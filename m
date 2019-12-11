@@ -2,74 +2,129 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3BBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A9DC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB30D21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576051477;
-	bh=B1Z2ZdmadE/uwSr7tP3e+eWCAuxvdqiIy995PRO7DnQ=;
-	h=Date:In-Reply-To:References:Subject:To:CC:From:List-ID:From;
-	b=bENkGG+XwxRXEby5NVmHoJ4cAF925mNshq9P47ZsstrN5QOlUTUlKi3aJej3ZSckU
-	 AnWAIc0lm/7g7dqIic8lDWpO6ByavMT+kZ/0vFJRI6mwh7bGOb6s2UB/B9TCheqIe6
-	 5OlNtGgBahLPLYGIaOXB1+3cD1a9ip1kawDpa6ek=
+	by mail.kernel.org (Postfix) with ESMTP id 4007F222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:06:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pNip4Ipk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jj9j0Yly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfLKIEh (ORCPT
+        id S1728253AbfLKIGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfLKIEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:04:36 -0500
-Received: from [10.228.163.158] (unknown [2.55.135.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D38B2173E;
-        Wed, 11 Dec 2019 08:04:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576051476;
-        bh=B1Z2ZdmadE/uwSr7tP3e+eWCAuxvdqiIy995PRO7DnQ=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=sdVbIBaYyIIc8OK1sQiHd65Y9ChIPY3/OpofxyRTEaxO/bPYp8FqUdiVrguQFQFC3
-         kMRQ6zy6hAkcv/CJWicRC5ceOpDPU40tYN+3gohr0toChexW0teHTP/NhAegW7Vzb2
-         seiDATUX+pMqRUC4qD7OxXY32t/dTiZ2Hyn/GAMg=
-Date:   Wed, 11 Dec 2019 10:04:29 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191210.232556.198185739663319799.davem@davemloft.net>
-References: <20191124085720.6201-1-rppt@kernel.org> <20191211062649.GA28255@rapoport-lnx> <20191210.232556.198185739663319799.davem@davemloft.net>
+        Wed, 11 Dec 2019 03:06:38 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55957 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726543AbfLKIGh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 03:06:37 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id C866B22138;
+        Wed, 11 Dec 2019 03:06:36 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 11 Dec 2019 03:06:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=hwPGVZSfhiMxz+WWKnEgFwPNaIp
+        NoOUWvpk6+9E3qN4=; b=pNip4IpkG9LKvVBXYoyj4iVJS/ovoPIw9uWvOPk5cd9
+        aeaF/jCv7glBQ+oKn8wpOl6n3UrLb0rgftmS04wkr50FD1IkkFHTMYvonRZw86Lj
+        rIxwCZ6cNOEPfbb0UmR7pNOh3W8Tin3r2rF48bQskZY+1mLE/4zjEU7Lttik/FJI
+        n8jQEQBF1wfSCShgauIgmygzeTmEYzHl8gW9Cipklj/+z0SGicb0Oef+ZCrnXbpy
+        2LtsLThBsWK9Q7i5Mvc8GxhhFC6z6Cg0whP53l11XVHQwbn1CHVNnpEOK3kAStYf
+        PYwKSDBhhcd95w233qcW/ZL7lhTiWF7eewTLoRU07ig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=hwPGVZ
+        SfhiMxz+WWKnEgFwPNaIpNoOUWvpk6+9E3qN4=; b=jj9j0YlySSDVxgY0h/vfI/
+        aBM5pZSEUheItTPmultGLLgrgaBhHTdUTeNy4c41344yAtToDW3qW6/G83+QyggH
+        sm3g6pf7cEXj1zUWIfLGKTsY44dhhovQamRUtTQtBA+p8tqvMA+14KLCSOCjGMnp
+        wXMHTL2W+IfRxZrpRy5xOQAzkd4wt0TJ/Oy1dsxlCXGAtRrX5GwLqfns5zgxJWgt
+        adK9eQS9r5Rud6MWzRraNXrxsG1MtxQ9/h9lBnNK5cCJ7KV+XtjpWF86PMoKEP18
+        dFSX8G8JlEcREUqZwBpXrBhvKyj1SduXIfRAePAw817s1//ZjTbA5OkZYf4u2r8g
+        ==
+X-ME-Sender: <xms:jKPwXfXqZ_5EeTjpf0WKqXeWJktHHwg9Hv0q58PoZoj3nTZoHjIwSw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
+    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
+    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:jKPwXSl6xGsb9BnnvKa9iCOm1T5zBt8VRYeehfUjcihda8tyWGH7sw>
+    <xmx:jKPwXYg_duZ4YteFKA2eq--62RBE3EUDVTzlmiFFH1OgnjMeCKELKQ>
+    <xmx:jKPwXS5eunZZjFT3NveH4Rpe-x2fnIaaEwQZn7a1LrmQs-O310SuYA>
+    <xmx:jKPwXXnbpFRNjLVoZD7ulW-OOlvofq2rh8P0vhnr9WhEweg_S1Xe_A>
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B864880070;
+        Wed, 11 Dec 2019 03:06:35 -0500 (EST)
+Date:   Wed, 11 Dec 2019 09:06:33 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
+        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6
+ example
+Message-ID: <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
+References: <20191210174710.10649-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] sparc64: add support for folded p4d page tables
-To:     David Miller <davem@davemloft.net>
-CC:     sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, rppt@linux.ibm.com
-From:   Mike Rapoport <rppt@kernel.org>
-Message-ID: <4C87F045-7902-415E-BE54-9F527CE3B5E6@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="44tksmdnwrh2gezn"
+Content-Disposition: inline
+In-Reply-To: <20191210174710.10649-1-peron.clem@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On December 11, 2019 9:25:56 AM GMT+02:00, David Miller <davem@davemloft=2E=
-net> wrote:
->From: Mike Rapoport <rppt@kernel=2Eorg>
->Date: Wed, 11 Dec 2019 08:26:51 +0200
->
->> Any updates on this?
->
->I thought I gave my ack, sorry:
->
->Acked-by: David S=2E Miller <davem@davemloft=2Enet>
 
-Can you please take it via sparc tree?
+--44tksmdnwrh2gezn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---=20
-Sincerely yours,
-Mike
+On Tue, Dec 10, 2019 at 06:47:10PM +0100, Cl=E9ment P=E9ron wrote:
+> Latest linux-next doesn't build due to the following error:
+>
+> Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.exam=
+ple.dts:35.37-38
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
+wm.example.dt.yaml]
+> Error 1
+>
+> This is due to missing header in the device-tree yaml example.
+>
+> Fix this by adding the missing headers.
+>
+> Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description=
+")
+> Reported-by: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+
+Applied, thanks!
+Maxime
+
+--44tksmdnwrh2gezn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfCjiQAKCRDj7w1vZxhR
+xTcEAP9uGGmta1bRoVSRk92LUIUmW8iSPPITd+A+9/tLuXcG3QEAkBBswRhpwUQ9
+IcmAHUp2Yo34CHA+/krrKKxL0JUADQc=
+=UP4/
+-----END PGP SIGNATURE-----
+
+--44tksmdnwrh2gezn--
