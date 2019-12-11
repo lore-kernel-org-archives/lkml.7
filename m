@@ -2,126 +2,246 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81EDC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD08C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88D7E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576060981;
-	bh=NwJI8msRaERbqP+3FROGHItAhebPYHeQra0pErfd+Qg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ctH9fqGHi1LlRCPTLco/c5emYHNTM2rFFrdGydt1AGd0JmyEn9Y6+BjA/Gib8NTCC
-	 TA095F+7AwXP8TL+M1RTVhu4BzKnuS6SsVuX9TBLJcrTgtQ5p/dzjax1BdeSYuGYVL
-	 R31J6qH9ReIaEyR2r98+6wWIlRIy7OxAaWP3sLqA=
+	by mail.kernel.org (Postfix) with ESMTP id 12C16206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:44:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RosiyBjx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfLKKnA (ORCPT
+        id S1728953AbfLKKn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:43:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfLKKnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:43:00 -0500
-Received: from wens.tw (mirror2.csie.ntu.edu.tw [140.112.30.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681BD206A5;
-        Wed, 11 Dec 2019 10:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576060979;
-        bh=NwJI8msRaERbqP+3FROGHItAhebPYHeQra0pErfd+Qg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YJ3TyVj4V42lqastwnlH3q7SPKVkxsHtkR/zNjNbXIgUeX/zx4hjAkPvV0xZiRTqj
-         TKFGpfbZJT+J+2a5UnSsMLXsqKbj2JqewlFqPK8Pv8zCDZ+1JTJCsgDrEYUYRmIHCy
-         1mU3k8vai7etAb4HZK3bwXiyuEQ9/9/Km6hnYzIM=
-Received: by wens.tw (Postfix, from userid 1000)
-        id C74DB5FCD1; Wed, 11 Dec 2019 18:42:56 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
-Date:   Wed, 11 Dec 2019 18:41:52 +0800
-Message-Id: <20191211104152.26496-1-wens@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Wed, 11 Dec 2019 05:43:59 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:39310 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbfLKKn6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:43:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=W1Xr1ESFOb4cZaNdonF79OjzkRvMReLsf1g3WU8W8wc=; b=RosiyBjxVUaBCTBdKECx/Q/fK
+        REY+K9pikjNMxb3Sos19IGdi7QC6YXOwPhLMdt7hCxbQbEWssmdpaCdL1Q1n6anPY2+kBNdbBYdAs
+        UOYf9cwovzdBVSAK3yjq3SwZURod3Vbz+1OerekSafSVwCnCmdY8sEXn8vz5mhiRUF80676ebMm4W
+        DdIZ92zJZSvY0X1+rxpNwcd1jlw5cB6EtsIpxfgdd9j+/GU1dGXrWBfl+EAfeGB38BPSKRV7zt94g
+        BsQLwyQoMbgk+g1iO8lk5cys4dBFo8NQphxNISGVP808gLKNZkU4ePSo+mPZpJgYQB1avG9gpz6RL
+        EyfTB6fgQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:39844)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iezTC-0007pY-Bw; Wed, 11 Dec 2019 10:43:50 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iezT9-0005mz-IS; Wed, 11 Dec 2019 10:43:47 +0000
+Date:   Wed, 11 Dec 2019 10:43:47 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "festevam@gmail.com" <festevam@gmail.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
+Message-ID: <20191211104347.GA25745@shell.armlinux.org.uk>
+References: <20191127071136.5240-1-peng.ma@nxp.com>
+ <20191128100613.GI25745@shell.armlinux.org.uk>
+ <VI1PR04MB4431CF7F051F9439C84F84FAED5A0@VI1PR04MB4431.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4431CF7F051F9439C84F84FAED5A0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Wed, Dec 11, 2019 at 10:25:26AM +0000, Peng Ma wrote:
+> Hi Russell,
+> 
+> I am sorry to reply late, thanks for your patient reminding,
+> Please see my comments inline.
+> 
+> Best Regards,
+> Peng
+> >-----Original Message-----
+> >From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+> >Sent: 2019年11月28日 18:06
+> >To: Peng Ma <peng.ma@nxp.com>
+> >Cc: linux@rempel-privat.de; kernel@pengutronix.de; shawnguo@kernel.org;
+> >s.hauer@pengutronix.de; linux-kernel@vger.kernel.org; dl-linux-imx
+> ><linux-imx@nxp.com>; festevam@gmail.com;
+> >linux-arm-kernel@lists.infradead.org; linux-i2c@vger.kernel.org
+> >Subject: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
+> >
+> >Caution: EXT Email
+> >
+> >On Wed, Nov 27, 2019 at 07:12:09AM +0000, Peng Ma wrote:
+> >> EDMA may be not available or defered due to dependencies on other
+> >> modules, If these scenarios is encountered, we should defer probing.
+> >
+> >This has been tried before in this form, and it causes regressions.
+> >
+> >> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> >> ---
+> >>  drivers/i2c/busses/i2c-imx.c | 16 +++++++++++-----
+> >>  1 file changed, 11 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/drivers/i2c/busses/i2c-imx.c
+> >> b/drivers/i2c/busses/i2c-imx.c index 40111a3..c2b0693 100644
+> >> --- a/drivers/i2c/busses/i2c-imx.c
+> >> +++ b/drivers/i2c/busses/i2c-imx.c
+> >> @@ -369,8 +369,8 @@ static void i2c_imx_reset_regs(struct
+> >> imx_i2c_struct *i2c_imx)  }
+> >>
+> >>  /* Functions for DMA support */
+> >> -static void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+> >> -                                             dma_addr_t
+> >phy_addr)
+> >> +static int i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+> >> +                            dma_addr_t phy_addr)
+> >>  {
+> >>       struct imx_i2c_dma *dma;
+> >>       struct dma_slave_config dma_sconfig; @@ -379,7 +379,7 @@ static
+> >> void i2c_imx_dma_request(struct imx_i2c_struct *i2c_imx,
+> >>
+> >>       dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
+> >>       if (!dma)
+> >> -             return;
+> >> +             return -ENOMEM;
+> >>
+> >>       dma->chan_tx = dma_request_chan(dev, "tx");
+> >>       if (IS_ERR(dma->chan_tx)) {
+> >> @@ -424,7 +424,7 @@ static void i2c_imx_dma_request(struct
+> >imx_i2c_struct *i2c_imx,
+> >>       dev_info(dev, "using %s (tx) and %s (rx) for DMA transfers\n",
+> >>               dma_chan_name(dma->chan_tx),
+> >> dma_chan_name(dma->chan_rx));
+> >>
+> >> -     return;
+> >> +     return 0;
+> >>
+> >>  fail_rx:
+> >>       dma_release_channel(dma->chan_rx);
+> >> @@ -432,6 +432,8 @@ static void i2c_imx_dma_request(struct
+> >imx_i2c_struct *i2c_imx,
+> >>       dma_release_channel(dma->chan_tx);
+> >>  fail_al:
+> >>       devm_kfree(dev, dma);
+> >> +
+> >> +     return ret;
+> >
+> >Some platforms don't have EDMA.  Doesn't this force everyone who wants
+> >I2C to have DMA?  The last attempt at this had:
+> >
+> >        /* return successfully if there is no dma support */
+> >        return ret == -ENODEV ? 0 : ret;
+> >
+> >here because of exactly this.
+> >
+> >>  }
+> >>
+> >>  static void i2c_imx_dma_callback(void *arg) @@ -1605,10 +1607,14 @@
+> >> static int i2c_imx_probe(struct platform_device *pdev)
+> >>       dev_info(&i2c_imx->adapter.dev, "IMX I2C adapter registered\n");
+> >>
+> >>       /* Init DMA config if supported */
+> >> -     i2c_imx_dma_request(i2c_imx, phy_addr);
+> >> +     ret = i2c_imx_dma_request(i2c_imx, phy_addr);
+> >> +     if (ret == -EPROBE_DEFER)
+> >> +             goto i2c_adapter_remove;
+> >
+> >This happens _after_ the adapter has been published to the rest of the kernel.
+> >Claiming resources after publication is racy - the adapter may be in use by a
+> >request at this point.  Secondly, there's been problems with this causing
+> >regressions when EDMA is built as a module and i2c-imx is built-in.
+> >
+> >See e8c220fac415 ("Revert "i2c: imx: improve the error handling in
+> >i2c_imx_dma_request()"") when exactly what you're proposing was tried and
+> >ended up having to be reverted.
+> >
+> >AFAIK nothing has changed since, so merely reinstating the known to be broken
+> >code, thereby reintroducing the same (and more) problems, isn't going to be
+> >acceptable.
+> >
+> >Sorry, but this gets a big NAK from me.
+> >
+> [Peng Ma] I saw the revert commit e8c220fac415 and understand your concerns.
+> I scan the i2c-imx.c driver, All platforms that use i2c driver and support dma use an eDMA engine,
+> So I change the code(compare with last patch) as follows, please review and give me your precious comments.
+> Thanks very much.
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 12f7934fddb4..6cafee52dd67 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1605,8 +1605,11 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>  
+>         /* Init DMA config if supported */
+>         ret = i2c_imx_dma_request(i2c_imx, phy_addr);
+> -       if (ret == -EPROBE_DEFER)
+> +       if (ret == -EPROBE_DEFER) {
+> +#if    IS_BUILTIN(CONFIG_FSL_EDMA)
+>                 goto i2c_adapter_remove;
+> +#endif
+> +       }
 
-max_pfn, as set in arch/arm/mm/init.c:
+You haven't understood _why_ the problem occurs, you're just attempting
+to patch around it. You're hacking the code, rather than engineering
+the code.
 
-    static void __init find_limits(unsigned long *min,
-				   unsigned long *max_low,
-				   unsigned long *max_high)
-    {
-	    *max_low = PFN_DOWN(memblock_get_current_limit());
-	    *min = PFN_UP(memblock_start_of_DRAM());
-	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
-    }
+The infinite deferred probe occurs because:
 
-with memblock_end_of_DRAM() pointing to the next byte after DRAM. As
-such, max_pfn points to the PFN after the end of DRAM.
+- i2c-imx is attempted to be probed.
+- i2c-imx sets up the hardware, and then calls
+  i2c_add_numbered_adapter()
+- i2c_add_numbered_adapter() publishes the bus to the world, and then
+  searches DT for any children to create - and it finds some and
+  creates them.
+- the children devices are matched to their drivers, which bind.  This
+  triggers a deferred probe to be scheduled.
+- back in the i2c-imx driver, we get to i2c_imx_dma_request(), which
+  fails, and you return -EPROBE_DEFER.
+- the i2c-imx driver probe actions are unwound, and probe exits.
+- the driver core processes the deferred probe request, finds the 
+  i2c-imx device(s) on the deferred probe list, and attempts to
+  probe them.  Goto the top of this list.
 
-Thus when using max_pfn to check DMA masks, we should subtract one
-when checking DMA ranges against it.
+If, for whatever reason, i2c_imx_dma_request() ever returns
+-EPROBE_DEFER, the above loop WILL happen.
+  
+The FUNDAMENTAL rule of kernel programming is that you do NOT publish
+before you have completed setup.  i2c-imx violates that rule as the
+probe function is ordered at present.
 
-Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
-__dma_supported()") fixed the same issue, but missed this spot.
+i2c-imx has been written for i2c_imx_dma_request() to be safe to call
+after the device has been published, but with the current probe function
+order, it is unsafe to propagate the EPROBE_DEFER return value for the
+reason above.  For the reason the original attempt got reverted.
 
-This issue was found while working on the sun4i-csi v4l2 driver on the
-Allwinner R40 SoC. On Allwinner SoCs, DRAM is offset at 0x40000000,
-and we are starting to use of_dma_configure() with the "dma-ranges"
-property in the device tree to have the DMA API handle the offset.
+So, if you want to do this (and yes, I'd also encourage it to be
+conditional on EDMA being built-in, as I2C is commonly used as a way
+to get at RTCs, which are read before kernel modules can be loaded)
+then you MUST move i2c_imx_dma_request() before
+i2c_add_numbered_adapter() to avoid the infinite loop.
 
-In this particular instance, dma-ranges was set to the same range as
-the actual available (2 GiB) DRAM. The following error appeared when
-the driver attempted to allocate a buffer:
-
-    sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
-    covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
-    sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
-
-Fixing the off-by-one error makes things work.
-
-Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
-Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
-Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/mm/dma-mapping.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index e822af0d9219..f4daafdbac56 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -227,12 +227,12 @@ static int __dma_supported(struct device *dev, u64 mask, bool warn)
- 	 * Translate the device's DMA mask to a PFN limit.  This
- 	 * PFN number includes the page which we can DMA to.
- 	 */
--	if (dma_to_pfn(dev, mask) < max_dma_pfn) {
-+	if (dma_to_pfn(dev, mask) < max_dma_pfn - 1) {
- 		if (warn)
- 			dev_warn(dev, "Coherent DMA mask %#llx (pfn %#lx-%#lx) covers a smaller range of system memory than the DMA zone pfn 0x0-%#lx\n",
- 				 mask,
- 				 dma_to_pfn(dev, 0), dma_to_pfn(dev, mask) + 1,
--				 max_dma_pfn + 1);
-+				 max_dma_pfn);
- 		return 0;
- 	}
- 
 -- 
-2.24.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
