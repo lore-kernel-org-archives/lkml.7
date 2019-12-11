@@ -2,172 +2,91 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF18C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F012C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10722073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079070;
-	bh=ejot6L9fm3YbdGO02ZyywhGUTmP6TRIjGIlJ8WY/OQY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gkhZV2XNBlC6Rdd5+KeH+D7WkPKpZ5L0wdwBBO4AT6nqz4a7xemiVnRZ7ROpOBVuT
-	 aM9dkBnARw8Pvwh6M0eL/f4lwwtBqrZgdrRzAmGP+/nKIpGLbgfxulKkjhO1Y/m/5S
-	 CjmKY2OROM+MefZeOkbR4U2zs5sH39Bq/ldgdHlQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0276B2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pOLJCHVH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732341AbfLKPoW (ORCPT
+        id S2387813AbfLKPod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:44:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733113AbfLKP13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:29 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E0D22527;
-        Wed, 11 Dec 2019 15:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078048;
-        bh=ejot6L9fm3YbdGO02ZyywhGUTmP6TRIjGIlJ8WY/OQY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9cq4XQjCssXj2E0Qalq7/wLdJuUUModogpUcRfUjlDvPXc60IERXMkyjAbyQdV5W
-         jMdDf+yzCKWRmdzxZaVdi2X/7/SfohJeLe4RsLpTiwjigWSwtu+ADPmUJGAYpTtlXy
-         b3Uc6XMYzE3//36i7AnNDlamj9t//m82xPqb9kTU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 41/79] PCI: rpaphp: Annotate and correctly byte swap DRC properties
-Date:   Wed, 11 Dec 2019 10:26:05 -0500
-Message-Id: <20191211152643.23056-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:44:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44506 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733014AbfLKPoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:44:20 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so24539221wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:44:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zTeAMitJBFyTpo1SLC9FDWJuZxg2pIG+EP0HCZfhl0I=;
+        b=pOLJCHVHJYDyPogESOHu5eSOC0iZmXtd7Moc1RqXnzMeYrkXXT2uJ6MN+GBcjIldDo
+         N1NMWAndifJdnJNZujfnuX3xAPYEhliqNfRumigz/7iXep+ev51u+JvMzEFpirxxTht1
+         S/lkPoW8wEQd+UFqCafa6uN+m+ws8r2r33fNZjI4C9Jkkbd4mU959c3nooEd1d0rMm72
+         nMUdhdjTR7gKaikD2XYXDfm0Hr4zhYNIYfuml8NF6wUeYNZ6HbKRMFNPk8H7celmF9y2
+         pLKwPfg3PKXGEhKpXxODcgtOwjUkqFK0SjgxOgYiFnUJiSyFTJToigREJ56mUm80oBcw
+         on4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zTeAMitJBFyTpo1SLC9FDWJuZxg2pIG+EP0HCZfhl0I=;
+        b=tKiuV5GTV8gLyL4AlbY4jGDbahOt2N81vVHAzxlWARTJHnKDUlGbEthzHdwR2utUHv
+         II07Ur4FGOcFjvZD5dkHebm/44CCZ9C1QOnAMgaqyo3bNcJtc8sTDgBewTGRZvFtwpZl
+         G+FLaHJN4BG/Dsd0p2/3P4QZwLBd9D+P7Ql9MoVq9iYbR14qYDbb0HQuAF8uBn7T80UG
+         KdqiOOgi+EJTThEbmzxeHQlBqpEyQVDGsIlRoa9yq4tZS17pcRxXByuJ0L+e9uA1v5iC
+         s2wKdd85QtOiyDVt07hFzY3xof9r1CrepHbilYiqnSJ5nY3IS9wDfbO2pHUkOb54AY69
+         Ah5A==
+X-Gm-Message-State: APjAAAVO1PkVrpmXDV6mIMPLsTAOFWtqOsFJRGTcV7/tHQeEBq1xyMvN
+        hN0yz34dxFBXSn9dQ1kF2Vcn/w==
+X-Google-Smtp-Source: APXvYqyb4Pp7PLP/3DKnjab13q0ueZ+RiAZW/2+2GzBfRU2szkzvYsUcLcSImdIwSLGU5xpIHlfSTw==
+X-Received: by 2002:adf:e591:: with SMTP id l17mr404663wrm.139.1576079059232;
+        Wed, 11 Dec 2019 07:44:19 -0800 (PST)
+Received: from myrica (adsl-84-227-176-239.adslplus.ch. [84.227.176.239])
+        by smtp.gmail.com with ESMTPSA id z12sm2693401wmd.16.2019.12.11.07.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:44:18 -0800 (PST)
+Date:   Wed, 11 Dec 2019 16:44:16 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] iommu: virtio: Use iommu_put_resv_regions_simple()
+Message-ID: <20191211154416.GA1927@myrica>
+References: <20191209145007.2433144-1-thierry.reding@gmail.com>
+ <20191209145007.2433144-6-thierry.reding@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209145007.2433144-6-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+On Mon, Dec 09, 2019 at 03:50:07PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Use the new standard function instead of open-coding it.
+> 
+> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Cc: virtualization@lists.linux-foundation.org
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 0737686778c6dbe0908d684dd5b9c05b127526ba ]
-
-The device tree is in big endian format and any properties directly
-retrieved using OF helpers that don't explicitly byte swap should
-be annotated. In particular there are several places where we grab
-the opaque property value for the old ibm,drc-* properties and the
-ibm,my-drc-index property.
-
-Fix this for better static checking by annotating values we know to
-explicitly big endian, and byte swap where appropriate.
-
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-9-git-send-email-tyreld@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/hotplug/rpaphp_core.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index ccc6deeb9ccf0..7d74fe875225e 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -154,11 +154,11 @@ static enum pci_bus_speed get_max_bus_speed(struct slot *slot)
- 	return speed;
- }
- 
--static int get_children_props(struct device_node *dn, const int **drc_indexes,
--		const int **drc_names, const int **drc_types,
--		const int **drc_power_domains)
-+static int get_children_props(struct device_node *dn, const __be32 **drc_indexes,
-+			      const __be32 **drc_names, const __be32 **drc_types,
-+			      const __be32 **drc_power_domains)
- {
--	const int *indexes, *names, *types, *domains;
-+	const __be32 *indexes, *names, *types, *domains;
- 
- 	indexes = of_get_property(dn, "ibm,drc-indexes", NULL);
- 	names = of_get_property(dn, "ibm,drc-names", NULL);
-@@ -194,8 +194,8 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
- 				char *drc_type, unsigned int my_index)
- {
- 	char *name_tmp, *type_tmp;
--	const int *indexes, *names;
--	const int *types, *domains;
-+	const __be32 *indexes, *names;
-+	const __be32 *types, *domains;
- 	int i, rc;
- 
- 	rc = get_children_props(dn->parent, &indexes, &names, &types, &domains);
-@@ -208,7 +208,7 @@ static int rpaphp_check_drc_props_v1(struct device_node *dn, char *drc_name,
- 
- 	/* Iterate through parent properties, looking for my-drc-index */
- 	for (i = 0; i < be32_to_cpu(indexes[0]); i++) {
--		if ((unsigned int) indexes[i + 1] == my_index)
-+		if (be32_to_cpu(indexes[i + 1]) == my_index)
- 			break;
- 
- 		name_tmp += (strlen(name_tmp) + 1);
-@@ -267,7 +267,7 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 			char *drc_type)
- {
--	const unsigned int *my_index;
-+	const __be32 *my_index;
- 
- 	my_index = of_get_property(dn, "ibm,my-drc-index", NULL);
- 	if (!my_index) {
-@@ -277,10 +277,10 @@ int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 
- 	if (of_find_property(dn->parent, "ibm,drc-info", NULL))
- 		return rpaphp_check_drc_props_v2(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- 	else
- 		return rpaphp_check_drc_props_v1(dn, drc_name, drc_type,
--						*my_index);
-+						be32_to_cpu(*my_index));
- }
- EXPORT_SYMBOL_GPL(rpaphp_check_drc_props);
- 
-@@ -311,10 +311,11 @@ static int is_php_type(char *drc_type)
-  * for built-in pci slots (even when the built-in slots are
-  * dlparable.)
-  */
--static int is_php_dn(struct device_node *dn, const int **indexes,
--		const int **names, const int **types, const int **power_domains)
-+static int is_php_dn(struct device_node *dn, const __be32 **indexes,
-+		     const __be32 **names, const __be32 **types,
-+		     const __be32 **power_domains)
- {
--	const int *drc_types;
-+	const __be32 *drc_types;
- 	int rc;
- 
- 	rc = get_children_props(dn, indexes, names, &drc_types, power_domains);
-@@ -349,7 +350,7 @@ int rpaphp_add_slot(struct device_node *dn)
- 	struct slot *slot;
- 	int retval = 0;
- 	int i;
--	const int *indexes, *names, *types, *power_domains;
-+	const __be32 *indexes, *names, *types, *power_domains;
- 	char *name, *type;
- 
- 	if (!dn->name || strcmp(dn->name, "pci"))
--- 
-2.20.1
-
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
