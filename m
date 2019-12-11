@@ -2,148 +2,93 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E743AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43E2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6DA2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079313;
-	bh=cQnHYqMKMnTnO6m2mJKlDYRQy3IpoH92Ix9Topw/7fc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nMxm1H3Yx8ZuLQ0xf/bBBstGrZ6XkKJ/xZwOesr+6icpGtN83Q67PrgL3ziUmazYF
-	 6owxx5dRvlIBKEA2xATVgdyfG0O0mYz9FP0TbaKLPwMsr+/9Lbli481odLfz3bWdhJ
-	 EfcxnJW6zBprBOKjcG0PzikYZxsIuL6/lnfdWctM=
+	by mail.kernel.org (Postfix) with ESMTP id 8288F222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oIWbnlRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbfLKPYv (ORCPT
+        id S2387995AbfLKPsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732886AbfLKPYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:47 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B9C2077B;
-        Wed, 11 Dec 2019 15:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077886;
-        bh=cQnHYqMKMnTnO6m2mJKlDYRQy3IpoH92Ix9Topw/7fc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uk5c8sQ+uscbXDNvSF0hQ0tEZbVeJumB8hfWablHMkrqGc39E0C6a11w9KjfV+3gY
-         BC2ocYWI+ZjaLiK5uRMwAOkWZm7x0oWLpz5LWY8+BNlCxp0w28to+otEq0AxZpY7HV
-         2HjIJaynu0e9FofgoMUoNzuDN/GAGZNPBHV1yoGQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH 4.19 208/243] coresight: etm4x: Fix input validation for sysfs.
-Date:   Wed, 11 Dec 2019 16:06:10 +0100
-Message-Id: <20191211150353.224230883@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 11 Dec 2019 10:48:37 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36189 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732172AbfLKPsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:48:33 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so7500029wma.1;
+        Wed, 11 Dec 2019 07:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HHknGkOCqrNxt52GD3cXj52e9zxxPE4soKJv+dpWQEY=;
+        b=oIWbnlROfjQnCGNZCiLi7byhz4dLIGt+RjME0td4t9fKjpw4v5g8O/0dvwvittn8mJ
+         OPWZGZg0MRyuKXLf2j0MSrvmubrpM8RKFSQ1lrFFMEgmFK5B0c7/sq01c37gMAGBO/s/
+         fKveW0mw9IYp9hdK0rZL/rjPTErRkyurTlsGRBY0I4FdsweH4ug1HiP9KaCSH27mt+Ei
+         IG1jsaAyCz28knZ5rBagaJFKi1S7MA1A+ZzO1z9IEUnlCwMQ+yYpiirPQ0wOTqBDzFQX
+         i/2kZNvbB0fMsdevMZX2DTSSnvum286LBzIzuR2js0juXe1/2jYqQcRHyhwlB24GdgYL
+         PiKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HHknGkOCqrNxt52GD3cXj52e9zxxPE4soKJv+dpWQEY=;
+        b=LHLLx++r8YHXbDmQhEYVO68NSMDlCF50AxP2fUjYGKNBf3KtqVnyn41zwqrTM/3WZN
+         3Od93RJqQy1EdLmthBNhbPOm2ixvftO1bKfUinECpDJ3czLmyyiBLgFH8v6tYLw/6kNW
+         wAES4P+UjeqPlGA4sAlAKuXg3hfvm0lSiLQFVPewqOFFhv0ceHfyU+t79j57uMD180K2
+         9XJg9UZrUkdj6RYuID65C2toqoh7dPzOdbh5N9fI0JK3X5qnOsTREs+vebX31MA2KUy3
+         zY2ol/F2zhjYAt9MMyLdrKcmdL9BuDqNkeC/VDhecJWPSjYbL32pLWjyKMf37efx02au
+         yZFA==
+X-Gm-Message-State: APjAAAUkgJncltgCRFb0SQzNyfjgxjkCbeWJg7zFB+kGKC0uYBYqE/R3
+        XU4ZxpCh3uThfHQE5OWp6Vk=
+X-Google-Smtp-Source: APXvYqwkGklybJhQUkvyxLGUfCYJKgd1v5Gr+omfdMAso88OSlk52wgRnLzLQ9dxxh8rIc7M5DJJmg==
+X-Received: by 2002:a7b:c151:: with SMTP id z17mr461367wmi.137.1576079311277;
+        Wed, 11 Dec 2019 07:48:31 -0800 (PST)
+Received: from localhost.localdomain (dslb-002-204-142-082.002.204.pools.vodafone-ip.de. [2.204.142.82])
+        by smtp.gmail.com with ESMTPSA id n16sm2677388wro.88.2019.12.11.07.48.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:48:30 -0800 (PST)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     pkshih@realtek.com
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 0/6] rtlwifi: convert rtl8192{ce,cu,de} to use generic functions
+Date:   Wed, 11 Dec 2019 16:47:49 +0100
+Message-Id: <20191211154755.15012-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Leach <mike.leach@linaro.org>
+This series converts the drivers rtl8192{ce,cu,de} to use the generic
+functions rtl_query_rxpwrpercentage and rtl_signal_scale_mapping.
 
-commit 2fe6899e36aa174abefd017887f9cfe0cb60c43a upstream.
+Michael Straube (6):
+  rtlwifi: rtl8192ce: use generic rtl_query_rxpwrpercentage
+  rtlwifi: rtl8192cu: use generic rtl_query_rxpwrpercentage
+  rtlwifi: rtl8192de: use generic rtl_query_rxpwrpercentage
+  rtlwifi: rtl8192ce: use generic rtl_signal_scale_mapping
+  rtlwifi: rtl8192cu: use generic rtl_signal_scale_mapping
+  rtlwifi: rtl8192de: use generic rtl_signal_scale_mapping
 
-A number of issues are fixed relating to sysfs input validation:-
+ .../wireless/realtek/rtlwifi/rtl8192ce/trx.c  | 48 ++----------------
+ .../wireless/realtek/rtlwifi/rtl8192cu/mac.c  | 49 ++-----------------
+ .../wireless/realtek/rtlwifi/rtl8192de/trx.c  | 47 ++----------------
+ 3 files changed, 14 insertions(+), 130 deletions(-)
 
-1) bb_ctrl_store() - incorrect compare of bit select field to absolute
-value. Reworked per ETMv4 specification.
-2) seq_event_store() - incorrect mask value - register has two
-event values.
-3) cyc_threshold_store() - must mask with max before checking min
-otherwise wrapped values can set illegal value below min.
-4) res_ctrl_store() - update to mask off all res0 bits.
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Fixes: a77de2637c9eb ("coresight: etm4x: moving sysFS entries to a dedicated file")
-Cc: stable <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20191104181251.26732-6-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c |   21 ++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
-
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -655,10 +655,13 @@ static ssize_t cyc_threshold_store(struc
- 
- 	if (kstrtoul(buf, 16, &val))
- 		return -EINVAL;
-+
-+	/* mask off max threshold before checking min value */
-+	val &= ETM_CYC_THRESHOLD_MASK;
- 	if (val < drvdata->ccitmin)
- 		return -EINVAL;
- 
--	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
-+	config->ccctlr = val;
- 	return size;
- }
- static DEVICE_ATTR_RW(cyc_threshold);
-@@ -689,14 +692,16 @@ static ssize_t bb_ctrl_store(struct devi
- 		return -EINVAL;
- 	if (!drvdata->nr_addr_cmp)
- 		return -EINVAL;
-+
- 	/*
--	 * Bit[7:0] selects which address range comparator is used for
--	 * branch broadcast control.
-+	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
-+	 * individual range comparators. If include then at least 1
-+	 * range must be selected.
- 	 */
--	if (BMVAL(val, 0, 7) > drvdata->nr_addr_cmp)
-+	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
- 		return -EINVAL;
- 
--	config->bb_ctrl = val;
-+	config->bb_ctrl = val & GENMASK(8, 0);
- 	return size;
- }
- static DEVICE_ATTR_RW(bb_ctrl);
-@@ -1329,8 +1334,8 @@ static ssize_t seq_event_store(struct de
- 
- 	spin_lock(&drvdata->spinlock);
- 	idx = config->seq_idx;
--	/* RST, bits[7:0] */
--	config->seq_ctrl[idx] = val & 0xFF;
-+	/* Seq control has two masks B[15:8] F[7:0] */
-+	config->seq_ctrl[idx] = val & 0xFFFF;
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-@@ -1585,7 +1590,7 @@ static ssize_t res_ctrl_store(struct dev
- 	if (idx % 2 != 0)
- 		/* PAIRINV, bit[21] */
- 		val &= ~BIT(21);
--	config->res_ctrl[idx] = val;
-+	config->res_ctrl[idx] = val & GENMASK(21, 0);
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-
+-- 
+2.24.0
 
