@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF30CC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98E3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D7324654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE46022B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078061;
-	bh=1+PYsgrlVIXcy1sg+TkUNOPdnuEJTx9tNxWeA9loVaw=;
+	s=default; t=1576078066;
+	bh=VBqmgu+/fTCK3LmeGT4lLrSBpbjP6+bqqfjkjkKKYmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tF2TTTFYacV4AgrHdbjopjvpVgAtz04WgDyBb0hSmXri2Ys5DbZ0awZ/cMCo/a3Ga
-	 Ir7g9tHPDTfJlMzGTqxeEtisVbOPc2A1G3UY81yaok1j+LqkiBbgrCMmI8S1KpIAeC
-	 pK64ApT/iBs4810TyAy2YaNt9UaVgKc5cBRvDyOw=
+	b=xT/8z2Sx8cYc9AEj5AfhXMHrnGH3QFfcYfSLFJ8S/nXTbfpHp7ow3O01K0q9EM2xM
+	 k+tssFfyQvfCIOcpsdGkuXxICKHJwIzISXHIPGnMPzPtaIDUlgpK2sn5gQ714NvrmM
+	 HlLLa17VlldWxG+BbM0g0hRVyRtpTvtcXHEHOiN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387448AbfLKP1k (ORCPT
+        id S2387469AbfLKP1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732967AbfLKP1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:23 -0500
+        id S2387416AbfLKP10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C8F924680;
-        Wed, 11 Dec 2019 15:27:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC4D2468F;
+        Wed, 11 Dec 2019 15:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078041;
-        bh=1+PYsgrlVIXcy1sg+TkUNOPdnuEJTx9tNxWeA9loVaw=;
+        s=default; t=1576078045;
+        bh=VBqmgu+/fTCK3LmeGT4lLrSBpbjP6+bqqfjkjkKKYmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuZDXOIG0qB2lgJw6W3jWOep+mtmFpWT+p2wkkoIf+OFvekYDLJMISGtOQ7QCPJd6
-         owci1RkA6PDWp6UktpVEtyqCDxCdVun31YsYjRZMFY0WCu/Sb4II/6xB+GCu4Ueav6
-         7X9JhCky0jbToIWGplT0Xu83X2dNP5n3WiShHxjg=
+        b=1S+7xJ2ME5sk0GDe59c/VuD6VfC2vokWTFnBcGUqhG/t8LtX+AhC18akEZDmkFomQ
+         OVbit9vWZJ7tCrNW2Ic16hD5RvhkahGPphJwxQg/kKHkABM+GkUhpBtBgoHTy22AzO
+         mGyvLU9v/yXGJuau9BKaVPz3gJSDBSOZg/s9uNQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        coverity-bot <keescook+coverity-bot@chromium.org>,
-        James Bottomley <James.Bottomley@SteelEye.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+Cc:     Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 35/79] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
-Date:   Wed, 11 Dec 2019 10:25:59 -0500
-Message-Id: <20191211152643.23056-35-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 38/79] scsi: ufs: fix potential bug which ends in system hang
+Date:   Wed, 11 Dec 2019 10:26:02 -0500
+Message-Id: <20191211152643.23056-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -64,64 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Bean Huo <beanhuo@micron.com>
 
-[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
+[ Upstream commit cfcbae3895b86c390ede57b2a8f601dd5972b47b ]
 
-Coverity reported the following:
+In function __ufshcd_query_descriptor(), in the event of an error
+happening, we directly goto out_unlock and forget to invaliate
+hba->dev_cmd.query.descriptor pointer. This results in this pointer still
+valid in ufshcd_copy_query_response() for other query requests which go
+through ufshcd_exec_raw_upiu_cmd(). This will cause __memcpy() crash and
+system hangs. Log as shown below:
 
-*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
-4433     			kfree(mp);
-4434     		}
-4435     		mempool_free(mbox, phba->mbox_mem_pool);
-4436     	}
-4437     out:
-4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-vvv     Dereferencing null pointer "shost".
-4439     		spin_lock_irq(shost->host_lock);
-4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
-4441     		spin_unlock_irq(shost->host_lock);
-4442
-4443     		/* If the node is not being used by another discovery thread,
-4444     		 * and we are sending a reject, we are done with it.
+Unable to handle kernel paging request at virtual address
+ffff000012233c40
+Mem abort info:
+   ESR = 0x96000047
+   Exception class = DABT (current EL), IL = 32 bits
+   SET = 0, FnV = 0
+   EA = 0, S1PTW = 0
+Data abort info:
+   ISV = 0, ISS = 0x00000047
+   CM = 0, WnR = 1
+swapper pgtable: 4k pages, 48-bit VAs, pgdp = 0000000028cc735c
+[ffff000012233c40] pgd=00000000bffff003, pud=00000000bfffe003,
+pmd=00000000ba8b8003, pte=0000000000000000
+ Internal error: Oops: 96000047 [#2] PREEMPT SMP
+ ...
+ Call trace:
+  __memcpy+0x74/0x180
+  ufshcd_issue_devman_upiu_cmd+0x250/0x3c0
+  ufshcd_exec_raw_upiu_cmd+0xfc/0x1a8
+  ufs_bsg_request+0x178/0x3b0
+  bsg_queue_rq+0xc0/0x118
+  blk_mq_dispatch_rq_list+0xb0/0x538
+  blk_mq_sched_dispatch_requests+0x18c/0x1d8
+  __blk_mq_run_hw_queue+0xb4/0x118
+  blk_mq_run_work_fn+0x28/0x38
+  process_one_work+0x1ec/0x470
+  worker_thread+0x48/0x458
+  kthread+0x130/0x138
+  ret_from_fork+0x10/0x1c
+ Code: 540000ab a8c12027 a88120c7 a8c12027 (a88120c7)
+ ---[ end trace 793e1eb5dff69f2d ]---
+ note: kworker/0:2H[2054] exited with preempt_count 1
 
-Fix by adding a check for non-null shost in line 4438.
-The scenario when shost is set to null is when ndlp is null.
-As such, the ndlp check present was sufficient. But better safe
-than sorry so add the shost check.
+This patch is to move "descriptor = NULL" down to below the label
+"out_unlock".
 
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
-Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
-
-CC: James Bottomley <James.Bottomley@SteelEye.com>
-CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-CC: linux-next@vger.kernel.org
-Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Fixes: d44a5f98bb49b2(ufs: query descriptor API)
+Link: https://lore.kernel.org/r/20191112223436.27449-3-huobean@gmail.com
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 +-
+ drivers/scsi/ufs/ufshcd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index 4f4d1b3b3bbc4..7398350b08b41 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -4110,7 +4110,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 		mempool_free(mbox, phba->mbox_mem_pool);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 8bce755e0f5bc..7510d8328d4dd 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -3011,10 +3011,10 @@ static int __ufshcd_query_descriptor(struct ufs_hba *hba,
+ 		goto out_unlock;
  	}
+ 
+-	hba->dev_cmd.query.descriptor = NULL;
+ 	*buf_len = be16_to_cpu(response->upiu_res.length);
+ 
+ out_unlock:
++	hba->dev_cmd.query.descriptor = NULL;
+ 	mutex_unlock(&hba->dev_cmd.lock);
  out:
--	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-+	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
- 		spin_lock_irq(shost->host_lock);
- 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
- 		spin_unlock_irq(shost->host_lock);
+ 	ufshcd_release(hba);
 -- 
 2.20.1
 
