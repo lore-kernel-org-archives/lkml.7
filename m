@@ -2,110 +2,144 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D848DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F84C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA281214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576050142;
-	bh=hjwHRYg8sPYAGDfSGrnlcMrFRv1F4fdjjCVCcQ5+a1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MvHRnsKdT70DkvLKTgvHZrQILHb8XrS4k7x3p+vdmqqGTOC4631ayLK5d+cu7qrBu
-	 H3OgI8Bb2h6/O6F8MoGPRO8Z+WmczGPxHwRXRzo91BtMSe6sJboRg8QFDcTFXaWPZP
-	 kWDWdxiubIlg/ncfKD6KvJlW4C/4iPLcFlRSgzvU=
+	by mail.kernel.org (Postfix) with ESMTP id E57C320637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:43:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="kSMVBnYT";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="j8iC+etk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfLKHmV (ORCPT
+        id S1728135AbfLKHnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:42:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfLKHmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:42:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881EB208C3;
-        Wed, 11 Dec 2019 07:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576050141;
-        bh=hjwHRYg8sPYAGDfSGrnlcMrFRv1F4fdjjCVCcQ5+a1M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YpRaJ89jUMVRa6IpaYcn6qin1ZSI494HkfhCJYBls/yNzHmpiJLg3eXHWeFjPbnY9
-         OJSUt1Jtbeb0q26EcErkVu4DdetqYR8EyYmWfXug6VBVUCwtCPmiAG6d5Yr8S+MjaZ
-         qTBEnr/Bc6Y7eCmruD2bDi8IpyP/w+/ELamaV/hU=
-Date:   Wed, 11 Dec 2019 08:42:18 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc:     devel@driverdev.osuosl.org, Sumit Pundir <pundirsumit11@gmail.com>,
-        linux-kernel@vger.kernel.org, David Daney <ddaney.cavm@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Laura Lazzati <laura.lazzati.15@gmail.com>
-Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
- controller driver
-Message-ID: <20191211074218.GB398293@kroah.com>
-References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
- <20191210091509.3546251-2-gregkh@linuxfoundation.org>
- <20191210193153.GB18225@darkstar.musicnaut.iki.fi>
- <20191210201957.GB4070187@kroah.com>
- <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
+        Wed, 11 Dec 2019 02:43:01 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:40966 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfLKHnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:43:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1576050181; x=1607586181;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=dD0acaqYEb3GzKBeMGth4CR7qb/h1Jc6cFnLM3pirf4=;
+  b=kSMVBnYTbyuxPqnBWrHpOB+B/mAOu4IBxOxh8dycrHIM6Hr45oKaCpjd
+   v2nNWvkg1Xbq2kDsT/e50iEGAvb+iDcRo/4OiQL5svgldbc/GmTa4cPCV
+   Gu/xmiOJyn8Tcw54kuQluPNdMgdtP3L3F2wwIbN83gGCo4l7RRnA5XoK7
+   sKdOMnGRkvgyfDSwcCwZrdpF2jrJvzDpchJDjwQqAvvmBBvQfIaYkqbQ2
+   qNW+v87l9VbBH25O/Z9UuwQDcjfzndAcuyPf7QItFauyEH1VZ0nbbr1Ra
+   2Pt5WTYKgqaXypj4ntNO0opWqytlM5FtMZQV+v2G71cCKfRT6Q13xF3m7
+   Q==;
+IronPort-SDR: pTBfrnvTWvafQbtSacl0piEU22vAvYgAtOR47NLhRxAfl0OUUMyM15BvLPVb0fSFJKRkcBuiIc
+ 2xrXvwaL9lXVjeLNkwv0iub2ezbych7gNp+CgYljFQYZsONVH1TfLT4x1ZQoIJ69x0ZCbNC8/R
+ PXlt63zZnufFxY6wYd0C+qesjJz5lF6j5yHTl4zB+DyMt+FZ1/DV3mNF/OS1q8f+IKLyx7gQb3
+ X7PwuqAaVipo9uLNEfoWgXRI+LNj3fLThNJMcyJBViikXUXgP3mipWUgqBclKpguhdkc4AK2zz
+ BwM=
+X-IronPort-AV: E=Sophos;i="5.69,301,1571673600"; 
+   d="scan'208";a="126692017"
+Received: from mail-bn8nam11lp2174.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.174])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Dec 2019 15:42:58 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DD5ddZz0V+ysQ/DkzqofAtCSwkwgq7mavIFJfhxCeiZCJ/p41FkOaZbP8cqwJttD3WR1oj1Db4W/391xDoe47xrOLI1yBjA7xfqWOuhneXWClboLAKsQQQKFFWw++lTrj43jjtyzYg3HnD2bbZQPMcqyuNJwDSmqhuvaP0O8AUos8ttYDWKkruQBf9Mb+FY+ArjZSp0UZGICXwgt9qgrNA+8d4jy2UYT7WsEG65Pw1n82G2UhtJL8Aqo+v+nJhL9ejQu6LqxnXidXyTn1nQNGgciNVxSZTrRYJVHqTX0KXs4610O/Fs7l+mwJ0xJvVcMTXuXLsd0ArxzjN5FjE/ZRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dD0acaqYEb3GzKBeMGth4CR7qb/h1Jc6cFnLM3pirf4=;
+ b=gVKLKrR4gtZY3RWna92O3A0RK3mbS/HHXpxG9xd+aiEijWs9oLNMUvfdHl4N4g1z9ybP5cyMS9bl724hmsNiMKbZFv/YtAM00fPKR8NZJAHndECkP6EkXmjFudWFpZdshOSFIKUhLj3b37H38ziAOgi3mzHiockJTpS9aLrGRV9g8OdOVMpzMg0WxmD6vDZlAQNW2T9vz80Twrtp+aYGX2owxdFQwBAZEBfp6+nyWIoNsRk7vd4kYTEbsiu/TWjh5w72bQr5A35/O2JD8o1PlfLboqaE1SLsSd0S/9fBigGc/poEvWKK5eA1lrpttsMan/5cnjTB5UHaRYl6nHaHfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dD0acaqYEb3GzKBeMGth4CR7qb/h1Jc6cFnLM3pirf4=;
+ b=j8iC+etk8uw/tJWk0E47rVwRU9+pqN0E8P3g4gV3gPLXzbxi+7JENsBnAFyfdEfQFegl0uOl7yhKEDozlkXDBIQiI9y0/dyIuwakIr4xHig7tUhuhQZ09lOhwVwC0/y8ymc3wTdoiZ/y6w0jugIvevdomXqjn6uj0E8XKvJEUBE=
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com (20.179.57.21) by
+ BYAPR04MB4231.namprd04.prod.outlook.com (20.176.248.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.22; Wed, 11 Dec 2019 07:42:56 +0000
+Received: from BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::c3e:e0b4:872:e851]) by BYAPR04MB5749.namprd04.prod.outlook.com
+ ([fe80::c3e:e0b4:872:e851%7]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 07:42:56 +0000
+From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>
+CC:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "osandov@fb.com" <osandov@fb.com>,
+        "jthumshirn@suse.de" <jthumshirn@suse.de>,
+        "minwoo.im.dev@gmail.com" <minwoo.im.dev@gmail.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "andrea.parri@amarulasolutions.com" 
+        <andrea.parri@amarulasolutions.com>,
+        "hare@suse.com" <hare@suse.com>, "tj@kernel.org" <tj@kernel.org>,
+        Ajay Joshi <Ajay.Joshi@wdc.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "dsterba@suse.com" <dsterba@suse.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>
+Subject: Re: [PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE to
+ reflect extents allocation in block device internals
+Thread-Topic: [PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE to
+ reflect extents allocation in block device internals
+Thread-Index: AQHVr3reBavjsn3tmUKK1Acu/NUNxA==
+Date:   Wed, 11 Dec 2019 07:42:56 +0000
+Message-ID: <BYAPR04MB574961FE921EB3FEA03CAF77865A0@BYAPR04MB5749.namprd04.prod.outlook.com>
+References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
+x-originating-ip: [199.255.45.62]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c482896e-5b18-43ed-9b5c-08d77e0dbcf2
+x-ms-traffictypediagnostic: BYAPR04MB4231:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR04MB4231B31878F2E57F004C7550865A0@BYAPR04MB4231.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(136003)(346002)(376002)(396003)(189003)(199004)(110136005)(186003)(558084003)(4326008)(2906002)(478600001)(64756008)(66446008)(66946007)(316002)(66556008)(76116006)(54906003)(66476007)(5660300002)(966005)(52536014)(33656002)(26005)(7416002)(81156014)(81166006)(55016002)(6506007)(71200400001)(7696005)(86362001)(8936002)(8676002)(9686003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR04MB4231;H:BYAPR04MB5749.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IllgFZyPjmS4PNp/bruzJiihX9vG+Wt1/WY9G8aRbHsUBdiXf4wndC7JIPiAkpWt0BE+12GhssjseLsWxZ0GjCWxsQfofaK9MIG+zp6eBQ8UZ5PWbTD7Z6wydUI3nPTB17wUMzp/XtQPpTI4Ci3VzshlCXFVWDBWP4OkRfYF+Fov5xE1+3G/XcrK55mBRZQ1nsoXwnQz3fse7sJLbmrvhE0NZ71tXC04eSNou5Fx5lAuIb+qk91kKSXXios3JbgjZM8KxNaSai0KSCtdNw3FbcReXrRBKNJD6b49J0LwvT7HU0vVKILdMhRfms7w4gMnw9VLvFKVsEcMuSMPygsFtxZAcEj07m/hP5UP8Df+8VDW5lYJGsk3AxQUQR/NIR070pYG3fbs31m/VH/uodd28t4Lf3W3sTbZi6I9O/cRkB+GzSbIoFeB6rIZTyWSync2iLZaSSmTzt+XOyGt+EXMyMFDYCYZFlrYZ1/ipAiMFuTljoIkkfLMlDVIjYIv5Q5l+ZU06ch/tTJaNo13gM5nGgU/c5wThFAK8TbQ8Di6wwk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c482896e-5b18-43ed-9b5c-08d77e0dbcf2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 07:42:56.4506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 503CHFVUGXbxM6O9c7UN7Tps6WlyHhq6T62h1hmwUzvAFunyUNvJ2o6qfLhYOTcBHeuJsYj/HCazYNky6Btc3e2J+tF16bWWnMquAJe5QFg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4231
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:27:44PM +0200, Aaro Koskinen wrote:
-> On Tue, Dec 10, 2019 at 09:19:57PM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Dec 10, 2019 at 09:31:54PM +0200, Aaro Koskinen wrote:
-> > > Hi,
-> > > 
-> > > On Tue, Dec 10, 2019 at 10:15:09AM +0100, Greg Kroah-Hartman wrote:
-> > > > This driver was merged back in 2013 and shows no progress toward every
-> > > > being merged into the "correct" part of the kernel.
-> > > 
-> > > Do you mean all the patches since 2013 were "no progress"? Thanks.
-> > 
-> > I have not seen any proposals to get it out of staging at all.  If the
-> > only thing left really is just those two simple TODO lines, then why has
-> > it taken 6 years to do that?
-> 
-> Do you mean you did not see the below thread when I asked for help;
-> it was a kind of propsal, no? Also things take time when you are just a
-> hobbyist reverse engineering undocumented hardware that you also run in
-> production. Yes, I'm slow, but the starting point wasn't also a very good.
-> 
-> https://marc.info/?t=155839354700002&r=1&w=2
-
-I have the short-term memory of a squirrel, remember I get 1000 emails a
-day to deal with.
-
-That thread was from back in May, the instructions on what was needed to
-be done is quite simple, so there should not have been a multi-month
-delay from then until now.  What happened?
-
-> I don't mind you deleting the driver, and if you think that "no progress"
-> is true then I'm very sorry for all those commits/noise.
-
-Don't be sorry, you have fixed it up to make it ready to be merged
-properly.  But yes, there is no progress being made now, so it should
-either be dropped or merged properly.
-
-If you don't have the time now to do it, that's fine, the revert to get
-the code back just takes one single git command when you, or someone
-else, can get the chance to do it.
-
-Don't take it personally, this is about to happen to almost all of the
-staging drivers that have been languishing around :)
-
-thanks,
-
-greg k-h
+> Here is a simple test I did:=0A=
+> https://gist.github.com/tkhai/5b788651cdb74c1dbff3500745878856=0A=
+>=0A=
+=0A=
+Somehow I'm not able to open this link, can you please share results=0A=
+in plain text on the email ?=0A=
+=0A=
+=0A=
