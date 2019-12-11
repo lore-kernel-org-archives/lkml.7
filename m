@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3E6C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE933C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4AE214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FC021556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080734;
-	bh=tYIjukdyNWyys5Q405CowLe8RQsi4SABNuXFZgXNvno=;
+	s=default; t=1576080737;
+	bh=qZP2yRdgbUNSFmpXlCEF63tmGL1c3FYWJMWm9kxrw1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FU+lOp1khoKdIPRxJ0X/AIJ1dUfE4Ass/6KJDeIDQ1Se/ZkjLjH8xyb82I3sEqUOE
-	 NC9n28iIbXx2UIGj00isN/LlxtCTAlub5t+lhToSaudwPs4cTAucxKsQzlvL+q090e
-	 4o+Fd2h1BE1pEakgX89MKV8vSIr62X5CdTzOFHDE=
+	b=Q7S2Y108VLqGMRKMeDLq6mN4DYswR1JJNM+/VbPwDMP8TYAr1hkxCWd3MkYET4UK+
+	 0vMPQtMbonSteacf/O1zij9atyqnUOeU9+0bQy+NufSh4Xm+V03DYFBa1R6/1if4du
+	 kv9EPRHxx6l+OugfJatBd2arcKu7fYnOMkGwsJGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfLKPKC (ORCPT
+        id S1731220AbfLKQMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57914 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:12:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730266AbfLKPJs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:48 -0500
+        id S1730676AbfLKPKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F5E7208C3;
-        Wed, 11 Dec 2019 15:09:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D59F22B48;
+        Wed, 11 Dec 2019 15:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076988;
-        bh=tYIjukdyNWyys5Q405CowLe8RQsi4SABNuXFZgXNvno=;
+        s=default; t=1576077000;
+        bh=qZP2yRdgbUNSFmpXlCEF63tmGL1c3FYWJMWm9kxrw1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1C/7QaiWdqRBMDsc760zF7Bj/spt3svT0OrGoYOdUKBnSuQN8OQiS7POOffwCXg+v
-         Iq5twRj7VE6xvj2qVHpZ7hETvZYRkMLw1uc/1mev1XWOG53JvGq5XvKbX5PUQqTRMJ
-         ZXSn7eKoisV6AwqJH8deAxruC2i4jwv6HbImk6iI=
+        b=REFKtHfsqdMtEOkna56o60Q+8Sqm/HM+J5jzRkhXpZaIlxh/vV0iE3BaSKTKg3vs5
+         nDpUdI5/HkQeZKJUXK3dSow5wf9BdewLexR9NCqoTsy83s4LfG5GvAmgtvxefOBAuC
+         hxPHks1Xc+W+FVEQd3/98+DNwaq7GTf/uCAxgcX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 66/92] KVM: x86: Remove a spurious export of a static function
-Date:   Wed, 11 Dec 2019 16:05:57 +0100
-Message-Id: <20191211150253.903314849@linuxfoundation.org>
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        Atul Gupta <atul.gupta@chelsio.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 70/92] crypto: af_alg - cast ki_complete ternary op to int
+Date:   Wed, 11 Dec 2019 16:06:01 +0100
+Message-Id: <20191211150255.890526771@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -61,33 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-commit 24885d1d79e2e83d49201aeae0bc59f1402fd4f1 upstream.
+commit 64e7f852c47ce99f6c324c46d6a299a5a7ebead9 upstream.
 
-A recent change inadvertently exported a static function, which results
-in modpost throwing a warning.  Fix it.
+when libkcapi test is executed  using HW accelerator, cipher operation
+return -74.Since af_alg_async_cb->ki_complete treat err as unsigned int,
+libkcapi receive 429467222 even though it expect -ve value.
 
-Fixes: cbbaa2727aa3 ("KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Hence its required to cast resultlen to int so that proper
+error is returned to libkcapi.
+
+AEAD one shot non-aligned test 2(libkcapi test)
+./../bin/kcapi   -x 10   -c "gcm(aes)" -i 7815d4b06ae50c9c56e87bd7
+-k ea38ac0c9b9998c80e28fb496a2b88d9 -a
+"853f98a750098bec1aa7497e979e78098155c877879556bb51ddeb6374cbaefc"
+-t "c4ce58985b7203094be1d134c1b8ab0b" -q
+"b03692f86d1b8b39baf2abb255197c98"
+
+Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Atul Gupta <atul.gupta@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    1 -
- 1 file changed, 1 deletion(-)
+ crypto/af_alg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1339,7 +1339,6 @@ static u64 kvm_get_arch_capabilities(voi
- 	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
- }
--EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1043,7 +1043,7 @@ void af_alg_async_cb(struct crypto_async
+ 	af_alg_free_resources(areq);
+ 	sock_put(sk);
  
- static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
- {
+-	iocb->ki_complete(iocb, err ? err : resultlen, 0);
++	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
+ }
+ EXPORT_SYMBOL_GPL(af_alg_async_cb);
+ 
 
 
