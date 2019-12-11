@@ -2,103 +2,95 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E10C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6E2C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8958206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22277206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:37:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dDPPKNbr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BcjuOgLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfLKAgf (ORCPT
+        id S1727325AbfLKAhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:36:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33785 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfLKAgb (ORCPT
+        Tue, 10 Dec 2019 19:37:18 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44322 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfLKAhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:36:31 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y206so851420pfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 16:36:30 -0800 (PST)
+        Tue, 10 Dec 2019 19:37:17 -0500
+Received: by mail-lj1-f196.google.com with SMTP id c19so21883155lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 16:37:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YgLOEq+b3z3/DTsjuxwC7KLaORE8dq4xMxztFesSO1E=;
-        b=dDPPKNbrgbLGmMbRNeNgFCRoeauYBwrY00fbTjRfRSmxMpI2OpLj9AtyX7y2oPRgR6
-         d4I5SVqsBlXmaqb1+77ddPC5CfFwyJMR96XAaSBkO1Vrqw1lgldlKHJA2puQAKdgKKiM
-         NU/GaCpRjAa/67cieZTL6Nn4UliUEpYmfjKF8=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M5fozyjIYmS/BTIpsdI1ELrEKUgvuQ2Q2YpvirtYHFk=;
+        b=BcjuOgLYEULEkvnSEZEFZyVqO9tjz4WwDOrrlR+J6z6ZGNHtyg2EYf/Zs1j3Xql8EZ
+         nBts8BTvVIRW0JEB2yfchCF4g46IL2zbex8fpgGN1HKpfRxGu7tTHIHIm6Su65BOB6VG
+         DIsl0MaSaiCTgLFWYEQAdQT5EhvXSFx2iSi0d66o5Jxoqin9M9r1Nyo6TH6mjj5wGqUi
+         Conxd2xm/VptOo8+TD7PXlAdRXRY4rFZQkYgpYf4HUDI3DX5isXtMKJW/V7AmKQE//VU
+         hn7/3vplEf6bJTd3eG96g9u2oxf95RWizhawTQUygu2yEPPW4lfi+hZvShEYserCeRIk
+         FxbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YgLOEq+b3z3/DTsjuxwC7KLaORE8dq4xMxztFesSO1E=;
-        b=AK82Xu2H72vYlyn2YpkZiddImmBk4VT2KeRLjwV06MWUNCbiy8HbJnJA07idxVre5+
-         VdclUA8A756ydGJbtrVx9hQiLTuccxU5jNEQEHitbj9YzyF2mflfPJnjPrvG/JhxYKSL
-         sa6wckM2k9/FKoZxyCe/Rh2/l9dt2c0nIGSof0VYxhZkDhVLxbG921WpFtkQk1sYbjci
-         kiZ2VFf0Hkr0KmE/0CM0oOZYIm+Wz43XwZDVW0SBbgnfLZP4NKEOtgCDY0PATeNebswQ
-         wkpiHDs6F3VlqAXHes/fT9EevMYlx6gA/Spx6zviMkf+fNshKDbCsCDzJXMXsAooYZEH
-         Psbw==
-X-Gm-Message-State: APjAAAUpyL14cltVa/GNvR1q0h9ZkedGqdAVn/EKvUBoqg/GNsVn3gmJ
-        wsnoumYoI/WYBEzWaqOOcATcXg==
-X-Google-Smtp-Source: APXvYqzDHrJPYBFC/4ZRlo6kMRGcctk9Da8+L6mFYu9ZNYUFhmEDZGFglvH1i+JoExCrNLitCmIaUA==
-X-Received: by 2002:aa7:9145:: with SMTP id 5mr779281pfi.74.1576024590404;
-        Tue, 10 Dec 2019 16:36:30 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id d38sm159954pgd.59.2019.12.10.16.36.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 16:36:29 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     mka@chromium.org, Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 2/2] arm64: dts: sc7180: Add a comment to i2c7 about external pullup
-Date:   Tue, 10 Dec 2019 16:35:40 -0800
-Message-Id: <20191210163530.2.I8d4cbb3d7ac5824f8e950c53038df8c27a512905@changeid>
-X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-In-Reply-To: <20191210163530.1.I69a6c29e08924229d160b651769c84508a07b3c6@changeid>
-References: <20191210163530.1.I69a6c29e08924229d160b651769c84508a07b3c6@changeid>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M5fozyjIYmS/BTIpsdI1ELrEKUgvuQ2Q2YpvirtYHFk=;
+        b=BpR/LgkEHflq2083qpuvJQMwf3uUMKZhzqZMgNpsQVXGxW4z+GasUEmevQIiSjTiiJ
+         LF8FQ3kXUCZgePa6CWRL8Sh5umDCpGHE+b1CoT6RvpLAdH2eziQU1FkBl7zVacsDO1YC
+         6hfEWuUn4yUh0miPQcXGEwDxo7cQDgCiOJxnDx3lJ6qFFUf1OPneSfDXzDsfNlwFRO3f
+         YCA4u/t63MhWLsBcs28JcH+85t2Gfc58pxvEGcW+HI2DXUGEC+N5Slr+SIZ4yEo/PN3h
+         GjUaN2IDrPQo0WTmlYTUBOQVYAszlqvXL1sKStJrG1burPgsSxbdyv7zYyl080fWPD0k
+         02eQ==
+X-Gm-Message-State: APjAAAUvrBLg7vWpFJ/repdmTTDaB2VTAVuDaLUCAwAb1JBT31gR/n+7
+        xAugHvrhi4f4dcVJz1I1KiAq6oFnJchTKqRHhfd5iA==
+X-Google-Smtp-Source: APXvYqzaiOv4PPiUmhxXF4TwhB8RZgaRZzj7pK+Yv2jU0m6s3z6YbcqbvvsvbDjTA/1YqXWlxl8S4u658HmPr70nbjM=
+X-Received: by 2002:a05:651c:1049:: with SMTP id x9mr68223ljm.233.1576024635474;
+ Tue, 10 Dec 2019 16:37:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1575925023.git.mirq-linux@rere.qmqm.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Dec 2019 01:37:03 +0100
+Message-ID: <CACRpkdbTqxzXnLE7uQ=MrqV-BoP5gpZtX07gsHyCr++ah3s65Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] mmc: simplify WP/CD GPIO handling
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make i2c7 symmetric with the other i2c busses and comment that we have
-no internal pull because there is an external one.
+On Mon, Dec 9, 2019 at 10:09 PM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.=
+qmqm.pl> wrote:
 
-Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+> This series removes convoluted handling of inverted CD and WP lines in
+> SD/MMC host drivers when using GPIOs.
+>
+> First patch, sent separately earlier, adds gpiod_toggle_active_low() to
+> switch line inversion flag in the gpiod structure. Next two patches
+> modify WP and CD initialization to apply all the inversions onto gpiod's
+> active-low flag. Final patch removes now-unused argument from init functi=
+ons.
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 ++
- 1 file changed, 2 insertions(+)
+I like the approach, as much as I liked my own idea to centralize
+all DT quirks and hide them in gpiolib-of.c I can see how this
+makes it easier to solve the final hurdles in the MMC framework
+and contain it better.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-index 5eab3a282eba..05d30a56eca9 100644
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -311,6 +311,8 @@ &qup_i2c7_default {
- 	pinconf {
- 		pins = "gpio6", "gpio7";
- 		drive-strength = <2>;
-+
-+		/* Has external pullup */
- 		bias-disable;
- 	};
- };
--- 
-2.24.0.525.g8f36a354ae-goog
+If it also works I'm happy for Ulf to merge all of this!
 
+Yours,
+Linus Walleij
