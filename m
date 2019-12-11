@@ -2,164 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10820C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6CBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADC2214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2197D214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUK89sLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfLKNRe (ORCPT
+        id S1729482AbfLKNRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:17:34 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41467 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729131AbfLKNRe (ORCPT
+        Wed, 11 Dec 2019 08:17:39 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30119 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729443AbfLKNRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:17:34 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tkd3Ra0_1576070243;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tkd3Ra0_1576070243)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 11 Dec 2019 21:17:23 +0800
-Subject: Re: [PATCH] ocfs2: call journal flush to mark journal as empty after
- journal recovery when mount
-To:     Kai Li <li.kai4@h3c.com>, mark@fasheh.com, jlbec@evilplan.org,
-        chge@linux.alibaba.com
-Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20191211100338.510-1-li.kai4@h3c.com>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <76d8166c-afe9-fc63-98b2-5293e3956669@linux.alibaba.com>
-Date:   Wed, 11 Dec 2019 21:17:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 11 Dec 2019 08:17:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576070257;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AX5fhWmUkcVTK2FGEAydksRsVVwg5DCyda4UF354+FM=;
+        b=eUK89sLkwK4WEdYCOh7XW/Z+JcNRL6Az0F2MZG9jvMfovTfcJ/HF8+8XE+Xh7jHZ1eIuO2
+        7M+iOwXoUuBZZWPkLmsD3BRvGCaw6DFkkBg0BHdhNccRi55g3E9zyydJVGcP1MmGby68Wc
+        5/PncOVfERKJzoZeNfSvp4GlaEy19tc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-OSi8-b5bP9uGf_WTtpb2Qw-1; Wed, 11 Dec 2019 08:17:34 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B441DB25;
+        Wed, 11 Dec 2019 13:17:32 +0000 (UTC)
+Received: from carbon (ovpn-200-56.brq.redhat.com [10.40.200.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1BDD100EBA4;
+        Wed, 11 Dec 2019 13:17:25 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 14:17:23 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     brouer@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 1/2] net: ethernet: ti: select PAGE_POOL for switchdev
+ driver
+Message-ID: <20191211141723.2cb3d5e9@carbon>
+In-Reply-To: <20191211125643.1987157-1-arnd@arndb.de>
+References: <20191211125643.1987157-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20191211100338.510-1-li.kai4@h3c.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: OSi8-b5bP9uGf_WTtpb2Qw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Dec 2019 13:56:09 +0100
+Arnd Bergmann <arnd@arndb.de> wrote:
 
+> The new driver misses a dependency:
+> 
+> drivers/net/ethernet/ti/cpsw_new.o: In function `cpsw_rx_handler':
+> cpsw_new.c:(.text+0x259c): undefined reference to `__page_pool_put_page'
+> cpsw_new.c:(.text+0x25d0): undefined reference to `page_pool_alloc_pages'
+> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_fill_rx_channels':
+> cpsw_priv.c:(.text+0x22d8): undefined reference to `page_pool_alloc_pages'
+> cpsw_priv.c:(.text+0x2420): undefined reference to `__page_pool_put_page'
+> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_create_xdp_rxqs':
+> cpsw_priv.c:(.text+0x2624): undefined reference to `page_pool_create'
+> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_run_xdp':
+> cpsw_priv.c:(.text+0x2dc8): undefined reference to `__page_pool_put_page'
+> 
+> Other drivers use 'select' for PAGE_POOL, so do the same here.
+> 
+> Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On 19/12/11 18:03, Kai Li wrote:
-> If journal is dirty when mount, it will be replayed but jbd2 sb
-> log tail cannot be updated to mark a new start because
-> journal->j_flag has already been set with JBD2_ABORT first
-> in journal_init_common. When a new transaction is committed, it
-> will be recored in block 1 first(journal->j_tail is set to 1 in
-> journal_reset).
-> 
-> If emergency restart happens again before journal super block is
-> updated unfortunately, the new recorded trans will not be replayed
-> in the next mount.
-> 
-I think I've finally understood the problem. But I don't think it has
-been clearly described for reviewing. I strongly suggest you describe
-the problem in the way of timeline, such as in which step, do what
-operation, and what is the status, etc.
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
 
+Thanks for fixing this.
 
-> This exception happens when this lun is used by only one node. If it
-> is used by multi-nodes, other node will replay its journal and its
-> journal sb block will be updated after recovery.
-> 
-> To fix this problem, use jbd2_journal_flush to mark journal as empty as
-> ocfs2_replay_journal has done.> 
-Sounds reasonable. But IMO, it is really a corner use scenario, using
-cluster filesystem in single node...
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-Thanks,
-Joseph
-
-> The following jbd2 journal can be generated by touching a new file after
-> journal is replayed, and seq 15 is the first valid commit, but first seq
-> is 13 in journal super block.
-> logdump:
-> Block 0: Journal Superblock
-> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
-> Blocksize: 4096   Total Blocks: 32768   First Block: 1
-> First Commit ID: 13   Start Log Blknum: 1
-> Error: 0
-> Feature Compat: 0
-> Feature Incompat: 2 block64
-> Feature RO compat: 0
-> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
-> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
-> Per Txn Block Limit    Journal: 0    Data: 0
-> 
-> Block 1: Journal Commit Block
-> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> Block 2: Journal Descriptor
-> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
-> No. Blocknum        Flags
->  0. 587             none
-> UUID: 00000000000000000000000000000000
->  1. 8257792         JBD2_FLAG_SAME_UUID
->  2. 619             JBD2_FLAG_SAME_UUID
->  3. 24772864        JBD2_FLAG_SAME_UUID
->  4. 8257802         JBD2_FLAG_SAME_UUID
->  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
-> ...
-> Block 7: Inode
-> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
-> FS Generation: 2839773110 (0xa9437fb6)
-> CRC32: 00000000   ECC: 0000
-> Type: Regular   Attr: 0x0   Flags: Valid
-> Dynamic Features: (0x1) InlineData
-> User: 0 (root)   Group: 0 (root)   Size: 7
-> Links: 1   Clusters: 0
-> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
-> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
-> ...
-> Block 9: Journal Commit Block
-> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> The following is jouranl recovery log when recovering the upper jbd2
-> journal when mount again.
-> syslog:
-> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
-> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
-> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
-> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
-> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
-> 
-> Due to first commit seq 13 recorded in journal super is not consistent
-> with the value recorded in block 1(seq is 14), journal recovery will be
-> terminated before seq 15 even though it is an unbroken commit, inode
-> 8257802 is a new file and it will be lost.
-> 
-> Signed-off-by: Kai Li <li.kai4@h3c.com>
-> ---
->  fs/ocfs2/journal.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index 1afe57f425a0..b8b9d26fa731 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
->  
->  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
->  
-> +	if (replayed) {
-> +		/* wipe the journal */
-> +		jbd2_journal_lock_updates(journal->j_journal);
-> +		status = jbd2_journal_flush(journal->j_journal);
-> +		jbd2_journal_unlock_updates(journal->j_journal);
-> +		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
-> +	}
-> +
->  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
->  	if (status < 0) {
->  		mlog_errno(status);
-> 
