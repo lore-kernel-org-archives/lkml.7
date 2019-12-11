@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8057CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AB6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56ABD2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635992173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077909;
-	bh=XFY2YXT24AeENfZJ8m5GBF/ostWCmKVB4tDgj9c42Yc=;
+	s=default; t=1576077912;
+	bh=NEpL2CzNtWa8pl2T6jNiFSD8t5+OTKp74Cn9n98fZfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ksCPLvDZKVbp9stX6M46Tzlp0wk3iqmA1a1RFPcikfk+EHOKN3NdkSwIl/xFKETxi
-	 vOix7mTtRKKHx+lVon1IkV4VAF3+Kbb37jWuGPl/aoCxuGUB/IeFhVt2oaAyuoNvms
-	 pA70Oc5xF6S+3xUNNe3c/rVyrhcsPWgPHAt+mB7g=
+	b=YYfVbAv6C8sj3/IwtBdLvdHka3ssXNaofH8dxeUI6ii3lbgG4QovxL53RxIuuE3cb
+	 N/+PEEigS0/56tmqHSzCpbefNDxP2e+uqHEb9UjjBrMoBs8Ohz5L49H4z0sFdnaXyp
+	 V0+xetNdfOIt2tbhhEsjSIKnCDxFoGwksDXU6+bQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbfLKPZH (ORCPT
+        id S1732963AbfLKPZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:25:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56694 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:25:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732700AbfLKPZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:25:05 -0500
+        id S1732951AbfLKPZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:25:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB26B208C3;
-        Wed, 11 Dec 2019 15:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3C92077B;
+        Wed, 11 Dec 2019 15:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077904;
-        bh=XFY2YXT24AeENfZJ8m5GBF/ostWCmKVB4tDgj9c42Yc=;
+        s=default; t=1576077906;
+        bh=NEpL2CzNtWa8pl2T6jNiFSD8t5+OTKp74Cn9n98fZfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HydYMX+Ee2R/XZdTUixf14EZAYzAL452zAJCobyjnl1rPsRev59iJYZzgvIY+fc44
-         TKbmijdjGb6u9Ve6sEert7Ix1Ju+KUHFDYPJy4mwMHQbt3+77Aw2m4zaiCbPxoGGIn
-         aqKff41WEfLyDLfe07QUd1b2ho8FlBdu9sgYiiUI=
+        b=Ond6MBkoAiZId0d6qkQk2dkkS3ln47yKmG6O1IivJ8RQLDY45tkMICtszLOAZrvKo
+         7l94KQNrRHuyO9v56ib4epCmYS3UKKRxQRptWF1Sm+JoqmveidUkwhFjEMbeiYwt13
+         Qns1A1/0X4KJ/dfpjsvyazzBDwzpOjjS9EuStJw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Julien Floret <julien.floret@6wind.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Subject: [PATCH 4.19 215/243] xfrm interface: fix management of phydev
-Date:   Wed, 11 Dec 2019 16:06:17 +0100
-Message-Id: <20191211150353.865115344@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 216/243] CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
+Date:   Wed, 11 Dec 2019 16:06:18 +0100
+Message-Id: <20191211150353.926799856@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,125 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 22d6552f827ef76ade3edf6bbb3f05048a0a7d8b upstream.
+commit 6f582b273ec23332074d970a7fb25bef835df71f upstream.
 
-With the current implementation, phydev cannot be removed:
+Currently when the client creates a cifsFileInfo structure for
+a newly opened file, it allocates a list of byte-range locks
+with a pointer to the new cfile and attaches this list to the
+inode's lock list. The latter happens before initializing all
+other fields, e.g. cfile->tlink. Thus a partially initialized
+cifsFileInfo structure becomes available to other threads that
+walk through the inode's lock list. One example of such a thread
+may be an oplock break worker thread that tries to push all
+cached byte-range locks. This causes NULL-pointer dereference
+in smb2_push_mandatory_locks() when accessing cfile->tlink:
 
-$ ip link add dummy type dummy
-$ ip link add xfrm1 type xfrm dev dummy if_id 1
-$ ip l d dummy
- kernel:[77938.465445] unregister_netdevice: waiting for dummy to become free. Usage count = 1
+[598428.945633] BUG: kernel NULL pointer dereference, address: 0000000000000038
+...
+[598428.945749] Workqueue: cifsoplockd cifs_oplock_break [cifs]
+[598428.945793] RIP: 0010:smb2_push_mandatory_locks+0xd6/0x5a0 [cifs]
+...
+[598428.945834] Call Trace:
+[598428.945870]  ? cifs_revalidate_mapping+0x45/0x90 [cifs]
+[598428.945901]  cifs_oplock_break+0x13d/0x450 [cifs]
+[598428.945909]  process_one_work+0x1db/0x380
+[598428.945914]  worker_thread+0x4d/0x400
+[598428.945921]  kthread+0x104/0x140
+[598428.945925]  ? process_one_work+0x380/0x380
+[598428.945931]  ? kthread_park+0x80/0x80
+[598428.945937]  ret_from_fork+0x35/0x40
 
-Manage it like in ip tunnels, ie just keep the ifindex. Not that the side
-effect, is that the phydev is now optional.
+Fix this by reordering initialization steps of the cifsFileInfo
+structure: initialize all the fields first and then add the new
+byte-range lock list to the inode's lock list.
 
-Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Tested-by: Julien Floret <julien.floret@6wind.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/xfrm.h        |    1 -
- net/xfrm/xfrm_interface.c |   34 ++++++++++++++++++----------------
- 2 files changed, 18 insertions(+), 17 deletions(-)
+ fs/cifs/file.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1062,7 +1062,6 @@ struct xfrm_if_parms {
- struct xfrm_if {
- 	struct xfrm_if __rcu *next;	/* next interface in list */
- 	struct net_device *dev;		/* virtual device associated with interface */
--	struct net_device *phydev;	/* physical device */
- 	struct net *net;		/* netns for packet i/o */
- 	struct xfrm_if_parms p;		/* interface parms */
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -312,9 +312,6 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 	INIT_LIST_HEAD(&fdlocks->locks);
+ 	fdlocks->cfile = cfile;
+ 	cfile->llist = fdlocks;
+-	cifs_down_write(&cinode->lock_sem);
+-	list_add(&fdlocks->llist, &cinode->llist);
+-	up_write(&cinode->lock_sem);
  
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -177,7 +177,6 @@ static void xfrmi_dev_uninit(struct net_
- 	struct xfrmi_net *xfrmn = net_generic(xi->net, xfrmi_net_id);
- 
- 	xfrmi_unlink(xfrmn, xi);
--	dev_put(xi->phydev);
- 	dev_put(dev);
- }
- 
-@@ -364,7 +363,7 @@ static netdev_tx_t xfrmi_xmit(struct sk_
- 		goto tx_err;
+ 	cfile->count = 1;
+ 	cfile->pid = current->tgid;
+@@ -338,6 +335,10 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 		oplock = 0;
  	}
  
--	fl.flowi_oif = xi->phydev->ifindex;
-+	fl.flowi_oif = xi->p.link;
- 
- 	ret = xfrmi_xmit2(skb, dev, &fl);
- 	if (ret < 0)
-@@ -553,7 +552,7 @@ static int xfrmi_get_iflink(const struct
- {
- 	struct xfrm_if *xi = netdev_priv(dev);
- 
--	return xi->phydev->ifindex;
-+	return xi->p.link;
- }
- 
- 
-@@ -579,12 +578,14 @@ static void xfrmi_dev_setup(struct net_d
- 	dev->needs_free_netdev	= true;
- 	dev->priv_destructor	= xfrmi_dev_free;
- 	netif_keep_dst(dev);
++	cifs_down_write(&cinode->lock_sem);
++	list_add(&fdlocks->llist, &cinode->llist);
++	up_write(&cinode->lock_sem);
 +
-+	eth_broadcast_addr(dev->broadcast);
- }
- 
- static int xfrmi_dev_init(struct net_device *dev)
- {
- 	struct xfrm_if *xi = netdev_priv(dev);
--	struct net_device *phydev = xi->phydev;
-+	struct net_device *phydev = __dev_get_by_index(xi->net, xi->p.link);
- 	int err;
- 
- 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
-@@ -599,13 +600,19 @@ static int xfrmi_dev_init(struct net_dev
- 
- 	dev->features |= NETIF_F_LLTX;
- 
--	dev->needed_headroom = phydev->needed_headroom;
--	dev->needed_tailroom = phydev->needed_tailroom;
--
--	if (is_zero_ether_addr(dev->dev_addr))
--		eth_hw_addr_inherit(dev, phydev);
--	if (is_zero_ether_addr(dev->broadcast))
--		memcpy(dev->broadcast, phydev->broadcast, dev->addr_len);
-+	if (phydev) {
-+		dev->needed_headroom = phydev->needed_headroom;
-+		dev->needed_tailroom = phydev->needed_tailroom;
-+
-+		if (is_zero_ether_addr(dev->dev_addr))
-+			eth_hw_addr_inherit(dev, phydev);
-+		if (is_zero_ether_addr(dev->broadcast))
-+			memcpy(dev->broadcast, phydev->broadcast,
-+			       dev->addr_len);
-+	} else {
-+		eth_hw_addr_random(dev);
-+		eth_broadcast_addr(dev->broadcast);
-+	}
- 
- 	return 0;
- }
-@@ -655,13 +662,8 @@ static int xfrmi_newlink(struct net *src
- 	xi->p = p;
- 	xi->net = net;
- 	xi->dev = dev;
--	xi->phydev = dev_get_by_index(net, p.link);
--	if (!xi->phydev)
--		return -ENODEV;
- 
- 	err = xfrmi_create(dev);
--	if (err < 0)
--		dev_put(xi->phydev);
- 	return err;
- }
- 
+ 	spin_lock(&tcon->open_file_lock);
+ 	if (fid->pending_open->oplock != CIFS_OPLOCK_NO_CHANGE && oplock)
+ 		oplock = fid->pending_open->oplock;
 
 
