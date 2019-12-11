@@ -2,251 +2,189 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A8CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C17DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C602321D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:45:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O9omnOCg"
+	by mail.kernel.org (Postfix) with ESMTP id 18C4F208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729344AbfLKMpX (ORCPT
+        id S1729196AbfLKMsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:45:23 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42476 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729196AbfLKMpU (ORCPT
+        Wed, 11 Dec 2019 07:48:09 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:48027 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727402AbfLKMsJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:45:20 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBCj1og012041;
-        Wed, 11 Dec 2019 06:45:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576068301;
-        bh=bd3Ck13/1cv/byJZHXr9phvyeVkUVFbwJ9DqoFa3n9I=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=O9omnOCgwGA98BHj4bawgCkBPM5GrcUAUTrGSRCOcC1M4k+47NAQ3hGLm2QP0SLbK
-         Egp25w/pHe+0dvaoqzco3tvu3omE63IDoEfWWJbYxpwbE7cbVloLvHtL+Kuirtrdy/
-         VrggVMcTVVWKsXskT9L340RtzobSe4XTES6DoAcA=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBCj1Yn036611
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 06:45:01 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 06:45:01 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 06:45:01 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBCirfi125451;
-        Wed, 11 Dec 2019 06:44:58 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC:     Murali Karicheri <m-karicheri2@ti.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH 1/4] PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments
-Date:   Wed, 11 Dec 2019 18:16:05 +0530
-Message-ID: <20191211124608.887-2-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211124608.887-1-kishon@ti.com>
-References: <20191211124608.887-1-kishon@ti.com>
+        Wed, 11 Dec 2019 07:48:09 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tkd-TqM_1576068468;
+Received: from IT-C02YD3Q7JG5H.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0Tkd-TqM_1576068468)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 11 Dec 2019 20:47:48 +0800
+Subject: Re: [PATCH] ocfs2: call journal flush to mark journal as empty after
+ journal recovery when mount
+To:     Kai Li <li.kai4@h3c.com>, mark@fasheh.com, jlbec@evilplan.org,
+        joseph.qi@linux.alibaba.com
+Cc:     ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191211100338.510-1-li.kai4@h3c.com>
+From:   Changwei Ge <chge@linux.alibaba.com>
+Message-ID: <d4bb15d0-55fa-2a8e-a975-4c65eed3bae3@linux.alibaba.com>
+Date:   Wed, 11 Dec 2019 20:47:48 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191211100338.510-1-li.kai4@h3c.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 8963106eabdc5691 ("PCI: endpoint: Add MSI-X interfaces") while
-adding support to raise MSIX interrupts from endpoint didn't include
-BAR Indicator register (BIR) configuration and MSIX table offset as
-arguments in pci_epc_set_msix(). This would result in endpoint
-controller register using random BAR indicator register, the memory
-for which might not be allocated by the endpoint function driver.
-Add BAR indicator register and MSIX table offset as arguments in
-pci_epc_set_msix() and allocate space for MSIX table and pending
-bit array (PBA) in pci-epf-test endpoint function driver.
+Hi Kai,
 
-Fixes: commit 8963106eabdc5691 ("PCI: endpoint: Add MSI-X interfaces")
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../pci/controller/dwc/pcie-designware-ep.c   | 15 +++++++--
- drivers/pci/endpoint/functions/pci-epf-test.c | 31 +++++++++++++++----
- drivers/pci/endpoint/pci-epc-core.c           |  7 +++--
- include/linux/pci-epc.h                       |  6 ++--
- 4 files changed, 47 insertions(+), 12 deletions(-)
+Now the problem is more clear to me.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 3dd2e2697294..4cd3193c9c7c 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -269,7 +269,8 @@ static int dw_pcie_ep_get_msix(struct pci_epc *epc, u8 func_no)
- 	return val;
- }
- 
--static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
-+static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts,
-+			       enum pci_barno bir, u32 offset)
- {
- 	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-@@ -278,12 +279,22 @@ static int dw_pcie_ep_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
- 	if (!ep->msix_cap)
- 		return -EINVAL;
- 
-+	dw_pcie_dbi_ro_wr_en(pci);
-+
- 	reg = ep->msix_cap + PCI_MSIX_FLAGS;
- 	val = dw_pcie_readw_dbi(pci, reg);
- 	val &= ~PCI_MSIX_FLAGS_QSIZE;
- 	val |= interrupts;
--	dw_pcie_dbi_ro_wr_en(pci);
- 	dw_pcie_writew_dbi(pci, reg, val);
-+
-+	reg = ep->msix_cap + PCI_MSIX_TABLE;
-+	val = offset | bir;
-+	dw_pcie_writel_dbi(pci, reg, val);
-+
-+	reg = ep->msix_cap + PCI_MSIX_PBA;
-+	val = (offset + (interrupts * PCI_MSIX_ENTRY_SIZE)) | bir;
-+	dw_pcie_writel_dbi(pci, reg, val);
-+
- 	dw_pcie_dbi_ro_wr_dis(pci);
- 
- 	return 0;
-diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index 5d74f81ddfe4..f4bd3200cd74 100644
---- a/drivers/pci/endpoint/functions/pci-epf-test.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -47,6 +47,7 @@ struct pci_epf_test {
- 	void			*reg[PCI_STD_NUM_BARS];
- 	struct pci_epf		*epf;
- 	enum pci_barno		test_reg_bar;
-+	size_t			msix_table_offset;
- 	struct delayed_work	cmd_handler;
- 	const struct pci_epc_features *epc_features;
- };
-@@ -429,6 +430,10 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 	struct pci_epf_test *epf_test = epf_get_drvdata(epf);
- 	struct device *dev = &epf->dev;
- 	struct pci_epf_bar *epf_bar;
-+	size_t msix_table_size = 0;
-+	size_t test_reg_bar_size;
-+	size_t pba_size = 0;
-+	bool msix_capable;
- 	void *base;
- 	int bar, add;
- 	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-@@ -437,13 +442,25 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
- 
- 	epc_features = epf_test->epc_features;
- 
--	if (epc_features->bar_fixed_size[test_reg_bar])
-+	test_reg_bar_size = ALIGN(sizeof(struct pci_epf_test_reg), 128);
-+
-+	msix_capable = epc_features->msix_capable;
-+	if (msix_capable) {
-+		msix_table_size = PCI_MSIX_ENTRY_SIZE * epf->msix_interrupts;
-+		epf_test->msix_table_offset = test_reg_bar_size;
-+		/* Align to QWORD or 8 Bytes */
-+		pba_size = ALIGN(DIV_ROUND_UP(epf->msix_interrupts, 8), 8);
-+	}
-+	test_reg_size = test_reg_bar_size + msix_table_size + pba_size;
-+
-+	if (epc_features->bar_fixed_size[test_reg_bar]) {
-+		if (test_reg_size > bar_size[test_reg_bar])
-+			return -ENOMEM;
- 		test_reg_size = bar_size[test_reg_bar];
--	else
--		test_reg_size = sizeof(struct pci_epf_test_reg);
-+	}
- 
--	base = pci_epf_alloc_space(epf, test_reg_size,
--				   test_reg_bar, epc_features->align);
-+	base = pci_epf_alloc_space(epf, test_reg_size, test_reg_bar,
-+				   epc_features->align);
- 	if (!base) {
- 		dev_err(dev, "Failed to allocated register space\n");
- 		return -ENOMEM;
-@@ -539,7 +556,9 @@ static int pci_epf_test_bind(struct pci_epf *epf)
- 	}
- 
- 	if (msix_capable) {
--		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts);
-+		ret = pci_epc_set_msix(epc, epf->func_no, epf->msix_interrupts,
-+				       epf_test->test_reg_bar,
-+				       epf_test->msix_table_offset);
- 		if (ret) {
- 			dev_err(dev, "MSI-X configuration failed\n");
- 			return ret;
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 2091508c1620..3b278fb99206 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -305,10 +305,13 @@ EXPORT_SYMBOL_GPL(pci_epc_get_msix);
-  * @epc: the EPC device on which MSI-X has to be configured
-  * @func_no: the endpoint function number in the EPC device
-  * @interrupts: number of MSI-X interrupts required by the EPF
-+ * @bir: BAR where the MSI-X table resides
-+ * @offset: Offset pointing to the start of MSI-X table
-  *
-  * Invoke to set the required number of MSI-X interrupts.
-  */
--int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
-+int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts,
-+		     enum pci_barno bir, u32 offset)
- {
- 	int ret;
- 	unsigned long flags;
-@@ -321,7 +324,7 @@ int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts)
- 		return 0;
- 
- 	spin_lock_irqsave(&epc->lock, flags);
--	ret = epc->ops->set_msix(epc, func_no, interrupts - 1);
-+	ret = epc->ops->set_msix(epc, func_no, interrupts - 1, bir, offset);
- 	spin_unlock_irqrestore(&epc->lock, flags);
- 
- 	return ret;
-diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-index 56f1846b9d39..4e2bed5fd39c 100644
---- a/include/linux/pci-epc.h
-+++ b/include/linux/pci-epc.h
-@@ -53,7 +53,8 @@ struct pci_epc_ops {
- 			      phys_addr_t addr);
- 	int	(*set_msi)(struct pci_epc *epc, u8 func_no, u8 interrupts);
- 	int	(*get_msi)(struct pci_epc *epc, u8 func_no);
--	int	(*set_msix)(struct pci_epc *epc, u8 func_no, u16 interrupts);
-+	int	(*set_msix)(struct pci_epc *epc, u8 func_no, u16 interrupts,
-+			    enum pci_barno, u32 offset);
- 	int	(*get_msix)(struct pci_epc *epc, u8 func_no);
- 	int	(*raise_irq)(struct pci_epc *epc, u8 func_no,
- 			     enum pci_epc_irq_type type, u16 interrupt_num);
-@@ -165,7 +166,8 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no,
- 			phys_addr_t phys_addr);
- int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 interrupts);
- int pci_epc_get_msi(struct pci_epc *epc, u8 func_no);
--int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts);
-+int pci_epc_set_msix(struct pci_epc *epc, u8 func_no, u16 interrupts,
-+		     enum pci_barno, u32 offset);
- int pci_epc_get_msix(struct pci_epc *epc, u8 func_no);
- int pci_epc_raise_irq(struct pci_epc *epc, u8 func_no,
- 		      enum pci_epc_irq_type type, u16 interrupt_num);
--- 
-2.17.1
+Just a few comments inline.
 
+On 12/11/19 6:03 PM, Kai Li wrote:
+> If journal is dirty when mount, it will be replayed but jbd2 sb
+> log tail cannot be updated to mark a new start because
+> journal->j_flag has already been set with JBD2_ABORT first
+> in journal_init_common. When a new transaction is committed, it
+> will be recored in block 1 first(journal->j_tail is set to 1 in
+> journal_reset).
+> 
+> If emergency restart happens again before journal super block is
+> updated unfortunately, the new recorded trans will not be replayed
+> in the next mount.
+
+So this issue happens before the first committing log iteration  comes 
+(running in jbd2 kernel thread), right?
+This leads jbd2 losing the chance to update *on-disk* journal super 
+block but the dynamic status of journal is still remaining in memory.
+
+Yes, I agree. We should update on-disk journal super block after journal 
+recovery since that procedure doesn't involve journal status in memory 
+which is just reset to the very beginning(tail and head pointing to the 
+first block) of journal region.
+
+Moreover, during journal recovery running by peer nodes, ocfs2 already 
+does that like what this patch does.
+
+ocfs2_recover_node() -> ocfs2_replay_journal().
+
+Very good job to catch such an exception. :-)
+
+
+> 
+> This exception happens when this lun is used by only one node. If it
+> is used by multi-nodes, other node will replay its journal and its
+> journal sb block will be updated after recovery.
+> 
+> To fix this problem, use jbd2_journal_flush to mark journal as empty as
+> ocfs2_replay_journal has done.
+> 
+> The following jbd2 journal can be generated by touching a new file after
+> journal is replayed, and seq 15 is the first valid commit, but first seq
+> is 13 in journal super block.
+> logdump:
+> Block 0: Journal Superblock
+> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+> First Commit ID: 13   Start Log Blknum: 1
+> Error: 0
+> Feature Compat: 0
+> Feature Incompat: 2 block64
+> Feature RO compat: 0
+> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+> Per Txn Block Limit    Journal: 0    Data: 0
+> 
+> Block 1: Journal Commit Block
+> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+> 
+> Block 2: Journal Descriptor
+> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+> No. Blocknum        Flags
+>   0. 587             none
+> UUID: 00000000000000000000000000000000
+>   1. 8257792         JBD2_FLAG_SAME_UUID
+>   2. 619             JBD2_FLAG_SAME_UUID
+>   3. 24772864        JBD2_FLAG_SAME_UUID
+>   4. 8257802         JBD2_FLAG_SAME_UUID
+>   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+> ...
+> Block 7: Inode
+> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+> FS Generation: 2839773110 (0xa9437fb6)
+> CRC32: 00000000   ECC: 0000
+> Type: Regular   Attr: 0x0   Flags: Valid
+> Dynamic Features: (0x1) InlineData
+> User: 0 (root)   Group: 0 (root)   Size: 7
+> Links: 1   Clusters: 0
+> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+> ...
+> Block 9: Journal Commit Block
+> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+> 
+> The following is jouranl recovery log when recovering the upper jbd2
+> journal when mount again.
+> syslog:
+> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+> 
+> Due to first commit seq 13 recorded in journal super is not consistent
+> with the value recorded in block 1(seq is 14), journal recovery will be
+> terminated before seq 15 even though it is an unbroken commit, inode
+> 8257802 is a new file and it will be lost.
+> 
+> Signed-off-by: Kai Li <li.kai4@h3c.com>
+> ---
+>   fs/ocfs2/journal.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+> index 1afe57f425a0..b8b9d26fa731 100644
+> --- a/fs/ocfs2/journal.c
+> +++ b/fs/ocfs2/journal.c
+> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+>   
+>   	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+>   
+> +	if (replayed) {
+> +		/* wipe the journal */
+> +		jbd2_journal_lock_updates(journal->j_journal);
+> +		status = jbd2_journal_flush(journal->j_journal);
+> +		jbd2_journal_unlock_updates(journal->j_journal);
+> +		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
+
+Is the above mlog line necessary?
+Can we just log a warning only jbd2_journal_flush() fails and let the 
+mount continue? IMO, the mlog line can't help much.
+
+Otherwise, this patch looks good to me.
+
+
+Thanks,
+Changwei
+
+
+> +	}
+> +
+>   	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+>   	if (status < 0) {
+>   		mlog_errno(status);
+> 
