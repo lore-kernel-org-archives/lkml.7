@@ -2,92 +2,111 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B670C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E09DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E43052077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F38520836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080049;
-	bh=mnM0pqkvhIGDKUdKdcPkorlp2nZEimXF2wDbAzyLPhE=;
+	s=default; t=1576080052;
+	bh=bOEKlkM0Bu6aFMQUWVJmuPimpJcF6y2YbSZcnZpYxnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ShdPDyCjlbjYJ6cfImICThujGpETt4t2WOGR9IevFURo+gScGaKeSXfj/PP5MYjFG
-	 vlxJCcMBlfRIld6i2RHXcdNNzLZY6aaBhLeoeJHlnazQ9C9663buadRY36MdJuOgSY
-	 cWDD/OpX9uCKr0IkDzxlIDy6M07mNT22/r0Alq/M=
+	b=dyRNVKJ/M7NzsXN70sia08l0YDhSHd2uYQYJqTuGvIFB1+HHx9UUY0KfxPdoEycBJ
+	 NtUUV3hszctrewzS7rUHYi3RPZHp5PcUeF631i9aA3dNsHxilHPrXszU5Lttb12aSZ
+	 rEHqwrlysI+uW9yaGSjlfyv+UkBsVz1ertC3JYx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733269AbfLKQAr (ORCPT
+        id S1733311AbfLKQAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:00:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37630 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:00:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbfLKPNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731479AbfLKPNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:13:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3E6124688;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B4BB24658;
         Wed, 11 Dec 2019 15:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077221;
-        bh=mnM0pqkvhIGDKUdKdcPkorlp2nZEimXF2wDbAzyLPhE=;
+        s=default; t=1576077220;
+        bh=bOEKlkM0Bu6aFMQUWVJmuPimpJcF6y2YbSZcnZpYxnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yyShlHHzVkfGX0tMiugZz43TtejvqUHUsUngIHrma/KGEHz/m26zqixuvevZlWuxU
-         Sv8dQGVC5buZGyTd9Zfc1RNnxqMd+ZS++/n+1oufapGBBLrTMn6kjZFxSS4BMQEhM/
-         2NkDkIbfb25Qezz6d9ni+lSIlpyPj/5frLo231kM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 101/134] gpio/mpc8xxx: fix qoriq GPIO reading
-Date:   Wed, 11 Dec 2019 10:11:17 -0500
-Message-Id: <20191211151150.19073-101-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=DOLJFUuqBAKMeMDQD0Xo8dFKAi10dRDDRgE8MD2GK7ujs5k0GQ60ZKcRCsq1ULCd7
+         tvEnAQFV0omvyQ12fE+w1t6J7ZjTkv0HsX0y/IEEQbPUAj/DtKnf8sXa7KU4kV8D3W
+         67BZa2I2YWs1F4U1pfrzEirDF4dRsbXunFCWNJ9g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.3 063/105] x86/PCI: Avoid AMD FCH XHCI USB PME# from D0 defect
+Date:   Wed, 11 Dec 2019 16:05:52 +0100
+Message-Id: <20191211150246.810282645@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 787b64a43f7acacf8099329ea08872e663f1e74f ]
+commit 7e8ce0e2b036dbc6617184317983aea4f2c52099 upstream.
 
-Qoriq requires the IBE register to be set to enable GPIO inputs to be
-read.  Set it.
+The AMD FCH USB XHCI Controller advertises support for generating PME#
+while in D0.  When in D0, it does signal PME# for USB 3.0 connect events,
+but not for USB 2.0 or USB 1.1 connect events, which means the controller
+doesn't wake correctly for those events.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Link: https://lore.kernel.org/r/E1iX3HC-00069N-0T@rmk-PC.armlinux.org.uk
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
+        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
+        Capabilities: [50] Power Management version 3
+                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+
+Clear PCI_PM_CAP_PME_D0 in dev->pme_support to indicate the device will not
+assert PME# from D0 so we don't rely on it.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
+Link: https://lore.kernel.org/r/20190902145252.32111-1-kai.heng.feng@canonical.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpio/gpio-mpc8xxx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/pci/fixup.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de29c94c..b863421ae7309 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -386,6 +386,9 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -589,6 +589,17 @@ static void pci_fixup_amd_ehci_pme(struc
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7808, pci_fixup_amd_ehci_pme);
  
- 	gc->to_irq = mpc8xxx_gpio_to_irq;
- 
-+	if (of_device_is_compatible(np, "fsl,qoriq-gpio"))
-+		gc->write_reg(mpc8xxx_gc->regs + GPIO_IBE, 0xffffffff);
+ /*
++ * Device [1022:7914]
++ * When in D0, PME# doesn't get asserted when plugging USB 2.0 device.
++ */
++static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
++{
++	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
++	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
 +
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
- 		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--- 
-2.20.1
++/*
+  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
+  *
+  * Using the [mem 0x7fa00000-0x7fbfffff] region, e.g., by assigning it to
+
 
