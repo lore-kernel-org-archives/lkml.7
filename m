@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA6DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC0C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43EFD2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8882077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQOBOLyJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJHGYsG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731316AbfLKSPi (ORCPT
+        id S1731344AbfLKSPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:15:38 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:40844 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731281AbfLKSPf (ORCPT
+        Wed, 11 Dec 2019 13:15:39 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:36101 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731306AbfLKSPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:35 -0500
-Received: by mail-yb1-f193.google.com with SMTP id n196so668575ybg.7;
-        Wed, 11 Dec 2019 10:15:34 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:38 -0500
+Received: by mail-yw1-f68.google.com with SMTP id n184so2544549ywc.3;
+        Wed, 11 Dec 2019 10:15:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QVBn4iyxCFtZQ6l2ifso8EO7BmmbJ8gqwzlkKDMZ+b0=;
-        b=pQOBOLyJAOXdkAByxSpa45JZ8gIhUVoN88CzHwopEOntTivioJ271CvnarkR4INXqv
-         ZDsSAVKlcB4fJIeJ5m1XLFDjI928mGOk9GCUEEI6FFNf+lOfu6fBfKb+Q9RvyjKlpUEI
-         4ILsI66IDvBv8a8lcEjde5LzqkczsoI7AVDbCzaljPAUuWaDjAnVDmP5iEnmWrAH4EeI
-         8t/Zi52AvcxBdLRuCsAeP/B5mLfjJv4Y4BWa2Asn2M1qx7dLalVQYpFaF5pJdgOM7Pn2
-         0S2d6/1sYWYyNDxUZn4WG9+riUJ7tgpsNzOVFgnkJIC5nbnHhaRs9iFkdS/DZ+G/4+XC
-         ez8g==
+        bh=Mwy/S/J6wsO8PbfLfst4z2PfBZ7YuKvJG/igovMyno0=;
+        b=KJHGYsG0OY2Y9l/PncY7IQlms2PwWHCni33ygsVrhF9FXN2OpdgOht71AJDKcaccdj
+         MsZLTfHdSa19JawfWKP+Sog7nzSW7B20rkmdfiGtOyLpmpPOFxmQqggfP3OutKzIZceG
+         5w4iyIDNgyLEA80j/82e2E7MJtKNXMnPZaVgWdt4xvuD4+tpU1oGcFXfwb86G3gnfu4j
+         n5MHfnbAg5iOJBAPHudVP4F18V1oMYLp48uMQ5tVXxNYR6qSZVL3Vkc3TGVUxvDkrz8z
+         TGrXNsznE8SfS/gdCNy+FN/mmQVpQO7ip8goNarhEiQtECfLMWFFQrMciFh2VHuY0PvW
+         xqOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QVBn4iyxCFtZQ6l2ifso8EO7BmmbJ8gqwzlkKDMZ+b0=;
-        b=kVSRHiVZEWtN8EGQb/o45nq75Q/oom0cdPYOUR3gj9tmdFahwNe0jFhL9Fl1LDcTbB
-         EdZTqvJvvSgAoZNIe1L9R6bUWDZok4jre43PumhqVRJA/TYfzdLp1ICEOcLC7IbESVDl
-         lRXb3fKZDSXoan80zRtB5rsvxrXurGASF2xi6MD5220x2BaOSr/iEuqQdXa4VU3PlOur
-         N6nh6FPY7p1pkZg8F57FSc6qIHixd4SLlYx88FqRENJ2ExaQcIRJZF5oEXDbSZ07BlSr
-         6NGzzaLwjDmkSQRsVRLgTVNsA8HLqCryAD+YGapjwxNSZlOibKdV0TmOkYFqU9Z4h5gN
-         DHXw==
-X-Gm-Message-State: APjAAAVpEY52xw5MdCDK6BvbX+IA0/tSLKK0sP0bx/O4gk7HnrjgIq4k
-        bqeEf+wdhmKYg5i1lWruHy/kx4cftuyuRQ==
-X-Google-Smtp-Source: APXvYqzkgGwAWatyCrigitcbfKFcDI/TWYvwjodqhO70wwtdpa4DhxupOzAq7gSDAsprih7nCdhQAA==
-X-Received: by 2002:a25:dd5:: with SMTP id 204mr999122ybn.452.1576088133641;
-        Wed, 11 Dec 2019 10:15:33 -0800 (PST)
+        bh=Mwy/S/J6wsO8PbfLfst4z2PfBZ7YuKvJG/igovMyno0=;
+        b=hg22QjXK/C0bPbI8Qu/qW/6H2IbS7y802qvucV3OPa2ePu+oWCLzt+RRyM3jctEDqq
+         m4ldiuMmwjNS6aZCCEUSl6cNa+CfzmhKrxkM8NhSg0+7JKN+PBWsSJSbS7Qxu7kV638j
+         c/XxUSJyscryhYLPsAjHaee2VJWKnTzZVWUgPDwHToRWv6FR+hktYfDgxH11eiqmcnoJ
+         fM/3+hn8Y2islbduq+vYKLcxAhuevAO/DL/fzFlQNwFzY9hwd8h98yDq3VZtFz0GrNM/
+         PB3KmtkM7XyIEEhNZjTRl4eSvx1AWXVlVkUSDozYc6aaxtirlpHzi6UDIyqiILbBD+nR
+         AEXQ==
+X-Gm-Message-State: APjAAAV/ktAvsLdZ6W6QLQC9Aq/tuMA/dQ2uco+qHD5eHXfC6fn2HG+A
+        Jwm7/K0U2ppdP3rcPswNLzOJXKnHtBEP2A==
+X-Google-Smtp-Source: APXvYqwUgZ48VcZDEX6jLUogQueS6jlPgBzrZ6tj6XT+JacAtvRER7pgE5YU4zBsreOXIgTWlhcYmQ==
+X-Received: by 2002:a81:680b:: with SMTP id d11mr815196ywc.457.1576088136728;
+        Wed, 11 Dec 2019 10:15:36 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id d13sm1278930ywj.91.2019.12.11.10.15.33
+        by smtp.gmail.com with ESMTPSA id 204sm1304497ywx.21.2019.12.11.10.15.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:33 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:36 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 19/23] staging: qlge: Fix WARNING: msleep < 20ms can sleep for up to 20ms
-Date:   Wed, 11 Dec 2019 12:12:48 -0600
-Message-Id: <d71c273e9966f3afb5b24ef9787b44e402241dcb.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 21/23] staging: qlge: Fix WARNING: suspect code indent for conditional statements
+Date:   Wed, 11 Dec 2019 12:12:50 -0600
+Message-Id: <323c4dfd64eef1ca15404e45d69ae260ee3e87f4.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,55 +76,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: msleep < 20ms can sleep for up to 20ms by changing msleep
-to usleep_range() in qlge_dbg.c, qlge_ethtool.c, and  qlge_main.c
+Fix indentation for conditionals in qlge_ethtool.c and qlge_main.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge_dbg.c     | 2 +-
- drivers/staging/qlge/qlge_ethtool.c | 2 +-
- drivers/staging/qlge/qlge_main.c    | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/staging/qlge/qlge_ethtool.c |  4 ++--
+ drivers/staging/qlge/qlge_main.c    | 18 +++++++++---------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 0f1e1b62662d..ba801de02109 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1340,7 +1340,7 @@ void ql_mpi_core_to_log(struct work_struct *work)
- 		       tmp[i + 5],
- 		       tmp[i + 6],
- 		       tmp[i + 7]);
--		msleep(5);
-+		usleep_range(5000, 6000);
- 	}
- }
- 
 diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
-index b9e1e154d646..abed932c3694 100644
+index abed932c3694..0bb70b465389 100644
 --- a/drivers/staging/qlge/qlge_ethtool.c
 +++ b/drivers/staging/qlge/qlge_ethtool.c
-@@ -555,7 +555,7 @@ static int ql_run_loopback_test(struct ql_adapter *qdev)
- 		atomic_inc(&qdev->lb_count);
+@@ -529,8 +529,8 @@ void ql_check_lb_frame(struct ql_adapter *qdev,
+ 	if ((*(skb->data + 3) == 0xFF) &&
+ 	    (*(skb->data + frame_size / 2 + 10) == 0xBE) &&
+ 	    (*(skb->data + frame_size / 2 + 12) == 0xAF)) {
+-			atomic_dec(&qdev->lb_count);
+-			return;
++		atomic_dec(&qdev->lb_count);
++		return;
  	}
- 	/* Give queue time to settle before testing results. */
--	msleep(2);
-+	usleep_range(2000, 3000);
- 	ql_clean_lb_rx_ring(&qdev->rx_ring[0], 128);
- 	return atomic_read(&qdev->lb_count) ? -EIO : 0;
  }
+ 
 diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index c6e26a757268..e18aa335c899 100644
+index 9427386e4a1e..102da1fe9899 100644
 --- a/drivers/staging/qlge/qlge_main.c
 +++ b/drivers/staging/qlge/qlge_main.c
-@@ -3924,7 +3924,7 @@ static int qlge_close(struct net_device *ndev)
- 	 * (Rarely happens, but possible.)
- 	 */
- 	while (!test_bit(QL_ADAPTER_UP, &qdev->flags))
--		msleep(1);
-+		usleep_range(1000, 2000);
+@@ -4121,11 +4121,11 @@ static struct net_device_stats *qlge_get_stats(struct net_device
+ 	/* Get RX stats. */
+ 	pkts = mcast = dropped = errors = bytes = 0;
+ 	for (i = 0; i < qdev->rss_ring_count; i++, rx_ring++) {
+-			pkts += rx_ring->rx_packets;
+-			bytes += rx_ring->rx_bytes;
+-			dropped += rx_ring->rx_dropped;
+-			errors += rx_ring->rx_errors;
+-			mcast += rx_ring->rx_multicast;
++		pkts += rx_ring->rx_packets;
++		bytes += rx_ring->rx_bytes;
++		dropped += rx_ring->rx_dropped;
++		errors += rx_ring->rx_errors;
++		mcast += rx_ring->rx_multicast;
+ 	}
+ 	ndev->stats.rx_packets = pkts;
+ 	ndev->stats.rx_bytes = bytes;
+@@ -4136,9 +4136,9 @@ static struct net_device_stats *qlge_get_stats(struct net_device
+ 	/* Get TX stats. */
+ 	pkts = errors = bytes = 0;
+ 	for (i = 0; i < qdev->tx_ring_count; i++, tx_ring++) {
+-			pkts += tx_ring->tx_packets;
+-			bytes += tx_ring->tx_bytes;
+-			errors += tx_ring->tx_errors;
++		pkts += tx_ring->tx_packets;
++		bytes += tx_ring->tx_bytes;
++		errors += tx_ring->tx_errors;
+ 	}
+ 	ndev->stats.tx_packets = pkts;
+ 	ndev->stats.tx_bytes = bytes;
+@@ -4432,7 +4432,7 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
+ 	} else {
+ 		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+ 		if (!err)
+-		       err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
++			err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(32));
+ 	}
  
- 	/* Make sure refill_work doesn't re-enable napi */
- 	for (i = 0; i < qdev->rss_ring_count; i++)
+ 	if (err) {
 -- 
 2.20.1
 
