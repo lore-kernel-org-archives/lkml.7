@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B4BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBCEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6532465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BADB32465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077382;
-	bh=S/L1hLiHFY0yuqr31DMWzA3QYET4k3af1LqJ31C86GI=;
+	s=default; t=1576077384;
+	bh=xcdkye4lRun+480vOvUlfnWMlKXPKn42zOyCFXCoA4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwRunW942l28ctt/oIw9FPPzfZCFdLoyjfO1ILMb2BlA+YJO3Vg7BEoEM7qaiZD/t
-	 acsm9/3+iKjYZclg88DAzSnYoNp29mtpH7pREiy4Hl/8BWB3GDJ+xb3wda78rWiQtn
-	 5+i0suWV+4ssE5C6OXffWuCCfr1x+q6OdivSQu70=
+	b=ImaUP0rRssC9nBZgiWh9WzgqDumuPHBjHlRi07amwSzdme3vfJVtFoIlK+5xRsHmA
+	 iO3/PeRWdmpu9LTcDrQ3QTp2d1IvmgiFttIf1VupWZX/in4Ogdo6ygNxwq4aYexfEp
+	 6XHVjw/9tagnh55HrI0A3W33Pz5z7puZMQhlWgHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfLKPQV (ORCPT
+        id S1731891AbfLKPQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731869AbfLKPQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:13 -0500
+        id S1731878AbfLKPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E54E62465B;
-        Wed, 11 Dec 2019 15:16:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3961E24658;
+        Wed, 11 Dec 2019 15:16:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077373;
-        bh=S/L1hLiHFY0yuqr31DMWzA3QYET4k3af1LqJ31C86GI=;
+        s=default; t=1576077378;
+        bh=xcdkye4lRun+480vOvUlfnWMlKXPKn42zOyCFXCoA4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCWO1DrYPU/VrkUV7qtHRIV0O9biuXj3c++YPQLMZrniCzm/PICu3ygv3lt8/F0NG
-         5zQddOgOTVPLJ40UG/CTVNNggZlfNrifLBh9/XBvzeNeEONBaa9JUpMprJwIC51rnZ
-         KU+gf9RyAKkCcLBsTA99km+9FvRG0agt/m6jFxu8=
+        b=pQtnC6gWT34Z2kO21vINO/K507BiYVkv0Lg2q2AtRcK0odSlRbicQ02v+akRssdi0
+         AN12tBfoDrgFTFDZ9W+1sqt6ZZPSwECLCrMYjxEKhXg7f/1VYDAsWk8FGU6msVuaBm
+         Gem4iS0B/0fKaIwQM5xUSr1NJ76o0loTU7rzpx7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Xiaodong Xu <stid.smth@gmail.com>,
+        Bo Chen <chenborfc@163.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 015/243] audit_get_nd(): dont unlock parent too early
-Date:   Wed, 11 Dec 2019 16:02:57 +0100
-Message-Id: <20191211150340.078316785@linuxfoundation.org>
+Subject: [PATCH 4.19 017/243] xfrm: release device reference for invalid state
+Date:   Wed, 11 Dec 2019 16:02:59 +0100
+Message-Id: <20191211150340.183928044@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,38 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Xiaodong Xu <stid.smth@gmail.com>
 
-[ Upstream commit 69924b89687a2923e88cc42144aea27868913d0e ]
+[ Upstream commit 4944a4b1077f74d89073624bd286219d2fcbfce3 ]
 
-if the child has been negative and just went positive
-under us, we want coherent d_is_positive() and ->d_inode.
-Don't unlock the parent until we'd done that work...
+An ESP packet could be decrypted in async mode if the input handler for
+this packet returns -EINPROGRESS in xfrm_input(). At this moment the device
+reference in skb is held. Later xfrm_input() will be invoked again to
+resume the processing.
+If the transform state is still valid it would continue to release the
+device reference and there won't be a problem; however if the transform
+state is not valid when async resumption happens, the packet will be
+dropped while the device reference is still being held.
+When the device is deleted for some reason and the reference to this
+device is not properly released, the kernel will keep logging like:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+unregister_netdevice: waiting for ppp2 to become free. Usage count = 1
+
+The issue is observed when running IPsec traffic over a PPPoE device based
+on a bridge interface. By terminating the PPPoE connection on the server
+end for multiple times, the PPPoE device on the client side will eventually
+get stuck on the above warning message.
+
+This patch will check the async mode first and continue to release device
+reference in async resumption, before it is dropped due to invalid state.
+
+v2: Do not assign address family from outer_mode in the transform if the
+state is invalid
+
+v3: Release device reference in the error path instead of jumping to resume
+
+Fixes: 4ce3dbe397d7b ("xfrm: Fix xfrm_input() to verify state is valid when (encap_type < 0)")
+Signed-off-by: Xiaodong Xu <stid.smth@gmail.com>
+Reported-by: Bo Chen <chenborfc@163.com>
+Tested-by: Bo Chen <chenborfc@163.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit_watch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_input.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
-index 787c7afdf8294..4f7262eba73d8 100644
---- a/kernel/audit_watch.c
-+++ b/kernel/audit_watch.c
-@@ -366,12 +366,12 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
- 	struct dentry *d = kern_path_locked(watch->path, parent);
- 	if (IS_ERR(d))
- 		return PTR_ERR(d);
--	inode_unlock(d_backing_inode(parent->dentry));
- 	if (d_is_positive(d)) {
- 		/* update watch filter fields */
- 		watch->dev = d->d_sb->s_dev;
- 		watch->ino = d_backing_inode(d)->i_ino;
- 	}
-+	inode_unlock(d_backing_inode(parent->dentry));
- 	dput(d);
- 	return 0;
- }
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index d5635908587f4..82b0a99ee1f43 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -246,6 +246,9 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 			else
+ 				XFRM_INC_STATS(net,
+ 					       LINUX_MIB_XFRMINSTATEINVALID);
++
++			if (encap_type == -1)
++				dev_put(skb->dev);
+ 			goto drop;
+ 		}
+ 
 -- 
 2.20.1
 
