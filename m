@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B916C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B70CC2D0CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333E124688
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D112173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078424;
-	bh=RYWWA+GWDzqkVP8b1Zs0zVQCI/e699qtq0sVhFVpKNI=;
+	s=default; t=1576078428;
+	bh=saC9CbUe0SMq0Y1JRgGKYLRdJcpz2TFCefEai91MKdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sz+eusIXnxnCwAJST0Pp63rd8RE/odFctMsUkB1lPP3783jF0J3H91qw2XyMfqRZp
-	 LTdMVmbdiJKc/naSN9Fm+njxDBZu1n3xOKJNaJ0opx3D58uGqCXGJxxzZbYSR9wcA1
-	 R+E0vUgbAh2cZFsNA8kvydTBxS8QQUdYIaalO2gk=
+	b=aPx+akl4PnITzGEeBwPJJujX6byvAgFSSZH8A/trRgPzbQunwE7rCuIXg8DJa4i3w
+	 iTvb2D2UlquNV67PirZHvm7pGt+FpQgrHBzjFmi04I9WhaGntKenLx2uT5fkqht4+F
+	 op0qjkhifq5KsHFHgu0FQ5lD3hSKcJqinNK1bPoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387683AbfLKP2j (ORCPT
+        id S2387830AbfLKPdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34798 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:33:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387649AbfLKP2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:35 -0500
+        id S2387686AbfLKP2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA80B24679;
-        Wed, 11 Dec 2019 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C66208C3;
+        Wed, 11 Dec 2019 15:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078114;
-        bh=RYWWA+GWDzqkVP8b1Zs0zVQCI/e699qtq0sVhFVpKNI=;
+        s=default; t=1576078119;
+        bh=saC9CbUe0SMq0Y1JRgGKYLRdJcpz2TFCefEai91MKdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CXoqsZnQXw8LJ2IH3Cnzk5Dizal7cipZp6/0GJeK/E4Pe0PnNZLlWwukqqVv1FXzo
-         Z1+i9chkBrlc4FFdlhJ1XckUm/LMtN2S1IQ98Ov4WkRS0AFGOQ1Yzda89TFBXHoKs/
-         hLK7MqQCA5vQFRcHcSdTg099jswN8EMX69J7kcVU=
+        b=E/DhV+jV46Jph2c/ZhCcbziPFLdJ77xbrDdK0GroW8R53ToLXul3LtLzOeD332gMy
+         PUhhJhlOZfwg5y+cEYq4UwP3zclDKY6nbCt/9bt84wX6aOAAgj/yB3EOu4baa4PfKk
+         ef8ZDgzzvEb7KuVvHJuJnbqOtdxI+0j1NOMKbPUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        MPT-FusionLinux.pdl@avagotech.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 02/58] scsi: mpt3sas: Fix clear pending bit in ioctl status
-Date:   Wed, 11 Dec 2019 10:27:35 -0500
-Message-Id: <20191211152831.23507-2-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/58] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
+Date:   Wed, 11 Dec 2019 10:27:40 -0500
+Message-Id: <20191211152831.23507-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -60,43 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 782b281883caf70289ba6a186af29441a117d23e ]
+[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
 
-When user issues diag register command from application with required size,
-and if driver unable to allocate the memory, then it will fail the register
-command. While failing the register command, driver is not currently
-clearing MPT3_CMD_PENDING bit in ctl_cmds.status variable which was set
-before trying to allocate the memory. As this bit is set, subsequent
-register command will be failed with BUSY status even when user wants to
-register the trace buffer will less memory.
+When operating in private loop mode, PLOGI exchanges are racing and the
+driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
+the login with the other end causing the other end to abort its PLOGI as
+well. Discovery never fully completes.
 
-Clear MPT3_CMD_PENDING bit in ctl_cmds.status before returning the diag
-register command with no memory status.
+Fix by disabling the PLOGI abort when private loop and letting the state
+machine play out.
 
-Link: https://lore.kernel.org/r/1568379890-18347-4-git-send-email-sreekanth.reddy@broadcom.com
-Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index bdffb692bded4..622dcf2984a94 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -1502,7 +1502,8 @@ _ctl_diag_register_2(struct MPT3SAS_ADAPTER *ioc,
- 			    " for diag buffers, requested size(%d)\n",
- 			    ioc->name, __func__, request_data_sz);
- 			mpt3sas_base_free_smid(ioc, smid);
--			return -ENOMEM;
-+			rc = -ENOMEM;
-+			goto out;
- 		}
- 		ioc->diag_buffer[buffer_type] = request_data;
- 		ioc->diag_buffer_sz[buffer_type] = request_data_sz;
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 043bca6449cd0..96411754aa43a 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -483,8 +483,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 	 * single discovery thread, this will cause a huge delay in
+ 	 * discovery. Also this will cause multiple state machines
+ 	 * running in parallel for this node.
++	 * This only applies to a fabric environment.
+ 	 */
+-	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
++	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
++	    (vport->fc_flag & FC_FABRIC)) {
+ 		/* software abort outstanding PLOGI */
+ 		lpfc_els_abort(phba, ndlp);
+ 	}
 -- 
 2.20.1
 
