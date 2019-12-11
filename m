@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B07C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6B3C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEEA12073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF3BB208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1576077461;
-	bh=DskxH4nDed/fTxBnpZHfThwnlrqdlMuYDLk36DG9sts=;
+	bh=V80Xt/F5molGZym4VsMs8r/TwMbFXOPehtRwwyqzMC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2pDXbRzVt0gVHJIx2KdZv4EvwWFy4x8JBR/xnt1EXqsg1yI2qd9TG2ExwfxSzKTEW
-	 JL0mtyq1/SUpmmu2BP4juxWYGLv+hFYlhyfIsxDQAlexbrnrHu6a065s4wOJM6lDYX
-	 0jhS/WYXYJ6tXjPNOVXCzeYBpFR2bTT6+YyIwQ5U=
+	b=bmERWEz0K/hC1vYA219IuQWFYeUF8/ag/ZFYiyvEvISHERUBB2w+JCYHXR47nkKhX
+	 GrRVb1hyxRSp+gp9g+0BpY6nzraIpa3BHCt1CJEEpmMm84OgikU3skr+2s1rHudY1N
+	 pAXXNyXklPyJKnMStgWHrHzt8WLwjECW2J4NVDWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731739AbfLKPRj (ORCPT
+        id S1732046AbfLKPRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:17:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:17:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731717AbfLKPRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:17:35 -0500
+        id S1729663AbfLKPRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCE0020663;
-        Wed, 11 Dec 2019 15:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 531EB24682;
+        Wed, 11 Dec 2019 15:17:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077455;
-        bh=DskxH4nDed/fTxBnpZHfThwnlrqdlMuYDLk36DG9sts=;
+        s=default; t=1576077457;
+        bh=V80Xt/F5molGZym4VsMs8r/TwMbFXOPehtRwwyqzMC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1NmM2Z0Fv9OVasN2t/Zw4KtxqnHetGAIWJVV8ihTCIzfok8iriTMMb7B5vffzAvGt
-         N1EPaGxBeeb5831RZur0pNdNncv6Csd7fb31hee8yfiMOf63o9H8ZM1+D4YMG9jRZ8
-         jhZlibYu4DnMmaHyIf88wAFkA1Wwavrb5w2xhCqA=
+        b=U+yMSgwkJD/gcLI1UFUoCZ9NS6CIghrbqN0k/qv7k/8myNOaPSFWsjgmOt1KXWH+f
+         Hi86mFVY2nm7iRPr3e0n7C7+gzfvU5F3OiHNUCs3LnfYhowjArB+yHFxg2QGtUeh+h
+         HVBhvEX8bWbIp8Wzu7H7YPHg1SwcYRsgrZbOyvuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alice Michael <alice.michael@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/243] virtchnl: Fix off by one error
-Date:   Wed, 11 Dec 2019 16:03:28 +0100
-Message-Id: <20191211150342.217595902@linuxfoundation.org>
+Subject: [PATCH 4.19 029/243] iwlwifi: mvm: synchronize TID queue removal
+Date:   Wed, 11 Dec 2019 16:03:11 +0100
+Message-Id: <20191211150340.826896898@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,40 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alice Michael <alice.michael@intel.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 843faff87af261bf55eda719a06087af0486a168 ]
+[ Upstream commit 06bc6f6ed4ae0246a5e52094d1be90906a1361c7 ]
 
-When calculating the valid length for a VIRTCHNL_OP_ENABLE_CHANNELS
-message, we accidentally allowed messages with one extra
-virtchnl_channel_info structure on the end. This happened due
-to an off by one error, because we forgot that valid_len already
-accounted for one virtchnl_channel_info structure, so we need to
-subtract one from the num_tc value.
+When we mark a TID as no longer having a queue, there's no
+guarantee the TX path isn't using this txq_id right now,
+having accessed it just before we reset the value. To fix
+this, add synchronize_net() when we change the TIDs from
+having a queue to not having one, so that we can then be
+sure that the TX path is no longer accessing that queue.
 
-Signed-off-by: Alice Michael <alice.michael@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/avf/virtchnl.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
-index 212b3822d1804..92d179fb6d59e 100644
---- a/include/linux/avf/virtchnl.h
-+++ b/include/linux/avf/virtchnl.h
-@@ -798,8 +798,8 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
- 		if (msglen >= valid_len) {
- 			struct virtchnl_tc_info *vti =
- 				(struct virtchnl_tc_info *)msg;
--			valid_len += vti->num_tc *
--				sizeof(struct virtchnl_channel_info);
-+			valid_len += (vti->num_tc - 1) *
-+				     sizeof(struct virtchnl_channel_info);
- 			if (vti->num_tc == 0)
- 				err_msg_format = true;
- 		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+index 04ea516bddcc0..e850aa504b608 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
+@@ -440,6 +440,16 @@ static int iwl_mvm_remove_sta_queue_marking(struct iwl_mvm *mvm, int queue)
+ 
+ 	rcu_read_unlock();
+ 
++	/*
++	 * The TX path may have been using this TXQ_ID from the tid_data,
++	 * so make sure it's no longer running so that we can safely reuse
++	 * this TXQ later. We've set all the TIDs to IWL_MVM_INVALID_QUEUE
++	 * above, but nothing guarantees we've stopped using them. Thus,
++	 * without this, we could get to iwl_mvm_disable_txq() and remove
++	 * the queue while still sending frames to it.
++	 */
++	synchronize_net();
++
+ 	return disable_agg_tids;
+ }
+ 
 -- 
 2.20.1
 
