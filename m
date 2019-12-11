@@ -2,88 +2,108 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9269BC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE1AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A83F24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6FB24680
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077209;
-	bh=9xd/VABcza9uEglJOSz/DEebvYrkbh5MIhe0PXjV2sU=;
+	s=default; t=1576077213;
+	bh=RubREijqb6fCvtlTS2NxAPSuHQOr0yCZ5UPXyRoih4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Slov+ZGjJPOH6mdd9YawbCju3Ohmrf0xFku7tG5KHukgllZo9WmzIlHvFbnXA5IRp
-	 hklA59yX7db+6vhfX1TKtPeirP1Xx5pSd8nyvdbU3M9BEeIbb5WbZBeGqX+u+Z+YWd
-	 klEsgyquKKRb1x3aON8JzCRR2yVwkZ2ERdqfYeLo=
+	b=h357aIE1puZdgfP7TV6m2izBegjmJDC9OKQU/WuGMyC+8aFoiw6o2bhaAyqzqoZK7
+	 gweyUKtUad0O6xFzBBWCxBL143BQYJZyzfEoBL4/ekFAbsJrF6vqTEvZao3XVK5BoL
+	 NqfjlXJUPhY0i63YMM0oVLfUcLuBuHL8EOSsN1CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731418AbfLKPN2 (ORCPT
+        id S1731432AbfLKPNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36470 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfLKPNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730936AbfLKPNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:17 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC3024681;
-        Wed, 11 Dec 2019 15:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5B622467F;
+        Wed, 11 Dec 2019 15:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077195;
-        bh=9xd/VABcza9uEglJOSz/DEebvYrkbh5MIhe0PXjV2sU=;
+        s=default; t=1576077196;
+        bh=RubREijqb6fCvtlTS2NxAPSuHQOr0yCZ5UPXyRoih4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSs4kW/BX8LMGxV0ky/u9piWs5XtptCTI+RjIB5eCLYEdu2hChTudNalKrtoGZTHC
-         Z+ZZ/S8YPhbvSGd08w+XFU0V58jO6r8l21+WG2uJ2ivw3kVFkM2NUfq3YgSucNSvrs
-         P8f/m4OCOi1BdjfAW6Vq3+iVnD4sLjKqtrcL+q8E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 045/105] fuse: verify nlink
-Date:   Wed, 11 Dec 2019 16:05:34 +0100
-Message-Id: <20191211150239.290851608@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=XvWBmsHpl76JDe+5yxMwbiL86aVCieaqGMiz7a6jixLpoI09QTW+esQxWq936TzWG
+         IQgrpv279vaQkp9lxvjXVWNJIqwQCzmBLRkUqMY3L3hWKy6GrhXQuW8hSmOxHo+0hs
+         q+2sHHqWwIh7ncz2p6uhJ4KoKHOdhRP3L9oWwyUU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aaron Ma <aaron.ma@canonical.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 079/134] HID: i2c-hid: fix no irq after reset on raydium 3118
+Date:   Wed, 11 Dec 2019 10:10:55 -0500
+Message-Id: <20191211151150.19073-79-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Aaron Ma <aaron.ma@canonical.com>
 
-commit c634da718db9b2fac201df2ae1b1b095344ce5eb upstream.
+[ Upstream commit 0c8432236dea20a95f68fa17989ea3f8af0186a5 ]
 
-When adding a new hard link, make sure that i_nlink doesn't overflow.
+On some ThinkPad L390 some raydium 3118 touchscreen devices
+doesn't response any data after reset, but some does.
 
-Fixes: ac45d61357e8 ("fuse: fix nlink after unlink")
-Cc: <stable@vger.kernel.org> # v3.4
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Add this ID to no irq quirk,
+then don't wait for any response alike on these touchscreens.
+All kinds of raydium 3118 devices work fine.
 
+BugLink: https://bugs.launchpad.net/bugs/1849721
+
+Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dir.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h              | 1 +
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -814,7 +814,8 @@ static int fuse_link(struct dentry *entr
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 00904537e17c4..6273e7178e785 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -960,6 +960,7 @@
  
- 		spin_lock(&fi->lock);
- 		fi->attr_version = atomic64_inc_return(&fc->attr_version);
--		inc_nlink(inode);
-+		if (likely(inode->i_nlink < UINT_MAX))
-+			inc_nlink(inode);
- 		spin_unlock(&fi->lock);
- 		fuse_invalidate_attr(inode);
- 		fuse_update_ctime(inode);
-
+ #define I2C_VENDOR_ID_RAYDIUM		0x2386
+ #define I2C_PRODUCT_ID_RAYDIUM_4B33	0x4b33
++#define I2C_PRODUCT_ID_RAYDIUM_3118	0x3118
+ 
+ #define USB_VENDOR_ID_RAZER            0x1532
+ #define USB_DEVICE_ID_RAZER_BLADE_14   0x011D
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 04c088131e044..7608ee053114c 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -170,6 +170,8 @@ static const struct i2c_hid_quirks {
+ 		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
+ 	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
+ 		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
++	{ I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_3118,
++		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
+ 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
+ 		 I2C_HID_QUIRK_BOGUS_IRQ },
+ 	{ 0, 0 }
+-- 
+2.20.1
 
