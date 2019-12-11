@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9F9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98129C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40689208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F26B208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077983;
-	bh=wqWB3edme22S00bQqrqhZjtMi9qt3abxS/gc7xLxhS8=;
+	s=default; t=1576077985;
+	bh=NZwHU/3735iugvdYsyLllWoIe3H0BfykBG6HE1i6ty0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HjFio6pbRye3FPVdByW+11z9mLy3EgFu6rK2SXT98ZN8Jcc6RAXH0ii8EGAvaXWwC
-	 AWc3Q3c6nwGb2d0kcebHlo0r9bzu66pq70ge3JXLNULNWlJxbnRg4YbXMiPuS+amKk
-	 M9atWRZeSOJcn6kFbSee9r5LEIyq6r9q+wMGJKok=
+	b=kGdo2HWl1gTOCibl0YzLQ7Eiv3rd8sMQVLs3wANmGL5XxoOimPpnPoH1Ee3WHScdw
+	 54Xnqjl6aU5Hvb/H8UX0EPxTk2M210Lb4CLZU5P7NwI6OEAFL7FSU//oM5NnMFhPvO
+	 msaknLEX6XEaQu76htM4EruXMyoLzwoZxdDykl8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732820AbfLKP0V (ORCPT
+        id S1733117AbfLKP0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733098AbfLKP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:20 -0500
+        id S1732965AbfLKP0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 667F4222C4;
-        Wed, 11 Dec 2019 15:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAB4922527;
+        Wed, 11 Dec 2019 15:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077978;
-        bh=wqWB3edme22S00bQqrqhZjtMi9qt3abxS/gc7xLxhS8=;
+        s=default; t=1576077981;
+        bh=NZwHU/3735iugvdYsyLllWoIe3H0BfykBG6HE1i6ty0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nl5xIxJth88VP46NM9Ct5ct+pz0cmOq1I3oKTkk9PQRZeh0CDKOfmItXWpE+e+vyU
-         /UF3fdz9MI2ll4KUhwB2ysrD3HXUvE6LI/xJCa/WuPnOxFvmzLE9NpO34bnNfMeBQP
-         nGDYVaaKO33QikYV18mEfoPSMVtq+q8J0Kxaqtlk=
+        b=iFcDxJvwJlx/qM/LZ2t3zvQgA2l0YiGVYXHBEFtUg2Ez/CbLZ9G5+OgFVdr5BPOZj
+         D03nhydvTqDXSe/0vyO8DKQRXhnwB89OgolSNUnEE2GuQuWyXmne4uoBFLHEqF2Iju
+         AfON8ESlLyam9CYiV30YnFvWSjR4BWPZhiNMtvIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
+        Atul Gupta <atul.gupta@chelsio.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 230/243] crypto: atmel-aes - Fix IV handling when req->nbytes < ivsize
-Date:   Wed, 11 Dec 2019 16:06:32 +0100
-Message-Id: <20191211150354.861227340@linuxfoundation.org>
+Subject: [PATCH 4.19 231/243] crypto: af_alg - cast ki_complete ternary op to int
+Date:   Wed, 11 Dec 2019 16:06:33 +0100
+Message-Id: <20191211150354.927140672@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,110 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Ayush Sawal <ayush.sawal@chelsio.com>
 
-commit 86ef1dfcb561473fbf5e199d58d18c55554d78be upstream.
+commit 64e7f852c47ce99f6c324c46d6a299a5a7ebead9 upstream.
 
-commit 394a9e044702 ("crypto: cfb - add missing 'chunksize' property")
-adds a test vector where the input length is smaller than the IV length
-(the second test vector). This revealed a NULL pointer dereference in
-the atmel-aes driver, that is caused by passing an incorrect offset in
-scatterwalk_map_and_copy() when atmel_aes_complete() is called.
+when libkcapi test is executed  using HW accelerator, cipher operation
+return -74.Since af_alg_async_cb->ki_complete treat err as unsigned int,
+libkcapi receive 429467222 even though it expect -ve value.
 
-Do not save the IV in req->info of ablkcipher_request (or equivalently
-req->iv of skcipher_request) when req->nbytes < ivsize, because the IV
-will not be further used.
+Hence its required to cast resultlen to int so that proper
+error is returned to libkcapi.
 
-While touching the code, modify the type of ivsize from int to
-unsigned int, to comply with the return type of
-crypto_ablkcipher_ivsize().
+AEAD one shot non-aligned test 2(libkcapi test)
+./../bin/kcapi   -x 10   -c "gcm(aes)" -i 7815d4b06ae50c9c56e87bd7
+-k ea38ac0c9b9998c80e28fb496a2b88d9 -a
+"853f98a750098bec1aa7497e979e78098155c877879556bb51ddeb6374cbaefc"
+-t "c4ce58985b7203094be1d134c1b8ab0b" -q
+"b03692f86d1b8b39baf2abb255197c98"
 
-Fixes: 91308019ecb4 ("crypto: atmel-aes - properly set IV after {en,de}crypt")
+Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Signed-off-by: Atul Gupta <atul.gupta@chelsio.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/atmel-aes.c |   53 +++++++++++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 23 deletions(-)
+ crypto/af_alg.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -493,6 +493,29 @@ static inline bool atmel_aes_is_encrypt(
- static void atmel_aes_authenc_complete(struct atmel_aes_dev *dd, int err);
- #endif
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -1058,7 +1058,7 @@ void af_alg_async_cb(struct crypto_async
+ 	af_alg_free_resources(areq);
+ 	sock_put(sk);
  
-+static void atmel_aes_set_iv_as_last_ciphertext_block(struct atmel_aes_dev *dd)
-+{
-+	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
-+	struct atmel_aes_reqctx *rctx = ablkcipher_request_ctx(req);
-+	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
-+	unsigned int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
-+
-+	if (req->nbytes < ivsize)
-+		return;
-+
-+	if (rctx->mode & AES_FLAGS_ENCRYPT) {
-+		scatterwalk_map_and_copy(req->info, req->dst,
-+					 req->nbytes - ivsize, ivsize, 0);
-+	} else {
-+		if (req->src == req->dst)
-+			memcpy(req->info, rctx->lastc, ivsize);
-+		else
-+			scatterwalk_map_and_copy(req->info, req->src,
-+						 req->nbytes - ivsize,
-+						 ivsize, 0);
-+	}
-+}
-+
- static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
- {
- #ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
-@@ -503,26 +526,8 @@ static inline int atmel_aes_complete(str
- 	clk_disable(dd->iclk);
- 	dd->flags &= ~AES_FLAGS_BUSY;
+-	iocb->ki_complete(iocb, err ? err : resultlen, 0);
++	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
+ }
+ EXPORT_SYMBOL_GPL(af_alg_async_cb);
  
--	if (!dd->ctx->is_aead) {
--		struct ablkcipher_request *req =
--			ablkcipher_request_cast(dd->areq);
--		struct atmel_aes_reqctx *rctx = ablkcipher_request_ctx(req);
--		struct crypto_ablkcipher *ablkcipher =
--			crypto_ablkcipher_reqtfm(req);
--		int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
--
--		if (rctx->mode & AES_FLAGS_ENCRYPT) {
--			scatterwalk_map_and_copy(req->info, req->dst,
--				req->nbytes - ivsize, ivsize, 0);
--		} else {
--			if (req->src == req->dst) {
--				memcpy(req->info, rctx->lastc, ivsize);
--			} else {
--				scatterwalk_map_and_copy(req->info, req->src,
--					req->nbytes - ivsize, ivsize, 0);
--			}
--		}
--	}
-+	if (!dd->ctx->is_aead)
-+		atmel_aes_set_iv_as_last_ciphertext_block(dd);
- 
- 	if (dd->is_async)
- 		dd->areq->complete(dd->areq, err);
-@@ -1128,10 +1133,12 @@ static int atmel_aes_crypt(struct ablkci
- 	rctx->mode = mode;
- 
- 	if (!(mode & AES_FLAGS_ENCRYPT) && (req->src == req->dst)) {
--		int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
-+		unsigned int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
- 
--		scatterwalk_map_and_copy(rctx->lastc, req->src,
--			(req->nbytes - ivsize), ivsize, 0);
-+		if (req->nbytes >= ivsize)
-+			scatterwalk_map_and_copy(rctx->lastc, req->src,
-+						 req->nbytes - ivsize,
-+						 ivsize, 0);
- 	}
- 
- 	return atmel_aes_handle_queue(dd, &req->base);
 
 
