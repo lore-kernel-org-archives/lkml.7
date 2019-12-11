@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE1DC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8A1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A6920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A771208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080450;
-	bh=fWIUNSbPleNggmA6BWe/9j6tT59UNH1kNlCk7NEguWg=;
+	s=default; t=1576080454;
+	bh=ZKzO6I2uFUyULvy5O5qCEahJDu5QIYx52x9szvZRs+U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1hi8lzlrBzq/Qt0izaOHsaemgDdpMPSEItLrw6DbC5ZnM0CBNw1HZQkP6bK6u/3GA
-	 vi7588JV91LShxuMyymaBhsNzm1TABStwnNHeyis0GdSA8C9otoQ9hqVNdDqql82Bc
-	 b4y49M8BzB900Nv+ZnxCFk4dikr0DVVx3RCqp7OE=
+	b=OlfoN2N8tbbQii4nSblDCObPDkL7ddH4c7mbzLjhzQKr8IYDfE8169sByQNxJ3xW6
+	 9pOukbo9jwvDyioGxteQZ1epSQXThssr6tF7VsVqsejbGTYaodTr791wYGNq1gQ9DG
+	 VTidlV+zqXHgc7Tc5ty5rr7zXo/QTZ8w2cX1jhOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731138AbfLKPM3 (ORCPT
+        id S2388796AbfLKQHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:07:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731075AbfLKPMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:15 -0500
+        id S1731136AbfLKPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 696F624654;
-        Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1B8D2467D;
+        Wed, 11 Dec 2019 15:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077135;
-        bh=fWIUNSbPleNggmA6BWe/9j6tT59UNH1kNlCk7NEguWg=;
+        s=default; t=1576077148;
+        bh=ZKzO6I2uFUyULvy5O5qCEahJDu5QIYx52x9szvZRs+U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1w8YoSA1G/WhB7FfPy7NV/S46HrVDqELwus4GzE/TMLBOU4Ksy6h2ZYV4rNwJlazN
-         AuaytO9BcNOR5oRZGhf5SrEmEIAl2yiVAItW9Hf0+z7AMZA99FmDuuPH9UbKN15YW3
-         vq/RdnPZ4DvsaFcxENcjvNnWsK+X3D0V4nUtARFM=
+        b=m3IlIcZD+ydqTlOnMLcSY2uWd/Eg3oL2lUypo57BlClDSlxgBlqqN3L8SaeMXMQuk
+         F8T0ory7jfqZn320sBKivAZUHKIeCYLZUaaDgjVQx305Cys00FjBs9s3pHZhapHPOv
+         GJ5Tpud+9Ki1we5g2lH41livoyrArkeia2Q26mjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 022/134] scsi: hisi_sas: Delete the debugfs folder of hisi_sas when the probe fails
-Date:   Wed, 11 Dec 2019 10:09:58 -0500
-Message-Id: <20191211151150.19073-22-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 035/134] clocksource/drivers/asm9260: Add a check for of_clk_get
+Date:   Wed, 11 Dec 2019 10:10:11 -0500
+Message-Id: <20191211151150.19073-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,51 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit cabe7c10c97a0857a9fb14b6c772ab784947995d ]
+[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
 
-Although if the debugfs initialization fails, we will delete the debugfs
-folder of hisi_sas, but we did not consider the scenario where debugfs was
-successfully initialized, but the probe failed for other reasons. We found
-out that hisi_sas folder is still remain after the probe failed.
+asm9260_timer_init misses a check for of_clk_get.
+Add a check for it and print errors like other clocksource drivers.
 
-When probe fail, we should delete debugfs folder to avoid the above issue.
-
-Link: https://lore.kernel.org/r/1571926105-74636-18-git-send-email-john.garry@huawei.com
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 1 +
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/clocksource/asm9260_timer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 20f0cb4698b7f..633effb09c9cc 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -2682,6 +2682,7 @@ int hisi_sas_probe(struct platform_device *pdev,
- err_out_register_ha:
- 	scsi_remove_host(shost);
- err_out_ha:
-+	hisi_sas_debugfs_exit(hisi_hba);
- 	hisi_sas_free(hisi_hba);
- 	scsi_host_put(shost);
- 	return rc;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index cb8d087762dbd..ef32ee12f6065 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3259,6 +3259,7 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- err_out_register_ha:
- 	scsi_remove_host(shost);
- err_out_ha:
-+	hisi_sas_debugfs_exit(hisi_hba);
- 	scsi_host_put(shost);
- err_out_regions:
- 	pci_release_regions(pdev);
+diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
+index 9f09a59161e70..5b39d3701fa3c 100644
+--- a/drivers/clocksource/asm9260_timer.c
++++ b/drivers/clocksource/asm9260_timer.c
+@@ -194,6 +194,10 @@ static int __init asm9260_timer_init(struct device_node *np)
+ 	}
+ 
+ 	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		pr_err("Failed to get clk!\n");
++		return PTR_ERR(clk);
++	}
+ 
+ 	ret = clk_prepare_enable(clk);
+ 	if (ret) {
 -- 
 2.20.1
 
