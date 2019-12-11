@@ -2,286 +2,144 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF202C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298ABC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FD1206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0B3206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:19:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q50bYmGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLKCSd (ORCPT
+        id S1727691AbfLKCTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:18:33 -0500
-Received: from mga06.intel.com ([134.134.136.31]:10408 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727010AbfLKCSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:18:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:18:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="363452407"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2019 18:18:28 -0800
-Date:   Wed, 11 Dec 2019 10:19:51 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 7/7] KVM: X86: Add user-space access interface for CET
- MSRs
-Message-ID: <20191211021951.GE12845@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-8-weijiang.yang@intel.com>
- <20191210215859.GO15758@linux.intel.com>
+        Tue, 10 Dec 2019 21:19:40 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:59657 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727302AbfLKCTj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:19:39 -0500
+X-UUID: 165e4f02be654651ba7986a8681e7bd2-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rhfdqi2eRRPOmkQEKUGmuq54EZ73uOUii6nqn78dZ8M=;
+        b=q50bYmGYPizR+0jps0AvO/uOh8KtsxOOYaIgX10598imLcEZpN6cXQfF6TQuBAyS0jEsnOiK986JSxCyf2pLOC/tzMvO568Obf+hYDAblDvwVcFHe1iPILfiA7SVOtxL2Y9NK7gKhU2R3drDXwyLHha1CEDDxomlz1hhMETlSHY=;
+X-UUID: 165e4f02be654651ba7986a8681e7bd2-20191211
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 267267415; Wed, 11 Dec 2019 10:19:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 10:19:26 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Dec 2019 10:19:35 +0800
+Message-ID: <1576030774.24528.2.camel@mtksdaap41>
+Subject: Re: [PATCH v6 5/6] rtc: mt6397: fix alarm register overwrite
+From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, Ran Bi <ran.bi@mediatek.com>
+Date:   Wed, 11 Dec 2019 10:19:34 +0800
+In-Reply-To: <20191210164139.GT1463890@piout.net>
+References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <1575639183-17606-6-git-send-email-hsin-hsiung.wang@mediatek.com>
+         <20191210164139.GT1463890@piout.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210215859.GO15758@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:58:59PM -0800, Sean Christopherson wrote:
-> On Fri, Nov 01, 2019 at 04:52:22PM +0800, Yang Weijiang wrote:
-> > There're two different places storing Guest CET states, states
-> > managed with XSAVES/XRSTORS, as restored/saved
-> > in previous patch, can be read/write directly from/to the MSRs.
-> > For those stored in VMCS fields, they're access via vmcs_read/
-> > vmcs_write.
-> > 
-> >  
-> > +#define CET_MSR_RSVD_BITS_1    0x3
-> > +#define CET_MSR_RSVD_BITS_2   (0xF << 6)
-> > +
-> > +static bool cet_msr_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > +{
-> > +	u32 index = msr->index;
-> > +	u64 data = msr->data;
-> > +	u32 high_word = data >> 32;
-> > +
-> > +	if ((index == MSR_IA32_U_CET || index == MSR_IA32_S_CET) &&
-> > +	    (data & CET_MSR_RSVD_BITS_2))
-> > +		return false;
-> > +
-> > +	if (is_64_bit_mode(vcpu)) {
-> > +		if (is_noncanonical_address(data & PAGE_MASK, vcpu))
-> 
-> I don't think this is correct.  MSRs that contain an address usually only
-> fault on a non-canonical value and do the non-canonical check regardless
-> of mode.  E.g. VM-Enter's consistency checks on SYSENTER_E{I,S}P only care
-> about a canonical address and are not dependent on mode, and SYSENTER
-> itself states that bits 63:32 are ignored in 32-bit mode.  I assume the
-> same is true here.
-The spec. reads like this:  Must be machine canonical when written on
-parts that support 64 bit mode. On parts that do not support 64 bit mode, the bits 63:32 are
-reserved and must be 0.  
+SGksDQoNCk9uIFR1ZSwgMjAxOS0xMi0xMCBhdCAxNzo0MSArMDEwMCwgQWxleGFuZHJlIEJlbGxv
+bmkgd3JvdGU6DQo+IEhpLA0KPiANCj4gT24gMDYvMTIvMjAxOSAyMTozMzowMiswODAwLCBIc2lu
+LUhzaXVuZyBXYW5nIHdyb3RlOg0KPiA+IEZyb206IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVrLmNv
+bT4NCj4gPiANCj4gPiBBbGFybSByZWdpc3RlcnMgaGlnaCBieXRlIHdhcyByZXNlcnZlZCBmb3Ig
+b3RoZXIgZnVuY3Rpb25zLg0KPiA+IFRoaXMgYWRkIG1hc2sgaW4gYWxhcm0gcmVnaXN0ZXJzIG9w
+ZXJhdGlvbiBmdW5jdGlvbnMuDQo+ID4gVGhpcyBhbHNvIGZpeCBlcnJvciBjb25kaXRpb24gaW4g
+aW50ZXJydXB0IGhhbmRsZXIuDQo+ID4gDQo+ID4gRml4ZXM6IGZjMjk3OTExOGYzZiAoInJ0Yzog
+bWVkaWF0ZWs6IEFkZCBNVDYzOTcgUlRDIGRyaXZlciIpDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1i
+eTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4t
+SHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
+ICBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgfCA0NyArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9u
+cygrKSwgMTQgZGVsZXRpb25zKC0pDQo+ID4gDQo+IA0KPiBDYW4geW91IHJlYmFzZSB0aGF0IG9u
+ZSBvbiB0b3Agb2YgdjUuNS1yYzEgc29vbj8gSSdsbCBpbmNsdWRlIGl0IGluIC1maXhlcy4NCj4g
+DQpTdXJlLCBJIHdpbGwgc2VuZCB0aGUgbmV4dCB2ZXJzaW9uIGxhdGVyLg0KDQo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1tdDYzOTcuYyBiL2RyaXZlcnMvcnRjL3J0Yy1tdDYzOTcu
+Yw0KPiA+IGluZGV4IDcwNDIyOWUuLmIyMTZiZGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9y
+dGMvcnRjLW10NjM5Ny5jDQo+ID4gKysrIGIvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQo+ID4g
+QEAgLTQ3LDYgKzQ3LDE0IEBADQo+ID4gIA0KPiA+ICAjZGVmaW5lIFJUQ19BTF9TRUMJCTB4MDAx
+OA0KPiA+ICANCj4gPiArI2RlZmluZSBSVENfQUxfU0VDX01BU0sJCTB4MDAzZg0KPiA+ICsjZGVm
+aW5lIFJUQ19BTF9NSU5fTUFTSwkJMHgwMDNmDQo+ID4gKyNkZWZpbmUgUlRDX0FMX0hPVV9NQVNL
+CQkweDAwMWYNCj4gPiArI2RlZmluZSBSVENfQUxfRE9NX01BU0sJCTB4MDAxZg0KPiA+ICsjZGVm
+aW5lIFJUQ19BTF9ET1dfTUFTSwkJMHgwMDA3DQo+ID4gKyNkZWZpbmUgUlRDX0FMX01USF9NQVNL
+CQkweDAwMGYNCj4gPiArI2RlZmluZSBSVENfQUxfWUVBX01BU0sJCTB4MDA3Zg0KPiA+ICsNCj4g
+PiAgI2RlZmluZSBSVENfUEROMgkJMHgwMDJlDQo+ID4gICNkZWZpbmUgUlRDX1BETjJfUFdST05f
+QUxBUk0JQklUKDQpDQo+ID4gIA0KPiA+IEBAIC0xMDMsNyArMTExLDcgQEAgc3RhdGljIGlycXJl
+dHVybl90IG10a19ydGNfaXJxX2hhbmRsZXJfdGhyZWFkKGludCBpcnEsIHZvaWQgKmRhdGEpDQo+
+ID4gIAkJaXJxZW4gPSBpcnFzdGEgJiB+UlRDX0lSUV9FTl9BTDsNCj4gPiAgCQltdXRleF9sb2Nr
+KCZydGMtPmxvY2spOw0KPiA+ICAJCWlmIChyZWdtYXBfd3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+
+YWRkcl9iYXNlICsgUlRDX0lSUV9FTiwNCj4gPiAtCQkJCSBpcnFlbikgPCAwKQ0KPiA+ICsJCQkJ
+IGlycWVuKSA9PSAwKQ0KPiA+ICAJCQltdGtfcnRjX3dyaXRlX3RyaWdnZXIocnRjKTsNCj4gPiAg
+CQltdXRleF91bmxvY2soJnJ0Yy0+bG9jayk7DQo+ID4gIA0KPiA+IEBAIC0yMjUsMTIgKzIzMywx
+MiBAQCBzdGF0aWMgaW50IG10a19ydGNfcmVhZF9hbGFybShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
+cnVjdCBydGNfd2thbHJtICphbG0pDQo+ID4gIAlhbG0tPnBlbmRpbmcgPSAhIShwZG4yICYgUlRD
+X1BETjJfUFdST05fQUxBUk0pOw0KPiA+ICAJbXV0ZXhfdW5sb2NrKCZydGMtPmxvY2spOw0KPiA+
+ICANCj4gPiAtCXRtLT50bV9zZWMgPSBkYXRhW1JUQ19PRkZTRVRfU0VDXTsNCj4gPiAtCXRtLT50
+bV9taW4gPSBkYXRhW1JUQ19PRkZTRVRfTUlOXTsNCj4gPiAtCXRtLT50bV9ob3VyID0gZGF0YVtS
+VENfT0ZGU0VUX0hPVVJdOw0KPiA+IC0JdG0tPnRtX21kYXkgPSBkYXRhW1JUQ19PRkZTRVRfRE9N
+XTsNCj4gPiAtCXRtLT50bV9tb24gPSBkYXRhW1JUQ19PRkZTRVRfTVRIXTsNCj4gPiAtCXRtLT50
+bV95ZWFyID0gZGF0YVtSVENfT0ZGU0VUX1lFQVJdOw0KPiA+ICsJdG0tPnRtX3NlYyA9IGRhdGFb
+UlRDX09GRlNFVF9TRUNdICYgUlRDX0FMX1NFQ19NQVNLOw0KPiA+ICsJdG0tPnRtX21pbiA9IGRh
+dGFbUlRDX09GRlNFVF9NSU5dICYgUlRDX0FMX01JTl9NQVNLOw0KPiA+ICsJdG0tPnRtX2hvdXIg
+PSBkYXRhW1JUQ19PRkZTRVRfSE9VUl0gJiBSVENfQUxfSE9VX01BU0s7DQo+ID4gKwl0bS0+dG1f
+bWRheSA9IGRhdGFbUlRDX09GRlNFVF9ET01dICYgUlRDX0FMX0RPTV9NQVNLOw0KPiA+ICsJdG0t
+PnRtX21vbiA9IGRhdGFbUlRDX09GRlNFVF9NVEhdICYgUlRDX0FMX01USF9NQVNLOw0KPiA+ICsJ
+dG0tPnRtX3llYXIgPSBkYXRhW1JUQ19PRkZTRVRfWUVBUl0gJiBSVENfQUxfWUVBX01BU0s7DQo+
+ID4gIA0KPiA+ICAJdG0tPnRtX3llYXIgKz0gUlRDX01JTl9ZRUFSX09GRlNFVDsNCj4gPiAgCXRt
+LT50bV9tb24tLTsNCj4gPiBAQCAtMjUxLDE0ICsyNTksMjUgQEAgc3RhdGljIGludCBtdGtfcnRj
+X3NldF9hbGFybShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbG0pDQo+
+ID4gIAl0bS0+dG1feWVhciAtPSBSVENfTUlOX1lFQVJfT0ZGU0VUOw0KPiA+ICAJdG0tPnRtX21v
+bisrOw0KPiA+ICANCj4gPiAtCWRhdGFbUlRDX09GRlNFVF9TRUNdID0gdG0tPnRtX3NlYzsNCj4g
+PiAtCWRhdGFbUlRDX09GRlNFVF9NSU5dID0gdG0tPnRtX21pbjsNCj4gPiAtCWRhdGFbUlRDX09G
+RlNFVF9IT1VSXSA9IHRtLT50bV9ob3VyOw0KPiA+IC0JZGF0YVtSVENfT0ZGU0VUX0RPTV0gPSB0
+bS0+dG1fbWRheTsNCj4gPiAtCWRhdGFbUlRDX09GRlNFVF9NVEhdID0gdG0tPnRtX21vbjsNCj4g
+PiAtCWRhdGFbUlRDX09GRlNFVF9ZRUFSXSA9IHRtLT50bV95ZWFyOw0KPiA+IC0NCj4gPiAgCW11
+dGV4X2xvY2soJnJ0Yy0+bG9jayk7DQo+ID4gKwlyZXQgPSByZWdtYXBfYnVsa19yZWFkKHJ0Yy0+
+cmVnbWFwLCBydGMtPmFkZHJfYmFzZSArIFJUQ19BTF9TRUMsDQo+ID4gKwkJCSAgICAgICBkYXRh
+LCBSVENfT0ZGU0VUX0NPVU5UKTsNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCWdvdG8gZXhp
+dDsNCj4gPiArDQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfU0VDXSA9ICgoZGF0YVtSVENfT0ZGU0VU
+X1NFQ10gJiB+KFJUQ19BTF9TRUNfTUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1fc2VjICYgUlRD
+X0FMX1NFQ19NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfTUlOXSA9ICgoZGF0YVtSVENf
+T0ZGU0VUX01JTl0gJiB+KFJUQ19BTF9NSU5fTUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1fbWlu
+ICYgUlRDX0FMX01JTl9NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfSE9VUl0gPSAoKGRh
+dGFbUlRDX09GRlNFVF9IT1VSXSAmIH4oUlRDX0FMX0hPVV9NQVNLKSkgfA0KPiA+ICsJCQkJKHRt
+LT50bV9ob3VyICYgUlRDX0FMX0hPVV9NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfRE9N
+XSA9ICgoZGF0YVtSVENfT0ZGU0VUX0RPTV0gJiB+KFJUQ19BTF9ET01fTUFTSykpIHwNCj4gPiAr
+CQkJCSh0bS0+dG1fbWRheSAmIFJUQ19BTF9ET01fTUFTSykpOw0KPiA+ICsJZGF0YVtSVENfT0ZG
+U0VUX01USF0gPSAoKGRhdGFbUlRDX09GRlNFVF9NVEhdICYgfihSVENfQUxfTVRIX01BU0spKSB8
+DQo+ID4gKwkJCQkodG0tPnRtX21vbiAmIFJUQ19BTF9NVEhfTUFTSykpOw0KPiA+ICsJZGF0YVtS
+VENfT0ZGU0VUX1lFQVJdID0gKChkYXRhW1JUQ19PRkZTRVRfWUVBUl0gJiB+KFJUQ19BTF9ZRUFf
+TUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1feWVhciAmIFJUQ19BTF9ZRUFfTUFTSykpOw0KPiA+
+ICsNCj4gPiAgCWlmIChhbG0tPmVuYWJsZWQpIHsNCj4gPiAgCQlyZXQgPSByZWdtYXBfYnVsa193
+cml0ZShydGMtPnJlZ21hcCwNCj4gPiAgCQkJCQlydGMtPmFkZHJfYmFzZSArIFJUQ19BTF9TRUMs
+DQo+ID4gLS0gDQo+ID4gMi42LjQNCj4gDQoNCg==
 
-> If that is indeed the case, what about adding these to the common canonical
-> check in __kvm_set_msr()?  That'd cut down on the boilerplate here and
-> might make it easier to audit KVM's canonical checks.
-> 
-> > +			return false;
-> > +		else if ((index == MSR_IA32_PL0_SSP ||
-> > +			  index == MSR_IA32_PL1_SSP ||
-> > +			  index == MSR_IA32_PL2_SSP ||
-> > +			  index == MSR_IA32_PL3_SSP) &&
-> > +			  (data & CET_MSR_RSVD_BITS_1))
-> > +			return false;
-> > +	} else {
-> > +		if (msr->index == MSR_IA32_INT_SSP_TAB)
-> > +			return false;
-> > +		else if ((index == MSR_IA32_U_CET ||
-> > +			  index == MSR_IA32_S_CET ||
-> > +			  index == MSR_IA32_PL0_SSP ||
-> > +			  index == MSR_IA32_PL1_SSP ||
-> > +			  index == MSR_IA32_PL2_SSP ||
-> > +			  index == MSR_IA32_PL3_SSP) &&
-> > +			  (high_word & ~0ul))
-> > +			return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> 
-> This helper seems like overkill, e.g. it's filled with index-specific
-> checks, but is called from code that has already switched on the index.
-> Open coding the individual checks is likely more readable and would require
-> less code, especially if the canonical checks are cleaned up.
->
-I'm afraid if the checks are not wrapped in a helper, there're many
-repeat checking-code, that's why I'm using a wrapper.
-
-> > +
-> > +static bool cet_msr_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > +{
-> > +	u64 kvm_xss;
-> > +	u32 index = msr->index;
-> > +
-> > +	if (is_guest_mode(vcpu))
-> > +		return false;
-> 
-> I may have missed this in an earlier discussion, does CET not support
-> nesting?
->
-I don't want to make CET avaible to nested guest at time being, first to
-make it available to L1 guest first. So I need to avoid exposing any CET
-CPUID/MSRs to a nested guest.
-
-> > +
-> > +	kvm_xss = kvm_supported_xss();
-> > +
-> > +	switch (index) {
-> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > +		if (!boot_cpu_has(X86_FEATURE_SHSTK))
-> > +			return false;
-> > +		if (!msr->host_initiated) {
-> > +			if (!guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +				return false;
-> > +		} else {
-> 
-> This looks wrong, WRMSR from the guest only checks CPUID, it doesn't check
-> kvm_xss.
-> 
-OOPs, I need to add the check, thank you!
-
-> > +			if (index == MSR_IA32_PL3_SSP) {
-> > +				if (!(kvm_xss & XFEATURE_MASK_CET_USER))
-> > +					return false;
-> > +			} else {
-> > +				if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL))
-> > +					return false;
-> > +			}
-> > +		}
-> > +		break;
-> > +	case MSR_IA32_U_CET:
-> > +	case MSR_IA32_S_CET:
-> 
-> Rather than bundle everything in a single access_allowed() helper, it might
-> be easier to have separate helpers for each class of MSR.   Except for the
-> guest_mode() check, there's no overlap between the classes.
->
-Sure, let me double check the code.
-
-> > +		if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
-> > +		    !boot_cpu_has(X86_FEATURE_IBT))
-> > +			return false;
-> > +
-> > +		if (!msr->host_initiated) {
-> > +			if (!guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-> > +			    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> > +				return false;
-> > +		} else if (index == MSR_IA32_U_CET &&
-> > +			   !(kvm_xss & XFEATURE_MASK_CET_USER))
-> 
-> Same comment about guest not checking kvm_xss.
->
-OK.
-
-> > +			return false;
-> > +		break;
-> > +	case MSR_IA32_INT_SSP_TAB:
-> > +		if (!boot_cpu_has(X86_FEATURE_SHSTK))
-> > +			return false;
-> > +
-> > +		if (!msr->host_initiated &&
-> > +		    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +			return false;
-> > +		break;
-> > +	default:
-> > +		return false;
-> > +	}
-> > +	return true;
-> > +}
-> >  /*
-> >   * Reads an msr value (of 'msr_index') into 'pdata'.
-> >   * Returns 0 on success, non-0 otherwise.
-> > @@ -1788,6 +1880,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >  		else
-> >  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
-> >  		break;
-> > +	case MSR_IA32_S_CET:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		msr_info->data = vmcs_readl(GUEST_S_CET);
-> > +		break;
-> > +	case MSR_IA32_INT_SSP_TAB:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-> > +		break;
-> > +	case MSR_IA32_U_CET:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
-> > +		break;
-> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		rdmsrl(msr_info->index, msr_info->data);
-> > +		break;
-> >  	case MSR_TSC_AUX:
-> >  		if (!msr_info->host_initiated &&
-> >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > @@ -2039,6 +2151,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >  		else
-> >  			vmx->pt_desc.guest.addr_a[index / 2] = data;
-> >  		break;
-> > +	case MSR_IA32_S_CET:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		if (!cet_msr_write_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		vmcs_writel(GUEST_S_CET, data);
-> > +		break;
-> > +	case MSR_IA32_INT_SSP_TAB:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		if (!cet_msr_write_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-> > +		break;
-> > +	case MSR_IA32_U_CET:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		if (!cet_msr_write_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		wrmsrl(MSR_IA32_U_CET, data);
-> > +		break;
-> > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> > +		if (!cet_msr_access_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		if (!cet_msr_write_allowed(vcpu, msr_info))
-> > +			return 1;
-> > +		wrmsrl(msr_info->index, data);
-> > +		break;
-> >  	case MSR_TSC_AUX:
-> >  		if (!msr_info->host_initiated &&
-> >  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 6275a75d5802..1bbe4550da90 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -1143,6 +1143,9 @@ static u32 msrs_to_save[] = {
-> >  	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
-> >  	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
-> >  	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-> > +	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
-> > +	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
-> > +	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
-> >  };
-> >  
-> >  static unsigned num_msrs_to_save;
-> > -- 
-> > 2.17.2
-> > 
