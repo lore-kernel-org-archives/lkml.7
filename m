@@ -2,63 +2,146 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AACC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EC2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EBB22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE81206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576089462;
+	bh=1gXvBUogE2AAfBihgg+EAwI3LDxBCsXa5+dajF/kmjg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=2jLmasi8iouNvSUk5dBrVhO6bEwvv98vZn7rlTuzkz0pdMrD5e4R/g9DEj78qKm1K
+	 G8xeDsK9wCGdKompIvtOCCPBTHTttJzMoVKz7R9qRkn2a05ZwYHK0eUCURaC/PmK4R
+	 hasIHRcEELOarTvWoI/JTz4izX9nhoMKa6Sh25HY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfLKSeM (ORCPT
+        id S1729663AbfLKShl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:34:12 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29366 "EHLO 1wt.eu"
+        Wed, 11 Dec 2019 13:37:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726856AbfLKSeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:34:12 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id xBBIO1oW032484;
-        Wed, 11 Dec 2019 19:24:01 +0100
-Date:   Wed, 11 Dec 2019 19:24:01 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
-        linux-arch@vger.kernel.org, security@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
-Message-ID: <20191211182401.GF31670@1wt.eu>
-References: <20191208171918.GC19716@avx2>
- <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
- <20191211072225.GB3700@avx2>
- <20191211095937.GB31670@1wt.eu>
- <20191211181933.GA3919@avx2>
+        id S1728128AbfLKShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:37:41 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B79420836;
+        Wed, 11 Dec 2019 18:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576089460;
+        bh=1gXvBUogE2AAfBihgg+EAwI3LDxBCsXa5+dajF/kmjg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=hUmBWcOiez6O+QK8DycrGZ2NKd6Z3nHXV/0pJfua9Gta8moied6bv+yOJn7bQ1X6D
+         8fW9F20i/hua59a3OBG/PBntIQRbzkfqyaZejLwlyso3iA4FAq6g7K4AB/NXh4eBk9
+         WaEpX1g0e5s3Mko+AB+T+4cDjVmCzvR5FRAiAIJ0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B94B535203C6; Wed, 11 Dec 2019 10:37:38 -0800 (PST)
+Date:   Wed, 11 Dec 2019 10:37:38 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Shane M Seymour <shane.seymour@hpe.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH tip/core/rcu 01/12] rcu: Remove rcu_swap_protected()
+Message-ID: <20191211183738.GA5190@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
+ <20191210040741.2943-1-paulmck@kernel.org>
+ <yq1a77zmt4a.fsf@oracle.com>
+ <20191211035122.GC2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211181933.GA3919@avx2>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20191211035122.GC2889@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:19:33PM +0300, Alexey Dobriyan wrote:
-> Reports are better be done by people who know what they are doing, as in
-> understand what executable stack is and what does it mean in reality.
+On Tue, Dec 10, 2019 at 07:51:22PM -0800, Paul E. McKenney wrote:
+> On Tue, Dec 10, 2019 at 10:35:49PM -0500, Martin K. Petersen wrote:
+> > 
+> > Paul,
+> > 
+> > > Now that the calls to rcu_swap_protected() have been replaced by
+> > > rcu_replace_pointer(), this commit removes rcu_swap_protected().
+> > 
+> > It appears there are two callers remaining in Linus' master. Otherwise
+> > looks good to me.
 > 
-> > Otherwise it will just go to /dev/null with all warning about bad blocks
-> > on USB sticks and CPU core throttling under high temperature.
+> I did queue a fix for one of them, and thank you for calling my
+> attention to the new one.  This commit should hit -next soon, so
+> hopefully this will discourage further additions.  ;-)
 > 
-> That's fine. You don't want bugreports from people who don't know what
-> is executable stack. Every security bug bounty program is flooded by
-> such people. This is why message is worded in a neutral way.
+> > Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+> 
+> Thank you!
 
-Well we definitely don't have the same experience with user reports. I
-was just suggesting, but since you apparently already have all the
-responses you needed, I'm even wondering why the warning remains.
+And here is the patch for the new one.
 
-Willy
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 10699d92c906707d679e28b099cd798a519b4f51
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Wed Dec 11 10:30:21 2019 -0800
+
+    wireless/mediatek: Replace rcu_swap_protected() with rcu_replace_pointer()
+    
+    This commit replaces the use of rcu_swap_protected() with the more
+    intuitively appealing rcu_replace_pointer() as a step towards removing
+    rcu_swap_protected().
+    
+    Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+    Reported-by: "Martin K. Petersen" <martin.petersen@oracle.com>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+    Cc: Felix Fietkau <nbd@nbd.name>
+    Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+    Cc: Ryder Lee <ryder.lee@mediatek.com>
+    Cc: Roy Luo <royluo@google.com>
+    Cc: Kalle Valo <kvalo@codeaurora.org>
+    Cc: "David S. Miller" <davem@davemloft.net>
+    Cc: Matthias Brugger <matthias.bgg@gmail.com>
+    Cc: <linux-wireless@vger.kernel.org>
+    Cc: <netdev@vger.kernel.org>
+    Cc: <linux-arm-kernel@lists.infradead.org>
+    Cc: <linux-mediatek@lists.infradead.org>
+
+diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+index 53b5a4b..80986ce 100644
+--- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
++++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+@@ -281,8 +281,8 @@ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno)
+ {
+ 	struct mt76_rx_tid *tid = NULL;
+ 
+-	rcu_swap_protected(wcid->aggr[tidno], tid,
+-			   lockdep_is_held(&dev->mutex));
++	tid = rcu_swap_protected(wcid->aggr[tidno], tid,
++				 lockdep_is_held(&dev->mutex));
+ 	if (tid) {
+ 		mt76_rx_aggr_shutdown(dev, tid);
+ 		kfree_rcu(tid, rcu_head);
