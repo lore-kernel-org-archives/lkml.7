@@ -2,95 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37783C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C20F2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09697222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079982;
-	bh=Q5Dcr8A1aSAnDMxrhZ4ckRgixOVCPQ3v2ONjkEvR5QA=;
+	s=default; t=1576079984;
+	bh=XUmbsPkZBUep6WkzCfrL1lHhh1NcPsaKVvKEEK7EqIE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rRkV9yKNYMLR5uFho/tbnuHL7YH13DWzwLBbeP2VqKuC68MF2crm30jgotTDk3Em
-	 s/4gqucxZdvl2NGFtiG6OOhhpK7tUqWxnoihFExiGOa6LJJsyzWp+GZAjwG+SjCuv4
-	 eBcHMuiXGaj0O8i59QmFeomf9tLit6mKnU2ImAmY=
+	b=SdpBtajZlPmW1+c+3GaSybUivXS0oFnD5DJVEfcgeqYYho1LVidBpff1eu9FSDfs1
+	 0vdxXVsoRPHiNP0eHM71O81HDvvuVpqNfwvcGqwfhVS3Whnp1KSb5l4LeRelfeLK0y
+	 KD9FBc02F7j/jPC9mEKvmuCak7UHy6pO9U/eb1Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732843AbfLKP7l (ORCPT
+        id S1732857AbfLKP7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:59:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38468 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:59:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731552AbfLKPOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730946AbfLKPOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:14:00 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7731D2467E;
-        Wed, 11 Dec 2019 15:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F20224682;
+        Wed, 11 Dec 2019 15:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077239;
-        bh=Q5Dcr8A1aSAnDMxrhZ4ckRgixOVCPQ3v2ONjkEvR5QA=;
+        bh=XUmbsPkZBUep6WkzCfrL1lHhh1NcPsaKVvKEEK7EqIE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=whZOHmHJK8HUo4RaDj7juJ1XUBqUja2VG+jcPRXYYVPe5X18tNIOYYmbhMMTWoeLq
-         wRCNjJbSMadtv3qtTt7jVDD8ZgJ46nDOGwG9h9Z19xeIFcMQ1sUWv0w2sWZqfObEi4
-         T+fJaDJjRVKaOAXcElQiXvVItA07JDQQReBBApn8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Trond Myklebust <trondmy@gmail.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.3 069/105] nfsd: restore NFSv3 ACL support
-Date:   Wed, 11 Dec 2019 16:05:58 +0100
-Message-Id: <20191211150250.436375546@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=zPzP2W5kUO/kAvpMex1Q14EEGtaoiBKmySn569pveD/wAzKDvgXiDXmqBYHX+CLhu
+         P3Ah0CwuRBWlQrMYAIggCkjv0QkO4S6P1cxWnw54vdn1quXeQQUD/vKo6iggCGWu4w
+         Ea18rKUrR1YDm+k2EIKTtb71BA2VDC5jqEumeGvc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 117/134] cdrom: respect device capabilities during opening action
+Date:   Wed, 11 Dec 2019 10:11:33 -0500
+Message-Id: <20191211151150.19073-117-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: J. Bruce Fields <bfields@redhat.com>
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-commit 7c149057d044c52ed1e1d4ee50cf412c8d0f7295 upstream.
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-An error in e333f3bbefe3 left the nfsd_acl_program->pg_vers array empty,
-which effectively turned off the server's support for NFSv3 ACLs.
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-Fixes: e333f3bbefe3 "nfsd: Allow containers to set supported nfs versions"
-Cc: stable@vger.kernel.org
-Cc: Trond Myklebust <trondmy@gmail.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
 
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfssvc.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -94,12 +94,11 @@ static const struct svc_version *nfsd_ac
- 
- #define NFSD_ACL_MINVERS            2
- #define NFSD_ACL_NRVERS		ARRAY_SIZE(nfsd_acl_version)
--static const struct svc_version *nfsd_acl_versions[NFSD_ACL_NRVERS];
- 
- static struct svc_program	nfsd_acl_program = {
- 	.pg_prog		= NFS_ACL_PROGRAM,
- 	.pg_nvers		= NFSD_ACL_NRVERS,
--	.pg_vers		= nfsd_acl_versions,
-+	.pg_vers		= nfsd_acl_version,
- 	.pg_name		= "nfsacl",
- 	.pg_class		= "nfsd",
- 	.pg_stats		= &nfsd_acl_svcstats,
-
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index ac42ae4651ce7..eebdcbef0578f 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -996,6 +996,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
++
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
++
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1162,7 +1168,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2882,6 +2889,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
+-- 
+2.20.1
 
