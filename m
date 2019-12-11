@@ -2,131 +2,83 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D728EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6D9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A904222527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AB82077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQutmLP/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YgOzV4v6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbfLKS1v (ORCPT
+        id S1731273AbfLKS2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:27:51 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42101 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729230AbfLKS1v (ORCPT
+        Wed, 11 Dec 2019 13:28:08 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35030 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731155AbfLKS2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:27:51 -0500
-Received: by mail-io1-f68.google.com with SMTP id f82so23690334ioa.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:27:50 -0800 (PST)
+        Wed, 11 Dec 2019 13:28:08 -0500
+Received: by mail-io1-f67.google.com with SMTP id v18so23762968iol.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:28:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mzDObby2jR84VqCAR2NNwsNmUH6L34aJzVs2dTgYaFM=;
-        b=SQutmLP/sTlMS+zEASMFyKHYZa5f7ZvuA3wQ6jac0fGgK7KhPy0pJYlK9Ep86yG+qw
-         wzyZcPvXgatCP1WzKGQ9qaWIfawy6sjA+myEUnoItidWjoBwaXzm6GzH8/YNDPrFYuNi
-         KI1ImvVwYFkcjW2tTODNRvj/3xdCFvtFVcraGylloS+K8e19bwK5TLnyt3JKe/jYM7/q
-         MRhQX0c6GfsJx/dvNnwivAkIfnoi4aXV/lLLKOWOsYzeiFLRupKYp1Z3i6jc9iTsZ9d8
-         sdmC37PlxSS1zykHsxTjLMi/rf/gqm3CKQU1vUKQHLuQbovcOtO8cKbIH3pwgCb1Qyxe
-         Y4ZA==
+        bh=GYZ+lGswFVXkExunAAAaOydIGqZJAHmJZ1GU8MypIx8=;
+        b=YgOzV4v6I/TJVJydU7kTxVhF0VMLBMt2iNdLA+J1hNO6gC79rsTSsyFWoBw6gMfalQ
+         jpz8UmB5Ox1hpBkwq/d5lES/48ikNJgOpc0sq6kUr0dcFaX5KyrXM1n1CPCxuMQmEDdF
+         3Z7w09S39qzud1kYHF4BXd0Lo3dWITtHys7ilImYhq601hu7LNc2r6nhX/rRIceQFEP5
+         1VY4h1GZsm/4GtPXsbWOCrcfTnOZlhQ1NH/FEkDjWWcOTFWnrxu1ioaPwIVlzjS53fKh
+         f3jAWpXen+JUdXQ0LDpScWpevyZbsFXNnrDfH2y+9sw+YQURKrXTJJ56cWRLir8caxGV
+         y9Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mzDObby2jR84VqCAR2NNwsNmUH6L34aJzVs2dTgYaFM=;
-        b=dyF+FUYx8uiPhKNims6mZTXdToN4MunUjCsD94bc3yWPJRsqF4k5m3z/H2wEdNjEPT
-         QfQKhQo6Ropw/o5CbgF+yg8MG0BNVvZWPPHbUp6JVPWJHh+prWk5yJxk6RgCwdO9tmEz
-         dxPb32fvtIt60jV4ImHFdT9Mrew1SCZGcAW3AhfYOBGywfdLpHDiQLE3/tc5Ur20Twh5
-         vwNZEhVB6T4DhOf0Tymd4RMqcDJ3ic5+x2zAeZDk3Zu2drCbGrPTwg6s+XzFkdbvJVEI
-         kyJ+L3D4nO5GPwrque9R7xpXOwO6JO74kttthoItKPa7bS71pGgYAdD5jw+QbNOSlbRT
-         SSgg==
-X-Gm-Message-State: APjAAAXS0eV8pXEZ8sAzQ8498t8bQ1yT+Y1xXLKEhyOY0wctvPtekQkt
-        JCneYzerK+TKH4Mcjt52WKjN8mezK6bb2cyjxOwg7cVt
-X-Google-Smtp-Source: APXvYqzr/oijDkWCcNuhvBnIVjwCPuuM7oI1QguAVqVj6YMeD8ttf/i0DbRLSFLpONolcFkrV56yhH2S3xvlzv460ao=
-X-Received: by 2002:a6b:1455:: with SMTP id 82mr3759846iou.200.1576088870232;
- Wed, 11 Dec 2019 10:27:50 -0800 (PST)
+        bh=GYZ+lGswFVXkExunAAAaOydIGqZJAHmJZ1GU8MypIx8=;
+        b=Y1pMvO1FNfUwzIMTvewOkenbl+/7WHAxCyJYUhYrGd13GtIt1s1ndf4ZUWP24+wRuT
+         2XGoOs0iNjrtS4SKnabGVjkNiDm+ONuWxdQBaUeC6uFJwWfp/RCyUnwPubvE0KIJeGBz
+         UqgkS4kUtS7BJeGGeQg9beyVTDbbsjRSed8jFxqdxdTA+f5QCQuBkc3DxjXn+SOkWAfM
+         StWF7NQEMEfS0k/6hbzvaUvMebmbr83L/jXRHWCOmdPSqzstX2GCz78TN8sITv4ZIO3Z
+         NqVmdqGsO1XtGpqjP+vjJT6e8OzO5/0qKu8jFyP7OoX/ffzzRaNm3E9cOxH+3fjY/Phg
+         dXYw==
+X-Gm-Message-State: APjAAAWS/iBWvYnaKgEbOD+hl+3rqOU0r1loAe+6vkOnHo5kkmLeXnxn
+        hScnoNAfVE1RA/lonC7B45ciBQGyqmoilXv3xiILwA==
+X-Google-Smtp-Source: APXvYqxIDlpEs2zoJLhRiXAXqzWo0oO6DflPW5rIoWl9fbpISlPNO+TX2x2qqejGkIbmidkvc94EXMb/3GXV1Hu5hYQ=
+X-Received: by 2002:a6b:3b49:: with SMTP id i70mr3977659ioa.108.1576088887157;
+ Wed, 11 Dec 2019 10:28:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211084216.25405-1-kraxel@redhat.com> <20191211084216.25405-2-kraxel@redhat.com>
-In-Reply-To: <20191211084216.25405-2-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 11 Dec 2019 10:27:39 -0800
-Message-ID: <CAPaKu7TyMPt4Wpq9FoWyTJSppURrz9XuFqD4fmFg6aX_9p+jtw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/virtio: skip set_scanout if framebuffer didn't change
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>
+References: <20191211175822.1925-1-sean.j.christopherson@intel.com> <20191211175822.1925-3-sean.j.christopherson@intel.com>
+In-Reply-To: <20191211175822.1925-3-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Wed, 11 Dec 2019 10:27:56 -0800
+Message-ID: <CALMp9eTqtTRgQZaCdbkEkL6bChCTOgVPgbYTjBi5iOqsTn4r-Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: x86: Refactor and rename bit() to feature_bit() macro
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 12:42 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Wed, Dec 11, 2019 at 9:58 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_plane.c | 31 ++++++++++++++------------
->  1 file changed, 17 insertions(+), 14 deletions(-)
+> Rename bit() to __feature_bit() to give it a more descriptive name, and
+> add a macro, feature_bit(), to stuff the X68_FEATURE_ prefix to keep
+> line lengths manageable for code that hardcodes the bit to be retrieved.
 >
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> index bc4bc4475a8c..a0f91658c2bc 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> @@ -151,20 +151,23 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
->         if (bo->dumb)
->                 virtio_gpu_update_dumb_bo(vgdev, bo, plane->state);
+> No functional change intended.
 >
-> -       DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
-> -                 bo->hw_res_handle,
-> -                 plane->state->crtc_w, plane->state->crtc_h,
-> -                 plane->state->crtc_x, plane->state->crtc_y,
-> -                 plane->state->src_w >> 16,
-> -                 plane->state->src_h >> 16,
-> -                 plane->state->src_x >> 16,
-> -                 plane->state->src_y >> 16);
-> -       virtio_gpu_cmd_set_scanout(vgdev, output->index,
-> -                                  bo->hw_res_handle,
-> -                                  plane->state->src_w >> 16,
-> -                                  plane->state->src_h >> 16,
-> -                                  plane->state->src_x >> 16,
-> -                                  plane->state->src_y >> 16);
-> +       if (plane->state->fb != old_state->fb) {
-Should we check src_{w,h,x,y} as well?
-> +               DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
-> +                         bo->hw_res_handle,
-> +                         plane->state->crtc_w, plane->state->crtc_h,
-> +                         plane->state->crtc_x, plane->state->crtc_y,
-> +                         plane->state->src_w >> 16,
-> +                         plane->state->src_h >> 16,
-> +                         plane->state->src_x >> 16,
-> +                         plane->state->src_y >> 16);
-> +               virtio_gpu_cmd_set_scanout(vgdev, output->index,
-> +                                          bo->hw_res_handle,
-> +                                          plane->state->src_w >> 16,
-> +                                          plane->state->src_h >> 16,
-> +                                          plane->state->src_x >> 16,
-> +                                          plane->state->src_y >> 16);
-> +       }
-> +
->         virtio_gpu_cmd_resource_flush(vgdev, bo->hw_res_handle,
->                                       plane->state->src_x >> 16,
->                                       plane->state->src_y >> 16,
-> --
-> 2.18.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
