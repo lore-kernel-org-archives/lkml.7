@@ -2,189 +2,176 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B82C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7850208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE4B214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EmnrUMMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbfLKOqs (ORCPT
+        id S1729689AbfLKOqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:46:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:60634 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbfLKOqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:46:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 592621FB;
-        Wed, 11 Dec 2019 06:46:47 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C72223F67D;
-        Wed, 11 Dec 2019 06:46:45 -0800 (PST)
-Date:   Wed, 11 Dec 2019 14:46:43 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Linuxarm <linuxarm@huawei.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCHES] Fix 'perf top' breakage on architectures not providing
- get_cpuid() Re: perf top for arm64?
-Message-ID: <20191211144643.GC35097@lakrids.cambridge.arm.com>
-References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
- <20191106140036.GA6259@kernel.org>
- <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
- <20191210163655.GG14123@krava>
- <952dc484-2739-ee65-f41c-f0198850ab10@huawei.com>
- <20191210170841.GA23357@krava>
- <9a31536b-f266-e305-1107-2f745d0a33e3@huawei.com>
- <20191210195113.GD13965@kernel.org>
- <20191211133319.GA15181@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211133319.GA15181@kernel.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Wed, 11 Dec 2019 09:46:53 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55200 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbfLKOqv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:46:51 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191211144649euoutp0205a2c9ca524d2c4721d2a60c0c604883~fWGqYY8T30987809878euoutp02g
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191211144649euoutp0205a2c9ca524d2c4721d2a60c0c604883~fWGqYY8T30987809878euoutp02g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576075609;
+        bh=6yPCbgLPq9lCGS66YYBtZYi6Uzkol1G5zMpyUCDGzKk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EmnrUMMcH5XNif7pvCvVPYLVpnPabTH4EaVo4rgAbtalSKf7ITfDl9doCe2eAS8dN
+         LWFT2sjmZUw1db9kdWvOnwqteKDmPJtzA1o4FUj4xviiKIFerULZzmNdAdgvclRfVP
+         J4jeEIY9MnEYXwSJuExiCHBxWonGpcoAq4GCKS/4=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191211144649eucas1p2304a23219d0b5fed15aa82ee8b2ab5a7~fWGqB0q0T2855628556eucas1p2Y;
+        Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3A.0E.60698.85101FD5; Wed, 11
+        Dec 2019 14:46:49 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce~fWGpoDUOw3050630506eucas1p2K;
+        Wed, 11 Dec 2019 14:46:48 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191211144648eusmtrp2d3ecab1613505b685bb325903dde0a11~fWGpnXy2A0169801698eusmtrp21;
+        Wed, 11 Dec 2019 14:46:48 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-a1-5df10158cbdd
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id CD.9A.07950.85101FD5; Wed, 11
+        Dec 2019 14:46:48 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191211144647eusmtip15998910aa904bd33dab89c66ced87407~fWGo9_zTD0944809448eusmtip1n;
+        Wed, 11 Dec 2019 14:46:47 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2 1/4] ARM: dts: exynos: Correct USB3503 GPIOs polarity
+Date:   Wed, 11 Dec 2019 15:46:35 +0100
+Message-Id: <20191211144638.24676-2-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211144638.24676-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSaUiTYRzv2XtuNX2dgg8aGeuwAi/mh4e8CoJeiMIP9aFg6NI3tXTKpqYS
+        ZM40LUvFcpmWU1Px2ppH3lfmCGUeSytQIQ1EwSNMyyzN+WZ9+53/Hzw8NCbpJpzoCGUsp1Iq
+        IqWkCG/qXze7XQZf5Z5jhQCZZzZw9EqrJ9BA1yKO0juLcKQp1ZNoaMhAIePMOIEsrYUksmhG
+        ANIOdQpQSfldDNX2TVIoJVWG0jLKCVRfl06h9d4hwSmGLf0+hbGG6WqCbSmYpFhjVQbJToy3
+        k2xXUQ3F1pfdZlPfdeHsw4YqwK4YDwSKroh8Q7nIiHhO5eEfLApPKZsAMXV2CXey3wuSwbBN
+        JhDSkPGGxvyXZCYQ0RKmEkDzWz1hNSTMNwDvb53kjRUAJ9pyBLuNmeHGv40KAEf6dRRPthtL
+        T+Z36iTjBTMXMndSDkwNgBtZWtxKMMaMwSLNCG5N2TMs7DSU7DRw5gi0VM5iVixm/OBw5SDJ
+        77nAakP3tk7TQsYf5vUkWu9AZpSCbe1G3KpD5gzMn7vAx+3hvKmB4vF+uNXyQsDnNQB+NtdS
+        PHkAoCVFC/iUD3xjGiGshzDmONS3evDyaThteSbg79vAjwt2VhnbhrlN+Rgvi+G9NAmfPgoL
+        THX/ZnuGRzEes3CpK5ngHygHwK2ObjIbuBT8HysGoAo4cnHqqDBOLVNyN93Viih1nDLMPSQ6
+        ygi2/9XApmm1GXT+utoLGBpI94mLXy/JJYQiXp0Y1QsgjUkdxKa0RblEHKpITOJU0UGquEhO
+        3QucaVzqKJaVzMklTJgilrvBcTGcatcV0EKnZEA1A5vl2MPnbJ10a7N5jw4dQ03XK2UJISsL
+        16rPPncpFvqdb7j1wTXYfW1Pm6cmqWT1x5YbHtGx7t1aU+0xKaN8Ls0X5n+Zt91rdg1w+zSV
+        8FjYEuv0e8kcFLg8cTHXx/lpgc7XXe6/8TOrok+nlLCawUbZizGfqYOFweMBm1p/Ka4OV3id
+        wFRqxR9W36iMUwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xu7oRjB9jDe6uUrY49/g3i8XGGetZ
+        LU7vf8di0b5vLotF8+L1bBbnz29gt9j0+BqrxeVdc9gsLjdfZLSYcX4fk8WiZa3MFmuP3GW3
+        aGoxtmjrXMZqsXldO7vFz0PnmRwEPBZ/v8fsseHRalaPnbPusntsWtXJ5nHn2h42j/1z17B7
+        bF5S79Fycj+LR9+WVYwenzfJBXBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
+        mSrp29mkpOZklqUW6dsl6GU0LbnDWLBOsKJxwhWmBsYLfF2MnBwSAiYSjy9sZeti5OIQEljK
+        KPGv5xQbREJG4uS0BlYIW1jiz7UuqKJPjBInvlxlAkmwCRhKdL2FSIgIbGCUOPP+CQtIglng
+        GrPEss3SILawgIfEvg2LwCaxCKhKXF7xnBnE5hWwlbiw4gzUNnmJ1RsOAMU5ODgF7CSmHKwE
+        CQsBldybdIhtAiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHRs+3Yzy07GLveBR9i
+        FOBgVOLhXbD9fawQa2JZcWXuIUYJDmYlEd7jbe9ihXhTEiurUovy44tKc1KLDzGaAt00kVlK
+        NDkfGNl5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYvV3a5jn/
+        l1IQu8GmPonp8MHrH6c84PnqM8G5dJ2Nh9jxRzMkDqysTr7kYMBUKseysKj77V61v7o9x6//
+        OKoQxhAcXTctskgrdt+8TX+/ZOa4ZWVskXMXOLnYUc7V42jc7dB0xYWrF5llhR7lyDv7vd6o
+        knVj9E+5WlFhz9vRLzi4BD+XcXEosRRnJBpqMRcVJwIA3Caj6rQCAAA=
+X-CMS-MailID: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
+References: <20191211144638.24676-1-m.szyprowski@samsung.com>
+        <CGME20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:33:19AM -0300, Arnaldo Carvalho de Melo wrote:
-> So can you take a look at the two patches below and provide me Acked-by
-> and/or Reviewed-by and/or Tested-by?
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-I just gave this a spin. With vanilla v5.5-rc1 perf top behaves as John
-reported, and with these applied atop perf works as expected:
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts        | 2 +-
+ arch/arm/boot/dts/exynos5410-odroidxu.dts       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Tested-by: Mark Rutland <mark.rutland@arm.com>
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index ea55f377d17c..9c39e82e4ecb 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -267,7 +267,7 @@
+ 
+ 		intn-gpios = <&gpx3 0 GPIO_ACTIVE_HIGH>;
+ 		connect-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
+-		reset-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
+ 		initial-mode = <1>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index d6c85efdb465..3eddf5dbcf7b 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -154,7 +154,7 @@
+ 		compatible = "smsc,usb3503a";
+ 
+ 		reset-gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
+-		connect-gpios = <&gpd1 7 GPIO_ACTIVE_LOW>;
++		connect-gpios = <&gpd1 7 GPIO_ACTIVE_HIGH>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+index e0db251e253f..4f9297ae0763 100644
+--- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
++++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+@@ -170,7 +170,7 @@
+ 
+ 		intn-gpios = <&gpx0 7 GPIO_ACTIVE_HIGH>;
+ 		connect-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
+-		reset-gpios = <&gpx1 4 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpx1 4 GPIO_ACTIVE_LOW>;
+ 		initial-mode = <1>;
+ 
+ 		clock-names = "refclk";
+-- 
+2.17.1
 
-From scaning the code, the only other user of get_cpuid() that ends up
-giving up is perf kvm, but AFAICT that never supported arm64, so that
-looks sound to me:
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> From 53c6cde6a71a1a9283763bd2e938b229b50c2cd5 Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Wed, 11 Dec 2019 10:09:24 -0300
-> Subject: [PATCH 1/2] perf arch: Make the default get_cpuid() return compatible
->  error
-> 
-> Some of the functions calling get_cpuid() propagate back the error it
-> returns, and all are using errno (positive) values, make the weak
-> default get_cpuid() function return ENOSYS to be consistent and to allow
-> checking if this is an arch not providing this function or if a provided
-> one is having trouble getting the cpuid, to decide if the warning should
-> be provided to the user or just a debug message should be emitted.
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/header.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index becc2d109423..4d39a75551a0 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -850,7 +850,7 @@ int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
->   */
->  int __weak get_cpuid(char *buffer __maybe_unused, size_t sz __maybe_unused)
->  {
-> -	return -1;
-> +	return ENOSYS; /* Not implemented */
->  }
->  
->  static int write_cpuid(struct feat_fd *ff,
-> -- 
-> 2.21.0
-> 
-> From c6c6a3e2eb6982e37294abcac389effd298cf730 Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Wed, 11 Dec 2019 10:21:59 -0300
-> Subject: [PATCH 2/2] perf top: Do not bail out when perf_env__read_cpuid()
->  returns ENOSYS
-> 
-> 'perf top' stopped working on hw architectures that do not provide a
-> get_cpuid() implementation and thus fallback to the weak get_cpuid()
-> default function.
-> 
-> This is done because at annotation time we may need it in the arch
-> specific annotation init routine, but that is only being used by arches
-> that do provide a get_cpuid() implementation:
-> 
->   $ find tools/  -name "*.[ch]" | xargs grep 'evlist->env'
->   tools/perf/builtin-top.c:	top.evlist->env = &perf_env;
->   tools/perf/util/evsel.c:		return evsel->evlist->env;
->   tools/perf/util/s390-cpumsf.c:	sf->machine_type = s390_cpumsf_get_type(session->evlist->env->cpuid);
->   tools/perf/util/header.c:	session->evlist->env = &header->env;
->   tools/perf/util/sample-raw.c:	const char *arch_pf = perf_env__arch(evlist->env);
->   $
-> 
->   $ find tools/perf/arch  -name "*.[ch]" | xargs grep -w get_cpuid
->   tools/perf/arch/x86/util/auxtrace.c:	ret = get_cpuid(buffer, sizeof(buffer));
->   tools/perf/arch/x86/util/header.c:get_cpuid(char *buffer, size_t sz)
->   tools/perf/arch/powerpc/util/header.c:get_cpuid(char *buffer, size_t sz)
->   tools/perf/arch/s390/util/header.c: * Implementation of get_cpuid().
->   tools/perf/arch/s390/util/header.c:int get_cpuid(char *buffer, size_t sz)
->   tools/perf/arch/s390/util/header.c:	if (buf && get_cpuid(buf, 128))
->   $
-> 
-> For 'report' or 'script', i.e. tools working on perf.data files, that is
-> setup while reading the header, its just top that needs to explicitely
-> read it at tool start.
-> 
-> Reported-by: John Garry <john.garry@huawei.com>
-> Analysed-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-top.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index dc80044bc46f..795e353de095 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1568,9 +1568,13 @@ int cmd_top(int argc, const char **argv)
->  	 */
->  	status = perf_env__read_cpuid(&perf_env);
->  	if (status) {
-> -		pr_err("Couldn't read the cpuid for this machine: %s\n",
-> -		       str_error_r(errno, errbuf, sizeof(errbuf)));
-> -		goto out_delete_evlist;
-> +		/*
-> +		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
-> +		 * warn the user explicitely.
-> +		 */
-> +		eprintf(status == ENOSYS ? 1 : 0, verbose,
-> +			"Couldn't read the cpuid for this machine: %s\n",
-> +			str_error_r(errno, errbuf, sizeof(errbuf)));
->  	}
->  	top.evlist->env = &perf_env;
->  
-> -- 
-> 2.21.0
-> 
