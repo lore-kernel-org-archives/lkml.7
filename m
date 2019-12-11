@@ -2,67 +2,149 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A7BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DCEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC62D206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576060946;
-	bh=nsJ4bE9wDwdi05WetCiVOr9Mbc94g8Oku8eeY/1k/hE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=q6Ti53onQbSok+Rqm4hAu7ZQfQR9jNcVT/dkhcEoa+PsS8Ims/8MeZkT5iamylPOA
-	 9h7QT++Z6LxyzgoyiRFVYvJRY3jesmWVIAOF6H7s0vB7psaRNB7Bmq9iS+CkOf3sQv
-	 e2Tq2xc/pzcLIqFQVABWLvB7eqv3KzvXnlxXKTZ8=
+	by mail.kernel.org (Postfix) with ESMTP id 10E0A2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfLKKmZ (ORCPT
+        id S1728995AbfLKKmi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:42:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfLKKmZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:42:25 -0500
-Received: from localhost (unknown [171.76.100.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08AF92054F;
-        Wed, 11 Dec 2019 10:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576060944;
-        bh=nsJ4bE9wDwdi05WetCiVOr9Mbc94g8Oku8eeY/1k/hE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2n/1zKCb5xTIvx/XgOJ+xKHW21guNHHnKoF6ZtSMurBofQSDTG3n6nsE4phArjIcb
-         Y3PbZFAQ/wHYBxeV1sBq/7ZUlLwelz6OE88jRYWv3/vhUDukhm1Kp9tyIDyJKCvr0Z
-         2SeqE864qmTRUbJaoHhevvpwnmSSMBltwbSyom9Y=
-Date:   Wed, 11 Dec 2019 16:12:20 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: axi-dmac: add a check for
- devm_regmap_init_mmio
-Message-ID: <20191211104220.GF2536@vkoul-mobl>
-References: <20191209085711.16001-1-hslester96@gmail.com>
+        Wed, 11 Dec 2019 05:42:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59534 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728030AbfLKKmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:42:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 376F6B13E;
+        Wed, 11 Dec 2019 10:42:36 +0000 (UTC)
+From:   Thomas Renninger <trenn@suse.de>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Felix Schnizlein <fschnizlein@suse.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
+        Felix Schnizlein <fschnizlein@suse.de>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
+Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
+Date:   Wed, 11 Dec 2019 11:42:35 +0100
+Message-ID: <4737004.4U1sY2OxSp@skinner.arch.suse.de>
+In-Reply-To: <87sglroqix.fsf@nanos.tec.linutronix.de>
+References: <20191206162421.15050-1-trenn@suse.de> <20191206163656.GC86904@kroah.com> <87sglroqix.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209085711.16001-1-hslester96@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-12-19, 16:57, Chuhong Yuan wrote:
-> The driver misses checking the result of devm_regmap_init_mmio().
-> Add a check to fix it.
+On Tuesday, December 10, 2019 9:48:54 PM CET Thomas Gleixner wrote:
+> Greg KH <gregkh@linuxfoundation.org> writes:
+> > On Fri, Dec 06, 2019 at 05:24:20PM +0100, Thomas Renninger wrote:
+> >> From: Felix Schnizlein <fschnizlein@suse.de>
+> >> ==> flags <==
+> >> fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36
+> >> clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc
+> >> rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma
+> >> cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave
+> >> avx f16c rdrand hypervisor lahf_lm abm cpuid_fault invpcid_single pti
+> >> ssbd ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
+> >> xsaveopt arat umip> 
+> > One file with all of that?  We are going to run into problems
+> > eventually, that should be split up.
+> > 
+> > Just like bugs, that's going to just grow over time and eventually
+> > overflow PAGE_SIZE :(
+> > 
+> > Make this:
+> >   ├── flags
+> >   │   ├── fpu
+> >   │   ├── vme
+> > 
+> > ...
+> > 
+> > Much simpler to parse, right?
+> 
+> Well, I'm not really sure whether 100+ files are simpler to parse.
+> 
+> Aside of that I really don't see the value for 100+ files per CPU which
+> are just returning 1 or True or whatever as long as you are not
+> suggesting to provide real feature files which have 0/1 or True/False
+> content.
 
-Applied, thanks
+I also do not like the one file per cpu flag approach.
+This still is one "data"/"info" per sysfs file.
+Similar to:
+cpu/cpufreq/policy1/scaling_available_governors
+and probably a lot others. If PAGE_SIZE overflow has to be cared for, then be 
+it.
+ 
+> But I still don't get the whole thing. The only "argument" I've seen so
+> far is the 'proc moves to sys' mantra, but that does not make it any
+> better.
+> 
+> We won't get rid of /proc/cpuinfo for a very long time simply because
+> too much userspace uses it.
 
--- 
-~Vinod
+The reason we will never get rid of it is:
+Newly written userspace tools still (have to) make use it.
+This is because of a small set of remaining info which is convenient
+to have in userspace but which is not avail in sysfs yet.
+
+Therefore only x of the 26 /proc/cpuinfo data has been picked up.
+
+For decades unused info like:
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+power management:
+
+shall die at (long but) some point of time.
+
+It's quite some years ago when acpi and cpufreq proc info first got
+deprecated and duplicated in sys.
+It has been said that it needs years of deprecation that the event file
+on which damons were listening for acpi events can ever be removed...
+It has been 2013 when the removal has been done, more than 5 years ago:
+1696d9dc57e062ce5200f6a42a6aaada15b434bb
+ACPI: Remove the old /proc/acpi/event interface
+
+/proc/cpuinfo may need some years more, but there should be no
+reason it is still getting used.
+
+> Introducing a mess in /sys/ in parallel just
+> for following the mantra does not help much.
+ 
+> Also IF we ever expose feature flags in sys then this needs to be a
+> split ino
+> 
+>   cpu/common_features
+> 
+> and
+> 
+>   cpu/CPU$N/unique_features
+
+Makes sense.
+feature (without common/unique) is also a better naming than flags.
+
+If Greg (and others) are ok, I would add "page size exceeding" handling.
+Hm, quick searching for an example I realize that debugfs can exceed page 
+size. Is it that hard to expose a sysfs file larger than page size?
+
+> On most systems unique_features wont exist, but there is such stuff on
+> the horizon.
+
+I still wait a bit before doing work for nothing.
+I hope everybody agrees, that remaining useful info in /proc/cpuinfo should
+show up in /sys if that did not happen yet. And that userspace tools should
+not (need to) make use of /proc/cpuinfo anymore.
+
+    Thomas
+
+
