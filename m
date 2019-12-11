@@ -3,32 +3,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E26C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E72C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FF8208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9BB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLKEtI (ORCPT
+        id S1727123AbfLKEzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:49:08 -0500
-Received: from mail5.windriver.com ([192.103.53.11]:48610 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfLKEtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:49:07 -0500
+        Tue, 10 Dec 2019 23:55:41 -0500
+Received: from mail.windriver.com ([147.11.1.11]:38048 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfLKEzl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 23:55:41 -0500
 Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xBB4mlae022410
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xBB4tJbv010057
         (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 20:48:47 -0800
+        Tue, 10 Dec 2019 20:55:19 -0800 (PST)
 Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
  (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 10 Dec
- 2019 20:48:46 -0800
+ 2019 20:55:18 -0800
 Subject: Re: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected()
  with rcu_replace_pointer()
-To:     <paulmck@kernel.org>, Tuong Lien Tong <tuong.t.lien@dektech.com.au>
+To:     Tuong Lien Tong <tuong.t.lien@dektech.com.au>, <paulmck@kernel.org>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mingo@kernel.org>, <tipc-discussion@lists.sourceforge.net>,
         <kernel-team@fb.com>, <torvalds@linux-foundation.org>,
@@ -38,14 +39,13 @@ References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
  <20191210223825.GS2889@paulmck-ThinkPad-P72>
  <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
  <707801d5afc6$cac68190$605384b0$@dektech.com.au>
- <20191211031751.GZ2889@paulmck-ThinkPad-P72>
 From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <fdbb5b2c-851e-11c1-7e52-5f70b7489504@windriver.com>
-Date:   Wed, 11 Dec 2019 12:35:29 +0800
+Message-ID: <db88d33f-8e25-8859-84ec-3372a108c759@windriver.com>
+Date:   Wed, 11 Dec 2019 12:42:00 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191211031751.GZ2889@paulmck-ThinkPad-P72>
+In-Reply-To: <707801d5afc6$cac68190$605384b0$@dektech.com.au>
 Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,8 +55,19 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 11:17 AM, Paul E. McKenney wrote:
->> Acked-by: Ying Xue <ying.xue@windriver.com>
-> As in the following?  If so, I will be very happy to apply your Acked-by.
+On 12/11/19 10:00 AM, Tuong Lien Tong wrote:
+>>  
+>>  	/* Move passive key if any */
+>>  	if (key.passive) {
+>> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
+>> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2,
+> &rx->lock);
+> The 3rd parameter should be the lockdep condition checking instead of the
+> spinlock's pointer i.e. "lockdep_is_held(&rx->lock)"?
+> That's why I'd prefer to use the 'tipc_aead_rcu_swap ()' macro, which is
+> clear & concise at least for the context here. It might be re-used later as
+> well...
+> 
 
-Yes. Thanks!
+Right. The 3rd parameter of rcu_replace_pointer() should be
+"lockdep_is_held(&rx->lock)" instead of "&rx->lock".
