@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97C4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E802C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80AA121556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC172077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078690;
-	bh=fEqdX+7S7tkDo7Pq70+Qc8Hu7erKpC+qHRMyteevV7A=;
+	s=default; t=1576078695;
+	bh=HNbg6bCPyKPQgU9SbP1UWq4zicPzmIxrkPeN4xAmf0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OquYlw7tj85MaIKy9Up+fh67eAvKhBpR7DPVX8r61Ho/Lhl8J3+SwPL2M4AcD8KYU
-	 7P7EzqgXpPDkspQku9EMTnePHLZ7VH5ymVjAkV8wA0pY6ufoaCRrxlZ5yyu0lN+2dY
-	 fwPI/H9XXYNnEko1ugkvc1mvaCoZK0/WWpb2jmAI=
+	b=qYxUCc1Up3HP7hvACigIcihuXz+KZvfeHkb06ey4YMTkHuH+9ESNrSnlUdpT2odQe
+	 L3zjh/f+B1F47pWU/FqB7OMc2+U1bzf1JjLSkBqx3yV+lFcihwOnn1IurMykhH80JN
+	 Ydnqcr7hIDzb5Hf51GINyBEt+Q2xcce+Yxsv2K8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388241AbfLKPiJ (ORCPT
+        id S2388105AbfLKPfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:38:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388117AbfLKPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:20 -0500
+        id S2388061AbfLKPfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A899F2173E;
-        Wed, 11 Dec 2019 15:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AD472173E;
+        Wed, 11 Dec 2019 15:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078520;
-        bh=fEqdX+7S7tkDo7Pq70+Qc8Hu7erKpC+qHRMyteevV7A=;
+        s=default; t=1576078516;
+        bh=HNbg6bCPyKPQgU9SbP1UWq4zicPzmIxrkPeN4xAmf0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZsL0gyIy5sS/PKABW9Kx+5OtrBnNbKTpN93BCCsoODR11d8HmY1E0yyFZ4XLb8H7F
-         cVyRILI85DdF/LEjw6VfXkaRxu9dM8dXN2j19Kt/w4GiAK+HX+8Lv/0FlX0f+9r4il
-         LxbZ33Tt9ELNQtexKJM/H50mB6NOo3dvTsOD+Zuo=
+        b=cvbFFqblLAS/5m9ZvYm688pdQloEQfEpDYan7JQ0SO5gycse3RdNIhngSIxyO9yXa
+         c7NphTp5jkugO7jdwofPEBC6+wYqOX1lqIF5fLsSvmStxmATkM51I9vvWQVNbkXdqq
+         d5CZOyc97wLx4RGY6ghA84VO6kceEHXMJeZvCmb0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 09/42] powerpc/pseries: Don't fail hash page table insert for bolted mapping
-Date:   Wed, 11 Dec 2019 10:34:37 -0500
-Message-Id: <20191211153510.23861-9-sashal@kernel.org>
+Cc:     David Disseldorp <ddiss@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/42] scsi: target: compare full CHAP_A Algorithm strings
+Date:   Wed, 11 Dec 2019 10:34:33 -0500
+Message-Id: <20191211153510.23861-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -59,65 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: David Disseldorp <ddiss@suse.de>
 
-[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
+[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
 
-If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
-insert by removing a random entry from the group.
+RFC 2307 states:
 
-After some runtime, it is very well possible to find all the 8 hash page table
-entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
-in that case. With Storage class memory a user can find this error easily since
-a namespace enable/disable is equivalent to memory add/remove.
+  For CHAP [RFC1994], in the first step, the initiator MUST send:
 
-This results in failures as reported below:
+      CHAP_A=<A1,A2...>
 
-$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
-libndctl: ndctl_dax_enable: dax1.3: failed to enable
-  Error: namespace1.2: failed to enable
+   Where A1,A2... are proposed algorithms, in order of preference.
+...
+   For the Algorithm, as stated in [RFC1994], one value is required to
+   be implemented:
 
-failed to create namespace: No such device or address
+       5     (CHAP with MD5)
 
-In kernel log we find the details as below:
+LIO currently checks for this value by only comparing a single byte in
+the tokenized Algorithm string, which means that any value starting with
+a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
+comparing the entire tokenized string.
 
-Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
-dax_pmem: probe of dax1.3 failed with error -14
-
-This indicates that we failed to create a bolted hash table entry for direct-map
-address backing the namespace.
-
-We also observe failures such that not all namespaces will be enabled with
-ndctl enable-namespace all command.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/target/iscsi/iscsi_target_auth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index bd666287c5eda..de1d8cdd29915 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -289,7 +289,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
- 					       HPTE_V_BOLTED, psize, psize,
- 					       ssize);
--
-+		if (ret == -1) {
-+			/* Try to remove a non bolted entry */
-+			ret = mmu_hash_ops.hpte_remove(hpteg);
-+			if (ret != -1)
-+				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
-+							       HPTE_V_BOLTED, psize, psize,
-+							       ssize);
-+		}
- 		if (ret < 0)
- 			break;
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index f0d97305575d7..aa3f98994c7d6 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -74,7 +74,7 @@ static int chap_check_algorithm(const char *a_str)
+ 		if (!token)
+ 			goto out;
  
+-		if (!strncmp(token, "5", 1)) {
++		if (!strcmp(token, "5")) {
+ 			pr_debug("Selected MD5 Algorithm\n");
+ 			kfree(orig);
+ 			return CHAP_DIGEST_MD5;
 -- 
 2.20.1
 
