@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EBBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A0EC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487C92173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1DD222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077831;
-	bh=397+llq5b8ShLmAi4cOwDwNlPSEvwZuhmZI3njME1mE=;
+	s=default; t=1576077834;
+	bh=JsIC5CV+h7wmbyXfmTd2M9dfvD94GrrUw0tE3n+hI6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z7XtKaFrnvTXDYIHiDQEPbiCmYRjT6OpSxJrXDp5VAXhYs5X9dVeFu3THv0y1ZbVv
-	 E9O8S8fOib9UOGSXcsc3YQyMlfRMmDroRr7TQPdxz5+18nc63fhHw39X1aEBRjNan0
-	 ncqMoyaBmK4Rethh4TTj/USEDTMK87Ds9pgGyFiU=
+	b=E0cN7nbXknRfobMNdKa1dnMMrsTHePiHrKJMpbNpSfpUXK33efuVQ0ceWlDA3BlUb
+	 hv2u0dKBVUGAwMV6nGO4BNLsqenCxGUSlYjPp9Xd95d6uFem2a8XdXSsjzT/LVxNen
+	 LhohzyJjemI1hMsw762W/9kpjNQokkRY8S2DmCQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732486AbfLKPXt (ORCPT
+        id S1732478AbfLKPXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732749AbfLKPXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:43 -0500
+        id S1731717AbfLKPXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB2862077B;
-        Wed, 11 Dec 2019 15:23:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C842173E;
+        Wed, 11 Dec 2019 15:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077823;
-        bh=397+llq5b8ShLmAi4cOwDwNlPSEvwZuhmZI3njME1mE=;
+        s=default; t=1576077825;
+        bh=JsIC5CV+h7wmbyXfmTd2M9dfvD94GrrUw0tE3n+hI6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rT0ISnsA83GDqkAbVEa/316zdxxAx8FORpYs2EppsNCrVcrFO+Aeu/xrf2z+IiUzF
-         e2Xryjnn4wuk1oRiGAzWfZYWkgj4W2EWoRiMhMWpxSvGvTP2+WG0vthe+l47ErHvyZ
-         8TupCzo0e7uqHm+cAJ36QdGxYKVUrbsq5o4qxn0c=
+        b=ab8KXeiSwkRioeV5ze3WK+kWit0Pjyw92J3vQuohRIFkamkc4ufX4ElAsdJy7BZKD
+         s7a0bvxcmTV7Gci7pdYMXgRlcqUjBcw7RF85orUspLg6TVZJ2xnYc9KKIiUG271JPa
+         Pah3KkM+hPlHfzXe6FfOj9/bg3ShiRcJQzcYNHkE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        stable@vger.kernel.org, Nir Dotan <nird@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 183/243] soc: renesas: r8a77990-sysc: Fix initialization order of 3DG-{A,B}
-Date:   Wed, 11 Dec 2019 16:05:45 +0100
-Message-Id: <20191211150351.521599663@linuxfoundation.org>
+Subject: [PATCH 4.19 184/243] mlxsw: spectrum_router: Relax GRE decap matching check
+Date:   Wed, 11 Dec 2019 16:05:46 +0100
+Message-Id: <20191211150351.589776296@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,67 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Nir Dotan <nird@mellanox.com>
 
-[ Upstream commit b0d7fbf8b174168c580bb310964c3c809e5569a9 ]
+[ Upstream commit da93d2913fdf43d5cde3c5a53ac9cc29684d5c7c ]
 
-The workaround for the wrong hierarchy of the 3DG-{A,B} power
-domains on R-Car E3 ES1.0 corrected the parent domains.
-However, the 3DG-{A,B} power domains were still initialized and powered
-in the wrong order, causing 3DG operation to fail.
+GRE decap offload is configured when local routes prefix correspond to the
+local address of one of the offloaded GRE tunnels. The matching check was
+found to be too strict, such that for a flat GRE configuration, in which
+the overlay and underlay traffic share the same non-default VRF, decap flow
+was not offloaded.
 
-Fix this by changing the order in the table at runtime, when running on
-an affected SoC.
+Relax the check for decap flow offloading. A match occurs if the local
+address of the tunnel matches the local route address while both share the
+same VRF table.
 
-Fixes: 086b399965a7ee7e ("soc: renesas: r8a77990-sysc: Add workaround for 3DG-{A,B}")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: 4607f6d26950 ("mlxsw: spectrum_router: Support IPv4 underlay decap")
+Signed-off-by: Nir Dotan <nird@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/renesas/r8a77990-sysc.c | 23 ++++-------------------
- 1 file changed, 4 insertions(+), 19 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/soc/renesas/r8a77990-sysc.c b/drivers/soc/renesas/r8a77990-sysc.c
-index 15579ebc5ed20..664b244eb1dd9 100644
---- a/drivers/soc/renesas/r8a77990-sysc.c
-+++ b/drivers/soc/renesas/r8a77990-sysc.c
-@@ -28,19 +28,6 @@ static struct rcar_sysc_area r8a77990_areas[] __initdata = {
- 	{ "3dg-b",	0x100, 1, R8A77990_PD_3DG_B,	R8A77990_PD_3DG_A },
- };
- 
--static void __init rcar_sysc_fix_parent(struct rcar_sysc_area *areas,
--					unsigned int num_areas, u8 id,
--					int new_parent)
--{
--	unsigned int i;
--
--	for (i = 0; i < num_areas; i++)
--		if (areas[i].isr_bit == id) {
--			areas[i].parent = new_parent;
--			return;
--		}
--}
--
- /* Fixups for R-Car E3 ES1.0 revision */
- static const struct soc_device_attribute r8a77990[] __initconst = {
- 	{ .soc_id = "r8a77990", .revision = "ES1.0" },
-@@ -50,12 +37,10 @@ static const struct soc_device_attribute r8a77990[] __initconst = {
- static int __init r8a77990_sysc_init(void)
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+index 3f54b3ca38bad..44b6c2ac5961d 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+@@ -1215,15 +1215,12 @@ mlxsw_sp_ipip_entry_matches_decap(struct mlxsw_sp *mlxsw_sp,
  {
- 	if (soc_device_match(r8a77990)) {
--		rcar_sysc_fix_parent(r8a77990_areas,
--				     ARRAY_SIZE(r8a77990_areas),
--				     R8A77990_PD_3DG_A, R8A77990_PD_3DG_B);
--		rcar_sysc_fix_parent(r8a77990_areas,
--				     ARRAY_SIZE(r8a77990_areas),
--				     R8A77990_PD_3DG_B, R8A77990_PD_ALWAYS_ON);
-+		/* Fix incorrect 3DG hierarchy */
-+		swap(r8a77990_areas[7], r8a77990_areas[8]);
-+		r8a77990_areas[7].parent = R8A77990_PD_ALWAYS_ON;
-+		r8a77990_areas[8].parent = R8A77990_PD_3DG_B;
- 	}
+ 	u32 ul_tb_id = l3mdev_fib_table(ul_dev) ? : RT_TABLE_MAIN;
+ 	enum mlxsw_sp_ipip_type ipipt = ipip_entry->ipipt;
+-	struct net_device *ipip_ul_dev;
  
- 	return 0;
+ 	if (mlxsw_sp->router->ipip_ops_arr[ipipt]->ul_proto != ul_proto)
+ 		return false;
+ 
+-	ipip_ul_dev = __mlxsw_sp_ipip_netdev_ul_dev_get(ipip_entry->ol_dev);
+ 	return mlxsw_sp_ipip_entry_saddr_matches(mlxsw_sp, ul_proto, ul_dip,
+-						 ul_tb_id, ipip_entry) &&
+-	       (!ipip_ul_dev || ipip_ul_dev == ul_dev);
++						 ul_tb_id, ipip_entry);
+ }
+ 
+ /* Given decap parameters, find the corresponding IPIP entry. */
 -- 
 2.20.1
 
