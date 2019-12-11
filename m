@@ -2,76 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A54C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A69FC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B4E222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576072589;
-	bh=dWkqILqfAhjEvyhCKPXISYgfOfSC3OtngOei9pUlZ5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LRmUYPbBRm99X/2l74TgmhVKvBzEgZ21DVE0deM54jZtNqSY3ujwNYeTEkKVGU7pD
-	 qLkbvUVxzAS3zyG+DsfL31OhVILIbICrf/gDamMk2eqi56bC0xP8u9Z/U9WjeaSoir
-	 /NL6SgSsTmi9zUq5M0smlyRFFzaBSf0i8cNBDpVM=
+	by mail.kernel.org (Postfix) with ESMTP id DE2332173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfLKN43 (ORCPT
+        id S1729731AbfLKN46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:56:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729278AbfLKN42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:56:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC557214D8;
-        Wed, 11 Dec 2019 13:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576072588;
-        bh=dWkqILqfAhjEvyhCKPXISYgfOfSC3OtngOei9pUlZ5w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=enaEjm3qhz+GbI1C7GZdbjUVp+Li+O9XxQqiaGueU8xTWyFJi3xOAs08wqOcxr99A
-         TjmdjHoIohXmbLhvAqKCb708/vwcxCf5WQ+UYx2BMRwMzocjhZQpyBHCi1+hTg2dJV
-         4lSTU4jvrB9a4wmcTqpHvJGg5DZ7YKEwkIIzpHRU=
-Date:   Wed, 11 Dec 2019 14:56:19 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Felix Schnizlein <fschnizlein@suse.com>,
-        linux-kernel@vger.kernel.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
-Message-ID: <20191211135619.GA538980@kroah.com>
-References: <20191206162421.15050-1-trenn@suse.de>
- <20191206163656.GC86904@kroah.com>
- <87sglroqix.fsf@nanos.tec.linutronix.de>
- <4737004.4U1sY2OxSp@skinner.arch.suse.de>
+        Wed, 11 Dec 2019 08:56:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58636 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728128AbfLKN46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:56:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F388AAB8;
+        Wed, 11 Dec 2019 13:56:56 +0000 (UTC)
+Subject: Re: [PATCH] xen-blkback: prevent premature module unload
+To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
+        "Durrant, Paul" <pdurrant@amazon.com>
+Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+References: <20191210145305.6605-1-pdurrant@amazon.com>
+ <20191211112754.GM980@Air-de-Roger>
+ <14a01d62046c48ee9b2486917370b5f5@EX13D32EUC003.ant.amazon.com>
+ <20191211135523.GP980@Air-de-Roger>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <ab90f484-0641-a33d-6fcf-6fccc602e8c2@suse.com>
+Date:   Wed, 11 Dec 2019 14:56:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4737004.4U1sY2OxSp@skinner.arch.suse.de>
+In-Reply-To: <20191211135523.GP980@Air-de-Roger>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:42:35AM +0100, Thomas Renninger wrote:
-> If Greg (and others) are ok, I would add "page size exceeding" handling.
-> Hm, quick searching for an example I realize that debugfs can exceed page 
-> size. Is it that hard to expose a sysfs file larger than page size?
+On 11.12.19 14:55, Roger Pau Monné wrote:
+> On Wed, Dec 11, 2019 at 01:27:42PM +0000, Durrant, Paul wrote:
+>>> -----Original Message-----
+>>> From: Roger Pau Monné <roger.pau@citrix.com>
+>>> Sent: 11 December 2019 11:29
+>>> To: Durrant, Paul <pdurrant@amazon.com>
+>>> Cc: xen-devel@lists.xenproject.org; linux-block@vger.kernel.org; linux-
+>>> kernel@vger.kernel.org; Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>;
+>>> Jens Axboe <axboe@kernel.dk>
+>>> Subject: Re: [PATCH] xen-blkback: prevent premature module unload
+>>>
+>>> On Tue, Dec 10, 2019 at 02:53:05PM +0000, Paul Durrant wrote:
+>>>> Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
+>>>> cache. This cache is destoyed when xen-blkif is unloaded so it is
+>>>> necessary to wait for the deferred free routine used for such objects to
+>>>> complete. This necessity was missed in commit 14855954f636 "xen-blkback:
+>>>> allow module to be cleanly unloaded". This patch fixes the problem by
+>>>> taking/releasing extra module references in xen_blkif_alloc/free()
+>>>> respectively.
+>>>>
+>>>> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+>>>
+>>> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+>>>
+>>> One nit below.
+>>>
+>>>> ---
+>>>> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+>>>> Cc: "Roger Pau Monné" <roger.pau@citrix.com>
+>>>> Cc: Jens Axboe <axboe@kernel.dk>
+>>>> ---
+>>>>   drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
+>>>>   1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-
+>>> blkback/xenbus.c
+>>>> index e8c5c54e1d26..59d576d27ca7 100644
+>>>> --- a/drivers/block/xen-blkback/xenbus.c
+>>>> +++ b/drivers/block/xen-blkback/xenbus.c
+>>>> @@ -171,6 +171,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t
+>>> domid)
+>>>>   	blkif->domid = domid;
+>>>>   	atomic_set(&blkif->refcnt, 1);
+>>>>   	init_completion(&blkif->drain_complete);
+>>>> +
+>>>> +	/*
+>>>> +	 * Because freeing back to the cache may be deferred, it is not
+>>>> +	 * safe to unload the module (and hence destroy the cache) until
+>>>> +	 * this has completed. To prevent premature unloading, take an
+>>>> +	 * extra module reference here and release only when the object
+>>>> +	 * has been free back to the cache.
+>>>                      ^ freed
+>>
+>> Oh yes. Can this be done on commit, or would you like me to send a v2?
+> 
+> Adjusting on commit would be fine for me, but it's up to Juergen since
+> he is the one that will pick this up. IIRC the module unload patches
+> didn't go through the block subsystem.
 
-No, there is a simple way to do it, but I'm not going to show you how as
-it is NOT how to use sysfs at all :)
+Oh, right. Yes, will fix this when committing.
 
-Why are you wanting to dump this whole mess into one file and then parse
-it, it's no different from having 100+ different sysfs files and then
-doing a readdir(3) on the thing, right?
 
-greg k-h
+Juergen
+
