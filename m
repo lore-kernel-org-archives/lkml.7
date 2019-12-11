@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BCEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BD4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCF5324658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B21A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078184;
-	bh=m6UjtObjWHHqzN+zVBv13rmE/XLn9eBaZMoC/IwllrY=;
+	s=default; t=1576078187;
+	bh=Hw7bD5PbrKVmf62VIKhLrG1Vqni+JW0i4fW7uGy5yyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zygcrGxptc1wQrpegTHI+vrtnLbFzNGFPpNZiK3p0Ey3Lit8cqtzZNX2ZnEzVg70e
-	 0ItD3FngY/RE50hJ21BxJE1rgl9rw8DBP5WW2aLD3iLDtmiNb7J5FxeDquaQjhBmEf
-	 ESapq/cO5hjxGGpez9UlIIUKtaqOh5F0zn5gdp7g=
+	b=Fyw7rO5hWhZmFID0udmhfrc8RZzZc8J+rYbIepyhcwcgmYCt45Cse7jRhGAEEoCPL
+	 tB+ZIeQIsOHgS64DjmMccdeiC/olPc2JVjPC4tjg7bbQyWDEtcnzHixSv5H314o/TP
+	 A6CE/7+XiNwkahD6kgktzs/dSPvZ0W41Sa9vkFPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387951AbfLKP3n (ORCPT
+        id S2387945AbfLKP3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36564 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387918AbfLKP3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:34 -0500
+        id S2387898AbfLKP3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9DC22B48;
-        Wed, 11 Dec 2019 15:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BE1B2467A;
+        Wed, 11 Dec 2019 15:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078174;
-        bh=m6UjtObjWHHqzN+zVBv13rmE/XLn9eBaZMoC/IwllrY=;
+        s=default; t=1576078170;
+        bh=Hw7bD5PbrKVmf62VIKhLrG1Vqni+JW0i4fW7uGy5yyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=01QcaYtb7gqJUJBZxZpST/F2BuevfbQWGodrEpn5yZ2whFjYnoPH0PROH/PihsG9r
-         UO+lhTzVBYzol2xbWnlO9xkdOToYhs3LWwG2J4cgKmC+TfCYBc5ZYYBMK1QeStToux
-         aYh40agwNoq7sMEpdM1avuGj9EGlHfZB7iAINauA=
+        b=ACcEPvsBjZJftPJ0cvNVrgEBWQo6HTz9RSPkYYyMU4Q8ZLQ3omoIHO8BnXF8Zbx+R
+         IBn8hZBj2tryBoEZOZMjZrpy8LGX8rfgNNlV35eAHEYcCR3W7RXFhzZyWPnl11Jf8Z
+         fBL6OcLp06+hhmM0XCttlgl/kwGXsIhHLGEDlNak=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 57/58] kernel: sysctl: make drop_caches write-only
-Date:   Wed, 11 Dec 2019 10:28:30 -0500
-Message-Id: <20191211152831.23507-57-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 54/58] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+Date:   Wed, 11 Dec 2019 10:28:27 -0500
+Message-Id: <20191211152831.23507-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -65,51 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
+[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
 
-Currently, the drop_caches proc file and sysctl read back the last value
-written, suggesting this is somehow a stateful setting instead of a
-one-time command.  Make it write-only, like e.g.  compact_memory.
+The DTC v1.5.1 added references to (U)INT32_MAX.
 
-While mitigating a VM problem at scale in our fleet, there was confusion
-about whether writing to this file will permanently switch the kernel into
-a non-caching mode.  This influences the decision making in a tense
-situation, where tens of people are trying to fix tens of thousands of
-affected machines: Do we need a rollback strategy?  What are the
-performance implications of operating in a non-caching state for several
-days?  It also caused confusion when the kernel team said we may need to
-write the file several times to make sure it's effective ("But it already
-reads back 3?").
+This is no problem for user-space programs since <stdint.h> defines
+(U)INT32_MAX along with (u)int32_t.
 
-Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Chris Down <chris@chrisdown.name>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+For the kernel space, libfdt_env.h needs to be adjusted before we
+pull in the changes.
+
+In the kernel, we usually use s/u32 instead of (u)int32_t for the
+fixed-width types.
+
+Accordingly, we already have S/U32_MAX for their max values.
+So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+
+Instead, add them to the in-kernel libfdt_env.h to compile the
+latest libfdt.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 3 +++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index cfc2c0d1369ab..74fc3a9d19235 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1397,7 +1397,7 @@ static struct ctl_table vm_table[] = {
- 		.procname	= "drop_caches",
- 		.data		= &sysctl_drop_caches,
- 		.maxlen		= sizeof(int),
--		.mode		= 0644,
-+		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= &one,
- 		.extra2		= &four,
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index b36c0289a308e..6a0f1f524466e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -2,11 +2,13 @@
+ #ifndef _ARM_LIBFDT_ENV_H
+ #define _ARM_LIBFDT_ENV_H
+ 
++#include <linux/limits.h>
+ #include <linux/types.h>
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
+ 
+-#define INT_MAX			((int)(~0U>>1))
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
+ 
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 39155d3b2cefa..ac5d3c947e04e 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <string.h>
+ 
+ #define INT_MAX			((int)(~0U>>1))
++#define UINT32_MAX		((u32)~0U)
++#define INT32_MAX		((s32)(UINT32_MAX >> 1))
+ 
+ #include "of.h"
+ 
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 1aa707ab19bbf..8b54c591678e1 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -7,6 +7,9 @@
+ 
+ #include <asm/byteorder.h>
+ 
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
 -- 
 2.20.1
 
