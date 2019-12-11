@@ -2,63 +2,61 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43169C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 367D5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18197214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0951121556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NKVNemM5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FmnXLruT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfLKOEG (ORCPT
+        id S1729966AbfLKOEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:04:06 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44806 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbfLKOED (ORCPT
+        Wed, 11 Dec 2019 09:04:09 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:59136 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729946AbfLKOEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:04:03 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE40gj113989;
-        Wed, 11 Dec 2019 08:04:00 -0600
+        Wed, 11 Dec 2019 09:04:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE3whi051136;
+        Wed, 11 Dec 2019 08:03:58 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576073040;
-        bh=X9B0cbHSFBh6z+++yuvEhMSytocbxnyPPOMKchxLqbc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=NKVNemM5CsjL3BRzXptZb3PasR/QVO/VAqNNJsEn9UCWrVnwQ5cIx+M+7gBaThsdt
-         zmDtkyBL1qYQtSvwbVeyT9EONp5/TPY6j4ZiwPaUVKygnA8flmth/fdOs38n7NZeDM
-         Ypmefl+slfI1q5bNIcI76JQSO8txWoMkpG4hR+Xk=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE40IH095707
+        s=ti-com-17Q1; t=1576073038;
+        bh=kx/dJ6v0ZG1fuLfzC9w4JML+MFgThDX9MMh+PhKFWls=;
+        h=From:To:CC:Subject:Date;
+        b=FmnXLruTS1JZpCOGSsTqNf+Md8L9eDtjUKjBK1a8gXbHPGpEzP3AI37c42K10uFsL
+         Fk44S52at99Z6v/D17wgYPrFANWG4UTvBXjb8mNoTXy/LeVxaKTvYYZYy8J8qoEhlL
+         Sxu41oK4eEgU6PmeSF5sQF9Jqf8iAt/ZMJYp9uc4=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE3wq5126180
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:04:00 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Dec 2019 08:03:58 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:03:59 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 08:03:58 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:03:59 -0600
+ Frontend Transport; Wed, 11 Dec 2019 08:03:58 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE3wcn086061;
-        Wed, 11 Dec 2019 08:03:59 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE3wcl086061;
+        Wed, 11 Dec 2019 08:03:58 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 2/3] ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
-Date:   Wed, 11 Dec 2019 08:07:19 -0600
-Message-ID: <20191211140720.10539-3-bparrot@ti.com>
+Subject: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
+Date:   Wed, 11 Dec 2019 08:07:17 -0600
+Message-ID: <20191211140720.10539-1-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211140720.10539-1-bparrot@ti.com>
-References: <20191211140720.10539-1-bparrot@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
@@ -67,70 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add VPFE device nodes entries.
-Add OmniVision OV2659 sensor device nodes and linkage.
+This patch series adds the missing camera endpoint (ov2659) as well as
+the required source clocks nodes for the sensor.
 
-The sensor clock (xvclk) is sourced from clkout1.
-Add clock entries to properly select clkout1 and set its parent
-clock to sys_clkin_ck.
+On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
+clock nodes/tree was removed as it was unsed at the time, we are
+re-adding the needed clock nodes here.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- arch/arm/boot/dts/am437x-sk-evm.dts | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Changes since v2:
+- Fixed/added Tony's ack
 
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index 74eaa6a3b258..25222497f828 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -272,6 +272,12 @@
- 		>;
- 	};
- 
-+	clkout1_pin: pinmux_clkout1_pin {
-+		pinctrl-single,pins = <
-+			0x270 (PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* XDMA_EVENT_INTR0/CLKOUT1 */
-+		>;
-+	};
-+
- 	cpsw_default: cpsw_default {
- 		pinctrl-single,pins = <
- 			/* Slave 1 */
-@@ -593,6 +599,25 @@
- 	pinctrl-0 = <&i2c1_pins>;
- 	clock-frequency = <400000>;
- 
-+	ov2659@30 {
-+		compatible = "ovti,ov2659";
-+		reg = <0x30>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&clkout1_pin>;
-+
-+		clocks = <&clkout1_mux_ck>;
-+		clock-names = "xvclk";
-+		assigned-clocks = <&clkout1_mux_ck>;
-+		assigned-clock-parents = <&clkout1_osc_div_ck>;
-+
-+		port {
-+			ov2659_1: endpoint {
-+				remote-endpoint = <&vpfe0_ep>;
-+				link-frequencies = /bits/ 64 <70000000>;
-+			};
-+		};
-+	};
-+
- 	edt-ft5306@38 {
- 		status = "okay";
- 		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
-@@ -877,7 +902,7 @@
- 	/* Camera port */
- 	port {
- 		vpfe0_ep: endpoint {
--			/* remote-endpoint = <&sensor>; add once we have it */
-+			remote-endpoint = <&ov2659_1>;
- 			ti,am437x-vpfe-interface = <0>;
- 			bus-width = <8>;
- 			hsync-active = <0>;
+Changes since v1:
+- Fix clock name to make it generic
+- Add non-standard clock node naming to commit message as per Tony's
+  comment
+- Rename all clock nodes to use '-' instead of '_'
+
+Benoit Parrot (2):
+  ARM: dts: am437x-sk-evm: Add VPFE and OV2659 entries
+  ARM: dts: am43x-epos-evm: Add VPFE and OV2659 entries
+
+Tero Kristo (1):
+  ARM: dts: am43xx: add support for clkout1 clock
+
+ arch/arm/boot/dts/am437x-sk-evm.dts  | 27 +++++++++++++-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 23 +++++++++++-
+ arch/arm/boot/dts/am43xx-clocks.dtsi | 54 ++++++++++++++++++++++++++++
+ 3 files changed, 102 insertions(+), 2 deletions(-)
+
 -- 
 2.17.1
 
