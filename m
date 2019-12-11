@@ -2,141 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118DEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D377C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7752073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396732073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080090;
-	bh=OcyEzfTXpAYKuruNL2d1bm6fV7j6InQkUk4GWQFj5q4=;
+	s=default; t=1576080097;
+	bh=RzNCs8S3ckMl0QtLvNUcHCyuJiZfIk4C+x/j7Srm+o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HMvhGBtL7S+Tp0Af3nyM/IqkdsbHB/wfVdt8AT18dkIN2tVFzug5r5MWC9p95qxOS
-	 kp0qCG/5Rx5WD5mhbT0Ft9J17RGcmnWjZgH59dNeQ7CoK+cnIkYtbQcuCBhtiz8HF/
-	 PO9brMtJL/eZpbn+fOXUVJB65z3pc4Mzubfj4YhA=
+	b=trg/DXv9IRBibmnmjpPn1HL3eP9WWTDQVVu/5tUyCejkxpfsNwWOuPqlmzsmc6e8x
+	 zvaCQD1rgQWr3BBoHfMVJ/7csh3eSUwtrtmf2hgjibxjohK3PiUS/bGKNjRTmZFUgd
+	 5EAiV8oEcnSxeYs+E1q3o1K4X7cNcAv++UC9A4V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387996AbfLKQBa (ORCPT
+        id S2388061AbfLKQBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37158 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731430AbfLKPNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:31 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731419AbfLKPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:28 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFBD824671;
-        Wed, 11 Dec 2019 15:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65ACB2467A;
+        Wed, 11 Dec 2019 15:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077210;
-        bh=OcyEzfTXpAYKuruNL2d1bm6fV7j6InQkUk4GWQFj5q4=;
+        s=default; t=1576077207;
+        bh=RzNCs8S3ckMl0QtLvNUcHCyuJiZfIk4C+x/j7Srm+o8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2EIrP/pahzTQwqhtdqIKIVRPUEqoGCTY+zN5y87zWKpsM4wGrrKkUpwj3LkC7L1Os
-         sw6nINEHGS0AxWNiDqb+RyltlcvFExAsLdmAOYclzz+IxJiy+ZAddLc7upMZzVlxby
-         ejLfhArf3QFLOo/PY5XNPeF6WF8M21ln3Kim88E0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 092/134] scsi: ufs: Fix error handing during hibern8 enter
-Date:   Wed, 11 Dec 2019 10:11:08 -0500
-Message-Id: <20191211151150.19073-92-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=PinAiwY1hgjCxBBb4fX2xzuURgVinm2o71+stSOC74qRzxaBxCAHveL7zLJTIyjsm
+         xqpdAKoz3iQJ/7pq/u+nh38CPmGNAb4cL8gWzgzHAcbbbFgJq3yS0oUn8oe62/pclr
+         P1xtyZ6PzMzlpoX9dXE88g9KVxOkB+lXvh2wwcds=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.3 058/105] Input: goodix - add upside-down quirk for Teclast X89 tablet
+Date:   Wed, 11 Dec 2019 16:05:47 +0100
+Message-Id: <20191211150243.842708344@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 6d303e4b19d694cdbebf76bcdb51ada664ee953d ]
+commit df5b5e555b356662a5e4a23c6774fdfce8547d54 upstream.
 
-During clock gating (ufshcd_gate_work()), we first put the link hibern8 by
-calling ufshcd_uic_hibern8_enter() and if ufshcd_uic_hibern8_enter()
-returns success (0) then we gate all the clocks.  Now let’s zoom in to what
-ufshcd_uic_hibern8_enter() does internally: It calls
-__ufshcd_uic_hibern8_enter() and if failure is encountered, link recovery
-shall put the link back to the highest HS gear and returns success (0) to
-ufshcd_uic_hibern8_enter() which is the issue as link is still in active
-state due to recovery!  Now ufshcd_uic_hibern8_enter() returns success to
-ufshcd_gate_work() and hence it goes ahead with gating the UFS clock while
-link is still in active state hence I believe controller would raise UIC
-error interrupts. But when we service the interrupt, clocks might have
-already been disabled!
+The touchscreen on the Teclast X89 is mounted upside down in relation to
+the display orientation (the touchscreen itself is mounted upright, but the
+display is mounted upside-down). Add a quirk for this so that we send
+coordinates which match the display orientation.
 
-This change fixes for this by returning failure from
-__ufshcd_uic_hibern8_enter() if recovery succeeds as link is still not in
-hibern8, upon receiving the error ufshcd_hibern8_enter() would initiate
-retry to put the link state back into hibern8.
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Bastien Nocera <hadess@hadess.net>
+Link: https://lore.kernel.org/r/20191202085636.6650-1-hdegoede@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Link: https://lore.kernel.org/r/1573798172-20534-8-git-send-email-cang@codeaurora.org
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/input/touchscreen/goodix.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 358ff7b015680..0036dcffc4a90 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3885,15 +3885,24 @@ static int __ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 			     ktime_to_us(ktime_sub(ktime_get(), start)), ret);
- 
- 	if (ret) {
-+		int err;
-+
- 		dev_err(hba->dev, "%s: hibern8 enter failed. ret = %d\n",
- 			__func__, ret);
- 
- 		/*
--		 * If link recovery fails then return error so that caller
--		 * don't retry the hibern8 enter again.
-+		 * If link recovery fails then return error code returned from
-+		 * ufshcd_link_recovery().
-+		 * If link recovery succeeds then return -EAGAIN to attempt
-+		 * hibern8 enter retry again.
- 		 */
--		if (ufshcd_link_recovery(hba))
--			ret = -ENOLINK;
-+		err = ufshcd_link_recovery(hba);
-+		if (err) {
-+			dev_err(hba->dev, "%s: link recovery failed", __func__);
-+			ret = err;
-+		} else {
-+			ret = -EAGAIN;
-+		}
- 	} else
- 		ufshcd_vops_hibern8_notify(hba, UIC_CMD_DME_HIBER_ENTER,
- 								POST_CHANGE);
-@@ -3907,7 +3916,7 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 
- 	for (retries = UIC_HIBERN8_ENTER_RETRIES; retries > 0; retries--) {
- 		ret = __ufshcd_uic_hibern8_enter(hba);
--		if (!ret || ret == -ENOLINK)
-+		if (!ret)
- 			goto out;
- 	}
- out:
--- 
-2.20.1
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -127,6 +127,15 @@ static const unsigned long goodix_irq_fl
+ static const struct dmi_system_id rotated_screen[] = {
+ #if defined(CONFIG_DMI) && defined(CONFIG_X86)
+ 	{
++		.ident = "Teclast X89",
++		.matches = {
++			/* tPAD is too generic, also match on bios date */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
++			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
++		},
++	},
++	{
+ 		.ident = "WinBook TW100",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+
 
