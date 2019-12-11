@@ -2,104 +2,148 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0405C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670D92464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6FCF2464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dE92+E8K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BfMpm+5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfLKNUW (ORCPT
+        id S1729594AbfLKNU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:20:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52963 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728128AbfLKNUU (ORCPT
+        Wed, 11 Dec 2019 08:20:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54267 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728976AbfLKNUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:20:20 -0500
+        Wed, 11 Dec 2019 08:20:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576070419;
+        s=mimecast20190719; t=1576070425;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=o/u/4ZEqQP0e+uS2+lCszxa5LZBpaQoPz1LVNN7voyg=;
-        b=dE92+E8Keo6YqSkUKbQr++CMuiQIjplKbMtXwxLR0fWUD8bB7y+amC3EK6XdBZG3b2yX/K
-        lp0cS0lQKTzj4978xYr3d/J15PIhdqDY8iDFyGL5vD2ZYDQDEFAgKHOIPeHZCagY9KIbYS
-        SX6HWPIMMFf0vzb0yKQw2XPkUbdr/UM=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-drEHkx9cNC2qmQrIYoLj9A-1; Wed, 11 Dec 2019 08:20:15 -0500
-Received: by mail-lf1-f70.google.com with SMTP id t8so2103303lfc.21
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:20:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=o/u/4ZEqQP0e+uS2+lCszxa5LZBpaQoPz1LVNN7voyg=;
-        b=ZV+Mt98F3X/m7eXxwSm7vSbDcownO0Hr3Ced9hl+LT69z87V/TmX7ZyNq/6u2fq4WM
-         xF204BdrefoZ91MJ13t1ZoMnA6JUl5LNsiVC+mV4lAz8I5yVYljOHFjgNQoO7XYrQNuZ
-         +1FszZBNZuJbAzbsCktX4yGikwna0/+CfsgyKrx05DoMS27K0MqFsQkO8EYoepejlgdt
-         me1UrAL8JRr4gcgjwDCR0wizrTXvJj+eYWKN4uHo7EnStozCma7Z96t5j3O+8DkX/YTz
-         cP5wUC2ngb7xr4Z6WeCyxbdvzw5DFXGlJa7R/tqDxyawLxeTmI4DbtJgE/zwVHPAPFR7
-         2Wrw==
-X-Gm-Message-State: APjAAAUxB62havg1GRoC44tzfVU1jH5zuaYfvyoj60zZbeA5iECFUPan
-        q/wFfBQvzkEGpD1E9Rvm3KLMEVPEfjAsXyCREvvu8CHCcGAMoXmH8oEsWgEpe7gBffr4GZ3zRwm
-        3Iy1Mk71cm+3c/1c1jGYMTKi5
-X-Received: by 2002:a2e:9b95:: with SMTP id z21mr1806008lji.112.1576070414501;
-        Wed, 11 Dec 2019 05:20:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxiBoj4+UzNM6MVzGlRn15zbpyF65rItNLpqEE+jZ6WQC2/2JVmPf9if2K7dMUlgg9zx4M+KA==
-X-Received: by 2002:a2e:9b95:: with SMTP id z21mr1805990lji.112.1576070414253;
-        Wed, 11 Dec 2019 05:20:14 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id c12sm1157656lfp.58.2019.12.11.05.20.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 05:20:13 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 64AA318033F; Wed, 11 Dec 2019 14:20:11 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
-Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or ksyms
-In-Reply-To: <20191211130857.GB23383@linux.fritz.box>
-References: <20191210181412.151226-1-toke@redhat.com> <20191210125457.13f7821a@cakuba.netronome.com> <87eexbhopo.fsf@toke.dk> <20191211130857.GB23383@linux.fritz.box>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Wed, 11 Dec 2019 14:20:11 +0100
-Message-ID: <87zhfzf184.fsf@toke.dk>
+        bh=61Sm77wHsqBMMFdZKARKxx8aSpgfgeBKIFR7CjGK+3w=;
+        b=BfMpm+5AzaDindQjQk1W1JJYvKOK5EznNoF7YF1386QuZdiXBAcf1Xao2AvN8FhAZuLGGJ
+        LfMkunTEwMjXifNxjYF6iqZMlY460l9LyH75v450gwNvtWMwbaKLQ5CpmQdZi7GGCGtspe
+        8JcSiOy8NEDWsxLT1S6kPoaPYSqpKTo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-341-NGbFWe4PN1mC_x--I1LrmQ-1; Wed, 11 Dec 2019 08:20:22 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EE68DB21;
+        Wed, 11 Dec 2019 13:20:20 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9A6B1001902;
+        Wed, 11 Dec 2019 13:20:19 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 21:20:17 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
+        william.kucharski@oracle.com, mingo@kernel.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
+Message-ID: <20191211132017.GC28917@MiWiFi-R3L-srv>
+References: <20191206150524.14687-1-bhe@redhat.com>
+ <20191209100717.GC6156@dhcp22.suse.cz>
+ <20191210072453.GI2984@MiWiFi-R3L-srv>
+ <20191210102834.GE10404@dhcp22.suse.cz>
+ <20191210104303.GN2984@MiWiFi-R3L-srv>
+ <20191210113341.GG10404@dhcp22.suse.cz>
+ <20191210125557.GA28917@MiWiFi-R3L-srv>
+ <20191210133202.GJ10404@dhcp22.suse.cz>
+ <20191210140534.GB28917@MiWiFi-R3L-srv>
+ <20191210141934.GL10404@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-MC-Unique: drEHkx9cNC2qmQrIYoLj9A-1
+In-Reply-To: <20191210141934.GL10404@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: NGbFWe4PN1mC_x--I1LrmQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel Borkmann <daniel@iogearbox.net> writes:
+On 12/10/19 at 03:19pm, Michal Hocko wrote:
+> On Tue 10-12-19 22:05:34, Baoquan He wrote:
+> > On 12/10/19 at 02:32pm, Michal Hocko wrote:
+> > > On Tue 10-12-19 20:55:57, Baoquan He wrote:
+> > > [...]
+> > > > Btw, as you said at above, I am confused by the '[KNL,BOOT]', what =
+does
+> > > > the 'BOOT' mean in the documentation of 'mem=3D'? I checked all par=
+ameters
+> > > > with 'BOOT', still don't get it clearly.
+> > >=20
+> > > This is a good question indeed. I have checked closer and this is wha=
+t
+> > > documentation says
+> > > Documentation/admin-guide/kernel-parameters.rst
+> > > "
+> > >         BOOT    Is a boot loader parameter.
+> > >=20
+> > > Parameters denoted with BOOT are actually interpreted by the boot
+> > > loader, and have no meaning to the kernel directly.
+> > > "
+> > >=20
+> > > and that really doesn't fit, right? So I went to check the full histo=
+ry
+> > > git tree just to get to 2.4.0-test5 and no explanation whatsoever.
+> > > Fun, isn't it? ;)
+> >=20
+> > Yeah, very interesting. Finally I got their original purpose from
+> > Documentation/x86/boot.rst.
+> >=20
+> >=20
+> > Special Command Line Options
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> >=20
+> > If the command line provided by the boot loader is entered by the
+> > user, the user may expect the following command line options to work.
+> > They should normally not be deleted from the kernel command line even
+> > though not all of them are actually meaningful to the kernel.  Boot
+> > loader authors who need additional command line options for the boot
+> > loader itself should get them registered in
+> > Documentation/admin-guide/kernel-parameters.rst to make sure they will =
+not
+> > conflict with actual kernel options now or in the future.
+> >=20
+> > ...
+> >=20
+> > So here, [KNL,BOOT], KNL means it's used for kernel, BOOT means it's
+> > needed by boot loader.
+>=20
+> OK, that clarifies this a bit. Thanks for referencing to it!
+> That should explain how the behavior is not boot time restricted at all
+> and the current implementation is actually correct. So a change to it
+> should clearly state the new usecase as we have already discussed. In
+> case there are bootloaders which really rely on the original strict
+> meaning then we should be able to compare cost/benfits of those two
+> usecases.
 
-> On Tue, Dec 10, 2019 at 10:09:55PM +0100, Toke H=C3=B8iland-J=C3=B8rgense=
-n wrote:
-> [...]
->> Anyhow, I don't suppose it'll hurt to have the Fixes: tag(s) in there;
->> does Patchwork pick these up (or can you guys do that when you apply
->> this?), or should I resend?
->
-> Fixes tags should /always/ be present if possible, since they help to pro=
-vide
-> more context even if the buggy commit was in bpf-next, for example.
+Sounds reasonable to me. From the current parameters for x86, it only
+impact the bootloader during boot-time, e.g 'mem=3D ' says bootloader need
+this to place initrd. It might not give the trouble, anyway, we will
+say.
 
-ACK, will do. Thank you for picking them up for this patch (did you do
-that manually, or is this part of your scripts?)
+Just a little more, we have test case for memory hotplug which only test
+the DIMM added after boot. And the old 'mem=3D ' implementation in x86
+only erazes memory regions above 'mem=3D ' in e820 table. That is why the
+behaviour change immediately gave me a surprise when I noticed people
+back ported Jurgen's patch to our distros.=20
 
--Toke
+So glad to see all is clear, thanks.
 
