@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A96C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5845C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B06924681
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70BD24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077018;
-	bh=6aGjWXNISs2WJ1JMWExV1XkKDkJddOHQDLaxBAQHG4M=;
+	s=default; t=1576077020;
+	bh=WY4vBWzloZIFoF9RuCdF85ivO+hMUaBPhoaIRVUSlMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEauzeeICTGCQFneTv8Jkja7zmdlT18ao8/iS7shlrnfwXiZLQ6T+FGaCgDeBHyAG
-	 YfvjScQ11lGgoRlTTBavtA/xwAgs3vnHGwJPSCTdN1igrWFRIWhTylJ7vXijpN23Mv
-	 Dza56UimDCu4XtG7SyqeFHgq5Su+Gim21oCDyNDo=
+	b=w+Bn9IqBraR8MKN7rPHE/VfygM6jEH1L1rB0r9QMPFFlHLJbh2lcZ4lQoEw2DRK2R
+	 8epGSGuhetYmECyzxIlxAXt8+sQ8W6bhP86jUUSi6p0xJWKkGHT7HIA+KNEvRDVG7K
+	 9b9Qw/81VdpXtJzQR/FtlFFF9hAFaD9kJ0InNFMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbfLKPKR (ORCPT
+        id S1730746AbfLKPKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58436 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730719AbfLKPKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:14 -0500
+        id S1730729AbfLKPKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58978208C3;
-        Wed, 11 Dec 2019 15:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8B92208C3;
+        Wed, 11 Dec 2019 15:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077013;
-        bh=6aGjWXNISs2WJ1JMWExV1XkKDkJddOHQDLaxBAQHG4M=;
+        s=default; t=1576077016;
+        bh=WY4vBWzloZIFoF9RuCdF85ivO+hMUaBPhoaIRVUSlMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zyfb33I7o40i3WIUS/ULI13gY53ojwjrUOzy5CLy+knE837gXG5F4eHLC5Jueo/wH
-         3Tt7giCoohHZAZaU3CZG5li1huQucwiqdj6RAgM3/dhF7HpVB9vR8+GHfz9WEoGBxY
-         qx3mxIfnHbHMvT7RFPjsePzuxSjngkcb0l/BSGLk=
+        b=tHT/UXiG0QFuxxPWZj1xwAcJdhK8hI/zRUZ+u/qsQbNLR5pkyzUHijDqb0OpZO1tC
+         tZPOtGwsHDG5JaWFILjka3vjkb7fom4wyxf/mzrLhSTkWFBDPpb9I4riroxkQuXdwr
+         DiSHXR5bmkb+enwBlwq09d9tfVTnuNzLE/9ylOPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 75/92] crypto: user - fix memory leak in crypto_reportstat
-Date:   Wed, 11 Dec 2019 16:06:06 +0100
-Message-Id: <20191211150258.359953926@linuxfoundation.org>
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Han Xu <han.xu@nxp.com>, Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 76/92] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR register
+Date:   Wed, 11 Dec 2019 16:06:07 +0100
+Message-Id: <20191211150258.542835961@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,37 +60,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit c03b04dcdba1da39903e23cc4d072abf8f68f2dd upstream.
+commit f6910679e17ad4915f008bd2c614d38052426f7c upstream.
 
-In crypto_reportstat, a new skb is created by nlmsg_new(). This skb is
-leaked if crypto_reportstat_alg() fails. Required release for skb is
-added.
+Later versions of the QSPI controller (e.g. in i.MX6UL/ULL and i.MX7)
+seem to have an additional TDH setting in the FLSHCR register, that
+needs to be set in accordance with the access mode that is used (DDR
+or SDR).
 
-Fixes: cac5818c25d0 ("crypto: user - Implement a generic crypto statistics")
+Previous bootstages such as BootROM or bootloader might have used the
+DDR mode to access the flash. As we currently only use SDR mode, we
+need to make sure the TDH bits are cleared upon initialization.
+
+Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI controller")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Acked-by: Han Xu <han.xu@nxp.com>
+Link: https://lore.kernel.org/r/20191007071933.26786-1-frieder.schrempf@kontron.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/crypto_user_stat.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-qspi.c |   38 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
---- a/crypto/crypto_user_stat.c
-+++ b/crypto/crypto_user_stat.c
-@@ -328,8 +328,10 @@ int crypto_reportstat(struct sk_buff *in
- drop_alg:
- 	crypto_mod_put(alg);
+--- a/drivers/spi/spi-fsl-qspi.c
++++ b/drivers/spi/spi-fsl-qspi.c
+@@ -63,6 +63,11 @@
+ #define QUADSPI_IPCR			0x08
+ #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
  
--	if (err)
-+	if (err) {
-+		kfree_skb(skb);
- 		return err;
-+	}
++#define QUADSPI_FLSHCR			0x0c
++#define QUADSPI_FLSHCR_TCSS_MASK	GENMASK(3, 0)
++#define QUADSPI_FLSHCR_TCSH_MASK	GENMASK(11, 8)
++#define QUADSPI_FLSHCR_TDH_MASK		GENMASK(17, 16)
++
+ #define QUADSPI_BUF3CR			0x1c
+ #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
+ #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
+@@ -95,6 +100,9 @@
+ #define QUADSPI_FR			0x160
+ #define QUADSPI_FR_TFF_MASK		BIT(0)
  
- 	return nlmsg_unicast(net->crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
++#define QUADSPI_RSER			0x164
++#define QUADSPI_RSER_TFIE		BIT(0)
++
+ #define QUADSPI_SPTRCLR			0x16c
+ #define QUADSPI_SPTRCLR_IPPTRC		BIT(8)
+ #define QUADSPI_SPTRCLR_BFPTRC		BIT(0)
+@@ -112,9 +120,6 @@
+ #define QUADSPI_LCKER_LOCK		BIT(0)
+ #define QUADSPI_LCKER_UNLOCK		BIT(1)
+ 
+-#define QUADSPI_RSER			0x164
+-#define QUADSPI_RSER_TFIE		BIT(0)
+-
+ #define QUADSPI_LUT_BASE		0x310
+ #define QUADSPI_LUT_OFFSET		(SEQID_LUT * 4 * 4)
+ #define QUADSPI_LUT_REG(idx) \
+@@ -181,6 +186,12 @@
+  */
+ #define QUADSPI_QUIRK_BASE_INTERNAL	BIT(4)
+ 
++/*
++ * Controller uses TDH bits in register QUADSPI_FLSHCR.
++ * They need to be set in accordance with the DDR/SDR mode.
++ */
++#define QUADSPI_QUIRK_USE_TDH_SETTING	BIT(5)
++
+ struct fsl_qspi_devtype_data {
+ 	unsigned int rxfifo;
+ 	unsigned int txfifo;
+@@ -209,7 +220,8 @@ static const struct fsl_qspi_devtype_dat
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
+ 	.ahb_buf_size = SZ_1K,
+-	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
++	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
++		  QUADSPI_QUIRK_USE_TDH_SETTING,
+ 	.little_endian = true,
+ };
+ 
+@@ -217,7 +229,8 @@ static const struct fsl_qspi_devtype_dat
+ 	.rxfifo = SZ_128,
+ 	.txfifo = SZ_512,
+ 	.ahb_buf_size = SZ_1K,
+-	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
++	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
++		  QUADSPI_QUIRK_USE_TDH_SETTING,
+ 	.little_endian = true,
+ };
+ 
+@@ -275,6 +288,11 @@ static inline int needs_amba_base_offset
+ 	return !(q->devtype_data->quirks & QUADSPI_QUIRK_BASE_INTERNAL);
  }
+ 
++static inline int needs_tdh_setting(struct fsl_qspi *q)
++{
++	return q->devtype_data->quirks & QUADSPI_QUIRK_USE_TDH_SETTING;
++}
++
+ /*
+  * An IC bug makes it necessary to rearrange the 32-bit data.
+  * Later chips, such as IMX6SLX, have fixed this bug.
+@@ -710,6 +728,16 @@ static int fsl_qspi_default_setup(struct
+ 	qspi_writel(q, QUADSPI_MCR_MDIS_MASK | QUADSPI_MCR_RESERVED_MASK,
+ 		    base + QUADSPI_MCR);
+ 
++	/*
++	 * Previous boot stages (BootROM, bootloader) might have used DDR
++	 * mode and did not clear the TDH bits. As we currently use SDR mode
++	 * only, clear the TDH bits if necessary.
++	 */
++	if (needs_tdh_setting(q))
++		qspi_writel(q, qspi_readl(q, base + QUADSPI_FLSHCR) &
++			    ~QUADSPI_FLSHCR_TDH_MASK,
++			    base + QUADSPI_FLSHCR);
++
+ 	reg = qspi_readl(q, base + QUADSPI_SMPR);
+ 	qspi_writel(q, reg & ~(QUADSPI_SMPR_FSDLY_MASK
+ 			| QUADSPI_SMPR_FSPHS_MASK
 
 
