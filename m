@@ -2,151 +2,97 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A495C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D291D2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080109;
-	bh=Ur/viyuBEyZ5mqbdrZIIH5xEqPh/48fUizwmkULdx4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGOR001nIxzZ46yTGxeNWePvgIWgwB40/44hM5A5lD7xxDyLqsPoBgF913uMwwS6W
-	 6m9Luy+tWaV/DC6EWr65i5XZAtg1/5glXOpC7mRSeiJBjX/2HjyOO4ae0g/jyG+UR8
-	 piB+nXHCiq8MyasmeKZ4KpMLiUqZ0TX6Mr5doJEY=
+	by mail.kernel.org (Postfix) with ESMTP id 172172073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfLKQBr (ORCPT
+        id S2388363AbfLKQBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:01:51 -0500
+Received: from mga02.intel.com ([134.134.136.20]:18942 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731411AbfLKPNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:24 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1574E24656;
-        Wed, 11 Dec 2019 15:13:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077204;
-        bh=Ur/viyuBEyZ5mqbdrZIIH5xEqPh/48fUizwmkULdx4o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xaFJuEPcATQr3gajjFdK81T2jXtUe/ZD+k2Z0IwMHQDaLbRTYTcOIpv3XfDTykEj9
-         q3tfUDXjFbnIByX5sz9X2/QF743gd5dQOYV26PUqffvcC4DbAJUOGhoept9HbpIyaU
-         i0IinKA4rMKJ6ba8TsLurhL1+H60LdBzwR2d1QhA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Cartwright <julia@ni.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        Tim Sander <tim@krieglstein.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 086/134] watchdog: prevent deferral of watchdogd wakeup on RT
-Date:   Wed, 11 Dec 2019 10:11:02 -0500
-Message-Id: <20191211151150.19073-86-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        id S1732868AbfLKQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:01:42 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 08:01:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="296287348"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 11 Dec 2019 08:01:40 -0800
+Date:   Wed, 11 Dec 2019 08:01:40 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 0/6] Fix various comment errors
+Message-ID: <20191211160140.GC5044@linux.intel.com>
+References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Cartwright <julia@ni.com>
+On Wed, Dec 11, 2019 at 02:26:19PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> Fix various comment mistakes, such as typo, grammar mistake, out-dated
+> function name, writing error and so on. It is a bit tedious and many
+> thanks for review in advance.
+> 
+> Miaohe Lin (6):
+>   KVM: Fix some wrong function names in comment
+>   KVM: Fix some out-dated function names in comment
+>   KVM: Fix some comment typos and missing parentheses
+>   KVM: Fix some grammar mistakes
+>   KVM: hyperv: Fix some typos in vcpu unimpl info
+>   KVM: Fix some writing mistakes
 
-[ Upstream commit a19f89335f4bda3d77d991c96583e3e51856acbb ]
+Regarding the patch organizing, I'd probably group the comment changes
+based on what files they touch as opposed to what type of comment issue
+they're fixing.
 
-When PREEMPT_RT is enabled, all hrtimer expiry functions are
-deferred for execution into the context of ksoftirqd unless otherwise
-annotated.
+E.g. three patches for the comments
 
-Deferring the expiry of the hrtimer used by the watchdog core, however,
-is a waste, as the callback does nothing but queue a kthread work item
-and wakeup watchdogd.
+   KVM: VMX: Fix comment blah blah blah
+   KVM: x86: Fix comment blah blah blah
+   KVM: Fix comment blah blah blah
 
-It's worst then that, too: the deferral through ksoftirqd also means
-that for correct behavior a user must adjust the scheduling parameters
-of both watchdogd _and_ ksoftirqd, which is unnecessary and has other
-side effects (like causing unrelated expiry functions to execute at
-potentially elevated priority).
+and one patch for the print typo in hyperv
 
-Instead, mark the hrtimer used by the watchdog core as being _HARD to
-allow it's execution directly from hardirq context.  The work done in
-this expiry function is well-bounded and minimal.
+   KVM: hyperv: Fix some typos in vcpu unimpl info
 
-A user still must adjust the scheduling parameters of the watchdogd
-to be correct w.r.t. their application needs.
+For KVM, the splits don't matter _that_ much since they more or less all
+get routed through the maintainers/reviewers, but it is nice when patches
+can be contained to specific subsystems/areas as it allows people to easily
+skip over patches that aren't relevant to them.
 
-Link: https://lkml.kernel.org/r/0e02d8327aeca344096c246713033887bc490dd7.1538089180.git.julia@ni.com
-Cc: Guenter Roeck <linux@roeck-us.net>
-Reported-and-tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Reported-by: Tim Sander <tim@krieglstein.org>
-Signed-off-by: Julia Cartwright <julia@ni.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-[bigeasy: use only HRTIMER_MODE_REL_HARD]
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191105144506.clyadjbvnn7b7b2m@linutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/watchdog/watchdog_dev.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index dbd2ad4c92948..d3acc0a7256ca 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -158,7 +158,8 @@ static inline void watchdog_update_worker(struct watchdog_device *wdd)
- 		ktime_t t = watchdog_next_keepalive(wdd);
- 
- 		if (t > 0)
--			hrtimer_start(&wd_data->timer, t, HRTIMER_MODE_REL);
-+			hrtimer_start(&wd_data->timer, t,
-+				      HRTIMER_MODE_REL_HARD);
- 	} else {
- 		hrtimer_cancel(&wd_data->timer);
- 	}
-@@ -177,7 +178,7 @@ static int __watchdog_ping(struct watchdog_device *wdd)
- 	if (ktime_after(earliest_keepalive, now)) {
- 		hrtimer_start(&wd_data->timer,
- 			      ktime_sub(earliest_keepalive, now),
--			      HRTIMER_MODE_REL);
-+			      HRTIMER_MODE_REL_HARD);
- 		return 0;
- 	}
- 
-@@ -971,7 +972,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
- 		return -ENODEV;
- 
- 	kthread_init_work(&wd_data->work, watchdog_ping_work);
--	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	wd_data->timer.function = watchdog_timer_expired;
- 
- 	if (wdd->id == 0) {
-@@ -1019,7 +1020,8 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
- 		__module_get(wdd->ops->owner);
- 		kref_get(&wd_data->kref);
- 		if (handle_boot_enabled)
--			hrtimer_start(&wd_data->timer, 0, HRTIMER_MODE_REL);
-+			hrtimer_start(&wd_data->timer, 0,
-+				      HRTIMER_MODE_REL_HARD);
- 		else
- 			pr_info("watchdog%d running and kernel based pre-userspace handler disabled\n",
- 				wdd->id);
--- 
-2.20.1
-
+>  arch/x86/include/asm/kvm_host.h       | 2 +-
+>  arch/x86/kvm/hyperv.c                 | 6 +++---
+>  arch/x86/kvm/ioapic.c                 | 2 +-
+>  arch/x86/kvm/lapic.c                  | 4 ++--
+>  arch/x86/kvm/vmx/nested.c             | 2 +-
+>  arch/x86/kvm/vmx/vmcs_shadow_fields.h | 4 ++--
+>  arch/x86/kvm/vmx/vmx.c                | 8 ++++----
+>  virt/kvm/kvm_main.c                   | 6 +++---
+>  8 files changed, 17 insertions(+), 17 deletions(-)
+> 
+> -- 
+> 2.19.1
+> 
