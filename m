@@ -2,116 +2,113 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D9C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C992C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B60214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCC3214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:38:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GUvuPFbx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za9dk0f3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfLKXhm (ORCPT
+        id S1727063AbfLKXil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:37:42 -0500
-Received: from ozlabs.org ([203.11.71.1]:46837 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfLKXhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:37:42 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YCyq3Kvhz9sPf;
-        Thu, 12 Dec 2019 10:37:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576107459;
-        bh=anOBSm0Hx5W98+Fik5tTRV+QdfBiQItlqQqJav57vzM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GUvuPFbxC70xmhfrjEQWZfz2aKHdNG3Yve6C0r2zZfA3GwSFmKwB5/3NFxrIQUYiI
-         hPkcGGxayHNIP3O098mURkMII/B28kP1GJhi0/t5g4b76l+fg1vgYQ0B3RF0JnbSnx
-         +Qmtz24vm579q7TraZ3PuMNUy8SML949G8LxjLU5fOdeyk6rfQXnaadHCEqxzDGL1k
-         FyCwpSyyFYCZfD4NM6wzBba0Wv/vStgkipdTCiLDypG/QbTNbuu9RZz+VOhacDXykE
-         CpofE7X3UTcEQS15/tNgoiRCNCFoACbdf3WI22IaPKrkauIaOxZbUq6Nw1oy9QKLYF
-         TsTQnWHotaO6g==
-Date:   Thu, 12 Dec 2019 10:37:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yintian Tao <yttao@amd.com>, Jason Gunthorpe <jgg@mellanox.com>
-Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
-Message-ID: <20191212103738.1b3b085c@canb.auug.org.au>
+        Wed, 11 Dec 2019 18:38:41 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:44095 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbfLKXil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:38:41 -0500
+Received: by mail-wr1-f51.google.com with SMTP id q10so552833wrm.11;
+        Wed, 11 Dec 2019 15:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:user-agent
+         :content-transfer-encoding;
+        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
+        b=Za9dk0f3+8Oo2BcaPZmBbpc29b3C6CmCFARBm9fTHh/QLUWgUu5TSJr9ppy8bkCdrc
+         H/Zs90vGg4yF2K3w5woCtLhBCGBREAC1ocKIG3+pB+wiIO4NxrOHH3iI6/38Dd0vbjMg
+         qFTUiuois9HPXxl9PR6eLbt6Lk8Bi9eEli3Rdl8mq/mzwsvpdHLVpxgdV4O5587xza97
+         ydALyXp3GgqPyRbvcu8+UuPLpE8ZG9qw5YFuoj3sesJJk3j3EoMXB6+mSPzTfzmY0ZcY
+         7KFxamKx4iTGmrzz8dSXEFpas10CjMjE6bX/g7Nlz2sMXrNJOXZOt+Ujtfcfm/v1JW6k
+         3Qcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :user-agent:content-transfer-encoding;
+        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
+        b=YIWRT95AhiLawdzUfw770XytlmAnSohh0CUwSFg9pO/StPdGQHIzMVYAA56H3u8LHq
+         SIRAjePrT1aL8NoiY6qAQZrHLzCIssZcOVxg0WgKlnT1lXzxy3D2/9mraD5pQVXRq5ZC
+         +NYHpI6acu3oKGIk3yvO4/KaeFh7iNaW3A2pPMbobxS5OWyuyKuj1CJSELcHiGQMVZHT
+         FW8WYMVaW81W4BqjVxPLBtqLUHdx83Y2xtA6o92sqo75jmPJhWoVinF11BOJX91NJi9R
+         bNbNKlyQXI/qCuMBFLUMtU93wLiHw83nq/Qjd4WXcbmpNNhSHzelTaoY8QtU+EO9mQUh
+         gqjg==
+X-Gm-Message-State: APjAAAXrvcaw4LEChn6QSWhzl5ODWkm6D1VHWATOhWwSqrBZGozRYo/a
+        YL4JFmjXCCbDs/vLX/g2S2A=
+X-Google-Smtp-Source: APXvYqyt9+nph0QrBPM/FnhfUGZMJLtmYaY8jJjnZzNW2cdfqWXBK8OyEytjvDss5jLs0ZDLutaJ+A==
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr2640601wrw.31.1576107518523;
+        Wed, 11 Dec 2019 15:38:38 -0800 (PST)
+Received: from localhost ([5.59.90.131])
+        by smtp.gmail.com with ESMTPSA id w20sm3995604wmk.34.2019.12.11.15.38.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 15:38:37 -0800 (PST)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "\"Rafael J. Wysocki\"" <rafael.j.wysocki@intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?iso-8859-1?Q?=22Stefan_M=E4tje=22?= <stefan.maetje@esd.eu>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [REGRESSION] PCI v5.5-rc1 breaks google kevin
+Date:   Thu, 12 Dec 2019 00:38:35 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2g+4lXBbe75hosTkGlpOraX";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Message-ID: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2g+4lXBbe75hosTkGlpOraX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
+since v5.5-rc1 the google kevin chromebook does not boot.
+Git bisect reports=20
+5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
+as the first bad commit.
 
-Hi all,
+In order to revert it from v5.5-rc1 i had to also revert some dependencies:
+5e0c21c75e8c08375a69710527e4a921b897cb7e
+aff5d0552da4055da3faa27ee4252e48bb1f5821
+35efea32b26f9aacc99bf07e0d2cdfba2028b099
+687aaf386aeb551130f31705ce40d1341047a936
+72ea91afbfb08619696ccde610ee4d0d29cf4a1d
+87e90283c94c76ee11d379ab5a0973382bbd0baf
+After reverting all of this, still no luck.
+So, either the results of git bisect are not to be trusted, or
+there are more bad commits.
 
-Today's linux-next merge of the amdgpu tree got a conflict in:
+By "does not boot" i mean that the display fails to start and
+the display is the only output device, so debugging is quite difficult.
 
-  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
+# CONFIG_PCI is not set
 
-between commit:
+Regards,
+  Vicente.
 
-  62914a99dee5 ("drm/amdgpu: Use mmu_interval_insert instead of hmm_mirror")
-
-from Linus' tree and commit:
-
-  8497d2bcdee1 ("drm/amd/powerplay: enable pp one vf mode for vega10")
-
-from the amdgpu tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index c17505fba988,8992506541d8..000000000000
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@@ -2794,8 -2828,6 +2828,7 @@@ int amdgpu_device_init(struct amdgpu_de
-  	mutex_init(&adev->virt.vf_errors.lock);
-  	hash_init(adev->mn_hash);
-  	mutex_init(&adev->lock_reset);
- +	mutex_init(&adev->notifier_lock);
-- 	mutex_init(&adev->virt.dpm_mutex);
-  	mutex_init(&adev->psp.mutex);
- =20
-  	r =3D amdgpu_device_check_arguments(adev);
-
---Sig_/2g+4lXBbe75hosTkGlpOraX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xfcIACgkQAVBC80lX
-0Gx0qwf8C8ZKnyjMlYh9MF74yk4zH0ETeMLjH1+ePAUejEtOM9LzI8NYiFLj6M3q
-xsagMfZTDQ0p9ufLxeeSKK0wVzMMnHb9uasCJZmoRzrE1/nvkAtFDdUt515BEcoU
-56kc56eDjNcGzCaqHkdekHI3lr0EVIKwHUr26FxRMWSV/Lpd+EVPGPsSBWIwxOxO
-bF0eUgayGXHQ6VT4m6nNjIM4JIO/YRH2dW66XLQOIlJOd5kePDiT8gxab+xxAjrb
-LOuh1Lfsw3e2z5iPZ9LSkQqDhAhQhubkS3cmThTIkuLjTfIaGHWbjW2gdNDgpm/x
-Ii7FMrrecu+7zZ7wpN3Yry34X6P3nw==
-=5dF8
------END PGP SIGNATURE-----
-
---Sig_/2g+4lXBbe75hosTkGlpOraX--
