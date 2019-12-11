@@ -2,154 +2,121 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A632C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16516C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F83B24679
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4F72465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="trIiLL+j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5C0uyFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388001AbfLKPaz (ORCPT
+        id S2387932AbfLKPa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:30:55 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10288 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387680AbfLKPaw (ORCPT
+        Wed, 11 Dec 2019 10:30:58 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:46182 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387867AbfLKP3X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:30:52 -0500
+        Wed, 11 Dec 2019 10:29:23 -0500
+Received: by mail-pj1-f67.google.com with SMTP id z21so9041500pjq.13;
+        Wed, 11 Dec 2019 07:29:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576078251; x=1607614251;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SKfQoX2A8rZ0EnP2XkyIWyJjMF/So/eVFwUYzJEpgTw=;
-  b=trIiLL+jeKQk4aIryp5tyAmL9BBvgLbLwpkQEUcbXbYVIX8jXMhRc7WU
-   /kPttwswhWMzcjH70fTRxWCqqY7AaO1iMlLRMzR6KliXstR+se+VlQJ8Q
-   c/qDWjbxAQDutpUJss0YkxROM6pc3ZSuiIjIlMWs6FzNghY/BNpKJELqP
-   k=;
-IronPort-SDR: ynn3GjgWJ7AJmj+IiCD63/an9xfGjEvulKIW2ESukaoYU3xV38CEmegp9TBobp4VnugtQwnRoH
- dToGlfSk+tuQ==
-X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
-   d="scan'208";a="14303724"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Dec 2019 15:30:40 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 0FDA8A2146;
-        Wed, 11 Dec 2019 15:30:39 +0000 (UTC)
-Received: from EX13D32EUB004.ant.amazon.com (10.43.166.212) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D32EUB004.ant.amazon.com (10.43.166.212) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 15:30:07 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH v3 3/4] xen/interface: re-define FRONT/BACK_RING_ATTACH()
-Date:   Wed, 11 Dec 2019 15:29:55 +0000
-Message-ID: <20191211152956.5168-4-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152956.5168-1-pdurrant@amazon.com>
-References: <20191211152956.5168-1-pdurrant@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pfDhDYFuoXDrqHRE8i/08ZQEyfFGj50C9cMmD8Jy2MA=;
+        b=j5C0uyFcwXKjxMT2bhJ14CbB+fZCEQxShkK6p3Cf93qQ6BpSTKh005B5VD2g3OiyqF
+         /wNRFMf+eDpSe4TXNqE6yRjbz6RybfTWfb6JvF2sgW3j1ebFqzHfH+knhZW5LWMcLU9Q
+         PPkMZlifZ3WANqTGfezf8poByuNPftyfj2T8ipV3B9YeSB8ICKW5MsA6kddHfyed3zGU
+         vic5lX9Flai49PViVVxoFnEQJ1pk/ccakyFpoYFqPpU1m9xHZDAyiQ7nU9kNfJZthfG6
+         7ElzzegodjoKVuaP+P5wut6UEuDXichyFzp4GyPgvDzsqKx4ZybnxVzEt/Nh+yrpsJgq
+         kRqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pfDhDYFuoXDrqHRE8i/08ZQEyfFGj50C9cMmD8Jy2MA=;
+        b=oAp9Da0cQAxIH33xtPRmHHU7hXcNi2uBWg1Og5bnOhBOKc+hnHLVtlcYxFnwXbX6zF
+         GEAaDkOqYoCsnjDS7bBWqirQhwVzj3p5jhoz5pUi3vNFcmz6OmMvfPehP1gwtNkj/FpT
+         3z3ypD6JonJ5HP91wt3V+mi5Gijz7NOU3juy/RKKTpDlY2pn7/Po+PHgd0kGvbEAGgXe
+         mIA42Asn90P5z94ZdBFE/amZfAWQw9qJf/c+w5LheJuK4rW2BZ+nyJjdkdZV1XmA+VBP
+         Wl6qpuDs65zuO7ZGQ45BENZByisPuxDaop07kTF9tryPX0BH4JedGPDxS5qhAqjTERnc
+         FSBQ==
+X-Gm-Message-State: APjAAAWG8fEtXNby/te4Lw1NUEZdGAC01iU/5E+FSAUQshH+DOm7Ksp/
+        6G6y8LdeLPeY7Putejvd+94YB7/nGUFqXoZE64E=
+X-Google-Smtp-Source: APXvYqwlR/tF5FA23iHp/eaMoUPuaCaCPBgDqm77FVGRFefN3YELGs3EmpG2NGeQvAJUc/yD31OEVyNePT/dpDkApsU=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr4272497pjq.132.1576078162498;
+ Wed, 11 Dec 2019 07:29:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com> <1576075099-3441-3-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1576075099-3441-3-git-send-email-akinobu.mita@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 Dec 2019 17:29:12 +0200
+Message-ID: <CAHp75Vfq4KqNAGY4ivveR7D0Z1fA1EOFT+oL9+f+Ak2jikCTVg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/12] ACPI: thermal: switch to use <linux/units.h> helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently these macros are defined to re-initialize a front/back ring
-(respectively) to values read from the shared ring in such a way that any
-requests/responses that are added to the shared ring whilst the front/back
-is detached will be skipped over. This, in general, is not a desirable
-semantic since most frontend implementations will eventually block waiting
-for a response which would either never appear or never be processed.
+On Wed, Dec 11, 2019 at 4:39 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
+>
+> This switches the ACPI thermal zone driver to use celsius_to_deci_kelvin(),
+> deci_kelvin_to_celsius(), and deci_kelvin_to_millicelsius_with_offset() in
+> <linux/units.h> instead of helpers in <linux/thermal.h>.
+>
+> This is preparation for centralizing the kelvin to/from Celsius conversion
+> helpers in <linux/units.h>.
 
-Since the macros are currently unused, take this opportunity to re-define
-them to re-initialize a front/back ring using specified values. This also
-allows FRONT/BACK_RING_INIT() to be re-defined in terms of
-FRONT/BACK_RING_ATTACH() using a specified value of 0.
+>  #include <linux/reboot.h>
+>  #include <linux/device.h>
+>  #include <linux/thermal.h>
 
-NOTE: BACK_RING_ATTACH() will be used directly in a subsequent patch.
+> +#include <linux/units.h>
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
+Can we try to keep *some* order, i.e. put this after acpi.h below?
 
-A patch to add the FRONT/BACK_RING_ATTACH() macros to the canonical
-ring.h in xen.git will be sent once the definitions have been agreed.
+>  #include <linux/acpi.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/uaccess.h>
 
-v2:
- - change definitions to take explicit initial index values
----
- include/xen/interface/io/ring.h | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+>                         } else if (crt > 0) {
+> -                               unsigned long crt_k = CELSIUS_TO_DECI_KELVIN(crt);
+> +                               unsigned long crt_k =
+> +                                       celsius_to_deci_kelvin(crt);
 
-diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
-index 3f40501fc60b..2af7a1cd6658 100644
---- a/include/xen/interface/io/ring.h
-+++ b/include/xen/interface/io/ring.h
-@@ -125,35 +125,24 @@ struct __name##_back_ring {						\
-     memset((_s)->pad, 0, sizeof((_s)->pad));				\
- } while(0)
- 
--#define FRONT_RING_INIT(_r, _s, __size) do {				\
--    (_r)->req_prod_pvt = 0;						\
--    (_r)->rsp_cons = 0;							\
-+#define FRONT_RING_ATTACH(_r, _s, _i, __size) do {			\
-+    (_r)->req_prod_pvt = (_i);						\
-+    (_r)->rsp_cons = (_i);						\
-     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
-     (_r)->sring = (_s);							\
- } while (0)
- 
--#define BACK_RING_INIT(_r, _s, __size) do {				\
--    (_r)->rsp_prod_pvt = 0;						\
--    (_r)->req_cons = 0;							\
--    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
--    (_r)->sring = (_s);							\
--} while (0)
-+#define FRONT_RING_INIT(_r, _s, __size) FRONT_RING_ATTACH(_r, _s, 0, __size)
- 
--/* Initialize to existing shared indexes -- for recovery */
--#define FRONT_RING_ATTACH(_r, _s, __size) do {				\
--    (_r)->sring = (_s);							\
--    (_r)->req_prod_pvt = (_s)->req_prod;				\
--    (_r)->rsp_cons = (_s)->rsp_prod;					\
-+#define BACK_RING_ATTACH(_r, _s, _i, __size) do {			\
-+    (_r)->rsp_prod_pvt = (_i);						\
-+    (_r)->req_cons = (_i);						\
-     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
--} while (0)
--
--#define BACK_RING_ATTACH(_r, _s, __size) do {				\
-     (_r)->sring = (_s);							\
--    (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
--    (_r)->req_cons = (_s)->req_prod;					\
--    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
- } while (0)
- 
-+#define BACK_RING_INIT(_r, _s, __size) BACK_RING_ATTACH(_r, _s, 0, __size)
-+
- /* How big is this ring? */
- #define RING_SIZE(_r)							\
-     ((_r)->nr_ents)
+It used to be one line, why do two?
+
+>         pr_info(PREFIX "%s [%s] (%ld C)\n", acpi_device_name(device),
+> -               acpi_device_bid(device), DECI_KELVIN_TO_CELSIUS(tz->temperature));
+> +               acpi_device_bid(device),
+> +               deci_kelvin_to_celsius(tz->temperature));
+
+Ditto.
+
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
