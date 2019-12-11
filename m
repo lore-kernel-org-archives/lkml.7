@@ -2,98 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C70C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D6DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205F820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF9D2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077116;
-	bh=NGnFn9nHpuHhYGvP9pAM7mshyTnwuL5ajlVrjkVg0OU=;
+	s=default; t=1576077120;
+	bh=GOBp+qS3FGkY90AMsI0PqPGQZH9s+19M68+rUesgz1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Te0ZYbP9gJ2RMxRE41NT/sYsn9IsVnc+IYNL8dlflDGuXScJVuvJiQ5d/QfKd3t9o
-	 YlhPa6q5DqaOfTpt01Qg057oWeR72XdBqspaELrrWmK0B1we1oTy6+Ozeh4NVlPS6i
-	 61zm6h5eI/L1Zb1S3fzS2hUDUVLnnsz6JAzMI1v8=
+	b=Ql+zBFz3MqMFGWV7xUIR2/7OMr9DtDGD44F0ka2VoMdWa9UWWxcOArpYT2EZE4VJR
+	 L5fzqWy9zUTm7Nr3sFdS3HMcKFLCXar/w4BZAGuXcyoLw0DdFWSjIgTx0C/VL32zRO
+	 BCYcTVKJu4/LR52wAt7O66Wsv3pxhDjjqDDd7j5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbfLKPLy (ORCPT
+        id S1730310AbfLKPL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60580 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbfLKPLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:48 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730985AbfLKPLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04ACD208C3;
-        Wed, 11 Dec 2019 15:11:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 733F020663;
+        Wed, 11 Dec 2019 15:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077108;
-        bh=NGnFn9nHpuHhYGvP9pAM7mshyTnwuL5ajlVrjkVg0OU=;
+        s=default; t=1576077113;
+        bh=GOBp+qS3FGkY90AMsI0PqPGQZH9s+19M68+rUesgz1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UoLEAcAeGBBgJcrnVt9G1AX4ONE2snadu84rskyua0SLN1NLAEjt5EZtiTrNKEYBJ
-         5x95Q7X4SEWEyA+eUL/hl0bxkBXIjrsEpMN56YdFxJ7Cdrdf2FdivmzCuYW9JoMzjW
-         EwvN3gMkU9tChFIOoLaGAA+DHzh0IxYv8tDU7l6o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thibaut Sautereau <thibaut@sautereau.fr>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 020/105] cgroup: dont put ERR_PTR() into fc->root
-Date:   Wed, 11 Dec 2019 16:05:09 +0100
-Message-Id: <20191211150226.742272740@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=YY7f+nwY0323TP/LEOPXOrug3nDnGK8TftXberIN2X+ynNxY2CWg89LPQJUE5Yu6n
+         mtqHO0u2+OTm/kHzyEl4dgaFgboXBxhH1JYkS3quzcDIOZw+Xre2jILH1RuQMJi4kE
+         NqMboqzq42YH1YfCIXm/E4gCUsZ84butVdhzzjdA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 002/134] scsi: lpfc: Fix discovery failures when target device connectivity bounces
+Date:   Wed, 11 Dec 2019 10:09:38 -0500
+Message-Id: <20191211151150.19073-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 630faf81b3e61bcc90dc6d8b497800657d2752a5 ]
+[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
 
-the caller of ->get_tree() expects NULL left there on error...
+An issue was seen discovering all SCSI Luns when a target device undergoes
+link bounce.
 
-Reported-by: Thibaut Sautereau <thibaut@sautereau.fr>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+The driver currently does not qualify the FC4 support on the target.
+Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
+that the target will reject the PRLI if it is not supported. If a PRLI
+times out, the driver will retry. The driver will not proceed with the
+device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
+the device is FCP only and does not respond to the NVMe PRLI, thus
+initiating the wait/retry loop in the driver.  During that time, a RSCN is
+received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
+response comes back before the PRLI mess is resolved and it prematurely
+cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
+state. Discovery with the target never completes or resets.
+
+Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
+thereby restarting the discovery process for the node.
+
+Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup/cgroup.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 8be1da1ebd9a4..f23862fa15146 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -2119,11 +2119,12 @@ int cgroup_do_get_tree(struct fs_context *fc)
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 749286acdc173..f7c205e1da485 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -5405,9 +5405,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
+ 			/* If we've already received a PLOGI from this NPort
+ 			 * we don't need to try to discover it again.
+ 			 */
+-			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
++			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
++			    !(ndlp->nlp_type &
++			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
+ 				return NULL;
  
- 		nsdentry = kernfs_node_dentry(cgrp->kn, sb);
- 		dput(fc->root);
--		fc->root = nsdentry;
- 		if (IS_ERR(nsdentry)) {
--			ret = PTR_ERR(nsdentry);
- 			deactivate_locked_super(sb);
-+			ret = PTR_ERR(nsdentry);
-+			nsdentry = NULL;
- 		}
-+		fc->root = nsdentry;
- 	}
- 
- 	if (!ctx->kfc.new_sb_created)
++			ndlp->nlp_prev_state = ndlp->nlp_state;
++			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
++
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
-
-
 
