@@ -2,109 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE53C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 543E8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487E7208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27903208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079958;
-	bh=hVUHMLLYDV08S/pPSYP9EoFOQBwimzdIpsxjLTyyhlo=;
+	s=default; t=1576079964;
+	bh=z3Kj59tElYDFczXrLzBvFGf3Lq0FVEcXhM0H7/niF5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NVRXy0TXPPRXF50L3MZPeWFCO18DSlMZ69zIrR9MNsNzU7DyHaQYaUY6bDRKdU0Jt
-	 UvKAg8UnjoPW6vPmE4wKSJQ/flAstvsybPipb+q6QEfU1TFfX0PhABHb1Px/dlXVeo
-	 2NSmTZLuuEgtaxraV2v8QReWKWibMcg099GEm4MI=
+	b=u5kHS3CB84mLZ1aL8FS+6YQW8Mj56lRPWTMAdTq98CCsFBByaDMkaRovlqbRBgIRF
+	 a8UqCbNBogfUfPptzyomuRHYU+MNxPWkrDjTFW5tpuQyVSvVAmzdYFZYAvUfWQ9Npv
+	 PUBbRIIv59vIEnVV/tUlEFyU3VlMyy7A/kWgucJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732762AbfLKP7J (ORCPT
+        id S1731773AbfLKP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:59:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38822 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:59:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731581AbfLKPOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:07 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731575AbfLKPOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25A6820663;
-        Wed, 11 Dec 2019 15:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A91224693;
+        Wed, 11 Dec 2019 15:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077247;
-        bh=hVUHMLLYDV08S/pPSYP9EoFOQBwimzdIpsxjLTyyhlo=;
+        s=default; t=1576077245;
+        bh=z3Kj59tElYDFczXrLzBvFGf3Lq0FVEcXhM0H7/niF5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wbl/3VANT2bVujlMQqMWshzdoteEZzHLZSiB8ewAztzbL3h3l+AKGEQ3yms5dh1bE
-         KSzEdGlPdvifbD8aXzBByhKRuF7T+E2UtYnbsVLTk5FmiyczwLTfGDSml85U2A9uv6
-         GCfU3ICn9gOly/7cBeZbOrwzSWMFJotl3K5Q4ghE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 124/134] mailbox: imx: Clear the right interrupts at shutdown
-Date:   Wed, 11 Dec 2019 10:11:40 -0500
-Message-Id: <20191211151150.19073-124-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=a7aK1yKzZirRvYlOibGrIImuGcHOAL/y0sr3ni0zuJiVNSP05O1SQldbBWuTKpluB
+         ATOo+EirqaFHKJ8roRv09jfoYXE19yUSvMr3zcPjxleIftD6QPpVt4ace6ABgT7qF/
+         0VLcIh51EFvL9CDs41Qagc9uo6/CVsjWRMn9m4g4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.3 071/105] jbd2: Fix possible overflow in jbd2_log_space_left()
+Date:   Wed, 11 Dec 2019 16:06:00 +0100
+Message-Id: <20191211150251.819544427@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 5f0af07e89199ac51cdd4f25bc303bdc703f4e9c ]
+commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
 
-Make sure to only clear enabled interrupts keeping count
-of the connection type.
+When number of free space in the journal is very low, the arithmetic in
+jbd2_log_space_left() could underflow resulting in very high number of
+free blocks and thus triggering assertion failure in transaction commit
+code complaining there's not enough space in the journal:
 
-Suggested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+J_ASSERT(journal->j_free > 1);
+
+Properly check for the low number of free blocks.
+
+CC: stable@vger.kernel.org
+Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mailbox/imx-mailbox.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ include/linux/jbd2.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 9f74dee1a58c7..d28bbd47ff882 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -217,8 +217,19 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
- 	if (cp->type == IMX_MU_TYPE_TXDB)
- 		tasklet_kill(&cp->txdb_tasklet);
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1584,7 +1584,7 @@ static inline int jbd2_space_needed(jour
+ static inline unsigned long jbd2_log_space_left(journal_t *journal)
+ {
+ 	/* Allow for rounding errors */
+-	unsigned long free = journal->j_free - 32;
++	long free = journal->j_free - 32;
  
--	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx) |
--		       IMX_MU_xCR_RIEn(cp->idx) | IMX_MU_xCR_GIEn(cp->idx));
-+	switch (cp->type) {
-+	case IMX_MU_TYPE_TX:
-+		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
-+		break;
-+	case IMX_MU_TYPE_RX:
-+		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(cp->idx));
-+		break;
-+	case IMX_MU_TYPE_RXDB:
-+		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_GIEn(cp->idx));
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	free_irq(priv->irq, chan);
+ 	if (journal->j_committing_transaction) {
+ 		unsigned long committing = atomic_read(&journal->
+@@ -1593,7 +1593,7 @@ static inline unsigned long jbd2_log_spa
+ 		/* Transaction + control blocks */
+ 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
+ 	}
+-	return free;
++	return max_t(long, free, 0);
  }
--- 
-2.20.1
+ 
+ /*
+
 
