@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA78C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E549FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4240B20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8CC20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080431;
-	bh=1p+VIhW29w2XPh91R1wTJ43eATvNT1qf2y1Fw9muaBI=;
+	s=default; t=1576080436;
+	bh=FsGRS6i1JQA/Fs5w9IlywZtU1wgcApDmYXC3E95CFLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePMLevXqzRWu2qhEVwYLrBmgbxUqV8t9ajg3FR17pHwA9tSqsaS97TC136EPAeZC0
-	 a4VsFEjZCWtxLWDAHr3sZVC6CSJ+DTLEXDzQzZvqXsLHGm9IM3iGGknKG+3qRyRewL
-	 5pIQn4LIfDy1pEWaOxHXQXNIOmkf4OsbXjhJfTFg=
+	b=GLBozNGd4+7FpX8qDSvqNo1jiolNaSmQROifYAhIiZZcIlTwaXNSSB1gm0r9H4v1a
+	 IslWEUTfI/IR8DWRfFZgGV5D2Crhn6gnbg5Kvrdm87rPABg2D5Q3DuVHNdzLVY4QU3
+	 wtfspJHEwYB3GXfcLg4yLMpynmwlKFhQkQapf2ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbfLKPMc (ORCPT
+        id S1731426AbfLKQHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:07:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731086AbfLKPMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:18 -0500
+        id S1730713AbfLKPMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658F02467D;
-        Wed, 11 Dec 2019 15:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 075382467F;
+        Wed, 11 Dec 2019 15:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077138;
-        bh=1p+VIhW29w2XPh91R1wTJ43eATvNT1qf2y1Fw9muaBI=;
+        s=default; t=1576077150;
+        bh=FsGRS6i1JQA/Fs5w9IlywZtU1wgcApDmYXC3E95CFLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rvOf4ZnikqDApXfm5idDcZ0daOm88g/B8ZA7dPSlLjR5IHMyhfmHoK9phsZubLvbR
-         29m4McEgrNXEZsFINZ50u2bUeeD+MGdaKwTR00jxuF/ZvhoB1vtNBuhqxtvIKrGJOQ
-         kMXY1filHsDGu0JGwvknvGziV/sLht1xNb5DCNOs=
+        b=fL88RWqaLkWJ+vbzYl2yvCOP7tJXpUh0zmEms1zT0lefMNEJYWnXMLWj3XH35oR1k
+         32AsMzzGtcjynUj4cVVnBf39ON380OsLMwaUa91sKzqY35snDWrDtNayrmcSNEgxP4
+         +YYVnY4MBzHgmnqf8630pZ0LlDGgDhUxygXnWC1o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Matthias Fend <Matthias.Fend@wolfvision.net>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 025/134] Input: st1232 - do not reset the chip too early
-Date:   Wed, 11 Dec 2019 10:10:01 -0500
-Message-Id: <20191211151150.19073-25-sashal@kernel.org>
+Cc:     Pavel Modilaynen <pavel.modilaynen@axis.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 037/134] dtc: Use pkg-config to locate libyaml
+Date:   Wed, 11 Dec 2019 10:10:13 -0500
+Message-Id: <20191211151150.19073-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,76 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Pavel Modilaynen <pavel.modilaynen@axis.com>
 
-[ Upstream commit efd7bb08a762d4f6322054c6824bd942971ac563 ]
+[ Upstream commit 067c650c456e758f933aaf87a202f841d34be269 ]
 
-We should not be putting the chip into reset while interrupts are enabled
-and ISR may be running. Fix this by installing a custom devm action and
-powering off the device/resetting GPIO line from there. This ensures proper
-ordering.
+Using Makefile's wildcard with absolute path to detect
+the presence of libyaml results in false-positive
+detection when cross-compiling e.g. in yocto environment.
+The latter results in build error:
+| scripts/dtc/yamltree.o: In function `yaml_propval_int':
+| yamltree.c: undefined reference to `yaml_sequence_start_event_initialize'
+| yamltree.c: undefined reference to `yaml_emitter_emit'
+| yamltree.c: undefined reference to `yaml_scalar_event_initialize'
+...
+Use pkg-config to locate libyaml to address this scenario.
 
-Tested-by: Matthias Fend <Matthias.Fend@wolfvision.net>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Pavel Modilaynen <pavel.modilaynen@axis.com>
+[robh: silence stderr]
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/st1232.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ scripts/dtc/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/touchscreen/st1232.c b/drivers/input/touchscreen/st1232.c
-index 1139714e72e26..1c5f8875cb795 100644
---- a/drivers/input/touchscreen/st1232.c
-+++ b/drivers/input/touchscreen/st1232.c
-@@ -149,6 +149,11 @@ static void st1232_ts_power(struct st1232_ts_data *ts, bool poweron)
- 		gpiod_set_value_cansleep(ts->reset_gpio, !poweron);
- }
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index 82160808765c3..b5a5b1c548c9b 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -11,7 +11,7 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
+ # Source files need to get at the userspace version of libfdt_env.h to compile
+ HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
  
-+static void st1232_ts_power_off(void *data)
-+{
-+	st1232_ts_power(data, false);
-+}
-+
- static const struct st_chip_info st1232_chip_info = {
- 	.have_z		= true,
- 	.max_x		= 0x31f, /* 800 - 1 */
-@@ -229,6 +234,13 @@ static int st1232_ts_probe(struct i2c_client *client,
+-ifeq ($(wildcard /usr/include/yaml.h),)
++ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+ ifneq ($(CHECK_DTBS),)
+ $(error dtc needs libyaml for DT schema validation support. \
+ 	Install the necessary libyaml development package.)
+@@ -19,7 +19,7 @@ endif
+ HOST_EXTRACFLAGS += -DNO_YAML
+ else
+ dtc-objs	+= yamltree.o
+-HOSTLDLIBS_dtc	:= -lyaml
++HOSTLDLIBS_dtc	:= $(shell pkg-config yaml-0.1 --libs)
+ endif
  
- 	st1232_ts_power(ts, true);
- 
-+	error = devm_add_action_or_reset(&client->dev, st1232_ts_power_off, ts);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"Failed to install power off action: %d\n", error);
-+		return error;
-+	}
-+
- 	input_dev->name = "st1232-touchscreen";
- 	input_dev->id.bustype = BUS_I2C;
- 	input_dev->dev.parent = &client->dev;
-@@ -271,15 +283,6 @@ static int st1232_ts_probe(struct i2c_client *client,
- 	return 0;
- }
- 
--static int st1232_ts_remove(struct i2c_client *client)
--{
--	struct st1232_ts_data *ts = i2c_get_clientdata(client);
--
--	st1232_ts_power(ts, false);
--
--	return 0;
--}
--
- static int __maybe_unused st1232_ts_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-@@ -329,7 +332,6 @@ MODULE_DEVICE_TABLE(of, st1232_ts_dt_ids);
- 
- static struct i2c_driver st1232_ts_driver = {
- 	.probe		= st1232_ts_probe,
--	.remove		= st1232_ts_remove,
- 	.id_table	= st1232_ts_id,
- 	.driver = {
- 		.name	= ST1232_TS_NAME,
+ # Generated files need one more search path to include headers in source tree
 -- 
 2.20.1
 
