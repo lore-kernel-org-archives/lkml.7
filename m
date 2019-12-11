@@ -2,132 +2,73 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B64C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6F3C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B9AB214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5190206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576028110;
-	bh=pQxMKg7JJjgWHDinyWr+5TBs3j6yYrQbYkC1gEBWN/k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lf0d3YxNlPkySXeTnvi6WcKbnAqR4+YSYfWYYb4zNelg0ZVWjDE712VLogx7/Wl+L
-	 TPsZXoyxdrmlcJuY4aHrBX4hxjCMrag6MG/hpQmFD1gikZTVMmalf+6n/ux8PjvJWe
-	 sCoTzWc/YTkc8y1USomipfhvlliXVNfQQx/TJrgg=
+	s=default; t=1576028114;
+	bh=c9m9fown74Zh8IIFCHcE5o2mKOa4ALygmoYsqibpZwk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Yz0gEEABtFy7abyGssfELIhewPYTgFhRTaUNEPCIlVXnebuW5cQ1HkwBnQ3ReuWHq
+	 /22aSEDu8xEG8pKlyvSV5bAXLIhGPT+uX+jhmmod8uGnUadkK1Ai6TBcF4oKbeWWVp
+	 lPgXYOFznBcVse/1SZvH7I+CEkdqmE5ZN+u2pn9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfLKBfJ (ORCPT
+        id S1727443AbfLKBfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:35:09 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37630 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbfLKBfI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53826 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726500AbfLKBfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 20:35:08 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q127so9919849pga.4;
-        Tue, 10 Dec 2019 17:35:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nlpVsvSziMS3fJYT4hfZDu09k+DIOzs8q7E2mV4QBMM=;
-        b=NZ2e7jQCO0XsxakoDSNlRS7AaNAmbyiX3s5WJ40a1LAVqE5SND78+yIGfSgRF+1r69
-         JCVloXc80IJMn4iRUVSea15czBfXyV20oIcoyoCL3gTWtpsoxyNpHJkCM48fix5mPo1a
-         z7tED3IWm6VXN1dlEGZS2MBXUpHkDus3l2NPss/ayDe6vrMyRiQ91LXW/KjnBDx3OkZy
-         EhrB2lYQs/8yNp+G+b1kqlYN1trh0Y2N1sf+e4FSyqtQv5AAR3VRaq0mOqbmqND4tzXp
-         8lF3Tcp4wSBrrIl2kcOW2Aj5wfDPcHh0O2ZcHUxfYUumTUfEW3+qotevs9UYYTqOc3as
-         SdNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nlpVsvSziMS3fJYT4hfZDu09k+DIOzs8q7E2mV4QBMM=;
-        b=TuwIbOtsImC4+OXg8yIvR9pDaFXoqOFWtVKtAfE4YZh364qnabvdfW9pbFj1I7wnu/
-         tLv6Efs5ydAOUMQoA2h+7o0tdxHoe0lqwGmcQySSk1+oJhElPZRPmiZvHt7B5hGzttIu
-         2z86RLUxILnQD446C1iiYK5pyWeUKuFpyFGh40Y9J36ZD0U/I7t5vDmQL83pQV0aK7XY
-         PYR0smeAqJU55RIEPiw/m5eQy8B3pQCe6AmaxRveIRAzofw5KQ6YytZ2D6nTZo09q8sM
-         fnRIW0O8OPp6Cd1ShFaLawH4XvLK5D3Omzx+gXg6toMAcJBD8jM2CKzyDbIKTDgWGtfz
-         Oa9Q==
-X-Gm-Message-State: APjAAAXEf3gD5O9XGcTJO1xl3bLjNowrYZ/Ohy5pXxMbL2y43viml9MI
-        Vrxp8cBVQDHsSuOcGWdxzi5UQFBS
-X-Google-Smtp-Source: APXvYqxl1SD/KNXFXo4mnS2r4hl5LczS1cUtUXkz/1uWGAoK8RJYFaUqsy3vxsCeZu73IPqU0JxyOQ==
-X-Received: by 2002:a63:2ac2:: with SMTP id q185mr1222079pgq.417.1576028106879;
-        Tue, 10 Dec 2019 17:35:06 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id v16sm297845pfn.77.2019.12.10.17.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 17:35:05 -0800 (PST)
-Date:   Tue, 10 Dec 2019 17:35:03 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH NOTFORMERGE 0/5] Extend remote madvise API to KSM hints
-Message-ID: <20191211013503.GA134194@google.com>
-References: <20190616085835.953-1-oleksandr@redhat.com>
- <20191210104939.jauw5hnv3smhtvtr@butterfly.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210104939.jauw5hnv3smhtvtr@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 893CC206EC;
+        Wed, 11 Dec 2019 01:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576028107;
+        bh=c9m9fown74Zh8IIFCHcE5o2mKOa4ALygmoYsqibpZwk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R7hTCIb9LYwpUcXG44PFXDu+rF4suDUOZKbHWvoL7hLLRxAEjLpWCQ89pl9HmxTcQ
+         WvHhxdTdSjluLvbeRKD4ihTnNKoO0LnuvFHanplpkTMBhLn5UB9iIT02VQ0CMLsxAx
+         m7u1uzUiT5NEoiNI4Xq1FTk3WSdbbps6KQBGiNIk=
+Date:   Tue, 10 Dec 2019 17:35:07 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
+        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
+        jinyuqi <jinyuqi@huawei.com>
+Subject: Re: mmotm 2019-12-06-19-46 uploaded
+Message-Id: <20191210173507.5f4b46bde9586456c2132560@linux-foundation.org>
+In-Reply-To: <c0691301-fa72-b9fe-5cb8-815275f84555@hisilicon.com>
+References: <20191207034723.OPvz2A9wZ%akpm@linux-foundation.org>
+        <c0691301-fa72-b9fe-5cb8-815275f84555@hisilicon.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
+On Mon, 9 Dec 2019 14:31:55 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
 
-On Tue, Dec 10, 2019 at 11:49:39AM +0100, Oleksandr Natalenko wrote:
-> Hello, Minchan.
+> Hi Andrew,
 > 
-> On Sun, Jun 16, 2019 at 10:58:30AM +0200, Oleksandr Natalenko wrote:
-> > This is a set of commits based on our discussion on your submission [1].
-> > 
-> > First 2 implement minor suggestions just for you to not forget to take
-> > them into account.
-> > 
-> > uio.h inclusion was needed for me to be able to compile your series
-> > successfully. Also please note I had to enable "Transparent Hugepage
-> > Support" as well as "Enable idle page tracking" options, otherwise the
-> > build failed. I guess this can be addressed by you better since the
-> > errors are introduced with MADV_COLD introduction.
-> > 
-> > Last 2 commits are the actual KSM hints enablement. The first one
-> > implements additional check for the case where the mmap_sem is taken for
-> > write, and the second one just allows KSM hints to be used by the remote
-> > interface.
-> > 
-> > I'm not Cc'ing else anyone except two mailing lists to not distract
-> > people unnecessarily. If you are fine with this addition, please use it
-> > for your next iteration of process_madvise(), and then you'll Cc all the
-> > people needed.
-> > 
-> > Thanks.
-> > 
-> > [1] https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/
-> > 
-> > Oleksandr Natalenko (5):
-> >   mm: rename madvise_core to madvise_common
-> >   mm: revert madvise_inject_error line split
-> >   mm: include uio.h to madvise.c
-> >   mm/madvise: employ mmget_still_valid for write lock
-> >   mm/madvise: allow KSM hints for remote API
-> > 
-> >  mm/madvise.c | 23 ++++++++++++++---------
-> >  1 file changed, 14 insertions(+), 9 deletions(-)
-> > 
-> > -- 
-> > 2.22.0
-> > 
+> About this patch,
+> https://lore.kernel.org/lkml/1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com/
 > 
-> This is a gentle ping. Are you still planning to submit process_madvise() solution?
+> It is not in linux-next or your trees now, has it been dropped?
 
-I'm really sorry for being slow progress.
-I am stuck with internal stuff of company.
-I will do best effort to send it within one or two weeks.
+Yes, I dropped it with a "to be updated" note.  Michal is asking for
+significant changelog updates (at least).
 
-Thanks.
