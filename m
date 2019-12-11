@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ECAC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9773C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784172467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD8F24684
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077183;
-	bh=a4j3f4oI2h7jDrF7xEcDPyR0F0vYGjUi2/Tx+D7Uo84=;
+	s=default; t=1576077186;
+	bh=ziHd0qwLt1CVoQnQwHS/GZeFprg96768/sHE5CZAjPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CNKbIbCywnFWU/AyIpneQJ3lCKuQUK7+2HbGOGfo/0T2u2zps7JwIv74X4bDbIC74
-	 yL9Ffp2p/If3CVxj7e8uB2IGNlkhAJrSEsP+GVcR2Oi+D8lUOxLu61IFJYr5tj1z4u
-	 cMTMIV3/RvrRi1Lxvp+7vQdF+mtRJdlGjvyJkJe0=
+	b=ZcEV6XBGxxFqjfkr1RGNyAuq6TTf7N++Kfv7jho/ZFBkZAwqHOPfBQci1JC4VeMJg
+	 ZCNJVveBXK1vh1NztPxosTSzMID6CRDJE/1CJImWMFcOEOW1DiL75GOTuZTFwnBzb8
+	 9To6UHqq6J0HXGZ12MgioNi1QnKeruwMTiAgrte8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfLKPNC (ORCPT
+        id S1731332AbfLKPNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbfLKPMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:50 -0500
+        id S1731247AbfLKPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7281B24686;
-        Wed, 11 Dec 2019 15:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D03924681;
+        Wed, 11 Dec 2019 15:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077169;
-        bh=a4j3f4oI2h7jDrF7xEcDPyR0F0vYGjUi2/Tx+D7Uo84=;
+        s=default; t=1576077172;
+        bh=ziHd0qwLt1CVoQnQwHS/GZeFprg96768/sHE5CZAjPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O9MPLrs51ZnJImuPWkJS/WvVt/kb18XR2SJ3UlwNlERGxhHebhbOGXs08yF6NgUi2
-         NuoQN/mUmK2uKEl5Nswhtxe6hUEujYqJRNVZGLaBEFnmXnYIBNt7mK5RVaNQPfe2jV
-         7MV8LXRA4ltjvO56S56fUFKLRiNiDSggyZd/Ue7k=
+        b=bOgHLnETcOln1S0IoBPv1WoItLd07F0aM2ASat8ap5pBuW4TZC93Y5l7PSUSZ1akM
+         3dH2VsEk3ia9oDbNeO/hAyf1XoyWQZhDlJmkCfst8vGUW7pVMDylX2p1Ln+A+C4DwM
+         HC7U0FEpsVPFucZdzaQpRI9AgZOXZ9LEsaQp7yHo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 054/134] dma-direct: check for overflows on 32 bit DMA addresses
-Date:   Wed, 11 Dec 2019 10:10:30 -0500
-Message-Id: <20191211151150.19073-54-sashal@kernel.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.4 057/134] iommu/arm-smmu-v3: Don't display an error when IRQ lines are missing
+Date:   Wed, 11 Dec 2019 10:10:33 -0500
+Message-Id: <20191211151150.19073-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -58,68 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit b12d66278dd627cbe1ea7c000aa4715aaf8830c8 ]
+[ Upstream commit f7aff1a93f52047739af31072de0ad8d149641f3 ]
 
-As seen on the new Raspberry Pi 4 and sta2x11's DMA implementation it is
-possible for a device configured with 32 bit DMA addresses and a partial
-DMA mapping located at the end of the address space to overflow. It
-happens when a higher physical address, not DMAable, is translated to
-it's DMA counterpart.
+Since commit 7723f4c5ecdb ("driver core: platform: Add an error message
+to platform_get_irq*()"), platform_get_irq_byname() displays an error
+when the IRQ isn't found. Since the SMMUv3 driver uses that function to
+query which interrupt method is available, the message is now displayed
+during boot for any SMMUv3 that doesn't implement the combined
+interrupt, or that implements MSIs.
 
-For example the Raspberry Pi 4, configurable up to 4 GB of memory, has
-an interconnect capable of addressing the lower 1 GB of physical memory
-with a DMA offset of 0xc0000000. It transpires that, any attempt to
-translate physical addresses higher than the first GB will result in an
-overflow which dma_capable() can't detect as it only checks for
-addresses bigger then the maximum allowed DMA address.
+[   20.700337] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ combined not found
+[   20.706508] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ eventq not found
+[   20.712503] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ priq not found
+[   20.718325] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ gerror not found
 
-Fix this by verifying in dma_capable() if the DMA address range provided
-is at any point lower than the minimum possible DMA address on the bus.
+Use platform_get_irq_byname_optional() to avoid displaying a spurious
+error.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Acked-by: Will Deacon <will@kernel.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dma-direct.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/iommu/arm-smmu-v3.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index adf993a3bd580..6a18a97b76a87 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -3,8 +3,11 @@
- #define _LINUX_DMA_DIRECT_H 1
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 8da93e730d6fd..ed90361b84dc7 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -3611,19 +3611,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
  
- #include <linux/dma-mapping.h>
-+#include <linux/memblock.h> /* for min_low_pfn */
- #include <linux/mem_encrypt.h>
+ 	/* Interrupt lines */
  
-+static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
-+
- #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
- #include <asm/dma-direct.h>
- #else
-@@ -24,11 +27,16 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+-	irq = platform_get_irq_byname(pdev, "combined");
++	irq = platform_get_irq_byname_optional(pdev, "combined");
+ 	if (irq > 0)
+ 		smmu->combined_irq = irq;
+ 	else {
+-		irq = platform_get_irq_byname(pdev, "eventq");
++		irq = platform_get_irq_byname_optional(pdev, "eventq");
+ 		if (irq > 0)
+ 			smmu->evtq.q.irq = irq;
  
- static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
- {
-+	dma_addr_t end = addr + size - 1;
-+
- 	if (!dev->dma_mask)
- 		return false;
+-		irq = platform_get_irq_byname(pdev, "priq");
++		irq = platform_get_irq_byname_optional(pdev, "priq");
+ 		if (irq > 0)
+ 			smmu->priq.q.irq = irq;
  
--	return addr + size - 1 <=
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
-+	if (!IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
-+	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
-+		return false;
-+
-+	return end <= min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- 
+-		irq = platform_get_irq_byname(pdev, "gerror");
++		irq = platform_get_irq_byname_optional(pdev, "gerror");
+ 		if (irq > 0)
+ 			smmu->gerr_irq = irq;
+ 	}
 -- 
 2.20.1
 
