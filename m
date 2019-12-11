@@ -2,105 +2,162 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9E6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457732073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82212073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078973;
-	bh=FVo9RzpRNbSQ5+JdfVLkPWd3hzdsy+4GQz+nCCrexhQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYBSwXwcvQa/enoFTSStXmrP2BJ/9C3+5j5JhRLDlZ0ueyeXvHnLcchLOnWtJVIOm
-	 fmUncMpEvUUvkjUjACvvayaLJOP4eCDNtjkmBTc0S1SwWhsqM8DDIXdxS4dOPWuCkq
-	 jZ/vpVUutZIq5b/onPdOtfJEAzqzrRyCbIDv2nDU=
+	s=default; t=1576078975;
+	bh=QOlrJ5HDaP/pmSmKB3j/h9vRMRsxEsX0iRtdjuQyFgo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KZ88q74QW+fTO82sSQgXsQJEn0SyJfZLtWHUXTtxOWyq/kF9lLzCr4ZVDTZOIsZNu
+	 1RqNJF5ZAC+MHbetcNtRhfu9mS3DE6Z3Kuvd9tOtBTDpLd4Nyh51hbU5ypgOWWcHMf
+	 o39ryHKtLMp9yb45TMYpPHm42ec2RDQb/RcfSbmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388677AbfLKPmv (ORCPT
+        id S2388483AbfLKPmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:42:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:42:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:35326 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387444AbfLKP1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B8962173E;
-        Wed, 11 Dec 2019 15:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078058;
-        bh=FVo9RzpRNbSQ5+JdfVLkPWd3hzdsy+4GQz+nCCrexhQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JV6p8JDJtrRkL9XQ2tts2JxsE5P2wEDwG4+LGKlLKHtMM7jkp0ls13RLKO40BDOMQ
-         KJgxLnV/7C4j7yrrqiQTIhb+Lt/wX3k+PPTj5mFvV23M5gRE+6NlaN3BfRDf56TQmb
-         s6HE+Qy88Jv+An/jWrrVi526QkYDzNZKoC7hpps0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 4.19 51/79] libnvdimm/btt: fix variable 'rc' set but not used
-Date:   Wed, 11 Dec 2019 10:26:15 -0500
-Message-Id: <20191211152643.23056-51-sashal@kernel.org>
+        id S2388672AbfLKPmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:42:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B055430E;
+        Wed, 11 Dec 2019 07:42:49 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 094183F52E;
+        Wed, 11 Dec 2019 07:42:49 -0800 (PST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        =?UTF-8?q?Kristina=20Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [PATCH v4 00/12] arm64: ARMv8.5-A: Branch Target Identification support
+Date:   Wed, 11 Dec 2019 15:41:54 +0000
+Message-Id: <20191211154206.46260-1-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+This patch implements support for ARMv8.5-A Branch Target Identification
+(BTI), which is a control flow integrity protection feature introduced
+as part of the ARMv8.5-A extensions.
 
-[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
+This is mainly a repost based on v5.5-rc1.
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+Changes:
 
-Add a ratelimited message in case a storm of errors is encountered.
+v4:
+ - Dropped patch fixing existing documentation as it has already been merged.
+ - Convert WARN_ON() to WARN_ON_ONCE() in "ELF: Add ELF program property
+   parsing support".
+ - Added display of guarded pages to ptdump.
+ - Updated for conversion of exception handling from assembler to C.
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvdimm/btt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Notes:
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 0360c015f6580..75ae2c508a044 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1260,11 +1260,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
- 
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
- 			goto out_rtt;
- 		}
- 
+ * GCC 9 can compile backwards-compatible BTI-enabled code with
+   -mbranch-protection=bti or -mbranch-protection=standard.
+
+ * Binutils trunk supports the new ELF note, but this wasn't in a release
+   the last time I posted this series.  (The situation _might_ have changed
+   in the meantime...)
+
+   Creation of a BTI-enabled binary requires _everything_ linked in to
+   be BTI-enabled.  For now ld --force-bti can be used to override this,
+   but some things may break until the required C library support is in
+   place.
+
+   There is no straightforward way to mark a .s file as BTI-enabled:
+   scraping the output from gcc -S works as a quick hack for now.
+
+   readelf -n can be used to examing the program properties in an ELF
+   file.
+
+ * Runtime mmap() and mprotect() can be used to enable BTI on a
+   page-by-page basis using the new PROT_BTI, but the code in the
+   affected pages still needs to be written or compiled to contain the
+   appopriate BTI landing pads.
+
+Dave Martin (11):
+  ELF: UAPI and Kconfig additions for ELF program properties
+  ELF: Add ELF program property parsing support
+  mm: Reserve asm-generic prot flag 0x10 for arch use
+  arm64: Basic Branch Target Identification support
+  elf: Allow arch to tweak initial mmap prot flags
+  arm64: elf: Enable BTI at exec based on ELF program properties
+  arm64: BTI: Decode BYTPE bits when printing PSTATE
+  arm64: unify native/compat instruction skipping
+  arm64: traps: Shuffle code to eliminate forward declarations
+  arm64: BTI: Reset BTYPE when skipping emulated instructions
+  KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+
+Mark Brown (1):
+  arm64: mm: Display guarded pages in ptdump
+
+ Documentation/arm64/cpu-feature-registers.rst |   2 +
+ Documentation/arm64/elf_hwcaps.rst            |   4 +
+ arch/arm64/Kconfig                            |  29 ++++
+ arch/arm64/include/asm/cpucaps.h              |   3 +-
+ arch/arm64/include/asm/cpufeature.h           |   6 +
+ arch/arm64/include/asm/elf.h                  |  50 ++++++
+ arch/arm64/include/asm/esr.h                  |   2 +-
+ arch/arm64/include/asm/exception.h            |   1 +
+ arch/arm64/include/asm/hwcap.h                |   1 +
+ arch/arm64/include/asm/kvm_emulate.h          |   6 +-
+ arch/arm64/include/asm/mman.h                 |  37 +++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   1 +
+ arch/arm64/include/asm/pgtable.h              |   2 +-
+ arch/arm64/include/asm/ptrace.h               |   8 +
+ arch/arm64/include/asm/sysreg.h               |   4 +
+ arch/arm64/include/uapi/asm/hwcap.h           |   1 +
+ arch/arm64/include/uapi/asm/mman.h            |   9 ++
+ arch/arm64/include/uapi/asm/ptrace.h          |   1 +
+ arch/arm64/kernel/cpufeature.c                |  33 ++++
+ arch/arm64/kernel/cpuinfo.c                   |   1 +
+ arch/arm64/kernel/entry-common.c              |  11 ++
+ arch/arm64/kernel/process.c                   |  36 ++++-
+ arch/arm64/kernel/ptrace.c                    |   2 +-
+ arch/arm64/kernel/signal.c                    |  16 ++
+ arch/arm64/kernel/syscall.c                   |  18 +++
+ arch/arm64/kernel/traps.c                     | 127 +++++++--------
+ arch/arm64/mm/dump.c                          |   5 +
+ fs/Kconfig.binfmt                             |   6 +
+ fs/binfmt_elf.c                               | 145 +++++++++++++++++-
+ fs/compat_binfmt_elf.c                        |   4 +
+ include/linux/elf.h                           |  43 ++++++
+ include/linux/mm.h                            |   3 +
+ include/uapi/asm-generic/mman-common.h        |   1 +
+ include/uapi/linux/elf.h                      |  11 ++
+ 34 files changed, 554 insertions(+), 75 deletions(-)
+ create mode 100644 arch/arm64/include/asm/mman.h
+ create mode 100644 arch/arm64/include/uapi/asm/mman.h
+
 -- 
 2.20.1
 
