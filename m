@@ -2,83 +2,120 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA4C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A5DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDE42077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1207206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfLKCNf (ORCPT
+        id S1727594AbfLKCOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:13:35 -0500
-Received: from mga04.intel.com ([192.55.52.120]:52878 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbfLKCNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:13:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:13:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="225353034"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 18:13:31 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
-        yi.l.liu@intel.com, yi.y.sun@intel.com,
-        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 6/6] iommu/vt-d: Use iova over first level
-Date:   Wed, 11 Dec 2019 10:12:19 +0800
-Message-Id: <20191211021219.8997-7-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211021219.8997-1-baolu.lu@linux.intel.com>
-References: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+        Tue, 10 Dec 2019 21:14:43 -0500
+Received: from twhmllg4.macronix.com ([211.75.127.132]:64678 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfLKCOn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:14:43 -0500
+Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id xBB2EbJC009562;
+        Wed, 11 Dec 2019 10:14:37 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id EE442EC2E2E051ECB764;
+        Wed, 11 Dec 2019 10:14:37 +0800 (CST)
+In-Reply-To: <8f2908ec-6e17-dad1-7f2a-ec22647caecb@microchip.com>
+References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw> <8f2908ec-6e17-dad1-7f2a-ec22647caecb@microchip.com>
+To:     <Tudor.Ambarus@microchip.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        vigneshr@ti.com
+Subject: Re: [PATCH 0/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+MIME-Version: 1.0
+X-KeepSent: B2FEF12D:A2B77CBE-482584CD:000C20E3;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFB2FEF12D.A2B77CBE-ON482584CD.000C20E3-482584CD.000C5393@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 11 Dec 2019 10:14:38 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/12/11 AM 10:14:37,
+        Serialize complete at 2019/12/11 AM 10:14:37
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com xBB2EbJC009562
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After we make all map/unmap paths support first level page table.
-Let's turn it on if hardware supports scalable mode.
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-iommu.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Hi Tudor,
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index e47f5fe37b59..9228f121a040 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -1749,15 +1749,13 @@ static void free_dmar_iommu(struct intel_iommu *iommu)
- 
- /*
-  * Check and return whether first level is used by default for
-- * DMA translation. Currently, we make it off by setting
-- * first_level_support = 0, and will change it to -1 after all
-- * map/unmap paths support first level page table.
-+ * DMA translation.
-  */
- static bool first_level_by_default(void)
- {
- 	struct dmar_drhd_unit *drhd;
- 	struct intel_iommu *iommu;
--	static int first_level_support = 0;
-+	static int first_level_support = -1;
- 
- 	if (likely(first_level_support != -1))
- 		return first_level_support;
--- 
-2.17.1
+> 
+> Re: [PATCH 0/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+> 
+> Hi, Mason,
+> 
+> From the discussion you had with Vignesh, I understand that a v2 will 
+follow. A
+> nit below.
+> 
+> On 11/15/19 10:58 AM, Mason Yang wrote:
+> > Hello,
+> > 
+> > This is repost of patchset from Boris Brezillon's
+> > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
+> > 
+> 
+> [cut]
+> 
+> > Mason Yang (4):
+> 
+> Did you intentionally overwrite Boris's authorship? If yes, would you 
+please
+> describe what changed from Boris's patch set?
+
+okay, sure.
+I will describe it in v2 patch set.
+
+> 
+> Cheers,
+> ta
+
+thanks for your time & comments.
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
