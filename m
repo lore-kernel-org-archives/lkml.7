@@ -2,105 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD5C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AE82073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E5D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g70pc2ke"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CTpH30TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbfLKQVo (ORCPT
+        id S1730501AbfLKQW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:21:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46738 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfLKQVl (ORCPT
+        Wed, 11 Dec 2019 11:22:56 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:24794 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730219AbfLKQWz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:21:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AxXuRP6SlO9EYVZsfKYGZTNvOdQRf3h3gzU4Dl8Nq0c=; b=g70pc2kei6mVg+B+h8YjfbGsg
-        mKZeb9t1jKfZKM8HyZWZkFBrKwtlXP8G4ceGlsVyVyzF9AO00JejYenmo4XxrsHfPrw/FSXvisxwb
-        bRiYSzfAhuRtD8shFf9H0KixFRC5QCTuik++EKIAO9xodk1ljCFZEYfSAZb6bS2dBWrmjAosXs3cQ
-        JoYQU3cmJJn1We/+FfugqqzCOVtaKCZnlJa7NDbLXbRkG2tRTu1twvygzBaq10Y/rldyBVDHHr4RK
-        AMMG5jNnzRd16N026VBWH2/TrzhTMgPf1g8Yr1lMDQjJMaql49Ap7FzgjsZhfXmL4BXjMoTpfXX1r
-        UrGFDzjhA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if4k7-0006LN-OM; Wed, 11 Dec 2019 16:21:39 +0000
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-To:     dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20191206135406.563336e7@canb.auug.org.au>
- <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
- <20191211134929.GL3929@twin.jikos.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
-Date:   Wed, 11 Dec 2019 08:21:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 11:22:55 -0500
+X-UUID: 73e49ec7508844cf8842576d5af10895-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=iimza8cqkvrV1lF7V0mYtKiaYJScHBfp3AjzMCxE4gQ=;
+        b=CTpH30TN4MmOSrnL9IVid5HNqTGghWnqq9dsYcUVwkjXzAKx1Z1fdk6SNy1brspl32QzavMWw+uizFf1w2kxZvnngpm24ZChzD7x8oKBSL6b6wgHHlMeuj6+wcLVXvtLhESq9N2kdimZYolQ9BaDoLgPdEpd8KQID1dvWKZu/Hc=;
+X-UUID: 73e49ec7508844cf8842576d5af10895-20191212
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 792463200; Thu, 12 Dec 2019 00:22:49 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 00:22:23 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 00:22:06 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
+Subject: [PATCH v6 0/2] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Thu, 12 Dec 2019 00:22:34 +0800
+Message-ID: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-In-Reply-To: <20191211134929.GL3929@twin.jikos.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[oops, forgot to add Josh and PeterZ]
+RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBzZXJp
+ZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzLCBhbmQgYXVkaW8gd2ls
+bCB1c2UgaXQgaW4gDQptYWNoaW5lIGRyaXZlciBkdXJpbmcgYm9vdHVwLCB0aGV5IGRlcGVuZCBv
+biB0aGUgZm9yLW5leHQuDQoNCnY2IGNoYW5nZXM6DQoJMS4gU2ltcGxpZnkgdG9wcnVnX3Jlc2V0
+X2Fzc2VydCgpICYgdG9wcnVnX3Jlc2V0X2RlYXNzZXJ0KCkuDQoJMi4gQWRkIG1lbWJlcnMgZm9y
+IG10MjcxMl9kYXRhICYgbXQ4MTgzX2RhdGEuDQoNCnY1IGNoYW5nZXM6DQoJMS4gQWRkIFNpZ25l
+ZC1vZmYtYnkgdGFnIGFuZCBSZXZpZXdlZC1ieSB0YWcuDQoNCnY0IGNoYW5nZXM6DQoJMS4gRml4
+ZWQgd3Jvbmcgc2lnbmVkLW9mZiBhcyBjb3JyZWN0IG1haWwgc3VmZml4Lg0KCTIuIEZpeGVkIHBh
+dGNoIHN1YmplY3QgdGhhdCBhZGQgcGF0Y2ggdmVyc2lvbi4NCg0KdjMgY2hhbmdlczoNCgkxLiBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MjgzLyBhbmQgDQoJICAgaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTE2NDMwNS8gaGFzIGJlZW4gbWVyZ2Vk
+Lg0KCTIuIENoYW5nZSB0aGUgbmFtZSBvZiBtdGtfd2R0X2NvbXBhdGlibGUgdG8gbXRrX3dkdF9k
+YXRhLg0KCTMuIFJlbW92ZSB0b3ByZ3VfcmVzZXQgc3RydWN0IGFuZCB1c2UgbXRrX3dkdF9kZXYg
+aW5zdGVhZC4NCgk0LiBHZXQgdGhlIHZhbHVlIG9mIHN3X3JzdF9udW0gZnJvbSAuaCBmaWxlLg0K
+CTUuIEFkZGRkIG10MjcxMi1yZXNldHMuaCBmb3IgbXQyNzEyLg0KCTYuIEltcHJvdmUgY29tbWl0
+IG1lc3NhZ2UuDQoNCnYyIGNoYW5nZXM6DQoJMS4gcmVtb3ZlICJXSVAiIHRoYXQgaW4gdGhlIHRp
+dGxlIG9mIHBhdGNoZXMNCgkyLiBhZGQgaHlwZXIgbGluayBmb3IgdGhlIHBhdGNoIHRoYXQgZGVw
+ZW5kcyBvbg0KCTMuIHBhdGNod29yayBsaXN0Og0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL2NvdmVyLzExMTY0Mjg1Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
+LzExMTY0Mjk1Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0Mjk5
+Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MjgzLw0KCQlodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MzA1Lw0KDQp2MSBjaGFuZ2VzOg0K
+CTEuIHBhdGNod29yayBsaXN0Og0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL2NvdmVy
+LzExMTY0MTczLw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTgx
+Lw0KCQlodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTg1Lw0KCQlodHRw
+czovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTg3Lw0KCQlodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzExMTY0MTc1Lw0KDQp5b25nLmxpYW5nICgyKToNCiAgYXJt
+NjQ6IGR0czogbXQ4MTgzOiBBZGQgcmVzZXQtY2VsbHMgaW4gaW5mcmFjZmcNCiAgY2xrOiByZXNl
+dDogTW9kaWZ5IHJlc2V0LWNvbnRyb2xsZXIgZHJpdmVyDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAgfCAgMTAgKy0NCiBkcml2ZXJzL3dhdGNoZG9nL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvd2F0Y2hkb2cvbXRr
+X3dkdC5jICAgICAgICAgICAgICAgICAgICB8IDEwOSArKysrKysrKysrKysrKysrKy0NCiAuLi4v
+cmVzZXQtY29udHJvbGxlci9tdDI3MTItcmVzZXRzLmggICAgICAgICAgfCAgMjIgKysrKw0KIC4u
+Li9yZXNldC1jb250cm9sbGVyL210ODE4My1yZXNldHMuaCAgICAgICAgICB8ICAxNyArKysNCiA1
+IGZpbGVzIGNoYW5nZWQsIDE1NSBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2R0LWJpbmRpbmdzL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEy
+LXJlc2V0cy5oDQoNCi0tIA0KMi4xOC4wDQo=
 
-On 12/11/19 5:49 AM, David Sterba wrote:
-> On Fri, Dec 06, 2019 at 08:17:30AM -0800, Randy Dunlap wrote:
->> On 12/5/19 6:54 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Please do not add any material for v5.6 to your linux-next included
->>> trees until after v5.5-rc1 has been released.
->>>
->>> Changes since 20191204:
->>>
->>
->> on x86_64:
->>
->> fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-> 
-> Can somebody enlighten me what is one supposed to do to address the
-> warnings? Function names reported in the list contain our ASSERT macro
-> that conditionally calls BUG() that I believe is what could cause the
-> unreachable instructions but I don't see how.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/btrfs/ctree.h#n3113
-> 
-> __cold
-> static inline void assfail(const char *expr, const char *file, int line)
-> {
-> 	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
-> 		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> 		BUG();
-> 	}
-> }
-> 
-> #define ASSERT(expr)	\
-> 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
