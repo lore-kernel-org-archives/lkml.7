@@ -2,154 +2,184 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE27C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37835C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC3B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080742;
-	bh=139vf3DfrbkU/P4JhYzf52gZ3HQgEWtbHarbgTFRTQU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o5NDpLXb7HTDVih0eC/x2JsjMhjUVNMaZI3OXD7CTEo8DpjTxJoHAqKXLzP9FvxGE
-	 LKu2Bk1XNf0DzXs+gS2JffZsjA9vcWfQjNBl+lY1UUlS1h5K2lY93rqJunuw/SB9xR
-	 CFnM8GXd8VpZTX9R0xaKVYo+Amdausj4CmteTOYQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0481F205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NO2SAA+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfLKPJm (ORCPT
+        id S1731232AbfLKQM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730141AbfLKPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 399232465B;
-        Wed, 11 Dec 2019 15:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076976;
-        bh=139vf3DfrbkU/P4JhYzf52gZ3HQgEWtbHarbgTFRTQU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zul2SulS4U/oQJpR0RzxztOcyxXg/xNqLQPmykcmMO7Jlnua40/bcyU6+JwRHuTQv
-         6M/Qj6cwEcgl+UIKbKm/0/7lFlqHYoOhbRLE7AJvmEhCsdDEjrRUj1PPpKUtziokZq
-         aTDnVFSM82ogFnybkLxaqfv7dhsSsUEFQAdcoPXA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Reto Buerki <reet@codelabs.ch>
-Subject: [PATCH 5.4 62/92] KVM: nVMX: Always write vmcs02.GUEST_CR3 during nested VM-Enter
-Date:   Wed, 11 Dec 2019 16:05:53 +0100
-Message-Id: <20191211150251.817846556@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
-References: <20191211150221.977775294@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 11 Dec 2019 11:12:27 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40563 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730609AbfLKPJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:33 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so24394017wrn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:09:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rZVVfmcA7nilm43qu1vr0G4ih2DRvgI2LIwxMX3GmZM=;
+        b=NO2SAA+c5VVCLzfy9pyhAEiNINNX3kHFsCX/sL90lCqw2Ck0btb7CvhIKfc6Ac8gfg
+         Wg0/aq6TV+ODVHYQjkgxBJbh5PjEPXh2jhc3RzDAudrx/+1arQJrouTGtbU4hs9J81ZP
+         9KgyRAlCeg4ZzSlRYq8GKNGnJ+A+44y6Iu2cq5THKFUJtri5msXBupEeaxE2rH6zfmQd
+         TDExPqREaHpgeUw0t7fdo8svQF0ytEUhIY9NOgxB+BAxsdKDlzHHKB+xB44m3AwwAy5T
+         X1w6GBSy3Pt+RMb8k3HkWVqzRfUKu0PgYJkEGEdL5S+QAPEefpZ6HktLh8UoIThRlAMR
+         k6JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rZVVfmcA7nilm43qu1vr0G4ih2DRvgI2LIwxMX3GmZM=;
+        b=iREKcEgoIrRVXUdNuL9UOt5nqne50tnH509zXvpDS8mJ7CCDfolhbleGxkahqPA9ef
+         DIy+Atb25ZiQDWg/QS9nt66kRKiv6AldOtSpJ2dgON2hldVfg2CfD5aee9JrdSY6UDkK
+         a9k17mFfU4rNR34T7S5sqA698AwuO7DLyAnOei4iioKXlJY0h43x0kEqypH1adTcQzTA
+         wULBlIGIPCGWJCkzT+fG1EMInsK1rPMjBg5XWPdxbsDP+q9uuh69zfoDHjvRuk5XBHe2
+         PLct3nwYZnmTz+6YPyyyw40ebRXp3kGoN30PO1jb1GAdwedk1+bproO6niH6zEf03WpH
+         FQ/w==
+X-Gm-Message-State: APjAAAU75z6kiNSUKvP/Hdf2D4FFZd6VH1U8Ghk5B7qO2nSqFMw4u4bW
+        3qR0MTzf3PNrclR7P6K8r2F9Yg==
+X-Google-Smtp-Source: APXvYqyd6vy+iUwCdrH8Too6eymccRguXlFfkclccjZT8vLOZpaoM9yZcOuXHxYXlg7OvsWu6BqZsw==
+X-Received: by 2002:a5d:558d:: with SMTP id i13mr288441wrv.364.1576076970624;
+        Wed, 11 Dec 2019 07:09:30 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:e505:be10:23e:110d? ([2a01:e34:ed2f:f020:e505:be10:23e:110d])
+        by smtp.googlemail.com with ESMTPSA id l17sm2549108wro.77.2019.12.11.07.09.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 07:09:30 -0800 (PST)
+Subject: Re: [PATCH] drivers: thermal: tsens: Work with old DTBs
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org, swboyd@chromium.org,
+        stephan@gerhold.net, olof@lixom.net
+Cc:     linux-pm@vger.kernel.org
+References: <cover.1576058136.git.amit.kucheria@linaro.org>
+ <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <aa9174c2-c851-4769-0f9c-5541047a7901@linaro.org>
+Date:   Wed, 11 Dec 2019 16:09:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On 11/12/2019 10:58, Amit Kucheria wrote:
+> In order for the old DTBs to continue working, the new interrupt code
+> must not return an error if interrupts are not defined.
+> 
+> Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 015e7d2015985..d8f51067ed411 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -109,7 +109,7 @@ static int tsens_register(struct tsens_priv *priv)
+>  
+>  	irq = platform_get_irq_byname(pdev, "uplow");
+>  	if (irq < 0) {
+> -		ret = irq;
 
-commit 04f11ef45810da5ae2542dd78cc353f3761bd2cb upstream.
+'ret' remains uninitialized here.
 
-Write the desired L2 CR3 into vmcs02.GUEST_CR3 during nested VM-Enter
-instead of deferring the VMWRITE until vmx_set_cr3().  If the VMWRITE
-is deferred, then KVM can consume a stale vmcs02.GUEST_CR3 when it
-refreshes vmcs12->guest_cr3 during nested_vmx_vmexit() if the emulated
-VM-Exit occurs without actually entering L2, e.g. if the nested run
-is squashed because nested VM-Enter (from L1) is putting L2 into HLT.
+> +		dev_warn(&pdev->dev, "Missing uplow irq in DT\n");
+>  		goto err_put_device;
+>  	}
+>  
+> @@ -118,7 +118,8 @@ static int tsens_register(struct tsens_priv *priv)
+>  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>  					dev_name(&pdev->dev), priv);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+> +		dev_warn(&pdev->dev, "%s: failed to get uplow irq\n", __func__);
+> +		ret = 0;
+>  		goto err_put_device;
+>  	}
 
-Note, the above scenario can occur regardless of whether L1 is
-intercepting HLT, e.g. L1 can intercept HLT and then re-enter L2 with
-vmcs.GUEST_ACTIVITY_STATE=HALTED.  But practically speaking, a VMM will
-likely put a guest into HALTED if and only if it's not intercepting HLT.
+The code now is unable to make a distinction between an error in the DT
+and the old DT :/
 
-In an ideal world where EPT *requires* unrestricted guest (and vice
-versa), VMX could handle CR3 similar to how it handles RSP and RIP,
-e.g. mark CR3 dirty and conditionally load it at vmx_vcpu_run().  But
-the unrestricted guest silliness complicates the dirty tracking logic
-to the point that explicitly handling vmcs02.GUEST_CR3 during nested
-VM-Enter is a simpler overall implementation.
+Why not version the DT?
 
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Reto Buerki <reet@codelabs.ch>
-Tested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- arch/x86/kvm/vmx/nested.c |   10 ++++++++++
- arch/x86/kvm/vmx/vmx.c    |   10 +++++++---
- 2 files changed, 17 insertions(+), 3 deletions(-)
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2418,6 +2418,16 @@ static int prepare_vmcs02(struct kvm_vcp
- 				entry_failure_code))
- 		return -EINVAL;
- 
-+	/*
-+	 * Immediately write vmcs02.GUEST_CR3.  It will be propagated to vmcs12
-+	 * on nested VM-Exit, which can occur without actually running L2 and
-+	 * thus without hitting vmx_set_cr3(), e.g. if L1 is entering L2 with
-+	 * vmcs12.GUEST_ACTIVITYSTATE=HLT, in which case KVM will intercept the
-+	 * transition to HLT instead of running L2.
-+	 */
-+	if (enable_ept)
-+		vmcs_writel(GUEST_CR3, vmcs12->guest_cr3);
-+
- 	/* Late preparation of GUEST_PDPTRs now that EFER and CRs are set. */
- 	if (load_guest_pdptrs_vmcs12 && nested_cpu_has_ept(vmcs12) &&
- 	    is_pae_paging(vcpu)) {
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2995,6 +2995,7 @@ u64 construct_eptp(struct kvm_vcpu *vcpu
- void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- {
- 	struct kvm *kvm = vcpu->kvm;
-+	bool update_guest_cr3 = true;
- 	unsigned long guest_cr3;
- 	u64 eptp;
- 
-@@ -3011,15 +3012,18 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu,
- 			spin_unlock(&to_kvm_vmx(kvm)->ept_pointer_lock);
- 		}
- 
--		if (enable_unrestricted_guest || is_paging(vcpu) ||
--		    is_guest_mode(vcpu))
-+		/* Loading vmcs02.GUEST_CR3 is handled by nested VM-Enter. */
-+		if (is_guest_mode(vcpu))
-+			update_guest_cr3 = false;
-+		else if (enable_unrestricted_guest || is_paging(vcpu))
- 			guest_cr3 = kvm_read_cr3(vcpu);
- 		else
- 			guest_cr3 = to_kvm_vmx(kvm)->ept_identity_map_addr;
- 		ept_load_pdptrs(vcpu);
- 	}
- 
--	vmcs_writel(GUEST_CR3, guest_cr3);
-+	if (update_guest_cr3)
-+		vmcs_writel(GUEST_CR3, guest_cr3);
- }
- 
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
