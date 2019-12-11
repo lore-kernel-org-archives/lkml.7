@@ -2,97 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAEDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61397C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE15E205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA90205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:04:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oBg4iX5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbfLKSDN (ORCPT
+        id S1731020AbfLKSEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:03:13 -0500
-Received: from mga18.intel.com ([134.134.136.126]:17321 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbfLKSDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:03:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 10:03:12 -0800
-X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
-   d="scan'208";a="245373947"
-Received: from rchatre-mobl.amr.corp.intel.com (HELO [10.24.14.138]) ([10.24.14.138])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Dec 2019 10:03:04 -0800
-Subject: Re: [PATCH v2] x86/resctrl: fix an imbalance in domain_remove_cpu
-To:     Qian Cai <cai@lca.pw>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de
-Cc:     fenghua.yu@intel.com, hpa@zytor.com, john.stultz@linaro.org,
-        sboyd@kernel.org, tony.luck@intel.com, tj@kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20191211033042.2188-1-cai@lca.pw>
-From:   Reinette Chatre <reinette.chatre@intel.com>
-Message-ID: <9e7483f2-75cc-afaa-e1ea-287a970d4579@intel.com>
-Date:   Wed, 11 Dec 2019 10:02:56 -0800
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 13:04:15 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43059 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730334AbfLKSEO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:04:14 -0500
+Received: by mail-io1-f68.google.com with SMTP id s2so23602758iog.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:04:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lk2kHwOIGMIgDPaSWiDXXQawNgoxO/02PTT5MTHKBSk=;
+        b=oBg4iX5BFblswDGY+ml4KpSu9P9MZzXv04sTj8aWJf/VNEZfCNpb1QRgyiF4L+TAhq
+         vRmS0y1d6uDaeh07IjDEuYCwYKbW/ysvqPeXzgbvXkAczQYlCltxJedTvXM+OTPEFvu/
+         XneacJuDxO1F0RmpEFe5D17tm1Gpq2YxaFOK0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lk2kHwOIGMIgDPaSWiDXXQawNgoxO/02PTT5MTHKBSk=;
+        b=OEk/qOX+FW4OsWGQTCoy/m3GkGLLWxHE696ztzj9MkDCJUVPkAYzXZAGlwQLzvb1pz
+         eswI9dJAor/2v9DMtQiLwoPGmm1SeC4F0sMZlsSv10iwz34DVjsBT9nUOsNp/JrR6f4y
+         /7H8uxPfwrN2xQUa6qBniiQ0WAnL9oaM+6oSaAvw6EqJ35Ch2444RPNCjjZhl7AYdBGx
+         6718Er//X1tlClRqjXdtLfj8BdhF0mB4hvpfNQF/wj1PGbgDxNWeFeWlH5T5Sh/cB3rH
+         8sCx8ZSTFIEn7dGeVL049o247qBm6yypTLYZN/AhASpZvofTO5oiwf5uJl1Ga/UoQI+Y
+         WD/A==
+X-Gm-Message-State: APjAAAV7FuncONQsNIjYYSFEoWuJpqwb2gJC75FV148z4V4snrUCBr+/
+        ENuwuLtjKqth63oqJ2QZtEP23ViCK1Q=
+X-Google-Smtp-Source: APXvYqwaN3nLHsu/llF1bkSmTdyIngsMJZNzW6pm2r/X9jao6Xe+yfhC7AmrUpNID9pCrdecoiCjtg==
+X-Received: by 2002:a05:6602:2346:: with SMTP id r6mr3769426iot.133.1576087454106;
+        Wed, 11 Dec 2019 10:04:14 -0800 (PST)
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com. [209.85.166.43])
+        by smtp.gmail.com with ESMTPSA id m18sm671456ioj.74.2019.12.11.10.04.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 10:04:13 -0800 (PST)
+Received: by mail-io1-f43.google.com with SMTP id x1so23622138iop.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:04:13 -0800 (PST)
+X-Received: by 2002:a6b:5503:: with SMTP id j3mr3620512iob.142.1576087452757;
+ Wed, 11 Dec 2019 10:04:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191211033042.2188-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org>
+ <0101016ef36a9118-f2919277-effa-4cd5-adf8-bbc8016f31df-000000@us-west-2.amazonses.com>
+ <20191211063829.GC3143381@builder> <0101016ef3c8e061-462507db-9d6f-4ead-8740-73b08ed97574-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef3c8e061-462507db-9d6f-4ead-8740-73b08ed97574-000000@us-west-2.amazonses.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 11 Dec 2019 10:04:01 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=VHaFYsqt+3-jgJo8JWKxfRvgR_D-qP5e=TGq8h_f43EA@mail.gmail.com>
+Message-ID: <CAD=FV=VHaFYsqt+3-jgJo8JWKxfRvgR_D-qP5e=TGq8h_f43EA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7180: Add new qup functions
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LinusW <linus.walleij@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qian,
+Hi,
 
-On 12/10/2019 7:30 PM, Qian Cai wrote:
-> A system that supports resource monitoring may have multiple resources
-> while not all of these resources are capable of monitoring. Monitoring
-> related state is initialized only for resources that are capable of
-> monitoring and correspondingly this state should subsequently only be
-> removed from these resources that are capable of monitoring.
-> 
-> domain_add_cpu() calls domain_setup_mon_state() only when r->mon_capable
-> is true where it will initialize d->mbm_over. However,
-> domain_remove_cpu() calls cancel_delayed_work(&d->mbm_over) without
-> checking r->mon_capable resulting in an attempt to cancel d->mbm_over on
-> all resources, even those that never initialized d->mbm_over because
-> they are not capable of monitoring. Hence, it triggers a debugobjects
-> warning when offlining CPUs because those timer debugobjects are never
-> initialized.
-> 
-> ODEBUG: assert_init not available (active state 0) object type:
-> timer_list hint: 0x0
-> WARNING: CPU: 143 PID: 789 at lib/debugobjects.c:484
-> debug_print_object+0xfe/0x140
-> Hardware name: HP Synergy 680 Gen9/Synergy 680 Gen9 Compute Module, BIOS
-> I40 05/23/2018
-> RIP: 0010:debug_print_object+0xfe/0x140
-> Call Trace:
-> debug_object_assert_init+0x1f5/0x240
-> del_timer+0x6f/0xf0
-> try_to_grab_pending+0x42/0x3c0
-> cancel_delayed_work+0x7d/0x150
-> resctrl_offline_cpu+0x3c0/0x520
-> cpuhp_invoke_callback+0x197/0x1120
-> cpuhp_thread_fun+0x252/0x2f0
-> smpboot_thread_fn+0x255/0x440
-> kthread+0x1e6/0x210
-> ret_from_fork+0x3a/0x50
-> 
-> Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
+On Tue, Dec 10, 2019 at 11:07 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+> On 12/11/2019 12:08 PM, Bjorn Andersson wrote:
+> > On Tue 10 Dec 21:24 PST 2019, Rajendra Nayak wrote:
+> >
+> >> on sc7180 we have cases where multiple functions from the same
+> >> qup instance share the same pin. This is true for qup02/04/11 and qup13.
+> >> Add new function names to distinguish which qup function to use.
+> >>
+> >> The device tree files for this platform haven't landed in mainline yet,
+> >> so there aren't any users upstream who should break with this change
+> >> in function names, however, anyone using the devicetree files that were
+> >> posted on the lists and using these specific function names will need
+> >> to update their changes.
+> >
+> > I don't think this paragraph adds value to the git log, but the patch
+> > looks good.
+>
+> Right, I should have mentioned that bit after the --- so its not in the
+> changelog :/
+>
+> Linus, do you want me to resend with that paragraph moved below --- ?
 
-Thank you very much.
+Personally I find this type of info useful even in the changelog
+itself.  Without it someone inspecting this change would wonder why it
+was OK to change the device tree bindings without an attempt at
+backward compatibility.  I suppose they could always go back to the
+mailing list and track down the history, but why is it bad to be in
+the changelog?
 
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+In any case, if everyone hates it in the change log I won't stand in
+the way, so regardless of which way folks go on that:
 
-Reinette
-
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
