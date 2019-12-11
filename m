@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AB6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DBF2C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB9B1222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4332A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aglqWHi1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="l1m7Gu9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729262AbfLKMbr (ORCPT
+        id S1729441AbfLKMb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:31:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51198 "EHLO
+        Wed, 11 Dec 2019 07:31:56 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51184 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbfLKMbo (ORCPT
+        with ESMTP id S1729384AbfLKMbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:31:44 -0500
+        Wed, 11 Dec 2019 07:31:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3R2DK7HvOJXWBjGxheTnCh1+oyh0A3xwV1bV88LUreM=; b=aglqWHi18wn3lAH9Lx5D/B4kie
-        lJrNLFF2pxctrEMnYBHJIEBPv58Uj2A/vOKGdU8ZDPpr8FRStCEj0aezmWfn31MarEVKYHnc5yWex
-        o4z0fl0klPQ5ega9cW16Tu2P2HCSxYvHoFGZ/aWVIoOt9c2cHZ/FcPuq3kEZvabVEq+Eq+I6OrTPN
-        dtIJQP6gNNjFP/E6MFesMAcqOR3T40Ryem7Xr9dYn2tgznxlX8JgvxiQghvD3NSRLSueGnFntUOfM
-        DcFRhZWamjcLkkYGEgDd2rlXeZIGbLC0EEw5Fjo3t1fgIYGg3VCHsMJ6tJw05K20y5rLuhDQqO5CI
-        wITu+cqA==;
+        bh=ms24ZH5KSAe8YqglSclvMlUcqKf59iwRs7IAhQbihiw=; b=l1m7Gu9a4Q2E3VAhtFH0Vp6pEx
+        7EKYlfQaoYSG5yxKZAShvCgoRjLQLsCVedrCySOZcv6m5VGUW/XMk4JyEIv+2kdPEoFbrZBhEmU8/
+        sWx5LLMB2Ga23SlgeQXhLty27LpTfHyB27BJYG9fH0adgzixITKepoNnnkINnwB8yaevGHnAQbFL3
+        Py5E6bYHv7SO0HuoKwzAv1DtGWUwjCu2q1YuH6L4xT82EeEC9n9gMLQBk+3m7oamydC1AagQQynhU
+        n0o5I6r+eRnMLPrTGoDkI2fSRDgs5EURT1qY7MZkiJl+4Zh1PcEwBoNz5PAFyBp/H8FH+rZvIszY3
+        u223hRVA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if192-0001Pf-Bl; Wed, 11 Dec 2019 12:31:08 +0000
+        id 1if191-0001Pa-Lc; Wed, 11 Dec 2019 12:31:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 026FB307093;
-        Wed, 11 Dec 2019 13:29:44 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6C323061E6;
+        Wed, 11 Dec 2019 13:29:43 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 605A920137CBF; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
-Message-Id: <20191211122956.629995180@infradead.org>
+        id 3FD7920137CB6; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
+Message-Id: <20191211122956.227316370@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 11 Dec 2019 13:07:30 +0100
+Date:   Wed, 11 Dec 2019 13:07:23 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Will Deacon <will@kernel.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -65,7 +65,7 @@ Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
         Richard Henderson <rth@twiddle.net>,
         Nick Hu <nickhu@andestech.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 17/17] riscv/tlb: Fix __p*_free_tlb()
+Subject: [PATCH 10/17] sparc32/tlb: Fix __p*_free_tlb()
 References: <20191211120713.360281197@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -83,37 +83,95 @@ following order:
 
 to ensure it is safe against concurrent accesses.
 
-Since RISC-V has page based PMDs, no software walkers and IPI based
-TLB invalidation, it can use the simple tlb_remove_page() based
-freeer.
+Because Sparc32 has non-page based page directories, use a custom
+table freeer.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/riscv/include/asm/pgalloc.h |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/sparc/Kconfig                  |    1 +
+ arch/sparc/include/asm/pgalloc_32.h |    7 +++++--
+ arch/sparc/mm/srmmu.c               |   28 ++++++++++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 2 deletions(-)
 
---- a/arch/riscv/include/asm/pgalloc.h
-+++ b/arch/riscv/include/asm/pgalloc.h
-@@ -73,14 +73,15 @@ static inline void pmd_free(struct mm_st
- 	free_page((unsigned long)pmd);
+--- a/arch/sparc/Kconfig
++++ b/arch/sparc/Kconfig
+@@ -57,6 +57,7 @@ config SPARC32
+ 	select CLZ_TAB
+ 	select HAVE_UID16
+ 	select OLD_SIGACTION
++	select MMU_GATHER_TABLE_FREE
+ 
+ config SPARC64
+ 	def_bool 64BIT
+--- a/arch/sparc/include/asm/pgalloc_32.h
++++ b/arch/sparc/include/asm/pgalloc_32.h
+@@ -12,6 +12,9 @@
+ 
+ struct page;
+ 
++extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int idx);
++extern void __tlb_remove_table(void *table);
++
+ void *srmmu_get_nocache(int size, int align);
+ void srmmu_free_nocache(void *addr, int size);
+ 
+@@ -48,7 +51,7 @@ static inline void free_pmd_fast(pmd_t *
  }
  
--#define __pmd_free_tlb(tlb, pmd, addr)  pmd_free((tlb)->mm, pmd)
-+#define __pmd_free_tlb(tlb, pmd, addr)	\
-+	tlb_remove_table((tlb), virt_to_page(pmd))
+ #define pmd_free(mm, pmd)		free_pmd_fast(pmd)
+-#define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tlb)->mm, pmd)
++#define __pmd_free_tlb(tlb, pmd, addr)	pgtable_free_tlb((tlb), (pmd), 1)
  
- #endif /* __PAGETABLE_PMD_FOLDED */
+ void pmd_populate(struct mm_struct *mm, pmd_t *pmdp, struct page *ptep);
+ #define pmd_pgtable(pmd) pmd_page(pmd)
+@@ -72,6 +75,6 @@ static inline void free_pte_fast(pte_t *
+ #define pte_free_kernel(mm, pte)	free_pte_fast(pte)
  
--#define __pte_free_tlb(tlb, pte, buf)   \
--do {                                    \
--	pgtable_pte_page_dtor(pte);     \
--	tlb_remove_page((tlb), pte);    \
-+#define __pte_free_tlb(tlb, pte, buf)	\
-+do {					\
-+	pgtable_pte_page_dtor(pte);	\
-+	tlb_remove_table((tlb), (pte));	\
- } while (0)
- #endif /* CONFIG_MMU */
+ void pte_free(struct mm_struct * mm, pgtable_t pte);
+-#define __pte_free_tlb(tlb, pte, addr)	pte_free((tlb)->mm, pte)
++#define __pte_free_tlb(tlb, pte, addr)	pgtable_free_tlb((tlb), (pte), 0)
  
+ #endif /* _SPARC_PGALLOC_H */
+--- a/arch/sparc/mm/srmmu.c
++++ b/arch/sparc/mm/srmmu.c
+@@ -38,6 +38,7 @@
+ #include <asm/page.h>
+ #include <asm/asi.h>
+ #include <asm/smp.h>
++#include <asm/tlb.h>
+ #include <asm/io.h>
+ 
+ /* Now the cpu specific definitions. */
+@@ -1849,3 +1850,30 @@ void __init load_mmu(void)
+ 		sun4m_init_smp();
+ #endif
+ }
++
++#define TLB_IDX_MASK	1UL
++
++void __tlb_remove_table(void *table)
++{
++	void *dir = (void *)((unsigned long)table & ~TLB_IDX_MASK);
++	int idx = (unsigned long)table & TLB_IDX_MASK;
++
++	switch (idx) {
++	case 1: /* PMD */
++		pmd_free(NULL, dir);
++		break;
++	case 0: /* PTE */
++		pte_free(NULL, dir);
++		break;
++	}
++}
++
++void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int idx)
++{
++	unsigned long pgf = (unsigned long)table;
++	BUG_ON(idx > TLB_IDX_MASK);
++	BUG_ON(pgf & TLB_IDX_MASK);
++	pgf |= idx;
++	tlb_remove_table(tlb, (void *)pgf);
++}
++
 
 
