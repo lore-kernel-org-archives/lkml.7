@@ -2,149 +2,139 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DCEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960AEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E0A2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D9E2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbfLKKmi convert rfc822-to-8bit (ORCPT
+        id S1729028AbfLKKmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:42:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59534 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 05:42:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59588 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728030AbfLKKmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:42:38 -0500
+        id S1728030AbfLKKmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:42:43 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 376F6B13E;
-        Wed, 11 Dec 2019 10:42:36 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.de>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Felix Schnizlein <fschnizlein@suse.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
-Date:   Wed, 11 Dec 2019 11:42:35 +0100
-Message-ID: <4737004.4U1sY2OxSp@skinner.arch.suse.de>
-In-Reply-To: <87sglroqix.fsf@nanos.tec.linutronix.de>
-References: <20191206162421.15050-1-trenn@suse.de> <20191206163656.GC86904@kroah.com> <87sglroqix.fsf@nanos.tec.linutronix.de>
+        by mx1.suse.de (Postfix) with ESMTP id D483FB178;
+        Wed, 11 Dec 2019 10:42:38 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id F3EB81E0B23; Wed, 11 Dec 2019 11:42:36 +0100 (CET)
+Date:   Wed, 11 Dec 2019 11:42:36 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 20/25] powerpc: book3s64: convert to pin_user_pages()
+ and put_user_page()
+Message-ID: <20191211104236.GM1551@quack2.suse.cz>
+References: <20191211025318.457113-1-jhubbard@nvidia.com>
+ <20191211025318.457113-21-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211025318.457113-21-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, December 10, 2019 9:48:54 PM CET Thomas Gleixner wrote:
-> Greg KH <gregkh@linuxfoundation.org> writes:
-> > On Fri, Dec 06, 2019 at 05:24:20PM +0100, Thomas Renninger wrote:
-> >> From: Felix Schnizlein <fschnizlein@suse.de>
-> >> ==> flags <==
-> >> fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36
-> >> clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc
-> >> rep_good nopl xtopology cpuid tsc_known_freq pni pclmulqdq ssse3 fma
-> >> cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave
-> >> avx f16c rdrand hypervisor lahf_lm abm cpuid_fault invpcid_single pti
-> >> ssbd ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
-> >> xsaveopt arat umip> 
-> > One file with all of that?  We are going to run into problems
-> > eventually, that should be split up.
-> > 
-> > Just like bugs, that's going to just grow over time and eventually
-> > overflow PAGE_SIZE :(
-> > 
-> > Make this:
-> >   ├── flags
-> >   │   ├── fpu
-> >   │   ├── vme
-> > 
-> > ...
-> > 
-> > Much simpler to parse, right?
+On Tue 10-12-19 18:53:13, John Hubbard wrote:
+> 1. Convert from get_user_pages() to pin_user_pages().
 > 
-> Well, I'm not really sure whether 100+ files are simpler to parse.
+> 2. As required by pin_user_pages(), release these pages via
+> put_user_page().
 > 
-> Aside of that I really don't see the value for 100+ files per CPU which
-> are just returning 1 or True or whatever as long as you are not
-> suggesting to provide real feature files which have 0/1 or True/False
-> content.
+> Cc: Jan Kara <jack@suse.cz>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-I also do not like the one file per cpu flag approach.
-This still is one "data"/"info" per sysfs file.
-Similar to:
-cpu/cpufreq/policy1/scaling_available_governors
-and probably a lot others. If PAGE_SIZE overflow has to be cared for, then be 
-it.
- 
-> But I still don't get the whole thing. The only "argument" I've seen so
-> far is the 'proc moves to sys' mantra, but that does not make it any
-> better.
+The patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+I'd just note that mm_iommu_do_alloc() has a pre-existing bug that the last
+jump to 'free_exit' (at line 157) happens already after converting page
+pointers to physical addresses so put_page() calls there will just crash.
+But that's completely unrelated to your change. I'll send a fix separately.
+
+								Honza
+
+> ---
+>  arch/powerpc/mm/book3s64/iommu_api.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> We won't get rid of /proc/cpuinfo for a very long time simply because
-> too much userspace uses it.
-
-The reason we will never get rid of it is:
-Newly written userspace tools still (have to) make use it.
-This is because of a small set of remaining info which is convenient
-to have in userspace but which is not avail in sysfs yet.
-
-Therefore only x of the 26 /proc/cpuinfo data has been picked up.
-
-For decades unused info like:
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 13
-wp              : yes
-power management:
-
-shall die at (long but) some point of time.
-
-It's quite some years ago when acpi and cpufreq proc info first got
-deprecated and duplicated in sys.
-It has been said that it needs years of deprecation that the event file
-on which damons were listening for acpi events can ever be removed...
-It has been 2013 when the removal has been done, more than 5 years ago:
-1696d9dc57e062ce5200f6a42a6aaada15b434bb
-ACPI: Remove the old /proc/acpi/event interface
-
-/proc/cpuinfo may need some years more, but there should be no
-reason it is still getting used.
-
-> Introducing a mess in /sys/ in parallel just
-> for following the mantra does not help much.
- 
-> Also IF we ever expose feature flags in sys then this needs to be a
-> split ino
+> diff --git a/arch/powerpc/mm/book3s64/iommu_api.c b/arch/powerpc/mm/book3s64/iommu_api.c
+> index 56cc84520577..a86547822034 100644
+> --- a/arch/powerpc/mm/book3s64/iommu_api.c
+> +++ b/arch/powerpc/mm/book3s64/iommu_api.c
+> @@ -103,7 +103,7 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
+>  	for (entry = 0; entry < entries; entry += chunk) {
+>  		unsigned long n = min(entries - entry, chunk);
+>  
+> -		ret = get_user_pages(ua + (entry << PAGE_SHIFT), n,
+> +		ret = pin_user_pages(ua + (entry << PAGE_SHIFT), n,
+>  				FOLL_WRITE | FOLL_LONGTERM,
+>  				mem->hpages + entry, NULL);
+>  		if (ret == n) {
+> @@ -167,9 +167,8 @@ static long mm_iommu_do_alloc(struct mm_struct *mm, unsigned long ua,
+>  	return 0;
+>  
+>  free_exit:
+> -	/* free the reference taken */
+> -	for (i = 0; i < pinned; i++)
+> -		put_page(mem->hpages[i]);
+> +	/* free the references taken */
+> +	put_user_pages(mem->hpages, pinned);
+>  
+>  	vfree(mem->hpas);
+>  	kfree(mem);
+> @@ -215,7 +214,8 @@ static void mm_iommu_unpin(struct mm_iommu_table_group_mem_t *mem)
+>  		if (mem->hpas[i] & MM_IOMMU_TABLE_GROUP_PAGE_DIRTY)
+>  			SetPageDirty(page);
+>  
+> -		put_page(page);
+> +		put_user_page(page);
+> +
+>  		mem->hpas[i] = 0;
+>  	}
+>  }
+> -- 
+> 2.24.0
 > 
->   cpu/common_features
-> 
-> and
-> 
->   cpu/CPU$N/unique_features
-
-Makes sense.
-feature (without common/unique) is also a better naming than flags.
-
-If Greg (and others) are ok, I would add "page size exceeding" handling.
-Hm, quick searching for an example I realize that debugfs can exceed page 
-size. Is it that hard to expose a sysfs file larger than page size?
-
-> On most systems unique_features wont exist, but there is such stuff on
-> the horizon.
-
-I still wait a bit before doing work for nothing.
-I hope everybody agrees, that remaining useful info in /proc/cpuinfo should
-show up in /sys if that did not happen yet. And that userspace tools should
-not (need to) make use of /proc/cpuinfo anymore.
-
-    Thomas
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
