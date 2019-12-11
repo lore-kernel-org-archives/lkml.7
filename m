@@ -2,128 +2,161 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCC1C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4362C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FD721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:03:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aMd/OWlq"
+	by mail.kernel.org (Postfix) with ESMTP id 9243F21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbfLKKDZ (ORCPT
+        id S1728559AbfLKKE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:03:25 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:33018 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbfLKKDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:03:25 -0500
-Received: by mail-qt1-f193.google.com with SMTP id d5so5786051qto.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:03:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=9cAOkUmumX1baWPx8mq3cUq6Rwz3U0hfDddkRl9OQAQ=;
-        b=aMd/OWlqZFzVIYrC+5D3onezrFpfiY4lwf7ZzCS9YYoEonUgO1FmDUptCXo1djU6bW
-         h+QaDHb47NJmtyOD3WXT4eYT/6dSgxYeNQHtHWgTNwBGc93BJslZj5h3bItsM/Sp0elI
-         s2kIkrYn6Z3mrggJns1IHJaC0pNM5zoNKf0zLLWf8OVHFADMNfNyRw4oCZFvJZ/eyjZQ
-         bSuJHAkRw5ur5UgivinXLJhcnGlp6WfQuaTeZUFVJ0k1JT8bShEN3ZlpuIr87RmikCLQ
-         CqS/SyxpwJQEnUaaRRAAt20VRZ+wWw+zHWEy7Lyy6Kot8b2T77DKtGpG3Bvkmknv4nET
-         1qxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=9cAOkUmumX1baWPx8mq3cUq6Rwz3U0hfDddkRl9OQAQ=;
-        b=gnQQ39sKq+V45FyWxLStFefQPTuVbevex6jt4DwLhJpdqIs5ESsug/0euY/jPjingn
-         AgjssUxs+iCa+wyAPPcBMm4RrhUiP0ZfiSw+9/ObXsEuSbZKdMP4Y0kp0o/u48vNs4CM
-         sF7UhnhXzOvqXn7pc9AnDTZ+qzAfojt1whZg0LXtJFT4uWmem5wobjrQPpC5Xc5amhUn
-         s//H3TcjDVa4hIt7Adav9GL+h2KuyJ6rE0xGvsUGi3+gS4bgAgQWe34fCPNqE+po3jhK
-         rRZcD8pl5C2cofq3s/c5AwBzqyTRlAWoTfx2wxA2fD1gDcmXSMhTMyIfd+wIVPKMSeUf
-         XvIw==
-X-Gm-Message-State: APjAAAW2wLEzsNTz9WZANMPt/ir3XYC6jCT9nVxEtkRYljR3B+lwHmVB
-        7tQ6sjNsknPDMTWN+UA25ix1ynsCyYGOJBH3Ou2zkg==
-X-Google-Smtp-Source: APXvYqytoucRYG6syAs7nvi4fXL/HwMswDafJP5Ndd2GpOVbJ1lLN+murfZoUtXD9BpSNF0ppyVWKopA4zeVoqnfgJc=
-X-Received: by 2002:ac8:5208:: with SMTP id r8mr1934293qtn.131.1576058604073;
- Wed, 11 Dec 2019 02:03:24 -0800 (PST)
+        Wed, 11 Dec 2019 05:04:57 -0500
+Received: from smtp.h3c.com ([60.191.123.56]:50804 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727829AbfLKKE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:04:57 -0500
+Received: from DAG2EX09-IDC.srv.huawei-3com.com ([10.8.0.72])
+        by h3cspam01-ex.h3c.com with ESMTPS id xBBA3w0v017487
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 18:03:58 +0800 (GMT-8)
+        (envelope-from li.kai4@h3c.com)
+Received: from DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) by
+ DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 11 Dec 2019 18:04:01 +0800
+Received: from BJHUB01-EX.srv.huawei-3com.com (10.63.20.169) by
+ DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
+ (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1713.5
+ via Frontend Transport; Wed, 11 Dec 2019 18:04:01 +0800
+Received: from RDVDI-L14391V.h3c.huawei-3com.com (10.125.108.72) by
+ rndsmtp.h3c.com (10.63.20.174) with Microsoft SMTP Server id 14.3.408.0; Wed,
+ 11 Dec 2019 18:03:48 +0800
+From:   Kai Li <li.kai4@h3c.com>
+To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
+        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
+CC:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
+        Kai Li <li.kai4@h3c.com>
+Subject: [PATCH] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
+Date:   Wed, 11 Dec 2019 18:03:38 +0800
+Message-ID: <20191211100338.510-1-li.kai4@h3c.com>
+X-Mailer: git-send-email 2.24.0.windows.2
 MIME-Version: 1.0
-References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
- <1575451330-11112-2-git-send-email-peng.fan@nxp.com> <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
- <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com> <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
-In-Reply-To: <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Dec 2019 11:03:13 +0100
-Message-ID: <CAMpxmJVSe9crFabywAdeEWWRYmCW9cE2tRcKBb7eyfKuPV9RXw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.125.108.72]
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com xBBA3w0v017487
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 11 gru 2019 o 10:49 Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
->
-> On Wed, Dec 11, 2019 at 10:30:33AM +0100, Bartosz Golaszewski wrote:
-> > =C5=9Br., 4 gru 2019 o 11:09 Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@pengutronix.de> napisa=C5=82(a):
-> > >
-> > > On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
-> > > > From: Peng Fan <peng.fan@nxp.com>
-> > > >
-> > > > platform_irq_count() is the more generic way (independent of
-> > > > device trees) to determine the count of available interrupts. So
-> > > > use this instead.
-> > > >
-> > > > As platform_irq_count() might return an error code (which
-> > > > of_irq_count doesn't) some additional handling is necessary.
-> > > >
-> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > ---
-> > > >
-> > > > V3:
-> > > >  Use %pe
-> > >
-> > > Great. Note that with %pe there is a dependency on commit 57f5677e535=
-b
-> > > ("printf: add support for printing symbolic error names") which was
-> > > applied during the current merge window.
-> > >
-> >
-> > Why would %pe be better in this case? The function returned an int -
-> > why convert it to a pointer?
->
-> The conversion to a pointer is (currently still) needed, because there
-> is no printk facility (yet) that consumes an int error pointer and
-> results in the respecting code.
->
-> Somewhere on my todo-list is an item to fix that, but we're not there
-> yet and so the best option is to use %pe.
->
+If journal is dirty when mount, it will be replayed but jbd2 sb
+log tail cannot be updated to mark a new start because
+journal->j_flag has already been set with JBD2_ABORT first
+in journal_init_common. When a new transaction is committed, it
+will be recored in block 1 first(journal->j_tail is set to 1 in
+journal_reset).
 
-Fair enough, I wasn't aware of this new format modifier.
+If emergency restart happens again before journal super block is
+updated unfortunately, the new recorded trans will not be replayed
+in the next mount.
 
-Both applied.
+This exception happens when this lun is used by only one node. If it
+is used by multi-nodes, other node will replay its journal and its
+journal sb block will be updated after recovery.
 
-Bartosz
+To fix this problem, use jbd2_journal_flush to mark journal as empty as
+ocfs2_replay_journal has done.
+
+The following jbd2 journal can be generated by touching a new file after
+journal is replayed, and seq 15 is the first valid commit, but first seq
+is 13 in journal super block.
+logdump:
+Block 0: Journal Superblock
+Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+Blocksize: 4096   Total Blocks: 32768   First Block: 1
+First Commit ID: 13   Start Log Blknum: 1
+Error: 0
+Feature Compat: 0
+Feature Incompat: 2 block64
+Feature RO compat: 0
+Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+Per Txn Block Limit    Journal: 0    Data: 0
+
+Block 1: Journal Commit Block
+Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+
+Block 2: Journal Descriptor
+Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+No. Blocknum        Flags
+ 0. 587             none
+UUID: 00000000000000000000000000000000
+ 1. 8257792         JBD2_FLAG_SAME_UUID
+ 2. 619             JBD2_FLAG_SAME_UUID
+ 3. 24772864        JBD2_FLAG_SAME_UUID
+ 4. 8257802         JBD2_FLAG_SAME_UUID
+ 5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+...
+Block 7: Inode
+Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+FS Generation: 2839773110 (0xa9437fb6)
+CRC32: 00000000   ECC: 0000
+Type: Regular   Attr: 0x0   Flags: Valid
+Dynamic Features: (0x1) InlineData
+User: 0 (root)   Group: 0 (root)   Size: 7
+Links: 1   Clusters: 0
+ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+...
+Block 9: Journal Commit Block
+Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+
+The following is jouranl recovery log when recovering the upper jbd2
+journal when mount again.
+syslog:
+[ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+[ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+[ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+[ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+[ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+
+Due to first commit seq 13 recorded in journal super is not consistent
+with the value recorded in block 1(seq is 14), journal recovery will be
+terminated before seq 15 even though it is an unbroken commit, inode
+8257802 is a new file and it will be lost.
+
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+---
+ fs/ocfs2/journal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index 1afe57f425a0..b8b9d26fa731 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+ 
+ 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+ 
++	if (replayed) {
++		/* wipe the journal */
++		jbd2_journal_lock_updates(journal->j_journal);
++		status = jbd2_journal_flush(journal->j_journal);
++		jbd2_journal_unlock_updates(journal->j_journal);
++		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
++	}
++
+ 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+ 	if (status < 0) {
+ 		mlog_errno(status);
+-- 
+2.24.0.windows.2
+
