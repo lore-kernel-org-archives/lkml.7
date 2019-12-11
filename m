@@ -2,144 +2,141 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0C4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6CC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1202077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B8572077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBfPqw5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfLKEJk convert rfc822-to-8bit (ORCPT
+        id S1727685AbfLKEKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:09:40 -0500
-Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:29782 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726642AbfLKEJk (ORCPT
+        Tue, 10 Dec 2019 23:10:24 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35666 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLKEKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:09:40 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xBB48siS021258
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 11 Dec 2019 12:08:54 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from localhost (10.0.74.130) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 11 Dec 2019 12:09:00
- +0800
-From:   Orson Zhai <orson.zhai@unisoc.com>
-To:     Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     <linux-kernel@vger.kernel.org>, <baolin.wang@unisoc.com>,
-        <kevin.tang@unisoc.com>, <chunyan.zhang@unisoc.com>,
-        <liangcai.fan@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH v3] mfd: syscon: Add arguments support for syscon reference
-Date:   Wed, 11 Dec 2019 12:08:31 +0800
-Message-ID: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 10 Dec 2019 23:10:24 -0500
+Received: by mail-io1-f68.google.com with SMTP id v18so21269319iol.2;
+        Tue, 10 Dec 2019 20:10:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=X/8Op0hbC9FcMl5P88Fh+jNn8kY8fhf7703ZK88DExI=;
+        b=kBfPqw5ioDQvcQCWSwiAqQwXjkcBx5JDwz3yvDNnIO5WEryzR9vNZdOo2Rfgccn+LO
+         hA8rU8w+PpjDLB9MiNXD7jU+qb4fhhGHvO7ie9Zp+OnN2+5C1QeiTmuQLftrZOilffBR
+         wbe8H2WmJWk4yTaycpoRctP4RDWWKM5yEIDF5G3DQ3tBItFg6Ocgjhg+FNzia6S6XMos
+         lLjRSBQefodKfLM62vfMekrIiM9MGcmL2yAvyNTKrOxzu5idDo8CXI0R+EHxFIBz3JAH
+         pMnPhDt8YWNj56mo+6H2AUObCRtt2nbrkRsh53ujLnAFrv62WlsGDS8OJwu/Hirlo1LX
+         2RNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=X/8Op0hbC9FcMl5P88Fh+jNn8kY8fhf7703ZK88DExI=;
+        b=RYwpUqx6qszw7nAR8G5ILoM003uJJsvAYDcaUeUOtTBUtgfb/FxCAvdxXNMIOx0FTR
+         e14SadmAoD26kQu8H0DCNq4vl69Vf1h45dyWihz6t2RH2bX4gy6Oxo03Wc8x7K/Hoxu+
+         e/xs8ACbR7rfbp1sV4NA5v35nKZnHXCmTvfU2RTJvAto857uymkidbBfe+Ph5H2TVFuB
+         kT/z5VxfxmdWknVRBNrhupfxp2B/5mwNgfKCdMn/j27FnLGfx27qNgsv4vywB/p23xgE
+         aLgu+SzkENUTHWnkhCpbXnKl0CU+ZL7UPQKR9lEQM4J0Je61GukhUVx261Hkd3ZKu/FP
+         vmGw==
+X-Gm-Message-State: APjAAAX4Lm4plHn/UTb2dgVigDzxgudnAuI6bj98RhU5FfYOWFWzNRI0
+        DbSCifF+JDuzd0ngp2pgTHWrrw51jAoEq+UO6tlQkAG7
+X-Google-Smtp-Source: APXvYqx5WAqik/eCozmhH4/CIxvAum7u3esCCyxXvao5eIuBHooq1DrtQqQ1a/ndHqNmFE5FGaNIecqPO/DkL6/wSTE=
+X-Received: by 2002:a6b:7201:: with SMTP id n1mr1043223ioc.37.1576037423377;
+ Tue, 10 Dec 2019 20:10:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Originating-IP: [10.0.74.130]
-X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xBB48siS021258
+References: <20191206181051.GA121021@google.com> <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
+In-Reply-To: <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Tue, 10 Dec 2019 22:10:12 -0600
+Message-ID: <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
+To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, andrew.murray@arm.com,
+        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        wangkefeng.wang@huawei.com, huawei.libin@huawei.com,
+        guohanjun@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a lot of similar global registers being used across multiple SoCs
-from Unisoc. But most of these registers are assigned with different offset
-for different SoCs. It is hard to handle all of them in an all-in-one
-kernel image.
+On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
+<wangxiongfeng2@huawei.com> wrote:
+>
+>
+>
+> On 2019/12/7 2:10, Bjorn Helgaas wrote:
+> > On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
+> >> HiSilicon PCI Network Processor 5896 devices misreport the class type as
+> >> 'NOT_DEFINED', but it is actually a network device. Also the size of
+> >> BAR3 is reported as 265T, but this BAR is actually unused.
+> >> This patch modify the class type to 'CLASS_NETWORK' and disable the
+> >> unused BAR3.
+> >
+> > "NOT_DEFINED" is not the value in the Class Code register.  The commit
+> > message should include the actual value.
+>
+> The actual value is 0, I will update the commit message.
+>
+> >
+> >> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+> >> ---
+> >>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
+> >>  include/linux/pci_ids.h |  1 +
+> >>  2 files changed, 30 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> >> index 4937a08..b9adebb 100644
+> >> --- a/drivers/pci/quirks.c
+> >> +++ b/drivers/pci/quirks.c
+> >> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
+> >>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
+> >>                            PCI_CLASS_DISPLAY_VGA, 8,
+> >>                            quirk_reset_lenovo_thinkpad_p50_nvgpu);
+> >> +
+> >> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
+> >> +{
+> >> +    u32 class = pdev->class;
+> >> +
+> >> +    pdev->class = PCI_BASE_CLASS_NETWORK << 8;
+> >> +    pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
+> >> +             class, pdev->class);
+> >> +}
+> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
+> >> +                    quirk_hisi_fixup_np_class);
+> >> +
+> >> +/*
+> >> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
+> >> + * when assigning the resources. But this BAR is actually unused by the driver,
+> >> + * so let's disable it.
+> >
+> > The question is not whether the BAR is used by the driver; the
+> > question is whether the device responds to accesses to the region
+> > described by the BAR when PCI_COMMAND_MEMORY is turned on.
+>
+> I asked the hardware engineer. He said I can not write an address into that BAR.
 
-Add a helper function to get regmap with arguments where we could put some
-extra information such as the offset value.
+If the BAR is not writable, I think sizing should fail, so I suspect
+some of the bits are actually writable.
 
-Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
-Tested-by: Baolin Wang <baolin.wang@unisoc.com>
----
- drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
- include/linux/mfd/syscon.h | 14 ++++++++++++++
- 2 files changed, 43 insertions(+)
+What do you see in dmesg when this device is enumerated?  Can you
+instrument the code in __pci_read_base() and see what we read/write to
+that BAR?
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index e22197c..2918b05 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+Per spec, if the BAR is not implemented, it should be read-only zero.
+But obviously the whole reason for the quirk is that the device
+doesn't comply with the spec.
 
-+struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
-+                                       const char *property,
-+                                       int arg_count,
-+                                       unsigned int *out_args)
-+{
-+       struct device_node *syscon_np;
-+       struct of_phandle_args args;
-+       struct regmap *regmap;
-+       unsigned int index;
-+       int rc;
-+
-+       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
-+                       0, &args);
-+       if (rc)
-+               return ERR_PTR(rc);
-+
-+       syscon_np = args.np;
-+       if (!syscon_np)
-+               return ERR_PTR(-ENODEV);
-+
-+       regmap = syscon_node_to_regmap(syscon_np);
-+       for (index = 0; index < arg_count; index++)
-+               out_args[index] = args.args[index];
-+       of_node_put(syscon_np);
-+
-+       return regmap;
-+}
-+EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
-+
- static int syscon_probe(struct platform_device *pdev)
- {
-        struct device *dev = &pdev->dev;
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 112dc66..714cab1 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
- extern struct regmap *syscon_regmap_lookup_by_phandle(
-                                        struct device_node *np,
-                                        const char *property);
-+extern struct regmap *syscon_regmap_lookup_by_phandle_args(
-+                                       struct device_node *np,
-+                                       const char *property,
-+                                       int arg_count,
-+                                       unsigned int *out_args);
- #else
- static inline struct regmap *device_node_to_regmap(struct device_node *np)
- {
-@@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
- {
-        return ERR_PTR(-ENOTSUPP);
- }
-+
-+static struct regmap *syscon_regmap_lookup_by_phandle_args(
-+                                       struct device_node *np,
-+                                       const char *property,
-+                                       int arg_count,
-+                                       unsigned int *out_args)
-+{
-+       return ERR_PTR(-ENOTSUPP);
-+}
- #endif
-
- #endif /* __LINUX_MFD_SYSCON_H__ */
---
-2.7.4
-
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
+Bjorn
