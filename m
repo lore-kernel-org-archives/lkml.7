@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74982C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43B0622527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DBA2465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077670;
-	bh=bwooIVWu/MxWs9geWXbUNqyJjTdWQEswFAjdk6BoAVU=;
+	s=default; t=1576077678;
+	bh=beiUjmyuBgp35NQy+gRPHb1sOJ7HQPGyZw4jEV+9fjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=euSFcukJPAXwjqavz0IPTaxjgX8tfNlchVslhFIl/AYqGYWtROOHuCvdCcVZPxKlV
-	 /r1WmApWnqKp+GFKIgFvVh/0nAtnjFHEHdvdNXAGshhMQ+f6x09KGi4kcwAcSWdVXl
-	 Ls5CQ25uLGmeq9hyx6DsNKfN2atqT5eWSnqeeLuY=
+	b=tEabhzX2tMtoobwtmtPprmv4v1FaXJGPKi3wGtlPg0OrPtP3XiSviqkEKIzv3jRO9
+	 kzZrKkWbX8PLiRfNhrkC4E8LZE8KM9dH/GS52N1ApZCl46f5aPDX68lf/sUGWdX+Sy
+	 6sFc2M+reg0f9NYYudzKOxdC02Hlss0f3nT+Xr4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732425AbfLKPVJ (ORCPT
+        id S1732445AbfLKPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51148 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731908AbfLKPVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:06 -0500
+        id S1732433AbfLKPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E6B2467A;
-        Wed, 11 Dec 2019 15:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 461982073D;
+        Wed, 11 Dec 2019 15:21:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077665;
-        bh=bwooIVWu/MxWs9geWXbUNqyJjTdWQEswFAjdk6BoAVU=;
+        s=default; t=1576077673;
+        bh=beiUjmyuBgp35NQy+gRPHb1sOJ7HQPGyZw4jEV+9fjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExnpTOWlfAel3OsoEx8DiSuYVLZfIhwgWOqkKBuD9LaCFBHyEHaIk/EWdULwzZE+t
-         e0yY9lbASh/feTv+aOfr6RPkPNPFNUokIY6T0R4fIAD0YUPx5X8V2IDnFFGr1REmFB
-         +F2x10T6SXJhXZ/iOCdjMGF5UXbHOtQZNLoQ7huQ=
+        b=epu5EwdQ/z0gor9VZGg2MrJaQjgtrr+RcN7dSVyphuU+/Jk9pW59/Jt1x+NNp9oDx
+         hkBkjwHrfpxGrWhmRKFt/DqxFo3T45WnBOOAdYfNs5f+GjO3EqyB9SEJTLWOMulsvT
+         Xz7u+BEPdJkc8yRQvBZTB/jrhWhpjl9CR9C604KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 125/243] ARM: dts: r8a779[01]: Disable unconnected LVDS encoders
-Date:   Wed, 11 Dec 2019 16:04:47 +0100
-Message-Id: <20191211150347.566420078@linuxfoundation.org>
+        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 110/243] nvme: Free ctrl device name on init failure
+Date:   Wed, 11 Dec 2019 16:04:32 +0100
+Message-Id: <20191211150346.558585307@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,69 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+From: Keith Busch <keith.busch@intel.com>
 
-[ Upstream commit 89862542fab10fed8a3c2f9c167622ef4287351d ]
+[ Upstream commit d6a2b9535d1e52bea269c138614c4801469d10e1 ]
 
-The LVDS0 encoder on Koelsh and Porter, and the LVDS1 encoder on Lager,
-are enabled in DT but have no device connected to their output. This
-result in spurious messages being printed to the kernel log such as
+Free the kobject name that was allocated for the controller device on
+failure rather than its parent.
 
-rcar-du feb00000.display: no connector for encoder /soc/lvds@feb90000, skipping
-
-Fix it by disabling the encoders.
-
-Fixes: 15a1ff30d8f9 ("ARM: dts: r8a7790: Convert to new LVDS DT bindings")
-Fixes: e5c3f4707f39 ("ARM: dts: r8a7791: Convert to new LVDS DT bindings")
-Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Fixes: d22524a4782a9 ("nvme: switch controller refcounting to use struct device")
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/r8a7790-lager.dts   | 2 --
- arch/arm/boot/dts/r8a7791-koelsch.dts | 2 --
- arch/arm/boot/dts/r8a7791-porter.dts  | 2 --
- 3 files changed, 6 deletions(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
-index 50312e752e2fa..7b9508e83d46c 100644
---- a/arch/arm/boot/dts/r8a7790-lager.dts
-+++ b/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -489,8 +489,6 @@
- };
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index c4ff4f079448e..b2d9bd564960a 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -3652,7 +3652,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  
- &lvds1 {
--	status = "okay";
--
- 	ports {
- 		port@1 {
- 			lvds_connector: endpoint {
-diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-index ce22db01fbbaa..e6580aa0cea35 100644
---- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-+++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-@@ -479,8 +479,6 @@
- };
- 
- &lvds0 {
--	status = "okay";
--
- 	ports {
- 		port@1 {
- 			lvds_connector: endpoint {
-diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-index f02036e5de015..fefdf8238bbe9 100644
---- a/arch/arm/boot/dts/r8a7791-porter.dts
-+++ b/arch/arm/boot/dts/r8a7791-porter.dts
-@@ -482,8 +482,6 @@
- };
- 
- &lvds0 {
--	status = "okay";
--
- 	ports {
- 		port@1 {
- 			lvds_connector: endpoint {
+ 	return 0;
+ out_free_name:
+-	kfree_const(dev->kobj.name);
++	kfree_const(ctrl->device->kobj.name);
+ out_release_instance:
+ 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
+ out:
 -- 
 2.20.1
 
