@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D2FC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CFCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E253A22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26FD24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076884;
-	bh=DM87xZb71YxE/mN+bBErGuthvuytuq1S3I8vLgnKNjg=;
+	s=default; t=1576076886;
+	bh=g0jZFLX0yEtJ0KaPzUCHs3PLRu4okm5m+F3MyeYYZog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqtDu/iD0ilara+3+NDEJ34COONxpbnfnZRVwhAM4Q/Q2g537gUgH7tc2fMqKgtfE
-	 F+/QwLUtRz7QQrUIUTSvkixkzCMltTXmcIIaIBJSm3W58v7AtdtDkMeeOCKavceGjd
-	 6fzHhIBC76AFrUCErpT7pv/GR/0+oI+A5N8vwp9s=
+	b=Rr4+mODL7xBpQLaWyNSimJU+ZIsjtHJphjs3W+IP0x+o1NeeqRnZURHGzmzQnoVhf
+	 29RQyChxyrToXADmNOIDeCdt40qRgQYb1+pgchznkXngFP7TvB+c0jYa7nPbP48m3P
+	 ye1MUW7QrIf5YAzzho/OyBGidYQaOpqsMusa/a+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfLKPID (ORCPT
+        id S1730243AbfLKPIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55342 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbfLKPIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:01 -0500
+        id S1730209AbfLKPIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E255224680;
-        Wed, 11 Dec 2019 15:07:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C8F2173E;
+        Wed, 11 Dec 2019 15:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076879;
-        bh=DM87xZb71YxE/mN+bBErGuthvuytuq1S3I8vLgnKNjg=;
+        s=default; t=1576076881;
+        bh=g0jZFLX0yEtJ0KaPzUCHs3PLRu4okm5m+F3MyeYYZog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNYTI7JH6RX3VT4qFQIIsPJ/21VqNUNxGhdtya0ovvNPS6afdcXoWnFD2YAGFY1qb
-         628zbfEphHns1RbKsjZ74XAuBEWu0s6zzYRCpgHZdqbdJcmDmPq8SevO2SI26h1cgo
-         2iN2ruBYTmkYdfNY9bKLM+o45ycQcaJrbpss25eE=
+        b=e13qp+H361NGk/DEMx1c9XX7DS2r6i8cVsqWlX9OQ1KeLxMuFsUWzRKG1Hcp0zvrH
+         Yg3oaE6Gn99NW5kf8Ox9khGF7MTpnWC5wsdkI6pcQTrkCfGUb4i5AtJQmaVJWzq7MB
+         WQPyGSG21hpXyP9CCSrN7I02mUkhmcxb9ewtQ3TI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arijit Banerjee <arijit@rubrik.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.4 25/92] fuse: verify attributes
-Date:   Wed, 11 Dec 2019 16:05:16 +0100
-Message-Id: <20191211150230.493866269@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 26/92] io_uring: fix missing kmap() declaration on powerpc
+Date:   Wed, 11 Dec 2019 16:05:17 +0100
+Message-Id: <20191211150231.381410778@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,124 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit eb59bd17d2fa6e5e84fba61a5ebdea984222e6d5 upstream.
+commit aa4c3967756c6c576a38a23ac511be211462a6b7 upstream.
 
-If a filesystem returns negative inode sizes, future reads on the file were
-causing the cpu to spin on truncate_pagecache.
+Christophe reports that current master fails building on powerpc with
+this error:
 
-Create a helper to validate the attributes.  This now does two things:
+   CC      fs/io_uring.o
+fs/io_uring.c: In function ‘loop_rw_iter’:
+fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’
+[-Werror=implicit-function-declaration]
+     iovec.iov_base = kmap(iter->bvec->bv_page)
+                      ^
+fs/io_uring.c:1628:19: warning: assignment makes pointer from integer
+without a cast [-Wint-conversion]
+     iovec.iov_base = kmap(iter->bvec->bv_page)
+                    ^
+fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’
+[-Werror=implicit-function-declaration]
+     kunmap(iter->bvec->bv_page);
+     ^
 
- - check the file mode
- - check if the file size fits in i_size without overflowing
+which is caused by a missing highmem.h include. Fix it by including
+it.
 
-Reported-by: Arijit Banerjee <arijit@rubrik.com>
-Fixes: d8a5ba45457e ("[PATCH] FUSE - core")
-Cc: <stable@vger.kernel.org> # v2.6.14
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 311ae9e159d8 ("io_uring: fix dead-hung for non-iter fixed rw")
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/dir.c     |   22 ++++++++++++++++------
- fs/fuse/fuse_i.h  |    2 ++
- fs/fuse/readdir.c |    2 +-
- 3 files changed, 19 insertions(+), 7 deletions(-)
+ fs/io_uring.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -248,7 +248,8 @@ static int fuse_dentry_revalidate(struct
- 		kfree(forget);
- 		if (ret == -ENOMEM)
- 			goto out;
--		if (ret || (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
-+		if (ret || fuse_invalid_attr(&outarg.attr) ||
-+		    (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
- 			goto invalid;
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -70,6 +70,7 @@
+ #include <linux/nospec.h>
+ #include <linux/sizes.h>
+ #include <linux/hugetlb.h>
++#include <linux/highmem.h>
  
- 		forget_all_cached_acls(inode);
-@@ -319,6 +320,12 @@ int fuse_valid_type(int m)
- 		S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m);
- }
+ #include <uapi/linux/io_uring.h>
  
-+bool fuse_invalid_attr(struct fuse_attr *attr)
-+{
-+	return !fuse_valid_type(attr->mode) ||
-+		attr->size > LLONG_MAX;
-+}
-+
- int fuse_lookup_name(struct super_block *sb, u64 nodeid, const struct qstr *name,
- 		     struct fuse_entry_out *outarg, struct inode **inode)
- {
-@@ -350,7 +357,7 @@ int fuse_lookup_name(struct super_block
- 	err = -EIO;
- 	if (!outarg->nodeid)
- 		goto out_put_forget;
--	if (!fuse_valid_type(outarg->attr.mode))
-+	if (fuse_invalid_attr(&outarg->attr))
- 		goto out_put_forget;
- 
- 	*inode = fuse_iget(sb, outarg->nodeid, outarg->generation,
-@@ -475,7 +482,8 @@ static int fuse_create_open(struct inode
- 		goto out_free_ff;
- 
- 	err = -EIO;
--	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid))
-+	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid) ||
-+	    fuse_invalid_attr(&outentry.attr))
- 		goto out_free_ff;
- 
- 	ff->fh = outopen.fh;
-@@ -583,7 +591,7 @@ static int create_new_entry(struct fuse_
- 		goto out_put_forget_req;
- 
- 	err = -EIO;
--	if (invalid_nodeid(outarg.nodeid))
-+	if (invalid_nodeid(outarg.nodeid) || fuse_invalid_attr(&outarg.attr))
- 		goto out_put_forget_req;
- 
- 	if ((outarg.attr.mode ^ mode) & S_IFMT)
-@@ -943,7 +951,8 @@ static int fuse_do_getattr(struct inode
- 	args.out_args[0].value = &outarg;
- 	err = fuse_simple_request(fc, &args);
- 	if (!err) {
--		if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
-+		if (fuse_invalid_attr(&outarg.attr) ||
-+		    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
- 			make_bad_inode(inode);
- 			err = -EIO;
- 		} else {
-@@ -1564,7 +1573,8 @@ int fuse_do_setattr(struct dentry *dentr
- 		goto error;
- 	}
- 
--	if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
-+	if (fuse_invalid_attr(&outarg.attr) ||
-+	    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
- 		make_bad_inode(inode);
- 		err = -EIO;
- 		goto error;
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -989,6 +989,8 @@ void fuse_ctl_remove_conn(struct fuse_co
-  */
- int fuse_valid_type(int m);
- 
-+bool fuse_invalid_attr(struct fuse_attr *attr);
-+
- /**
-  * Is current process allowed to perform filesystem operation?
-  */
---- a/fs/fuse/readdir.c
-+++ b/fs/fuse/readdir.c
-@@ -184,7 +184,7 @@ static int fuse_direntplus_link(struct f
- 
- 	if (invalid_nodeid(o->nodeid))
- 		return -EIO;
--	if (!fuse_valid_type(o->attr.mode))
-+	if (fuse_invalid_attr(&o->attr))
- 		return -EIO;
- 
- 	fc = get_fuse_conn(dir);
 
 
