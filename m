@@ -2,122 +2,284 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61837C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61DBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C102073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:06:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="XKsiYV/E"
+	by mail.kernel.org (Postfix) with ESMTP id A28A02053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfLKKG5 (ORCPT
+        id S1728752AbfLKKHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:06:57 -0500
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:40029 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfLKKG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:06:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576058816;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5u5G6DvrHHYulwWxXP6RstYPZT7qaXjQ0DriMESzSyA=;
-  b=XKsiYV/EY89O7D0ldTwTbgnqW+fOWyYlkUtjBTmZlisWFeGi34qOJGts
-   Ooa+j7xWDaDAxZwex4GwFsDq81OPcf9Dcb/w9Sc7kLSmVAghntOAlSuBH
-   7qs2hvhQZ0SAGqDB4nYKU6fWGsmO1SqfcXsKihxYsAkb7Ib4QuMgdGZXc
-   c=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: h/++TCBi6C1mtA3r2r4COIFU7QXU1SxGYa0kvs/AAIA/HzuKOgPkJTwyZ2lmqLf9XKazfUwH7c
- xINyLWFzaAoDqJ593kmfWd85AhzpISMMLYjKcm8czhMmqnA50DPrKQjrZXl8VN5Hm+mR3gEdMK
- 5CcgFiAZwpk8sYzqoJ38tPrchGtds4tWqkNkJpJ8sdb3UZWXIffyt+i4nmndyyvr7IwhjjiTCe
- H0gSssg35mwqkGBizjBWCehbnDyILPqGmgzL61k3AnZgBT6XMMYO4DkShwJKPdc3Zx/px8l0eM
- 5Ps=
-X-SBRS: 2.7
-X-MesageID: 9642862
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
-   d="scan'208";a="9642862"
-Date:   Wed, 11 Dec 2019 11:06:27 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     Paul Durrant <pdurrant@amazon.com>
-CC:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
-        "Juergen Gross" <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Subject: Re: [Xen-devel] [PATCH v2 2/4] xenbus: limit when state is forced to
- closed
-Message-ID: <20191211100627.GI980@Air-de-Roger>
-References: <20191210113347.3404-1-pdurrant@amazon.com>
- <20191210113347.3404-3-pdurrant@amazon.com>
+        Wed, 11 Dec 2019 05:07:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36898 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728404AbfLKKHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:07:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A3A02AD75;
+        Wed, 11 Dec 2019 10:07:29 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
+ attributes
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        gurchetansingh@chromium.org
+References: <20191211081810.20079-1-kraxel@redhat.com>
+ <20191211081810.20079-2-kraxel@redhat.com>
+ <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
+Date:   Wed, 11 Dec 2019 11:07:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191210113347.3404-3-pdurrant@amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+In-Reply-To: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:33:45AM +0000, Paul Durrant wrote:
-> If a driver probe() fails then leave the xenstore state alone. There is no
-> reason to modify it as the failure may be due to transient resource
-> allocation issues and hence a subsequent probe() may succeed.
-> 
-> If the driver supports re-binding then only force state to closed during
-> remove() only in the case when the toolstack may need to clean up. This can
-> be detected by checking whether the state in xenstore has been set to
-> closing prior to device removal.
-> 
-> NOTE: Re-bind support is indicated by new boolean in struct xenbus_driver,
->       which defaults to false. Subsequent patches will add support to
->       some backend drivers.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl
+Content-Type: multipart/mixed; boundary="PWptc28KfncWqAB1I31NMJorptpyGRJEF";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, open list
+ <linux-kernel@vger.kernel.org>, gurchetansingh@chromium.org
+Message-ID: <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
+Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
+ attributes
+References: <20191211081810.20079-1-kraxel@redhat.com>
+ <20191211081810.20079-2-kraxel@redhat.com>
+ <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+In-Reply-To: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
 
-My intention was to specify whether you want to close the
-backends on unbind in sysfs, so that an user can decide at runtime,
-rather than having a hardcoded value in the driver.
+--PWptc28KfncWqAB1I31NMJorptpyGRJEF
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Anyway, I'm less sure whether such runtime tunable is useful at all,
-so let's leave it out and can always be added afterwards. At the end
-of day a user wrongly doing a rmmod blkback can always recover
-gracefully by loading blkback again with your proposed approach to
-leave connections open on module removal.
 
-Sorry for the extra work.
 
-Thanks, Roger.
+Am 11.12.19 um 10:58 schrieb Thomas Zimmermann:
+> Hi Gerd
+>=20
+> Am 11.12.19 um 09:18 schrieb Gerd Hoffmann:
+>> Add caching field to drm_gem_shmem_object to specify the cachine
+>> attributes for mappings.  Add helper function to tweak pgprot
+>> accordingly.  Switch vmap and mmap functions to the new helper.
+>>
+>> Set caching to write-combine when creating the object so behavior
+>> doesn't change by default.  Drivers can override that later if
+>> needed.
+>>
+>> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+>=20
+> If you want to merge this patch, you have my
+>=20
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+>=20
+> Please see my comment below.
+>=20
+>> ---
+>>  include/drm/drm_gem_shmem_helper.h     | 12 ++++++++++++
+>>  drivers/gpu/drm/drm_gem_shmem_helper.c | 24 +++++++++++++++++++++---
+>>  2 files changed, 33 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_=
+shmem_helper.h
+>> index 6748379a0b44..9d6e02c6205f 100644
+>> --- a/include/drm/drm_gem_shmem_helper.h
+>> +++ b/include/drm/drm_gem_shmem_helper.h
+>> @@ -17,6 +17,11 @@ struct drm_mode_create_dumb;
+>>  struct drm_printer;
+>>  struct sg_table;
+>> =20
+>> +enum drm_gem_shmem_caching {
+>> +	DRM_GEM_SHMEM_CACHED =3D 1,
+>> +	DRM_GEM_SHMEM_WC,
+>> +};
+>> +
+>>  /**
+>>   * struct drm_gem_shmem_object - GEM object backed by shmem
+>>   */
+>> @@ -83,6 +88,11 @@ struct drm_gem_shmem_object {
+>>  	 * The address are un-mapped when the count reaches zero.
+>>  	 */
+>>  	unsigned int vmap_use_count;
+>> +
+>> +	/**
+>> +	 * @caching: caching attributes for mappings.
+>> +	 */
+>> +	enum drm_gem_shmem_caching caching;
+>>  };
+>> =20
+>>  #define to_drm_gem_shmem_obj(obj) \
+>> @@ -130,6 +140,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_dev=
+ice *dev,
+>> =20
+>>  struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *o=
+bj);
+>> =20
+>> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pg=
+prot_t prot);
+>> +
+>>  /**
+>>   * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+>>   *
+>> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/=
+drm_gem_shmem_helper.c
+>> index a421a2eed48a..5bb94e130a50 100644
+>> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>> @@ -76,6 +76,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create(st=
+ruct drm_device *dev, size_t
+>>  	mutex_init(&shmem->pages_lock);
+>>  	mutex_init(&shmem->vmap_lock);
+>>  	INIT_LIST_HEAD(&shmem->madv_list);
+>> +	shmem->caching =3D DRM_GEM_SHMEM_WC;
+>> =20
+>>  	/*
+>>  	 * Our buffers are kept pinned, so allocating them
+>> @@ -256,9 +257,11 @@ static void *drm_gem_shmem_vmap_locked(struct drm=
+_gem_shmem_object *shmem)
+>> =20
+>>  	if (obj->import_attach)
+>>  		shmem->vaddr =3D dma_buf_vmap(obj->import_attach->dmabuf);
+>> -	else
+>> +	else {
+>> +		pgprot_t prot =3D drm_gem_shmem_caching(shmem, PAGE_KERNEL);
+>>  		shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+>> -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
+>> +				    VM_MAP, prot);
+>> +	}
+>> =20
+>>  	if (!shmem->vaddr) {
+>>  		DRM_DEBUG_KMS("Failed to vmap pages\n");
+>> @@ -540,7 +543,8 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj,=
+ struct vm_area_struct *vma)
+>>  	}
+>> =20
+>>  	vma->vm_flags |=3D VM_MIXEDMAP | VM_DONTEXPAND;
+>> -	vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_f=
+lags));
+>> +	vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
+>> +	vma->vm_page_prot =3D drm_gem_shmem_caching(shmem, vma->vm_page_prot=
+);
+>>  	vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
+>>  	vma->vm_ops =3D &drm_gem_shmem_vm_ops;
+>> =20
+>> @@ -683,3 +687,17 @@ drm_gem_shmem_prime_import_sg_table(struct drm_de=
+vice *dev,
+>>  	return ERR_PTR(ret);
+>>  }
+>>  EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>> +
+>> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pg=
+prot_t prot)
+>> +{
+>> +	switch (shmem->caching) {
+>> +	case DRM_GEM_SHMEM_CACHED:
+>> +		return prot;
+>> +	case DRM_GEM_SHMEM_WC:
+>> +		return pgprot_writecombine(prot);
+>> +	default:
+>> +		WARN_ON_ONCE(1);
+>> +		return prot;
+>> +	}
+>> +}
+>> +EXPORT_SYMBOL_GPL(drm_gem_shmem_caching);
+>=20
+> Two reason why I'd reconsider this design.
+>=20
+> I don't like switch statements new the bottom of the call graph. The
+> code ends up with default warnings, such as this one.
+>=20
+> Udl has different caching flags for imported and 'native' buffers. This=
+
+> would require a new constant and additional code here.
+>=20
+> What do you think about turning this function into a callback in struct=
+
+> shmem_funcs? The default implementation would be for WC, virtio would
+> use CACHED. The individual implementations could still be located in th=
+e
+> shmem code. Udl would later provide its own code.
+
+On a second thought, all this might be over-engineered and v1 of the
+patchset was the correct approach. You can add my
+
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+if you prefer to merge v1.
+
+>=20
+> Best regards
+> Thomas
+>=20
+>>
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--PWptc28KfncWqAB1I31NMJorptpyGRJEF--
+
+--r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3wv90ACgkQaA3BHVML
+eiO64Qf/YBbsWDQuJn4oSmZ4mtNOipUzxozbGDzsimdp95A//zGbwtYuSiAsEaom
+gqnUWkfh4aZ6eDwixlNmyUwZa7duLQ6Nw5QmA36BCyzhHdjoUoNt22gggKMHP6Jv
+ODbtVVpOkdMpNo9MrrxKI0zwiaZFFPEbNLH1Dg6B2JcwLupSAJs4C9JITQ3vqgct
+fQsNDJqQtQk5ylIh7J4qiC9/zvt0wsfQhHFTc0YkeHv24ejvi3o37dXe2vmGKMjM
+xzILi2sG6pRPzJPx/LxkU4hcYUSAd9C9gKlkLSt2ncae+3Vh9fQajphP/1sZv+0z
+eXjXG/FPxleeSVzZenwW4dE0rgiJhQ==
+=ZM7a
+-----END PGP SIGNATURE-----
+
+--r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl--
