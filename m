@@ -2,107 +2,215 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41909C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFAEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1897A206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274BE21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="L/WpBq9H"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iNUzbB/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfLKDhX (ORCPT
+        id S1727307AbfLKDhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:37:23 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:57202 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLKDhX (ORCPT
+        Tue, 10 Dec 2019 22:37:36 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35772 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfLKDhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:37:23 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB3P45C153230;
-        Wed, 11 Dec 2019 03:36:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=Pk8yzQhSfRv+UdtIPQBqczRUvP3c/3wYixQrmDvJIdM=;
- b=L/WpBq9Hcq0ugPV1O6/fkNdSOkjvoPjiBaKCrgETfqi5G985g5eFUAWdur6G0cJOadI2
- uTUEbGojG/uXUR9hjJJkBHnYXchQ8qLr5KcI3LJXR5Y7ILAlJP7qZqvIa7mGieN6V403
- iYtydiidgRCmCftDycVQOzqU76nRynC4oFvZqy3uzo8yz/8iQ857Bn11zXSOaSPvGw4b
- gGr1Hch0NEhxPH5CTiPpSAIgBWn1thZ/pGQiqmLguQGv2FyqXFd6+mQypfkgjpInDsiG
- sH8euVo2qVR6m1d1yjuvL4ax7O2m/vcpR/gRQwTTgyqEwLHpqv1LEinfSlvohoKNs8JA ug== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2wrw4n6ue4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 03:36:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB3NtNP083739;
-        Wed, 11 Dec 2019 03:36:02 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2wtqg8jh38-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 03:36:02 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBB3ZrJQ004814;
-        Wed, 11 Dec 2019 03:35:58 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Dec 2019 19:35:53 -0800
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH tip/core/rcu 01/12] rcu: Remove rcu_swap_protected()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
-        <20191210040741.2943-1-paulmck@kernel.org>
-Date:   Tue, 10 Dec 2019 22:35:49 -0500
-In-Reply-To: <20191210040741.2943-1-paulmck@kernel.org> (paulmck@kernel.org's
-        message of "Mon, 9 Dec 2019 20:07:30 -0800")
-Message-ID: <yq1a77zmt4a.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 10 Dec 2019 22:37:35 -0500
+Received: by mail-oi1-f194.google.com with SMTP id k196so12022231oib.2
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 19:37:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hKg6CtmhRxPWbTqHVDFqtJdh68B7oJMOxK58C2vi9N8=;
+        b=iNUzbB/5ZyunOXZp5DcomNLJDeahuk6g7IY6VuRLyRHeh2QM6XEki1XWdTp+Cd3PMQ
+         fRyrjIC7JrtZILRdswUDUinWmMEioVaGqU7bSAM2iWRp86GaNLu+lKPoBLVKkksTqgeW
+         QqkyH6RhgyP2qq8JMFcWcgSy8WiN213s+MBH0AYXl8xvOA6j4aMw9fsPXWNjRskd9PSd
+         f5/nBfuyA6z5Jnk02HLUjQDGKMz2HyantBRL8GF1HanGTsU4NP/0P03j68TpMLKo2F41
+         DtafWdcAg4t4Bnrzat9zJ0zmg/k+wNam/fzjp8fFOfjvWt7iJ3QHdL3+KX/zm7F9EFg9
+         3MKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hKg6CtmhRxPWbTqHVDFqtJdh68B7oJMOxK58C2vi9N8=;
+        b=J912nolqpZi3U3uI5Hpxntc8zd6oVJZQ9S3OJRUC5brV/OeoJT4FOuKUznViIZ7RnH
+         Sl53Ggvtwta5EU1noiLhqfyIjeeVSTvpqpfaYHCuILH8+d8mwQqu2WJ2emIDzZW66lEf
+         IyJcp+mgGAxgBGoEO7mJyvZ9GWtrzpD3Z9Ca4TMSMQvfijsUoxJ9xLHibZVLKzzD0vY6
+         PZLEl0q3QlYqcTc83ol2Gm+l9+L3tQ4+SszWBTJMaieisCmI1ye9yZo3hiNOhVa5Ei8p
+         /YHY20mKGB1NyF4PbS4be268auDBIFTw94YPpPsBfgXzBo/4pLBah3XGwifYnzftrDYn
+         yggQ==
+X-Gm-Message-State: APjAAAXd59awTpldP9WmPI3X81+lD472aSTKDMzZeUfLuu5Eek4CYopQ
+        jnE5twVjWo5JNk79zTJ4ngEPFOrw9N3AJKKMuX3npg==
+X-Google-Smtp-Source: APXvYqyuye/rOVhTdrOk0mj5xLYR20XK/mN+wO9DEAnn/wew7e1KaSZQdtqZT8bdwpFXWrz5zbo34m58+Ut2ulUFCVo=
+X-Received: by 2002:aca:4850:: with SMTP id v77mr1121953oia.70.1576035454356;
+ Tue, 10 Dec 2019 19:37:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912110030
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912110030
+References: <20191202070348.32148-1-tao3.xu@intel.com> <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
+ <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com> <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
+ <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com> <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
+ <82e7361e-256e-002c-6b30-601cec1fad07@intel.com> <0f8084fd-86a9-081c-e32a-20c756c9daf6@intel.com>
+In-Reply-To: <0f8084fd-86a9-081c-e32a-20c756c9daf6@intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 10 Dec 2019 19:37:23 -0800
+Message-ID: <CAPcyv4gq690oQgjD53qF_v7YPT2shR0pw5ubtXbOcYMQfH1wxg@mail.gmail.com>
+Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
+ Write Policy
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 10, 2019 at 7:05 PM Tao Xu <tao3.xu@intel.com> wrote:
+>
+>
+> On 12/10/19 9:18 PM, Tao Xu wrote:
+> > On 12/10/2019 4:27 PM, Rafael J. Wysocki wrote:
+> >> On Tue, Dec 10, 2019 at 9:19 AM Tao Xu <tao3.xu@intel.com> wrote:
+> >>>
+> >>> On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
+> >>>> On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
+> >>>>>
+> >>>>> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
+> >>>>>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
+> >>>>>>>
+> >>>>>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
+> >>>>>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex
+> >>>>>>> Cache
+> >>>>>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
+> >>>>>>> 2 is "Write Through" for Write Policy.
+> >>>>>>
+> >>>>>> Well, I'm not sure what the connection between the above statement,
+> >>>>>> which is correct AFAICS, and the changes made by the patch is.
+> >>>>>>
+> >>>>>> Is that the *_OTHER symbol names are confusing or something deeper?
+> >>>>>>
+> >>>>>
+> >>>>> Because in include/acpi/actbl1.h:
+> >>>>>
+> >>>>> #define ACPI_HMAT_CA_NONE                     (0)
+> >>>>>
+> >>>>> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
+> >>>>>
+> >>>>>       enum cache_indexing {
+> >>>>>              NODE_CACHE_DIRECT_MAP,
+> >>>>>              NODE_CACHE_INDEXED,
+> >>>>>              NODE_CACHE_OTHER,
+> >>>>>       };
+> >>>>> NODE_CACHE_OTHER is 2, and for otner enum:
+> >>>>>
+> >>>>>             case ACPI_HMAT_CA_DIRECT_MAPPED:
+> >>>>>                     tcache->cache_attrs.indexing =
+> >>>>> NODE_CACHE_DIRECT_MAP;
+> >>>>>                     break;
+> >>>>>             case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+> >>>>>                     tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+> >>>>>                     break;
+> >>>>> in include/acpi/actbl1.h:
+> >>>>>
+> >>>>>     #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
+> >>>>>     #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
+> >>>>>
+> >>>>> but in include/linux/node.h:
+> >>>>>
+> >>>>> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is
+> >>>>> incorrect.
+> >>>>
+> >>>> Why is it incorrect?
+> >>>
+> >>> Sorry I paste the wrong pre-define.
+> >>>
+> >>> This is the incorrect line:
+> >>>
+> >>> case ACPI_HMAT_CA_DIRECT_MAPPED:
+> >>> tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+> >>>
+> >>> ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means
+> >>> if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in
+> >>> cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole
+> >>> switch codes:
+> >>
+> >> This is a mapping between the ACPI-defined values and the generic ones
+> >> defined in the kernel.  There is not rule I know of by which they must
+> >> be the same numbers.  Or is there such a rule which I'm missing?
+> >>
+> >> As long as cache_attrs.indexing is used consistently going forward,
+> >> the difference between the ACPI-defined numbers and its values
+> >> shouldn't matter, should it?
+> >>
+> > Yes, it will not influence the ACPI HMAT tables. Only influence is the
+> > sysfs, as in
+> > https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html:
+> >
+> > # tree sys/devices/system/node/node0/memory_side_cache/
+> > /sys/devices/system/node/node0/memory_side_cache/
+> > |-- index1
+> > |   |-- indexing
+> > |   |-- line_size
+> > |   |-- size
+> > |   `-- write_policy
+> >
+> > indexing is parsed in this file, so it can be read by user-space.
+> > Although now there is no user-space tool use this information to do some
+> > thing. But I am wondering if it is used in the future, someone use it to
+> > show the memory side cache information to user or use it to do
+> > performance turning.
+>
+> I finish a test using emulated ACPI HMAT from QEMU
+> (branch:hmat https://github.com/taoxu916/qemu.git)
+>
+> And I get the kernel log and sysfs output:
+> [    0.954288] HMAT: Cache: Domain:0 Size:20480 Attrs:00081111 SMBIOS
+> Handles:0
+> [    0.954835] HMAT: Cache: Domain:1 Size:15360 Attrs:00081111 SMBIOS
+> Handles:0
+>
+> /sys/devices/system/node/node0/memory_side_cache/index1 # cat indexing
+> 0
+> /sys/devices/system/node/node0/memory_side_cache/index1 # cat write_policy
+> 0
+>
+> Note that 'Attrs' is printed using %x, so we can get:
+> (attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8 = 1,
+> (attrs & ACPI_HMAT_WRITE_POLICY) >> 12       = 1
+>
+> but we get 0 in sysfs, so if user or software read this information and
+> read the ACPI 6.3 spec, will think there is 'none' for Cache
+> Associativity or Write Policy.
 
-Paul,
+The sysfs interface is not meant to reflect the ACPI values. This
+sysfs information may be populated by another platform firmware
+(non-ACPI). I would have preferred that these files use text values
+rather than numbers. However, at least the ABI documentation gives the
+expected translation:
 
-> Now that the calls to rcu_swap_protected() have been replaced by
-> rcu_replace_pointer(), this commit removes rcu_swap_protected().
+What:           /sys/devices/system/node/nodeX/memory_side_cache/indexY/indexing
+Date:           December 2018
+Contact:        Keith Busch <keith.busch@intel.com>
+Description:
+                The caches associativity indexing: 0 for direct mapped,
+                non-zero if indexed.
 
-It appears there are two callers remaining in Linus' master. Otherwise
-looks good to me.
-
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+What:
+/sys/devices/system/node/nodeX/memory_side_cache/indexY/write_policy
+Date:           December 2018
+Contact:        Keith Busch <keith.busch@intel.com>
+Description:
+                The cache write policy: 0 for write-back, 1 for write-through,
+                other or unknown.
