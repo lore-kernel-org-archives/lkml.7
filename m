@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12FEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE1DC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70D720836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A6920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080444;
-	bh=UXnO5c4FLyYN9Gmyu429fTyxrF3mqzIcAgwWMCRZe3M=;
+	s=default; t=1576080450;
+	bh=fWIUNSbPleNggmA6BWe/9j6tT59UNH1kNlCk7NEguWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yBvnIeGUvNPNVfb6R7PxtQbXniY6OnYRH/79UavRcnfh12IeSQQvstm95f5+X/MeJ
-	 +TJb8EaQ8MNoo3KVjTGm9TxZUE91+4Tz3YRzZ0VXUgGCqP9Q0WCg4bR5oAevTD1Ixk
-	 ZUhcZA32CfuhAifafb0rbtG8HW1Uoqw/ST+Y8nvw=
+	b=1hi8lzlrBzq/Qt0izaOHsaemgDdpMPSEItLrw6DbC5ZnM0CBNw1HZQkP6bK6u/3GA
+	 vi7588JV91LShxuMyymaBhsNzm1TABStwnNHeyis0GdSA8C9otoQ9hqVNdDqql82Bc
+	 b4y49M8BzB900Nv+ZnxCFk4dikr0DVVx3RCqp7OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388813AbfLKQHX (ORCPT
+        id S1731138AbfLKPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:07:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730763AbfLKPMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:30 -0500
+        id S1731075AbfLKPMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3E8E208C3;
-        Wed, 11 Dec 2019 15:12:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696F624654;
+        Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077149;
-        bh=UXnO5c4FLyYN9Gmyu429fTyxrF3mqzIcAgwWMCRZe3M=;
+        s=default; t=1576077135;
+        bh=fWIUNSbPleNggmA6BWe/9j6tT59UNH1kNlCk7NEguWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kdzi2jlL+9LO9KDxXDWTu9tCWB9qPqByHQOfXym4Ul6DnqkrY29nTt9XacqftntbW
-         P+OOvjPBfGZ7CyZX673BR6Cg0vHLolOtXuTwWtrjlMfDnhnkUJ5fZ6GxMA/n4Aek05
-         IoSKNgqazCCabcj59wPoH+s039G/hJ/8FPOkD6VI=
+        b=1w8YoSA1G/WhB7FfPy7NV/S46HrVDqELwus4GzE/TMLBOU4Ksy6h2ZYV4rNwJlazN
+         AuaytO9BcNOR5oRZGhf5SrEmEIAl2yiVAItW9Hf0+z7AMZA99FmDuuPH9UbKN15YW3
+         vq/RdnPZ4DvsaFcxENcjvNnWsK+X3D0V4nUtARFM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 036/134] clocksource/drivers/timer-of: Use unique device name instead of timer
-Date:   Wed, 11 Dec 2019 10:10:12 -0500
-Message-Id: <20191211151150.19073-36-sashal@kernel.org>
+Cc:     Luo Jiaxing <luojiaxing@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 022/134] scsi: hisi_sas: Delete the debugfs folder of hisi_sas when the probe fails
+Date:   Wed, 11 Dec 2019 10:09:58 -0500
+Message-Id: <20191211151150.19073-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,45 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Luo Jiaxing <luojiaxing@huawei.com>
 
-[ Upstream commit 4411464d6f8b5e5759637235a6f2b2a85c2be0f1 ]
+[ Upstream commit cabe7c10c97a0857a9fb14b6c772ab784947995d ]
 
-If a hardware-specific driver does not provide a name, the timer-of core
-falls back to device_node.name.  Due to generic DT node naming policies,
-that name is almost always "timer", and thus doesn't identify the actual
-timer used.
+Although if the debugfs initialization fails, we will delete the debugfs
+folder of hisi_sas, but we did not consider the scenario where debugfs was
+successfully initialized, but the probe failed for other reasons. We found
+out that hisi_sas folder is still remain after the probe failed.
 
-Fix this by using device_node.full_name instead, which includes the unit
-addrees.
+When probe fail, we should delete debugfs folder to avoid the above issue.
 
-Example impact on /proc/timer_list:
-
-    -Clock Event Device: timer
-    +Clock Event Device: timer@fcfec400
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016144747.29538-3-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/1571926105-74636-18-git-send-email-john.garry@huawei.com
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c  | 1 +
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 11ff701ff4bb9..a3c73e972fce1 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -192,7 +192,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 	}
- 
- 	if (!to->clkevt.name)
--		to->clkevt.name = np->name;
-+		to->clkevt.name = np->full_name;
- 
- 	to->np = np;
- 
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 20f0cb4698b7f..633effb09c9cc 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -2682,6 +2682,7 @@ int hisi_sas_probe(struct platform_device *pdev,
+ err_out_register_ha:
+ 	scsi_remove_host(shost);
+ err_out_ha:
++	hisi_sas_debugfs_exit(hisi_hba);
+ 	hisi_sas_free(hisi_hba);
+ 	scsi_host_put(shost);
+ 	return rc;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index cb8d087762dbd..ef32ee12f6065 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -3259,6 +3259,7 @@ hisi_sas_v3_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ err_out_register_ha:
+ 	scsi_remove_host(shost);
+ err_out_ha:
++	hisi_sas_debugfs_exit(hisi_hba);
+ 	scsi_host_put(shost);
+ err_out_regions:
+ 	pci_release_regions(pdev);
 -- 
 2.20.1
 
