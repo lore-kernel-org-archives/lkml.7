@@ -2,121 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9C6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D0BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1043F2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkDYur5u"
+	by mail.kernel.org (Postfix) with ESMTP id 92FE72073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079218;
+	bh=e6ded1V5IaVW7G0fvVHxMvQhqObyPDVK5jKXC+pLjQ0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bK7tnXwIFs96JW9bsIy01WiSSWjV6ZUe4yVYj2jdl7+boKOtd7efiauaBj5jea4eS
+	 g5w4qq8NOg9UXUWRIc670omGMxHwMU8xpSeSuDcs0RSKdXUzWhKmnyBiz5vGX8iGkX
+	 iRcftfqpo9cbVr/SRzF0nTGPlf7rCg3L1EOluvVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387484AbfLKPqp (ORCPT
+        id S1733279AbfLKPq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:46:45 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42060 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733015AbfLKPqi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:46:38 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y19so17034496lfl.9;
-        Wed, 11 Dec 2019 07:46:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Hb49b1TTgt6OexHutblEuNW1wSf9d52k2K2OJyi3uuU=;
-        b=PkDYur5uKLoW9VhvC2aZGxAYkKOERHduE37OR7NaumcyTiSKtWlWnL0YhAPocF4gyW
-         i/2Ma5FcnPrB9FHWe3iICD5xAY3QajO+jJbaVQH6KWtwutz8e9PQj5v0KAyH2cpvEZmG
-         wSdlkeBQXijgqdUDXTVJmK81fJ9UGojdfW+++x+d7hsPy+uaKYFYjdTM5X0ql9xutYaT
-         7JcsaOhLlylyP4SqXdy3Kx05UKW323rSrU8cWgU/xU+MPxyIin2Qq/7wxNN/tmEfhfKo
-         wIz0CBYRJgoEliIMaZmtHcB/2GJ+86fimeFGh2DjuJVshD2g2NT7hPjvo5bGyFv7wH5I
-         kNxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Hb49b1TTgt6OexHutblEuNW1wSf9d52k2K2OJyi3uuU=;
-        b=fzmGHuonwjDtWGtc8fOggXuzriJXy6bCYJ2bkx+EGXddVNhXZvXyTc3WlOKaatR5bT
-         YrN7KqU0aWycsIguwp1Io+X+3Ufx0Dwx0dTC3J+4VYvyXzCc0s67AnJFBSK0HRaNDnz+
-         OP+zgxzfxYHMxcpYmNmHWIW1WpHNfN9/lcsqoSAO/MDJaT6MpHYc+6F1JfHy7j255k1q
-         n2miyR/hqWoyS+gGWjBb1xNcKQyoAw/fgh98k9FnbNl0bDzLI5ubM7wZX9RWsS9OPEhB
-         p2xI/YREhD+12cmE3OFlj7QaQhI3MOgHRSpHByhwVdpjCJQaebCC+/yR6zoJF+xGKjv4
-         xUlw==
-X-Gm-Message-State: APjAAAX4LQbEicAwEYH6qHuk8cOAjVDxjAx5ZrZdTIrxpeNt7m/HPv+e
-        ZzF65briUAZwFTZEkwzDhz0IY8+/
-X-Google-Smtp-Source: APXvYqy67rQ6NDMYoPXkX1ni2G1d870R9UN7KWCu2PvsM+xokjKjbXFrB2RpHDe1scGGslddP6CKJg==
-X-Received: by 2002:ac2:4909:: with SMTP id n9mr2693030lfi.21.1576079195882;
-        Wed, 11 Dec 2019 07:46:35 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id e12sm1403826ljj.17.2019.12.11.07.46.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 07:46:35 -0800 (PST)
-Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191210014011.21987-1-digetx@gmail.com>
- <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com>
-Date:   Wed, 11 Dec 2019 18:46:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 11 Dec 2019 10:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60390 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733196AbfLKP0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F9F24679;
+        Wed, 11 Dec 2019 15:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078014;
+        bh=e6ded1V5IaVW7G0fvVHxMvQhqObyPDVK5jKXC+pLjQ0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zij2n9KhVXATK4d0SqLGQMKDhFEoBwTQ7QnhQqbl4UBSUmboDRfegSU/KsTADHrLI
+         HXiUoGgsM9QZGG2cVxDfw7XeZM25/6CyUTPJ6qxwbFr6MS/HXwQ+8ZzueHIjc52f+N
+         H1qrl3rc1UI/qOcr7u3S4mjUqBJKSxGOftoKyFJo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Disseldorp <ddiss@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Mike Christie <mchristi@redhat.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/79] scsi: target: compare full CHAP_A Algorithm strings
+Date:   Wed, 11 Dec 2019 10:25:33 -0500
+Message-Id: <20191211152643.23056-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ulf,
+From: David Disseldorp <ddiss@suse.de>
 
-11.12.2019 11:11, Ulf Hansson пишет:
-> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
->> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
->> In a result high-speed mode isn't enabled for the WiFi card and this
->> results in a malfunctioning SDIO communication.
-> 
-> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR_SPEED?
+[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
 
-Yes, the SDIO_SPEED_SHS bit is set.
+RFC 2307 states:
 
->>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
->>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
->>
->> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
->> the problem, let's do the same in upstream.
->>
->> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
->> which overrides card's info for the TI wl1251 WiFi.
-> 
-> This is a temporary solution and should be replaced by doing the DT
-> parsing during
-> 
-> So, yes, let's see if we can use a card quirk instead. That's the first option.
-> 
-> A second option is simply to parse the DT subnode for a new DT
-> property during mmc_sdio_init_card(). Along the lines of what we do
-> for the broken-hpi DT binding for eMMC.
+  For CHAP [RFC1994], in the first step, the initiator MUST send:
 
-Let's try the first option. My understanding is that the problem affects
-only the specific model of the WiFi chip and it's not a board-specific
-problem. I'll add Broadcom driver people to CC for the next version of
-the patch, maybe they'll have something to say.
+      CHAP_A=<A1,A2...>
 
-[snip]
+   Where A1,A2... are proposed algorithms, in order of preference.
+...
+   For the Algorithm, as stated in [RFC1994], one value is required to
+   be implemented:
+
+       5     (CHAP with MD5)
+
+LIO currently checks for this value by only comparing a single byte in
+the tokenized Algorithm string, which means that any value starting with
+a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
+comparing the entire tokenized string.
+
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/iscsi/iscsi_target_auth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index e2fa3a3bc81df..b6bf605fa5c15 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -78,7 +78,7 @@ static int chap_check_algorithm(const char *a_str)
+ 		if (!token)
+ 			goto out;
+ 
+-		if (!strncmp(token, "5", 1)) {
++		if (!strcmp(token, "5")) {
+ 			pr_debug("Selected MD5 Algorithm\n");
+ 			kfree(orig);
+ 			return CHAP_DIGEST_MD5;
+-- 
+2.20.1
+
