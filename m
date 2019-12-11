@@ -2,119 +2,90 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173E3C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1F12073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:59:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1ojBJTp"
+	by mail.kernel.org (Postfix) with ESMTP id D9B6B2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576061978;
+	bh=CGbqrDZkwug3So6LcWMlQquOmUASErTqG/iUYsLK0eg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A5r+/Ksvn+Hgqq14bJwkYsRBfcFspA0VnnKgnUQZFbqolSRoN4vOMNFF5tFTIL9+A
+	 34U8VqE416WSq4MT1tDPlJNHbxBItplbA/NTqme3cE9NpDJnxuOnrG/Bk7iyw1qiG7
+	 mja5ayqaeQstMZlxZMoKzlauuGsCZcWvP/zHDPEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfLKK7Q (ORCPT
+        id S1728920AbfLKK7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:59:16 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45804 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfLKK7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:59:15 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so23478003wrj.12;
-        Wed, 11 Dec 2019 02:59:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZJ6q3Z6ceKXrm+SRlu2SJJixCZ2doGfehevk1AA5ByM=;
-        b=K1ojBJTpeL2Wboiq1cJE1Qq1n1g2bh/8V9dHPWgDVEGYy3w7g72D4KX55XVKKdXmbK
-         twQeRiS4RHTOb+jek8lMpidtbUZHZ56k/3uCiXXG5/+Hkw/rxpi9nXFgX2fFiuSZt9gx
-         33t0fTYw2WNQcXFMUfbK17IUcJIqUG/f7ENFXDkP/+HZFFhEV/HUUyHXlqyaRHTlZqP+
-         W1hQAb3DcSM8/OMvm51Xzaphnh3Jfeo+cHO0F9nvSfAt5q5JciBAe7LhcaGyG570Cgc+
-         6ckP1RX5m9u+nWZ060GCRdifB5D99LuUhnhQKM7RWCVZCXEGwohrxalOaTxi1DYQbRQS
-         L75Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZJ6q3Z6ceKXrm+SRlu2SJJixCZ2doGfehevk1AA5ByM=;
-        b=CWNGOWdCBGIM5YUnP8RUDubrLjs1VwD1l1Qx4Tk0y+BfZrg0HXeGBRMZIAbnfxWJxo
-         06Ln4n/GRXgkNas+fN1pQG9aG+SUxWXkiVg7HD/4VOytDvHCs0jcVZlEtqQAONhjlDfE
-         epH2R/ebVeKuTkVhAHHk+lucDCnbA+mtzvryFwr5/wHxodA9599JwB1WOp+GMW89PeSn
-         JeLB7umwH7g6IpZrVI93kTQqubohZoD+toQ7xEQypEF2FO9Ej+UeSfaVRtuTORVJCLhP
-         mAB77OhJkKvdr5ozVJHI/3EIBx27vOJQlQNQDb3/sLUY3yeDHFC8uCh2tikVyIx9DYY+
-         Mkpw==
-X-Gm-Message-State: APjAAAW1ifWSe1V4yw3gzKPTwvQFDZCmgljpGzMh54SRiF7Dj5Ef78ei
-        O+eWwIH4bSbmgOdv7l/+a88=
-X-Google-Smtp-Source: APXvYqzYgisCayrNKaxODP8N7xFYdT2hZz1hxEtmhPqbWlMtOUVzxlgJNwPz8lQm54UI/lwzuPutcw==
-X-Received: by 2002:adf:dc86:: with SMTP id r6mr3304746wrj.68.1576061953285;
-        Wed, 11 Dec 2019 02:59:13 -0800 (PST)
-Received: from arch-thunder.localdomain (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
-        by smtp.gmail.com with ESMTPSA id o19sm1215640wmc.18.2019.12.11.02.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 02:59:12 -0800 (PST)
-Date:   Wed, 11 Dec 2019 10:59:08 +0000
-From:   Rui Miguel Silva <rmfrfs@gmail.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
- v4l2_async_notifier_cleanup in remove
-Message-ID: <20191211105908.dw4lnuble3ejlnil@arch-thunder.localdomain>
-References: <20191209085828.16183-1-hslester96@gmail.com>
+        Wed, 11 Dec 2019 05:59:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:53792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727469AbfLKK7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:59:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3059B1FB;
+        Wed, 11 Dec 2019 02:59:36 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A48093F6CF;
+        Wed, 11 Dec 2019 02:59:35 -0800 (PST)
+Date:   Wed, 11 Dec 2019 10:59:34 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH AUTOSEL 5.4 177/350] regulator: fixed: add off-on-delay
+Message-ID: <20191211105934.GB3870@sirena.org.uk>
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-138-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gj572EiMnwbLXET9"
 Content-Disposition: inline
-In-Reply-To: <20191209085828.16183-1-hslester96@gmail.com>
+In-Reply-To: <20191210210735.9077-138-sashal@kernel.org>
+X-Cookie: NOBODY EXPECTS THE SPANISH INQUISITION!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuhong,
-Thanks for the patch.
 
-On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
-> All drivers in imx call v4l2_async_notifier_cleanup() after unregistering
-> the notifier except this driver.
-> This should be a miss and we need to add the call to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+--gj572EiMnwbLXET9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rui Miguel Silva <rmfrfs@gmail.com>
+On Tue, Dec 10, 2019 at 04:04:42PM -0500, Sasha Levin wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> [ Upstream commit f7907e57aea2adcd0b57ebcca410e125412ab680 ]
+>=20
+> Depends on board design, the gpio controlling regulator may
+> connects with a big capacitance. When need off, it takes some time
+> to let the regulator to be truly off. If not add enough delay, the
+> regulator might have always been on, so introduce off-on-delay to
+> handle such case.
 
-------
-Cheers,
-     Rui
-> ---
->  drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 99166afca071..2bfa85bb84e7 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -1105,6 +1105,7 @@ static int mipi_csis_remove(struct platform_device *pdev)
->  	mipi_csis_debugfs_exit(state);
->  	v4l2_async_unregister_subdev(&state->mipi_sd);
->  	v4l2_async_notifier_unregister(&state->subdev_notifier);
-> +	v4l2_async_notifier_cleanup(&state->subdev_notifier);
->  
->  	pm_runtime_disable(&pdev->dev);
->  	mipi_csis_pm_suspend(&pdev->dev, true);
-> -- 
-> 2.24.0
-> 
+This is clearly adding a new feature and doesn't include the matching DT
+binding addition for that new feature.
+
+--gj572EiMnwbLXET9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3wzBUACgkQJNaLcl1U
+h9DVGwf/UCdcYRsvXW7t9t0abHQsN3v809jgTCzYRJZrmccTdGl8v8iKjMFMw2cN
+PB16c/NuRElxjsLIrdQvowd9FYpHElStG9HxYPzEQSLssVt2C984sRZmToRgfLmL
+gMoyVqQQYcKTcKyx0VmXjWtpgvLNa/E3Fc5cisufp0duyCtKEnknUx6YYCTAIws4
+kwKcle6uZJDocZN+HTOkfg/wypFI3/DXc0/D40Yu38URfaf5mfOIumr4EyOBgtPM
+/qRBJWmLyUGffMqAx1gxaYJvAnGKLECwwkOtEByhRmHOWQBphABgtUnxz/gIUGJ2
+9GuGQQ7JHV+NIqaqSzWqUNLbT9oYgQ==
+=xz7B
+-----END PGP SIGNATURE-----
+
+--gj572EiMnwbLXET9--
