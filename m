@@ -2,54 +2,52 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2125C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B221FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6A62073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FDC208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077756;
-	bh=ClgqZHzhsPuOhhKHmA7iAkuNWjv/c05qXLW7ILvQ8LE=;
+	s=default; t=1576077759;
+	bh=Z5AqVrIC8GjWQ/SiK2JLzDiahAB4oiEWSlkGKafYMJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0v6ntd97A5YjqxxTCAMmagjraSrljpqN7GirY8I13+gCtwZEd3D9QBi4EMFmgCpjN
-	 xdE1S25r61d+BSrkIDHCpc6g8n/bCxZyzXOofIP2Q0mc2PC3Tb0RHpgtva3F5wxytq
-	 1ECzRcfEpXZifr93UizdYSKkkBwTkX9CK9JgELZE=
+	b=lD6RThhtxDDYurptkUZTu/yvSvbzEjb1qg2l3iXxfXqVzmB0sL+uG8/RPbaQXoDl4
+	 2ZHIwoS3EXUYMxYF9465drDlSt7+iWSUKo8AaQ6eR2RHGkOQ9h1o3wihbrGi/4743s
+	 hshi6/NU/1nrVImK0cEjst7ky/sFGW4lBA40HomM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732618AbfLKPWf (ORCPT
+        id S1732158AbfLKPWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732177AbfLKPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:33 -0500
+        id S1732615AbfLKPWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 569E9214AF;
-        Wed, 11 Dec 2019 15:22:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA4FC2073D;
+        Wed, 11 Dec 2019 15:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077752;
-        bh=ClgqZHzhsPuOhhKHmA7iAkuNWjv/c05qXLW7ILvQ8LE=;
+        s=default; t=1576077755;
+        bh=Z5AqVrIC8GjWQ/SiK2JLzDiahAB4oiEWSlkGKafYMJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ntFZF0Lj5Q03D8ohrp7nOjKxv2l+BcqwXlaKCtD4e9gConwX6jaFvWX56fRtU/mhf
-         xhdvbFjn/N9zZqTu43VHdEQ0qCRQraReZ3OERBf0FTETrB/HaJC0zSzPjOynSa3sEk
-         cfHwKcx3XyT+iW3NPcuEYBt9jjQU4K/DoB2ZyDXg=
+        b=tDU8+U3GoVuWK2wSiTZhbvqehhnj2avQLSNBRYdp12anOCjDcm1iArSbQkyl/YB42
+         dVnuUDqbRnS8yjIy4tHLYOc9ybrkgJLVZgb8sxNAHc8ZNneD/yl0a42Gi4oXmV2vn6
+         Aaw44Y93WA/+HdhWUrpxCUbNLTHEouHmOj5j/BxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 158/243] modpost: skip ELF local symbols during section mismatch check
-Date:   Wed, 11 Dec 2019 16:05:20 +0100
-Message-Id: <20191211150349.832644988@linuxfoundation.org>
+Subject: [PATCH 4.19 159/243] kbuild: fix single target build for external module
+Date:   Wed, 11 Dec 2019 16:05:21 +0100
+Message-Id: <20191211150349.899539555@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,94 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Walmsley <paul.walmsley@sifive.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit a4d26f1a0958bb1c2b60c6f1e67c6f5d43e2647b ]
+[ Upstream commit e07db28eea38ed4e332b3a89f3995c86b713cb5b ]
 
-During development of a serial console driver with a gcc 8.2.0
-toolchain for RISC-V, the following modpost warning appeared:
+Building a single target in an external module fails due to missing
+.tmp_versions directory.
 
-----
-WARNING: vmlinux.o(.data+0x19b10): Section mismatch in reference from the variable .LANCHOR1 to the function .init.text:sifive_serial_console_setup()
-The variable .LANCHOR1 references
-the function __init sifive_serial_console_setup()
-If the reference is valid then annotate the
-variable with __init* or __refdata (see linux/init.h) or name the variable:
-*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
-----
+For example,
 
-".LANCHOR1" is an ELF local symbol, automatically created by gcc's section
-anchor generation code:
+  $ make -C /lib/modules/$(uname -r)/build M=$PWD foo.o
 
-https://gcc.gnu.org/onlinedocs/gccint/Anchored-Addresses.html
+will fail in the following way:
 
-https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/varasm.c;h=cd9591a45617464946dcf9a126dde277d9de9804;hb=9fb89fa845c1b2e0a18d85ada0b077c84508ab78#l7473
+  CC [M]  /home/masahiro/foo/foo.o
+/bin/sh: 1: cannot create /home/masahiro/foo/.tmp_versions/foo.mod: Directory nonexistent
 
-This was verified by compiling the kernel with -fno-section-anchors
-and observing that the ".LANCHOR1" ELF local symbol disappeared, and
-modpost no longer warned about the section mismatch.  The serial
-driver code idiom triggering the warning is standard Linux serial
-driver practice that has a specific whitelist inclusion in modpost.c.
+This is because $(cmd_crmodverdir) is executed only before building
+/, %/, %.ko single targets of external modules. Create .tmp_versions
+in the 'prepare' target.
 
-I'm neither a modpost nor an ELF expert, but naively, it doesn't seem
-useful for modpost to report section mismatch warnings caused by ELF
-local symbols by default.  Local symbols have compiler-generated
-names, and thus bypass modpost's whitelisting algorithm, which relies
-on the presence of a non-autogenerated symbol name.  This increases
-the likelihood that false positive warnings will be generated (as in
-the above case).
-
-Thus, disable section mismatch reporting on ELF local symbols.  The
-rationale here is similar to that of commit 2e3a10a1551d ("ARM: avoid
-ARM binutils leaking ELF local symbols") and of similar code already
-present in modpost.c:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/mod/modpost.c?h=v4.19-rc4&id=7876320f88802b22d4e2daf7eb027dd14175a0f8#n1256
-
-This third version of the patch implements a suggestion from Masahiro
-Yamada <yamada.masahiro@socionext.com> to restructure the code as an
-additional pattern matching step inside secref_whitelist(), and
-further improves the patch description.
-
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Signed-off-by: Paul Walmsley <paul@pwsan.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/mod/modpost.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Makefile | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 858cbe56b1006..91a80036c05d5 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -1163,6 +1163,14 @@ static const struct sectioncheck *section_mismatch(
-  *   fromsec = text section
-  *   refsymname = *.constprop.*
-  *
-+ * Pattern 6:
-+ *   Hide section mismatch warnings for ELF local symbols.  The goal
-+ *   is to eliminate false positive modpost warnings caused by
-+ *   compiler-generated ELF local symbol names such as ".LANCHOR1".
-+ *   Autogenerated symbol names bypass modpost's "Pattern 2"
-+ *   whitelisting, which relies on pattern-matching against symbol
-+ *   names to work.  (One situation where gcc can autogenerate ELF
-+ *   local symbols is when "-fsection-anchors" is used.)
-  **/
- static int secref_whitelist(const struct sectioncheck *mismatch,
- 			    const char *fromsec, const char *fromsym,
-@@ -1201,6 +1209,10 @@ static int secref_whitelist(const struct sectioncheck *mismatch,
- 	    match(fromsym, optim_symbols))
- 		return 0;
+diff --git a/Makefile b/Makefile
+index f9ebb74e8e43f..471acfc74998b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1507,9 +1507,6 @@ else # KBUILD_EXTMOD
  
-+	/* Check for pattern 6 */
-+	if (strstarts(fromsym, ".L"))
-+		return 0;
-+
- 	return 1;
- }
+ # We are always building modules
+ KBUILD_MODULES := 1
+-PHONY += crmodverdir
+-crmodverdir:
+-	$(cmd_crmodverdir)
  
+ PHONY += $(objtree)/Module.symvers
+ $(objtree)/Module.symvers:
+@@ -1521,7 +1518,7 @@ $(objtree)/Module.symvers:
+ 
+ module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
+ PHONY += $(module-dirs) modules
+-$(module-dirs): crmodverdir $(objtree)/Module.symvers
++$(module-dirs): prepare $(objtree)/Module.symvers
+ 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
+ 
+ modules: $(module-dirs)
+@@ -1562,7 +1559,8 @@ help:
+ 
+ # Dummies...
+ PHONY += prepare scripts
+-prepare: ;
++prepare:
++	$(cmd_crmodverdir)
+ scripts: ;
+ endif # KBUILD_EXTMOD
+ 
+@@ -1689,17 +1687,14 @@ endif
+ 
+ # Modules
+ /: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ # Make sure the latest headers are built for Documentation
+ Documentation/ samples/: headers_install
+ %/: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+ 	$(build)=$(build-dir)
+ %.ko: prepare scripts FORCE
+-	$(cmd_crmodverdir)
+ 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
+ 	$(build)=$(build-dir) $(@:.ko=.o)
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
 -- 
 2.20.1
 
