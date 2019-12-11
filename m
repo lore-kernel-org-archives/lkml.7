@@ -7,351 +7,427 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF03C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88339C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9824320836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5399B20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:53:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLKUxV (ORCPT
+        id S1727170AbfLKUxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:53:21 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:33265 "EHLO
+        Wed, 11 Dec 2019 15:53:40 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:48923 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfLKUxV (ORCPT
+        with ESMTP id S1726313AbfLKUxk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:53:21 -0500
+        Wed, 11 Dec 2019 15:53:40 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MNbxN-1iLXWl00p1-00P20M; Wed, 11 Dec 2019 21:53:04 +0100
+ 1MUGqT-1iEz5s0XzP-00RH4A; Wed, 11 Dec 2019 21:52:03 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Jens Axboe <axboe@kernel.dk>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 24/24] Documentation: document ioctl interfaces better
-Date:   Wed, 11 Dec 2019 21:42:58 +0100
-Message-Id: <20191211204306.1207817-25-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: [PATCH 20/24] compat_ioctl: move HDIO ioctl handling into drivers/ide
+Date:   Wed, 11 Dec 2019 21:42:54 +0100
+Message-Id: <20191211204306.1207817-21-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191211204306.1207817-1-arnd@arndb.de>
 References: <20191211204306.1207817-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:aX83qY2gzIb1UH/MGpptCcNx3Fm7jzI7Op46RwEngICWEsKbKJN
- +aB7rHtumg4Q8zjAEcbg8JF+GwQKoWsmw+eVpuk9HuyhQ6K9c95DCG29r4mNe5FipNvkFN3
- 67RUuhau+/vsEiZFpWPoXowNU15R94B8sP26iKibS8kY2W8VcXdU+8WT/w3jOCsowLkJuk6
- 1CjcV4L6aRdT1CxCbkRWA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1lOjHeULC1c=:jEdbpOrh8ZnOFDTj9moCuP
- NZ/yy9AdO26TLdpn2YZaWxVYi0oQoCY6GemZOwTMQGVu5ZFPxOlrWtSCLJYu8lF2UihygYaNa
- KpdquzCEUuUswjQciRokgyfP+XOwNTsepKzA0Nbz5u6qsp1igs8qUcE29q5iaqXzGCdsQ+N9N
- TDEOc8CoLKkD35EmOcFX4A6MwLytKyFDddcLTQPfrX5op3yLTHtqpFOxj7tyxtPWBD4tnjIjU
- aB0NdC2k8PMK58sHxugu4yEGTC3ImlyvRrnq+NWQLUV+Qw8hGvDTe9sGY5hN69In2RYI8o/iQ
- BbtlQI6gieWS6bNAZZTQE03/Zxcw2ZBt+E4c83SLabBVTRcKKyVHkGts8mA/yhLL0BJBVYOt1
- x53yvAD6YJWCzjSksDpTcPsJ2mKh9K+T1xxyMgWFrZmC0MDLmhmv9bmIQ5Lz1I0VYm+11jkri
- kcGb4FmGhMwCFH/mZkCuLCWDD0cJGin3dIFy+Kj5tXZVN9YAiw8IvKtcJKzoQwq0kMAEFEslx
- S0wzpX4NJ+8DfiR93a+6XxJ/hu+Gqidu90Sv3PNpPznbv2KhZOsnl0k8jVUKVKeZhcVrkUSyd
- j7Fb3owOK7loApQocdDRgMvc1oNMJNszjHYI5ySLXedbVClebSBsCulyBXyZD9kqzVNZDuxBc
- dwJvXtcjRU2khOPZF8wrq29nohZtCc48aR0gEzdt58yKg0ZvWHSi9hS6pnBtYRMb/A0Pt70pV
- GhPE/hZf/0Lbc/0clAF6GW0sAMh8WR7hp3I4lz69tEzUUORDu45Q1Rspa/w3hS6PcPMZE3bZB
- RSWI8saJ/qvWY+2fNqO5hEMHbdQrn3HUSR1CPKqn8p3R+fWSoU9w3L+DxrDDf5RT7a/RBv2oH
- rE96sNcEXYcI6x53pkvg==
+X-Provags-ID: V03:K1:WqFkragwamlquVD0w4XYqhcIWXTSfEm2ryUKFK8u+208jHdn86k
+ pOxQ/44+skwkscooobamLqYROzjiyDHmhR7vd7mZsDkdahZFFDTypnjyg/Hdp8tBpAR6T6t
+ BG5ICdH2nzWjz0M5aEYDqPXUJycrPXfLGPpgxHV+DfwvgdtlxeAmHPywiBQZ3TMIxNX5TLz
+ YgsS8Zzbr8SkrSCkHWbKQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hXVkbih942Q=:6QoC8VGHeNYu3jkFNSWBjN
+ Bsgw6GAWOhVxTu0RrIuR52HnpgA7zCpo4k6rUZ/Ogwet5Q1aK3+ymqu8O2ZORhCOS5IxxCq6Q
+ avF0hh61iAVZgSDinHGfpDrdC3HPuGf1j+0QDyI26R+r9JpawVfRAK0hdOhOTDqCA62TYjvtt
+ q6wWAO7PwZTQY7UzLdAavR34PTGVI4Gv0s36ziwloXx8/Q9CYunu8oc7pUEoJCtTrloeCy+gZ
+ 0Rl/8jwIWskh1FutmymHQoNzK3jjV0akRImu0cQ9DBFiYYS7AY/0BbV31IPeiXfwrVMgBIOTg
+ y7bTbSAxuZdkUEbwHu9WYNbB79CSOdvAOER/Z47+cgzlseAhhhpfhyx/yG5yBy+rF8tCgMUTY
+ Us/BhbRYrko109srTIDpm2l5V6+THpeaWq5fbXd9jmghprTW1s1YY+HBtS+3iuvzmx4RXEJNz
+ RU0EtureQPgp69sBqlhSdHzUvLlWGAgJG74445fxi8kWvfP9Jkf+mlwrwghiHbC5S0AfvT9oc
+ GyShavXEXp4jIfNX4UgkEDaUxHDSE5ImMZ6+G6vAm6kna+LeQVvj7e0HOnD3+kiErSCEpnIhq
+ U4B+vpo0NNwtVonekdLUxnokR3fin+AGa8PeTMnwJUUkLAYXy4hm1yLFg5QMxJXmSKEw84Ot/
+ zmKCTHtKHyOzrzzDiEWzg0pc3XxwuIlcfPO2I02B/6fCvRd1lApXlzTnGG83ygYr2jAkatL6T
+ BIPER0eTia5DCHC2AfUbal6lY2ygnrrOmL3q+9S5Rytp/oX+bo7+UEb2XJtQZgFCF2x2ahKN4
+ a2bmMo0r9pZ8j9WqxVTaSzR5KHHWlombQ3+4L+BK63p6aC7LMuZdF7sXrH9eO34qTDK1oyXRp
+ dAOLQ2wgSYEiTKaW5Icw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation/process/botching-up-ioctls.rst was orignally
-written as a blog post for DRM driver writers, so it it misses
-some points while going into a lot of detail on others.
+Most of the HDIO ioctls are only used by the obsolete drivers/ide
+subsystem, these can be handled by changing ide_cmd_ioctl() to be aware
+of compat mode and doing the correct transformations in place and using
+it as both native and compat handlers for all drivers.
 
-Try to provide a replacement that addresses typical issues
-across a wider range of subsystems, and follows the style of
-the core-api documentation better.
+The SCSI drivers implementing the same commands are already doing
+this in the drivers, so the compat_blkdev_driver_ioctl() function
+is no longer needed now.
+
+The BLKSECTSET and HDIO_GETGEO_BIG ioctls are not implemented
+in any driver any more and no longer need any conversion.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/core-api/index.rst |   1 +
- Documentation/core-api/ioctl.rst | 250 +++++++++++++++++++++++++++++++
- 2 files changed, 251 insertions(+)
- create mode 100644 Documentation/core-api/ioctl.rst
+ block/compat_ioctl.c           | 75 ----------------------------------
+ drivers/ide/ide-cd.c           |  8 +++-
+ drivers/ide/ide-disk.c         |  3 ++
+ drivers/ide/ide-floppy_ioctl.c |  7 ++--
+ drivers/ide/ide-ioctls.c       | 47 +++++++++++++--------
+ drivers/ide/ide-tape.c         | 14 +++++++
+ 6 files changed, 57 insertions(+), 97 deletions(-)
 
-diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
-index ab0eae1c153a..3f28b2f668be 100644
---- a/Documentation/core-api/index.rst
-+++ b/Documentation/core-api/index.rst
-@@ -39,6 +39,7 @@ Core utilities
-    ../RCU/index
-    gcc-plugins
-    symbol-namespaces
-+   ioctl
+diff --git a/block/compat_ioctl.c b/block/compat_ioctl.c
+index 7cb534d6e767..765aa5357655 100644
+--- a/block/compat_ioctl.c
++++ b/block/compat_ioctl.c
+@@ -77,24 +77,6 @@ static int compat_hdio_getgeo(struct gendisk *disk, struct block_device *bdev,
+ 	return ret;
+ }
  
+-static int compat_hdio_ioctl(struct block_device *bdev, fmode_t mode,
+-		unsigned int cmd, unsigned long arg)
+-{
+-	unsigned long __user *p;
+-	int error;
+-
+-	p = compat_alloc_user_space(sizeof(unsigned long));
+-	error = __blkdev_driver_ioctl(bdev, mode,
+-				cmd, (unsigned long)p);
+-	if (error == 0) {
+-		unsigned int __user *uvp = compat_ptr(arg);
+-		unsigned long v;
+-		if (get_user(v, p) || put_user(v, uvp))
+-			error = -EFAULT;
+-	}
+-	return error;
+-}
+-
+ struct compat_blkpg_ioctl_arg {
+ 	compat_int_t op;
+ 	compat_int_t flags;
+@@ -128,61 +110,6 @@ static int compat_blkpg_ioctl(struct block_device *bdev, fmode_t mode,
+ #define BLKBSZSET_32		_IOW(0x12, 113, int)
+ #define BLKGETSIZE64_32		_IOR(0x12, 114, int)
  
- Interfaces for kernel debugging
-diff --git a/Documentation/core-api/ioctl.rst b/Documentation/core-api/ioctl.rst
-new file mode 100644
-index 000000000000..cb2c86ae63e7
---- /dev/null
-+++ b/Documentation/core-api/ioctl.rst
-@@ -0,0 +1,250 @@
-+======================
-+ioctl based interfaces
-+======================
+-static int compat_blkdev_driver_ioctl(struct block_device *bdev, fmode_t mode,
+-			unsigned cmd, unsigned long arg)
+-{
+-	switch (cmd) {
+-	case HDIO_GET_UNMASKINTR:
+-	case HDIO_GET_MULTCOUNT:
+-	case HDIO_GET_KEEPSETTINGS:
+-	case HDIO_GET_32BIT:
+-	case HDIO_GET_NOWERR:
+-	case HDIO_GET_DMA:
+-	case HDIO_GET_NICE:
+-	case HDIO_GET_WCACHE:
+-	case HDIO_GET_ACOUSTIC:
+-	case HDIO_GET_ADDRESS:
+-	case HDIO_GET_BUSSTATE:
+-		return compat_hdio_ioctl(bdev, mode, cmd, arg);
+-
+-	/*
+-	 * No handler required for the ones below, we just need to
+-	 * convert arg to a 64 bit pointer.
+-	 */
+-	case BLKSECTSET:
+-	/*
+-	 * 0x03 -- HD/IDE ioctl's used by hdparm and friends.
+-	 *         Some need translations, these do not.
+-	 */
+-	case HDIO_GET_IDENTITY:
+-	case HDIO_DRIVE_TASK:
+-	case HDIO_DRIVE_CMD:
+-	/* 0x330 is reserved -- it used to be HDIO_GETGEO_BIG */
+-	case 0x330:
+-		arg = (unsigned long)compat_ptr(arg);
+-	/* These intepret arg as an unsigned long, not as a pointer,
+-	 * so we must not do compat_ptr() conversion. */
+-	case HDIO_SET_MULTCOUNT:
+-	case HDIO_SET_UNMASKINTR:
+-	case HDIO_SET_KEEPSETTINGS:
+-	case HDIO_SET_32BIT:
+-	case HDIO_SET_NOWERR:
+-	case HDIO_SET_DMA:
+-	case HDIO_SET_PIO_MODE:
+-	case HDIO_SET_NICE:
+-	case HDIO_SET_WCACHE:
+-	case HDIO_SET_ACOUSTIC:
+-	case HDIO_SET_BUSSTATE:
+-	case HDIO_SET_ADDRESS:
+-		break;
+-	default:
+-		/* unknown ioctl number */
+-		return -ENOIOCTLCMD;
+-	}
+-
+-	return __blkdev_driver_ioctl(bdev, mode, cmd, arg);
+-}
+-
+ /* Most of the generic ioctls are handled in the normal fallback path.
+    This assumes the blkdev's low level compat_ioctl always returns
+    ENOIOCTLCMD for unknown ioctls. */
+@@ -293,8 +220,6 @@ long compat_blkdev_ioctl(struct file *file, unsigned cmd, unsigned long arg)
+ 	default:
+ 		if (disk->fops->compat_ioctl)
+ 			ret = disk->fops->compat_ioctl(bdev, mode, cmd, arg);
+-		if (ret == -ENOIOCTLCMD)
+-			ret = compat_blkdev_driver_ioctl(bdev, mode, cmd, arg);
+ 		return ret;
+ 	}
+ }
+diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c
+index 2de6e8ace957..521564da8707 100644
+--- a/drivers/ide/ide-cd.c
++++ b/drivers/ide/ide-cd.c
+@@ -1727,8 +1727,12 @@ static int idecd_locked_compat_ioctl(struct block_device *bdev, fmode_t mode,
+ 		break;
+ 	}
+ 
+-	return cdrom_ioctl(&info->devinfo, bdev, mode, cmd,
+-			   (unsigned long)compat_ptr(arg));
++	err = generic_ide_ioctl(info->drive, bdev, cmd, arg);
++	if (err == -EINVAL)
++		err = cdrom_ioctl(&info->devinfo, bdev, mode, cmd,
++				  (unsigned long)compat_ptr(arg));
 +
-+:c:func:`ioctl` is the most common way for applications to interface
-+with device drivers. It is flexible and easily extended by adding new
-+commands and can be passed through character devices, block devices as
-+well as sockets and other special file descriptors.
++	return err;
+ }
+ 
+ static int idecd_compat_ioctl(struct block_device *bdev, fmode_t mode,
+diff --git a/drivers/ide/ide-disk.c b/drivers/ide/ide-disk.c
+index 197912af5c2f..27f1098e4bcd 100644
+--- a/drivers/ide/ide-disk.c
++++ b/drivers/ide/ide-disk.c
+@@ -794,4 +794,7 @@ const struct ide_disk_ops ide_ata_disk_ops = {
+ 	.set_doorlock		= ide_disk_set_doorlock,
+ 	.do_request		= ide_do_rw_disk,
+ 	.ioctl			= ide_disk_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl		= ide_disk_ioctl,
++#endif
+ };
+diff --git a/drivers/ide/ide-floppy_ioctl.c b/drivers/ide/ide-floppy_ioctl.c
+index 4fd70f804d6f..39a790ac6cc3 100644
+--- a/drivers/ide/ide-floppy_ioctl.c
++++ b/drivers/ide/ide-floppy_ioctl.c
+@@ -329,10 +329,9 @@ int ide_floppy_compat_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	if (cmd != CDROM_SEND_PACKET && cmd != SCSI_IOCTL_SEND_COMMAND)
+ 		err = scsi_cmd_blk_ioctl(bdev, mode, cmd, argp);
+ 
+-	/*
+-	 * there is no generic_ide_compat_ioctl(), that is handled
+-	 * through compat_blkdev_ioctl().
+-	 */
++	if (err == -ENOTTY)
++		err = generic_ide_ioctl(drive, bdev, cmd, arg);
 +
-+However, it is also very easy to get ioctl command definitions wrong,
-+and hard to fix them later without breaking existing applications,
-+so this documentation tries to help developers get it right.
+ out:
+ 	mutex_unlock(&ide_floppy_ioctl_mutex);
+ 	return err;
+diff --git a/drivers/ide/ide-ioctls.c b/drivers/ide/ide-ioctls.c
+index d48c17003874..d97da46fdd79 100644
+--- a/drivers/ide/ide-ioctls.c
++++ b/drivers/ide/ide-ioctls.c
+@@ -3,11 +3,21 @@
+  * IDE ioctls handling.
+  */
+ 
++#include <linux/compat.h>
+ #include <linux/export.h>
+ #include <linux/hdreg.h>
+ #include <linux/ide.h>
+ #include <linux/slab.h>
+ 
++static int put_user_long(long val, unsigned long arg)
++{
++#ifdef CONFIG_COMPAT
++	if (in_compat_syscall())
++		return put_user(val, (compat_long_t __user *)compat_ptr(arg));
++#endif
++	return put_user(val, (long __user *)arg);
++}
 +
-+Command number definitions
-+==========================
+ static const struct ide_ioctl_devset ide_ioctl_settings[] = {
+ { HDIO_GET_32BIT,	 HDIO_SET_32BIT,	&ide_devset_io_32bit  },
+ { HDIO_GET_KEEPSETTINGS, HDIO_SET_KEEPSETTINGS,	&ide_devset_keepsettings },
+@@ -37,7 +47,7 @@ int ide_setting_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	mutex_lock(&ide_setting_mtx);
+ 	err = ds->get(drive);
+ 	mutex_unlock(&ide_setting_mtx);
+-	return err >= 0 ? put_user(err, (long __user *)arg) : err;
++	return err >= 0 ? put_user_long(err, arg) : err;
+ 
+ set_val:
+ 	if (bdev != bdev->bd_contains)
+@@ -56,7 +66,7 @@ int ide_setting_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ EXPORT_SYMBOL_GPL(ide_setting_ioctl);
+ 
+ static int ide_get_identity_ioctl(ide_drive_t *drive, unsigned int cmd,
+-				  unsigned long arg)
++				  void __user *argp)
+ {
+ 	u16 *id = NULL;
+ 	int size = (cmd == HDIO_GET_IDENTITY) ? (ATA_ID_WORDS * 2) : 142;
+@@ -77,7 +87,7 @@ static int ide_get_identity_ioctl(ide_drive_t *drive, unsigned int cmd,
+ 	memcpy(id, drive->id, size);
+ 	ata_id_to_hd_driveid(id);
+ 
+-	if (copy_to_user((void __user *)arg, id, size))
++	if (copy_to_user(argp, id, size))
+ 		rc = -EFAULT;
+ 
+ 	kfree(id);
+@@ -87,10 +97,10 @@ static int ide_get_identity_ioctl(ide_drive_t *drive, unsigned int cmd,
+ 
+ static int ide_get_nice_ioctl(ide_drive_t *drive, unsigned long arg)
+ {
+-	return put_user((!!(drive->dev_flags & IDE_DFLAG_DSC_OVERLAP)
++	return put_user_long((!!(drive->dev_flags & IDE_DFLAG_DSC_OVERLAP)
+ 			 << IDE_NICE_DSC_OVERLAP) |
+ 			(!!(drive->dev_flags & IDE_DFLAG_NICE1)
+-			 << IDE_NICE_1), (long __user *)arg);
++			 << IDE_NICE_1), arg);
+ }
+ 
+ static int ide_set_nice_ioctl(ide_drive_t *drive, unsigned long arg)
+@@ -115,7 +125,7 @@ static int ide_set_nice_ioctl(ide_drive_t *drive, unsigned long arg)
+ 	return 0;
+ }
+ 
+-static int ide_cmd_ioctl(ide_drive_t *drive, unsigned long arg)
++static int ide_cmd_ioctl(ide_drive_t *drive, void __user *argp)
+ {
+ 	u8 *buf = NULL;
+ 	int bufsize = 0, err = 0;
+@@ -123,7 +133,7 @@ static int ide_cmd_ioctl(ide_drive_t *drive, unsigned long arg)
+ 	struct ide_cmd cmd;
+ 	struct ide_taskfile *tf = &cmd.tf;
+ 
+-	if (NULL == (void *) arg) {
++	if (NULL == argp) {
+ 		struct request *rq;
+ 
+ 		rq = blk_get_request(drive->queue, REQ_OP_DRV_IN, 0);
+@@ -135,7 +145,7 @@ static int ide_cmd_ioctl(ide_drive_t *drive, unsigned long arg)
+ 		return err;
+ 	}
+ 
+-	if (copy_from_user(args, (void __user *)arg, 4))
++	if (copy_from_user(args, argp, 4))
+ 		return -EFAULT;
+ 
+ 	memset(&cmd, 0, sizeof(cmd));
+@@ -181,19 +191,18 @@ static int ide_cmd_ioctl(ide_drive_t *drive, unsigned long arg)
+ 	args[1] = tf->error;
+ 	args[2] = tf->nsect;
+ abort:
+-	if (copy_to_user((void __user *)arg, &args, 4))
++	if (copy_to_user(argp, &args, 4))
+ 		err = -EFAULT;
+ 	if (buf) {
+-		if (copy_to_user((void __user *)(arg + 4), buf, bufsize))
++		if (copy_to_user((argp + 4), buf, bufsize))
+ 			err = -EFAULT;
+ 		kfree(buf);
+ 	}
+ 	return err;
+ }
+ 
+-static int ide_task_ioctl(ide_drive_t *drive, unsigned long arg)
++static int ide_task_ioctl(ide_drive_t *drive, void __user *p)
+ {
+-	void __user *p = (void __user *)arg;
+ 	int err = 0;
+ 	u8 args[7];
+ 	struct ide_cmd cmd;
+@@ -237,6 +246,12 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 		      unsigned int cmd, unsigned long arg)
+ {
+ 	int err;
++	void __user *argp = (void __user *)arg;
 +
-+The command number, or request number, is the second argument passed to
-+the ioctl system call. While this can be any 32-bit number that uniquely
-+identifies an action for a particular driver, there are a number of
-+conventions around defining them.
++#ifdef CONFIG_COMPAT
++	if (in_compat_syscall())
++		argp = compat_ptr(arg);
++#endif
+ 
+ 	err = ide_setting_ioctl(drive, bdev, cmd, arg, ide_ioctl_settings);
+ 	if (err != -EOPNOTSUPP)
+@@ -247,7 +262,7 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	case HDIO_GET_IDENTITY:
+ 		if (bdev != bdev->bd_contains)
+ 			return -EINVAL;
+-		return ide_get_identity_ioctl(drive, cmd, arg);
++		return ide_get_identity_ioctl(drive, cmd, argp);
+ 	case HDIO_GET_NICE:
+ 		return ide_get_nice_ioctl(drive, arg);
+ 	case HDIO_SET_NICE:
+@@ -265,11 +280,11 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	case HDIO_DRIVE_CMD:
+ 		if (!capable(CAP_SYS_RAWIO))
+ 			return -EACCES;
+-		return ide_cmd_ioctl(drive, arg);
++		return ide_cmd_ioctl(drive, argp);
+ 	case HDIO_DRIVE_TASK:
+ 		if (!capable(CAP_SYS_RAWIO))
+ 			return -EACCES;
+-		return ide_task_ioctl(drive, arg);
++		return ide_task_ioctl(drive, argp);
+ 	case HDIO_DRIVE_RESET:
+ 		if (!capable(CAP_SYS_ADMIN))
+ 			return -EACCES;
+@@ -277,7 +292,7 @@ int generic_ide_ioctl(ide_drive_t *drive, struct block_device *bdev,
+ 	case HDIO_GET_BUSSTATE:
+ 		if (!capable(CAP_SYS_ADMIN))
+ 			return -EACCES;
+-		if (put_user(BUSSTATE_ON, (long __user *)arg))
++		if (put_user_long(BUSSTATE_ON, arg))
+ 			return -EFAULT;
+ 		return 0;
+ 	case HDIO_SET_BUSSTATE:
+diff --git a/drivers/ide/ide-tape.c b/drivers/ide/ide-tape.c
+index 3e7482695f77..4c2a95a2f0b6 100644
+--- a/drivers/ide/ide-tape.c
++++ b/drivers/ide/ide-tape.c
+@@ -1945,11 +1945,25 @@ static int idetape_ioctl(struct block_device *bdev, fmode_t mode,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_COMPAT
++static int idetape_compat_ioctl(struct block_device *bdev, fmode_t mode,
++				unsigned int cmd, unsigned long arg)
++{
++        if (cmd == 0x0340 || cmd == 0x350)
++		arg = (unsigned long)compat_ptr(arg);
 +
-+``include/uapi/asm-generic/ioctl.h`` provides four macros for defining
-+ioctl commands that follow modern conventions: ``_IOC``, ``_IOR``,
-+``_IOW``, and ``_IORW``. These should be used for all new commands,
-+with the correct parameters:
++	return idetape_ioctl(bdev, mode, cmd, arg);
++}
++#endif
 +
-+_IO/_IOR/_IOW/_IOWR
-+   The macro name determines whether the argument is used for passing
-+   data into kernel (_IOW), from the kernel (_IOR), both (_IOWR) or is
-+   not a pointer (_IOC). It is possible but not recommended to pass an
-+   integer value instead of a pointer with _IOC.
-+
-+type
-+   An 8-bit number, often a character literal, specific to a subsystem
-+   or driver, and listed in :doc:`../ioctl/ioctl-number`
-+
-+nr
-+  An 8-bit number identifying the specific command, unique for a give
-+  value of 'type'
-+
-+size
-+  The name of the data type pointed to by the argument, the command
-+  number encodes the ``sizeof(size)`` value in a 13-bit or 14-bit integer,
-+  leading to a limit of 8191 bytes for the maximum size of the argument.
-+  Note: do not pass sizeof(type) type into _IOR/IOW, as that will lead
-+  to encoding sizeof(sizeof(type)), i.e. sizeof(size_t).
-+
-+
-+Interface versions
-+==================
-+
-+Some subsystems use version numbers in data structures to overload
-+commands with different interpretations of the argument.
-+
-+This is generally a bad idea, since changes to existing commands tend
-+to break existing applications.
-+
-+A better approach is to add a new ioctl command with a new number. The
-+old command still needs to be implemented in the kernel for compatibility,
-+but this can be a wrapper around the new implementation.
-+
-+Return code
-+===========
-+
-+ioctl commands can return negative error codes as documented in errno(3),
-+these get turned into errno values in user space. On success, the return
-+code should be zero. It is also possible but not recommended to return
-+a positive 'long' value.
-+
-+When the ioctl callback is called with an unknown command number, the
-+handler returns either -ENOTTY or -ENOIOCTLCMD, which also results in
-+-ENOTTY being returned from the system call. Some subsystems return
-+-ENOSYS or -EINVAL here for historic reasons, but this is wrong.
-+
-+Prior to Linux-5.5, compat_ioctl handlers were required to return
-+-ENOIOCTLCMD in order to use the fallback conversion into native
-+commands. As all subsystems are now responsible for handling compat
-+mode themselves, this is no longer needed, but it may be important to
-+consider when backporting bug fixes to older kernels.
-+
-+Timestamps
-+==========
-+
-+Traditionally, timestamps and timeout values are passed as ``struct
-+timespec`` or ``struct timeval``, but these are problematic because of
-+incompatible definitions of these structures in user space after the
-+move to 64-bit time_t.
-+
-+The __kernel_timespec type can be used instead to be embedded in other
-+data structures when separate second/nanosecond values are desired,
-+or passed to user space directly. This is still not ideal though,
-+as the structure matches neither the kernel's timespec64 nor the user
-+space timespec exactly. The get_timespec64() and put_timespec64() helper
-+functions canbe used to ensure that the layout remains compatible with
-+user space and the padding is treated correctly.
-+
-+As it is cheap to convert seconds to nanoseconds, but the opposite
-+requires an expensive 64-bit division, a simple __u64 nanosecond value
-+can be simpler and more efficient.
-+
-+Timeout values and timestamps should ideally use CLOCK_MONOTONIC time,
-+as returned by ``ktime_get_ns()`` or ``ktime_get_ts64()``.  Unlike
-+CLOCK_REALTIME, this makes the timestamps immune from jumping backwards
-+or forwards due to leap second adjustments and clock_settime() calls.
-+
-+``ktime_get_real_ns()`` can be used for CLOCK_REALTIME timestamps that
-+may be required for timestamps that need to be persistent across a reboot
-+or between multiple machines.
-+
-+32-bit compat mode
-+==================
-+
-+In order to support 32-bit user space running on a 64-bit machine, each
-+subsystem or driver that implements an ioctl callback handler must also
-+implement the corresponding compat_ioctl handler.
-+
-+As long as all the rules for data structures are followed, this is as
-+easy as setting the .compat_ioctl pointer to a helper function such as
-+``compat_ptr_ioctl()`` or ``blkdev_compat_ptr_ioctl``.
-+
-+compat_ptr()
-+------------
-+
-+On the s/390 architecture, 31-bit user space has ambiguous representations
-+for data pointers, with the upper bit being ignored. When running such
-+a process in compat mode, the ``compat_ptr()`` helper must be used to
-+clear the upper bit of a compat_uptr_t and turn it into a valid 64-bit
-+pointer.  On other architectures, this macro only performs a cast to a
-+``void __user *`` pointer.
-+
-+In an compat_ioctl() callback, the last argument is an unsigned long,
-+which can be interpreted as either a pointer or a scalar depending on
-+the command. If it is a scalar, then compat_ptr() must not be used, to
-+ensure that the 64-bit kernel behaves the same way as a 32-bit kernel
-+for arguments with the upper bit set.
-+
-+The compat_ptr_ioctl() helper can be used in place of a custom
-+compat_ioctl file operation for drivers that only take arguments that
-+are pointers to compatible data structures.
-+
-+Structure layout
-+----------------
-+
-+Compatible data structures have the same layout on all architectures,
-+avoiding all problematic members:
-+
-+* ``long`` and ``unsigned long`` are the size of a register, so
-+  they can be either 32 bit or 64 bit wide and cannot be used in portable
-+  data structures. Fixed-length replacements are ``__s32``, ``__u32``,
-+  ``__s64`` and ``__u64``.
-+
-+* Pointers have the same problem, in addition to requiring the
-+  use of ``compat_ptr()``. The best workaround is to use ``__u64``
-+  in place of pointers, which requires a cast to ``uintptr_t`` in user
-+  space, and the use of ``u64_to_user_ptr()`` in the kernel to convert
-+  it back into a user pointer.
-+
-+* On the x86-32 (i386) architecture, the alignment of 64-bit variables
-+  is only 32 bit, but they are naturally aligned on most other
-+  architectures including x86-64. This means a structure like
-+
-+  ::
-+
-+    struct foo {
-+        __u32 a;
-+        __u64 b;
-+        __u32 c;
-+    };
-+
-+  has four bytes of padding between a and b on x86-64, plus another four
-+  bytes of padding at the end, but no padding on i386, and it needs a
-+  compat_ioctl conversion handler to translate between the two formats.
-+
-+  To avoid this problem, all structures should have their members
-+  naturally aligned, or explicit reserved fields added in place of the
-+  implicit padding.
-+
-+* On ARM OABI user space, 16-bit member variables have 32-bit
-+  alignment, making them incompatible with modern EABI kernels.
-+  Conversely, on the m68k architecture, all struct members have at most
-+  16-bit alignment. These rarely cause problems as neither ARM-OABI nor
-+  m68k are supported by any compat mode, but for consistency, it is best
-+  to completely avoid 16-bit member variables.
-+
-+
-+* Bitfields and enums generally work as one would expect them to,
-+  but some properties of them are implementation-defined, so it is better
-+  to avoid them completely in ioctl interfaces.
-+
-+* ``char`` members can be either signed or unsigned, depending on
-+  the architecture, so the __u8 and __s8 types should be used for 8-bit
-+  integer values, though char arrays are clearer for fixed-length strings.
-+
-+Information leaks
-+=================
-+
-+Uninitialized data must not be copied back to user space, as this can
-+cause an information leak, which can be used to defeat kernel address
-+space layout randomization (KASLR), helping in an attack.
-+
-+As explained for the compat mode, it is best to not avoid any padding in
-+data structures, but if there is already padding in existing structures,
-+the kernel driver must be careful to zero out the padding using
-+``memset()`` or similar before copying it to user space.
-+
-+Subsystem abstractions
-+======================
-+
-+While some device drivers implement their own ioctl function, most
-+subsystems implement the same command for multiple drivers.  Ideally the
-+subsystem has an .ioctl() handler that copies the arguments from and
-+to user space, passing them into subsystem specific callback functions
-+through normal kernel pointers.
-+
-+This helps in various ways:
-+
-+* Applications written for one driver are more likely to work for
-+  another one in the same subsystem if there are no subtle differences
-+  in the user space ABI.
-+
-+* The complexity of user space access and data structure layout at done
-+  in one place, reducing the potential for implementation bugs.
-+
-+* It is more likely to be reviewed by experienced developers
-+  that can spot problems in the interface when the ioctl is shared
-+  between multiple drivers than when it is only used in a single driver.
-+
-+Alternatives to ioctl
-+=====================
-+
-+There are many cases in which ioctl is not the best solution for a
-+problem. Alternatives include
-+
-+* System calls are a better choice for a system-wide feature that
-+  is not tied to a physical device or constrained by the file system
-+  permissions of a character device node
-+
-+* netlink is the preferred way of configuring any network related
-+  objects through sockets.
-+
-+* debugfs is used for ad-hoc interfaces for debugging functionality
-+  that does not need to be exposed as a stable interface to applications.
-+
-+* sysfs is a good way to expose the state of an in-kernel object
-+  that is not tied to a file descriptor.
-+
-+* configfs can be used for more complex configuration than sysfs
-+
-+* A custom file system can provide extra flexibility with a simple
-+  user interface but add a lot of complexity in the implementation.
+ static const struct block_device_operations idetape_block_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= idetape_open,
+ 	.release	= idetape_release,
+ 	.ioctl		= idetape_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= idetape_compat_ioctl,
++#endif
+ };
+ 
+ static int ide_tape_probe(ide_drive_t *drive)
 -- 
 2.20.0
 
