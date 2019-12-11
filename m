@@ -2,99 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD21C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF19B20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481FE22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+BARLPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfLKOW2 (ORCPT
+        id S1729878AbfLKOXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:22:28 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10486 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726242AbfLKOW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:22:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 06:22:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="215796782"
-Received: from unknown (HELO pbossart-mac02.local) ([10.254.97.107])
-  by orsmga006.jf.intel.com with ESMTP; 11 Dec 2019 06:22:27 -0800
-Subject: Re: [alsa-devel] [PATCH v4 05/11] soundwire: intel: update interfaces
- between ASoC and SoundWire
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191209235520.18727-1-pierre-louis.bossart@linux.intel.com>
- <20191209235520.18727-6-pierre-louis.bossart@linux.intel.com>
- <20191211114247.GI2536@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <13e24f85-bf48-cf63-d738-dfb62b28a814@linux.intel.com>
-Date:   Wed, 11 Dec 2019 08:22:26 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Wed, 11 Dec 2019 09:23:09 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34472 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfLKOXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:23:08 -0500
+Received: by mail-pf1-f196.google.com with SMTP id l127so615433pfl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:23:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/QWzNDzzrfxQTmZnQXAnuGOpRW2t5ObwF4zriIuU40Y=;
+        b=X+BARLPnnb5Z0xTDzxhmbC3H9nKkYVim4Rh4phE9EBm7qNO7aIUaJGuD1TC9KIUIzm
+         XTbb0b69nRjKZAUnvb2lPL1NgxsVRCsWAxY9+bewiEBcSjDmyYURfskgytpo9lkqF9UI
+         ewq0eeSIIBhDWGuDL9ls7sulVX7i3SCfU1FuIXgdC+kTP2QNU0X8P6HI59thze0Fw5Z1
+         CC7Vi5z5iDvdTn4YUjm6IJ3jx3eDpb9J2NjXaLgGdvFOzunh1x56XR0vK0OkO3M4FlaO
+         fmo1UspdQF/4Z1pua/UZ0ObIWIOjHLCgQ2dngWCIr+z958SLHosToJDAGJXqhpWimXwh
+         6hWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/QWzNDzzrfxQTmZnQXAnuGOpRW2t5ObwF4zriIuU40Y=;
+        b=hOmqcvA6Fba0ONNQh9xgeUS1Y5MPbJJIb9qwrn8PpFK6K2ggZFjA2FXP9QomIFvVS+
+         fAnPnsWB99/fbMjtjoDpSiHrx4JyEs3UjDQOXb+xbtvBQvNBi8An8VA72HVDrYG6LH1x
+         rrp+cXiVUxCobxI94wrQJsuDzp6PQOvA8bnq1qMpZp4JntQYfTbZz/xpglJRvfJLHz/Z
+         DbIT7/eRu0SmSJ4kF6bTm4HgaeWPYVWiGLA+bqZCPAZHtybAr0eDK+/cLQXDyWCXzdJA
+         IOZV21fIoOSUZwtOtG7avcPoAajLp7cRbRmtT/LmuqYCQre0HR+uGcuqa71Wa00joUCq
+         oRvQ==
+X-Gm-Message-State: APjAAAW0F7X/Pp4dXL/0BUrBaqIiUlqqVYFcJr53N2ytbmzSEfZ17ONf
+        16Cr+W7lXrkJuRbH3W7/sWNJJxrWF8YNeL4F6uYTXA==
+X-Google-Smtp-Source: APXvYqyC3Yj5w8PRUHoADlHDrvA7T1UCFsuw0q62MHrJCRrNQF+pmIjqG0dinlqqjVMygtBbuXda+56UkHWlZ16Mb2M=
+X-Received: by 2002:a65:678f:: with SMTP id e15mr4437984pgr.130.1576074187917;
+ Wed, 11 Dec 2019 06:23:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191211114247.GI2536@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAAeHK+wY+35uBvr0=FnKsWOj91QhXuVE++V7frn5AihAPLvo5Q@mail.gmail.com>
+ <Pine.LNX.4.44L0.1912101508470.1647-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912101508470.1647-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 11 Dec 2019 15:22:56 +0100
+Message-ID: <CAAeHK+xTjUdP5D+DzRD-ZBd-8MmhWxT5n=CqO5u37FrEy6T-8Q@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 5:42 AM, Vinod Koul wrote:
-> On 09-12-19, 17:55, Pierre-Louis Bossart wrote:
-> 
->> @@ -138,8 +126,6 @@ static struct sdw_intel_ctx
->>   		pdevinfo.name = "int-sdw";
->>   		pdevinfo.id = i;
->>   		pdevinfo.fwnode = acpi_fwnode_handle(adev);
->> -		pdevinfo.data = &link->res;
->> -		pdevinfo.size_data = sizeof(link->res);
->>   
->>   		pdev = platform_device_register_full(&pdevinfo);
->>   		if (IS_ERR(pdev)) {
->> @@ -224,10 +210,8 @@ EXPORT_SYMBOL(sdw_intel_init);
-> 
-> This is still exported
-> 
->>   struct sdw_intel_res {
->> +	int count;
->>   	void __iomem *mmio_base;
->>   	int irq;
->>   	acpi_handle handle;
->>   	struct device *parent;
->>   	const struct sdw_intel_ops *ops;
->> -	void *arg;
->> +	struct device *dev;
->> +	u32 link_mask;
->>   };
->>   
->> -void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res);
-> 
-> But prototype removed, so i think this is a miss in the series, can you
-> fix that up
+On Tue, Dec 10, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 10 Dec 2019, Andrey Konovalov wrote:
+>
+> > On Tue, Dec 10, 2019 at 8:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> > > This looks like a race in v4l2_open(): The function drops the
+> > > videodev_lock mutex before calling the video driver's open routine, and
+> > > the device can be unregistered during the short time between.
+> > >
+> > > This patch tries to make the race much more likely to happen, for
+> > > testing and verification.
+> > >
+> > > Andrey, will syzbot run the same test with this patch, even though it
+> > > says it doesn't have a reproducer?
+> >
+> > Hi Alan,
+> >
+> > No, unfortunately there's nothing to run if there's no reproducer.
+> > It's technically possible to run the same program log that triggered
+> > the bug initially, but since the bug wasn't reproduced with this log
+> > even without the patch, there isn't much sense in running it with the
+> > patch applied.
+>
+> Actually it does make sense.  That bug was caused by a race, and the
+> patch tries to make the race much more likely to happen, so the same
+> test should fail again.
+>
+> But never mind; I'll try a different approach.  There's another syzbot
+> bug report, one with a reproducer, and with this patch in place it
+> should trigger the same race.  I'll try submitting it that way.
+>
+> By the way, do you know why syzbot sent _two_ reply messages?  One with
+> message ID <00000000000031a0af05995eca0b@google.com> and the other with
+> message ID <000000000000441a4205995eca11@google.com>?  It seems like
+> overkill.
 
-This is updated in a later patch that implements the new interfaces
-
--EXPORT_SYMBOL(sdw_intel_init);
-+EXPORT_SYMBOL(sdw_intel_acpi_scan);
-
-I will fix this but since there is no user for that function there will 
-be no impact.
-
+Hm, I'm not sure. Dmitry?
