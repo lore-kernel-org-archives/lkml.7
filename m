@@ -2,200 +2,142 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71959C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D50C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF652073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079608;
-	bh=I7dfkIHF5V4Hy/ZBCDGLy3Rm64lZ3kJnViQhLq5YtOA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WGcjvMIpWJj2os1fBjwqe+9+Y+leMkQl9oJLVPldSffBr3NWBpfSqU4pOH1A65vVH
-	 c7QNuY7OWNKO5bluJ/JaT969qOKHeoVZJ6zcdZmW2WQpcbD8Su8uLBUplHPOJpVcSu
-	 GB1eh65SieLbwFY34TyVyeJjZyQ+IzAKzqIkvFIM=
+	by mail.kernel.org (Postfix) with ESMTP id DBEE42073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cFiH4KIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbfLKPTH (ORCPT
+        id S1732466AbfLKPxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Dec 2019 10:53:31 -0500
+Received: from mail.efficios.com ([167.114.142.138]:42358 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732008AbfLKPTH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:19:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732040AbfLKPTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296C72073D;
-        Wed, 11 Dec 2019 15:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077540;
-        bh=I7dfkIHF5V4Hy/ZBCDGLy3Rm64lZ3kJnViQhLq5YtOA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRCghWcAIl4LlYK53cwQk1oY6POIjUIZXjhp888LgPM6lKKQAw/YR1Khhf7SvMw6B
-         312XmrXqMAz4KVDAizGb4tLwTy7XNAwbSv6B4BRXxVVfKs03z1N5O1aqwTQ3Mj/elW
-         9vTsc+m1/yNcenpTKc+ZpIB2n/wPisWGUCCUqX8I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 078/243] iomap: readpages doesnt zero page tail beyond EOF
-Date:   Wed, 11 Dec 2019 16:04:00 +0100
-Message-Id: <20191211150344.373359469@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 72F5E68774F;
+        Wed, 11 Dec 2019 10:19:05 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id WKPvfOPdR2rD; Wed, 11 Dec 2019 10:19:05 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0CCDE68774C;
+        Wed, 11 Dec 2019 10:19:05 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0CCDE68774C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1576077545;
+        bh=Els775lt7VbhSm6uez8HB9AuwfSHPUeqxVvc2FSjROM=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=cFiH4KIf5SmtmlttI/719OAaw5HhviY/mN++Yv4CSa7+yfMW60UxEA3/qxiIY5Y1A
+         Y+cdtg/ZAp1QbbvoVCTQhfvNoW4kOWZAK8yuJSPMPkQbw8dY8S0RuWZz1IOGGB6rEj
+         jC9R2ziP+ftZmh6YFaSBYSVZajd8QMLaiDMS3BH3y6YQR4H3ai3z9ci7jucs/OwJmd
+         GOy25GT8X7IxiDJGnu16+HKvbUJQvdzegYEVDGOIAwvoGrRVOutv2bB/1n74HrzyWC
+         xue0vzmAOv2CpkCYFIzELK320wBqCwD5MBloLBrjGQdj65x4cn6KOyrkkOSdWiUoGN
+         Ohz66cAHcADPA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id yRR1NrW5C_RV; Wed, 11 Dec 2019 10:19:04 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id EB0FA687740;
+        Wed, 11 Dec 2019 10:19:04 -0500 (EST)
+Date:   Wed, 11 Dec 2019 10:19:04 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kselftest <linux-kselftest@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Message-ID: <1871753014.2121.1576077544796.JavaMail.zimbra@efficios.com>
+In-Reply-To: <2d53b409-31e0-2245-e163-1ab26f52c841@linuxfoundation.org>
+References: <2d53b409-31e0-2245-e163-1ab26f52c841@linuxfoundation.org>
+Subject: Re: Linux 5.5=rc1 kselftest rseq test build failure
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3890)
+Thread-Topic: Linux 5.5=rc1 kselftest rseq test build failure
+Thread-Index: M//PaePCYQ98sUQtyT/D1GN/cpAq9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+----- On Dec 10, 2019, at 7:27 PM, Shuah Khan skhan@linuxfoundation.org wro=
+te:
 
-[ Upstream commit 8c110d43c6bca4b24dd13272a9d4e0ba6f2ec957 ]
+> Hi Mathieu,
+>=20
+> I am seeing rseq test build failure on Linux 5.5-rc1.
+>=20
+> gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=3D./
+> param_test.c -lpthread -lrseq -o ...tools/testing/selftests/rseq/param_te=
+st
+> param_test.c:18:21: error: static declaration of =E2=80=98gettid=E2=80=99=
+ follows
+> non-static declaration
+>    18 | static inline pid_t gettid(void)
+>       |                     ^~~~~~
+> In file included from /usr/include/unistd.h:1170,
+>                  from param_test.c:11:
+> /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:34:16: note: previous
+> declaration of =E2=80=98gettid=E2=80=99 was here
+>    34 | extern __pid_t gettid (void) __THROW;
+>       |                ^~~~~~
+> make: *** [Makefile:28: ...tools/testing/selftests/rseq/param_test] Error=
+ 1
+>=20
+>=20
+> The following obvious change fixes it. However, there could be reason
+> why this was defined here. If you think this is the right fix, I can
+> send the patch. I started seeing this with gcc version 9.2.1 20191008
 
-When we read the EOF page of the file via readpages, we need
-to zero the region beyond EOF that we either do not read or
-should not contain data so that mmap does not expose stale data to
-user applications.
+This issue is caused by introduction of "gettid()" in glibc 2.30. I don't
+think we want to introduce a build dependency on glibc 2.30 for kernel
+selftests. Removing the gettid() symbol as you propose here will break
+build environments with glibc < 2.30.
 
-However, iomap_adjust_read_range() fails to detect EOF correctly,
-and so fsx on 1k block size filesystems fails very quickly with
-mapreads exposing data beyond EOF. There are two problems here.
+We could eventually try to figure out whether the glibc headers implement
+gettid() at build time (not sure how), or we could simply rename our own
+"gettid()" to "rseq_gettid()", thus removing the namespace clash with
+glibc.
 
-Firstly, when calculating the end block of the EOF byte, we have
-to round the size by one to avoid a block aligned EOF from reporting
-a block too large. i.e. a size of 1024 bytes is 1 block, which in
-index terms is block 0. Therefore we have to calculate the end block
-from (isize - 1), not isize.
+I can propose a patch renaming gettid() to rseq_gettid() is that approach
+is OK with you.
 
-The second bug is determining if the current page spans EOF, and so
-whether we need split it into two half, one for the IO, and the
-other for zeroing. Unfortunately, the code that checks whether
-we should split the block doesn't actually check if we span EOF, it
-just checks if the read spans the /offset in the page/ that EOF
-sits on. So it splits every read into two if EOF is not page
-aligned, regardless of whether we are reading the EOF block or not.
+Thanks,
 
-Hence we need to restrict the "does the read span EOF" check to
-just the page that spans EOF, not every page we read.
-
-This patch results in correct EOF detection through readpages:
-
-xfs_vm_readpages:     dev 259:0 ino 0x43 nr_pages 24
-xfs_iomap_found:      dev 259:0 ino 0x43 size 0x66c00 offset 0x4f000 count 98304 type hole startoff 0x13c startblock 1368 blockcount 0x4
-iomap_readpage_actor: orig pos 323584 pos 323584, length 4096, poff 0 plen 4096, isize 420864
-xfs_iomap_found:      dev 259:0 ino 0x43 size 0x66c00 offset 0x50000 count 94208 type hole startoff 0x140 startblock 1497 blockcount 0x5c
-iomap_readpage_actor: orig pos 327680 pos 327680, length 94208, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 331776 pos 331776, length 90112, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 335872 pos 335872, length 86016, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 339968 pos 339968, length 81920, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 344064 pos 344064, length 77824, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 348160 pos 348160, length 73728, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 352256 pos 352256, length 69632, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 356352 pos 356352, length 65536, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 360448 pos 360448, length 61440, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 364544 pos 364544, length 57344, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 368640 pos 368640, length 53248, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 372736 pos 372736, length 49152, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 376832 pos 376832, length 45056, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 380928 pos 380928, length 40960, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 385024 pos 385024, length 36864, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 389120 pos 389120, length 32768, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 393216 pos 393216, length 28672, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 397312 pos 397312, length 24576, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 401408 pos 401408, length 20480, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 405504 pos 405504, length 16384, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 409600 pos 409600, length 12288, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 413696 pos 413696, length 8192, poff 0 plen 4096, isize 420864
-iomap_readpage_actor: orig pos 417792 pos 417792, length 4096, poff 0 plen 3072, isize 420864
-iomap_readpage_actor: orig pos 420864 pos 420864, length 1024, poff 3072 plen 1024, isize 420864
-
-As you can see, it now does full page reads until the last one which
-is split correctly at the block aligned EOF, reading 3072 bytes and
-zeroing the last 1024 bytes. The original version of the patch got
-this right, but it got another case wrong.
-
-The EOF detection crossing really needs to the the original length
-as plen, while it starts at the end of the block, will be shortened
-as up-to-date blocks are found on the page. This means "orig_pos +
-plen" no longer points to the end of the page, and so will not
-correctly detect EOF crossing. Hence we have to use the length
-passed in to detect this partial page case:
-
-xfs_filemap_fault:    dev 259:1 ino 0x43  write_fault 0
-xfs_vm_readpage:      dev 259:1 ino 0x43 nr_pages 1
-xfs_iomap_found:      dev 259:1 ino 0x43 size 0x2cc00 offset 0x2c000 count 4096 type hole startoff 0xb0 startblock 282 blockcount 0x4
-iomap_readpage_actor: orig pos 180224 pos 181248, length 4096, poff 1024 plen 2048, isize 183296
-xfs_iomap_found:      dev 259:1 ino 0x43 size 0x2cc00 offset 0x2cc00 count 1024 type hole startoff 0xb3 startblock 285 blockcount 0x1
-iomap_readpage_actor: orig pos 183296 pos 183296, length 1024, poff 3072 plen 1024, isize 183296
-
-Heere we see a trace where the first block on the EOF page is up to
-date, hence poff = 1024 bytes. The offset into the page of EOF is
-3072, so the range we want to read is 1024 - 3071, and the range we
-want to zero is 3072 - 4095. You can see this is split correctly
-now.
-
-This fixes the stale data beyond EOF problem that fsx quickly
-uncovers on 1k block size filesystems.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/iomap.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/fs/iomap.c b/fs/iomap.c
-index 0ff0f8ca3b197..caa45f73967cf 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -150,13 +150,14 @@ static void
- iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 		loff_t *pos, loff_t length, unsigned *offp, unsigned *lenp)
- {
-+	loff_t orig_pos = *pos;
-+	loff_t isize = i_size_read(inode);
- 	unsigned block_bits = inode->i_blkbits;
- 	unsigned block_size = (1 << block_bits);
- 	unsigned poff = offset_in_page(*pos);
- 	unsigned plen = min_t(loff_t, PAGE_SIZE - poff, length);
- 	unsigned first = poff >> block_bits;
- 	unsigned last = (poff + plen - 1) >> block_bits;
--	unsigned end = offset_in_page(i_size_read(inode)) >> block_bits;
- 
- 	/*
- 	 * If the block size is smaller than the page size we need to check the
-@@ -191,8 +192,12 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
- 	 * handle both halves separately so that we properly zero data in the
- 	 * page cache for blocks that are entirely outside of i_size.
- 	 */
--	if (first <= end && last > end)
--		plen -= (last - end) * block_size;
-+	if (orig_pos <= isize && orig_pos + length > isize) {
-+		unsigned end = offset_in_page(isize - 1) >> block_bits;
-+
-+		if (first <= end && last > end)
-+			plen -= (last - end) * block_size;
-+	}
- 
- 	*offp = poff;
- 	*lenp = plen;
--- 
-2.20.1
+Mathieu
 
 
+>=20
+> diff --git a/tools/testing/selftests/rseq/param_test.c
+> b/tools/testing/selftests/rseq/param_test.c
+> index eec2663261f2..18a0fa1235a7 100644
+> --- a/tools/testing/selftests/rseq/param_test.c
+> +++ b/tools/testing/selftests/rseq/param_test.c
+> @@ -15,11 +15,6 @@
+>  #include <errno.h>
+>  #include <stddef.h>
+>=20
+> -static inline pid_t gettid(void)
+> -{
+> -       return syscall(__NR_gettid);
+> -}
+> -
+>=20
+> thanks,
+> -- Shuah
 
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
