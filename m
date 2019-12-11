@@ -2,97 +2,165 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A495C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A498C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172172073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01EB82077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388363AbfLKQBv (ORCPT
+        id S1731001AbfLKQBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:51 -0500
-Received: from mga02.intel.com ([134.134.136.20]:18942 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732868AbfLKQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:01:42 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 08:01:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="296287348"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 11 Dec 2019 08:01:40 -0800
-Date:   Wed, 11 Dec 2019 08:01:40 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 0/6] Fix various comment errors
-Message-ID: <20191211160140.GC5044@linux.intel.com>
-References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+        Wed, 11 Dec 2019 11:01:54 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:45809 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731411AbfLKQBt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:01:49 -0500
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <cascardo@canonical.com>)
+        id 1if4Ql-00025a-M4; Wed, 11 Dec 2019 16:01:40 +0000
+Date:   Wed, 11 Dec 2019 13:01:33 -0300
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     Justin Forbes <jmforbes@linuxtx.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
+ recent binutils
+Message-ID: <20191211160133.GB4580@calabresa>
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+ <87zhgbe0ix.fsf@mpe.ellerman.id.au>
+ <20191202093752.GA1535@localhost.localdomain>
+ <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
+ <20191210222553.GA4580@calabresa>
+ <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:26:19PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
+On Wed, Dec 11, 2019 at 09:33:53AM -0600, Justin Forbes wrote:
+> On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
+> <cascardo@canonical.com> wrote:
+> >
+> > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
+> > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > > >
+> > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
+> > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
+> > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
+> > > > > > field when dumping the symbols of an object file. For example:
+> > > > > >
+> > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+> > > > > >
+> > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+> > > > > > be computed correctly and causes the checkabi target to fail.
+> > > > > >
+> > > > > > Fix that by looking for the symbol name in the last field instead of the
+> > > > > > 8th one. This way it should also cope with future extra fields.
+> > > > > >
+> > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> > > > > > ---
+> > > > > >  tools/lib/bpf/Makefile | 4 ++--
+> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > >
+> > > > > Thanks for fixing that, it's been on my very long list of test failures
+> > > > > for a while.
+> > > > >
+> > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+> > > >
+> > > > Looks good & also continues to work on x86. Applied, thanks!
+> > >
+> > > This actually seems to break horribly on PPC64le with binutils 2.33.1
+> > > resulting in:
+> > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
+> > > match with num of versioned symbols in libbpf.so (184). Please make
+> > > sure all LIBBPF_API symbols are versioned in libbpf.map.
+> > >
+> > > This is the only arch that fails, with x86/arm/aarch64/s390 all
+> > > building fine.  Reverting this patch allows successful build across
+> > > all arches.
+> > >
+> > > Justin
+> >
+> > Well, I ended up debugging this same issue and had the same fix as Jarno's when
+> > I noticed his fix was already applied.
+> >
+> > I just installed a system with the latest binutils, 2.33.1, and it still breaks
+> > without such fix. Can you tell what is the output of the following command on
+> > your system?
+> >
+> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
+> >
 > 
-> Fix various comment mistakes, such as typo, grammar mistake, out-dated
-> function name, writing error and so on. It is a bit tedious and many
-> thanks for review in advance.
-> 
-> Miaohe Lin (6):
->   KVM: Fix some wrong function names in comment
->   KVM: Fix some out-dated function names in comment
->   KVM: Fix some comment typos and missing parentheses
->   KVM: Fix some grammar mistakes
->   KVM: hyperv: Fix some typos in vcpu unimpl info
->   KVM: Fix some writing mistakes
+> readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
+> -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
+> !/UND/ {print $0}'
+>    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1
+> libbpf_num_possible_cpus [<localentry>: 8]
+>    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free
+> [<localentry>: 8]
+[...]
 
-Regarding the patch organizing, I'd probably group the comment changes
-based on what files they touch as opposed to what type of comment issue
-they're fixing.
+This is a patch on binutils carried by Fedora:
 
-E.g. three patches for the comments
+https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
 
-   KVM: VMX: Fix comment blah blah blah
-   KVM: x86: Fix comment blah blah blah
-   KVM: Fix comment blah blah blah
+" b8265c Have readelf display extra symbol information at the end of the line. "
 
-and one patch for the print typo in hyperv
+It has the following comment:
 
-   KVM: hyperv: Fix some typos in vcpu unimpl info
+# FIXME:    The proper fix would be to update the scripts that are expecting
+#           a fixed output from readelf.  But it seems that some of them are
+#           no longer being maintained.
 
-For KVM, the splits don't matter _that_ much since they more or less all
-get routed through the maintainers/reviewers, but it is nice when patches
-can be contained to specific subsystems/areas as it allows people to easily
-skip over patches that aren't relevant to them.
+This commit is from 2017, had it been on binutils upstream, maybe the situation
+right now would be different.
 
->  arch/x86/include/asm/kvm_host.h       | 2 +-
->  arch/x86/kvm/hyperv.c                 | 6 +++---
->  arch/x86/kvm/ioapic.c                 | 2 +-
->  arch/x86/kvm/lapic.c                  | 4 ++--
->  arch/x86/kvm/vmx/nested.c             | 2 +-
->  arch/x86/kvm/vmx/vmcs_shadow_fields.h | 4 ++--
->  arch/x86/kvm/vmx/vmx.c                | 8 ++++----
->  virt/kvm/kvm_main.c                   | 6 +++---
->  8 files changed, 17 insertions(+), 17 deletions(-)
-> 
-> -- 
-> 2.19.1
-> 
+Honestly, it seems the best way out is to filter the other information in the
+libbpf Makefile.
+
+Does the following patch work for you?
+
+
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 56ce6292071b..e6f99484d7d5 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -145,6 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
+ 
+ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+ 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
++			   sed 's/\[.*\]//' | \
+ 			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
+ 			   sort -u | wc -l)
+ VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+@@ -217,6 +218,7 @@ check_abi: $(OUTPUT)libbpf.so
+ 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf-in.o |		 \
+ 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
++		    sed 's/\[.*\]//' |					 \
+ 		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
+ 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+ 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
