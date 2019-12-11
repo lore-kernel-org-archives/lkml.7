@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB94C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E773E2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C6C2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079804;
-	bh=MMmOfzQAQPd+qex/oNeLOW3iayXwmQcSaN9IFAFG1IU=;
+	s=default; t=1576079806;
+	bh=ATBWun4wWF0hfWPoCuDAJUpd6PpKWorGF7fWEHv5zi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dbo+JhtS8qsnZ1TAk2+ezryuHmLFJMDdP3Zr5f87sHryjHYn45pkhQSS0uwCiDCWa
-	 VRnsDUbU1ghVnfCri+p16/8btQ9elAmQZJAwKfiLnMYmepbbHQGpgkmmt1zA64jTJb
-	 AhB6ZRCJ3Ss0/xTFD8lIGRztAHe6lOjiV52E/Rb0=
+	b=wa0aC7hSIlHbV66U706wurc9Ifhp04U16lV2winIxpEYBZQmN9d/rzvnufZr8puAL
+	 LBEa4ab7RibFJGCrmUCI6O74fSSqtmUo4Eh8Q3TLUqNtu0Ln4PaubPjWMCb4c84eZa
+	 RkL2ZBQjFxc7f3dMQMq3uCm5DdPYVif6Fp/xO2gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfLKP4m (ORCPT
+        id S1731760AbfLKPPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:56:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41518 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730487AbfLKPPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:15:24 -0500
+        id S1730534AbfLKPOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD122465C;
-        Wed, 11 Dec 2019 15:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 835942465B;
+        Wed, 11 Dec 2019 15:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077323;
-        bh=MMmOfzQAQPd+qex/oNeLOW3iayXwmQcSaN9IFAFG1IU=;
+        s=default; t=1576077258;
+        bh=ATBWun4wWF0hfWPoCuDAJUpd6PpKWorGF7fWEHv5zi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aoSz32+oRPqhXmmvDwxjlwxRAZchD+WAoTUQGkCBYL5Fr1QI47KM+iM+IZ36t4dG5
-         l8rY+LxTAFsozugaRWThiZpnBrl+nCceVguhQ63Fd0O/9J+cbtn2SXH70R+ks6nhPI
-         vUZ7O4Yf4hhnE0X6eSW50/6UXTd9QAjDhEqX5qvk=
+        b=LDB38Z+H8y9cFq6GBgIjtkvw0ekc8yXfBr/5Oqopq36CGvP9Aj3QrOoyHP/hyGaRI
+         fli3aoSz4Y1cECluJSffgNvlW8P1nd/Ha4N10UkU+Y1Bzfov6hN44rYBiSZuslv1MY
+         gmZtIByaYyYJXNg8LPC3ArqS5Vq0A5JDng/mPxdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Or Cohen <orcohen@paloaltonetworks.com>,
-        Nicolas Pitre <npitre@baylibre.com>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH 5.3 102/105] vcs: prevent write access to vcsu devices
-Date:   Wed, 11 Dec 2019 16:06:31 +0100
-Message-Id: <20191211150304.160317023@linuxfoundation.org>
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.3 075/105] arm64: dts: exynos: Revert "Remove unneeded address space mapping for soc node"
+Date:   Wed, 11 Dec 2019 16:06:04 +0100
+Message-Id: <20191211150253.971364995@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -60,38 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Pitre <nico@fluxnic.net>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 0c9acb1af77a3cb8707e43f45b72c95266903cee upstream.
+commit bed903167ae5b5532eda5d7db26de451bd232da5 upstream.
 
-Commit d21b0be246bf ("vt: introduce unicode mode for /dev/vcs") guarded
-against using devices containing attributes as this is not yet
-implemented. It however failed to guard against writes to any devices
-as this is also unimplemented.
+Commit ef72171b3621 ("arm64: dts: exynos: Remove unneeded address space
+mapping for soc node") changed the address and size cells in root node from
+2 to 1, but /memory nodes for the affected boards were not updated. This
+went unnoticed on Exynos5433-based TM2(e) boards, because they use u-boot,
+which updates /memory node to the correct values. On the other hand, the
+mentioned commit broke boot on Exynos7-based Espresso board, which
+bootloader doesn't touch /memory node at all.
 
-Reported-by: Or Cohen <orcohen@paloaltonetworks.com>
-Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-Cc: <stable@vger.kernel.org> # v4.19+
-Cc: Jiri Slaby <jslaby@suse.com>
-Fixes: d21b0be246bf ("vt: introduce unicode mode for /dev/vcs")
-Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr
+This patch reverts commit ef72171b3621 ("arm64: dts: exynos: Remove
+unneeded address space mapping for soc node"), so Exynos5433 and Exynos7
+SoCs again matches other ARM64 platforms with 64bit mappings in root
+node.
+
+Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
+Fixes: ef72171b3621 ("arm64: dts: exynos: Remove unneeded address space mapping for soc node")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: <stable@vger.kernel.org> # 5.3.x: 72ddcf6aa224 arm64: dts: exynos: Move GPU under /soc node for Exynos5433
+Cc: <stable@vger.kernel.org> # 5.3.x: ede87c3a2bdb arm64: dts: exynos: Move GPU under /soc node for Exynos7
+Cc: <stable@vger.kernel.org> # 4.18.x
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vc_screen.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi |    6 +++---
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    |    6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -456,6 +456,9 @@ vcs_write(struct file *file, const char
- 	size_t ret;
- 	char *con_buf;
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -18,8 +18,8 @@
  
-+	if (use_unicode(inode))
-+		return -EOPNOTSUPP;
-+
- 	con_buf = (char *) __get_free_page(GFP_KERNEL);
- 	if (!con_buf)
- 		return -ENOMEM;
+ / {
+ 	compatible = "samsung,exynos5433";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 
+ 	interrupt-parent = <&gic>;
+ 
+@@ -311,7 +311,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges;
++		ranges = <0x0 0x0 0x0 0x18000000>;
+ 
+ 		chipid@10000000 {
+ 			compatible = "samsung,exynos4210-chipid";
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -12,8 +12,8 @@
+ / {
+ 	compatible = "samsung,exynos7";
+ 	interrupt-parent = <&gic>;
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 
+ 	aliases {
+ 		pinctrl0 = &pinctrl_alive;
+@@ -98,7 +98,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges;
++		ranges = <0 0 0 0x18000000>;
+ 
+ 		chipid@10000000 {
+ 			compatible = "samsung,exynos4210-chipid";
 
 
