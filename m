@@ -2,101 +2,123 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0D8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A876C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C449C2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE05C2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZlQJFkn9"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="LEw3E0wq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388852AbfLKQDt (ORCPT
+        id S2388856AbfLKQEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:03:49 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:47730 "EHLO vps0.lunn.ch"
+        Wed, 11 Dec 2019 11:04:00 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:17810 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388821AbfLKQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:03:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=JC7q0sPt/GRGBIf2Uf74AucDMKhObwoznRVXHT//S3Q=; b=ZlQJFkn9tJIjt29SdqX1PpHMRK
-        pTityYajvTA/tvyRey6gPYVYmEMxu+G/zBPejLTSbFE2Gk7trOW6/vtgjB2OYyQNsFRHWIlhLGhAt
-        8vM8PVrbairl+z8kzRcI2CVzx2R/PJ4fLSR6P9XQMuonoOFZfQ+VuhuGKM3oVwbJLIFk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1if4SP-0005m0-6C; Wed, 11 Dec 2019 17:03:21 +0100
-Date:   Wed, 11 Dec 2019 17:03:21 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Chng, Jack Ping" <jack.ping.chng@linux.intel.com>,
-        devel@driverdev.osuosl.org, cheol.yong.kim@intel.com,
-        andriy.shevchenko@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mallikarjunax.reddy@linux.intel.com,
-        davem@davemloft.net
-Subject: Re: FW: [PATCH v2] staging: intel-gwdpa: gswip: Introduce Gigabit
- Ethernet Switch (GSWIP) device driver
-Message-ID: <20191211160321.GA21225@lunn.ch>
-References: <5f85180573a3fb20238d6a340cdd990f140ed6f0.1576054234.git.jack.ping.chng@intel.com>
- <20191211092738.GA505511@kroah.com>
- <BYAPR11MB317606F8BE2B60C4BAD872F1DE5A0@BYAPR11MB3176.namprd11.prod.outlook.com>
- <c26e56cf-eb04-5992-252a-e66f6029d6ac@linux.intel.com>
- <20191211121724.GA514307@kroah.com>
+        id S2388809AbfLKQD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:03:28 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Y1tj1TTTzwT;
+        Wed, 11 Dec 2019 17:03:25 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1576080205; bh=Oy1VvPQHyP5QeFjH7svcEiAPSnLBrr+l7IoFFshlf3Y=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=LEw3E0wqPNydVX/ZrXBs0IBb9pg5KK3a+T+LbXtW5igMe6IBi+K1bq4hXsIg21AUm
+         VODV0aAF98Cwgb+g3cRWn7SjOOBlLp7+Wz2wxVk3AQWzXUEzu05I2LkKa+Y3CTQcVA
+         c5l8vPZsbrAtk9GXRrjhi43kzavr7vpp0RM99Axxu3mA3unVnaeAFwHSE6QhD9J6Xb
+         ku4J5dYV7/HsJX+C4iVeEwzmuv/xH0Rk5WEOzCp0SI8mNjwM/kbs5gL8GCSoX/R8E0
+         zN6wJyZgwjVjexs0VOt0eX800yb4GER2OV5aZhjHEae11QUMoanFZJOK0Jplz5+8Vi
+         6AHpepuqnm5zw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Wed, 11 Dec 2019 17:03:24 +0100
+Message-Id: <fb5d7ea800dbbd908ff5a497bb02055ab7fe7ea8.1576079249.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 7/9] input: elants: support 0x66 reply opcode for reporting
+ touches
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211121724.GA514307@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > We are trying to upstream the datapath code for Intel new NoC gateway
-> > (please refer to intel-gwdpa.txt at the end of the patch). It consists of
-> > ethernet, WIFI and passive optics handling. Since the code is quite huge, we
-> > have broken it into parts for internal review.
-> > 
-> > As we have seen past upstream example such as fsl/dpaa, we thought that it
-> > is better for us to start the upstreaming of the driver into staging folder
-> > to get feedback from the community.
-> > 
-> > Is this the right approach? Or do we upstream all the drivers into
-> > drivers/soc folder when we have all the drivers ready?
-> 
-> Why is drivers/soc/ the place to put networking drivers?
-> 
-> Please please please work with the Intel Linux kernel developers who
-> know how to do this type of thing and do not require the kernel
-> community to teach you all the proper development model and methods
-> here.
+From: Dmitry Osipenko <digetx@gmail.com>
 
-I see a lot in common with dpaa2 here. You have a non traditional
-hardware architecture. That means it does not nicely fit into the tree
-as other drivers do.
+eKTF3624 touchscreen firmware uses two variants of the reply opcodes for
+reporting touch events: one is 0x63 (used by older firmware) and other is
+0x66 (used by newer firmware). The 0x66 variant is equal to 0x63 of
+eKTH3500, while 0x63 needs small adjustment of the touch pressure value.
 
-There also appears to of been a huge amount of code development behind
-closed doors, same as dpaa2. And because of the non traditional
-architecture, you have had to make all sorts of design decisions. And
-because that happened behind closed door, i'm sure some are
-wrong. dpaa2 has been in staging for around 2 1/2 years now. It takes
-that amount of time to discuss how non traditional hardware should be
-supported in Linux, an re-write the drivers as needed because of the
-wrong design decisions.
+Nexus 7 tablet device has eKTF3624 touchscreen and it uses 0x66 opcode for
+reporting touch events, let's support it now. Other devices, eg. ASUS TF300T,
+use 0x63.
 
-I kind of expect you are going to have a similar experience. So as
-well as getting the Intel Linux kernel developers involved for process
-and architecture support, you might want to look at how the dpaa2
-drivers have evolved, what they got wrong, what they got right. How is
-your hardware similar and different. And look at what parts of dpaa2
-have moved out of staging, and maybe consider that code as a good
-model to follow.
+Note: CMD_HEADER_REK is used for replying to calibration requests, it has
+the same 0x66 opcode number which eKTF3624 uses for reporting touches.
+The calibration replies are handled separately from the the rest of the
+commands in the driver by entering into ELAN_WAIT_RECALIBRATION state
+and thus this change shouldn't change the old behavior.
 
-      Andrew
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index 1c3eb49a22e4..d750eb97c912 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -60,6 +60,15 @@
+ #define QUEUE_HEADER_NORMAL	0X63
+ #define QUEUE_HEADER_WAIT	0x64
+ 
++/*
++ * Depending on firmware version, eKTF3624 touchscreens may utilize one of
++ * these opcodes for the touch events: 0x63 and 0x66. The 0x63 is used by
++ * older firmware version and differs from 0x66 such that touch pressure
++ * value needs to be adjusted. The 0x66 opcode of newer firmware is equal
++ * to 0x63 of eKTH3500.
++ */
++#define QUEUE_HEADER_NORMAL2	0x66
++
+ /* Command header definition */
+ #define CMD_HEADER_WRITE	0x54
+ #define CMD_HEADER_READ		0x53
+@@ -990,7 +999,6 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+ 		switch (ts->buf[FW_HDR_TYPE]) {
+ 		case CMD_HEADER_HELLO:
+ 		case CMD_HEADER_RESP:
+-		case CMD_HEADER_REK:
+ 			break;
+ 
+ 		case QUEUE_HEADER_WAIT:
+@@ -1010,6 +1018,7 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+ 			break;
+ 
+ 		case QUEUE_HEADER_NORMAL:
++		case QUEUE_HEADER_NORMAL2:
+ 			report_count = ts->buf[FW_HDR_COUNT];
+ 			if (report_count == 0 || report_count > 3) {
+ 				dev_err(&client->dev,
+-- 
+2.20.1
+
