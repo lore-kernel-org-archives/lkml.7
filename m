@@ -2,124 +2,132 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27FDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6316BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A972077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34EF920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079999;
-	bh=BZ0oz8NjKl7UrehNzTIeGh2lJAIqcAF9T36DM21l1JA=;
+	s=default; t=1576080002;
+	bh=LGW7v87sNgdj7lp4cac8DXf/BuQaHXMOQQGoLFkmpZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0APxbekaJrNOVu9ZMjz/LI0X2CuBXiv7/jKh3OlmKSH0/rvsgs2G+Xv6sG2TqhTgd
-	 HsMZ16j0V/fsWwntkHPjNNARnsAJFkWOzwG5wxrhLnLS8a3ITOB+riJPkhoze0PMJe
-	 Pb3gE7UAnZbYK2vrHZ/fpXZ5ydzoTCrkTXth9bVE=
+	b=BrxyZiHIzcXOQqspu/PTeAWaVFVI8N73vuknTgNMO/JZg42h6UntNPzZPCESY7gPG
+	 uoEINST6BvpZqDiD3lIcWXc0fttIEQ6NlrGwc3Hq46EAbeyfwzJ+mYEhDOgySC5SYl
+	 dvUBU/0752ExcfxFSfSMerwhsoRN5KIl/y3T6Lf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbfLKPN5 (ORCPT
+        id S1731826AbfLKQAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36752 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:00:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731407AbfLKPNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731536AbfLKPN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E50C52467E;
-        Wed, 11 Dec 2019 15:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E948C24654;
+        Wed, 11 Dec 2019 15:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077202;
-        bh=BZ0oz8NjKl7UrehNzTIeGh2lJAIqcAF9T36DM21l1JA=;
+        s=default; t=1576077237;
+        bh=LGW7v87sNgdj7lp4cac8DXf/BuQaHXMOQQGoLFkmpZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luMowHQWyuxZ5H6or+1O9/X6HSoxVxA9AzhjWLue8/BSUpQw7A5GERGunsiJULyB8
-         WceqPf51itmbx4NaAWkN98kjrF8pRI/o8eNGEE5BOxaxwZdnzf2kul0ghJUE5U4Af2
-         oxU114/eBVNs/y3/bY1F6qXkNbz+U/lvsn4Fhdwo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 085/134] watchdog: aspeed: Fix clock behaviour for ast2600
-Date:   Wed, 11 Dec 2019 10:11:01 -0500
-Message-Id: <20191211151150.19073-85-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=ZKpPVzOo9XpfVsE460KoARdwU5mpvXWOcrRDZSEVflB3doKmuUBSj8lkcFxMHXrXg
+         cVzdxDW+8TRRgR+9godw0ZQWy+7PUV/9VT77+Dg5gTgZdfoGP32z161OCReL1ipU9b
+         od0hKycPVJUMrG7p8bH+L2aUqocWzeMh6sfTDdnc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 5.3 068/105] nfsd: Ensure CLONE persists data and metadata changes to the target file
+Date:   Wed, 11 Dec 2019 16:05:57 +0100
+Message-Id: <20191211150249.287893236@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Trond Myklebust <trondmy@gmail.com>
 
-[ Upstream commit c04571251b3d842096f1597f5d4badb508be016d ]
+commit a25e3726b32c746c0098125d4c7463bb84df72bb upstream.
 
-The ast2600 no longer uses bit 4 in the control register to indicate a
-1MHz clock (It now controls whether this watchdog is reset by a SOC
-reset). This means we do not want to set it. It also does not need to be
-set for the ast2500, as it is read-only on that SoC.
+The NFSv4.2 CLONE operation has implicit persistence requirements on the
+target file, since there is no protocol requirement that the client issue
+a separate operation to persist data.
+For that reason, we should call vfs_fsync_range() on the destination file
+after a successful call to vfs_clone_file_range().
 
-The comment next to the clock rate selection wandered away from where it
-was set, so put it back next to the register setting it's describing.
+Fixes: ffa0160a1039 ("nfsd: implement the NFSv4.2 CLONE operation")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.5+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191108032905.22463-1-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ fs/nfsd/nfs4proc.c |    3 ++-
+ fs/nfsd/vfs.c      |    8 +++++++-
+ fs/nfsd/vfs.h      |    2 +-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index 4ec0906bf12c0..7e00960651fa2 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -258,11 +258,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(wdt->base))
- 		return PTR_ERR(wdt->base);
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1083,7 +1083,8 @@ nfsd4_clone(struct svc_rqst *rqstp, stru
+ 		goto out;
  
--	/*
--	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
--	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
--	 * good reason to have a faster watchdog counter.
--	 */
- 	wdt->wdd.info = &aspeed_wdt_info;
- 	wdt->wdd.ops = &aspeed_wdt_ops;
- 	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
-@@ -278,7 +273,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	config = ofdid->data;
+ 	status = nfsd4_clone_file_range(src, clone->cl_src_pos,
+-			dst, clone->cl_dst_pos, clone->cl_count);
++			dst, clone->cl_dst_pos, clone->cl_count,
++			EX_ISSYNC(cstate->current_fh.fh_export));
  
--	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-+	/*
-+	 * On clock rates:
-+	 *  - ast2400 wdt can run at PCLK, or 1MHz
-+	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
-+	 *  - ast2600 always runs at 1MHz
-+	 *
-+	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
-+	 */
-+	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
-+		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+ 	fput(dst);
+ 	fput(src);
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -552,7 +552,7 @@ __be32 nfsd4_set_nfs4_label(struct svc_r
+ #endif
  
- 	/*
- 	 * Control reset on a per-device basis to ensure the
--- 
-2.20.1
+ __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
+-		u64 dst_pos, u64 count)
++		u64 dst_pos, u64 count, bool sync)
+ {
+ 	loff_t cloned;
+ 
+@@ -561,6 +561,12 @@ __be32 nfsd4_clone_file_range(struct fil
+ 		return nfserrno(cloned);
+ 	if (count && cloned != count)
+ 		return nfserrno(-EINVAL);
++	if (sync) {
++		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
++		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
++		if (status < 0)
++			return nfserrno(status);
++	}
+ 	return 0;
+ }
+ 
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -58,7 +58,7 @@ __be32          nfsd4_set_nfs4_label(str
+ __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
+ 				    struct file *, loff_t, loff_t, int);
+ __be32		nfsd4_clone_file_range(struct file *, u64, struct file *,
+-			u64, u64);
++				       u64, u64, bool);
+ #endif /* CONFIG_NFSD_V4 */
+ __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
+ 				char *name, int len, struct iattr *attrs,
+
 
