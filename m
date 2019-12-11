@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB386C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15BDCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0432073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF41F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079633;
-	bh=oi0NwHz/0+UXCaZM5CXMYdplOMcRs9ZrS4m8zdYsDv0=;
+	s=default; t=1576079635;
+	bh=TX4FmDy6FGqSKw79Fi5w489FdgHCSPOAkTHpnI2sr2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLybLwLlvLfMZ4cEwrG6bRP9RoJHYGDKOSEqn0eseyBmHTy7GHHnRBcDv/ExcAHQb
-	 xkxj0+J8V4YPSkarHSuEe/ABqaq1RNcJh7EnkIiUd0Q5/EJxpM4HVliAX4GddGgZIY
-	 41KAfYt9RfmI5TnDEiLVJvPPxn2n94B6qpOCtuD0=
+	b=Vw6zVVTDOh5II/VieeM1YZ16n5ZqhBKeQrU3LlhtKtH7fuQ8v3eXX1INCxleusk9S
+	 ZX47+n0mnX+0p6Lu18Gn7Hot63/hA9aetVGSKqF+4SDXuPRPHnINhSS5bDOa9uKlnY
+	 tankQPc3BxS6u4DKIdBCz60ggCavu4cpFgzIIiWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731391AbfLKPSg (ORCPT
+        id S1732875AbfLKPxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46488 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:53:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731859AbfLKPS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:28 -0500
+        id S1732136AbfLKPSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A7E422527;
-        Wed, 11 Dec 2019 15:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA24B208C3;
+        Wed, 11 Dec 2019 15:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077508;
-        bh=oi0NwHz/0+UXCaZM5CXMYdplOMcRs9ZrS4m8zdYsDv0=;
+        s=default; t=1576077516;
+        bh=TX4FmDy6FGqSKw79Fi5w489FdgHCSPOAkTHpnI2sr2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YG8pZxX478TdQet0bxu6/vhNQeQjJd7J2einetm+YtO68+/tKut9A0WqVOKZ1DLGa
-         dip1NQ1JPYj5JzAMA0FpLcYdu7FxVxoJDxsxRhdM+l7INhgMGA7HkzGTJxSSVDpBWK
-         YrLtCCaVzBjYJ6SUPZ9NU7rLX5a/N4Rq4QEIvBws=
+        b=NlDHW6eFutFr8PxejHfQ0Q2rjkkeTlHg0EJRE7QtLXp95bGKSJSMxFLx9RbbXEY5J
+         Ym7mgVtPB7Ocv2fAndf7T4E9/rw55VqknnqiYCZR8lMMtqQTzpu6jJcCPvYTiLWWKT
+         +X1CPVO/zr+d+nDcl4P2QVh1M5WbjInMQw35QjlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Janne Huttunen <janne.huttunen@nokia.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/243] mm/vmstat.c: fix NUMA statistics updates
-Date:   Wed, 11 Dec 2019 16:03:46 +0100
-Message-Id: <20191211150343.419011891@linuxfoundation.org>
+Subject: [PATCH 4.19 031/243] iwlwifi: mvm: Send non offchannel traffic via AP sta
+Date:   Wed, 11 Dec 2019 16:03:13 +0100
+Message-Id: <20191211150341.374992328@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,53 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janne Huttunen <janne.huttunen@nokia.com>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 13c9aaf7fa01cc7600c61981609feadeef3354ec ]
+[ Upstream commit dc1aca22f8f38b7e2ad7b118db87404d11e68771 ]
 
-Scan through the whole array to see if an update is needed.  While we're
-at it, use sizeof() to be safe against any possible type changes in the
-future.
+TDLS discovery response frame is a unicast direct frame to the peer.
+Since we don't have a STA for this peer, this frame goes through
+iwl_tx_skb_non_sta(). As the result aux_sta and some completely
+arbitrary queue would be selected for this frame, resulting in a queue
+hang.  Fix that by sending such frames through AP sta instead.
 
-The bug here is that we wouldn't sync per-cpu counters into global ones
-if there was an update of numa_stats for higher cpus.  Highly
-theoretical one though because it is much more probable that zone_stats
-are updated so we would refresh anyway.  So I wouldn't bother to mark
-this for stable, yet something nice to fix.
-
-[mhocko@suse.com: changelog enhancement]
-Link: http://lkml.kernel.org/r/1541601517-17282-1-git-send-email-janne.huttunen@nokia.com
-Fixes: 1d90ca897cb0 ("mm: update NUMA counter threshold size")
-Signed-off-by: Janne Huttunen <janne.huttunen@nokia.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmstat.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index a2b2ea786c9b2..ce81b0a7d0186 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1826,12 +1826,13 @@ static bool need_update(int cpu)
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+index 0f357e8c4f940..476c44db0e64b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c
+@@ -820,6 +820,21 @@ static void iwl_mvm_mac_tx(struct ieee80211_hw *hw,
+ 	    !ieee80211_is_bufferable_mmpdu(hdr->frame_control))
+ 		sta = NULL;
  
- 		/*
- 		 * The fast way of checking if there are any vmstat diffs.
--		 * This works because the diffs are byte sized items.
- 		 */
--		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS))
-+		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS *
-+			       sizeof(p->vm_stat_diff[0])))
- 			return true;
- #ifdef CONFIG_NUMA
--		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS))
-+		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS *
-+			       sizeof(p->vm_numa_stat_diff[0])))
- 			return true;
- #endif
- 	}
++	/* If there is no sta, and it's not offchannel - send through AP */
++	if (info->control.vif->type == NL80211_IFTYPE_STATION &&
++	    info->hw_queue != IWL_MVM_OFFCHANNEL_QUEUE && !sta) {
++		struct iwl_mvm_vif *mvmvif =
++			iwl_mvm_vif_from_mac80211(info->control.vif);
++		u8 ap_sta_id = READ_ONCE(mvmvif->ap_sta_id);
++
++		if (ap_sta_id < IWL_MVM_STATION_COUNT) {
++			/* mac80211 holds rcu read lock */
++			sta = rcu_dereference(mvm->fw_id_to_mac_id[ap_sta_id]);
++			if (IS_ERR_OR_NULL(sta))
++				goto drop;
++		}
++	}
++
+ 	if (sta) {
+ 		if (iwl_mvm_defer_tx(mvm, sta, skb))
+ 			return;
 -- 
 2.20.1
 
