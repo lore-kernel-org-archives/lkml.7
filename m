@@ -2,156 +2,102 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F3C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930E7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD7024685
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B12924654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077217;
-	bh=sThiPnci4T/GbAaieAjV2/NYiH/63xnXFMXZsH0FKeo=;
+	s=default; t=1576077227;
+	bh=aHg8pTeJxTgKJijpf2cEEJRvzMiodnvZkagbclORluA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzmgp3/aYC+D5uAdGS2ox8BOmAQUdkrLyteIOurStemDuPHWMjbnJY5zJ2e5CwYFR
-	 rj7S5O9GF8CXdGna2RjI5f4LET6nMGU1MqsFdZmxV8E+r/WNohfMtoQr6z7LZcw5Gk
-	 O3SmwMVwcYCTxluP7AebLgwCB26gpTs5BuVlIYjs=
+	b=Xdh320MnGiJuDK60IFtZbhOrCHtuYSIPybZXn4dVaiAUyaLMZ0+JWQMl3wFbZJe3X
+	 YOu6hxNZD7+eX0K0aSp9rz+akmKpq+NA7trns1xcSipvTiqS+eV3MgjCZbhkHw9CJM
+	 FDRv4WluGAxPQq2FH9R3IwwLFO7+pgS0xT6W/FKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731460AbfLKPNh (ORCPT
+        id S1731499AbfLKPNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731387AbfLKPNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731393AbfLKPNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:21 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 653B724680;
-        Wed, 11 Dec 2019 15:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C54812464B;
+        Wed, 11 Dec 2019 15:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077197;
-        bh=sThiPnci4T/GbAaieAjV2/NYiH/63xnXFMXZsH0FKeo=;
+        s=default; t=1576077200;
+        bh=aHg8pTeJxTgKJijpf2cEEJRvzMiodnvZkagbclORluA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k4sMYHp7P0r44rpgps5C3EcaXNGIIGr6pFKX4J2Gzog35LTGczs6MpiircHOSPHxv
-         7tSMpqtufBUIMk9Opg4VLDcHvepiiS9iaeXurgR13CY+zJ3OU2RrgMi4p8xsLdG3A+
-         VKdBP7eKEnJO6yMKGlzuuqHWPyj70/7YPlfiFZl0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 054/105] ALSA: hda: Modify stream stripe mask only when needed
-Date:   Wed, 11 Dec 2019 16:05:43 +0100
-Message-Id: <20191211150242.706861940@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=xFz2LROsV3KCaQ8m/N3RoFs4KbNVHCiHb5/UgtrPSJ6dk72HWdQZ9iCpSsTpD+Qwp
+         M5kXne7UUmAMnccZpGQDrJECR5uZUFtYAJOQ/XLohv5I2rcryemngZ3R5hpnMvQBkW
+         ISU+/W1OWRTr5T4QitVQ9lS85bfZss2HaERJ+nOk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Andrew Duggan <aduggan@synaptics.com>,
+        Federico Cerutti <federico@ceres-c.it>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 083/134] HID: rmi: Check that the RMI_STARTED bit is set before unregistering the RMI transport device
+Date:   Wed, 11 Dec 2019 10:10:59 -0500
+Message-Id: <20191211151150.19073-83-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Andrew Duggan <aduggan@synaptics.com>
 
-commit e38e486d66e2a3b902768fd71c32dbf10f77e1cb upstream.
+[ Upstream commit 8725aa4fa7ded30211ebd28bb1c9bae806eb3841 ]
 
-The recent commit in HD-audio stream management for changing the
-stripe control seems causing a regression on some platforms.  The
-stripe control is currently used only by HDMI codec, and applying the
-stripe mask unconditionally may lead to scratchy and static noises as
-seen on some MacBooks.
+In the event that the RMI device is unreachable, the calls to rmi_set_mode() or
+rmi_set_page() will fail before registering the RMI transport device. When the
+device is removed, rmi_remove() will call rmi_unregister_transport_device()
+which will attempt to access the rmi_dev pointer which was not set.
+This patch adds a check of the RMI_STARTED bit before calling
+rmi_unregister_transport_device().  The RMI_STARTED bit is only set
+after rmi_register_transport_device() completes successfully.
 
-For addressing the regression, this patch changes the stream
-management code to apply the stripe mask conditionally only when the
-codec driver requested.
+The kernel oops was reported in this message:
+https://www.spinics.net/lists/linux-input/msg58433.html
 
-Fixes: 9b6f7e7a296e ("ALSA: hda: program stripe bits for controller")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204477
-Tested-by: Michael Pobega <mpobega@neverware.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191202074947.1617-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[jkosina@suse.cz: reworded changelog as agreed with Andrew]
+Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+Reported-by: Federico Cerutti <federico@ceres-c.it>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/sound/hdaudio.h    |    1 +
- sound/hda/hdac_stream.c    |   19 ++++++++++++-------
- sound/pci/hda/patch_hdmi.c |    5 +++++
- 3 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/hid/hid-rmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/sound/hdaudio.h
-+++ b/include/sound/hdaudio.h
-@@ -504,6 +504,7 @@ struct hdac_stream {
- 	bool prepared:1;
- 	bool no_period_wakeup:1;
- 	bool locked:1;
-+	bool stripe:1;			/* apply stripe control */
+diff --git a/drivers/hid/hid-rmi.c b/drivers/hid/hid-rmi.c
+index 7c6abd7e09797..9ce22acdfaca2 100644
+--- a/drivers/hid/hid-rmi.c
++++ b/drivers/hid/hid-rmi.c
+@@ -744,7 +744,8 @@ static void rmi_remove(struct hid_device *hdev)
+ {
+ 	struct rmi_data *hdata = hid_get_drvdata(hdev);
  
- 	/* timestamp */
- 	unsigned long start_wallclk;	/* start + minimum wallclk */
---- a/sound/hda/hdac_stream.c
-+++ b/sound/hda/hdac_stream.c
-@@ -96,12 +96,14 @@ void snd_hdac_stream_start(struct hdac_s
- 			      1 << azx_dev->index,
- 			      1 << azx_dev->index);
- 	/* set stripe control */
--	if (azx_dev->substream)
--		stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
--	else
--		stripe_ctl = 0;
--	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
--				stripe_ctl);
-+	if (azx_dev->stripe) {
-+		if (azx_dev->substream)
-+			stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
-+		else
-+			stripe_ctl = 0;
-+		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
-+					stripe_ctl);
-+	}
- 	/* set DMA start and interrupt mask */
- 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
- 				0, SD_CTL_DMA_START | SD_INT_MASK);
-@@ -118,7 +120,10 @@ void snd_hdac_stream_clear(struct hdac_s
- 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
- 				SD_CTL_DMA_START | SD_INT_MASK, 0);
- 	snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK); /* to be sure */
--	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
-+	if (azx_dev->stripe) {
-+		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
-+		azx_dev->stripe = 0;
-+	}
- 	azx_dev->running = false;
- }
- EXPORT_SYMBOL_GPL(snd_hdac_stream_clear);
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -31,6 +31,7 @@
- #include <sound/hda_codec.h>
- #include "hda_local.h"
- #include "hda_jack.h"
-+#include "hda_controller.h"
- 
- static bool static_hdmi_pcm;
- module_param(static_hdmi_pcm, bool, 0644);
-@@ -1226,6 +1227,10 @@ static int hdmi_pcm_open(struct hda_pcm_
- 	per_pin->cvt_nid = per_cvt->cvt_nid;
- 	hinfo->nid = per_cvt->cvt_nid;
- 
-+	/* flip stripe flag for the assigned stream if supported */
-+	if (get_wcaps(codec, per_cvt->cvt_nid) & AC_WCAP_STRIPE)
-+		azx_stream(get_azx_dev(substream))->stripe = 1;
-+
- 	snd_hda_set_dev_select(codec, per_pin->pin_nid, per_pin->dev_id);
- 	snd_hda_codec_write_cache(codec, per_pin->pin_nid, 0,
- 			    AC_VERB_SET_CONNECT_SEL,
-
+-	if (hdata->device_flags & RMI_DEVICE) {
++	if ((hdata->device_flags & RMI_DEVICE)
++	    && test_bit(RMI_STARTED, &hdata->flags)) {
+ 		clear_bit(RMI_STARTED, &hdata->flags);
+ 		cancel_work_sync(&hdata->reset_work);
+ 		rmi_unregister_transport_device(&hdata->xport);
+-- 
+2.20.1
 
