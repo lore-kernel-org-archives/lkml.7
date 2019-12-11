@@ -2,94 +2,130 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFE4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7419C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E35224654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JQ+T1bbR"
+	by mail.kernel.org (Postfix) with ESMTP id A8D412077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576077890;
+	bh=+tUap1Kb/lal8rHG71c3bSLAIRXCJ/bSSaakJcTY2To=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dm9J4ba7/KSLffZfptb1UVHdZAw3n09E96+CpkTZ4E+sD0W3AyQSOAzJs9ZzeUsY1
+	 QxtCQUGf2blwq6uRLFF4rsVJGVoOL6lPHzq3ApLrHlwZGc1YIwUNGSLGpYDcIr3qP6
+	 EzY/WfwHM6v0qzggRCjTyOc0k4PIxoT89cbfVdpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732888AbfLKPYr (ORCPT
+        id S1732735AbfLKPYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46658 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732714AbfLKPYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lCtKLzzdaOAiKN6oGE3yx6uTT5U+M8wV3nEecLRcZL4=; b=JQ+T1bbRmiOoN11jYVC7+m0HU
-        JoyGLNA3Nzw1yp7vwy93I53nt5PqCLktzdgmHlodPSYRBP/HJ6z3hZMf9gWmZokOE8ltuaquR05Cz
-        mh7n3UdMKbcvok3uc+IYpnOsTzdHT+oK0Cd1IOXLrtnznq3i72h+XDgKNNEtH3YCHpyOVOGEeDSVU
-        ZdY9dzNbIkF61y5/Kk4IXcyJ3HLTVcH7P5y9SsVsWaaXMuCAN+eOPKnrHFlq5Io0xxz/FCzLFaC6z
-        Gmo6Eog8Rbc/geQNHiYrLw84TJkBbw71cV1QH/c9t6gRmbvzTmGk3mSeDv4a2Nq9zefrComnPIvZJ
-        LGByA1Pdw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if3qw-0001sp-5J; Wed, 11 Dec 2019 15:24:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 11 Dec 2019 10:24:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56170 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732876AbfLKPYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:44 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 56095306060;
-        Wed, 11 Dec 2019 16:23:15 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3BF3220137C8F; Wed, 11 Dec 2019 16:24:35 +0100 (CET)
-Date:   Wed, 11 Dec 2019 16:24:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>, elena.reshetova@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
- Perf users groups
-Message-ID: <20191211152435.GN2827@hirez.programming.kicks-ass.net>
-References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
- <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
- <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
- <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
- <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED0FC208C3;
+        Wed, 11 Dec 2019 15:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077883;
+        bh=+tUap1Kb/lal8rHG71c3bSLAIRXCJ/bSSaakJcTY2To=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ypNoi5fJkzQemzPtOwp2BRyYdtEWrX7TZyihQl1iVXxIrSuGOAIye6rZ+qZuY6UdM
+         IYecHrjCG2tsKxSsz1jmhKzpbEFZ8gbMxAjUIGq/PpVp6qp8hOMsuG4NFj9MkhU/sb
+         L8EOh+j9ut7e/9gZnyHfIDMpjUSlz0uhqvCPcBHY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 190/243] clk: renesas: rcar-gen3: Set state when registering SD clocks
+Date:   Wed, 11 Dec 2019 16:05:52 +0100
+Message-Id: <20191211150351.996407413@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:52:15PM +0300, Alexey Budankov wrote:
-> Undoubtedly, SELinux is the powerful, mature, whole level of functionality that
-> could provide benefits not only for perf_events subsystem. However perf_events
-> is built around capabilities to provide access control to its functionality,
-> thus perf_events would require considerable rework prior it could be controlled
-> thru SELinux. 
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-You mean this:
+[ Upstream commit ecda0a09fa9933bcd67e33c952f778f0872392ed ]
 
-  da97e18458fb ("perf_event: Add support for LSM and SELinux checks")
+The driver tries to figure out which state a SD clock is in when the
+clock is registered, instead of setting a known state. This can be
+problematic for two reasons.
 
-?
+1. If the clock driver can't figure out the state of the clock,
+   registration of the clock fails, and setting of a known state by a
+   clock user is not possible.
 
-> Then the adoption could also require changes to the installed
-> infrastructure just for the sake of adopting alternative access control mechanism.
+2. The state of the clock depends on if and how the bootloader
+   configured it. The driver only checks that the rate is known, not if
+   the clock is stopped or not for example.
 
-This is still very much true.
+Fix this by setting a known state and making sure the clock is stopped.
+
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/renesas/rcar-gen3-cpg.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/clk/renesas/rcar-gen3-cpg.c b/drivers/clk/renesas/rcar-gen3-cpg.c
+index 628b63b85d3f0..9ace7d39cd1b5 100644
+--- a/drivers/clk/renesas/rcar-gen3-cpg.c
++++ b/drivers/clk/renesas/rcar-gen3-cpg.c
+@@ -361,7 +361,7 @@ static struct clk * __init cpg_sd_clk_register(const struct cpg_core_clk *core,
+ 	struct sd_clock *clock;
+ 	struct clk *clk;
+ 	unsigned int i;
+-	u32 sd_fc;
++	u32 val;
+ 
+ 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
+ 	if (!clock)
+@@ -378,17 +378,9 @@ static struct clk * __init cpg_sd_clk_register(const struct cpg_core_clk *core,
+ 	clock->div_table = cpg_sd_div_table;
+ 	clock->div_num = ARRAY_SIZE(cpg_sd_div_table);
+ 
+-	sd_fc = readl(clock->csn.reg) & CPG_SD_FC_MASK;
+-	for (i = 0; i < clock->div_num; i++)
+-		if (sd_fc == (clock->div_table[i].val & CPG_SD_FC_MASK))
+-			break;
+-
+-	if (WARN_ON(i >= clock->div_num)) {
+-		kfree(clock);
+-		return ERR_PTR(-EINVAL);
+-	}
+-
+-	clock->cur_div_idx = i;
++	val = readl(clock->csn.reg) & ~CPG_SD_FC_MASK;
++	val |= CPG_SD_STP_MASK | (clock->div_table[0].val & CPG_SD_FC_MASK);
++	writel(val, clock->csn.reg);
+ 
+ 	clock->div_max = clock->div_table[0].div;
+ 	clock->div_min = clock->div_max;
+-- 
+2.20.1
+
+
+
