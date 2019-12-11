@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2A7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74275C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 349612073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4680120836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080286;
-	bh=KhsJlt8mJmKhtd62rZZlnvygPNnMkacTIfjNnVH+Zqo=;
+	s=default; t=1576080290;
+	bh=jfHW+7eSa8lBKY6GqNwLQXRRfJytTLOmmixQEGzxVZQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEDIx+3Y6cDbEryXGvwVUCXP6oiuxbFqZkGfE3yHf635w5Q15n6pKeX1BQX3lSCNx
-	 zgPx65rOTKJR/RJyRSwzXlsY2cNsMOId5tJyvYBCV5RQmEID3SANC+wFtxO9Xsm4WM
-	 jwiCy8wFl/+RUkz7wOpqbvh1CcfdHeLYLOeskie8=
+	b=XLuNC/vEg6SsrFjn2pKlBGPHj5FXEdtJsS8r4DuKxrJuYDEog9IQr/kM4kl++wPpu
+	 V+6yRW8IJOwjXAgyu+xOTauhkdjWqg/xaaSyf1UCpFI3W2XsWFhhlJKuZd7/+M2S/t
+	 +Uy2fkWaANWlhieZbLRle3BOLrmCa+yYgiwqDdiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbfLKPM7 (ORCPT
+        id S1733181AbfLKQEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34742 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:04:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbfLKPMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:40 -0500
+        id S1731286AbfLKPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6E262465E;
-        Wed, 11 Dec 2019 15:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 874A22465B;
+        Wed, 11 Dec 2019 15:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077159;
-        bh=KhsJlt8mJmKhtd62rZZlnvygPNnMkacTIfjNnVH+Zqo=;
+        s=default; t=1576077178;
+        bh=jfHW+7eSa8lBKY6GqNwLQXRRfJytTLOmmixQEGzxVZQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L/eth3NzEXp8Jn9p5ESnx1AYIKTLibV02Y4/2RkzRIyX8OJ19Y/wAzq9q04z7p6Ak
-         kEytisqzA3/5MUgNxiOUZqQgE25mZx5yRlK05NF7D/aGm7KRgFVPMwaQiSPrQ0PGFE
-         bmfZDM3cpIFBMIKuZQUVJR/RbUl2qJT+mWjYyu1c=
+        b=KMMooxCvrs1bj1vgzvj3ANqifVco5ltIrlhX4CsoRw8i0I8MiipxzE8dQsRHrT5Ai
+         pOxFUzXiUHm/Cttdnnq2xbzPgFmZjOwvaKE18ZLmIebL7n98agxT2aQZTe6Uuhd1KR
+         3DloKlwg3IzP+aeOsn/sAH2YjXgn0iPTJTvV9CPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 045/134] scsi: lpfc: Fix unexpected error messages during RSCN handling
-Date:   Wed, 11 Dec 2019 10:10:21 -0500
-Message-Id: <20191211151150.19073-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 062/134] scsi: zorro_esp: Limit DMA transfers to 65536 bytes (except on Fastlane)
+Date:   Wed, 11 Dec 2019 10:10:38 -0500
+Message-Id: <20191211151150.19073-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,89 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Kars de Jong <jongk@linux-m68k.org>
 
-[ Upstream commit 2332e6e475b016e2026763f51333f84e2e6c57a3 ]
+[ Upstream commit 02f7e9f351a9de95577eafdc3bd413ed1c3b589f ]
 
-During heavy RCN activity and log_verbose = 0 we see these messages:
+When using this driver on a Blizzard 1260, there were failures whenever DMA
+transfers from the SCSI bus to memory of 65535 bytes were followed by a DMA
+transfer of 1 byte. This caused the byte at offset 65535 to be overwritten
+with 0xff. The Blizzard hardware can't handle single byte DMA transfers.
 
-  2754 PRLI failure DID:521245 Status:x9/xb2c00, data: x0
-  0231 RSCN timeout Data: x0 x3
-  0230 Unexpected timeout, hba link state x5
+Besides this issue, limiting the DMA length to something that is not a
+multiple of the page size is very inefficient on most file systems.
 
-This is due to delayed RSCN activity.
+It seems this limit was chosen because the DMA transfer counter of the ESP
+by default is 16 bits wide, thus limiting the length to 65535 bytes.
+However, the value 0 means 65536 bytes, which is handled by the ESP and the
+Blizzard just fine. It is also the default maximum used by esp_scsi when
+drivers don't provide their own dma_length_limit() function.
 
-Correct by avoiding the timeout thus the messages by restarting the
-discovery timeout whenever an rscn is received.
+The limit of 65536 bytes can be used by all boards except the Fastlane. The
+old driver used a limit of 65532 bytes (0xfffc), which is reintroduced in
+this patch.
 
-Filter PRLI responses such that severity depends on whether expected for
-the configuration or not. For example, PRLI errors on a fabric will be
-informational (they are expected), but Point-to-Point errors are not
-necessarily expected so they are raised to an error level.
-
-Link: https://lore.kernel.org/r/20191105005708.7399-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Fixes: b7ded0e8b0d1 ("scsi: zorro_esp: Limit DMA transfers to 65535 bytes")
+Link: https://lore.kernel.org/r/20191112175523.23145-1-jongk@linux-m68k.org
+Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+Reviewed-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/scsi/zorro_esp.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index f293b48616ae9..4794a58deaf3c 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -2236,6 +2236,7 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 	struct Scsi_Host  *shost = lpfc_shost_from_vport(vport);
- 	IOCB_t *irsp;
- 	struct lpfc_nodelist *ndlp;
-+	char *mode;
- 
- 	/* we pass cmdiocb to state machine which needs rspiocb as well */
- 	cmdiocb->context_un.rsp_iocb = rspiocb;
-@@ -2273,8 +2274,17 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 			goto out;
- 		}
- 
-+		/* If we don't send GFT_ID to Fabric, a PRLI error
-+		 * could be expected.
-+		 */
-+		if ((vport->fc_flag & FC_FABRIC) ||
-+		    (vport->cfg_enable_fc4_type != LPFC_ENABLE_BOTH))
-+			mode = KERN_ERR;
-+		else
-+			mode = KERN_INFO;
+diff --git a/drivers/scsi/zorro_esp.c b/drivers/scsi/zorro_esp.c
+index ca8e3abeb2c7a..a23a8e5794f5c 100644
+--- a/drivers/scsi/zorro_esp.c
++++ b/drivers/scsi/zorro_esp.c
+@@ -218,7 +218,14 @@ static int fastlane_esp_irq_pending(struct esp *esp)
+ static u32 zorro_esp_dma_length_limit(struct esp *esp, u32 dma_addr,
+ 					u32 dma_len)
+ {
+-	return dma_len > 0xFFFF ? 0xFFFF : dma_len;
++	return dma_len > (1U << 16) ? (1U << 16) : dma_len;
++}
 +
- 		/* PRLI failed */
--		lpfc_printf_vlog(vport, KERN_ERR, LOG_ELS,
-+		lpfc_printf_vlog(vport, mode, LOG_ELS,
- 				 "2754 PRLI failure DID:%06X Status:x%x/x%x, "
- 				 "data: x%x\n",
- 				 ndlp->nlp_DID, irsp->ulpStatus,
-@@ -6455,7 +6465,7 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
- 	uint32_t payload_len, length, nportid, *cmd;
- 	int rscn_cnt;
- 	int rscn_id = 0, hba_id = 0;
--	int i;
-+	int i, tmo;
++static u32 fastlane_esp_dma_length_limit(struct esp *esp, u32 dma_addr,
++					u32 dma_len)
++{
++	/* The old driver used 0xfffc as limit, so do that here too */
++	return dma_len > 0xfffc ? 0xfffc : dma_len;
+ }
  
- 	pcmd = (struct lpfc_dmabuf *) cmdiocb->context2;
- 	lp = (uint32_t *) pcmd->virt;
-@@ -6561,6 +6571,13 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
- 
- 		spin_lock_irq(shost->host_lock);
- 		vport->fc_flag |= FC_RSCN_DEFERRED;
-+
-+		/* Restart disctmo if its already running */
-+		if (vport->fc_flag & FC_DISC_TMO) {
-+			tmo = ((phba->fc_ratov * 3) + 3);
-+			mod_timer(&vport->fc_disctmo,
-+				  jiffies + msecs_to_jiffies(1000 * tmo));
-+		}
- 		if ((rscn_cnt < FC_MAX_HOLD_RSCN) &&
- 		    !(vport->fc_flag & FC_RSCN_DISCOVERY)) {
- 			vport->fc_flag |= FC_RSCN_MODE;
+ static void zorro_esp_reset_dma(struct esp *esp)
+@@ -604,7 +611,7 @@ static const struct esp_driver_ops fastlane_esp_ops = {
+ 	.esp_write8		= zorro_esp_write8,
+ 	.esp_read8		= zorro_esp_read8,
+ 	.irq_pending		= fastlane_esp_irq_pending,
+-	.dma_length_limit	= zorro_esp_dma_length_limit,
++	.dma_length_limit	= fastlane_esp_dma_length_limit,
+ 	.reset_dma		= zorro_esp_reset_dma,
+ 	.dma_drain		= zorro_esp_dma_drain,
+ 	.dma_invalidate		= fastlane_esp_dma_invalidate,
 -- 
 2.20.1
 
