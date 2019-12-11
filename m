@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5140C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0179C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6152054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952EC2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dy2B3r++"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I8V2k3Of"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbfLKUsv (ORCPT
+        id S1727308AbfLKUs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:48:51 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:38175 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727265AbfLKUst (ORCPT
+        Wed, 11 Dec 2019 15:48:56 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:49515 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfLKUsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:48:49 -0500
-Received: by mail-pj1-f74.google.com with SMTP id k93so12161916pjh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:48:48 -0800 (PST)
+        Wed, 11 Dec 2019 15:48:55 -0500
+Received: by mail-pf1-f202.google.com with SMTP id b15so2828458pfo.16
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:48:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=hTNW3ODcCvFxOFPF3z95jUajN2yDUtML20vR5t2IREg=;
-        b=dy2B3r+++dZl+ThGERMOVovQJLenKliQYHzqLXvVkDm/0uZ8Gq3hCRgZG7tyd84kSC
-         vdk9fXkvOx45tG0X/9LZdpJ53i3mcwnbYwDT/z2mUEz6CF5qqnHx/UEYV7hMKX2L/5Oo
-         BwjoIzsDdayWCwOFblKERarcaoxS0sRtURTgX+1+//NTSuTbTaH33yi5DOtom0S4lq99
-         q+VJL0Dp1iY7Rap3CiKHhUUEccLEo67XSSOOFB/8NY4dDN5uw4tafg/feMXo5GKJ6uUV
-         lHcfsBn1Ipdrjt/9jS4WdLQ3fw4u180ZNYPIOOr8WbI+cLMuRWTUky++KooaR2tV0dO9
-         ITpQ==
+        bh=0uBm59z2CSkxE1Lwa309Nz0ygPbdvHmq/YUupdQxc7E=;
+        b=I8V2k3Of6lRv1EDUC410FpR8FtBNQM0aht20sKEmAa2g/XoHx4ga+H6HGWK3VmCuRc
+         wTNP5z9oSZKoLgQaiyZRfW3xul3WBjmcGmueZhYjDD73dzB9Pk28xF1dD4sse2hL8zCs
+         jxasrPodRUF5TKbLIqwZEHjdr4+h3zVlhnWMAH3YR8JtbbJmHg/3dkQercCnt+w81iog
+         QF9DyU5dmZwGDqQjdV8hbmxVUMt0l9lKPb2ajtxp0Of4aWkLYwN04vwYz55EgnrVXlpz
+         J2cnKpCAoxhwh6R+UYYFI9d/vgFOs6CdW/2EtwTnyudLXsAeiI9rXMNbv63SXKTHu2dc
+         9xWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=hTNW3ODcCvFxOFPF3z95jUajN2yDUtML20vR5t2IREg=;
-        b=TQvHXh4Z13cZWr++BeJ/SQJ0frO+rFXZO8Rs13kcA29HOzpYDkXu7C+wsfYDz+Ee+Y
-         a390KAoQocFj/J176GsRTyeIeFdRDY6DBFsNRDkKqwyYYwbMa15JLPDUT6efp4K5jHpT
-         sQsHJJa5LfdlKG+QRXexeg5kYg/mtrCV/3gzC7H/ETbYU29kPNn8wJUj/eUfx6g30hpi
-         4lohWw0aQB5MudnaWa9y24Ts0ej5+NqdGM4MoUm/4XjKz1FSxVhsbX6r/MOxBOrta2F3
-         UAO727VdRDifU+zlYpRtLB3mIKoHNph2HDzBXurt31Egp482u7wuIIml7wrIe93XUaIE
-         zxxw==
-X-Gm-Message-State: APjAAAVaA86e/cdgB9An5UVDXirBI1MCyBvPM42wZqW3tB+ig0rJRDD1
-        CdSJU1NpJ0RRu2fN5pIP73FOzvsSYfKr
-X-Google-Smtp-Source: APXvYqxHJ71qg3FHMyk8lYMOq9M63OQ9kqtvkCKDj4/LJ57ylFSIwgHpaTerPBZmkwqI10yVqtfehV1zS4R6
-X-Received: by 2002:a63:6c03:: with SMTP id h3mr5981055pgc.19.1576097328530;
- Wed, 11 Dec 2019 12:48:48 -0800 (PST)
-Date:   Wed, 11 Dec 2019 12:47:46 -0800
+        bh=0uBm59z2CSkxE1Lwa309Nz0ygPbdvHmq/YUupdQxc7E=;
+        b=cMVB5LTnAyyyHrHFdxD+niVllUv7XNWj2tZtD6RS/MgwPJ/HnkuEkVsXjkDyx1zAmi
+         CqVMVBXI8C+vFPIZf2pTbMTMOh9/3al5sK7eC3PZkLjenVdoxIabdNjAy+w1buMyyT32
+         grmomG1F9J1Vn4vocsvclj28V+E6TXr6ozcpoYMqVn8g1dB01DMVGvXbUWhE3pH57H6M
+         Zkx+j0VPXTnwuxHn+e/LCS2yJGZ5vrzpvNIVuKdygEYvetsHQ4BZCj4JjPcwavSUDlxT
+         LD4gCDLyJ4BXtgZdTHLfuRMicesuCQWtENf0fa7bzJR5IeKjJGqNI/k+3bQ+O4gWLzrr
+         TDYg==
+X-Gm-Message-State: APjAAAWR6SREljwRwnc4/9L9kqM/oyV2ULC0LFPl4ieoxfWegFTIabGw
+        tNl3MLx38WYgF6QXPT1AazaVxw6LY8YZ
+X-Google-Smtp-Source: APXvYqzpV4iFVXiUK5BQScN74ZwB27juWvlBDSrPZNfl+y/rATB6M5QAfuVVUKOtVW9B7wan1hPJvtR1w6Bp
+X-Received: by 2002:a63:5525:: with SMTP id j37mr6269827pgb.180.1576097334639;
+ Wed, 11 Dec 2019 12:48:54 -0800 (PST)
+Date:   Wed, 11 Dec 2019 12:47:47 -0800
 In-Reply-To: <20191211204753.242298-1-pomonis@google.com>
-Message-Id: <20191211204753.242298-7-pomonis@google.com>
+Message-Id: <20191211204753.242298-8-pomonis@google.com>
 Mime-Version: 1.0
 References: <20191211204753.242298-1-pomonis@google.com>
 X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-Subject: [PATCH v2 06/13] KVM: x86: Protect kvm_lapic_reg_write() from
- Spectre-v1/L1TF attacks
+Subject: [PATCH v2 07/13] KVM: x86: Protect MSR-based index computations in
+ fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
 From:   Marios Pomonis <pomonis@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
         Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -79,49 +79,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
+This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
 This function contains index computations based on the
 (attacker-controlled) MSR number.
 
-Fixes: commit 0105d1a52640 ("KVM: x2apic interface to lapic")
+Fixes: commit de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
 
 Signed-off-by: Nick Finco <nifi@google.com>
 Signed-off-by: Marios Pomonis <pomonis@google.com>
 Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
 ---
- arch/x86/kvm/lapic.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mtrr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index cf9177b4a07f..3323115f52d5 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1963,15 +1963,20 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
- 	case APIC_LVTTHMR:
- 	case APIC_LVTPC:
- 	case APIC_LVT1:
--	case APIC_LVTERR:
-+	case APIC_LVTERR: {
- 		/* TODO: Check vector */
-+		size_t size;
-+		u32 index;
-+
- 		if (!kvm_apic_sw_enabled(apic))
- 			val |= APIC_LVT_MASKED;
--
--		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
-+		size = ARRAY_SIZE(apic_lvt_mask);
-+		index = array_index_nospec(
-+				(reg - APIC_LVTT) >> 4, size);
-+		val &= apic_lvt_mask[index];
- 		kvm_lapic_set_reg(apic, reg, val);
--
+diff --git a/arch/x86/kvm/mtrr.c b/arch/x86/kvm/mtrr.c
+index 25ce3edd1872..7f0059aa30e1 100644
+--- a/arch/x86/kvm/mtrr.c
++++ b/arch/x86/kvm/mtrr.c
+@@ -192,11 +192,15 @@ static bool fixed_msr_to_seg_unit(u32 msr, int *seg, int *unit)
  		break;
-+	}
- 
- 	case APIC_LVTT:
- 		if (!kvm_apic_sw_enabled(apic))
+ 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
+ 		*seg = 1;
+-		*unit = msr - MSR_MTRRfix16K_80000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix16K_80000,
++			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
+ 		break;
+ 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
+ 		*seg = 2;
+-		*unit = msr - MSR_MTRRfix4K_C0000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix4K_C0000,
++			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
+ 		break;
+ 	default:
+ 		return false;
 -- 
 2.24.0.525.g8f36a354ae-goog
 
