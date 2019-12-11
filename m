@@ -2,104 +2,168 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D78BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259FC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E512073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D71AE2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079900;
-	bh=auBK3F1O3f85KTx3LabQwNo/1FXPbHtftbxFbtbk8kw=;
+	s=default; t=1576079902;
+	bh=cFlcOaw/qeAJPWdJSsqw24Ge7bVtfzcVX8YUgBDsENU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I8zEh+3ArRvpvfLDVE4BoXNbhmPQWr/r4fw4xYrwnJC0U8Igjsx2oiwGnuGQl7o4P
-	 U4IzqTx1F1RVj4uXegDNILUZb/f99Uk1W+Q1O5OShh07QyLtqqGhm0geP155Pd9mfE
-	 Yy9sRbwe2isrDI9nSorFWqVG9H7CiUzUoEb81mPc=
+	b=L4thgtL/5ZWlxFhs1yvIzJYsvnYkXzQuqjttR/PVTni1Trb12EiMX4nxO8mPKRI/W
+	 rXfRlOlFCKo3l4s2/oDxubE9yDHawMWsCq3xIMT9zqkwkD2rbEKaR6H38BWo4ejXBq
+	 CmkvB0V66/LMFEPYqbROj3Os7Z3HVLjppnzbqYLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731953AbfLKP6S (ORCPT
+        id S1731234AbfLKPOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:58:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40154 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731645AbfLKPOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731477AbfLKPNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CDF32467D;
-        Wed, 11 Dec 2019 15:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F14172467D;
+        Wed, 11 Dec 2019 15:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077276;
-        bh=auBK3F1O3f85KTx3LabQwNo/1FXPbHtftbxFbtbk8kw=;
+        s=default; t=1576077220;
+        bh=cFlcOaw/qeAJPWdJSsqw24Ge7bVtfzcVX8YUgBDsENU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rs2w0sJxXLCy0bKstB81l80+JlymEqXAFuLsEa0bd/bU/Q2oSlBOH2FEtrZQ2nVDt
-         0DIcq+193GPxNeJq+k7RL0yyStM1tdj9UVF8+h25ONiTF7O2ma0sEnCMfS/tyqvjI5
-         iDAaIiq47XbPx+LvhGUPdHPHIR/eNQJuR6dmqwYM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.3 082/105] KVM: x86: fix presentation of TSX feature in ARCH_CAPABILITIES
-Date:   Wed, 11 Dec 2019 16:06:11 +0100
-Message-Id: <20191211150258.359509325@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=Cx0Fm+0xFhx0u8MmnffK3wrj9vAeY2TtbACdhsbRxsTz1so6QVBwTwM/qE1F+Y7Va
+         y/jnMo3suLJdxioMb8EKRE8bU2X7DVAugqXwjYKBNgnClr+xI2CBuk3VnuRU8OK8rm
+         zH04YPDDKQE0pLcZXAypg7WYUIPskT7JcvKVoun8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 100/134] habanalabs: skip VA block list update in reset flow
+Date:   Wed, 11 Dec 2019 10:11:16 -0500
+Message-Id: <20191211151150.19073-100-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Omer Shpigelman <oshpigelman@habana.ai>
 
-commit cbbaa2727aa3ae9e0a844803da7cef7fd3b94f2b upstream.
+[ Upstream commit 71c5e55e7c077fa17c42fbda91a8d14322825c44 ]
 
-KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
-to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
-!RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
-hidden (it actually was), yet the value says that TSX is not vulnerable
-to microarchitectural data sampling.  Fix both.
+Reduce context close time by skipping the VA block free list update in
+order to avoid hard reset with open contexts.
+Reset with open contexts can potentially lead to a kernel crash as the
+generic pool of the MMU hops is destroyed while it is not empty because
+some unmap operations are not done.
+The commit affect mainly when running on simulator.
 
-Cc: stable@vger.kernel.org
-Tested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/misc/habanalabs/memory.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1292,12 +1292,18 @@ static u64 kvm_get_arch_capabilities(voi
- 	 * If TSX is disabled on the system, guests are also mitigated against
- 	 * TAA and clear CPU buffer mitigation is not required for guests.
- 	 */
--	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
--	    (data & ARCH_CAP_TSX_CTRL_MSR))
-+	if (!boot_cpu_has(X86_FEATURE_RTM))
-+		data &= ~ARCH_CAP_TAA_NO;
-+	else if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		data |= ARCH_CAP_TAA_NO;
-+	else if (data & ARCH_CAP_TSX_CTRL_MSR)
- 		data &= ~ARCH_CAP_MDS_NO;
- 
-+	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
-+	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
- }
-+EXPORT_SYMBOL_GPL(kvm_get_arch_capabilities);
- 
- static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
+diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
+index 365fb0cb8dfff..22566b75ca50c 100644
+--- a/drivers/misc/habanalabs/memory.c
++++ b/drivers/misc/habanalabs/memory.c
+@@ -965,17 +965,19 @@ init_page_pack_err:
+  *
+  * @ctx                 : current context
+  * @vaddr               : device virtual address to unmap
++ * @ctx_free            : true if in context free flow, false otherwise.
+  *
+  * This function does the following:
+  * - Unmap the physical pages related to the given virtual address
+  * - return the device virtual block to the virtual block list
+  */
+-static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
++static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr, bool ctx_free)
  {
-
+ 	struct hl_device *hdev = ctx->hdev;
+ 	struct hl_vm_phys_pg_pack *phys_pg_pack = NULL;
+ 	struct hl_vm_hash_node *hnode = NULL;
+ 	struct hl_userptr *userptr = NULL;
++	struct hl_va_range *va_range;
+ 	enum vm_type_t *vm_type;
+ 	u64 next_vaddr, i;
+ 	u32 page_size;
+@@ -1003,6 +1005,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 
+ 	if (*vm_type == VM_TYPE_USERPTR) {
+ 		is_userptr = true;
++		va_range = &ctx->host_va_range;
+ 		userptr = hnode->ptr;
+ 		rc = init_phys_pg_pack_from_userptr(ctx, userptr,
+ 				&phys_pg_pack);
+@@ -1014,6 +1017,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 		}
+ 	} else if (*vm_type == VM_TYPE_PHYS_PACK) {
+ 		is_userptr = false;
++		va_range = &ctx->dram_va_range;
+ 		phys_pg_pack = hnode->ptr;
+ 	} else {
+ 		dev_warn(hdev->dev,
+@@ -1052,12 +1056,18 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 
+ 	mutex_unlock(&ctx->mmu_lock);
+ 
+-	if (add_va_block(hdev,
+-			is_userptr ? &ctx->host_va_range : &ctx->dram_va_range,
+-			vaddr,
+-			vaddr + phys_pg_pack->total_size - 1))
+-		dev_warn(hdev->dev, "add va block failed for vaddr: 0x%llx\n",
+-				vaddr);
++	/*
++	 * No point in maintaining the free VA block list if the context is
++	 * closing as the list will be freed anyway
++	 */
++	if (!ctx_free) {
++		rc = add_va_block(hdev, va_range, vaddr,
++					vaddr + phys_pg_pack->total_size - 1);
++		if (rc)
++			dev_warn(hdev->dev,
++					"add va block failed for vaddr: 0x%llx\n",
++					vaddr);
++	}
+ 
+ 	atomic_dec(&phys_pg_pack->mapping_cnt);
+ 	kfree(hnode);
+@@ -1189,8 +1199,8 @@ int hl_mem_ioctl(struct hl_fpriv *hpriv, void *data)
+ 		break;
+ 
+ 	case HL_MEM_OP_UNMAP:
+-		rc = unmap_device_va(ctx,
+-				args->in.unmap.device_virt_addr);
++		rc = unmap_device_va(ctx, args->in.unmap.device_virt_addr,
++					false);
+ 		break;
+ 
+ 	default:
+@@ -1620,7 +1630,7 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
+ 		dev_dbg(hdev->dev,
+ 			"hl_mem_hash_node of vaddr 0x%llx of asid %d is still alive\n",
+ 			hnode->vaddr, ctx->asid);
+-		unmap_device_va(ctx, hnode->vaddr);
++		unmap_device_va(ctx, hnode->vaddr, true);
+ 	}
+ 
+ 	spin_lock(&vm->idr_lock);
+-- 
+2.20.1
 
