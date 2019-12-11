@@ -2,165 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E060EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC72C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B502C22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E9A206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzpYPy2o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="svfgvcf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfLKSNU (ORCPT
+        id S1730473AbfLKSPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:13:20 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:44546 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfLKSNU (ORCPT
+        Wed, 11 Dec 2019 13:15:05 -0500
+Received: from mail-yw1-f54.google.com ([209.85.161.54]:46662 "EHLO
+        mail-yw1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbfLKSPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:13:20 -0500
-Received: by mail-ua1-f66.google.com with SMTP id d6so9210730uam.11;
-        Wed, 11 Dec 2019 10:13:20 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:05 -0500
+Received: by mail-yw1-f54.google.com with SMTP id u139so9275159ywf.13;
+        Wed, 11 Dec 2019 10:15:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bd29n+OqWQHmjiv4UohToE6LWwboTOECsuyuIZjyFLc=;
-        b=dzpYPy2oARzQ0iGcjAca12/c3TTFocSLbTgbg/ooUwOW9F1VR/s8PE802ilhjbtbRG
-         ZxZXzRCuD3aeCJMDBJMi+/K4t4OLrFjj6sqgbkVhCr3LetOWTSRVc1MReJhuDoHq6bkC
-         UESo9BKJOPpJqPOWlstJIqMNAjD8ylNJmoLWN5qPTkNv/CwYL1C63i8c85RMwVN0lcIm
-         g7vNBpE8X1MtiFYNeliW0xkJ3fcTpB2UQiBMdh32QcEzGSy5bZHEhP8m8tRDOQ4qdkO0
-         xiVBKBLLNB1q/0OtE43sxjPEguFRhbA3k2oUx6CMWz15YMV5xoL0AdbmIJ+ADJrq3lIN
-         7qbg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q2LAtAr35fOxdHluyYQPMQ83B/l646nAWaVMX7Ww9lA=;
+        b=svfgvcf5l0Q51QBfuqGqqVaa5t10/wiQRuxkxmKW7VSu244E0qnQHtPlbzdiqgvRQL
+         XxpbD6bJiAqJmoO/h3tU1FOZ5XinalTLmNv9X/LreO/ci8L2j+D5KVri2/d39p+X6dSk
+         ztDYX95hsMl0zcQlgQotcCrpHEEMDaRN3kDVeTLEQk+JhC3LkTYaPTtYvzEJskR6w3Kd
+         hu9MMCLuSkVZhiAyvUgG7CB66L34grupVwcsvVp1btLbDAtL8VGOdYttDGrQTfFeAe5O
+         SQP8NUL5QE+eP8y5ouPoqGqIv+prihfGe1uqeJuBbITrjKR6vmONidXB2uQ+rqAin4/0
+         H8Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bd29n+OqWQHmjiv4UohToE6LWwboTOECsuyuIZjyFLc=;
-        b=nC7E8SADC5KgvP0pePtMl1liNfoQ60iUQ1GS7tr9bfkuKIZ5owimD1GMmKKIiieIKP
-         dCoYST/yAzkwekwJVjNaf3ScRRU4U4DRP+Rx81jPo6hE6sJApvFZG7abcOittq3ZEcrP
-         cglp4tyOWn6KSymZumlzN2LccERUfKlyHEHSZDANPRGN16YS5hqx80OosOD4YMxgzAl+
-         m4/miPU0U1kOKU5siciIoZQX9+uVGqY0/g3HI4ku+jFqetFCdBShslMdtUdV0xo66eWi
-         CKnTBRArkXctwfUqU/tVvfxbezNlm0nS+qlzwI/eHBTJ6xRtbS7gsGND7MnCAvyIKGxY
-         wi4g==
-X-Gm-Message-State: APjAAAUmrCMTcCZiCAynv5gZBl73HywTwIGGOCSv1A6jViAVG3w392X+
-        8ibdhP4ExO9Lcm6E5yrHb5S6EgQb
-X-Google-Smtp-Source: APXvYqxOgC4TDxo+oV7b8znqWdp8cjvcMF9KAx5I/dgbEEczsw6rGRWj7qsgndiJMGC4M0PwYjPDqw==
-X-Received: by 2002:ab0:6418:: with SMTP id x24mr4509581uao.40.1576087999267;
-        Wed, 11 Dec 2019 10:13:19 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([177.195.211.59])
-        by smtp.gmail.com with ESMTPSA id f22sm1635454vso.8.2019.12.11.10.13.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q2LAtAr35fOxdHluyYQPMQ83B/l646nAWaVMX7Ww9lA=;
+        b=RdE2hkmDYDhOi59oLpnkA7k1Baab7atain+hAQaJwrmSMBkqE+Ky3CvMNRMdwo86Pi
+         AXu0Xqx0tt5F2fCDQ01JyXgKz+1YiAsysWRIvgTZqsE4WSTESjiNHWrQPgTcFDK+iwUF
+         7uFU6b/Jkf2hDfcafZ9JJkwH+o2gAXb4pN5XUIG0cGEA4dENkEqAb4Y7Gc9hPikyl8RZ
+         0d59U0BZ1C4Tbir+Op69M52Zelb6xaVD8xaczzlMWdr5Jw9P4DgIBi6X919HFHKagSTd
+         9aVJFJOOJSJf+gRBd8ujpzgfeewTVDz+4fSw6nSXFBQf4ZIu9UARRG/jOxQXNVZ5qPO7
+         t2XA==
+X-Gm-Message-State: APjAAAUB1T2uwHL8d8y9n5kHM+ikccHjLmK9hrh8TuLg/PN7dS9bIPmv
+        0ZFsemNnODt9FHPdGgyoI7V+8mWpmE1SMg==
+X-Google-Smtp-Source: APXvYqy9RUld3P5NVjS7SATFBqmbXZHrOlPh6/SxjKxntUcO348d/pvMz2XOAtbY+VfOVGc4qzEQ+g==
+X-Received: by 2002:a81:af04:: with SMTP id n4mr883522ywh.319.1576088103847;
+        Wed, 11 Dec 2019 10:15:03 -0800 (PST)
+Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
+        by smtp.gmail.com with ESMTPSA id l5sm1277409ywd.48.2019.12.11.10.15.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:13:18 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37CD340352; Wed, 11 Dec 2019 15:13:13 -0300 (-03)
-Date:   Wed, 11 Dec 2019 15:13:13 -0300
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Matheus Marchini <mmarchini@netflix.com>,
-        linux-perf-users@vger.kernel.org, jkoch@netflix.com,
-        khlebnikov@yandex-team.ru, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Keeping <john@metanate.com>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf map: fix infinite loop on
- map_groups__fixup_overlappings
-Message-ID: <20191211181313.GE13965@kernel.org>
-References: <20191211160734.18087-1-mmarchini@netflix.com>
+        Wed, 11 Dec 2019 10:15:03 -0800 (PST)
+From:   Scott Schafer <schaferjscott@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Scott Schafer <schaferjscott@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/23] V2: Break up from one patch to multiple
+Date:   Wed, 11 Dec 2019 12:12:29 -0600
+Message-Id: <cover.1576086080.git.schaferjscott@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211160734.18087-1-mmarchini@netflix.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Dec 11, 2019 at 08:07:31AM -0800, Matheus Marchini escreveu:
-> In some cases, when using perf inject and there are JIT_CODE_MOVE
-> records in the jitdump file, perf will end up in an infinite loop on
-> map_groups__fixup_overlappings, which will keep allocating memory
-> indefinitely. This issue was observed on Node.js (with changes to
-> generate JIT_CODE_MOVE records) and on Java.
-> 
-> This issue started to occur after 6a9405b56c274 (perf map:
-> Optimize maps__fixup_overlappings()). To prevent it from happening,
-> partially revert those changes without losing the optimizations
-> introduced in it.
+I broke up the changes from one patch to many so each patch has more
+defined changes. I also added a few other patches for formatting issues
+I missed in the original patch. 
 
-Konstantin, can you please take a look and provide your Acked-by or
-Reviewed-by?
+Scott Schafer (23):
+  staging: qlge: Fix CHECK extra blank lines in many files
+  staging: qlge: Fix CHECK: Alignment should match open parenthesis
+  staging:qlge: Fix WARNING: Missing a blank line after declarations
+  staging: qlge: Fix WARNING: Missing a blank line after declarations
+  staging: qlge: Fix CHECK: Blank lines aren't necessary before a close
+    brace '}'
+  staging: qlge: Fix CHECK: Blank lines aren't necessary after an open
+    brace '{'
+  staging: qlge: Fix WARNING: quoted string split across lines
+  staging: qlge: Fix CHECK: Unnecessary parentheses around
+    mpi_coredump->mpi_global_header
+  staging: qlge: Fix CHECK: No space is necessary after a cast
+  staging: qlge: Fix CHECK: blank line after function/struct/union/enum
+    declarations
+  staging: qlge: Fix CHECK: braces {} should be used on all arms of this
+    statement
+  staging: qlge: Fix WARNING: please, no space before tabs in qlge.h
+  staging: qlge: Fix CHECK: spaces preferred around that (ctx:VxV)
+  staging: qlge: Fix WARNING: Unnecessary space before function pointer
+    arguments
+  staging: qlge: Fix WARNING: please, no spaces at the start of a line
+  staging: qlge: Fix WARNING: Block comments use a trailing */ on a
+    separate line
+  staging: qlge: Fix WARNING: else is not generally useful after a break
+    or return
+  staging: qlge: Fix CHECK: Prefer using the BIT macro
+  staging: qlge: Fix WARNING: msleep < 20ms can sleep for up to 20ms
+  staging: qlge: Fix CHECK: usleep_range is preferred over udelay
+  staging: qlge: Fix WARNING: suspect code indent for conditional
+    statements
+  staging: qlge: Fix CHECK: Unbalanced braces around else statement
+  staging: qlge: Fix WARNING: Avoid multiple line dereference
 
-- Arnaldo
- 
-> Signed-off-by: Matheus Marchini <mmarchini@netflix.com>
-> ---
->  tools/perf/util/map.c | 17 +++++++++++++++++
->  tools/perf/util/map.h |  1 +
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 744bfbaf35cf..8918fdb8ddab 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -781,6 +781,21 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
->  	__maps__insert(&mg->maps, map);
->  }
->  
-> +int map__overlap(struct map *l, struct map *r)
-> +{
-> +	if (l->start > r->start) {
-> +		struct map *t = l;
-> +
-> +		l = r;
-> +		r = t;
-> +	}
-> +
-> +	if (l->end > r->start)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
->  int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
->  {
->  	struct maps *maps = &mg->maps;
-> @@ -821,6 +836,8 @@ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE
->  		 */
->  		if (pos->start >= map->end)
->  			break;
-> +		if (!map__overlap(map, pos))
-> +			continue;
->  
->  		if (verbose >= 2) {
->  
-> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> index 5e8899883231..1383571437aa 100644
-> --- a/tools/perf/util/map.h
-> +++ b/tools/perf/util/map.h
-> @@ -132,6 +132,7 @@ static inline void __map__zput(struct map **map)
->  
->  #define map__zput(map) __map__zput(&map)
->  
-> +int map__overlap(struct map *l, struct map *r);
->  size_t map__fprintf(struct map *map, FILE *fp);
->  size_t map__fprintf_dsoname(struct map *map, FILE *fp);
->  char *map__srcline(struct map *map, u64 addr, struct symbol *sym);
-> -- 
-> 2.17.1
+ drivers/staging/qlge/qlge.h         |  43 ++--
+ drivers/staging/qlge/qlge_dbg.c     |  97 ++++----
+ drivers/staging/qlge/qlge_ethtool.c |  60 ++---
+ drivers/staging/qlge/qlge_main.c    | 336 +++++++++++++---------------
+ drivers/staging/qlge/qlge_mpi.c     |  71 +++---
+ 5 files changed, 293 insertions(+), 314 deletions(-)
 
 -- 
+2.20.1
 
-- Arnaldo
