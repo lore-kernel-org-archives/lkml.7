@@ -2,132 +2,177 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A9BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CF7C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8C921556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00C52173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfLKJ7s (ORCPT
+        id S1728693AbfLKKAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:59:48 -0500
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29350 "EHLO 1wt.eu"
+        Wed, 11 Dec 2019 05:00:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:7124 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbfLKJ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:59:48 -0500
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id xBB9xb32031689;
-        Wed, 11 Dec 2019 10:59:37 +0100
-Date:   Wed, 11 Dec 2019 10:59:37 +0100
-From:   Willy Tarreau <w@1wt.eu>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
-        linux-arch@vger.kernel.org, security@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
-Message-ID: <20191211095937.GB31670@1wt.eu>
-References: <20191208171918.GC19716@avx2>
- <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
- <20191211072225.GB3700@avx2>
+        id S1728027AbfLKKAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:00:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 02:00:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="245186313"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Dec 2019 02:00:02 -0800
+Received: from [10.226.39.9] (unknown [10.226.39.9])
+        by linux.intel.com (Postfix) with ESMTP id AD65558033E;
+        Wed, 11 Dec 2019 01:59:59 -0800 (PST)
+Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+References: <20191210234951.GA175479@google.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
+Date:   Wed, 11 Dec 2019 17:59:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211072225.GB3700@avx2>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20191210234951.GA175479@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:22:25AM +0300, Alexey Dobriyan wrote:
-> On Tue, Dec 10, 2019 at 05:47:26PM -0800, Andrew Morton wrote:
-> > On Sun, 8 Dec 2019 20:19:18 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> > 
-> > > There were few episodes of silent downgrade to an executable stack over
-> > > years:
-> > > 
-> > > 1) linking innocent looking assembly file will silently add executable
-> > >    stack if proper linker options is not given as well:
-> > > 
-> > > 	$ cat f.S
-> > > 	.intel_syntax noprefix
-> > > 	.text
-> > > 	.globl f
-> > > 	f:
-> > > 	        ret
-> > > 
-> > > 	$ cat main.c
-> > > 	void f(void);
-> > > 	int main(void)
-> > > 	{
-> > > 	        f();
-> > > 	        return 0;
-> > > 	}
-> > > 
-> > > 	$ gcc main.c f.S
-> > > 	$ readelf -l ./a.out
-> > > 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
-> > >                          0x0000000000000000 0x0000000000000000  RWE    0x10
-> > > 			 					 ^^^
-> > > 
-> > > 2) converting C99 nested function into a closure
-> > > https://nullprogram.com/blog/2019/11/15/
-> > > 
-> > > 	void intsort2(int *base, size_t nmemb, _Bool invert)
-> > > 	{
-> > > 	    int cmp(const void *a, const void *b)
-> > > 	    {
-> > > 	        int r = *(int *)a - *(int *)b;
-> > > 	        return invert ? -r : r;
-> > > 	    }
-> > > 	    qsort(base, nmemb, sizeof(*base), cmp);
-> > > 	}
-> > > 
-> > > will silently require stack trampolines while non-closure version will not.
-> > > 
-> > > Without doubt this behaviour is documented somewhere, add a warning so that
-> > > developers and users can at least notice. After so many years of x86_64 having
-> > > proper executable stack support it should not cause too many problems.
-> > 
-> > hm, OK, let's give it a trial run.
-> > 
-> > > --- a/fs/exec.c
-> > > +++ b/fs/exec.c
-> > > @@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
-> > >  		goto out_unlock;
-> > >  	BUG_ON(prev != vma);
-> > >  
-> > > +	if (unlikely(vm_flags & VM_EXEC)) {
-> > > +		pr_warn_once("process '%pD4' started with executable stack\n",
-> > > +			     bprm->file);
-> > > +	}
-> > > +
-> > >  	/* Move stack pages down in memory. */
-> > >  	if (stack_shift) {
-> > >  		ret = shift_arg_pages(vma, stack_shift);
-> > 
-> > What are poor users supposed to do if this message comes out? 
-> > Hopefully google the message and end up at this thread.  What do you
-> > want to tell them?
-> 
-> Me? Nothing :-) They hopefully should file tickets against distros and ISV,
-> post egregious examples to oss-security.
-> 
-> Like they already do against this warning!
-> > ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
 
-Alexey, Andrew is right. Your message gives no instruction and users are
-already flooded with messages they got used to ignore. A warning is made
-to catch attention so it should give instructions. It can either say
-"this application relies on insecure capabilities and might not work
-anymore in the future, you should report this to its author", or "report
-this to kernel developers if you think this warning is inappropriate".
-Otherwise it will just go to /dev/null with all warning about bad blocks
-on USB sticks and CPU core throttling under high temperature.
+On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
+> On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
+>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>
+>> Intel PCIe driver requires Upconfigure support, Fast Training
+>> Sequence and link speed configurations. So adding the respective
+>> helper functions in the PCIe DesignWare framework.
+>> It also programs hardware autonomous speed during speed
+>> configuration so defining it in pci_regs.h.
+>>
+>> Also, mark Intel PCIe driver depends on MSI IRQ Domain
+>> as Synopsys DesignWare framework depends on the
+>> PCI_MSI_IRQ_DOMAIN.
+>>
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> --- a/drivers/pci/controller/dwc/pcie-designware.c
+>> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+>> @@ -14,6 +14,8 @@
+>>   
+>>   #include "pcie-designware.h"
+>>   
+>> +extern const unsigned char pcie_link_speed[];
+> This shouldn't be needed; there's a declaration in drivers/pci/pci.h.
+Sure, will do it. Thanks for pointing it.
+>
+>> +struct intel_pcie_soc {
+>> +	unsigned int pcie_ver;
+>> +	unsigned int pcie_atu_offset;
+>> +	u32 num_viewport;
+>> +};
+> Looks a little strange to have the fields below lined up but the ones
+> above not.
+My miss, i will update it.
+>
+>> +struct intel_pcie_port {
+>> +	struct dw_pcie		pci;
+>> +	void __iomem		*app_base;
+>> +	struct gpio_desc	*reset_gpio;
+>> +	u32			rst_intrvl;
+>> +	u32			max_speed;
+>> +	u32			link_gen;
+>> +	u32			max_width;
+>> +	u32			n_fts;
+>> +	struct clk		*core_clk;
+>> +	struct reset_control	*core_rst;
+>> +	struct phy		*phy;
+>> +	u8			pcie_cap_ofst;
+>> +};
+>> +
+>> +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
+>> +{
+>> +	u32 old;
+>> +
+>> +	old = readl(base + ofs);
+>> +	val = (old & ~mask) | (val & mask);
+>> +
+>> +	if (val != old)
+>> +		writel(val, base + ofs);
+> I assume this is never used on registers where the "old & ~mask" part
+> contains RW1C bits?  If there are RW1C bits in that part, this will
+> corrupt them.
+There is no impact because RW1C bits of respective registers are 0s at 
+the time of this function call.
+>
+>> +	if (!lpp->pcie_cap_ofst) {
+>> +		ret = dw_pcie_find_capability(&lpp->pci, PCI_CAP_ID_EXP);
+>> +		if (!ret) {
+>> +			ret = -ENXIO;
+>> +			dev_err(dev, "Invalid PCIe capability offset\n");
+> Some of your messages start with a capital letter, others not.
+I will correct it.
+>
+>> +int intel_pcie_msi_init(struct pcie_port *pp)
+> You might add a comment here like the one at
+> ks_pcie_am654_msi_host_init().  Since the users of the
+> .msi_host_init() function pointer only call the function if the
+> pointer is non-NULL, it's not completely obvious why you have this
+> stub function.
+Ok, i will change it.
+>
+>> +{
+>> +	/* PCIe MSI/MSIx is handled by MSI in x86 processor */
+>> +	return 0;
+>> +}
+>> +	/*
+>> +	 * Intel PCIe doesn't configure IO region, so set viewport
+>> +	 * to not to perform IO region access.
+> s/to not to/to not/
+Ok, i will fix it.
+>
+>> +	 */
+>> +	pci->num_viewport = data->num_viewport;
+>> +
+>> +	dev_info(dev, "Intel PCIe Root Complex Port init done\n");
+> Probably superfluous.
+I will remove the print then!
+>
+>> +
+>> +	return ret;
+> Since the return value is known here:
+>
+>    return 0;
 
-Willy
+Ok, i will update it.
+
+I see, this patch series is merged in the maintainer tree.
+Should i need to submit as a separate patch on top of maintainer tree or 
+submit the new version of whole patch series?
+Please let me know the best practice.
+
+Regards,
+Dilip
+
+>
+>> +}
