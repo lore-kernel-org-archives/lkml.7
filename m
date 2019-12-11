@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E4AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D346FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE74C2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA54E2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077031;
-	bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
+	s=default; t=1576077036;
+	bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5bWSJDsayWax8AIOrbufVY5Ok8JzbWa8Mu0EC28RscIHF+lSmt3zFadu0hY0/Fxd
-	 LFTkJBMvfzG7zvxpktGMxkPZ8ZMcAv3HerysTkBR8nJSTvldeDU47tH9x7a3ETtXCH
-	 YVj6D4qEqt+7vM64H/WTjcw3Egpwq53LLGVB9uiM=
+	b=ZJxR8VnVLOriSuQQC7wnj1C7QoJ8LlxQgkPGwQLkOOnPLhdLZjlZSJqzQFlvCwy2g
+	 uuJfhmp/0pM6pbYH87OVzHbmiOo6eXLrgnu/m3AajAwIOWrhSSCTOt82ro1p4L8D0I
+	 zR4lfgPziYdglbkCLFt/cHHRIM3T8EzhWHtiE1Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfLKPKb (ORCPT
+        id S1729144AbfLKPKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58688 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730742AbfLKPKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:25 -0500
+        id S1730388AbfLKPK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A289320663;
-        Wed, 11 Dec 2019 15:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A17BF2173E;
+        Wed, 11 Dec 2019 15:10:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077024;
-        bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
+        s=default; t=1576077029;
+        bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRPm8EOXR0u9S7Z30lZkOp8fn/A3scex2ACGQKgJv6g3wFSC+DfWCYk7vtwWmFf1H
-         jV4SqZGBgcEqnzdQlmRV4xxf08Goc0lmvfyZnd9GP/ZXnc7X6tC3eh2z4BvUPzsVSo
-         E3G+MM5yLAwryGiF0JutuUYy1ryAjcfAJhcwAXp0=
+        b=GfMCSvAqku5Z3UmPn4rPIHRgtyesEl9BRnf4w4MqKONpg1WiBjQZrngSnmkfEua3j
+         NEZKlc8h2Ri+bJpCdusvchTxJaAJRe6ph0lGFfBKAQGyu0LufvOAcMn+AhdqV2EjVA
+         uiVikq4Uv4PvZ7NUwQYdcN8ke1G71pwAhUJLjg1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Joerg Roedel <jroedel@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 44/92] x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
-Date:   Wed, 11 Dec 2019 16:05:35 +0100
-Message-Id: <20191211150242.020012504@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 46/92] CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
+Date:   Wed, 11 Dec 2019 16:05:37 +0100
+Message-Id: <20191211150242.347836993@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -67,93 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 9a62d20027da3164a22244d9f022c0c987261687 upstream.
+commit 6f582b273ec23332074d970a7fb25bef835df71f upstream.
 
-The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
-ranges: before such vmap ranges are reused we make sure that they are
-unmapped from every task's page tables.
+Currently when the client creates a cifsFileInfo structure for
+a newly opened file, it allocates a list of byte-range locks
+with a pointer to the new cfile and attaches this list to the
+inode's lock list. The latter happens before initializing all
+other fields, e.g. cfile->tlink. Thus a partially initialized
+cifsFileInfo structure becomes available to other threads that
+walk through the inode's lock list. One example of such a thread
+may be an oplock break worker thread that tries to push all
+cached byte-range locks. This causes NULL-pointer dereference
+in smb2_push_mandatory_locks() when accessing cfile->tlink:
 
-This is really easy on pagetable setups where the kernel page tables
-are shared between all tasks - this is the case on 32-bit kernels
-with SHARED_KERNEL_PMD = 1.
+[598428.945633] BUG: kernel NULL pointer dereference, address: 0000000000000038
+...
+[598428.945749] Workqueue: cifsoplockd cifs_oplock_break [cifs]
+[598428.945793] RIP: 0010:smb2_push_mandatory_locks+0xd6/0x5a0 [cifs]
+...
+[598428.945834] Call Trace:
+[598428.945870]  ? cifs_revalidate_mapping+0x45/0x90 [cifs]
+[598428.945901]  cifs_oplock_break+0x13d/0x450 [cifs]
+[598428.945909]  process_one_work+0x1db/0x380
+[598428.945914]  worker_thread+0x4d/0x400
+[598428.945921]  kthread+0x104/0x140
+[598428.945925]  ? process_one_work+0x380/0x380
+[598428.945931]  ? kthread_park+0x80/0x80
+[598428.945937]  ret_from_fork+0x35/0x40
 
-But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
-over the pgd_list and clearing all pmd entries in the pgds that
-are cleared in the init_mm.pgd, which is the reference pagetable
-that the vmalloc() code uses.
+Fix this by reordering initialization steps of the cifsFileInfo
+structure: initialize all the fields first and then add the new
+byte-range lock list to the inode's lock list.
 
-In that context the current practice of vmalloc_sync_all() iterating
-until FIX_ADDR_TOP is buggy:
-
-        for (address = VMALLOC_START & PMD_MASK;
-             address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
-             address += PMD_SIZE) {
-                struct page *page;
-
-Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
-address ranges:
-
-	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
-
-This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
-that don't clear their pmds, but it's lethal for the LDT range,
-which relies on having different mappings in different processes,
-and 'synchronizing' them in the vmalloc sense corrupts those
-pagetable entries (clearing them).
-
-This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
-off and makes this the dominant mapping mode on 32-bit.
-
-To make LDT working again vmalloc_sync_all() must only iterate over
-the volatile parts of the kernel address range that are identical
-between all processes.
-
-So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
-to make sure the VMALLOC areas are synchronized and the LDT
-mapping is not falsely overwritten.
-
-The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
-but this is not really a proplem since their PMDs get established
-during bootup and never change.
-
-This change fixes the ldt_gdt selftest in my setup.
-
-[ mingo: Fixed up the changelog to explain the logic and modified the
-         copying to only happen up until VMALLOC_END. ]
-
-Reported-by: Borislav Petkov <bp@suse.de>
-Tested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: hpa@zytor.com
-Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
-Link: https://lkml.kernel.org/r/20191126111119.GA110513@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Stable <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/fault.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/file.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -197,7 +197,7 @@ void vmalloc_sync_all(void)
- 		return;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -313,9 +313,6 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 	INIT_LIST_HEAD(&fdlocks->locks);
+ 	fdlocks->cfile = cfile;
+ 	cfile->llist = fdlocks;
+-	cifs_down_write(&cinode->lock_sem);
+-	list_add(&fdlocks->llist, &cinode->llist);
+-	up_write(&cinode->lock_sem);
  
- 	for (address = VMALLOC_START & PMD_MASK;
--	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
-+	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
- 	     address += PMD_SIZE) {
- 		struct page *page;
+ 	cfile->count = 1;
+ 	cfile->pid = current->tgid;
+@@ -339,6 +336,10 @@ cifs_new_fileinfo(struct cifs_fid *fid,
+ 		oplock = 0;
+ 	}
  
++	cifs_down_write(&cinode->lock_sem);
++	list_add(&fdlocks->llist, &cinode->llist);
++	up_write(&cinode->lock_sem);
++
+ 	spin_lock(&tcon->open_file_lock);
+ 	if (fid->pending_open->oplock != CIFS_OPLOCK_NO_CHANGE && oplock)
+ 		oplock = fid->pending_open->oplock;
 
 
