@@ -2,213 +2,167 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2996FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A46C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB812073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:25:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lm9p+q5u"
+	by mail.kernel.org (Postfix) with ESMTP id 084472073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfLKKZe (ORCPT
+        id S1728883AbfLKK1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:25:34 -0500
-Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:49518
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728769AbfLKKZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:25:33 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=REQX7V+QUjy/hCAbjLJAf5i1Zf7VJOQO+v2i08373NV0LWFXiXPLrcuwyza8djHPPU39HxTcPY8OhvpWo//JI4T0B+SwatmLaGghfPW5PfVVwPUHn47puo6VD+ah0xehx4eaIYWR+BXz4zC11TqMhCtqo+XGukRRPtI+wgCDmsHC4OsWhOnXQJNlkhxzxwYrzMAJr/NMdP5iWYUiaUyEOIe0QMhMWs9PDHhZtF8CBpRPDCETkgenYGhQX7Mcnx7YUHOy2t1iTjpUG2CfKD2v+uz5o1aZh9LL/OPP9hoMksnrAnzPBRLte5ne8/bl3DdveHxLkQwy0cMafmSa6oogCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ezj2q4GK++1UoWCZOEsITaX6S+FWh7TnaGDvUpc9p9k=;
- b=VXT979MsgsOK8zIJXos9Y1FYkABispaQrI7alVKLo365YYdqLESpN0ZkuKVucFr811rHxUlhZqo2nGlRLK1AtRDPDR+QXlL1VMUvqrHi0DbpwHJD3oeoqHp32W9IzwvD0u8t+8iUrcjqYaq0ktToCSbqe0IPZ7QPlBnEQqKaYycCV55vUn+tdLpdFt7YTvGz+JGA1tVxw5jBHj1dPomzx1PPtJNsD/ZB40MOsc3aHt1NKsAa7rZ+juU7qwwFnMWguVbDwFXNr0EhhZ72uSu4yw/sbL8LDjQsx98UB+QuPHUTqtfDvDfBrDYPicK4uDfj+xY6h17ejcE1SeMFdSOCBQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ezj2q4GK++1UoWCZOEsITaX6S+FWh7TnaGDvUpc9p9k=;
- b=lm9p+q5uILtUeuXqCPbIjUhhnB+CF14L4M44HOmMAF1tpoCOItjn5LwftWhCk9iAdpBizYKtxRisG2JDmSHqys07povoRhSnGtLnmPitzPTJo8lPi4j3082MQiN9gb+um1GIZUdHhstbg7aI6ekF6Wx2cj6t4mWrh206HMz60iI=
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) by
- VI1PR04MB5808.eurprd04.prod.outlook.com (20.178.127.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Wed, 11 Dec 2019 10:25:27 +0000
-Received: from VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2]) by VI1PR04MB4431.eurprd04.prod.outlook.com
- ([fe80::c947:5ae7:2a68:a4f2%3]) with mapi id 15.20.2516.019; Wed, 11 Dec 2019
- 10:25:26 +0000
-From:   Peng Ma <peng.ma@nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
-Thread-Topic: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
-Thread-Index: AQHVpPH7P18PyO0DCUWpmTSTyww0uaegXQmAgBRv36A=
-Date:   Wed, 11 Dec 2019 10:25:26 +0000
-Message-ID: <VI1PR04MB4431CF7F051F9439C84F84FAED5A0@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20191127071136.5240-1-peng.ma@nxp.com>
- <20191128100613.GI25745@shell.armlinux.org.uk>
-In-Reply-To: <20191128100613.GI25745@shell.armlinux.org.uk>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.ma@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6f5fdc6b-3700-4aee-e02f-08d77e24709b
-x-ms-traffictypediagnostic: VI1PR04MB5808:|VI1PR04MB5808:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5808084EB40A3FDA0A9DC614ED5A0@VI1PR04MB5808.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(39860400002)(136003)(13464003)(189003)(199004)(5660300002)(44832011)(33656002)(55016002)(2906002)(8936002)(316002)(52536014)(9686003)(6916009)(81156014)(81166006)(4326008)(7696005)(186003)(71200400001)(6506007)(66556008)(64756008)(66446008)(45080400002)(76116006)(966005)(66946007)(86362001)(54906003)(478600001)(66476007)(8676002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5808;H:VI1PR04MB4431.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sZK8elfHg3UyAUegXj0hsPeqNqUicou/MGC0bvZmwkR43aqa6gfnD/lFJxGl3ftWtaZ+YWsjL3FJmbAFd+GOgev0CVCo/PunXSF+F8JBoOJCwUX/UCcSELTXsksNV/aICiisfJYpQ7ShAmMzNX793Ck47Pqk7kFKLsbTyp67tc5tUME8ouhsVp5s1cFsTEE0D848ZfJYAhp6mTceelZlFyGsAYMPpCx0JJWGVa5wj4VH9xfr0dTVf+FQ/0151bh0LHWJinKgEz+oTjoKX405riY3sxcJmyMlZ+jcyCF59k1vumW78blEdtEdflLARBvZpaFgRYAUc17osDhPvwESv6DtlnmaXiA4s56/47sGT+hlWmIizF8z588t3ecmBTwRGI4ZnAsBRRsoO9Uxy8hIg5cW2U/O1ip3seqcstzSbUF4U7TJRZ1Cy3tvgn1gcCBwXoFUVoX/QfZliI67j52tcmdfdtL6ZSZy0UJydn596e5bZwoy6T8vxumtCVBhIyZcEJhtGSC9eHrOKM016z4rLKfQhlKHBoEsxtpRiWPOv4k=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 11 Dec 2019 05:27:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34962 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728839AbfLKK1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:27:42 -0500
+Received: by mail-wr1-f66.google.com with SMTP id g17so23430577wro.2;
+        Wed, 11 Dec 2019 02:27:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=izYbmOCoes/LsYGzfApweM/paZftNhc8ig2YmA93Iek=;
+        b=dktV8W3qjSWDFsMCCmSkupvyv2D5omOSWSwl6P5a7dA2dMxgkT/EQgC3h8HIs4QVQ/
+         gWLXsVKT25j9/c1klc74wS7zpsFi6A+vcHjxVoZ6Wasw5El4rj0WQTVU/EPfeeMri+Mw
+         cIOPguow8HvR5xUAHxRe112D+TY58ZADZW1y6mpk8YSL/Igznlmuj1QUl+IRz2CGWd1M
+         ASsNLSTd4+qTacSmeGxPXlvA8BdHBD2EZAeIKX/cGZsQ23b2g/avCvPVwW74cL/IaF24
+         oEI3H1q81BRmSiwzK1beN45g8YLlXlQHcvO9vnD2a69GyEgVXwkGcUKJAZGrz7y7978J
+         2l/Q==
+X-Gm-Message-State: APjAAAVZkHRhKfG9pxh+3XnKDe4zeZ3QeTZd/w7wMAV1GX2XABghVoYX
+        r+AfKq4brpJmh7d56nHc8fmvalNUVV8=
+X-Google-Smtp-Source: APXvYqyKefPhCuv8OWJdNzJS6knz9WRw9M/rJ9/ZpIY7x3A1aYhhcZqTdcBBs3ixzoOkVIsZqVjMoQ==
+X-Received: by 2002:a5d:4a91:: with SMTP id o17mr3129463wrq.232.1576060059698;
+        Wed, 11 Dec 2019 02:27:39 -0800 (PST)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id v3sm1707333wru.32.2019.12.11.02.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 02:27:39 -0800 (PST)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH] MIPS: Add KSEG*ADDR definitions to CONFIG_64BIT
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Burton <paulburton@kernel.org>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191210172739.27131-1-efremov@linux.com>
+ <20191210185716.3lkhbuuqtzj2vs3l@lantea.localdomain>
+ <54db9ec6-a60a-8202-72d8-dafef9eb2f0e@linux.com>
+ <d709de95-c736-464d-9a92-e7b4df5df697@gmail.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <132b4840-f499-01c2-dbb4-6bc9665c9335@linux.com>
+Date:   Wed, 11 Dec 2019 13:27:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f5fdc6b-3700-4aee-e02f-08d77e24709b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 10:25:26.7841
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vuwfZ7pIUTP+y0AFQIhhXQDWk6S894qWY+JGpyltu+0sohjOLJR/ihroJkitDXnr
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5808
+In-Reply-To: <d709de95-c736-464d-9a92-e7b4df5df697@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUnVzc2VsbCwNCg0KSSBhbSBzb3JyeSB0byByZXBseSBsYXRlLCB0aGFua3MgZm9yIHlvdXIg
-cGF0aWVudCByZW1pbmRpbmcsDQpQbGVhc2Ugc2VlIG15IGNvbW1lbnRzIGlubGluZS4NCg0KQmVz
-dCBSZWdhcmRzLA0KUGVuZw0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogUnVz
-c2VsbCBLaW5nIC0gQVJNIExpbnV4IGFkbWluIDxsaW51eEBhcm1saW51eC5vcmcudWs+DQo+U2Vu
-dDogMjAxOcTqMTHUwjI4yNUgMTg6MDYNCj5UbzogUGVuZyBNYSA8cGVuZy5tYUBueHAuY29tPg0K
-PkNjOiBsaW51eEByZW1wZWwtcHJpdmF0LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IHNoYXdu
-Z3VvQGtlcm5lbC5vcmc7DQo+cy5oYXVlckBwZW5ndXRyb25peC5kZTsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14DQo+PGxpbnV4LWlteEBueHAuY29tPjsgZmVzdGV2
-YW1AZ21haWwuY29tOw0KPmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
-dXgtaTJjQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFtFWFRdIFJlOiBbUEFUQ0hdIGkyYzog
-aW14OiBEZWZlciBwcm9iaW5nIGlmIEVETUEgbm90IGF2YWlsYWJsZQ0KPg0KPkNhdXRpb246IEVY
-VCBFbWFpbA0KPg0KPk9uIFdlZCwgTm92IDI3LCAyMDE5IGF0IDA3OjEyOjA5QU0gKzAwMDAsIFBl
-bmcgTWEgd3JvdGU6DQo+PiBFRE1BIG1heSBiZSBub3QgYXZhaWxhYmxlIG9yIGRlZmVyZWQgZHVl
-IHRvIGRlcGVuZGVuY2llcyBvbiBvdGhlcg0KPj4gbW9kdWxlcywgSWYgdGhlc2Ugc2NlbmFyaW9z
-IGlzIGVuY291bnRlcmVkLCB3ZSBzaG91bGQgZGVmZXIgcHJvYmluZy4NCj4NCj5UaGlzIGhhcyBi
-ZWVuIHRyaWVkIGJlZm9yZSBpbiB0aGlzIGZvcm0sIGFuZCBpdCBjYXVzZXMgcmVncmVzc2lvbnMu
-DQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+PiAtLS0N
-Cj4+ICBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jIHwgMTYgKysrKysrKysrKystLS0tLQ0K
-Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPj4N
-Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQo+PiBiL2RyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMgaW5kZXggNDAxMTFhMy4uYzJiMDY5MyAxMDA2NDQNCj4+
-IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMNCj4+ICsrKyBiL2RyaXZlcnMvaTJj
-L2J1c3Nlcy9pMmMtaW14LmMNCj4+IEBAIC0zNjksOCArMzY5LDggQEAgc3RhdGljIHZvaWQgaTJj
-X2lteF9yZXNldF9yZWdzKHN0cnVjdA0KPj4gaW14X2kyY19zdHJ1Y3QgKmkyY19pbXgpICB9DQo+
-Pg0KPj4gIC8qIEZ1bmN0aW9ucyBmb3IgRE1BIHN1cHBvcnQgKi8NCj4+IC1zdGF0aWMgdm9pZCBp
-MmNfaW14X2RtYV9yZXF1ZXN0KHN0cnVjdCBpbXhfaTJjX3N0cnVjdCAqaTJjX2lteCwNCj4+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkbWFfYWRkcl90DQo+
-cGh5X2FkZHIpDQo+PiArc3RhdGljIGludCBpMmNfaW14X2RtYV9yZXF1ZXN0KHN0cnVjdCBpbXhf
-aTJjX3N0cnVjdCAqaTJjX2lteCwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgZG1h
-X2FkZHJfdCBwaHlfYWRkcikNCj4+ICB7DQo+PiAgICAgICBzdHJ1Y3QgaW14X2kyY19kbWEgKmRt
-YTsNCj4+ICAgICAgIHN0cnVjdCBkbWFfc2xhdmVfY29uZmlnIGRtYV9zY29uZmlnOyBAQCAtMzc5
-LDcgKzM3OSw3IEBAIHN0YXRpYw0KPj4gdm9pZCBpMmNfaW14X2RtYV9yZXF1ZXN0KHN0cnVjdCBp
-bXhfaTJjX3N0cnVjdCAqaTJjX2lteCwNCj4+DQo+PiAgICAgICBkbWEgPSBkZXZtX2t6YWxsb2Mo
-ZGV2LCBzaXplb2YoKmRtYSksIEdGUF9LRVJORUwpOw0KPj4gICAgICAgaWYgKCFkbWEpDQo+PiAt
-ICAgICAgICAgICAgIHJldHVybjsNCj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07DQo+
-Pg0KPj4gICAgICAgZG1hLT5jaGFuX3R4ID0gZG1hX3JlcXVlc3RfY2hhbihkZXYsICJ0eCIpOw0K
-Pj4gICAgICAgaWYgKElTX0VSUihkbWEtPmNoYW5fdHgpKSB7DQo+PiBAQCAtNDI0LDcgKzQyNCw3
-IEBAIHN0YXRpYyB2b2lkIGkyY19pbXhfZG1hX3JlcXVlc3Qoc3RydWN0DQo+aW14X2kyY19zdHJ1
-Y3QgKmkyY19pbXgsDQo+PiAgICAgICBkZXZfaW5mbyhkZXYsICJ1c2luZyAlcyAodHgpIGFuZCAl
-cyAocngpIGZvciBETUEgdHJhbnNmZXJzXG4iLA0KPj4gICAgICAgICAgICAgICBkbWFfY2hhbl9u
-YW1lKGRtYS0+Y2hhbl90eCksDQo+PiBkbWFfY2hhbl9uYW1lKGRtYS0+Y2hhbl9yeCkpOw0KPj4N
-Cj4+IC0gICAgIHJldHVybjsNCj4+ICsgICAgIHJldHVybiAwOw0KPj4NCj4+ICBmYWlsX3J4Og0K
-Pj4gICAgICAgZG1hX3JlbGVhc2VfY2hhbm5lbChkbWEtPmNoYW5fcngpOw0KPj4gQEAgLTQzMiw2
-ICs0MzIsOCBAQCBzdGF0aWMgdm9pZCBpMmNfaW14X2RtYV9yZXF1ZXN0KHN0cnVjdA0KPmlteF9p
-MmNfc3RydWN0ICppMmNfaW14LA0KPj4gICAgICAgZG1hX3JlbGVhc2VfY2hhbm5lbChkbWEtPmNo
-YW5fdHgpOw0KPj4gIGZhaWxfYWw6DQo+PiAgICAgICBkZXZtX2tmcmVlKGRldiwgZG1hKTsNCj4+
-ICsNCj4+ICsgICAgIHJldHVybiByZXQ7DQo+DQo+U29tZSBwbGF0Zm9ybXMgZG9uJ3QgaGF2ZSBF
-RE1BLiAgRG9lc24ndCB0aGlzIGZvcmNlIGV2ZXJ5b25lIHdobyB3YW50cw0KPkkyQyB0byBoYXZl
-IERNQT8gIFRoZSBsYXN0IGF0dGVtcHQgYXQgdGhpcyBoYWQ6DQo+DQo+ICAgICAgICAvKiByZXR1
-cm4gc3VjY2Vzc2Z1bGx5IGlmIHRoZXJlIGlzIG5vIGRtYSBzdXBwb3J0ICovDQo+ICAgICAgICBy
-ZXR1cm4gcmV0ID09IC1FTk9ERVYgPyAwIDogcmV0Ow0KPg0KPmhlcmUgYmVjYXVzZSBvZiBleGFj
-dGx5IHRoaXMuDQo+DQo+PiAgfQ0KPj4NCj4+ICBzdGF0aWMgdm9pZCBpMmNfaW14X2RtYV9jYWxs
-YmFjayh2b2lkICphcmcpIEBAIC0xNjA1LDEwICsxNjA3LDE0IEBADQo+PiBzdGF0aWMgaW50IGky
-Y19pbXhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICAgICAgIGRldl9p
-bmZvKCZpMmNfaW14LT5hZGFwdGVyLmRldiwgIklNWCBJMkMgYWRhcHRlciByZWdpc3RlcmVkXG4i
-KTsNCj4+DQo+PiAgICAgICAvKiBJbml0IERNQSBjb25maWcgaWYgc3VwcG9ydGVkICovDQo+PiAt
-ICAgICBpMmNfaW14X2RtYV9yZXF1ZXN0KGkyY19pbXgsIHBoeV9hZGRyKTsNCj4+ICsgICAgIHJl
-dCA9IGkyY19pbXhfZG1hX3JlcXVlc3QoaTJjX2lteCwgcGh5X2FkZHIpOw0KPj4gKyAgICAgaWYg
-KHJldCA9PSAtRVBST0JFX0RFRkVSKQ0KPj4gKyAgICAgICAgICAgICBnb3RvIGkyY19hZGFwdGVy
-X3JlbW92ZTsNCj4NCj5UaGlzIGhhcHBlbnMgX2FmdGVyXyB0aGUgYWRhcHRlciBoYXMgYmVlbiBw
-dWJsaXNoZWQgdG8gdGhlIHJlc3Qgb2YgdGhlIGtlcm5lbC4NCj5DbGFpbWluZyByZXNvdXJjZXMg
-YWZ0ZXIgcHVibGljYXRpb24gaXMgcmFjeSAtIHRoZSBhZGFwdGVyIG1heSBiZSBpbiB1c2UgYnkg
-YQ0KPnJlcXVlc3QgYXQgdGhpcyBwb2ludC4gIFNlY29uZGx5LCB0aGVyZSdzIGJlZW4gcHJvYmxl
-bXMgd2l0aCB0aGlzIGNhdXNpbmcNCj5yZWdyZXNzaW9ucyB3aGVuIEVETUEgaXMgYnVpbHQgYXMg
-YSBtb2R1bGUgYW5kIGkyYy1pbXggaXMgYnVpbHQtaW4uDQo+DQo+U2VlIGU4YzIyMGZhYzQxNSAo
-IlJldmVydCAiaTJjOiBpbXg6IGltcHJvdmUgdGhlIGVycm9yIGhhbmRsaW5nIGluDQo+aTJjX2lt
-eF9kbWFfcmVxdWVzdCgpIiIpIHdoZW4gZXhhY3RseSB3aGF0IHlvdSdyZSBwcm9wb3Npbmcgd2Fz
-IHRyaWVkIGFuZA0KPmVuZGVkIHVwIGhhdmluZyB0byBiZSByZXZlcnRlZC4NCj4NCj5BRkFJSyBu
-b3RoaW5nIGhhcyBjaGFuZ2VkIHNpbmNlLCBzbyBtZXJlbHkgcmVpbnN0YXRpbmcgdGhlIGtub3du
-IHRvIGJlIGJyb2tlbg0KPmNvZGUsIHRoZXJlYnkgcmVpbnRyb2R1Y2luZyB0aGUgc2FtZSAoYW5k
-IG1vcmUpIHByb2JsZW1zLCBpc24ndCBnb2luZyB0byBiZQ0KPmFjY2VwdGFibGUuDQo+DQo+U29y
-cnksIGJ1dCB0aGlzIGdldHMgYSBiaWcgTkFLIGZyb20gbWUuDQo+DQpbUGVuZyBNYV0gSSBzYXcg
-dGhlIHJldmVydCBjb21taXQgZThjMjIwZmFjNDE1IGFuZCB1bmRlcnN0YW5kIHlvdXIgY29uY2Vy
-bnMuDQpJIHNjYW4gdGhlIGkyYy1pbXguYyBkcml2ZXIsIEFsbCBwbGF0Zm9ybXMgdGhhdCB1c2Ug
-aTJjIGRyaXZlciBhbmQgc3VwcG9ydCBkbWEgdXNlIGFuIGVETUEgZW5naW5lLA0KU28gSSBjaGFu
-Z2UgdGhlIGNvZGUoY29tcGFyZSB3aXRoIGxhc3QgcGF0Y2gpIGFzIGZvbGxvd3MsIHBsZWFzZSBy
-ZXZpZXcgYW5kIGdpdmUgbWUgeW91ciBwcmVjaW91cyBjb21tZW50cy4NClRoYW5rcyB2ZXJ5IG11
-Y2guDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jIGIvZHJpdmVy
-cy9pMmMvYnVzc2VzL2kyYy1pbXguYw0KaW5kZXggMTJmNzkzNGZkZGI0Li42Y2FmZWU1MmRkNjcg
-MTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQorKysgYi9kcml2ZXJz
-L2kyYy9idXNzZXMvaTJjLWlteC5jDQpAQCAtMTYwNSw4ICsxNjA1LDExIEBAIHN0YXRpYyBpbnQg
-aTJjX2lteF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIA0KICAgICAgICAv
-KiBJbml0IERNQSBjb25maWcgaWYgc3VwcG9ydGVkICovDQogICAgICAgIHJldCA9IGkyY19pbXhf
-ZG1hX3JlcXVlc3QoaTJjX2lteCwgcGh5X2FkZHIpOw0KLSAgICAgICBpZiAocmV0ID09IC1FUFJP
-QkVfREVGRVIpDQorICAgICAgIGlmIChyZXQgPT0gLUVQUk9CRV9ERUZFUikgew0KKyNpZiAgICBJ
-U19CVUlMVElOKENPTkZJR19GU0xfRURNQSkNCiAgICAgICAgICAgICAgICBnb3RvIGkyY19hZGFw
-dGVyX3JlbW92ZTsNCisjZW5kaWYNCisgICAgICAgfQ0KDQo+Pg0KPj4gICAgICAgcmV0dXJuIDA7
-ICAgLyogUmV0dXJuIE9LICovDQo+Pg0KPj4gK2kyY19hZGFwdGVyX3JlbW92ZToNCj4+ICsgICAg
-IGkyY19kZWxfYWRhcHRlcigmaTJjX2lteC0+YWRhcHRlcik7DQo+PiAgY2xrX25vdGlmaWVyX3Vu
-cmVnaXN0ZXI6DQo+PiAgICAgICBjbGtfbm90aWZpZXJfdW5yZWdpc3RlcihpMmNfaW14LT5jbGss
-ICZpMmNfaW14LT5jbGtfY2hhbmdlX25iKTsNCj4+ICBycG1fZGlzYWJsZToNCj4+IC0tDQo+PiAy
-LjkuNQ0KPj4NCj4+DQo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXw0KPj4gbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4+IGxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJv
-dGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZsaXN0cw0KPj4gLmluZnJhZGVh
-ZC5vcmclMkZtYWlsbWFuJTJGbGlzdGluZm8lMkZsaW51eC1hcm0ta2VybmVsJmFtcDtkYXRhPTAy
-JTcNCj5DMA0KPj4NCj4xJTdDcGVuZy5tYSU0MG54cC5jb20lN0M2ZGJjZjczY2ViMTA0OTU0NTdm
-YTA4ZDc3M2VhOWVlMSU3QzY4Ng0KPmVhMWQzYmMyDQo+Pg0KPmI0YzZmYTkyY2Q5OWM1YzMwMTYz
-NSU3QzAlN0MxJTdDNjM3MTA1MzIzODQzMTc0NjMxJmFtcDtzZGF0YT1kDQo+djFVSU5STUUNCj4+
-IEN4NncyeEclMkZ5bGlOV052SWJUYmFjSHBxQXQ4JTJCNlc1cUZrJTNEJmFtcDtyZXNlcnZlZD0w
-DQo+Pg0KPg0KPi0tDQo+Uk1LJ3MgUGF0Y2ggc3lzdGVtOg0KPmh0dHBzOi8vZXVyMDEuc2FmZWxp
-bmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnd3dy5hcg0KPm1s
-aW51eC5vcmcudWslMkZkZXZlbG9wZXIlMkZwYXRjaGVzJTJGJmFtcDtkYXRhPTAyJTdDMDElN0Nw
-ZW5nLm1hDQo+JTQwbnhwLmNvbSU3QzZkYmNmNzNjZWIxMDQ5NTQ1N2ZhMDhkNzczZWE5ZWUxJTdD
-Njg2ZWExZDNiYzJiNGM2DQo+ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNzEwNTMyMzg0
-MzE4NDYyOSZhbXA7c2RhdGE9OUZaQ0ENCj5KSnhFOTl3UDVaTW9HNmliJTJGZVlvWGRrc2dxMnVT
-ekJyQnROVW5VJTNEJmFtcDtyZXNlcnZlZD0wDQo+RlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUg
-bGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAxMi4xTWJwcyBkb3duIDYyMmticHMNCj51cCBBY2Nv
-cmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldDogMTEuOU1icHMgZG93biA1MDBrYnBzIHVwDQo=
+On 12/11/19 2:04 AM, Florian Fainelli wrote:
+> On 12/10/19 12:14 PM, Denis Efremov wrote:
+>> Hi,
+>>
+>> On 10.12.2019 21:57, Paul Burton wrote:
+>>> Hi Denis,
+>>>
+>>> On Tue, Dec 10, 2019 at 08:27:39PM +0300, Denis Efremov wrote:
+>>>> The patch adds KSEG0ADDR, KSEG1ADDR, KSEG2ADDR, KSEG3ADDR
+>>>> definitions to CONFIG_64BIT ifdef. This fixes broken compilation:
+>>>>   CC      drivers/watchdog/mtx-1_wdt.o
+>>>> In file included from drivers/watchdog/mtx-1_wdt.c:44:
+>>>> ./arch/mips/include/asm/mach-au1x00/au1000.h: In function ‘alchemy_rdsys’:
+>>>> ./arch/mips/include/asm/mach-au1x00/au1000.h:603:36: error: implicit
+>>>>   declaration of function ‘KSEG1ADDR’; did you mean ‘CKSEG1ADDR’?
+>>>>   [-Werror=implicit-function-declaration]
+>>>
+>>> Since this driver is meant to run on a system that only supports 32 bit
+>>> kernels, I think it would be better to correct its dependencies in
+>>> Kconfig like so:
+>>>
+>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>> index 58e7c100b6ad..509cbb6d2cea 100644
+>>> --- a/drivers/watchdog/Kconfig
+>>> +++ b/drivers/watchdog/Kconfig
+>>> @@ -1648,7 +1648,7 @@ config JZ4740_WDT
+>>>
+>>>  config WDT_MTX1
+>>>         tristate "MTX-1 Hardware Watchdog"
+>>> -       depends on MIPS_MTX1 || (MIPS && COMPILE_TEST)
+>>> +       depends on MIPS_MTX1 || (MIPS && 32BIT && COMPILE_TEST)
+>>>         help
+>>>           Hardware driver for the MTX-1 boards. This is a watchdog timer that
+>>>           will reboot the machine after a 100 seconds timer expired.
+>>>
+>>> And mark this with the appropriate fixes tag:
+>>>
+>>>   Fixes: da2a68b3eb47 ("watchdog: Enable COMPILE_TEST where possible")
+>>>
+>>> What do you think?
+>>>
+>>> Alternatively the driver could just use the existing & equivalent
+>>> CKSEG1ADDR() macro as the compiler suggested, but in that case it'd be
+>>> good to check that's the only change needed to build cleanly with
+>>> CONFIG_64BIT=y.
+>>>
+>>
+>> Thank you for the suggestion. I will prepare V2 and fix the same way other
+>> drivers that break the compilation with CONFIG_64BIT and missing KSEG1ADDR.
+> 
+> There is a much simpler solution actually:
+
+Well, I think you know better how to fix this. I think it will be better if you
+prepare the patch. Your solution seems more elegant, at least to me.
+
+> 
+> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
+> index 8aa1cb4a295f..ea1bbf5ee528 100644
+> --- a/drivers/watchdog/mtx-1_wdt.c
+> +++ b/drivers/watchdog/mtx-1_wdt.c
+> @@ -41,8 +41,6 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/gpio/consumer.h>
+> 
+> -#include <asm/mach-au1x00/au1000.h>
+> -
+>  #define MTX1_WDT_INTERVAL      (5 * HZ)
+> 
+>  static int ticks = 100 * HZ;
+> 
+> and then you can even push this further with:
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 1679e0dc869b..982897ff074e 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1651,7 +1651,7 @@ config JZ4740_WDT
+> 
+>  config WDT_MTX1
+>         tristate "MTX-1 Hardware Watchdog"
+> -       depends on MIPS_MTX1 || (MIPS && COMPILE_TEST)
+> +       depends on MIPS_MTX1 || COMPILE_TEST
+>         help
+>           Hardware driver for the MTX-1 boards. This is a watchdog timer
+> that
+>           will reboot the machine after a 100 seconds timer expired.
+> 
+> I checked both an alchemy, non-alchemy MIPS build as well as a x86_64
+> build with the two patches applied.
+> 
+> In fact, this entire driver is just an older version of
+> drivers/watchdog/gpio_wdt.c and should be converted to it, if only I had
+> that box available.
+
+
+Thanks,
+Denis
