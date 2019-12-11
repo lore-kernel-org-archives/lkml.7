@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 803FBC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73BDC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEF92465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7A120663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077156;
-	bh=HWaKh99dgegX7bql7xsnkCTH6WXDUuvRMl6i0onbLW8=;
+	s=default; t=1576077157;
+	bh=k2Dj0WU/+DPd2o2LyxT3Kvk5a1GvCFmVhVA7nBIYlqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQKqxCOgoCWFMAcRAlUTqUKjT31kmLMA3MRH8cI57SZ31sglUnXrFghfPYDBAdVno
-	 8u7N32MQg1fygzRisknsFi3O3Li9bzE91zOG1adWIvzV4qotsWDI+Qhxpb7x7aVHzl
-	 HBGkPacPAmFU6gWrHGuY3ouq0/5xMP1auVvZG3vg=
+	b=kJgIdy5QS4T9pcs2qoCv4w909+j0DFcB1DUMI6WGa4XxRQxvrhbnCfI5WFtkYfer6
+	 Zeeu6orN7sIPcpNe/nLlhw454KV14kaVMalYHn9o3Xodrbv5DtM2K7pJApTAt67aDw
+	 iEFLOOZiTBuLvJDxitoP59vUAPkKt+L2/t0Nv1V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbfLKPMe (ORCPT
+        id S1731187AbfLKPMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731088AbfLKPMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731093AbfLKPMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 779C72173E;
-        Wed, 11 Dec 2019 15:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71BCC208C3;
+        Wed, 11 Dec 2019 15:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077139;
-        bh=HWaKh99dgegX7bql7xsnkCTH6WXDUuvRMl6i0onbLW8=;
+        s=default; t=1576077140;
+        bh=k2Dj0WU/+DPd2o2LyxT3Kvk5a1GvCFmVhVA7nBIYlqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/J9yW1qPZgW+2DNC2OQSrS7jfN+aC5k1UKlIc/X7s7XOHnVQWwfdMLXh4y41NV70
-         76EV6k8T4Ds0oy/kEBdurT5Sa/bg2r0iA95P7KrhIRsUmyyIkBjENs8a75aYue3RAJ
-         rZaUSJrTNqRkY1fADVmXSFz8wktse5OPwQdcmCdg=
+        b=a7hrtaqSOs1QwnQRYtDMsw/wlKqIZtebOl9CnkVPAzn1ZIUraKdmojcx76smfJvcV
+         22mGAYfqeFo/vtxU+cKit52ZiX0WwfASIB7YeHp3b5K2GH2bs20mc7ziIr/GH+O5qP
+         kSCUkv7OIaGexKPg6w1n6SjfY3CSKLfUYwGqlGog=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 026/134] selftests/powerpc: Fixup clobbers for TM tests
-Date:   Wed, 11 Dec 2019 10:10:02 -0500
-Message-Id: <20191211151150.19073-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 027/134] powerpc/tools: Don't quote $objdump in scripts
+Date:   Wed, 11 Dec 2019 10:10:03 -0500
+Message-Id: <20191211151150.19073-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,97 +60,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit a02cbc7ffe529ed58b6bbe54652104fc2c88bd77 ]
+[ Upstream commit e44ff9ea8f4c8a90c82f7b85bd4f5e497c841960 ]
 
-Some of our TM (Transactional Memory) tests, list "r1" (the stack
-pointer) as a clobbered register.
+Some of our scripts are passed $objdump and then call it as
+"$objdump". This doesn't work if it contains spaces because we're
+using ccache, for example you get errors such as:
 
-GCC >= 9 doesn't accept this, and the build breaks:
+  ./arch/powerpc/tools/relocs_check.sh: line 48: ccache ppc64le-objdump: No such file or directory
+  ./arch/powerpc/tools/unrel_branch_check.sh: line 26: ccache ppc64le-objdump: No such file or directory
 
-  ptrace-tm-spd-tar.c: In function 'tm_spd_tar':
-  ptrace-tm-spd-tar.c:31:2: error: listing the stack pointer register 'r1' in a clobber list is deprecated [-Werror=deprecated]
-     31 |  asm __volatile__(
-        |  ^~~
-  ptrace-tm-spd-tar.c:31:2: note: the value of the stack pointer after an 'asm' statement must be the same as it was before the statement
+Fix it by not quoting the string when we expand it, allowing the shell
+to do the right thing for us.
 
-We do have some fairly large inline asm blocks in these tests, and
-some of them do change the value of r1. However they should all return
-to C with the value in r1 restored, so I think it's legitimate to say
-r1 is not clobbered.
-
-As Segher points out, the r1 clobbers may have been added because of
-the use of `or 1,1,1`, however that doesn't actually clobber r1.
-
-Segher also points out that some of these tests do clobber LR, because
-they call functions, and that is not listed in the clobbers, so add
-that where appropriate.
-
+Fixes: a71aa05e1416 ("powerpc: Convert relocs_check to a shell script using grep")
+Fixes: 4ea80652dc75 ("powerpc/64s: Tool to flag direct branches from unrelocated interrupt vectors")
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191029095324.14669-1-mpe@ellerman.id.au
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024004730.32135-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c | 4 ++--
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c     | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c     | 4 ++--
- 4 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/tools/relocs_check.sh       | 2 +-
+ arch/powerpc/tools/unrel_branch_check.sh | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-index 25e23e73c72e6..2ecfa1158e2bc 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-@@ -73,7 +73,7 @@ trans:
- 		[sprn_texasr]"i"(SPRN_TEXASR), [tar_1]"i"(TAR_1),
- 		[dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2), [dscr_2]"i"(DSCR_2),
- 		[tar_3]"i"(TAR_3), [dscr_3]"i"(DSCR_3)
--		: "memory", "r0", "r1", "r3", "r4", "r5", "r6"
-+		: "memory", "r0", "r3", "r4", "r5", "r6", "lr"
- 		);
+diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
+index 2b4e959caa365..7b9fe0a567cf3 100755
+--- a/arch/powerpc/tools/relocs_check.sh
++++ b/arch/powerpc/tools/relocs_check.sh
+@@ -20,7 +20,7 @@ objdump="$1"
+ vmlinux="$2"
  
- 	/* TM failed, analyse */
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-index f603fe5a445b3..6f7fb51f08099 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-@@ -74,8 +74,8 @@ trans:
- 		"3: ;"
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
- 		: [sprn_texasr] "i"  (SPRN_TEXASR)
--		: "memory", "r0", "r1", "r3", "r4",
--		"r7", "r8", "r9", "r10", "r11"
-+		: "memory", "r0", "r3", "r4",
-+		  "r7", "r8", "r9", "r10", "r11", "lr"
- 		);
+ bad_relocs=$(
+-"$objdump" -R "$vmlinux" |
++$objdump -R "$vmlinux" |
+ 	# Only look at relocation lines.
+ 	grep -E '\<R_' |
+ 	# These relocations are okay
+diff --git a/arch/powerpc/tools/unrel_branch_check.sh b/arch/powerpc/tools/unrel_branch_check.sh
+index 1e972df3107ee..77114755dc6f2 100755
+--- a/arch/powerpc/tools/unrel_branch_check.sh
++++ b/arch/powerpc/tools/unrel_branch_check.sh
+@@ -18,14 +18,14 @@ vmlinux="$2"
+ #__end_interrupts should be located within the first 64K
  
- 	if (result) {
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-index e0d37f07bdeba..46ef378a15ecc 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-@@ -62,7 +62,7 @@ trans:
- 		[sprn_ppr]"i"(SPRN_PPR), [sprn_texasr]"i"(SPRN_TEXASR),
- 		[tar_1]"i"(TAR_1), [dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2),
- 		[dscr_2]"i"(DSCR_2), [cptr1] "b" (&cptr[1])
--		: "memory", "r0", "r1", "r3", "r4", "r5", "r6"
-+		: "memory", "r0", "r3", "r4", "r5", "r6"
- 		);
+ end_intr=0x$(
+-"$objdump" -R "$vmlinux" -d --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -d --start-address=0xc000000000000000           \
+ 		 --stop-address=0xc000000000010000 |
+ grep '\<__end_interrupts>:' |
+ awk '{print $1}'
+ )
  
- 	/* TM failed, analyse */
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-index 8027457b97b7c..70ca01234f79c 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-@@ -62,8 +62,8 @@ trans:
- 		"3: ;"
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
- 		: [sprn_texasr] "i"  (SPRN_TEXASR), [cptr1] "b" (&cptr[1])
--		: "memory", "r0", "r1", "r3", "r4",
--		"r7", "r8", "r9", "r10", "r11"
-+		: "memory", "r0", "r3", "r4",
-+		  "r7", "r8", "r9", "r10", "r11", "lr"
- 		);
- 
- 	if (result) {
+ BRANCHES=$(
+-"$objdump" -R "$vmlinux" -D --start-address=0xc000000000000000		\
++$objdump -R "$vmlinux" -D --start-address=0xc000000000000000           \
+ 		--stop-address=${end_intr} |
+ grep -e "^c[0-9a-f]*:[[:space:]]*\([0-9a-f][0-9a-f][[:space:]]\)\{4\}[[:space:]]*b" |
+ grep -v '\<__start_initialization_multiplatform>' |
 -- 
 2.20.1
 
