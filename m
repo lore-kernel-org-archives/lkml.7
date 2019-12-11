@@ -2,92 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2243BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0D8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED12A2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C449C2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="GWZfg/lm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZlQJFkn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbfLKQDv (ORCPT
+        id S2388852AbfLKQDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:03:51 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:62306 "EHLO rere.qmqm.pl"
+        Wed, 11 Dec 2019 11:03:49 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:47730 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388815AbfLKQD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:03:28 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Y1tj75jbzww;
-        Wed, 11 Dec 2019 17:03:25 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1576080206; bh=Ied8n5JGgcT/Q6GVeD3SNToh2Vsqko/Bq33v2AXfFoI=;
-        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=GWZfg/lmm50OYVE/ONG2Zh/HK5dnCXByevprO5MhDC0/ZzVbxTDX91SnX6s5+tF1R
-         e47phCs+3f/5khR7iD2nNVfltIXOmQqJv6WSsdlP5GguneVmDkzzE9/5iHE6D/vwvk
-         IFnYumpFr+U8m74VzAt/GeUnOWPq59Qe56oCy5EmXrXkF/8j2U1r25rzyhu9DQa/Lw
-         0+xi01+XCs1+EAqkGARQK9p8A5WjdUATs+HeTkb+VPEfjWwD1s4rowBprbItFJg5SQ
-         uBt3cMFF5xJmytXmHKhSjcTOuE1mcH+dHFBtjucOdUItkJnEw9WaAa/7a+ws50O64R
-         5D3M7iR4yDvIA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Wed, 11 Dec 2019 17:03:25 +0100
-Message-Id: <ecacdd9b1baea0cf332c30f3c7e01d5e734957be.1576079249.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
-From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 8/9] dt-bindings: input: elants-i2c: Document common
- touchscreen properties
+        id S2388821AbfLKQD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:03:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JC7q0sPt/GRGBIf2Uf74AucDMKhObwoznRVXHT//S3Q=; b=ZlQJFkn9tJIjt29SdqX1PpHMRK
+        pTityYajvTA/tvyRey6gPYVYmEMxu+G/zBPejLTSbFE2Gk7trOW6/vtgjB2OYyQNsFRHWIlhLGhAt
+        8vM8PVrbairl+z8kzRcI2CVzx2R/PJ4fLSR6P9XQMuonoOFZfQ+VuhuGKM3oVwbJLIFk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1if4SP-0005m0-6C; Wed, 11 Dec 2019 17:03:21 +0100
+Date:   Wed, 11 Dec 2019 17:03:21 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Chng, Jack Ping" <jack.ping.chng@linux.intel.com>,
+        devel@driverdev.osuosl.org, cheol.yong.kim@intel.com,
+        andriy.shevchenko@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mallikarjunax.reddy@linux.intel.com,
+        davem@davemloft.net
+Subject: Re: FW: [PATCH v2] staging: intel-gwdpa: gswip: Introduce Gigabit
+ Ethernet Switch (GSWIP) device driver
+Message-ID: <20191211160321.GA21225@lunn.ch>
+References: <5f85180573a3fb20238d6a340cdd990f140ed6f0.1576054234.git.jack.ping.chng@intel.com>
+ <20191211092738.GA505511@kroah.com>
+ <BYAPR11MB317606F8BE2B60C4BAD872F1DE5A0@BYAPR11MB3176.namprd11.prod.outlook.com>
+ <c26e56cf-eb04-5992-252a-e66f6029d6ac@linux.intel.com>
+ <20191211121724.GA514307@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh-dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Scott Liu <scott.liu@emc.com.tw>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211121724.GA514307@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+> > We are trying to upstream the datapath code for Intel new NoC gateway
+> > (please refer to intel-gwdpa.txt at the end of the patch). It consists of
+> > ethernet, WIFI and passive optics handling. Since the code is quite huge, we
+> > have broken it into parts for internal review.
+> > 
+> > As we have seen past upstream example such as fsl/dpaa, we thought that it
+> > is better for us to start the upstreaming of the driver into staging folder
+> > to get feedback from the community.
+> > 
+> > Is this the right approach? Or do we upstream all the drivers into
+> > drivers/soc folder when we have all the drivers ready?
+> 
+> Why is drivers/soc/ the place to put networking drivers?
+> 
+> Please please please work with the Intel Linux kernel developers who
+> know how to do this type of thing and do not require the kernel
+> community to teach you all the proper development model and methods
+> here.
 
-Document support of the common touchscreen properties.
+I see a lot in common with dpaa2 here. You have a non traditional
+hardware architecture. That means it does not nicely fit into the tree
+as other drivers do.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
----
- Documentation/devicetree/bindings/input/elants_i2c.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+There also appears to of been a huge amount of code development behind
+closed doors, same as dpaa2. And because of the non traditional
+architecture, you have had to make all sorts of design decisions. And
+because that happened behind closed door, i'm sure some are
+wrong. dpaa2 has been in staging for around 2 1/2 years now. It takes
+that amount of time to discuss how non traditional hardware should be
+supported in Linux, an re-write the drivers as needed because of the
+wrong design decisions.
 
-diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
-index 5edac8be0802..45fab32bbc19 100644
---- a/Documentation/devicetree/bindings/input/elants_i2c.txt
-+++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
-@@ -14,9 +14,13 @@ Optional properties:
- - reset-gpios: reset gpio the chip is connected to.
- - vcc33-supply: a phandle for the regulator supplying 3.3V power.
- - vccio-supply: a phandle for the regulator supplying IO power.
-+- see [2] for additional properties
-+
-+For additional optional properties see: touchscreen.txt
- 
- [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
- 
- Example:
- 	&i2c1 {
--- 
-2.20.1
+I kind of expect you are going to have a similar experience. So as
+well as getting the Intel Linux kernel developers involved for process
+and architecture support, you might want to look at how the dpaa2
+drivers have evolved, what they got wrong, what they got right. How is
+your hardware similar and different. And look at what parts of dpaa2
+have moved out of staging, and maybe consider that code as a good
+model to follow.
 
+      Andrew
