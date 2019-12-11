@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A814EC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD46C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745742073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F1E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079529;
-	bh=QqZtaoiTzgvFT0/xdxSmNilbB4vI6VA3v6uX4v+6WZU=;
+	s=default; t=1576079535;
+	bh=5Sp5yUHgoMyXmrbW9X9JdEoez6QcUp6xJ50vpCzx0b0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U011pOTCvhAP9iFJh4x1cM+mTV+4KzXzJ7WFXatGdJp50tkDuvC9qLnxNlU/pVPHg
-	 0MXtxW4N0Jr/ZjUiyPcvStTiB7iSy6rrF/n3ZkJeij+V8GbPJHnME1nD0tD6Tb/jsr
-	 /cxYgcETyX20k/vqJ49eMBVqqCQC4nqZqwufazTw=
+	b=B8ufr1nUFMnEzySQ0mcVZJYgjDugCr+fN9t/lmnfyYkig/kmpMbU+BX8zLOmi3Tjz
+	 eFULlFUA7CG3qHaPn33Mzy+fgOWLV7SqZ0Yetfi75Qyr2pmdyJmC0LK4SFpMAP3gLr
+	 HKwJmNhOx+aoVLx28ib9X3Ej6/k4l1GmCKOJI0No=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbfLKPVd (ORCPT
+        id S1732437AbfLKPVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729663AbfLKPV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:29 -0500
+        id S1732167AbfLKPVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBEEF24658;
-        Wed, 11 Dec 2019 15:21:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 030732073D;
+        Wed, 11 Dec 2019 15:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077689;
-        bh=QqZtaoiTzgvFT0/xdxSmNilbB4vI6VA3v6uX4v+6WZU=;
+        s=default; t=1576077670;
+        bh=5Sp5yUHgoMyXmrbW9X9JdEoez6QcUp6xJ50vpCzx0b0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pDNZRZLtxAwBTvWV2PoRcz+gUgd24omRX81NBHOvaD5aGVvtzMatQR1PR5m7N8uEL
-         rgG+nYeGrm+WkEzNEH6mVCHCzs5DaaBNvB+KmGbguFU3gpwgwFTQ9iZW4EoVvXuHQp
-         S9nycrRx6bTuALzvS8Xs+LeQYpmAXLRZvhEhH6uI=
+        b=hk1qsV43cV4abeYPFzmDHZz17e4IVyNGUWz67mOxqDBj373Y3dKvcTOQC5AEr9HBT
+         2/AmZA2hhmw17zHgtybEd0beckBsoygSuv5Pg9Um1flBBhuZsZ67NoywAHUT0R4MLo
+         8OQb1g9GTMOjnVYn+1OTDYqi46AtAkWKtUGuEnz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 133/243] bpf: btf: implement btf_name_valid_identifier()
-Date:   Wed, 11 Dec 2019 16:04:55 +0100
-Message-Id: <20191211150348.108202779@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 127/243] ARM: dts: sun8i: a23/a33: Fix OPP DTC warnings
+Date:   Wed, 11 Dec 2019 16:04:49 +0100
+Message-Id: <20191211150347.699074067@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,66 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit cdbb096adddb3f42584cecb5ec2e07c26815b71f ]
+[ Upstream commit a858f569b80a69076c521532a289097af905cf1e ]
 
-Function btf_name_valid_identifier() have been implemented in
-bpf-next commit 2667a2626f4d ("bpf: btf: Add BTF_KIND_FUNC and
-BTF_KIND_FUNC_PROTO"). Backport this function so later patch
-can use it.
+DTC will emit a warning on our OPPs nodes for the common DTSI between the
+A23 and A33 since those nodes use the frequency as unit addresses, but
+don't have a matching reg property.
 
-Fixes: 69b693f0aefa ("bpf: btf: Introduce BPF Type Format (BTF)")
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix this by moving the frequency to the node name instead.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/btf.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi              | 6 +++---
+ arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 4 ++--
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index cfa27b7d1168c..f0f9109f59bac 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -5,6 +5,7 @@
- #include <uapi/linux/types.h>
- #include <linux/seq_file.h>
- #include <linux/compiler.h>
-+#include <linux/ctype.h>
- #include <linux/errno.h>
- #include <linux/slab.h>
- #include <linux/anon_inodes.h>
-@@ -426,6 +427,30 @@ static bool btf_name_offset_valid(const struct btf *btf, u32 offset)
- 		offset < btf->hdr.str_len;
- }
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index f0096074a4678..97de6ad133dc2 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -47,19 +47,19 @@
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
  
-+/* Only C-style identifier is permitted. This can be relaxed if
-+ * necessary.
-+ */
-+static bool btf_name_valid_identifier(const struct btf *btf, u32 offset)
-+{
-+	/* offset must be valid */
-+	const char *src = &btf->strings[offset];
-+	const char *src_limit;
-+
-+	if (!isalpha(*src) && *src != '_')
-+		return false;
-+
-+	/* set a limit on identifier length */
-+	src_limit = src + KSYM_NAME_LEN;
-+	src++;
-+	while (*src && src < src_limit) {
-+		if (!isalnum(*src) && *src != '_')
-+			return false;
-+		src++;
-+	}
-+
-+	return !*src;
-+}
-+
- static const char *btf_name_by_offset(const struct btf *btf, u32 offset)
- {
- 	if (!offset)
+-		opp@648000000 {
++		opp-648000000 {
+ 			opp-hz = /bits/ 64 <648000000>;
+ 			opp-microvolt = <1040000 1040000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+-		opp@816000000 {
++		opp-816000000 {
+ 			opp-hz = /bits/ 64 <816000000>;
+ 			opp-microvolt = <1100000 1100000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
+-		opp@1008000000 {
++		opp-1008000000 {
+ 			opp-hz = /bits/ 64 <1008000000>;
+ 			opp-microvolt = <1200000 1200000 1300000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+index 0dbdb29a8fff9..ee7ce3752581b 100644
+--- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
++++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
+@@ -103,13 +103,13 @@
+ };
+ 
+ &cpu0_opp_table {
+-	opp@1104000000 {
++	opp-1104000000 {
+ 		opp-hz = /bits/ 64 <1104000000>;
+ 		opp-microvolt = <1320000>;
+ 		clock-latency-ns = <244144>; /* 8 32k periods */
+ 	};
+ 
+-	opp@1200000000 {
++	opp-1200000000 {
+ 		opp-hz = /bits/ 64 <1200000000>;
+ 		opp-microvolt = <1320000>;
+ 		clock-latency-ns = <244144>; /* 8 32k periods */
 -- 
 2.20.1
 
