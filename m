@@ -2,61 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBB7C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0C3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF0D20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003052077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730916AbfLKR6K (ORCPT
+        id S1731041AbfLKR6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:58:10 -0500
-Received: from mga11.intel.com ([192.55.52.93]:46936 "EHLO mga11.intel.com"
+        Wed, 11 Dec 2019 12:58:25 -0500
+Received: from mga02.intel.com ([134.134.136.20]:29189 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbfLKR6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:58:10 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1730918AbfLKR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:58:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:58:09 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:58:22 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
-   d="scan'208";a="225618649"
-Received: from cmclough-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.152])
-  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 09:58:07 -0800
-Date:   Wed, 11 Dec 2019 19:58:05 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Tadeusz Struk <tadeusz.struk@intel.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tpm: selftests: cleanup after unseal with wrong policy
- test
-Message-ID: <20191211175805.GL4516@linux.intel.com>
-References: <157601492070.15343.464606544465753590.stgit@tstruk-mobl1>
+   d="scan'208";a="203645151"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 11 Dec 2019 09:58:22 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] KVM: x86: Add build-time assertion on usage of bit()
+Date:   Wed, 11 Dec 2019 09:58:21 -0800
+Message-Id: <20191211175822.1925-2-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191211175822.1925-1-sean.j.christopherson@intel.com>
+References: <20191211175822.1925-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157601492070.15343.464606544465753590.stgit@tstruk-mobl1>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:55:20PM -0800, Tadeusz Struk wrote:
-> Unseal with wrong policy tests affects DA lockout and eventually
-> causes to fail with:
-> "ProtocolError: TPM_RC_LOCKOUT: cc=0x00000153, rc=0x00000921",
-> when the test runs multiple times. Send tpm clear command
-> after the test to reset the DA counters.
-> 
-> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+Add build-time checks to ensure KVM isn't trying to do a reverse CPUID
+lookup on Linux-defined feature bits, along with comments to explain
+the gory details of X86_FEATUREs and bit().
 
-You could pick this also to the same patch set.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
 
-/Jarkko
+Note, the premature newline in the first line of the second comment is
+intentional to reduce churn in the next patch.
+
+ arch/x86/kvm/x86.h | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index cab5e71f0f0f..4ee4175c66a7 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -144,9 +144,28 @@ static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
+ 	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
+ }
+ 
+-static inline u32 bit(int bitno)
++/*
++ * Retrieve the bit mask from an X86_FEATURE_* definition.  Features contain
++ * the hardware defined bit number (stored in bits 4:0) and a software defined
++ * "word" (stored in bits 31:5).  The word is used to index into arrays of
++ * bit masks that hold the per-cpu feature capabilities, e.g. this_cpu_has().
++ */
++static __always_inline u32 bit(int feature)
+ {
+-	return 1 << (bitno & 31);
++	/*
++	 * bit() is intended to be used only for hardware-defined
++	 * words, i.e. words whose bits directly correspond to a CPUID leaf.
++	 * Retrieving the bit mask from a Linux-defined word is nonsensical
++	 * as the bit number/mask is an arbitrary software-defined value and
++	 * can't be used by KVM to query/control guest capabilities.
++	 */
++	BUILD_BUG_ON((feature >> 5) == CPUID_LNX_1);
++	BUILD_BUG_ON((feature >> 5) == CPUID_LNX_2);
++	BUILD_BUG_ON((feature >> 5) == CPUID_LNX_3);
++	BUILD_BUG_ON((feature >> 5) == CPUID_LNX_4);
++	BUILD_BUG_ON((feature >> 5) > CPUID_7_EDX);
++
++	return 1 << (feature & 31);
+ }
+ 
+ static inline u8 vcpu_virt_addr_bits(struct kvm_vcpu *vcpu)
+-- 
+2.24.0
+
