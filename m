@@ -2,106 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A384C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26364C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5F822527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077971;
-	bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZUfrb0KbwFOzfVhTR1wnH39qhn2wMZHS7cq/5CuwNAo+XBrfAUBN75RT6I3hxwgq
-	 Jl4tYzgdEzQ+XdlsIq7mJmbDOxSv8go1fFZbUrjuQCj/HLT/gNJpVAuV/Qv3oNlpMf
-	 2Qdn8bUYXeBXglL6BAb1AJGXe2xy8bBFsSNiObZM=
+	by mail.kernel.org (Postfix) with ESMTP id F064A222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAGXRwf7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733081AbfLKP0L (ORCPT
+        id S1733087AbfLKP0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbfLKP0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4683E2077B;
-        Wed, 11 Dec 2019 15:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077962;
-        bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugZx38xqhotAWnWlB+tyu8dyndm9NgE3kvSkaWua2yhlxBWRAEm3zuBFgQ3Hd5/jz
-         lmVeVHz8kgY+R1LCh4N+GLOMu9ZhrIXXg3ZbS1LMqmT/zrrPQHgrZGLG2oRQHD/JI1
-         3EDKk69blEzD4jz0svYXk/+7SoDBcGkMpj4dp3eE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 238/243] RDMA/qib: Validate ->show()/store() callbacks before calling them
-Date:   Wed, 11 Dec 2019 16:06:40 +0100
-Message-Id: <20191211150355.402771505@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 11 Dec 2019 10:26:13 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34136 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732924AbfLKP0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:07 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so17042572lfc.1;
+        Wed, 11 Dec 2019 07:26:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UXbv7AZalf0SJthB9VxmQOQHQNQr5NxpvNmi8Mus0cU=;
+        b=DAGXRwf7NY3dt7nxqCSZ6a856Lz3XGnVqcq9yPxYkzkNSNs/YT4VHK/A8h1hpbcQcC
+         SlxjNIxenKolltunkOAS3xBBU4tnB5vOgy/h1HJuz5j2lGa9HdYtNyleNXBWs8d/BUVP
+         uJ11i+JTvE3Imwu6qulmRFQdk4dZDVDbEowWc3riwi/4gSGmuuASd9zKQ1+RqNwqKC8l
+         pKDsVvxajmupA7JXYB0wKAtCpCki/lnHxkVT7X4qKqlkwzOp1Z5WyDPF4SIz3NQVRniz
+         4YKV5fnuHx9KIpMPvX8JB8Pgu9iY5MYaLSlVIYbsYC9VPjbxqMobUw5CfaNsu0zb1jPd
+         G0qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UXbv7AZalf0SJthB9VxmQOQHQNQr5NxpvNmi8Mus0cU=;
+        b=oeJF9gSncR98Aepw7K51rIh3kqLtxHHlfgVorIuwuTID5sbejOtBZgRAS3Vvj92IPG
+         I3ckupn9ys57wbBPtH4OgOo0DFSGGdPoE7uiiIlB+uS03aTuLnfi93FdRch633Pdi6BF
+         SYigTRo4VNtQOx4p4wOYSKmjKE1ka+V1O0XVojVrL1Hg/76FiYZm/G5BiHCq2Uu5sFoJ
+         vhPQL1gC/Sztktbz2TFmVS8HBbb9fZVvEaY29EHaf5dTpis+igOfZBpMVPRPs5PHSdTq
+         ZgyanSxcOYgteBuBFWhv4/2ke4bUUcQyvFMrdcGWd5fdbD1HqEM1vK/A7xXB9M2H5OZp
+         v/Sg==
+X-Gm-Message-State: APjAAAVaACuXQKraxYwC7OfZ64hhvR3rduAhkVTgBA0aRPLDILiYIdlR
+        f04jDltlNqxc1JH0nwETBzZeVfRg
+X-Google-Smtp-Source: APXvYqyYm/SNIE22ortuNQPRjduIvM/kAFQbigUzlR+6z5UFuwd16Xk59CtfmpwCARAUWDExiJMeyQ==
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr2597142lfh.102.1576077964140;
+        Wed, 11 Dec 2019 07:26:04 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t81sm1335053lff.25.2019.12.11.07.26.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 07:26:03 -0800 (PST)
+Subject: Re: [PATCH 3/6] input: elants: support common touchscreen DT
+ properties
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-input@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org
+References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
+ <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
+ <20191210023818.GB15246@qmqm.qmqm.pl>
+ <2c9cd83c-518f-2f22-c3e7-ac629a181b8d@gmail.com>
+ <20191211032813.GA17731@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <21532a63-6706-c082-5ab1-cf083bd3af47@gmail.com>
+Date:   Wed, 11 Dec 2019 18:26:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20191211032813.GA17731@qmqm.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+11.12.2019 06:28, Michał Mirosław пишет:
+> On Tue, Dec 10, 2019 at 06:21:02PM +0300, Dmitry Osipenko wrote:
+>> 10.12.2019 05:38, Michał Mirosław пишет:
+>>> On Tue, Dec 10, 2019 at 04:03:18AM +0300, Dmitry Osipenko wrote:
+>>>> 10.12.2019 03:19, Michał Mirosław пишет:
+>>>>> Support common DT properties like axis inversions to complement
+>>>>> information obtained from device's firmware.a
+>>> [...]
+>>>>> @@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
+>>>>>  	ts->input->name = "Elan Touchscreen";
+>>>>>  	ts->input->id.bustype = BUS_I2C;
+>>>>>  
+>>>>> +	touchscreen_parse_properties(ts->input, true, &ts->prop);
+>>>>
+>>>> Shouldn't this function be invoked after setting the max x/y sizes with
+>>>> the hardware values? That's what all other drivers do and then you won't
+>>>> need to set the ts->prop.max_x/y above in the code.
+>>>
+>>> This is done later in the series - this patch only adds axis inversion
+>>> support and ignores DT-provided sizes.
+>>
+>> What is the reason of splitting it into two patches?
+>>
+>> Perhaps I'm still missing something, but why something a bit more simple
+>> like this wouldn't yield exactly the same result:
+> [...]
+> 
+> Originally I thought to skip probing the hardware when all info is
+> already provided in devicetree. This didn't happen, though. I'll take
+> your patch then, with a slight adjustment in "prop"'s position... And
+> the rest of them, so as to not duplicate the work. :-)
 
-commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 upstream.
-
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
-
-Protect against that by always validating the show/store callbacks.
-
-Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/infiniband/hw/qib/qib_sysfs.c |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->show)
-+		return -EIO;
-+
- 	return pattr->show(ppd, buf);
- }
- 
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
- 
-
-
+Okay
