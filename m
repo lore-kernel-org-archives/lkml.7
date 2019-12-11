@@ -6,92 +6,92 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B724C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FAFC2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C68ED2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488E9206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="WZnsst5W";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MW8Wdj/q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MtyeG8Rp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfLKAkb (ORCPT
+        id S1726613AbfLKAo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:40:31 -0500
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:45425 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726062AbfLKAkb (ORCPT
+        Tue, 10 Dec 2019 19:44:57 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:32897 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfLKAo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:40:31 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2672022106;
-        Tue, 10 Dec 2019 19:40:30 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 10 Dec 2019 19:40:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=FonVZHXm8ET8/Gd2BoHglmFqWNBAnF8
-        7T7Cuu6NkJxM=; b=WZnsst5WSd/jJyPa8/DKQT+rO94VEGhBhocBz6rMrY+rZiR
-        X2exBJKINOYOkgLaGGdJbgH0tRy69OB9Gzq8LZ/AOOCrVVGFu6ItOb6NnXcVCVaP
-        enPh68VBSbVd4qzIlw/4pnWmICrRW3QT9s2645nygYAxThTCB9eZh/74LN+5N5Sg
-        einCMwZPVfRh44ne74vztBzfuNNtkYZaDYgFI3y9laVsPzKRbF4zw4HhAL3n78qm
-        nivvSIwRd2oXq+fHH0eHmaatKRMpgBNW9b6FNuIQHqqCQLrXOsTKRSyDSOVu+rCX
-        73ct1SxmkLWWmQ7Oh6BAKzU0fX0zn6swES6YgbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=FonVZH
-        Xm8ET8/Gd2BoHglmFqWNBAnF87T7Cuu6NkJxM=; b=MW8Wdj/qJosAgt/7LYRH3X
-        sDG15s5apG0eiHVuPdF1Kn1ugcXcdloyQF7lhPhA+DEGzZk1KTR+CT/fBo/wl1qs
-        jX6GGk5dbm+NAhccxT9SdRIBarJgxVI1pIbh6+eFpXpm8TYpPAnSNblkk1YCUGpK
-        sypOjl5J2/48EjbTBi5DCqOaqi6KoT5AVxXtk9JdmGlaCZjZaA654KytbPFofUHf
-        cIepUtIDdr0Hgbh5QfIfkb0L2H7WgemK/N5/uX4KmQdCzPZYNYmvBv4jRtcYt8kE
-        9IaZ3M4qfGrV2MU7ILUuzDKrRndH+blcTP3Dm1ggkET4T3JcGhnhCf+eLFrNOHYg
-        ==
-X-ME-Sender: <xms:_TrwXRXgVuKbUZ4tpqgPLTF6OlqMIUu8toDF00sZl3R8TdWbnBUDuQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedgudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:_TrwXYoTPre5R7lC-A2jPAjUH52SLlHALdX9qeVfVSO_T_aLaEtFWg>
-    <xmx:_TrwXVaWacl2QMmPyAnToUc2NkFCuwPJY6Xi7l0ZGJIOCPMV5MSKVw>
-    <xmx:_TrwXWBTrkqAEvq1Ct9QQNC9gOsOiLnrVk_Zz-sqxpv5yDnq0VV6Pg>
-    <xmx:_jrwXU4ELyPyFWcRUfAGSXU06FxcXxQzOEXLNNaHOYxm1AADXShTTA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 4050AE00A2; Tue, 10 Dec 2019 19:40:29 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
-Mime-Version: 1.0
-Message-Id: <9a4b8714-f188-4ff7-b028-92f1379cbe30@www.fastmail.com>
-In-Reply-To: <1575566112-11658-5-git-send-email-eajames@linux.ibm.com>
-References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
- <1575566112-11658-5-git-send-email-eajames@linux.ibm.com>
-Date:   Wed, 11 Dec 2019 11:12:08 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
-        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
-Subject: =?UTF-8?Q?Re:_[PATCH_v2_04/12]_ARM:_dts:_aspeed:_ast2600:_Add_SCU_interr?=
- =?UTF-8?Q?upt_controllers?=
-Content-Type: text/plain
+        Tue, 10 Dec 2019 19:44:56 -0500
+Received: by mail-lf1-f66.google.com with SMTP id n25so15320639lfl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 16:44:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Vxe3R5EVIXOlzXfg/ekg4fF+ZY9IvaW7g6YuHiA6CRc=;
+        b=MtyeG8RpnpRGMdHyeEPGILjfxKzcweWjFHPnZnPKGrFC89h32clJMupq6IVPMFKjIj
+         gOeCDnC7nFYvShxcl11BGmqnpkE0ipUZXu3xM6Jidjp1LySuANUWWCitzYibKMYfvWG1
+         X1dvYxmajrxJPXeE9qG5K0USO0k/bPEeJpx6HsPEPGy1Vl6tmElflipIQZNvgvcRDfEz
+         SYDSjIP8HkM6mjRFvP1HY5WnFHD4ZK+w6bTmrXu0iRwf6dpv9ylEpnrlCFSTeWitv/IO
+         Q7peiKQcOi7HYEcvYEhxZSQSrV0XcqSLQtkL7vje6t8GWlJruym/eFAOowG1osU80Onk
+         +0xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Vxe3R5EVIXOlzXfg/ekg4fF+ZY9IvaW7g6YuHiA6CRc=;
+        b=c+J5h5REm9lbojNZJIL2ukGdZElAz+rdIsfNo8WmUMCE3mK6sRlVAjZNDMIGhm5H5u
+         mFPV3goas9EsOxChEX1ZWnCKvGefNMLJNIz3zBUquGCeO+mPWKXvJJYX5gH8zL6Ns6Pa
+         VFenzu+lcizyV17UdmdCx7Up1jTpRQ8pp4xrGI4HtmHfAAHDDCRYSbVmMCUhhUUbAYGn
+         TyYRLE432j+a65Xxys8nQOUw/G1kHzdGAoEGso/6mkUfe/MHLMcqlpLSSYN2V6wco7U9
+         MCUr5YVkrxI/B4ub5OwHG7LtktoYcCk8g0Wh1oOy/pbUtNWpsMDv5bR+vFakQu1DhI4g
+         EHTQ==
+X-Gm-Message-State: APjAAAXrYpjl0EoSCZZpaasdtphoJHSVHPwJZNm50H8+pUaXP7cZzU/2
+        Ad3kAJCsVg4u72ds/sl1JX8yZ0fjgKuWcPt7TSw6IQ==
+X-Google-Smtp-Source: APXvYqyzkVpMJI7AkzWZi2reeD8NSrXhhAftpTMTQWujAo4UvyYRUUGGNKIP2kxrZNb+IPDOetsu2JxL4GfMINwTvD4=
+X-Received: by 2002:a19:c0b:: with SMTP id 11mr408358lfm.135.1576025094524;
+ Tue, 10 Dec 2019 16:44:54 -0800 (PST)
+MIME-Version: 1.0
+References: <20191205212501.9163-1-jacek.anaszewski@gmail.com>
+In-Reply-To: <20191205212501.9163-1-jacek.anaszewski@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 11 Dec 2019 01:44:43 +0100
+Message-ID: <CACRpkda220vtWPRkkKX+gSPsTuA+VjmKhCDTn8ZeLrkrLd3u8w@mail.gmail.com>
+Subject: Re: [PATCH] leds: gpio: Fix uninitialized gpio label for fwnode based probe
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 5, 2019 at 10:25 PM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
 
+> When switching to using generic LED name composition mechanism via
+> devm_led_classdev_register_ext() API the part of code initializing
+> struct gpio_led's template name property was removed alongside.
+> It was however overlooked that the property was also passed to
+> devm_fwnode_get_gpiod_from_child() in place of "label" parameter,
+> which when set to NULL, results in gpio label being initialized to '?'.
+>
+> It could be observed in debugfs and failed to properly identify
+> gpio association with LED consumer.
+>
+> Fix this shortcoming by updating the GPIO label after the LED is
+> registered and its final name is known.
+>
+> Fixes: d7235f5feaa0 ("leds: gpio: Use generic support for composing LED names")
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
-On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
-> Add nodes for the interrupt controllers provided by the SCU.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-
-You should split out the DT changes and send them as their own
-series to Joel.
+Yours,
+Linus Walleij
