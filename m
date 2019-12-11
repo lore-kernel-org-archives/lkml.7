@@ -2,122 +2,94 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D97EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0F5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29652073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859F72073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079839;
-	bh=eXagK1phPOAzsaZb6CGtWx8s8oj9kQaDgR9EuNIdy4g=;
+	s=default; t=1576079843;
+	bh=lFZkm7q6Kd6ZAtelJLFxe7PszsPAW7e1i73I2nPoQKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Biz37sLiuqGfqfCfuWh3leKEg/+bTXfn4zx6EHTmJQYIXgzVu/AyPfbBjGF+mIMNG
-	 B985shR9T7GzmKCG9gGCfN+8uKnzYYPl7/q4gof1K5Ha431B/UNg9aUwWuTs67OKU+
-	 r+p2w0syXY86ayzFUCb4S6uiWPa4eG0ab4hCZ5Gg=
+	b=g8X5GL3ltgNlwsvzGbHlECZiQXEYjLktASq4p0bXCZrgPxhdguF6ivCzuFR5h/iDB
+	 OSnD8WPf/msmiqFkdr10XmgK5GRVJm8nGhDCs9PHTBA9c0WgjdDWUGxCIaErKy4ZOo
+	 U/N7ufqdqwsFEYElb3yaw3lz1IxwrcH1SfOiphJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbfLKPPK (ORCPT
+        id S1731955AbfLKP5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730652AbfLKPOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:04 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730503AbfLKPPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:11 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F28624654;
-        Wed, 11 Dec 2019 15:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C31A2465E;
+        Wed, 11 Dec 2019 15:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077243;
-        bh=eXagK1phPOAzsaZb6CGtWx8s8oj9kQaDgR9EuNIdy4g=;
+        s=default; t=1576077310;
+        bh=lFZkm7q6Kd6ZAtelJLFxe7PszsPAW7e1i73I2nPoQKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5Zy3SERYZEg4XqhI1gsNwycuHv4NknklT5kC7TBzBFCgjxrF56rLLSifPxTmrfma
-         FKJNN/q1DeolwzH7Pxsxbnj61RzEK8+yKYQb93CWQNxjPaaySjZuxAypuFcxMQyEQ7
-         +nainWv7CGYcEzf651ZtKwDfVloxw8dKOSZluXt0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 121/134] perf script: Fix brstackinsn for AUXTRACE
-Date:   Wed, 11 Dec 2019 10:11:37 -0500
-Message-Id: <20191211151150.19073-121-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=U/D+8Fm3jW43WlSJRIY61Y6NCapVyJeYBiKC6typYdbjNBpb19j87hDTHV0FWRNbj
+         FhVBhS6L4aDJiS98+kDKu4cg4o6lYSElp6cnQBA84EE91JgqzY8P3/UQGZyWGCqVEW
+         2JZ5Tufq5QUqv1bNJ6FgIg2m0nnn2P7nTX3a/Y9c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.3 097/105] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
+Date:   Wed, 11 Dec 2019 16:06:26 +0100
+Message-Id: <20191211150302.501151205@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 0cd032d3b5fcebf5454315400ab310746a81ca53 ]
+commit 15f794bd977a0135328fbdd8a83cc64c1d267b39 upstream.
 
-brstackinsn must be allowed to be set by the user when AUX area data has
-been captured because, in that case, the branch stack might be
-synthesized on the fly. This fixes the following error:
+Even if the flag use_gpio_descriptors is set, it is possible that
+cs_gpiods was not allocated, which leads to a kernel crash.
 
-Before:
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191024141309.22434-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-  Display of branch stack assembler requested, but non all-branch filter set
-  Hint: run 'perf record -b ...'
-
-After:
-
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
-        bmexec+2485:
-        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
-        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
-        00005641d5806bd6                        add %rdi, %rax
-        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
-        00005641d5806bdd                        cmp %rax, %r14
-        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
-        mismatch of LBR data and executable
-        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
-
-Fixes: 48d02a1d5c13 ("perf script: Add 'brstackinsn' for branch stacks")
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191127095322.15417-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6dba8b728d232..3983d6ccd14df 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -448,7 +448,7 @@ static int perf_evsel__check_attr(struct evsel *evsel,
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) &&
-+	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
- 	    !(perf_evlist__combined_branch_type(session->evlist) &
- 	      PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
--- 
-2.20.1
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1779,7 +1779,8 @@ static int of_spi_parse_dt(struct spi_co
+ 	 * handled in the gpiolib, so all gpio chip selects are "active high"
+ 	 * in the logical sense, the gpiolib will invert the line if need be.
+ 	 */
+-	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
++	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods &&
++	    ctlr->cs_gpiods[spi->chip_select])
+ 		spi->mode |= SPI_CS_HIGH;
+ 
+ 	/* Device speed */
+
 
