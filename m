@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29537C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B4BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD482465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6532465C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077380;
-	bh=7eOKCjZ0cR1AnFiTqy5GIYb61+R5OBdQSidlgyrGhpk=;
+	s=default; t=1576077382;
+	bh=S/L1hLiHFY0yuqr31DMWzA3QYET4k3af1LqJ31C86GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVvrSE9suZ/4k2SPofTUgrlepg7oYGBxCKfXIeh/mJgaxd1ASwB26oK4V0IfYo2Fg
-	 PjhetZNp53wLxHkmf78JcwKsg2Bmjcn7ORW7s+fsadP0mf59weCp7v3+muh7QFWgap
-	 gWOmL46M5kA0ZBCP6jsvejeZTrS3Qyx0Y3sWgDWE=
+	b=VwRunW942l28ctt/oIw9FPPzfZCFdLoyjfO1ILMb2BlA+YJO3Vg7BEoEM7qaiZD/t
+	 acsm9/3+iKjYZclg88DAzSnYoNp29mtpH7pREiy4Hl/8BWB3GDJ+xb3wda78rWiQtn
+	 5+i0suWV+4ssE5C6OXffWuCCfr1x+q6OdivSQu70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731877AbfLKPQT (ORCPT
+        id S1730615AbfLKPQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43246 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729260AbfLKPQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:16 -0500
+        id S1731869AbfLKPQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA69824654;
-        Wed, 11 Dec 2019 15:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54E62465B;
+        Wed, 11 Dec 2019 15:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077376;
-        bh=7eOKCjZ0cR1AnFiTqy5GIYb61+R5OBdQSidlgyrGhpk=;
+        s=default; t=1576077373;
+        bh=S/L1hLiHFY0yuqr31DMWzA3QYET4k3af1LqJ31C86GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQZHFADnTH6XEp17BXZfJkYM/N8HXmahMop5m1UHPhCntJCEhcQn7gdARRNhfJbCY
-         qBEtmvzT0F4WTR6WzcgtPbbQIwgqVOX4mGm1FxFB6Ulw1KXDYQxISQaEg1WS6dOIRF
-         yK8eVwQGjvEK01aehuPOHLqHPT/0bcyziKlUsBf8=
+        b=LCWO1DrYPU/VrkUV7qtHRIV0O9biuXj3c++YPQLMZrniCzm/PICu3ygv3lt8/F0NG
+         5zQddOgOTVPLJ40UG/CTVNNggZlfNrifLBh9/XBvzeNeEONBaa9JUpMprJwIC51rnZ
+         KU+gf9RyAKkCcLBsTA99km+9FvRG0agt/m6jFxu8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/243] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
-Date:   Wed, 11 Dec 2019 16:02:58 +0100
-Message-Id: <20191211150340.131305469@linuxfoundation.org>
+Subject: [PATCH 4.19 015/243] audit_get_nd(): dont unlock parent too early
+Date:   Wed, 11 Dec 2019 16:02:57 +0100
+Message-Id: <20191211150340.078316785@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,70 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
+[ Upstream commit 69924b89687a2923e88cc42144aea27868913d0e ]
 
-I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
-result in a NULL pointer dereference at the moment:
+if the child has been negative and just went positive
+under us, we want coherent d_is_positive() and ->d_inode.
+Don't unlock the parent until we'd done that work...
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    Oops: 0002 [#1] PREEMPT SMP NOPTI
-    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
-    RIP: 0010:skb_queue_tail+0x25/0x50
-    Call Trace:
-     nci_recv_frame+0x36/0x90 [nci]
-     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
-     ? preempt_count_add+0x68/0xa0
-     ? irq_forced_thread_fn+0x80/0x80
-     irq_thread_fn+0x20/0x60
-     irq_thread+0xee/0x180
-     ? wake_threads_waitq+0x30/0x30
-     kthread+0xfb/0x130
-     ? irq_thread_check_affinity+0xd0/0xd0
-     ? kthread_park+0x90/0x90
-     ret_from_fork+0x1f/0x40
-
-Afterward the kernel must be rebooted to work properly again.
-
-This happens because it attempts to call nci_recv_frame() with skb == NULL.
-However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
-NULL checks for skb, causing the NULL pointer dereference.
-
-Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
-Make sure to log it so it is obvious that a communication error occurred.
-The error above then becomes:
-
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-
-Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/nxp-nci/i2c.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/audit_watch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
-index ba695e392c3b7..0df745cad601a 100644
---- a/drivers/nfc/nxp-nci/i2c.c
-+++ b/drivers/nfc/nxp-nci/i2c.c
-@@ -236,8 +236,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
- 
- 	if (r == -EREMOTEIO) {
- 		phy->hard_fault = r;
--		skb = NULL;
--	} else if (r < 0) {
-+		if (info->mode == NXP_NCI_MODE_FW)
-+			nxp_nci_fw_recv_frame(phy->ndev, NULL);
-+	}
-+	if (r < 0) {
- 		nfc_err(&client->dev, "Read failed with error %d\n", r);
- 		goto exit_irq_handled;
+diff --git a/kernel/audit_watch.c b/kernel/audit_watch.c
+index 787c7afdf8294..4f7262eba73d8 100644
+--- a/kernel/audit_watch.c
++++ b/kernel/audit_watch.c
+@@ -366,12 +366,12 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
+ 	struct dentry *d = kern_path_locked(watch->path, parent);
+ 	if (IS_ERR(d))
+ 		return PTR_ERR(d);
+-	inode_unlock(d_backing_inode(parent->dentry));
+ 	if (d_is_positive(d)) {
+ 		/* update watch filter fields */
+ 		watch->dev = d->d_sb->s_dev;
+ 		watch->ino = d_backing_inode(d)->i_ino;
  	}
++	inode_unlock(d_backing_inode(parent->dentry));
+ 	dput(d);
+ 	return 0;
+ }
 -- 
 2.20.1
 
