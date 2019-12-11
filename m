@@ -2,94 +2,99 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F02EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D7AC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3069E2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC14D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NXPY98qG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrJ2CeNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfLKQbN (ORCPT
+        id S1730571AbfLKQcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:31:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfLKQbM (ORCPT
+        Wed, 11 Dec 2019 11:32:15 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49726 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730072AbfLKQcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:31:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7HvcTjE6EdC7yltRqiqqah/kodynClz3aRQRp8aRgEY=; b=NXPY98qGOhJENLSsyhO72Is0Y
-        u65NujtGA75NJD/hJUO8HPitfwjN78pkQZCl6rXf3hC2VZkJabei+vzL4kYuiGPC7reyOc/oSYBT5
-        Y3MeSG5+WuLGhQuBadXDWuXDJ0rY0O/Z6apD8vcXu+vkA7aZnzAOct1SzaEzhHJeNk2zOR11nFi3Y
-        iBteCHssgklWW7Iw+7jF306zMWZPxJGHFk2N1XQbmrJO1jkT9Yw1vp29D9zHMTAVcLIKuVhgRRBES
-        qJ9ujl/+gJtFN3bb0qpO9EOn1+vvVQuamvZ5i/ioT58HbniCfTNa8zYWIxq/PNag8W2YtTtvf1iPn
-        37ERdQIRQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if4tJ-0002Ac-BO; Wed, 11 Dec 2019 16:31:09 +0000
-Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
-To:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
-Date:   Wed, 11 Dec 2019 08:31:08 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 11:32:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576081934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LKFqnBlvG1fW2JXIJg+dQL5IlchdA2nn0WN6YjbROus=;
+        b=XrJ2CeNNB2sK5jipaTMCiPCv/Eky1QNufATCNHd+aspwWEqFf+BTsTA8LXojd+H6xETeXu
+        op2b34FbPG4T0qgD31AjIiInKLetWFGvUvFFurTsU47kIiY8PbvfSMf1MZrzNENq/na0cd
+        /5yUFN3LszHNDN+CWVROU9NkLaqzI6k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-83-pAFiM52NPEutsb_TVfBPDg-1; Wed, 11 Dec 2019 11:32:11 -0500
+X-MC-Unique: pAFiM52NPEutsb_TVfBPDg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A74AB0923;
+        Wed, 11 Dec 2019 16:32:08 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-117-148.ams2.redhat.com [10.36.117.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 62A37605FF;
+        Wed, 11 Dec 2019 16:32:02 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bob Picco <bob.picco@oracle.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Sistare <steven.sistare@oracle.com>
+Subject: [PATCH v2 0/3] mm: fix max_pfn not falling on section boundary
+Date:   Wed, 11 Dec 2019 17:31:58 +0100
+Message-Id: <20191211163201.17179-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 7:14 PM, Andrew Morton wrote:
-> The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
-> You will need quilt to apply these patches to the latest Linus release (5.x
-> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> http://ozlabs.org/~akpm/mmotm/series
-> 
-> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> followed by the base kernel version against which this patch series is to
-> be applied.
+Playing with different memory sizes for a x86-64 guest, I discovered that
+some memmaps (highest section if max_mem does not fall on the section
+boundary) are marked as being valid and online, but contain garbage. We
+have to properly initialize these memmaps.
 
-on x86_64:
+Looking at /proc/kpageflags and friends, I found some more issues,
+partially related to this.
 
-drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
-drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
-drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
+v1 -> v2:
+- "mm: fix uninitialized memmaps on a partially populated last section"
+-- Refine patch description (esp. how to reproduce), add tested-by
+- "fs/proc/page.c: allow inspection of last section and fix end detection=
+"
+-- Make it compile for !CONFIG_SPARSE and add a comment to the new
+   helper function
 
+David Hildenbrand (3):
+  mm: fix uninitialized memmaps on a partially populated last section
+  fs/proc/page.c: allow inspection of last section and fix end detection
+  mm: initialize memmap of unavailable memory directly
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+ fs/proc/page.c     | 30 +++++++++++++++++++++++++++---
+ include/linux/mm.h |  6 ------
+ mm/page_alloc.c    | 43 ++++++++++++++++++++++++++++++++-----------
+ 3 files changed, 59 insertions(+), 20 deletions(-)
+
+--=20
+2.23.0
+
