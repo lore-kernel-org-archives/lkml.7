@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBEEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE2CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365DA2465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4867422B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077553;
-	bh=k6v9ebSPCzG8fqp3o5nqMhBV4T7TyDMFqX+h2Cy5mr0=;
+	s=default; t=1576077561;
+	bh=zmyNCSy0tpWy5TE1mS2OaviV0V1vdC2NHsGPOmi/44c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRp3BTXsh9ko3NDSuSWMpEAykZ7Qn1jNVe72H1V9dfbi4jCKuwxW5HlFx/EMvsfg9
-	 R+Gxd6ciS/dWLtH6ZIX9RJcn+f7lYBv6yaI4H9h+vPGC/8hDFh3X7/SFuEUYdse9Va
-	 oHXTTigBjVgbjYB2H+8XpHS0tUu9BpXfDLiw/mlI=
+	b=kb9I4a/BecNU480jVlhEW/cRKgVBIBo79UO47nQ9VvA/7AFLMEG6Qdc2ii3Cw3kjk
+	 /YgBOeZEWe24QET+5Y9EzxqadarqZ5SZZ1EEN784Bi/813xLAuxVBhrJKUW6IHUluX
+	 nHQi13WVNvUkjLIFDRkm2VyQcMc8EuF5IkzdKZQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbfLKPTM (ORCPT
+        id S1732204AbfLKPTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:19:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47642 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:19:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732168AbfLKPTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:06 -0500
+        id S1732066AbfLKPTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:19:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1C4524654;
-        Wed, 11 Dec 2019 15:19:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3210622527;
+        Wed, 11 Dec 2019 15:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077546;
-        bh=k6v9ebSPCzG8fqp3o5nqMhBV4T7TyDMFqX+h2Cy5mr0=;
+        s=default; t=1576077553;
+        bh=zmyNCSy0tpWy5TE1mS2OaviV0V1vdC2NHsGPOmi/44c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brNshz5pna8ePWxOPEkdktCpArrPDxxPNDY14tR1WuqBtzSfJp3mS+0GHuLuFakyX
-         Pp+BoJ/4l6dcLuLRlQhannX1mqabnKLzbwmvePI3urquQrIQOmUCVtzcQDKkiCsuaU
-         ZGhu2MkYV52EjZqTigibduFAcZfqXn93aCScZCWc=
+        b=gNDxKswYvgvgXvbrejoYGh+6TNcfnLyAAzSMXeZK2CE0SVQzaywuLYl/1XbzrLHXI
+         Ln/9HKHuRXO6o0/QJDTq17Ag4BgUXv93Z+Yv7SoCtzSc7bgpmqH7tDd8v74SythAsT
+         IwL7iPEyG/OvhITEGpA+zCI6MWorN1jUU8M/W0IY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Nylon Chen <nylon7@andestech.com>,
+        Greentime Hu <greentime@andestech.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 080/243] MIPS: OCTEON: octeon-platform: fix typing
-Date:   Wed, 11 Dec 2019 16:04:02 +0100
-Message-Id: <20191211150344.509981082@linuxfoundation.org>
+Subject: [PATCH 4.19 083/243] nds32: Fix the items of hwcap_str ordering issue.
+Date:   Wed, 11 Dec 2019 16:04:05 +0100
+Message-Id: <20191211150344.710982600@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Nylon Chen <nylon7@andestech.com>
 
-[ Upstream commit 2cf1c8933dd93088cfb5f8f58b3bb9bbdf1781b9 ]
+[ Upstream commit a5234068e6dc18ae5300d678fbf3e129d9b93f78 ]
 
-Use correct type for fdt_property nameoff field.
+The hwcap_str should be set in a correct order according to HWCAP_xx.
+We also add the missing "fpu_dp" to it.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21204/
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@linux-mips.org
+Signed-off-by: Nylon Chen <nylon7@andestech.com>
+Acked-by: Greentime Hu <greentime@andestech.com>
+Signed-off-by: Greentime Hu <greentime@andestech.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/cavium-octeon/octeon-platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/nds32/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/cavium-octeon/octeon-platform.c b/arch/mips/cavium-octeon/octeon-platform.c
-index 807cadaf554e2..5ba181e87d2c1 100644
---- a/arch/mips/cavium-octeon/octeon-platform.c
-+++ b/arch/mips/cavium-octeon/octeon-platform.c
-@@ -501,7 +501,7 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
- 	if (phy_addr >= 256 && alt_phy > 0) {
- 		const struct fdt_property *phy_prop;
- 		struct fdt_property *alt_prop;
--		u32 phy_handle_name;
-+		fdt32_t phy_handle_name;
+diff --git a/arch/nds32/kernel/setup.c b/arch/nds32/kernel/setup.c
+index 63a1a5ef5219f..87683583f2064 100644
+--- a/arch/nds32/kernel/setup.c
++++ b/arch/nds32/kernel/setup.c
+@@ -71,8 +71,9 @@ static const char *hwcap_str[] = {
+ 	"div",
+ 	"mac",
+ 	"l2c",
+-	"dx_regs",
++	"fpu_dp",
+ 	"v2",
++	"dx_regs",
+ 	NULL,
+ };
  
- 		/* Use the alt phy node instead.*/
- 		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);
 -- 
 2.20.1
 
