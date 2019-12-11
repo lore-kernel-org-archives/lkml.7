@@ -2,81 +2,103 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C48BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8892DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397D120836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621F1205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfLKBoR (ORCPT
+        id S1727451AbfLKBpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:44:17 -0500
-Received: from mga03.intel.com ([134.134.136.65]:22190 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfLKBoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:44:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 17:44:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="264705584"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Dec 2019 17:44:13 -0800
-Date:   Wed, 11 Dec 2019 09:45:36 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 2/7] KVM: VMX: Define CET VMCS fields and #CP flag
-Message-ID: <20191211014536.GB12845@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-3-weijiang.yang@intel.com>
- <20191210210044.GK15758@linux.intel.com>
+        Tue, 10 Dec 2019 20:45:40 -0500
+Received: from mail.windriver.com ([147.11.1.11]:51372 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfLKBpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:45:40 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xBB1io9N011413
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 10 Dec 2019 17:44:51 -0800 (PST)
+Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 10 Dec
+ 2019 17:44:50 -0800
+Subject: Re: [PATCH net/tipc] Replace rcu_swap_protected() with
+ rcu_replace_pointer()
+To:     <paulmck@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <jon.maloy@ericsson.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <tipc-discussion@lists.sourceforge.net>,
+        <torvalds@linux-foundation.org>, <mingo@kernel.org>,
+        <kernel-team@fb.com>
+References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
+ <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
+ <20191210223825.GS2889@paulmck-ThinkPad-P72>
+From:   Ying Xue <ying.xue@windriver.com>
+Message-ID: <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
+Date:   Wed, 11 Dec 2019 09:31:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210210044.GK15758@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191210223825.GS2889@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.155.90]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:00:44PM -0800, Sean Christopherson wrote:
-> On Fri, Nov 01, 2019 at 04:52:17PM +0800, Yang Weijiang wrote:
-> > CET(Control-flow Enforcement Technology) is an upcoming Intel(R)
-> > processor feature that blocks Return/Jump-Oriented Programming(ROP)
-> > attacks. It provides the following capabilities to defend
-> > against ROP/JOP style control-flow subversion attacks:
-> > 
-> >  	return (1U << vector) & exception_has_error_code;
-> >  }
-> > @@ -298,7 +298,8 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
-> >   * Right now, no XSS states are used on x86 platform,
-> >   * expand the macro for new features.
+On 12/11/19 6:38 AM, Paul E. McKenney wrote:
+> commit 4ee8e2c68b076867b7a5af82a38010fffcab611c
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Mon Dec 9 19:13:45 2019 -0800
 > 
-> I assume this comment needs to be updated?
->
-I'm not sure which features in upstream code are using xsaves bits,
-should I go like this:
-In future, other XSS state bits can be added here to make them available
-to guest? 
-> >   */
-> > -#define KVM_SUPPORTED_XSS	0
-> > +#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER \
-> > +				| XFEATURE_MASK_CET_KERNEL)
-> >  
-> >  extern u64 host_xcr0;
-> >  
-> > -- 
-> > 2.17.2
-> > 
+>     net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
+>     
+>     This commit replaces the use of rcu_swap_protected() with the more
+>     intuitively appealing rcu_replace_pointer() as a step towards removing
+>     rcu_swap_protected().
+>     
+>     Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+>     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+>     Reported-by: kbuild test robot <lkp@intel.com>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>     Cc: Jon Maloy <jon.maloy@ericsson.com>
+>     Cc: Ying Xue <ying.xue@windriver.com>
+>     Cc: "David S. Miller" <davem@davemloft.net>
+>     Cc: <netdev@vger.kernel.org>
+>     Cc: <tipc-discussion@lists.sourceforge.net>
+> 
+
+Acked-by: Ying Xue <ying.xue@windriver.com>
+
+> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
+> index 990a872..978d2db 100644
+> --- a/net/tipc/crypto.c
+> +++ b/net/tipc/crypto.c
+> @@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
+>  #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
+>  	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
+>  
+> -#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
+> -	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
+> -
+>  #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
+>  do {									\
+>  	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
+> @@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
+>  
+>  	/* Move passive key if any */
+>  	if (key.passive) {
+> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
+> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, &rx->lock);
+>  		x = (key.passive - key.pending + new_pending) % KEY_MAX;
+>  		new_passive = (x <= 0) ? x + KEY_MAX : x;
+>  	}
+> 
