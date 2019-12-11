@@ -2,60 +2,89 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D01AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE4DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52BEA20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0546F21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbfLKG0R (ORCPT
+        id S1727845AbfLKG0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:26:17 -0500
-Received: from mga07.intel.com ([134.134.136.100]:19962 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfLKG0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:26:17 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 22:26:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="225400285"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 22:26:14 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH 2/2] perf/x86/intel/bts: Fix the use of page_private()
-In-Reply-To: <20191211002334.GS2844@hirez.programming.kicks-ass.net>
-References: <20191205142853.28894-1-alexander.shishkin@linux.intel.com> <20191205142853.28894-3-alexander.shishkin@linux.intel.com> <20191211002334.GS2844@hirez.programming.kicks-ass.net>
-Date:   Wed, 11 Dec 2019 08:26:13 +0200
-Message-ID: <87h827cr96.fsf@ashishki-desk.ger.corp.intel.com>
+        Wed, 11 Dec 2019 01:26:48 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7214 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727777AbfLKG0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:26:47 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 493B8CE977B0D7BFD3AD;
+        Wed, 11 Dec 2019 14:26:45 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Dec 2019
+ 14:26:38 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
+        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+Subject: [PATCH 1/6] KVM: Fix some wrong function names in comment
+Date:   Wed, 11 Dec 2019 14:26:20 +0800
+Message-ID: <1576045585-8536-2-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
+From: Miaohe Lin <linmiaohe@huawei.com>
 
->>  static size_t buf_size(struct page *page)
->>  {
->> -	return 1 << (PAGE_SHIFT + page_private(page));
->> +	return 1 << (PAGE_SHIFT + buf_nr_pages(page));
->
-> Hurmph, shouldn't that be:
->
-> 	return buf_nr_pages(page) * PAGE_SIZE;
->
-> ?
+Fix some wrong function names in comment. mmu_check_roots is a typo for
+mmu_check_root, vmcs_read_any should be vmcs12_read_any and so on.
 
-True, that one's broken.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h | 2 +-
+ virt/kvm/kvm_main.c                   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+index eb1ecd16fd22..5f3d95c18c39 100644
+--- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
++++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+@@ -28,7 +28,7 @@ BUILD_BUG_ON(1)
+ 
+ /*
+  * Keeping the fields ordered by size is an attempt at improving
+- * branch prediction in vmcs_read_any and vmcs_write_any.
++ * branch prediction in vmcs12_read_any and vmcs12_write_any.
+  */
+ 
+ /* 16-bits */
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 3aa21bec028d..63df3586f062 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1117,7 +1117,7 @@ int __kvm_set_memory_region(struct kvm *kvm,
+ 		 *
+ 		 * validation of sp->gfn happens in:
+ 		 *	- gfn_to_hva (kvm_read_guest, gfn_to_pfn)
+-		 *	- kvm_is_visible_gfn (mmu_check_roots)
++		 *	- kvm_is_visible_gfn (mmu_check_root)
+ 		 */
+ 		kvm_arch_flush_shadow_memslot(kvm, slot);
+ 
+-- 
+2.19.1
+
