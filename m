@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D16C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EB0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12D92077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D53212077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077731;
-	bh=3ArXGiMkiz38pZ0JixrmLD6V1Xs1RlgO+YskVi7oH3Q=;
+	s=default; t=1576077735;
+	bh=+KgFr1WTVtExSSrgWrvLQz3fY25SyK3dsgybXHRYDL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L3yl8/AZZoQb5NMREEkwufhNaeTT774vD8DJaI/falpfgDz/lSxlXj1TdJwIZkFFE
-	 4QqV28aMQdFgbCVNHedFRtzYByI1U4pSoGQpieZKR+JiSXhR+kD6hAmPDLhxGaIjYP
-	 lRutoBuL/P7Rvhaw1FobV+Oq7mBZ5/TTu9j9S+Ic=
+	b=ZADNG+sqWdYH+mZKFRT4I6ltpIJxDEdRjfrUF9j2LR47GeX9Nha1+yv6mxezLQ929
+	 MEj0WEkAwo/8s63Uizr9VzqntSUkNtmWxFEMN5Rvz58/kNlsa6puejLURIIRWh0ls6
+	 HrfDFd9LzSpB39zixxEuZNNTsrAZbPLjryjVwf3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732567AbfLKPWK (ORCPT
+        id S1732572AbfLKPWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbfLKPWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:07 -0500
+        id S1730966AbfLKPWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895262073D;
-        Wed, 11 Dec 2019 15:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 035672077B;
+        Wed, 11 Dec 2019 15:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077727;
-        bh=3ArXGiMkiz38pZ0JixrmLD6V1Xs1RlgO+YskVi7oH3Q=;
+        s=default; t=1576077729;
+        bh=+KgFr1WTVtExSSrgWrvLQz3fY25SyK3dsgybXHRYDL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LwJ6TOXkPhY1CRvbs50bUwSeyRZPzCEERcs67LTqkSnSTbYpZRVGpY9FHudWfqFQS
-         dmDtrDyXUCf6ZX+mf+TjdK0VucgSc6taA+svDv10whQ3CbI6EBfN7Le8dBeuANkKRt
-         C3SShn4nlE4omuwhpeLjurizCfStBG9zuJvZRxF4=
+        b=QHarXUEvp2nRrZTTHLC2FaU6mBS/8zeMectnTuAORi6v6P9HWjbKn/J8TJvbTM90v
+         qacgLn0gCrK+WcZBb2cAO2UWKBCLdKUapnRHWm5zJ1/T/vWX2Duh2FoDV6tQpgjy2/
+         FuZRd3xlcLOQp7nyjLxA7mKTIgoip5tybnCwAQOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,10 +47,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh@kernel.org>,
         Wenzhen Yu <wenzhen.yu@mediatek.com>,
         Weiyi Lu <weiyi.lu@mediatek.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH 4.19 146/243] clk: mediatek: Drop __init from mtk_clk_register_cpumuxes()
-Date:   Wed, 11 Dec 2019 16:05:08 +0100
-Message-Id: <20191211150349.023552012@linuxfoundation.org>
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 147/243] clk: mediatek: Drop more __init markings for driver probe
+Date:   Wed, 11 Dec 2019 16:05:09 +0100
+Message-Id: <20191211150349.092000983@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -65,46 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephen Boyd <sboyd@kernel.org>
 
-commit 28f1186a26f7e4e5df7be454710da26c810effb6 upstream.
+[ Upstream commit 553604c041b8c18cd6a8e1d785a77f3e4be61cdb ]
 
-This function is used from more places than just __init code. Removing
-__init silences a section mismatch warning here.
+This function is called from driver probe, which isn't the same as
+__init code because driver probe can happen later. Drop the __init
+marking here to fix this potential problem.
 
 Cc: Sean Wang <sean.wang@mediatek.com>
 Cc: Ryder Lee <ryder.lee@mediatek.com>
 Cc: Rob Herring <robh@kernel.org>
 Cc: Wenzhen Yu <wenzhen.yu@mediatek.com>
 Cc: Weiyi Lu <weiyi.lu@mediatek.com>
+Fixes: 2fc0a509e4ee ("clk: mediatek: add clock support for MT7622 SoC")
 Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/clk/mediatek/clk-cpumux.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/clk/mediatek/clk-mt7622.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/clk/mediatek/clk-cpumux.c
-+++ b/drivers/clk/mediatek/clk-cpumux.c
-@@ -53,7 +53,7 @@ static const struct clk_ops clk_cpumux_o
- 	.set_parent = clk_cpumux_set_parent,
+--- a/drivers/clk/mediatek/clk-mt7622.c
++++ b/drivers/clk/mediatek/clk-mt7622.c
+@@ -513,7 +513,7 @@ static const struct mtk_gate peri_clks[]
+ 	GATE_PERI1(CLK_PERI_IRTX_PD, "peri_irtx_pd", "irtx_sel", 2),
  };
  
--static struct clk __init *
-+static struct clk *
- mtk_clk_register_cpumux(const struct mtk_composite *mux,
- 			struct regmap *regmap)
- {
-@@ -84,9 +84,9 @@ mtk_clk_register_cpumux(const struct mtk
- 	return clk;
+-static struct mtk_composite infra_muxes[] __initdata = {
++static struct mtk_composite infra_muxes[] = {
+ 	MUX(CLK_INFRA_MUX1_SEL, "infra_mux1_sel", infra_mux1_parents,
+ 	    0x000, 2, 2),
+ };
+@@ -652,7 +652,7 @@ static int mtk_topckgen_init(struct plat
+ 	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
  }
  
--int __init mtk_clk_register_cpumuxes(struct device_node *node,
--				     const struct mtk_composite *clks, int num,
--				     struct clk_onecell_data *clk_data)
-+int mtk_clk_register_cpumuxes(struct device_node *node,
-+			      const struct mtk_composite *clks, int num,
-+			      struct clk_onecell_data *clk_data)
+-static int __init mtk_infrasys_init(struct platform_device *pdev)
++static int mtk_infrasys_init(struct platform_device *pdev)
  {
- 	int i;
- 	struct clk *clk;
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct clk_onecell_data *clk_data;
 
 
