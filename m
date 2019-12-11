@@ -2,102 +2,108 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A9EC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C82C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1946205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b1M+u6Le"
+	by mail.kernel.org (Postfix) with ESMTP id B5E2D205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfLKJt3 (ORCPT
+        id S1728669AbfLKJuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:49:29 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54042 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728792AbfLKJt1 (ORCPT
+        Wed, 11 Dec 2019 04:50:01 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41939 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728562AbfLKJuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:49:27 -0500
-Received: by mail-wm1-f66.google.com with SMTP id n9so6317922wmd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:49:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=ew5JWCOcSlKaUdOBW2upCduPJsnWEHhMOGfyRLOM/Ks=;
-        b=b1M+u6LeZzfLRE63nJT4EwennKzWm2huuKcVuAQB43o5C88vNT07efqLx2pSavKKRr
-         k2dqMp6/rxETI+GhLwSubs7At19B+2hSjOZUi8+qyhNYIenbXDwMKku9FS5AEAmgnLb+
-         dU/HgwUlhFytzlUzo5o9Pvkjycl99b2/7U3kYciIwJhaHotCvzleA11B68L4nsei/WNU
-         VESkqxpc9JSZoYu7xK4MLuZ79Wj6qfJCKuJJ9JnpaYJeFojm72TChD/o4jhW/Ex5wylK
-         DI/KgcMu+o5KiftFsIpb6cdbJObDUi/vfYKnB9S9/ChC9Z0KPtqv5aKgzp7WLfBlNaBo
-         wh/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ew5JWCOcSlKaUdOBW2upCduPJsnWEHhMOGfyRLOM/Ks=;
-        b=U4Ev54dtUAI59gxzuthES2WILtXODq+LnhV8v5jZ3Se7kom4UnInNPubYwEGPiHlgl
-         +5/kDxs+2SCgY+SNG/Om1OamNtWrfG+8XcTzTtmvCj+x2YSRuMptyFw56UbwYCin37W5
-         Nd/7Q+oxAhJRsLBxCLJT3LQT2ohegRrVdHXdebulaVt+Lt4x+/V/UdxwzSXFvKa4PFnM
-         GhjSlVcIedmozqS0SueG5U0ouH0+Mx1lojePutEbxBgzf/bzX1eQPwAxplFbkPrjqjb+
-         5ND/lF9Fi21QeQf00JkE0G61eDfj6qaCbvclmehwRMiYz0NhObxgd7aCDjcmubAe237F
-         8taQ==
-X-Gm-Message-State: APjAAAVHxo8Dl0J+ThruhtLD6hUudBQw2d1MM41fMzFfqqCykvlJkcfM
-        YCOxFRR4gsNOYOI4SQGr3KKBAg==
-X-Google-Smtp-Source: APXvYqzAGcw3s+OGM61OWIJ1Q4lLcdmgx5c1rL6joB3KJRAYdsCxoVV2iKVaQxGfLokfqpD8OaOuCQ==
-X-Received: by 2002:a7b:cb4a:: with SMTP id v10mr2547385wmj.106.1576057765329;
-        Wed, 11 Dec 2019 01:49:25 -0800 (PST)
-Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g17sm1531836wmc.37.2019.12.11.01.49.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:49:24 -0800 (PST)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, khilman@baylibre.com
-Subject: [PATCH v3] bluetooth: hci_bcm: enable IRQ capability from node
-Date:   Wed, 11 Dec 2019 10:49:23 +0100
-Message-Id: <20191211094923.20220-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Dec 2019 04:50:01 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieyd1-00020i-Hb; Wed, 11 Dec 2019 10:49:55 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ieyd0-0004je-Pc; Wed, 11 Dec 2019 10:49:54 +0100
+Date:   Wed, 11 Dec 2019 10:49:54 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
+Message-ID: <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
+References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
+ <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
+ <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
+ <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Actually IRQ can be found from GPIO but all platforms don't support
-gpiod_to_irq, it's the case on amlogic chip.
-so to have possibility to use interrupt mode we need to add interrupts
-field in node and support it in driver.
+On Wed, Dec 11, 2019 at 10:30:33AM +0100, Bartosz Golaszewski wrote:
+> śr., 4 gru 2019 o 11:09 Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> napisał(a):
+> >
+> > On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > platform_irq_count() is the more generic way (independent of
+> > > device trees) to determine the count of available interrupts. So
+> > > use this instead.
+> > >
+> > > As platform_irq_count() might return an error code (which
+> > > of_irq_count doesn't) some additional handling is necessary.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >
+> > > V3:
+> > >  Use %pe
+> >
+> > Great. Note that with %pe there is a dependency on commit 57f5677e535b
+> > ("printf: add support for printing symbolic error names") which was
+> > applied during the current merge window.
+> >
+> 
+> Why would %pe be better in this case? The function returned an int -
+> why convert it to a pointer?
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- drivers/bluetooth/hci_bcm.c | 3 +++
- 1 file changed, 3 insertions(+)
+The conversion to a pointer is (currently still) needed, because there
+is no printk facility (yet) that consumes an int error pointer and
+results in the respecting code.
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index f8f5c593a05c..9f52d57c56de 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -1409,6 +1409,7 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- {
- 	struct bcm_device *bcmdev;
- 	const struct bcm_device_data *data;
-+	struct platform_device *pdev;
- 	int err;
- 
- 	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-@@ -1421,6 +1422,8 @@ static int bcm_serdev_probe(struct serdev_device *serdev)
- #endif
- 	bcmdev->serdev_hu.serdev = serdev;
- 	serdev_device_set_drvdata(serdev, bcmdev);
-+	pdev = to_platform_device(bcmdev->dev);
-+	bcmdev->irq = platform_get_irq(pdev, 0);
- 
- 	/* Initialize routing field to an unused value */
- 	bcmdev->pcm_int_params[0] = 0xff;
+Somewhere on my todo-list is an item to fix that, but we're not there
+yet and so the best option is to use %pe.
+
+Best regards
+Uwe
+
 -- 
-2.17.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
