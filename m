@@ -2,108 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C82C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620CBC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E2D205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ED9205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfLKJuB (ORCPT
+        id S1728568AbfLKJu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:50:01 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41939 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728562AbfLKJuB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:50:01 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ieyd1-00020i-Hb; Wed, 11 Dec 2019 10:49:55 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ieyd0-0004je-Pc; Wed, 11 Dec 2019 10:49:54 +0100
-Date:   Wed, 11 Dec 2019 10:49:54 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "sbranden@broadcom.com" <sbranden@broadcom.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] gpio: bcm-kona: use platform_irq_count
-Message-ID: <20191211094954.qk44xv3uh33rgz7z@pengutronix.de>
-References: <1575451330-11112-1-git-send-email-peng.fan@nxp.com>
- <1575451330-11112-2-git-send-email-peng.fan@nxp.com>
- <20191204100925.sjp6cztozlm5qm6y@pengutronix.de>
- <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+        Wed, 11 Dec 2019 04:50:57 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:55888 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727493AbfLKJu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:50:56 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ieydq-0000iP-RW; Wed, 11 Dec 2019 17:50:46 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ieydn-0006eC-Cu; Wed, 11 Dec 2019 17:50:43 +0800
+Date:   Wed, 11 Dec 2019 17:50:43 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+Message-ID: <20191211095043.3kngq7wh77xvadge@gondor.apana.org.au>
+References: <20191211084112.971-1-linux.amoon@gmail.com>
+ <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+ <CANAwSgQOTA0mSvFW5otaCzFPHidhY7VFcrXZHjCD-1XkQpcx3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMpxmJWMSnTB6JF8vOCmQzE3swWhbx8uwNEzU=qf49L26QCDPQ@mail.gmail.com>
+In-Reply-To: <CANAwSgQOTA0mSvFW5otaCzFPHidhY7VFcrXZHjCD-1XkQpcx3w@mail.gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:30:33AM +0100, Bartosz Golaszewski wrote:
-> śr., 4 gru 2019 o 11:09 Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> napisał(a):
-> >
-> > On Wed, Dec 04, 2019 at 09:24:39AM +0000, Peng Fan wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > platform_irq_count() is the more generic way (independent of
-> > > device trees) to determine the count of available interrupts. So
-> > > use this instead.
-> > >
-> > > As platform_irq_count() might return an error code (which
-> > > of_irq_count doesn't) some additional handling is necessary.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V3:
-> > >  Use %pe
-> >
-> > Great. Note that with %pe there is a dependency on commit 57f5677e535b
-> > ("printf: add support for printing symbolic error names") which was
-> > applied during the current merge window.
-> >
+On Wed, Dec 11, 2019 at 03:07:53PM +0530, Anand Moon wrote:
+>
+> name         : ecb(aes)
+> driver       : ecb-aes-gxl
+> module       : kernel
+> priority     : 400
+> refcnt       : 1
+> selftest     : passed
+> internal     : no
+> type         : skcipher
+> async        : yes
+> blocksize    : 16
+> min keysize  : 16
+> max keysize  : 32
+> ivsize       : 0
+> chunksize    : 16
+> walksize     : 16
 > 
-> Why would %pe be better in this case? The function returned an int -
-> why convert it to a pointer?
+> name         : cbc(aes)
+> driver       : cbc-aes-gxl
+> module       : kernel
+> priority     : 400
+> refcnt       : 1
+> selftest     : passed
+> internal     : no
+> type         : skcipher
+> async        : yes
+> blocksize    : 16
+> min keysize  : 16
+> max keysize  : 32
+> ivsize       : 16
+> chunksize    : 16
+> walksize     : 16
 
-The conversion to a pointer is (currently still) needed, because there
-is no printk facility (yet) that consumes an int error pointer and
-results in the respecting code.
+Oh so you did actually get them loaded.  You need to run tcrypt with
+mode=500 instead of 200 to test the async ciphers.  Does that work?
 
-Somewhere on my todo-list is an item to fix that, but we're not there
-yet and so the best option is to use %pe.
-
-Best regards
-Uwe
-
+Thanks,
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
