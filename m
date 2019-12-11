@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AE5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C57C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0426A22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F5C21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078783;
-	bh=g/Di7A63JQjwJJFCpgmt3I2PfrtgBLTLmE5qIZShGPg=;
+	s=default; t=1576078792;
+	bh=fzxLBrcFCK4wmMAW1jImlZF2ZM5TpI9NA9ovPYQY4Ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2r5JPfjC1yDofI4qLBi0uM3cdEOZyrkHGZf3LpJus5jpY8XX564H/5od60zaaNvE8
-	 TEa2noDP+pSr7YUhdCLa++LiB8pbWY7XjrTI/Fq+UEqEfNSHKVrRiZkrRI4W5CbB7T
-	 1z5G7p3jwfyN2lrVeV+p0k+UvvHNSwjKh1P1VNlc=
+	b=Q2yl7KGAPgZJdZ995fwWbQYGdrS4DPJzRlE2+JbZJt3VW1C8imsCpH4szgBSgwl8R
+	 Blt8WjJ/tU2UFDTlnSAOeL0+beb5vOTYZngaVeKJQZ5HMHQVy4Gipwkp8G7JPHbd1W
+	 Bfj7yiURJ/S5iUUGZX9Y6W4jtkTToo/caMiVQ5S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388204AbfLKPjl (ORCPT
+        id S2388314AbfLKPjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:39:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49326 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:39:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388247AbfLKPim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:42 -0500
+        id S2387841AbfLKPij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6FF921556;
-        Wed, 11 Dec 2019 15:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6592077B;
+        Wed, 11 Dec 2019 15:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078722;
-        bh=g/Di7A63JQjwJJFCpgmt3I2PfrtgBLTLmE5qIZShGPg=;
+        s=default; t=1576078718;
+        bh=fzxLBrcFCK4wmMAW1jImlZF2ZM5TpI9NA9ovPYQY4Ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2Q1cJzYWQOgpIe/ohj+mLt7ADyCANwdKU+MCqHSGfykTVjtLbmcxlVnDVUP58oXW
-         PVYdkrmBJBLxY3XGI5qsv1PPNRrJaM7GeSEPrYsah28klZsOjfYrebPtnIoj4E/qmr
-         jQLoNzARnXBy22HwMyUdIxGscs2kcMCGqjzSgxnI=
+        b=jOwk1Gkr2Rbgg7j5F3k4iUC5wMdH2drJ5MgBd9VumsGFPSgOqc6PPJq2uIV1s959O
+         8mKy8gTu4ZmuxLnlzpR4oeIRZAZScL9Ne7UeTTfkJXFJxeX1iLN0CIWkLHxeaO2eq0
+         8m1QIvZYCt3zEt8VH0c4OVPhJx5dH/g3irEPvz2s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Theodore Ts'o <tytso@mit.edu>, stable@kernel.org,
-        Andreas Dilger <adilger@dilger.ca>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 27/37] ext4: work around deleting a file with i_nlink == 0 safely
-Date:   Wed, 11 Dec 2019 10:38:03 -0500
-Message-Id: <20191211153813.24126-27-sashal@kernel.org>
+Cc:     "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
+        "Mauro S . M . Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.4 23/37] powerpc/security: Fix wrong message when RFI Flush is disable
+Date:   Wed, 11 Dec 2019 10:37:59 -0500
+Message-Id: <20191211153813.24126-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -59,63 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
 
-[ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
+[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
 
-If the file system is corrupted such that a file's i_links_count is
-too small, then it's possible that when unlinking that file, i_nlink
-will already be zero.  Previously we were working around this kind of
-corruption by forcing i_nlink to one; but we were doing this before
-trying to delete the directory entry --- and if the file system is
-corrupted enough that ext4_delete_entry() fails, then we exit with
-i_nlink elevated, and this causes the orphan inode list handling to be
-FUBAR'ed, such that when we unmount the file system, the orphan inode
-list can get corrupted.
+The issue was showing "Mitigation" message via sysfs whatever the
+state of "RFI Flush", but it should show "Vulnerable" when it is
+disabled.
 
-A better way to fix this is to simply skip trying to call drop_nlink()
-if i_nlink is already zero, thus moving the check to the place where
-it makes the most sense.
+If you have "L1D private" feature enabled and not "RFI Flush" you are
+vulnerable to meltdown attacks.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205433
+"RFI Flush" is the key feature to mitigate the meltdown whatever the
+"L1D private" state.
 
-Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+
+So the message should be as the truth table shows:
+
+  CPU | L1D private | RFI Flush |                sysfs
+  ----|-------------|-----------|-------------------------------------
+   P9 |    False    |   False   | Vulnerable
+   P9 |    False    |   True    | Mitigation: RFI Flush
+   P9 |    True     |   False   | Vulnerable: L1D private per thread
+   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
+   P8 |    False    |   False   | Vulnerable
+   P8 |    False    |   True    | Mitigation: RFI Flush
+
+Output before this fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: L1D private per thread
+
+Output after fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Vulnerable: L1D private per thread
+
+Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/security.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index aa08e129149dc..712bf332e3948 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -3040,18 +3040,17 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
- 	if (IS_DIRSYNC(dir))
- 		ext4_handle_sync(handle);
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index fc5c49046aa7d..45778c83038f8 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -135,26 +135,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
--	if (inode->i_nlink == 0) {
--		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
--				   dentry->d_name.len, dentry->d_name.name);
--		set_nlink(inode, 1);
--	}
- 	retval = ext4_delete_entry(handle, dir, de, bh);
- 	if (retval)
- 		goto end_unlink;
- 	dir->i_ctime = dir->i_mtime = ext4_current_time(dir);
- 	ext4_update_dx_flag(dir);
- 	ext4_mark_inode_dirty(handle, dir);
--	drop_nlink(inode);
-+	if (inode->i_nlink == 0)
-+		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
-+				   dentry->d_name.len, dentry->d_name.name);
-+	else
-+		drop_nlink(inode);
- 	if (!inode->i_nlink)
- 		ext4_orphan_add(handle, inode);
- 	inode->i_ctime = ext4_current_time(inode);
+ 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
+ 
+-	if (rfi_flush || thread_priv) {
++	if (rfi_flush) {
+ 		struct seq_buf s;
+ 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
+ 
+-		seq_buf_printf(&s, "Mitigation: ");
+-
+-		if (rfi_flush)
+-			seq_buf_printf(&s, "RFI Flush");
+-
+-		if (rfi_flush && thread_priv)
+-			seq_buf_printf(&s, ", ");
+-
++		seq_buf_printf(&s, "Mitigation: RFI Flush");
+ 		if (thread_priv)
+-			seq_buf_printf(&s, "L1D private per thread");
++			seq_buf_printf(&s, ", L1D private per thread");
+ 
+ 		seq_buf_printf(&s, "\n");
+ 
+ 		return s.len;
+ 	}
+ 
++	if (thread_priv)
++		return sprintf(buf, "Vulnerable: L1D private per thread\n");
++
+ 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
+ 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
+ 		return sprintf(buf, "Not affected\n");
 -- 
 2.20.1
 
