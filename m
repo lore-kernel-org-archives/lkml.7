@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA31C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A22C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A7520836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1032420836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080545;
-	bh=fkFoiEdrVja6Mpq5ViDVq4zEJINrqbJJda2zWCpOQtQ=;
+	s=default; t=1576080553;
+	bh=VH0BMsB28T3mrEZ4A0ujM9x+cN5vLsmbHMZIRlhmU1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mi55wnr+xVAB1cLi+lmYceHPwsGy+wkOWjIGXUtGZ4mI5E2f9uEn+m1tcUelTnsWW
-	 c3EaEjCowxGWxwgMC+EhpLNV8jqiP51+tUYs4yqjhLwNdSFphUU0eY1nZ26OWVn3HY
-	 ZngIBpaA8jqv8q5SPIOEkcwX8xZxqnO+gSPXkm0Q=
+	b=I6QrOSANX4tVT55g2WYh3NqLl5zWMHQeg4ttuBqMdoIx6S4KFnDG4K3AkbBxbZU3F
+	 FlDP6GjG96osaIEeVMfsqP/tuVKCe2JOLuhSE9+5LPVOkplHY/zfGXFIoY02R9nIEv
+	 TJly0/A8dto+gn++zeIIs+ABrcAP3gIcbM+fJubk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388938AbfLKQJE (ORCPT
+        id S2387860AbfLKQJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:09:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33278 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:09:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbfLKPML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:11 -0500
+        id S1730281AbfLKPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0072B2465B;
-        Wed, 11 Dec 2019 15:12:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8FF32467E;
+        Wed, 11 Dec 2019 15:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077130;
-        bh=fkFoiEdrVja6Mpq5ViDVq4zEJINrqbJJda2zWCpOQtQ=;
+        s=default; t=1576077129;
+        bh=VH0BMsB28T3mrEZ4A0ujM9x+cN5vLsmbHMZIRlhmU1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzXyuSA3fF57Ux2Kgr+t67ckR934BLErqdPhMh+bVB1Oegr3i1SiREXE/Zr+OMnB7
-         tH93302kiSbGfDQ5hIW2e9XK7y0kdU7gi/KQWNSUqN+1sZNCT4EjCroktHWAOYuGKY
-         lnB6JsBtQdGCqMd6WnOqqP194Obu1g+k/hIIqQT4=
+        b=JxmM+SgU2D0+Ofq++5/etUGv7amGM7sI7Ucff8X7XC6gEL4THgDVAQa37WXkukF0n
+         Kq0/MheDG+cM5qOJ02fh7hppiifo34HKtEApckTyI7fqvN5JQQ8YsC7NwThI0c4PuR
+         Nlhkjf0P1SE3hartyIY6VsxfyVR/sapf5wIGQLtc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Zhangguanghui <zhang.guanghui@h3c.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
+Cc:     David Disseldorp <ddiss@suse.de>, Lee Duncan <lduncan@suse.com>,
+        Mike Christie <mchristi@redhat.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 018/134] scsi: lpfc: Fix hardlockup in lpfc_abort_handler
-Date:   Wed, 11 Dec 2019 10:09:54 -0500
-Message-Id: <20191211151150.19073-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 017/134] scsi: target: compare full CHAP_A Algorithm strings
+Date:   Wed, 11 Dec 2019 10:09:53 -0500
+Message-Id: <20191211151150.19073-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -61,56 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: David Disseldorp <ddiss@suse.de>
 
-[ Upstream commit 91a52b617cdb8bf6d298892101c061d438b84a19 ]
+[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
 
-In lpfc_abort_handler, the lock acquire order is hbalock (irqsave),
-buf_lock (irq) and ring_lock (irq).  The issue is that in two places the
-locks are released out of order - the buf_lock and the hbalock - resulting
-in the cpu preemption/lock flags getting restored out of order and
-deadlocking the cpu.
+RFC 2307 states:
 
-Fix the unlock order by fully releasing the hbalocks as well.
+  For CHAP [RFC1994], in the first step, the initiator MUST send:
 
-CC: Zhangguanghui <zhang.guanghui@h3c.com>
-Link: https://lore.kernel.org/r/20191018211832.7917-7-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+      CHAP_A=<A1,A2...>
+
+   Where A1,A2... are proposed algorithms, in order of preference.
+...
+   For the Algorithm, as stated in [RFC1994], one value is required to
+   be implemented:
+
+       5     (CHAP with MD5)
+
+LIO currently checks for this value by only comparing a single byte in
+the tokenized Algorithm string, which means that any value starting with
+a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
+comparing the entire tokenized string.
+
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Reviewed-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: David Disseldorp <ddiss@suse.de>
+Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/target/iscsi/iscsi_target_auth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index 6822cd9ff8f1e..68b31b27fa057 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -4843,20 +4843,21 @@ lpfc_abort_handler(struct scsi_cmnd *cmnd)
- 		ret_val = __lpfc_sli_issue_iocb(phba, LPFC_FCP_RING,
- 						abtsiocb, 0);
- 	}
--	/* no longer need the lock after this point */
--	spin_unlock_irqrestore(&phba->hbalock, flags);
+diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
+index 51ddca2033e0a..8fe9b12a07a4d 100644
+--- a/drivers/target/iscsi/iscsi_target_auth.c
++++ b/drivers/target/iscsi/iscsi_target_auth.c
+@@ -70,7 +70,7 @@ static int chap_check_algorithm(const char *a_str)
+ 		if (!token)
+ 			goto out;
  
- 	if (ret_val == IOCB_ERROR) {
- 		/* Indicate the IO is not being aborted by the driver. */
- 		iocb->iocb_flag &= ~LPFC_DRIVER_ABORTED;
- 		lpfc_cmd->waitq = NULL;
- 		spin_unlock(&lpfc_cmd->buf_lock);
-+		spin_unlock_irqrestore(&phba->hbalock, flags);
- 		lpfc_sli_release_iocbq(phba, abtsiocb);
- 		ret = FAILED;
- 		goto out;
- 	}
- 
-+	/* no longer need the lock after this point */
- 	spin_unlock(&lpfc_cmd->buf_lock);
-+	spin_unlock_irqrestore(&phba->hbalock, flags);
- 
- 	if (phba->cfg_poll & DISABLE_FCP_RING_INT)
- 		lpfc_sli_handle_fast_ring_event(phba,
+-		if (!strncmp(token, "5", 1)) {
++		if (!strcmp(token, "5")) {
+ 			pr_debug("Selected MD5 Algorithm\n");
+ 			kfree(orig);
+ 			return CHAP_DIGEST_MD5;
 -- 
 2.20.1
 
