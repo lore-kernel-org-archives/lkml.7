@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F585C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D3BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 463382077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B6F12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078384;
-	bh=MZxWCjPMdzRp2j19rWZIMdoTzcngRZidA8+i0wdeXIY=;
+	s=default; t=1576078390;
+	bh=F6FNZD+WafbeRICAiehtuCPVTxROPy7vsvvpcW+wcEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMBJy4jD/paHIvsOwdd0q+oXSdXGiTsEubV88lRj0yRKGNAQxCZjl3r7v31iSsTvT
-	 8dJh+6xT+Rfe0YpgC5xOWu//N983hNxhvgrt4Bu35WM9s0N2Pn21hG9F6RjEtn6N3N
-	 Bg8d09QNYVUhJgtyeS79hb6mJIFTeWt/RrP1Oz8s=
+	b=c0W8nwVoGYmmqinn9CUqiBdaF4J/mwzbiGWBfcRottRqyBgJ7cY+HluohqK+pvtCJ
+	 IGlyS92FN3Wy3mIkg9P1E2FRYBwHhQo0yIB79N4J2drB3vdylRRKA2H0WfRKZj0Uya
+	 MTX0hw/FXgaKmHUdJRz3xAm7usEGpRGyp3jp0h20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388043AbfLKPdD (ORCPT
+        id S2388044AbfLKPdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:33:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387719AbfLKP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:49 -0500
+        id S1732817AbfLKP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:47 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C97B424679;
-        Wed, 11 Dec 2019 15:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D98F224658;
+        Wed, 11 Dec 2019 15:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078128;
-        bh=MZxWCjPMdzRp2j19rWZIMdoTzcngRZidA8+i0wdeXIY=;
+        s=default; t=1576078126;
+        bh=F6FNZD+WafbeRICAiehtuCPVTxROPy7vsvvpcW+wcEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJjGn9CR4Z8TzbgNNSGZDqqpOVXNg1C5Was9EoB8tHDZIG6+bcGKVjmlplnMTCOd6
-         Hu5GUsKlVbfTH3Q2e//pEZGmUS60TIKoSTJ8uWzjt/V2wtXWfmgooa90mjpRMSsZZ+
-         64rIVz8iamQdouWnZAbKi2Lg8venVM/Hgk9wvamw=
+        b=xxcWEa1u9szZ9/WvS9W5C9l/2oXJAayo3AdTkGv+5szX/NFdDe46A6ibmsR+GAGLB
+         b9EbCZLNO7Kie8ztVVdDE3VHrYzjMRyRgCUWWe7lEQ2ER/c6XaZsQvWl2IuMu1PBxC
+         cMmUkN5NgPEYZxy6MOWdCun5dqWfV2Uu0aZ7GRkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/58] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
-Date:   Wed, 11 Dec 2019 10:27:49 -0500
-Message-Id: <20191211152831.23507-16-sashal@kernel.org>
+Cc:     Anthony Steinhauser <asteinhauser@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 14/58] powerpc/security/book3s64: Report L1TF status in sysfs
+Date:   Wed, 11 Dec 2019 10:27:47 -0500
+Message-Id: <20191211152831.23507-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -61,45 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: Anthony Steinhauser <asteinhauser@google.com>
 
-[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
+[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
 
-This patch updates the lock pattern in ext4_direct_IO_read() to not
-block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
-locking condition implemented here is similar to that of 942491c9e6d6
-("xfs: fix AIM7 regression").
+Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
+Meltdown. It is also mitigated by flushing the L1D on privilege
+transition.
 
-Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Currently the sysfs gives a false negative on L1TF on CPUs that I
+verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
+T2P9D01.
+
+Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
+Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/kernel/security.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index b3d5fd84b4856..f746abfd96977 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3787,7 +3787,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
- 	 * writes & truncates and since we take care of writing back page cache,
- 	 * we are protected against page writeback as well.
- 	 */
--	inode_lock_shared(inode);
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock_shared(inode))
-+			return -EAGAIN;
-+	} else {
-+		inode_lock_shared(inode);
-+	}
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index f5d6541bf8c27..fef3f09fc238b 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -160,6 +160,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+ 
+ 	return sprintf(buf, "Vulnerable\n");
+ }
 +
- 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
- 					   iocb->ki_pos + count - 1);
- 	if (ret)
++ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
++{
++	return cpu_show_meltdown(dev, attr, buf);
++}
+ #endif
+ 
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
 -- 
 2.20.1
 
