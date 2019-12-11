@@ -2,189 +2,200 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C17DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B816BC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C4F208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFC2214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729196AbfLKMsJ (ORCPT
+        id S1729224AbfLKMut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:48:09 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:48027 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727402AbfLKMsJ (ORCPT
+        Wed, 11 Dec 2019 07:50:49 -0500
+Received: from out28-97.mail.aliyun.com ([115.124.28.97]:45048 "EHLO
+        out28-97.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfLKMus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:48:09 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=chge@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0Tkd-TqM_1576068468;
-Received: from IT-C02YD3Q7JG5H.local(mailfrom:chge@linux.alibaba.com fp:SMTPD_---0Tkd-TqM_1576068468)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 11 Dec 2019 20:47:48 +0800
-Subject: Re: [PATCH] ocfs2: call journal flush to mark journal as empty after
- journal recovery when mount
-To:     Kai Li <li.kai4@h3c.com>, mark@fasheh.com, jlbec@evilplan.org,
-        joseph.qi@linux.alibaba.com
-Cc:     ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191211100338.510-1-li.kai4@h3c.com>
-From:   Changwei Ge <chge@linux.alibaba.com>
-Message-ID: <d4bb15d0-55fa-2a8e-a975-4c65eed3bae3@linux.alibaba.com>
-Date:   Wed, 11 Dec 2019 20:47:48 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 11 Dec 2019 07:50:48 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.394242-0.00500286-0.600755;DS=CONTINUE|ham_system_inform|0.0144906-0.0023619-0.983148;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=12;RT=12;SR=0;TI=SMTPD_---.GF0GTgF_1576068628;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GF0GTgF_1576068628)
+          by smtp.aliyun-inc.com(10.147.40.200);
+          Wed, 11 Dec 2019 20:50:42 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, paul@crapouillou.net,
+        mark.rutland@arm.com, linus.walleij@linaro.org,
+        zhenwenjin@gmail.com, sernia.zhou@foxmail.com
+Subject: [PATCH v7 2/4] pinctrl: Ingenic: Add missing parts for X1000 and X1500.
+Date:   Wed, 11 Dec 2019 20:50:23 +0800
+Message-Id: <1576068625-125234-3-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576068625-125234-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576068625-125234-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211100338.510-1-li.kai4@h3c.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai,
+1.Add pinctrl drivers for the SPI flash controller (SFC) of
+  X1000 and X1500.
+2.Add pinctrl driver for the synchronous serial interface (SSI)
+  of X1000.
 
-Now the problem is more clear to me.
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
 
-Just a few comments inline.
+Notes:
+    v2:
+    New patch.
+    
+    v2->v3:
+    Fix typo.
+    
+    v3->v4:
+    No change.
+    
+    v4->v5:
+    No change.
+    
+    v5->v6:
+    Remove duplicates "ssi-ce0-d".
+    
+    v6->v7:
+    Change my Signed-off-by from "Zhou Yanjie <zhouyanjie@zoho.com>"
+    to "周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>" because
+    the old mailbox is in an unstable state.
 
-On 12/11/19 6:03 PM, Kai Li wrote:
-> If journal is dirty when mount, it will be replayed but jbd2 sb
-> log tail cannot be updated to mark a new start because
-> journal->j_flag has already been set with JBD2_ABORT first
-> in journal_init_common. When a new transaction is committed, it
-> will be recored in block 1 first(journal->j_tail is set to 1 in
-> journal_reset).
-> 
-> If emergency restart happens again before journal super block is
-> updated unfortunately, the new recorded trans will not be replayed
-> in the next mount.
+ drivers/pinctrl/pinctrl-ingenic.c | 64 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-So this issue happens before the first committing log iteration  comes 
-(running in jbd2 kernel thread), right?
-This leads jbd2 losing the chance to update *on-disk* journal super 
-block but the dynamic status of journal is still remaining in memory.
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 059e39a..38f7f147 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1031,6 +1031,23 @@ static int x1000_uart1_data_d_pins[] = { 0x62, 0x63, };
+ static int x1000_uart1_hwflow_pins[] = { 0x64, 0x65, };
+ static int x1000_uart2_data_a_pins[] = { 0x02, 0x03, };
+ static int x1000_uart2_data_d_pins[] = { 0x65, 0x64, };
++static int x1000_sfc_pins[] = { 0x1d, 0x1c, 0x1e, 0x1f, 0x1a, 0x1b, };
++static int x1000_ssi_dt_a_22_pins[] = { 0x16, };
++static int x1000_ssi_dt_a_29_pins[] = { 0x1d, };
++static int x1000_ssi_dt_d_pins[] = { 0x62, };
++static int x1000_ssi_dr_a_23_pins[] = { 0x17, };
++static int x1000_ssi_dr_a_28_pins[] = { 0x1c, };
++static int x1000_ssi_dr_d_pins[] = { 0x63, };
++static int x1000_ssi_clk_a_24_pins[] = { 0x18, };
++static int x1000_ssi_clk_a_26_pins[] = { 0x1a, };
++static int x1000_ssi_clk_d_pins[] = { 0x60, };
++static int x1000_ssi_gpc_a_20_pins[] = { 0x14, };
++static int x1000_ssi_gpc_a_31_pins[] = { 0x1f, };
++static int x1000_ssi_ce0_a_25_pins[] = { 0x19, };
++static int x1000_ssi_ce0_a_27_pins[] = { 0x1b, };
++static int x1000_ssi_ce0_d_pins[] = { 0x61, };
++static int x1000_ssi_ce1_a_21_pins[] = { 0x15, };
++static int x1000_ssi_ce1_a_30_pins[] = { 0x1e, };
+ static int x1000_mmc0_1bit_pins[] = { 0x18, 0x19, 0x17, };
+ static int x1000_mmc0_4bit_pins[] = { 0x16, 0x15, 0x14, };
+ static int x1000_mmc0_8bit_pins[] = { 0x13, 0x12, 0x11, 0x10, };
+@@ -1081,6 +1098,23 @@ static int x1000_uart1_data_d_funcs[] = { 1, 1, };
+ static int x1000_uart1_hwflow_funcs[] = { 1, 1, };
+ static int x1000_uart2_data_a_funcs[] = { 2, 2, };
+ static int x1000_uart2_data_d_funcs[] = { 0, 0, };
++static int x1000_sfc_funcs[] = { 1, 1, 1, 1, 1, 1, };
++static int x1000_ssi_dt_a_22_funcs[] = { 2, };
++static int x1000_ssi_dt_a_29_funcs[] = { 2, };
++static int x1000_ssi_dt_d_funcs[] = { 0, };
++static int x1000_ssi_dr_a_23_funcs[] = { 2, };
++static int x1000_ssi_dr_a_28_funcs[] = { 2, };
++static int x1000_ssi_dr_d_funcs[] = { 0, };
++static int x1000_ssi_clk_a_24_funcs[] = { 2, };
++static int x1000_ssi_clk_a_26_funcs[] = { 2, };
++static int x1000_ssi_clk_d_funcs[] = { 0, };
++static int x1000_ssi_gpc_a_20_funcs[] = { 2, };
++static int x1000_ssi_gpc_a_31_funcs[] = { 2, };
++static int x1000_ssi_ce0_a_25_funcs[] = { 2, };
++static int x1000_ssi_ce0_a_27_funcs[] = { 2, };
++static int x1000_ssi_ce0_d_funcs[] = { 0, };
++static int x1000_ssi_ce1_a_21_funcs[] = { 2, };
++static int x1000_ssi_ce1_a_30_funcs[] = { 2, };
+ static int x1000_mmc0_1bit_funcs[] = { 1, 1, 1, };
+ static int x1000_mmc0_4bit_funcs[] = { 1, 1, 1, };
+ static int x1000_mmc0_8bit_funcs[] = { 1, 1, 1, 1, 1, };
+@@ -1119,6 +1153,23 @@ static const struct group_desc x1000_groups[] = {
+ 	INGENIC_PIN_GROUP("uart1-hwflow", x1000_uart1_hwflow),
+ 	INGENIC_PIN_GROUP("uart2-data-a", x1000_uart2_data_a),
+ 	INGENIC_PIN_GROUP("uart2-data-d", x1000_uart2_data_d),
++	INGENIC_PIN_GROUP("sfc", x1000_sfc),
++	INGENIC_PIN_GROUP("ssi-dt-a-22", x1000_ssi_dt_a_22),
++	INGENIC_PIN_GROUP("ssi-dt-a-29", x1000_ssi_dt_a_29),
++	INGENIC_PIN_GROUP("ssi-dt-d", x1000_ssi_dt_d),
++	INGENIC_PIN_GROUP("ssi-dr-a-23", x1000_ssi_dr_a_23),
++	INGENIC_PIN_GROUP("ssi-dr-a-28", x1000_ssi_dr_a_28),
++	INGENIC_PIN_GROUP("ssi-dr-d", x1000_ssi_dr_d),
++	INGENIC_PIN_GROUP("ssi-clk-a-24", x1000_ssi_clk_a_24),
++	INGENIC_PIN_GROUP("ssi-clk-a-26", x1000_ssi_clk_a_26),
++	INGENIC_PIN_GROUP("ssi-clk-d", x1000_ssi_clk_d),
++	INGENIC_PIN_GROUP("ssi-gpc-a-20", x1000_ssi_gpc_a_20),
++	INGENIC_PIN_GROUP("ssi-gpc-a-31", x1000_ssi_gpc_a_31),
++	INGENIC_PIN_GROUP("ssi-ce0-a-25", x1000_ssi_ce0_a_25),
++	INGENIC_PIN_GROUP("ssi-ce0-a-27", x1000_ssi_ce0_a_27),
++	INGENIC_PIN_GROUP("ssi-ce0-d", x1000_ssi_ce0_d),
++	INGENIC_PIN_GROUP("ssi-ce1-a-21", x1000_ssi_ce1_a_21),
++	INGENIC_PIN_GROUP("ssi-ce1-a-30", x1000_ssi_ce1_a_30),
+ 	INGENIC_PIN_GROUP("mmc0-1bit", x1000_mmc0_1bit),
+ 	INGENIC_PIN_GROUP("mmc0-4bit", x1000_mmc0_4bit),
+ 	INGENIC_PIN_GROUP("mmc0-8bit", x1000_mmc0_8bit),
+@@ -1152,6 +1203,15 @@ static const char *x1000_uart1_groups[] = {
+ 	"uart1-data-a", "uart1-data-d", "uart1-hwflow",
+ };
+ static const char *x1000_uart2_groups[] = { "uart2-data-a", "uart2-data-d", };
++static const char *x1000_sfc_groups[] = { "sfc", };
++static const char *x1000_ssi_groups[] = {
++	"ssi-dt-a-22", "ssi-dt-a-29", "ssi-dt-d",
++	"ssi-dr-a-23", "ssi-dr-a-28", "ssi-dr-d",
++	"ssi-clk-a-24", "ssi-clk-a-26", "ssi-clk-d",
++	"ssi-gpc-a-20", "ssi-gpc-a-31",
++	"ssi-ce0-a-25", "ssi-ce0-a-27", "ssi-ce0-d",
++	"ssi-ce1-a-21", "ssi-ce1-a-30",
++};
+ static const char *x1000_mmc0_groups[] = {
+ 	"mmc0-1bit", "mmc0-4bit", "mmc0-8bit",
+ };
+@@ -1182,6 +1242,8 @@ static const struct function_desc x1000_functions[] = {
+ 	{ "uart0", x1000_uart0_groups, ARRAY_SIZE(x1000_uart0_groups), },
+ 	{ "uart1", x1000_uart1_groups, ARRAY_SIZE(x1000_uart1_groups), },
+ 	{ "uart2", x1000_uart2_groups, ARRAY_SIZE(x1000_uart2_groups), },
++	{ "sfc", x1000_sfc_groups, ARRAY_SIZE(x1000_sfc_groups), },
++	{ "ssi", x1000_ssi_groups, ARRAY_SIZE(x1000_ssi_groups), },
+ 	{ "mmc0", x1000_mmc0_groups, ARRAY_SIZE(x1000_mmc0_groups), },
+ 	{ "mmc1", x1000_mmc1_groups, ARRAY_SIZE(x1000_mmc1_groups), },
+ 	{ "emc", x1000_emc_groups, ARRAY_SIZE(x1000_emc_groups), },
+@@ -1271,6 +1333,7 @@ static const struct group_desc x1500_groups[] = {
+ 	INGENIC_PIN_GROUP("uart1-hwflow", x1500_uart1_hwflow),
+ 	INGENIC_PIN_GROUP("uart2-data-a", x1500_uart2_data_a),
+ 	INGENIC_PIN_GROUP("uart2-data-d", x1500_uart2_data_d),
++	INGENIC_PIN_GROUP("sfc", x1000_sfc),
+ 	INGENIC_PIN_GROUP("mmc-1bit", x1500_mmc_1bit),
+ 	INGENIC_PIN_GROUP("mmc-4bit", x1500_mmc_4bit),
+ 	INGENIC_PIN_GROUP("i2c0-data", x1500_i2c0),
+@@ -1307,6 +1370,7 @@ static const struct function_desc x1500_functions[] = {
+ 	{ "uart0", x1500_uart0_groups, ARRAY_SIZE(x1500_uart0_groups), },
+ 	{ "uart1", x1500_uart1_groups, ARRAY_SIZE(x1500_uart1_groups), },
+ 	{ "uart2", x1500_uart2_groups, ARRAY_SIZE(x1500_uart2_groups), },
++	{ "sfc", x1000_sfc_groups, ARRAY_SIZE(x1000_sfc_groups), },
+ 	{ "mmc", x1500_mmc_groups, ARRAY_SIZE(x1500_mmc_groups), },
+ 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
+ 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
+-- 
+2.7.4
 
-Yes, I agree. We should update on-disk journal super block after journal 
-recovery since that procedure doesn't involve journal status in memory 
-which is just reset to the very beginning(tail and head pointing to the 
-first block) of journal region.
-
-Moreover, during journal recovery running by peer nodes, ocfs2 already 
-does that like what this patch does.
-
-ocfs2_recover_node() -> ocfs2_replay_journal().
-
-Very good job to catch such an exception. :-)
-
-
-> 
-> This exception happens when this lun is used by only one node. If it
-> is used by multi-nodes, other node will replay its journal and its
-> journal sb block will be updated after recovery.
-> 
-> To fix this problem, use jbd2_journal_flush to mark journal as empty as
-> ocfs2_replay_journal has done.
-> 
-> The following jbd2 journal can be generated by touching a new file after
-> journal is replayed, and seq 15 is the first valid commit, but first seq
-> is 13 in journal super block.
-> logdump:
-> Block 0: Journal Superblock
-> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
-> Blocksize: 4096   Total Blocks: 32768   First Block: 1
-> First Commit ID: 13   Start Log Blknum: 1
-> Error: 0
-> Feature Compat: 0
-> Feature Incompat: 2 block64
-> Feature RO compat: 0
-> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
-> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
-> Per Txn Block Limit    Journal: 0    Data: 0
-> 
-> Block 1: Journal Commit Block
-> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> Block 2: Journal Descriptor
-> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
-> No. Blocknum        Flags
->   0. 587             none
-> UUID: 00000000000000000000000000000000
->   1. 8257792         JBD2_FLAG_SAME_UUID
->   2. 619             JBD2_FLAG_SAME_UUID
->   3. 24772864        JBD2_FLAG_SAME_UUID
->   4. 8257802         JBD2_FLAG_SAME_UUID
->   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
-> ...
-> Block 7: Inode
-> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
-> FS Generation: 2839773110 (0xa9437fb6)
-> CRC32: 00000000   ECC: 0000
-> Type: Regular   Attr: 0x0   Flags: Valid
-> Dynamic Features: (0x1) InlineData
-> User: 0 (root)   Group: 0 (root)   Size: 7
-> Links: 1   Clusters: 0
-> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
-> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
-> ...
-> Block 9: Journal Commit Block
-> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
-> 
-> The following is jouranl recovery log when recovering the upper jbd2
-> journal when mount again.
-> syslog:
-> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
-> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
-> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
-> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
-> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
-> 
-> Due to first commit seq 13 recorded in journal super is not consistent
-> with the value recorded in block 1(seq is 14), journal recovery will be
-> terminated before seq 15 even though it is an unbroken commit, inode
-> 8257802 is a new file and it will be lost.
-> 
-> Signed-off-by: Kai Li <li.kai4@h3c.com>
-> ---
->   fs/ocfs2/journal.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-> index 1afe57f425a0..b8b9d26fa731 100644
-> --- a/fs/ocfs2/journal.c
-> +++ b/fs/ocfs2/journal.c
-> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
->   
->   	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
->   
-> +	if (replayed) {
-> +		/* wipe the journal */
-> +		jbd2_journal_lock_updates(journal->j_journal);
-> +		status = jbd2_journal_flush(journal->j_journal);
-> +		jbd2_journal_unlock_updates(journal->j_journal);
-> +		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
-
-Is the above mlog line necessary?
-Can we just log a warning only jbd2_journal_flush() fails and let the 
-mount continue? IMO, the mlog line can't help much.
-
-Otherwise, this patch looks good to me.
-
-
-Thanks,
-Changwei
-
-
-> +	}
-> +
->   	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
->   	if (status < 0) {
->   		mlog_errno(status);
-> 
