@@ -7,257 +7,98 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E07C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2775FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26543214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C07214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AwbYvkh9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cH68ixxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfLKVyy (ORCPT
+        id S1726743AbfLKV5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:54:54 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:36684 "EHLO mail.andi.de1.cc"
+        Wed, 11 Dec 2019 16:57:37 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:41540 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLKVye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 16:54:34 -0500
+        id S1726313AbfLKV5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 16:57:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=References:In-Reply-To:Message-Id:Date:Subject:
-        Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QHWbSZMQCipY4uVgsv7odzWykOkxPDCDMNwl6NJA12Y=; b=AwbYvkh9BHqvW9JHEBHc1u4O4
-        Xvzm0ER2aASkx2cc5fmYqk9fZoQjtQaZVkBqyyIRM/d6YM/7SRZYGlXfZYV1LIZmSJ6Z1OV3KLzbd
-        OUH7E23NZ+k6hFdnsNEYTPNG5L/tVmTh69lj2/cdAlk32M+RQscWrmgo2+aTPGUVN6mFQ=;
-Received: from p5dcc331a.dip0.t-ipconnect.de ([93.204.51.26] helo=eeepc)
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vyPYuKP4nBZWwRtmxSe5elUv8cYRbdETpDEHXZisMr8=; b=cH68ixxC4aHnX4hnIZCm+faQ/e
+        CCufRSSS0KY68o8eLy0HnYIeoSqSOdExYCI/wYAm1Um6dOAT/3WAp2BXG+LutniBpSqLiiUU0WqOT
+        Y+mnchjpaIaVBMd4YmkERWK6AbOcpUaMbc1v2TaZzIZgdLpYy83ojZsL14JBj/uRZzYs=;
+Received: from p200300ccff0c6f001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:6f00:1a3d:a2ff:febf:d33a] helo=aktux)
         by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <andreas@kemnade.info>)
-        id 1if9w9-0002EX-Jh; Wed, 11 Dec 2019 22:54:25 +0100
-Received: from andi by eeepc with local (Exim 4.89)
+        id 1if9zC-0002HF-Vg; Wed, 11 Dec 2019 22:57:35 +0100
+Received: from andi by aktux with local (Exim 4.92)
         (envelope-from <andreas@kemnade.info>)
-        id 1if9w7-00005d-Nv; Wed, 11 Dec 2019 22:54:23 +0100
+        id 1if9zC-00052q-JM; Wed, 11 Dec 2019 22:57:34 +0100
 From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
 Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v4 2/5] mfd: rn5t618: add IRQ support
-Date:   Wed, 11 Dec 2019 22:54:06 +0100
-Message-Id: <20191211215409.32764-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20191211215409.32764-1-andreas@kemnade.info>
-References: <20191211215409.32764-1-andreas@kemnade.info>
+Subject: [PATCH] mfd: rn5t618: cleanup i2c_device_id
+Date:   Wed, 11 Dec 2019 22:57:31 +0100
+Message-Id: <20191211215731.19350-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for IRQ handling in the RC5T619 which is required
-for properly implementing subdevices like RTC.
-For now only definitions for the variant RC5T619 are included.
+That list was just empty, so it can be removed if .probe_new
+instead of .probe is used
 
+Suggested-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
-Changes in v4:
-merge rn5t618-irq.c into rn5t618.c
-use macros for IRQ table
+ drivers/mfd/rn5t618.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-Changes in v3:
-alignment cleanup
-
-Changes in v2:
-- no dead code, did some more testing and thinking for that
-- remove extra empty lines
- drivers/mfd/Kconfig         |  1 +
- drivers/mfd/rn5t618.c       | 88 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/rn5t618.h | 15 ++++++++
- 3 files changed, 104 insertions(+)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index ae24d3ea68ea..522e068d0082 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1057,6 +1057,7 @@ config MFD_RN5T618
- 	depends on OF
- 	select MFD_CORE
- 	select REGMAP_I2C
-+	select REGMAP_IRQ
- 	help
- 	  Say yes here to add support for the Ricoh RN5T567,
- 	  RN5T618, RC5T619 PMIC.
 diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-index da5cd9c92a59..76d997c0cfe4 100644
+index 18d56a732b20..70d52b46ee8a 100644
 --- a/drivers/mfd/rn5t618.c
 +++ b/drivers/mfd/rn5t618.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/delay.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/rn5t618.h>
- #include <linux/module.h>
-@@ -45,9 +47,63 @@ static const struct regmap_config rn5t618_regmap_config = {
- 	.cache_type	= REGCACHE_RBTREE,
+@@ -150,8 +150,7 @@ static const struct of_device_id rn5t618_of_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, rn5t618_of_match);
  
-+static const struct regmap_irq rc5t619_irqs[] = {
-+	REGMAP_IRQ_REG(RN5T618_IRQ_SYS, 0, BIT(0)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_DCDC, 0, BIT(1)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_RTC, 0, BIT(2)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_ADC, 0, BIT(3)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_GPIO, 0, BIT(4)),
-+	REGMAP_IRQ_REG(RN5T618_IRQ_CHG, 0, BIT(6)),
-+};
-+
-+static const struct regmap_irq_chip rc5t619_irq_chip = {
-+	.name = "rc5t619",
-+	.irqs = rc5t619_irqs,
-+	.num_irqs = ARRAY_SIZE(rc5t619_irqs),
-+	.num_regs = 1,
-+	.status_base = RN5T618_INTMON,
-+	.mask_base = RN5T618_INTEN,
-+	.mask_invert = true,
-+};
-+
- static struct rn5t618 *rn5t618_pm_power_off;
- static struct notifier_block rn5t618_restart_handler;
- 
-+int rn5t618_irq_init(struct rn5t618 *rn5t618)
-+{
-+	const struct regmap_irq_chip *irq_chip;
-+	int ret;
-+
-+	if (!rn5t618->irq)
-+		return 0;
-+
-+	switch (rn5t618->variant) {
-+	case RC5T619:
-+		irq_chip = &rc5t619_irq_chip;
-+		break;
-+	default:
-+		irq_chip = NULL;
-+		break;
-+	}
-+
-+	if (!irq_chip) {
-+		dev_err(rn5t618->dev, "Currently no IRQ support for variant %d\n",
-+			(int)rn5t618->variant);
-+		return -ENOENT;
-+	}
-+
-+	ret = devm_regmap_add_irq_chip(rn5t618->dev, rn5t618->regmap,
-+				       rn5t618->irq,
-+				       IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+				       0, irq_chip, &rn5t618->irq_data);
-+	if (ret) {
-+		dev_err(rn5t618->dev, "Failed to register IRQ chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static void rn5t618_trigger_poweroff_sequence(bool repower)
+-static int rn5t618_i2c_probe(struct i2c_client *i2c,
+-			     const struct i2c_device_id *id)
++static int rn5t618_i2c_probe(struct i2c_client *i2c)
  {
- 	/* disable automatic repower-on */
-@@ -105,6 +161,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, priv);
- 	priv->variant = (long)of_id->data;
-+	priv->irq = i2c->irq;
-+	priv->dev = &i2c->dev;
- 
- 	priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
- 	if (IS_ERR(priv->regmap)) {
-@@ -137,6 +195,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
- 		return ret;
- 	}
- 
-+	if (priv->irq > 0) {
-+		if (rn5t618_irq_init(priv))
-+			priv->irq = 0;
-+	}
-+
+ 	const struct of_device_id *of_id;
+ 	struct rn5t618 *priv;
+@@ -251,11 +250,6 @@ static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
  	return 0;
  }
  
-@@ -154,15 +217,40 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
- 	return 0;
- }
- 
-+static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		disable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-+{
-+	struct rn5t618 *priv = dev_get_drvdata(dev);
-+
-+	if (priv->irq)
-+		enable_irq(priv->irq);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id rn5t618_i2c_id[] = {
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
- 
-+static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
-+			rn5t618_i2c_suspend,
-+			rn5t618_i2c_resume);
-+
- static struct i2c_driver rn5t618_i2c_driver = {
- 	.driver = {
- 		.name = "rn5t618",
+-static const struct i2c_device_id rn5t618_i2c_id[] = {
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
+-
+ static SIMPLE_DEV_PM_OPS(rn5t618_i2c_dev_pm_ops,
+ 			rn5t618_i2c_suspend,
+ 			rn5t618_i2c_resume);
+@@ -266,9 +260,8 @@ static struct i2c_driver rn5t618_i2c_driver = {
  		.of_match_table = of_match_ptr(rn5t618_of_match),
-+		.pm = &rn5t618_i2c_dev_pm_ops,
+ 		.pm = &rn5t618_i2c_dev_pm_ops,
  	},
- 	.probe = rn5t618_i2c_probe,
+-	.probe = rn5t618_i2c_probe,
++	.probe_new = rn5t618_i2c_probe,
  	.remove = rn5t618_i2c_remove,
-diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
-index d62ef48060b5..739571656f2b 100644
---- a/include/linux/mfd/rn5t618.h
-+++ b/include/linux/mfd/rn5t618.h
-@@ -242,9 +242,24 @@ enum {
- 	RC5T619,
+-	.id_table = rn5t618_i2c_id,
  };
  
-+/* RN5T618 IRQ definitions */
-+enum {
-+	RN5T618_IRQ_SYS = 0,
-+	RN5T618_IRQ_DCDC,
-+	RN5T618_IRQ_RTC,
-+	RN5T618_IRQ_ADC,
-+	RN5T618_IRQ_GPIO,
-+	RN5T618_IRQ_CHG,
-+	RN5T618_NR_IRQS,
-+};
-+
- struct rn5t618 {
- 	struct regmap *regmap;
-+	struct device *dev;
- 	long variant;
-+
-+	int irq;
-+	struct regmap_irq_chip_data *irq_data;
- };
- 
- #endif /* __LINUX_MFD_RN5T618_H */
+ module_i2c_driver(rn5t618_i2c_driver);
 -- 
-2.11.0
+2.20.1
 
