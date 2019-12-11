@@ -2,104 +2,201 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE3AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EFCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C992073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B2B2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080321;
-	bh=9PI1QPNR2iHRgZayRSUSeas2bsFCkeZ0CrEQq7RCfcw=;
+	s=default; t=1576080327;
+	bh=6E00oAINu4WSQ2OxBCVSoVj7KPtNBMXJcbpbuz32U0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lC4TCwTAGQSVlGHVgFMQ9/Gjiky52+oFQZPzGjhNG2KjC0M8e3cHWGt1rggPgHlK7
-	 kdXq/R3ZR17cCSn212qO4ixJ2nl9epCh8pPhP3cfwPCDUV64Ck07/EnzQQ2EpeGW7s
-	 LoMCiqWY/aXy6mahQslgPA2090SuqPA8h4h1zNU0=
+	b=oRoJ1BhKdfnuwvsf8EzEk8FATariqHZDkKgbiLVxjQ4KADA2l0VUyx3BssdFX1O6s
+	 4M+Juhpv+/WCyW23qKeGQ0IKs1JbNdkZhCPS5IeXLa5WouU1YbXTC5/NSS+0LZY/Au
+	 gQaBGo+2yvXYO5yUZ5tKaoC8wCnoNXHYcomNHhBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388887AbfLKQFU (ORCPT
+        id S1730192AbfLKQF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731244AbfLKPMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730431AbfLKPMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:51 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E444F24654;
+        by mail.kernel.org (Postfix) with ESMTPSA id 928702465B;
         Wed, 11 Dec 2019 15:12:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077171;
-        bh=9PI1QPNR2iHRgZayRSUSeas2bsFCkeZ0CrEQq7RCfcw=;
+        bh=6E00oAINu4WSQ2OxBCVSoVj7KPtNBMXJcbpbuz32U0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiQZP+6wImaN9kCHENsBEoTRscIb9PxiJZI09kqU707mN9/HBqmqKCCXbQ17vp8yc
-         kl+5RuqjR4vE+a0IUKvX1pP+d1oWo/Vm8LAFrh9/o9TJRwG/BL6jPmwJkx7iiyN3+D
-         TGJUGenFvykaXS/O4Nx53pGgwBRouC3mKrlitGg4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 042/105] net: ep93xx_eth: fix mismatch of request_mem_region in remove
-Date:   Wed, 11 Dec 2019 16:05:31 +0100
-Message-Id: <20191211150237.980765149@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=rPTVhdIvg9m/dXJEjlWA5RBhEFdFcJ41zXcT2lnd9pw/yIebuIB/hwbADYkma5dBM
+         zUBzk8Qvw/rCxztElHyVvRyQuDhoNIAa4ie1NO4VtcyTZvr2LLoimrVsfdrZUct6q2
+         og4hr6WdA2tuQsXPAgOONF+GxSFi6Lk0OqyVhqdA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 056/134] fs/quota: handle overflows of sysctl fs.quota.* and report as unsigned long
+Date:   Wed, 11 Dec 2019 10:10:32 -0500
+Message-Id: <20191211151150.19073-56-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 3df70afe8d33f4977d0e0891bdcfb639320b5257 ]
+[ Upstream commit 6fcbcec9cfc7b3c6a2c1f1a23ebacedff7073e0a ]
 
-The driver calls release_resource in remove to match request_mem_region
-in probe, which is incorrect.
-Fix it by using the right one, release_mem_region.
+Quota statistics counted as 64-bit per-cpu counter. Reading sums per-cpu
+fractions as signed 64-bit int, filters negative values and then reports
+lower half as signed 32-bit int.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Result may looks like:
+
+fs.quota.allocated_dquots = 22327
+fs.quota.cache_hits = -489852115
+fs.quota.drops = -487288718
+fs.quota.free_dquots = 22083
+fs.quota.lookups = -486883485
+fs.quota.reads = 22327
+fs.quota.syncs = 335064
+fs.quota.writes = 3088689
+
+Values bigger than 2^31-1 reported as negative.
+
+All counters except "allocated_dquots" and "free_dquots" are monotonic,
+thus they should be reported as is without filtering negative values.
+
+Kernel doesn't have generic helper for 64-bit sysctl yet,
+let's use at least unsigned long.
+
+Link: https://lore.kernel.org/r/157337934693.2078.9842146413181153727.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cirrus/ep93xx_eth.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/quota/dquot.c      | 29 +++++++++++++++++------------
+ include/linux/quota.h |  2 +-
+ 2 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-index f1a0c4dceda0c..f37c9a08c4cf5 100644
---- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-+++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-@@ -763,6 +763,7 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 6e826b454082c..fa6ec4f96791d 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2860,68 +2860,73 @@ EXPORT_SYMBOL(dquot_quotactl_sysfile_ops);
+ static int do_proc_dqstats(struct ctl_table *table, int write,
+ 		     void __user *buffer, size_t *lenp, loff_t *ppos)
  {
- 	struct net_device *dev;
- 	struct ep93xx_priv *ep;
-+	struct resource *mem;
+-	unsigned int type = (int *)table->data - dqstats.stat;
++	unsigned int type = (unsigned long *)table->data - dqstats.stat;
++	s64 value = percpu_counter_sum(&dqstats.counter[type]);
++
++	/* Filter negative values for non-monotonic counters */
++	if (value < 0 && (type == DQST_ALLOC_DQUOTS ||
++			  type == DQST_FREE_DQUOTS))
++		value = 0;
  
- 	dev = platform_get_drvdata(pdev);
- 	if (dev == NULL)
-@@ -778,8 +779,8 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
- 		iounmap(ep->base_addr);
+ 	/* Update global table */
+-	dqstats.stat[type] =
+-			percpu_counter_sum_positive(&dqstats.counter[type]);
+-	return proc_dointvec(table, write, buffer, lenp, ppos);
++	dqstats.stat[type] = value;
++	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
  
- 	if (ep->res != NULL) {
--		release_resource(ep->res);
--		kfree(ep->res);
-+		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		release_mem_region(mem->start, resource_size(mem));
- 	}
+ static struct ctl_table fs_dqstats_table[] = {
+ 	{
+ 		.procname	= "lookups",
+ 		.data		= &dqstats.stat[DQST_LOOKUPS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "drops",
+ 		.data		= &dqstats.stat[DQST_DROPS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "reads",
+ 		.data		= &dqstats.stat[DQST_READS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "writes",
+ 		.data		= &dqstats.stat[DQST_WRITES],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "cache_hits",
+ 		.data		= &dqstats.stat[DQST_CACHE_HITS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "allocated_dquots",
+ 		.data		= &dqstats.stat[DQST_ALLOC_DQUOTS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "free_dquots",
+ 		.data		= &dqstats.stat[DQST_FREE_DQUOTS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "syncs",
+ 		.data		= &dqstats.stat[DQST_SYNCS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index f32dd270b8e3f..27aab84fcbaac 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -263,7 +263,7 @@ enum {
+ };
  
- 	free_netdev(dev);
+ struct dqstats {
+-	int stat[_DQST_DQSTAT_LAST];
++	unsigned long stat[_DQST_DQSTAT_LAST];
+ 	struct percpu_counter counter[_DQST_DQSTAT_LAST];
+ };
+ 
 -- 
 2.20.1
-
-
 
