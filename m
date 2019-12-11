@@ -6,139 +6,161 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED68C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8CF222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B010206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLKUqa (ORCPT
+        id S1726683AbfLKUrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:46:30 -0500
-Received: from mout.kundenserver.de ([217.72.192.74]:47121 "EHLO
+        Wed, 11 Dec 2019 15:47:17 -0500
+Received: from mout.kundenserver.de ([212.227.17.24]:53299 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfLKUq3 (ORCPT
+        with ESMTP id S1726345AbfLKUrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:46:29 -0500
+        Wed, 11 Dec 2019 15:47:16 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MdNPq-1i65A826tc-00ZQLd; Wed, 11 Dec 2019 21:45:44 +0100
+ 1N7Qt9-1heGB12Xy1-017l1U; Wed, 11 Dec 2019 21:47:02 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Jens Axboe <axboe@kernel.dk>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org
+        Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        Arnd Bergmann <arnd@arndb.de>, Martin Wilck <mwilck@suse.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>
-Subject: [PATCH 10/24] compat_ioctl: cdrom: handle CDROM_LAST_WRITTEN
-Date:   Wed, 11 Dec 2019 21:42:44 +0100
-Message-Id: <20191211204306.1207817-11-arnd@arndb.de>
+        Arnd Bergmann <arnd@arndb.de>, Hannes Reinecke <hare@suse.com>,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH 12/24] compat_ioctl: add scsi_compat_ioctl
+Date:   Wed, 11 Dec 2019 21:42:46 +0100
+Message-Id: <20191211204306.1207817-13-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20191211204306.1207817-1-arnd@arndb.de>
 References: <20191211204306.1207817-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:OgKProSambYiHxIdc4WgI96dWkA775je0kzaKhUxPtesDlYoKyr
- gFFE1yy9DzEM7a5B5AA/oSqXoT7QuiY4bPuyHN27QCD94Ex8qoyXne6agA5MTSOyDSrPZGD
- b1iEfWDWCeor9YWE98KUBDkDqgzEcVe4XsydwGdKj0HN1+aNts0vphUCJe97+YwSV7Cwuc1
- NPTBUBiYBp0q71uYDhjLg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Hu2x/EQ5Akw=:kkX8RCM7OH0NzXIm2tqs9i
- sLHHlNRUC31BYCN7hIZytGYHFX+czQfkQlwPZsH8e+XKW0dHB9up5hnk5z1rU4r2NUrUdAr0v
- VyFaamsfs6G8SqhUkpOmVGoWOAFaSQ9MrbqI8sLODVKtntYt8R9eWpeRcFnSTEuNb3g+whPI4
- mSoYVxg6+8o8mtCTLdVnfxhCUDVnh8gqsJ4JQFVfHK22DWhxEvcMJ9T7tE6IdA9ZA/EZjXdGV
- sLfZpMxbGKRov84Jy/2ZqSVMIfpDQMWZXGjo/+qFZeKurqf54xnsjNmZsaPHpyaZBMnfiW+TX
- lCwVM07T3jmrVnam7Xonjfn9L7acTC6cFTWU9o7QQ+kpCJa/ZdAi70SzHbyMuOL4ZYkH05Xud
- mDpr4nwzEIgJLWzGkvxxX1iaWM1j4ZEEm9HjrCQlOCY8TCNRxHspFNWoOWvTOMzjjm8iD8Xua
- QvN6mPKXr5GZvwpMwnKbRHX+uEzUYLGg4npHHrWkdI/zRcVEjRL5Eza8kz+EtRENOfL6ITRXh
- zX8zKnuUaxBeEyYR/X5pQjKN0SeBGmVyB7RyJJSdUdUj8PsBoUMfCVEe2kyuBOSZPdzMyWBSh
- oXqLDy417zcfrnc+7Ec9vujspmUmVuaAc1qWxswpslZCkHlvfejhXZNJ4vt34IFAZSTkG28+y
- BmG53KpQIu9xron0cA3NL0rgACyTESFb8ouD/QfdlH5XSnKUcEzLZAd+9sLL35tAeKq1A9PSf
- kY7ij1PIMzoQc6ix9EpU5tLRR18Ky03ORsAG97f+/xE/WXSpPvyjACZw8W5Z1HkwulabSwBkC
- B5mgacsSWMkl7bJNu7JTb9YAezAK7f0wmDxlDBqeVfLIwvb4vJNJXpOMn3ZIPtML6Qg51rh4x
- UCB0u9rL3bexsg3A8PyA==
+X-Provags-ID: V03:K1:K9j2t2hRIDN1s24Qc+2ApYId+NR70I0ahQXZVZus7eh7p5W3KwC
+ BexL4HNQXEGo1mU+/z+mF+nWOdFPvBBNu+B3O+hhRy6chSEBu6VtLmq6zXb4gdu/3JIZkWp
+ fxlku3lFgKF/LiyPgpzzL8FHeSh1jnUjSLS5XVoRw4PLA0ipNO8wXuf5fhuEbAVIaJ5e9cD
+ Xp7cjFIB9kwrj12+7CkmA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iCPMOUwnMGU=:56ma4IjE+C5v8tJDupanbg
+ ffaWXakkoowFJced4omf+RzDDMZK7NMo9/Q1isuFrGMdxbOrbBfPNB4zVP292J9Lbze6z2vby
+ 06MP9oMvdo6eX2EQ+g6AyzUwrOXltJyuT/hOYV6Su2QTSINt/C4WWoqEXtdSge4uz7tfCyCfM
+ NAUvMG9TLvoWOo7S8XMZgeW9VdarpO8Z6RaMpJWsAqIEFK7gKubRgL8PBHYuUNrnT6DkeHy6Y
+ D2RgrNSWuI3nI0AUGGni+g0HZzWgwLC5QtKsxsQj9gSQytfqAuiY5q/RIT/0Jd5MHcv6ouf+x
+ EEB3nJoKwgCYlh8Lx79x5uuRLFOQpSySmOqaD7P17FrJWT2sby0FrSqCrNx82EaFhOFk0y8B1
+ eVwHci2CU8wKbf3Tt2N3rLVN+DK/ozFKAXNYPJbwcpoQRIHtcXAuCVgELFDqYsGkUa+ql2gvC
+ I32A8I4uzEqukJM7Z9b+D9DNGfOl2HZvnkR/ZhmtObpEo5/pUFMfj11wTiSsTYebpdrhG8+HY
+ 8c/NxNufKbs+tpi1t5B/poXDjXurDqYNvg+E5zjGn8xLXJivGVlsSEEEwwvZU94xH2RO97qTk
+ sd9kyb/N8K8jMfqZqEz8RnBPgNlLtXMRO04cU0ns0ZvRQbc6aumAItMheTcPj+ZUIQPfCTPWK
+ oAVIFgY8NprWEIdqZfjvA01MQ2v5Zo3hXfyOGYaXQlRWV74VXSf4th8Xzis0k/650QKI8mrDK
+ cQqX4kJHyT/K3IX6moEX6stv8hy4WfiXEZf8ZfqNZXgEK9idm51FpDCc6gyFKsAtIGdDb4bZ5
+ uVs5sguZu62Bjex2nnONT0YwfyPyRwY1tNjMH6PcTOBj5p2/ohWqRAkR/T3GTfRVOUcCbpZ1w
+ vdIHEV5oDXVh+MX6OPeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the only ioctl command that does not have a proper
-compat handler. Making the normal implementation do the
-right thing is actually very simply, so just do that by
-using an in_compat_syscall() check to avoid the special
-case in the pkcdvd driver.
+In order to move the compat handling for SCSI ioctl commands out of
+fs/compat_ioctl.c into the individual drivers, we need a helper function
+first to match the native ioctl handler called by sd, sr, st, etc.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/block/pktcdvd.c | 24 +-----------------------
- drivers/cdrom/cdrom.c   |  7 ++++---
- 2 files changed, 5 insertions(+), 26 deletions(-)
+ drivers/scsi/scsi_ioctl.c | 54 +++++++++++++++++++++++++++++----------
+ include/scsi/scsi_ioctl.h |  1 +
+ 2 files changed, 41 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
-index ab4d3be4b646..5f970a7d32c0 100644
---- a/drivers/block/pktcdvd.c
-+++ b/drivers/block/pktcdvd.c
-@@ -2663,26 +2663,6 @@ static int pkt_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd,
- 	return ret;
+diff --git a/drivers/scsi/scsi_ioctl.c b/drivers/scsi/scsi_ioctl.c
+index 57bcd05605bf..8f3af87b6bb0 100644
+--- a/drivers/scsi/scsi_ioctl.c
++++ b/drivers/scsi/scsi_ioctl.c
+@@ -189,17 +189,7 @@ static int scsi_ioctl_get_pci(struct scsi_device *sdev, void __user *arg)
  }
  
--#ifdef CONFIG_COMPAT
--static int pkt_compat_ioctl(struct block_device *bdev, fmode_t mode, unsigned int cmd, unsigned long arg)
--{
--	switch (cmd) {
--	/* compatible */
--	case CDROMEJECT:
--	case CDROMMULTISESSION:
--	case CDROMREADTOCENTRY:
--	case CDROM_SEND_PACKET: /* compat mode handled in scsi_cmd_ioctl */
--	case SCSI_IOCTL_SEND_COMMAND:
--		return pkt_ioctl(bdev, mode, cmd, (unsigned long)compat_ptr(arg));
--
--	/* FIXME: no handler so far */
--	default:
--	case CDROM_LAST_WRITTEN:
--		return -ENOIOCTLCMD;
--	}
--}
--#endif
--
- static unsigned int pkt_check_events(struct gendisk *disk,
- 				     unsigned int clearing)
+ 
+-/**
+- * scsi_ioctl - Dispatch ioctl to scsi device
+- * @sdev: scsi device receiving ioctl
+- * @cmd: which ioctl is it
+- * @arg: data associated with ioctl
+- *
+- * Description: The scsi_ioctl() function differs from most ioctls in that it
+- * does not take a major/minor number as the dev field.  Rather, it takes
+- * a pointer to a &struct scsi_device.
+- */
+-int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
++static int scsi_ioctl_common(struct scsi_device *sdev, int cmd, void __user *arg)
  {
-@@ -2704,9 +2684,7 @@ static const struct block_device_operations pktcdvd_ops = {
- 	.open =			pkt_open,
- 	.release =		pkt_close,
- 	.ioctl =		pkt_ioctl,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl =		pkt_compat_ioctl,
--#endif
-+	.compat_ioctl =		blkdev_compat_ptr_ioctl,
- 	.check_events =		pkt_check_events,
- };
- 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 48095025e588..faca0f346fff 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -3293,9 +3293,10 @@ static noinline int mmc_ioctl_cdrom_last_written(struct cdrom_device_info *cdi,
- 	ret = cdrom_get_last_written(cdi, &last);
- 	if (ret)
- 		return ret;
--	if (copy_to_user((long __user *)arg, &last, sizeof(last)))
--		return -EFAULT;
--	return 0;
-+	if (in_compat_syscall())
-+		return put_user(last, (__s32 __user *)arg);
+ 	char scsi_cmd[MAX_COMMAND_SIZE];
+ 	struct scsi_sense_hdr sense_hdr;
+@@ -266,14 +256,50 @@ int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
+                 return scsi_ioctl_get_pci(sdev, arg);
+ 	case SG_SCSI_RESET:
+ 		return scsi_ioctl_reset(sdev, arg);
+-	default:
+-		if (sdev->host->hostt->ioctl)
+-			return sdev->host->hostt->ioctl(sdev, cmd, arg);
+ 	}
++	return -ENOIOCTLCMD;
++}
 +
-+	return put_user(last, (long __user *)arg);
++/**
++ * scsi_ioctl - Dispatch ioctl to scsi device
++ * @sdev: scsi device receiving ioctl
++ * @cmd: which ioctl is it
++ * @arg: data associated with ioctl
++ *
++ * Description: The scsi_ioctl() function differs from most ioctls in that it
++ * does not take a major/minor number as the dev field.  Rather, it takes
++ * a pointer to a &struct scsi_device.
++ */
++int scsi_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
++{
++	int ret = scsi_ioctl_common(sdev, cmd, arg);
++
++	if (ret != -ENOIOCTLCMD)
++		return ret;
++
++	if (sdev->host->hostt->ioctl)
++		return sdev->host->hostt->ioctl(sdev, cmd, arg);
++
+ 	return -EINVAL;
  }
+ EXPORT_SYMBOL(scsi_ioctl);
  
- static int mmc_ioctl(struct cdrom_device_info *cdi, unsigned int cmd,
++#ifdef CONFIG_COMPAT
++int scsi_compat_ioctl(struct scsi_device *sdev, int cmd, void __user *arg)
++{
++	int ret = scsi_ioctl_common(sdev, cmd, arg);
++
++	if (ret != -ENOIOCTLCMD)
++		return ret;
++
++	if (sdev->host->hostt->compat_ioctl)
++		return sdev->host->hostt->compat_ioctl(sdev, cmd, arg);
++
++	return ret;
++}
++EXPORT_SYMBOL(scsi_compat_ioctl);
++#endif
++
+ /*
+  * We can process a reset even when a device isn't fully operable.
+  */
+diff --git a/include/scsi/scsi_ioctl.h b/include/scsi/scsi_ioctl.h
+index 5101e987c0ef..4fe69d863b5d 100644
+--- a/include/scsi/scsi_ioctl.h
++++ b/include/scsi/scsi_ioctl.h
+@@ -44,6 +44,7 @@ typedef struct scsi_fctargaddress {
+ int scsi_ioctl_block_when_processing_errors(struct scsi_device *sdev,
+ 		int cmd, bool ndelay);
+ extern int scsi_ioctl(struct scsi_device *, int, void __user *);
++extern int scsi_compat_ioctl(struct scsi_device *sdev, int cmd, void __user *arg);
+ 
+ #endif /* __KERNEL__ */
+ #endif /* _SCSI_IOCTL_H */
 -- 
 2.20.0
 
