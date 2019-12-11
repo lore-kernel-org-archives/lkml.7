@@ -2,119 +2,124 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AEFC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF40C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA182073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576024068;
-	bh=i3i/OOd/yLvu9iRSyxFuS5XThvDR5pjKCGsACjw4ywg=;
-	h=To:Cc:From:Subject:Date:List-ID:From;
-	b=wGlTbB0kTqWveA7313DW1S3pQCxn+MVzT15YQCgVfQmrVsO351GKtbTKe7WTfjCO+
-	 jf+wQKXwBtvAjCjJd+nLwqbhKr66HC1V2c5PkcuerIjV1sxV/DS/0IcBEkSj+kFlX0
-	 slmQolmf2IrAgETCEQz+orwqf2Q3txDCmpAEl9Io=
+	by mail.kernel.org (Postfix) with ESMTP id 10EE12073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZsA1gWWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbfLKA1r (ORCPT
+        id S1727386AbfLKA1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:27:47 -0500
-Received: from mail-il1-f169.google.com ([209.85.166.169]:36188 "EHLO
-        mail-il1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfLKA1r (ORCPT
+        Tue, 10 Dec 2019 19:27:52 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9928 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfLKA1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:27:47 -0500
-Received: by mail-il1-f169.google.com with SMTP id b15so17878897iln.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 16:27:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=+LjSD6sVRfH2//hYMsY7+rgc6dBShfyt7VWRkvvmBSw=;
-        b=VzkfbA3JJVNZR2NqBWHOvSAOAEe3oUB5+qdGJh76ZlosSggwxkVIi1akfrjGwluYWI
-         DtnR0OQfOHMR2lZf7vx+D5ACoQ8Ibrs8d6Y2R/dkLeCSWpoTirv+H8IwquERWvLsch1z
-         BQpqvhvLtPvRfhAG1C/OU6PiObA9EjcuoOQOE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=+LjSD6sVRfH2//hYMsY7+rgc6dBShfyt7VWRkvvmBSw=;
-        b=N1OWUA19wzRYOzrcxjMAcutpUIXXio+zxmAkDcNtk5zy1EQ/E15Pj8+60GgdXx/32m
-         iyqSFHv31U27O2rZ3iJVzX9nYiB6P9JQlnhAeNw/9ZwV+0tsCBuKEr8/f/VMfFCd0Hwz
-         fMW1oN9e6+eDgj0NlotVeemTXltohrPRNqSgWlSzCgQxtHnm0DTFY9ieT9AfG87BmafP
-         6RFaIJLv7UUUspxH+D+6OyeAnvgUxDQupHqW2clwNBCBDge5dCWtTvGfrAKwErFY3TwQ
-         3rUqyD/SM16QRyAqhGOJqUjMAndji7rQeCveSCGT8sSRuBSEujdinpAao6zuwkh9JuE5
-         /nnA==
-X-Gm-Message-State: APjAAAVDR2COzQ2/SmBIIdm86JW8B4GsEuePPj7ALA7zAwODSDWxJavu
-        m8NC6YPqQcXG8KzR9z96eG3XkRpLQKunmQ==
-X-Google-Smtp-Source: APXvYqxMXre2lYtjHVTpvGNDP8qoZJnxHDDjM1l1v2+ZDWv9h6fWOXfMCkZNJWiclb+chQl/adutkQ==
-X-Received: by 2002:a92:d609:: with SMTP id w9mr514333ilm.46.1576024066088;
-        Tue, 10 Dec 2019 16:27:46 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id c4sm164062iln.24.2019.12.10.16.27.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 16:27:45 -0800 (PST)
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Subject: Linux 5.5=rc1 kselftest rseq test build failure
-Message-ID: <2d53b409-31e0-2245-e163-1ab26f52c841@linuxfoundation.org>
-Date:   Tue, 10 Dec 2019 17:27:44 -0700
+        Tue, 10 Dec 2019 19:27:49 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df037ed0000>; Tue, 10 Dec 2019 16:27:25 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 10 Dec 2019 16:27:47 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 10 Dec 2019 16:27:47 -0800
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 00:27:46 +0000
+Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 00:27:45 +0000
+Subject: Re: [PATCH v8 23/26] mm/gup: pass flags arg to __gup_device_*
+ functions
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "Shuah Khan" <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        <bpf@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <kvm@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <netdev@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20191209225344.99740-1-jhubbard@nvidia.com>
+ <20191209225344.99740-24-jhubbard@nvidia.com>
+ <20191210124957.GG1551@quack2.suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <017cb337-99f0-785c-7fd9-223d3f05e840@nvidia.com>
+Date:   Tue, 10 Dec 2019 16:27:45 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191210124957.GG1551@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576024046; bh=qun8cg/sHOBwx96E42yhjWjklRPzRNtkdXEjGWJis9k=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZsA1gWWzEMoxNw4sGMBn0IB6PCN0ayjG1bjHlLTvRKvZNYWfFY6GadphhHH5/oXSG
+         JeeIACrDEldkCsiwLSqi7Sb/+s/lrstUEM6ZSkaa3ocFKRVk5BHiT+XSKQ7ZrvWG+N
+         y0FLTJm8bSQI8BERNijJq98G8+9Vm3vXUx29fLwfgq+J6rOLjwbNTnpcEijsnqylin
+         SaZDw8jS4hgJd1nkfZeanVmYjGG39ms/U3WiHxJYVbPGGDJYFEo916VNZt+5U5P0Or
+         fjh47kokYfS4lafjqrrwAa0dWo+eZljJp5xfyflXDQpDbHXAnqoG/R22NwcPm4jWYI
+         CAgkYrlfpd8+A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+On 12/10/19 4:49 AM, Jan Kara wrote:
+> On Mon 09-12-19 14:53:41, John Hubbard wrote:
+>> A subsequent patch requires access to gup flags, so pass the flags
+>> argument through to the __gup_device_* functions.
+>>
+>> Also placate checkpatch.pl by shortening a nearby line.
+>>
+>> TODO: Christoph Hellwig requested folding this into the patch the uses
+>> the gup flags arguments.
+> 
+> You should probably implement this TODO? :)
+> 
+> 								Honza
 
-I am seeing rseq test build failure on Linux 5.5-rc1.
-
-gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ 
-param_test.c -lpthread -lrseq -o ...tools/testing/selftests/rseq/param_test
-param_test.c:18:21: error: static declaration of ‘gettid’ follows 
-non-static declaration
-    18 | static inline pid_t gettid(void)
-       |                     ^~~~~~
-In file included from /usr/include/unistd.h:1170,
-                  from param_test.c:11:
-/usr/include/x86_64-linux-gnu/bits/unistd_ext.h:34:16: note: previous 
-declaration of ‘gettid’ was here
-    34 | extern __pid_t gettid (void) __THROW;
-       |                ^~~~~~
-make: *** [Makefile:28: ...tools/testing/selftests/rseq/param_test] Error 1
-
-
-The following obvious change fixes it. However, there could be reason
-why this was defined here. If you think this is the right fix, I can
-send the patch. I started seeing this with gcc version 9.2.1 20191008
-
-diff --git a/tools/testing/selftests/rseq/param_test.c 
-b/tools/testing/selftests/rseq/param_test.c
-index eec2663261f2..18a0fa1235a7 100644
---- a/tools/testing/selftests/rseq/param_test.c
-+++ b/tools/testing/selftests/rseq/param_test.c
-@@ -15,11 +15,6 @@
-  #include <errno.h>
-  #include <stddef.h>
-
--static inline pid_t gettid(void)
--{
--       return syscall(__NR_gettid);
--}
--
+Yes. Done for v9.
 
 thanks,
--- Shuah
+-- 
+John Hubbard
+NVIDIA
