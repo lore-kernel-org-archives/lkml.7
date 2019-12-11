@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F91C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A46C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C14F24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE74422527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077494;
-	bh=fhvtmL8GZu/pKDtGa9VK13wtQwS8/qg2FXgDYF7RPcA=;
+	s=default; t=1576077497;
+	bh=iCHWYkCfTQjmfLuLLQ0qaNORT4g4Fr7QJzI6dpKk5jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ueW+zaBnZiplXXigH+GIe5T/bjvzB0nubUxZRcgpvujJfc2gos2TnzuZ50ZdwCzUA
-	 IIwoncx0797pRaTYqS1squZuLb2Ij8tDkeigol+3MjV/DALRVAQ8p3XJRdrdfNn45d
-	 t6TZzHOVQXrQPaaLBJ/YIx2pSpDp990XJXSDYAJY=
+	b=Z33va3yjlV6J+lWE8OSC660lHWGjQUEgl2UN10Xc7ho9mdJDE3UHuDj0uJz6urWJD
+	 s317ZHhnUawys3kFLd2c2t/9o9CRWt2An+Lyi4z5AVbLqfcEcrsbJm0QRH8kSofoJu
+	 K4R3sasARzQB4PiyA3YfS5/uhA7qYduHsEFZXyGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbfLKPSK (ORCPT
+        id S1731693AbfLKPSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45846 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730371AbfLKPSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:05 -0500
+        id S1731828AbfLKPSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 171BF2073D;
-        Wed, 11 Dec 2019 15:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7C62073D;
+        Wed, 11 Dec 2019 15:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077484;
-        bh=fhvtmL8GZu/pKDtGa9VK13wtQwS8/qg2FXgDYF7RPcA=;
+        s=default; t=1576077492;
+        bh=iCHWYkCfTQjmfLuLLQ0qaNORT4g4Fr7QJzI6dpKk5jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OCftq9/T8TD7LRDB+HOFSIIAkgaIYHjbk4O8uCiFmnWd7C6APVXsqxG6OWgEQWrlZ
-         RsOHAOgDRKLwgX9jzbfF751yAV1kLX8QbrB1k5NeSpFN0PmGkR6+wAmi7Gq/YvZQ6O
-         VJow1gvZmRuCw2JVn+EFKnRL/qOFqL/l7tzVarEA=
+        b=UPXT7uPrLyO7kt8hWfp21nc5vwC8YB2dvir40FTLZJLw7KPwl4jmkdYlobMRWh+s8
+         WGwqIeHbnpwD7iRIPH9tbABNYBA59FpuYZFPKFUihX6hRwv33yd3xAeceGNfjSPYGQ
+         3oq1Wg+OS/6z6MV7Ptr70+Wqj4LK/UMCn3tfLI4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/243] bus: ti-sysc: Fix getting optional clocks in clock_roles
-Date:   Wed, 11 Dec 2019 16:03:38 +0100
-Message-Id: <20191211150342.887027890@linuxfoundation.org>
+Subject: [PATCH 4.19 058/243] crypto: ecc - check for invalid values in the key verification test
+Date:   Wed, 11 Dec 2019 16:03:40 +0100
+Message-Id: <20191211150343.019403693@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,41 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Vitaly Chikunov <vt@altlinux.org>
 
-[ Upstream commit 7b4f8ac2f1acdff3c0cce23d8c3b86434a6e768a ]
+[ Upstream commit 2eb4942b6609d35a4e835644a33203b0aef7443d ]
 
-We can have holes in clock_roles with interface clock missing for
-example. Currently getting an optional clock will fail if there are
-only a functional clock and an optional clock.
+Currently used scalar multiplication algorithm (Matthieu Rivain, 2011)
+have invalid values for scalar == 1, n-1, and for regularized version
+n-2, which was previously not checked. Verify that they are not used as
+private keys.
 
-Fixes: 09dfe5810762 ("bus: ti-sysc: Add handling for clkctrl opt clocks")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ crypto/ecc.c | 42 ++++++++++++++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 5b31131d0cba2..b6f63e7620214 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -217,8 +217,13 @@ static int sysc_get_clocks(struct sysc *ddata)
- 	if (!ddata->clocks)
- 		return -ENOMEM;
+diff --git a/crypto/ecc.c b/crypto/ecc.c
+index adcce310f6462..ed1237115066b 100644
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -912,30 +912,43 @@ static inline void ecc_swap_digits(const u64 *in, u64 *out,
+ 		out[i] = __swab64(in[ndigits - 1 - i]);
+ }
  
--	for (i = 0; i < ddata->nr_clocks; i++) {
--		error = sysc_get_one_clock(ddata, ddata->clock_roles[i]);
-+	for (i = 0; i < SYSC_MAX_CLOCKS; i++) {
-+		const char *name = ddata->clock_roles[i];
+-int ecc_is_key_valid(unsigned int curve_id, unsigned int ndigits,
+-		     const u64 *private_key, unsigned int private_key_len)
++static int __ecc_is_key_valid(const struct ecc_curve *curve,
++			      const u64 *private_key, unsigned int ndigits)
+ {
+-	int nbytes;
+-	const struct ecc_curve *curve = ecc_get_curve(curve_id);
++	u64 one[ECC_MAX_DIGITS] = { 1, };
++	u64 res[ECC_MAX_DIGITS];
+ 
+ 	if (!private_key)
+ 		return -EINVAL;
+ 
+-	nbytes = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
+-
+-	if (private_key_len != nbytes)
++	if (curve->g.ndigits != ndigits)
+ 		return -EINVAL;
+ 
+-	if (vli_is_zero(private_key, ndigits))
++	/* Make sure the private key is in the range [2, n-3]. */
++	if (vli_cmp(one, private_key, ndigits) != -1)
+ 		return -EINVAL;
+-
+-	/* Make sure the private key is in the range [1, n-1]. */
+-	if (vli_cmp(curve->n, private_key, ndigits) != 1)
++	vli_sub(res, curve->n, one, ndigits);
++	vli_sub(res, res, one, ndigits);
++	if (vli_cmp(res, private_key, ndigits) != 1)
+ 		return -EINVAL;
+ 
+ 	return 0;
+ }
+ 
++int ecc_is_key_valid(unsigned int curve_id, unsigned int ndigits,
++		     const u64 *private_key, unsigned int private_key_len)
++{
++	int nbytes;
++	const struct ecc_curve *curve = ecc_get_curve(curve_id);
 +
-+		if (!name)
-+			continue;
++	nbytes = ndigits << ECC_DIGITS_TO_BYTES_SHIFT;
 +
-+		error = sysc_get_one_clock(ddata, name);
- 		if (error && error != -ENOENT)
- 			return error;
- 	}
++	if (private_key_len != nbytes)
++		return -EINVAL;
++
++	return __ecc_is_key_valid(curve, private_key, ndigits);
++}
++
+ /*
+  * ECC private keys are generated using the method of extra random bits,
+  * equivalent to that described in FIPS 186-4, Appendix B.4.1.
+@@ -979,11 +992,8 @@ int ecc_gen_privkey(unsigned int curve_id, unsigned int ndigits, u64 *privkey)
+ 	if (err)
+ 		return err;
+ 
+-	if (vli_is_zero(priv, ndigits))
+-		return -EINVAL;
+-
+-	/* Make sure the private key is in the range [1, n-1]. */
+-	if (vli_cmp(curve->n, priv, ndigits) != 1)
++	/* Make sure the private key is in the valid range. */
++	if (__ecc_is_key_valid(curve, priv, ndigits))
+ 		return -EINVAL;
+ 
+ 	ecc_swap_digits(priv, privkey, ndigits);
 -- 
 2.20.1
 
