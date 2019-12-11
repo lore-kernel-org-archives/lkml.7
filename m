@@ -2,105 +2,139 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C959DC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4017C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A09DC20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bRSo4UIz";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YE690hR2"
+	by mail.kernel.org (Postfix) with ESMTP id C23DE208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:45:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfLKEh6 (ORCPT
+        id S1726897AbfLKEpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:37:58 -0500
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:46526
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726631AbfLKEh6 (ORCPT
+        Tue, 10 Dec 2019 23:45:52 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726631AbfLKEpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:37:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576039077;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=TZs1q5iCCLqj3ymqIoenTw7yehpn45zKyXEbFODyeuA=;
-        b=bRSo4UIzhLqXSQiMUpCL6p5TDJq4VaLEjlqUjqhTrPat0w1a8hd/HjmmGfBWw8u4
-        Pr1gdX4xjYMoPb1veiIVBGPaLz0N2fKmR0qj9oM3rnqR9mxBwjyDj5NEx2KAuyVxefy
-        aFxeH3M9MnND7dZ/qBe/KUV+SNQlvuD+N0yAihhM=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576039077;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=TZs1q5iCCLqj3ymqIoenTw7yehpn45zKyXEbFODyeuA=;
-        b=YE690hR21SN8LgNOB4LCfarF8BEAdo4jAcPMsllIF02VU62kqnd3gabsOUn1CZGl
-        HSZ8SFd4NpQhUuSGYAJDytIa5baO1rlCQNWfWgEKOHHzUATjp6XF5ZVQX2OHCz9Ppra
-        Os51dMIDt/qKt3czwgKaUGW1iOKUvilx8MCpF6zw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 35A2EC447AC
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add a comment to i2c7 about
- external pullup
-To:     Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     mka@chromium.org, Roja Rani Yarubandi <rojay@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-References: <20191210163530.1.I69a6c29e08924229d160b651769c84508a07b3c6@changeid>
- <20191210163530.2.I8d4cbb3d7ac5824f8e950c53038df8c27a512905@changeid>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0101016ef33fd5d9-8367442a-f863-4f64-9787-f49c716156e5-000000@us-west-2.amazonses.com>
-Date:   Wed, 11 Dec 2019 04:37:57 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 10 Dec 2019 23:45:51 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBB4gsWW047236
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:45:50 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wthkh6rpy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:45:50 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 11 Dec 2019 04:45:48 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Dec 2019 04:45:45 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBB4ji1i32571542
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 04:45:44 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A93A5205F;
+        Wed, 11 Dec 2019 04:45:44 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0A48B52054;
+        Wed, 11 Dec 2019 04:45:44 +0000 (GMT)
+Received: from [9.81.199.13] (unknown [9.81.199.13])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 8817EA0131;
+        Wed, 11 Dec 2019 15:45:40 +1100 (AEDT)
+Subject: Re: [ANNOUNCE] Call for Sessions - linux.conf.au 2020 Kernel Miniconf
+ - Deadline Extended
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     lwn@lwn.net
+References: <b15cd04a-b7d0-f14c-38e4-6204858425db@linux.ibm.com>
+Date:   Wed, 11 Dec 2019 15:45:41 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191210163530.2.I8d4cbb3d7ac5824f8e950c53038df8c27a512905@changeid>
+In-Reply-To: <b15cd04a-b7d0-f14c-38e4-6204858425db@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.12.11-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-TM-AS-GCONF: 00
+x-cbid: 19121104-4275-0000-0000-0000038DCF5B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121104-4276-0000-0000-000038A18277
+Message-Id: <488cb7d8-b42e-bc7f-0ba3-2e24cad205ad@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_08:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 mlxscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=912 bulkscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/11/2019 6:05 AM, Douglas Anderson wrote:
-> Make i2c7 symmetric with the other i2c busses and comment that we have
-> no internal pull because there is an external one.
+On 16/10/19 6:52 pm, Andrew Donnellan wrote:
+> LCA2020 Kernel Miniconf - Gold Coast, Queensland, Australia - 2020-01-14
+> ------------------------------------------------------------------------
 > 
-> Fixes: ba3fc6496366 ("arm64: dts: sc7180: Add qupv3_0 and qupv3_1")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> ******
+> 
+> LCA Kernel Miniconf submissions open!
+> 
+> Submissions close: 2019-12-08 (early submissions until 2019-11-17)
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+This deadline has been extended to 2019-12-22, but may close early once 
+we have accepted enough talks.
+
+
+Andrew
+
 
 > 
->   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 2 ++
->   1 file changed, 2 insertions(+)
+> Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 5eab3a282eba..05d30a56eca9 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -311,6 +311,8 @@ &qup_i2c7_default {
->   	pinconf {
->   		pins = "gpio6", "gpio7";
->   		drive-strength = <2>;
-> +
-> +		/* Has external pullup */
->   		bias-disable;
->   	};
->   };
+> More info: https://lca-kernel.ozlabs.org/2020-cfs.html
+> 
+> ******
+> 
+> linux.conf.au 2020 will be held at the Gold Coast Convention and 
+> Exhibition Centre, from 13-17 January 2020. The Kernel Miniconf is 
+> returning once again to discuss all things kernel.
+> 
+> The Kernel Miniconf is a single-day miniconf track about everything 
+> related to the kernel and low-level systems programming.
+> 
+> The Kernel Miniconf will focus on a variety of kernel-related topics - 
+> technical presentations on up-and-coming kernel developments, the future 
+> direction of the kernel, and kernel development community and process 
+> matters. Past Kernel Miniconfs have included technical talks on topics 
+> such as memory management, RCU, scheduling and filesystems, as well as 
+> talks on Linux kernel community topics such as licensing and Linux 
+> kernel development process.
+> 
+> We invite submissions on anything related to kernel and low-level 
+> systems programming. We welcome submissions from developers of all 
+> levels of experience in the kernel community, covering a broad range of 
+> topics. The focus of the miniconf will primarily be on Linux, however 
+> non-Linux talks of sufficient interest to a primarily Linux audience 
+> will be considered.
+> 
+> Early Close Date: 2019-11-17, midnight Anywhere on Earth (UTC-12)
+> Final Close Date: 2019-12-08, midnight Anywhere on Earth (UTC-12)
+> Submissions: https://linux.conf.au/proposals/submit/kernel-miniconf/
+> 
+> ** For more information: http://lca-kernel.ozlabs.org/2020-cfs.html **
 > 
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
