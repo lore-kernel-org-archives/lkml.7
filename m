@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BAEC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB77BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5772073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E313208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079104;
-	bh=eYZh47n3f+uDVa5bwWIUkO99bKEECO7YiEbSdp9Mo2Y=;
+	s=default; t=1576079109;
+	bh=tj9wfogutwTq7jhUxlzPs51lqLar4v91elPNG30PenA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZp6Tr4fKsf2K8ClLU5rV+1HcfT7WOjgJPGQIIL5c6ifQVH6ac3RA18n3NSKHAiNz
-	 5ci7P95Yh9/RX+jxRFu38u+JKqb6PJpwatbApVhdmEFD51f9CzU/czVRKLBdMD78ZW
-	 MXnnWo+9Lenhbsou73THnZmbCVTigVjELSw1acmY=
+	b=Xre9L7IjQNtfVZnGFm0BKj2d5ckdbJqfQ2Y6WIFjhRwOedyEdIkzFHuKjGkukJdgs
+	 HbK8jfP4iHfElzCpCa+NCPke7c/+TdwlcHvKNm+HAEiv7NFcVtV9hPtgKVrlrlobcN
+	 4FFkjyYprPImBDq4PJ9zpJoMmc8wyCG5C5jM43Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733292AbfLKP1R (ORCPT
+        id S2388551AbfLKPpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:45:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733237AbfLKP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:06 -0500
+        id S1733271AbfLKP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E353522527;
-        Wed, 11 Dec 2019 15:27:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69B8122527;
+        Wed, 11 Dec 2019 15:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078025;
-        bh=eYZh47n3f+uDVa5bwWIUkO99bKEECO7YiEbSdp9Mo2Y=;
+        s=default; t=1576078033;
+        bh=tj9wfogutwTq7jhUxlzPs51lqLar4v91elPNG30PenA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZa70nUuJyfg5irmC3sq8bN8LVmQwIl4v/DxnknSDFZVXiHi/Vfw3Na3h0HfaGAAX
-         mC1ey67QqBxDELqTD+qDKXNEViB8+2vK02nYrWrS02iqwSy27wqO0QZeCOk2A8zO/2
-         xGYPCbXzzdDR+uzqygUWntcF6fXxgq8vsNSk0sg4=
+        b=UHQIX2Dmte15qtiZT6+UfxvcW+qO6NwMeWN+I3H4NDGTXYQIyqrh/PvzMafkfNUDx
+         //vVcXedqMQ1kZ+Oug7QpyvJMP02Ps59/uC8L/bcHh4Ip9A0KMKSBeG16pCkW2Vj+j
+         hw3UX4zbeb0y22+8Ue/XlCQL5PtVj4FJOwndgXcg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 20/79] clocksource/drivers/timer-of: Use unique device name instead of timer
-Date:   Wed, 11 Dec 2019 10:25:44 -0500
-Message-Id: <20191211152643.23056-20-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/79] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
+Date:   Wed, 11 Dec 2019 10:25:51 -0500
+Message-Id: <20191211152643.23056-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,45 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 4411464d6f8b5e5759637235a6f2b2a85c2be0f1 ]
+[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
 
-If a hardware-specific driver does not provide a name, the timer-of core
-falls back to device_node.name.  Due to generic DT node naming policies,
-that name is almost always "timer", and thus doesn't identify the actual
-timer used.
+If the driver receives a login that is later then LOGO'd by the remote port
+(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
+will logout the node and unregister the rpi that is being used for the
+node.  As part of the unreg, the node's rpi value is replaced by the
+LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
+offline walks the nodes and ensures they are logged out, which possibly
+entails unreg'ing their rpi values.  This path does not validate the node's
+rpi value, thus doesn't detect that it has been unreg'd already.  The
+replaced rpi value is then used when accessing the rpi bitmask array which
+tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
+index for the bitmask, it may fault the system.
 
-Fix this by using device_node.full_name instead, which includes the unit
-addrees.
+Revise the rpi release code to detect when the rpi value is the replaced
+RPI_ALLOC_ERROR value and ignore further release steps.
 
-Example impact on /proc/timer_list:
-
-    -Clock Event Device: timer
-    +Clock Event Device: timer@fcfec400
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016144747.29538-3-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 06ed88a2a8a0d..6e2cb3693ed89 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -199,7 +199,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 	}
- 
- 	if (!to->clkevt.name)
--		to->clkevt.name = np->name;
-+		to->clkevt.name = np->full_name;
- 
- 	to->np = np;
- 
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 51b06b8a1dc72..969e0c176ed1d 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -17875,6 +17875,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
+ static void
+ __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
+ {
++	/*
++	 * if the rpi value indicates a prior unreg has already
++	 * been done, skip the unreg.
++	 */
++	if (rpi == LPFC_RPI_ALLOC_ERROR)
++		return;
++
+ 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
+ 		phba->sli4_hba.rpi_count--;
+ 		phba->sli4_hba.max_cfg_param.rpi_used--;
 -- 
 2.20.1
 
