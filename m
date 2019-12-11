@@ -2,251 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A71C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABAC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43CB2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:38:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xk/Ld8xm"
+	by mail.kernel.org (Postfix) with ESMTP id B6F052077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfLKGie (ORCPT
+        id S1727880AbfLKGjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:38:34 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36226 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfLKGie (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:38:34 -0500
-Received: by mail-pf1-f196.google.com with SMTP id x184so1291661pfb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 22:38:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wCcHDW9O7Iaab79y+0aXCM6dy3RXkvfoXYtohfVx57g=;
-        b=xk/Ld8xmYFb+XOgsxTVb+d66ZWfVAzpl3lEMhPnRsI4DUZB/M06dGtrQyWv6ISmMcm
-         57OeuFGVjA9OtVLKIFqIRFyT1qV1M6tgB7ZeprVQFQHpYX2imgr4ANdsgTAt2czzrBeo
-         0Y9GsQq9vhL/d/C1TQ0mQIFh+77H/sZlB9xNSu9hmMBUEFVTS1jaNIzrFBq8/bsoBvDZ
-         Hof5bxz87V3/o9apFf6kVJEt5PkZScWTf2zzl/kUR/YoxNp1TQd7pPHJsklWBng5JFsv
-         Ocro5Hj1frgU8W9pJdVYPofsFDogVE93rP3FzrZwvQY15t/ZtNa0m6Ge2VT3YR8F2LE8
-         pGiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wCcHDW9O7Iaab79y+0aXCM6dy3RXkvfoXYtohfVx57g=;
-        b=ffH9ERAGk828Akes5jGjLMkFCHouTTqQJatNYDXv9EhvT3bJxMQP8lKNFf4u9/1nQA
-         R7+GMNKsNBCFYuhTubCABVWva2i5RnVQDtfbGWjXq7K4L3hd9oTEoq82VPlyactRJFKP
-         KQHgELTjVM6WBkzg8S/VL8BVkauRFGRhA4gaBxW1TT7YOjzVeVzosZOd9Yoj6NMPyCvC
-         Oag3/bd7cfnQ/4AiiTKg1UZX33nceT4fieiAxGrZJTEcKeGUhigG1KcVFB7iturTEg9u
-         BcpeVXMuQI8uUuHiaNtMPLfEVoWIyZK35syaH3+dA17fZVaJgJmZx3NV99IPRNEwudfW
-         4bIg==
-X-Gm-Message-State: APjAAAUkgLPt75DF1YUkpx4QIfbV4zWEVGF2JlOZHNdCpXcYr6o6prbc
-        WALaUUw9cpVBQvCOidT+TNiYkQ==
-X-Google-Smtp-Source: APXvYqx0Yu/g8Ci7gEq1qg/N+fFl+X0bsr04TepOdQxEenptEJ8PtkyR3cPG2esolXZ5H9/BmvFyaQ==
-X-Received: by 2002:a63:ed56:: with SMTP id m22mr2318632pgk.261.1576046312857;
-        Tue, 10 Dec 2019 22:38:32 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l1sm1234792pgs.47.2019.12.10.22.38.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 22:38:32 -0800 (PST)
-Date:   Tue, 10 Dec 2019 22:38:29 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7180: Add new qup functions
-Message-ID: <20191211063829.GC3143381@builder>
-References: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org>
- <0101016ef36a9118-f2919277-effa-4cd5-adf8-bbc8016f31df-000000@us-west-2.amazonses.com>
+        Wed, 11 Dec 2019 01:39:07 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:42610 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725800AbfLKGjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:39:07 -0500
+Received: from [10.130.0.36] (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxfxfvjvBdz38JAA--.103S3;
+        Wed, 11 Dec 2019 14:38:41 +0800 (CST)
+Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
+To:     Al Viro <viro@zeniv.linux.org.uk>
+References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191211024858.GB732@sol.localdomain>
+ <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
+ <20191211044723.GC4203@ZenIV.linux.org.uk>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
+Date:   Wed, 11 Dec 2019 14:38:34 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016ef36a9118-f2919277-effa-4cd5-adf8-bbc8016f31df-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191211044723.GC4203@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9DxfxfvjvBdz38JAA--.103S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xry3KF4UGF4furW3Xry5urg_yoWkGrX_ur
+        18Cw1DAF4UZr13ZwsxJFW7JFZxWFW5Wr1jvFyvv3y7AF98A398urWkKrsIva1UZr4fZFZI
+        kryjyrWIqrW29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb-AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
+        c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I
+        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
+        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7jjgUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10 Dec 21:24 PST 2019, Rajendra Nayak wrote:
+On 12/11/2019 12:47 PM, Al Viro wrote:
+> On Wed, Dec 11, 2019 at 11:59:40AM +0800, Tiezhu Yang wrote:
+>
+>> static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+>> {
+>>          if (len == 1 && name[0] == '.')
+>>                  return true;
+>>
+>>          if (len == 2 && name[0] == '.' && name[1] == '.')
+>>                  return true;
+>>
+>>          return false;
+>> }
+>>
+>> Hi Matthew,
+>>
+>> How do you think? I think the performance influence is very small
+>> due to is_dot_or_dotdot() is a such short static inline function.
+> It's a very short inline function called on a very hot codepath.
+> Often.
+>
+> I mean it - it's done literally for every pathname component of
+> every pathname passed to a syscall.
 
-> on sc7180 we have cases where multiple functions from the same
-> qup instance share the same pin. This is true for qup02/04/11 and qup13.
-> Add new function names to distinguish which qup function to use.
-> 
-> The device tree files for this platform haven't landed in mainline yet,
-> so there aren't any users upstream who should break with this change
-> in function names, however, anyone using the devicetree files that were
-> posted on the lists and using these specific function names will need
-> to update their changes.
+OK. I understand. Let us do not use the helper function in fs/namei.c,
+just use the following implementation for other callers:
 
-I don't think this paragraph adds value to the git log, but the patch
-looks good.
+static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+{
+         if (len >= 1 && unlikely(name[0] == '.')) {
+                 if (len < 2 || (len == 2 && name[1] == '.'))
+                         return true;
+         }
 
-> 
-> Reported-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+         return false;
+}
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Special thanks for Matthew, Darrick, Al and Eric.
+If you have any more suggestion, please let me know.
 
-Regards,
-Bjorn
+Thanks,
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-sc7180.c | 60 +++++++++++++++++++++++------------
->  1 file changed, 40 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> index d6cfad7..6247d92 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-> @@ -456,14 +456,18 @@ enum sc7180_functions {
->  	msm_mux_qspi_data,
->  	msm_mux_qup00,
->  	msm_mux_qup01,
-> -	msm_mux_qup02,
-> +	msm_mux_qup02_i2c,
-> +	msm_mux_qup02_uart,
->  	msm_mux_qup03,
-> -	msm_mux_qup04,
-> +	msm_mux_qup04_i2c,
-> +	msm_mux_qup04_uart,
->  	msm_mux_qup05,
->  	msm_mux_qup10,
-> -	msm_mux_qup11,
-> +	msm_mux_qup11_i2c,
-> +	msm_mux_qup11_uart,
->  	msm_mux_qup12,
-> -	msm_mux_qup13,
-> +	msm_mux_qup13_i2c,
-> +	msm_mux_qup13_uart,
->  	msm_mux_qup14,
->  	msm_mux_qup15,
->  	msm_mux_sdc1_tb,
-> @@ -543,7 +547,10 @@ static const char * const sdc1_tb_groups[] = {
->  static const char * const sdc2_tb_groups[] = {
->  	"gpio5",
->  };
-> -static const char * const qup11_groups[] = {
-> +static const char * const qup11_i2c_groups[] = {
-> +	"gpio6", "gpio7",
-> +};
-> +static const char * const qup11_uart_groups[] = {
->  	"gpio6", "gpio7",
->  };
->  static const char * const ddr_bist_groups[] = {
-> @@ -593,7 +600,10 @@ static const char * const qdss_groups[] = {
->  static const char * const pll_reset_groups[] = {
->  	"gpio14",
->  };
-> -static const char * const qup02_groups[] = {
-> +static const char * const qup02_i2c_groups[] = {
-> +	"gpio15", "gpio16",
-> +};
-> +static const char * const qup02_uart_groups[] = {
->  	"gpio15", "gpio16",
->  };
->  static const char * const cci_i2c_groups[] = {
-> @@ -698,7 +708,10 @@ static const char * const wlan1_adc1_groups[] = {
->  static const char * const atest_usb13_groups[] = {
->  	"gpio44",
->  };
-> -static const char * const qup13_groups[] = {
-> +static const char * const qup13_i2c_groups[] = {
-> +	"gpio46", "gpio47",
-> +};
-> +static const char * const qup13_uart_groups[] = {
->  	"gpio46", "gpio47",
->  };
->  static const char * const gcc_gp1_groups[] = {
-> @@ -848,7 +861,10 @@ static const char * const usb_phy_groups[] = {
->  static const char * const mss_lte_groups[] = {
->  	"gpio108", "gpio109",
->  };
-> -static const char * const qup04_groups[] = {
-> +static const char * const qup04_i2c_groups[] = {
-> +	"gpio115", "gpio116",
-> +};
-> +static const char * const qup04_uart_groups[] = {
->  	"gpio115", "gpio116",
->  };
->  
-> @@ -929,14 +945,18 @@ static const struct msm_function sc7180_functions[] = {
->  	FUNCTION(qspi_data),
->  	FUNCTION(qup00),
->  	FUNCTION(qup01),
-> -	FUNCTION(qup02),
-> +	FUNCTION(qup02_i2c),
-> +	FUNCTION(qup02_uart),
->  	FUNCTION(qup03),
-> -	FUNCTION(qup04),
-> +	FUNCTION(qup04_i2c),
-> +	FUNCTION(qup04_uart),
->  	FUNCTION(qup05),
->  	FUNCTION(qup10),
-> -	FUNCTION(qup11),
-> +	FUNCTION(qup11_i2c),
-> +	FUNCTION(qup11_uart),
->  	FUNCTION(qup12),
-> -	FUNCTION(qup13),
-> +	FUNCTION(qup13_i2c),
-> +	FUNCTION(qup13_uart),
->  	FUNCTION(qup14),
->  	FUNCTION(qup15),
->  	FUNCTION(sdc1_tb),
-> @@ -976,8 +996,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->  	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
->  	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _),
->  	[5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
-> -	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _),
-> -	[7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
-> +	[6] = PINGROUP(6, NORTH, qup11_i2c, qup11_uart, _, _, _, _, _, _, _),
-> +	[7] = PINGROUP(7, NORTH, qup11_i2c, qup11_uart, ddr_bist, _, _, _, _, _, _),
->  	[8] = PINGROUP(8, NORTH, gp_pdm1, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _),
->  	[9] = PINGROUP(9, NORTH, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _, _),
->  	[10] = PINGROUP(10, NORTH, mdp_vsync, ddr_bist, _, _, _, _, _, _, _),
-> @@ -985,8 +1005,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->  	[12] = PINGROUP(12, SOUTH, mdp_vsync, m_voc, qup01, _, phase_flag, wlan2_adc0, atest_usb10, ddr_pxi3, _),
->  	[13] = PINGROUP(13, SOUTH, cam_mclk, pll_bypassnl, qdss, _, _, _, _, _, _),
->  	[14] = PINGROUP(14, SOUTH, cam_mclk, pll_reset, qdss, _, _, _, _, _, _),
-> -	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
-> -	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
-> +	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
-> +	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
->  	[17] = PINGROUP(17, SOUTH, cci_i2c, _, phase_flag, qdss, _, wlan1_adc0, atest_usb12, ddr_pxi1, atest_char),
->  	[18] = PINGROUP(18, SOUTH, cci_i2c, agera_pll, _, phase_flag, qdss, vsense_trigger, ddr_pxi0, atest_char3, _),
->  	[19] = PINGROUP(19, SOUTH, cci_i2c, _, phase_flag, qdss, atest_char2, _, _, _, _),
-> @@ -1016,8 +1036,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->  	[43] = PINGROUP(43, NORTH, qup12, _, _, _, _, _, _, _, _),
->  	[44] = PINGROUP(44, NORTH, qup12, _, phase_flag, qdss_cti, wlan1_adc1, atest_usb13, ddr_pxi1, _, _),
->  	[45] = PINGROUP(45, NORTH, qup12, qdss_cti, _, _, _, _, _, _, _),
-> -	[46] = PINGROUP(46, NORTH, qup13, qup13, _, _, _, _, _, _, _),
-> -	[47] = PINGROUP(47, NORTH, qup13, qup13, _, _, _, _, _, _, _),
-> +	[46] = PINGROUP(46, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
-> +	[47] = PINGROUP(47, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
->  	[48] = PINGROUP(48, NORTH, gcc_gp1, _, _, _, _, _, _, _, _),
->  	[49] = PINGROUP(49, WEST, mi2s_1, btfm_slimbus, _, _, _, _, _, _, _),
->  	[50] = PINGROUP(50, WEST, mi2s_1, btfm_slimbus, gp_pdm1, _, _, _, _, _, _),
-> @@ -1085,8 +1105,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->  	[112] = PINGROUP(112, NORTH, _, _, _, _, _, _, _, _, _),
->  	[113] = PINGROUP(113, NORTH, _, _, _, _, _, _, _, _, _),
->  	[114] = PINGROUP(114, NORTH, _, _, _, _, _, _, _, _, _),
-> -	[115] = PINGROUP(115, WEST, qup04, qup04, _, _, _, _, _, _, _),
-> -	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
-> +	[115] = PINGROUP(115, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
-> +	[116] = PINGROUP(116, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
->  	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
->  	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
->  	[119] = UFS_RESET(ufs_reset, 0x7f000),
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Tiezhu Yang
+
