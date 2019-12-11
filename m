@@ -2,65 +2,66 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D7AC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1CDEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC14D2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6499E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrJ2CeNN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="daY8v31n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbfLKQcP (ORCPT
+        id S1730661AbfLKQcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:32:15 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49726 "EHLO
+        Wed, 11 Dec 2019 11:32:20 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23091 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730072AbfLKQcP (ORCPT
+        by vger.kernel.org with ESMTP id S1730575AbfLKQcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:32:15 -0500
+        Wed, 11 Dec 2019 11:32:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576081934;
+        s=mimecast20190719; t=1576081936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LKFqnBlvG1fW2JXIJg+dQL5IlchdA2nn0WN6YjbROus=;
-        b=XrJ2CeNNB2sK5jipaTMCiPCv/Eky1QNufATCNHd+aspwWEqFf+BTsTA8LXojd+H6xETeXu
-        op2b34FbPG4T0qgD31AjIiInKLetWFGvUvFFurTsU47kIiY8PbvfSMf1MZrzNENq/na0cd
-        /5yUFN3LszHNDN+CWVROU9NkLaqzI6k=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0gJwfxwyql/ZBro6j3PHhc8Sr1IUHu9YKmw5lChLB3M=;
+        b=daY8v31nrKGKBIER7p03AU48nvvcv1VOH2iZSNzYUAu81TVlzdb9CM/FhKZtzj3LPTNrJN
+        sQUN9KVyhXkbpVugThntoTgHL4UQ9wjot+XnINFbC13WnpPgSNFVR17UfMmgOU7YmqEHoY
+        pvteBYJQY0hiAr5/71qv/iw3L5+qxQk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-83-pAFiM52NPEutsb_TVfBPDg-1; Wed, 11 Dec 2019 11:32:11 -0500
-X-MC-Unique: pAFiM52NPEutsb_TVfBPDg-1
+ us-mta-188-wmcTqCOIMYGjeEvJ5IZrFg-1; Wed, 11 Dec 2019 11:32:12 -0500
+X-MC-Unique: wmcTqCOIMYGjeEvJ5IZrFg-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A74AB0923;
-        Wed, 11 Dec 2019 16:32:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2568E8C2B48;
+        Wed, 11 Dec 2019 16:32:11 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-117-148.ams2.redhat.com [10.36.117.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 62A37605FF;
-        Wed, 11 Dec 2019 16:32:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 89B7F605FF;
+        Wed, 11 Dec 2019 16:32:08 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bob Picco <bob.picco@oracle.com>,
         Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
+        stable@vger.kernel.org,
         Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Oscar Salvador <osalvador@suse.de>,
         Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Steven Sistare <steven.sistare@oracle.com>
-Subject: [PATCH v2 0/3] mm: fix max_pfn not falling on section boundary
-Date:   Wed, 11 Dec 2019 17:31:58 +0100
-Message-Id: <20191211163201.17179-1-david@redhat.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Bob Picco <bob.picco@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v2 1/3] mm: fix uninitialized memmaps on a partially populated last section
+Date:   Wed, 11 Dec 2019 17:31:59 +0100
+Message-Id: <20191211163201.17179-2-david@redhat.com>
+In-Reply-To: <20191211163201.17179-1-david@redhat.com>
+References: <20191211163201.17179-1-david@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Content-Transfer-Encoding: quoted-printable
@@ -69,32 +70,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Playing with different memory sizes for a x86-64 guest, I discovered that
-some memmaps (highest section if max_mem does not fall on the section
-boundary) are marked as being valid and online, but contain garbage. We
-have to properly initialize these memmaps.
+If max_pfn is not aligned to a section boundary, we can easily run into
+BUGs. This can e.g., be triggered on x86-64 under QEMU by specifying a
+memory size that is not a multiple of 128MB (e.g., 4097MB, but also
+4160MB). I was told that on real HW, we can easily have this scenario
+(esp., one of the main reasons sub-section hotadd of devmem was added).
 
-Looking at /proc/kpageflags and friends, I found some more issues,
-partially related to this.
+The issue is, that we have a valid memmap (pfn_valid()) for the
+whole section, and the whole section will be marked "online".
+pfn_to_online_page() will succeed, but the memmap contains garbage.
 
-v1 -> v2:
-- "mm: fix uninitialized memmaps on a partially populated last section"
--- Refine patch description (esp. how to reproduce), add tested-by
-- "fs/proc/page.c: allow inspection of last section and fix end detection=
+E.g., doing a "./page-types -r -a 0x144001" when QEMU was started with
+"-m 4160M" - (see tools/vm/page-types.c):
+
+[  200.476376] BUG: unable to handle page fault for address: ffffffffffff=
+fffe
+[  200.477500] #PF: supervisor read access in kernel mode
+[  200.478334] #PF: error_code(0x0000) - not-present page
+[  200.479076] PGD 59614067 P4D 59614067 PUD 59616067 PMD 0
+[  200.479557] Oops: 0000 [#4] SMP NOPTI
+[  200.479875] CPU: 0 PID: 603 Comm: page-types Tainted: G      D W      =
+   5.5.0-rc1-next-20191209 #93
+[  200.480646] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
+[  200.481648] RIP: 0010:stable_page_flags+0x4d/0x410
+[  200.482061] Code: f3 ff 41 89 c0 48 b8 00 00 00 00 01 00 00 00 45 84 c=
+0 0f 85 cd 02 00 00 48 8b 53 08 48 8b 2b 48f
+[  200.483644] RSP: 0018:ffffb139401cbe60 EFLAGS: 00010202
+[  200.484091] RAX: fffffffffffffffe RBX: fffffbeec5100040 RCX: 000000000=
+0000000
+[  200.484697] RDX: 0000000000000001 RSI: ffffffff9535c7cd RDI: 000000000=
+0000246
+[  200.485313] RBP: ffffffffffffffff R08: 0000000000000000 R09: 000000000=
+0000000
+[  200.485917] R10: 0000000000000000 R11: 0000000000000000 R12: 000000000=
+0144001
+[  200.486523] R13: 00007ffd6ba55f48 R14: 00007ffd6ba55f40 R15: ffffb1394=
+01cbf08
+[  200.487130] FS:  00007f68df717580(0000) GS:ffff9ec77fa00000(0000) knlG=
+S:0000000000000000
+[  200.487804] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  200.488295] CR2: fffffffffffffffe CR3: 0000000135d48000 CR4: 000000000=
+00006f0
+[  200.488897] Call Trace:
+[  200.489115]  kpageflags_read+0xe9/0x140
+[  200.489447]  proc_reg_read+0x3c/0x60
+[  200.489755]  vfs_read+0xc2/0x170
+[  200.490037]  ksys_pread64+0x65/0xa0
+[  200.490352]  do_syscall_64+0x5c/0xa0
+[  200.490665]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+But it can be triggered much easier via "cat /proc/kpageflags > /dev/null=
 "
--- Make it compile for !CONFIG_SPARSE and add a comment to the new
-   helper function
+after cold/hot plugging a DIMM to such a system:
 
-David Hildenbrand (3):
-  mm: fix uninitialized memmaps on a partially populated last section
-  fs/proc/page.c: allow inspection of last section and fix end detection
-  mm: initialize memmap of unavailable memory directly
+[root@localhost ~]# cat /proc/kpageflags > /dev/null
+[  111.517275] BUG: unable to handle page fault for address: ffffffffffff=
+fffe
+[  111.517907] #PF: supervisor read access in kernel mode
+[  111.518333] #PF: error_code(0x0000) - not-present page
+[  111.518771] PGD a240e067 P4D a240e067 PUD a2410067 PMD 0
 
- fs/proc/page.c     | 30 +++++++++++++++++++++++++++---
- include/linux/mm.h |  6 ------
- mm/page_alloc.c    | 43 ++++++++++++++++++++++++++++++++-----------
- 3 files changed, 59 insertions(+), 20 deletions(-)
+This patch fixes that by at least zero-ing out that memmap (so e.g.,
+page_to_pfn() will not crash). Commit 907ec5fca3dc ("mm: zero remaining
+unavailable struct pages") tried to fix a similar issue, but forgot to
+consider this special case.
 
+After this patch, there are still problems to solve. E.g., not all of the=
+se
+pages falling into a memory hole will actually get initialized later
+and set PageReserved - they are only zeroed out - but at least the
+immediate crashes are gone. A follow-up patch will take care of this.
+
+Fixes: f7f99100d8d9 ("mm: stop zeroing memory during allocation in vmemma=
+p")
+Tested-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: <stable@vger.kernel.org> # v4.15+
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Steven Sistare <steven.sistare@oracle.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Bob Picco <bob.picco@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/page_alloc.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 62dcd6b76c80..1eb2ce7c79e4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6932,7 +6932,8 @@ static u64 zero_pfn_range(unsigned long spfn, unsig=
+ned long epfn)
+  * This function also addresses a similar issue where struct pages are l=
+eft
+  * uninitialized because the physical address range is not covered by
+  * memblock.memory or memblock.reserved. That could happen when memblock
+- * layout is manually configured via memmap=3D.
++ * layout is manually configured via memmap=3D, or when the highest phys=
+ical
++ * address (max_pfn) does not end on a section boundary.
+  */
+ void __init zero_resv_unavail(void)
+ {
+@@ -6950,7 +6951,16 @@ void __init zero_resv_unavail(void)
+ 			pgcnt +=3D zero_pfn_range(PFN_DOWN(next), PFN_UP(start));
+ 		next =3D end;
+ 	}
+-	pgcnt +=3D zero_pfn_range(PFN_DOWN(next), max_pfn);
++
++	/*
++	 * Early sections always have a fully populated memmap for the whole
++	 * section - see pfn_valid(). If the last section has holes at the
++	 * end and that section is marked "online", the memmap will be
++	 * considered initialized. Make sure that memmap has a well defined
++	 * state.
++	 */
++	pgcnt +=3D zero_pfn_range(PFN_DOWN(next),
++				round_up(max_pfn, PAGES_PER_SECTION));
+=20
+ 	/*
+ 	 * Struct pages that do not have backing memory. This could be because
 --=20
 2.23.0
 
