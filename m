@@ -2,82 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83058C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D6CC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB7E205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D0A205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VY3oVp/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfLKCCC (ORCPT
+        id S1727166AbfLKCEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:02:02 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23328 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfLKCCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:02:01 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:02:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="203394713"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga007.jf.intel.com with ESMTP; 10 Dec 2019 18:01:59 -0800
-Date:   Wed, 11 Dec 2019 10:03:21 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 6/7] KVM: X86: Load guest fpu state when accessing
- MSRs managed by XSAVES
-Message-ID: <20191211020321.GD12845@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-7-weijiang.yang@intel.com>
- <20191210212748.GN15758@linux.intel.com>
+        Tue, 10 Dec 2019 21:04:55 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:32077 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726364AbfLKCEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:04:55 -0500
+X-UUID: c0e289d8c5a64e7384b49c4353133d96-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=wg0RWtXnuazbnyWqaYUsInjXzTF5INnndGMTSvzSNXg=;
+        b=VY3oVp/kL+4z2JOIh6bbMIsWlTardtrptRq8k9S4xbwlHMFQhmFX6w1QBYXwA4lPtmAOBafnMXubU2L5qZncv3+adK1yTBkxszBKyb7X1+KbwN9wdT+5UAnkAqyyIE7/RrSrkfKFhR1P8neRM0mH7qGyXWVTwSlhjrWfoAfzhFU=;
+X-UUID: c0e289d8c5a64e7384b49c4353133d96-20191211
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 599611083; Wed, 11 Dec 2019 10:04:49 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 10:04:22 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 11 Dec 2019 10:04:43 +0800
+Message-ID: <1576029887.19653.17.camel@mtksdaap41>
+Subject: Re: [PATCH v2 13/14] soc: mediatek: cmdq: add wait no clear event
+ function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 11 Dec 2019 10:04:47 +0800
+In-Reply-To: <1574819937-6246-15-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-15-git-send-email-dennis-yc.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210212748.GN15758@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:27:48PM -0800, Sean Christopherson wrote:
-> On Fri, Nov 01, 2019 at 04:52:21PM +0800, Yang Weijiang wrote:
-> > From: Sean Christopherson <sean.j.christopherson@intel.com>
-> > 
- 
-> > -	for (i = 0; i < msrs->nmsrs; ++i)
-> > +	for (i = 0; i < msrs->nmsrs; ++i) {
-> > +		if (!fpu_loaded && cet_xss &&
-> > +		    is_xsaves_msr(entries[i].index)) {
-> > +			kvm_load_guest_fpu(vcpu);
-> 
-> This needs to also check for a non-NULL @vcpu.  KVM_GET_MSR can be called
-> on the VM to invoke do_get_msr_feature().
->
-Yeah, I need to add the check, thanks!
+SGksIERlbm5pczoNCg0KT24gV2VkLCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IEFkZCB3YWl0IG5vIGNsZWFyIGV2ZW50IGZ1bmN0aW9uIGluIGNt
+ZHEgaGVscGVyIGZ1bmN0aW9ucyB0byB3YWl0IHNwZWNpZmljDQo+IGV2ZW50IHdpdGhvdXQgY2xl
+YXIgdG8gMCBhZnRlciByZWNlaXZlIGl0Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlD
+IEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMv
+c29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIHwgMTUgKysrKysrKysrKysrKysrDQo+ICBp
+bmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oICB8IDEwICsrKysrKysrKysNCj4g
+IDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9zb2MvbWVkaWF0
+ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gaW5kZXggMTBhOWI0NDgxZTU4Li42ZjI3MGZhZGZiNTAg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+
+ICsrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IEBAIC0zMzAs
+NiArMzMwLDIxIEBAIGludCBjbWRxX3BrdF93ZmUoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBl
+dmVudCkNCj4gIH0NCj4gIEVYUE9SVF9TWU1CT0woY21kcV9wa3Rfd2ZlKTsNCj4gIA0KPiAraW50
+IGNtZHFfcGt0X3dhaXRfbm9fY2xlYXIoc3RydWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkN
+Cj4gK3sNCj4gKwlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gKw0K
+PiArCWlmIChldmVudCA+PSBDTURRX01BWF9FVkVOVCkNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+
+ICsNCj4gKwlpbnN0Lm9wID0gQ01EUV9DT0RFX1dGRTsNCj4gKwlpbnN0LnZhbHVlID0gQ01EUV9X
+RkVfV0FJVCB8IENNRFFfV0ZFX1dBSVRfVkFMVUU7DQo+ICsJaW5zdC5ldmVudCA9IGV2ZW50Ow0K
+PiArDQo+ICsJcmV0dXJuIGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ICt9
+DQo+ICtFWFBPUlRfU1lNQk9MKGNtZHFfcGt0X3dhaXRfbm9fY2xlYXIpOw0KDQpTbyB0aGUgd2Fp
+dCBjb21tYW5kIGhhcyB0d28gdmVyc2lvbiwgb25lIGlzIHdhaXQgYW5kIHRoZW4gY2xlYXIgZXZl
+bnQsDQphbm90aGVyIGlzIHdhaXQgYW5kIG5vdCBjbGVhciBldmVudC4gVGhlIG5hbWUgb2YgY21k
+cV9wa3Rfd2ZlKCkgaXMgJ3dhaXQNCmZvciBldmVudCcsIHNvIGl0J3MgdHJpdmlhbCB0aGF0IHdl
+IHRoaW5rIGl0IGRvZXMgbm90IGNsZWFyIGV2ZW50LiBJJ3ZlDQp0aHJlZSBzdWdnZXN0aW9uIGZv
+ciB0aGlzOg0KDQoxLiBMZXQgY21kcV9wa3Rfd2ZlKCkgd2FpdCBhbmQgbm90IGNsZWFyIGV2ZW50
+LCBhbmQNCmNtZHFfcGt0X3dmZV9jbGVhcl9ldmVudCgpIHdhaXQgYW5kIGNsZWFyIGV2ZW50Lg0K
+DQpvciANCjIuIExldCBjbWRxX3BrdF93ZmUoKSBoYXMgYSBwYXJhbWV0ZXIgdG8gaW5kaWNhdGUg
+dGhhdCBjbGVhciBldmVudCBvcg0Kbm90IGFmdGVyIHdhaXQuDQoNCm9yDQozLiBMZXQgY21kcV9w
+a3Rfd2ZlKCkgd2FpdCBhbmQgbm90IGNsZWFyIGV2ZW50LCBhbmQgbm90IHByb3ZpZGUgd2FpdCBh
+bmQNCmNsZWFyIGV2ZW50IHZlcnNpb24uIEZvciBEUk0gYW5kIE1EUCwgSSB0aGluayBib3RoIGp1
+c3QgbmVlZCB3YWl0IGFuZA0Kbm90IGNsZWFyIGV2ZW50Lg0KDQpSZWdhcmRzLA0KQ0sNCg0KDQo+
+ICsNCj4gIGludCBjbWRxX3BrdF9jbGVhcl9ldmVudChzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2
+IGV2ZW50KQ0KPiAgew0KPiAgCXN0cnVjdCBjbWRxX2luc3RydWN0aW9uIGluc3QgPSB7IHswfSB9
+Ow0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaCBi
+L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gaW5kZXggZDE1ZDhjOTQx
+OTkyLi40MGJjNjFhZDhkMzEgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlh
+dGVrL210ay1jbWRxLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNt
+ZHEuaA0KPiBAQCAtMTQ5LDYgKzE0OSwxNiBAQCBpbnQgY21kcV9wa3Rfd3JpdGVfc192YWx1ZShz
+dHJ1Y3QgY21kcV9wa3QgKnBrdCwgZG1hX2FkZHJfdCBhZGRyLA0KPiAgICovDQo+ICBpbnQgY21k
+cV9wa3Rfd2ZlKHN0cnVjdCBjbWRxX3BrdCAqcGt0LCB1MTYgZXZlbnQpOw0KPiAgDQo+ICsvKioN
+Cj4gKyAqIGNtZHFfcGt0X3dhaXRfbm9fY2xlYXIoKSAtIEFwcGVuZCB3YWl0IGZvciBldmVudCBj
+b21tYW5kIHRvIHRoZSBDTURRIHBhY2tldCwNCj4gKyAqCQkJICAgICAgd2l0aG91dCB1cGRhdGUg
+ZXZlbnQgdG8gMCBhZnRlciByZWNlaXZlIGl0Lg0KPiArICogQHBrdDoJdGhlIENNRFEgcGFja2V0
+DQo+ICsgKiBAZXZlbnQ6CXRoZSBkZXNpcmVkIGV2ZW50IHR5cGUgdG8gd2FpdA0KPiArICoNCj4g
+KyAqIFJldHVybjogMCBmb3Igc3VjY2VzczsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5l
+ZA0KPiArICovDQo+ICtpbnQgY21kcV9wa3Rfd2FpdF9ub19jbGVhcihzdHJ1Y3QgY21kcV9wa3Qg
+KnBrdCwgdTE2IGV2ZW50KTsNCj4gKw0KPiAgLyoqDQo+ICAgKiBjbWRxX3BrdF9jbGVhcl9ldmVu
+dCgpIC0gYXBwZW5kIGNsZWFyIGV2ZW50IGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+ICAg
+KiBAcGt0Ogl0aGUgQ01EUSBwYWNrZXQNCg0K
 
-> > +			fpu_loaded = true;
-> > +		}
-> >  		if (do_msr(vcpu, entries[i].index, &entries[i].data))
-> >  			break;
-> > +	}
-> > +	if (fpu_loaded)
-> > +		kvm_put_guest_fpu(vcpu);
-> >  
-> >  	return i;
-> >  }
-> > -- 
-> > 2.17.2
-> > 
