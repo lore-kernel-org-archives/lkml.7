@@ -7,75 +7,74 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151CEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86197C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDA0214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4D6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X76wqWSK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LeVJVV19"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfLKQ6c (ORCPT
+        id S1730699AbfLKQ64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:58:32 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42722 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729524AbfLKQ6b (ORCPT
+        Wed, 11 Dec 2019 11:58:56 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34102 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbfLKQ64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:58:31 -0500
-Received: by mail-pl1-f195.google.com with SMTP id x13so1642348plr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:58:31 -0800 (PST)
+        Wed, 11 Dec 2019 11:58:56 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so1656032pln.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:58:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=message-id:mime-version:content-transfer-encoding:in-reply-to
          :references:subject:to:from:cc:user-agent:date;
-        bh=nO1/D6YzLDQJru2EbIZiTMpHKIQ1x4Kj5OM8Yf3k2jA=;
-        b=X76wqWSKPn8j7rqfA4HXB8cSCWi8CSmRC2ja0st603SooTirVgKPZJ5HCqmZe8CDSV
-         mU2wKAJi6RWyXkcs/9dh2qYRY7CK4dak4+yAAJavfhkyihZrz2CuccNTmvgdskUIeHGD
-         Vkol4s7L21nmcjHhaqOc8TUCS6R1jbOAg9czI=
+        bh=5jb7nWK70BZS7ag9B3B5zFJSF1bm+Q/zoWTJh2Z8lXA=;
+        b=LeVJVV19ZTloWo+6tCC05BqqcOm7WR1cmQNkt8oeELgRn40lhEYhKQ097l3j0YqAKs
+         d33wAq2Mt4CczBc3SBpzhDbXKkHKS1HtXXqznFO0ZNBzQUXgYXGc1jSqB171fw/+o+AL
+         0GcK0PByzIbu9tkgACQ9JiW07oc/nU2Ss1rcE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:mime-version
          :content-transfer-encoding:in-reply-to:references:subject:to:from:cc
          :user-agent:date;
-        bh=nO1/D6YzLDQJru2EbIZiTMpHKIQ1x4Kj5OM8Yf3k2jA=;
-        b=XKPwuKVts+cfHD3nkhRdR+/Zv/+U9eDGSj2gz3ilSLaxs8qRSMfc6J8JaELRQwo/Iy
-         y8m+GSI1xWE0NymDjIC5DwCvFicdSR6rVaipmyciL8ODpkXHWqd5TIKrQZ+W+hRmpXex
-         XclCv8nlDU6Ngp6zBq7Aj2A6GO5/EXn0XL5K85pOSUM4hY6SWm3LKX40qF8BIxXtQkeW
-         nHqcslTX2UdY90n0LUCgEnWQs/ou1pE+KfTRfvTbrXzBO/V5c9Fi4QJZZJoYiFniuwpb
-         6PxGtHu83ThafySDHhtDT1R6olJHXv4Gv+ZovyUKC5SpHI3wLvJJ/EpST48UUduUpra2
-         gkJA==
-X-Gm-Message-State: APjAAAXDobg4S03MQ7nYHbqJOA8XJgSAuX+oh0WJ+kKfGMg8gH9Y9IQx
-        cwrmiuxl7Y4G9xI8Bqs5MPOcOp0I+KY=
-X-Google-Smtp-Source: APXvYqzJgsV3DYCq9QJ4kxgM5GvK71kUpfoKmzn7rSTO7KmV71ONqmrQjqh3AE2WNpSbFEXBobEjig==
-X-Received: by 2002:a17:902:a615:: with SMTP id u21mr4467398plq.44.1576083510879;
-        Wed, 11 Dec 2019 08:58:30 -0800 (PST)
+        bh=5jb7nWK70BZS7ag9B3B5zFJSF1bm+Q/zoWTJh2Z8lXA=;
+        b=jYmYx6hiSOS2IkKH1y1wjQb8jkEuYt8dVqnn/Ug+I8y78pVh9t3JjYmLIrUmTzwLpV
+         0EvCYEqhdSPZ+mZ39tD536/wxUo8zx0puImvke0sd/B8AZyGg+vflWiAs/eupCbUw1lZ
+         rPlxL4b1UUy/AyyXR6QycBXVYjGJLrbRpqjkjhiLq1eU+2r8nn/ffA4Oy93wJCwJ8Bhu
+         djp2JulIj7aPMsBuKzA6nhba0eyPI8qnhS15rSd9ffuIb5027uMWrkD34SgmPriy6EHW
+         ULopmezT4FWuytEECFKE9vuTM9QJ3oc+RlcwnkVW49UQcvYNZI835yiPy1y4V8fxbuzK
+         Gy+g==
+X-Gm-Message-State: APjAAAWASVgkCsJO0rYLy5O0yTlZyuUGJy7YU+XrPFq4ncT9qkJfmoWt
+        Qrg3tPiDQT8HFLUHXumpZm2Dqg==
+X-Google-Smtp-Source: APXvYqwfxt84EsPzyIIawe7+keVsiepyplg9Ohwph/Y9Z+q0mwLb0vrE3MS2SYn3Q2d0mOtGwTjyPg==
+X-Received: by 2002:a17:902:9a91:: with SMTP id w17mr4173201plp.96.1576083535480;
+        Wed, 11 Dec 2019 08:58:55 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id u5sm3612263pfm.115.2019.12.11.08.58.30
+        by smtp.gmail.com with ESMTPSA id q21sm3674641pff.105.2019.12.11.08.58.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 08:58:30 -0800 (PST)
-Message-ID: <5df12036.1c69fb81.bdb18.8c4f@mx.google.com>
+        Wed, 11 Dec 2019 08:58:55 -0800 (PST)
+Message-ID: <5df1204f.1c69fb81.b4c19.8ce9@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <0101016ef3cdac32-1353f7d8-b973-4881-86ec-589d50849765-000000@us-west-2.amazonses.com>
-References: <0101016ef3cdac32-1353f7d8-b973-4881-86ec-589d50849765-000000@us-west-2.amazonses.com>
-Subject: Re: [PATCH 1/2] arm64: dts: sc7180: Remove additional spi chip select muxes
+In-Reply-To: <0101016ef3cdeea5-fba7a1a7-75b0-43bc-b7e4-94d19ae6b576-000000@us-west-2.amazonses.com>
+References: <1576048353-21154-1-git-send-email-rnayak@codeaurora.org> <0101016ef3cdeea5-fba7a1a7-75b0-43bc-b7e4-94d19ae6b576-000000@us-west-2.amazonses.com>
+Subject: Re: [PATCH 2/2] arm64: dts: sc7180: Add aliases for all i2c and spi devices
 To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
         bjorn.andersson@linaro.org
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
 User-Agent: alot/0.8.1
-Date:   Wed, 11 Dec 2019 08:58:29 -0800
+Date:   Wed, 11 Dec 2019 08:58:53 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2019-12-10 23:12:52)
-> remove the additional CS muxes that were added by default for
-> spi so every board using sc7180 does not have to override it.
+Quoting Rajendra Nayak (2019-12-10 23:13:09)
+> Add aliases for all i2c and spi nodes
 >=20
 > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
