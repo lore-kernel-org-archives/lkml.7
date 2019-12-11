@@ -2,220 +2,282 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7A0C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D8AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E3A206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF7A206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730988AbfLKSGy (ORCPT
+        id S1730824AbfLKSIC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:06:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:41828 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730197AbfLKSGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:06:54 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0854731B;
-        Wed, 11 Dec 2019 10:06:53 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 845B63F6CF;
-        Wed, 11 Dec 2019 10:06:52 -0800 (PST)
-Subject: Re: [PATCH 08/15] firmware: arm_scmi: Add and initialise protocol
- version to scmi_device structure
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
- <20191210145345.11616-9-sudeep.holla@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <b79fe89b-5779-f70b-cfb8-4b20f622e9ef@arm.com>
-Date:   Wed, 11 Dec 2019 18:06:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 11 Dec 2019 13:08:02 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15896 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726242AbfLKSIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:08:02 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBI3ic3057577;
+        Wed, 11 Dec 2019 13:07:25 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtdp4pndd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 13:07:24 -0500
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBBI3fqM057210;
+        Wed, 11 Dec 2019 13:07:24 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtdp4pncj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 13:07:23 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBBI6iCN029621;
+        Wed, 11 Dec 2019 18:07:22 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2wr3q7rj70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 18:07:22 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBBI7LHV31850982
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 18:07:21 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63283124052;
+        Wed, 11 Dec 2019 18:07:21 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 38D2E12405C;
+        Wed, 11 Dec 2019 18:07:21 +0000 (GMT)
+Received: from localhost (unknown [9.53.179.218])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Dec 2019 18:07:21 +0000 (GMT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191210145345.11616-9-sudeep.holla@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Ram Pai <linuxram@us.ibm.com>, mpe@ellerman.id.au
+From:   Michael Roth <mdroth@linux.vnet.ibm.com>
+In-Reply-To: <be36117d-204e-bf59-287a-371103186e16@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, paulus@ozlabs.org, hch@lst.de,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org,
+        leonardo@linux.ibm.com
+References: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com>
+ <1575681159-30356-2-git-send-email-linuxram@us.ibm.com>
+ <1575681159-30356-3-git-send-email-linuxram@us.ibm.com>
+ <157602860458.3810.8599908751067047456@sif>
+ <be36117d-204e-bf59-287a-371103186e16@ozlabs.ru>
+Message-ID: <157608763756.3810.12346253559039287143@sif>
+User-Agent: alot/0.7
+Subject: Re: [PATCH v5 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for Secure VM.
+Date:   Wed, 11 Dec 2019 12:07:17 -0600
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_05:2019-12-11,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=8
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 14:53, Sudeep Holla wrote:
-> It's useful to keep track of scmi protocol version in the scmi device
-> structure along with the protocol id. These can be used to expose the
-> information to the userspace via bus dev_groups attributes as well.
+Quoting Alexey Kardashevskiy (2019-12-11 02:36:29)
 > 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/arm_scmi/clock.c   | 6 +++++-
->  drivers/firmware/arm_scmi/perf.c    | 6 +++++-
->  drivers/firmware/arm_scmi/power.c   | 6 +++++-
->  drivers/firmware/arm_scmi/reset.c   | 6 +++++-
->  drivers/firmware/arm_scmi/sensors.c | 6 +++++-
->  include/linux/scmi_protocol.h       | 1 +
->  6 files changed, 26 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-> index b567ec03f711..b68736ae7f88 100644
-> --- a/drivers/firmware/arm_scmi/clock.c
-> +++ b/drivers/firmware/arm_scmi/clock.c
-> @@ -318,8 +318,11 @@ static int scmi_clock_protocol_init(struct scmi_device *dev)
->  	struct clock_info *cinfo;
->  	struct scmi_handle *handle = dev->handle;
+> On 11/12/2019 12:43, Michael Roth wrote:
+> > Quoting Ram Pai (2019-12-06 19:12:39)
+> >> Commit edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on
+> >>                 secure guests")
+> >> disabled dma_iommu_ops path, for secure VMs. Disabling dma_iommu_ops
+> >> path for secure VMs, helped enable dma_direct path.  This enabled
+> >> support for bounce-buffering through SWIOTLB.  However it fails to
+> >> operate when IOMMU is enabled, since I/O pages are not TCE mapped.
+> >>
+> >> Renable dma_iommu_ops path for pseries Secure VMs.  It handles all
+> >> cases including, TCE mapping I/O pages, in the presence of a
+> >> IOMMU.
+> > 
+> > Wasn't clear to me at first, but I guess the main gist of this series is
+> > that we want to continue to use SWIOTLB, but also need to create mappings
+> > of it's bounce buffers in the IOMMU, so we revert to using dma_iommu_ops
+> > and rely on the various dma_iommu_{map,alloc}_bypass() hooks throughout
+> > to call into dma_direct_* ops rather than relying on the dma_is_direct(ops)
+> > checks in DMA API functions to do the same.
 > 
-> -	if (handle->clk_ops && handle->clk_priv)
-> +	if (handle->clk_ops && handle->clk_priv) {
-> +		cinfo = handle->clk_priv;
-> +		dev->version = cinfo->version;
->  		return 0; /* initialised already for the first device */
-> +	}
 > 
+> Correct. Took me a bit of time to realize what we got here :) We only
+> rely on  dma_iommu_ops::.dma_supported to write the DMA offset to a
+> device (when creating a huge window), and after that we know it is
+> mapped directly and swiotlb gets this 1<<59 offset via __phys_to_dma().
+> 
+> 
+> > That makes sense, but one issue I see with that is that
+> > dma_iommu_map_bypass() only tests true if all the following are true:
+> > 
+> > 1) the device requests a 64-bit DMA mask via
+> >    dma_set_mask/dma_set_coherent_mask
+> > 2) DDW is enabled (i.e. we don't pass disable_ddw on command-line)
+> > 
+> > dma_is_direct() checks don't have this limitation, so I think for
+> > anything cases, such as devices that use a smaller DMA mask, we'll
+> > end up falling back to the non-bypass functions in dma_iommu_ops, which
+> > will likely break for things like dma_alloc_coherent/dma_map_single
+> > since they won't use SWIOTLB pages and won't do the necessary calls to
+> > set_memory_unencrypted() to share those non-SWIOTLB buffers with
+> > hypervisor.
+> > 
+> > Maybe that's ok, but I think we should be clearer about how to
+> > fail/handle these cases.
+> > 
+> > Though I also agree with some concerns Alexey stated earlier: it seems
+> > wasteful to map the entire DDW window just so these bounce buffers can be
+> > mapped.  Especially if you consider the lack of a mapping to be an additional
+> > safe-guard against things like buggy device implementations on the QEMU
+> > side. E.g. if we leaked pages to the hypervisor on accident, those pages
+> > wouldn't be immediately accessible to a device, and would still require
+> > additional work get past the IOMMU.
+> > 
+> > What would it look like if we try to make all this work with disable_ddw passed
+> > to kernel command-line (or forced for is_secure_guest())?
+> > 
+> >   1) dma_iommu_{alloc,map}_bypass() would no longer get us to dma_direct_* ops,
+> >      but an additional case or hook that considers is_secure_guest() might do
+> >      it.
+> >      
+> >   2) We'd also need to set up an IOMMU mapping for the bounce buffers via
+> >      io_tlb_start/io_tlb_end. We could do it once, on-demand via
+> >      dma_iommu_bypass_supported() like we do for the 64-bit DDW window, or
+> >      maybe in some init function.
+> 
+> 
+> io_tlb_start/io_tlb_end are only guaranteed to stay within 4GB and our
+> default DMA window is 1GB (KVM) or 2GB (PowerVM), ok, we can define
+> ARCH_LOW_ADDRESS_LIMIT as 1GB.
 
-This is the device specific init stuff which I would remove from this proto initialization,
-which is the reason for this proto_init to be invoked for all devices defined for such proto.
+True, and limiting allocations to under 1GB might be brittle (also saw a
+patching floating around that increased IO_TLB_DEFAULT_SIZE size to 1GB,
+which obviously wouldn't work out with this approach, but not sure if
+that's still needed or not: "powerpc/svm: Increase SWIOTLB buffer size")
 
-I'd say to move dev->version initialization into the specific scmi_drv->probe
-which is called after scmi_protocol_init inside bus:scmi_dev_probe, after having
-disabled the proto_init after the first invocation, once the protocol is initialized,
-BUT this would result anyway in duplication since you'll have to fill dev->version
-from the custom protocol info in each of the related scmi drivers, and that would also mean
-delegating to a possible user scmi driver .probe an initialization which is then needed by
-the sysfs attribute exposed by the SCMI framework code.
+However that's only an issue if we insist on using an identity mapping
+in the IOMMU, which would be nice because non-IOMMU virtio would
+magically work, but since that's not a goal of this series I think we do
+have the option of mapping io_tlb_start at DMA address 0 (or
+thereabouts).
 
-So not a solution.
+We'd probably need to modify __phys_to_dma to treat archdata.dma_offset
+as a negative offset in this case, but it seems like it would work about
+the same as with DDW offset.
 
-Cristian
+But yah, it does make things a bit less appealing than what I was initially
+thinking with that approach...
 
+> 
+> But it has also been mentioned that we are likely to be having swiotlb
+> buffers outside of the first 4GB as they are not just for crippled
+> devices any more. So we are likely to have 64bit window, I'd just ditch
+> the default window then, I have patches for this but every time I
+> thought I have a use case, turned out that I did not.
 
->  	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
-> 
-> @@ -345,6 +348,7 @@ static int scmi_clock_protocol_init(struct scmi_device *dev)
->  			scmi_clock_describe_rates_get(handle, clkid, clk);
->  	}
-> 
-> +	dev->version = version;
->  	cinfo->version = version;
->  	handle->clk_ops = &clk_ops;
->  	handle->clk_priv = cinfo;
-> diff --git a/drivers/firmware/arm_scmi/perf.c b/drivers/firmware/arm_scmi/perf.c
-> index b1de6197f61c..8a02dc453894 100644
-> --- a/drivers/firmware/arm_scmi/perf.c
-> +++ b/drivers/firmware/arm_scmi/perf.c
-> @@ -712,8 +712,11 @@ static int scmi_perf_protocol_init(struct scmi_device *dev)
->  	struct scmi_perf_info *pinfo;
->  	struct scmi_handle *handle = dev->handle;
-> 
-> -	if (handle->perf_ops && handle->perf_priv)
-> +	if (handle->perf_ops && handle->perf_priv) {
-> +		pinfo = handle->perf_priv;
-> +		dev->version = pinfo->version;
->  		return 0; /* initialised already for the first device */
-> +	}
-> 
->  	scmi_version_get(handle, SCMI_PROTOCOL_PERF, &version);
-> 
-> @@ -741,6 +744,7 @@ static int scmi_perf_protocol_init(struct scmi_device *dev)
->  			scmi_perf_domain_init_fc(handle, domain, &dom->fc_info);
->  	}
-> 
-> +	dev->version = version;
->  	pinfo->version = version;
->  	handle->perf_ops = &perf_ops;
->  	handle->perf_priv = pinfo;
-> diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
-> index d11c6cd6bbab..6267111e38e6 100644
-> --- a/drivers/firmware/arm_scmi/power.c
-> +++ b/drivers/firmware/arm_scmi/power.c
-> @@ -187,8 +187,11 @@ static int scmi_power_protocol_init(struct scmi_device *dev)
->  	struct scmi_power_info *pinfo;
->  	struct scmi_handle *handle = dev->handle;
-> 
-> -	if (handle->power_ops && handle->power_priv)
-> +	if (handle->power_ops && handle->power_priv) {
-> +		pinfo = handle->power_priv;
-> +		dev->version = pinfo->version;
->  		return 0; /* initialised already for the first device */
-> +	}
-> 
->  	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
-> 
-> @@ -212,6 +215,7 @@ static int scmi_power_protocol_init(struct scmi_device *dev)
->  		scmi_power_domain_attributes_get(handle, domain, dom);
->  	}
-> 
-> +	dev->version = version;
->  	pinfo->version = version;
->  	handle->power_ops = &power_ops;
->  	handle->power_priv = pinfo;
-> diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
-> index dce103781b3f..76f1cee85a06 100644
-> --- a/drivers/firmware/arm_scmi/reset.c
-> +++ b/drivers/firmware/arm_scmi/reset.c
-> @@ -197,8 +197,11 @@ static int scmi_reset_protocol_init(struct scmi_device *dev)
->  	struct scmi_reset_info *pinfo;
->  	struct scmi_handle *handle = dev->handle;
-> 
-> -	if (handle->reset_ops && handle->reset_priv)
-> +	if (handle->reset_ops && handle->reset_priv) {
-> +		pinfo = handle->reset_priv;
-> +		dev->version = pinfo->version;
->  		return 0; /* initialised already for the first device */
-> +	}
-> 
->  	scmi_version_get(handle, SCMI_PROTOCOL_RESET, &version);
-> 
-> @@ -222,6 +225,7 @@ static int scmi_reset_protocol_init(struct scmi_device *dev)
->  		scmi_reset_domain_attributes_get(handle, domain, dom);
->  	}
-> 
-> +	dev->version = version;
->  	pinfo->version = version;
->  	handle->reset_ops = &reset_ops;
->  	handle->reset_priv = pinfo;
-> diff --git a/drivers/firmware/arm_scmi/sensors.c b/drivers/firmware/arm_scmi/sensors.c
-> index aac0243e2880..fb3bed4cb171 100644
-> --- a/drivers/firmware/arm_scmi/sensors.c
-> +++ b/drivers/firmware/arm_scmi/sensors.c
-> @@ -278,8 +278,11 @@ static int scmi_sensors_protocol_init(struct scmi_device *dev)
->  	struct sensors_info *sinfo;
->  	struct scmi_handle *handle = dev->handle;
-> 
-> -	if (handle->sensor_ops && handle->sensor_priv)
-> +	if (handle->sensor_ops && handle->sensor_priv) {
-> +		sinfo = handle->sensor_priv;
-> +		dev->version = sinfo->version;
->  		return 0; /* initialised already for the first device */
-> +	}
-> 
->  	scmi_version_get(handle, SCMI_PROTOCOL_SENSOR, &version);
-> 
-> @@ -299,6 +302,7 @@ static int scmi_sensors_protocol_init(struct scmi_device *dev)
-> 
->  	scmi_sensor_description_get(handle, sinfo);
-> 
-> +	dev->version = version;
->  	sinfo->version = version;
->  	handle->sensor_ops = &sensor_ops;
->  	handle->sensor_priv = sinfo;
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index b676825e6eb0..a863bc0cdf28 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -256,6 +256,7 @@ enum scmi_std_protocol {
-> 
->  struct scmi_device {
->  	u32 id;
-> +	u32 version;
->  	u8 protocol_id;
->  	const char *name;
->  	struct device dev;
-> --
-> 2.17.1
-> 
+Not sure I've seen this discussion, maybe it was on slack? By crippled
+devices do you mean virtio with IOMMU off? Isn't swiotlb buffer limited
+to under ARCH_LOW_ADDRESS_LIMIT in any case? Just trying to understand
+what changes we're anticipating there.
 
+> 
+> 
+> > That also has the benefit of not requiring devices to support 64-bit DMA.
+> > 
+> > Alternatively, we could continue to rely on the 64-bit DDW window, but
+> > modify call to enable_ddw() to only map the io_tlb_start/end range in
+> > the case of is_secure_guest(). This is a little cleaner implementation-wise
+> > since we can rely on the existing dma_iommu_{alloc,map}_bypass() hooks, but
+> > devices that don't support 64-bit will fail back to not using dma_direct_* ops
+> > and fail miserably. We'd probably want to handle that more gracefully.
+> > 
+> > Or we handle both cases gracefully. To me it makes more sense to enable
+> > non-DDW case, then consider adding DDW case later if there's some reason
+> > why 64-bit DMA is needed. But would be good to hear if there are other
+> > opinions.
+> 
+> 
+> For now we need to do something with the H_PUT_TCE_INDIRECT's page -
+> either disable multitce (but boot time increases) or share the page. The
+> patch does the latter. Thanks,
+
+I was sort of hoping the option of only mapping the bounce buffer (or
+avoiding DDW completely) would help here, but looks like the issue has
+more to do with clearing the default TCE table. Fair enough.
+
+Reverting to dma_iommu_ops does re-introduce some new failure paths for
+non 64-bit devices though, so I think it would be good to address that
+as part of this series. I think it would be sufficient to have
+dma_set_mask/dma_set_coherent_mask/dma_set_mask_and_coherent fail for
+non 64-bit masks. I think something like the following in
+dma_iommu_dma_supported() might do it:
+
+  /*
+   * Secure guests currently rely on 64-bit DMA window, which is only
+   * utilized for devices that support 64-bit DMA masks
+   */
+  if (is_secure_guest() && mask < DMA_BIT_MASK(64)) {
+    dev_err(dev, "Warning: 64-bit DMA required when PEF enabled: mask 0x%08llx", mask);
+    return 0;
+  }
+    
+That should let most drivers fail gracefully and make it clear what devices
+are broken (rather than silently misbehaving). It also makes things a bit
+clearer WRT what we expect to work with this applied. 
+
+> 
+> 
+> > 
+> >>
+> >> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> >> ---
+> >>  arch/powerpc/platforms/pseries/iommu.c | 11 +----------
+> >>  1 file changed, 1 insertion(+), 10 deletions(-)
+> >>
+> >> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> >> index 67b5009..4e27d66 100644
+> >> --- a/arch/powerpc/platforms/pseries/iommu.c
+> >> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> >> @@ -36,7 +36,6 @@
+> >>  #include <asm/udbg.h>
+> >>  #include <asm/mmzone.h>
+> >>  #include <asm/plpar_wrappers.h>
+> >> -#include <asm/svm.h>
+> >>  #include <asm/ultravisor.h>
+> >>
+> >>  #include "pseries.h"
+> >> @@ -1346,15 +1345,7 @@ void iommu_init_early_pSeries(void)
+> >>         of_reconfig_notifier_register(&iommu_reconfig_nb);
+> >>         register_memory_notifier(&iommu_mem_nb);
+> >>
+> >> -       /*
+> >> -        * Secure guest memory is inacessible to devices so regular DMA isn't
+> >> -        * possible.
+> >> -        *
+> >> -        * In that case keep devices' dma_map_ops as NULL so that the generic
+> >> -        * DMA code path will use SWIOTLB to bounce buffers for DMA.
+> >> -        */
+> >> -       if (!is_secure_guest())
+> >> -               set_pci_dma_ops(&dma_iommu_ops);
+> >> +       set_pci_dma_ops(&dma_iommu_ops);
+> >>  }
+> >>
+> >>  static int __init disable_multitce(char *str)
+> >> -- 
+> >> 1.8.3.1
+> >>
+> 
+> -- 
+> Alexey
