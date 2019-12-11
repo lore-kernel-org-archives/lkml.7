@@ -2,177 +2,190 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D72DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F373C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10ED424654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DABDA222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JqwJ7U/L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SkvzyHM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfLKWTS (ORCPT
+        id S1726823AbfLKWTz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:19:18 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40453 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfLKWTR (ORCPT
+        Wed, 11 Dec 2019 17:19:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56670 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726411AbfLKWTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:19:17 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c93so20834579edf.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:19:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
-         :content-transfer-encoding;
-        bh=72CkmEu8P0deCrZSK3BbV39L1/XfAcEqTc+T0/vC9p8=;
-        b=JqwJ7U/LA2SMeghbmpJ0R3IbdVMoHlrcIrEqcEnWBOJYg1X47XE1vElstrUfVqfOe9
-         7Nm9Ve0wPUG+eL/33omQ3z+lfWJ3ZuEFYPQgQhGVHRoQwdfZyBlRx72U1gnPsLcwQvrA
-         eEymZjvC2Os3hjP6l4q6HSOzp0Gbb72XhMqGlT5gk/sVsAasKMpGIWw9OThTEKCns8+r
-         PBVXHwHJq8Crr3ZF2HH/fAVHZ7VwGo3VI1FZ8Gru00EPm7LTvAdUMT6wW6yzBQghPR2o
-         d2TLW0wSqTwP/6JT9UatESP2h23cTh4m4+D/Pb1GzLzhPTYRUr3KZCppK8zOGb8WMY63
-         MQYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc:content-transfer-encoding;
-        bh=72CkmEu8P0deCrZSK3BbV39L1/XfAcEqTc+T0/vC9p8=;
-        b=GteuV7Uut1hRsxXCOGznyEUiBFEgCs793JQtX/hwJ7GpgcvNL7BABm1P9nQyWoyt82
-         S4H1m8LXM1Gb1tG/0ORIMl96qeEWkG/u1yTLm8u5Bh8Izb69/5IxS+7ejHQoFejNVBqG
-         dbz8Ism9SROb+Ear9bwwzPytWnOIZRNF/pCWZgefCfP2HkOjkD0Ejw0MiH0qy1c9F6fU
-         oTT8eeo/M7IWPHf2pLc2yqrzjeSaBaAISinB3u/d3zPjb4jt9HDmvZPI8IoCe8sOCMgA
-         /DzJtOk6vLfPlJUHWNI8bmtWfcHY901HoVv+be1+2RwbH6GtuJoTuSf8fkOjG+zydfLW
-         MDIw==
-X-Gm-Message-State: APjAAAXNNJlyaTVs+IhoKJ3lkyKW2839hxE++aEte2tL91YMbLFCrvDL
-        DAC0VK1n8/z8g2QNvi0QZhS9IW5APwaKyFRqtqowrmMH9a0=
-X-Received: by 2002:a17:906:9716:: with SMTP id k22mt5047774ejx.233.1576102754435;
- Wed, 11 Dec 2019 14:19:14 -0800 (PST)
+        Wed, 11 Dec 2019 17:19:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576102794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E0l7zoV2+95h99CoTxTx4tu5LuU1gFk/R9T/E2GUkPc=;
+        b=SkvzyHM0E4XOVHjMrT8+sPvrJjnpn1ozMkYUmjrxustc1Aab3PnknBp0z6v9xNUZVpybZg
+        +KmDE2DPZ1Wm5C43QUYD5/ynuipVF66wrwm+3aUXwrsVK6+Om1taJ4ZFWFNdtvwnwy8sqw
+        s/EtYfvixmISKNKysUB6sVvOadqec18=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-344-QJdIcJX0PhK_UHbBgAAu5g-1; Wed, 11 Dec 2019 17:19:50 -0500
+X-MC-Unique: QJdIcJX0PhK_UHbBgAAu5g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8831F800D41;
+        Wed, 11 Dec 2019 22:19:49 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9E79B691A0;
+        Wed, 11 Dec 2019 22:19:48 +0000 (UTC)
+Subject: Re: [PATCH v2] hugetlbfs: Disable softIRQ when taking hugetlb_lock
+To:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@kernel.org>
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+Date:   Wed, 11 Dec 2019 17:19:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20191205071953.121511-1-wvw@google.com> <69dd3a7a-c5fe-3ae7-8a4d-c3939870eed8@linaro.org>
- <CAGXk5yrsmvHK_xwvp_kFNmSqKOZ7Ef3HrVBHYDMBmDsCz0FNSQ@mail.gmail.com>
- <0603228e-5f0b-d335-30ce-67cf0626a489@linaro.org> <20191211085400.GB500800@kroah.com>
- <CAGXk5yrFp1eeeadhJar_qJqJ9G1q2mn+5m8JW4705ouQDLqzsw@mail.gmail.com> <f0ebc98d-25f2-6326-c0d8-8dda543c4091@linaro.org>
-In-Reply-To: <f0ebc98d-25f2-6326-c0d8-8dda543c4091@linaro.org>
-From:   Wei Wang <wvw@google.com>
-Date:   Wed, 11 Dec 2019 14:19:03 -0800
-Message-ID: <CAGXk5yosq5saYWdsz2k+uCYZ5CNTR4zNR2nB3H7-=TQs07u8Sw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] thermal: introduce by-name softlink
-Cc:     Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 1:11 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
+On 12/11/19 5:04 PM, Mike Kravetz wrote:
+> Cc: Michal
 >
-> On 11/12/2019 21:11, Wei Wang wrote:
-> > On Wed, Dec 11, 2019 at 12:54 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >>
-> >> On Tue, Dec 10, 2019 at 09:54:11PM +0100, Daniel Lezcano wrote:
-> >>> On 10/12/2019 21:01, Wei Wang wrote:
-> >>>> On Tue, Dec 10, 2019 at 6:36 AM Daniel Lezcano
-> >>>> <daniel.lezcano@linaro.org> wrote:
-> >>>>>
-> >>>>> On 05/12/2019 08:19, Wei Wang wrote:
-> >>>>>> The paths thermal_zone%d and cooling_device%d are not intuitive an=
-d the
-> >>>>>> numbers are subject to change due to device tree change. This usua=
-lly
-> >>>>>> leads to tree traversal in userspace code.
-> >>
-> >> tree traversal is supposed to be done in userspace code :)
-> >>
-> > Yes, that can be done in userspace, but given the amount of thermal
-> > zones we have in some mobile devices, this will bring a lot of
-> > convenience.
+> Sorry for the late reply on this effort.
 >
-> But usually all these thermal zones are fixed and building the name<->tz
-> association is just a question of a few lines of code from userspace,
-> no? What would be the benefit of adding more ABI?
+> On 12/11/19 11:46 AM, Waiman Long wrote:
+>> The following lockdep splat was observed when a certain hugetlbfs test
+>> was run:
+>>
+>> [  612.388273] ================================
+>> [  612.411273] WARNING: inconsistent lock state
+>> [  612.432273] 4.18.0-159.el8.x86_64+debug #1 Tainted: G        W --------- -  -
+>> [  612.469273] --------------------------------
+>> [  612.489273] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+>> [  612.517273] swapper/30/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
+>> [  612.541273] ffffffff9acdc038 (hugetlb_lock){+.?.}, at: free_huge_page+0x36f/0xaa0
+>> [  612.576273] {SOFTIRQ-ON-W} state was registered at:
+>> [  612.598273]   lock_acquire+0x14f/0x3b0
+>> [  612.616273]   _raw_spin_lock+0x30/0x70
+>> [  612.634273]   __nr_hugepages_store_common+0x11b/0xb30
+>> [  612.657273]   hugetlb_sysctl_handler_common+0x209/0x2d0
+>> [  612.681273]   proc_sys_call_handler+0x37f/0x450
+>> [  612.703273]   vfs_write+0x157/0x460
+>> [  612.719273]   ksys_write+0xb8/0x170
+>> [  612.736273]   do_syscall_64+0xa5/0x4d0
+>> [  612.753273]   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+>> [  612.777273] irq event stamp: 691296
+>> [  612.794273] hardirqs last  enabled at (691296): [<ffffffff99bb034b>] _raw_spin_unlock_irqrestore+0x4b/0x60
+>> [  612.839273] hardirqs last disabled at (691295): [<ffffffff99bb0ad2>] _raw_spin_lock_irqsave+0x22/0x81
+>> [  612.882273] softirqs last  enabled at (691284): [<ffffffff97ff0c63>] irq_enter+0xc3/0xe0
+>> [  612.922273] softirqs last disabled at (691285): [<ffffffff97ff0ebe>] irq_exit+0x23e/0x2b0
+>> [  612.962273]
+>> [  612.962273] other info that might help us debug this:
+>> [  612.993273]  Possible unsafe locking scenario:
+>> [  612.993273]
+>> [  613.020273]        CPU0
+>> [  613.031273]        ----
+>> [  613.042273]   lock(hugetlb_lock);
+>> [  613.057273]   <Interrupt>
+>> [  613.069273]     lock(hugetlb_lock);
+>> [  613.085273]
+>> [  613.085273]  *** DEADLOCK ***
+>>       :
+>> [  613.245273] Call Trace:
+>> [  613.256273]  <IRQ>
+>> [  613.265273]  dump_stack+0x9a/0xf0
+>> [  613.281273]  mark_lock+0xd0c/0x12f0
+>> [  613.297273]  ? print_shortest_lock_dependencies+0x80/0x80
+>> [  613.322273]  ? sched_clock_cpu+0x18/0x1e0
+>> [  613.341273]  __lock_acquire+0x146b/0x48c0
+>> [  613.360273]  ? trace_hardirqs_on+0x10/0x10
+>> [  613.379273]  ? trace_hardirqs_on_caller+0x27b/0x580
+>> [  613.401273]  lock_acquire+0x14f/0x3b0
+>> [  613.419273]  ? free_huge_page+0x36f/0xaa0
+>> [  613.440273]  _raw_spin_lock+0x30/0x70
+>> [  613.458273]  ? free_huge_page+0x36f/0xaa0
+>> [  613.477273]  free_huge_page+0x36f/0xaa0
+>> [  613.495273]  bio_check_pages_dirty+0x2fc/0x5c0
+>> [  613.516273]  clone_endio+0x17f/0x670 [dm_mod]
+>> [  613.536273]  ? disable_discard+0x90/0x90 [dm_mod]
+>> [  613.558273]  ? bio_endio+0x4ba/0x930
+>> [  613.575273]  ? blk_account_io_completion+0x400/0x530
+>> [  613.598273]  blk_update_request+0x276/0xe50
+>> [  613.617273]  scsi_end_request+0x7b/0x6a0
+>> [  613.636273]  ? lock_downgrade+0x6f0/0x6f0
+>> [  613.654273]  scsi_io_completion+0x1c6/0x1570
+>> [  613.674273]  ? sd_completed_bytes+0x3a0/0x3a0 [sd_mod]
+>> [  613.698273]  ? scsi_mq_requeue_cmd+0xc0/0xc0
+>> [  613.718273]  blk_done_softirq+0x22e/0x350
+>> [  613.737273]  ? blk_softirq_cpu_dead+0x230/0x230
+>> [  613.758273]  __do_softirq+0x23d/0xad8
+>> [  613.776273]  irq_exit+0x23e/0x2b0
+>> [  613.792273]  do_IRQ+0x11a/0x200
+>> [  613.806273]  common_interrupt+0xf/0xf
+>> [  613.823273]  </IRQ>
+> This is interesting.  I'm trying to wrap my head around how we ended up
+> with a BIO pointing to a hugetlbfs page.  My 'guess' is that user space
+> code passed an address to some system call or driver.  And, that system
+> call or driver set up the IO.  For the purpose of addressing this issue,
+> it does not matter.  I am just a little confused/curious.
+>
+>> Since hugetlb_lock can be taken from both process and softIRQ contexts,
+>> we need to protect the lock from nested locking by disabling softIRQ
+>> using spin_lock_bh() before taking it.
+>>
+>> Currently, only free_huge_page() is known to be called from softIRQ
+>> context.
+> We discussed this exact same issue more than a year ago.  See,
+> https://lkml.org/lkml/2018/9/5/398
+>
+> At that time, the only 'known' caller of put_page for a hugetlbfs page from
+> softirq context was in powerpc specific code.  IIRC, Aneesh addressed the
+> issue last year by modifying the powerpc specific code.  The more general
+> issue in the hugetlbfs code was never addressed. :(
+>
+> As part of the discussion in the previous e-mail thread, the issue of
+> whether we should address put_page for hugetlbfs pages for only softirq
+> or extend to hardirq context was discussed.  The conclusion (or at least
+> suggestion from Andrew and Michal) was that we should modify code to allow
+> for calls from hardirq context.  The reasoning IIRC, was that put_page of
+> other pages was allowed from hardirq context, so hugetlbfs pages should be
+> no different.
+>
+> Matthew, do you think that reasoning from last year is still valid?  Should
+> we be targeting soft or hard irq calls?
+>
+> One other thing.  free_huge_page may also take a subpool specific lock via
+> spin_lock().  See hugepage_subpool_put_pages.  This would also need to take
+> irq context into account.
 
+Thanks for the background information.
 
-code reuse as tz mapping is per device tree setup and we try to use
-the same _type_  in thermal zone in shared client code for Android
-thermal API.
+We will need to use spin_lock_irq() or spin_lock_irqsave() for allowing
+hardirq context calls like what is in the v1 patch. I will look further
+into the subpool specific lock also.
 
->
-> If there is a thermal zone change, then a notification can be used, so
-> the userspace code rebuild the name<->tz, no?
+Cheers,
+Longman
 
-
-Assuming you meant for type<->tz, this mapping won't change in runtime
-in our case (not unloading things), but it could be changed due to
-device tree change, e.g. adding/removing thermal zones.
-
-
->
-> > e.g. this is on Pixel 4 XL:
-> > coral:/ # ls  /sys/devices/virtual/thermal/
-> > cdev-by-name      cooling_device15  cooling_device22  cooling_device3
-> >  cooling_device9  thermal_zone15  thermal_zone22  thermal_zone3
-> > thermal_zone37  thermal_zone44  thermal_zone51  thermal_zone59
-> > thermal_zone66  thermal_zone73  thermal_zone80  thermal_zone88
-> > cooling_device0   cooling_device16  cooling_device23  cooling_device30
-> >  thermal_zone0    thermal_zone16  thermal_zone23  thermal_zone30
-> > thermal_zone38  thermal_zone45  thermal_zone52  thermal_zone6
-> > thermal_zone67  thermal_zone74  thermal_zone81  thermal_zone9
-> > cooling_device1   cooling_device17  cooling_device24  cooling_device31
-> >  thermal_zone1    thermal_zone17  thermal_zone24  thermal_zone31
-> > thermal_zone39  thermal_zone46  thermal_zone53  thermal_zone60
-> > thermal_zone68  thermal_zone75  thermal_zone82  tz-by-name
-> > cooling_device10  cooling_device18  cooling_device25  cooling_device4
-> >  thermal_zone10   thermal_zone18  thermal_zone25  thermal_zone32
-> > thermal_zone4   thermal_zone47  thermal_zone54  thermal_zone61
-> > thermal_zone69  thermal_zone76  thermal_zone83
-> > cooling_device11  cooling_device19  cooling_device26  cooling_device5
-> >  thermal_zone11   thermal_zone19  thermal_zone26  thermal_zone33
-> > thermal_zone40  thermal_zone48  thermal_zone55  thermal_zone62
-> > thermal_zone7   thermal_zone77  thermal_zone84
-> > cooling_device12  cooling_device2   cooling_device27  cooling_device6
-> >  thermal_zone12   thermal_zone2   thermal_zone27  thermal_zone34
-> > thermal_zone41  thermal_zone49  thermal_zone56  thermal_zone63
-> > thermal_zone70  thermal_zone78  thermal_zone85
-> > cooling_device13  cooling_device20  cooling_device28  cooling_device7
-> >  thermal_zone13   thermal_zone20  thermal_zone28  thermal_zone35
-> > thermal_zone42  thermal_zone5   thermal_zone57  thermal_zone64
-> > thermal_zone71  thermal_zone79  thermal_zone86
-> > cooling_device14  cooling_device21  cooling_device29  cooling_device8
-> >  thermal_zone14   thermal_zone21  thermal_zone29  thermal_zone36
-> > thermal_zone43  thermal_zone50  thermal_zone58  thermal_zone65
-> > thermal_zone72  thermal_zone8   thermal_zone87
-> >
-> >
-> >> But what userspace code needs to do this, and for what?
-> > In Android, thermal daemon and thermal HAL as well as some init.rc
-> > script would use those thermal paths for managing and monitoring
-> > thermal. The daemon/HAL could have logic pipled in, however Android's
-> > init.rc script would be really tricky.
-> > On a related note, we also create /dev/block/by-name links from userspa=
-ce.
-> >
-> > Thanks!
-> > -Wei
-> >>
-> >> thanks,
-> >>
-> >> greg k-h
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
-RM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
