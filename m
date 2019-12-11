@@ -2,142 +2,89 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3342BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67543C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069DF2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327D62073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080146;
-	bh=etoHb+N2upRHCrg7AxpFPKl/JHHQbFBSU4cuwZv9h84=;
+	s=default; t=1576080150;
+	bh=LKxzpUfyF+oYSQX+FKuJTBK46/nO+5dzYVqWq0NnofU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A2qLSDh7gni8y7CQvSpfrf/M08H2HAJtiAyqfqY+/Vr5u6Wu2N8jJRcxbrKA9+X2V
-	 9y+uRp7P3m3PuKDjF5gBNTdZOZWSTdHIl9s825OKRYUJPla17QWrmw6kPAEJ8I3BCh
-	 wvuCvQcReLb7ego8aXjYQH1yQrZMVjxASNUZyTO4=
+	b=fW1GmrrAJzSBHuZ5/1x9/EgVpr/jnS2gYZdMmiRTEVqUdON17Cl6G5J7cQvL5JNPE
+	 kZcpmOGVVynLgNRLIMyrF2Q88Hi6Br1/AUYTya0HsZL1MQp1BmUXn+HZXkwY0UGAZB
+	 OFZG2lb4Rzy0nKkth4sSf77UFydZLxYyEmuJ9ROk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388566AbfLKQCY (ORCPT
+        id S1731371AbfLKPNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:02:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36340 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731378AbfLKPNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:14 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731325AbfLKPNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6790D24680;
-        Wed, 11 Dec 2019 15:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD60324685;
+        Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077193;
-        bh=etoHb+N2upRHCrg7AxpFPKl/JHHQbFBSU4cuwZv9h84=;
+        s=default; t=1576077184;
+        bh=LKxzpUfyF+oYSQX+FKuJTBK46/nO+5dzYVqWq0NnofU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x2hS8y4laDYzGqYrLV/88CRdmaB0niRQDue8ZxFYEbsRzh44Myqrs/LnTW1YfarEM
-         5JLrTjAf9lqyf6QHoN925tuEYUrTzWydNgrEdAjqu0n3f/WJSa+0IG81uBCynP/E/4
-         wNh4HfK9r/q0Vd8Rt1GIEy35tC9u/2McG4gRWf/w=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 076/134] dt-bindings: Improve validation build error handling
-Date:   Wed, 11 Dec 2019 10:10:52 -0500
-Message-Id: <20191211151150.19073-76-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=wu6QFAw6csWGikgjKJxzABrsyOVU4HJm6N32Ds37sZTBR6El6+7qZoE79fKstF3vg
+         cZFx1wmzEUL+51BEvtdUplbbnUZCrOL9LNE9K6gXObQzKRFxX/k60jHEy4E46DTzFq
+         tfbyq/0FSzGLlhDiEeuaD35TtnZOfA6GrkgpXmio=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 5.3 013/105] serial: ifx6x60: add missed pm_runtime_disable
+Date:   Wed, 11 Dec 2019 16:05:02 +0100
+Message-Id: <20191211150224.089045896@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 93512dad334deb444619505f1fbb761156f7471b ]
+commit 50b2b571c5f3df721fc81bf9a12c521dfbe019ba upstream.
 
-Schema errors can cause make to exit before useful information is
-printed. This leaves developers wondering what's wrong. It can be
-overcome passing '-k' to make, but that's not an obvious solution.
-There's 2 scenarios where this happens.
+The driver forgets to call pm_runtime_disable in remove.
+Add the missed calls to fix it.
 
-When using DT_SCHEMA_FILES to validate with a single schema, any error
-in the schema results in processed-schema.yaml being empty causing a
-make error. The result is the specific errors in the schema are never
-shown because processed-schema.yaml is the first target built. Simply
-making processed-schema.yaml last in extra-y ensures the full schema
-validation with detailed error messages happen first.
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191118024833.21587-1-hslester96@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The 2nd problem is while schema errors are ignored for
-processed-schema.yaml, full validation of the schema still runs in
-parallel and any schema validation errors will still stop the build when
-running validation of dts files. The fix is to not add the schema
-examples to extra-y in this case. This means 'dtbs_check' is no longer a
-superset of 'dt_binding_check'. Update the documentation to make this
-clear.
-
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/Makefile  | 5 ++++-
- Documentation/devicetree/writing-schema.rst | 6 ++++--
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/tty/serial/ifx6x60.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 5138a2f6232aa..646cb35253733 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -12,7 +12,6 @@ $(obj)/%.example.dts: $(src)/%.yaml FORCE
- 	$(call if_changed,chk_binding)
- 
- DT_TMP_SCHEMA := processed-schema.yaml
--extra-y += $(DT_TMP_SCHEMA)
- 
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(real-prereqs)
-@@ -26,8 +25,12 @@ DT_DOCS = $(shell \
- 
- DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
- 
-+ifeq ($(CHECK_DTBS),)
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
- extra-y += $(patsubst $(src)/%.yaml,%.example.dt.yaml, $(DT_SCHEMA_FILES))
-+endif
- 
- $(obj)/$(DT_TMP_SCHEMA): $(DT_SCHEMA_FILES) FORCE
- 	$(call if_changed,mk_schema)
+--- a/drivers/tty/serial/ifx6x60.c
++++ b/drivers/tty/serial/ifx6x60.c
+@@ -1230,6 +1230,9 @@ static int ifx_spi_spi_remove(struct spi
+ 	struct ifx_spi_device *ifx_dev = spi_get_drvdata(spi);
+ 	/* stop activity */
+ 	tasklet_kill(&ifx_dev->io_work_tasklet);
 +
-+extra-y += $(DT_TMP_SCHEMA)
-diff --git a/Documentation/devicetree/writing-schema.rst b/Documentation/devicetree/writing-schema.rst
-index f4a638072262f..83e04e5c342da 100644
---- a/Documentation/devicetree/writing-schema.rst
-+++ b/Documentation/devicetree/writing-schema.rst
-@@ -130,11 +130,13 @@ binding schema. All of the DT binding documents can be validated using the
- 
-     make dt_binding_check
- 
--In order to perform validation of DT source files, use the `dtbs_check` target::
-+In order to perform validation of DT source files, use the ``dtbs_check`` target::
- 
-     make dtbs_check
- 
--This will first run the `dt_binding_check` which generates the processed schema.
-+Note that ``dtbs_check`` will skip any binding schema files with errors. It is
-+necessary to use ``dt_binding_check`` to get all the validation errors in the
-+binding schema files.
- 
- It is also possible to run checks with a single schema file by setting the
- ``DT_SCHEMA_FILES`` variable to a specific schema file.
--- 
-2.20.1
++	pm_runtime_disable(&spi->dev);
++
+ 	/* free irq */
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.reset_out), ifx_dev);
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.srdy), ifx_dev);
+
 
