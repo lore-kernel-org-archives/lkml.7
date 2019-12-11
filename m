@@ -2,98 +2,180 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A04C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F6DC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9899222B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576074411;
-	bh=Qy1znBU3pH+6omj0HjeyroPBVpb9rQjYap7r0jfAG98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CenQ87pZSHR+XDC88Sb4ZG+UCgA/8l1SB22L9I8OiP1s8tLtpfcMwqEZxdxHZ7W9O
-	 8r4h/zReHpHyYMqWnP0/nT+PA8fNeb+HNfE2ztPdOJj+i77Y57cKeSsuL1LTcAI/BD
-	 DRKwjU+BcmmBIoQLp12yRihUoKtJ1at8kXQRLkGI=
+	by mail.kernel.org (Postfix) with ESMTP id 7EEDD20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:27:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2KBVcOs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbfLKO0u (ORCPT
+        id S1729892AbfLKO12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:26:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfLKO0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:26:50 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E5C420836;
-        Wed, 11 Dec 2019 14:26:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576074409;
-        bh=Qy1znBU3pH+6omj0HjeyroPBVpb9rQjYap7r0jfAG98=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BjvxOVhSQ707fRbeqTGUXDcuhEnzOxXEY+NxteZ5p9aSm+qeQJSaibiL5kHCZ33sd
-         Pd/bmPcoPYFx8uiwXjWgkfnXB0s+RY7apIIL5HJMwzItLR0FHncehO7FSui0mBdjxG
-         r17SLeJRPEidTZ+Eih0GExSsMWMovYmsTKbTBCog=
-Date:   Wed, 11 Dec 2019 15:26:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thomas Renninger <trenn@suse.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Felix Schnizlein <fschnizlein@suse.com>,
-        linux-kernel@vger.kernel.org,
-        Felix Schnizlein <fschnizlein@suse.de>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux@armlinux.org.uk, will.deacon@arm.com, x86@kernel.org
-Subject: Re: [PATCH 2/3] x86 cpuinfo: implement sysfs nodes for x86
-Message-ID: <20191211142647.GB605616@kroah.com>
-References: <20191206162421.15050-1-trenn@suse.de>
- <4737004.4U1sY2OxSp@skinner.arch.suse.de>
- <20191211135619.GA538980@kroah.com>
- <22533595.7ohjOCJ8As@skinner.arch.suse.de>
+        Wed, 11 Dec 2019 09:27:28 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37179 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729841AbfLKO12 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:27:28 -0500
+Received: by mail-io1-f67.google.com with SMTP id k24so22835194ioc.4;
+        Wed, 11 Dec 2019 06:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Faypt5jJbaNtCoHXofsWRZ8YINuZgK4fs840LJrVspY=;
+        b=Z2KBVcOsCkR47+VmQPOkiHjj7vFKRPOwy8osTvnKM5r/Tg62TU0sG4hmG5auAO9PZe
+         mT3KzbzHQZKrbW7H1sBHn51ECGZQXzKZ6DswDgLHURVFuKGX0g7bBcZnzTtUZYNkvZ8x
+         QXSt91qZVnoaJYMbx7l7ka77oIwQHZygkf3v1c3dyplmmWAEnvf4xeHjhaFvYq3UI38b
+         gCSLKK8Kg220Qm1z/EFRy0ZgQ6rwpu+IfjUWOhxaOFdVBfZoQ01vbMst+Vb0yFXnLBjW
+         eJQx6reBYP4mBhH+XKM3CdRjGPxu05kHF2l4cRFsA5M47SwLRxr36WDyLnhB+dhQb7vU
+         aIXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Faypt5jJbaNtCoHXofsWRZ8YINuZgK4fs840LJrVspY=;
+        b=TGMl6gLfTKBFr8HVUqjAj6f+W2dL7d0BEYhFyATDIXWcutugEFjTxpxFrR0zIN0qcG
+         +/tzFX4Lsn9eP47nlfsBofjrg/Gl025I3qTYeLLcZgdIMPekFA7T+GWxlWB7PQnX+o+U
+         czLMzM0jUSKnmi7opYRSWZtv30YZguWFb9Z7HQar5hs8GLwSwTBXwsMWXqTRT7xsJX6P
+         dNGJmjpBenK/V2a/dxc9HdAeRGcVMgtZUf/EY0fkg2P32hPiLsILuyX0u9tKpKcU+A+p
+         yPk/ditykfuMHnImhkYUOfqBwdnRXJd0NwCJ/rV2XLbmkox3HGOhavycjJevrT57m6lc
+         AEig==
+X-Gm-Message-State: APjAAAXsIQwty6Hem9W7qwHYV60ma0ZTnyQmzZ36ZSMFxDEmVsq0rxlF
+        TKrMPf7Lqa7VQjn7X923NDGQPDcQgeAhyhLTyss=
+X-Google-Smtp-Source: APXvYqx25zJakF+83vcjU/NrLZyb4Iyh7/msBEZNeWy88VfcZLcy4mMeUD6cBebcI8aP42hW4L9Hbh1Z30BrvhjsLXQ=
+X-Received: by 2002:a6b:c9ca:: with SMTP id z193mr2766932iof.276.1576074446612;
+ Wed, 11 Dec 2019 06:27:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <22533595.7ohjOCJ8As@skinner.arch.suse.de>
+References: <20191130225153.30111-1-aford173@gmail.com> <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
+ <CAHCN7xLkV1WC=9ACj1Mi8+uE8kRCEjCEe+Y36pXwkNeNrgrNVg@mail.gmail.com>
+ <VI1PR0402MB34857B8C5560B912B34674AB985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <d82428e3-326b-db80-2e40-4ef1bdbca060@kontron.de>
+In-Reply-To: <d82428e3-326b-db80-2e40-4ef1bdbca060@kontron.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 11 Dec 2019 08:27:16 -0600
+Message-ID: <CAHCN7xKUSQQeGt984L9FXmXw7XFMqUvR+9RFqn-zv9q-zQdSSg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:12:51PM +0100, Thomas Renninger wrote:
-> On Wednesday, December 11, 2019 2:56:19 PM CET Greg KH wrote:
-> > On Wed, Dec 11, 2019 at 11:42:35AM +0100, Thomas Renninger wrote:
-> > > If Greg (and others) are ok, I would add "page size exceeding" handling.
-> > > Hm, quick searching for an example I realize that debugfs can exceed page
-> > > size. Is it that hard to expose a sysfs file larger than page size?
-> > 
-> > No, there is a simple way to do it, but I'm not going to show you how as
-> > it is NOT how to use sysfs at all :)
+On Wed, Dec 11, 2019 at 8:23 AM Schrempf Frieder
+<frieder.schrempf@kontron.de> wrote:
+>
+> On 10.12.19 08:56, Horia Geanta wrote:
+> > On 12/6/2019 9:55 PM, Adam Ford wrote:
+> >> On Wed, Dec 4, 2019 at 5:38 AM Schrempf Frieder
+> >> <frieder.schrempf@kontron.de> wrote:
+> >>>
+> >>> Hi Adam,
+> >>>
+> >>> On 30.11.19 23:51, Adam Ford wrote:
+> >>>> The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
+> >>>> the driver is restricting the check to just the i.MX8MQ.
+> >>>>
+> >>>> This patch lets the driver support all i.MX8M Variants if enabled.
+> >>>>
+> >>>> Signed-off-by: Adam Ford <aford173@gmail.com>
+> >>>
+> >>> What about the following lines in run_descriptor_deco0()? Does this
+> >>> condition also apply to i.MX8MM?
+> >>
+> >> I think that's a question for NXP.  I am not seeing that in the NXP
+> >> Linux Release, and I don't have an 8MQ to compare.
+> >>
+> > IIRC the i.MX BSP releases use the JRI for initializing the RNG,
+> > and not the DECO register interface.
 > >
-> > Why are you wanting to dump this whole mess into one file
-> 
-> I wouldn't call a whitespace separated list of CPU feature flags a mess...
+> >> I was able to get the driver working on the i.MXMM with the patch.
+> >>
+> > You are probably using a newer U-boot, which includes
+> > commit dfaec76029f2 ("crypto/fsl: instantiate all rng state handles")
+> >
+> >> NXP  Team,
+> >>
+> >> Do you have any opinions on this?
+> >>
+> > Since current U-boot initializes both RNG state handles, practically
+> > instantiate_rng() is a no-op.
+> >
+> > A simple experiment is to "lie" about the state_handle_mask, to exercise
+> > the DECO acquire code (or, as mentioned above, to run with an older U-boot):
+> >
+> > @@ -268,12 +272,19 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
+> >          struct caam_ctrl __iomem *ctrl;
+> >          u32 *desc, status = 0, rdsta_val;
+> >          int ret = 0, sh_idx;
+> > +       static int force_init = 1;
+> >
+> >          ctrl = (struct caam_ctrl __iomem *)ctrlpriv->ctrl;
+> >          desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL);
+> >          if (!desc)
+> >                  return -ENOMEM;
+> >
+> > +       if (force_init && (state_handle_mask == 0x3)) {
+> > +               dev_err(ctrldev, "Forcing reinit of RNG state handle 0!\n");
+> > +               force_init = 0;
+> > +               state_handle_mask = 0x2;
+> > +       }
+> > +
+> >          for (sh_idx = 0; sh_idx < RNG4_MAX_HANDLES; sh_idx++) {
+> >                  /*
+> >                   * If the corresponding bit is set, this state handle
+> >
+> > In this case boot log confirms the DECO cannot be acquired:
+> > [    2.137101] caam 30900000.crypto: Forcing reinit of RNG state handle 0!
+> > [    2.172293] caam 30900000.crypto: failed to acquire DECO 0
+> > [    2.177786] caam 30900000.crypto: failed to instantiate RNG
+> >
+> > To sum up, writing to DECORSR is mandatory.
+>
+> Thanks Horia for providing the details.
 
-It's a mess in that it's more than one value and you want to overflow a
-PAGE_SIZE sometime in the future with it :(
+I appreciate it too.
 
-> > and then parse
-> > it, it's no different from having 100+ different sysfs files and then
-> > doing a readdir(3) on the thing, right?
-> 
-> If this is the way it "has to"/should/"is designed for" to export such
-> (not that complex) data via sysfs...
-> 
-> I do not have such a strong opinion on the how, this is up to maintainers
-> to discuss.
-> 
-> I hope it is agreed that this info is worth exporting via sysfs.
+>
+> Adam, can you update your patch to enable the code in
+> run_descriptor_deco0() for i.MX8MM?
 
-I don't think anyone is saying it is worth exporting this information
-via sysfs at all here.
+I will work on that.  I have been trying to get the mainline U-Boot to
+start correctly, because I wanted to see if/how this interacted. I'll
+try to get a V2 pushed today.
 
-thanks,
+>
+> If I understand this correctly, this is necessary to have the RNG
+> initialize correctly no matter what version of U-Boot is used.
 
-greg k-h
+That makes sense based on Horia's feedback.  With the holidays this
+month, my spare time and weekends have been full.
+
+adam
+>
+> Thanks,
+> Frieder
