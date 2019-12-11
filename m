@@ -2,165 +2,100 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A498C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7D4C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EB82077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578CE2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576080124;
+	bh=fqApEpiJswPrQQE2UddJFG1LKaOvkhQp23n/8LhV2U4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qVSVXNf3KoEOzQ8+07L7WJw5dv5dOBj1QUvaBVtmn7Z5SJmlP5ESEpkqhVdyBeze7
+	 gips1bQsfNIIO8KuSr/5Pp0SfhzYAcnTNAaY381zhs+Xu5xB8zFp5Pgq+4M9WhpGdC
+	 jU7yQ49Ow/vU1qQu7ULlzhizSce71wOXLu9OSIjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfLKQBy (ORCPT
+        id S1730877AbfLKPNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:54 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:45809 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731411AbfLKQBt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:01:49 -0500
-Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=calabresa)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <cascardo@canonical.com>)
-        id 1if4Ql-00025a-M4; Wed, 11 Dec 2019 16:01:40 +0000
-Date:   Wed, 11 Dec 2019 13:01:33 -0300
-From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-To:     Justin Forbes <jmforbes@linuxtx.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        debian-kernel@lists.debian.org
-Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
- recent binutils
-Message-ID: <20191211160133.GB4580@calabresa>
-References: <20191201195728.4161537-1-aurelien@aurel32.net>
- <87zhgbe0ix.fsf@mpe.ellerman.id.au>
- <20191202093752.GA1535@localhost.localdomain>
- <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
- <20191210222553.GA4580@calabresa>
- <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+        Wed, 11 Dec 2019 10:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731373AbfLKPNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A00C02464B;
+        Wed, 11 Dec 2019 15:13:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077192;
+        bh=fqApEpiJswPrQQE2UddJFG1LKaOvkhQp23n/8LhV2U4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y2Q196js8RagPb3WngA5flGQu8/gX7bkB3fTCJ9I9BnzAf6SoLyc+Fua53ysR34h6
+         rQT1A84mbFEIqNxCSgqlGhiyiX9nKYX+0wFaj1WLjNw9PibVrT14RA/rUHhpXGHK9q
+         YFsz57kirW4TsEHQwefbueaPQDEL2xIGeGuum/sw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.3 006/105] time: Zero the upper 32-bits in __kernel_timespec on 32-bit
+Date:   Wed, 11 Dec 2019 16:04:55 +0100
+Message-Id: <20191211150222.848046258@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:33:53AM -0600, Justin Forbes wrote:
-> On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
-> <cascardo@canonical.com> wrote:
-> >
-> > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
-> > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > >
-> > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
-> > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
-> > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
-> > > > > > field when dumping the symbols of an object file. For example:
-> > > > > >
-> > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
-> > > > > >
-> > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
-> > > > > > be computed correctly and causes the checkabi target to fail.
-> > > > > >
-> > > > > > Fix that by looking for the symbol name in the last field instead of the
-> > > > > > 8th one. This way it should also cope with future extra fields.
-> > > > > >
-> > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-> > > > > > ---
-> > > > > >  tools/lib/bpf/Makefile | 4 ++--
-> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > Thanks for fixing that, it's been on my very long list of test failures
-> > > > > for a while.
-> > > > >
-> > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-> > > >
-> > > > Looks good & also continues to work on x86. Applied, thanks!
-> > >
-> > > This actually seems to break horribly on PPC64le with binutils 2.33.1
-> > > resulting in:
-> > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
-> > > match with num of versioned symbols in libbpf.so (184). Please make
-> > > sure all LIBBPF_API symbols are versioned in libbpf.map.
-> > >
-> > > This is the only arch that fails, with x86/arm/aarch64/s390 all
-> > > building fine.  Reverting this patch allows successful build across
-> > > all arches.
-> > >
-> > > Justin
-> >
-> > Well, I ended up debugging this same issue and had the same fix as Jarno's when
-> > I noticed his fix was already applied.
-> >
-> > I just installed a system with the latest binutils, 2.33.1, and it still breaks
-> > without such fix. Can you tell what is the output of the following command on
-> > your system?
-> >
-> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
-> >
-> 
-> readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
-> -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
-> !/UND/ {print $0}'
->    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1
-> libbpf_num_possible_cpus [<localentry>: 8]
->    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free
-> [<localentry>: 8]
-[...]
+From: Dmitry Safonov <dima@arista.com>
 
-This is a patch on binutils carried by Fedora:
+commit 7b8474466ed97be458c825f34a85f2c2b84c3f95 upstream.
 
-https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
+On compat interfaces, the high order bits of nanoseconds should be zeroed
+out. This is because the application code or the libc do not guarantee
+zeroing of these. If used without zeroing, kernel might be at risk of using
+timespec values incorrectly.
 
-" b8265c Have readelf display extra symbol information at the end of the line. "
+Originally it was handled correctly, but lost during is_compat_syscall()
+cleanup. Revert the condition back to check CONFIG_64BIT.
 
-It has the following comment:
+Fixes: 98f76206b335 ("compat: Cleanup in_compat_syscall() callers")
+Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191121000303.126523-1-dima@arista.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-# FIXME:    The proper fix would be to update the scripts that are expecting
-#           a fixed output from readelf.  But it seems that some of them are
-#           no longer being maintained.
+---
+ kernel/time/time.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This commit is from 2017, had it been on binutils upstream, maybe the situation
-right now would be different.
-
-Honestly, it seems the best way out is to filter the other information in the
-libbpf Makefile.
-
-Does the following patch work for you?
-
-
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 56ce6292071b..e6f99484d7d5 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -145,6 +145,7 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -881,7 +881,8 @@ int get_timespec64(struct timespec64 *ts
+ 	ts->tv_sec = kts.tv_sec;
  
- GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
- 			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
-+			   sed 's/\[.*\]//' | \
- 			   awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
- 			   sort -u | wc -l)
- VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
-@@ -217,6 +218,7 @@ check_abi: $(OUTPUT)libbpf.so
- 		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
- 		readelf -s --wide $(OUTPUT)libbpf-in.o |		 \
- 		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
-+		    sed 's/\[.*\]//' |					 \
- 		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
- 		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
- 		readelf -s --wide $(OUTPUT)libbpf.so |			 \
+ 	/* Zero out the padding for 32 bit systems or in compat mode */
+-	if (IS_ENABLED(CONFIG_64BIT_TIME) && in_compat_syscall())
++	if (IS_ENABLED(CONFIG_64BIT_TIME) && (!IS_ENABLED(CONFIG_64BIT) ||
++					      in_compat_syscall()))
+ 		kts.tv_nsec &= 0xFFFFFFFFUL;
+ 
+ 	ts->tv_nsec = kts.tv_nsec;
+
+
