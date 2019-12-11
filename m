@@ -2,176 +2,180 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7B1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E750C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE4B214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0302208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EmnrUMMc"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Wn15tCuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfLKOqx (ORCPT
+        id S1730006AbfLKOq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:46:53 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55200 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfLKOqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:46:56 -0500
+Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:6248
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729278AbfLKOqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 09:46:51 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191211144649euoutp0205a2c9ca524d2c4721d2a60c0c604883~fWGqYY8T30987809878euoutp02g
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191211144649euoutp0205a2c9ca524d2c4721d2a60c0c604883~fWGqYY8T30987809878euoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1576075609;
-        bh=6yPCbgLPq9lCGS66YYBtZYi6Uzkol1G5zMpyUCDGzKk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmnrUMMcH5XNif7pvCvVPYLVpnPabTH4EaVo4rgAbtalSKf7ITfDl9doCe2eAS8dN
-         LWFT2sjmZUw1db9kdWvOnwqteKDmPJtzA1o4FUj4xviiKIFerULZzmNdAdgvclRfVP
-         J4jeEIY9MnEYXwSJuExiCHBxWonGpcoAq4GCKS/4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191211144649eucas1p2304a23219d0b5fed15aa82ee8b2ab5a7~fWGqB0q0T2855628556eucas1p2Y;
-        Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3A.0E.60698.85101FD5; Wed, 11
-        Dec 2019 14:46:49 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce~fWGpoDUOw3050630506eucas1p2K;
-        Wed, 11 Dec 2019 14:46:48 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191211144648eusmtrp2d3ecab1613505b685bb325903dde0a11~fWGpnXy2A0169801698eusmtrp21;
-        Wed, 11 Dec 2019 14:46:48 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-a1-5df10158cbdd
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id CD.9A.07950.85101FD5; Wed, 11
-        Dec 2019 14:46:48 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191211144647eusmtip15998910aa904bd33dab89c66ced87407~fWGo9_zTD0944809448eusmtip1n;
-        Wed, 11 Dec 2019 14:46:47 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH v2 1/4] ARM: dts: exynos: Correct USB3503 GPIOs polarity
-Date:   Wed, 11 Dec 2019 15:46:35 +0100
-Message-Id: <20191211144638.24676-2-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211144638.24676-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSaUiTYRzv2XtuNX2dgg8aGeuwAi/mh4e8CoJeiMIP9aFg6NI3tXTKpqYS
-        ZM40LUvFcpmWU1Px2ppH3lfmCGUeSytQIQ1EwSNMyyzN+WZ9+53/Hzw8NCbpJpzoCGUsp1Iq
-        IqWkCG/qXze7XQZf5Z5jhQCZZzZw9EqrJ9BA1yKO0juLcKQp1ZNoaMhAIePMOIEsrYUksmhG
-        ANIOdQpQSfldDNX2TVIoJVWG0jLKCVRfl06h9d4hwSmGLf0+hbGG6WqCbSmYpFhjVQbJToy3
-        k2xXUQ3F1pfdZlPfdeHsw4YqwK4YDwSKroh8Q7nIiHhO5eEfLApPKZsAMXV2CXey3wuSwbBN
-        JhDSkPGGxvyXZCYQ0RKmEkDzWz1hNSTMNwDvb53kjRUAJ9pyBLuNmeHGv40KAEf6dRRPthtL
-        T+Z36iTjBTMXMndSDkwNgBtZWtxKMMaMwSLNCG5N2TMs7DSU7DRw5gi0VM5iVixm/OBw5SDJ
-        77nAakP3tk7TQsYf5vUkWu9AZpSCbe1G3KpD5gzMn7vAx+3hvKmB4vF+uNXyQsDnNQB+NtdS
-        PHkAoCVFC/iUD3xjGiGshzDmONS3evDyaThteSbg79vAjwt2VhnbhrlN+Rgvi+G9NAmfPgoL
-        THX/ZnuGRzEes3CpK5ngHygHwK2ObjIbuBT8HysGoAo4cnHqqDBOLVNyN93Viih1nDLMPSQ6
-        ygi2/9XApmm1GXT+utoLGBpI94mLXy/JJYQiXp0Y1QsgjUkdxKa0RblEHKpITOJU0UGquEhO
-        3QucaVzqKJaVzMklTJgilrvBcTGcatcV0EKnZEA1A5vl2MPnbJ10a7N5jw4dQ03XK2UJISsL
-        16rPPncpFvqdb7j1wTXYfW1Pm6cmqWT1x5YbHtGx7t1aU+0xKaN8Ls0X5n+Zt91rdg1w+zSV
-        8FjYEuv0e8kcFLg8cTHXx/lpgc7XXe6/8TOrok+nlLCawUbZizGfqYOFweMBm1p/Ka4OV3id
-        wFRqxR9W36iMUwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIIsWRmVeSWpSXmKPExsVy+t/xu7oRjB9jDe6uUrY49/g3i8XGGetZ
-        LU7vf8di0b5vLotF8+L1bBbnz29gt9j0+BqrxeVdc9gsLjdfZLSYcX4fk8WiZa3MFmuP3GW3
-        aGoxtmjrXMZqsXldO7vFz0PnmRwEPBZ/v8fsseHRalaPnbPusntsWtXJ5nHn2h42j/1z17B7
-        bF5S79Fycj+LR9+WVYwenzfJBXBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
-        mSrp29mkpOZklqUW6dsl6GU0LbnDWLBOsKJxwhWmBsYLfF2MnBwSAiYSjy9sZeti5OIQEljK
-        KPGv5xQbREJG4uS0BlYIW1jiz7UuqKJPjBInvlxlAkmwCRhKdL2FSIgIbGCUOPP+CQtIglng
-        GrPEss3SILawgIfEvg2LwCaxCKhKXF7xnBnE5hWwlbiw4gzUNnmJ1RsOAMU5ODgF7CSmHKwE
-        CQsBldybdIhtAiPfAkaGVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHRs+3Yzy07GLveBR9i
-        FOBgVOLhXbD9fawQa2JZcWXuIUYJDmYlEd7jbe9ihXhTEiurUovy44tKc1KLDzGaAt00kVlK
-        NDkfGNl5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoYvV3a5jn/
-        l1IQu8GmPonp8MHrH6c84PnqM8G5dJ2Nh9jxRzMkDqysTr7kYMBUKseysKj77V61v7o9x6//
-        OKoQxhAcXTctskgrdt+8TX+/ZOa4ZWVskXMXOLnYUc7V42jc7dB0xYWrF5llhR7lyDv7vd6o
-        knVj9E+5WlFhz9vRLzi4BD+XcXEosRRnJBpqMRcVJwIA3Caj6rQCAAA=
-X-CMS-MailID: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce
-References: <20191211144638.24676-1-m.szyprowski@samsung.com>
-        <CGME20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce@eucas1p2.samsung.com>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J+rcO7bTCQIKPxX8gERUX6cz/7MAtwWtVRZAKLxGKmhjpR38ttm3K4ZWs84Y7zP97RzkuEDNmclPhu67Rn0Rc3nep4fXNdHcigItpTl5w9DjMx2KW5E7lPlB6kxZrKZkX55juC25jkLLgIvr3Mou3wDZwwjlq9NDwoIUdBaep7r3WR6HrpLwIQ1B8TQ7w+Ls++SV5c6sIB7TjKivrAVW98Wq6AL8Z6xjlyJPgH3ZPAbuWacdu1+kd2KhYBI58z+oyHcGye5X47g8N58TPtHP+yRPmWE0p3eDDCghHOL9j3yfQ1fcVg40iTa/QX33X9uraF+GxNNF4oW5bSh3egxp2A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hdv3xy29Ew/4mwo89L0xX6a2q6ZWQwmDFj9NDkwLk3c=;
+ b=loLVyd+Qlz046zjbDxbbFP5vKYP4IP1yQZL+o7BwlnfyGdiuD9Gncn2CX/SVgFDcLneB1W5DRGM9J2mu80qZN2r2NHGIxtMmsZuo5x5C0FERLxCcAKfSeCEBlOtPTgvY3CMsUw05+JgpmGsNdd/Pav2c67QHZK9/h2wKn6vdBm2pcmK3ktTeRMZnvcP7SFaQlvnSNeKpc60uPhoAr82wcUZ63AxX7NMY1fTeXiY3zAl5bx2rdbwzA27cH9iJGi2MkD2K018sSNKHiljI6N7PdMV5FvEuMxqup6In2J2l0viAgLSFZmmVC61cXjfckZeSkJzwaUUKNVp1b63gAA5Rig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hdv3xy29Ew/4mwo89L0xX6a2q6ZWQwmDFj9NDkwLk3c=;
+ b=Wn15tCuqROGkjSZ09yo2fGdby/PJ6tS9LDCeI5h6Oj+qHRoGjYG+FAQbJLafPSrcrEqpzkT7J6JI6535RU4jMaJuC05ewLUfsNsj3coqVFzeY/FuBCfKEseWatIv+zbqrr/4lVEbXeGO0/KhcqMp3tFk+fY/elbtyTF3tchFWSc=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6039.namprd02.prod.outlook.com (10.255.156.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.17; Wed, 11 Dec 2019 14:46:07 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::5d66:1c32:4c41:b087]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::5d66:1c32:4c41:b087%3]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 14:46:07 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        Michal Simek <michals@xilinx.com>,
+        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
+        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
+        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        git <git@xilinx.com>
+Subject: RE: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
+ dma_terminate_all
+Thread-Topic: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
+ dma_terminate_all
+Thread-Index: AQHVo1uM5nn5YHd560C/NFUjbNUe6Key97yAgAIaTxA=
+Date:   Wed, 11 Dec 2019 14:46:06 +0000
+Message-ID: <CH2PR02MB70009D78EA8C487BFFA54964C75A0@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <1574664121-13451-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20191210060113.GP82508@vkoul-mobl>
+In-Reply-To: <20191210060113.GP82508@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ef0dec40-0481-4d15-5cd0-08d77e48daea
+x-ms-traffictypediagnostic: CH2PR02MB6039:|CH2PR02MB6039:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB60398A17E15599DA0D2CCBA1C75A0@CH2PR02MB6039.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3513;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(13464003)(199004)(189003)(53546011)(6506007)(26005)(33656002)(7696005)(52536014)(186003)(71200400001)(5660300002)(54906003)(66476007)(4326008)(64756008)(66946007)(76116006)(6916009)(8676002)(9686003)(478600001)(86362001)(316002)(107886003)(81166006)(66556008)(8936002)(2906002)(81156014)(55016002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6039;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PUn7PqYLM3gQYoFo5910B6QAXDsjEa8Y11OSjEEgiiVEua5rbGsUxlrR7/KiV3+WDYfs0qtWPb8bOvzBROAqU1yzazf3JkBplxuhiN4+bjg8iYQnr7f7GlCcat88R/ZEhH5fpjpNlMMpTHrpWvgNbM8gZARUYiwPDCnvKyiyqHp61Ywp2cXgIjoukTsRV2GoqRdBmCXS+67pXH3v9S/d1vy7h7tR6/tQ2WB0i+lSb97IRxE3hcCuwnqmnuMdvyk4xnHPeOu5teKLI656qnp+e6H0kcS+FLKH0JuCc0AfwWTwNZKkGLGz1eYP7MZgULvH1rSBXN3POy9WAFhtbWhA0q0EUx4ts9xsK5gdB2R4Jv18N7LwFlT4IPXcwRZTkb66DphpsG5AtuYp5HfPGnPQriznE/25AVAfrAv3zrUEmFcqGvmeD+z97tM8Nvylhlh1Jl/57h8V551Xerc2ymx9OqThjNLokSObCz2q2kQs2XF7ic/U0uU5a+45emoHvjq4
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef0dec40-0481-4d15-5cd0-08d77e48daea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 14:46:06.9820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: C/y7fQpR/hiFMEAHvZue0wZq0viLsZsFdSRQSo6+6vqeIwqOvEafgGsAnvQDbV8hVNJTAcWegITq5NwGaSOk1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current USB3503 driver ignores GPIO polarity and always operates as if the
-GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-USB3503 chip applications to match the chip specification and common
-convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-to fix the USB3503 driver to properly use generic GPIO bindings and read
-polarity from DT.
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Tuesday, December 10, 2019 11:31 AM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>
+> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
+> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
+> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
+> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; git
+> <git@xilinx.com>
+> Subject: Re: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
+> dma_terminate_all
+>=20
+> On 25-11-19, 12:12, Radhey Shyam Pandey wrote:
+> > Reset DMA channel after stop to ensure that pending transfers and
+> > FIFOs in the datapath are flushed or completed. It fixes intermittent
+> > data verification failure reported by xilinx dma test client.
+> >
+> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > ---
+> >  drivers/dma/xilinx/xilinx_dma.c | 17 +++++++++--------
+> >  1 file changed, 9 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
+> > b/drivers/dma/xilinx/xilinx_dma.c index a9c5d5c..6f1539c 100644
+> > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > @@ -2404,16 +2404,17 @@ static int xilinx_dma_terminate_all(struct
+> dma_chan *dchan)
+> >  	u32 reg;
+> >  	int err;
+> >
+> > -	if (chan->cyclic)
+> > -		xilinx_dma_chan_reset(chan);
+>=20
+> So reset is required for non cyclic cases as well now?
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 2 +-
- arch/arm/boot/dts/exynos5250-arndale.dts        | 2 +-
- arch/arm/boot/dts/exynos5410-odroidxu.dts       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Yes. In absence of reset in non-cyclic case, when dmatest client
+driver is stressed and loaded/unloaded multiple times we see dma=20
+data comparison failures. Possibly IP is prefetching/holding the
+previous state and reset ensures a clean state on each iteration.
+>=20
+> > -
+> > -	err =3D chan->stop_transfer(chan);
+> > -	if (err) {
+> > -		dev_err(chan->dev, "Cannot stop channel %p: %x\n",
+> > -			chan, dma_ctrl_read(chan,
+> XILINX_DMA_REG_DMASR));
+> > -		chan->err =3D true;
+> > +	if (!chan->cyclic) {
+> > +		err =3D chan->stop_transfer(chan);
+>=20
+> no stop for cyclic now..?
+After reset stop is not needed, so for the cyclic mode we only do reset.
 
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index ea55f377d17c..9c39e82e4ecb 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -267,7 +267,7 @@
- 
- 		intn-gpios = <&gpx3 0 GPIO_ACTIVE_HIGH>;
- 		connect-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
- 		initial-mode = <1>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index d6c85efdb465..3eddf5dbcf7b 100644
---- a/arch/arm/boot/dts/exynos5250-arndale.dts
-+++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -154,7 +154,7 @@
- 		compatible = "smsc,usb3503a";
- 
- 		reset-gpios = <&gpx3 5 GPIO_ACTIVE_LOW>;
--		connect-gpios = <&gpd1 7 GPIO_ACTIVE_LOW>;
-+		connect-gpios = <&gpd1 7 GPIO_ACTIVE_HIGH>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-index e0db251e253f..4f9297ae0763 100644
---- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
-+++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-@@ -170,7 +170,7 @@
- 
- 		intn-gpios = <&gpx0 7 GPIO_ACTIVE_HIGH>;
- 		connect-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&gpx1 4 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpx1 4 GPIO_ACTIVE_LOW>;
- 		initial-mode = <1>;
- 
- 		clock-names = "refclk";
--- 
-2.17.1
-
+>=20
+> > +		if (err) {
+> > +			dev_err(chan->dev, "Cannot stop channel %p: %x\n",
+> > +				chan, dma_ctrl_read(chan,
+> > +				XILINX_DMA_REG_DMASR));
+> > +			chan->err =3D true;
+> > +		}
+> >  	}
+> >
+> > +	xilinx_dma_chan_reset(chan);
+> >  	/* Remove and free all of the descriptors in the lists */
+> >  	xilinx_dma_free_descriptors(chan);
+> >  	chan->idle =3D true;
+> > --
+> > 2.7.4
+>=20
+> --
+> ~Vinod
