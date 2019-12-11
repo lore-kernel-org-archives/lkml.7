@@ -2,98 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C596C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35529C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E984208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1A2208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:56:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gCUQ+BxW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="hDcocNte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfLKLzt (ORCPT
+        id S1729153AbfLKL4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:55:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28242 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727469AbfLKLzs (ORCPT
+        Wed, 11 Dec 2019 06:56:14 -0500
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:20935 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfLKL4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:55:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576065347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XwexMGmPekdr4+AxISaEIBvhb/7gR+zi4pC7R+9p3hQ=;
-        b=gCUQ+BxW+gCE/4JWfQ7CMsGczLSXrXybGZPZpiwr02Nl9OXE9D31Mbno8lmXITIslfkUD8
-        ODy7gFiF414bfEKwof+ZWvTCZlpxdKm7bSXt7zBn038YCujrWF7Xuptn7um/jyMShxUsaG
-        ILy4lXcFR+TAIkiMUqgoU5THM5PkF+c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-6hO2WSIAMWeD3kkaBT-oyg-1; Wed, 11 Dec 2019 06:55:46 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB47818543D1;
-        Wed, 11 Dec 2019 11:55:44 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1D5A5C1B5;
-        Wed, 11 Dec 2019 11:55:44 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id C366B18034E9;
-        Wed, 11 Dec 2019 11:55:44 +0000 (UTC)
-Date:   Wed, 11 Dec 2019 06:55:44 -0500 (EST)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
-Message-ID: <17522697.476689.1576065344710.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20191210113737.4016-3-johan@kernel.org>
-References: <20191210113737.4016-1-johan@kernel.org> <20191210113737.4016-3-johan@kernel.org>
-Subject: Re: [PATCH 2/7] Input: aiptek: fix endpoint sanity check
+        Wed, 11 Dec 2019 06:56:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1576065373;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=x+mOS5NASMRzp3pD2IpuENxWuCCrbFLiS87vKIsLe/U=;
+  b=hDcocNtecQuI4L4BLPGOP+KrDWbmDJ9M2ZgK+C2AJybIfDr+aRZfdqRy
+   XQJZRRFM1oIImO/OLc5ofPgIOAzb3/07YJWKl4LufwuJpQkE/FkTLkJVL
+   0snG9YvCLMTdtup86CTY3zUfg0AgM/zgmhlkmRS4ZUtJu/L2ruAwBmtjr
+   g=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: YA8PlSwaIQJsapTXNoWtgaI8GoZmb2RIdgt2QMy2CcTvDuGW4n1JrXzz6WMJUo6uwpHVUeZVek
+ 17D58EKrVRRybk1Qg9oW9Z+mDb8Feenq91lvB9ROCrgGdEPsdAMM9xEql1q0kRR2hdaunVvbPO
+ pBvTCI2R4AlibRPiRdl7mC2rOrKW5T1Rw+PuTomAFES+jWAz1xr327+SBothLRVlAsl8WBxq9c
+ 8IX+y6ZePZF+6tAayYDrmqntYpAlZz2Zb/hh8JoBuWIp7RxdXwSd45mdTMOCOoIRi2JYYnRszX
+ P2c=
+X-SBRS: 2.7
+X-MesageID: 9646652
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
+   d="scan'208";a="9646652"
+Date:   Wed, 11 Dec 2019 12:56:06 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     SeongJae Park <sj38.park@gmail.com>
+CC:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
+        "SeongJae Park" <sjpark@amazon.de>, <pdurrant@amazon.com>,
+        <sjpark@amazon.com>, <xen-devel@lists.xenproject.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 3/3] xen/blkback: Remove unnecessary static variable
+ name prefixes
+Message-ID: <20191211115606.GO980@Air-de-Roger>
+References: <20191211042428.5961-1-sjpark@amazon.de>
+ <20191211042733.6143-1-sjpark@amazon.de>
 MIME-Version: 1.0
-X-Originating-IP: [10.40.205.203, 10.4.195.30]
-Thread-Topic: Input: aiptek: fix endpoint sanity check
-Thread-Index: yxnpiHiLIHXEq4+MmBp4wSYn+N3S+A==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 6hO2WSIAMWeD3kkaBT-oyg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211042733.6143-1-sjpark@amazon.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A fix for a bug indeed, thank you Johan.
-
-Best regards,
-Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
-
------ Original Message -----
-> From: "Johan Hovold" <johan@kernel.org>
-> To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, "Johan Hovold"
-> <johan@kernel.org>, "stable" <stable@vger.kernel.org>, "Vladis Dronov" <vdronov@redhat.com>
-> Sent: Tuesday, December 10, 2019 12:37:32 PM
-> Subject: [PATCH 2/7] Input: aiptek: fix endpoint sanity check
+On Wed, Dec 11, 2019 at 04:27:33AM +0000, SeongJae Park wrote:
+> A few of static variables in blkback have 'xen_blkif_' prefix, though it
+> is unnecessary for static variables.  This commit removes such prefixes.
 > 
-> The driver was checking the number of endpoints of the first alternate
-> setting instead of the current one, something which could lead to the
-> driver binding to an invalid interface.
-> 
-> This in turn could cause the driver to misbehave or trigger a WARN() in
-> usb_submit_urb() that kernels with panic_on_warn set would choke on.
-> 
-> Fixes: 8e20cf2bce12 ("Input: aiptek - fix crash on detecting device without
-> endpoints")
-> Cc: stable <stable@vger.kernel.org>     # 4.4
-> Cc: Vladis Dronov <vdronov@redhat.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 
+Thanks.
+
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
