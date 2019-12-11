@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F07C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF3DC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6955C222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503E82173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078017;
-	bh=o9oNc69DmTqn3hH7gqvokMwckcvcCRhoSdzLpmEDsi4=;
+	s=default; t=1576078022;
+	bh=HGMIwK7kHHWFbOrmHAzoIA5/7fNSo+gHtARiMjYlJ3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAnMZoRkaQHSyC2DkmgNEmDFlC4dmLgGi1BKwcpEKqp6qzU4Euowfz1uaZwb1lVYG
-	 ILRexYUoRZ9GcxnzoomgbXxJGv6fXDX7GFigJtnN4fjcGvDcb5QpVZBRu5c01ClYMW
-	 yZJyTphpKjtSiJBcWgeQkVXZVp5ySdlvpBuuZ3IY=
+	b=NnBO3y6hlF5TAm9LTPPOJQhT8inJJBVNSPxwS24X8d+gwLWDzKlNQGwDUE/HnQLNd
+	 NMbUEilqJOqUKlqEgIiHITFPWkTpZcmQECYZ9YDZDvDmDnqObWhqW9Rl8eZ3DJLM51
+	 VDojrC+iGsK6EYJiv7B8c/QkdO9kGsH2MtPjazII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733205AbfLKP04 (ORCPT
+        id S1733221AbfLKP1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733174AbfLKP0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:50 -0500
+        id S1732726AbfLKP0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E8CA24658;
-        Wed, 11 Dec 2019 15:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E838E22527;
+        Wed, 11 Dec 2019 15:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078009;
-        bh=o9oNc69DmTqn3hH7gqvokMwckcvcCRhoSdzLpmEDsi4=;
+        s=default; t=1576078007;
+        bh=HGMIwK7kHHWFbOrmHAzoIA5/7fNSo+gHtARiMjYlJ3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUfbNxOKNYQWcawp0YZ14MZv9NrmlGiYAUkW0yKw46X2rXbssy3IVCCU3Npka1jBV
-         5hB3oOEXotqC0SEHrHSRlDYUAqMXXRIbLQe/uX5nJPZOnZk1kG9g8XWox/3YS87qS/
-         nIGcjSFTAQ2oLsXnCvWdYtGanx0NDlAZcXXUysjM=
+        b=z2wUNJBwoQVIkHAsi69yOX7Kij1Csv3v1jWLCi5pancDgGTLmlDDdwMq9rqAbs6d4
+         0dSqrqJjxQCy5sSsYgPQp71Did8tpRgb7lh5aDNoyzTrkwErdCrtlug5OrnQLbUTjp
+         zLNySLvMXrPB5HR7HlEJRYFl4IFI3xsBjfoQHfzc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 05/79] f2fs: fix to update time in lazytime mode
-Date:   Wed, 11 Dec 2019 10:25:29 -0500
-Message-Id: <20191211152643.23056-5-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/79] scsi: lpfc: Fix locking on mailbox command completion
+Date:   Wed, 11 Dec 2019 10:25:27 -0500
+Message-Id: <20191211152643.23056-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -59,102 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit fe1897eaa6646f5a64a4cee0e6473ed9887d324b ]
+[ Upstream commit 07b8582430370097238b589f4e24da7613ca6dd3 ]
 
-generic/018 reports an inconsistent status of atime, the
-testcase is as below:
-- open file with O_SYNC
-- write file to construct fraged space
-- calc md5 of file
-- record {a,c,m}time
-- defrag file --- do nothing
-- umount & mount
-- check {a,c,m}time
+Symptoms were seen of the driver not having valid data for mailbox
+commands. After debugging, the following sequence was found:
 
-The root cause is, as f2fs enables lazytime by default, atime
-update will dirty vfs inode, rather than dirtying f2fs inode (by set
-with FI_DIRTY_INODE), so later f2fs_write_inode() called from VFS will
-fail to update inode page due to our skip:
+The driver maintains a port-wide pointer of the mailbox command that is
+currently in execution. Once finished, the port-wide pointer is cleared
+(done in lpfc_sli4_mq_release()). The next mailbox command issued will set
+the next pointer and so on.
 
-f2fs_write_inode()
-	if (is_inode_flag_set(inode, FI_DIRTY_INODE))
-		return 0;
+The mailbox response data is only copied if there is a valid port-wide
+pointer.
 
-So eventually, after evict(), we lose last atime for ever.
+In the failing case, it was seen that a new mailbox command was being
+attempted in parallel with the completion.  The parallel path was seeing
+the mailbox no long in use (flag check under lock) and thus set the port
+pointer.  The completion path had cleared the active flag under lock, but
+had not touched the port pointer.  The port pointer is cleared after the
+lock is released. In this case, the completion path cleared the just-set
+value by the parallel path.
 
-To fix this issue, we need to check whether {a,c,m,cr}time is
-consistent in between inode cache and inode page, and only skip
-f2fs_update_inode() if f2fs inode is not dirty and time is
-consistent as well.
+Fix by making the calls that clear mbox state/port pointer while under
+lock.  Also slightly cleaned up the error path.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: https://lore.kernel.org/r/20190922035906.10977-8-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h  | 23 +++++++++++++++--------
- fs/f2fs/inode.c |  6 +++++-
- 2 files changed, 20 insertions(+), 9 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 34e48bcf50874..72d154e71bb56 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2578,6 +2578,20 @@ static inline void clear_file(struct inode *inode, int type)
- 	f2fs_mark_inode_dirty_sync(inode, true);
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 755803ff6cfef..51b06b8a1dc72 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -12936,13 +12936,19 @@ send_current_mbox:
+ 	phba->sli.sli_flag &= ~LPFC_SLI_MBOX_ACTIVE;
+ 	/* Setting active mailbox pointer need to be in sync to flag clear */
+ 	phba->sli.mbox_active = NULL;
++	if (bf_get(lpfc_trailer_consumed, mcqe))
++		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
+ 	spin_unlock_irqrestore(&phba->hbalock, iflags);
+ 	/* Wake up worker thread to post the next pending mailbox command */
+ 	lpfc_worker_wake_up(phba);
++	return workposted;
++
+ out_no_mqe_complete:
++	spin_lock_irqsave(&phba->hbalock, iflags);
+ 	if (bf_get(lpfc_trailer_consumed, mcqe))
+ 		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
+-	return workposted;
++	spin_unlock_irqrestore(&phba->hbalock, iflags);
++	return false;
  }
  
-+static inline bool f2fs_is_time_consistent(struct inode *inode)
-+{
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
-+		return false;
-+	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
-+						&F2FS_I(inode)->i_crtime))
-+		return false;
-+	return true;
-+}
-+
- static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
- {
- 	bool ret;
-@@ -2595,14 +2609,7 @@ static inline bool f2fs_skip_inode_update(struct inode *inode, int dsync)
- 			i_size_read(inode) & ~PAGE_MASK)
- 		return false;
- 
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time, &inode->i_atime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 1, &inode->i_ctime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 2, &inode->i_mtime))
--		return false;
--	if (!timespec64_equal(F2FS_I(inode)->i_disk_time + 3,
--						&F2FS_I(inode)->i_crtime))
-+	if (!f2fs_is_time_consistent(inode))
- 		return false;
- 
- 	down_read(&F2FS_I(inode)->i_sem);
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 540d45759621a..a01be7d8db867 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -614,7 +614,11 @@ int f2fs_write_inode(struct inode *inode, struct writeback_control *wbc)
- 			inode->i_ino == F2FS_META_INO(sbi))
- 		return 0;
- 
--	if (!is_inode_flag_set(inode, FI_DIRTY_INODE))
-+	/*
-+	 * atime could be updated without dirtying f2fs inode in lazytime mode
-+	 */
-+	if (f2fs_is_time_consistent(inode) &&
-+		!is_inode_flag_set(inode, FI_DIRTY_INODE))
- 		return 0;
- 
- 	/*
+ /**
 -- 
 2.20.1
 
