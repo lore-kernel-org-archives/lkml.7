@@ -2,110 +2,96 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9E7C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087F1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70BF21D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEFC82054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="VrSyV1Cp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZXy6TgE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfLKINj (ORCPT
+        id S1728150AbfLKIPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:13:39 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:10703 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727547AbfLKINj (ORCPT
+        Wed, 11 Dec 2019 03:15:52 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31390 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726983AbfLKIPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:13:39 -0500
-X-UUID: 8ce0a82ac5d84fa5b3d915213eed691f-20191211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=LMtGwOTN7KKUaEd8A9wg9LxG6VsxXxh0GBa84A4j5NY=;
-        b=VrSyV1Cp/l36nS3QpKYFQo/XlsRas7PPPnVbCA0Vmr0Xq/oddPdYCRZ+S1LbSxLa35dk22OAX4BCsnJciiodIVZTT0ChjctJfIyvGXWxdOJosTtSwLsF9p3akTdDJSv8K+NEZp+u963N+G6BOLk9LhnhyLF5R0EpP+D0ff2xj7o=;
-X-UUID: 8ce0a82ac5d84fa5b3d915213eed691f-20191211
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1353820062; Wed, 11 Dec 2019 16:13:33 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Dec 2019 16:13:09 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Dec 2019 16:12:57 +0800
-Message-ID: <1576052012.1631.13.camel@mtksdccf07>
-Subject: Re: [PATCH] [RESEND] arm64: dts: mt8173: Add dynamic power node.
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <hsinyi@chromium.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Dawei Chien <dawei.chien@mediatek.com>, <mn.tsou@mediatek.com>
-Date:   Wed, 11 Dec 2019 16:13:32 +0800
-In-Reply-To: <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
-References: <20191122090610.17015-1-michael.kao@mediatek.com>
-         <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 11 Dec 2019 03:15:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576052150;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c9+eXVJvGhvjgCko5lAbFcvBiKAk1D5Fec1eKLqFyyY=;
+        b=ZXy6TgE6/MJyjO7nN6qbTrAlargJ83+qMWK3YcWM1mN46Idt6Cah8TK+TIDJj73P9qCxx9
+        cXozvhshv9OB/Mk9u8hX95htVOYVcR0ZABMI71oXWgbfNHu9SNvZ1KfuniLmbH/IRzb0+i
+        9BJy7a8RaFLzjCKiN74l7qX8pHCo7e8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-wgVuXbNjO-abuQ7falBagA-1; Wed, 11 Dec 2019 03:15:47 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0942E911EA;
+        Wed, 11 Dec 2019 08:15:45 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6DEB160BE1;
+        Wed, 11 Dec 2019 08:15:43 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id AB48E16E05; Wed, 11 Dec 2019 09:15:41 +0100 (CET)
+Date:   Wed, 11 Dec 2019 09:15:41 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        gurchetansingh@chromium.org
+Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
+Message-ID: <20191211081541.ejofg4uxo6poss6v@sirius.home.kraxel.org>
+References: <20191210085759.14763-1-kraxel@redhat.com>
+ <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <e8915378-df67-e6f4-f40c-599797e16e9c@suse.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: wgVuXbNjO-abuQ7falBagA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTA1IGF0IDE3OjAwICswMTAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
-Cj4gSGkgTWljaGFlbCwNCj4gDQo+IA0KPiBPbiAyMi8xMS8yMDE5IDEwOjA2LCBtaWNoYWVsLmth
-b0BtZWRpYXRlay5jb20gd3JvdGU6DQo+ID4gRnJvbTogIm1pY2hhZWwua2FvIiA8bWljaGFlbC5r
-YW9AbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IFRoaXMgZGV2aWNlIG5vZGUgaXMgZm9yIGNhbGN1
-bGF0aW5nIGR5bmFtaWMgcG93ZXIgaW4gbVcuDQo+ID4gU2luY2UgbXQ4MTczIGhhcyB0d28gY2x1
-c3RlcnMsIHRoZXJlIGFyZSB0d28gZHluYW1pYyBwb3dlcg0KPiA+IGNvZWZmaWNpZW50IGFzIHdl
-bGwuDQo+IA0KPiBBcmUgeW91IHN1cmUgYWJvdXQgdGhlIHZhbHVlcz8gVXN1YWxseSwgQmlnIGlz
-IH54NCBsaXR0bGUsIGhlcmUgaXQgaXMgfngyLg0KDQpIaSBEYW5pZWwsDQoNCkkgaGF2ZSBjb25m
-aXJtZWQgYWdhaW4gd2l0aCBvdXIgSUMgZGVzaWduZXIuDQpUaGUgZHluYW1pYyBwb3dlciBjb2Vm
-ZmljaWVudHMgYXJlIHRoZXNlIHZhbHVlIGlzIHJpZ2h0Lg0KRGVzaWduZXIgY29tbWVudCB0aGF0
-IGl0IGlzIHJlc3VsdCBmcm9tIGRpZmZlcmVudCBJQyBpbXBsZW1lbnQuDQo+IA0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IERhd2VpIENoaWVuIDxkYXdlaS5jaGllbkBtZWRpYXRlay5jb20+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogTWljaGFlbC5LYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCj4gPiAN
-Cj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaSB8
-IDQgKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0c2kgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My5kdHNpDQo+ID4gaW5kZXggMTVmMTg0
-MmY2ZGYzLi5iMDNjYTVhNzEzMzggMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0
-cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ4MTczLmR0c2kNCj4gPiBAQCAtMTU3LDYgKzE1Nyw3IEBADQo+ID4gIAkJCWVuYWJs
-ZS1tZXRob2QgPSAicHNjaSI7DQo+ID4gIAkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmQ1BVX1NMRUVQ
-XzA+Ow0KPiA+ICAJCQkjY29vbGluZy1jZWxscyA9IDwyPjsNCj4gPiArCQkJZHluYW1pYy1wb3dl
-ci1jb2VmZmljaWVudCA9IDwyNjM+Ow0KPiA+ICAJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19J
-TkZSQV9DQTUzU0VMPiwNCj4gPiAgCQkJCSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfTUFJTlBM
-TD47DQo+ID4gIAkJCWNsb2NrLW5hbWVzID0gImNwdSIsICJpbnRlcm1lZGlhdGUiOw0KPiA+IEBA
-IC0xNzAsNiArMTcxLDcgQEANCj4gPiAgCQkJZW5hYmxlLW1ldGhvZCA9ICJwc2NpIjsNCj4gPiAg
-CQkJY3B1LWlkbGUtc3RhdGVzID0gPCZDUFVfU0xFRVBfMD47DQo+ID4gIAkJCSNjb29saW5nLWNl
-bGxzID0gPDI+Ow0KPiA+ICsJCQlkeW5hbWljLXBvd2VyLWNvZWZmaWNpZW50ID0gPDI2Mz47DQo+
-ID4gIAkJCWNsb2NrcyA9IDwmaW5mcmFjZmcgQ0xLX0lORlJBX0NBNTNTRUw+LA0KPiA+ICAJCQkJ
-IDwmYXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9NQUlOUExMPjsNCj4gPiAgCQkJY2xvY2stbmFtZXMg
-PSAiY3B1IiwgImludGVybWVkaWF0ZSI7DQo+ID4gQEAgLTE4Myw2ICsxODUsNyBAQA0KPiA+ICAJ
-CQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KPiA+ICAJCQljcHUtaWRsZS1zdGF0ZXMgPSA8JkNQ
-VV9TTEVFUF8wPjsNCj4gPiAgCQkJI2Nvb2xpbmctY2VsbHMgPSA8Mj47DQo+ID4gKwkJCWR5bmFt
-aWMtcG93ZXItY29lZmZpY2llbnQgPSA8NTMwPjsNCj4gPiAgCQkJY2xvY2tzID0gPCZpbmZyYWNm
-ZyBDTEtfSU5GUkFfQ0E3MlNFTD4sDQo+ID4gIAkJCQkgPCZhcG1peGVkc3lzIENMS19BUE1JWEVE
-X01BSU5QTEw+Ow0KPiA+ICAJCQljbG9jay1uYW1lcyA9ICJjcHUiLCAiaW50ZXJtZWRpYXRlIjsN
-Cj4gPiBAQCAtMTk2LDYgKzE5OSw3IEBADQo+ID4gIAkJCWVuYWJsZS1tZXRob2QgPSAicHNjaSI7
-DQo+ID4gIAkJCWNwdS1pZGxlLXN0YXRlcyA9IDwmQ1BVX1NMRUVQXzA+Ow0KPiA+ICAJCQkjY29v
-bGluZy1jZWxscyA9IDwyPjsNCj4gPiArCQkJZHluYW1pYy1wb3dlci1jb2VmZmljaWVudCA9IDw1
-MzA+Ow0KPiA+ICAJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19JTkZSQV9DQTcyU0VMPiwNCj4g
-PiAgCQkJCSA8JmFwbWl4ZWRzeXMgQ0xLX0FQTUlYRURfTUFJTlBMTD47DQo+ID4gIAkJCWNsb2Nr
-LW5hbWVzID0gImNwdSIsICJpbnRlcm1lZGlhdGUiOw0KPiA+IA0KPiANCj4gDQoNCg==
+  Hi,
+
+> There's similar code in udl, [1] which still uses writecombine for
+> imported buffers. Virtio does not need this?
+
+virtio doesn't support dma-buf imports (yet).
+So no worries for now.
+
+Why pick writecombine for the imported buffer btw?
+It'll probably be correct for the majority of imports, but it still
+looks like a educated guess to me.  What if you import from vgem?
+
+I guess we should either ...
+  (1) Ask the exporting driver to handle things, simliar to how it is
+      done for vmaps already, probably by calling dma_buf_mmap(), or
+  (2) Refuse to mmap imported objects via drm api.
+
+> Aside from this, do you think we could handle all special cases within
+> shmem?
+
+Probably makes sense to teach shmem helpers about caching.
+
+cheers,
+  Gerd
 
