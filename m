@@ -2,83 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6D9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB0CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0AB82077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F49222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:28:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YgOzV4v6"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="J+FMENgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731273AbfLKS2I (ORCPT
+        id S1731384AbfLKS2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:28:08 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35030 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731155AbfLKS2I (ORCPT
+        Wed, 11 Dec 2019 13:28:15 -0500
+Received: from mailgw02.mediatek.com ([216.200.240.185]:58602 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731322AbfLKS2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:28:08 -0500
-Received: by mail-io1-f67.google.com with SMTP id v18so23762968iol.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:28:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GYZ+lGswFVXkExunAAAaOydIGqZJAHmJZ1GU8MypIx8=;
-        b=YgOzV4v6I/TJVJydU7kTxVhF0VMLBMt2iNdLA+J1hNO6gC79rsTSsyFWoBw6gMfalQ
-         jpz8UmB5Ox1hpBkwq/d5lES/48ikNJgOpc0sq6kUr0dcFaX5KyrXM1n1CPCxuMQmEDdF
-         3Z7w09S39qzud1kYHF4BXd0Lo3dWITtHys7ilImYhq601hu7LNc2r6nhX/rRIceQFEP5
-         1VY4h1GZsm/4GtPXsbWOCrcfTnOZlhQ1NH/FEkDjWWcOTFWnrxu1ioaPwIVlzjS53fKh
-         f3jAWpXen+JUdXQ0LDpScWpevyZbsFXNnrDfH2y+9sw+YQURKrXTJJ56cWRLir8caxGV
-         y9Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GYZ+lGswFVXkExunAAAaOydIGqZJAHmJZ1GU8MypIx8=;
-        b=Y1pMvO1FNfUwzIMTvewOkenbl+/7WHAxCyJYUhYrGd13GtIt1s1ndf4ZUWP24+wRuT
-         2XGoOs0iNjrtS4SKnabGVjkNiDm+ONuWxdQBaUeC6uFJwWfp/RCyUnwPubvE0KIJeGBz
-         UqgkS4kUtS7BJeGGeQg9beyVTDbbsjRSed8jFxqdxdTA+f5QCQuBkc3DxjXn+SOkWAfM
-         StWF7NQEMEfS0k/6hbzvaUvMebmbr83L/jXRHWCOmdPSqzstX2GCz78TN8sITv4ZIO3Z
-         NqVmdqGsO1XtGpqjP+vjJT6e8OzO5/0qKu8jFyP7OoX/ffzzRaNm3E9cOxH+3fjY/Phg
-         dXYw==
-X-Gm-Message-State: APjAAAWS/iBWvYnaKgEbOD+hl+3rqOU0r1loAe+6vkOnHo5kkmLeXnxn
-        hScnoNAfVE1RA/lonC7B45ciBQGyqmoilXv3xiILwA==
-X-Google-Smtp-Source: APXvYqxIDlpEs2zoJLhRiXAXqzWo0oO6DflPW5rIoWl9fbpISlPNO+TX2x2qqejGkIbmidkvc94EXMb/3GXV1Hu5hYQ=
-X-Received: by 2002:a6b:3b49:: with SMTP id i70mr3977659ioa.108.1576088887157;
- Wed, 11 Dec 2019 10:28:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20191211175822.1925-1-sean.j.christopherson@intel.com> <20191211175822.1925-3-sean.j.christopherson@intel.com>
-In-Reply-To: <20191211175822.1925-3-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 11 Dec 2019 10:27:56 -0800
-Message-ID: <CALMp9eTqtTRgQZaCdbkEkL6bChCTOgVPgbYTjBi5iOqsTn4r-Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KVM: x86: Refactor and rename bit() to feature_bit() macro
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Wed, 11 Dec 2019 13:28:12 -0500
+X-UUID: b929bc5011c94d5b845cbbfdf035042d-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=AJS94YiN8pfCT1+XiiAx5eqWRqmJb3Rr0RYdZSYfHVI=;
+        b=J+FMENgS0ZD05uAjEI2c6d+L5p5r9IKFk7gDKqvIXx/e7nRys27SIFGcLJQ6o1l9/ce/ZvJw+NyN9mJeMVKqyQ6ABYD5nAniP8eHRDk/nEE0iBYfgwaE2GCwRpuUS2vWtyBzTOyN4iUS59nPVdNyKUcjFXUVr+Fj9EiL+9+fgkc=;
+X-UUID: b929bc5011c94d5b845cbbfdf035042d-20191211
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw02.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1807329998; Wed, 11 Dec 2019 10:28:08 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 10:19:07 -0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 02:17:34 +0800
+Message-ID: <1576088280.23763.73.camel@mtksdccf07>
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of
+ MT7531 switch
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>
+Date:   Thu, 12 Dec 2019 02:18:00 +0800
+In-Reply-To: <20191210164438.GD27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+         <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+         <20191210164438.GD27714@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 9:58 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Rename bit() to __feature_bit() to give it a more descriptive name, and
-> add a macro, feature_bit(), to stuff the X68_FEATURE_ prefix to keep
-> line lengths manageable for code that hardcodes the bit to be retrieved.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+T24gV2VkLCAyMDE5LTEyLTExIGF0IDAwOjQ0ICswODAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiArc3RhdGljIGludA0KPiA+ICttdDc1MzFfaW5kX21tZF9waHlfcmVhZChzdHJ1Y3QgbXQ3NTMw
+X3ByaXYgKnByaXYsIGludCBwb3J0LCBpbnQgZGV2YWQsDQo+ID4gKwkJCWludCByZWdudW0pDQo+
+ID4gK3sNCj4gPiArCXN0cnVjdCBtaWlfYnVzICpidXMgPSBwcml2LT5idXM7DQo+ID4gKwlzdHJ1
+Y3QgbXQ3NTMwX2R1bW15X3BvbGwgcDsNCj4gPiArCXUzMiByZWcsIHZhbDsNCj4gPiArCWludCBy
+ZXQ7DQo+ID4gKw0KPiA+ICsJSU5JVF9NVDc1MzBfRFVNTVlfUE9MTCgmcCwgcHJpdiwgTVQ3NTMx
+X1BIWV9JQUMpOw0KPiA+ICsNCj4gPiArCW11dGV4X2xvY2tfbmVzdGVkKCZidXMtPm1kaW9fbG9j
+aywgTURJT19NVVRFWF9ORVNURUQpOw0KPiA+ICsNCj4gPiArCXJldCA9IHJlYWR4X3BvbGxfdGlt
+ZW91dChfbXQ3NTMwX3VubG9ja2VkX3JlYWQsICZwLCB2YWwsDQo+ID4gKwkJCQkgISh2YWwgJiBQ
+SFlfQUNTX1NUKSwgMjAsIDEwMDAwMCk7DQo+ID4gKwlpZiAocmV0IDwgMCkgew0KPiA+ICsJCWRl
+dl9lcnIocHJpdi0+ZGV2LCAicG9sbCB0aW1lb3V0XG4iKTsNCj4gPiArCQlnb3RvIG91dDsNCj4g
+PiArCX0NCj4gPiArDQo+ID4gKwlyZWcgPSBNRElPX0NMNDVfQUREUiB8IE1ESU9fUEhZX0FERFIo
+cG9ydCkgfCBNRElPX0RFVl9BRERSKGRldmFkKSB8DQo+ID4gKwkgICAgICByZWdudW07DQo+IA0K
+PiBJdCBtaWdodCBiZSBiZXR0ZXIgdG8gY2FsbCB0aGlzIG10NzUzMV9pbmRfYzQ1X3BoeV9yZWFk
+KCkNCj4gDQo+ID4gK3N0YXRpYyBpbnQNCj4gPiArbXQ3NTMxX2luZF9waHlfcmVhZChzdHJ1Y3Qg
+ZHNhX3N3aXRjaCAqZHMsIGludCBwb3J0LCBpbnQgcmVnbnVtKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1
+Y3QgbXQ3NTMwX3ByaXYgKnByaXYgPSBkcy0+cHJpdjsNCj4gPiArCXN0cnVjdCBtaWlfYnVzICpi
+dXMgPSBwcml2LT5idXM7DQo+ID4gKwlzdHJ1Y3QgbXQ3NTMwX2R1bW15X3BvbGwgcDsNCj4gPiAr
+CWludCByZXQ7DQo+ID4gKwl1MzIgdmFsOw0KPiA+ICsNCj4gPiArCUlOSVRfTVQ3NTMwX0RVTU1Z
+X1BPTEwoJnAsIHByaXYsIE1UNzUzMV9QSFlfSUFDKTsNCj4gPiArDQo+ID4gKwltdXRleF9sb2Nr
+X25lc3RlZCgmYnVzLT5tZGlvX2xvY2ssIE1ESU9fTVVURVhfTkVTVEVEKTsNCj4gPiArDQo+ID4g
+KwlyZXQgPSByZWFkeF9wb2xsX3RpbWVvdXQoX210NzUzMF91bmxvY2tlZF9yZWFkLCAmcCwgdmFs
+LA0KPiA+ICsJCQkJICEodmFsICYgUEhZX0FDU19TVCksIDIwLCAxMDAwMDApOw0KPiA+ICsJaWYg
+KHJldCA8IDApIHsNCj4gPiArCQlkZXZfZXJyKHByaXYtPmRldiwgInBvbGwgdGltZW91dFxuIik7
+DQo+ID4gKwkJZ290byBvdXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJdmFsID0gTURJT19DTDIy
+X1JFQUQgfCBNRElPX1BIWV9BRERSKHBvcnQpIHwgTURJT19SRUdfQUREUihyZWdudW0pOw0KPiAN
+Cj4gVGhpcyBpcyB0aGVuIG10NzUzMV9pbmRfYzIyX3BoeV9yZWFkKCkuDQo+IA0KPiBBbmQgdGhl
+biB5b3UgY2FuIGFkZCBhIHdyYXBwZXIgYXJvdW5kIHRoaXMgdG8gcHJvdmlkZQ0KPiANCj4gbXQ3
+NTMxX3BoeV9yZWFkKCkgd2hpY2ggY2FuIGRvIGJvdGggQzIyIGFuZCBDNDUuDQpJJ2xsIHVwZGF0
+ZSB0aGUgY29kZSBiYXNlIG9uIGFib3ZlIHN1Z2dlc3Rpb24uDQo+IA0KPiA+ICsJW0lEX01UNzUz
+MV0gPSB7DQo+ID4gKwkJLmlkID0gSURfTVQ3NTMxLA0KPiA+ICsJCS5zZXR1cCA9IG10NzUzMV9z
+ZXR1cCwNCj4gPiArCQkucGh5X3JlYWQgPSBtdDc1MzFfaW5kX3BoeV9yZWFkLA0KPiANCj4gYW5k
+IHVzZSBpdCBoZXJlLg0KRG8geW91IGFsc28gaGludCBhdCB1c2luZyB0aGUgc2FtZSBudW1iZXIg
+b2YgcGFyYW1ldGVycyBmb3INCm10NzUzMV9pbmRfYzIyX3BoeV9yZWFkKCkgYW5kIG10NzUzMV9p
+bmRfYzQ1X3BoeV9yZWFkKCk/DQoNCkxhbmRlbg0KPiANCj4gICBBbmRyZXcNCg0K
+
