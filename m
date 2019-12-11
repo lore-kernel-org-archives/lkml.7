@@ -2,106 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F387C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E910C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E07222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:28:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="R4J+hp7a"
+	by mail.kernel.org (Postfix) with ESMTP id 0C30B21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfLKT21 (ORCPT
+        id S1729893AbfLKT2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:28:27 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:47032 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729793AbfLKT2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:28:24 -0500
-Received: by mail-pf1-f202.google.com with SMTP id w127so2697462pfb.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:28:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Z9cyJ6q/dRKwszgWPK/I6HD4udk/HngreENNBBFw7AE=;
-        b=R4J+hp7ameLmcKBvWd1R3GHgVQMiqDLeCk+xK86P/IRMuh6UmJa9Faa5uqjS4kWyFg
-         lL/VL+0yiQSVCjjou1PYLwUk5n8YWw+5HFdP2a92aB7l5OvSR7njVCuEuEU7ILdNksTE
-         2IpI6glhHVDy6eNg96ttbF925uLPxi+VoHZCb7VWblcUGDkMrvhzGjACHIWT/UqDBsaz
-         ONTjf5w9eu8EeVbm9tB0FOcag12BKE6rhip+RYd5P8VyZ62mxl0MZ8QED5kQRVYL1c0H
-         UQ1HaAdchOoT2M+AZajZrwAWD8PvQ9W1PwBcEmzwoAJM3GxLhGO1mshgQ2QK1+Gs3kcV
-         wa7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Z9cyJ6q/dRKwszgWPK/I6HD4udk/HngreENNBBFw7AE=;
-        b=ng0R+N+VtQ3XKeWjTkS1psCnjRB5pHWads9ma21vBi3vYqMpzx+shJLEw2RttLPpOj
-         sqNSEPVptl9KbUL4AtJlj8Qzh30d73qsLvCz8G9KZ/vy5w04x4Wxhw5pncPQnqm6ccUk
-         v0Z0UwO0bFSsTDmgyiQbK5yngflVeLxxRfqLAeK9kFJJ8Tl3YHVe63uLrht061WLF5vy
-         XDZOglo/xcajadG15T9hGC7dGxYkeNbIZoVNRiGg3e76iUeQDYqjHQwrNN1EWZDSo/E+
-         mArwD1RqclnEVvBaLvPbQPRLBszuUWxFa3u6zy+6m3p9XSfQRIrlqa+G5PnZtnI92kLj
-         26gw==
-X-Gm-Message-State: APjAAAWq4o7eTT48QNZXxQmHjbaBEuRNtoNryIcDOjvALBRJe/m1S09x
-        SnytRKtLmMuM2dK47Vw8se0d1cxbW2A9gKppNSjhWw==
-X-Google-Smtp-Source: APXvYqyYij4yV+DXbejSHZeng6BXYHuLudblK+kNmIhwXq4dmlZ+ZGkXmoMKknhbAuxQ+DE/c95Qal0IVJbWFYYgdCBmMg==
-X-Received: by 2002:a63:28a:: with SMTP id 132mr5883273pgc.165.1576092502945;
- Wed, 11 Dec 2019 11:28:22 -0800 (PST)
-Date:   Wed, 11 Dec 2019 11:27:42 -0800
-In-Reply-To: <20191211192742.95699-1-brendanhiggins@google.com>
-Message-Id: <20191211192742.95699-8-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-Subject: [PATCH v1 7/7] fsi: aspeed: add unspecified HAS_IOMEM dependency
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        davidgow@google.com, Brendan Higgins <brendanhiggins@google.com>,
-        linux-fsi@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Dec 2019 14:28:48 -0500
+Received: from mga14.intel.com ([192.55.52.115]:38007 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727002AbfLKT2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 14:28:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 11:18:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
+   d="scan'208";a="238664618"
+Received: from xshen14-mobl.ccr.corp.intel.com (HELO [10.254.215.77]) ([10.254.215.77])
+  by fmsmga004.fm.intel.com with ESMTP; 11 Dec 2019 11:18:38 -0800
+Subject: Re: [PATCH] x86/resctrl: Check monitoring static key in MBM overflow
+ handler
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        Xiaochen Shen <xiaochen.shen@intel.com>
+References: <1576086103-11640-1-git-send-email-xiaochen.shen@intel.com>
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+Message-ID: <d0a154d3-a7f6-827b-f785-e776c350cf2d@intel.com>
+Date:   Thu, 12 Dec 2019 03:18:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
+MIME-Version: 1.0
+In-Reply-To: <1576086103-11640-1-git-send-email-xiaochen.shen@intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently CONFIG_FSI_MASTER_ASPEED=y implicitly depends on
-CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-the following build error:
+Hi,
 
-ld: drivers/fsi/fsi-master-aspeed.o: in function `fsi_master_aspeed_probe':
-drivers/fsi/fsi-master-aspeed.c:436: undefined reference to `devm_ioremap_resource'
+I am sorry I sent out a wrong version of patch.
+Please ignore this patch. I will resend soon.
 
-Fix the build error by adding the unspecified dependency.
 
-Reported-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
----
- drivers/fsi/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 12/12/2019 1:41, Xiaochen Shen wrote:
+> Currently, there are three static keys in resctrl file system:
+> rdt_mon_enable_key and rdt_alloc_enable_key indicate if monitoring
+> feature and allocation feature is enabled respectively. rdt_enable_key
+> is enabled when either monitoring feature or allocation feature is
+> enabled.
+> 
+> If no monitoring feature is supported (either hardware doesn't support
+> monitoring feature or the feature is disabled by kernel command line
+> option "rdt="), rdt_enable_key is still enabled but rdt_mon_enable_key
+> is disabled.
+> 
+> MBM is a monitoring feature. MBM overflow handler intends to check if
+> monitoring feature is not enabled for fast return. So the accurate check
+> here is to check rdt_mon_enable_key instead of rdt_enable_key.
+> 
+> Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
+> Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> ---
+>   arch/x86/kernel/cpu/resctrl/internal.h | 1 +
+>   arch/x86/kernel/cpu/resctrl/monitor.c  | 4 ++--
+>   2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> index e49b77283924..181c992f448c 100644
+> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> @@ -57,6 +57,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
+>   }
+>   
+>   DECLARE_STATIC_KEY_FALSE(rdt_enable_key);
+> +DECLARE_STATIC_KEY_FALSE(rdt_mon_enable_key);
+>   
+>   /**
+>    * struct mon_evt - Entry in the event list of a resource
+> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> index 397206f23d14..773124b0e18a 100644
+> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> @@ -514,7 +514,7 @@ void mbm_handle_overflow(struct work_struct *work)
+>   
+>   	mutex_lock(&rdtgroup_mutex);
+>   
+> -	if (!static_branch_likely(&rdt_enable_key))
+> +	if (!static_branch_likely(&rdt_mon_enable_key))
+>   		goto out_unlock;
+>   
+>   	d = get_domain_from_cpu(cpu, &rdt_resources_all[RDT_RESOURCE_L3]);
+> @@ -543,7 +543,7 @@ void mbm_setup_overflow_handler(struct rdt_domain *dom, unsigned long delay_ms)
+>   	unsigned long delay = msecs_to_jiffies(delay_ms);
+>   	int cpu;
+>   
+> -	if (!static_branch_likely(&rdt_enable_key))
+> +	if (!static_branch_likely(&rdt_mon_enable_key))
+>   		return;
+>   	cpu = cpumask_any(&dom->cpu_mask);
+>   	dom->mbm_work_cpu = cpu;
+> 
 
-diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-index 92ce6d85802cc..4cc0e630ab79b 100644
---- a/drivers/fsi/Kconfig
-+++ b/drivers/fsi/Kconfig
-@@ -55,6 +55,7 @@ config FSI_MASTER_AST_CF
- 
- config FSI_MASTER_ASPEED
- 	tristate "FSI ASPEED master"
-+	depends on HAS_IOMEM
- 	help
- 	 This option enables a FSI master that is present behind an OPB bridge
- 	 in the AST2600.
 -- 
-2.24.0.525.g8f36a354ae-goog
-
+Best regards,
+Xiaochen
