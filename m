@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17ABC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D111AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC01208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73D5208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078088;
-	bh=QzNDaq2BvpCKmi7xO06govvZMk9GjZdENqHwCpuM2kE=;
+	s=default; t=1576078091;
+	bh=VunT9qqXftIM0TA+5tBJ+7ay5ekF88EW/zThG/hjKjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEDFWbaZsg2FRvzjDjgXJfE+iTfnDdgsLPSgJLCpn/imik23psy6wxvm7v647fp65
-	 fhbyoGALq5kM5gficDrenijXRNmQaaTamacbuLx9Saf/kFDtyARRntMUmULk4Uudq6
-	 BLnFMqpZQhMYBWGzuYMN0/L9KaqKnrkAMWJtQSK4=
+	b=h44CHvbC0C4zltMX0cpx3AijwM0alsn/XWY95nNZog/N5GKWx4NEk5FQvRlXdiKaG
+	 g1JHoD5QcBC72Jp96FXsmROvuFe0mSp0e76ScMvOejNJGTa8q63MfP9lCRFqkFGdDJ
+	 IBh/HxWYRij58d84qAmUQp5tckuOxnJFOqJ1JuWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387553AbfLKP2H (ORCPT
+        id S1732925AbfLKP2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387468AbfLKP1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:46 -0500
+        id S2387478AbfLKP1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 700B4222C4;
-        Wed, 11 Dec 2019 15:27:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B8092465B;
+        Wed, 11 Dec 2019 15:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078065;
-        bh=QzNDaq2BvpCKmi7xO06govvZMk9GjZdENqHwCpuM2kE=;
+        s=default; t=1576078068;
+        bh=VunT9qqXftIM0TA+5tBJ+7ay5ekF88EW/zThG/hjKjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uTn+k0toIjGbgd9b4YqqwKopRQaz6zn8QjFwaHzVzvM82+/4ipem/qrrq46c0EhST
-         7uAHamEmRnofs9Gs+z53AKBg3+odo6oQ2T7reDgZWc23/O332sOqk2n1B3/88fziLC
-         cTlbVNPHMV/k+OsL9C+YH/4AtZFP0pVYcmbM8F0U=
+        b=1UXYTCTFPKqlJCcKgr+EHpyWeU30Cy5ABPgtU1Ki+HGqQGF7hBNTNoFdxiFfqxqyE
+         bj33/mH5xLSPxxDAFd8wicuqpz2EOIHWOUzbv0UF6EyTxvWHciu2ux9+iX7dW5Kn0M
+         D8/X75z21wQETUs2fm3osA+rvAffLeyUvkH11xw0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     peter chang <dpf@google.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 57/79] scsi: pm80xx: Fix for SATA device discovery
-Date:   Wed, 11 Dec 2019 10:26:21 -0500
-Message-Id: <20191211152643.23056-57-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 60/79] scsi: NCR5380: Add disconnect_mask module parameter
+Date:   Wed, 11 Dec 2019 10:26:24 -0500
+Message-Id: <20191211152643.23056-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -63,39 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: peter chang <dpf@google.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
+[ Upstream commit 0b7a223552d455bcfba6fb9cfc5eef2b5fce1491 ]
 
-Driver was missing complete() call in mpi_sata_completion which result in
-SATA abort error handling timing out. That causes the device to be left in
-the in_recovery state so subsequent commands sent to the device fail and
-the OS removes access to it.
+Add a module parameter to inhibit disconnect/reselect for individual
+targets. This gains compatibility with Aztec PowerMonster SCSI/SATA
+adapters with buggy firmware. (No fix is available from the vendor.)
 
-Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: peter chang <dpf@google.com>
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Apparently these adapters pass-through the product/vendor of the attached
+SATA device. Since they can't be identified from the response to an INQUIRY
+command, a device blacklist flag won't work.
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Link: https://lore.kernel.org/r/993b17545990f31f9fa5a98202b51102a68e7594.1573875417.git.fthain@telegraphics.com.au
+Reviewed-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/NCR5380.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 5021aed87f33a..8627feb80261a 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 			pm8001_printk("task 0x%p done with io_status 0x%x"
- 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
- 			t, status, ts->resp, ts->stat));
-+		if (t->slow_task)
-+			complete(&t->slow_task->completion);
- 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
- 	} else {
- 		spin_unlock_irqrestore(&t->task_state_lock, flags);
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 8ec68dcc0cc4a..95a3e3bf2b431 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -129,6 +129,9 @@
+ #define NCR5380_release_dma_irq(x)
+ #endif
+ 
++static unsigned int disconnect_mask = ~0;
++module_param(disconnect_mask, int, 0444);
++
+ static int do_abort(struct Scsi_Host *);
+ static void do_reset(struct Scsi_Host *);
+ static void bus_reset_cleanup(struct Scsi_Host *);
+@@ -946,7 +949,8 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+ 	int err;
+ 	bool ret = true;
+ 	bool can_disconnect = instance->irq != NO_IRQ &&
+-			      cmd->cmnd[0] != REQUEST_SENSE;
++			      cmd->cmnd[0] != REQUEST_SENSE &&
++			      (disconnect_mask & BIT(scmd_id(cmd)));
+ 
+ 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
 -- 
 2.20.1
 
