@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48480C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE86EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA1B22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD5B22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077649;
-	bh=Vk4CO8RoK4QK13syaTDZhMeKWRUm1nOGUOYrePS8LYc=;
+	s=default; t=1576077651;
+	bh=dDBDlbf091Mgq77WY0ie6J14Z/JMU3bD7FbbkoZrOnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFYiZTntPDbk5ezvza3frl6CT/dMuX8U4fel1dz0NKqqPqf58QqX4exASe/IUzM63
-	 d1r9qRI6RkClJY7qbEi0Y+pxOQOmfnRX0n782E6xSvzWQtJ5SD7kG+xeyeSIVw6W/G
-	 bDNUUX0t5iT2djU8RqsfPLe04Z84VYwGivi1CAIY=
+	b=nZqhT4RCImfJWIya7nwTaeG0Ikb49ZCbaF2nbhBTJWV5qFAELcdUQjgxue4Eb6tYi
+	 CpnagXFzGXUifPt2meWT+bsJ2U2QPJLNsum+e6/8aYZ5p3u2i0oIC8BWT6uVNMzHzq
+	 EUC1ehlfyDZqpve7zs8wV71s/DwMHxfmT7Pap2KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfLKPUr (ORCPT
+        id S1732040AbfLKPUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:20:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:20:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732355AbfLKPUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:20:45 -0500
+        id S1732376AbfLKPUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB9822B48;
-        Wed, 11 Dec 2019 15:20:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE95722527;
+        Wed, 11 Dec 2019 15:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077644;
-        bh=Vk4CO8RoK4QK13syaTDZhMeKWRUm1nOGUOYrePS8LYc=;
+        s=default; t=1576077647;
+        bh=dDBDlbf091Mgq77WY0ie6J14Z/JMU3bD7FbbkoZrOnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrzhCD37Q+fooAAD9B0V0iiaTK4N+DBo+JeldK8y1K7G4FtjV+/7cjbwdQX/PRnlC
-         fU0xYOdoY0YF5KMy5ZVljMjkLJeytUoKFaPJVJAS82N6Ows2MBJZrCJspYEfscOCY5
-         HbDmL222c3F/OcMbdKJvgjx5eHUsdL95JtTyYdn0=
+        b=LzSJCz8lWGQO2PspEuQURXOvAaO9xuHvFxiTcODjVLi1bDENLnaWY0o6s4iBmIbKF
+         YDVdfrlvVrgJu+3lMXsfBuGPbZ0u6/Wl+iuAdrjs/pg6WF4eYzoSth/8UQP02SCAWl
+         FUhX4EpKRBa2e9F+dqdDa+wrttqIbKgzFghTEfBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 109/243] sparc: Correct ctx->saw_frame_pointer logic.
-Date:   Wed, 11 Dec 2019 16:04:31 +0100
-Message-Id: <20191211150346.490033245@linuxfoundation.org>
+Subject: [PATCH 4.19 118/243] lockd: fix decoding of TEST results
+Date:   Wed, 11 Dec 2019 16:04:40 +0100
+Message-Id: <20191211150347.096495863@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,68 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+From: J. Bruce Fields <bfields@redhat.com>
 
-[ Upstream commit e2ac579a7a18bcd9e8cf14cf42eac0b8a2ba6c4b ]
+[ Upstream commit b8db159239b3f51e2b909859935cc25cb3ff3eed ]
 
-We need to initialize the frame pointer register not just if it is
-seen as a source operand, but also if it is seen as the destination
-operand of a store or an atomic instruction (which effectively is a
-source operand).
+We fail to advance the read pointer when reading the stat.oh field that
+identifies the lock-holder in a TEST result.
 
-This is exercised by test_verifier's "non-invalid fp arithmetic"
+This turns out not to matter if the server is knfsd, which always
+returns a zero-length field.  But other servers (Ganesha is an example)
+may not do this.  The result is bad values in fcntl F_GETLK results.
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fix this.
+
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/net/bpf_jit_comp_64.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/lockd/clnt4xdr.c | 22 ++++++----------------
+ fs/lockd/clntxdr.c  | 22 ++++++----------------
+ 2 files changed, 12 insertions(+), 32 deletions(-)
 
-diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
-index 7217d63596431..ec4da4dc98f12 100644
---- a/arch/sparc/net/bpf_jit_comp_64.c
-+++ b/arch/sparc/net/bpf_jit_comp_64.c
-@@ -1270,6 +1270,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
- 		u32 opcode = 0, rs2;
+diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
+index 00d5ef5f99f73..214a2fa1f1e39 100644
+--- a/fs/lockd/clnt4xdr.c
++++ b/fs/lockd/clnt4xdr.c
+@@ -128,24 +128,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+ static int decode_netobj(struct xdr_stream *xdr,
+ 			 struct xdr_netobj *obj)
+ {
+-	u32 length;
+-	__be32 *p;
++	ssize_t ret;
  
-+		if (insn->dst_reg == BPF_REG_FP)
-+			ctx->saw_frame_pointer = true;
-+
- 		ctx->tmp_2_used = true;
- 		emit_loadimm(imm, tmp2, ctx);
+-	p = xdr_inline_decode(xdr, 4);
+-	if (unlikely(p == NULL))
+-		goto out_overflow;
+-	length = be32_to_cpup(p++);
+-	if (unlikely(length > XDR_MAX_NETOBJ))
+-		goto out_size;
+-	obj->len = length;
+-	obj->data = (u8 *)p;
++	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
++						XDR_MAX_NETOBJ);
++	if (unlikely(ret < 0))
++		return -EIO;
++	obj->len = ret;
+ 	return 0;
+-out_size:
+-	dprintk("NFS: returned netobj was too long: %u\n", length);
+-	return -EIO;
+-out_overflow:
+-	print_overflow_msg(__func__, xdr);
+-	return -EIO;
+ }
  
-@@ -1308,6 +1311,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 		const u8 tmp = bpf2sparc[TMP_REG_1];
- 		u32 opcode = 0, rs2;
+ /*
+diff --git a/fs/lockd/clntxdr.c b/fs/lockd/clntxdr.c
+index 2c6176387143c..747b9c8c940ac 100644
+--- a/fs/lockd/clntxdr.c
++++ b/fs/lockd/clntxdr.c
+@@ -125,24 +125,14 @@ static void encode_netobj(struct xdr_stream *xdr,
+ static int decode_netobj(struct xdr_stream *xdr,
+ 			 struct xdr_netobj *obj)
+ {
+-	u32 length;
+-	__be32 *p;
++	ssize_t ret;
  
-+		if (insn->dst_reg == BPF_REG_FP)
-+			ctx->saw_frame_pointer = true;
-+
- 		switch (BPF_SIZE(code)) {
- 		case BPF_W:
- 			opcode = ST32;
-@@ -1340,6 +1346,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
- 		const u8 tmp3 = bpf2sparc[TMP_REG_3];
+-	p = xdr_inline_decode(xdr, 4);
+-	if (unlikely(p == NULL))
+-		goto out_overflow;
+-	length = be32_to_cpup(p++);
+-	if (unlikely(length > XDR_MAX_NETOBJ))
+-		goto out_size;
+-	obj->len = length;
+-	obj->data = (u8 *)p;
++	ret = xdr_stream_decode_opaque_inline(xdr, (void *)&obj->data,
++			XDR_MAX_NETOBJ);
++	if (unlikely(ret < 0))
++		return -EIO;
++	obj->len = ret;
+ 	return 0;
+-out_size:
+-	dprintk("NFS: returned netobj was too long: %u\n", length);
+-	return -EIO;
+-out_overflow:
+-	print_overflow_msg(__func__, xdr);
+-	return -EIO;
+ }
  
-+		if (insn->dst_reg == BPF_REG_FP)
-+			ctx->saw_frame_pointer = true;
-+
- 		ctx->tmp_1_used = true;
- 		ctx->tmp_2_used = true;
- 		ctx->tmp_3_used = true;
-@@ -1360,6 +1369,9 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx)
- 		const u8 tmp2 = bpf2sparc[TMP_REG_2];
- 		const u8 tmp3 = bpf2sparc[TMP_REG_3];
- 
-+		if (insn->dst_reg == BPF_REG_FP)
-+			ctx->saw_frame_pointer = true;
-+
- 		ctx->tmp_1_used = true;
- 		ctx->tmp_2_used = true;
- 		ctx->tmp_3_used = true;
+ /*
 -- 
 2.20.1
 
