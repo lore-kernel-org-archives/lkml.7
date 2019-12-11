@@ -2,177 +2,141 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B57C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D587C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C77214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733AF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FqW/X3yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbfLKOOL (ORCPT
+        id S1729808AbfLKOPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:14:11 -0500
-Received: from mga14.intel.com ([192.55.52.115]:5834 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfLKOOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:14:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 06:13:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="215794088"
-Received: from jgullbra-mobl.amr.corp.intel.com (HELO [10.251.27.60]) ([10.251.27.60])
-  by orsmga006.jf.intel.com with ESMTP; 11 Dec 2019 06:13:37 -0800
-Subject: Re: [PATCH] x86/fpu: Warn only when CPU-provided sizes less than
- struct declaration
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jon.grimm@amd.com,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-References: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
- <b63e2111-b0c6-a716-3d99-88f91ad64e1d@intel.com>
- <68bdd6f0-a229-433a-9234-303a3b02b092@amd.com>
- <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
- <7a8fe748-2c57-295a-e6ed-8969c41462aa@amd.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <d092bae0-69ea-0a57-4db5-6de074956564@intel.com>
-Date:   Wed, 11 Dec 2019 06:13:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 09:15:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23884 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727554AbfLKOPG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:15:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576073704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6CNeNviiAcs4FnRFrCRUNmQuCuRCLUA+6sORydEute8=;
+        b=FqW/X3yBCVhNWjMJYUgGfeYq6LOqCUge4N45oao2pXq3lPVWMMhYiR/0mVfH43DHQY3P8B
+        cD/LlP8daezfybjaXHjr+MNjcC9kuNAwrxO9MKXwz3+Bt5CcVFa/cWmgaXuDplIw9Z0uty
+        1xeBiy8dfJIOqb9o16YoNLlcepe3dBE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-129-RmO7OYVPNheQJfED3k0xZg-1; Wed, 11 Dec 2019 09:15:02 -0500
+Received: by mail-wr1-f69.google.com with SMTP id r2so10497672wrp.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:15:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6CNeNviiAcs4FnRFrCRUNmQuCuRCLUA+6sORydEute8=;
+        b=JS7xKHDXoyiHETIkfy/yBDcTaAo5FuoUBu7Kxwuh4ebXXImul02qxEKMqjiUI3GNBV
+         RK2rUT9hwYXo295XCILWicMNbDtAa+r5n3H0hkloOyYkVdM168OvECe/pb2kgkXjF/Ez
+         QBBL1RlFZkjiWsSOoyNeZKxoGBuF6Y2XYN8Y8wlvLQ87w9nghgigLpTeJgAug44GsemI
+         rZuXUCshvO8KN+tgBCpOZ38zkIRjRaNDENgua73oXxrkNy9bXU8D7csyjBXAqKK5LXeH
+         UnrjNlXYvwetoJIfFe4YfGdDMSc+39eF37sZ8vdIyI9mCymanAquobQSRyPditS3oqTI
+         FopA==
+X-Gm-Message-State: APjAAAWWw5oKXCloiYSJLScPGFE94LK34ekdKOlK7CyxZqc+EbTKxccB
+        eE9LI3jyloT60RBJrMD+mObdgK6knmmE+CmNom06t6+nbSpfZUaaBW9Z/mQ+4OjGfWwcynebwNV
+        dRoN0iIj3fOXOTO0eB1b/tnT3
+X-Received: by 2002:adf:f78d:: with SMTP id q13mr4120187wrp.365.1576073701687;
+        Wed, 11 Dec 2019 06:15:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzGa5r2SnfhcT6zQ4xQrq1x+BOmqjrJJ7OwIvx4uM3tEJhG56oMXjTsdcZ1Mf8aHncadmBgtw==
+X-Received: by 2002:adf:f78d:: with SMTP id q13mr4120155wrp.365.1576073701421;
+        Wed, 11 Dec 2019 06:15:01 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
+        by smtp.gmail.com with ESMTPSA id h17sm2459307wrs.18.2019.12.11.06.15.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 06:15:00 -0800 (PST)
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+To:     "Michael S. Tsirkin" <mst@redhat.com>, Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <20191211063830-mutt-send-email-mst@kernel.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <fd9025cc-bb52-8ac8-fece-9bc857d3d5d1@redhat.com>
+Date:   Wed, 11 Dec 2019 15:14:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <7a8fe748-2c57-295a-e6ed-8969c41462aa@amd.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191211063830-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: RmO7OYVPNheQJfED3k0xZg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 9:24 PM, Suravee Suthikulpanit wrote:
->>> Yes, the implementation includes the padding size within the size of
->>> the enumerated state. This results in the reported size larger than
->>> the amount needed by the feature.
+On 11/12/19 13:53, Michael S. Tsirkin wrote:
+>> +
+>> +struct kvm_dirty_ring_indexes {
+>> +	__u32 avail_index; /* set by kernel */
+>> +	__u32 fetch_index; /* set by userspace */
+>
+> Sticking these next to each other seems to guarantee cache conflicts.
+
+I don't think that's an issue because you'd have a conflict anyway on
+the actual entry; userspace anyway has to read the kernel-written index,
+which will cause cache traffic.
+
+> Avail/Fetch seems to mimic Virtio's avail/used exactly.
+
+No, avail_index/fetch_index is just the producer and consumer indices
+respectively.  There is only one ring buffer, not two as in virtio.
+
+> I am not saying
+> you must reuse the code really, but I think you should take a hard look
+> at e.g. the virtio packed ring structure. We spent a bunch of time
+> optimizing it for cache utilization. It seems kernel is the driver,
+> making entries available, and userspace the device, using them.
+> Again let's not develop a thread about this, but I think
+> this is something to consider and discuss in future versions
+> of the patches.
+
+Even in the packed ring you have two cache lines accessed, one for the
+index and one for the descriptor.  Here you have one, because the data
+is embedded in the ring buffer.
+
 > 
-> Actually, please allow me clarify my understanding for this part.
+>> +};
+>> +
+>> +While for each of the dirty entry it's defined as:
+>> +
+>> +struct kvm_dirty_gfn {
 > 
-> When you referred to "the existing architecture for padding", IIUC,
-> that's the XSAVE state size, offset, and alignment of each extended
-> feature reported by the CPUID Fn 0Dh E[A|B|C]X. By "padding", do you
-> mean the additional area included as part of alignment?
-
-I was specifically thinking of this nugget in Intel's SDM, Volume 1, 13.2:
-
-> The value returned by ECX[1] indicates the alignment of state
-> component i when the compacted format of the extended region of an
-> XSAVE area is used (see Section 13.4.3). If ECX[1] returns 0, state
-> component i is located immediately following the preceding state
-> component; if ECX[1] returns 1, state component i is located on the
-> next 64-byte boundary following the preceding state component.
-
-Essentially, if an implementation needs state alignment or (up to) 64
-bytes of padding, it could use this existing architecture for it.
-
->> I don't think we've ever had XSAVE state that differed in size between
->> implementations.  This kind of thing ensures that we can't have any
->> statically-defined inspection into the XSAVE state.
->>
->> It also increases the amount of blind trust that we have in the CPU
->> implementations.  However, those warnings were specifically added at
->> Ingo's behest (IIRC) to reduce our blind trust in the CPU.
+> What does GFN stand for?
 > 
-> I am not quite sure what you meant by "statically-defined inspection"
-
-Previously, it was possible to depend on a constant offset for a state
-component in an XSAVE buffer.  You could literally say "PKRU is at
-offset 0x1234" (or whatever).  All implementations had PKRU in the same
-spot (without the compacted format).
-
-BTW, I'm not saying this is a problem.  The documented XSAVE
-architecture itself has no provisions for the state being accessed like
-this.
-
-> and "blind trust".
-
-I think I actually parroted the term from Ingo:
-
-https://lore.kernel.org/lkml/20150808090615.GA32641@gmail.com/
-
-But the point is that with your patch, the kernel becomes less strict
-about what we demand from the CPU.  That might lead to letting CPU bugs
-creep in that might cause real problems later.
-
-> Please correct me if I am wrong, but I believe this is similar to the
-> case mentioned in the commit ef78f2a4bf84 ('x86/fpu: Check
-> CPU-provided sizes against struct declarations'), where it mentions
-> inconsistency b/w the MPX 'bndcsr' state and the C structures.
-
-Yep, but I fixed that by padding the C structure, not silencing the
-warning.  Also *ALL* MPX implementations have had the same size for that
-state.
-
-If we go forward with this patch, we should also removing the
-pad_to_64_bytes[] from 'struct mpx_bndcsr_state'.
-
-> What I have been told (by HW folks) is that the hardware reports 32 bytes for PKRU feature
-> to account for additional padding (24 bytes) required to maintain offset for the XSAVE data
-> in compact form where:
+>> +        __u32 pad;
+>> +        __u32 slot; /* as_id | slot_id */
+>> +        __u64 offset;
+>> +};
 > 
->     offset of the next component = offset of current component +
->                                    size of current component
-> 
-> In this case, the hardware adds the padding needed before the offset of the subsequent
-> feature into the PKRU xsave state size. 
+> offset of what? a 4K page right? Seems like a waste e.g. for
+> hugetlbfs... How about replacing pad with size instead?
 
-Huh, that's exactly why I thought we added ECX[1]. to the architecture.
+No, it's an offset in the memslot (which will usually be >4GB for any VM
+with bigger memory than that).
+
+Paolo
+
