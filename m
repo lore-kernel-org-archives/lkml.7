@@ -2,94 +2,99 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9102CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6F0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604D82073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="G2E2Di2y"
+	by mail.kernel.org (Postfix) with ESMTP id C83022073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079084;
+	bh=0kkvMRZ/npEE3ZOX3qFqvZr/yONXMfNvvPFi75Q63SE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HL2X85lFG1NVtrwy9ryUIUBDFUunBX7yK8vsqCEqVRbgLiim2+CMPwc/6zY8eG+pD
+	 2mvvA62uuItrAhl2whufww5x2IAY1EEhbnRLJ+4xnBd5J2umDnd3aRaBo2gpKJyGCs
+	 WixgUxq3yeHpznE6JOuvggKDTISacFiImk6k8/Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388666AbfLKPof (ORCPT
+        id S2387680AbfLKPon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:44:35 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39603 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732174AbfLKPob (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:44:31 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e10so24589926ljj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:44:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XdzBTtaNquqJQQc4imgAleeVldIWzikxbiqcx5Oj4Uw=;
-        b=G2E2Di2yoRVC6LiYhg1kO50cH34YBeUkTvPVd13zyFgGT5Zhg5360ZibuMIwXzjzZT
-         x4RiYwW9WBQI4t5kV+nbfqmKJPgz3nEu/Ok4dxgoc7DZqCrMPUustH30XN1suYlnEOKN
-         qSs+GuTWkYCPlMdMRJUtL7WvIn7cs594EGRqqvxKMvO3GEybm9jv82wo8Mn2/VqwMqxE
-         KXW1WBNB42/ak4h0bBQwEC/4bP+zQP3pUgvQNe+eq8+TJLAcHJVyjkJsm1KHurbFMSTl
-         9gQ2vhMXWr3Gw4CrbO87BXw1zG/y++JkWskieWBimgUr+G07/l3wZy9bukniaD1h9hSP
-         JB+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XdzBTtaNquqJQQc4imgAleeVldIWzikxbiqcx5Oj4Uw=;
-        b=blcRU3ERtxBb9HlBDRX0HylIIjaqWR0Ce+HEgxgUc3IWWxZvX8dAW8rf7N9sYegYjZ
-         THBx/eLkR8Nqx6RFrcqnIEQ4MdpRy5WSDn7al3mPZ7ncrom+hIV7cNL/QqNpjjOrXKgv
-         XxIXP1sk8uJzCShO/kDgIMAKs4lzb3b2CeqeYjIdnMlvVhBbnbr//XokcsviBBvHGckS
-         SNw5mOis4l5YY2HTJUvF8IOH1rYzFr2aviMzWg+I/RXf8OFjY3xr9g3O5UcxLl1rMtXd
-         59WIFMCtnrJ+lfdc8yqeyPlLfUK4QbI5Kfs27N93wp9mOmkgbLV591j1ILKz3WYV/V2p
-         fjbA==
-X-Gm-Message-State: APjAAAU9aOiMy+hMp/Suy9E7wGo9q2NddssxX8TiaKDsppa8RFwdrlaL
-        dZWsFzkyVdVrWxvpX5Gber6Bdw==
-X-Google-Smtp-Source: APXvYqwSQs81SgJhtxgOyKyhGTp7SwuA3qzUk/Yet+/zmbJc38BOSBCKb5y1J1lYoQveRVIKsu2I3A==
-X-Received: by 2002:a2e:814e:: with SMTP id t14mr2470350ljg.149.1576079069978;
-        Wed, 11 Dec 2019 07:44:29 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id d25sm1400170ljj.51.2019.12.11.07.44.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 07:44:29 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A073E101218; Wed, 11 Dec 2019 18:44:29 +0300 (+03)
-Date:   Wed, 11 Dec 2019 18:44:29 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mircea CIRJALIU - MELIU <mcirjaliu@bitdefender.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>
-Subject: Re: [RFC PATCH v1 2/4] mm: also set VMA in khugepaged range
- invalidation
-Message-ID: <20191211154429.7tscxcqk725guyce@box>
-References: <DB7PR02MB3979E79A7ADF7E7B2F397418BB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
+        Wed, 11 Dec 2019 10:44:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732975AbfLKP1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:24 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CBE322527;
+        Wed, 11 Dec 2019 15:27:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078043;
+        bh=0kkvMRZ/npEE3ZOX3qFqvZr/yONXMfNvvPFi75Q63SE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cxjEja541X3RKkhiZ5d2w+ULOO0mS1iAELDhbmOh2hJZKvQbTAuaS7B0F7HkOjLSh
+         mjUXscKhmJfPLLHpG4dePEptlNttceaQsL6HlvJNFbmzogVGgxRoyxyrgqlkZTax4e
+         o+rU0z98EA8jBSn7UAyZmdgp/q9HnFstNgVkJLWA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/79] PCI: rpaphp: Fix up pointer to first drc-info entry
+Date:   Wed, 11 Dec 2019 10:26:01 -0500
+Message-Id: <20191211152643.23056-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR02MB3979E79A7ADF7E7B2F397418BB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:29:21AM +0000, Mircea CIRJALIU - MELIU wrote:
-> MMU notifier client may need the VMA for extra info.
-> This change is needed by the remote mapping feature that inspects anon VMAs
-> with huge mappings. 
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-The change itself is okay, but commit message should be better.
+[ Upstream commit 9723c25f99aff0451cfe6392e1b9fdd99d0bf9f0 ]
 
-Do we have any user of mmu notifiers in current kernel that affected by
-the missing vma here?
+The first entry of the ibm,drc-info property is an int encoded count
+of the number of drc-info entries that follow. The "value" pointer
+returned by of_prop_next_u32() is still pointing at the this value
+when we call of_read_drc_info_cell(), but the helper function
+expects that value to be pointing at the first element of an entry.
 
-And subject starting with 'also' looks wrong to me.
+Fix up by incrementing the "value" pointer to point at the first
+element of the first drc-info entry prior.
 
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1573449697-5448-5-git-send-email-tyreld@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/hotplug/rpaphp_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+index cc860c5f7d26f..f56004243591f 100644
+--- a/drivers/pci/hotplug/rpaphp_core.c
++++ b/drivers/pci/hotplug/rpaphp_core.c
+@@ -239,6 +239,8 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
+ 	value = of_prop_next_u32(info, NULL, &entries);
+ 	if (!value)
+ 		return -EINVAL;
++	else
++		value++;
+ 
+ 	for (j = 0; j < entries; j++) {
+ 		of_read_drc_info_cell(&info, &value, &drc);
 -- 
- Kirill A. Shutemov
+2.20.1
+
