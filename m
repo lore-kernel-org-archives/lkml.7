@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA66BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3FC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3FC524654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55BDF208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077536;
-	bh=CUUNtVqEczqRgKcODEIbCiRwjHTUcTYe5MQwpXHF1vk=;
+	s=default; t=1576077540;
+	bh=cZRXYZr3dnqdd2ZANv1oCOypDbcNrsP6ksZp+LUmUVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTv68Jm2jb2DRdQDPNyIqSiAG/uMAlUOXIK29YnJDf3XdsiiYIzf4RoRE57SH/4xR
-	 Ssb6lZRpuG6XmcRqoT8IiBK2ufbYT2KfUvipWbJmK5DluZtKTYJ2f89RdiFq2I2ARB
-	 1nh+gsHkziHRnMQ3Edsen8lc8yengoNVXeSFAgAg=
+	b=HlZ8HgeibuDXRkztoRln3C1HMq3D2noaX1MD8f0VfBsOQDfc0N0Rnpr+thRUMRlDw
+	 GNnn9jWOd8HIATTTD9OBQOwF3Qee7hAAvKdzDJBA0DJo1cYDzp4Vx7MroSbh37bq7l
+	 HVvoWK637FzvgBOXkVXh6nBjykdaetgRJSduIxDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbfLKPSz (ORCPT
+        id S1732055AbfLKPS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732028AbfLKPSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:49 -0500
+        id S1732040AbfLKPSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 760342073D;
-        Wed, 11 Dec 2019 15:18:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1062324654;
+        Wed, 11 Dec 2019 15:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077528;
-        bh=CUUNtVqEczqRgKcODEIbCiRwjHTUcTYe5MQwpXHF1vk=;
+        s=default; t=1576077534;
+        bh=cZRXYZr3dnqdd2ZANv1oCOypDbcNrsP6ksZp+LUmUVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vrYGPHykGu8qoSG2b8gkKyO00WW56oieUZpcdLm7qGKSZAWC0kHBIrwESHMuMTfl6
-         xwHRvetlxn0qa64fkP88qSYIoMUd0admHbTUMAPkrddJ2ZWOWAX8/7zlsOL9vzinIu
-         A2V0vVOTVaLfw4yCtVG0a2ThBjagMw8HEraQvEKI=
+        b=b0KVAoL5cYDPuofzMR6XCplmEoxGCPrS9VW+mxaaPGae4z0DZpoIEFYRAD5T/w5co
+         qqi8OAnppLKS5IZq8jR+l4Du7OpGuHfv5W8McKWcNjWBecPGW4VVKYKHof91bYlfJP
+         8RNRcozqyWOQGE1lX1DZhKH5q324KHOAkGjnRYf0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Moni Shoua <monis@mellanox.com>,
-        Majd Dibbiny <majd@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org, Cheng-Yi Chiang <cychiang@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/243] net/mlx5: Release resource on error flow
-Date:   Wed, 11 Dec 2019 16:03:18 +0100
-Message-Id: <20191211150341.665418764@linuxfoundation.org>
+Subject: [PATCH 4.19 068/243] regulator: Fix return value of _set_load() stub
+Date:   Wed, 11 Dec 2019 16:03:50 +0100
+Message-Id: <20191211150343.689372303@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,44 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moni Shoua <monis@mellanox.com>
+From: Mark Brown <broonie@kernel.org>
 
-[ Upstream commit 698114968a22f6c0c9f42e983ba033cc36bb7217 ]
+[ Upstream commit f1abf67217de91f5cd3c757ae857632ca565099a ]
 
-Fix reference counting leakage when the event handler aborts due to an
-unsupported event for the resource type.
+The stub implementation of _set_load() returns a mode value which is
+within the bounds of valid return codes for success (the documentation
+just says that failures are negative error codes) but not sensible or
+what the actual implementation does.  Fix it to just return 0.
 
-Fixes: a14c2d4beee5 ("net/mlx5_core: Warn on unsupported events of QP/RQ/SQ")
-Signed-off-by: Moni Shoua <monis@mellanox.com>
-Reviewed-by: Majd Dibbiny <majd@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reported-by: Cheng-Yi Chiang <cychiang@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/qp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/regulator/consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/qp.c b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-index 4ca07bfb6b14f..f33707ce8b6b0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/qp.c
-@@ -132,7 +132,7 @@ void mlx5_rsc_event(struct mlx5_core_dev *dev, u32 rsn, int event_type)
- 	if (!is_event_type_allowed((rsn >> MLX5_USER_INDEX_LEN), event_type)) {
- 		mlx5_core_warn(dev, "event 0x%.2x is not allowed on resource 0x%.8x\n",
- 			       event_type, rsn);
--		return;
-+		goto out;
- 	}
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index 25602afd48447..f3f76051e8b00 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -508,7 +508,7 @@ static inline int regulator_get_error_flags(struct regulator *regulator,
  
- 	switch (common->res) {
-@@ -150,7 +150,7 @@ void mlx5_rsc_event(struct mlx5_core_dev *dev, u32 rsn, int event_type)
- 	default:
- 		mlx5_core_warn(dev, "invalid resource type for 0x%x\n", rsn);
- 	}
--
-+out:
- 	mlx5_core_put_rsc(common);
+ static inline int regulator_set_load(struct regulator *regulator, int load_uA)
+ {
+-	return REGULATOR_MODE_NORMAL;
++	return 0;
  }
  
+ static inline int regulator_allow_bypass(struct regulator *regulator,
 -- 
 2.20.1
 
