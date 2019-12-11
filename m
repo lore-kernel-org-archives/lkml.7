@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081DAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E6B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2D122B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077062;
-	bh=Xc0eyKlXnbwXsBZJnAPM3DHLQ9UKo918HSZqaDGVZZk=;
+	s=default; t=1576077065;
+	bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyUoUnTzR3NQG2pTDACvdttUZmlcgUVIA5vGF5YHInKhB1v3ALkJjse5Gx0a2vDlH
-	 zkN0E64rhzhD96dwQb3JkZCjgbomXX/NB/zZQWE/ZHJuzByV2Us7uJG1bxfyEwBnmM
-	 LS/h9ghOTJ+hkS99pRQ3ryouBxT0ivhUO0dzSEsI=
+	b=qXDERyM5N1tK9UYexLkjN7DoV0afLtdVxQ1s5vO9P4oSHLoxLXGix9QncVs6jDyrD
+	 iTST+gqGZpbnEy3odPtk+RePZNeY9PHqea5m9CnHe4Ci54bqRRzp8B1/0Qyz5nx8mb
+	 a6/zjOMG8/Yz18RZ2YEU8J4QqraL85tZdJaNZD8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfLKPLB (ORCPT
+        id S1730237AbfLKPLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730849AbfLKPK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:58 -0500
+        id S1730862AbfLKPLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB37E2173E;
-        Wed, 11 Dec 2019 15:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2DE124656;
+        Wed, 11 Dec 2019 15:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077058;
-        bh=Xc0eyKlXnbwXsBZJnAPM3DHLQ9UKo918HSZqaDGVZZk=;
+        s=default; t=1576077061;
+        bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOjUEZpMu5K2Tx0S+UXMWZ1FRB/u6mDWhJb774YaoF23roee3ONxy5mVK4VP7Uics
-         nDLElvV3Pu4B6Wbfrn5ROEMHC+pSJCD9Ci6tyh4W+0PDgfaK8UC4GNzfW7F8e9e6Dg
-         PoWF/bj7jveDkf4gw1gOYlMW27G3wqF6ZC0Ehd50=
+        b=zR38MCXqQRVg8vMJ0vx3RJB8EYorFw7AVeg9JexgvLwNLKf3vEEhANg6ZLjBH0guI
+         dYqqs/0Xd/bnOTsoxF6PR9Cnnv+OM3x/zZ5JvoWKdg9gBG+Ke3QW+zfm5hSca1dcW6
+         Fqm1jYq3LV749v5s8qGJnDJLePX9Tt/eWQk1gR8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
-        Martin Elshuber <martin.elshuber@theobroma-systems.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 81/92] can: ucan: fix non-atomic allocation in completion handler
-Date:   Wed, 11 Dec 2019 16:06:12 +0100
-Message-Id: <20191211150300.171772638@linuxfoundation.org>
+        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 82/92] RDMA/qib: Validate ->show()/store() callbacks before calling them
+Date:   Wed, 11 Dec 2019 16:06:13 +0100
+Message-Id: <20191211150300.723842793@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -63,36 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit 870db5d1015c8bd63e93b579e857223c96249ff7 upstream.
+commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 upstream.
 
-USB completion handlers are called in atomic context and must
-specifically not allocate memory using GFP_KERNEL.
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
 
-Fixes: 9f2d3eae88d2 ("can: ucan: add driver for Theobroma Systems UCAN devices")
-Cc: stable <stable@vger.kernel.org>     # 4.19
-Cc: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
-Cc: Martin Elshuber <martin.elshuber@theobroma-systems.com>
-Cc: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Protect against that by always validating the show/store callbacks.
+
+Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/ucan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/qib/qib_sysfs.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/can/usb/ucan.c
-+++ b/drivers/net/can/usb/ucan.c
-@@ -792,7 +792,7 @@ resubmit:
- 			  up);
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
  
- 	usb_anchor_urb(urb, &up->rx_urbs);
--	ret = usb_submit_urb(urb, GFP_KERNEL);
-+	ret = usb_submit_urb(urb, GFP_ATOMIC);
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
+ }
  
- 	if (ret < 0) {
- 		netdev_err(up->netdev,
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
+ 
 
 
