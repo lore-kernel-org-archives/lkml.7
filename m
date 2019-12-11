@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9773C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16916C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD8F24684
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D0A2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077186;
-	bh=ziHd0qwLt1CVoQnQwHS/GZeFprg96768/sHE5CZAjPs=;
+	s=default; t=1576077187;
+	bh=oAgvk0szn6Zv2vG5haaR1xbFC4wzoPEwZ9AaSte1z44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZcEV6XBGxxFqjfkr1RGNyAuq6TTf7N++Kfv7jho/ZFBkZAwqHOPfBQci1JC4VeMJg
-	 ZCNJVveBXK1vh1NztPxosTSzMID6CRDJE/1CJImWMFcOEOW1DiL75GOTuZTFwnBzb8
-	 9To6UHqq6J0HXGZ12MgioNi1QnKeruwMTiAgrte8=
+	b=tFI2HD45ZSbG2LidRlazYVNX494Y/4wnsCo7EfR94QILEJ2Gpf+Y3xMCU9UmnxpQz
+	 aI5aPV8ebTHSt3fAZ7qgSe2RtDRXaKg4sjSYBnLmamB0otP4S/+qAyRiH9peeHsuyw
+	 JwYr7mwO1etHOQbk9H0UJCm/Hev+ddIqZrxMehqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbfLKPNF (ORCPT
+        id S1731342AbfLKPNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35294 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731247AbfLKPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730636AbfLKPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D03924681;
-        Wed, 11 Dec 2019 15:12:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87032467F;
+        Wed, 11 Dec 2019 15:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077172;
-        bh=ziHd0qwLt1CVoQnQwHS/GZeFprg96768/sHE5CZAjPs=;
+        s=default; t=1576077173;
+        bh=oAgvk0szn6Zv2vG5haaR1xbFC4wzoPEwZ9AaSte1z44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOgHLnETcOln1S0IoBPv1WoItLd07F0aM2ASat8ap5pBuW4TZC93Y5l7PSUSZ1akM
-         3dH2VsEk3ia9oDbNeO/hAyf1XoyWQZhDlJmkCfst8vGUW7pVMDylX2p1Ln+A+C4DwM
-         HC7U0FEpsVPFucZdzaQpRI9AgZOXZ9LEsaQp7yHo=
+        b=PuihQRM1WOHMj0sM1QkAkRa1QCgm0uO0YBti4wkSxcgVYvtN139T2/cCIBYbjF5zE
+         Q5wMrY8THjhc+wGoJai0pmfXREy7T7NLuBB4D0zbhTRc7+RKUA3nvcQk/MaaIXCH9R
+         kEw/iws8ZLUxvq4wiDhZRqNavNYby4rm62hX+Urw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.4 057/134] iommu/arm-smmu-v3: Don't display an error when IRQ lines are missing
-Date:   Wed, 11 Dec 2019 10:10:33 -0500
-Message-Id: <20191211151150.19073-57-sashal@kernel.org>
+Cc:     Alain Volmat <alain.volmat@st.com>,
+        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 058/134] i2c: stm32f7: fix & reorder remove & probe error handling
+Date:   Wed, 11 Dec 2019 10:10:34 -0500
+Message-Id: <20191211151150.19073-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -61,62 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Alain Volmat <alain.volmat@st.com>
 
-[ Upstream commit f7aff1a93f52047739af31072de0ad8d149641f3 ]
+[ Upstream commit 53aaaa5d9b1e95eb40e877fbffa6f964a8394bb7 ]
 
-Since commit 7723f4c5ecdb ("driver core: platform: Add an error message
-to platform_get_irq*()"), platform_get_irq_byname() displays an error
-when the IRQ isn't found. Since the SMMUv3 driver uses that function to
-query which interrupt method is available, the message is now displayed
-during boot for any SMMUv3 that doesn't implement the combined
-interrupt, or that implements MSIs.
+Add missing dma channels free calls in case of error during probe
+and reorder the remove function so that dma channels are freed after
+the i2c adapter is deleted.
+Overall, reorder the remove function so that probe error handling order
+and remove function order are same.
 
-[   20.700337] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ combined not found
-[   20.706508] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ eventq not found
-[   20.712503] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ priq not found
-[   20.718325] arm-smmu-v3 arm-smmu-v3.7.auto: IRQ gerror not found
-
-Use platform_get_irq_byname_optional() to avoid displaying a spurious
-error.
-
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 7ecc8cfde553 ("i2c: i2c-stm32f7: Add DMA support")
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-stm32f7.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8da93e730d6fd..ed90361b84dc7 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -3611,19 +3611,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index b24e7b937f210..84cfed17ff4f5 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -1985,6 +1985,11 @@ pm_disable:
+ 	pm_runtime_set_suspended(i2c_dev->dev);
+ 	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
  
- 	/* Interrupt lines */
++	if (i2c_dev->dma) {
++		stm32_i2c_dma_free(i2c_dev->dma);
++		i2c_dev->dma = NULL;
++	}
++
+ clk_free:
+ 	clk_disable_unprepare(i2c_dev->clk);
  
--	irq = platform_get_irq_byname(pdev, "combined");
-+	irq = platform_get_irq_byname_optional(pdev, "combined");
- 	if (irq > 0)
- 		smmu->combined_irq = irq;
- 	else {
--		irq = platform_get_irq_byname(pdev, "eventq");
-+		irq = platform_get_irq_byname_optional(pdev, "eventq");
- 		if (irq > 0)
- 			smmu->evtq.q.irq = irq;
+@@ -1995,21 +2000,21 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+ {
+ 	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
  
--		irq = platform_get_irq_byname(pdev, "priq");
-+		irq = platform_get_irq_byname_optional(pdev, "priq");
- 		if (irq > 0)
- 			smmu->priq.q.irq = irq;
+-	if (i2c_dev->dma) {
+-		stm32_i2c_dma_free(i2c_dev->dma);
+-		i2c_dev->dma = NULL;
+-	}
+-
+ 	i2c_del_adapter(&i2c_dev->adap);
+ 	pm_runtime_get_sync(i2c_dev->dev);
  
--		irq = platform_get_irq_byname(pdev, "gerror");
-+		irq = platform_get_irq_byname_optional(pdev, "gerror");
- 		if (irq > 0)
- 			smmu->gerr_irq = irq;
- 	}
+-	clk_disable_unprepare(i2c_dev->clk);
+-
+ 	pm_runtime_put_noidle(i2c_dev->dev);
+ 	pm_runtime_disable(i2c_dev->dev);
+ 	pm_runtime_set_suspended(i2c_dev->dev);
+ 	pm_runtime_dont_use_autosuspend(i2c_dev->dev);
+ 
++	if (i2c_dev->dma) {
++		stm32_i2c_dma_free(i2c_dev->dma);
++		i2c_dev->dma = NULL;
++	}
++
++	clk_disable_unprepare(i2c_dev->clk);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
