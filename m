@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057D6C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F28CBC2D0C6
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC21220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE96C20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077369;
-	bh=wy3YIPHob0rwT7NgwqV/wiFK4T5Z5pn4dDmhgqJTP9I=;
+	s=default; t=1576077370;
+	bh=uXh2vBvBRQO36GgVX8ar8zmIAph80dMhJHJkUXgaPvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7vhPEWqQXPFzZJCSCK5sGDW4OmuxDI5KJzLlLHNZ2UIK5VtdnywVrai+NCMT1C/e
-	 FzmKPPDfasuSma+9apvV/oSQmRCvuz8sr/Qf3Nz0nV/l33kAokQxgq96wQU3Rt+jhs
-	 UGFqwgFosMFx6/omWzZqv3Bi1vsiEqZvBaDvbOxM=
+	b=l26t1Pz8NFxWYLC9eA1KYZRBL1soJbYZ/3hp0nNycx6CQsZ6Cskzu6nduVCY/lXJb
+	 yoyXY48Am5FWBIlRcW8nsVyLKMYKnXi3zKzt/nM2nSm7XxgRhtgHiQTkQokQbyOM85
+	 C01nhFVSDQ7HJMVssLqoKrVxaIg/Lqp4i3kXb6Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbfLKPQI (ORCPT
+        id S1731854AbfLKPQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731642AbfLKPQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:05 -0500
+        id S1730511AbfLKPQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF77A24654;
-        Wed, 11 Dec 2019 15:16:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24EE720663;
+        Wed, 11 Dec 2019 15:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077365;
-        bh=wy3YIPHob0rwT7NgwqV/wiFK4T5Z5pn4dDmhgqJTP9I=;
+        s=default; t=1576077362;
+        bh=uXh2vBvBRQO36GgVX8ar8zmIAph80dMhJHJkUXgaPvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R4h7PuR/S/13hpMmpRZz0Cex/aSBG1c95vAjK+irYQvwV27vCAWz9Jbn2h3NBeFgM
-         HVAjks5T6wQvTwpl9Jd6tpB6lT7T7+qt/BTAlpZhClQoVA7Ss7bmGFOp/gZTa0+BB3
-         qjKVMUyv3QwjapINZHXBbzzoZvTpSrD/w773MWEA=
+        b=1hxwVOYHrIgi1jvF9vjj/fqMcezjeXr8n1G1BAymBxh1JBzUqUEq6f873X6EQg+rd
+         m5AeiDsZzVfxtl33H/bfnK1Lmn1aeaXwLZbiS8mnP6V/nlb5LghQS/apfkWAswzdiy
+         kHaasG3gfUu4l1VuKqIlSc7nrwv2n7RZa8Bt/9Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sirong Wang <wangsirong@huawei.com>,
-        Weihang Li <liweihang@hisilicon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 012/243] RDMA/hns: Correct the value of HNS_ROCE_HEM_CHUNK_LEN
-Date:   Wed, 11 Dec 2019 16:02:54 +0100
-Message-Id: <20191211150339.921079116@linuxfoundation.org>
+Subject: [PATCH 4.19 011/243] autofs: fix a leak in autofs_expire_indirect()
+Date:   Wed, 11 Dec 2019 16:02:53 +0100
+Message-Id: <20191211150339.868438289@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sirong Wang <wangsirong@huawei.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 531eb45b3da4267fc2a64233ba256c8ffb02edd2 ]
+[ Upstream commit 03ad0d703df75c43f78bd72e16124b5b94a95188 ]
 
-Size of pointer to buf field of struct hns_roce_hem_chunk should be
-considered when calculating HNS_ROCE_HEM_CHUNK_LEN, or sg table size will
-be larger than expected when allocating hem.
+if the second call of should_expire() in there ends up
+grabbing and returning a new reference to dentry, we need
+to drop it before continuing.
 
-Fixes: 9a4435375cd1 ("IB/hns: Add driver files for hns RoCE driver")
-Link: https://lore.kernel.org/r/1572575610-52530-2-git-send-email-liweihang@hisilicon.com
-Signed-off-by: Sirong Wang <wangsirong@huawei.com>
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_hem.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/autofs/expire.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_hem.h b/drivers/infiniband/hw/hns/hns_roce_hem.h
-index e8850d59e7804..a94444db3045a 100644
---- a/drivers/infiniband/hw/hns/hns_roce_hem.h
-+++ b/drivers/infiniband/hw/hns/hns_roce_hem.h
-@@ -54,7 +54,7 @@ enum {
+diff --git a/fs/autofs/expire.c b/fs/autofs/expire.c
+index 28d9c2b1b3bb3..70e9afe589fbf 100644
+--- a/fs/autofs/expire.c
++++ b/fs/autofs/expire.c
+@@ -501,9 +501,10 @@ static struct dentry *autofs_expire_indirect(struct super_block *sb,
+ 		 */
+ 		how &= ~AUTOFS_EXP_LEAVES;
+ 		found = should_expire(expired, mnt, timeout, how);
+-		if (!found || found != expired)
+-			/* Something has changed, continue */
++		if (found != expired) { // something has changed, continue
++			dput(found);
+ 			goto next;
++		}
  
- #define HNS_ROCE_HEM_CHUNK_LEN	\
- 	 ((256 - sizeof(struct list_head) - 2 * sizeof(int)) /	 \
--	 (sizeof(struct scatterlist)))
-+	 (sizeof(struct scatterlist) + sizeof(void *)))
- 
- #define check_whether_bt_num_3(type, hop_num) \
- 	(type < HEM_TYPE_MTT && hop_num == 2)
+ 		if (expired != dentry)
+ 			dput(dentry);
 -- 
 2.20.1
 
