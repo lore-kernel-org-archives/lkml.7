@@ -7,51 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9EBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74843C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913882465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0D62464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078572;
-	bh=/+6g7v4r3IpGywefIv8ZdFwib2PrWscyPGU9R1Zcsw8=;
+	s=default; t=1576078576;
+	bh=dIfCz3Zt8PohvxBeJBhWjWv+5k+mpJwXkU+kG+LB/LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=URO/BYu2wDX9/WuiYC3DEUE/JwXJ8cCp313kzdCZM9bSo65PwnSk9h/GMiiI9EPV+
-	 ehnHvZHStJtmE4i+uF0KknitBpQLi/OxHsJQpFeDhso2C2ijHM10F3PieRtBdRp7R/
-	 keGWs9VmnjgoPfcT5FimmCa9CUISbCRC6GbqM2cA=
+	b=Xpllae6V4jVLOhJxHTyrmRdRNha/L3TCswg1KYdpl+u7NrUkr7bY8M4mU/+d1fqbo
+	 YbewEvUgiXksC9/Llp4s6/k2NRJaQCRnIaiZoG5/ycxskCYT9Dh75n2TBdh8dbYOS9
+	 OAWvkpdRNuyPsv6e2b0qdkri4E4xzLXWiJENzKV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbfLKPgA (ORCPT
+        id S2388029AbfLKPgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387831AbfLKPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:50 -0500
+        id S1733101AbfLKPf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:56 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D37C24656;
-        Wed, 11 Dec 2019 15:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376C52464B;
+        Wed, 11 Dec 2019 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078550;
-        bh=/+6g7v4r3IpGywefIv8ZdFwib2PrWscyPGU9R1Zcsw8=;
+        s=default; t=1576078556;
+        bh=dIfCz3Zt8PohvxBeJBhWjWv+5k+mpJwXkU+kG+LB/LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O55GThCb8BrUm2PHe3V6Y5+gWlkvaYwICoo9/OmEgLhymN0KnaEsM+0e26KSTNTy8
-         sfXtouxpCrs2J5g6gSq4j0DIV4P4OlqsM316b5vXaNRffWeRrB0pDje0k2ETzt8S/l
-         oSDyWifvg9swnW/rRZxSZPVrJUQdS6Ha+59cSQZg=
+        b=1e/J80Nd9RpM8lLA5qmyuZkc0N3RB/DGiQONXnef4ay88+DanFiVY7gwRdbkUOIZx
+         NZ86XjKVAE1kWDd9ELP5SkyR4xuF7MlU2YHg0yTEEDVzYj2auTa+XvVnJJwkdA37XQ
+         kvHs3Jqj/13345/5nrH+Lv4ysnuZWFJVTQtnILoA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
-        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 37/42] cdrom: respect device capabilities during opening action
-Date:   Wed, 11 Dec 2019 10:35:05 -0500
-Message-Id: <20191211153510.23861-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 42/42] kernel: sysctl: make drop_caches write-only
+Date:   Wed, 11 Dec 2019 10:35:10 -0500
+Message-Id: <20191211153510.23861-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,64 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diego Elio Pettenò <flameeyes@flameeyes.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-Reading the TOC only works if the device can play audio, otherwise
-these commands fail (and possibly bring the device to an unhealthy
-state.)
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-Similarly, cdrom_mmc3_profile() should only be called if the device
-supports generic packet commands.
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cdrom/cdrom.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index a46f188f679e7..782dbab5ad56a 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -998,6 +998,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 	tracks->xa = 0;
- 	tracks->error = 0;
- 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
-+
-+	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
-+		tracks->error = CDS_NO_INFO;
-+		return;
-+	}
-+
- 	/* Grab the TOC header so we can see how many tracks there are */
- 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
- 	if (ret) {
-@@ -1164,7 +1170,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
- 		ret = open_for_data(cdi);
- 		if (ret)
- 			goto err;
--		cdrom_mmc3_profile(cdi);
-+		if (CDROM_CAN(CDC_GENERIC_PACKET))
-+			cdrom_mmc3_profile(cdi);
- 		if (mode & FMODE_WRITE) {
- 			ret = -EROFS;
- 			if (cdrom_open_write(cdi))
-@@ -2873,6 +2880,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
- 	   it doesn't give enough information or fails. then we return
- 	   the toc contents. */
- use_toc:
-+	if (!CDROM_CAN(CDC_PLAY_AUDIO))
-+		return -ENOSYS;
-+
- 	toc.cdte_format = CDROM_MSF;
- 	toc.cdte_track = CDROM_LEADOUT;
- 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 6af1ac551ea3a..34449ec0689d0 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1398,7 +1398,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= &one,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
