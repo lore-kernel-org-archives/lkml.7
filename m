@@ -2,116 +2,140 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7439EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9154FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481FE22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X+BARLPn"
+	by mail.kernel.org (Postfix) with ESMTP id 710E820836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfLKOXJ (ORCPT
+        id S1729882AbfLKOX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:23:09 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34472 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfLKOXI (ORCPT
+        Wed, 11 Dec 2019 09:23:57 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:44654 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729671AbfLKOX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:23:08 -0500
-Received: by mail-pf1-f196.google.com with SMTP id l127so615433pfl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/QWzNDzzrfxQTmZnQXAnuGOpRW2t5ObwF4zriIuU40Y=;
-        b=X+BARLPnnb5Z0xTDzxhmbC3H9nKkYVim4Rh4phE9EBm7qNO7aIUaJGuD1TC9KIUIzm
-         XTbb0b69nRjKZAUnvb2lPL1NgxsVRCsWAxY9+bewiEBcSjDmyYURfskgytpo9lkqF9UI
-         ewq0eeSIIBhDWGuDL9ls7sulVX7i3SCfU1FuIXgdC+kTP2QNU0X8P6HI59thze0Fw5Z1
-         CC7Vi5z5iDvdTn4YUjm6IJ3jx3eDpb9J2NjXaLgGdvFOzunh1x56XR0vK0OkO3M4FlaO
-         fmo1UspdQF/4Z1pua/UZ0ObIWIOjHLCgQ2dngWCIr+z958SLHosToJDAGJXqhpWimXwh
-         6hWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/QWzNDzzrfxQTmZnQXAnuGOpRW2t5ObwF4zriIuU40Y=;
-        b=hOmqcvA6Fba0ONNQh9xgeUS1Y5MPbJJIb9qwrn8PpFK6K2ggZFjA2FXP9QomIFvVS+
-         fAnPnsWB99/fbMjtjoDpSiHrx4JyEs3UjDQOXb+xbtvBQvNBi8An8VA72HVDrYG6LH1x
-         rrp+cXiVUxCobxI94wrQJsuDzp6PQOvA8bnq1qMpZp4JntQYfTbZz/xpglJRvfJLHz/Z
-         DbIT7/eRu0SmSJ4kF6bTm4HgaeWPYVWiGLA+bqZCPAZHtybAr0eDK+/cLQXDyWCXzdJA
-         IOZV21fIoOSUZwtOtG7avcPoAajLp7cRbRmtT/LmuqYCQre0HR+uGcuqa71Wa00joUCq
-         oRvQ==
-X-Gm-Message-State: APjAAAW0F7X/Pp4dXL/0BUrBaqIiUlqqVYFcJr53N2ytbmzSEfZ17ONf
-        16Cr+W7lXrkJuRbH3W7/sWNJJxrWF8YNeL4F6uYTXA==
-X-Google-Smtp-Source: APXvYqyC3Yj5w8PRUHoADlHDrvA7T1UCFsuw0q62MHrJCRrNQF+pmIjqG0dinlqqjVMygtBbuXda+56UkHWlZ16Mb2M=
-X-Received: by 2002:a65:678f:: with SMTP id e15mr4437984pgr.130.1576074187917;
- Wed, 11 Dec 2019 06:23:07 -0800 (PST)
+        Wed, 11 Dec 2019 09:23:57 -0500
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id C5A2767A6F1;
+        Wed, 11 Dec 2019 15:23:33 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 11 Dec
+ 2019 15:23:33 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 11 Dec 2019 15:23:33 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Horia Geanta <horia.geanta@nxp.com>, Adam Ford <aford173@gmail.com>
+CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        "Fabio Estevam" <festevam@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+Thread-Topic: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
+ i.MX8M variants
+Thread-Index: AQHVp9kQe4CI+Rf8yUmun0IOEuspVqe0/KsA
+Date:   Wed, 11 Dec 2019 14:23:32 +0000
+Message-ID: <d82428e3-326b-db80-2e40-4ef1bdbca060@kontron.de>
+References: <20191130225153.30111-1-aford173@gmail.com>
+ <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
+ <CAHCN7xLkV1WC=9ACj1Mi8+uE8kRCEjCEe+Y36pXwkNeNrgrNVg@mail.gmail.com>
+ <VI1PR0402MB34857B8C5560B912B34674AB985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB34857B8C5560B912B34674AB985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AA2FCE7CD7265A47BE96B7819248829C@snt-world.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CAAeHK+wY+35uBvr0=FnKsWOj91QhXuVE++V7frn5AihAPLvo5Q@mail.gmail.com>
- <Pine.LNX.4.44L0.1912101508470.1647-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1912101508470.1647-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 11 Dec 2019 15:22:56 +0100
-Message-ID: <CAAeHK+xTjUdP5D+DzRD-ZBd-8MmhWxT5n=CqO5u37FrEy6T-8Q@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: C5A2767A6F1.AF622
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: aford173@gmail.com, aymen.sghaier@nxp.com,
+        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
+        herbert@gondor.apana.org.au, horia.geanta@nxp.com,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 10 Dec 2019, Andrey Konovalov wrote:
->
-> > On Tue, Dec 10, 2019 at 8:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> > > This looks like a race in v4l2_open(): The function drops the
-> > > videodev_lock mutex before calling the video driver's open routine, and
-> > > the device can be unregistered during the short time between.
-> > >
-> > > This patch tries to make the race much more likely to happen, for
-> > > testing and verification.
-> > >
-> > > Andrey, will syzbot run the same test with this patch, even though it
-> > > says it doesn't have a reproducer?
-> >
-> > Hi Alan,
-> >
-> > No, unfortunately there's nothing to run if there's no reproducer.
-> > It's technically possible to run the same program log that triggered
-> > the bug initially, but since the bug wasn't reproduced with this log
-> > even without the patch, there isn't much sense in running it with the
-> > patch applied.
->
-> Actually it does make sense.  That bug was caused by a race, and the
-> patch tries to make the race much more likely to happen, so the same
-> test should fail again.
->
-> But never mind; I'll try a different approach.  There's another syzbot
-> bug report, one with a reproducer, and with this patch in place it
-> should trigger the same race.  I'll try submitting it that way.
->
-> By the way, do you know why syzbot sent _two_ reply messages?  One with
-> message ID <00000000000031a0af05995eca0b@google.com> and the other with
-> message ID <000000000000441a4205995eca11@google.com>?  It seems like
-> overkill.
-
-Hm, I'm not sure. Dmitry?
+T24gMTAuMTIuMTkgMDg6NTYsIEhvcmlhIEdlYW50YSB3cm90ZToNCj4gT24gMTIvNi8yMDE5IDk6
+NTUgUE0sIEFkYW0gRm9yZCB3cm90ZToNCj4+IE9uIFdlZCwgRGVjIDQsIDIwMTkgYXQgNTozOCBB
+TSBTY2hyZW1wZiBGcmllZGVyDQo+PiA8ZnJpZWRlci5zY2hyZW1wZkBrb250cm9uLmRlPiB3cm90
+ZToNCj4+Pg0KPj4+IEhpIEFkYW0sDQo+Pj4NCj4+PiBPbiAzMC4xMS4xOSAyMzo1MSwgQWRhbSBG
+b3JkIHdyb3RlOg0KPj4+PiBUaGUgaS5NWDhNIE1pbmkgdXNlcyB0aGUgc2FtZSBjcnlwdG8gZW5n
+aW5lIGFzIHRoZSBpLk1YOE1RLCBidXQNCj4+Pj4gdGhlIGRyaXZlciBpcyByZXN0cmljdGluZyB0
+aGUgY2hlY2sgdG8ganVzdCB0aGUgaS5NWDhNUS4NCj4+Pj4NCj4+Pj4gVGhpcyBwYXRjaCBsZXRz
+IHRoZSBkcml2ZXIgc3VwcG9ydCBhbGwgaS5NWDhNIFZhcmlhbnRzIGlmIGVuYWJsZWQuDQo+Pj4+
+DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IEFkYW0gRm9yZCA8YWZvcmQxNzNAZ21haWwuY29tPg0KPj4+
+DQo+Pj4gV2hhdCBhYm91dCB0aGUgZm9sbG93aW5nIGxpbmVzIGluIHJ1bl9kZXNjcmlwdG9yX2Rl
+Y28wKCk/IERvZXMgdGhpcw0KPj4+IGNvbmRpdGlvbiBhbHNvIGFwcGx5IHRvIGkuTVg4TU0/DQo+
+Pg0KPj4gSSB0aGluayB0aGF0J3MgYSBxdWVzdGlvbiBmb3IgTlhQLiAgSSBhbSBub3Qgc2VlaW5n
+IHRoYXQgaW4gdGhlIE5YUA0KPj4gTGludXggUmVsZWFzZSwgYW5kIEkgZG9uJ3QgaGF2ZSBhbiA4
+TVEgdG8gY29tcGFyZS4NCj4+DQo+IElJUkMgdGhlIGkuTVggQlNQIHJlbGVhc2VzIHVzZSB0aGUg
+SlJJIGZvciBpbml0aWFsaXppbmcgdGhlIFJORywNCj4gYW5kIG5vdCB0aGUgREVDTyByZWdpc3Rl
+ciBpbnRlcmZhY2UuDQo+IA0KPj4gSSB3YXMgYWJsZSB0byBnZXQgdGhlIGRyaXZlciB3b3JraW5n
+IG9uIHRoZSBpLk1YTU0gd2l0aCB0aGUgcGF0Y2guDQo+Pg0KPiBZb3UgYXJlIHByb2JhYmx5IHVz
+aW5nIGEgbmV3ZXIgVS1ib290LCB3aGljaCBpbmNsdWRlcw0KPiBjb21taXQgZGZhZWM3NjAyOWYy
+ICgiY3J5cHRvL2ZzbDogaW5zdGFudGlhdGUgYWxsIHJuZyBzdGF0ZSBoYW5kbGVzIikNCj4gDQo+
+PiBOWFAgIFRlYW0sDQo+Pg0KPj4gRG8geW91IGhhdmUgYW55IG9waW5pb25zIG9uIHRoaXM/DQo+
+Pg0KPiBTaW5jZSBjdXJyZW50IFUtYm9vdCBpbml0aWFsaXplcyBib3RoIFJORyBzdGF0ZSBoYW5k
+bGVzLCBwcmFjdGljYWxseQ0KPiBpbnN0YW50aWF0ZV9ybmcoKSBpcyBhIG5vLW9wLg0KPiANCj4g
+QSBzaW1wbGUgZXhwZXJpbWVudCBpcyB0byAibGllIiBhYm91dCB0aGUgc3RhdGVfaGFuZGxlX21h
+c2ssIHRvIGV4ZXJjaXNlDQo+IHRoZSBERUNPIGFjcXVpcmUgY29kZSAob3IsIGFzIG1lbnRpb25l
+ZCBhYm92ZSwgdG8gcnVuIHdpdGggYW4gb2xkZXIgVS1ib290KToNCj4gDQo+IEBAIC0yNjgsMTIg
+KzI3MiwxOSBAQCBzdGF0aWMgaW50IGluc3RhbnRpYXRlX3JuZyhzdHJ1Y3QgZGV2aWNlICpjdHJs
+ZGV2LCBpbnQgc3RhdGVfaGFuZGxlX21hc2ssDQo+ICAgICAgICAgIHN0cnVjdCBjYWFtX2N0cmwg
+X19pb21lbSAqY3RybDsNCj4gICAgICAgICAgdTMyICpkZXNjLCBzdGF0dXMgPSAwLCByZHN0YV92
+YWw7DQo+ICAgICAgICAgIGludCByZXQgPSAwLCBzaF9pZHg7DQo+ICsgICAgICAgc3RhdGljIGlu
+dCBmb3JjZV9pbml0ID0gMTsNCj4gDQo+ICAgICAgICAgIGN0cmwgPSAoc3RydWN0IGNhYW1fY3Ry
+bCBfX2lvbWVtICopY3RybHByaXYtPmN0cmw7DQo+ICAgICAgICAgIGRlc2MgPSBrbWFsbG9jKENB
+QU1fQ01EX1NaICogNywgR0ZQX0tFUk5FTCk7DQo+ICAgICAgICAgIGlmICghZGVzYykNCj4gICAg
+ICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gDQo+ICsgICAgICAgaWYgKGZvcmNlX2lu
+aXQgJiYgKHN0YXRlX2hhbmRsZV9tYXNrID09IDB4MykpIHsNCj4gKyAgICAgICAgICAgICAgIGRl
+dl9lcnIoY3RybGRldiwgIkZvcmNpbmcgcmVpbml0IG9mIFJORyBzdGF0ZSBoYW5kbGUgMCFcbiIp
+Ow0KPiArICAgICAgICAgICAgICAgZm9yY2VfaW5pdCA9IDA7DQo+ICsgICAgICAgICAgICAgICBz
+dGF0ZV9oYW5kbGVfbWFzayA9IDB4MjsNCj4gKyAgICAgICB9DQo+ICsNCj4gICAgICAgICAgZm9y
+IChzaF9pZHggPSAwOyBzaF9pZHggPCBSTkc0X01BWF9IQU5ETEVTOyBzaF9pZHgrKykgew0KPiAg
+ICAgICAgICAgICAgICAgIC8qDQo+ICAgICAgICAgICAgICAgICAgICogSWYgdGhlIGNvcnJlc3Bv
+bmRpbmcgYml0IGlzIHNldCwgdGhpcyBzdGF0ZSBoYW5kbGUNCj4gDQo+IEluIHRoaXMgY2FzZSBi
+b290IGxvZyBjb25maXJtcyB0aGUgREVDTyBjYW5ub3QgYmUgYWNxdWlyZWQ6DQo+IFsgICAgMi4x
+MzcxMDFdIGNhYW0gMzA5MDAwMDAuY3J5cHRvOiBGb3JjaW5nIHJlaW5pdCBvZiBSTkcgc3RhdGUg
+aGFuZGxlIDAhDQo+IFsgICAgMi4xNzIyOTNdIGNhYW0gMzA5MDAwMDAuY3J5cHRvOiBmYWlsZWQg
+dG8gYWNxdWlyZSBERUNPIDANCj4gWyAgICAyLjE3Nzc4Nl0gY2FhbSAzMDkwMDAwMC5jcnlwdG86
+IGZhaWxlZCB0byBpbnN0YW50aWF0ZSBSTkcNCj4gDQo+IFRvIHN1bSB1cCwgd3JpdGluZyB0byBE
+RUNPUlNSIGlzIG1hbmRhdG9yeS4NCg0KVGhhbmtzIEhvcmlhIGZvciBwcm92aWRpbmcgdGhlIGRl
+dGFpbHMuDQoNCkFkYW0sIGNhbiB5b3UgdXBkYXRlIHlvdXIgcGF0Y2ggdG8gZW5hYmxlIHRoZSBj
+b2RlIGluIA0KcnVuX2Rlc2NyaXB0b3JfZGVjbzAoKSBmb3IgaS5NWDhNTT8NCg0KSWYgSSB1bmRl
+cnN0YW5kIHRoaXMgY29ycmVjdGx5LCB0aGlzIGlzIG5lY2Vzc2FyeSB0byBoYXZlIHRoZSBSTkcg
+DQppbml0aWFsaXplIGNvcnJlY3RseSBubyBtYXR0ZXIgd2hhdCB2ZXJzaW9uIG9mIFUtQm9vdCBp
+cyB1c2VkLg0KDQpUaGFua3MsDQpGcmllZGVy
