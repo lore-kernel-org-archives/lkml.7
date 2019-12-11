@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4281C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A96C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76E9E22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B06924681
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077014;
-	bh=wytKeplqK/AKhB4cIpXTYLqEbmNYTJ0B2BTWnB98EBQ=;
+	s=default; t=1576077018;
+	bh=6aGjWXNISs2WJ1JMWExV1XkKDkJddOHQDLaxBAQHG4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YoYbxhsCW/FCRyh+sqVOhMzEFCuonThqpL03zTMluLX+2BH/kGszppRohkXVnkH7o
-	 ItRb7rjt2+FeYPCJH3693qSR6fUzlJ+VDbrvm4Qi1pQixasgwjFF878blPncVCzCji
-	 8c85Q0md5ZNcRl+aUIxeeX65an7yf6mTXVnRxZFE=
+	b=bEauzeeICTGCQFneTv8Jkja7zmdlT18ao8/iS7shlrnfwXiZLQ6T+FGaCgDeBHyAG
+	 YfvjScQ11lGgoRlTTBavtA/xwAgs3vnHGwJPSCTdN1igrWFRIWhTylJ7vXijpN23Mv
+	 Dza56UimDCu4XtG7SyqeFHgq5Su+Gim21oCDyNDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfLKPKM (ORCPT
+        id S1730737AbfLKPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58340 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730700AbfLKPKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:09 -0500
+        id S1730719AbfLKPKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6381F22B48;
-        Wed, 11 Dec 2019 15:10:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58978208C3;
+        Wed, 11 Dec 2019 15:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077008;
-        bh=wytKeplqK/AKhB4cIpXTYLqEbmNYTJ0B2BTWnB98EBQ=;
+        s=default; t=1576077013;
+        bh=6aGjWXNISs2WJ1JMWExV1XkKDkJddOHQDLaxBAQHG4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uY5bbTU7YC4c7zUYgF+8vtS3C4wEb4/XZdg1zZsy4M65WUtqeCixty0KGrefioE9E
-         vy6fmlmzM4Y62SsPeQfsu6BtLU1io3PAQClIIk7b3rTNKars3pLFcHiN3MvVCutMcK
-         7UDc/2ZU0JysScYJc+/kecgGJ+HhB045IjhF5ScM=
+        b=zyfb33I7o40i3WIUS/ULI13gY53ojwjrUOzy5CLy+knE837gXG5F4eHLC5Jueo/wH
+         3Tt7giCoohHZAZaU3CZG5li1huQucwiqdj6RAgM3/dhF7HpVB9vR8+GHfz9WEoGBxY
+         qx3mxIfnHbHMvT7RFPjsePzuxSjngkcb0l/BSGLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 73/92] crypto: ecdh - fix big endian bug in ECC library
-Date:   Wed, 11 Dec 2019 16:06:04 +0100
-Message-Id: <20191211150257.641511332@linuxfoundation.org>
+Subject: [PATCH 5.4 75/92] crypto: user - fix memory leak in crypto_reportstat
+Date:   Wed, 11 Dec 2019 16:06:06 +0100
+Message-Id: <20191211150258.359953926@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,42 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit f398243e9fd6a3a059c1ea7b380c40628dbf0c61 upstream.
+commit c03b04dcdba1da39903e23cc4d072abf8f68f2dd upstream.
 
-The elliptic curve arithmetic library used by the EC-DH KPP implementation
-assumes big endian byte order, and unconditionally reverses the byte
-and word order of multi-limb quantities. On big endian systems, the byte
-reordering is not necessary, while the word ordering needs to be retained.
+In crypto_reportstat, a new skb is created by nlmsg_new(). This skb is
+leaked if crypto_reportstat_alg() fails. Required release for skb is
+added.
 
-So replace the __swab64() invocation with a call to be64_to_cpu() which
-should do the right thing for both little and big endian builds.
-
-Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
-Cc: <stable@vger.kernel.org> # v4.9+
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Fixes: cac5818c25d0 ("crypto: user - Implement a generic crypto statistics")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/ecc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ crypto/crypto_user_stat.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/crypto/ecc.c
-+++ b/crypto/ecc.c
-@@ -1284,10 +1284,11 @@ EXPORT_SYMBOL(ecc_point_mult_shamir);
- static inline void ecc_swap_digits(const u64 *in, u64 *out,
- 				   unsigned int ndigits)
- {
-+	const __be64 *src = (__force __be64 *)in;
- 	int i;
+--- a/crypto/crypto_user_stat.c
++++ b/crypto/crypto_user_stat.c
+@@ -328,8 +328,10 @@ int crypto_reportstat(struct sk_buff *in
+ drop_alg:
+ 	crypto_mod_put(alg);
  
- 	for (i = 0; i < ndigits; i++)
--		out[i] = __swab64(in[ndigits - 1 - i]);
-+		out[i] = be64_to_cpu(src[ndigits - 1 - i]);
+-	if (err)
++	if (err) {
++		kfree_skb(skb);
+ 		return err;
++	}
+ 
+ 	return nlmsg_unicast(net->crypto_nlsk, skb, NETLINK_CB(in_skb).portid);
  }
- 
- static int __ecc_is_key_valid(const struct ecc_curve *curve,
 
 
