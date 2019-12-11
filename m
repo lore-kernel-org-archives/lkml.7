@@ -2,102 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F049C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE842C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5774E21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078849;
-	bh=n4GvizVDzxPXRCyPq8+nCL+CKfZkX/TznNEEnntdSts=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=amgUl6ZCWa6bAlXyF7b/KVmKlPynAGPIIDjZAJHXs9MUZ4gu4iP+g3yME74Fbr0OG
-	 L3MAgPlFRp5qSUrYbfQ5jsWE3YcWeEwaRhYVya139Yf+nacu7qWb+SEZk8CSeL4MyS
-	 0NrtybrBkbo59NkYCn11SLMbah1f+MA5EWl90qC4=
+	by mail.kernel.org (Postfix) with ESMTP id 99DBB21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388480AbfLKPks (ORCPT
+        id S2388544AbfLKPku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:40:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:40:50 -0500
+Received: from mga07.intel.com ([134.134.136.100]:59322 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388386AbfLKPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:24 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C13F422B48;
-        Wed, 11 Dec 2019 15:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078703;
-        bh=n4GvizVDzxPXRCyPq8+nCL+CKfZkX/TznNEEnntdSts=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ftpuHtLmjbF2xQw/7sjDy0BJTByFvESr7IWIcYmZu8jSBx5FffvEGNZrauqxflBWL
-         0XtPegFEjxSILfpFrH4uUiUq/Dre9wSxh9tT3Q++uzdPMg19r1VS6sGI2YQ26yVsbG
-         Pj4XyB0wVKkPjBgjTNyG7JQttv0Vyh+3hx662Srk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 09/37] dma-debug: add a schedule point in debug_dma_dump_mappings()
-Date:   Wed, 11 Dec 2019 10:37:45 -0500
-Message-Id: <20191211153813.24126-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
-References: <20191211153813.24126-1-sashal@kernel.org>
+        id S1733115AbfLKPkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:40:45 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 07:40:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="245326651"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga002.fm.intel.com with SMTP; 11 Dec 2019 07:40:38 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 11 Dec 2019 17:40:37 +0200
+Date:   Wed, 11 Dec 2019 17:40:37 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Thomas Anderson <thomasanderson@google.com>
+Cc:     Bhawanpreet Lakha <Bhawanpreet.lakha@amd.com>,
+        Harry Wentland <hwentlan@amd.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>, Sean Pau <sean@poorly.run>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/edid: Increase size of VDB and CMDB bitmaps to 256
+ bits
+Message-ID: <20191211154037.GI1208@intel.com>
+References: <20191210221048.83628-1-thomasanderson@google.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210221048.83628-1-thomasanderson@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Tue, Dec 10, 2019 at 02:10:48PM -0800, Thomas Anderson wrote:
+> CEA-861-G adds modes up to 219, so increase the size of the
+> maps in preparation for adding the new modes to drm_edid.c.
+> 
+> Signed-off-by: Thomas Anderson <thomasanderson@google.com>
 
-[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
+Thanks. lgtm. Pushed to drm-misc-next.
 
-debug_dma_dump_mappings() can take a lot of cpu cycles :
+PS. I do wonder a bit if we should consider a more economical way to
+track this stuff. Not really sure how many bits we can realistically
+expect to be set in these bitmasks...
 
-lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
-163435 /sys/kernel/debug/dma-api/dump
+> ---
+>  include/drm/drm_connector.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> index 5f8c3389d46f..17b728d9c73d 100644
+> --- a/include/drm/drm_connector.h
+> +++ b/include/drm/drm_connector.h
+> @@ -188,19 +188,19 @@ struct drm_hdmi_info {
+>  
+>  	/**
+>  	 * @y420_vdb_modes: bitmap of modes which can support ycbcr420
+> -	 * output only (not normal RGB/YCBCR444/422 outputs). There are total
+> -	 * 107 VICs defined by CEA-861-F spec, so the size is 128 bits to map
+> -	 * upto 128 VICs;
+> +	 * output only (not normal RGB/YCBCR444/422 outputs). The max VIC
+> +	 * defined by the CEA-861-G spec is 219, so the size is 256 bits to map
+> +	 * up to 256 VICs.
+>  	 */
+> -	unsigned long y420_vdb_modes[BITS_TO_LONGS(128)];
+> +	unsigned long y420_vdb_modes[BITS_TO_LONGS(256)];
+>  
+>  	/**
+>  	 * @y420_cmdb_modes: bitmap of modes which can support ycbcr420
+> -	 * output also, along with normal HDMI outputs. There are total 107
+> -	 * VICs defined by CEA-861-F spec, so the size is 128 bits to map upto
+> -	 * 128 VICs;
+> +	 * output also, along with normal HDMI outputs. The max VIC defined by
+> +	 * the CEA-861-G spec is 219, so the size is 256 bits to map up to 256
+> +	 * VICs.
+>  	 */
+> -	unsigned long y420_cmdb_modes[BITS_TO_LONGS(128)];
+> +	unsigned long y420_cmdb_modes[BITS_TO_LONGS(256)];
+>  
+>  	/** @y420_cmdb_map: bitmap of SVD index, to extraxt vcb modes */
+>  	u64 y420_cmdb_map;
+> -- 
+> 2.24.0.525.g8f36a354ae-goog
 
-real	0m0.463s
-user	0m0.003s
-sys	0m0.459s
-
-Let's add a cond_resched() to avoid holding cpu for too long.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Corentin Labbe <clabbe@baylibre.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- lib/dma-debug.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/dma-debug.c b/lib/dma-debug.c
-index 51a76af25c663..173013f5e41b9 100644
---- a/lib/dma-debug.c
-+++ b/lib/dma-debug.c
-@@ -427,6 +427,7 @@ void debug_dma_dump_mappings(struct device *dev)
- 		}
- 
- 		spin_unlock_irqrestore(&bucket->lock, flags);
-+		cond_resched();
- 	}
- }
- EXPORT_SYMBOL(debug_dma_dump_mappings);
 -- 
-2.20.1
-
+Ville Syrjälä
+Intel
