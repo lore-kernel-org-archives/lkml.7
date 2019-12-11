@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA8C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B45C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD5D2465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC0B2467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077134;
-	bh=VuytPSLb+8F9+jtnOgEB06wArOxY6MKT/sSY+vsFQLM=;
+	s=default; t=1576077147;
+	bh=VPD4dyWy+JKVBUwjhXVuIu5XtWvfaTIKqFTi8EFeecE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPmiRH2HT1bSmpiWNThE+LLoM09oJiXn+Nn32TA6DlUBX/cx154K4rACl/n9AC9Lc
-	 9Bk5NEfL0NKx0isOG1Z1n5Ms9f7MRvn89EO8JIQMKlKTuY8CckSDGTI9PLuGyKhGbb
-	 jQNRdCMFqkxChft8IoCwpywGvUSdH9m4ziM36s3A=
+	b=ZorrCtg5rBz4h76f+3NlXzLkuC+o4VsnMRqwg2FfZvBsx8PosUmsA01oBfFHPYk9s
+	 wcQBEkQlWC0gO1BYxzZomoz0iarw/ouD8n3SeMCYl9lJI9G3xYKYO7GsbTEAU/J0/X
+	 tdtUMK5Ogjq9S1IvlqAQYRw+gfXt/1VzxzkmfGog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbfLKPMN (ORCPT
+        id S1731124AbfLKPM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbfLKPMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:01 -0500
+        id S1731048AbfLKPMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA36F24682;
-        Wed, 11 Dec 2019 15:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD5D1222C4;
+        Wed, 11 Dec 2019 15:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077121;
-        bh=VuytPSLb+8F9+jtnOgEB06wArOxY6MKT/sSY+vsFQLM=;
+        s=default; t=1576077126;
+        bh=VPD4dyWy+JKVBUwjhXVuIu5XtWvfaTIKqFTi8EFeecE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woLE8CYuVpCYwjYWJyZR27S1ED/xkHi1eZc8RUJkvc2fiyUL8OiQgtMs0oEy/1P+k
-         wO4LwJOkgYztFHKBtmRiLsprKlSt44sjQ7kSf0E60MVVhtztUnfvF/NUdPEVUIfDMM
-         KakSyxsRKchfU3k2CBdfcqG4oVRiqGeG1qi7vO30=
+        b=BLyllEteWQVMePWLqSLFXyFDdevUZUqH1ubY4A1AVEPo+6wEymTLFuQDTXlcNqrv2
+         T4dSRrCkijgrZWtwSM0coSyx2mfZS8UvTOB1D95PvTG2xTJ9qYaQX4IyRaLdWjJQM3
+         F++68EvOL8SOxa3fYhHSeSDSiLjY6795fTmf35Ew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Xiaodong Xu <stid.smth@gmail.com>,
+        Bo Chen <chenborfc@163.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 025/105] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
-Date:   Wed, 11 Dec 2019 16:05:14 +0100
-Message-Id: <20191211150229.013991971@linuxfoundation.org>
+Subject: [PATCH 5.3 026/105] xfrm: release device reference for invalid state
+Date:   Wed, 11 Dec 2019 16:05:15 +0100
+Message-Id: <20191211150229.289266937@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -61,70 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Xiaodong Xu <stid.smth@gmail.com>
 
-[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
+[ Upstream commit 4944a4b1077f74d89073624bd286219d2fcbfce3 ]
 
-I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
-result in a NULL pointer dereference at the moment:
+An ESP packet could be decrypted in async mode if the input handler for
+this packet returns -EINPROGRESS in xfrm_input(). At this moment the device
+reference in skb is held. Later xfrm_input() will be invoked again to
+resume the processing.
+If the transform state is still valid it would continue to release the
+device reference and there won't be a problem; however if the transform
+state is not valid when async resumption happens, the packet will be
+dropped while the device reference is still being held.
+When the device is deleted for some reason and the reference to this
+device is not properly released, the kernel will keep logging like:
 
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    Oops: 0002 [#1] PREEMPT SMP NOPTI
-    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
-    RIP: 0010:skb_queue_tail+0x25/0x50
-    Call Trace:
-     nci_recv_frame+0x36/0x90 [nci]
-     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
-     ? preempt_count_add+0x68/0xa0
-     ? irq_forced_thread_fn+0x80/0x80
-     irq_thread_fn+0x20/0x60
-     irq_thread+0xee/0x180
-     ? wake_threads_waitq+0x30/0x30
-     kthread+0xfb/0x130
-     ? irq_thread_check_affinity+0xd0/0xd0
-     ? kthread_park+0x90/0x90
-     ret_from_fork+0x1f/0x40
+unregister_netdevice: waiting for ppp2 to become free. Usage count = 1
 
-Afterward the kernel must be rebooted to work properly again.
+The issue is observed when running IPsec traffic over a PPPoE device based
+on a bridge interface. By terminating the PPPoE connection on the server
+end for multiple times, the PPPoE device on the client side will eventually
+get stuck on the above warning message.
 
-This happens because it attempts to call nci_recv_frame() with skb == NULL.
-However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
-NULL checks for skb, causing the NULL pointer dereference.
+This patch will check the async mode first and continue to release device
+reference in async resumption, before it is dropped due to invalid state.
 
-Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
-Make sure to log it so it is obvious that a communication error occurred.
-The error above then becomes:
+v2: Do not assign address family from outer_mode in the transform if the
+state is invalid
 
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
-    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
-    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+v3: Release device reference in the error path instead of jumping to resume
 
-Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4ce3dbe397d7b ("xfrm: Fix xfrm_input() to verify state is valid when (encap_type < 0)")
+Signed-off-by: Xiaodong Xu <stid.smth@gmail.com>
+Reported-by: Bo Chen <chenborfc@163.com>
+Tested-by: Bo Chen <chenborfc@163.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/nxp-nci/i2c.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/xfrm/xfrm_input.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
-index 4aeb3861b4095..6c468899f2ffe 100644
---- a/drivers/nfc/nxp-nci/i2c.c
-+++ b/drivers/nfc/nxp-nci/i2c.c
-@@ -225,8 +225,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
+diff --git a/net/xfrm/xfrm_input.c b/net/xfrm/xfrm_input.c
+index 6088bc2dc11e3..fcd4b1f36e669 100644
+--- a/net/xfrm/xfrm_input.c
++++ b/net/xfrm/xfrm_input.c
+@@ -480,6 +480,9 @@ int xfrm_input(struct sk_buff *skb, int nexthdr, __be32 spi, int encap_type)
+ 			else
+ 				XFRM_INC_STATS(net,
+ 					       LINUX_MIB_XFRMINSTATEINVALID);
++
++			if (encap_type == -1)
++				dev_put(skb->dev);
+ 			goto drop;
+ 		}
  
- 	if (r == -EREMOTEIO) {
- 		phy->hard_fault = r;
--		skb = NULL;
--	} else if (r < 0) {
-+		if (info->mode == NXP_NCI_MODE_FW)
-+			nxp_nci_fw_recv_frame(phy->ndev, NULL);
-+	}
-+	if (r < 0) {
- 		nfc_err(&client->dev, "Read failed with error %d\n", r);
- 		goto exit_irq_handled;
- 	}
 -- 
 2.20.1
 
