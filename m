@@ -2,51 +2,53 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A266EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7AEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787A62077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDFF2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079945;
-	bh=Bz+8WnJtqczywJSe0UW6YQd82hoa3y0kDAL/ZZjTorE=;
+	s=default; t=1576079953;
+	bh=wm3yUHJRSzOn2z/efeQp3MgJZ/QBy5b8Kry5NXR6mhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfZOKJgd1/y8BbgC/bI5fFuDfV1pr8bbZUUQTB4nP0u6L+E0ByMmE13WxV1k0/BXz
-	 IPcuJ9vaMsQFBn0ZIO7q6yQTppfJ4HcXJa2GKNdYcTJVFiMQefkylZpCMiiQ+1tigX
-	 JW+mAtr+bvSelxPXyFPZZEK/q/TcYucDsP8A9C9k=
+	b=mIj5OEk+SN7efOQTpHk6P7P35RinDuIDegq02N9ivsSimhv5ohfrLSQwdOxrxGT1W
+	 p8aw7EMDpcjITySSBDDEGp32vHe6gqWXyxoTTzbmG2WeAK5q9FtDfyOmrR8upqODbr
+	 azE9Mc+Tt+Gk8kznQe3HFWyNAUSUKlWXuYdLZ1mI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732559AbfLKP7E (ORCPT
+        id S1732826AbfLKP7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:59:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:59:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731590AbfLKPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:10 -0500
+        id S1731573AbfLKPOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576E524658;
-        Wed, 11 Dec 2019 15:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19E7324684;
+        Wed, 11 Dec 2019 15:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077250;
-        bh=Bz+8WnJtqczywJSe0UW6YQd82hoa3y0kDAL/ZZjTorE=;
+        s=default; t=1576077244;
+        bh=wm3yUHJRSzOn2z/efeQp3MgJZ/QBy5b8Kry5NXR6mhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12NkmH7GcBDH8yyWoAdlMWmBYqxpc8PiIG/xGCBqnd79K8PCLS/TbCjgjfzpzgSyV
-         uvMcFtne7+kDotJpGQQ6pxdip+zu99UI8Wvdo70aBnOjV1uKUzU+QfDo2tvBRctcdc
-         VDImB/BbozoZ8IcKSSNPI5rMVWFkjXLnIctKhlF8=
+        b=Ji0nPQ8SUiv65WyW0yzqV3ELG1ToHbumS10bO1W1I9XCTMGPzKQye6t2dBlaD/2Wg
+         lprvKGTJv2GwMUzJ4seZ2WZBHuz0mS4X8TV3OO1Kdc+Cxv+NC4gosaMH/t05yIChOU
+         LP4TBy2keHN86cKYY0Mm1y+kIDUwqv3z8jmaK07s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 127/134] s390/cpum_sf: Check for SDBT and SDB consistency
-Date:   Wed, 11 Dec 2019 10:11:43 -0500
-Message-Id: <20191211151150.19073-127-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 122/134] perf regs: Make perf_reg_name() return "unknown" instead of NULL
+Date:   Wed, 11 Dec 2019 10:11:38 -0500
+Message-Id: <20191211151150.19073-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,105 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
+[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
 
-Each SBDT is located at a 4KB page and contains 512 entries.
-Each entry of a SDBT points to a SDB, a 4KB page containing
-sampled data. The last entry is a link to another SDBT page.
+To avoid breaking the build on arches where this is not wired up, at
+least all the other features should be made available and when using
+this specific routine, the "unknown" should point the user/developer to
+the need to wire this up on this particular hardware architecture.
 
-When an event is created the function sequence executed is:
+Detected in a container mipsel debian cross build environment, where it
+shows up as:
 
-  __hw_perf_event_init()
-  +--> allocate_buffers()
-       +--> realloc_sampling_buffers()
-	    +---> alloc_sample_data_block()
+  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2:
+  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Both functions realloc_sampling_buffers() and
-alloc_sample_data_block() allocate pages and the allocation
-can fail. This is handled correctly and all allocated
-pages are freed and error -ENOMEM is returned to the
-top calling function. Finally the event is not created.
+cross compiler details:
 
-Once the event has been created, the amount of initially
-allocated SDBT and SDB can be too low. This is detected
-during measurement interrupt handling, where the amount
-of lost samples is calculated. If the number of lost samples
-is too high considering sampling frequency and already allocated
-SBDs, the number of SDBs is enlarged during the next execution
-of cpumsf_pmu_enable().
+  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
 
-If more SBDs need to be allocated, functions
+Also on mips64:
 
-       realloc_sampling_buffers()
-       +---> alloc-sample_data_block()
+  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
+                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
+                   from util/session.c:13:
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_user__printf' at util/session.c:1139:3,
+      inlined from 'dump_sample' at util/session.c:1246:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In function 'printf',
+      inlined from 'regs_dump__printf' at util/session.c:1103:3,
+      inlined from 'regs__printf' at util/session.c:1131:2,
+      inlined from 'regs_intr__printf' at util/session.c:1147:3,
+      inlined from 'dump_sample' at util/session.c:1249:3,
+      inlined from 'machines__deliver_event' at util/session.c:1421:3:
+  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
+    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-are called to allocate more pages. Page allocation may fail
-and the returned error is ignored. A SDBT and SDB setup
-already exists.
+cross compiler details:
 
-However the modified SDBTs and SDBs might end up in a situation
-where the first entry of an SDBT does not point to an SDB,
-but another SDBT, basicly an SBDT without payload.
-This can not be handled by the interrupt handler, where an SDBT
-must have at least one entry pointing to an SBD.
+  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
 
-Add a check to avoid SDBTs with out payload (SDBs) when enlarging
-the buffer setup.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/util/perf_regs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 3d8b12a9a6ff4..7511b71d29313 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -193,7 +193,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 				   unsigned long num_sdb, gfp_t gfp_flags)
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index 47fe34e5f7d5b..ec7640cc4c911 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -41,7 +41,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+ 
+ static inline const char *perf_reg_name(int id __maybe_unused)
  {
- 	int i, rc;
--	unsigned long *new, *tail;
-+	unsigned long *new, *tail, *tail_prev = NULL;
+-	return NULL;
++	return "unknown";
+ }
  
- 	if (!sfb->sdbt || !sfb->tail)
- 		return -EINVAL;
-@@ -232,6 +232,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 			sfb->num_sdbt++;
- 			/* Link current page to tail of chain */
- 			*tail = (unsigned long)(void *) new + 1;
-+			tail_prev = tail;
- 			tail = new;
- 		}
- 
-@@ -241,10 +242,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 		 * issue, a new realloc call (if required) might succeed.
- 		 */
- 		rc = alloc_sample_data_block(tail, gfp_flags);
--		if (rc)
-+		if (rc) {
-+			/* Undo last SDBT. An SDBT with no SDB at its first
-+			 * entry but with an SDBT entry instead can not be
-+			 * handled by the interrupt handler code.
-+			 * Avoid this situation.
-+			 */
-+			if (tail_prev) {
-+				sfb->num_sdbt--;
-+				free_page((unsigned long) new);
-+				tail = tail_prev;
-+			}
- 			break;
-+		}
- 		sfb->num_sdb++;
- 		tail++;
-+		tail_prev = new = NULL;	/* Allocated at least one SBD */
- 	}
- 
- 	/* Link sampling buffer to its origin */
+ static inline int perf_reg_value(u64 *valp __maybe_unused,
 -- 
 2.20.1
 
