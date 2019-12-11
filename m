@@ -2,142 +2,105 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0802BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C81C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE5024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLp0q+Aq"
+	by mail.kernel.org (Postfix) with ESMTP id AE64C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfLKLrX (ORCPT
+        id S1729061AbfLKLtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:47:23 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:39898 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfLKLrX (ORCPT
+        Wed, 11 Dec 2019 06:49:06 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:49254 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727477AbfLKLtF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:47:23 -0500
-Received: by mail-vk1-f194.google.com with SMTP id x199so6695013vke.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 03:47:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=KPw4BWkTUh66N/l+oHgRw2epWlItk5ePmLSBKI5Tyjc=;
-        b=fLp0q+Aq+pCU0RkbRVrb2N2a9Cbry6BHuCOylVJULtiPiEObiSOxp/zavD8nzE+zj5
-         lKyW0NHDPZ0wyI2Z9BVSwsGC29TKNdK8TOKRQdV2ICMjyhsvO2bGHVWapjhh/k6lyHgp
-         4AL6rw3TQQnY6t3Zl8z9oJ4GdUKiSRVij2DWsfvZDXfk7GomIsw45hb55Y9zE9UTW+j6
-         TOwDPrUo/s0V38hskklMtX9r46NWjQHRUmSZm7NxUXfwLOvEIoz/6AufILKs6XIXdsm8
-         PKYRhpob37eGDMbF3pU5G4FSkNKnqZvW1/9POYZoYBcKlRQxtekSjqiGzYeL7s4sc/WE
-         VR1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=KPw4BWkTUh66N/l+oHgRw2epWlItk5ePmLSBKI5Tyjc=;
-        b=sMh+4jJv6jBeZf1bLC90w1UhVmCgcy7lKT3om2LqlvgLAkv4VGwpubh6YNRDSLgfL/
-         0aXXrYGkykdg2aGijPcxr9Ol4pLtEm+iIG39kF6CWQj8r9vh4VXlc7pgLeRZh/uJWBBo
-         somaLt8J3gruhRMblOFAyC12AHmYhNApteljb5+MtteQ9xkRKP5Rt9ywsGiXuw9e3aiO
-         b2nZMgJYmg6b8HE4YT4VdAKgy3LAtk+v64TltwtsjeTstwCC0Tq9t5x9oQ9nI2yxLNKQ
-         WR6MrMeDo8h9nHTQXfPCHcuSqSFTPBVDkWlTdF/5fij0sqBPYv72Zcl5R5yr+YE5Gj7Y
-         Ypkw==
-X-Gm-Message-State: APjAAAWl5GKYyHevTDIzYFiR/xDfFg/7nD3s65ngokaIlXinmvNdCC0u
-        BXgLo3rjStWShTGAeEvb6dlxwUCGETmzUGMDs9A+yQ==
-X-Google-Smtp-Source: APXvYqy2WV0o0WTeidYaegKNg5xN9HKD7exGZ7ITgPnsyD2ep/rt00HnH9Ugu3XPBwH9a3J2kYJwc5f02NtnzlPD5SU=
-X-Received: by 2002:a1f:3fcd:: with SMTP id m196mr2975528vka.28.1576064841951;
- Wed, 11 Dec 2019 03:47:21 -0800 (PST)
+        Wed, 11 Dec 2019 06:49:05 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-9a-5df0d7ae1537
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 34.B2.08102.EA7D0FD5; Wed, 11 Dec 2019 12:49:02 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Wed, 11 Dec 2019 12:48:56 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>
+CC:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "noralf@tronnes.org" <noralf@tronnes.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Subject: Re: [PATCH v6 12/15] rtc: bd70528 add BD71828 support
+Thread-Topic: [PATCH v6 12/15] rtc: bd70528 add BD71828 support
+Thread-Index: AQHVsAgtLDOE1gVnBUinFPzstDImkqe0vi8AgAAC8oA=
+Date:   Wed, 11 Dec 2019 11:48:56 +0000
+Message-ID: <830dad816b6d7f375e7c821e8e435931d1cd4afa.camel@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <16a2492d4c70a80628dbf1a64a85c5b554c7f6e4.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191211113828.GW1463890@piout.net>
+In-Reply-To: <20191211113828.GW1463890@piout.net>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <0A0135D61D3D4542ABB9B3608955BE32@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
- <1575966995-13757-5-git-send-email-kevin3.tang@gmail.com> <CACvgo50Hgbb8ywX2RgFqkitxwBG64EhP9g1TSxgLkQf-6L6soA@mail.gmail.com>
- <CAFPSGXZMmfeBxkNhuNR59bX26_69_y5C13P7qY-UawVDa7Q3Jw@mail.gmail.com>
-In-Reply-To: <CAFPSGXZMmfeBxkNhuNR59bX26_69_y5C13P7qY-UawVDa7Q3Jw@mail.gmail.com>
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-Date:   Wed, 11 Dec 2019 11:46:06 +0000
-Message-ID: <CACvgo50wCKq76Wj0xjJcuWxz5gvaOSbj1Hz8-Vi6eOSGH106yg@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/8] drm/sprd: add Unisoc's drm display controller driver
-To:     tang pengchuan <kevin3.tang@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTVxjfuff23gN49VBwHOo08266OSOORJOTxTkX5nb5ZzHRZK8QvI47
+        SoS2uS0bbv/gCNWiM+jAzQaq1qIMG6sFHyMwXcOzGpQOCmaiKyKJOis6wfkY7t4Whb/Od77f
+        63zJdyCtr+MMsMBkkxWTVCiwicy5+icnlh0bGMt5u/GHBcTT28+RbdHDHPlvTwdHHtQGGVId
+        GWHJyLltgOxv69GRHeebdKTskI8lf548zpBr4+2ATPRtp0jV0yMUubfzqo4ctHsY0rj/KSB/
+        NNew5OTfxwDpONrHkrqBXorU1HUx5O59B0V6g2tJdTDKkaFgO0vKegdpUt7axpHJ8AmG7Or5
+        aM180evyAvHJ4z1AvDtYzoku73fir84hTvQ3OFjxSriFFc/Wejnx0K4fdeLEhd2MOHrQx4id
+        g6cp8SfXI0r07WwDYv3Rh5z4j3/BOvR50qpNku3r9QX5puWrNyYZw6eyLMN0yeVLIaoU9NEV
+        IAFitAKHIj9zFSAR6lE/wK7AMzZ+6QK4vO+6ikDIolW44jKnCVJRFnZdtDMah0a/JeEbVQdi
+        TiloNf634fYU6T0cqqli4vU7+N54S4zDoEXYPzAc8+TRx7ijZyr4PMB3fLcpjZOAMnHpmJ/V
+        aoDmY0dpNNanURr2jz7UxV+NsKfl4tQEc/HN65NTfQG3Poowmj+NlmBf8/K4dA3eXjPMxeuF
+        uGpHJFbzKBl37xthKsHLzhkJzmm1c4baOUPtnKE+AHQNABdJBYX5kk3OzFDk4gzFbCxSjy/N
+        RX4QX7sHZ8CzQHYAUBAEQDqkhLk83T2Wo5+9yZy3xShZjblKcaFsDQAMaSGV77RHc/R8nrTl
+        W1kxP4fmQUZI49+I7M7RIy1rsyxbZOU5+gqEAua5ftU0WZHz5ZKvCgpt0zAFEzTzREOqVTbl
+        yYpUbDPmauuRa1X3Q4NmqbmWsCrnrRapSO3GpUGwFFberHXTsK22zk3rGZPZJBvSeLuWhDSq
+        sdj0IugWSINASOHdmtEs9e+98LmlRlBqhCNPG81qk6YhQylo8Fa+u6G1uvnS1tnu9O55uGRF
+        lhC6L7c8HvZcG+0SGqO/eyLuiGWyiZQ3dW6YsL/efuRKwgdnK7t/Wfm9dOGzJVdXfug3LD3z
+        ycDE0J2y9GV0fcberW9mfTMJx19ljKHjn4b3/WXI/uKlU4eT39+4+DXY5ECG7M1z8N4bGYtS
+        sGMtLTBWo5T5Fq1Ypf8B6qHyojgEAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 at 09:18, tang pengchuan <kevin3.tang@gmail.com> wrote:
->
-> Hi
->
-> Emil Velikov <emil.l.velikov@gmail.com> =E4=BA=8E2019=E5=B9=B412=E6=9C=88=
-11=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:14=E5=86=99=E9=81=93=EF=
-=BC=9A
->>
->> Hi Kevin,
->>
->> On Tue, 10 Dec 2019 at 08:41, Kevin Tang <kevin3.tang@gmail.com> wrote:
->> >
->> > From: Kevin Tang <kevin.tang@unisoc.com>
->> >
->> > Adds DPU(Display Processor Unit) support for the Unisoc's display subs=
-ystem.
->> > It's support multi planes, scaler, rotation, PQ(Picture Quality) and m=
-ore.
->> >
->> > Cc: Orson Zhai <orsonzhai@gmail.com>
->> > Cc: Baolin Wang <baolin.wang@linaro.org>
->> > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
->> > Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
->> > ---
->> >  drivers/gpu/drm/sprd/Makefile       |    6 +-
->> >  drivers/gpu/drm/sprd/disp_lib.c     |  290 +++++++
->> >  drivers/gpu/drm/sprd/disp_lib.h     |   40 +
->> >  drivers/gpu/drm/sprd/dpu/Makefile   |    8 +
->> >  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c | 1464 ++++++++++++++++++++++++++=
-+++++++++
->> >  drivers/gpu/drm/sprd/sprd_dpu.c     | 1152 ++++++++++++++++++++++++++=
-+
->> >  drivers/gpu/drm/sprd/sprd_dpu.h     |  217 ++++++
->> >  7 files changed, 3176 insertions(+), 1 deletion(-)
->>
->> As we can see from the diff stat this patch is huge. So it would be fair=
-ly hard
->> to provide meaningful review as-is.
->>
->> One can combine my earlier suggestion (to keep modeset/atomic out of 2/8=
-), with
->> the following split:
->>  - 4/8 add basic atomic modeset support - one format, one rotation 0, no=
- extra
->>  attributes
->>  - 5/8 add extra formats
->>  - 6/8 add extra rotation support
->>  - ... add custom attributes
->
-> Ok, i will split this patch, upstream modeset and atomic at first. clock,=
- gloabl, enhance, extra
-> attributes  and so on will be upload later.
-
-Amazing thank you. Please apply the similar logic and split patch 6/8
-- that patch is twice larger than this one.
-
-Some small general requests - please use plain text emails (see [1])
-and trim unrelated fragments when replying.
-Otherwise it is very easy to miss the comment that you and others have made=
-.
-
-HTH
-Emil
-
-[1] https://www.lifewire.com/how-to-send-a-message-in-plain-text-from-gmail=
--1171963
+SGVsbG8gQWxleGFuZHJlLA0KDQpPbiBXZWQsIDIwMTktMTItMTEgYXQgMTI6MzggKzAxMDAsIEFs
+ZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBIaSwNCj4gDQo+IEkganVzdCByZWFsaXNlZCB0aGUg
+c3ViamVjdCBpcyBtaXNzaW5nIGEgY29sb24sIGl0IHNob3VsZCBiZToNCj4gDQo+IHJ0YzogYmQ3
+MDUyODogYWRkIEJENzE4Mjggc3VwcG9ydA0KDQpSaWdodC4gVGhhbmtzIGZvciBwb2ludGluZyBp
+dCBvdXQgOikNCg0KPiBQbGVhc2UgZml4IGl0IGluIGNhc2UgeW91IGV2ZXIgaGF2ZSB0byByZXNl
+bmQgZm9yIGFub3RoZXIgcmVhc29uLg0KDQpXaWxsIGRvIDopDQoNCkJyLA0KCU1hdHRpIFZhaXR0
+aW5lbg0KDQo=
