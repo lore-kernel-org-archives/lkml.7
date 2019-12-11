@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94C2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A52C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C912465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EE522527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077620;
-	bh=mLEWgaRg4QN21zySbsZbDq5eOsEUGBbcPKlCrTYgZ9M=;
+	s=default; t=1576077624;
+	bh=68xZ3u58C8jS9MejQCAJ5ABHymWTJHDY7QMDuXRC7OE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjfcO+AkOb1ph7mNoHu1HQ/m0TywfV/3uxxBnoKMFedToe6afC5TZSDAf3QTf9Kx4
-	 IkUI/iQiKpxgUlx0L0VXrcc75Ka3XZAfZnpT3kP6ke4mygJtlEiQCfotcM8P5IcX/X
-	 SnWhqRNqIISIcXmo5KSppxES5Zrdzr8wiZ9qzbbA=
+	b=lo7UnE2pX0TptiHXOkjHyVdjrFdijpZEhzfTKwZjvyQDzdIfro56Iapua/RUmuFyC
+	 yxZQB4chsU0mEXNUvJdoeLAXA8jTe/fSM1Pqc9bGXsIaAnMdq3jHOsDi0VRQMuvSIY
+	 KTCJB9jJ3khBn3i47gb82rKfFfcUn26ijZvhCSA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732324AbfLKPUT (ORCPT
+        id S1731009AbfLKPUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:20:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49420 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:20:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731267AbfLKPUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:20:15 -0500
+        id S1731267AbfLKPUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8744324658;
-        Wed, 11 Dec 2019 15:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A5872465B;
+        Wed, 11 Dec 2019 15:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077615;
-        bh=mLEWgaRg4QN21zySbsZbDq5eOsEUGBbcPKlCrTYgZ9M=;
+        s=default; t=1576077620;
+        bh=68xZ3u58C8jS9MejQCAJ5ABHymWTJHDY7QMDuXRC7OE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/U99nasT/kWq8cJTibmRLeHIjNBag0XaNnnR4CFr2I2snM0+Z46tOSA6Xd0jA+iM
-         qJVTaK2eKgimh01VolPsC1ipNbJ8U7HvNhr7YV8AtBDWiX6TdTjOxqJnbCHva+hgG9
-         5mRYbonG+jT3vIgYYKIrXSx/YaDjz5tKdFoy5Q/E=
+        b=l7ek/10HFtqyECaztHRJWSMkOsljw/F6m44uJ3YUKjQlq8Yf9VjXA1vqYZDXX+Bam
+         6TWDiXE3AsJarRNjV6pKTKmy3rnR4sAOC02IAjJRjC46FCgvlKVXbpvMALF86Zd4/p
+         UfnneAC5G9V1XjBSOHRRlUxDzyokiOSPBe+3bsUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunlong Song <yunlong.song@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Otavio Salvador <otavio@ossystems.com.br>,
+        Fabio Berton <fabio.berton@ossystems.com.br>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/243] f2fs: change segment to section in f2fs_ioc_gc_range
-Date:   Wed, 11 Dec 2019 16:04:26 +0100
-Message-Id: <20191211150346.143738231@linuxfoundation.org>
+Subject: [PATCH 4.19 106/243] ARM: dts: rockchip: Assign the proper GPIO clocks for rv1108
+Date:   Wed, 11 Dec 2019 16:04:28 +0100
+Message-Id: <20191211150346.285142276@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,34 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunlong Song <yunlong.song@huawei.com>
+From: Otavio Salvador <otavio@ossystems.com.br>
 
-[ Upstream commit 67b0e42b768c9ddc3fd5ca1aee3db815cfaa635c ]
+[ Upstream commit efc2e0bd9594060915696a418564aefd0270b1d6 ]
 
-f2fs_ioc_gc_range skips blocks_per_seg each time, however, f2fs_gc moves
-blocks of section each time, so fix it from segment to section.
+It is not correct to assign the 24MHz clock oscillator to the GPIO
+ports.
 
-Signed-off-by: Yunlong Song <yunlong.song@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fix it by assigning the proper GPIO clocks instead.
+
+Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+Tested-by: Fabio Berton <fabio.berton@ossystems.com.br>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rv1108.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 187bf7e260c99..5eef2a8b29ab6 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2143,7 +2143,7 @@ do_more:
- 	}
+diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
+index 4090ad2619ffb..a9f053dfdc068 100644
+--- a/arch/arm/boot/dts/rv1108.dtsi
++++ b/arch/arm/boot/dts/rv1108.dtsi
+@@ -541,7 +541,7 @@
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x20030000 0x100>;
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&xin24m>;
++			clocks = <&cru PCLK_GPIO0_PMU>;
  
- 	ret = f2fs_gc(sbi, range.sync, true, GET_SEGNO(sbi, range.start));
--	range.start += sbi->blocks_per_seg;
-+	range.start += BLKS_PER_SEC(sbi);
- 	if (range.start <= end)
- 		goto do_more;
- out:
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+@@ -554,7 +554,7 @@
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x10310000 0x100>;
+ 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&xin24m>;
++			clocks = <&cru PCLK_GPIO1>;
+ 
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+@@ -567,7 +567,7 @@
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x10320000 0x100>;
+ 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&xin24m>;
++			clocks = <&cru PCLK_GPIO2>;
+ 
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+@@ -580,7 +580,7 @@
+ 			compatible = "rockchip,gpio-bank";
+ 			reg = <0x10330000 0x100>;
+ 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&xin24m>;
++			clocks = <&cru PCLK_GPIO3>;
+ 
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
 -- 
 2.20.1
 
