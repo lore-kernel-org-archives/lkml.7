@@ -2,184 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2738DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD52C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6CF20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:52:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nxZLRJlP"
+	by mail.kernel.org (Postfix) with ESMTP id F3A0E20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:54:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbfLKRwS (ORCPT
+        id S1730780AbfLKRx7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:52:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:57090 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLKRwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:52:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NNmicuFL5ok36X4eq37Ayq5N4dbbpy3GcLqAwcxHD20=; b=nxZLRJlP62cN7e2AvJqHBD1EX
-        Q/9Rmt2XXKWYsEOK6WOOI53eUGjAIOGVvwN0nddevYkw8poXEYzXZs+E3qVPJ4Pd36PX5lkaM66Un
-        7b7oJCljoeOVnfR6w7trjP/m8yGhpq50mIg+FzkznyOSZhTCwq5XMrLvKpvOsWh3GpAVVfZj69O/t
-        ZGXJ7nnLaE7ipj3XR2lqTH3Po8hHa6dRokw3KBXD8DwZENktcWAjE3Hp+U8L1IxOfuhlU8GaD7xld
-        R165MNTTuuHxCWLDJEaU/QRpgV1VoecoWc1CtlWN9J+aA9kQPOa19x1oHYxYZq2tJFX4QqNsXrBrP
-        AEjE3uiQA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if69d-000597-VL; Wed, 11 Dec 2019 17:52:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CAEEA300F29;
-        Wed, 11 Dec 2019 18:50:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C1C5920120E4D; Wed, 11 Dec 2019 18:52:02 +0100 (CET)
-Date:   Wed, 11 Dec 2019 18:52:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191211175202.GQ2827@hirez.programming.kicks-ass.net>
-References: <20191121171214.GD12042@gmail.com>
- <3481175cbe14457a947f934343946d52@AcuMS.aculab.com>
- <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
- <20191121185303.GB199273@romley-ivt3.sc.intel.com>
- <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
- <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
- <20191122092555.GA4097@hirez.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
- <20191122203105.GE2844@hirez.programming.kicks-ass.net>
- <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+        Wed, 11 Dec 2019 12:53:59 -0500
+Received: from mga18.intel.com ([134.134.136.126]:16420 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729228AbfLKRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:53:59 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:53:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
+   d="scan'208";a="216001761"
+Received: from cmclough-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.152])
+  by orsmga003.jf.intel.com with ESMTP; 11 Dec 2019 09:53:53 -0800
+Date:   Wed, 11 Dec 2019 19:53:51 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     "Zhao, Shirley" <shirley.zhao@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        'Mauro Carvalho Chehab' <mchehab+samsung@kernel.org>,
+        "Zhu, Bing" <bing.zhu@intel.com>,
+        "Chen, Luhai" <luhai.chen@intel.com>
+Subject: Re: One question about trusted key of keyring in Linux kernel.
+Message-ID: <20191211175351.GJ4516@linux.intel.com>
+References: <A888B25CD99C1141B7C254171A953E8E4909D360@shsmsx102.ccr.corp.intel.com>
+ <1575267453.4080.26.camel@linux.ibm.com>
+ <A888B25CD99C1141B7C254171A953E8E4909E381@shsmsx102.ccr.corp.intel.com>
+ <1575269075.4080.31.camel@linux.ibm.com>
+ <A888B25CD99C1141B7C254171A953E8E4909E399@shsmsx102.ccr.corp.intel.com>
+ <1575312932.24227.13.camel@linux.ibm.com>
+ <20191209194715.GD19243@linux.intel.com>
+ <1575923513.31378.22.camel@linux.ibm.com>
+ <20191211172345.GB4516@linux.intel.com>
+ <20191211173322.GD4516@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+In-Reply-To: <20191211173322.GD4516@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 22, 2019 at 01:23:30PM -0800, Andy Lutomirski wrote:
-> On Fri, Nov 22, 2019 at 12:31 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Nov 22, 2019 at 05:48:14PM +0000, Luck, Tony wrote:
-> > > > When we use byte ops, we must consider the word as 4 independent
-> > > > variables. And in that case the later load might observe the lock-byte
-> > > > state from 3, because the modification to the lock byte from 4 is in
-> > > > CPU2's store-buffer.
-> > >
-> > > So we absolutely violate this with the optimization for constant arguments
-> > > to set_bit(), clear_bit() and change_bit() that are implemented as byte ops.
-> > >
-> > > So is code that does:
-> > >
-> > >       set_bit(0, bitmap);
-> > >
-> > > on one CPU. While another is doing:
-> > >
-> > >       set_bit(mybit, bitmap);
-> > >
-> > > on another CPU safe? The first operates on just one byte, the second  on 8 bytes.
-> >
-> > It is safe if all you care about is the consistency of that one bit.
-> >
+On Wed, Dec 11, 2019 at 07:33:22PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Dec 11, 2019 at 07:23:59PM +0200, Jarkko Sakkinen wrote:
+> > On Mon, Dec 09, 2019 at 12:31:53PM -0800, James Bottomley wrote:
+> > > On Mon, 2019-12-09 at 21:47 +0200, Jarkko Sakkinen wrote:
+> > > > On Mon, Dec 02, 2019 at 10:55:32AM -0800, James Bottomley wrote:
+> > > > > blob but it looks like we need to fix the API.  I suppose the good
+> > > > > news is given this failure that we have the opportunity to rewrite
+> > > > > the API since no-one else can have used it for anything because of
+> > > > > this.  The
+> > > > 
+> > > > I did successfully run this test when I wrote it 5 years ago:
+> > > > 
+> > > > https://github.com/jsakkine-intel/tpm2-scripts/blob/master/keyctl-smo
+> > > > ke.sh
+> > > > 
+> > > > Given that there is API a way must be found that backwards
+> > > > compatibility
+> > > > is not broken. New format is fine but it must co-exist.
+> > > 
+> > > The old API is unsupportable in the combination of policy + auth as I
+> > > already explained.  The kernel doesn't have access to the nonces to
+> > > generate the HMAC because the session was created by the user and the
+> > > API has no way to pass them in (plus passing them in would be a huge
+> > > security failure if we tried).  Given that Shirley appears to be the
+> > > first person ever to try this, I don't think the old API has grown any
+> > > policy users so its safe to remove it.  If we get a complaint, we can
+> > > discuss adding it back.
+> > 
+> > It works within limits so it can be definitely be maintained for
+> > backwards compatibility.
+> > 
+> > Also, you are making a claim of the users that we cannot verify.
+> > 
+> > Finally, the new feature neither handles sessions. You claim that
+> > it could be added later. I have to deny that because until session
+> > handling is there we have no ways to be sure about that.
+> > 
+> > I see your point but this needs more consideration. It does not
+> > make sense to rush.
 > 
-> I'm still lost here.  Can you explain how one could write code that
-> observes an issue?  My trusty SDM, Vol 3 8.2.2 says "Locked
-> instructions have a total order."
+> Also can test the current patch set as soon as I've done with
+> release critical tpm_tis bug even if I don't agree on every
+> point.
 
-This is the thing I don't fully believe. Per this thread the bus-lock is
-*BAD* and not used for normal LOCK prefixed operations. But without the
-bus-lock it becomes very hard to guarantee total order.
+E.g. I cannot do any good judgement on the options before I get
+the feel to the code so please hold for a while until I get to
+the point that I can run it.
 
-After all, if some CPU doesn't observe a specific variable, it doesn't
-care where in the order it fell. So I'm thinking they punted and went
-with some partial order that is near enough that it becomes very hard to
-tell the difference the moment you actually do observe stuff.
-
-> 8.2.3.9 says "Loads and Stores Are
-> Not Reordered with Locked Instructions."  Admittedly, the latter is an
-> "example", but the section is very clear about the fact that a locked
-> instruction prevents reordering of a load or a store issued by the
-> same CPU relative to the locked instruction *regardless of whether
-> they overlap*.
-
-IIRC this rule is CPU-local.
-
-Sure, but we're talking two cpus here.
-
-	u32 var = 0;
-	u8 *ptr = &var;
-
-	CPU0			CPU1
-
-				xchg(ptr, 1)
-
-	xchg((ptr+1, 1);
-	r = READ_ONCE(var);
-
-AFAICT nothing guarantees r == 0x0101. The CPU1 store can be stuck in
-CPU1's store-buffer. CPU0's xchg() does not overlap and therefore
-doesn't force a snoop or forward.
-
-From the perspective of the LOCK prefixed instructions CPU0 never
-observes the variable @ptr. And therefore doesn't need to provide order.
-
-Note how the READ_ONCE() is a normal load on CPU0, and per the rules is
-only forced to happen after it's own LOCK prefixed instruction, but it
-is free to observe ptr[0,2,3] from before, only ptr[1] will be forwarded
-from its own store-buffer.
-
-This is exactly the one reorder TSO allows.
-
-> I understand that the CPU is probably permitted to optimize a LOCK RMW
-> operation such that it retires before the store buffers of earlier
-> instructions are fully flushed, but only if the store buffer and cache
-> coherency machinery work together to preserve the architecturally
-> guaranteed ordering.
-
-Maybe, maybe not. I'm very loathe to trust this without things being
-better specified.
-
-Like I said, it is possible that it all works, but the way I understand
-things I _really_ don't want to rely on it.
-
-Therefore, I've written:
-
-	u32 var = 0;
-	u8 *ptr = &var;
-
-	CPU0			CPU1
-
-				xchg(ptr, 1)
-
-	set_bit(8, ptr);
-
-	r = READ_ONCE(var);
-
-Because then the LOCK BTSL overlaps with the LOCK XCHGB and CPU0 now
-observes the variable @ptr and therefore must force order.
-
-Did this clarify, or confuse more?
+/Jarkko
