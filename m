@@ -2,146 +2,204 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EC2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE11C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE81206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576089462;
-	bh=1gXvBUogE2AAfBihgg+EAwI3LDxBCsXa5+dajF/kmjg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=2jLmasi8iouNvSUk5dBrVhO6bEwvv98vZn7rlTuzkz0pdMrD5e4R/g9DEj78qKm1K
-	 G8xeDsK9wCGdKompIvtOCCPBTHTttJzMoVKz7R9qRkn2a05ZwYHK0eUCURaC/PmK4R
-	 hasIHRcEELOarTvWoI/JTz4izX9nhoMKa6Sh25HY=
+	by mail.kernel.org (Postfix) with ESMTP id 3FF49206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QCBjYOKG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbfLKShl (ORCPT
+        id S1729762AbfLKSjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:37:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33568 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfLKShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:37:41 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B79420836;
-        Wed, 11 Dec 2019 18:37:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576089460;
-        bh=1gXvBUogE2AAfBihgg+EAwI3LDxBCsXa5+dajF/kmjg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hUmBWcOiez6O+QK8DycrGZ2NKd6Z3nHXV/0pJfua9Gta8moied6bv+yOJn7bQ1X6D
-         8fW9F20i/hua59a3OBG/PBntIQRbzkfqyaZejLwlyso3iA4FAq6g7K4AB/NXh4eBk9
-         WaEpX1g0e5s3Mko+AB+T+4cDjVmCzvR5FRAiAIJ0=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id B94B535203C6; Wed, 11 Dec 2019 10:37:38 -0800 (PST)
-Date:   Wed, 11 Dec 2019 10:37:38 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 01/12] rcu: Remove rcu_swap_protected()
-Message-ID: <20191211183738.GA5190@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
- <20191210040741.2943-1-paulmck@kernel.org>
- <yq1a77zmt4a.fsf@oracle.com>
- <20191211035122.GC2889@paulmck-ThinkPad-P72>
+        Wed, 11 Dec 2019 13:39:35 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:42324 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbfLKSjf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:39:35 -0500
+Received: by mail-ua1-f68.google.com with SMTP id d8so3960701uak.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jvwRzY6q6sEUlr5sjKgPT84DnfYGRvojIL+zk+mDmvc=;
+        b=QCBjYOKGS8VgotL7RL1mAHYwBVd/jEaqUKD0dygCykJJ6XEP7LyitxuNOMLv3sriPg
+         2wVGVG6EpAwrx6ArJEAC2ffQE4RqX1jLWhBYhFm/wKX75eFjP6MC6G9XIaKEIYww/Nrv
+         UunoWMyRhm3UshUN5NCgLy+XBPv82wKSrcPv7A+3hek/qDxHEuPOpVmgfhgaAbFGtkWg
+         Vi/D9mycOs9MU/BzASDG1CVeW6N38OI0yjDCi02eGudNPwcYg7axtN3FYQVYIzGJ5JHD
+         jE8nCn+Cch4Csk2AQUU3myG7n5Mao/JzzZ49ILC1k2jYhZ1oz/KLA5Ho8trLN3qTaBNQ
+         1U5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jvwRzY6q6sEUlr5sjKgPT84DnfYGRvojIL+zk+mDmvc=;
+        b=d9tTMF8bf7Nkgc93FXY5avqjsFwvEcXy90KS/5JBFROarVxfrDxCD3hLQy2c7/kkRm
+         iZ+qeYuK17SWdvxwgHiFo5Vy/Nsz6mL7v+vew6NYRUA7d77ZhQrIV7SoBD0gU1lNFzCG
+         3kCvBP+nLDye+UjZwyJyVuIVqkQIeSqSCWqbRwUI4VLHJ5yVEc1U29YeuLhbfq/aTa/0
+         mVZXj8xGEaAc0of2Ux+xMXlmGphoLrb1omaoiLnzQ4IvJkgq4GGgqP3OAJ+nw5xm25qF
+         MvxDJ5Vl1igm/Ems7Jt0S8/WoyJvg53ki2+KEDfQYZFIQvUOx4EYX8m/61pYkUdfBamo
+         8nIw==
+X-Gm-Message-State: APjAAAW0N8HqPxnFe5ykLgEVzVRlBlHyl4NH1DKfdcYGRD9Znv/IC+Gu
+        kwYBWSpjJv5U4GixASWpjZZ0cxSWw79P7PC8CfY8LQ==
+X-Google-Smtp-Source: APXvYqy6xPnfaUrI7lLh3KoBS7iHoKRPYaYIY62oaMx9roqeU7jll1yBN71P4HBHxz9spRjXkUGvDZvdNUuctO+BwG4=
+X-Received: by 2002:a9f:3e84:: with SMTP id x4mr4323355uai.83.1576089573173;
+ Wed, 11 Dec 2019 10:39:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211035122.GC2889@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com> <1569582943-13476-2-git-send-email-pbonzini@redhat.com>
+In-Reply-To: <1569582943-13476-2-git-send-email-pbonzini@redhat.com>
+From:   Ben Gardon <bgardon@google.com>
+Date:   Wed, 11 Dec 2019 10:39:22 -0800
+Message-ID: <CANgfPd8G194y1Bo-6HR-jP8wh4DvdAsaijue_pnhetjduyzn4A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] KVM: x86: assign two bits to track SPTE kinds
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 07:51:22PM -0800, Paul E. McKenney wrote:
-> On Tue, Dec 10, 2019 at 10:35:49PM -0500, Martin K. Petersen wrote:
-> > 
-> > Paul,
-> > 
-> > > Now that the calls to rcu_swap_protected() have been replaced by
-> > > rcu_replace_pointer(), this commit removes rcu_swap_protected().
-> > 
-> > It appears there are two callers remaining in Linus' master. Otherwise
-> > looks good to me.
-> 
-> I did queue a fix for one of them, and thank you for calling my
-> attention to the new one.  This commit should hit -next soon, so
-> hopefully this will discourage further additions.  ;-)
-> 
-> > Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-> 
-> Thank you!
+Has anyone tested this patch on a long-running machine? It looks like
+the SPTE_MMIO_MASK overlaps with the bits used to track MMIO
+generation number, which makes me think that on a long running VM, a
+high enough generation number would overwrite the SPTE_SPECIAL_MASK
+region and cause the MMIO SPTE to be misinterpreted. It seems like
+setting bits 52 and 53 would also cause an incorrect generation number
+to be read from the PTE.
 
-And here is the patch for the new one.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 10699d92c906707d679e28b099cd798a519b4f51
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Wed Dec 11 10:30:21 2019 -0800
-
-    wireless/mediatek: Replace rcu_swap_protected() with rcu_replace_pointer()
-    
-    This commit replaces the use of rcu_swap_protected() with the more
-    intuitively appealing rcu_replace_pointer() as a step towards removing
-    rcu_swap_protected().
-    
-    Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-    Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-    Reported-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    Cc: Felix Fietkau <nbd@nbd.name>
-    Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-    Cc: Ryder Lee <ryder.lee@mediatek.com>
-    Cc: Roy Luo <royluo@google.com>
-    Cc: Kalle Valo <kvalo@codeaurora.org>
-    Cc: "David S. Miller" <davem@davemloft.net>
-    Cc: Matthias Brugger <matthias.bgg@gmail.com>
-    Cc: <linux-wireless@vger.kernel.org>
-    Cc: <netdev@vger.kernel.org>
-    Cc: <linux-arm-kernel@lists.infradead.org>
-    Cc: <linux-mediatek@lists.infradead.org>
-
-diff --git a/drivers/net/wireless/mediatek/mt76/agg-rx.c b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-index 53b5a4b..80986ce 100644
---- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
-+++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-@@ -281,8 +281,8 @@ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno)
- {
- 	struct mt76_rx_tid *tid = NULL;
- 
--	rcu_swap_protected(wcid->aggr[tidno], tid,
--			   lockdep_is_held(&dev->mutex));
-+	tid = rcu_swap_protected(wcid->aggr[tidno], tid,
-+				 lockdep_is_held(&dev->mutex));
- 	if (tid) {
- 		mt76_rx_aggr_shutdown(dev, tid);
- 		kfree_rcu(tid, rcu_head);
+On Fri, Sep 27, 2019 at 4:16 AM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> Currently, we are overloading SPTE_SPECIAL_MASK to mean both
+> "A/D bits unavailable" and MMIO, where the difference between the
+> two is determined by mio_mask and mmio_value.
+>
+> However, the next patch will need two bits to distinguish
+> availability of A/D bits from write protection.  So, while at
+> it give MMIO its own bit pattern, and move the two bits from
+> bit 62 to bits 52..53 since Intel is allocating EPT page table
+> bits from the top.
+>
+> Reviewed-by: Junaid Shahid <junaids@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  7 -------
+>  arch/x86/kvm/mmu.c              | 28 ++++++++++++++++++----------
+>  2 files changed, 18 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 23edf56cf577..50eb430b0ad8 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -219,13 +219,6 @@ enum {
+>                                  PFERR_WRITE_MASK |             \
+>                                  PFERR_PRESENT_MASK)
+>
+> -/*
+> - * The mask used to denote special SPTEs, which can be either MMIO SPTEs or
+> - * Access Tracking SPTEs. We use bit 62 instead of bit 63 to avoid conflicting
+> - * with the SVE bit in EPT PTEs.
+> - */
+> -#define SPTE_SPECIAL_MASK (1ULL << 62)
+> -
+>  /* apic attention bits */
+>  #define KVM_APIC_CHECK_VAPIC   0
+>  /*
+> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> index 5269aa057dfa..bac8d228d82b 100644
+> --- a/arch/x86/kvm/mmu.c
+> +++ b/arch/x86/kvm/mmu.c
+> @@ -83,7 +83,16 @@ enum {
+>  #define PTE_PREFETCH_NUM               8
+>
+>  #define PT_FIRST_AVAIL_BITS_SHIFT 10
+> -#define PT64_SECOND_AVAIL_BITS_SHIFT 52
+> +#define PT64_SECOND_AVAIL_BITS_SHIFT 54
+> +
+> +/*
+> + * The mask used to denote special SPTEs, which can be either MMIO SPTEs or
+> + * Access Tracking SPTEs.
+> + */
+> +#define SPTE_SPECIAL_MASK (3ULL << 52)
+> +#define SPTE_AD_ENABLED_MASK (0ULL << 52)
+> +#define SPTE_AD_DISABLED_MASK (1ULL << 52)
+> +#define SPTE_MMIO_MASK (3ULL << 52)
+>
+>  #define PT64_LEVEL_BITS 9
+>
+> @@ -219,12 +228,11 @@ struct kvm_shadow_walk_iterator {
+>  static u64 __read_mostly shadow_me_mask;
+>
+>  /*
+> - * SPTEs used by MMUs without A/D bits are marked with shadow_acc_track_value.
+> - * Non-present SPTEs with shadow_acc_track_value set are in place for access
+> - * tracking.
+> + * SPTEs used by MMUs without A/D bits are marked with SPTE_AD_DISABLED_MASK;
+> + * shadow_acc_track_mask is the set of bits to be cleared in non-accessed
+> + * pages.
+>   */
+>  static u64 __read_mostly shadow_acc_track_mask;
+> -static const u64 shadow_acc_track_value = SPTE_SPECIAL_MASK;
+>
+>  /*
+>   * The mask/shift to use for saving the original R/X bits when marking the PTE
+> @@ -304,7 +312,7 @@ void kvm_mmu_set_mmio_spte_mask(u64 mmio_mask, u64 mmio_value, u64 access_mask)
+>  {
+>         BUG_ON((u64)(unsigned)access_mask != access_mask);
+>         BUG_ON((mmio_mask & mmio_value) != mmio_value);
+> -       shadow_mmio_value = mmio_value | SPTE_SPECIAL_MASK;
+> +       shadow_mmio_value = mmio_value | SPTE_MMIO_MASK;
+>         shadow_mmio_mask = mmio_mask | SPTE_SPECIAL_MASK;
+>         shadow_mmio_access_mask = access_mask;
+>  }
+> @@ -323,7 +331,7 @@ static inline bool sp_ad_disabled(struct kvm_mmu_page *sp)
+>  static inline bool spte_ad_enabled(u64 spte)
+>  {
+>         MMU_WARN_ON(is_mmio_spte(spte));
+> -       return !(spte & shadow_acc_track_value);
+> +       return (spte & SPTE_SPECIAL_MASK) == SPTE_AD_ENABLED_MASK;
+>  }
+>
+>  static inline u64 spte_shadow_accessed_mask(u64 spte)
+> @@ -461,7 +469,7 @@ void kvm_mmu_set_mask_ptes(u64 user_mask, u64 accessed_mask,
+>  {
+>         BUG_ON(!dirty_mask != !accessed_mask);
+>         BUG_ON(!accessed_mask && !acc_track_mask);
+> -       BUG_ON(acc_track_mask & shadow_acc_track_value);
+> +       BUG_ON(acc_track_mask & SPTE_SPECIAL_MASK);
+>
+>         shadow_user_mask = user_mask;
+>         shadow_accessed_mask = accessed_mask;
+> @@ -2622,7 +2630,7 @@ static void link_shadow_page(struct kvm_vcpu *vcpu, u64 *sptep,
+>                shadow_user_mask | shadow_x_mask | shadow_me_mask;
+>
+>         if (sp_ad_disabled(sp))
+> -               spte |= shadow_acc_track_value;
+> +               spte |= SPTE_AD_DISABLED_MASK;
+>         else
+>                 spte |= shadow_accessed_mask;
+>
+> @@ -2968,7 +2976,7 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
+>
+>         sp = page_header(__pa(sptep));
+>         if (sp_ad_disabled(sp))
+> -               spte |= shadow_acc_track_value;
+> +               spte |= SPTE_AD_DISABLED_MASK;
+>
+>         /*
+>          * For the EPT case, shadow_present_mask is 0 if hardware
+> --
+> 1.8.3.1
+>
+>
