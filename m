@@ -2,127 +2,59 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA81C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC49C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014C82077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576028849;
-	bh=aJEBHOJgbmW5u/PI+IDmgyBqpJA+BGn7BUCYF8lBBXI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qSaxWR4WLqkWBQIlUpEsQtpUsfoqbeyZAnXt/lAYeAVQXHujcCfCW1Rwj8p/7iCey
-	 TjTsePIZN04lMpSTmeusmIOEvrSCB27vPrxyvRUCQCtWrqCmcWaEJ53/YQ1bMS4uZv
-	 Hx6ejpdx1m0qY5SMKtsiUlJlekLmAxiz8saaBCs0=
+	by mail.kernel.org (Postfix) with ESMTP id B7F9B205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfLKBr2 (ORCPT
+        id S1727500AbfLKBro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:47:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbfLKBr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:47:27 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021B2205ED;
-        Wed, 11 Dec 2019 01:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576028847;
-        bh=aJEBHOJgbmW5u/PI+IDmgyBqpJA+BGn7BUCYF8lBBXI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a4TeTJ8lJl8q2dLF6mL0GpmczoEuiJsnjXjb9qT5uG5YEyb5hp2C9lNnNhFyLBLB2
-         031Y12L8dQGuzjXBTdQPX+qPEUotS1ySZN21FJ3Zx0yaT5gq3Tjon5oFgMy6hOLPph
-         knl2US3pMczsLrw/0BNFyQN54wFMElQ3kUNz4c4k=
-Date:   Tue, 10 Dec 2019 17:47:26 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
-        linux-arch@vger.kernel.org, security@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
-Message-Id: <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
-In-Reply-To: <20191208171918.GC19716@avx2>
-References: <20191208171918.GC19716@avx2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Tue, 10 Dec 2019 20:47:44 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:51354 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbfLKBro (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:47:44 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8EDE71506508A;
+        Tue, 10 Dec 2019 17:47:43 -0800 (PST)
+Date:   Tue, 10 Dec 2019 17:47:42 -0800 (PST)
+Message-Id: <20191210.174742.719483404374318765.davem@davemloft.net>
+To:     chenwandun@huawei.com
+Cc:     claudiu.manoil@nxp.com, po.liu@nxp.com, vladimir.oltean@nxp.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] enetc: remove variable 'tc_max_sized_frame' set but
+ not used
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1575973490-88354-1-git-send-email-chenwandun@huawei.com>
+References: <1575973490-88354-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Dec 2019 17:47:43 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 8 Dec 2019 20:19:18 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+From: Chen Wandun <chenwandun@huawei.com>
+Date: Tue, 10 Dec 2019 18:24:50 +0800
 
-> There were few episodes of silent downgrade to an executable stack over
-> years:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> 1) linking innocent looking assembly file will silently add executable
->    stack if proper linker options is not given as well:
+> drivers/net/ethernet/freescale/enetc/enetc_qos.c: In function enetc_setup_tc_cbs:
+> drivers/net/ethernet/freescale/enetc/enetc_qos.c:195:6: warning: variable tc_max_sized_frame set but not used [-Wunused-but-set-variable]
 > 
-> 	$ cat f.S
-> 	.intel_syntax noprefix
-> 	.text
-> 	.globl f
-> 	f:
-> 	        ret
-> 
-> 	$ cat main.c
-> 	void f(void);
-> 	int main(void)
-> 	{
-> 	        f();
-> 	        return 0;
-> 	}
-> 
-> 	$ gcc main.c f.S
-> 	$ readelf -l ./a.out
-> 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
->                          0x0000000000000000 0x0000000000000000  RWE    0x10
-> 			 					 ^^^
-> 
-> 2) converting C99 nested function into a closure
-> https://nullprogram.com/blog/2019/11/15/
-> 
-> 	void intsort2(int *base, size_t nmemb, _Bool invert)
-> 	{
-> 	    int cmp(const void *a, const void *b)
-> 	    {
-> 	        int r = *(int *)a - *(int *)b;
-> 	        return invert ? -r : r;
-> 	    }
-> 	    qsort(base, nmemb, sizeof(*base), cmp);
-> 	}
-> 
-> will silently require stack trampolines while non-closure version will not.
-> 
-> Without doubt this behaviour is documented somewhere, add a warning so that
-> developers and users can at least notice. After so many years of x86_64 having
-> proper executable stack support it should not cause too many problems.
+> Fixes: c431047c4efe ("enetc: add support Credit Based Shaper(CBS) for hardware offload")
+> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
 
-hm, OK, let's give it a trial run.
-
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
->  		goto out_unlock;
->  	BUG_ON(prev != vma);
->  
-> +	if (unlikely(vm_flags & VM_EXEC)) {
-> +		pr_warn_once("process '%pD4' started with executable stack\n",
-> +			     bprm->file);
-> +	}
-> +
->  	/* Move stack pages down in memory. */
->  	if (stack_shift) {
->  		ret = shift_arg_pages(vma, stack_shift);
-
-What are poor users supposed to do if this message comes out? 
-Hopefully google the message and end up at this thread.  What do you
-want to tell them?
-
+Applied to net-next.
