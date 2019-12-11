@@ -2,201 +2,237 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39929C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544CFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5A12077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078479;
-	bh=AKodxYXbfiStwlS/++4TaWCwqrYysdNLH7hfUktG7Hw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZtquAPp1eRaaza+5WQTl9WBO/5j7XX8gyRan//zwdXk5PrZ4GBi+LBQr/a3k2wnS1
-	 XVG06iA6wK1/plpTPLsGD4wXPn2wyC5Er680NXmOJdW85MZfIAmZEGBTa3gmvInXkD
-	 AOLA5yxLWdGHbdiAIhBixG5UHrUdDnVu0fKUDuRo=
+	by mail.kernel.org (Postfix) with ESMTP id 1D3B224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYT3x922"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387567AbfLKP2N (ORCPT
+        id S1733155AbfLKPek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Dec 2019 10:34:40 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45774 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733039AbfLKP2N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:28:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731246AbfLKP1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADEA2173E;
-        Wed, 11 Dec 2019 15:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078071;
-        bh=AKodxYXbfiStwlS/++4TaWCwqrYysdNLH7hfUktG7Hw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jy9IJGAwc2m8WLCOLfGZV8QmD7/7QE6RoXaSIzwBcjc7FiBvBnG+WJiF/W9uOIuEG
-         QuB9e+VTvZVe+7UVzae6R7ml7SvlDmJoQqhgnA6JuSO4BVrDNaNCVrpyu6LUAXMCyY
-         kei4XexgY4rS6g0hMUxwQF+kWNf1q/oNJOKYd6CI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Mike Christie <mchristi@redhat.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, open-iscsi@googlegroups.com
-Subject: [PATCH AUTOSEL 4.19 62/79] scsi: target: iscsi: Wait for all commands to finish before freeing a session
-Date:   Wed, 11 Dec 2019 10:26:26 -0500
-Message-Id: <20191211152643.23056-62-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+Received: by mail-vs1-f67.google.com with SMTP id l24so16015120vsr.12;
+        Wed, 11 Dec 2019 07:28:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eI29NPHgR+JJigbHSfSxbr0+0qNwPqbPN+NH3i1Irec=;
+        b=YYT3x922MQWm+f4a0aKynxOZDe3KgmaaUs1IKwJxWA5OaHODRf0PX8aGLcJMUDdnDc
+         /zzwfy6q0SZxyoiCwFJ9K+W/j6OQpEUbDt0hLQ6NdAR3IEiW7GpS4XU+D/phGMfIM3aW
+         mUKZ2Oc9FQsStkX7VFf1NTH3UsfhaKNHQQYQwVTJg5LCtNO6eDZt3pCxEYyeT4ZeKids
+         SQCpARlV+mWTaiGw6kXTxSUuWxqGqYY2gzEnCsg/Pn2/qv38da8TgyrEFMrFjPzMcqAe
+         peI5pKQQbpVfqrJjbHyPi4s3qM9Jb3mAbHr0LwJ71vMfm8X5sRG+sb4NN+o3Bu+BQ+zW
+         U3SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eI29NPHgR+JJigbHSfSxbr0+0qNwPqbPN+NH3i1Irec=;
+        b=g8abiMnyz5Box+lKy/ITa7tEUvowW8XcBwxAyzZC/Ov/Z5/TRBBQl6hZYu2sWIvaZZ
+         BxaJbq9MzS2RtTqYg8oZK0tKxYD7eU26iUMayCbGoAFEAKhq3dZ5Wg9X8S/+DFVbVEA9
+         yNmYBSV58mn9k7mUdoYpkmZaQOzCUmGY0UaPxjbEMIa8iiGtpy7LefShMi3GsVf0H6mK
+         0qduTG8uEIbs2grI+4h6Gnc/D2Q2eTMs6vshz5+jB1riX2+ha9QkOkJtFkiSGRkQXrE8
+         hLF8KVP2GwvHKc8qFO2fwR4ET6kiuqLrHKYonFlsQR4lHlyn8G8UNuxCp0KKJNITfPK+
+         0OAA==
+X-Gm-Message-State: APjAAAXduZQOeRJ0pdIMHWKjjaO5QqFYSI3GfzFqXImqo/7ZY8JRvzpp
+        CH7iODmUIyEfKdK1FdBn94w=
+X-Google-Smtp-Source: APXvYqyyXJCCvEUbVBf8RpbJ6qOKhDhEdIqLL7fFWAi8nYzygIRKtZVpy6yH+Yd464dAqw8wm196Xg==
+X-Received: by 2002:a67:b03:: with SMTP id 3mr3063976vsl.72.1576078087457;
+        Wed, 11 Dec 2019 07:28:07 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id 9sm1679121vkr.39.2019.12.11.07.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:28:06 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 8E6D640352; Wed, 11 Dec 2019 12:28:04 -0300 (-03)
+Date:   Wed, 11 Dec 2019 12:28:04 -0300
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, will@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linuxarm <linuxarm@huawei.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHES] Fix 'perf top' breakage on architectures not providing
+ get_cpuid() Re: perf top for arm64?
+Message-ID: <20191211152804.GD15181@kernel.org>
+References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+ <20191106140036.GA6259@kernel.org>
+ <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
+ <20191210163655.GG14123@krava>
+ <952dc484-2739-ee65-f41c-f0198850ab10@huawei.com>
+ <20191210170841.GA23357@krava>
+ <9a31536b-f266-e305-1107-2f745d0a33e3@huawei.com>
+ <20191210195113.GD13965@kernel.org>
+ <20191211133319.GA15181@kernel.org>
+ <20191211144643.GC35097@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211144643.GC35097@lakrids.cambridge.arm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+Em Wed, Dec 11, 2019 at 02:46:43PM +0000, Mark Rutland escreveu:
+> On Wed, Dec 11, 2019 at 10:33:19AM -0300, Arnaldo Carvalho de Melo wrote:
+> > So can you take a look at the two patches below and provide me Acked-by
+> > and/or Reviewed-by and/or Tested-by?
+> 
+> I just gave this a spin. With vanilla v5.5-rc1 perf top behaves as John
+> reported, and with these applied atop perf works as expected:
+> 
+> Tested-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> >From scaning the code, the only other user of get_cpuid() that ends up
+> giving up is perf kvm, but AFAICT that never supported arm64, so that
+> looks sound to me:
+> 
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+Thanks guys, added all the tags, appreciated, I also added this:
 
-The iSCSI target driver is the only target driver that does not wait for
-ongoing commands to finish before freeing a session. Make the iSCSI target
-driver wait for ongoing commands to finish before freeing a session. This
-patch fixes the following KASAN complaint:
+Fixes: 608127f73779 ("perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine")
 
-BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
-Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
+Thanks Jiri for pointing to it.
 
-CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Workqueue: target_completion target_complete_ok_work [target_core_mod]
-Call Trace:
- dump_stack+0x8a/0xd6
- print_address_description.constprop.0+0x40/0x60
- __kasan_report.cold+0x1b/0x33
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- __lock_acquire+0xb1a/0x2710
- lock_acquire+0xd3/0x200
- _raw_spin_lock_irqsave+0x43/0x60
- target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
- target_put_sess_cmd+0x2e/0x40 [target_core_mod]
- lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
- transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
- target_complete_ok_work+0x1b0/0x790 [target_core_mod]
- process_one_work+0x549/0xa40
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Allocated by task 889:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_slab_alloc+0x12/0x20
- kmem_cache_alloc+0xf6/0x360
- transport_alloc_session+0x29/0x80 [target_core_mod]
- iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-Freed by task 1025:
- save_stack+0x23/0x90
- __kasan_slab_free+0x13a/0x190
- kasan_slab_free+0x12/0x20
- kmem_cache_free+0x146/0x400
- transport_free_session+0x179/0x2f0 [target_core_mod]
- transport_deregister_session+0x130/0x180 [target_core_mod]
- iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
- iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
- iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
- iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
-
-The buggy address belongs to the object at ffff8881154ec9c0
- which belongs to the cache se_sess_cache of size 352
-The buggy address is located 176 bytes inside of
- 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
-The buggy address belongs to the page:
-page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
-flags: 0x2fff000000010200(slab|head)
-raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
-raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
-
-Cc: Mike Christie <mchristi@redhat.com>
-Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
- include/scsi/iscsi_proto.h          |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index 03e9cb156df94..317d0f3f7a14c 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1157,7 +1157,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+- Arnaldo
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
- 
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -1998,7 +2000,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4204,6 +4208,8 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
-+	target_sess_cmd_list_set_waiting(sess->se_sess);
-+	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index df156f1d50b2d..f0a01a54bd153 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -638,6 +638,7 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
-+#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
+> Thanks,
+> Mark.
+> 
+> > From 53c6cde6a71a1a9283763bd2e938b229b50c2cd5 Mon Sep 17 00:00:00 2001
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date: Wed, 11 Dec 2019 10:09:24 -0300
+> > Subject: [PATCH 1/2] perf arch: Make the default get_cpuid() return compatible
+> >  error
+> > 
+> > Some of the functions calling get_cpuid() propagate back the error it
+> > returns, and all are using errno (positive) values, make the weak
+> > default get_cpuid() function return ENOSYS to be consistent and to allow
+> > checking if this is an arch not providing this function or if a provided
+> > one is having trouble getting the cpuid, to decide if the warning should
+> > be provided to the user or just a debug message should be emitted.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: John Garry <john.garry@huawei.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Will Deacon <will@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/header.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index becc2d109423..4d39a75551a0 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -850,7 +850,7 @@ int __weak strcmp_cpuid_str(const char *mapcpuid, const char *cpuid)
+> >   */
+> >  int __weak get_cpuid(char *buffer __maybe_unused, size_t sz __maybe_unused)
+> >  {
+> > -	return -1;
+> > +	return ENOSYS; /* Not implemented */
+> >  }
+> >  
+> >  static int write_cpuid(struct feat_fd *ff,
+> > -- 
+> > 2.21.0
+> > 
+> > From c6c6a3e2eb6982e37294abcac389effd298cf730 Mon Sep 17 00:00:00 2001
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date: Wed, 11 Dec 2019 10:21:59 -0300
+> > Subject: [PATCH 2/2] perf top: Do not bail out when perf_env__read_cpuid()
+> >  returns ENOSYS
+> > 
+> > 'perf top' stopped working on hw architectures that do not provide a
+> > get_cpuid() implementation and thus fallback to the weak get_cpuid()
+> > default function.
+> > 
+> > This is done because at annotation time we may need it in the arch
+> > specific annotation init routine, but that is only being used by arches
+> > that do provide a get_cpuid() implementation:
+> > 
+> >   $ find tools/  -name "*.[ch]" | xargs grep 'evlist->env'
+> >   tools/perf/builtin-top.c:	top.evlist->env = &perf_env;
+> >   tools/perf/util/evsel.c:		return evsel->evlist->env;
+> >   tools/perf/util/s390-cpumsf.c:	sf->machine_type = s390_cpumsf_get_type(session->evlist->env->cpuid);
+> >   tools/perf/util/header.c:	session->evlist->env = &header->env;
+> >   tools/perf/util/sample-raw.c:	const char *arch_pf = perf_env__arch(evlist->env);
+> >   $
+> > 
+> >   $ find tools/perf/arch  -name "*.[ch]" | xargs grep -w get_cpuid
+> >   tools/perf/arch/x86/util/auxtrace.c:	ret = get_cpuid(buffer, sizeof(buffer));
+> >   tools/perf/arch/x86/util/header.c:get_cpuid(char *buffer, size_t sz)
+> >   tools/perf/arch/powerpc/util/header.c:get_cpuid(char *buffer, size_t sz)
+> >   tools/perf/arch/s390/util/header.c: * Implementation of get_cpuid().
+> >   tools/perf/arch/s390/util/header.c:int get_cpuid(char *buffer, size_t sz)
+> >   tools/perf/arch/s390/util/header.c:	if (buf && get_cpuid(buf, 128))
+> >   $
+> > 
+> > For 'report' or 'script', i.e. tools working on perf.data files, that is
+> > setup while reading the header, its just top that needs to explicitely
+> > read it at tool start.
+> > 
+> > Reported-by: John Garry <john.garry@huawei.com>
+> > Analysed-by: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Will Deacon <will@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/builtin-top.c | 10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index dc80044bc46f..795e353de095 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -1568,9 +1568,13 @@ int cmd_top(int argc, const char **argv)
+> >  	 */
+> >  	status = perf_env__read_cpuid(&perf_env);
+> >  	if (status) {
+> > -		pr_err("Couldn't read the cpuid for this machine: %s\n",
+> > -		       str_error_r(errno, errbuf, sizeof(errbuf)));
+> > -		goto out_delete_evlist;
+> > +		/*
+> > +		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
+> > +		 * warn the user explicitely.
+> > +		 */
+> > +		eprintf(status == ENOSYS ? 1 : 0, verbose,
+> > +			"Couldn't read the cpuid for this machine: %s\n",
+> > +			str_error_r(errno, errbuf, sizeof(errbuf)));
+> >  	}
+> >  	top.evlist->env = &perf_env;
+> >  
+> > -- 
+> > 2.21.0
+> > 
+
 -- 
-2.20.1
 
+- Arnaldo
