@@ -2,77 +2,85 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878A5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B4EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56448205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCAFC2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576029516;
+	bh=Cl621FHhPK2h2B+bxkrI0DSZWi6mXa++22Ve9vlh+p4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jnv44v2135tUgr9AcGjcC4WCh4aEjksVGdEmYyqDCGJJvRtw8sdTW6yzsfOYgnpA8
+	 Jgp/KMjNAbdLpm3hgfRnTwHhPPqgtdd533P1SJFi5Jgz09QUlfrxS7mG4VSPO/0Vbx
+	 dk7Smd+rePgPPBVTofftFP4G4UBp/SpIGoi5TsM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfLKB5l (ORCPT
+        id S1727549AbfLKB6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:57:41 -0500
-Received: from mga04.intel.com ([192.55.52.120]:51942 "EHLO mga04.intel.com"
+        Tue, 10 Dec 2019 20:58:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfLKB5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:57:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 17:57:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="225349071"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 17:57:37 -0800
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        kevin.tian@intel.com, yi.l.liu@intel.com, yi.y.sun@intel.com,
-        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yi Sun <yi.y.sun@linux.intel.com>
-Subject: Re: [PATCH v2 5/8] iommu/vt-d: Add first level page table interfaces
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20191128022550.9832-1-baolu.lu@linux.intel.com>
- <20191128022550.9832-6-baolu.lu@linux.intel.com>
- <20191202152732.3d9c6589@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <8fd5d2fe-51c7-3ee7-fcda-625082e23040@linux.intel.com>
-Date:   Wed, 11 Dec 2019 09:56:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <20191202152732.3d9c6589@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        id S1726062AbfLKB6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:58:34 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCF6B205ED;
+        Wed, 11 Dec 2019 01:58:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576029514;
+        bh=Cl621FHhPK2h2B+bxkrI0DSZWi6mXa++22Ve9vlh+p4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bL6riMTuah6/luBGs/RHWU7mviWpfnMG1EYT24qFmW2QlqnIWX5R6pf1urcJjcPAJ
+         FxgzOmqKIfbDyj8F6qhq3lUZUbVT8GWhrUhNNQwf0grxFC9hyvojD1CVdBzEtC1SeG
+         kLrJkeemHVvUVUO5bSFMXjqhNMxoBL/yxnV1LR40=
+Date:   Tue, 10 Dec 2019 17:58:33 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
+        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
+        jinyuqi <jinyuqi@huawei.com>
+Subject: Re: mmotm 2019-12-06-19-46 uploaded
+Message-Id: <20191210175833.6fc3360899bec1f99321528a@linux-foundation.org>
+In-Reply-To: <f4596325-a5cd-935e-38a3-61ca36aae9ae@hisilicon.com>
+References: <20191207034723.OPvz2A9wZ%akpm@linux-foundation.org>
+        <c0691301-fa72-b9fe-5cb8-815275f84555@hisilicon.com>
+        <20191210173507.5f4b46bde9586456c2132560@linux-foundation.org>
+        <f4596325-a5cd-935e-38a3-61ca36aae9ae@hisilicon.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
+On Wed, 11 Dec 2019 09:42:09 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
 
-On 12/3/19 7:27 AM, Jacob Pan wrote:
-> On Thu, 28 Nov 2019 10:25:47 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> Hi Andrew,
 > 
->> This adds functions to manipulate first level page tables
->> which could be used by a scalale mode capable IOMMU unit.
->>
-> FL and SL page tables are very similar, and I presume we are not using
-> all the flag bits in FL paging structures for DMA mapping. Are there
-> enough relevant differences to warrant a new set of helper functions
-> for FL? Or we can merge into one.
+> On 2019/12/11 9:35, Andrew Morton wrote:
+> > On Mon, 9 Dec 2019 14:31:55 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+> > 
+> >> Hi Andrew,
+> >>
+> >> About this patch,
+> >> https://lore.kernel.org/lkml/1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com/
+> >>
+> >> It is not in linux-next or your trees now, has it been dropped?
+> > 
+> > Yes, I dropped it with a "to be updated" note.  Michal is asking for
+> > significant changelog updates (at least).
+> 
+> Ok, Shall I rebase on 5.5-rc1 and send patch v4?
 
-I evaluated your suggestion these days. It turned out that your
-suggestion make code simpler and easier for maintainence. Thank you for
-the comment and I will send out a new version for review soon.
+Yes please.  Please ensure that all review comments have been
+addressed, either with code changes or with changelog additions.
 
-Best regards,
-baolu
