@@ -2,83 +2,104 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2DCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E65C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C102077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C52D214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:02:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EbQPfpnX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfLKGt0 (ORCPT
+        id S1727870AbfLKHCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:49:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7216 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfLKGtZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:49:25 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 324AE32A130ACAFC2811;
-        Wed, 11 Dec 2019 14:49:24 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 11 Dec 2019 14:49:14 +0800
-From:   Hanjun Guo <guohanjun@huawei.com>
-To:     Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Hanjun Guo <guohanjun@huawei.com>
-Subject: [PATCH v2] perf/smmuv3: Remove the leftover put_cpu() in error path
-Date:   Wed, 11 Dec 2019 14:43:06 +0800
-Message-ID: <1576046586-59145-1-git-send-email-guohanjun@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 11 Dec 2019 02:02:20 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37154 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfLKHCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:02:20 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so1039660plz.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:02:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R08vSO6u5igpmjKjGC9D9Rc8bVfKHww3KSNBkb72big=;
+        b=EbQPfpnXvegQePc3hEqXeNp6CZ97qUrsRtSRXq3taulR6nVc6G9mVUWISzUOH4Wla+
+         oDz+BSHgoD4gSfPif3/OxzS0cGYLYNFMxS4PnLqnht4hjOR3LU3dfOl5RHbvwo5AMMPP
+         jFbsJWCaAcIxNaYFAXnONMXtYIdo6Vx1uhk3zi8qAJPxBZRQV+pWRUUrGv2ZAe+b39A4
+         jiPlzCt8fn3zg1a6vHQqDuJjgI2mU8GjFmpgUwMGQOM7J1ZpNypch3s+bpnJxBX/SjV2
+         gIp1JkyEhHB/dZykup6Ucnd5mQOlMnf8QkEidHOaMT1nr9nks0jd/MWuNTkOhYi9iESc
+         nTdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R08vSO6u5igpmjKjGC9D9Rc8bVfKHww3KSNBkb72big=;
+        b=fD11DOOZbqcfzYOTTyWpO3apg7cOans8EMkIGkv6QsQhlpPzmWN77C62C8AvOPYhLb
+         sec/ltqx8r45Eq96CxtUmRqYZxPPk63GgURdoaQ/sJwiSfZPZXWYcUkl6wy9SSPjZKvT
+         FbnhDcVbYVIEvhwcNjVwA4oskY9PP2fLj99AdKpFHDOWNfX4y6q7ClKTa7eFaS6j7Z7y
+         mqGZvCi2bv4ditrZEjS7US1kj+9TD+OcSTyt3XWnxsDHQSYiuddbL51eDZk7KWhh8uir
+         B2FvhSur821g4S+jLFc7UShi6hGqZJ9/QdZtnIo5i+ii3250EF4sSdAJz7tV/jADbTyX
+         aG2A==
+X-Gm-Message-State: APjAAAXPI8iFbcvD6L+UoayNxFvaETWlNerTIMOeqjbqwnCPZ6N5jW00
+        m1WayYUfZFGokoUqCJxxNfMJpg==
+X-Google-Smtp-Source: APXvYqxHIlKXfSm0XPqRQmElKLjwtt+RZCLKkIRACmHo2HN9+dAciIGlYFN98DvSZJzP54TeBK13ag==
+X-Received: by 2002:a17:90a:1aa3:: with SMTP id p32mr1877886pjp.8.1576047739635;
+        Tue, 10 Dec 2019 23:02:19 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e27sm1483040pfm.26.2019.12.10.23.02.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 23:02:19 -0800 (PST)
+Date:   Tue, 10 Dec 2019 23:02:16 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 0/3] Add DT nodes for watchdog and llcc for SC7180 and
+ SM8150 SoCs
+Message-ID: <20191211070216.GF3143381@builder>
+References: <0101016ef3391259-59ec5f0a-2ae7-45a8-881e-edc2d0bf7b26-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ef3391259-59ec5f0a-2ae7-45a8-881e-edc2d0bf7b26-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In smmu_pmu_probe(), there is put_cpu() in the error path,
-which is wrong because we use raw_smp_processor_id() to
-get the cpu ID, not get_cpu(), remove it.
+On Tue 10 Dec 20:30 PST 2019, Sai Prakash Ranjan wrote:
 
-While we are at it, kill 'out_cpuhp_err' altogether and
-just return err if we fail to add the hotplug instance.
+> This series adds device tree node for watchdog on SC7180 and SM8150.
+> It also adds a node for LLCC (Last level cache controller) on SC7180.
+> 
+> Patch 3 depends on the dt binding change to LLCC node name:
+>  - https://patchwork.kernel.org/patch/11246055/
+> 
 
-Acked-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
----
- drivers/perf/arm_smmuv3_pmu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Series applied
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index 773128f..d704ecc 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -814,7 +814,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 	if (err) {
- 		dev_err(dev, "Error %d registering hotplug, PMU @%pa\n",
- 			err, &res_0->start);
--		goto out_cpuhp_err;
-+		return err;
- 	}
- 
- 	err = perf_pmu_register(&smmu_pmu->pmu, name, -1);
-@@ -833,8 +833,6 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 
- out_unregister:
- 	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
--out_cpuhp_err:
--	put_cpu();
- 	return err;
- }
- 
--- 
-1.7.12.4
+Thanks,
+Bjorn
 
+> Sai Prakash Ranjan (3):
+>   arm64: dts: qcom: sc7180: Add APSS watchdog node
+>   arm64: dts: qcom: sm8150: Add APSS watchdog node
+>   arm64: dts: qcom: sc7180: Add Last level cache controller node
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 13 +++++++++++++
+>  arch/arm64/boot/dts/qcom/sm8150.dtsi |  6 ++++++
+>  2 files changed, 19 insertions(+)
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
