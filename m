@@ -2,99 +2,117 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2DDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A460EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A629F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E592077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576049501;
+	bh=hzi59ZxXCtn7N9u9Q1/ZsXgqE+JPAgMDiGZkiykAq3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Dhsr3z4zadA1Y7Dkcvuyy90p5hwo8WzfYcXpoceVlGZVLZX5Db+T9eqPA1mZzVi3Y
+	 fCC0DkQCQzc0Hfu+/7GeFAD0I1ANEY1wOx/bpAdyAEoENh67APqtqqHiYlSBpiJgIr
+	 6rFpzXt5kotB7x0Patz53liU0GuiKmj4rhXAo11A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfLKHbQ (ORCPT
+        id S1728133AbfLKHbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:31:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:35977 "EHLO mga01.intel.com"
+        Wed, 11 Dec 2019 02:31:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfLKHbO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:31:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 23:31:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="238435818"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Dec 2019 23:31:12 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 2/3] perf report: Support a new key to reload the browser
-Date:   Wed, 11 Dec 2019 15:30:35 +0800
-Message-Id: <20191211073036.31504-2-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211073036.31504-1-yao.jin@linux.intel.com>
-References: <20191211073036.31504-1-yao.jin@linux.intel.com>
+        id S1727829AbfLKHbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:31:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 088F92077B;
+        Wed, 11 Dec 2019 07:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576049499;
+        bh=hzi59ZxXCtn7N9u9Q1/ZsXgqE+JPAgMDiGZkiykAq3Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AqhM4EM74IqmrdcSyqwzP0zvfddYOBw3VGWlO7KbkNlDcEnsH8Fd4foqvb3+v5FHj
+         oi0/VcKwejR8KAsItACMcW/2Dy6QV4sIwLlJwJJJhRz839G+2Tua+hHqhNpJqkFQ1C
+         /SWUpgJYJbIKDlpVeCoFvY3VKardOOuIBvifC6rU=
+Date:   Wed, 11 Dec 2019 08:31:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Schafer <schaferjscott@gmail.com>
+Cc:     devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
+        Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: qlge: Fix multiple WARNING and CHECK relating
+ to formatting
+Message-ID: <20191211073136.GB397938@kroah.com>
+References: <20191211014759.4749-1-schaferjscott@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211014759.4749-1-schaferjscott@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes we may need to reload the browser to update the output since
-some options are changed.
+On Tue, Dec 10, 2019 at 07:47:59PM -0600, Scott Schafer wrote:
+> CHECK: Please don't use multiple blank lines
+> CHECK: Blank lines aren't necessary before a close brace '}'
+> CHECK: Blank lines aren't necessary after an open brace '{'
+> WARNING: Missing a blank line after declarations
+> CHECK: No space is necessary after a cast
+> CHECK: braces {} should be used on all arms of this statement
+> CHECK: Unbalanced braces around else statement
+> WARNING: please, no space before tabs
+> CHECK: spaces preferred around that '/' (ctx:VxV)
+> CHECK: spaces preferred around that '+' (ctx:VxV)
+> CHECK: spaces preferred around that '%' (ctx:VxV)
+> CHECK: spaces preferred around that '|' (ctx:VxV)
+> CHECK: spaces preferred around that '*' (ctx:VxV)
+> WARNING: Unnecessary space before function pointer arguments
+> WARNING: please, no spaces at the start of a line
+> WARNING: Block comments use a trailing */ on a separate line
+> ERROR: trailing whitespace
+> 
+> In files qlge.h, qlge_dbg.c, qlge_ethtool.c, qlge_main.c, and qlge_mpi.c
+> 
+> Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge.h         |  45 ++++++-------
+>  drivers/staging/qlge/qlge_dbg.c     |  41 ++++++-----
+>  drivers/staging/qlge/qlge_ethtool.c |  20 ++++--
+>  drivers/staging/qlge/qlge_main.c    | 101 ++++++++++++++--------------
+>  drivers/staging/qlge/qlge_mpi.c     |  37 +++++-----
+>  5 files changed, 125 insertions(+), 119 deletions(-)
 
-This patch creates a new key K_RELOAD. Once the __cmd_report() returns
-K_RELOAD, it would repeat the whole process, such as, read samples from
-data file, sort the data and display in the browser.
+Hi,
 
- v2:
- ---
- This is a new patch created in v2.
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-report.c | 4 ++--
- tools/perf/ui/keysyms.h     | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 729cf7611d8a..02178fc54d67 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -635,7 +635,7 @@ static int report__browse_hists(struct report *rep)
- 		 * Usually "ret" is the last pressed key, and we only
- 		 * care if the key notifies us to switch data file.
- 		 */
--		if (ret != K_SWITCH_INPUT_DATA)
-+		if (ret != K_SWITCH_INPUT_DATA && ret != K_RELOAD)
- 			ret = 0;
- 		break;
- 	case 2:
-@@ -1538,7 +1538,7 @@ int cmd_report(int argc, const char **argv)
- 	sort__setup_elide(stdout);
- 
- 	ret = __cmd_report(&report);
--	if (ret == K_SWITCH_INPUT_DATA) {
-+	if (ret == K_SWITCH_INPUT_DATA || ret == K_RELOAD) {
- 		perf_session__delete(session);
- 		goto repeat;
- 	} else
-diff --git a/tools/perf/ui/keysyms.h b/tools/perf/ui/keysyms.h
-index fbfac29077f2..04cc4e5c031f 100644
---- a/tools/perf/ui/keysyms.h
-+++ b/tools/perf/ui/keysyms.h
-@@ -25,5 +25,6 @@
- #define K_ERROR	 -2
- #define K_RESIZE -3
- #define K_SWITCH_INPUT_DATA -4
-+#define K_RELOAD -5
- 
- #endif /* _PERF_KEYSYMS_H_ */
--- 
-2.17.1
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
 
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
