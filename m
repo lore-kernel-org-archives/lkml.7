@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305D4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65883C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAF0E2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C916208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076979;
-	bh=gmWCkjQVPPfidX2Tuqq9EuA+KCH/LpIU+IvlQpr4yBA=;
+	s=default; t=1576076986;
+	bh=5oMM/cvm6A3aBgzOUr6D1IuzknA4XLlLnZ3txtfxgbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EelCkYQLpTkP+1OAEAQIZiRyD991DZPJi9k21aZxa299/34KWEKrYY6B6F871nHAs
-	 O2XI7jrt26NVR9TQUMBZY+vjPGVMI+6W4KWLsqpxbOnreNXC/fCW391EP3uyvFaqGP
-	 +R/k26ymwP03x/IK5S4qyr0T8N7nd0i0CxJk5Rpg=
+	b=GW7eF0vK69/UBEfm3ukKb4/EY7FeiQX9Lv0zpaFNldyVVaDQAEc1Qb37Wi4f+ntFC
+	 M2bNjPChKG8tjtd0igq3GbbRhVSJi15fcsmqdTG6cByrdKnKgir2Z73eTw/A4Guzdy
+	 QFRdav8jy0WzZDYcuAgAWpE7irxJOg/OUxVDH0bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfLKPJh (ORCPT
+        id S1730094AbfLKPJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:09:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730618AbfLKPJe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:34 -0500
+        id S1730618AbfLKPJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA9F424658;
-        Wed, 11 Dec 2019 15:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B0D2465C;
+        Wed, 11 Dec 2019 15:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076974;
-        bh=gmWCkjQVPPfidX2Tuqq9EuA+KCH/LpIU+IvlQpr4yBA=;
+        s=default; t=1576076979;
+        bh=5oMM/cvm6A3aBgzOUr6D1IuzknA4XLlLnZ3txtfxgbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukgpba1zmRgVgi+kexOs6SFCJf4AbWaNmweLNx0VDN52OT+vP2hzyqlEiufbkyyCg
-         ZDpw7m9Vfmzh8IZhBhwqS5xH2JmgY5Fuy+4MA9emKOqcziX+Ib103A0MJsvWpKFhJX
-         3rdkuGP9rNyDZnwOhSS+d0UVVkvxzIdtbnlw4KdE=
+        b=zLG7U8UBU2cwRAdDx7OWRYSfTuFJzde0uzwI86nsaKwuAxX1VepaCeSwDkAd5ZadT
+         w2SMpdMdswQ4JHQWRQavNCtbjMRIfN+8TCOtJEEV7c/5VvtVWcMvXXVQAjeW5sqwh6
+         iYqxd3YnnZ9vuzOUIvNzwE7lukNUpnzP4wC880P4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.4 61/92] KVM: PPC: Book3S HV: XIVE: Set kvm->arch.xive when VPs are allocated
-Date:   Wed, 11 Dec 2019 16:05:52 +0100
-Message-Id: <20191211150250.436265473@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: [PATCH 5.4 63/92] KVM: arm/arm64: vgic: Dont rely on the wrong pending table
+Date:   Wed, 11 Dec 2019 16:05:54 +0100
+Message-Id: <20191211150251.958103217@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,84 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kurz <groug@kaod.org>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-commit e7d71c943040c23f2fd042033d319f56e84f845b upstream.
+commit ca185b260951d3b55108c0b95e188682d8a507b7 upstream.
 
-If we cannot allocate the XIVE VPs in OPAL, the creation of a XIVE or
-XICS-on-XIVE device is aborted as expected, but we leave kvm->arch.xive
-set forever since the release method isn't called in this case. Any
-subsequent tentative to create a XIVE or XICS-on-XIVE for this VM will
-thus always fail (DoS). This is a problem for QEMU since it destroys
-and re-creates these devices when the VM is reset: the VM would be
-restricted to using the much slower emulated XIVE or XICS forever.
+It's possible that two LPIs locate in the same "byte_offset" but target
+two different vcpus, where their pending status are indicated by two
+different pending tables.  In such a scenario, using last_byte_offset
+optimization will lead KVM relying on the wrong pending table entry.
+Let us use last_ptr instead, which can be treated as a byte index into
+a pending table and also, can be vcpu specific.
 
-As an alternative to adding rollback, do not assign kvm->arch.xive before
-making sure the XIVE VPs are allocated in OPAL.
-
-Cc: stable@vger.kernel.org # v5.2
-Fixes: 5422e95103cf ("KVM: PPC: Book3S HV: XIVE: Replace the 'destroy' method by a 'release' method")
-Signed-off-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Fixes: 280771252c1b ("KVM: arm64: vgic-v3: KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES")
+Cc: stable@vger.kernel.org
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Eric Auger <eric.auger@redhat.com>
+Link: https://lore.kernel.org/r/20191029071919.177-4-yuzenghui@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_xive.c        |   11 +++++------
- arch/powerpc/kvm/book3s_xive_native.c |    2 +-
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ virt/kvm/arm/vgic/vgic-v3.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_xive.c
-+++ b/arch/powerpc/kvm/book3s_xive.c
-@@ -2005,6 +2005,10 @@ static int kvmppc_xive_create(struct kvm
+--- a/virt/kvm/arm/vgic/vgic-v3.c
++++ b/virt/kvm/arm/vgic/vgic-v3.c
+@@ -363,8 +363,8 @@ retry:
+ int vgic_v3_save_pending_tables(struct kvm *kvm)
+ {
+ 	struct vgic_dist *dist = &kvm->arch.vgic;
+-	int last_byte_offset = -1;
+ 	struct vgic_irq *irq;
++	gpa_t last_ptr = ~(gpa_t)0;
+ 	int ret;
+ 	u8 val;
  
- 	pr_devel("Creating xive for partition\n");
+@@ -384,11 +384,11 @@ int vgic_v3_save_pending_tables(struct k
+ 		bit_nr = irq->intid % BITS_PER_BYTE;
+ 		ptr = pendbase + byte_offset;
  
-+	/* Already there ? */
-+	if (kvm->arch.xive)
-+		return -EEXIST;
-+
- 	xive = kvmppc_xive_get_device(kvm, type);
- 	if (!xive)
- 		return -ENOMEM;
-@@ -2014,12 +2018,6 @@ static int kvmppc_xive_create(struct kvm
- 	xive->kvm = kvm;
- 	mutex_init(&xive->lock);
+-		if (byte_offset != last_byte_offset) {
++		if (ptr != last_ptr) {
+ 			ret = kvm_read_guest_lock(kvm, ptr, &val, 1);
+ 			if (ret)
+ 				return ret;
+-			last_byte_offset = byte_offset;
++			last_ptr = ptr;
+ 		}
  
--	/* Already there ? */
--	if (kvm->arch.xive)
--		ret = -EEXIST;
--	else
--		kvm->arch.xive = xive;
--
- 	/* We use the default queue size set by the host */
- 	xive->q_order = xive_native_default_eq_shift();
- 	if (xive->q_order < PAGE_SHIFT)
-@@ -2039,6 +2037,7 @@ static int kvmppc_xive_create(struct kvm
- 	if (ret)
- 		return ret;
- 
-+	kvm->arch.xive = xive;
- 	return 0;
- }
- 
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -1095,7 +1095,6 @@ static int kvmppc_xive_native_create(str
- 	dev->private = xive;
- 	xive->dev = dev;
- 	xive->kvm = kvm;
--	kvm->arch.xive = xive;
- 	mutex_init(&xive->mapping_lock);
- 	mutex_init(&xive->lock);
- 
-@@ -1116,6 +1115,7 @@ static int kvmppc_xive_native_create(str
- 	if (ret)
- 		return ret;
- 
-+	kvm->arch.xive = xive;
- 	return 0;
- }
- 
+ 		stored = val & (1U << bit_nr);
 
 
