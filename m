@@ -2,92 +2,237 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91774C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CDEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645712073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE912073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079755;
+	bh=KMskS2d1qc91r8quykui3HyZFlFhTsVOYc2Ir+Blyro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=STW0sH+x4EPZ6zbyOts/kTwDGyjfTaKFcMsir3li1Hya+MavLo5Rugnn4URu+fNzp
+	 lwQhJj911PNyPNps+bnpRURcSCN9Gp9691QCJ/JboxXWyXYnjbrg9XnskTS4yI0/0j
+	 VBnVx2PwHA174aZohWLlAyP7+6BFc+WA+ta92XPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731492AbfLKPPn (ORCPT
+        id S1732426AbfLKPzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:43 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:55100 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1731693AbfLKPO6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:58 -0500
-Received: (qmail 1776 invoked by uid 2102); 11 Dec 2019 10:14:57 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 11 Dec 2019 10:14:57 -0500
-Date:   Wed, 11 Dec 2019 10:14:57 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-In-Reply-To: <CAAeHK+wFBYX8-L-D8w_nep3W=QjYoLAZbc=-0eoWK684wnuayA@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1912111010490.1549-100000@iolanthe.rowland.org>
+        Wed, 11 Dec 2019 10:55:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731574AbfLKPPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05AFD20663;
+        Wed, 11 Dec 2019 15:15:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077339;
+        bh=KMskS2d1qc91r8quykui3HyZFlFhTsVOYc2Ir+Blyro=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=anJhU2U8xL/Y0myzj6KDQCXlzLEW7Iyzh+DORgCbPBIsThOTPGsvG/SzgBVIpnEsX
+         ZBZ/U+FEzQfQxoJzvVFE89jFqZn8DJGEX3DouH7EbiuMaWCR1C+JA31Le1Z/j9M9lm
+         +bsyy+wvOVbuv6AUSk2LJPTjmhTUSE8+zkGlgqmw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Florian Bezdeka <florian@bezdeka.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.3 088/105] crypto: geode-aes - switch to skcipher for cbc(aes) fallback
+Date:   Wed, 11 Dec 2019 16:06:17 +0100
+Message-Id: <20191211150300.172484322@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Andrey Konovalov wrote:
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-> On Tue, Dec 10, 2019 at 9:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Tue, 10 Dec 2019, syzbot wrote:
-> >
-> > > > On Mon, 9 Dec 2019, syzbot wrote:
-> > >
-> > > >> Hello,
-> > >
-> > > >> syzbot found the following crash on:
-> > >
-> > > >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> > > >> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
-> > > >> kernel config:
-> > > >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> > > >> dashboard link:
-> > > >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
-> > > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > >
-> > > >> Unfortunately, I don't have any reproducer for this crash yet.
-> > >
-> > > >> IMPORTANT: if you fix the bug, please add the following tag to the
-> > > >> commit:
-> > > >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
+commit 504582e8e40b90b8f8c58783e2d1e4f6a2b71a3a upstream.
 
-> > > This crash does not have a reproducer. I cannot test it.
-> >
-> > Let's try the same patch with a different bug report -- one that has a
-> > reproducer.  I assume that syzbot gets the bug identity from the
-> > email's From: line (which has been updated acoordingly) rather than the
-> > Subject: line.
-> 
-> Did you get a response for this test? I see the test attempt on the
-> dashboard (the patch failed to build), but I didn't get an email with
-> the result.
+Commit 79c65d179a40e145 ("crypto: cbc - Convert to skcipher") updated
+the generic CBC template wrapper from a blkcipher to a skcipher algo,
+to get away from the deprecated blkcipher interface. However, as a side
+effect, drivers that instantiate CBC transforms using the blkcipher as
+a fallback no longer work, since skciphers can wrap blkciphers but not
+the other way around. This broke the geode-aes driver.
 
-No response so far.  On the other hand, syzbot has been a bit slow to 
-respond to my tests recently (typical turnaround time is several 
-hours).  I don't know what's going on.
+So let's fix it by moving to the sync skcipher interface when allocating
+the fallback. At the same time, align with the generic API for ECB and
+CBC by rejecting inputs that are not a multiple of the AES block size.
 
-Alan Stern
+Fixes: 79c65d179a40e145 ("crypto: cbc - Convert to skcipher")
+Cc: <stable@vger.kernel.org> # v4.20+ ONLY
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Florian Bezdeka <florian@bezdeka.de>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/crypto/geode-aes.c |   57 ++++++++++++++++++++++++++-------------------
+ drivers/crypto/geode-aes.h |    2 -
+ 2 files changed, 34 insertions(+), 25 deletions(-)
+
+--- a/drivers/crypto/geode-aes.c
++++ b/drivers/crypto/geode-aes.c
+@@ -10,6 +10,7 @@
+ #include <linux/spinlock.h>
+ #include <crypto/algapi.h>
+ #include <crypto/aes.h>
++#include <crypto/skcipher.h>
+ 
+ #include <linux/io.h>
+ #include <linux/delay.h>
+@@ -166,13 +167,15 @@ static int geode_setkey_blk(struct crypt
+ 	/*
+ 	 * The requested key size is not supported by HW, do a fallback
+ 	 */
+-	op->fallback.blk->base.crt_flags &= ~CRYPTO_TFM_REQ_MASK;
+-	op->fallback.blk->base.crt_flags |= (tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
++	crypto_sync_skcipher_clear_flags(op->fallback.blk, CRYPTO_TFM_REQ_MASK);
++	crypto_sync_skcipher_set_flags(op->fallback.blk,
++				       tfm->crt_flags & CRYPTO_TFM_REQ_MASK);
+ 
+-	ret = crypto_blkcipher_setkey(op->fallback.blk, key, len);
++	ret = crypto_sync_skcipher_setkey(op->fallback.blk, key, len);
+ 	if (ret) {
+ 		tfm->crt_flags &= ~CRYPTO_TFM_RES_MASK;
+-		tfm->crt_flags |= (op->fallback.blk->base.crt_flags & CRYPTO_TFM_RES_MASK);
++		tfm->crt_flags |= crypto_sync_skcipher_get_flags(op->fallback.blk) &
++				  CRYPTO_TFM_RES_MASK;
+ 	}
+ 	return ret;
+ }
+@@ -181,33 +184,28 @@ static int fallback_blk_dec(struct blkci
+ 		struct scatterlist *dst, struct scatterlist *src,
+ 		unsigned int nbytes)
+ {
+-	unsigned int ret;
+-	struct crypto_blkcipher *tfm;
+ 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
++	SYNC_SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
+ 
+-	tfm = desc->tfm;
+-	desc->tfm = op->fallback.blk;
+-
+-	ret = crypto_blkcipher_decrypt_iv(desc, dst, src, nbytes);
++	skcipher_request_set_sync_tfm(req, op->fallback.blk);
++	skcipher_request_set_callback(req, 0, NULL, NULL);
++	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
+ 
+-	desc->tfm = tfm;
+-	return ret;
++	return crypto_skcipher_decrypt(req);
+ }
++
+ static int fallback_blk_enc(struct blkcipher_desc *desc,
+ 		struct scatterlist *dst, struct scatterlist *src,
+ 		unsigned int nbytes)
+ {
+-	unsigned int ret;
+-	struct crypto_blkcipher *tfm;
+ 	struct geode_aes_op *op = crypto_blkcipher_ctx(desc->tfm);
++	SYNC_SKCIPHER_REQUEST_ON_STACK(req, op->fallback.blk);
+ 
+-	tfm = desc->tfm;
+-	desc->tfm = op->fallback.blk;
+-
+-	ret = crypto_blkcipher_encrypt_iv(desc, dst, src, nbytes);
++	skcipher_request_set_sync_tfm(req, op->fallback.blk);
++	skcipher_request_set_callback(req, 0, NULL, NULL);
++	skcipher_request_set_crypt(req, src, dst, nbytes, desc->info);
+ 
+-	desc->tfm = tfm;
+-	return ret;
++	return crypto_skcipher_encrypt(req);
+ }
+ 
+ static void
+@@ -307,6 +305,9 @@ geode_cbc_decrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_dec(desc, dst, src, nbytes);
+ 
+@@ -339,6 +340,9 @@ geode_cbc_encrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_enc(desc, dst, src, nbytes);
+ 
+@@ -366,9 +370,8 @@ static int fallback_init_blk(struct cryp
+ 	const char *name = crypto_tfm_alg_name(tfm);
+ 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
+ 
+-	op->fallback.blk = crypto_alloc_blkcipher(name, 0,
+-			CRYPTO_ALG_ASYNC | CRYPTO_ALG_NEED_FALLBACK);
+-
++	op->fallback.blk = crypto_alloc_sync_skcipher(name, 0,
++						      CRYPTO_ALG_NEED_FALLBACK);
+ 	if (IS_ERR(op->fallback.blk)) {
+ 		printk(KERN_ERR "Error allocating fallback algo %s\n", name);
+ 		return PTR_ERR(op->fallback.blk);
+@@ -381,7 +384,7 @@ static void fallback_exit_blk(struct cry
+ {
+ 	struct geode_aes_op *op = crypto_tfm_ctx(tfm);
+ 
+-	crypto_free_blkcipher(op->fallback.blk);
++	crypto_free_sync_skcipher(op->fallback.blk);
+ 	op->fallback.blk = NULL;
+ }
+ 
+@@ -420,6 +423,9 @@ geode_ecb_decrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_dec(desc, dst, src, nbytes);
+ 
+@@ -450,6 +456,9 @@ geode_ecb_encrypt(struct blkcipher_desc
+ 	struct blkcipher_walk walk;
+ 	int err, ret;
+ 
++	if (nbytes % AES_BLOCK_SIZE)
++		return -EINVAL;
++
+ 	if (unlikely(op->keylen != AES_KEYSIZE_128))
+ 		return fallback_blk_enc(desc, dst, src, nbytes);
+ 
+--- a/drivers/crypto/geode-aes.h
++++ b/drivers/crypto/geode-aes.h
+@@ -60,7 +60,7 @@ struct geode_aes_op {
+ 	u8 *iv;
+ 
+ 	union {
+-		struct crypto_blkcipher *blk;
++		struct crypto_sync_skcipher *blk;
+ 		struct crypto_cipher *cip;
+ 	} fallback;
+ 	u32 keylen;
+
 
