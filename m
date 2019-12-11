@@ -2,183 +2,531 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32892C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1016DC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7CA20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC4521556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:20:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfLKVUz (ORCPT
+        id S1726975AbfLKVU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:20:55 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:60249 "EHLO
+        Wed, 11 Dec 2019 16:20:58 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:43429 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfLKVUv (ORCPT
+        with ESMTP id S1726487AbfLKVUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 16:20:51 -0500
+        Wed, 11 Dec 2019 16:20:53 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mo7eX-1hvNKe05hz-00pfxP; Wed, 11 Dec 2019 22:20:31 +0100
+ 1N0F9t-1hlNSw2gPn-00xG6d; Wed, 11 Dec 2019 22:20:33 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>
 Cc:     Baolin Wang <baolin.wang7@gmail.com>, y2038@lists.linaro.org,
         linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v7 0/8] Fix year 2038 issue for sound subsystem
-Date:   Wed, 11 Dec 2019 22:20:16 +0100
-Message-Id: <20191211212025.1981822-1-arnd@arndb.de>
+        Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v7 8/9] ALSA: add new 32-bit layout for snd_pcm_mmap_status/control
+Date:   Wed, 11 Dec 2019 22:20:24 +0100
+Message-Id: <20191211212025.1981822-9-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191211212025.1981822-1-arnd@arndb.de>
+References: <20191211212025.1981822-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:EUNjsuCMFvOfLutRxMiDpsrdBNUjEnJY9WYrs7u4SgqHOEMtTQr
- jKDw6lqSni3FNWrx9XXBtARvrFjizsPEn+nvMSqjRiUsg3ZVQj5wvBXHcHmQM3fA5rPV9if
- eYFnSj/RbNur4cr2575gxtU+YinZnOGoTz45bXqganXcTY5kaJbKg79OiNzWJmilpZt/dLE
- PYXDEHBOpgA+AEPnJu4vQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Hf3kE9BGNcs=:p0QD8vySsZB9EGU/RjRvgy
- xeY3HbWJqQZqGkE1pQaqjDvABo0/GR/Ns+kAzHhWT9ohkisvw9jwxjF6sZ9wRcUDM4QL/M6rM
- 4NoxYJW/D97waBIuUlIYg40eGtQClNXXw2DSJw+SJg0hIsV1XO/p0OzI77Q/Nc7MEs2HOo70S
- zG5h+4hLqoTqoarczPc2/KPkhzzsLnVO7oQ53qK9ft6x3R8btAQZOM0PiHNX0iujI7awU/Tfw
- uovBcm9JPVHTgXdUaLN1hkT+3vEq+bAo8W391fIlE3NyT5vXh3LN3+rbk2GpsISWzb79zYmdD
- qhnGXrqhBMWfQR1bQEJQ2PWYU3FcRK7oKxU5/PmqekVnAGXQsxWAPFn2Nghnx34ZB6Eewlydb
- dsz26qSiWhx9fvKomDqcL5B1+rwyK+qpjbNXgigZSJqEL9lI4YNjDC42F+iEKmVa7mzqBT8B8
- AdJ6pxdnfkmiLb85MNKZwsS+VslP47mB7GIFFG4RjRppllExpjtJ1pw5nRh5Xi1GkoPh88wwW
- rs537Xk+8pGtALK2lkaLqZ1AlrSCvvJ8UbGq/vkSTYu1GL6d2jp44878OYnXyCfSoktUbhViK
- Atv/eZo0Bg3k/1xEAsCf7I8W+rjywf7SFmcUKU5/TKDOBZ5SVgtzUaMk5rO3y2qtpOmubyK2k
- VQZ6Eh6i8ya8+y5rVuFF7tR4mz+9lnzCd/6ZAxApqS8fQqDfLWqMc8nPvoT5RQAp5g5P4Zksh
- 8jpQuqazHE2imnDdS/oZxBmTPZxpbl/73mlj3zzkTXOPxzrHNSNaSDHMmsCQESSFIL0Y9Qr/M
- Rj0VVgWLNPsMZHNaeO0Xnr/H7s5w8DJ2An16pLQf+mGx34j07juW+0ak7ghgfZoFpwIsQOoBT
- isbIYlnWryBuBavmxqYQ==
+X-Provags-ID: V03:K1:5NnHiLeo9rQFgc7DO4rcGXwJyRFHLcOahws42Vd4+ZLOkNIDspD
+ U2ucT25reB7mvwREkSU8jYhq/6KYfRPMy+k6xdZyRi+Ym1n2MW7yyr/02fOV30GMzzlzjrH
+ RaO9hXJmU1eDGWSHaXwL92TPog4eESho0ToSmoyR+bOB8a/o/w1x8MuO6umCM95yx/Z9IcT
+ w4lI2PtgrzAvFFMkZWnsw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4r9+T0On1E4=:7dpWWGHL1kV6ILrbGb+J21
+ V3DEGlMfwDJrMiGpiNfGr6Sd8ot9ph0jzePKj586Q9aaCqcm3/bTG+rDGITapsP3JVaqg+hwU
+ YnQnYpTakFi2tKAAhWMC3Q3NcN54JgBtfPtxv0aSx5x9sOkUbuPduIbXJ6NpulRxGfW3PUaC8
+ 3MzL9BVzm2GW4f1n8BtaJKVCBLEj1DL98c07ldFncZLp83wHUk97ZyXiZXwEzXq/sNutT9drA
+ VfUlNsJMRruEBKblzga9crWvAo/lXH4kbIN0ADvdhG9/owAAmmKfpVea2evLrAvsBTzI2O1pb
+ ULp36aDULNubEldCuqM28smaMN+qNt+DghECet67mRAZvXcj69bqIPMNtb6HGgP6XnzHaiwT0
+ CwqvtcmnZWw0ei+aCCdksBH3iazNmGmJ8Ow8Bw0k7iJx5NbmkO39frHZLXyOmD+bhzc7uBKas
+ Mhkmllm17InlHeyFCgjrjpan8h/UQTmHoJ8zyO/7j6pYZFLaZ7HYBUnghC70IxrFURyahtOG2
+ HmMMecafQjQcbQDM4g/WDbky0i6oEUKCM3QBki0hP2Nea1LC4mpP44UAzB2nBjynTEvwpZ+x+
+ sftmBFMapRCPJmTbpBNNZUlNuDkL//carDxWAMLu4Y1JW5x2ImsYVOLrKDKyoSzKlswTSXw28
+ 2c20FuGPcxF1PtrKMGskAXDNx0WUM5BspFLAsCsEKENmrhmd6c2AWIArUGk1wOTue+jCSyPud
+ bFvAPvI4n9qxZ2+xWqHbkjpw7IzE+WAb4B4W8241ahXboMZdP2NW6ue6qpOcVP0WD+8KEFPyr
+ +l4nPuAARnz7efkgCrHKoAgq2MFe43dXTTAyqz/M9WvkzliwsDC0AnJyeuFXjjrLXnyK0esaT
+ mgZJVzs/ynzmCIesxHxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a series I worked on with Baolin in 2017 and 2018, but we
-never quite managed to finish up the last pieces. During the
-ALSA developer meetup at ELC-E 2018 in Edinburgh, a decision was
-made to go with this approach for keeping best compatibility
-with existing source code, and then I failed to follow up by
-resending the patches.
+The snd_pcm_mmap_status and snd_pcm_mmap_control interfaces are one of the
+trickiest areas to get right when moving to 64-bit time_t in user space.
 
-Now I have patches for all remaining time_t uses in the kernel,
-so it's absolutely time to revisit them. I have done more
-review of the patches myself and found a couple of minor issues
-that I have fixed up, otherwise the series is still the same as
-before.
+The snd_pcm_mmap_status structure layout is incompatible with user space
+that uses a 64-bit time_t, so we need a new layout for it. Since the
+SNDRV_PCM_IOCTL_SYNC_PTR ioctl combines it with snd_pcm_mmap_control
+into snd_pcm_sync_ptr, we need to change those two as well.
 
-Conceptually, the idea of these patches is:
+Both structures are also exported via an mmap() operation on certain
+architectures, and this suffers from incompatibility between 32-bit
+and 64-bit user space. As we have to change both structures anyway,
+this is a good opportunity to fix the mmap() problem as well, so let's
+standardize on the existing 64-bit layout of the structure where possible.
 
-- 64-bit applications should see no changes at all, neither
-  compile-time nor run-time.
+The downside is that we lose mmap() support for existing 32-bit x86 and
+powerpc applications, adding that would introduce very noticeable runtime
+overhead and complexity. My assumption here is that not too many people
+will miss the removed feature, given that:
 
-- 32-bit code compiled with a 64-bit time_t currently
-  does not work with ALSA, and requires kernel changes and/or
-  sound/asound.h changes
+- Almost all x86 and powerpc users these days are on 64-bit kernels,
+the majority of today's 32-bit users are on architectures that never
+supported mmap (ARM, MIPS, ...).
+- It never worked in compat mode (it was intentionally disabled there)
+- The application already needs to work with a fallback to
+SNDRV_PCM_IOCTL_SYNC_PTR, which will keep working with both the old
+and new structure layout.
 
-- Most 32-bit code using these interfaces will work correctly
-  on a modified kernel, with or without the uapi header changes.
+Both the ioctl() and mmap() based interfaces are changed at the same
+time, as they are based on the same structures. Unlike other interfaces,
+we change the uapi header to export both the traditional structure and
+a version that is portable between 32-bit and 64-bit user space code
+and that corresponds to the existing 64-bit layout. We further check the
+__USE_TIME_BITS64 macro that will be defined by future C library versions
+whenever we use the new time_t definition, so any existing user space
+source code will not see any changes until it gets rebuilt against a new
+C library. However, the new structures are all visible in addition to the
+old ones, allowing applications to explicitly request the new structures.
 
-- 32-bit code using SNDRV_TIMER_IOCTL_TREAD requires the
-  updated header file for 64-bit time_t support
+In order to detect the difference between the old snd_pcm_mmap_status and
+the new __snd_pcm_mmap_status64 structure from the ioctl command number,
+we rely on one quirk in the structure definition: snd_pcm_mmap_status
+must be aligned to alignof(time_t), which leads the compiler to insert
+four bytes of padding in struct snd_pcm_sync_ptr after 'flags' and a
+corresponding change in the size of snd_pcm_sync_ptr itself. On x86-32
+(and only there), the compiler doesn't use 64-bit alignment in structure,
+so I'm adding an explicit pad in the structure that has no effect on the
+existing 64-bit architectures but ensures that the layout matches for x86.
 
-- 32-bit i386 user space with 64-bit time_t is broken for
-  SNDRV_PCM_IOCTL_STATUS, SNDRV_RAWMIDI_IOCTL_STATUS and
-  SNDRV_PCM_IOCTL_SYNC_PTR because of i386 alignment. This is also
-  addressed by the updated uapi header.
+The snd_pcm_uframes_t type compatibility requires another hack: we can't
+easily make that 64 bit wide, so I leave the type as 'unsigned long',
+but add padding before and after it, to ensure that the data is properly
+aligned to the respective 64-bit field in the in-kernel structure.
 
-- PCM mmap is currently supported on native x86 kernels
-  (both 32-bit and 64-bit) but not for compat mode. This series breaks
-  the 32-bit native mmap support for 32-bit time_t, but instead allows
-  it for 64-bit time_t on both native and compat kernels. This seems to
-  be the best trade-off, as mmap support is optional already, and most
-  32-bit code runs in compat mode anyway.
+For the SNDRV_PCM_MMAP_OFFSET_STATUS/CONTROL constants that are used
+as the virtual file offset in the mmap() function, we also have to
+introduce new constants that depend on hte __USE_TIME_BITS64 macro:
+The existing macros are renamed to SNDRV_PCM_MMAP_OFFSET_STATUS_OLD
+and SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD, they continue to work fine on
+64-bit architectures, but stop working on native 32-bit user space.
+The replacement _NEW constants are now used by default for user space
+built with __USE_TIME_BITS64, those now work on all new kernels for x86,
+ppc and alpha (32 and 64 bit, native and compat). It might be a good idea
+for a future alsa-lib to support both the _OLD and _NEW macros and use
+the corresponding structures directly. Unmodified alsa-lib source code
+will retain the current behavior, so it will no longer be able to use
+mmap() for the status/control structures on 32-bit systems, until either
+the C library gets updated to 64-bit time_t or alsa-lib gets updated to
+support both mmap() layouts.
 
-- I've tried to avoid breaking compilation of 32-bit code
-  as much as possible. Anything that does break however is likely code
-  that is already broken on 64-bit time_t and needs source changes to
-  fix them.
-
-I hope I addressed all review comments by now, so please pull this
-for linux-5.6.
-
-A git branch with the same contents is available for testing at [1].
-
-     Arnd
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git y2038-alsa-v7
-[2] https://lore.kernel.org/lkml/CAK8P3a2Os66+iwQYf97qh05W2JP8rmWao8zmKoHiXqVHvyYAJA@mail.gmail.com/T/#m6519cb07cfda08adf1dedea6596bb98892b4d5dc
-
-Changes since v6: (Arnd):
- - Add a patch to update the API versions
- - Hide a timespec reference in #ifndef __KERNEL__ to remove the
-   last reference to time_t
- - Use a more readable way to do padding and describe it in the
-   changelog
- - Rebase to linux-5.5-rc1, changing include/sound/soc-component.h                   
-   and sound/drivers/aloop.c as needed.
-
-Changes since v5 (Arnd):
- - Rebased to linux-5.4-rc4
- - Updated to completely remove timespec and time_t references from alsa
- - found and fixed a few bugs
-
-Changes since v4 (Baolin):
- - Add patch 5 to change trigger_tstamp member of struct snd_pcm_runtime.
- - Add patch 8 to change internal timespec.
- - Add more explanation in commit message.
- - Use ktime_get_real_ts64() in patch 6.
- - Split common code out into a separate function in patch 6.
- - Fix tu->tread bug in patch 6 and remove #if __BITS_PER_LONG == 64 macro.
-
-Changes since v3:
- - Move struct snd_pcm_status32 to pcm.h file.
- - Modify comments and commit message.
- - Add new patch2 ~ patch6.
-
-Changes since v2:
- - Renamed all structures to make clear.
- - Remove CONFIG_X86_X32 macro and introduced new compat_snd_pcm_status64_x86_32.
-
-Changes since v1:
- - Add one macro for struct snd_pcm_status_32 which only active in 32bits kernel.
- - Convert pcm_compat.c to use struct snd_pcm_status_64.
- - Convert pcm_native.c to use struct snd_pcm_status_64.
+Co-developed-with: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+ include/uapi/sound/asound.h | 110 ++++++++++++++++++++++++++++++++----
+ sound/core/pcm_compat.c     |  30 +++++-----
+ sound/core/pcm_lib.c        |  10 ++--
+ sound/core/pcm_native.c     |  38 ++++++++-----
+ 4 files changed, 147 insertions(+), 41 deletions(-)
 
-Arnd Bergmann (3):
-  ALSA: move snd_pcm_ioctl_sync_ptr_compat into pcm_native.c
-  ALSA: add new 32-bit layout for snd_pcm_mmap_status/control
-  ALSA: bump uapi version numbers
-
-Baolin Wang (6):
-  ALSA: Replace timespec with timespec64
-  ALSA: Avoid using timespec for struct snd_timer_status
-  ALSA: Avoid using timespec for struct snd_ctl_elem_value
-  ALSA: Avoid using timespec for struct snd_pcm_status
-  ALSA: Avoid using timespec for struct snd_rawmidi_status
-  ALSA: Avoid using timespec for struct snd_timer_tread
-
- include/sound/pcm.h               |  74 ++++++--
- include/sound/soc-component.h     |   4 +-
- include/sound/timer.h             |   4 +-
- include/uapi/sound/asound.h       | 145 +++++++++++++--
- sound/core/pcm.c                  |  12 +-
- sound/core/pcm_compat.c           | 282 ++++++++----------------------
- sound/core/pcm_lib.c              |  38 ++--
- sound/core/pcm_native.c           | 226 +++++++++++++++++++++---
- sound/core/rawmidi.c              | 132 +++++++++++---
- sound/core/rawmidi_compat.c       |  87 +++------
- sound/core/timer.c                | 229 ++++++++++++++++++------
- sound/core/timer_compat.c         |  62 +------
- sound/drivers/aloop.c             |   2 +-
- sound/pci/hda/hda_controller.c    |  10 +-
- sound/soc/intel/skylake/skl-pcm.c |   4 +-
- 15 files changed, 817 insertions(+), 494 deletions(-)
-
+diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
+index ad86c5a7a1e2..df9983e7ead5 100644
+--- a/include/uapi/sound/asound.h
++++ b/include/uapi/sound/asound.h
+@@ -35,6 +35,8 @@
+ #include <time.h>
+ #endif
+ 
++#include <asm/byteorder.h>
++
+ /*
+  *  protocol version
+  */
+@@ -301,7 +303,9 @@ typedef int __bitwise snd_pcm_subformat_t;
+ #define SNDRV_PCM_INFO_DRAIN_TRIGGER	0x40000000		/* internal kernel flag - trigger in drain */
+ #define SNDRV_PCM_INFO_FIFO_IN_FRAMES	0x80000000	/* internal kernel flag - FIFO size is in frames */
+ 
+-
++#if (__BITS_PER_LONG == 32 && defined(__USE_TIME_BITS64)) || defined __KERNEL__
++#define __SND_STRUCT_TIME64
++#endif
+ 
+ typedef int __bitwise snd_pcm_state_t;
+ #define	SNDRV_PCM_STATE_OPEN		((__force snd_pcm_state_t) 0) /* stream is open */
+@@ -317,8 +321,17 @@ typedef int __bitwise snd_pcm_state_t;
+ 
+ enum {
+ 	SNDRV_PCM_MMAP_OFFSET_DATA = 0x00000000,
+-	SNDRV_PCM_MMAP_OFFSET_STATUS = 0x80000000,
+-	SNDRV_PCM_MMAP_OFFSET_CONTROL = 0x81000000,
++	SNDRV_PCM_MMAP_OFFSET_STATUS_OLD = 0x80000000,
++	SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD = 0x81000000,
++	SNDRV_PCM_MMAP_OFFSET_STATUS_NEW = 0x82000000,
++	SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW = 0x83000000,
++#ifdef __SND_STRUCT_TIME64
++	SNDRV_PCM_MMAP_OFFSET_STATUS = SNDRV_PCM_MMAP_OFFSET_STATUS_NEW,
++	SNDRV_PCM_MMAP_OFFSET_CONTROL = SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW,
++#else
++	SNDRV_PCM_MMAP_OFFSET_STATUS = SNDRV_PCM_MMAP_OFFSET_STATUS_OLD,
++	SNDRV_PCM_MMAP_OFFSET_CONTROL = SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD,
++#endif
+ };
+ 
+ union snd_pcm_sync_id {
+@@ -480,16 +493,46 @@ struct snd_pcm_status {
+ };
+ #endif
+ 
+-struct snd_pcm_mmap_status {
++/*
++ * For mmap operations, we need the 64-bit layout, both for compat mode,
++ * and for y2038 compatibility. For 64-bit applications, the two definitions
++ * are identical, so we keep the traditional version.
++ */
++#ifdef __SND_STRUCT_TIME64
++#define __snd_pcm_mmap_status64		snd_pcm_mmap_status
++#define __snd_pcm_mmap_control64	snd_pcm_mmap_control
++#define __snd_pcm_sync_ptr64		snd_pcm_sync_ptr
++#ifdef __KERNEL__
++#define __snd_timespec64		__kernel_timespec
++#else
++#define __snd_timespec64		timespec
++#endif
++struct __snd_timespec {
++	__s32 tv_sec;
++	__s32 tv_nsec;
++};
++#else
++#define __snd_pcm_mmap_status		snd_pcm_mmap_status
++#define __snd_pcm_mmap_control		snd_pcm_mmap_control
++#define __snd_pcm_sync_ptr		snd_pcm_sync_ptr
++#define __snd_timespec			timespec
++struct __snd_timespec64 {
++	__s64 tv_sec;
++	__s64 tv_nsec;
++};
++
++#endif
++
++struct __snd_pcm_mmap_status {
+ 	snd_pcm_state_t state;		/* RO: state - SNDRV_PCM_STATE_XXXX */
+ 	int pad1;			/* Needed for 64 bit alignment */
+ 	snd_pcm_uframes_t hw_ptr;	/* RO: hw ptr (0...boundary-1) */
+-	struct timespec tstamp;		/* Timestamp */
++	struct __snd_timespec tstamp;	/* Timestamp */
+ 	snd_pcm_state_t suspended_state; /* RO: suspended stream state */
+-	struct timespec audio_tstamp;	/* from sample counter or wall clock */
++	struct __snd_timespec audio_tstamp; /* from sample counter or wall clock */
+ };
+ 
+-struct snd_pcm_mmap_control {
++struct __snd_pcm_mmap_control {
+ 	snd_pcm_uframes_t appl_ptr;	/* RW: appl ptr (0...boundary-1) */
+ 	snd_pcm_uframes_t avail_min;	/* RW: min available frames for wakeup */
+ };
+@@ -498,14 +541,59 @@ struct snd_pcm_mmap_control {
+ #define SNDRV_PCM_SYNC_PTR_APPL		(1<<1)	/* get appl_ptr from driver (r/w op) */
+ #define SNDRV_PCM_SYNC_PTR_AVAIL_MIN	(1<<2)	/* get avail_min from driver */
+ 
+-struct snd_pcm_sync_ptr {
++struct __snd_pcm_sync_ptr {
+ 	unsigned int flags;
+ 	union {
+-		struct snd_pcm_mmap_status status;
++		struct __snd_pcm_mmap_status status;
++		unsigned char reserved[64];
++	} s;
++	union {
++		struct __snd_pcm_mmap_control control;
++		unsigned char reserved[64];
++	} c;
++};
++
++#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __BIG_ENDIAN : defined(__BIG_ENDIAN)
++typedef char __pad_before_uframe[sizeof(__u64) - sizeof(snd_pcm_uframes_t)];
++typedef char __pad_after_uframe[0];
++#endif
++
++#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __LITTLE_ENDIAN : defined(__LITTLE_ENDIAN)
++typedef char __pad_before_uframe[0];
++typedef char __pad_after_uframe[sizeof(__u64) - sizeof(snd_pcm_uframes_t)];
++#endif
++
++struct __snd_pcm_mmap_status64 {
++	__s32 state;			/* RO: state - SNDRV_PCM_STATE_XXXX */
++	__u32 pad1;			/* Needed for 64 bit alignment */
++	__pad_before_uframe __pad1;
++	snd_pcm_uframes_t hw_ptr;	/* RO: hw ptr (0...boundary-1) */
++	__pad_after_uframe __pad2;
++	struct __snd_timespec64 tstamp;	/* Timestamp */
++	__s32 suspended_state;		/* RO: suspended stream state */
++	__u32 pad3;			/* Needed for 64 bit alignment */
++	struct __snd_timespec64 audio_tstamp; /* sample counter or wall clock */
++};
++
++struct __snd_pcm_mmap_control64 {
++	__pad_before_uframe __pad1;
++	snd_pcm_uframes_t appl_ptr;	 /* RW: appl ptr (0...boundary-1) */
++	__pad_before_uframe __pad2;
++
++	__pad_before_uframe __pad3;
++	snd_pcm_uframes_t  avail_min;	 /* RW: min available frames for wakeup */
++	__pad_after_uframe __pad4;
++};
++
++struct __snd_pcm_sync_ptr64 {
++	__u32 flags;
++	__u32 pad1;
++	union {
++		struct __snd_pcm_mmap_status64 status;
+ 		unsigned char reserved[64];
+ 	} s;
+ 	union {
+-		struct snd_pcm_mmap_control control;
++		struct __snd_pcm_mmap_control64 control;
+ 		unsigned char reserved[64];
+ 	} c;
+ };
+@@ -590,6 +678,8 @@ enum {
+ #define SNDRV_PCM_IOCTL_STATUS		_IOR('A', 0x20, struct snd_pcm_status)
+ #define SNDRV_PCM_IOCTL_DELAY		_IOR('A', 0x21, snd_pcm_sframes_t)
+ #define SNDRV_PCM_IOCTL_HWSYNC		_IO('A', 0x22)
++#define __SNDRV_PCM_IOCTL_SYNC_PTR	_IOWR('A', 0x23, struct __snd_pcm_sync_ptr)
++#define __SNDRV_PCM_IOCTL_SYNC_PTR64	_IOWR('A', 0x23, struct __snd_pcm_sync_ptr64)
+ #define SNDRV_PCM_IOCTL_SYNC_PTR	_IOWR('A', 0x23, struct snd_pcm_sync_ptr)
+ #define SNDRV_PCM_IOCTL_STATUS_EXT	_IOWR('A', 0x24, struct snd_pcm_status)
+ #define SNDRV_PCM_IOCTL_CHANNEL_INFO	_IOR('A', 0x32, struct snd_pcm_channel_info)
+diff --git a/sound/core/pcm_compat.c b/sound/core/pcm_compat.c
+index 6a2e5ea145e6..967c689fb8da 100644
+--- a/sound/core/pcm_compat.c
++++ b/sound/core/pcm_compat.c
+@@ -178,8 +178,6 @@ struct compat_snd_pcm_status64 {
+ 	unsigned char reserved[52-4*sizeof(s64)];
+ } __packed;
+ 
+-#define put_timespec(src, dst) copy_to_user(dst, src, sizeof(*dst))
+-
+ static int snd_pcm_status_user_compat64(struct snd_pcm_substream *substream,
+ 					struct compat_snd_pcm_status64 __user *src,
+ 					bool ext)
+@@ -382,10 +380,12 @@ struct snd_pcm_mmap_status_x32 {
+ 	s32 pad1;
+ 	u32 hw_ptr;
+ 	u32 pad2; /* alignment */
+-	struct timespec tstamp;
++	s64 tstamp_sec;
++	s64 tstamp_nsec;
+ 	s32 suspended_state;
+ 	s32 pad3;
+-	struct timespec audio_tstamp;
++	s64 audio_tstamp_sec;
++	s64 audio_tstamp_nsec;
+ } __packed;
+ 
+ struct snd_pcm_mmap_control_x32 {
+@@ -453,9 +453,11 @@ static int snd_pcm_ioctl_sync_ptr_x32(struct snd_pcm_substream *substream,
+ 	snd_pcm_stream_unlock_irq(substream);
+ 	if (put_user(sstatus.state, &src->s.status.state) ||
+ 	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    put_timespec(&sstatus.tstamp, &src->s.status.tstamp) ||
++	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
++	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+ 	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    put_timespec(&sstatus.audio_tstamp, &src->s.status.audio_tstamp) ||
++	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
++	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+ 	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+ 	    put_user(scontrol.avail_min, &src->c.control.avail_min))
+ 		return -EFAULT;
+@@ -480,7 +482,6 @@ enum {
+ 	SNDRV_PCM_IOCTL_READI_FRAMES32 = _IOR('A', 0x51, struct snd_xferi32),
+ 	SNDRV_PCM_IOCTL_WRITEN_FRAMES32 = _IOW('A', 0x52, struct snd_xfern32),
+ 	SNDRV_PCM_IOCTL_READN_FRAMES32 = _IOR('A', 0x53, struct snd_xfern32),
+-	SNDRV_PCM_IOCTL_SYNC_PTR32 = _IOWR('A', 0x23, struct snd_pcm_sync_ptr32),
+ 	SNDRV_PCM_IOCTL_STATUS_COMPAT64 = _IOR('A', 0x20, struct compat_snd_pcm_status64),
+ 	SNDRV_PCM_IOCTL_STATUS_EXT_COMPAT64 = _IOWR('A', 0x24, struct compat_snd_pcm_status64),
+ #ifdef CONFIG_X86_X32
+@@ -504,8 +505,8 @@ static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned l
+ 
+ 	/*
+ 	 * When PCM is used on 32bit mode, we need to disable
+-	 * mmap of PCM status/control records because of the size
+-	 * incompatibility.
++	 * mmap of the old PCM status/control records because
++	 * of the size incompatibility.
+ 	 */
+ 	pcm_file->no_compat_mmap = 1;
+ 
+@@ -527,6 +528,13 @@ static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned l
+ 	case SNDRV_PCM_IOCTL_XRUN:
+ 	case SNDRV_PCM_IOCTL_LINK:
+ 	case SNDRV_PCM_IOCTL_UNLINK:
++	case __SNDRV_PCM_IOCTL_SYNC_PTR32:
++		return snd_pcm_common_ioctl(file, substream, cmd, argp);
++	case __SNDRV_PCM_IOCTL_SYNC_PTR64:
++#ifdef CONFIG_X86_X32
++		if (in_x32_syscall())
++			return snd_pcm_ioctl_sync_ptr_x32(substream, argp);
++#endif /* CONFIG_X86_X32 */
+ 		return snd_pcm_common_ioctl(file, substream, cmd, argp);
+ 	case SNDRV_PCM_IOCTL_HW_REFINE32:
+ 		return snd_pcm_ioctl_hw_params_compat(substream, 1, argp);
+@@ -538,8 +546,6 @@ static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned l
+ 		return snd_pcm_status_user32(substream, argp, false);
+ 	case SNDRV_PCM_IOCTL_STATUS_EXT_COMPAT32:
+ 		return snd_pcm_status_user32(substream, argp, true);
+-	case SNDRV_PCM_IOCTL_SYNC_PTR32:
+-		return snd_pcm_ioctl_sync_ptr_compat(substream, argp);
+ 	case SNDRV_PCM_IOCTL_CHANNEL_INFO32:
+ 		return snd_pcm_ioctl_channel_info_compat(substream, argp);
+ 	case SNDRV_PCM_IOCTL_WRITEI_FRAMES32:
+@@ -561,8 +567,6 @@ static long snd_pcm_ioctl_compat(struct file *file, unsigned int cmd, unsigned l
+ 	case SNDRV_PCM_IOCTL_STATUS_EXT_COMPAT64:
+ 		return snd_pcm_status_user_compat64(substream, argp, true);
+ #ifdef CONFIG_X86_X32
+-	case SNDRV_PCM_IOCTL_SYNC_PTR_X32:
+-		return snd_pcm_ioctl_sync_ptr_x32(substream, argp);
+ 	case SNDRV_PCM_IOCTL_CHANNEL_INFO_X32:
+ 		return snd_pcm_ioctl_channel_info_x32(substream, argp);
+ #endif /* CONFIG_X86_X32 */
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index ea5518d44e66..0271802bfba9 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -148,7 +148,8 @@ void __snd_pcm_xrun(struct snd_pcm_substream *substream)
+ 		struct timespec64 tstamp;
+ 
+ 		snd_pcm_gettime(runtime, &tstamp);
+-		runtime->status->tstamp = timespec64_to_timespec(tstamp);
++		runtime->status->tstamp.tv_sec = tstamp.tv_sec;
++		runtime->status->tstamp.tv_nsec = tstamp.tv_nsec;
+ 	}
+ 	snd_pcm_stop(substream, SNDRV_PCM_STATE_XRUN);
+ 	if (xrun_debug(substream, XRUN_DEBUG_BASIC)) {
+@@ -238,9 +239,10 @@ static void update_audio_tstamp(struct snd_pcm_substream *substream,
+ 
+ 	if (runtime->status->audio_tstamp.tv_sec != audio_tstamp->tv_sec ||
+ 	    runtime->status->audio_tstamp.tv_nsec != audio_tstamp->tv_nsec) {
+-		runtime->status->audio_tstamp =
+-			timespec64_to_timespec(*audio_tstamp);
+-		runtime->status->tstamp = timespec64_to_timespec(*curr_tstamp);
++		runtime->status->audio_tstamp.tv_sec = audio_tstamp->tv_sec;
++		runtime->status->audio_tstamp.tv_nsec = audio_tstamp->tv_nsec;
++		runtime->status->tstamp.tv_sec = curr_tstamp->tv_sec;
++		runtime->status->tstamp.tv_nsec = curr_tstamp->tv_nsec;
+ 	}
+ 
+ 
+diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
+index ba0636a2b437..5a1245509eac 100644
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -2889,14 +2889,15 @@ static int snd_pcm_sync_ptr(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_COMPAT
+ struct snd_pcm_mmap_status32 {
+ 	s32 state;
+ 	s32 pad1;
+ 	u32 hw_ptr;
+-	struct compat_timespec tstamp;
++	s32 tstamp_sec;
++	s32 tstamp_nsec;
+ 	s32 suspended_state;
+-	struct compat_timespec audio_tstamp;
++	s32 audio_tstamp_sec;
++	s32 audio_tstamp_nsec;
+ } __attribute__((packed));
+ 
+ struct snd_pcm_mmap_control32 {
+@@ -2976,17 +2977,18 @@ static int snd_pcm_ioctl_sync_ptr_compat(struct snd_pcm_substream *substream,
+ 	snd_pcm_stream_unlock_irq(substream);
+ 	if (put_user(sstatus.state, &src->s.status.state) ||
+ 	    put_user(sstatus.hw_ptr, &src->s.status.hw_ptr) ||
+-	    compat_put_timespec(&sstatus.tstamp, &src->s.status.tstamp) ||
++	    put_user(sstatus.tstamp.tv_sec, &src->s.status.tstamp_sec) ||
++	    put_user(sstatus.tstamp.tv_nsec, &src->s.status.tstamp_nsec) ||
+ 	    put_user(sstatus.suspended_state, &src->s.status.suspended_state) ||
+-	    compat_put_timespec(&sstatus.audio_tstamp,
+-				&src->s.status.audio_tstamp) ||
++	    put_user(sstatus.audio_tstamp.tv_sec, &src->s.status.audio_tstamp_sec) ||
++	    put_user(sstatus.audio_tstamp.tv_nsec, &src->s.status.audio_tstamp_nsec) ||
+ 	    put_user(scontrol.appl_ptr, &src->c.control.appl_ptr) ||
+ 	    put_user(scontrol.avail_min, &src->c.control.avail_min))
+ 		return -EFAULT;
+ 
+ 	return 0;
+ }
+-#endif
++#define __SNDRV_PCM_IOCTL_SYNC_PTR32 _IOWR('A', 0x23, struct snd_pcm_sync_ptr32)
+ 
+ static int snd_pcm_tstamp(struct snd_pcm_substream *substream, int __user *_arg)
+ {
+@@ -3156,7 +3158,9 @@ static int snd_pcm_common_ioctl(struct file *file,
+ 			return -EFAULT;
+ 		return 0;
+ 	}
+-	case SNDRV_PCM_IOCTL_SYNC_PTR:
++	case __SNDRV_PCM_IOCTL_SYNC_PTR32:
++		return snd_pcm_ioctl_sync_ptr_compat(substream, arg);
++	case __SNDRV_PCM_IOCTL_SYNC_PTR64:
+ 		return snd_pcm_sync_ptr(substream, arg);
+ #ifdef CONFIG_SND_SUPPORT_OLD_API
+ 	case SNDRV_PCM_IOCTL_HW_REFINE_OLD:
+@@ -3494,8 +3498,6 @@ static int snd_pcm_mmap_control(struct snd_pcm_substream *substream, struct file
+ 
+ static bool pcm_status_mmap_allowed(struct snd_pcm_file *pcm_file)
+ {
+-	if (pcm_file->no_compat_mmap)
+-		return false;
+ 	/* See pcm_control_mmap_allowed() below.
+ 	 * Since older alsa-lib requires both status and control mmaps to be
+ 	 * coupled, we have to disable the status mmap for old alsa-lib, too.
+@@ -3720,11 +3722,19 @@ static int snd_pcm_mmap(struct file *file, struct vm_area_struct *area)
+ 
+ 	offset = area->vm_pgoff << PAGE_SHIFT;
+ 	switch (offset) {
+-	case SNDRV_PCM_MMAP_OFFSET_STATUS:
++	case SNDRV_PCM_MMAP_OFFSET_STATUS_OLD:
++		if (pcm_file->no_compat_mmap || !IS_ENABLED(CONFIG_64BIT))
++			return -ENXIO;
++		/* fallthrough */
++	case SNDRV_PCM_MMAP_OFFSET_STATUS_NEW:
+ 		if (!pcm_status_mmap_allowed(pcm_file))
+ 			return -ENXIO;
+ 		return snd_pcm_mmap_status(substream, file, area);
+-	case SNDRV_PCM_MMAP_OFFSET_CONTROL:
++	case SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD:
++		if (pcm_file->no_compat_mmap || !IS_ENABLED(CONFIG_64BIT))
++			return -ENXIO;
++		/* fallthrough */
++	case SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW:
+ 		if (!pcm_control_mmap_allowed(pcm_file))
+ 			return -ENXIO;
+ 		return snd_pcm_mmap_control(substream, file, area);
+@@ -3884,9 +3894,9 @@ static unsigned long snd_pcm_get_unmapped_area(struct file *file,
+ 	unsigned long offset = pgoff << PAGE_SHIFT;
+ 
+ 	switch (offset) {
+-	case SNDRV_PCM_MMAP_OFFSET_STATUS:
++	case SNDRV_PCM_MMAP_OFFSET_STATUS_NEW:
+ 		return (unsigned long)runtime->status;
+-	case SNDRV_PCM_MMAP_OFFSET_CONTROL:
++	case SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW:
+ 		return (unsigned long)runtime->control;
+ 	default:
+ 		return (unsigned long)runtime->dma_area + offset;
 -- 
 2.20.0
 
