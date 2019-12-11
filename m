@@ -2,121 +2,140 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23017C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A323DC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F24442077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704E12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="jWAlmtEP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfLKH1Y (ORCPT
+        id S1728119AbfLKH1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:27:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57987 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLKH1Y (ORCPT
+        Wed, 11 Dec 2019 02:27:32 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:51666 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbfLKH1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:27:24 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iewP4-0006T3-E2; Wed, 11 Dec 2019 08:27:22 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iewP3-0004Eh-6N; Wed, 11 Dec 2019 08:27:21 +0100
-Date:   Wed, 11 Dec 2019 08:27:21 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Wed, 11 Dec 2019 02:27:32 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBB7HY6j011915;
+        Wed, 11 Dec 2019 02:27:13 -0500
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2wrb1sbdkp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 02:27:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VN7rnvuqiPEaKZCNRlCZ3T0/MTQW09MzY+WGP7sxUJwFyJncJr36W+Y1KltpSllVwipwzBP2sd+qIyzWTjOgecqotkh9mWsANf+cKhhzVwK5L9oJrjCZ2klX8ITBnyXJKFP0ibORz4Kba6brN4rmzu+h3N/3Gk+G7SEJwAKXI1WVBHmJgbi2ublOdbGjenLu1lvpnUWKYKyViJzZr29stELNzE6abs1XUg6aaHxMvvwoarDqcAhu9Uvl2lvGSVi/LdjHLw0ggcefBwKIEfGsfsovcBoJmDOBy4Jy3aEBxLHv/6YgX15nC4vUygoWmwY6SocqDTLBiohtPJrSIrmrKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUgpw3j5PeH0FcG1QXByJztHG50GxFLgIzNXCt3Zyfc=;
+ b=m6g8vJ6czs8+IDkRYBsvHICcU9NzzBhHmzMG29TTHP8xHP//NLfSTEvtl4GrZWSeoHr+G4fvRjcDV6jkCNY6KUcJBlBQVZ8TClqXxKouHR7vaK+MhapvSeJutqSRJRLXqM+BSb2TisgG7ilr1xfIGmQENjyI0orsvlSQJR5GtiSmLYhBp3VKm7G+nAXYGPbexgBw9xfyDiuNWG6DmV86/ghjk4hLwXbThf7udaE2X3smCqysSVv7DN1g/vGv1eE9s4gWqi0oz6KwPddywfdgmSOaSyUV27iUAmbCUqDgpqcopcxKK0927dLWPE9YxxIaOyAKC5M2xvedDmpi4/MIng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iUgpw3j5PeH0FcG1QXByJztHG50GxFLgIzNXCt3Zyfc=;
+ b=jWAlmtEPP7F2qnSkbVg4LKRJeGGd8JrARcIihPtsJJ0sPdtfBHC/4D3B4C8T3okkyLQyjuatNuuXz0fJ9YjZiQwb6nwln8XbpA/Ug2fJLQlugTHG9wBNZcyXgYgRy+LZJR/5PNkzMKI+RT/0Ws+18xM/lL9TOxQP/iL2rvpbBPQ=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5174.namprd03.prod.outlook.com (20.180.4.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Wed, 11 Dec 2019 07:27:11 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c%5]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 07:27:11 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
+        "lkcamp@lists.libreplanetbr.org" <lkcamp@lists.libreplanetbr.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "djunho@gmail.com" <djunho@gmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
- regulator
-Message-ID: <20191211072721.ze6yn2felxyae5eb@pengutronix.de>
-References: <1571906920-29966-1-git-send-email-Anson.Huang@nxp.com>
- <VI1PR04MB7023CD288FCC57806F067FD9EE5B0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "lars@metafoo.de" <lars@metafoo.de>
+Subject: Re: [PATCH v2 3/4] iio: adc: ad7923: Add of_device_id table
+Thread-Topic: [PATCH v2 3/4] iio: adc: ad7923: Add of_device_id table
+Thread-Index: AQHVr2vNvVB1N9c3W0CXyPoI7IvDUqe0ilsA
+Date:   Wed, 11 Dec 2019 07:27:11 +0000
+Message-ID: <b9e83fadfaf49fbbe2230ee6cd0007fb72cd6292.camel@analog.com>
+References: <20191210150811.3429-1-djunho@gmail.com>
+         <20191210150811.3429-4-djunho@gmail.com>
+In-Reply-To: <20191210150811.3429-4-djunho@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ae574d70-94fc-4912-6e6a-08d77e0b898c
+x-ms-traffictypediagnostic: CH2PR03MB5174:
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB517446E50F787B4A13E69147F95A0@CH2PR03MB5174.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:480;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(186003)(2906002)(478600001)(316002)(86362001)(66946007)(81166006)(2616005)(26005)(110136005)(36756003)(6512007)(8936002)(76116006)(5660300002)(6486002)(66476007)(8676002)(4001150100001)(71200400001)(66446008)(81156014)(64756008)(66556008)(6506007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5174;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Fo/T3cDk/NSVvNqCH4pBDQPAesyAh2mFRVbJIGIbq+b4ePpnjJKRwgoCG0CSayExlZCxvFG+cFBHapiPK2rRqatAEUDV1MAzG6/37BgmZIYOCIIyPtKdOpjwKPABViLJHHmT1beDmnjUtMuNIhE80eJjb7BnJM0XzJpHJa9zsQDxH3fByWdt2i+bbXX4YXRYuYD6K3cXjLXs8qelRs64tv0pWrfyi/R2IjEFvBhvvCepeyFz9IehABcrz2JZOoJYbWv7gQaKhNvbRDLbCvhDlHTPjFURKn8dAY7sfZbqHf1sscbT23ymiHOjU0cpXC2gLokuSn/4R1XbheLLDyXN/DnZrXndi/8ONhGJgmah7fu0LBkuNsrqAwNYGH2ipIVUzXoKlxSWoJK4GZnIs1Bg34S3ffTWrk1pYQzE2jBi6hGtVBQegdxD8Xd8xLb78HV7aGbXAFesBDJBkxor1T/ZK8oDwJ7wenv9YnZx+Lvb6W5cS2CNrvKEa1Oc68qJSxAH
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1151509C361B8B4FB2BAB70EBDD48AB5@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB3916D3DB4C0CE0017FC2D4B1F55A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:22:06 up 25 days, 22:40, 33 users,  load average: 0.00, 0.00,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae574d70-94fc-4912-6e6a-08d77e0b898c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 07:27:11.2690
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2UL7yd2oLEvUVqQ3F+0a/0ZhTgiceWrotN8kgmgqt6coNW3hIhZWrgV0SSEjcjRxOATsUTCv+aibLGO5VLr8uxyKNyLNuWPLPpQvl5JpPHg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5174
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_01:2019-12-10,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=999 priorityscore=1501
+ adultscore=0 phishscore=0 suspectscore=0 mlxscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-12-11 01:06, Anson Huang wrote:
-> 
-> 
-> > Subject: Re: [PATCH 1/3] ARM: dts: imx6ul-14x14-evk: Add sensors' GPIO
-> > regulator
-> > 
-> > On 24.10.2019 11:51, Anson Huang wrote:
-> > > On i.MX6UL 14x14 EVK board, sensors' power are controlled by
-> > > GPIO5_IO02, add GPIO regulator for sensors to manage their power.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > 
-> > For me this breaks network boot on imx6ul evk, relevant log snippet is this:
-> > 
-> >      fec 20b4000.ethernet eth0: Unable to connect to phy
-> >      IP-Config: Failed to open eth0
-> > 
-> > Looking at schematics (SPF-28616_C2.pdf) I see that SNVS_TAMPER2 pin is
-> > connected to PERI_PWREN which controls VPERI_3V3 which is used across
-> > the board:
-> >   * Sensors (VSENSOR_3V3)
-> >   * Ethernet (VENET_3V3)
-> >   * Bluetooth
-> >   * CAN
-> >   * Arduino header
-> >   * Camera
-> > 
-> > Maybe there are board revision differences? As far as I can tell this regulator
-> > is not specific to sensors so it should be always on.
-> 
-> You are correct, this regulator controls many other peripherals, I should make it always ON for now
-> to make sure NOT break other peripheral, and after all other peripherals controlled
-> by this regulator have added this regulator management, then the always ON can be
-> removed.
-
-IMHO marking the regulator as always on shouldn't be the fix. Is it to
-much work to add all required regulators? At least please add a comment
-which describes the need of the always-on property.
-
-Regards,
-  Marco 
-
-> Thanks,
-> Anson
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gVHVlLCAyMDE5LTEyLTEwIGF0IDEyOjA4IC0wMzAwLCBEYW5pZWwgSnVuaG8gd3JvdGU6DQo+
+IFtFeHRlcm5hbF0NCj4gDQo+IEFjY29tcGxpc2ggZGV2aWNlIHRyZWUgY29tcGF0aWJpbGl0eSB0
+byBkcml2ZXIgQUQ3OTIzDQo+IGJ5IGFkZGluZyBvZl9kZXZpY2VfaWQgdGFibGUgYW5kIG1ha2lu
+ZyBhIHN1YnNlcXVlbnQgY2FsbCB0bw0KPiBNT0RVTEVfREVWSUNFX1RBQkxFLg0KPiANCg0KUmV2
+aWV3ZWQtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5j
+b20+DQoNCj4gU2lnbmVkLW9mZi1ieTogRGFuaWVsIEp1bmhvIDxkanVuaG9AZ21haWwuY29tPg0K
+PiAtLS0NCj4gIGRyaXZlcnMvaWlvL2FkYy9hZDc5MjMuYyB8IDEwICsrKysrKysrKysNCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9paW8vYWRjL2FkNzkyMy5jIGIvZHJpdmVycy9paW8vYWRjL2FkNzkyMy5jDQo+IGluZGV4IGU1
+MzVjZWM5ZmMwMi4uNmQ1NmZhMGI5ZTMwIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lpby9hZGMv
+YWQ3OTIzLmMNCj4gKysrIGIvZHJpdmVycy9paW8vYWRjL2FkNzkyMy5jDQo+IEBAIC0zNDgsOSAr
+MzQ4LDE5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpX2RldmljZV9pZCBhZDc5MjNfaWRbXSA9
+IHsNCj4gIH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHNwaSwgYWQ3OTIzX2lkKTsNCj4gIA0K
+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgYWQ3OTIzX29mX21hdGNoW10gPSB7
+DQo+ICsJeyAuY29tcGF0aWJsZSA9ICJhZGksYWQ3OTA0IiwgfSwNCj4gKwl7IC5jb21wYXRpYmxl
+ID0gImFkaSxhZDc5MTQiLCB9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAiYWRpLGFkNzkyMyIsIH0s
+DQo+ICsJeyAuY29tcGF0aWJsZSA9ICJhZGksYWQ3OTI0IiwgfSwNCj4gKwl7IH0sDQo+ICt9Ow0K
+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWQ3OTIzX29mX21hdGNoKTsNCj4gKw0KPiAgc3Rh
+dGljIHN0cnVjdCBzcGlfZHJpdmVyIGFkNzkyM19kcml2ZXIgPSB7DQo+ICAJLmRyaXZlciA9IHsN
+Cj4gIAkJLm5hbWUJPSAiYWQ3OTIzIiwNCj4gKwkJLm9mX21hdGNoX3RhYmxlID0gYWQ3OTIzX29m
+X21hdGNoLA0KPiAgCX0sDQo+ICAJLnByb2JlCQk9IGFkNzkyM19wcm9iZSwNCj4gIAkucmVtb3Zl
+CQk9IGFkNzkyM19yZW1vdmUsDQo=
