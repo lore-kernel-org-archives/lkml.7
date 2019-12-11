@@ -2,158 +2,155 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FB3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 803FBC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFD522B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EEF92465E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077154;
-	bh=zQiU5dKwHOVRXTN0rVnNamHfzml94EObSwNzq6VHy0k=;
+	s=default; t=1576077156;
+	bh=HWaKh99dgegX7bql7xsnkCTH6WXDUuvRMl6i0onbLW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ShsmrNw4jV2GEsM7HA31XYIH3LEf9oPggd9YhDzoQjv+ec4jyrUJuRjEYXj2d0Ux
-	 BUfc3EIRhke/m3Lc+Tu7m9k0dmZ2+QWxNq9pK13z745kcn9/TxRjhPWPGdKIrLuSg+
-	 TGs2rydGFsLV9cymLua44QtZimONhxGT02Z0hxqo=
+	b=lQKqxCOgoCWFMAcRAlUTqUKjT31kmLMA3MRH8cI57SZ31sglUnXrFghfPYDBAdVno
+	 8u7N32MQg1fygzRisknsFi3O3Li9bzE91zOG1adWIvzV4qotsWDI+Qhxpb7x7aVHzl
+	 HBGkPacPAmFU6gWrHGuY3ouq0/5xMP1auVvZG3vg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731170AbfLKPMc (ORCPT
+        id S1731179AbfLKPMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbfLKPMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731088AbfLKPMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F5DD2465B;
-        Wed, 11 Dec 2019 15:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 779C72173E;
+        Wed, 11 Dec 2019 15:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077137;
-        bh=zQiU5dKwHOVRXTN0rVnNamHfzml94EObSwNzq6VHy0k=;
+        s=default; t=1576077139;
+        bh=HWaKh99dgegX7bql7xsnkCTH6WXDUuvRMl6i0onbLW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2b0Q2Nu52JuT65VBZPg33Y7Sx7jY9EENYN4Xcs3d7aJqS4uJrrBJ62Xf/aLhOzd4e
-         PtYShHhLtEiW3cXP4tVODnSNi4kKcM13ZfeVa20O/oUvnhwoudM+gc6dDsLgMvZixd
-         g0DZFcj8hmIuTtncqm9KU7ZpBtozBzFBGnsHWNQ8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, dietmar.eggemann@arm.com,
-        dsmythies@telus.net, juri.lelli@redhat.com, mgorman@suse.de,
-        rostedt@goodmis.org, Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 030/105] sched/pelt: Fix update of blocked PELT ordering
-Date:   Wed, 11 Dec 2019 16:05:19 +0100
-Message-Id: <20191211150230.499055068@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=a/J9yW1qPZgW+2DNC2OQSrS7jfN+aC5k1UKlIc/X7s7XOHnVQWwfdMLXh4y41NV70
+         76EV6k8T4Ds0oy/kEBdurT5Sa/bg2r0iA95P7KrhIRsUmyyIkBjENs8a75aYue3RAJ
+         rZaUSJrTNqRkY1fADVmXSFz8wktse5OPwQdcmCdg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 026/134] selftests/powerpc: Fixup clobbers for TM tests
+Date:   Wed, 11 Dec 2019 10:10:02 -0500
+Message-Id: <20191211151150.19073-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit b90f7c9d2198d789709390280a43e0a46345682b ]
+[ Upstream commit a02cbc7ffe529ed58b6bbe54652104fc2c88bd77 ]
 
-update_cfs_rq_load_avg() can call cpufreq_update_util() to trigger an
-update of the frequency. Make sure that RT, DL and IRQ PELT signals have
-been updated before calling cpufreq.
+Some of our TM (Transactional Memory) tests, list "r1" (the stack
+pointer) as a clobbered register.
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: dietmar.eggemann@arm.com
-Cc: dsmythies@telus.net
-Cc: juri.lelli@redhat.com
-Cc: mgorman@suse.de
-Cc: rostedt@goodmis.org
-Fixes: 371bf4273269 ("sched/rt: Add rt_rq utilization tracking")
-Fixes: 3727e0e16340 ("sched/dl: Add dl_rq utilization tracking")
-Fixes: 91c27493e78d ("sched/irq: Add IRQ utilization tracking")
-Link: https://lkml.kernel.org/r/1572434309-32512-1-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+GCC >= 9 doesn't accept this, and the build breaks:
+
+  ptrace-tm-spd-tar.c: In function 'tm_spd_tar':
+  ptrace-tm-spd-tar.c:31:2: error: listing the stack pointer register 'r1' in a clobber list is deprecated [-Werror=deprecated]
+     31 |  asm __volatile__(
+        |  ^~~
+  ptrace-tm-spd-tar.c:31:2: note: the value of the stack pointer after an 'asm' statement must be the same as it was before the statement
+
+We do have some fairly large inline asm blocks in these tests, and
+some of them do change the value of r1. However they should all return
+to C with the value in r1 restored, so I think it's legitimate to say
+r1 is not clobbered.
+
+As Segher points out, the r1 clobbers may have been added because of
+the use of `or 1,1,1`, however that doesn't actually clobber r1.
+
+Segher also points out that some of these tests do clobber LR, because
+they call functions, and that is not listed in the clobbers, so add
+that where appropriate.
+
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191029095324.14669-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/fair.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c | 2 +-
+ tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c | 4 ++--
+ tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c     | 2 +-
+ tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c     | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 649c6b60929e2..ba7cc68a39935 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7530,6 +7530,19 @@ static void update_blocked_averages(int cpu)
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
+index 25e23e73c72e6..2ecfa1158e2bc 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
+@@ -73,7 +73,7 @@ trans:
+ 		[sprn_texasr]"i"(SPRN_TEXASR), [tar_1]"i"(TAR_1),
+ 		[dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2), [dscr_2]"i"(DSCR_2),
+ 		[tar_3]"i"(TAR_3), [dscr_3]"i"(DSCR_3)
+-		: "memory", "r0", "r1", "r3", "r4", "r5", "r6"
++		: "memory", "r0", "r3", "r4", "r5", "r6", "lr"
+ 		);
  
-+	/*
-+	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
-+	 * that RT, DL and IRQ signals have been updated before updating CFS.
-+	 */
-+	curr_class = rq->curr->sched_class;
-+	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
-+	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
-+	update_irq_load_avg(rq, 0);
-+
-+	/* Don't need periodic decay once load/util_avg are null */
-+	if (others_have_blocked(rq))
-+		done = false;
-+
- 	/*
- 	 * Iterates the task_group tree in a bottom up fashion, see
- 	 * list_add_leaf_cfs_rq() for details.
-@@ -7557,14 +7570,6 @@ static void update_blocked_averages(int cpu)
- 			done = false;
- 	}
+ 	/* TM failed, analyse */
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
+index f603fe5a445b3..6f7fb51f08099 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
+@@ -74,8 +74,8 @@ trans:
+ 		"3: ;"
+ 		: [res] "=r" (result), [texasr] "=r" (texasr)
+ 		: [sprn_texasr] "i"  (SPRN_TEXASR)
+-		: "memory", "r0", "r1", "r3", "r4",
+-		"r7", "r8", "r9", "r10", "r11"
++		: "memory", "r0", "r3", "r4",
++		  "r7", "r8", "r9", "r10", "r11", "lr"
+ 		);
  
--	curr_class = rq->curr->sched_class;
--	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
--	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
--	update_irq_load_avg(rq, 0);
--	/* Don't need periodic decay once load/util_avg are null */
--	if (others_have_blocked(rq))
--		done = false;
--
- 	update_blocked_load_status(rq, !done);
- 	rq_unlock_irqrestore(rq, &rf);
- }
-@@ -7625,12 +7630,18 @@ static inline void update_blocked_averages(int cpu)
+ 	if (result) {
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
+index e0d37f07bdeba..46ef378a15ecc 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
+@@ -62,7 +62,7 @@ trans:
+ 		[sprn_ppr]"i"(SPRN_PPR), [sprn_texasr]"i"(SPRN_TEXASR),
+ 		[tar_1]"i"(TAR_1), [dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2),
+ 		[dscr_2]"i"(DSCR_2), [cptr1] "b" (&cptr[1])
+-		: "memory", "r0", "r1", "r3", "r4", "r5", "r6"
++		: "memory", "r0", "r3", "r4", "r5", "r6"
+ 		);
  
- 	rq_lock_irqsave(rq, &rf);
- 	update_rq_clock(rq);
--	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
+ 	/* TM failed, analyse */
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
+index 8027457b97b7c..70ca01234f79c 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
+@@ -62,8 +62,8 @@ trans:
+ 		"3: ;"
+ 		: [res] "=r" (result), [texasr] "=r" (texasr)
+ 		: [sprn_texasr] "i"  (SPRN_TEXASR), [cptr1] "b" (&cptr[1])
+-		: "memory", "r0", "r1", "r3", "r4",
+-		"r7", "r8", "r9", "r10", "r11"
++		: "memory", "r0", "r3", "r4",
++		  "r7", "r8", "r9", "r10", "r11", "lr"
+ 		);
  
-+	/*
-+	 * update_cfs_rq_load_avg() can call cpufreq_update_util(). Make sure
-+	 * that RT, DL and IRQ signals have been updated before updating CFS.
-+	 */
- 	curr_class = rq->curr->sched_class;
- 	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
- 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
- 	update_irq_load_avg(rq, 0);
-+
-+	update_cfs_rq_load_avg(cfs_rq_clock_pelt(cfs_rq), cfs_rq);
-+
- 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
- 	rq_unlock_irqrestore(rq, &rf);
- }
+ 	if (result) {
 -- 
 2.20.1
-
-
 
