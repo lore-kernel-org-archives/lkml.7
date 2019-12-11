@@ -2,101 +2,109 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB4BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D95C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2163208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEECF20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080531;
-	bh=Ms3Wl74bBHdAlMZIcbx6tr5jGXgIbn7MxDxHqZ4+IKc=;
+	s=default; t=1576080534;
+	bh=Nzzp9hIMZ7NzxvxCDwnBAX1leUi0Wk+JreeDjHwiWRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oQCcCSryYUpGvHxHUnfGNTh55Jqvm84WOVPxS4VhveJSvBP2eM7y+8PGXgjuo3Fuu
-	 S3NPQRVqkhLXnoFd4NgFAZ2Mda0oEJSlMkGCOb9MUxC3BwEMmbFY2dHDecAU6zbZQV
-	 EfwZmQ1YBEiQnp21YIOk4CyXBPLRuUk1tBDKOYtI=
+	b=mza7gZD85J5vEL9XROycTVDcvtQqjZyLP1ht6/pinxhbTQPzKY31N+Di9qdq5mij5
+	 uM+Js7Rxh5WswZvBAF7ZKKYXlEQnBwufZLHN7DimtwYngMOhHpteQtZA9ynjPdxsg9
+	 ynzFcThYfaEaC880GJQE+P1UTB/AQhEwvQlUGmts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388893AbfLKQIu (ORCPT
+        id S1731522AbfLKQIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:08:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33350 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:08:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731066AbfLKPMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731064AbfLKPMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:12 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BF4E2465C;
-        Wed, 11 Dec 2019 15:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272252465A;
+        Wed, 11 Dec 2019 15:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077131;
-        bh=Ms3Wl74bBHdAlMZIcbx6tr5jGXgIbn7MxDxHqZ4+IKc=;
+        bh=Nzzp9hIMZ7NzxvxCDwnBAX1leUi0Wk+JreeDjHwiWRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXO/1/st0sSuHPmYaMR3NX7GEynpC+x/kMZfWOCozrlYBIBOvI5kTSaCo4P39v4ec
-         vL/rQcs+JnHthIxPSNehYZ0onz7Va/F3XV9w1NSTEEzTxkVqlHVEuAy9gUakG+pAcX
-         HDQoXvGTXgqMNSvEi/z8+Kb93+YfwaYsGl2cAOuc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 019/134] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
-Date:   Wed, 11 Dec 2019 10:09:55 -0500
-Message-Id: <20191211151150.19073-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=KO4Xvi7DvTlYGREUVB5Slvr7Ls63iUdKE6Yx980dYhRFvyM55XwODAku9ETJzrciw
+         7qQyl40UDQ/21Tulo3+lcELAaSxHUDd0oUExn5zvtw6EHgqofGmtYsBqE0n+CoC+Gb
+         3AKxM2EktGx99oCA6Nse+8ZGR7Mrx6zMVzXUTgbQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 028/105] Input: cyttsp4_core - fix use after free bug
+Date:   Wed, 11 Dec 2019 16:05:17 +0100
+Message-Id: <20191211150229.738315143@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
+[ Upstream commit 79aae6acbef16f720a7949f8fc6ac69816c79d62 ]
 
-When operating in private loop mode, PLOGI exchanges are racing and the
-driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
-the login with the other end causing the other end to abort its PLOGI as
-well. Discovery never fully completes.
+The device md->input is used after it is released. Setting the device
+data to NULL is unnecessary as the device is never used again. Instead,
+md->input should be assigned NULL to avoid accessing the freed memory
+accidently. Besides, checking md->si against NULL is superfluous as it
+points to a variable address, which cannot be NULL.
 
-Fix by disabling the PLOGI abort when private loop and letting the state
-machine play out.
-
-Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/1572936379-6423-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/cyttsp4_core.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index fc6e4546d738a..6961713825585 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -484,8 +484,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	 * single discovery thread, this will cause a huge delay in
- 	 * discovery. Also this will cause multiple state machines
- 	 * running in parallel for this node.
-+	 * This only applies to a fabric environment.
- 	 */
--	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
-+	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
-+	    (vport->fc_flag & FC_FABRIC)) {
- 		/* software abort outstanding PLOGI */
- 		lpfc_els_abort(phba, ndlp);
- 	}
+diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
+index 4b22d49a0f49a..6bcffc930384a 100644
+--- a/drivers/input/touchscreen/cyttsp4_core.c
++++ b/drivers/input/touchscreen/cyttsp4_core.c
+@@ -1990,11 +1990,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
+ 
+ 	/* get sysinfo */
+ 	md->si = &cd->sysinfo;
+-	if (!md->si) {
+-		dev_err(dev, "%s: Fail get sysinfo pointer from core p=%p\n",
+-			__func__, md->si);
+-		goto error_get_sysinfo;
+-	}
+ 
+ 	rc = cyttsp4_setup_input_device(cd);
+ 	if (rc)
+@@ -2004,8 +1999,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
+ 
+ error_init_input:
+ 	input_free_device(md->input);
+-error_get_sysinfo:
+-	input_set_drvdata(md->input, NULL);
+ error_alloc_failed:
+ 	dev_err(dev, "%s failed.\n", __func__);
+ 	return rc;
 -- 
 2.20.1
+
+
 
