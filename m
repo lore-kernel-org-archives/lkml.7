@@ -2,157 +2,179 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38757C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C38C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02CDE20652
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:10:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dektech.com.au header.i=@dektech.com.au header.b="nCYEQBF6"
+	by mail.kernel.org (Postfix) with ESMTP id 119E8206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfLKCKb (ORCPT
+        id S1727528AbfLKCNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:10:31 -0500
-Received: from f0-dek.dektech.com.au ([210.10.221.142]:32928 "EHLO
-        mail.dektech.com.au" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726417AbfLKCKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:10:30 -0500
-X-Greylist: delayed 584 seconds by postgrey-1.27 at vger.kernel.org; Tue, 10 Dec 2019 21:10:28 EST
-Received: from localhost (localhost [127.0.0.1])
-        by mail.dektech.com.au (Postfix) with ESMTP id 753A144473;
-        Wed, 11 Dec 2019 13:00:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dektech.com.au;
-         h=content-language:x-mailer:content-transfer-encoding
-        :content-type:content-type:mime-version:message-id:date:date
-        :subject:subject:in-reply-to:references:from:from:received
-        :received:received; s=mail_dkim; t=1576029642; bh=l2BCh4INk9Xjpe
-        9P/beFH/83GOUPTtLsM+aYAl/XV6c=; b=nCYEQBF61ryWA+OV6FDSLHaFumv+df
-        zbbjBAzawtlgOH2nvOCmwh+5Qm0UyIMZeYEg/jsCofyODFaPszM6F+DdjaYqPwjC
-        MFI7L8Lcfs+OWjFex/2uLvsHEQY83EkQChNCiTyvVGGVho+XXrC+MIybahToejdD
-        h1E35TKiFSMqk=
-X-Virus-Scanned: amavisd-new at dektech.com.au
-Received: from mail.dektech.com.au ([127.0.0.1])
-        by localhost (mail2.dektech.com.au [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id xnnyoYZzpIOv; Wed, 11 Dec 2019 13:00:42 +1100 (AEDT)
-Received: from mail.dektech.com.au (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.dektech.com.au (Postfix) with ESMTPS id 400704BBFB;
-        Wed, 11 Dec 2019 13:00:41 +1100 (AEDT)
-Received: from VNLAP288VNPC (unknown [14.161.14.188])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.dektech.com.au (Postfix) with ESMTPSA id 908CF44473;
-        Wed, 11 Dec 2019 13:00:40 +1100 (AEDT)
-From:   "Tuong Lien Tong" <tuong.t.lien@dektech.com.au>
-To:     "'Ying Xue'" <ying.xue@windriver.com>, <paulmck@kernel.org>
-Cc:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mingo@kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <kernel-team@fb.com>, <torvalds@linux-foundation.org>,
-        <davem@davemloft.net>
-References: <20191210033146.GA32522@paulmck-ThinkPad-P72> <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com> <20191210223825.GS2889@paulmck-ThinkPad-P72> <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
-In-Reply-To: <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
-Subject: RE: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected() with rcu_replace_pointer()
-Date:   Wed, 11 Dec 2019 09:00:39 +0700
-Message-ID: <707801d5afc6$cac68190$605384b0$@dektech.com.au>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHn7R6lm2O6ODufE4ZTwpx6e2ZmvgEdJvCUAq0d++oCtrNyxadbqMjw
-Content-Language: en-us
+        Tue, 10 Dec 2019 21:13:15 -0500
+Received: from mga04.intel.com ([192.55.52.120]:52878 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfLKCNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:13:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:13:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="225352973"
+Received: from allen-box.sh.intel.com ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 18:13:12 -0800
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     ashok.raj@intel.com, sanjay.k.kumar@intel.com,
+        jacob.jun.pan@linux.intel.com, kevin.tian@intel.com,
+        yi.l.liu@intel.com, yi.y.sun@intel.com,
+        Peter Xu <peterx@redhat.com>, iommu@lists.linux-foundation.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v3 0/6] Use 1st-level for IOVA translation
+Date:   Wed, 11 Dec 2019 10:12:13 +0800
+Message-Id: <20191211021219.8997-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ying, Paul,
+Intel VT-d in scalable mode supports two types of page tables
+for DMA translation: the first level page table and the second
+level page table. The first level page table uses the same
+format as the CPU page table, while the second level page table
+keeps compatible with previous formats. The software is able
+to choose any one of them for DMA remapping according to the use
+case.
 
-Please see my comments inline. Thanks!
+This patchset aims to move IOVA (I/O Virtual Address) translation
+to 1st-level page table in scalable mode. This will simplify vIOMMU
+(IOMMU simulated by VM hypervisor) design by using the two-stage
+translation, a.k.a. nested mode translation.
 
-BR/Tuong
-
------Original Message-----
-From: Ying Xue <ying.xue@windriver.com> 
-Sent: Wednesday, December 11, 2019 8:32 AM
-To: paulmck@kernel.org
-Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org; mingo@kernel.org;
-tipc-discussion@lists.sourceforge.net; kernel-team@fb.com;
-torvalds@linux-foundation.org; davem@davemloft.net
-Subject: Re: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected()
-with rcu_replace_pointer()
-
-On 12/11/19 6:38 AM, Paul E. McKenney wrote:
-> commit 4ee8e2c68b076867b7a5af82a38010fffcab611c
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Mon Dec 9 19:13:45 2019 -0800
-> 
->     net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
->     
->     This commit replaces the use of rcu_swap_protected() with the more
->     intuitively appealing rcu_replace_pointer() as a step towards removing
->     rcu_swap_protected().
->     
->     Link:
-https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4g
-g6Hw@mail.gmail.com/
->     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
->     Reported-by: kbuild test robot <lkp@intel.com>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->     Cc: Jon Maloy <jon.maloy@ericsson.com>
->     Cc: Ying Xue <ying.xue@windriver.com>
->     Cc: "David S. Miller" <davem@davemloft.net>
->     Cc: <netdev@vger.kernel.org>
->     Cc: <tipc-discussion@lists.sourceforge.net>
-> 
-
-Acked-by: Ying Xue <ying.xue@windriver.com>
-
-> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-> index 990a872..978d2db 100644
-> --- a/net/tipc/crypto.c
-> +++ b/net/tipc/crypto.c
-> @@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old,
-struct tipc_key new,
->  #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
->  	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
->  
-> -#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)
-\
-> -	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
-> -
->  #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
->  do {									\
->  	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
-> @@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct
-tipc_crypto *rx, u8 new_pending)
->  
->  	/* Move passive key if any */
->  	if (key.passive) {
-> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2,
-&rx->lock);
-The 3rd parameter should be the lockdep condition checking instead of the
-spinlock's pointer i.e. "lockdep_is_held(&rx->lock)"?
-That's why I'd prefer to use the 'tipc_aead_rcu_swap ()' macro, which is
-clear & concise at least for the context here. It might be re-used later as
-well...
-
->  		x = (key.passive - key.pending + new_pending) % KEY_MAX;
->  		new_passive = (x <= 0) ? x + KEY_MAX : x;
->  	}
-> 
+As Intel VT-d architecture offers caching mode, guest IOVA (GIOVA)
+support is currently implemented in a shadow page manner. The device
+simulation software, like QEMU, has to figure out GIOVA->GPA mappings
+and write them to a shadowed page table, which will be used by the
+physical IOMMU. Each time when mappings are created or destroyed in
+vIOMMU, the simulation software has to intervene. Hence, the changes
+on GIOVA->GPA could be shadowed to host.
 
 
-_______________________________________________
-tipc-discussion mailing list
-tipc-discussion@lists.sourceforge.net
-https://lists.sourceforge.net/lists/listinfo/tipc-discussion
+     .-----------.
+     |  vIOMMU   |
+     |-----------|                 .--------------------.
+     |           |IOTLB flush trap |        QEMU        |
+     .-----------. (map/unmap)     |--------------------|
+     |GIOVA->GPA |---------------->|    .------------.  |
+     '-----------'                 |    | GIOVA->HPA |  |
+     |           |                 |    '------------'  |
+     '-----------'                 |                    |
+                                   |                    |
+                                   '--------------------'
+                                                |
+            <------------------------------------
+            |
+            v VFIO/IOMMU API
+      .-----------.
+      |  pIOMMU   |
+      |-----------|
+      |           |
+      .-----------.
+      |GIOVA->HPA |
+      '-----------'
+      |           |
+      '-----------'
+
+In VT-d 3.0, scalable mode is introduced, which offers two-level
+translation page tables and nested translation mode. Regards to
+GIOVA support, it can be simplified by 1) moving the GIOVA support
+over 1st-level page table to store GIOVA->GPA mapping in vIOMMU,
+2) binding vIOMMU 1st level page table to the pIOMMU, 3) using pIOMMU
+second level for GPA->HPA translation, and 4) enable nested (a.k.a.
+dual-stage) translation in host. Compared with current shadow GIOVA
+support, the new approach makes the vIOMMU design simpler and more
+efficient as we only need to flush the pIOMMU IOTLB and possible
+device-IOTLB when an IOVA mapping in vIOMMU is torn down.
+
+     .-----------.
+     |  vIOMMU   |
+     |-----------|                 .-----------.
+     |           |IOTLB flush trap |   QEMU    |
+     .-----------.    (unmap)      |-----------|
+     |GIOVA->GPA |---------------->|           |
+     '-----------'                 '-----------'
+     |           |                       |
+     '-----------'                       |
+           <------------------------------
+           |      VFIO/IOMMU          
+           |  cache invalidation and  
+           | guest gpd bind interfaces
+           v
+     .-----------.
+     |  pIOMMU   |
+     |-----------|
+     .-----------.
+     |GIOVA->GPA |<---First level
+     '-----------'
+     | GPA->HPA  |<---Scond level
+     '-----------'
+     '-----------'
+
+This patch applies the first level page table for IOVA translation
+unless the DOMAIN_ATTR_NESTING domain attribution has been set.
+Setting of this attribution means the second level will be used to
+map gPA (guest physical address) to hPA (host physical address), and
+the mappings between gVA (guest virtual address) and gPA will be
+maintained by the guest with the page table address binding to host's
+first level.
+
+Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
+Based-on-idea-by: Kevin Tian <kevin.tian@intel.com>
+Based-on-idea-by: Liu Yi L <yi.l.liu@intel.com>
+Based-on-idea-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Based-on-idea-by: Sanjay Kumar <sanjay.k.kumar@intel.com>
+Based-on-idea-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Change log:
+
+v2->v3:
+ - The previous version was posted here
+   https://lkml.org/lkml/2019/11/27/1831
+ - Accept Jacob's suggestion on merging two page tables.
+
+ v1->v2
+ - The first series was posted here
+   https://lkml.org/lkml/2019/9/23/297
+ - Use per domain page table ops to handle different page tables.
+ - Use first level for DMA remapping by default on both bare metal
+   and vm guest.
+ - Code refine according to code review comments for v1.
+
+Lu Baolu (6):
+  iommu/vt-d: Identify domains using first level page table
+  iommu/vt-d: Add set domain DOMAIN_ATTR_NESTING attr
+  iommu/vt-d: Add PASID_FLAG_FL5LP for first-level pasid setup
+  iommu/vt-d: Setup pasid entries for iova over first level
+  iommu/vt-d: Flush PASID-based iotlb for iova over first level
+  iommu/vt-d: Use iova over first level
+
+ drivers/iommu/dmar.c        |  41 ++++++++
+ drivers/iommu/intel-iommu.c | 185 ++++++++++++++++++++++++++++++++----
+ drivers/iommu/intel-pasid.c |   7 +-
+ drivers/iommu/intel-pasid.h |   6 ++
+ drivers/iommu/intel-svm.c   |   8 +-
+ include/linux/intel-iommu.h |  12 ++-
+ 6 files changed, 231 insertions(+), 28 deletions(-)
+
+-- 
+2.17.1
 
