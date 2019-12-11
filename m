@@ -2,146 +2,164 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0B6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCFBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E617421D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5B4208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ku5JWRXH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QNh1ExNM";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="eR5/bgof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfLKKhC (ORCPT
+        id S1728927AbfLKKhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:37:02 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43128 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfLKKhC (ORCPT
+        Wed, 11 Dec 2019 05:37:52 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:2057 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfLKKhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:37:02 -0500
-Received: by mail-pf1-f193.google.com with SMTP id h14so1597939pfe.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:37:02 -0800 (PST)
+        Wed, 11 Dec 2019 05:37:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1576060671; x=1607596671;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=8Fo+HkxGQj70XRc41XzazxMHK4+Y24D69f3Rqf6madM=;
+  b=QNh1ExNMqD9TC7xe8nYeLHprT1CVXr55hJ5rHIPP7CXbcbSp/KpgXEs2
+   Ekn7mWttsTAnz1ELRy0j0386Jwm+XYr0OljMIkJPXC+BgqUTt/yk+g+sL
+   RLcCze6CkRCmmkT4l8zoMRcsJOxKwcjVzVvzc8aE/StPdIB/Z5T/oz63h
+   uMdOpedgiXJ3hVDVZnSg6lGQJrT4RieG/lhQJKCvcIwLP5hhIqwm0Ptbv
+   QfOf8/zF09EYXbr2Fi31C3uwwyxWB/Cs/aT20OaJyGJoZ+xIl+RsB/rnC
+   WlzncUDgWJ1SdSrmiKjalddthavxcB9ZfXtWys1DJehL/qAkWViAxuMRP
+   w==;
+IronPort-SDR: 6VBEF61YkorfJeleLe6cKXIZV5QFlil+d2DrfX6cWG5MCcYvhSYIlG+74gHPC7zc40gNCcyy8f
+ 2FpLe6w684xiuCy1osAQ2hIxNZVj2Izd3RKdcgNi+eXG82znm3q3p6VAamCVQuTiSrLZEOdl0r
+ nJ6w8g4dtnsOE8sqy0gQ4NmD1ElV6817PfyXN58IXxlikKGZLFmQqaosZxBhJhSd7kzJuOSrBM
+ 0j9oBkwhI1mxp9nla0Bm+C7gBkbegRoy+INFoDeprtgDv8A+5byP0wMqKQC+XwUPG9qg5Bq9lB
+ MzI=
+X-IronPort-AV: E=Sophos;i="5.69,301,1571673600"; 
+   d="scan'208";a="129531089"
+Received: from mail-mw2nam10lp2109.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.109])
+  by ob1.hgst.iphmx.com with ESMTP; 11 Dec 2019 18:37:48 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J+kvq4bQC49d/Ot+nDnblkVCTNQecVQ5RH8/jrkgwfgW9dntQsn3Vrp4bhHaLHt8fSh+FVd7NSvoKFayrJ2vdmkRA6oxa7sesTWZEEEzDsJ6kS6kgC7mw2pem4YzbTBntcTXbNQfWwGliia24yvQ0lmWMv1XuZSLo+QxQ8gopCS0h7Indw5jdWKr0sSKg2xx4/IbTv5I/OZCRtsKCqpCZn+Cub61+lwkogS0qC4FYRG5zxWFG70QAuLOi3nnTD+X7MbskQP90yx8deADS3pvMDYPHRJel12VQMVPz68j3NMS8LgLursbbQ9MjVyOIoG4g96jlBR7ox98mszlxHAvfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VH9vPjwvhUYBYJ/82Vt9mYQPJSn/dpKQH7Q2XjexgoA=;
+ b=AtInRs+71b7Qc3s06SnnbCylGTSYsDWvoPpLUTv07g+yltgfQWFclqf/I7bCkHq3zGGrBaoa4TN6MDnq30RIPnC7MQ/4Cl3liYV+FJi7Q2h0OfswyZ8iZDbasFp7qktY3S0/AypH2NNvFK2TFMi3q//l4B8hJr5/Wb8zT8b9+8Tle4W8CstfFQHTCXi1/ljdVyRI80MYGiV4Bd//8fJzSzRKYfKKzXwEoOoMCumq0rs2KiLeVj4hYxM/hi1A4NHgYCIWiDSpprRG31RNU/PxfFrfD1lZxfrBA57bQi2x8TLHB7t9uVZbtudSAvpBin1fInCYrXiaRXk82P5Z3yn2xg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ypE33xjQV/xvJGAZCWivOIGTaz+zZc3+WM/gMk54BwY=;
-        b=ku5JWRXHY/4veanZyG8iQdHT0kYKtnWrt0lOiJIykUMYt7UpMhO8waPPbxxBj2otrl
-         bDgisHUNs9rz9JvoydvEjjQIAbGxuoPj3HVse/aKJEQE9b2yYigFC1JvqXInJ92IvOaO
-         sABULdBYbXyovUn5TOaZG/UGWVOX1aW3Qy890mHCEszuZ/BVltf1ZX7sZlSLfdlE3Wzs
-         CNZB2w2B4ClFHBAPQf1CVZnPyiGMtJTNpJ692XLwBNj+G7OK6PTQuZxWn4MmfOebuJWw
-         FZoL84GO37bX8zZYHpjNncA6n0ObQk804kuvInGOR2q4sunTTT1E2+cVt31xezT6Nx9T
-         Lc3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ypE33xjQV/xvJGAZCWivOIGTaz+zZc3+WM/gMk54BwY=;
-        b=c1kTdVuou6nzgxhZP4aUkDCGk1rM6UE1r8W02XroHeHhF7e5DkmfTsPSFhNgLnm9wl
-         pD9tDDpex6rWa84BB2dfpW3pZSJPRux8uLAR4IFkyGWj/l9IN4hIK+u+HVM7TJaQaksg
-         9rj1IELKtuSTfpiH5uCeoSwtXfFJrYu9SpT7QWA0Y66p1hgBahdBdIGHtFIkJ64l/7aO
-         2CtVg36dzExO4KZ2kBCIpCbdbxtGDsp1ZtxQeD79Pm3+7EggIdf2ist+VG5phpZTX1Pq
-         uPoD6YNp6s98uLxBu6oqh62cC1LRjWBmfLRvOvw1Pz+I/Tk7h/VtqO5UTrtUAkBgBSaJ
-         60jw==
-X-Gm-Message-State: APjAAAVbH9oWuRpgnh3ppdbeZdvB9CtMqSvs/yDVqV6IdhobIHCCK9jb
-        XHWmbyof6UoLw550O5GJzNXxGw==
-X-Google-Smtp-Source: APXvYqzJJfawC442tcd1C948WInoK6P499lQWD+a+zwnYmrtZja3a1LGlkVe185HjEnQFTF2zWHCoA==
-X-Received: by 2002:a63:5f91:: with SMTP id t139mr3243528pgb.185.1576060621746;
-        Wed, 11 Dec 2019 02:37:01 -0800 (PST)
-Received: from localhost ([122.171.112.123])
-        by smtp.gmail.com with ESMTPSA id z10sm2311173pgg.39.2019.12.11.02.37.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 02:37:01 -0800 (PST)
-Date:   Wed, 11 Dec 2019 16:06:58 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU
- offline
-Message-ID: <20191211103658.54pqb4jch3gxvzsv@vireshk-i7>
-References: <2691942.bH9KnLg61H@kreacher>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VH9vPjwvhUYBYJ/82Vt9mYQPJSn/dpKQH7Q2XjexgoA=;
+ b=eR5/bgofIGiaLOsrLWR4uw/OT8tmj3k7NXE3ZP5jqvUlLF/O6CANkY8qWHHtGZglEeH0NCmD7SLeZpTXgB1DmbiI/edSw2xpT6pbI5csP/1aCM4PEmmBPu8Buca9dDT++IqNJS1qkBsiLi29unZGPK1ZxQaBfHkPTOI4ZYYh9qs=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
+ MN2PR04MB6383.namprd04.prod.outlook.com (52.132.169.199) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Wed, 11 Dec 2019 10:37:46 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::9447:fa71:53df:f866%3]) with mapi id 15.20.2538.012; Wed, 11 Dec 2019
+ 10:37:46 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] scsi: ufs: Put SCSI host after remove it
+Thread-Topic: [PATCH v2 1/3] scsi: ufs: Put SCSI host after remove it
+Thread-Index: AQHVr//RJYxYdS3dXUmhxTnGX2MLCqe0vdGQ
+Date:   Wed, 11 Dec 2019 10:37:46 +0000
+Message-ID: <MN2PR04MB699184D76E7F9BABA923043AFC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef4259a7c-76bdf010-88b1-4309-ba24-8c874734184e-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016ef4259a7c-76bdf010-88b1-4309-ba24-8c874734184e-000000@us-west-2.amazonses.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3a1a4450-3862-42cb-8892-08d77e262999
+x-ms-traffictypediagnostic: MN2PR04MB6383:
+x-microsoft-antispam-prvs: <MN2PR04MB63833FD551F387E5C4E78A7CFC5A0@MN2PR04MB6383.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(136003)(366004)(376002)(346002)(199004)(189003)(7416002)(7696005)(6506007)(76116006)(66446008)(66946007)(64756008)(66556008)(26005)(2906002)(81166006)(8676002)(4326008)(81156014)(71200400001)(66476007)(186003)(8936002)(54906003)(316002)(33656002)(52536014)(110136005)(5660300002)(9686003)(478600001)(4744005)(86362001)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6383;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pOqEmXZ1wXCWunu71aInm3zxipuc8T6H7sYJWIvwm2ArMRKbgB6rfRYg/ZlNcuuhi5XUDHMDzWFAYpNRphiWiUv89qz5w1Uc9uNlE8xl9C3GQXvbjTkICzUr89fcGnQILIOx9kNjYJWyp63RtGUAWj5rGBf7BF9zB+x68PLeJtg0sQUBfqeRevnZ0pDVF+FmtWuh4J24KHslJkqZWj1Qr1P3KwTX2UsJEnYOdM98hz/bpo22sbAIxfJmZ7W6k6cX1rpV1dOE+7QCrcHvPjfvofALZAnXGiRiRcfNdSOaXpaZ6HjqbS7hq9zBrE+uQgOt55ccCzbPPBxMt3A2jChdm3Hs+blP9kEA81cJNyIW6HXnC5sCbR6FA9Uhn9g7Iustclj5bn9XbKQb02qR+r/oHgfSWCzbUX4asgJy2/ELJALSKneYd+b0XdMufS6ND5vw
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2691942.bH9KnLg61H@kreacher>
-User-Agent: NeoMutt/20180716-391-311a52
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a1a4450-3862-42cb-8892-08d77e262999
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 10:37:46.5908
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2OHDxee4lRiPMYT/OqHhpicmSUCHXUpKMkt3vuquckPlJc2NmP6MLg0US2i3e/xniAJlmCf1LqA2Wpn4jlSGnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-12-19, 11:28, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The scheduler code calling cpufreq_update_util() may run during CPU
-> offline on the target CPU after the IRQ work lists have been flushed
-> for it, so the target CPU should be prevented from running code that
-> may queue up an IRQ work item on it at that point.
-> 
-> Unfortunately, that may not be the case if dvfs_possible_from_any_cpu
-> is set for at least one cpufreq policy in the system, because that
-> allows the CPU going offline to run the utilization update callback
-> of the cpufreq governor on behalf of another (online) CPU in some
-> cases.
-> 
-> If that happens, the cpufreq governor callback may queue up an IRQ
-> work on the CPU running it, which is going offline, and the IRQ work
-> will not be flushed after that point.  Moreover, that IRQ work cannot
-> be flushed until the "offlining" CPU goes back online, so if any
-> other CPU calls irq_work_sync() to wait for the completion of that
-> IRQ work, it will have to wait until the "offlining" CPU is back
-> online and that may not happen forever.  In particular, a system-wide
-> deadlock may occur during CPU online as a result of that.
-> 
-> The failing scenario is as follows.  CPU0 is the boot CPU, so it
-> creates a cpufreq policy and becomes the "leader" of it
-> (policy->cpu).  It cannot go offline, because it is the boot CPU.
-> Next, other CPUs join the cpufreq policy as they go online and they
-> leave it when they go offline.  The last CPU to go offline, say CPU3,
-> may queue up an IRQ work while running the governor callback on
-> behalf of CPU0 after leaving the cpufreq policy because of the
-> dvfs_possible_from_any_cpu effect described above.  Then, CPU0 is
-> the only online CPU in the system and the stale IRQ work is still
-> queued on CPU3.  When, say, CPU1 goes back online, it will run
-> irq_work_sync() to wait for that IRQ work to complete and so it
-> will wait for CPU3 to go back online (which may never happen even
-> in principle), but (worse yet) CPU0 is waiting for CPU1 at that
-> point too and a system-wide deadlock occurs.
-> 
-> To address this problem notice that CPUs which cannot run cpufreq
-> utilization update code for themselves (for example, because they
-> have left the cpufreq policies that they belonged to), should also
-> be prevented from running that code on behalf of the other CPUs that
-> belong to a cpufreq policy with dvfs_possible_from_any_cpu set and so
-> in that case the cpufreq_update_util_data pointer of the CPU running
-> the code must not be NULL as well as for the CPU which is the target
-> of the cpufreq utilization update in progress.
-> 
-> Accordingly, change cpufreq_this_cpu_can_update() into a regular
-> function in kernel/sched/cpufreq.c (instead of a static inline in a
-> header file) and make it check the cpufreq_update_util_data pointer
-> of the local CPU if dvfs_possible_from_any_cpu is set for the target
-> cpufreq policy.
-> 
-> Also update the schedutil governor to do the
-> cpufreq_this_cpu_can_update() check in the non-fast-switch
-> case too to avoid the stale IRQ work issues.
-> 
-> Fixes: 99d14d0e16fa ("cpufreq: Process remote callbacks from any CPU if the platform permits")
-> Link: https://lore.kernel.org/linux-pm/20191121093557.bycvdo4xyinbc5cb@vireshk-i7/
-> Reported-by: Anson Huang <anson.huang@nxp.com>
-> Cc: 4.14+ <stable@vger.kernel.org> # 4.14+
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+=20
+>=20
+> In ufshcd_remove(), after SCSI host is removed, put it once so that its r=
+esources
+> can be released.
+>=20
+> Signed-off-by: Can Guo <cang@codeaurora.org>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+This is not really part of this patchset, is it?=20
 
--- 
-viresh
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index
+> b5966fa..a86b0fd 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+>         ufs_bsg_remove(hba);
+>         ufs_sysfs_remove_nodes(hba->dev);
+>         scsi_remove_host(hba->host);
+> +       scsi_host_put(hba->host);
+>         /* disable interrupts */
+>         ufshcd_disable_intr(hba, hba->intr_mask);
+>         ufshcd_hba_stop(hba, true);
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
+,
+> a Linux Foundation Collaborative Project
+
