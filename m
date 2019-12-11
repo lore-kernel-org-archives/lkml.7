@@ -2,135 +2,128 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335ECC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43F0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D6D20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080568;
-	bh=fxbntyBqEKHsMYyHubFDmIaQLZIboAKHGpoYtKjsg4I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hi7GD3DLsys+LcJpldtFk8Lcvc8OD9k1WlJ2Ps9gG3g9JpIgYdSWEcKdLSO62+Py6
-	 rd2CDUTCxeysVpswcn834sA4M05vuLq3Rm6EfSh9NNeVD7IAEm6ueivqEZ6vGuKVFj
-	 jNvQtH5p9ExvEdZEzAIa9WJU1IoeOtp/HAxUJHfA=
+	by mail.kernel.org (Postfix) with ESMTP id A2F5920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388949AbfLKQJ1 (ORCPT
+        id S2388957AbfLKQJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:09:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731053AbfLKPMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:07 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83FBA24671;
-        Wed, 11 Dec 2019 15:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077127;
-        bh=fxbntyBqEKHsMYyHubFDmIaQLZIboAKHGpoYtKjsg4I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnBjh5EKotostD4mbSRdaxvgKHyrHUK6RKL0fLz5Xg70hm9CuQNIC96Kqb43kNAxP
-         i+carD6SYClJ9L/DdVqANqsUg895eVp71fUHcXMVbeFgnJwzY0o1fTzmtWyERyPoUZ
-         ++7bfrsWklPbbnu3T3ugF8yObAiuBrNQ8kp1qWao=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 015/134] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
-Date:   Wed, 11 Dec 2019 10:09:51 -0500
-Message-Id: <20191211151150.19073-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Dec 2019 11:09:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388444AbfLKQJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:09:28 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBG7f0a064751
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:09:26 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtfbxm554-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:09:25 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
+        Wed, 11 Dec 2019 16:09:22 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Dec 2019 16:09:18 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBBG9GQ735389666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 16:09:16 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 69801A405F;
+        Wed, 11 Dec 2019 16:09:16 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C95FA4054;
+        Wed, 11 Dec 2019 16:09:14 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.74.172])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Dec 2019 16:09:14 +0000 (GMT)
+From:   Sourabh Jain <sourabhjain@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        gregkh@linuxfoundation.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH v6 0/6] reorganize and add FADump sysfs files
+Date:   Wed, 11 Dec 2019 21:39:04 +0530
+X-Mailer: git-send-email 2.17.2
+X-TM-AS-GCONF: 00
+x-cbid: 19121116-4275-0000-0000-0000038E019B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121116-4276-0000-0000-000038A1B827
+Message-Id: <20191211160910.21656-1-sourabhjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_04:2019-12-11,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 phishscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912110136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+Currently, FADump sysfs files are present inside /sys/kernel directory.
+But as the number of FADump sysfs file increases it is not a good idea to
+push all of them in /sys/kernel directory. It is better to have separate
+directory to keep all the FADump sysfs files.
 
-[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
+Patch series reorganizes the FADump sysfs files and avail all the existing
+FADump sysfs files present inside /sys/kernel into a new directory
+/sys/kernel/fadump. The backward compatibility is maintained by adding a
+symlink for every sysfs file that has moved to new location. Also a new
+FADump sys interface is added to get the amount of memory reserved by FADump
+for saving the crash dump.
 
-Page tables that reside in physical memory beyond the 4 GiB boundary are
-currently not working properly. The reason is that when the physical
-address for page directory entries is read, it gets truncated at 32 bits
-and can cause crashes when passing that address to the DMA API.
+Changelog:
+v1 -> v5:
+  - https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-December/201642.html
 
-Fix this by first casting the PDE value to a dma_addr_t and then using
-the page frame number mask for the SMMU instance to mask out the invalid
-bits, which are typically used for mapping attributes, etc.
+v5 -> v6
+  - Unregister FADump if fadump group creation fails.
+  - Remove fadump_enabled symlink if fadump_registered symlink
+    creation fails.
+  - Removed CREATE_SYMLINK macro.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/tegra-smmu.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Sourabh Jain (6):
+  Documentation/ABI: add ABI documentation for /sys/kernel/fadump_*
+  sysfs: wrap __compat_only_sysfs_link_entry_to_kobj function to change
+    the symlink name
+  powerpc/fadump: reorganize /sys/kernel/fadump_* sysfs files
+  powerpc/powernv: move core and fadump_release_opalcore under new
+    kobject
+  Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
+  powerpc/fadump: sysfs for fadump memory reservation
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 7293fc3f796d6..dd486233e2828 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -159,9 +159,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
- 	return (addr & smmu->pfn_mask) == addr;
- }
- 
--static dma_addr_t smmu_pde_to_dma(u32 pde)
-+static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
- {
--	return pde << 12;
-+	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
- }
- 
- static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
-@@ -549,6 +549,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 				  dma_addr_t *dmap)
- {
- 	unsigned int pd_index = iova_pd_index(iova);
-+	struct tegra_smmu *smmu = as->smmu;
- 	struct page *pt_page;
- 	u32 *pd;
- 
-@@ -557,7 +558,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 		return NULL;
- 
- 	pd = page_address(as->pd);
--	*dmap = smmu_pde_to_dma(pd[pd_index]);
-+	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
- 
- 	return tegra_smmu_pte_offset(pt_page, iova);
- }
-@@ -599,7 +600,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
- 	} else {
- 		u32 *pd = page_address(as->pd);
- 
--		*dmap = smmu_pde_to_dma(pd[pde]);
-+		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
- 	}
- 
- 	return tegra_smmu_pte_offset(as->pts[pde], iova);
-@@ -624,7 +625,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
- 	if (--as->count[pde] == 0) {
- 		struct tegra_smmu *smmu = as->smmu;
- 		u32 *pd = page_address(as->pd);
--		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
-+		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
- 
- 		tegra_smmu_set_pde(as, iova, 0);
- 
+ .../ABI/obsolete/sysfs-kernel-fadump_enabled  |   9 ++
+ .../obsolete/sysfs-kernel-fadump_registered   |  10 ++
+ .../obsolete/sysfs-kernel-fadump_release_mem  |  10 ++
+ .../sysfs-kernel-fadump_release_opalcore      |   9 ++
+ Documentation/ABI/testing/sysfs-kernel-fadump |  40 ++++++
+ .../powerpc/firmware-assisted-dump.rst        |  28 +++-
+ arch/powerpc/kernel/fadump.c                  | 127 +++++++++++++-----
+ arch/powerpc/platforms/powernv/opal-core.c    |  55 +++++---
+ fs/sysfs/group.c                              |  28 +++-
+ include/linux/sysfs.h                         |  12 ++
+ 10 files changed, 270 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
+ create mode 100644 Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
+ create mode 100644 Documentation/ABI/removed/sysfs-kernel-fadump_release_opalcore
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-fadump
+
 -- 
-2.20.1
+2.17.2
 
