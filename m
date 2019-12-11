@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58056C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D46C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEF024685
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 216F924679
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078133;
-	bh=pY+YQzGqpx1xXwp9mQ5O1lTfNALdPm0LfjKNW7N+IIo=;
+	s=default; t=1576078135;
+	bh=Jviwh3vJgi74E19q35hueu7i1yLk6agFMCkrNyCram8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hrsUpbuklxTtxZ0DHCCoQk3TimU7C0YRSHRteQacCKw3+hdSrRMsgVA57N5HkwTha
-	 N0GOsCfA2LnFekePgkpESMZRXBN8SzyNLnY/g5OMeUMAyshzGqeXwdgXB5I22T1K7v
-	 iXrWnasFC1Quvvn3kRXqnN+RHSeOuOS7XGApfQ70=
+	b=g5wr/6jT2JwAVHoGf8RBepeo6Stam0OB0qFhER5V5wmJ/Pog/hLiqW9aXMcvQ+9TF
+	 hvoiqdw27AeoyERTz1Pj0MekQy9iD+IBuMiOM6EVLNSYbA1roNyz6blVNuftjXzlAh
+	 vmBgLGFYgWA7VrS3L0jkWVzCfSoR6frCLiHCwEcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387736AbfLKP2w (ORCPT
+        id S2387746AbfLKP2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387715AbfLKP2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:48 -0500
+        id S2387458AbfLKP2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1C942465B;
-        Wed, 11 Dec 2019 15:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E25B42467D;
+        Wed, 11 Dec 2019 15:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078127;
-        bh=pY+YQzGqpx1xXwp9mQ5O1lTfNALdPm0LfjKNW7N+IIo=;
+        s=default; t=1576078130;
+        bh=Jviwh3vJgi74E19q35hueu7i1yLk6agFMCkrNyCram8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGTHn3OJKOEPEOMpcAGFEr/PIFGnBGiKv8lQ1kUXu8Xsi7nchUv/oKhplgAusGjio
-         OMXbZVEmkgTm5ne0UNVet0RZ8xmEp1QmyZw45DlDScDzOaeZGUube3DZEf3fsqXFIS
-         eh5a/uklBwgt35O458Zm8GgXVJ3y6zsrL6A2fgzU=
+        b=wPkQRG/DR6vEAhG8jLN5Dlutju6DQUl5t+pl6F0o+P4vWSMlha8bWVWaGaL+rHNJl
+         /0pep8otd8aabXzk5ShBePna+nNemODl8LR974X4Nc5Zy9Sq/AxMtPmGH9fMDq4LLJ
+         6iMHUIZZSveRkFf4nN8un9zmzAoJ/qFQEQVrQfDc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 15/58] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
-Date:   Wed, 11 Dec 2019 10:27:48 -0500
-Message-Id: <20191211152831.23507-15-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/58] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Wed, 11 Dec 2019 10:27:51 -0500
+Message-Id: <20191211152831.23507-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -59,75 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-With large memory (8TB and more) hotplug, we can get soft lockup
-warnings as below. These were caused by a long loop without any
-explicit cond_resched which is a problem for !PREEMPT kernels.
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-Avoid this using cond_resched() while inserting hash page table
-entries. We already do similar cond_resched() in __add_pages(), see
-commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
-__add_pages").
-
-  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
-   (t=24003 jiffies g=4285 q=2002)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
-  Call Trace:
-    dump_stack+0xb0/0xf4 (unreliable)
-    nmi_cpu_backtrace+0x124/0x130
-    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
-    arch_trigger_cpumask_backtrace+0x28/0x3c
-    rcu_dump_cpu_stacks+0xf8/0x154
-    rcu_sched_clock_irq+0x878/0xb40
-    update_process_times+0x48/0x90
-    tick_sched_handle.isra.16+0x4c/0x80
-    tick_sched_timer+0x68/0xe0
-    __hrtimer_run_queues+0x180/0x430
-    hrtimer_interrupt+0x110/0x300
-    timer_interrupt+0x108/0x2f0
-    decrementer_common+0x114/0x120
-  --- interrupt: 901 at arch_add_memory+0xc0/0x130
-      LR = arch_add_memory+0x74/0x130
-    memremap_pages+0x494/0x650
-    devm_memremap_pages+0x3c/0xa0
-    pmem_attach_disk+0x188/0x750
-    nvdimm_bus_probe+0xac/0x2c0
-    really_probe+0x148/0x570
-    driver_probe_device+0x19c/0x1d0
-    device_driver_attach+0xcc/0x100
-    bind_store+0x134/0x1c0
-    drv_attr_store+0x44/0x60
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1a0/0x270
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/hash_utils_64.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index cf1d76e036359..387600ecea60a 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -303,6 +303,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		if (ret < 0)
- 			break;
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 0ff083bbf5b1f..617a607375908 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -30,15 +30,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
  
-+		cond_resched();
- #ifdef CONFIG_DEBUG_PAGEALLOC
- 		if (debug_pagealloc_enabled() &&
- 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
+ 
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
 -- 
 2.20.1
 
