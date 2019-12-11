@@ -2,116 +2,94 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D60E6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFE4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB2492077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077882;
-	bh=V9iFbAEEh/ISObvSLThdcNRuyHPmWRB7uxhJV2IbNc0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QsyH+mTF/habMexo44AG/lFTntxnY2yFgYd4Sktmn0HxoG0/AjCYCEXRCFwX6Ikby
-	 +sj20QjU4QZKLwe2lvYd7A31f7mZ2raxzFQEecxoLRV8iIIhtxi2FEWigxg4yl07SO
-	 k6lpCpjA9/TKZalPJP0Um+gCFAbP6NyS0wX9vtz4=
+	by mail.kernel.org (Postfix) with ESMTP id 5E35224654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JQ+T1bbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732874AbfLKPYl (ORCPT
+        id S1732888AbfLKPYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732866AbfLKPYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 11 Dec 2019 10:24:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46658 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732714AbfLKPYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lCtKLzzdaOAiKN6oGE3yx6uTT5U+M8wV3nEecLRcZL4=; b=JQ+T1bbRmiOoN11jYVC7+m0HU
+        JoyGLNA3Nzw1yp7vwy93I53nt5PqCLktzdgmHlodPSYRBP/HJ6z3hZMf9gWmZokOE8ltuaquR05Cz
+        mh7n3UdMKbcvok3uc+IYpnOsTzdHT+oK0Cd1IOXLrtnznq3i72h+XDgKNNEtH3YCHpyOVOGEeDSVU
+        ZdY9dzNbIkF61y5/Kk4IXcyJ3HLTVcH7P5y9SsVsWaaXMuCAN+eOPKnrHFlq5Io0xxz/FCzLFaC6z
+        Gmo6Eog8Rbc/geQNHiYrLw84TJkBbw71cV1QH/c9t6gRmbvzTmGk3mSeDv4a2Nq9zefrComnPIvZJ
+        LGByA1Pdw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1if3qw-0001sp-5J; Wed, 11 Dec 2019 15:24:38 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBA82077B;
-        Wed, 11 Dec 2019 15:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077878;
-        bh=V9iFbAEEh/ISObvSLThdcNRuyHPmWRB7uxhJV2IbNc0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lr2A/KzGmDy6po2nIz8a9sVaHRDYTajzwNMa6SOB5qqsKGm/Rua9skCHYr/bmt3kb
-         JAhtmy2p4TXzu4u6woAzgt/eYSqNB1u24TPadb7UUy/Rk+IJLjUPP+iI3vJCtK7Jcl
-         isU/WxQdryvaibhC7djHn6reZI58Vw1fYmytsXMQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 206/243] Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers
-Date:   Wed, 11 Dec 2019 16:06:08 +0100
-Message-Id: <20191211150353.088399161@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 56095306060;
+        Wed, 11 Dec 2019 16:23:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3BF3220137C8F; Wed, 11 Dec 2019 16:24:35 +0100 (CET)
+Date:   Wed, 11 Dec 2019 16:24:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, elena.reshetova@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
+ Perf users groups
+Message-ID: <20191211152435.GN2827@hirez.programming.kicks-ass.net>
+References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+ <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
+ <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
+ <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+ <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+On Wed, Dec 11, 2019 at 01:52:15PM +0300, Alexey Budankov wrote:
+> Undoubtedly, SELinux is the powerful, mature, whole level of functionality that
+> could provide benefits not only for perf_events subsystem. However perf_events
+> is built around capabilities to provide access control to its functionality,
+> thus perf_events would require considerable rework prior it could be controlled
+> thru SELinux. 
 
-commit a284e11c371e446371675668d8c8120a27227339 upstream.
+You mean this:
 
-This increment of rmi_smbus in rmi_smb_read/write_block() causes
-garbage to be read/written.
+  da97e18458fb ("perf_event: Add support for LSM and SELinux checks")
 
-The first read of SMB_MAX_COUNT bytes is fine, but after that
-it is nonsense. Trial-and-error showed that by dropping the
-increment of rmiaddr everything is fine and the F54 function
-properly works.
+?
 
-I tried a hack with rmi_smb_write_block() as well (writing to the
-same F54 touchpad data area, then reading it back), and that
-suggests that there too the rmiaddr increment has to be dropped.
-It makes sense that if it has to be dropped for read, then it has
-to be dropped for write as well.
+> Then the adoption could also require changes to the installed
+> infrastructure just for the sake of adopting alternative access control mechanism.
 
-It looks like the initial work with F54 was done using i2c, not smbus,
-and it seems nobody ever tested F54 with smbus. The other functions
-all read/write less than SMB_MAX_COUNT as far as I can tell, so this
-issue was never noticed with non-F54 functions.
-
-With this change I can read out the touchpad data correctly on my
-Lenovo X1 Carbon 6th Gen laptop.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Link: https://lore.kernel.org/r/8dd22e21-4933-8e9c-a696-d281872c8de7@xs4all.nl
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/input/rmi4/rmi_smbus.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- a/drivers/input/rmi4/rmi_smbus.c
-+++ b/drivers/input/rmi4/rmi_smbus.c
-@@ -166,7 +166,6 @@ static int rmi_smb_write_block(struct rm
- 		/* prepare to write next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
--		rmiaddr += SMB_MAX_COUNT;
- 	}
- exit:
- 	mutex_unlock(&rmi_smb->page_mutex);
-@@ -218,7 +217,6 @@ static int rmi_smb_read_block(struct rmi
- 		/* prepare to read next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
--		rmiaddr += SMB_MAX_COUNT;
- 	}
- 
- 	retval = 0;
-
-
+This is still very much true.
