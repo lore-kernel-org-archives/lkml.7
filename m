@@ -2,168 +2,111 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259FC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FFFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71AE2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CEB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079902;
-	bh=cFlcOaw/qeAJPWdJSsqw24Ge7bVtfzcVX8YUgBDsENU=;
+	s=default; t=1576079908;
+	bh=+cME4i6w/HOFktWu1TlD6KxQeCzpussbdm5Do3MnTqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4thgtL/5ZWlxFhs1yvIzJYsvnYkXzQuqjttR/PVTni1Trb12EiMX4nxO8mPKRI/W
-	 rXfRlOlFCKo3l4s2/oDxubE9yDHawMWsCq3xIMT9zqkwkD2rbEKaR6H38BWo4ejXBq
-	 CmkvB0V66/LMFEPYqbROj3Os7Z3HVLjppnzbqYLM=
+	b=usy1WejcieNIE2mEOwgMZWqeMXdadyeyB0Sdu4Fnx/OS1/cYyY+EDmQ4xd6U3wVT0
+	 VK5RgpnAlYoUlgZSjniS3WMW1X6Iots4U4JYbPrd41GrRr5BKUmu9KXf71guwBbd02
+	 v5EXAYza/XyPEmhxaUGZTsbuEv+X3ll1mh+xffqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731234AbfLKPOf (ORCPT
+        id S1731874AbfLKP60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbfLKPNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:41 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731622AbfLKPOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14172467D;
-        Wed, 11 Dec 2019 15:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8412024658;
+        Wed, 11 Dec 2019 15:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077220;
-        bh=cFlcOaw/qeAJPWdJSsqw24Ge7bVtfzcVX8YUgBDsENU=;
+        s=default; t=1576077262;
+        bh=+cME4i6w/HOFktWu1TlD6KxQeCzpussbdm5Do3MnTqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cx0Fm+0xFhx0u8MmnffK3wrj9vAeY2TtbACdhsbRxsTz1so6QVBwTwM/qE1F+Y7Va
-         y/jnMo3suLJdxioMb8EKRE8bU2X7DVAugqXwjYKBNgnClr+xI2CBuk3VnuRU8OK8rm
-         zH04YPDDKQE0pLcZXAypg7WYUIPskT7JcvKVoun8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 100/134] habanalabs: skip VA block list update in reset flow
-Date:   Wed, 11 Dec 2019 10:11:16 -0500
-Message-Id: <20191211151150.19073-100-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=Tyl9MfwXBvpxg1V4YzqTuVdHcIxuW4mC0nwXdh62WGasmg6TJYfS6iV2sxhzRiG6/
+         awFKwLXYoe9+KUT+i4h34fbGRoBxf1J0doICI7wAGQdHU1p9+p7lz1OX6HKXvB8fut
+         YldzVThHE5IGct7L2AGj4gC5M4lXFNtHwoDDs380=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 5.3 077/105] KVM: PPC: Book3S HV: XIVE: Fix potential page leak on error path
+Date:   Wed, 11 Dec 2019 16:06:06 +0100
+Message-Id: <20191211150256.520751612@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+From: Greg Kurz <groug@kaod.org>
 
-[ Upstream commit 71c5e55e7c077fa17c42fbda91a8d14322825c44 ]
+commit 30486e72093ea2e594f44876b7a445c219449bce upstream.
 
-Reduce context close time by skipping the VA block free list update in
-order to avoid hard reset with open contexts.
-Reset with open contexts can potentially lead to a kernel crash as the
-generic pool of the MMU hops is destroyed while it is not empty because
-some unmap operations are not done.
-The commit affect mainly when running on simulator.
+We need to check the host page size is big enough to accomodate the
+EQ. Let's do this before taking a reference on the EQ page to avoid
+a potential leak if the check fails.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org # v5.2
+Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/misc/habanalabs/memory.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ arch/powerpc/kvm/book3s_xive_native.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index 365fb0cb8dfff..22566b75ca50c 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -965,17 +965,19 @@ init_page_pack_err:
-  *
-  * @ctx                 : current context
-  * @vaddr               : device virtual address to unmap
-+ * @ctx_free            : true if in context free flow, false otherwise.
-  *
-  * This function does the following:
-  * - Unmap the physical pages related to the given virtual address
-  * - return the device virtual block to the virtual block list
-  */
--static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
-+static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr, bool ctx_free)
- {
- 	struct hl_device *hdev = ctx->hdev;
- 	struct hl_vm_phys_pg_pack *phys_pg_pack = NULL;
- 	struct hl_vm_hash_node *hnode = NULL;
- 	struct hl_userptr *userptr = NULL;
-+	struct hl_va_range *va_range;
- 	enum vm_type_t *vm_type;
- 	u64 next_vaddr, i;
- 	u32 page_size;
-@@ -1003,6 +1005,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -637,12 +637,6 @@ static int kvmppc_xive_native_set_queue_
  
- 	if (*vm_type == VM_TYPE_USERPTR) {
- 		is_userptr = true;
-+		va_range = &ctx->host_va_range;
- 		userptr = hnode->ptr;
- 		rc = init_phys_pg_pack_from_userptr(ctx, userptr,
- 				&phys_pg_pack);
-@@ -1014,6 +1017,7 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
- 		}
- 	} else if (*vm_type == VM_TYPE_PHYS_PACK) {
- 		is_userptr = false;
-+		va_range = &ctx->dram_va_range;
- 		phys_pg_pack = hnode->ptr;
- 	} else {
- 		dev_warn(hdev->dev,
-@@ -1052,12 +1056,18 @@ static int unmap_device_va(struct hl_ctx *ctx, u64 vaddr)
+ 	srcu_idx = srcu_read_lock(&kvm->srcu);
+ 	gfn = gpa_to_gfn(kvm_eq.qaddr);
+-	page = gfn_to_page(kvm, gfn);
+-	if (is_error_page(page)) {
+-		srcu_read_unlock(&kvm->srcu, srcu_idx);
+-		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
+-		return -EINVAL;
+-	}
  
- 	mutex_unlock(&ctx->mmu_lock);
- 
--	if (add_va_block(hdev,
--			is_userptr ? &ctx->host_va_range : &ctx->dram_va_range,
--			vaddr,
--			vaddr + phys_pg_pack->total_size - 1))
--		dev_warn(hdev->dev, "add va block failed for vaddr: 0x%llx\n",
--				vaddr);
-+	/*
-+	 * No point in maintaining the free VA block list if the context is
-+	 * closing as the list will be freed anyway
-+	 */
-+	if (!ctx_free) {
-+		rc = add_va_block(hdev, va_range, vaddr,
-+					vaddr + phys_pg_pack->total_size - 1);
-+		if (rc)
-+			dev_warn(hdev->dev,
-+					"add va block failed for vaddr: 0x%llx\n",
-+					vaddr);
-+	}
- 
- 	atomic_dec(&phys_pg_pack->mapping_cnt);
- 	kfree(hnode);
-@@ -1189,8 +1199,8 @@ int hl_mem_ioctl(struct hl_fpriv *hpriv, void *data)
- 		break;
- 
- 	case HL_MEM_OP_UNMAP:
--		rc = unmap_device_va(ctx,
--				args->in.unmap.device_virt_addr);
-+		rc = unmap_device_va(ctx, args->in.unmap.device_virt_addr,
-+					false);
- 		break;
- 
- 	default:
-@@ -1620,7 +1630,7 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
- 		dev_dbg(hdev->dev,
- 			"hl_mem_hash_node of vaddr 0x%llx of asid %d is still alive\n",
- 			hnode->vaddr, ctx->asid);
--		unmap_device_va(ctx, hnode->vaddr);
-+		unmap_device_va(ctx, hnode->vaddr, true);
+ 	page_size = kvm_host_page_size(kvm, gfn);
+ 	if (1ull << kvm_eq.qshift > page_size) {
+@@ -651,6 +645,13 @@ static int kvmppc_xive_native_set_queue_
+ 		return -EINVAL;
  	}
  
- 	spin_lock(&vm->idr_lock);
--- 
-2.20.1
++	page = gfn_to_page(kvm, gfn);
++	if (is_error_page(page)) {
++		srcu_read_unlock(&kvm->srcu, srcu_idx);
++		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
++		return -EINVAL;
++	}
++
+ 	qaddr = page_to_virt(page) + (kvm_eq.qaddr & ~PAGE_MASK);
+ 	srcu_read_unlock(&kvm->srcu, srcu_idx);
+ 
+
 
