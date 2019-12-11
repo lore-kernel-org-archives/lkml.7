@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4C2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13800C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823E62465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC44022B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077569;
-	bh=ksPY1Q/x6/FCK+zIqenNAMFA9z6T+2px13YnVzmYDMA=;
+	s=default; t=1576077572;
+	bh=DblNtOlOXMic2UX+YtMOAQCLq+20Yq5B7SO904kLcQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyfxyiZFSZWrSPZ3w+NnNLxYUgp9Wqxid++uHdyXk5035j4po/z2ba1/VIGiUY7nU
-	 K012BvUjtW7WUQPCQvdazOYUFZuMqps8JuToLrJ4GE/lPTF/o8v+A0I8ofOkviwIPa
-	 twG4QWPshTGj7lIEdpTmdeRaPn5iFLUsnIaaWtJ0=
+	b=tIUsP5eYSrLggRne0o21c3zWD0BBJstaujnHcTvtqW1tl6iMTx4hPLo02Uyi4L0rj
+	 BtRyKVFBbktHvGrKUoIKk4JvKAn/fNwO8og5FlDz9sZb4bvsU0dms4z+tsGm99rxLb
+	 4YZgbDMuE4PJpIuAoxoeM8Q6OVt7dl6mSwDRja+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbfLKPT1 (ORCPT
+        id S1732231AbfLKPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48140 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:19:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731716AbfLKPTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:25 -0500
+        id S1732069AbfLKPT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:19:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B342073D;
-        Wed, 11 Dec 2019 15:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC59E22527;
+        Wed, 11 Dec 2019 15:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077564;
-        bh=ksPY1Q/x6/FCK+zIqenNAMFA9z6T+2px13YnVzmYDMA=;
+        s=default; t=1576077569;
+        bh=DblNtOlOXMic2UX+YtMOAQCLq+20Yq5B7SO904kLcQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+48u+PBfl3k8wwx3lOKe3OTuGwFm4Jvjzt5kW8cM7dY2s8Te+y2ARgZkTCNjtXM6
-         TnwoPYDZIsn1w9u99Mkbh8GopNiOM7QT3kZRA8+5t0dRqrVGsdoPWvrrda2XWjANTV
-         fsbxw5njh/6NtGmqtR8lElB91d0CC2a8eG0tDRLY=
+        b=ohAz7YmqGd5+uRKfKw/hMla3SWbxX2R9CZWHLzHSlpxX9WMookvS6QKDf17jd+Lbf
+         w/pHR+T8EhLOPTD4ZYm6RTRJYnh0GF1WQ6tsAbCbPClKG0bfiC985GfStNq2vdIgCU
+         mtOgs0+ilHRzHRgNnpPYhdY3UeOVNdR+kWXoRcXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
+        Torbjorn Jansson <torbjorn.jansson@mbox200.swipnet.se>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/243] USB: serial: f81534: fix reading old/new IC config
-Date:   Wed, 11 Dec 2019 16:03:51 +0100
-Message-Id: <20191211150343.758928804@linuxfoundation.org>
+Subject: [PATCH 4.19 088/243] media: pulse8-cec: return 0 when invalidating the logical address
+Date:   Wed, 11 Dec 2019 16:04:10 +0100
+Message-Id: <20191211150345.052181393@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,79 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 
-[ Upstream commit ab60075f2a4eebca1abb04f712569963fb4d9d6c ]
+[ Upstream commit 2e84eb9affac43eeaf834992888b72426a8cd442 ]
 
-The F81532/534 had a internal configuration space to save & control
-IC state with address F81534_CUSTOM_ADDRESS_START (0x2f00). Layout
-as following:
-	+00h: to indicate the section is valid
-	+01h~04h: UART Mode & port availability
-	+05h~08h: Output pin control on IC power on
-	+09h~12h: Output pin control on working <-- New added
+Return 0 when invalidating the logical address. The cec core produces
+a warning for drivers that do this.
 
-Old driver will use +05~08h as default on working, but newer IC will
-configed with shutdown mode(7) in 05h~08h and working mode with RS232(1)
-in 09h~12h. It'll make mainstream driver not working.
-
-This patch will make mainstream driver compatible older and newer IC.
-If using a old IC, the +05h~08h will be 00h~06h, we'll direct apply it.
-If using a new IC, the +05h~08h will be 07h or larger, we'll read +09h~12h
-to apply newer configuration.
-
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Reported-by: Torbjorn Jansson <torbjorn.jansson@mbox200.swipnet.se>
+Signed-off-by: Hans Verkuil <hansverk@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/f81534.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ drivers/media/usb/pulse8-cec/pulse8-cec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/serial/f81534.c b/drivers/usb/serial/f81534.c
-index 4dfbff20bda4c..db6c93c04b3c8 100644
---- a/drivers/usb/serial/f81534.c
-+++ b/drivers/usb/serial/f81534.c
-@@ -45,14 +45,17 @@
- #define F81534_CONFIG1_REG		(0x09 + F81534_UART_BASE_ADDRESS)
+diff --git a/drivers/media/usb/pulse8-cec/pulse8-cec.c b/drivers/media/usb/pulse8-cec/pulse8-cec.c
+index 350635826aaed..6e3bdd71e273b 100644
+--- a/drivers/media/usb/pulse8-cec/pulse8-cec.c
++++ b/drivers/media/usb/pulse8-cec/pulse8-cec.c
+@@ -585,7 +585,7 @@ unlock:
+ 	else
+ 		pulse8->config_pending = true;
+ 	mutex_unlock(&pulse8->config_lock);
+-	return err;
++	return log_addr == CEC_LOG_ADDR_INVALID ? 0 : err;
+ }
  
- #define F81534_DEF_CONF_ADDRESS_START	0x3000
--#define F81534_DEF_CONF_SIZE		8
-+#define F81534_DEF_CONF_SIZE		12
- 
- #define F81534_CUSTOM_ADDRESS_START	0x2f00
- #define F81534_CUSTOM_DATA_SIZE		0x10
- #define F81534_CUSTOM_NO_CUSTOM_DATA	0xff
- #define F81534_CUSTOM_VALID_TOKEN	0xf0
- #define F81534_CONF_OFFSET		1
--#define F81534_CONF_GPIO_OFFSET		4
-+#define F81534_CONF_INIT_GPIO_OFFSET	4
-+#define F81534_CONF_WORK_GPIO_OFFSET	8
-+#define F81534_CONF_GPIO_SHUTDOWN	7
-+#define F81534_CONF_GPIO_RS232		1
- 
- #define F81534_MAX_DATA_BLOCK		64
- #define F81534_MAX_BUS_RETRY		20
-@@ -1359,8 +1362,19 @@ static int f81534_set_port_output_pin(struct usb_serial_port *port)
- 	serial_priv = usb_get_serial_data(serial);
- 	port_priv = usb_get_serial_port_data(port);
- 
--	idx = F81534_CONF_GPIO_OFFSET + port_priv->phy_num;
-+	idx = F81534_CONF_INIT_GPIO_OFFSET + port_priv->phy_num;
- 	value = serial_priv->conf_data[idx];
-+	if (value >= F81534_CONF_GPIO_SHUTDOWN) {
-+		/*
-+		 * Newer IC configure will make transceiver in shutdown mode on
-+		 * initial power on. We need enable it before using UARTs.
-+		 */
-+		idx = F81534_CONF_WORK_GPIO_OFFSET + port_priv->phy_num;
-+		value = serial_priv->conf_data[idx];
-+		if (value >= F81534_CONF_GPIO_SHUTDOWN)
-+			value = F81534_CONF_GPIO_RS232;
-+	}
-+
- 	pins = &f81534_port_out_pins[port_priv->phy_num];
- 
- 	for (i = 0; i < ARRAY_SIZE(pins->pin); ++i) {
+ static int pulse8_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
 -- 
 2.20.1
 
