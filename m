@@ -2,116 +2,131 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10056C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16AFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB64E214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A272D214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YiKbE+m9"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="r4k5bDE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfLKKNo (ORCPT
+        id S1728835AbfLKKPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:13:44 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49892 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbfLKKNn (ORCPT
+        Wed, 11 Dec 2019 05:15:05 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:23253 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfLKKPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:13:43 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBAClIp046366;
-        Wed, 11 Dec 2019 04:12:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576059167;
-        bh=8BGngI7zTQTQPw9XUjrusxMSY5BvpVVhXIk8XhaPkjg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YiKbE+m9ONDUBibMhEJdcGxQyJbj1sRfl1YT6JRXtuvy//mNi2fF5xWv/r4d9qpMp
-         +FNI9copTvKFG2tPdEynVITozZ9Xi7XcO4PuWSi+kkJAkOrx7dbrjR4UgwL3qFRcvF
-         9hEJ22o6XS44u9rvUxJs6MXpXolbkGIf1WK5AZBM=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBACl57080780
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 04:12:47 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 04:12:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 04:12:46 -0600
-Received: from [10.24.69.35] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAChGZ119576;
-        Wed, 11 Dec 2019 04:12:43 -0600
-Subject: Re: [PATCH] ARM: davinci: select CONFIG_RESET_CONTROLLER
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     <stable@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Lechner <david@lechnology.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191210195202.622734-1-arnd@arndb.de>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <ba94531d-1f16-b985-5638-c226bab28d5b@ti.com>
-Date:   Wed, 11 Dec 2019 15:42:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191210195202.622734-1-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 11 Dec 2019 05:15:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576059304; x=1607595304;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QAxEg8wAMpeQpGJaY0emkukCqNQsOl8+HnDT4r3pg28=;
+  b=r4k5bDE+O6EnMs0orPfb0e4hrclInphNptcIF9f+mHDUTxfAb8YfTOF5
+   7N/F99pZjPYNIRxcN0ul26xg/rZtuMqkeUCORz39zSfNOEBI5uuFvh7fX
+   rfWYOYp9SYBndo5Ege/ehN3zvx0ejmz5jqNIujhYlu/8muyySCfx9cT/x
+   g=;
+IronPort-SDR: TlUAzD03+db+XnCJ5SOx7jg8iAfAJAsCWzYeaF5UYwd4Ir/j6CHWtxsj3vujq21Oo9aEwN3lFc
+ ATTxI2ku0eEg==
+X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
+   d="scan'208";a="8587630"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-62350142.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 11 Dec 2019 10:15:03 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-62350142.us-east-1.amazon.com (Postfix) with ESMTPS id 27B06A29F7;
+        Wed, 11 Dec 2019 10:15:01 +0000 (UTC)
+Received: from EX13D32EUC004.ant.amazon.com (10.43.164.121) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 10:15:00 +0000
+Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
+ EX13D32EUC004.ant.amazon.com (10.43.164.121) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 10:15:00 +0000
+Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
+ EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
+ Wed, 11 Dec 2019 10:14:59 +0000
+From:   "Durrant, Paul" <pdurrant@amazon.com>
+To:     =?iso-8859-1?Q?Roger_Pau_Monn=E9?= <roger.pau@citrix.com>
+CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Subject: RE: [Xen-devel] [PATCH v2 2/4] xenbus: limit when state is forced to
+ closed
+Thread-Topic: [Xen-devel] [PATCH v2 2/4] xenbus: limit when state is forced to
+ closed
+Thread-Index: AQHVr029Jnf5zy5/UEOnUavFsd58GKe0trGAgAABW5A=
+Date:   Wed, 11 Dec 2019 10:14:59 +0000
+Message-ID: <86a7d140501047028c49736c43fe547c@EX13D32EUC003.ant.amazon.com>
+References: <20191210113347.3404-1-pdurrant@amazon.com>
+ <20191210113347.3404-3-pdurrant@amazon.com>
+ <20191211100627.GI980@Air-de-Roger>
+In-Reply-To: <20191211100627.GI980@Air-de-Roger>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.166.120]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+> -----Original Message-----
+> From: Roger Pau Monn=E9 <roger.pau@citrix.com>
+> Sent: 11 December 2019 10:06
+> To: Durrant, Paul <pdurrant@amazon.com>
+> Cc: xen-devel@lists.xenproject.org; linux-kernel@vger.kernel.org; Juergen
+> Gross <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>;
+> Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Subject: Re: [Xen-devel] [PATCH v2 2/4] xenbus: limit when state is force=
+d
+> to closed
+>=20
+> On Tue, Dec 10, 2019 at 11:33:45AM +0000, Paul Durrant wrote:
+> > If a driver probe() fails then leave the xenstore state alone. There is
+> no
+> > reason to modify it as the failure may be due to transient resource
+> > allocation issues and hence a subsequent probe() may succeed.
+> >
+> > If the driver supports re-binding then only force state to closed durin=
+g
+> > remove() only in the case when the toolstack may need to clean up. This
+> can
+> > be detected by checking whether the state in xenstore has been set to
+> > closing prior to device removal.
+> >
+> > NOTE: Re-bind support is indicated by new boolean in struct
+> xenbus_driver,
+> >       which defaults to false. Subsequent patches will add support to
+> >       some backend drivers.
+>=20
+> My intention was to specify whether you want to close the
+> backends on unbind in sysfs, so that an user can decide at runtime,
+> rather than having a hardcoded value in the driver.
+>=20
+> Anyway, I'm less sure whether such runtime tunable is useful at all,
+> so let's leave it out and can always be added afterwards. At the end
+> of day a user wrongly doing a rmmod blkback can always recover
+> gracefully by loading blkback again with your proposed approach to
+> leave connections open on module removal.
+>=20
+> Sorry for the extra work.
+>=20
 
-On 11/12/19 1:21 AM, Arnd Bergmann wrote:
-> Selecting RESET_CONTROLLER is actually required, otherwise we
-> can get a link failure in the clock driver:
-> 
-> drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks':
-> psc.c:(.text+0x9a0): undefined reference to `devm_reset_controller_register'
-> drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
-> psc-da850.c:(.text+0x24): undefined reference to `reset_controller_add_lookup'
-> 
-> Fixes: f962396ce292 ("ARM: davinci: support multiplatform build for ARM v5")
-> Cc: <stable@vger.kernel.org> # v5.4
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Does this mean you don't think the extra driver flag is necessary any more?=
+ NB: now that xenbus actually takes module references you can't accidentall=
+y rmmod any more :-)
 
-Assuming you are going to apply directly to ARM-SoC,
-
-Acked-by: Sekhar Nori <nsekhar@ti.com>
-
-Thanks,
-Sekhar
-
-> ---
->  arch/arm/mach-davinci/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-> index dd427bd2768c..02b180ad7245 100644
-> --- a/arch/arm/mach-davinci/Kconfig
-> +++ b/arch/arm/mach-davinci/Kconfig
-> @@ -9,6 +9,7 @@ menuconfig ARCH_DAVINCI
->  	select PM_GENERIC_DOMAINS if PM
->  	select PM_GENERIC_DOMAINS_OF if PM && OF
->  	select REGMAP_MMIO
-> +	select RESET_CONTROLLER
->  	select HAVE_IDE
->  	select PINCTRL_SINGLE
->  
-> -- 
-> 2.20.0
-> 
-
+  Paul
