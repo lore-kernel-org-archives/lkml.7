@@ -2,100 +2,181 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D3BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03358C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6F12077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078390;
-	bh=F6FNZD+WafbeRICAiehtuCPVTxROPy7vsvvpcW+wcEQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c0W8nwVoGYmmqinn9CUqiBdaF4J/mwzbiGWBfcRottRqyBgJ7cY+HluohqK+pvtCJ
-	 IGlyS92FN3Wy3mIkg9P1E2FRYBwHhQo0yIB79N4J2drB3vdylRRKA2H0WfRKZj0Uya
-	 MTX0hw/FXgaKmHUdJRz3xAm7usEGpRGyp3jp0h20=
+	by mail.kernel.org (Postfix) with ESMTP id D36A824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbfLKPdJ (ORCPT
+        id S2388047AbfLKPdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732817AbfLKP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:47 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D98F224658;
-        Wed, 11 Dec 2019 15:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078126;
-        bh=F6FNZD+WafbeRICAiehtuCPVTxROPy7vsvvpcW+wcEQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xxcWEa1u9szZ9/WvS9W5C9l/2oXJAayo3AdTkGv+5szX/NFdDe46A6ibmsR+GAGLB
-         b9EbCZLNO7Kie8ztVVdDE3VHrYzjMRyRgCUWWe7lEQ2ER/c6XaZsQvWl2IuMu1PBxC
-         cMmUkN5NgPEYZxy6MOWdCun5dqWfV2Uu0aZ7GRkY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anthony Steinhauser <asteinhauser@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 14/58] powerpc/security/book3s64: Report L1TF status in sysfs
-Date:   Wed, 11 Dec 2019 10:27:47 -0500
-Message-Id: <20191211152831.23507-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:33:15 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37891 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387423AbfLKPdI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:33:08 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b8so13585956oiy.5;
+        Wed, 11 Dec 2019 07:33:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f5P25Si4pv99iP0qrSos6mF+77maXmQ/ZDO3HXBpXqE=;
+        b=PhQlpAuA19DEAcAgEFVx4qZBSt7waJ118aKV4TsU0dW++tEKwIk1fg6GDhlIGZHVrv
+         frMNXHxEyR63eUjLgicOFX74lex63afl/PHWUXpLY1yowmN/7Ab3KuTV1+fFsLjPSdN/
+         ORZDTBoxPa7hI3UAL3bCA+v0cwRipHJnYc2/pBD+lGeaS5lgTFqMBLRwrSKTfZ51fJuy
+         IyojJ3qnNwvuqAUuqd/pQOUZDJv44GOTs3CEYtEnfCITMil/EnNlMr75UEXrFqMJ4+VP
+         AsMuYsMN9Tru4yeZLd1xYd5zhoZxKtqgIXgant3NS5TDQ+pOiyhlgAuRcRFp45a41NRU
+         ojPw==
+X-Gm-Message-State: APjAAAVVegURNP1D3OxfHZ0FjqT/cbxI1Jos7bO3/lzYIxg9Kf3o3RRn
+        9LSW/eg1TTRjrHrVwYvVOXXuP+e2JsgIs+YgZ8I=
+X-Google-Smtp-Source: APXvYqxil2EmaM/dqweJcHtTfhDUlmKjy65GEn4NAbcDsfU0ROdt5CGKYoFFIB85oAv4vVN8I6Umv8ahu6gIC52KruA=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr3341766oia.102.1576078387298;
+ Wed, 11 Dec 2019 07:33:07 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190502123220.3016-1-geert+renesas@glider.be> <20190502123220.3016-2-geert+renesas@glider.be>
+In-Reply-To: <20190502123220.3016-2-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 11 Dec 2019 16:32:36 +0100
+Message-ID: <CAMuHMdU2atxUFCMFJNsgVWak+Z1YcTm8BrKtk66cpXu16K+_tA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/A1 Interrupt Controller
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Steinhauser <asteinhauser@google.com>
+Hi Rob,
 
-[ Upstream commit 8e6b6da91ac9b9ec5a925b6cb13f287a54bd547d ]
+On Thu, May 2, 2019 at 2:32 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Some PowerPC CPUs are vulnerable to L1TF to the same extent as to
-Meltdown. It is also mitigated by flushing the L1D on privilege
-transition.
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
+> @@ -0,0 +1,43 @@
+> +DT bindings for the Renesas RZ/A1 Interrupt Controller
+> +
+> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
+> +RZ/A1 and RZ/A2 SoCs:
+> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
+> +    interrupts,
+> +  - NMI edge select.
+> +
+> +Required properties:
+> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
+> +               fallback.
+> +               Examples with soctypes are:
+> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
+> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
+> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
+> +                                in interrupts.txt in this directory)
+> +  - #address-cells: Must be zero
+> +  - interrupt-controller: Marks the device as an interrupt controller
+> +  - reg: Base address and length of the memory resource used by the interrupt
+> +         controller
+> +  - interrupt-map: Specifies the mapping from external interrupts to GIC
+> +                  interrupts
+> +  - interrupt-map-mask: Must be <7 0>
+> +
+> +Example:
+> +
+> +       irqc: interrupt-controller@fcfef800 {
+> +               compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
+> +               #interrupt-cells = <2>;
+> +               #address-cells = <0>;
+> +               interrupt-controller;
+> +               reg = <0xfcfef800 0x6>;
+> +               interrupt-map =
+> +                       <0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                       <7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +               interrupt-map-mask = <7 0>;
+> +       };
 
-Currently the sysfs gives a false negative on L1TF on CPUs that I
-verified to be vulnerable, a Power9 Talos II Boston 004e 1202, PowerNV
-T2P9D01.
+"make dtbs_check" does not like this example:
 
-Signed-off-by: Anthony Steinhauser <asteinhauser@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-[mpe: Just have cpu_show_l1tf() call cpu_show_meltdown() directly]
-Link: https://lore.kernel.org/r/20191029190759.84821-1-asteinhauser@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/kernel/security.c | 5 +++++
- 1 file changed, 5 insertions(+)
+arch/arm/boot/dts/r7s72100-rskrza1.dt.yaml:
+interrupt-controller@fcfef800: {'compatible':
+['renesas,r7s72100-irqc', 'renesas,rza1-irqc'], '#interrupt-cells':
+[[2]], '#address-cells': [[0]], 'interrupt-controller': True, 'reg':
+[[4244568064, 6]], 'interrupt-map': [[0, 0, 3, 0, 0, 4], [1, 0, 3, 0,
+1, 4], [2, 0, 3, 0, 2, 4], [3, 0, 3, 0, 3, 4], [4, 0, 3, 0, 4, 4], [5,
+0, 3, 0, 5, 4], [6, 0, 3, 0, 6, 4], [7, 0, 3, 0, 7, 4]],
+'interrupt-map-mask': [[7, 0]], 'phandle': [[27]], '$nodename':
+['interrupt-controller@fcfef800']} is valid under each of {'required':
+['interrupt-map']}, {'required': ['interrupt-controller']}
+{'oneOf': [{'required': ['interrupt-controller']},
+           {'required': ['interrupt-map']}]}
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index f5d6541bf8c27..fef3f09fc238b 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -160,6 +160,11 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
- 
- 	return sprintf(buf, "Vulnerable\n");
- }
-+
-+ssize_t cpu_show_l1tf(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	return cpu_show_meltdown(dev, attr, buf);
-+}
- #endif
- 
- ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
+as it considers interrupt-controller and interrupt-map mutually-exclusive.
+
+This comes from
+dt-schema/meta-schemas/interrupts.yaml:
+
+    dependencies:
+      interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
+      '#interrupt-cells':
+        oneOf:
+          - required:
+              - interrupt-controller
+          - required:
+              - interrupt-map
+
+and/or dt-schema/schemas/interrupt-controller.yaml:
+
+    dependencies:
+      interrupt-controller: ['#interrupt-cells']
+      interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
+      "#interrupt-cells":
+        oneOf:
+          - required:
+              - interrupt-controller
+          - required:
+              - interrupt-map
+
+Removing the "interrupt-controller" property fixes the warning, but
+impacts the logic in of_irq_parse_raw().
+
+Is there something wrong with the base schema?
+Or perhaps this will just be be fixed by converting renesas,rza1-irqc.txt
+to yaml?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
