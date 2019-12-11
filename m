@@ -2,151 +2,96 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA68C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210E7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207C02073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E773E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079802;
-	bh=Dk33Pbf+IyBpH1P+hM8sFC10Hye/gBO0CB04qtKmUWo=;
+	s=default; t=1576079804;
+	bh=MMmOfzQAQPd+qex/oNeLOW3iayXwmQcSaN9IFAFG1IU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qwn7+gepBpcRMG8rakhf0w5tAOhgsCwR+5lIx9ivc2F2HBxWYo2F5Ic9JdOhJ8brE
-	 noHBNxLuyIIH0a2Gfbr4+pOWHWlmH8YdoqIa+p1bnoTumMHPCL0cudu/2gV0odnV18
-	 QUH8LU2hpBdTMaXHILCcTxEU3JUCM45GM8bWvLfk=
+	b=Dbo+JhtS8qsnZ1TAk2+ezryuHmLFJMDdP3Zr5f87sHryjHYn45pkhQSS0uwCiDCWa
+	 VRnsDUbU1ghVnfCri+p16/8btQ9elAmQZJAwKfiLnMYmepbbHQGpgkmmt1zA64jTJb
+	 AhB6ZRCJ3Ss0/xTFD8lIGRztAHe6lOjiV52E/Rb0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbfLKPPX (ORCPT
+        id S1732037AbfLKP4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:56:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfLKPOU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:20 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730487AbfLKPPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDD3E22B48;
-        Wed, 11 Dec 2019 15:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD122465C;
+        Wed, 11 Dec 2019 15:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077259;
-        bh=Dk33Pbf+IyBpH1P+hM8sFC10Hye/gBO0CB04qtKmUWo=;
+        s=default; t=1576077323;
+        bh=MMmOfzQAQPd+qex/oNeLOW3iayXwmQcSaN9IFAFG1IU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBBwjeerU9O48Srw0o8FAWZ/mJWQzH14+Kd9GkyHLU5drVRJ8i4awb8Exq0Dl2qhO
-         YgFZhvsTCUYaNYY/kMYOpSMxXbMyFBPzNu63NYAXbuQd7+uMZ0Y3EDssI9EFs963t5
-         sZhsLc/hO60AdyDABaRqFY9+LpAMuLIB8iykagVo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 134/134] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-Date:   Wed, 11 Dec 2019 10:11:50 -0500
-Message-Id: <20191211151150.19073-134-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=aoSz32+oRPqhXmmvDwxjlwxRAZchD+WAoTUQGkCBYL5Fr1QI47KM+iM+IZ36t4dG5
+         l8rY+LxTAFsozugaRWThiZpnBrl+nCceVguhQ63Fd0O/9J+cbtn2SXH70R+ks6nhPI
+         vUZ7O4Yf4hhnE0X6eSW50/6UXTd9QAjDhEqX5qvk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Or Cohen <orcohen@paloaltonetworks.com>,
+        Nicolas Pitre <npitre@baylibre.com>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: [PATCH 5.3 102/105] vcs: prevent write access to vcsu devices
+Date:   Wed, 11 Dec 2019 16:06:31 +0100
+Message-Id: <20191211150304.160317023@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Nicolas Pitre <nico@fluxnic.net>
 
-[ Upstream commit 3c1c24d91ffd536de0a64688a9df7f49e58fadbc ]
+commit 0c9acb1af77a3cb8707e43f45b72c95266903cee upstream.
 
-A while ago Andy noticed
-(http://lkml.kernel.org/r/CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com)
-that UFFD_FEATURE_EVENT_FORK used by an unprivileged user may have
-security implications.
+Commit d21b0be246bf ("vt: introduce unicode mode for /dev/vcs") guarded
+against using devices containing attributes as this is not yet
+implemented. It however failed to guard against writes to any devices
+as this is also unimplemented.
 
-As the first step of the solution the following patch limits the availably
-of UFFD_FEATURE_EVENT_FORK only for those having CAP_SYS_PTRACE.
+Reported-by: Or Cohen <orcohen@paloaltonetworks.com>
+Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+Cc: <stable@vger.kernel.org> # v4.19+
+Cc: Jiri Slaby <jslaby@suse.com>
+Fixes: d21b0be246bf ("vt: introduce unicode mode for /dev/vcs")
+Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The usage of CAP_SYS_PTRACE ensures compatibility with CRIU.
-
-Yet, if there are other users of non-cooperative userfaultfd that run
-without CAP_SYS_PTRACE, they would be broken :(
-
-Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-descriptor table from the read() implementation of uffd, which may have
-security implications for unprivileged use of the userfaultfd.
-
-Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-CAP_SYS_PTRACE.
-
-Link: http://lkml.kernel.org/r/1572967777-8812-2-git-send-email-rppt@linux.ibm.com
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Nick Kralevich <nnk@google.com>
-Cc: Nosh Minwalla <nosh@google.com>
-Cc: Pavel Emelyanov <ovzxemul@gmail.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/userfaultfd.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/tty/vt/vc_screen.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index f9fd18670e22d..d99d166fd8926 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1834,13 +1834,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
- 		goto out;
- 	features = uffdio_api.features;
--	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
--		memset(&uffdio_api, 0, sizeof(uffdio_api));
--		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
--			goto out;
--		ret = -EINVAL;
--		goto out;
--	}
-+	ret = -EINVAL;
-+	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
-+		goto err_out;
-+	ret = -EPERM;
-+	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
-+		goto err_out;
- 	/* report all available features and ioctls to userland */
- 	uffdio_api.features = UFFD_API_FEATURES;
- 	uffdio_api.ioctls = UFFD_API_IOCTLS;
-@@ -1853,6 +1852,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	ret = 0;
- out:
- 	return ret;
-+err_out:
-+	memset(&uffdio_api, 0, sizeof(uffdio_api));
-+	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
-+		ret = -EFAULT;
-+	goto out;
- }
+--- a/drivers/tty/vt/vc_screen.c
++++ b/drivers/tty/vt/vc_screen.c
+@@ -456,6 +456,9 @@ vcs_write(struct file *file, const char
+ 	size_t ret;
+ 	char *con_buf;
  
- static long userfaultfd_ioctl(struct file *file, unsigned cmd,
--- 
-2.20.1
++	if (use_unicode(inode))
++		return -EOPNOTSUPP;
++
+ 	con_buf = (char *) __get_free_page(GFP_KERNEL);
+ 	if (!con_buf)
+ 		return -ENOMEM;
+
 
