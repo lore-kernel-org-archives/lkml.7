@@ -2,80 +2,95 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B3BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61985C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0795121556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:29:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576074546;
-	bh=N8PbFLkORFvjWt9sLI4T9YHFqVWqnofZgm531GGx/5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yBQtl44wnj88R4FdgkL6UjeAmFE+IVILlWHnW7yWxI7N+YgKoBYNdSW3Qz15YdUpR
-	 jD8GGJgtogytSoJMbJThkmxT0tkfSI7IvFP62tK2iAlq0Nij2uffz61wTz1qH3g5+j
-	 RR4GbktvfN53KlBvg5AD4/wE5jfLsOA6Byfl16Ac=
+	by mail.kernel.org (Postfix) with ESMTP id 3FB4021556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfLKO3E (ORCPT
+        id S1729867AbfLKOcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:29:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbfLKO3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:29:04 -0500
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D453C22B48;
-        Wed, 11 Dec 2019 14:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576074544;
-        bh=N8PbFLkORFvjWt9sLI4T9YHFqVWqnofZgm531GGx/5U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q/vHswAa4Py9NtwngVg0E+ERq9UCWTuf40G9x6bs+Qa5YGvhxP55rO15r5AqfsuJH
-         2PvUT0gv7XO2QvD7ipJK2H4nU7mf3DJp9SrEHCBzWSXZwqBuNCxqIQxvScy7g0tdX2
-         uRUotylziv8axWluuyh6XFmtVzD4iB5hUXX4EybQ=
-Received: by mail-qv1-f47.google.com with SMTP id t7so5794868qve.4;
-        Wed, 11 Dec 2019 06:29:03 -0800 (PST)
-X-Gm-Message-State: APjAAAXL/qxRrMyG04jhHBrDv0zePHRADHuijmGWIs3jpvOsEZHm9L8N
-        NcKV1XC2V2EdA04ZkmIwzTH224nJyTmAGy+U+w==
-X-Google-Smtp-Source: APXvYqyslXHQeTlnxyWBHE+KQno4F7yO5jXM3IgMVqdVyPdAJw+emUIKIy0nf6WbxEaL8liKiMq7CxtC86P/ZYmk4FI=
-X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr3244655qvo.20.1576074542962;
- Wed, 11 Dec 2019 06:29:02 -0800 (PST)
+        Wed, 11 Dec 2019 09:32:12 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39087 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729791AbfLKOcL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:32:11 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y1so5546804lfb.6;
+        Wed, 11 Dec 2019 06:32:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=I/qN2tanqUKZDvFX3/9aZXGYpQisaWWATCmdCTHOfCc=;
+        b=oJuoLuHBHavjgxV4Hx1cgqWgJm4QE1N/K9Orkb1D1+vAzEv8nU9pqTV7hrvK4ljF0a
+         x490B8FYuXVTcPvCpbEafoxe55Gd5Xz0oggGfU3nkbZOQXz4kHn7NraAgF4U+/ce1wU6
+         b18BpiJMTocO5SUv4Ru4PmxmIaYk8LWRAXhuYNOSc93GLhNtWycujnc7z7EtXK6n4diw
+         hx67j1teSEIcreOk4S2U4E/rUB9dHQGKznboYxSVTn0GhsDFqX/gGruy15z4bmWJqRHn
+         /LyNZLr1WClDgiEfWZpJmFX5BBdHQQlN/SsrEW5j+e1QZf9xE7qRRsXNmuUH+DjTMYqv
+         Erow==
+X-Gm-Message-State: APjAAAWm9D40sixEOjBEjgTxBkYgrUzCBcEtXKxZaZ5Z3NZFsxeK/Wy6
+        L+In97GlqKAsoGvfXWbb7oU=
+X-Google-Smtp-Source: APXvYqxcbhVK9kxySlyOcrIdHH+ijf3BhMhBtW/zkiYEMH/YQ3hcXL+bKnv5UxBcUsFeJEGMoOLb/A==
+X-Received: by 2002:a19:f716:: with SMTP id z22mr2494614lfe.14.1576074729594;
+        Wed, 11 Dec 2019 06:32:09 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id k23sm1318457ljj.85.2019.12.11.06.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 06:32:09 -0800 (PST)
+Date:   Wed, 11 Dec 2019 16:31:58 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Use new GPIO direction defines for intel pinctrl
+Message-ID: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <20191209233305.18619-1-michael@walle.cc>
-In-Reply-To: <20191209233305.18619-1-michael@walle.cc>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 11 Dec 2019 08:28:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJB5oeUmtzV0jT0f-Rh22Cf3OzMVpfZvRa6xOEhx3e2cA@mail.gmail.com>
-Message-ID: <CAL_JsqJB5oeUmtzV0jT0f-Rh22Cf3OzMVpfZvRa6xOEhx3e2cA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: document the fsl-sai driver
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 9, 2019 at 5:33 PM Michael Walle <michael@walle.cc> wrote:
->
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> changes since v1:
->  - dual license gpl-2.0-only and bsd-2-clause
->  - add "additionalProperties: false"
->  - wrap example in soc {} node with correct #address-cells and #size-cells
->
->  .../bindings/clock/fsl,sai-clock.yaml         | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
+We added definitions for GPIO line directions here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=9208b1e77d6e8e9776f34f46ef4079ecac9c3c25
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Let's use them on Intel pincontrollers too.
+
+---
+
+Matti Vaittinen (3):
+  pinctrl: pinctrl-intel: Use GPIO direction definitions
+  pinctrl: pinctrl-cherryview: Use GPIO direction definitions
+  pinctrl: pinctrl-baytrail: Use GPIO direction definitions
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   | 4 ++--
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 3 ++-
+ drivers/pinctrl/intel/pinctrl-intel.c      | 3 ++-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+
+base-commit: e42617b825f8 ("Linux 5.5-rc1")
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
