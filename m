@@ -2,94 +2,112 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A651C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CD0214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576075223;
-	bh=qxSM7j8YWMNBv+etg8vjUZxp/0iLoNv+DuxrIYqvrvw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fk2dOnB3QpHB1UuMrsrFd+GuuIg8I4lhCnKsIwHEemq7eajklBivpcXsIfJdDW7uH
-	 IRO/N+hbw81QAnBL2CtNkdKmhLt6hf6G6aL8hKjMIevLpesGhurUq/gTwhwnmEmkAh
-	 DhEXBTYXBX0ayePEL/vY6fGkFIm8oedMAEIeDqCg=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3B220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:41:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="fsjcTIV9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbfLKOkW (ORCPT
+        id S1730063AbfLKOlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:40:22 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40856 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729829AbfLKOkW (ORCPT
+        Wed, 11 Dec 2019 09:41:25 -0500
+Received: from sonic316-54.consmr.mail.gq1.yahoo.com ([98.137.69.30]:46258
+        "EHLO sonic316-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729946AbfLKOlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:40:22 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t14so7212347wmi.5;
-        Wed, 11 Dec 2019 06:40:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6LV1fwVOyA4k6YB/7k6OFVrgJLqJ3K+42hjVJ8NocJk=;
-        b=NTj1/R3FZHjfx6woRfFzMJyY4UniShJESW7YwqEMB1nw3Qi6sl20Bhto3EeipxXSNb
-         vVtSsjfE6AzgVEpMDKK18JDp7I2vciEgZel2zM+f5e35YRZqZPL1VbsQBMDyErJ1HvsM
-         FvPAzRmXB42abqyxFjtNh/gdGNF0R/fUx9TIXbP7Cbe3hguB2wZzGW5zgESQACnOQJ7p
-         D9Zp6nVjRWkAX0At/AmoEZCIq60KBNrPvk7ERJB+sPpL2Li5VB3GXMut++GkJUr/94tH
-         WSIJS7YR1Rpy3YIQOyRKXetlmGwkHNSfW8/nXeTxnDx8NavD7bg1gceylRandwOdTeGZ
-         IO6A==
-X-Gm-Message-State: APjAAAWg6bWsatMolsayehuPOraCVyA5xd6vhqyV7mNcRyMpuVItnQmA
-        QcpEx1hkLlJvIuWuX95qiag=
-X-Google-Smtp-Source: APXvYqwy5+56DBmRmzDDxsDEqO4nVMY1hhpPtbXGeA9ujbnffW2eerK2zHxCYwCg5ZzGAUu1VGoGHA==
-X-Received: by 2002:a7b:c761:: with SMTP id x1mr113004wmk.37.1576075220183;
-        Wed, 11 Dec 2019 06:40:20 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f207sm2029578wme.9.2019.12.11.06.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 06:40:19 -0800 (PST)
-Date:   Wed, 11 Dec 2019 15:40:18 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "zhangyi (F)" <yi.zhang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        cl@linux.com, gregkh@linuxfoundation.org, mgalbraith@suse.de,
-        torvalds@linux-foundation.org, umgwanakikbuti@gmail.com,
-        wagi@monom.org, stable-commits@vger.kernel.org,
-        "Wangkefeng (Maro)" <wangkefeng.wang@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>
-Subject: Re: Patch "mm, vmstat: make quiet_vmstat lighter" has been added to
- the 4.4-stable tree
-Message-ID: <20191211144018.GG14655@dhcp22.suse.cz>
-References: <156442332854185@kroah.com>
- <e4bd396a-1a10-1387-aa3f-4d61d31ab7b6@huawei.com>
+        Wed, 11 Dec 2019 09:41:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1576075283; bh=8NXnEgzl9Hn8ih6NVxBSO6w7sunPtWemBcwEu/MIQmY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=fsjcTIV9H5UBmlvgJKstt4aT/VgsSf7yCPzptrD0iuurqBijQPf9SpJnVFK30s2Ycx6WiiJ5vWb5xaNBaudYrK5FVORUy9y1N6Lq4pbRgfipFlGZLv6/tinLBRT9cWbuOkykanIr1jciUbo0mLN5d3UnwaJH6qCatvgK3tFU7AEnUxbBXXFBKdCLSGYVK6KAEJbeQPjSDOKv9Bb3ieEF/UcWl9axO8JI8thuE5nKudgH5053ddxAM2nDZvmSdNqK0B2hE24QgdCm8yASCFVItBXYHNvoPk8ssysD75q/fd6xZm10G0UVccXuCqvnk1TCLDHhSg3msuFeLNd5TBz2tw==
+X-YMail-OSG: 7tLwCK8VM1kVE8ixC98XdwHbsJrsuowK0Ze0yHbgVvZa6ezhc58f6EXGiUYOjUo
+ AvgARQgxWpqLV1OAf3D2fl_5DMhgK5Ev.ttEquU_oV7eCokz3DaqY_Qu0WCyuDhhoe.VlXjSIVbm
+ 5Y.5F2zhwxrWQo4nSq.f8HjwY_c7hRA_OOQ6ywzIT2B34zsJV6Ny9_d_KT_8ehqqkOkTnpdHxzeG
+ GhGH8.QNcUaeNNP5J9yLC.nY1Ym1QvatVSdIhcqSA0cH7GLgnEFJ5I1lpKFoUlwJZxW5rpJxnOf0
+ Upd9ZV1x5J4_Z7qOWQmE2QxMeQ3btI30By5jXTN61_bO5aQylvOx_Zs04VOX8Y89ZJ2It0hCO0S9
+ n6iJlfoV7.owVYOlxTY1f69F9W91EVTG0r8jqAFjS7InWJzhffiRfuEjAoS5X1l2vVTXMY7gA3w.
+ 96SADI16lGU1I44jwY8D1XSZl6Jcy5i4gbpQg5kqhIoVfYVYo5pKgvfaLAE.kap5lEj.QvPy8buq
+ YrN5hJzFd.IHzCnLMyldBirgqcHDFFgxut1v_Yub8z1eTN1U6jqqNOxSSSiqq2_3WD3.373SyRMA
+ Wt5.ik0DP_r90uwwT5kxRyaJfDYRW1Oc8PDtrHWb61hTLUQHtd4RfNSJck9nIpiiMOJJJxSUTNOg
+ GPoBIBZ1TlrZoLsYo.Ga_cuvHij58M9LD7yHcl48t_vfQUV6lHKXsjvlUJdl_WVsDDwJzSGILYPm
+ sYxKRG4sJBSmxioh1u6VlKMRU4Qa5Y6nVx.9i51cjRtrDeD3a673qQVRb2i7OVtHbFgmsU84B_Vd
+ 7yqO3rtnmsGO45TPuMMTOrdQNBVQB.H62evznpNyGJgpr5btZicu4VYFtWFySdrSPrQ2sZmBFPPX
+ txqmSEGEm8GyzRCsSMWyvset0sc50Kc3SOTFcsAwtlinDM55dJjAd3Sht3mAF49ttU27GypPpFUP
+ 6SzBMznAm6FS6EUxwy4PlXc1HPvF6HkXiffyCsthLUMy0WHG48OYxXeAgl2H1G.d5tqyYbwsNn7W
+ FjS9MKf12dXY8FzTo32qAK_0Ng8M9GXVUdvsdb0I7pECxp5aCvEsVbt7FItG4HMBS8ztJPYZ54bE
+ p2uwf.B1hmfnt87hZfIkVw3r4m8OXYszcbUqsHX3WhM.BrghCdqycqzRu8O8jJu2fsuSdFx_hWV6
+ MMhCq72YiZxrk5xuN7XJeo.18JqmD0l66geIQWB38WxgtbOTN1xfgchBgzW.Bh_QC5Bqlgs.OBQr
+ Ia_BVgCLitKrmkzLIiz9p4trv8BhmG2JQ7291iwAdXwRoFB5MgE4ohNYRsGpcSDDE8hgmWkQJqvB
+ 6_qUOovThV5EDGgwha5sBn8uY9VkIK.irycx0ed_u0gv7ilE_lZPAm9v8iexz5HMXgN4B3vwhHSW
+ E
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Wed, 11 Dec 2019 14:41:23 +0000
+Received: by smtp417.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 36f5534268c63ff9379ab7e119e12b1f;
+          Wed, 11 Dec 2019 14:41:18 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 22:41:00 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Gao Xiang <gaoxiang25@huawei.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
+Message-ID: <20191211144055.GA6951@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191211024858.GB732@sol.localdomain>
+ <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
+ <20191211044723.GC4203@ZenIV.linux.org.uk>
+ <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
+ <20191211071711.GA231266@architecture4>
+ <20191211134014.GM32169@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e4bd396a-1a10-1387-aa3f-4d61d31ab7b6@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191211134014.GM32169@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-12-19 22:32:49, zhangyi (F) wrote:
-> Hi, all
-> 
-> We find a performance degradation under lmbench af_unix[1] test case after
-> mergeing this patch on my x86 qemu 4.4 machine. The test result is basically
-> stable for each teses.
-> 
-> Host machine: CPU: Intel(R) Xeon(R) CPU E5-2690 v3
->               CPU(s): 48
->               MEM: 193047 MB
-> 
-> Guest machine:  CPU: QEMU Virtual CPU version 2.5+
->                 CPU(s): 8
->                 MEM: 26065 MB
+Hi Matthew,
 
-Does the same happen on the bare metal? Also what are the numbers for
-the current vanilla kernel?
--- 
-Michal Hocko
-SUSE Labs
+On Wed, Dec 11, 2019 at 05:40:14AM -0800, Matthew Wilcox wrote:
+> On Wed, Dec 11, 2019 at 03:17:11PM +0800, Gao Xiang wrote:
+> > > static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> > > {
+> > >         if (len >= 1 && unlikely(name[0] == '.')) {
+> > 
+> > 
+> > And I suggest drop "unlikely" here since files start with prefix
+> > '.' (plus specical ".", "..") are not as uncommon as you expected...
+> 
+> They absolutely are uncommon.  Even if you just consider
+> /home/willy/kernel/linux/.git/config, only one of those six path elements
+> starts with a '.'.
+
+Okay, I think it depends on userdata and access patterns.
+I admit I have no statistics on all those callers.
+
+Just considering introducing an inline helper for cleanup, except for
+lookup_one_len_common() (since it's on an error path), others were all
+without unlikely() before.
+
+Ignore my words if it seems unreasonable or unlikely() is an improvement
+in this patch and sorry for annoying.
+
+Thanks,
+Gao Xiang
+
