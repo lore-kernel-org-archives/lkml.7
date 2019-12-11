@@ -2,112 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5476FC2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFA32073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576023176;
-	bh=GDFBVQeBWPRID8eSbaJ9JQvh/tai8QA9gp90x7hmdVk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uJ7igyieekHshLyCPS47IzA99tCUcCsaSkzgU2IQdCvqqvpOzr/LmWVmLce7j1qiT
-	 eeUiHprj2yOq0bQjSRMVEbixXepzZl8uCV6BcGNfkkfmbNiYNghNkT276RJLAyxnY9
-	 k25YZzbxy4W8l6vn8v9yImr1xbs0XvwI2FD5OJd4=
+	by mail.kernel.org (Postfix) with ESMTP id CC36C2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PhAZ/8Ai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbfLKAMz (ORCPT
+        id S1727047AbfLKAXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:12:55 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34725 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfLKAMy (ORCPT
+        Tue, 10 Dec 2019 19:23:43 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:50280 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfLKAXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:12:54 -0500
-Received: by mail-il1-f194.google.com with SMTP id w13so17845764ilo.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 16:12:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t2fl9QR6o36vp9A0Aj5OVE7v+t2aBYbEj7pCkzXK8nE=;
-        b=AsZ9BorgoArKzuchiMnPHv8a9XEmFlTe8j9/S+IoZiutTx2yNeoxbCDMKhg/nbYMRN
-         N+82KB06UY+qFj9v7MSue/MsPyx2Vk54g5wCvjcGKZENTZobR9n60NFZguf5lHGVXRVJ
-         X96ruQW0yk5Oy8cigduvH8H4lq6Nw1LqL7AiM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t2fl9QR6o36vp9A0Aj5OVE7v+t2aBYbEj7pCkzXK8nE=;
-        b=MeZjn0JD9JdBU2IFYckAnfxL28KIqloiLvroOjcIkz6K74YTgtdmPBTjgPPfL8cDXL
-         yN56Qp35mTQL+O/BXllk+L+wY/oZ3XuAXnfC57UZYYd6L7jZQm6WXij8JyPLYQJSAAF+
-         AmTuNoWiaYSiX5EPjcAgv/QIK0KNdOCeuJ6zxeCqH8rTKnzat7FC89vgZUsNLK/s7K/P
-         dN9gM0U93EX0gX/1ekyilURVk39QyYOICuhsYtmqVSuuXOCRrtkQadyYSskMcw82sJMA
-         PU08DqbfcBnwdnuqLgCfILcx9SENuW4a/sJtp6RCIC+NzVU8VGDyU38alK5CvE0j5oos
-         WHHQ==
-X-Gm-Message-State: APjAAAVPCVteDZgMmRTCBrAweGUUoZk/PoNNS6uv5oxqIWyXXcoCzHrO
-        YHNoUKlyTARmvZJ9w+wlSAgGZw==
-X-Google-Smtp-Source: APXvYqyOdfbfQMpzudpUr1aIIDIe4llBDz7VcMb2Q3S3pU9n1xO3zK4abinDSmnB8UvSEfLdWNt+PA==
-X-Received: by 2002:a92:4883:: with SMTP id j3mr394216ilg.272.1576023173702;
-        Tue, 10 Dec 2019 16:12:53 -0800 (PST)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id v5sm102092iob.61.2019.12.10.16.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 16:12:52 -0800 (PST)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     shuah@kernel.org, r@hev.cc, rpenyaev@suse.de
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, akpm@linux-foundation.org,
-        gregkh@linuxfoundation.org, christian@brauner.io,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: filesystems/epoll: fix build error
-Date:   Tue, 10 Dec 2019 17:12:33 -0700
-Message-Id: <20191211001233.15084-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 10 Dec 2019 19:23:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YCgFJ13mDXKwwcgsn3+J3Jw0vgcIsACw0ueQU8sgslM=; b=PhAZ/8AiYRlAhf9cDo0HVJYY6
+        c2Gf5no8VVGvet5xN/5AD2m3xGfD/e7X6tpr/Rx3Y5EspuTT62JtZDv7CfnYVlws6gMHGTDbrpwK6
+        jAaQNeItTG93UCrWYkjw+tuxFvst7GnjeZKIhtIpRZDInzw9VbvC7dCu8EIVXYLr8lIwlDaDVf52o
+        MG9c8t/tS9OiXjPsGsa4QUYE1myY4UrgqG/FTTH8jkqvUpbtKpyqGSHof/TNV32saRhwZn8/Xg/ev
+        7zscx/lwQglWc6l9Bjf5Rpt5sm25MIh6/MzaBXVBIVpCtAIwiF9R/CZ0zi1YJDeX7aFoLrchYQGDT
+        BaSa2Pi0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iepmz-0002Xl-KO; Wed, 11 Dec 2019 00:23:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4883E300565;
+        Wed, 11 Dec 2019 01:22:15 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E9E652006F78F; Wed, 11 Dec 2019 01:23:34 +0100 (CET)
+Date:   Wed, 11 Dec 2019 01:23:34 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH 2/2] perf/x86/intel/bts: Fix the use of page_private()
+Message-ID: <20191211002334.GS2844@hirez.programming.kicks-ass.net>
+References: <20191205142853.28894-1-alexander.shishkin@linux.intel.com>
+ <20191205142853.28894-3-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191205142853.28894-3-alexander.shishkin@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-epoll build fails to find pthread lib. Fix Makefile to use LDLIBS
-instead of LDFLAGS. LDLIBS is the right flag to use here with -l
-option when invoking ld.
+On Thu, Dec 05, 2019 at 05:28:53PM +0300, Alexander Shishkin wrote:
+> Commit
+> 
+>   8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+> 
+> uses page_private(page) without checking the PagePrivate(page) first,
+> which seems like a potential bug, considering that page->private aliases
+> with other stuff in struct page.
+> 
+> Fix this by checking PagePrivate() first.
+> 
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Fixes: 8062382c8dbe2 ("perf/x86/intel/bts: Add BTS PMU driver")
+> ---
+>  arch/x86/events/intel/bts.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+> index d53b4fb86d87..9e4da1c5a129 100644
+> --- a/arch/x86/events/intel/bts.c
+> +++ b/arch/x86/events/intel/bts.c
+> @@ -63,9 +63,17 @@ struct bts_buffer {
+>  
+>  static struct pmu bts_pmu;
+>  
+> +static int buf_nr_pages(struct page *page)
+> +{
+> +	if (!PagePrivate(page))
+> +		return 1;
+> +
+> +	return 1 << page_private(page);
+> +}
+> +
+>  static size_t buf_size(struct page *page)
+>  {
+> -	return 1 << (PAGE_SHIFT + page_private(page));
+> +	return 1 << (PAGE_SHIFT + buf_nr_pages(page));
 
-gcc -I../../../../../usr/include/  -lpthread  epoll_wakeup_test.c  -o .../tools/testing/selftests/filesystems/epoll/epoll_wakeup_test
-/usr/bin/ld: /tmp/ccaZvJUl.o: in function `kill_timeout':
-epoll_wakeup_test.c:(.text+0x4dd): undefined reference to `pthread_kill'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x4f2): undefined reference to `pthread_kill'
-/usr/bin/ld: /tmp/ccaZvJUl.o: in function `epoll9':
-epoll_wakeup_test.c:(.text+0x6382): undefined reference to `pthread_create'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x64d2): undefined reference to `pthread_create'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x6626): undefined reference to `pthread_join'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x684c): undefined reference to `pthread_tryjoin_np'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x6864): undefined reference to `pthread_kill'
-/usr/bin/ld: epoll_wakeup_test.c:(.text+0x6878): undefined reference to `pthread_join'
+Hurmph, shouldn't that be:
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- tools/testing/selftests/filesystems/epoll/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	return buf_nr_pages(page) * PAGE_SIZE;
 
-diff --git a/tools/testing/selftests/filesystems/epoll/Makefile b/tools/testing/selftests/filesystems/epoll/Makefile
-index e62f3d4f68da..78ae4aaf7141 100644
---- a/tools/testing/selftests/filesystems/epoll/Makefile
-+++ b/tools/testing/selftests/filesystems/epoll/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- CFLAGS += -I../../../../../usr/include/
--LDFLAGS += -lpthread
-+LDLIBS += -lpthread
- TEST_GEN_PROGS := epoll_wakeup_test
- 
- include ../../lib.mk
--- 
-2.20.1
+?
 
