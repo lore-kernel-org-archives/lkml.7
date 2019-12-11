@@ -2,110 +2,255 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EFFC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2328F2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Z+uVRsdH"
+	by mail.kernel.org (Postfix) with ESMTP id 0BAF32054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730946AbfLKRKR (ORCPT
+        id S1730872AbfLKRK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:10:17 -0500
-Received: from sonic301-22.consmr.mail.gq1.yahoo.com ([98.137.64.148]:36024
-        "EHLO sonic301-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730129AbfLKRKQ (ORCPT
+        Wed, 11 Dec 2019 12:10:58 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:60313 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfLKRK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:10:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1576084215; bh=zh+Qq4KKIZBWaPq05JcdqJTq0ZIdb2xT9gPdRoh6Iu4=; h=Date:From:To:Cc:Subject:References:From:Subject; b=Z+uVRsdHOXjOjjD9kXgyXgiLKGsj3ENObF3fxk7XwSy5K80VnFlmWQ4RYKetMSFs0vYkLW+LzHhOghKRoY2OoA6sa5kwxCrJwy7dCBCSBr8zyBNP+T4C22OTdEnxxICWIRkkHw9/kSByzfdu62QDKpe3pQFPmGV6QO/zh/Pt7l0mtjbAh2nki4PCXinp574TEXo0dHWm/NqyAYpL7qg+/fkQIK90+Ou7AAQ6/kTxpppRi14EScK12dij6bajPtWdkhIYrBHIA54URZ0k9YSN6arXRJg1dlfTCVxfW6Lh/zc4GDdWfv+qcDJFhx+F3V0V/8CG1YMlVusWrWoogYtQQg==
-X-YMail-OSG: WG8ijLUVM1kklRgyAHjAJW0GX8ixNnkB.BQrGKakTRErvtKWMMgVhn1zd2ZVceK
- NdtyTOS.pE0VJ3X0j0YcdgenF4f3E_Yz8F7H4SiHQlMn5m46Lj8i.j3Q4_g9ONYm4OauQq9L0m_K
- ERLQxrsbAqEL.T1z9NKHmvAjaVpHVbZZ2rPNOzPMzunok6QfhV7miYZhGWkUgf3Gx2az1pYr_8Bz
- w_7K8OLUTex5GtLM38kK9sHSgvU8Gf_CGNX94RcTscCpUhhrCPqdjovKewaDtTojK17UE20OKDL8
- ygnY5ed_cA6oT27gzyKcf55Lwr4_551HdcvJc16AW9.yf3p60aboUwMZNGKDkgxG5RFw5CFlouXo
- 3ya7tVxa3LaxAEgZiWb0Lb9MAXPNqpC0DB53NMyfW9Os70jG9ibKkMz_DYvxyKmph1GynRg5KLqE
- ovsNgOiXXYKkoplpnKDnzOuAP9t9DQXggapzFvR2rSuSZdXTYlv3t00Ob_rvk6KNkAVY1W0rBJb7
- Dc9encw4cYxTopFCQ5j_aAnv4kBE4bXtI6PQhptegeACwIbLRAqv9CuPlrhEwWbNYXIB8g4zp6I_
- jYKBNbK4oBUjUk7YcHi2gPqUd.U2uFmhBNM8sbzlGPrkeFKy6fFEJt41Mkfi_6lGbn_aofA8xIJZ
- ceY9hSCoUtBN_4EWIeT75aHow2.J4N98eW2NgkW_4.k2fdgDVMWcseihOeyxCx2RFkbxsd9KdLsg
- j_glcQtModUuCYoNeNR6JvZkLpvyLURWiL050PEwLk.vRMBr0_l_AGCz0OmYpPbR9jCNAyfdEhhl
- KtPQ0J98Q2PqhDx1.a1U5tY_aSnis19.hlcB9oV1Kkq_yHaVbnERSdp3dFVlISxTo_Ki6bzDNdTm
- 9SbyWYt3quGH6JFZaYcV4dmqOHH_uvEjJqcQL2gPmpsDBeXfEVkUlswcR4LVD9Zt19LSJK5wTsO6
- PBjIXfgDnE4HETtrwZijzELnoRTbj6hl18XmBEmV7wHbe4i4WUYyKZ3MFfRia6CX96e.uCYd3gEu
- 8IQcrQeSNQvsrFvwdrsgDdBOEd4LDndHg5JmRwFncasxCmzt_m.4ETAJYcjFPQMrOntdflK5lIFb
- AzKm.lz.TSGFbxX9io7cq_.IpF7aEZ.JOxffZdntPQ3O.QIUfzDMkzzudZuvJLgrBCodCEVSzOIX
- ffrXtZ5wkcWoANy8mBzvR1VQ91jSswxIPPTvH671QZrrpaC8ei5arEUFB3LMXSw68UPLwE4_zUSE
- hnHs6gNXvtyynnkdkTyWZ2BFitDQUBhyYbuM4A81pAGH80hI_NIRfbtR7tq8aH4iP6MmsBRncc3m
- _33mUcV_GPkTNmc_Xme5PPcskO6boB2jFJmNE1AQrqWIT6ZsO1FgPHA6oJzzeZNxFgYx83jARxwL
- loPCHanaSMSkb
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Wed, 11 Dec 2019 17:10:15 +0000
-Received: by smtp413.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 78b50f606b195eafc3a6178574d6a883;
-          Wed, 11 Dec 2019 17:10:09 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 01:09:58 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Michael <fedora.dm0@gmail.com>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Wang Li <wangli74@huawei.com>
-Subject: [GIT PULL] erofs fixes for 5.5-rc2
-Message-ID: <20191211170950.GA16027@hsiangkao-HP-ZHAN-66-Pro-G1>
+        Wed, 11 Dec 2019 12:10:57 -0500
+Received: from uno.lan (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id DE8F710000F;
+        Wed, 11 Dec 2019 17:10:53 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: media: renesas,ceu: Convert to yaml
+Date:   Wed, 11 Dec 2019 18:13:00 +0100
+Message-Id: <20191211171300.87023-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-References: <20191211170950.GA16027.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
-X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Convert the Renesas CEU bindings description to yaml schema and remove
+the existing textual bindings document.
 
-Could you consider these fixes for this 5.5 round?
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Mainly address a regression reported by David recently observed
-together with overlayfs due to the improper return value of listxattr()
-without xattr. Update outdated expressions in document as well.
+---
+v1 -> v2:
+- Dual license as suggested by Rob
+- Fix compatible string for r7s72100-ceu
+- Add 'default' to bus-width endpoint property
 
-Thanks,
-Gao Xiang
+Thanks
+   j
+---
+ .../devicetree/bindings/media/renesas,ceu.txt | 86 -------------------
+ .../bindings/media/renesas,ceu.yaml           | 78 +++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 79 insertions(+), 87 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,ceu.yaml
 
-The following changes since commit 219d54332a09e8d8741c1e1982f5eae56099de85:
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+deleted file mode 100644
+index 3e2a2652eb19..000000000000
+--- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
++++ /dev/null
+@@ -1,86 +0,0 @@
+-Renesas Capture Engine Unit (CEU)
+-----------------------------------------------
+-
+-The Capture Engine Unit is the image capture interface found in the Renesas
+-SH Mobile, R-Mobile and RZ SoCs.
+-
+-The interface supports a single parallel input with data bus width of 8 or 16
+-bits.
+-
+-Required properties:
+-- compatible: Shall be one of the following values:
+-	"renesas,r7s72100-ceu" for CEU units found in RZ/A1H and RZ/A1M SoCs
+-	"renesas,r8a7740-ceu" for CEU units found in R-Mobile A1 R8A7740 SoCs
+-- reg: Registers address base and size.
+-- interrupts: The interrupt specifier.
+-
+-The CEU supports a single parallel input and should contain a single 'port'
+-subnode with a single 'endpoint'. Connection to input devices are modeled
+-according to the video interfaces OF bindings specified in:
+-[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Optional endpoint properties applicable to parallel input bus described in
+-the above mentioned "video-interfaces.txt" file are supported.
+-
+-- hsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- vsync-active: See [1] for description. If property is not present,
+-  default is active high.
+-- bus-width: See [1] for description. Accepted values are '8' and '16'.
+-  If property is not present, default is '8'.
+-- field-even-active: See [1] for description. If property is not present,
+-  an even field is identified by a logic 0 (active-low signal).
+-
+-Example:
+-
+-The example describes the connection between the Capture Engine Unit and an
+-OV7670 image sensor connected to i2c1 interface.
+-
+-ceu: ceu@e8210000 {
+-	reg = <0xe8210000 0x209c>;
+-	compatible = "renesas,r7s72100-ceu";
+-	interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
+-
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&vio_pins>;
+-
+-	status = "okay";
+-
+-	port {
+-		ceu_in: endpoint {
+-			remote-endpoint = <&ov7670_out>;
+-
+-			hsync-active = <1>;
+-			vsync-active = <0>;
+-		};
+-	};
+-};
+-
+-i2c1: i2c@fcfee400 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c1_pins>;
+-
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-
+-	ov7670: camera@21 {
+-		compatible = "ovti,ov7670";
+-		reg = <0x21>;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&vio_pins>;
+-
+-		reset-gpios = <&port3 11 GPIO_ACTIVE_LOW>;
+-		powerdown-gpios = <&port3 12 GPIO_ACTIVE_HIGH>;
+-
+-		port {
+-			ov7670_out: endpoint {
+-				remote-endpoint = <&ceu_in>;
+-
+-				hsync-active = <1>;
+-				vsync-active = <0>;
+-			};
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.yaml b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+new file mode 100644
+index 000000000000..8e9251a0f9ef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/renesas,ceu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas Capture Engine Unit (CEU) Bindings
++
++maintainers:
++  - Jacopo Mondi <jacopo+renesas@jmondi.org>
++  - linux-renesas-soc@vger.kernel.org
++
++description: |+
++  The Capture Engine Unit is the image capture interface found in the Renesas SH
++  Mobile, R-Mobile and RZ SoCs. The interface supports a single parallel input
++  with data bus width of 8 or 16 bits.
++
++properties:
++  compatible:
++    enum:
++      - renesas,r7s72100-ceu
++      - renesas,r8a7740-ceu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  port:
++    type: object
++    additionalProperties: false
++
++    properties:
++       endpoint:
++         type: object
++         additionalProperties: false
++
++         # Properties described in
++         # Documentation/devicetree/bindings/media/video-interfaces.txt
++         properties:
++           remote-endpoint: true
++           hsync-active: true
++           vsync-active: true
++           field-even-active: false
++           bus-width:
++             enum: [8, 16]
++             default: 8
++
++         required:
++           - remote-endpoint
++
++    required:
++      - endpoint
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - port
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ceu: ceu@e8210000 {
++        reg = <0xe8210000 0x209c>;
++        compatible = "renesas,r7s72100-ceu";
++        interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
++
++        port {
++            ceu_in: endpoint {
++                remote-endpoint = <&ov7670_out>;
++                hsync-active = <1>;
++                vsync-active = <0>;
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eefa1e066655..df75855839f1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10276,7 +10276,7 @@ L:	linux-media@vger.kernel.org
+ L:	linux-renesas-soc@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Supported
+-F:	Documentation/devicetree/bindings/media/renesas,ceu.txt
++F:	Documentation/devicetree/bindings/media/renesas,ceu.yaml
+ F:	drivers/media/platform/renesas-ceu.c
+ F:	include/media/drv-intf/renesas-ceu.h
 
-  Linux 5.4 (2019-11-24 16:32:01 -0800)
+--
+2.24.0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.5-rc2-fixes
-
-for you to fetch changes up to ffafde478309af01b2a495ecaf203125abfb35bd:
-
-  erofs: update documentation (2019-12-08 21:37:01 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
-- Fix improper return value of listxattr() with no xattr;
-
-- Keep up documentation with latest code.
-
-----------------------------------------------------------------
-Gao Xiang (2):
-      erofs: zero out when listxattr is called with no xattr
-      erofs: update documentation
-
- Documentation/filesystems/erofs.txt | 27 ++++++++++++++-------------
- fs/erofs/xattr.c                    |  2 ++
- 2 files changed, 16 insertions(+), 13 deletions(-)
