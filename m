@@ -4,48 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F1DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE54C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEB724654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0280208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078141;
-	bh=bsg/VW+c7VbzS5saOXbczBiyZhGFxVOLbYz4eTd0b2k=;
+	s=default; t=1576078144;
+	bh=6VMoStXN6SIwIDCEKs9FJWnG1jDwzKncsKoo8gUWlEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pH0LIp5Juq8tQb3yB+WoP5iqLGUICf8GcVGh+JEly1+nFSLN14wKY2st0yVlObTuo
-	 z6DC8MquHcrXZ1c1M6S/Oyiiw1dcxn5zpjLp3QkcH9edM3f/6ZXSat5Oog6uTT1Mlb
-	 Bb2z47/k2u1yFJHwUB0L4R20tGqHRxLftjW3m5so=
+	b=Wg3MFJUILdjzDeNfhSlCnXu833d0ph1lxc4MoWrmtpnAHmJvWfOHjzErulGk+jIeS
+	 mdwjoJMsK9VYtU2BfOwapd6LqPoi0BtTdjciZ/i7usEdz+YnTcpC/pFT9dMyYQtcVE
+	 SQ06LA+MUVm6fla5a0icHFAZQ2NqkWupZvEHR/C0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387777AbfLKP3A (ORCPT
+        id S1733170AbfLKP3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35388 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387755AbfLKP24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:56 -0500
+        id S2387773AbfLKP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:00 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C3E2465B;
-        Wed, 11 Dec 2019 15:28:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37EAC24685;
+        Wed, 11 Dec 2019 15:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078135;
-        bh=bsg/VW+c7VbzS5saOXbczBiyZhGFxVOLbYz4eTd0b2k=;
+        s=default; t=1576078139;
+        bh=6VMoStXN6SIwIDCEKs9FJWnG1jDwzKncsKoo8gUWlEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yVOpeA+omJDcqY9LWVxC+qbXkpguhsCKHevZT5oUSMCGjRqjGZuVUc3FkLrPNtVbk
-         58lW4fOxz7iX6qD81AfnROClzQz7bEgDpAyUzpppVxpcrry2bCbV6a9P53zMx/pcoL
-         Bg1/HQYcMHNdWzz1l7JGPLpSyXUH5x5uWm4coGgA=
+        b=sAtySrf+GNrxjeFAZp0s9BDVUwABZoR9IvecGqPD9mLYg7ETIWE0Zrr1bDfb+ViTJ
+         RdIaDYZfRepizpQ0/eo+hVyeLLJnOXW9JVRKQVYkE9piHq2a0ik7nOfPPhEIIr8FKR
+         O1tiRCjSaYjVjjVyfukTQdaCAsgeMge0QLz+FXUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 23/58] irqchip: ingenic: Error out if IRQ domain creation failed
-Date:   Wed, 11 Dec 2019 10:27:56 -0500
-Message-Id: <20191211152831.23507-23-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        coverity-bot <keescook+coverity-bot@chromium.org>,
+        James Bottomley <James.Bottomley@SteelEye.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 26/58] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
+Date:   Wed, 11 Dec 2019 10:27:59 -0500
+Message-Id: <20191211152831.23507-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -58,57 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
+[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
 
-If we cannot create the IRQ domain, the driver should fail to probe
-instead of succeeding with just a warning message.
+Coverity reported the following:
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
+*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
+4433     			kfree(mp);
+4434     		}
+4435     		mempool_free(mbox, phba->mbox_mem_pool);
+4436     	}
+4437     out:
+4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
+vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+vvv     Dereferencing null pointer "shost".
+4439     		spin_lock_irq(shost->host_lock);
+4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+4441     		spin_unlock_irq(shost->host_lock);
+4442
+4443     		/* If the node is not being used by another discovery thread,
+4444     		 * and we are sending a reject, we are done with it.
+
+Fix by adding a check for non-null shost in line 4438.
+The scenario when shost is set to null is when ndlp is null.
+As such, the ndlp check present was sufficient. But better safe
+than sorry so add the shost check.
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
+Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+
+CC: James Bottomley <James.Bottomley@SteelEye.com>
+CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC: linux-next@vger.kernel.org
+Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index fc5953dea509a..b2e16dca76a60 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -117,6 +117,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		goto out_unmap_irq;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index c851fd14ff3e9..4c84c2ae1112d 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -4102,7 +4102,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 		mempool_free(mbox, phba->mbox_mem_pool);
  	}
- 
-+	domain = irq_domain_add_legacy(node, num_chips * 32,
-+				       JZ4740_IRQ_BASE, 0,
-+				       &irq_domain_simple_ops, NULL);
-+	if (!domain) {
-+		err = -ENOMEM;
-+		goto out_unmap_base;
-+	}
-+
- 	for (i = 0; i < num_chips; i++) {
- 		/* Mask all irqs */
- 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
-@@ -143,14 +151,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 				       IRQ_NOPROBE | IRQ_LEVEL);
- 	}
- 
--	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
--				       &irq_domain_simple_ops, NULL);
--	if (!domain)
--		pr_warn("unable to register IRQ domain\n");
--
- 	setup_irq(parent_irq, &intc_cascade_action);
- 	return 0;
- 
-+out_unmap_base:
-+	iounmap(intc->base);
- out_unmap_irq:
- 	irq_dispose_mapping(parent_irq);
- out_free:
+ out:
+-	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
++	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
+ 		spin_lock_irq(shost->host_lock);
+ 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+ 		spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
