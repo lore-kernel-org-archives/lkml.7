@@ -2,52 +2,50 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8318C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11809C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF7D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE38E2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076923;
-	bh=iCe981dpQcbeniIuJo78yCB5icEWgktPbevCe92sIE4=;
+	s=default; t=1576076927;
+	bh=cRi5G9C0XWPPCnV+02MMDB3bXkRsVGf0Rh3K1z24W0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lXW8Ay95ZUobvJuHfZZnlUpx9kDUZFMn58fpv9zbgNPMW+ME8OChR++w9Ou4xJ5cI
-	 4SSeYQueNJS2YHtI/VpSWqC/liWkm9ZkQ8WhtaRE2UNZPMAd23pQ3r5rmx9lU533Ch
-	 l9bi15yekVeIrM2W9eYaHCzYaRZbTDB7S04+ht6Q=
+	b=JunRVjzoxs04fWp7t/x4lfNGnUcLp1WjUkD/g45XrKgNPBSSLOFFM17/0gYp08vPA
+	 kwxzJ2rGxnCs54SiHGiqGmxD4vG107yjtc9GXDcBQdA5ODjNbDG5UM1rytBZwNGVl/
+	 fqGBXxhUmsYHsvSQvd4wMuAvm53r4grWkW07pvNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730442AbfLKPIm (ORCPT
+        id S1730453AbfLKPIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730425AbfLKPIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:38 -0500
+        id S1729746AbfLKPIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC0B220663;
-        Wed, 11 Dec 2019 15:08:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 981AD2173E;
+        Wed, 11 Dec 2019 15:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076918;
-        bh=iCe981dpQcbeniIuJo78yCB5icEWgktPbevCe92sIE4=;
+        s=default; t=1576076924;
+        bh=cRi5G9C0XWPPCnV+02MMDB3bXkRsVGf0Rh3K1z24W0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mxTsMIirxqkEghgEl7cZIMNA9Ilv1ybe957U1ZPFbe1DMGmDn5e4hKvgmPOt1RVUE
-         Z+ZMTrEfJNbq1rflv4w9QeoDWmSMLfbYMwCHJ/GJq3Gf9p2CbK2b5KZsTPf17qbdIT
-         reJ/ayqxkEL7Re7Wkp1Kv9mhXMseNwGUstPwkt20=
+        b=tG9/eKBj6q7FojlEGo8U1gZxjhoEtjErd8oJv9GsWL+3Gf6QtTiMyPvBzeCfpVd7t
+         5/xUolbovOx849FDi/XIuDb0zngmiI2J97yB2wNo4SKUQb0OcwCCj3W0skAwcDfFGS
+         3dPo9b9pljo4ghV/XOd54nvLldqHDWz4dYVP67jU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 04/92] perf scripts python: exported-sql-viewer.py: Fix use of TRUE with SQLite
-Date:   Wed, 11 Dec 2019 16:04:55 +0100
-Message-Id: <20191211150222.847761303@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.4 06/92] lp: fix sparc64 LPSETTIMEOUT ioctl
+Date:   Wed, 11 Dec 2019 16:04:57 +0100
+Message-Id: <20191211150223.378611864@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,59 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit af833988c088d3fed3e7188e7c3dd9ca17178dc3 upstream.
+commit 45a2d64696b11913bcf1087b041740edbade3e21 upstream.
 
-Prior to version 3.23 SQLite does not support TRUE or FALSE, so always
-use 1 and 0 for SQLite.
+The layout of struct timeval is different on sparc64 from
+anything else, and the patch I did long ago failed to take
+this into account.
 
-Fixes: 26c11206f433 ("perf scripts python: exported-sql-viewer.py: Use new 'has_calls' column")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org # v5.3+
-Link: http://lore.kernel.org/lkml/20191113120206.26957-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-[Adrian: backported to v5.3, v5.4]
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Change it now to handle sparc64 user space correctly again.
+
+Quite likely nobody cares about parallel ports on sparc64,
+but there is no reason not to fix it.
+
+Cc: stable@vger.kernel.org
+Fixes: 9a450484089d ("lp: support 64-bit time_t user space")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20191108203435.112759-7-arnd@arndb.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/perf/scripts/python/exported-sql-viewer.py |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/char/lp.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -625,7 +625,7 @@ class CallGraphRootItem(CallGraphLevelIt
- 		self.query_done = True
- 		if_has_calls = ""
- 		if IsSelectable(glb.db, "comms", columns = "has_calls"):
--			if_has_calls = " WHERE has_calls = TRUE"
-+			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
- 		query = QSqlQuery(glb.db)
- 		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
- 		while query.next():
-@@ -905,7 +905,7 @@ class CallTreeRootItem(CallGraphLevelIte
- 		self.query_done = True
- 		if_has_calls = ""
- 		if IsSelectable(glb.db, "comms", columns = "has_calls"):
--			if_has_calls = " WHERE has_calls = TRUE"
-+			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
- 		query = QSqlQuery(glb.db)
- 		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
- 		while query.next():
-@@ -3509,6 +3509,12 @@ class DBRef():
- 	def __init__(self, is_sqlite3, dbname):
- 		self.is_sqlite3 = is_sqlite3
- 		self.dbname = dbname
-+		self.TRUE = "TRUE"
-+		self.FALSE = "FALSE"
-+		# SQLite prior to version 3.23 does not support TRUE and FALSE
-+		if self.is_sqlite3:
-+			self.TRUE = "1"
-+			self.FALSE = "0"
+--- a/drivers/char/lp.c
++++ b/drivers/char/lp.c
+@@ -713,6 +713,10 @@ static int lp_set_timeout64(unsigned int
+ 	if (copy_from_user(karg, arg, sizeof(karg)))
+ 		return -EFAULT;
  
- 	def Open(self, connection_name):
- 		dbname = self.dbname
++	/* sparc64 suseconds_t is 32-bit only */
++	if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
++		karg[1] >>= 32;
++
+ 	return lp_set_timeout(minor, karg[0], karg[1]);
+ }
+ 
 
 
