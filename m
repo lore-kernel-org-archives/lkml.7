@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE54C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BD3C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0280208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBF622B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078144;
-	bh=6VMoStXN6SIwIDCEKs9FJWnG1jDwzKncsKoo8gUWlEY=;
+	s=default; t=1576078147;
+	bh=V3c61UjcYe4scFRc07uwvsawsHuVtrB91ryO+pxN9bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wg3MFJUILdjzDeNfhSlCnXu833d0ph1lxc4MoWrmtpnAHmJvWfOHjzErulGk+jIeS
-	 mdwjoJMsK9VYtU2BfOwapd6LqPoi0BtTdjciZ/i7usEdz+YnTcpC/pFT9dMyYQtcVE
-	 SQ06LA+MUVm6fla5a0icHFAZQ2NqkWupZvEHR/C0=
+	b=T0Yo5xNhGIQlKRgH/FZQc3EQegzLH3DQ3SqMf4gQvwtUkDjHD/cu2jlTmgBwzVaUm
+	 bwij9HjY81dXQs9n/DM3JMW1y2prbz7MwJy4r6/KwUm8LcfbP8kezghEJUYDv+iR8K
+	 9QvMqsEra4TWu3ampgFVYH7e9qCwNZ0xFQytynVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733170AbfLKP3D (ORCPT
+        id S2387805AbfLKP3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35426 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387773AbfLKP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:00 -0500
+        id S2387791AbfLKP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37EAC24685;
-        Wed, 11 Dec 2019 15:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79A6222C4;
+        Wed, 11 Dec 2019 15:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078139;
-        bh=6VMoStXN6SIwIDCEKs9FJWnG1jDwzKncsKoo8gUWlEY=;
+        s=default; t=1576078142;
+        bh=V3c61UjcYe4scFRc07uwvsawsHuVtrB91ryO+pxN9bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sAtySrf+GNrxjeFAZp0s9BDVUwABZoR9IvecGqPD9mLYg7ETIWE0Zrr1bDfb+ViTJ
-         RdIaDYZfRepizpQ0/eo+hVyeLLJnOXW9JVRKQVYkE9piHq2a0ik7nOfPPhEIIr8FKR
-         O1tiRCjSaYjVjjVyfukTQdaCAsgeMge0QLz+FXUo=
+        b=zUi4a0kPU/sXMIbBPqx5ZPhAgsU+BKehomgZ8kOckr9vhAkoTgMH0R0yXO2qqBKHz
+         uNxeryu+amonz5Y7/HClhaMvud7eGn73yp8x+Kv4/685tWG71NVlcILTMKs5BtBoyi
+         MLTID55iJXlCalQ02BhFav68xccAb6ZEeG7hdMVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        coverity-bot <keescook+coverity-bot@chromium.org>,
-        James Bottomley <James.Bottomley@SteelEye.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 26/58] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
-Date:   Wed, 11 Dec 2019 10:27:59 -0500
-Message-Id: <20191211152831.23507-26-sashal@kernel.org>
+Cc:     "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
+        "Mauro S . M . Rodrigues" <maurosr@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.14 29/58] powerpc/security: Fix wrong message when RFI Flush is disable
+Date:   Wed, 11 Dec 2019 10:28:02 -0500
+Message-Id: <20191211152831.23507-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -64,64 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
 
-[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
+[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
 
-Coverity reported the following:
+The issue was showing "Mitigation" message via sysfs whatever the
+state of "RFI Flush", but it should show "Vulnerable" when it is
+disabled.
 
-*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
-4433     			kfree(mp);
-4434     		}
-4435     		mempool_free(mbox, phba->mbox_mem_pool);
-4436     	}
-4437     out:
-4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
-vvv     Dereferencing null pointer "shost".
-4439     		spin_lock_irq(shost->host_lock);
-4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
-4441     		spin_unlock_irq(shost->host_lock);
-4442
-4443     		/* If the node is not being used by another discovery thread,
-4444     		 * and we are sending a reject, we are done with it.
+If you have "L1D private" feature enabled and not "RFI Flush" you are
+vulnerable to meltdown attacks.
 
-Fix by adding a check for non-null shost in line 4438.
-The scenario when shost is set to null is when ndlp is null.
-As such, the ndlp check present was sufficient. But better safe
-than sorry so add the shost check.
+"RFI Flush" is the key feature to mitigate the meltdown whatever the
+"L1D private" state.
 
-Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
-Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
 
-CC: James Bottomley <James.Bottomley@SteelEye.com>
-CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-CC: linux-next@vger.kernel.org
-Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So the message should be as the truth table shows:
+
+  CPU | L1D private | RFI Flush |                sysfs
+  ----|-------------|-----------|-------------------------------------
+   P9 |    False    |   False   | Vulnerable
+   P9 |    False    |   True    | Mitigation: RFI Flush
+   P9 |    True     |   False   | Vulnerable: L1D private per thread
+   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
+   P8 |    False    |   False   | Vulnerable
+   P8 |    False    |   True    | Mitigation: RFI Flush
+
+Output before this fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: L1D private per thread
+
+Output after fix:
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Mitigation: RFI Flush, L1D private per thread
+  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
+  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+  Vulnerable: L1D private per thread
+
+Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
+Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_els.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/security.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
-index c851fd14ff3e9..4c84c2ae1112d 100644
---- a/drivers/scsi/lpfc/lpfc_els.c
-+++ b/drivers/scsi/lpfc/lpfc_els.c
-@@ -4102,7 +4102,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
- 		mempool_free(mbox, phba->mbox_mem_pool);
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index fef3f09fc238b..b3f540c9f4109 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -134,26 +134,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+ 
+ 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
+ 
+-	if (rfi_flush || thread_priv) {
++	if (rfi_flush) {
+ 		struct seq_buf s;
+ 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
+ 
+-		seq_buf_printf(&s, "Mitigation: ");
+-
+-		if (rfi_flush)
+-			seq_buf_printf(&s, "RFI Flush");
+-
+-		if (rfi_flush && thread_priv)
+-			seq_buf_printf(&s, ", ");
+-
++		seq_buf_printf(&s, "Mitigation: RFI Flush");
+ 		if (thread_priv)
+-			seq_buf_printf(&s, "L1D private per thread");
++			seq_buf_printf(&s, ", L1D private per thread");
+ 
+ 		seq_buf_printf(&s, "\n");
+ 
+ 		return s.len;
  	}
- out:
--	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
-+	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
- 		spin_lock_irq(shost->host_lock);
- 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
- 		spin_unlock_irq(shost->host_lock);
+ 
++	if (thread_priv)
++		return sprintf(buf, "Vulnerable: L1D private per thread\n");
++
+ 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
+ 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
+ 		return sprintf(buf, "Not affected\n");
 -- 
 2.20.1
 
