@@ -2,126 +2,132 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59715C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5220CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9AB2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:37:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ByyfeRJb"
+	by mail.kernel.org (Postfix) with ESMTP id 25FA72077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078680;
+	bh=KIl2/Dd8MiDaz7LVp0lDFA585AIHjV6zE5yHkKmjLO4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LpThCdgVgACVA3lWSPt0kYKsc/kCphl+si5cvD4RfdaPWkiQweCYzSnRGn9i6e4ox
+	 ykdKsL0/ujy0F7sKhvLE8InaKBKGmbDCqinxIX0hj8CW/YUw/CXRFz+MkMD9J33/2M
+	 pXgPs07F/Iyimem22aU7mV7HH2/mnUJeAI3ANzNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbfLKPfZ (ORCPT
+        id S2388339AbfLKPh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:25 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35738 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfLKPfU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:20 -0500
-Received: by mail-qt1-f196.google.com with SMTP id s8so6631484qte.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EEZbVUZTmwHpEhj5IiLNVT7HoJJ6hK9o2EwOkcWd0R0=;
-        b=ByyfeRJbC64U8giuaSJyBfvkHapBhK2qAxMJttshjcpu4q7X5Gfa5KndB3Rsx+FfUi
-         2f5Chh4ed41jCL/yUvEAObJLLvxAKzSB3oX9f4i85dEtBwM69NnnT1HWQccG3lMNxg2B
-         0HxtpM2Bu3pbI0Mll/70NUJy6kuGduaNXfpbgt550b3TM2wZOmIXmZmDdat432CbG13Y
-         QnOUIs7h+1UPahghLzsw89qEGjuu+VUedXyzVqknuDAvXHP5Xm8tsXdnalMqEsczvEva
-         l2NRBcXAfvXC70PbdFm3ngvap4BqrNr7M9AZr7YXRhuTCxeiTPjTNLqUt1SKt0BGxnlV
-         ti+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EEZbVUZTmwHpEhj5IiLNVT7HoJJ6hK9o2EwOkcWd0R0=;
-        b=p3AjVzn4ecbKAKxev+riDCpfdmQ2L+zWVRcG38TSn+5zKO9b1bBHlaYGaRGvciLQ9I
-         twAn8ZkXyYx9CAD153rLP2CC/7uJuJstXd62QN1iIYRK7jePaCTgC5fWOf2bzM9KBBOk
-         DAdNNEyI3elXY7Ha6Co/47TLrpS2OIxkMuAkaShTlVouc2+zPQAT2+6ef0bQU4HtlQGt
-         /raBBmnxd7vEKt2TNbTf3zqHyT4GpTlCvC7OXzTFyiQ8XDpYz8ntAfzJ3ph9qeP5M8+M
-         Oaxr/iFbkaAE/cjUdJgTSGaKJs8qjaLNQLX72TbZZ7CaBrmwCvmg/lxhYzSMgPsySb59
-         HWtw==
-X-Gm-Message-State: APjAAAWLSaTQhSymqQNqnWfA4EPro2zjEtWCj0oRB4YdoFz0mF7JbUIg
-        nytewZRLHY7rBFwwCVHeuYvACQyD2fMQ8en/lZSW/Q==
-X-Google-Smtp-Source: APXvYqzPgmO02LvwPR3MASeJmUeTLUSOMZa+8nNfTg7jaNAriHFXi9CTAzkRdwS2y9fl/VgOUeUZWqYTOIkuaCIyzmE=
-X-Received: by 2002:aed:2465:: with SMTP id s34mr3283883qtc.158.1576078518501;
- Wed, 11 Dec 2019 07:35:18 -0800 (PST)
+        Wed, 11 Dec 2019 10:37:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388025AbfLKPfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:24 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C972467B;
+        Wed, 11 Dec 2019 15:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078524;
+        bh=KIl2/Dd8MiDaz7LVp0lDFA585AIHjV6zE5yHkKmjLO4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PZNsSbztH+ZRkc5AzN5bhkxxa/ZDUYa1KQS8WKB//re7HXOeHDmlhUPlSnaIxUH/b
+         Bx0vrSXwaetX9XhyRpxbhc6iCRyuuC/n+sVzpJOiCM2j2SRmhPhs0f8nHXEV6+pTei
+         hcqFUCjeSkn4Sj0RR7rIkG/Q7Ka2VhtjShhbIlcM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 13/42] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
+Date:   Wed, 11 Dec 2019 10:34:41 -0500
+Message-Id: <20191211153510.23861-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
+References: <20191211153510.23861-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <CAAeHK+wFBYX8-L-D8w_nep3W=QjYoLAZbc=-0eoWK684wnuayA@mail.gmail.com>
- <Pine.LNX.4.44L0.1912111010490.1549-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1912111010490.1549-100000@iolanthe.rowland.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 11 Dec 2019 16:35:07 +0100
-Message-ID: <CACT4Y+aTq7iThhikGNGKsLF61RHcWMY5mh=oTGc6FHv02f1BBQ@mail.gmail.com>
-Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:15 PM Alan Stern <stern@rowland.harvard.edu> wrote
->
-> On Wed, 11 Dec 2019, Andrey Konovalov wrote:
->
-> > On Tue, Dec 10, 2019 at 9:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Tue, 10 Dec 2019, syzbot wrote:
-> > >
-> > > > > On Mon, 9 Dec 2019, syzbot wrote:
-> > > >
-> > > > >> Hello,
-> > > >
-> > > > >> syzbot found the following crash on:
-> > > >
-> > > > >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> > > > >> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
-> > > > >> kernel config:
-> > > > >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> > > > >> dashboard link:
-> > > > >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
-> > > > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > >
-> > > > >> Unfortunately, I don't have any reproducer for this crash yet.
-> > > >
-> > > > >> IMPORTANT: if you fix the bug, please add the following tag to the
-> > > > >> commit:
-> > > > >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
->
-> > > > This crash does not have a reproducer. I cannot test it.
-> > >
-> > > Let's try the same patch with a different bug report -- one that has a
-> > > reproducer.  I assume that syzbot gets the bug identity from the
-> > > email's From: line (which has been updated acoordingly) rather than the
-> > > Subject: line.
-> >
-> > Did you get a response for this test? I see the test attempt on the
-> > dashboard (the patch failed to build), but I didn't get an email with
-> > the result.
->
-> No response so far.  On the other hand, syzbot has been a bit slow to
-> respond to my tests recently (typical turnaround time is several
-> hours).  I don't know what's going on.
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-The system is busy with bisections. Patch testing takes precedence
-over bisection, but only after the current one finished. Bisections
-can take a long time, up to days. The way it all works is a total hack
-that one can put together in a few days.
+[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
+
+With large memory (8TB and more) hotplug, we can get soft lockup
+warnings as below. These were caused by a long loop without any
+explicit cond_resched which is a problem for !PREEMPT kernels.
+
+Avoid this using cond_resched() while inserting hash page table
+entries. We already do similar cond_resched() in __add_pages(), see
+commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
+__add_pages").
+
+  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
+   (t=24003 jiffies g=4285 q=2002)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    nmi_cpu_backtrace+0x124/0x130
+    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
+    arch_trigger_cpumask_backtrace+0x28/0x3c
+    rcu_dump_cpu_stacks+0xf8/0x154
+    rcu_sched_clock_irq+0x878/0xb40
+    update_process_times+0x48/0x90
+    tick_sched_handle.isra.16+0x4c/0x80
+    tick_sched_timer+0x68/0xe0
+    __hrtimer_run_queues+0x180/0x430
+    hrtimer_interrupt+0x110/0x300
+    timer_interrupt+0x108/0x2f0
+    decrementer_common+0x114/0x120
+  --- interrupt: 901 at arch_add_memory+0xc0/0x130
+      LR = arch_add_memory+0x74/0x130
+    memremap_pages+0x494/0x650
+    devm_memremap_pages+0x3c/0xa0
+    pmem_attach_disk+0x188/0x750
+    nvdimm_bus_probe+0xac/0x2c0
+    really_probe+0x148/0x570
+    driver_probe_device+0x19c/0x1d0
+    device_driver_attach+0xcc/0x100
+    bind_store+0x134/0x1c0
+    drv_attr_store+0x44/0x60
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1a0/0x270
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/mm/hash_utils_64.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index de1d8cdd29915..2dc1fc445f357 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -300,6 +300,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		if (ret < 0)
+ 			break;
+ 
++		cond_resched();
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ 		if (debug_pagealloc_enabled() &&
+ 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+-- 
+2.20.1
+
