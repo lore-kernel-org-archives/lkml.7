@@ -2,130 +2,221 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E0C2D0C4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D89BC43603
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BCF4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:35:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0fDarWX"
+	by mail.kernel.org (Postfix) with ESMTP id DA6B0208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576042526;
+	bh=VDWQMOyqo2YOld146gLo00+J3/UY8gsgVDyZBcPMKsA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qXMuUYRONM2UW5rFd4Y33Uy5/ijfbuHuhxmzUu1JG/tGvFbIILgKz4Wg3APCYICzR
+	 TZWV6xZozYmOux0LTPV1lwS0OHIKpQU55xH2QfY9LrnUuo2Ysnb8fkC6YX/vsfqjBv
+	 YuxZHuci0UqyVNWl2qbjlbaIV+4pjjvb303xmVg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLKFfJ (ORCPT
+        id S1726631AbfLKFds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 00:35:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34425 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfLKFfJ (ORCPT
+        Wed, 11 Dec 2019 00:33:48 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:54020 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfLKFds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 00:35:09 -0500
-Received: by mail-pl1-f196.google.com with SMTP id x17so955766pln.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 21:35:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2OO7/mhUSy6qobOmjDi9q9vof+DP3uQZkiBVuacLKKk=;
-        b=P0fDarWXXzotrsEuyawGcdziLBTOsrIYSry5uGgXRfzDcHHAkK+viauFdTpnQ4yve8
-         1xgWmcCiSjeQDpwG24LIJ4yhJS3Kg2pFn1yTG/QrccPysq4l+cLFFd/agHx/9Z728n37
-         iYskg5KWq81OaEPY5Ji0YbDdIO3IZ1pGTTaVth6r2xNC9dhcbf7y07X70s9rFMCN33/v
-         IYjvIe1K3xt10Bv3LW2HnVpj3zkqDbnNpDi373F715xMbuxTQNGWFlkqyasSKU/mJvHo
-         OSWrQ9VkbMxXS8kEOGlMHtxWdsAuJtIxSFxp5BW0NgnvFhACqFcQ3Uw6xnEBG6uq+gPw
-         PWEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2OO7/mhUSy6qobOmjDi9q9vof+DP3uQZkiBVuacLKKk=;
-        b=gs4lNz48Yjh2JDoszxTEU1XxdMEk88HSDulq+Wygv7WU3BHYWj3VjubGI0yHEIqtPy
-         wv3AWVYYTmXBqfvEkPZf26d9jPnpz4uHLAjeKOOmM3Grd+0wdynXYcF7pHQhOEGbzOce
-         aBm92/2EQlI2Sf12m5WZECrwuueRJWA+n64BTY99zBD8Qu2IOy6h8bCPWg3JADOD6yVI
-         uGXw45O+4gqvNOUmGcHIbuoBZdDSTo9aOQNUuTSTuj1NTznT3oQUj3JqUliGbytd/10a
-         uSoBv3Co+ITk/x44zt1XsPLyR4lQ3ARtGQsbVZFwnC+Pt680TQCCPVxog3cZ6u+qOITt
-         KjnQ==
-X-Gm-Message-State: APjAAAUYWQWlSG0hOAHDNx6+LJz1HxwMPnx2+eWd5N8xAQlTLgdSjANp
-        SXokHhtmABq3XyCLD5ua744=
-X-Google-Smtp-Source: APXvYqzs5IaM4QXj9sDAUMc2e5r8pCcEJ1XckzsWRuzDpDHC5KaA+/JP+VjHheuXLslNWhkU8rHkWg==
-X-Received: by 2002:a17:902:c509:: with SMTP id o9mr1358256plx.112.1576042508773;
-        Tue, 10 Dec 2019 21:35:08 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id n188sm876052pga.84.2019.12.10.21.35.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 21:35:07 -0800 (PST)
-Date:   Wed, 11 Dec 2019 14:35:05 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
- multiple matches
-Message-ID: <20191211053505.GO88619@google.com>
-References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
- <20191210080154.GJ88619@google.com>
- <98df321d16adb67c5579ac4b67d845fc0c2c97df.camel@kernel.crashing.org>
- <20191211020149.GN88619@google.com>
- <38b543cb91e936d7bd9f8885e585dd55032d83a4.camel@kernel.crashing.org>
+        Wed, 11 Dec 2019 00:33:48 -0500
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id xBB5XhoM016835;
+        Wed, 11 Dec 2019 14:33:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xBB5XhoM016835
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576042424;
+        bh=69MyOS9aB1VcMJQYBz4dgojoS/Cbyu8xTjZZlTo6P5s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mgu6WfR0mgo5KyWtmdw5tLsuYQv4aDvzYvAYL/FF6aKwitb+xpd2Iccpnpy4qfOx2
+         G3ymr5lmhl9TigDpw+HUoZfEKUmfsCNXZ5I/lSK8vkg5n73qmKmAmhRLzxpsSx75U2
+         3S4+0labv7jYO48OzAhz7YZf5pxn+yoYKWXkvsSN0w4+7lobN2fMk610fFy8j/1tok
+         N5DUIBLWFyapuODtcjscxnidwWWJ3C0ZjfgDcIl9meS4hyLUvxZ9Y6FOZfUJBLA0dX
+         M1Pv3ZHLpe2GaCZ/LvC9+ZAaQc5mVbPsaEmrfDgwIg+hG/niR5emvFKJc4YggsN7gl
+         35epSYACyPcgw==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id x4so14901102vsx.10;
+        Tue, 10 Dec 2019 21:33:44 -0800 (PST)
+X-Gm-Message-State: APjAAAUFelvNG32QuDLInDnU+NhbSZ0r5dLaVRcAbiakao5FZ4ZR/Sgk
+        cX+UNp1+pA0rBdiqbXk9dSkV+Ig4BVqNYRIfsEE=
+X-Google-Smtp-Source: APXvYqzYoHUVIlV/XW+Q2IY7Q2C/pTURAM6hfqTX45LYS7ruzZE+8z43DRnEhuY1r5s7UGS385e2a0eKXf67N6ShWA8=
+X-Received: by 2002:a67:7ac4:: with SMTP id v187mr1028357vsc.181.1576042422892;
+ Tue, 10 Dec 2019 21:33:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <38b543cb91e936d7bd9f8885e585dd55032d83a4.camel@kernel.crashing.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191210091453.26346-1-yamada.masahiro@socionext.com> <MN2PR11MB4509B418D54E8DC7D3BE7DD2CC5A0@MN2PR11MB4509.namprd11.prod.outlook.com>
+In-Reply-To: <MN2PR11MB4509B418D54E8DC7D3BE7DD2CC5A0@MN2PR11MB4509.namprd11.prod.outlook.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 11 Dec 2019 14:33:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQnuR0fv6Nv5y=GxHxv8nhDB5K32TyG4G-WyOtJqyh0mg@mail.gmail.com>
+Message-ID: <CAK7LNAQnuR0fv6Nv5y=GxHxv8nhDB5K32TyG4G-WyOtJqyh0mg@mail.gmail.com>
+Subject: Re: [PATCH] mtd: rawnand: denali: add reset controlling
+To:     "Tan, Ley Foon" <ley.foon.tan@intel.com>
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marex@denx.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/12/11 15:02), Benjamin Herrenschmidt wrote:
-> On Wed, 2019-12-11 at 11:01 +0900, Sergey Senozhatsky wrote:
-> > On (19/12/11 09:26), Benjamin Herrenschmidt wrote:
-> > 
-[..]
-> > If we could perform simple alias matching, without ->setup() call, and
-> > exact matching (strcmp()), and then, if newcon would match two entries,
-> > we would pick up the last matching entry and configure newcon only once.
-> > 
-> > This changes the order, tho.
-> 
-> Walking the array backwards might just be what we want actually for the
-> case at hand, but of course if some platforms or driver call
-> add_preferred_console *after* the command line parsing, then it will
-> break those.
-
-Reverse loop sounds like a nice idea. But yes I guess this can break
-things.
-
-> Simple alias matching would require re-working all the match()
-> callbacks. That said I think it was a mistake to begin with to have
-> them include setup(). Those should have remained separate.
-
-Agreed. strcmp(alias) and strcmp(exact name) are the same things.
-The latter does "match" and setup() as separate steps, but the former
-does both at once.
-
-> What about a compromise here:
+On Wed, Dec 11, 2019 at 2:23 PM Tan, Ley Foon <ley.foon.tan@intel.com> wrote:
 >
-> Instead of walking the array and testing for preferred_console as we do
-> so, we first test the array entry pointed to by preferred_console
-> (doing both match & setup as today) and if that doesn't work, fallback
-> to our existing mechanism ?
-
-This may do the trick.
-And perform preferred_console fast-path configuration only if
-`has_preferred' is false.
-
-> > Well, it still looks to me that what you want is to "ignore alias
-> > match and prefer exact match".
 >
-> We don't want to ignore the alias match. But we do want to prefer the
-> exact match. We still want to keep the fallback to the alias match.
+>
+> > -----Original Message-----
+> > From: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Sent: Tuesday, December 10, 2019 5:15 PM
+> > To: linux-mtd@lists.infradead.org
+> > Cc: Dinh Nguyen <dinguyen@kernel.org>; Marek Vasut <marex@denx.de>;
+> > Tan, Ley Foon <ley.foon.tan@intel.com>; Masahiro Yamada
+> > <yamada.masahiro@socionext.com>; Mark Rutland
+> > <mark.rutland@arm.com>; Miquel Raynal <miquel.raynal@bootlin.com>;
+> > Philipp Zabel <p.zabel@pengutronix.de>; Richard Weinberger
+> > <richard@nod.at>; Rob Herring <robh+dt@kernel.org>; Vignesh
+> > Raghavendra <vigneshr@ti.com>; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: [PATCH] mtd: rawnand: denali: add reset controlling
+> >
+> > According to the Denali User's Guide, this IP has two reset signals.
+> >
+> >   rst_n:     reset most of FFs in the controller core
+> >   reg_rst_n: reset all FFs in the register interface, and in the
+> >              initialization sequence
+> >
+> > This commit supports controlling those reset signals, although they might be
+> > often tied up together in actual SoC integration.
+> >
+> > One thing that should be kept in mind is the automated initialization
+> > sequence (a.k.a. 'bootstrap' process) is kicked off when reg_rst_n is
+> > deasserted.
+> >
+> > When the reset is deasserted, the controller issues a RESET command to the
+> > chip select 0, and attempts to read out the chip ID, and further more, ONFI
+> > parameters if it is an ONFI-compliant device. Then, the controller sets up the
+> > relevant registers based on the detected device parameters.
+> >
+> > This process is just redundant for Linux because nand_scan_ident() probes
+> > devices and sets up parameters accordingly. Rather, this hardware feature is
+> > annoying because it ends up with misdetection due to bugs.
+> >
+> > So, commit 0615e7ad5d52 ("mtd: nand: denali: remove Toshiba and Hynix
+> > specific fixup code") changed the driver to not rely on it.
+> >
+> > However, there is no way to prevent it from running. The IP provides the
+> > 'bootstrap_inhibit_init' port to suppress this sequence, but it is usually out of
+> > software control, and dependent on SoC implementation.
+> > As for the Socionext UniPhier platform, LD4 always enables it. For the later
+> > SoCs, the bootstrap sequence runs depending on the boot mode.
+> >
+> > I added usleep_range() to make the driver wait until the sequence finishes.
+> > Otherwise, the driver would fail to detect the chip due to the race between
+> > the driver and hardware-controlled sequence.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  .../devicetree/bindings/mtd/denali-nand.txt   |  7 ++++
+> >  drivers/mtd/nand/raw/denali_dt.c              | 40 ++++++++++++++++++-
+> >  2 files changed, 46 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> > b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> > index b32aed1db46d..a48b17fb969a 100644
+> > --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> > @@ -14,6 +14,11 @@ Required properties:
+> >      interface clock, and the ECC circuit clock.
+> >    - clock-names: should contain "nand", "nand_x", "ecc"
+> >
+> > +Optional properties:
+> > +  - resets: may contain phandles to the controller core reset, the
+> > +register  reset
+> > +  - reset-names: may contain "nand", "reg"
+> > +
+> >  Sub-nodes:
+> >    Sub-nodes represent available NAND chips.
+> >
+> > @@ -46,6 +51,8 @@ nand: nand@ff900000 {
+> >       reg-names = "nand_data", "denali_reg";
+> >       clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+> >       clock-names = "nand", "nand_x", "ecc";
+> > +     resets = <&nand_rst>, <&nand_reg_rst>;
+> > +     reset-names = "nand", "reg";
+> >       interrupts = <0 144 4>;
+> >
+> >       nand@0 {
+> > diff --git a/drivers/mtd/nand/raw/denali_dt.c
+> > b/drivers/mtd/nand/raw/denali_dt.c
+> > index 8b779a899dcf..132bc6cc066c 100644
+> > --- a/drivers/mtd/nand/raw/denali_dt.c
+> > +++ b/drivers/mtd/nand/raw/denali_dt.c
+> > @@ -6,6 +6,7 @@
+> >   */
+> >
+> >  #include <linux/clk.h>
+> > +#include <linux/delay.h>
+> >  #include <linux/err.h>
+> >  #include <linux/io.h>
+> >  #include <linux/ioport.h>
+> > @@ -14,6 +15,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/reset.h>
+> >
+> >  #include "denali.h"
+> >
+> > @@ -22,6 +24,8 @@ struct denali_dt {
+> >       struct clk *clk;        /* core clock */
+> >       struct clk *clk_x;      /* bus interface clock */
+> >       struct clk *clk_ecc;    /* ECC circuit clock */
+> > +     struct reset_control *rst;      /* core reset */
+> > +     struct reset_control *rst_reg;  /* register reset */
+> >  };
+> >
+> >  struct denali_dt_data {
+> > @@ -151,6 +155,14 @@ static int denali_dt_probe(struct platform_device
+> > *pdev)
+> >       if (IS_ERR(dt->clk_ecc))
+> >               return PTR_ERR(dt->clk_ecc);
+> >
+> > +     dt->rst = devm_reset_control_get_optional_shared(dev, "nand");
+> > +     if (IS_ERR(dt->rst))
+> > +             return PTR_ERR(dt->rst);
+> > +
+> > +     dt->rst_reg = devm_reset_control_get_optional_shared(dev, "reg");
+> > +     if (IS_ERR(dt->rst_reg))
+> > +             return PTR_ERR(dt->rst_reg);
+> Will it trigger error if dts doesn't have "nand" or "reg" for reset-name?
+> SOCFPGA dts doesn't have this.
 
-Yeah, "prefer" is the key word here.
 
-	-ss
+No.
+These are optional resets.
+
+If they are not found in DT,
+the driver will skip the reset controlling.
+
+Of course, you can add them to your DT later
+if you want the driver to take care of the resets.
+
+
+
+Best Regards
+Masahiro Yamada
