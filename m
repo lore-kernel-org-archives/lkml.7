@@ -2,143 +2,164 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F09DC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBD7C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D2B214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:31:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B027214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:32:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OKAqHUBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLKJb7 (ORCPT
+        id S1728582AbfLKJcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:31:59 -0500
-Received: from mga05.intel.com ([192.55.52.43]:48558 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfLKJb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:31:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 01:31:58 -0800
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="207613299"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 01:31:54 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "S\, Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
-        Qian Cai <cai@lca.pw>, Ingo Molnar <mingo@kernel.org>,
-        Dave Airlie <airlied@linux.ie>
-Subject: Re: linux-next: build failure after merge of the drm-intel tree
-In-Reply-To: <20191210094224.4a294cb7@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191210093957.5120f717@canb.auug.org.au> <20191210094224.4a294cb7@canb.auug.org.au>
-Date:   Wed, 11 Dec 2019 11:31:51 +0200
-Message-ID: <87a77z4394.fsf@intel.com>
+        Wed, 11 Dec 2019 04:32:06 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36199 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfLKJcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:32:05 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z3so23251422wru.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:32:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tEGXARkAalI1UN2S550i2+Cl76AfIaIcHKN3Ub/pCj4=;
+        b=OKAqHUBIu8mgIjGy4JMOtSQFb87nbEYuG1MaClZphX50LClnOypLxt/cnht756ewhU
+         8JGvC3WhCB0tNx5ZXhRk7gHU92flLTxA/FuA+q4oCcjKZbSjrI+dhbysc5hWqfF97Foi
+         RLexicbSZ1vt0BHEpkVWwrntWcQNSo0VH+RrOSFKMOwHaFPM/IxCuaArqUK0/+GZUkNh
+         w/TMSFB4kZX09kCbyecCZ1Gz3SKZ42C1HJVB2RFdncbkOHdqI0sC/OJXDFcYe8x6DbWP
+         lHL4lTA+y8tGotj/Vs7BOC/H4yxcakH6u+iSdUgFMgw6z18rX8KxbzNARA2iPoMe7ayb
+         ry6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tEGXARkAalI1UN2S550i2+Cl76AfIaIcHKN3Ub/pCj4=;
+        b=IbOg5OlVZZxmu0N9x/hzy5rmKGBCwBMtv4r1ODFBBSZOUPtEpWAeqf7YCx86FZRTdk
+         ZVswu6yqXHT0LKoiEHb+V9JACNJcLkC/eIvNn3NAj+ufF1SuzsvbuPF5xyoYXbr4ogBu
+         CPJ6fuSeI+ZDl72IO/k0rBo9L3kE3eIW4rlB6O/wvqf1yYHJ5lcgMHVG3OrD4zUfXFEM
+         ZqEK/9Ii6DzA/Aa77xJ3Vfla3dr/Iewz75VNhitzfjOh/vu9duyvAifegaRHxzXwV1Rh
+         NHwqnVnWFpfn57ZqSm6PZ9W85dLuDp3m2OaHEXjImVpyxgfDMHcx5A+IuMOWqXT78e3U
+         jNLQ==
+X-Gm-Message-State: APjAAAV2xAeFJYJOjZ69cp4aBnV6ahxa2WJWP6lcy+eptTfMJY//y7jC
+        i4mZGkuhDIfNmrXffjXNynV/GQ==
+X-Google-Smtp-Source: APXvYqykmhYgF4/B8N4O7WUvLpw2Z0fsHw44P/YgTMv7nQw6NYLdi8VDdjZe4+1qcfOLCAuov1zRow==
+X-Received: by 2002:adf:f8c4:: with SMTP id f4mr2549615wrq.243.1576056722617;
+        Wed, 11 Dec 2019 01:32:02 -0800 (PST)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id b63sm1532226wmb.40.2019.12.11.01.32.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 01:32:02 -0800 (PST)
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Anand Moon <linux.amoon@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org
+References: <20191211084112.971-1-linux.amoon@gmail.com>
+ <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+ <20191211092741.totwucrkversjbav@gondor.apana.org.au>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <d2b54743-87da-091e-8d62-288ee29a54b0@baylibre.com>
+Date:   Wed, 11 Dec 2019 10:32:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191211092741.totwucrkversjbav@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Hi all,
->
-> [Just adding Dave Airlie to the cc list]
->
-> On Tue, 10 Dec 2019 09:39:57 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On 11/12/2019 10:27, Herbert Xu wrote:
+> On Wed, Dec 11, 2019 at 09:53:56AM +0100, Neil Armstrong wrote:
 >>
->> After merging the drm-intel tree, today's linux-next build (x86_64
->> allmodconfig) failed like this:
+>> On 11/12/2019 09:41, Anand Moon wrote:
+>>> [sudo] password for alarm:
+>>> [  903.867059] tcrypt:
+>>> [  903.867059] testing speed of async ecb(aes) (ecb(aes-arm64)) encryption
+>>
+>> Wow, I'm surprised it works on GXBB, Amlogic completely removed HW crypto for GXBB in all their
+>> vendor BSPs, in Linux, U-Boot and ATF chain.
+>>
+>> Could you run more tests to be sure it's really functional ?
+> 
+> Well as you can see from the tcrypt output, it's actually using
+> aes-arm64 which is certainly not the amlogic driver.  Presumably
+> the amlogic driver failed to load/register.
 
-FYI, I've now backmerged drm-next and thus v5.5-rc1 to
-drm-intel-next-queued, resolving the conflict.
+Nice catch... thanks Herbert.
 
-BR,
-Jani.
+Neil
 
+> 
+> Cheers,
+> 
 
->> 
->> In file included from include/linux/spinlock_types.h:18,
->>                  from include/linux/mutex.h:16,
->>                  from include/linux/kernfs.h:12,
->>                  from include/linux/sysfs.h:16,
->>                  from include/linux/kobject.h:20,
->>                  from include/linux/of.h:17,
->>                  from include/linux/irqdomain.h:35,
->>                  from include/linux/acpi.h:13,
->>                  from drivers/gpu/drm/i915/i915_drv.c:30:
->> drivers/gpu/drm/i915/gem/i915_gem_object.h: In function 'i915_gem_object_pin_pages':
->> include/linux/lockdep.h:635:2: error: too many arguments to function 'lock_release'
->>   635 |  lock_release(&(lock)->dep_map, 0, _THIS_IP_);  \
->>       |  ^~~~~~~~~~~~
->> drivers/gpu/drm/i915/gem/i915_gem_object.h:294:2: note: in expansion of macro 'might_lock_nested'
->>   294 |  might_lock_nested(&obj->mm.lock, I915_MM_GET_PAGES);
->>       |  ^~~~~~~~~~~~~~~~~
->> include/linux/lockdep.h:352:13: note: declared here
->>   352 | extern void lock_release(struct lockdep_map *lock, unsigned long ip);
->>       |             ^~~~~~~~~~~~
->> In file included from include/linux/spinlock_types.h:18,
->>                  from include/linux/spinlock.h:83,
->>                  from include/linux/mmzone.h:8,
->>                  from include/linux/gfp.h:6,
->>                  from include/linux/slab.h:15,
->>                  from drivers/gpu/drm/i915/i915_irq.c:32:
->> drivers/gpu/drm/i915/gem/i915_gem_object.h: In function 'i915_gem_object_pin_pages':
->> include/linux/lockdep.h:635:2: error: too many arguments to function 'lock_release'
->>   635 |  lock_release(&(lock)->dep_map, 0, _THIS_IP_);  \
->>       |  ^~~~~~~~~~~~
->> drivers/gpu/drm/i915/gem/i915_gem_object.h:294:2: note: in expansion of macro 'might_lock_nested'
->>   294 |  might_lock_nested(&obj->mm.lock, I915_MM_GET_PAGES);
->>       |  ^~~~~~~~~~~~~~~~~
->> include/linux/lockdep.h:352:13: note: declared here
->>   352 | extern void lock_release(struct lockdep_map *lock, unsigned long ip);
->>       |             ^~~~~~~~~~~~
->> 
->> Caused by commit
->> 
->>   e692b4021a2e ("lockdep: add might_lock_nested()")
->> 
->> interacting with commit
->> 
->>   5facae4f3549 ("locking/lockdep: Remove unused @nested argument from lock_release()")
->> 
->> from Linus' tree.
->> 
->> I have applied the following merge fix patch for today:
->> 
->> From: Stephen Rothwell <sfr@canb.auug.org.au>
->> Date: Tue, 10 Dec 2019 09:37:07 +1100
->> Subject: [PATCH] lockdep: fix up for lock_release API change
->> 
->> ---
->>  include/linux/lockdep.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
->> index 5bbfd5866081..664f52c6dd4c 100644
->> --- a/include/linux/lockdep.h
->> +++ b/include/linux/lockdep.h
->> @@ -632,7 +632,7 @@ do {									\
->>  	typecheck(struct lockdep_map *, &(lock)->dep_map);		\
->>  	lock_acquire(&(lock)->dep_map, subclass, 0, 1, 1, NULL,		\
->>  		     _THIS_IP_);					\
->> -	lock_release(&(lock)->dep_map, 0, _THIS_IP_);		\
->> +	lock_release(&(lock)->dep_map, _THIS_IP_);			\
->>  } while (0)
->>  
->>  #define lockdep_assert_irqs_enabled()	do {				\
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
