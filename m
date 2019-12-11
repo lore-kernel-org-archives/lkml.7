@@ -2,155 +2,136 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9DC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F82C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D0B206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:47:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Aa0ceLCu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ApLBdml7"
+	by mail.kernel.org (Postfix) with ESMTP id 9787D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLKDrI (ORCPT
+        id S1727597AbfLKDsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:47:08 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:48843 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbfLKDrI (ORCPT
+        Tue, 10 Dec 2019 22:48:00 -0500
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:13803 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfLKDsA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:47:08 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id D945622373;
-        Tue, 10 Dec 2019 22:47:06 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 10 Dec 2019 22:47:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=brTnepl9m5s/ksfArYTl/Nhn+h2HCCY
-        jrL1gHLQabRI=; b=Aa0ceLCufNUZeaOvxMekuQdZ6rTZrqXpZUtfb1HcEHbolDE
-        NvFp56/ta9wB5Bi98c09ELWGUzc5ky0KEFrxA7cXpN6STjSs3yu8WjEkR0VSsfM6
-        zKoyT2sIxjgxGiPqszM2BBhZBmAClQsVptbqFV+yJhn+H0t+G5JuiVn+CRuYtJ+n
-        QQXVJVEVRAbuZ+iFoImw6q1zVXFeZSqyYOdMTDvbwEscPisgHv1QJHsfNca7N6/u
-        Eu9Kt0oSNu5MjJ6fEBbuYhkKx73ySeNMwSJZg1JJ247WEBsOvFwvOjNkltgeiqDH
-        ttGlwrNdm7V4y+vZToxaKWuQ8rWGxO9k6z0ckOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=brTnep
-        l9m5s/ksfArYTl/Nhn+h2HCCYjrL1gHLQabRI=; b=ApLBdml7EgXKEBemGF6g+i
-        8WaU1pQv9lgcmYuhO3vLeKF7N9SCSw+Ei1nXEcbMeiGBYNCrRpqWHM7txYkBCZ/1
-        V4Wwtlm8On2Ui3mTmaVpW30k0xKfvDUg1avmGYP8wct3zocQ3ELrzRbqWivmwGRA
-        gA2f/Sgpo/1MhuZP/F4TH7fFEZrSwTAOSJIGPi6LnnRBmmyuP1dpVhuJ1LL0ad1F
-        GH/jNUan/rfTat/0GVDvAB+5QJDbtn4akZvikB54p4rYux1Tt654NulErtcTOItA
-        O6yo3LvsbHcb9Ndd/bEBfLxqHql6HRIEZsPrmVhnSSMVV8ZPdJHoLVVoYEbvZcYw
-        ==
-X-ME-Sender: <xms:umbwXcLW2pAVcnjhoYa--3sMmbdEnaxe4sZAoaL2-e7MBOT3g901Zw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedgheehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgepvd
-X-ME-Proxy: <xmx:umbwXaimatRuH5D7BzyUWD2zkCeDcvK9eb4gndzlf_yLxyKPY4lyOw>
-    <xmx:umbwXYuebxEBGSwAlb5JObPQMygTRkrQPavki8p8fjelv3iQe59xSA>
-    <xmx:umbwXcj5didO8Wg2faiIquBOB2EikzTL68BYjD_Xyp2QXekqT6Tavg>
-    <xmx:umbwXcj4wTsXn8iPDE5GJEEledoM4pU_Cr1845Jb94LgXatzYTGmUQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id AFEF0E00A2; Tue, 10 Dec 2019 22:47:06 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
-Mime-Version: 1.0
-Message-Id: <5086ee4b-bddb-40c1-9841-005b233f837b@www.fastmail.com>
-In-Reply-To: <1575566112-11658-10-git-send-email-eajames@linux.ibm.com>
-References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
- <1575566112-11658-10-git-send-email-eajames@linux.ibm.com>
-Date:   Wed, 11 Dec 2019 14:18:45 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
-        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
-        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
-Subject: Re: [PATCH v2 09/12] ARM: dts: aspeed: ast2600: Add XDMA Engine
-Content-Type: text/plain
+        Tue, 10 Dec 2019 22:48:00 -0500
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 11 Dec 2019 11:47:58 +0800
+Received: from csbcas.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
+        by mse.ite.com.tw with ESMTP id xBB3lr6k079450;
+        Wed, 11 Dec 2019 11:47:53 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from CSBMAIL1.internal.ite.com.tw (192.168.65.58) by
+ CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 11 Dec 2019 11:47:52 +0800
+Received: from CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f]) by
+ CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f%22]) with mapi id
+ 15.01.1713.004; Wed, 11 Dec 2019 11:47:52 +0800
+From:   <allen.chen@ite.com.tw>
+To:     <jani.nikula@linux.intel.com>
+CC:     <Jau-Chih.Tseng@ite.com.tw>, <maxime.ripard@bootlin.com>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <airlied@linux.ie>, <pihsun@chromium.org>, <sean@poorly.run>
+Subject: RE: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
+ timings logic
+Thread-Topic: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
+ timings logic
+Thread-Index: AQHVr0p4ZifVjR0QMU2oZureDdE7SKe0TGNQ
+Date:   Wed, 11 Dec 2019 03:47:52 +0000
+Message-ID: <75e96653559c4cf8a3b0f22dd611ef9b@ite.com.tw>
+References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
+ <87r21ce8rp.fsf@intel.com>
+In-Reply-To: <87r21ce8rp.fsf@intel.com>
+Accept-Language: en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.70.14]
+x-tm-snts-smtp: 8E5F65DFF2ADCBDEC829C5E1CBF1DB7DE2C3BCFE0E6EAB230CC4249425D7C13C2000:8
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MAIL: mse.ite.com.tw xBB3lr6k079450
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
-> Add a node for the XDMA engine with all the necessary information. Also
-> add a simple syscon node for the SDRAM memory controller.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
-> Changes since v1:
->  - Add a syscon SDRAM controller
->  - Add various properties to XDMA node
-> 
->  arch/arm/boot/dts/aspeed-g6.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-> index ead336e..514d685 100644
-> --- a/arch/arm/boot/dts/aspeed-g6.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-> @@ -3,6 +3,7 @@
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/clock/ast2600-clock.h>
-> +#include <dt-bindings/interrupt-controller/aspeed-scu-ic.h>
->  
->  / {
->  	model = "Aspeed BMC";
-> @@ -265,6 +266,11 @@
->  			status = "disabled";
->  		};
->  
-> +		sdmc: sdram@1e6e0000 {
-> +			compatible = "syscon";
-> +			reg = <0x1e6e0000 0xb8>;
-> +		};
-> +
-
-Hopefully we can drop this. We also need to figure out how whatever the solution is interacts
-with the EDAC driver.
-
->  		apb {
->  			compatible = "simple-bus";
->  			#address-cells = <1>;
-> @@ -311,6 +317,19 @@
->  				quality = <100>;
->  			};
->  
-> +			xdma: xdma@1e6e7000 {
-> +				compatible = "aspeed,ast2600-xdma";
-> +				reg = <0x1e6e7000 0x100>;
-> +				clocks = <&syscon ASPEED_CLK_GATE_BCLK>;
-> +				resets = <&syscon ASPEED_RESET_DEV_XDMA>;
-> +				interrupts-extended = <&gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +						      <&scu_ic0 ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI>;
-> +				pcie-device = "bmc";
-> +				scu = <&syscon>;
-> +				sdmc = <&sdmc>;
-
-sdmc property should go away also.
-
-> +				status = "disabled";
-> +			};
-> +
->  			gpio0: gpio@1e780000 {
->  				#gpio-cells = <2>;
->  				gpio-controller;
-> -- 
-> 1.8.3.1
-> 
->
+SGkgSmFuaQ0KDQpUaGFua3MgZm9yIHlvdXIgaGVscCBhbmQgSSB3aWxsIGZvbGxvdyB5b3VyIHN1
+Z2dlc3Rpb24gdG8gbW9kaWZ5IHRoZSBwYXRjaC4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCkZyb206IEphbmkgTmlrdWxhIFttYWlsdG86amFuaS5uaWt1bGFAbGludXguaW50ZWwuY29t
+XSANClNlbnQ6IFR1ZXNkYXksIERlY2VtYmVyIDEwLCAyMDE5IDc6MTAgUE0NClRvOiBBbGxlbiBD
+aGVuICizr6xmpnQpDQpDYzogSmF1LUNoaWggVHNlbmcgKLS/rEy0vCk7IE1heGltZSBSaXBhcmQ7
+IEFsbGVuIENoZW4gKLOvrGamdCk7IG9wZW4gbGlzdDsgb3BlbiBsaXN0OkRSTSBEUklWRVJTOyBE
+YXZpZCBBaXJsaWU7IFBpLUhzdW4gU2hpaDsgU2VhbiBQYXVsDQpTdWJqZWN0OiBSZTogW1BBVENI
+XSBkcm0vZWRpZDogZml4dXAgRURJRCAxLjMgYW5kIDEuNCBqdWRnZSByZWR1Y2VkLWJsYW5raW5n
+IHRpbWluZ3MgbG9naWMNCg0KT24gVHVlLCAyNiBOb3YgMjAxOSwgYWxsZW4gPGFsbGVuLmNoZW5A
+aXRlLmNvbS50dz4gd3JvdGU6DQo+IEFjY29yZGluZyB0byBWRVNBIEVOSEFOQ0VEIEVYVEVOREVE
+IERJU1BMQVkgSURFTlRJRklDQVRJT04gREFUQSBTVEFOREFSRA0KPiAoRGVmaW5lcyBFRElEIFN0
+cnVjdHVyZSBWZXJzaW9uIDEsIFJldmlzaW9uIDQpIHBhZ2U6IDM5DQo+IEhvdyB0byBkZXRlcm1p
+bmUgd2hldGhlciB0aGUgbW9uaXRvciBzdXBwb3J0IFJCIHRpbWluZyBvciBub3Q/DQo+IEVESUQg
+MS40DQo+IEZpcnN0OiAgcmVhZCBkZXRhaWxlZCB0aW1pbmcgZGVzY3JpcHRvciBhbmQgbWFrZSBz
+dXJlIGJ5dGUgMCA9IDB4MDAsDQo+IAlieXRlIDEgPSAweDAwLCBieXRlIDIgPSAweDAwIGFuZCBi
+eXRlIDMgPSAweEZEDQo+IFNlY29uZDogcmVhZCBFRElEIGJpdCAwIGluIGZlYXR1cmUgc3VwcG9y
+dCBieXRlIGF0IGFkZHJlc3MgMThoID0gMQ0KPiAJYW5kIGRldGFpbGVkIHRpbWluZyBkZXNjcmlw
+dG9yIGJ5dGUgMTAgPSAweDA0DQo+IFRoaXJkOiAgaWYgRURJRCBiaXQgMCBpbiBmZWF0dXJlIHN1
+cHBvcnQgYnl0ZSA9IDEgJiYNCj4gCWRldGFpbGVkIHRpbWluZyBkZXNjcmlwdG9yIGJ5dGUgMTAg
+PSAweDA0DQo+IAl0aGVuIHdlIGNhbiBjaGVjayBieXRlIDE1LCBpZiBiaXQgNCBpbiBieXRlIDE1
+ID0gMSBpcyBzdXBwb3J0IFJCDQo+ICAgICAgICAgaWYgRURJRCBiaXQgMCBpbiBmZWF0dXJlIHN1
+cHBvcnQgYnl0ZSAhPSAxIHx8DQo+IAlkZXRhaWxlZCB0aW1pbmcgZGVzY3JpcHRvciBieXRlIDEw
+ICE9IDB4MDQsDQo+IAl0aGVuIGJ5dGUgMTUgY2FuIG5vdCBiZSB1c2VkDQo+DQo+IFRoZSBsaW51
+eCBjb2RlIGlzX3JiIGZ1bmN0aW9uIG5vdCBmb2xsb3cgdGhlIFZFU0EncyBydWxlDQo+DQo+IFNp
+Z25lZC1vZmYtYnk6IEFsbGVuIENoZW4gPGFsbGVuLmNoZW5AaXRlLmNvbS50dz4NCj4gUmVwb3J0
+ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZl
+cnMvZ3B1L2RybS9kcm1fZWRpZC5jIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+LS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
+LSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jIGIvZHJpdmVy
+cy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gaW5kZXggZjU5MjZiZi4uZTExZTU4NSAxMDA2NDQNCj4g
+LS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2RybV9lZGlkLmMNCj4gQEAgLTkzLDYgKzkzLDEyIEBAIHN0cnVjdCBkZXRhaWxlZF9tb2RlX2Ns
+b3N1cmUgew0KPiAgCWludCBtb2RlczsNCj4gIH07DQo+ICANCj4gK3N0cnVjdCBlZGlkX3N1cHBv
+cnRfcmJfY2xvc3VyZSB7DQo+ICsJc3RydWN0IGVkaWQgKmVkaWQ7DQo+ICsJYm9vbCB2YWxpZF9z
+dXBwb3J0X3JiOw0KPiArCWJvb2wgc3VwcG9ydF9yYjsNCj4gK307DQo+ICsNCj4gICNkZWZpbmUg
+TEVWRUxfRE1UCTANCj4gICNkZWZpbmUgTEVWRUxfR1RGCTENCj4gICNkZWZpbmUgTEVWRUxfR1RG
+MgkyDQo+IEBAIC0yMDE3LDIzICsyMDIzLDQxIEBAIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICpk
+cm1fbW9kZV9maW5kX2RtdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LA0KPiAgCX0NCj4gIH0NCj4g
+IA0KPiArc3RhdGljIGJvb2wNCj4gK2lzX2Rpc3BsYXlfZGVzY3JpcHRvcihjb25zdCB1OCAqciwg
+dTggdGFnKQ0KPiArew0KPiArCXJldHVybiAoIXJbMF0gJiYgIXJbMV0gJiYgIXJbMl0gJiYgclsz
+XSA9PSB0YWcpID8gdHJ1ZSA6IGZhbHNlOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZA0KPiAg
+aXNfcmIoc3RydWN0IGRldGFpbGVkX3RpbWluZyAqdCwgdm9pZCAqZGF0YSkNCj4gIHsNCj4gIAl1
+OCAqciA9ICh1OCAqKXQ7DQo+IC0JaWYgKHJbM10gPT0gRURJRF9ERVRBSUxfTU9OSVRPUl9SQU5H
+RSkNCj4gLQkJaWYgKHJbMTVdICYgMHgxMCkNCj4gLQkJCSooYm9vbCAqKWRhdGEgPSB0cnVlOw0K
+PiArCXN0cnVjdCBlZGlkX3N1cHBvcnRfcmJfY2xvc3VyZSAqY2xvc3VyZSA9IGRhdGE7DQo+ICsJ
+c3RydWN0IGVkaWQgKmVkaWQgPSBjbG9zdXJlLT5lZGlkOw0KPiArDQo+ICsJaWYgKGlzX2Rpc3Bs
+YXlfZGVzY3JpcHRvcihyLCBFRElEX0RFVEFJTF9NT05JVE9SX1JBTkdFKSkgew0KPiArCQlpZiAo
+ZWRpZC0+ZmVhdHVyZXMgJiBCSVQoMCkgJiYgclsxMF0gPT0gQklUKDIpKSB7DQoNCkknbGwgdHJ5
+IHRvIGV4cGxhaW4gbXkgb3JpZ2luYWwgY29tbWVudCBhZ2Fpbi4NCg0KQ29uc2lkZXIgZWRpZC0+
+ZmVhdHVyZXMgJiBCSVQoMCkuIEl0IHJlbWFpbnMgdW5jaGFuZ2VkIGFjcm9zcyB0aGUNCml0ZXJh
+dGlvbi4gVGhlIGNvZGUgd2lsbCBvbmx5IGNoYW5nZSBhbnl0aGluZyBpZiBlZGlkLT5mZWF0dXJl
+cyAmDQpCSVQoMCkuDQoNCj4gKwkJCWNsb3N1cmUtPnZhbGlkX3N1cHBvcnRfcmIgPSB0cnVlOw0K
+PiArCQkJY2xvc3VyZS0+c3VwcG9ydF9yYiA9IChyWzE1XSAmIDB4MTApID8gdHJ1ZSA6IGZhbHNl
+Ow0KDQpZb3UgY291bGQgY29tYmluZSB0aGVzZSB0byBlLmcuIGEgc2luZ2xlIGludC4NCg0KCWlm
+IChyWzEwXSA9PSBCSVQoMikpIHsNCgkJaW50ICpyZXQgPSBkYXRhOw0KCQkqcmV0ID0gISEoclsx
+NV0gJiAweDEwKTsNCgl9DQoNCj4gKwkJfQ0KPiArCX0NCj4gIH0NCj4gIA0KPiAgLyogRURJRCAx
+LjQgZGVmaW5lcyB0aGlzIGV4cGxpY2l0bHkuICBGb3IgRURJRCAxLjMsIHdlIGd1ZXNzLCBiYWRs
+eS4gKi8NCj4gIHN0YXRpYyBib29sDQo+ICBkcm1fbW9uaXRvcl9zdXBwb3J0c19yYihzdHJ1Y3Qg
+ZWRpZCAqZWRpZCkNCj4gIHsNCj4gKwlzdHJ1Y3QgZWRpZF9zdXBwb3J0X3JiX2Nsb3N1cmUgY2xv
+c3VyZSA9IHsNCj4gKwkJLmVkaWQgPSBlZGlkLA0KPiArCQkudmFsaWRfc3VwcG9ydF9yYiA9IGZh
+bHNlLA0KPiArCQkuc3VwcG9ydF9yYiA9IGZhbHNlLA0KPiArCX07DQo+ICsNCj4gIAlpZiAoZWRp
+ZC0+cmV2aXNpb24gPj0gNCkgew0KPiAtCQlib29sIHJldCA9IGZhbHNlOw0KPiAtCQlkcm1fZm9y
+X2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZyZXQpOw0KPiAtCQlyZXR1
+cm4gcmV0Ow0KPiArCQlkcm1fZm9yX2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNf
+cmIsICZjbG9zdXJlKTsNCj4gKwkJaWYgKGNsb3N1cmUudmFsaWRfc3VwcG9ydF9yYikNCj4gKwkJ
+CXJldHVybiBjbG9zdXJlLnN1cHBvcnRfcmI7DQoNCkhlcmUsIHlvdSdkIGRvOg0KDQogICAgICAg
+IGlmIChlZGlkLT5mZWF0dXJlcyAmIEJJVCgwKSkgew0KICAgICAgICAJaW50IHJldCA9IC0xOw0K
+CQlkcm1fZm9yX2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZyZXQpOw0K
+ICAgICAgICAgICAgICAgIGlmIChyZXQgIT0gLTEpDQogICAgICAgICAgICAgICAgCXJldHVybiBy
+ZXQ7DQoJfQ0KDQoNCj4gIAl9DQo+ICANCj4gIAlyZXR1cm4gKChlZGlkLT5pbnB1dCAmIERSTV9F
+RElEX0lOUFVUX0RJR0lUQUwpICE9IDApOw0KDQotLSANCkphbmkgTmlrdWxhLCBJbnRlbCBPcGVu
+IFNvdXJjZSBHcmFwaGljcyBDZW50ZXINCg==
