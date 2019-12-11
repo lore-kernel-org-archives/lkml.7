@@ -2,116 +2,151 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5E1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C3C2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D291D2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080107;
-	bh=8fXR3pDHRmhmejxjqkM7w/Bbc1ZTBgKxvue1qmh4iVg=;
+	s=default; t=1576080109;
+	bh=Ur/viyuBEyZ5mqbdrZIIH5xEqPh/48fUizwmkULdx4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V4Ss8Np1i2SL381xcTNrizZ2KZ21PlxQKzAM+kjIKK44FtcJIuhQ2SIt/0lwsB+Tu
-	 A1uyADkgnnBBxLsE3ZNVGbYMfwByrYlSEThEXbKIwmZ5GW0QCLGs4PFFUwRVlqtiDi
-	 9+G7HD7XgMe0i5KRh9dwXMnInFEHjwgWcicl0hc0=
+	b=zGOR001nIxzZ46yTGxeNWePvgIWgwB40/44hM5A5lD7xxDyLqsPoBgF913uMwwS6W
+	 6m9Luy+tWaV/DC6EWr65i5XZAtg1/5glXOpC7mRSeiJBjX/2HjyOO4ae0g/jyG+UR8
+	 piB+nXHCiq8MyasmeKZ4KpMLiUqZ0TX6Mr5doJEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388099AbfLKQBm (ORCPT
+        id S1731862AbfLKQBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:01:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbfLKPNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731411AbfLKPNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:24 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAD4E20663;
-        Wed, 11 Dec 2019 15:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1574E24656;
+        Wed, 11 Dec 2019 15:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077205;
-        bh=8fXR3pDHRmhmejxjqkM7w/Bbc1ZTBgKxvue1qmh4iVg=;
+        s=default; t=1576077204;
+        bh=Ur/viyuBEyZ5mqbdrZIIH5xEqPh/48fUizwmkULdx4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmlL++8/v0i2/R78MlFVaiEos0yFhBKu37fgpNX9C+nQIFyt7QWsEBVTAklJ1Wayp
-         0iMQKh45BBiD8yUZB//Ft/P76qYlDW4Ap94H7s5yv67GyLNpJv4POW/+UOSExxSRHO
-         qyV3M402QhK0as0ZFzeOY9lVf8OqR+k3NNdbVZIc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.3 057/105] Input: synaptics-rmi4 - dont increment rmiaddr for SMBus transfers
-Date:   Wed, 11 Dec 2019 16:05:46 +0100
-Message-Id: <20191211150243.392936394@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=xaFJuEPcATQr3gajjFdK81T2jXtUe/ZD+k2Z0IwMHQDaLbRTYTcOIpv3XfDTykEj9
+         q3tfUDXjFbnIByX5sz9X2/QF743gd5dQOYV26PUqffvcC4DbAJUOGhoept9HbpIyaU
+         i0IinKA4rMKJ6ba8TsLurhL1+H60LdBzwR2d1QhA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julia Cartwright <julia@ni.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+        Tim Sander <tim@krieglstein.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 086/134] watchdog: prevent deferral of watchdogd wakeup on RT
+Date:   Wed, 11 Dec 2019 10:11:02 -0500
+Message-Id: <20191211151150.19073-86-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Julia Cartwright <julia@ni.com>
 
-commit a284e11c371e446371675668d8c8120a27227339 upstream.
+[ Upstream commit a19f89335f4bda3d77d991c96583e3e51856acbb ]
 
-This increment of rmi_smbus in rmi_smb_read/write_block() causes
-garbage to be read/written.
+When PREEMPT_RT is enabled, all hrtimer expiry functions are
+deferred for execution into the context of ksoftirqd unless otherwise
+annotated.
 
-The first read of SMB_MAX_COUNT bytes is fine, but after that
-it is nonsense. Trial-and-error showed that by dropping the
-increment of rmiaddr everything is fine and the F54 function
-properly works.
+Deferring the expiry of the hrtimer used by the watchdog core, however,
+is a waste, as the callback does nothing but queue a kthread work item
+and wakeup watchdogd.
 
-I tried a hack with rmi_smb_write_block() as well (writing to the
-same F54 touchpad data area, then reading it back), and that
-suggests that there too the rmiaddr increment has to be dropped.
-It makes sense that if it has to be dropped for read, then it has
-to be dropped for write as well.
+It's worst then that, too: the deferral through ksoftirqd also means
+that for correct behavior a user must adjust the scheduling parameters
+of both watchdogd _and_ ksoftirqd, which is unnecessary and has other
+side effects (like causing unrelated expiry functions to execute at
+potentially elevated priority).
 
-It looks like the initial work with F54 was done using i2c, not smbus,
-and it seems nobody ever tested F54 with smbus. The other functions
-all read/write less than SMB_MAX_COUNT as far as I can tell, so this
-issue was never noticed with non-F54 functions.
+Instead, mark the hrtimer used by the watchdog core as being _HARD to
+allow it's execution directly from hardirq context.  The work done in
+this expiry function is well-bounded and minimal.
 
-With this change I can read out the touchpad data correctly on my
-Lenovo X1 Carbon 6th Gen laptop.
+A user still must adjust the scheduling parameters of the watchdogd
+to be correct w.r.t. their application needs.
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Link: https://lore.kernel.org/r/8dd22e21-4933-8e9c-a696-d281872c8de7@xs4all.nl
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lkml.kernel.org/r/0e02d8327aeca344096c246713033887bc490dd7.1538089180.git.julia@ni.com
+Cc: Guenter Roeck <linux@roeck-us.net>
+Reported-and-tested-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Reported-by: Tim Sander <tim@krieglstein.org>
+Signed-off-by: Julia Cartwright <julia@ni.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+[bigeasy: use only HRTIMER_MODE_REL_HARD]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20191105144506.clyadjbvnn7b7b2m@linutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_smbus.c |    2 --
- 1 file changed, 2 deletions(-)
+ drivers/watchdog/watchdog_dev.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/input/rmi4/rmi_smbus.c
-+++ b/drivers/input/rmi4/rmi_smbus.c
-@@ -163,7 +163,6 @@ static int rmi_smb_write_block(struct rm
- 		/* prepare to write next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
--		rmiaddr += SMB_MAX_COUNT;
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index dbd2ad4c92948..d3acc0a7256ca 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -158,7 +158,8 @@ static inline void watchdog_update_worker(struct watchdog_device *wdd)
+ 		ktime_t t = watchdog_next_keepalive(wdd);
+ 
+ 		if (t > 0)
+-			hrtimer_start(&wd_data->timer, t, HRTIMER_MODE_REL);
++			hrtimer_start(&wd_data->timer, t,
++				      HRTIMER_MODE_REL_HARD);
+ 	} else {
+ 		hrtimer_cancel(&wd_data->timer);
  	}
- exit:
- 	mutex_unlock(&rmi_smb->page_mutex);
-@@ -215,7 +214,6 @@ static int rmi_smb_read_block(struct rmi
- 		/* prepare to read next block of bytes */
- 		cur_len -= SMB_MAX_COUNT;
- 		databuff += SMB_MAX_COUNT;
--		rmiaddr += SMB_MAX_COUNT;
+@@ -177,7 +178,7 @@ static int __watchdog_ping(struct watchdog_device *wdd)
+ 	if (ktime_after(earliest_keepalive, now)) {
+ 		hrtimer_start(&wd_data->timer,
+ 			      ktime_sub(earliest_keepalive, now),
+-			      HRTIMER_MODE_REL);
++			      HRTIMER_MODE_REL_HARD);
+ 		return 0;
  	}
  
- 	retval = 0;
-
+@@ -971,7 +972,7 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
+ 		return -ENODEV;
+ 
+ 	kthread_init_work(&wd_data->work, watchdog_ping_work);
+-	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
+ 	wd_data->timer.function = watchdog_timer_expired;
+ 
+ 	if (wdd->id == 0) {
+@@ -1019,7 +1020,8 @@ static int watchdog_cdev_register(struct watchdog_device *wdd, dev_t devno)
+ 		__module_get(wdd->ops->owner);
+ 		kref_get(&wd_data->kref);
+ 		if (handle_boot_enabled)
+-			hrtimer_start(&wd_data->timer, 0, HRTIMER_MODE_REL);
++			hrtimer_start(&wd_data->timer, 0,
++				      HRTIMER_MODE_REL_HARD);
+ 		else
+ 			pr_info("watchdog%d running and kernel based pre-userspace handler disabled\n",
+ 				wdd->id);
+-- 
+2.20.1
 
