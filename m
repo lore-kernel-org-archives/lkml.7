@@ -2,106 +2,197 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA68C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C71C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14CDA2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707B12054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="ic5e0TCq"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n8ng2gW+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726631AbfLKVXQ (ORCPT
+        id S1726787AbfLKVZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:23:16 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35996 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfLKVXP (ORCPT
+        Wed, 11 Dec 2019 16:25:37 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1456 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfLKVZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 16:23:15 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k3so10717898pgc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 13:23:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PiR4x9CoXnfWfCbQNTlgRP9ROMJUyaR0E0re5tOFBZ8=;
-        b=ic5e0TCqEoJNzj9fGsZQ5N9SAW1l1zgvcZjd56LeFf5mo1wulGCYmSTCjH4ILs0YEe
-         l0mfUZXXjf3ooPnzRT1O5RQkCzKRkw3aqkN6c2aPB9HdsQAWkzDvP0cx/iGQbWP2t3pu
-         OlFJpnzJ8dCIZifbJ784hdGKIMOGG7yVROYcG8TJl58+nHOnsMoJJT25BopTVvv3IMg0
-         S30euSGIGuRb5eKE8njTHIQT51IW4VwwnkkUIrzA4M5bZFNYAkPcWIKJKhk5HR8BLGEx
-         OdYbcmbLDNTSUSpgsSTjJLijaP52w2E5/t0+bLYB1g51M7v/881bd8pQZo7cFN8SWmSx
-         F1cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PiR4x9CoXnfWfCbQNTlgRP9ROMJUyaR0E0re5tOFBZ8=;
-        b=MHCjype4xqVoXLLo5UXhpfCf2dsgvEaC+9bHvC5/87b6zG2RWagiA4KQJLC9ybMNBG
-         XjsDcfa0CiUEVar6VCAM4ysBeRGtBWQ4x3MCnNDB/mtbrUD945MTmZWd5fvWE7zGDexj
-         tid8Jf4mYFi0yxjDj9lR+EKk+myQVkwrm/S542RibTPuK9e0YGw6SvJszsjEW2rzhN4e
-         J0MKEaH93yu9ujHaDgfhy24NZ+YQk6VjDGwnpiaolQSjgpBoRLQzH5EEVD7zpTIt4y68
-         5+q0wSYe7k05c0LYQWglbibnKlMnXkFZEu7LlpXBCTs0Sjj9KRH9vyueSUn7eSWLSqra
-         ooTw==
-X-Gm-Message-State: APjAAAWlk28Uy7dWpd0l4l9ES7h9ah8QHyZeiXkAJtvMncKNgQD/zMNN
-        otlnO+dtcgyO0IHUIIRP+3H7tg==
-X-Google-Smtp-Source: APXvYqwrFaHj1syZQej9q7UGHjSQjK/MJs091CunWjBi0pCJ3ZbBj0eGGn30dTwTAbwGEIu9ylCCTQ==
-X-Received: by 2002:a65:5cc2:: with SMTP id b2mr6457132pgt.171.1576099394769;
-        Wed, 11 Dec 2019 13:23:14 -0800 (PST)
-Received: from debian ([122.164.82.31])
-        by smtp.gmail.com with ESMTPSA id i3sm4270815pfg.94.2019.12.11.13.23.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 13:23:13 -0800 (PST)
-Date:   Thu, 12 Dec 2019 02:53:05 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191211212305.GA2676@debian>
-References: <20191211150221.153659747@linuxfoundation.org>
- <20191211161605.GA4849@debian>
- <20191211182852.GA715826@kroah.com>
- <20191211192232.GA14178@debian>
+        Wed, 11 Dec 2019 16:25:36 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df15eb80000>; Wed, 11 Dec 2019 13:25:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 11 Dec 2019 13:25:34 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 13:25:34 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 21:25:34 +0000
+Subject: Re: [PATCH v9 10/25] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+To:     Jonathan Corbet <corbet@lwn.net>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20191211025318.457113-1-jhubbard@nvidia.com>
+ <20191211025318.457113-11-jhubbard@nvidia.com>
+ <20191211135737.581add2f@lwn.net>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <c8930e77-9c99-2d3d-743d-9d58176ea690@nvidia.com>
+Date:   Wed, 11 Dec 2019 13:25:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211192232.GA14178@debian>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191211135737.581add2f@lwn.net>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576099513; bh=h8WoxBOtUL7d4aBHwikvS71dFoLle6Q1qJcgfYlGzoI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=n8ng2gW+8yccOTJ0sb0qKZBSBkMzrO2w+mX1jwAwhVYYv3FE21MXjsfMjjhApcnib
+         wo8d+ZRlDZwi9+66AYkoZtFFMIJupZ7au9saOmm/kNh3KbsRApo1SSaYZzqpFUg9dv
+         APDY2cvczFMX0P05ANDG9Wpe8w2DHHN7/JdQsO1AuudRaAw4keF3jV1uyq3uA82xUI
+         ieCnDqXdxIHT69mdMVDE/JA7qgs+lLHW/JROAhLDlkZchTV8THtwKre9xUIr3vtdDd
+         8O/vqZHRFo4GrCktOUJaI0JiNxox7/Ns2xEUIaiCnKWdDSbo4DOz0JmZdD1qJCvncm
+         kDdssHEUgirjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:52:32AM +0530, Jeffrin Jose wrote:
-> On Wed, Dec 11, 2019 at 07:28:52PM +0100, Greg Kroah-Hartman wrote:
-> > that's really odd.  How are you building this, from the git tree, or the
-> > tarball generated?
-> git tree
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+On 12/11/19 12:57 PM, Jonathan Corbet wrote:
+> On Tue, 10 Dec 2019 18:53:03 -0800
+> John Hubbard <jhubbard@nvidia.com> wrote:
 > 
+>> Introduce pin_user_pages*() variations of get_user_pages*() calls,
+>> and also pin_longterm_pages*() variations.
 > 
-> > And I still see that file in the 5.3 tree, what do you mean it was
-> > deleted?
+> Just a couple of nits on the documentation patch
 > 
-> may be during "git checkout linux-5.3.y" or may be i did "git pull" inside that branch
+>> +++ b/Documentation/core-api/pin_user_pages.rst
+>> @@ -0,0 +1,232 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +====================================================
+>> +pin_user_pages() and related calls
+>> +====================================================
+>> +
+>> +.. contents:: :local:
+>> +
+>> +Overview
+>> +========
+>> +
+>> +This document describes the following functions: ::
+>> +
+>> + pin_user_pages
+>> + pin_user_pages_fast
+>> + pin_user_pages_remote
 > 
-> that was a git status which showed "D" at the start of a few lines
-> and one of that lines showed that file.
-> i also checked that path locally and found it was not there
->
+> You could just say "the following functions::" and get the result you're
+> after with a slightly less alien plain-text reading experience.
 
-i downloaded the tree to another directory.
-i compiled the kernel and it was a success
+I see. That works nicely: same result with fewer :'s. 
 
---
-soffware engineer
-rajagiri school of engineering and technology
+> 
+> Of course, you could also just say "This document describes
+> pin_user_pages(), pin_user_pages_fast(), and pin_user_pages_remote()." But
+> that's a matter of personal taste, I guess.  Using the function() notation
+> will cause the docs system to automatically link to the kerneldoc info,
+> though.  
+
+OK. I did try the single-sentence approach just now, but to me the one-per-line
+seems to make both the text and the generated HTML slightly easier to look at. 
+Of course, like you say, different people will have different preferences. So 
+in the end I've combined the tips, like this:
+
++Overview
++========
++
++This document describes the following functions::
++
++ pin_user_pages()
++ pin_user_pages_fast()
++ pin_user_pages_remote()
+
+
+> 
+>> +Basic description of FOLL_PIN
+>> +=============================
+>> +
+>> +FOLL_PIN and FOLL_LONGTERM are flags that can be passed to the get_user_pages*()
+>> +("gup") family of functions. FOLL_PIN has significant interactions and
+>> +interdependencies with FOLL_LONGTERM, so both are covered here.
+>> +
+>> +FOLL_PIN is internal to gup, meaning that it should not appear at the gup call
+>> +sites. This allows the associated wrapper functions  (pin_user_pages*() and
+>> +others) to set the correct combination of these flags, and to check for problems
+>> +as well.
+>> +
+>> +FOLL_LONGTERM, on the other hand, *is* allowed to be set at the gup call sites.
+>> +This is in order to avoid creating a large number of wrapper functions to cover
+>> +all combinations of get*(), pin*(), FOLL_LONGTERM, and more. Also, the
+>> +pin_user_pages*() APIs are clearly distinct from the get_user_pages*() APIs, so
+>> +that's a natural dividing line, and a good point to make separate wrapper calls.
+>> +In other words, use pin_user_pages*() for DMA-pinned pages, and
+>> +get_user_pages*() for other cases. There are four cases described later on in
+>> +this document, to further clarify that concept.
+>> +
+>> +FOLL_PIN and FOLL_GET are mutually exclusive for a given gup call. However,
+>> +multiple threads and call sites are free to pin the same struct pages, via both
+>> +FOLL_PIN and FOLL_GET. It's just the call site that needs to choose one or the
+>> +other, not the struct page(s).
+>> +
+>> +The FOLL_PIN implementation is nearly the same as FOLL_GET, except that FOLL_PIN
+>> +uses a different reference counting technique.
+>> +
+>> +FOLL_PIN is a prerequisite to FOLL_LONGTGERM. Another way of saying that is,
+> 
+> FOLL_LONGTERM typoed there.
+> 
+
+Good catch. Fixed.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
 
