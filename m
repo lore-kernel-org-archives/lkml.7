@@ -2,126 +2,89 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A125C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B07C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBFE2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199A02073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfLKW7u (ORCPT
+        id S1726877AbfLKXB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:59:50 -0500
-Received: from mo-csw1116.securemx.jp ([210.130.202.158]:53884 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfLKW7t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:59:49 -0500
-Received: by mo-csw.securemx.jp (mx-mo-csw1116) id xBBMxe4F029592; Thu, 12 Dec 2019 07:59:40 +0900
-X-Iguazu-Qid: 2wGr1LCjibUcg58Ctk
-X-Iguazu-QSIG: v=2; s=0; t=1576105180; q=2wGr1LCjibUcg58Ctk; m=gbsfNuz+KBYcNC2h7vb+QMTGEz6U3KO65Z9ucjT1Me4=
-Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
-        by relay.securemx.jp (mx-mr1112) id xBBMxd2a004770;
-        Thu, 12 Dec 2019 07:59:39 +0900
-Received: from enc02.toshiba.co.jp ([61.202.160.51])
-        by imx12.toshiba.co.jp  with ESMTP id xBBMxcXf021742;
-        Thu, 12 Dec 2019 07:59:38 +0900 (JST)
-Received: from hop101.toshiba.co.jp ([133.199.85.107])
-        by enc02.toshiba.co.jp  with ESMTP id xBBMxcMj000808;
-        Thu, 12 Dec 2019 07:59:38 +0900
-Date:   Thu, 12 Dec 2019 07:59:37 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nguyen Viet Dung <dung.nguyen.aj@renesas.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 121/243] ASoC: rsnd: tidyup registering method for
- rsnd_kctrl_new()
-X-TSB-HOP: ON
-Message-ID: <20191211225937.nnu6kvvbyexfrahr@toshiba.co.jp>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150347.300543701@linuxfoundation.org>
+        Wed, 11 Dec 2019 18:01:27 -0500
+Received: from mga17.intel.com ([192.55.52.151]:10538 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726595AbfLKXB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:01:27 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 15:01:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
+   d="scan'208";a="245470797"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Dec 2019 15:01:26 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 5463F3002C5; Wed, 11 Dec 2019 15:01:26 -0800 (PST)
+Date:   Wed, 11 Dec 2019 15:01:26 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>, Kajol Jain <kjain@linux.ibm.com>
+Subject: Re: [RFC 0/3] perf tools: Add support for used defined metric
+Message-ID: <20191211230126.GC862919@tassilo.jf.intel.com>
+References: <20191211224800.9066-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211150347.300543701@linuxfoundation.org>
+In-Reply-To: <20191211224800.9066-1-jolsa@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Dec 11, 2019 at 04:04:43PM +0100, Greg Kroah-Hartman wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+On Wed, Dec 11, 2019 at 11:47:57PM +0100, Jiri Olsa wrote:
+> hi,
+> Joe asked for possibility to add user defined metrics. Given that
+> we already have metrics support, I added --metric option that allows
+> to specify metric on the command line, like:
 > 
-> [ Upstream commit 9c698e8481a15237a5b1db5f8391dd66d59e42a4 ]
+>   # perf stat  --metric 'DECODED_ICACHE_UOPS% = 100 * (idq.dsb_uops / \
+>     (idq.ms_uops + idq.mite_uops + idq.dsb_uops + lsd.uops))' ...
 > 
-> Current rsnd dvc.c is using flags to avoid duplicating register for
-> MIXer case. OTOH, commit e894efef9ac7 ("ASoC: core: add support to card
-> rebind") allows to rebind sound card without rebinding all drivers.
-> 
-> Because of above patch and dvc.c flags, it can't re-register kctrl if
-> only sound card was rebinded, because dvc is keeping old flags.
-> (Of course it will be no problem if rsnd driver also be rebinded,
-> but it is not purpose of above patch).
-> 
-> This patch checks current card registered kctrl when registering.
-> In MIXer case, it can avoid duplicate register if card already has same
-> kctrl. In rebind case, it can re-register kctrl because card registered
-> kctl had been removed when unbinding.
-> 
-> This patch is updated version of commit b918f1bc7f1ce ("ASoC: rsnd: DVC
-> kctrl sets once")
-> 
-> Reported-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Tested-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
-> Cc: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> The code facilitates the current metric code, and I was surprised
+> how easy it was, so I'm not sure I omitted something ;-)
 
-This commit also requires the following commit:
+There are some asserts you can hit, like for too many events.
 
-commit 7aea8a9d71d54f449f49e20324df06341cc18395
-Author: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Date:   Fri Feb 1 16:49:30 2019 +0900
+Also some of the syntax (e.g. using @ instead of / and escapes) are
+not super user friendly.
 
-    ASoC: rsnd: fixup MIX kctrl registration
+Other than that it should be ok.
 
-    Renesas sound device has many IPs and many situations.
-    If platform/board uses MIXer, situation will be more complex.
-    To avoid duplicate DVC kctrl registration when MIXer was used,
-    it had original flags.
-    But it was issue when sound card was re-binded, because
-    no one can't cleanup this flags then.
+Of course it would be better to put it into a file,
+and then support comments etc.
 
-    To solve this issue, commit 9c698e8481a15237a ("ASoC: rsnd: tidyup
-    registering method for rsnd_kctrl_new()") checks registered
-    card->controls, because if card was re-binded, these were cleanuped
-    automatically. This patch could solve re-binding issue.
-    But, it start to avoid MIX kctrl.
+I've been considering some extensions to perf to support @file
+reading with comment support.
 
-    To solve these issues, we need below.
-    To avoid card re-binding issue: check registered card->controls
-    To avoid duplicate DVC registration: check registered rsnd_kctrl_cfg
-    To allow multiple MIX registration: check registered rsnd_kctrl_cfg
-    This patch do it.
+Right now there are some very odd bugs when you do that, lie
 
-    Fixes: 9c698e8481a15237a ("ASoC: rsnd: tidyup registering method for rsnd_kctrl_new()")
-    Reported-by: Jiada Wang <jiada_wang@mentor.com>
-    Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-    Tested-By: Jiada Wang <jiada_wang@mentor.com>
-    Signed-off-by: Mark Brown <broonie@kernel.org>
+-e 'event,<newline>
+event,<newline>
+event...'
 
+adds the newline to the event name, which breaks the output formats.
 
-Please apply this to 4.19.y and 4.14.y.
-
-Best regards,
-  Nobuhiro
+-Andi
