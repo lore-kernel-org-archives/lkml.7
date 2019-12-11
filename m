@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CF3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2228C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1524420836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F5120836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080671;
-	bh=+FZXhK99v5zXMtFE3KEO3IcpSqvMG8CoGH2tNdMAtdE=;
+	s=default; t=1576080675;
+	bh=UpBlCeV7bfd29ME9bJvtWmZPHusiY1X6vU4HD458FMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVx0FPVLthwUy2h+fRk/dp4kpLORtnzClnf+h4eLHEaYgOsxisgBQ7KBQ4n6K9DKk
-	 UJzjunujIOGf/mZ5NQ90AoZGa0ASFS7mWrj3wnYmfjhcMGpH/Q+Yg9A9QZDkxFdfbk
-	 jawCyTg8X3DY/8SUQzvQid/0+YsU6v1cxlgccOyg=
+	b=0VbAIM7t328DRvsLtoFQQRPJX5jpPM21qz8vakuni+pQHZT44/g6/3qt2GlVfiGOo
+	 FDww8m9ERqLVCeZt1pR96R+3/gePVleG3vtkFkBQkN6dQWWt75uuTcYw9skCoUDJj5
+	 /nYbAWgMzBwremGOoNc8DffzxR4DZK/2hvDlSspE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfLKPLR (ORCPT
+        id S1730888AbfLKPLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59768 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730892AbfLKPLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:14 -0500
+        id S1730880AbfLKPLJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B074222C4;
-        Wed, 11 Dec 2019 15:11:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BCD6208C3;
+        Wed, 11 Dec 2019 15:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077074;
-        bh=+FZXhK99v5zXMtFE3KEO3IcpSqvMG8CoGH2tNdMAtdE=;
+        s=default; t=1576077068;
+        bh=UpBlCeV7bfd29ME9bJvtWmZPHusiY1X6vU4HD458FMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UvyaojnSJM0AboVEIlHZyJSj66HoRQhi6vuIw3AZKddBDHxwNVJDdCzEG+1VeG7Xj
-         jynziLpZeQzXhJmR3WL54fX/mzusMZQqLGJBMTD0iJezuAR4DPQk44pr5w99+2b7LL
-         kfkJ8Y8h4VzCvyBNbQzfwV+XgFiQbE7CDReqRH04=
+        b=bfWF0/+FNGlyeTjcxzEocltUFI5s5UyaDUuvs5pKXe+HMTCThE6jU4Chf76FkHUFr
+         S4+w0VKm5VuKg+SblrJo+Kr6P6Gn4AMGb+ir2Jqr5U1siwtD3U649m43d86axgr7fK
+         PtTscdLYx4SjBs6suGtos8uvWv2vsBQbIl2LhtPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 5.4 87/92] thermal: Fix deadlock in thermal thermal_zone_device_check
-Date:   Wed, 11 Dec 2019 16:06:18 +0100
-Message-Id: <20191211150302.037884152@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Laura Abbott <labbott@redhat.com>
+Subject: [PATCH 5.4 85/92] bdev: Refresh bdev size for disks without partitioning
+Date:   Wed, 11 Dec 2019 16:06:16 +0100
+Message-Id: <20191211150301.478486571@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,96 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <wvw@google.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
+commit cba22d86e0a10b7070d2e6a7379dbea51aa0883c upstream.
 
-1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
-device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
-a use-after-free issue. However, cancel_delayed_work_sync could be called
-insides the WQ causing deadlock.
+Currently, block device size in not updated on second and further open
+for block devices where partition scan is disabled. This is particularly
+annoying for example for DVD drives as that means block device size does
+not get updated once the media is inserted into a drive if the device is
+already open when inserting the media. This is actually always the case
+for example when pktcdvd is in use.
 
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+Fix the problem by revalidating block device size on every open even for
+devices with partition scan disabled.
 
-Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wei Wang <wvw@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Laura Abbott <labbott@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thermal/thermal_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/block_dev.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -304,7 +304,7 @@ static void thermal_zone_device_set_poll
- 				 &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1403,11 +1403,7 @@ static void flush_disk(struct block_devi
+ 		       "resized disk %s\n",
+ 		       bdev->bd_disk ? bdev->bd_disk->disk_name : "");
+ 	}
+-
+-	if (!bdev->bd_disk)
+-		return;
+-	if (disk_part_scan_enabled(bdev->bd_disk))
+-		bdev->bd_invalidated = 1;
++	bdev->bd_invalidated = 1;
  }
  
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -1414,7 +1414,7 @@ void thermal_zone_device_unregister(stru
+ /**
+@@ -1514,10 +1510,15 @@ static void __blkdev_put(struct block_de
  
- 	mutex_unlock(&thermal_list_lock);
+ static void bdev_disk_changed(struct block_device *bdev, bool invalidate)
+ {
+-	if (invalidate)
+-		invalidate_partitions(bdev->bd_disk, bdev);
+-	else
+-		rescan_partitions(bdev->bd_disk, bdev);
++	if (disk_part_scan_enabled(bdev->bd_disk)) {
++		if (invalidate)
++			invalidate_partitions(bdev->bd_disk, bdev);
++		else
++			rescan_partitions(bdev->bd_disk, bdev);
++	} else {
++		check_disk_size_change(bdev->bd_disk, bdev, !invalidate);
++		bdev->bd_invalidated = 0;
++	}
+ }
  
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
- 
- 	thermal_set_governor(tz, NULL);
- 
+ /*
 
 
