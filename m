@@ -2,200 +2,204 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B4C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0ABC2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6452073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lofcsni9"
+	by mail.kernel.org (Postfix) with ESMTP id 139332073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbfLKE1m (ORCPT
+        id S1727689AbfLKE1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:27:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37478 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfLKE1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:27:42 -0500
-Received: by mail-pg1-f194.google.com with SMTP id q127so10114090pga.4;
-        Tue, 10 Dec 2019 20:27:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rEcgwnaRhxf5O9dD75Zxn4HOLh2R66s7XyntOC74d9E=;
-        b=Lofcsni9piHB5mGQqPP+2S3S9s2EWFhep17RT10aY33Ak4WVy8+GtR5AqC/lyTbgrr
-         Gg/7AF1H3tw7Ve+kMhOLmpbKBhsALPRZb3g8pXcEmQqBhuJ1TdI359kUsfjWqHhPuF9a
-         c6YUIfaBtfXhrVNjJljAadm+61nNiWTUpAc8EiURHCKSBZUqniMDjhKcXY1RsM8zqQF7
-         0+Nbn1ryRgDh6di/c5AcWUXRcFRtaiYCz2hmEmFPNPYADcLKg2SsK9lzyB9qTXjUe591
-         vOtDOH2suB8pnV0xgEsaHX1zr6nzndzvfkECb7EbFXB1tS7YazCJzuSOKlfTRMoSx08m
-         HPBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rEcgwnaRhxf5O9dD75Zxn4HOLh2R66s7XyntOC74d9E=;
-        b=IokzFSU6RRVFEItTbz+aP1SRf/G2Y1YU4RhLb4WHPPQeozzRQCh3mnQnc1xYLGJBlp
-         bGGEwK4fOTADjDdD3EB6Lb2oQ6wAAIxUzhKqhDWnubHCILak0+btV/mZ0YvgSbPOfcjb
-         ZoAZZhlbDYI1LQOkKYsiiP5L9z2LsM6rSRKxB7nSsmmTKFeXOWQ800EvYaIjfAuMCFTK
-         o+wgGV9d3ymp9yUWcZhjZZcuFrKy+mTIN4qXmouSQnNcbvNWeMz6YUpoV4WoyNNTpThb
-         bidH6d8R80PR7eLXZapdaCCCL+j5pcqxAD0pn1SvaVjhD4vdL7dNO53FX1fLqZ+vCGgm
-         7JTw==
-X-Gm-Message-State: APjAAAWkROAluKB7X/MNql8H1F/ZasRdjfAdXWccYUI70XqunYB7mWWH
-        6vQrDDt9NC7dkBta5HIDIhU=
-X-Google-Smtp-Source: APXvYqy24bhJZxnJNM/F0i7fclLKt26wgSxp0KGAPJ6m6mq/sBjQJXDJ7S1yh/UQDwwQYt2vwWmJFQ==
-X-Received: by 2002:a63:5818:: with SMTP id m24mr1905056pgb.358.1576038460800;
-        Tue, 10 Dec 2019 20:27:40 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id m12sm591259pgr.87.2019.12.10.20.27.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 20:27:40 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        roger.pau@citrix.com
-Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/3] xen/blkback: Remove unnecessary static variable name prefixes
-Date:   Wed, 11 Dec 2019 04:27:33 +0000
-Message-Id: <20191211042733.6143-1-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211042428.5961-1-sjpark@amazon.de>
-References: <20191211042428.5961-1-sjpark@amazon.de>
+        Tue, 10 Dec 2019 23:27:46 -0500
+Received: from mga09.intel.com ([134.134.136.24]:42090 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbfLKE1p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 23:27:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 20:27:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="210642007"
+Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.152]) ([10.239.196.152])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Dec 2019 20:27:42 -0800
+Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
+ Write Policy
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191202070348.32148-1-tao3.xu@intel.com>
+ <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
+ <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com>
+ <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
+ <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com>
+ <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
+ <82e7361e-256e-002c-6b30-601cec1fad07@intel.com>
+ <0f8084fd-86a9-081c-e32a-20c756c9daf6@intel.com>
+ <CAPcyv4gq690oQgjD53qF_v7YPT2shR0pw5ubtXbOcYMQfH1wxg@mail.gmail.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <abb6f080-4523-7af3-d900-e1d500b35032@intel.com>
+Date:   Wed, 11 Dec 2019 12:27:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4gq690oQgjD53qF_v7YPT2shR0pw5ubtXbOcYMQfH1wxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few of static variables in blkback have 'xen_blkif_' prefix, though it
-is unnecessary for static variables.  This commit removes such prefixes.
+On 12/11/2019 11:37 AM, Dan Williams wrote:
+> On Tue, Dec 10, 2019 at 7:05 PM Tao Xu <tao3.xu@intel.com> wrote:
+>>
+>>
+>> On 12/10/19 9:18 PM, Tao Xu wrote:
+>>> On 12/10/2019 4:27 PM, Rafael J. Wysocki wrote:
+>>>> On Tue, Dec 10, 2019 at 9:19 AM Tao Xu <tao3.xu@intel.com> wrote:
+>>>>>
+>>>>> On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
+>>>>>> On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
+>>>>>>>
+>>>>>>> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
+>>>>>>>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
+>>>>>>>>>
+>>>>>>>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
+>>>>>>>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex
+>>>>>>>>> Cache
+>>>>>>>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
+>>>>>>>>> 2 is "Write Through" for Write Policy.
+>>>>>>>>
+>>>>>>>> Well, I'm not sure what the connection between the above statement,
+>>>>>>>> which is correct AFAICS, and the changes made by the patch is.
+>>>>>>>>
+>>>>>>>> Is that the *_OTHER symbol names are confusing or something deeper?
+>>>>>>>>
+>>>>>>>
+>>>>>>> Because in include/acpi/actbl1.h:
+>>>>>>>
+>>>>>>> #define ACPI_HMAT_CA_NONE                     (0)
+>>>>>>>
+>>>>>>> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
+>>>>>>>
+>>>>>>>        enum cache_indexing {
+>>>>>>>               NODE_CACHE_DIRECT_MAP,
+>>>>>>>               NODE_CACHE_INDEXED,
+>>>>>>>               NODE_CACHE_OTHER,
+>>>>>>>        };
+>>>>>>> NODE_CACHE_OTHER is 2, and for otner enum:
+>>>>>>>
+>>>>>>>              case ACPI_HMAT_CA_DIRECT_MAPPED:
+>>>>>>>                      tcache->cache_attrs.indexing =
+>>>>>>> NODE_CACHE_DIRECT_MAP;
+>>>>>>>                      break;
+>>>>>>>              case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
+>>>>>>>                      tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
+>>>>>>>                      break;
+>>>>>>> in include/acpi/actbl1.h:
+>>>>>>>
+>>>>>>>      #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
+>>>>>>>      #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
+>>>>>>>
+>>>>>>> but in include/linux/node.h:
+>>>>>>>
+>>>>>>> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is
+>>>>>>> incorrect.
+>>>>>>
+>>>>>> Why is it incorrect?
+>>>>>
+>>>>> Sorry I paste the wrong pre-define.
+>>>>>
+>>>>> This is the incorrect line:
+>>>>>
+>>>>> case ACPI_HMAT_CA_DIRECT_MAPPED:
+>>>>> tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
+>>>>>
+>>>>> ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means
+>>>>> if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in
+>>>>> cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole
+>>>>> switch codes:
+>>>>
+>>>> This is a mapping between the ACPI-defined values and the generic ones
+>>>> defined in the kernel.  There is not rule I know of by which they must
+>>>> be the same numbers.  Or is there such a rule which I'm missing?
+>>>>
+>>>> As long as cache_attrs.indexing is used consistently going forward,
+>>>> the difference between the ACPI-defined numbers and its values
+>>>> shouldn't matter, should it?
+>>>>
+>>> Yes, it will not influence the ACPI HMAT tables. Only influence is the
+>>> sysfs, as in
+>>> https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html:
+>>>
+>>> # tree sys/devices/system/node/node0/memory_side_cache/
+>>> /sys/devices/system/node/node0/memory_side_cache/
+>>> |-- index1
+>>> |   |-- indexing
+>>> |   |-- line_size
+>>> |   |-- size
+>>> |   `-- write_policy
+>>>
+>>> indexing is parsed in this file, so it can be read by user-space.
+>>> Although now there is no user-space tool use this information to do some
+>>> thing. But I am wondering if it is used in the future, someone use it to
+>>> show the memory side cache information to user or use it to do
+>>> performance turning.
+>>
+>> I finish a test using emulated ACPI HMAT from QEMU
+>> (branch:hmat https://github.com/taoxu916/qemu.git)
+>>
+>> And I get the kernel log and sysfs output:
+>> [    0.954288] HMAT: Cache: Domain:0 Size:20480 Attrs:00081111 SMBIOS
+>> Handles:0
+>> [    0.954835] HMAT: Cache: Domain:1 Size:15360 Attrs:00081111 SMBIOS
+>> Handles:0
+>>
+>> /sys/devices/system/node/node0/memory_side_cache/index1 # cat indexing
+>> 0
+>> /sys/devices/system/node/node0/memory_side_cache/index1 # cat write_policy
+>> 0
+>>
+>> Note that 'Attrs' is printed using %x, so we can get:
+>> (attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8 = 1,
+>> (attrs & ACPI_HMAT_WRITE_POLICY) >> 12       = 1
+>>
+>> but we get 0 in sysfs, so if user or software read this information and
+>> read the ACPI 6.3 spec, will think there is 'none' for Cache
+>> Associativity or Write Policy.
+> 
+> The sysfs interface is not meant to reflect the ACPI values. This
+> sysfs information may be populated by another platform firmware
+> (non-ACPI). I would have preferred that these files use text values
+> rather than numbers. However, at least the ABI documentation gives the
+> expected translation:
+> 
+> What:           /sys/devices/system/node/nodeX/memory_side_cache/indexY/indexing
+> Date:           December 2018
+> Contact:        Keith Busch <keith.busch@intel.com>
+> Description:
+>                  The caches associativity indexing: 0 for direct mapped,
+>                  non-zero if indexed.
+> 
+> What:
+> /sys/devices/system/node/nodeX/memory_side_cache/indexY/write_policy
+> Date:           December 2018
+> Contact:        Keith Busch <keith.busch@intel.com>
+> Description:
+>                  The cache write policy: 0 for write-back, 1 for write-through,
+>                  other or unknown.
+> 
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- drivers/block/xen-blkback/blkback.c | 37 +++++++++++++----------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index b493c306e84f..f690373669b8 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -62,8 +62,8 @@
-  * IO workloads.
-  */
- 
--static int xen_blkif_max_buffer_pages = 1024;
--module_param_named(max_buffer_pages, xen_blkif_max_buffer_pages, int, 0644);
-+static int max_buffer_pages = 1024;
-+module_param_named(max_buffer_pages, max_buffer_pages, int, 0644);
- MODULE_PARM_DESC(max_buffer_pages,
- "Maximum number of free pages to keep in each block backend buffer");
- 
-@@ -78,8 +78,8 @@ MODULE_PARM_DESC(max_buffer_pages,
-  * algorithm.
-  */
- 
--static int xen_blkif_max_pgrants = 1056;
--module_param_named(max_persistent_grants, xen_blkif_max_pgrants, int, 0644);
-+static int max_pgrants = 1056;
-+module_param_named(max_persistent_grants, max_pgrants, int, 0644);
- MODULE_PARM_DESC(max_persistent_grants,
-                  "Maximum number of grants to map persistently");
- 
-@@ -88,8 +88,8 @@ MODULE_PARM_DESC(max_persistent_grants,
-  * use. The time is in seconds, 0 means indefinitely long.
-  */
- 
--static unsigned int xen_blkif_pgrant_timeout = 60;
--module_param_named(persistent_grant_unused_seconds, xen_blkif_pgrant_timeout,
-+static unsigned int pgrant_timeout = 60;
-+module_param_named(persistent_grant_unused_seconds, pgrant_timeout,
- 		   uint, 0644);
- MODULE_PARM_DESC(persistent_grant_unused_seconds,
- 		 "Time in seconds an unused persistent grant is allowed to "
-@@ -137,9 +137,8 @@ module_param(log_stats, int, 0644);
- 
- static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
- {
--	return xen_blkif_pgrant_timeout &&
--	       (jiffies - persistent_gnt->last_used >=
--		HZ * xen_blkif_pgrant_timeout);
-+	return pgrant_timeout && (jiffies - persistent_gnt->last_used >=
-+			HZ * pgrant_timeout);
- }
- 
- /* Once a memory pressure is detected, squeeze free page pools for a while. */
-@@ -249,7 +248,7 @@ static int add_persistent_gnt(struct xen_blkif_ring *ring,
- 	struct persistent_gnt *this;
- 	struct xen_blkif *blkif = ring->blkif;
- 
--	if (ring->persistent_gnt_c >= xen_blkif_max_pgrants) {
-+	if (ring->persistent_gnt_c >= max_pgrants) {
- 		if (!blkif->vbd.overflow_max_grants)
- 			blkif->vbd.overflow_max_grants = 1;
- 		return -EBUSY;
-@@ -412,14 +411,13 @@ static void purge_persistent_gnt(struct xen_blkif_ring *ring)
- 		goto out;
- 	}
- 
--	if (ring->persistent_gnt_c < xen_blkif_max_pgrants ||
--	    (ring->persistent_gnt_c == xen_blkif_max_pgrants &&
-+	if (ring->persistent_gnt_c < max_pgrants ||
-+	    (ring->persistent_gnt_c == max_pgrants &&
- 	    !ring->blkif->vbd.overflow_max_grants)) {
- 		num_clean = 0;
- 	} else {
--		num_clean = (xen_blkif_max_pgrants / 100) * LRU_PERCENT_CLEAN;
--		num_clean = ring->persistent_gnt_c - xen_blkif_max_pgrants +
--			    num_clean;
-+		num_clean = (max_pgrants / 100) * LRU_PERCENT_CLEAN;
-+		num_clean = ring->persistent_gnt_c - max_pgrants + num_clean;
- 		num_clean = min(ring->persistent_gnt_c, num_clean);
- 		pr_debug("Going to purge at least %u persistent grants\n",
- 			 num_clean);
-@@ -614,8 +612,7 @@ static void print_stats(struct xen_blkif_ring *ring)
- 		 current->comm, ring->st_oo_req,
- 		 ring->st_rd_req, ring->st_wr_req,
- 		 ring->st_f_req, ring->st_ds_req,
--		 ring->persistent_gnt_c,
--		 xen_blkif_max_pgrants);
-+		 ring->persistent_gnt_c, max_pgrants);
- 	ring->st_print = jiffies + msecs_to_jiffies(10 * 1000);
- 	ring->st_rd_req = 0;
- 	ring->st_wr_req = 0;
-@@ -675,7 +672,7 @@ int xen_blkif_schedule(void *arg)
- 		if (time_before(jiffies, buffer_squeeze_end))
- 			shrink_free_pagepool(ring, 0);
- 		else
--			shrink_free_pagepool(ring, xen_blkif_max_buffer_pages);
-+			shrink_free_pagepool(ring, max_buffer_pages);
- 
- 		if (log_stats && time_after(jiffies, ring->st_print))
- 			print_stats(ring);
-@@ -902,7 +899,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			continue;
- 		}
- 		if (use_persistent_gnts &&
--		    ring->persistent_gnt_c < xen_blkif_max_pgrants) {
-+		    ring->persistent_gnt_c < max_pgrants) {
- 			/*
- 			 * We are using persistent grants, the grant is
- 			 * not mapped but we might have room for it.
-@@ -929,7 +926,7 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
- 			pages[seg_idx]->persistent_gnt = persistent_gnt;
- 			pr_debug("grant %u added to the tree of persistent grants, using %u/%u\n",
- 				 persistent_gnt->gnt, ring->persistent_gnt_c,
--				 xen_blkif_max_pgrants);
-+				 max_pgrants);
- 			goto next;
- 		}
- 		if (use_persistent_gnts && !blkif->vbd.overflow_max_grants) {
--- 
-2.17.1
-
+I understand. Thank you for your explanation.
