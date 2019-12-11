@@ -2,141 +2,94 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F840C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD811C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F9A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576084662;
-	bh=dOuJNHAPl5FHZkOeRPDhTFMXyq47JG1PI8yv+OOVfaU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=cK8yCwX9zjqNZZeieOzjRRNzljwwx2ASNDra5itKKoYhho1hRY3R9eazkXiCOSZ03
-	 qApFzWvi/GWdnP1wyGAGnfCIhP5u7xcCoHOPF5H6dEyfOGGEGWjwB/4z+kFHEJnu5a
-	 stSjyUTVfsS5LnF6ATNSGvJQlwb7zip3/VCbKN2I=
+	by mail.kernel.org (Postfix) with ESMTP id 12C7320409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:18:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ZHtoUkb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbfLKRRl (ORCPT
+        id S1730971AbfLKRSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:17:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730318AbfLKRRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:17:40 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A2F120409;
-        Wed, 11 Dec 2019 17:17:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576084659;
-        bh=dOuJNHAPl5FHZkOeRPDhTFMXyq47JG1PI8yv+OOVfaU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=gh0LcUDKYgOA/hOeopM/3GrtdmxbEsXTnQ81WJKaNZo3eqkNHo6+XUva4EPeWd8rp
-         8ti1qC8cmm23LYt3T+EqEijft8ZbQmmJ5kkeqO1mrBeHMOmi+O+I013JhMJmQQZCvd
-         Q7g/V7ngBKpaK8NGrTqdMAlzwIm3OoSKKfFetadw=
-Subject: Re: [PATCH] selftests: Fix dangling documentation references to
- kselftest_module.sh
-To:     Kees Cook <keescook@chromium.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <20191206031738.29641-1-mpe@ellerman.id.au>
- <201912071043.748BB5A6@keescook>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8f176a1d-23af-b4e7-f346-87d030adf239@kernel.org>
-Date:   Wed, 11 Dec 2019 10:17:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 12:18:11 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:23573 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730318AbfLKRSL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576084689;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=yJhVHA0KDyri+p92otMafuDdf1Au9L7Gf/Y4TZiQnMg=;
+        b=ZHtoUkb+Ded4Q0bDg1i+/xIX0vCyYMXr4+u3UOu9SUcNtmrE+11ybl3ShRgYzpXxzS
+        JnO6i+psu1w7DYSn+2io38Lm78na68PluInRJkRL0ui28DuSzJCcmZsCdbQM6wP4akTe
+        imD9hbWufmvS67bs9TBX+tHi25XnvEPeSVDDE8PqpxyRpMPU22+g/TxF+foSax7F+nLX
+        UdLPcJuKIpg5p2RMSoyMe7ZhN8BdS+LKX9RuDea5kB42FhIsZSS0TAh9Q493fD8gRoXl
+        x3tLnhk0s/PI4/R1sdIU2YyMusvhTHeOgNZYtAKAFGd5m/L9F3CxZCxbyjUXNIkD6rzv
+        ZXKQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJGV8vHxv6O"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.0.2 AUTH)
+        with ESMTPSA id R01a59vBBHI9oG0
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 11 Dec 2019 18:18:09 +0100 (CET)
+Date:   Wed, 11 Dec 2019 18:18:08 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mfd: ab8500: Fix ab8500-clk typo
+Message-ID: <20191211171808.GB1530@gerhold.net>
+References: <20191211114639.748463-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <201912071043.748BB5A6@keescook>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211114639.748463-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/7/19 11:43 AM, Kees Cook wrote:
-> On Fri, Dec 06, 2019 at 02:17:38PM +1100, Michael Ellerman wrote:
->> Commit c78fd76f2b67 ("selftests: Move kselftest_module.sh into
->> kselftest/") moved kselftest_module.sh but missed updating a few
->> references to the path in documentation.
->>
->> Fixes: c78fd76f2b67 ("selftests: Move kselftest_module.sh into kselftest/")
->> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+On Wed, Dec 11, 2019 at 12:46:39PM +0100, Linus Walleij wrote:
+> Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+> has a typo error renaming "ab8500-clk" to "abx500-clk"
+> with the result att ALSA SoC audio broke as the clock
+> driver was not probing anymore. Fixed it up.
 > 
-> Whoops! Thank you! :)
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
-> 
-> -Kees
-> 
->> ---
->>   Documentation/dev-tools/kselftest.rst       | 8 ++++----
->>   tools/testing/selftests/kselftest/module.sh | 2 +-
->>   2 files changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/dev-tools/kselftest.rst b/Documentation/dev-tools/kselftest.rst
->> index ecdfdc9d4b03..61ae13c44f91 100644
->> --- a/Documentation/dev-tools/kselftest.rst
->> +++ b/Documentation/dev-tools/kselftest.rst
->> @@ -203,12 +203,12 @@ Test Module
->>   Kselftest tests the kernel from userspace.  Sometimes things need
->>   testing from within the kernel, one method of doing this is to create a
->>   test module.  We can tie the module into the kselftest framework by
->> -using a shell script test runner.  ``kselftest_module.sh`` is designed
->> +using a shell script test runner.  ``kselftest/module.sh`` is designed
->>   to facilitate this process.  There is also a header file provided to
->>   assist writing kernel modules that are for use with kselftest:
->>   
->>   - ``tools/testing/kselftest/kselftest_module.h``
->> -- ``tools/testing/kselftest/kselftest_module.sh``
->> +- ``tools/testing/kselftest/kselftest/module.sh``
->>   
->>   How to use
->>   ----------
->> @@ -247,7 +247,7 @@ Example Module
->>   
->>      #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->>   
->> -   #include "../tools/testing/selftests/kselftest_module.h"
->> +   #include "../tools/testing/selftests/kselftest/module.h"
->>   
->>      KSTM_MODULE_GLOBALS();
->>   
->> @@ -276,7 +276,7 @@ Example test script
->>   
->>       #!/bin/bash
->>       # SPDX-License-Identifier: GPL-2.0+
->> -    $(dirname $0)/../kselftest_module.sh "foo" test_foo
->> +    $(dirname $0)/../kselftest/module.sh "foo" test_foo
->>   
->>   
->>   Test Harness
->> diff --git a/tools/testing/selftests/kselftest/module.sh b/tools/testing/selftests/kselftest/module.sh
->> index 18e1c7992d30..fb4733faff12 100755
->> --- a/tools/testing/selftests/kselftest/module.sh
->> +++ b/tools/testing/selftests/kselftest/module.sh
->> @@ -9,7 +9,7 @@
->>   #
->>   #   #!/bin/sh
->>   #   SPDX-License-Identifier: GPL-2.0+
->> -#   $(dirname $0)/../kselftest_module.sh "description" module_name
->> +#   $(dirname $0)/../kselftest/module.sh "description" module_name
->>   #
->>   # Example: tools/testing/selftests/lib/printf.sh
->>   
->> -- 
->> 2.21.0
->>
-> 
+> Cc: Stephan Gerhold <stephan@gerhold.net>
+> Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks. Pulling it into fixes for next 5.5-rc
+FWIW:
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
 
--- Shuah
+> ---
+>  drivers/mfd/ab8500-core.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/ab8500-core.c b/drivers/mfd/ab8500-core.c
+> index bafc729fc434..3c6fda68e6bc 100644
+> --- a/drivers/mfd/ab8500-core.c
+> +++ b/drivers/mfd/ab8500-core.c
+> @@ -631,8 +631,8 @@ static const struct mfd_cell ab8500_devs[] = {
+>  		    NULL, NULL, 0, 0, "stericsson,ab8500-ext-regulator"),
+>  	OF_MFD_CELL("ab8500-regulator",
+>  		    NULL, NULL, 0, 0, "stericsson,ab8500-regulator"),
+> -	OF_MFD_CELL("abx500-clk",
+> -		    NULL, NULL, 0, 0, "stericsson,abx500-clk"),
+> +	OF_MFD_CELL("ab8500-clk",
+> +		    NULL, NULL, 0, 0, "stericsson,ab8500-clk"),
+>  	OF_MFD_CELL("ab8500-gpadc",
+>  		    NULL, NULL, 0, 0, "stericsson,ab8500-gpadc"),
+>  	OF_MFD_CELL("ab8500-rtc",
+> -- 
+> 2.23.0
+> 
