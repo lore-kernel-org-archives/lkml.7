@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 118B4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B07C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71A3208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEA12073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077455;
-	bh=5NWWTqVFiDV6KFnH8FHM980wxkNuXYpGH4rfXj5jZf0=;
+	s=default; t=1576077461;
+	bh=DskxH4nDed/fTxBnpZHfThwnlrqdlMuYDLk36DG9sts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sLHqdPZLxHYTyS2drV9zrxHPMMXMTxjauorU1PismCoHBr5nk41gS3kOZINFzlou0
-	 741ylETkKjD5C3CJuIUrZsknDC8AH3iSp4RlkEdKqWACqCAT7WywlHFF/KPONVsi4x
-	 OuRXaCbcTX3Qigar42Q9Bc9mBZQ6ITpdf2rbs0F0=
+	b=2pDXbRzVt0gVHJIx2KdZv4EvwWFy4x8JBR/xnt1EXqsg1yI2qd9TG2ExwfxSzKTEW
+	 JL0mtyq1/SUpmmu2BP4juxWYGLv+hFYlhyfIsxDQAlexbrnrHu6a065s4wOJM6lDYX
+	 0jhS/WYXYJ6tXjPNOVXCzeYBpFR2bTT6+YyIwQ5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbfLKPRe (ORCPT
+        id S1731739AbfLKPRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:17:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:17:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731717AbfLKPRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:17:32 -0500
+        id S1731717AbfLKPRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9519522527;
-        Wed, 11 Dec 2019 15:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE0020663;
+        Wed, 11 Dec 2019 15:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077452;
-        bh=5NWWTqVFiDV6KFnH8FHM980wxkNuXYpGH4rfXj5jZf0=;
+        s=default; t=1576077455;
+        bh=DskxH4nDed/fTxBnpZHfThwnlrqdlMuYDLk36DG9sts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQ3nR9lL8a62ZvKp0hts1N4CM0NMW0p12DLuTSI8tedngGtqRQlJ8jxWkiNz1fscQ
-         T5ZjQohzKWXny+oU6KgXOqqq8sGO9Khwy/s4NPhfT7tTNmIoYgjty96HDCQjBe+YOt
-         pid3RxgTqdOVB3WzeStDFujyEFMjHgVsP6mpMRUs=
+        b=1NmM2Z0Fv9OVasN2t/Zw4KtxqnHetGAIWJVV8ihTCIzfok8iriTMMb7B5vffzAvGt
+         N1EPaGxBeeb5831RZur0pNdNncv6Csd7fb31hee8yfiMOf63o9H8ZM1+D4YMG9jRZ8
+         jhZlibYu4DnMmaHyIf88wAFkA1Wwavrb5w2xhCqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mitch Williams <mitch.a.williams@intel.com>,
+        stable@vger.kernel.org, Alice Michael <alice.michael@intel.com>,
         Andrew Bowers <andrewx.bowers@intel.com>,
         Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/243] i40e: dont restart nway if autoneg not supported
-Date:   Wed, 11 Dec 2019 16:03:27 +0100
-Message-Id: <20191211150342.157482194@linuxfoundation.org>
+Subject: [PATCH 4.19 046/243] virtchnl: Fix off by one error
+Date:   Wed, 11 Dec 2019 16:03:28 +0100
+Message-Id: <20191211150342.217595902@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,65 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mitch Williams <mitch.a.williams@intel.com>
+From: Alice Michael <alice.michael@intel.com>
 
-[ Upstream commit 7c3758f7839377ab67529cc50264a640636c47af ]
+[ Upstream commit 843faff87af261bf55eda719a06087af0486a168 ]
 
-On link types that do not support autoneg, we cannot attempt to restart
-nway negotiation. This results in a dead link that requires a power
-cycle to remedy.
+When calculating the valid length for a VIRTCHNL_OP_ENABLE_CHANNELS
+message, we accidentally allowed messages with one extra
+virtchnl_channel_info structure on the end. This happened due
+to an off by one error, because we forgot that valid_len already
+accounted for one virtchnl_channel_info structure, so we need to
+subtract one from the num_tc value.
 
-Fix this by saving off the autoneg state and checking this value before
-we try to restart nway.
-
-Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Signed-off-by: Alice Michael <alice.michael@intel.com>
 Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_ethtool.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/avf/virtchnl.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-index 5ff6caa83948c..a6b0f605a7d8b 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_ethtool.c
-@@ -1136,6 +1136,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 	i40e_status status;
- 	u8 aq_failures;
- 	int err = 0;
-+	u32 is_an;
- 
- 	/* Changing the port's flow control is not supported if this isn't the
- 	 * port's controlling PF
-@@ -1148,15 +1149,14 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 	if (vsi != pf->vsi[pf->lan_vsi])
- 		return -EOPNOTSUPP;
- 
--	if (pause->autoneg != ((hw_link_info->an_info & I40E_AQ_AN_COMPLETED) ?
--	    AUTONEG_ENABLE : AUTONEG_DISABLE)) {
-+	is_an = hw_link_info->an_info & I40E_AQ_AN_COMPLETED;
-+	if (pause->autoneg != is_an) {
- 		netdev_info(netdev, "To change autoneg please use: ethtool -s <dev> autoneg <on|off>\n");
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* If we have link and don't have autoneg */
--	if (!test_bit(__I40E_DOWN, pf->state) &&
--	    !(hw_link_info->an_info & I40E_AQ_AN_COMPLETED)) {
-+	if (!test_bit(__I40E_DOWN, pf->state) && !is_an) {
- 		/* Send message that it might not necessarily work*/
- 		netdev_info(netdev, "Autoneg did not complete so changing settings may not result in an actual change.\n");
- 	}
-@@ -1207,7 +1207,7 @@ static int i40e_set_pauseparam(struct net_device *netdev,
- 		err = -EAGAIN;
- 	}
- 
--	if (!test_bit(__I40E_DOWN, pf->state)) {
-+	if (!test_bit(__I40E_DOWN, pf->state) && is_an) {
- 		/* Give it a little more time to try to come back */
- 		msleep(75);
- 		if (!test_bit(__I40E_DOWN, pf->state))
+diff --git a/include/linux/avf/virtchnl.h b/include/linux/avf/virtchnl.h
+index 212b3822d1804..92d179fb6d59e 100644
+--- a/include/linux/avf/virtchnl.h
++++ b/include/linux/avf/virtchnl.h
+@@ -798,8 +798,8 @@ virtchnl_vc_validate_vf_msg(struct virtchnl_version_info *ver, u32 v_opcode,
+ 		if (msglen >= valid_len) {
+ 			struct virtchnl_tc_info *vti =
+ 				(struct virtchnl_tc_info *)msg;
+-			valid_len += vti->num_tc *
+-				sizeof(struct virtchnl_channel_info);
++			valid_len += (vti->num_tc - 1) *
++				     sizeof(struct virtchnl_channel_info);
+ 			if (vti->num_tc == 0)
+ 				err_msg_format = true;
+ 		}
 -- 
 2.20.1
 
