@@ -2,98 +2,117 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDBAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8C7C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72E52173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:42:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576064575;
-	bh=6KjxzfVLAoUXt6yCuyJGQsbZXfDjjfZdoEGj/7xAFwU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H3aIOeIa9m5nrARTPZtNLbCo491qVfrpXzQvsNrWSGL8FcrOpOsyQxRVzco8xHp/I
-	 LRppJADngz7e18bU+q4a3a1E2dy+GCUzrzGxnPPJic0y2aikdMPzRD2cv60DnW62O3
-	 luq7tV00Y3wIHPfvwmRGgE/G7rU8v6+55QH39+sE=
+	by mail.kernel.org (Postfix) with ESMTP id 61A95214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="A/LOMSEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfLKLmx (ORCPT
+        id S1729068AbfLKLnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:42:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50422 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 06:43:45 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:40504 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728976AbfLKLmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:42:53 -0500
-Received: from localhost (unknown [171.76.100.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 443762073D;
-        Wed, 11 Dec 2019 11:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576064573;
-        bh=6KjxzfVLAoUXt6yCuyJGQsbZXfDjjfZdoEGj/7xAFwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Br0+MtwRTdi/snyt2rZP3odMEKcpSeZx4LJlZzqmw+Uyfbg7u4G4oboGukomiSde4
-         1ygUsRc54BqDgNjRvPo9aMALRrsBLLjLKyYR9mKkDOnGfMZNooeoRh04fSGZkarPEu
-         C3HAGZHiXfjxDg1J4HS2/ut/zLfftTwYsnL/o2vg=
-Date:   Wed, 11 Dec 2019 17:12:47 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH v4 05/11] soundwire: intel: update interfaces between
- ASoC and SoundWire
-Message-ID: <20191211114247.GI2536@vkoul-mobl>
-References: <20191209235520.18727-1-pierre-louis.bossart@linux.intel.com>
- <20191209235520.18727-6-pierre-louis.bossart@linux.intel.com>
+        id S1727477AbfLKLnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 06:43:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ysyNjTSsmEcgClf9ZxXEgP2ysGGg+LMv85Q0mUD/N2k=; b=A/LOMSEg2V59J0lHgD2cVZD75
+        ugtsfbeLru2x5FGQCofE/qiFcQZFRoJ5WTmhgRATb//dMfit2N/Y6oqH/4Mc5VfZuJ7+DEVia7es8
+        3naHAHrh/gRO1+PalhZ20fH71nctjrpLmaPDOTbutAAuagjczbp2l40iHY5L9+HwP5EY0=;
+Received: from leintor.e.ffh.zone ([81.3.6.94] helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if0P3-0006ib-VN; Wed, 11 Dec 2019 12:43:38 +0100
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if0P1-00060J-Iy; Wed, 11 Dec 2019 12:43:35 +0100
+Date:   Wed, 11 Dec 2019 12:43:20 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH v3 3/6] mfd: rn5t618: add irq support
+Message-ID: <20191211124320.5744531f@kemnade.info>
+In-Reply-To: <20191211075021.GW3468@dell>
+References: <20191129212045.18325-1-andreas@kemnade.info>
+        <20191129212045.18325-4-andreas@kemnade.info>
+        <20191210093225.GT3468@dell>
+        <20191210175900.64df7de8@kemnade.info>
+        <20191211075021.GW3468@dell>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209235520.18727-6-pierre-louis.bossart@linux.intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/MuFE3bBo6T9L2my3GBgeHNO"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-12-19, 17:55, Pierre-Louis Bossart wrote:
+--Sig_/MuFE3bBo6T9L2my3GBgeHNO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> @@ -138,8 +126,6 @@ static struct sdw_intel_ctx
->  		pdevinfo.name = "int-sdw";
->  		pdevinfo.id = i;
->  		pdevinfo.fwnode = acpi_fwnode_handle(adev);
-> -		pdevinfo.data = &link->res;
-> -		pdevinfo.size_data = sizeof(link->res);
->  
->  		pdev = platform_device_register_full(&pdevinfo);
->  		if (IS_ERR(pdev)) {
-> @@ -224,10 +210,8 @@ EXPORT_SYMBOL(sdw_intel_init);
+On Wed, 11 Dec 2019 07:50:21 +0000
+Lee Jones <lee.jones@linaro.org> wrote:
 
-This is still exported
+[...]
+> > > > +
+> > > >  static const struct i2c_device_id rn5t618_i2c_id[] =3D {
+> > > >  	{ }
+> > > >  };
+> > > >  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);   =20
+> > >=20
+> > > Not this patch I know, but it's strange to see this empty. =20
+> >=20
+> > Yes, should be cleaned up. For now the device tree stuff seems to kick =
+in. =20
+>=20
+> I think this can be removed completely.
+>=20
+> Just make sure you use .probe2 and it should be automatic.
+>=20
+Hmm, I cannot find probe2 but probe_new. So you mean probe_new?
 
->  struct sdw_intel_res {
-> +	int count;
->  	void __iomem *mmio_base;
->  	int irq;
->  	acpi_handle handle;
->  	struct device *parent;
->  	const struct sdw_intel_ops *ops;
-> -	void *arg;
-> +	struct device *dev;
-> +	u32 link_mask;
->  };
->  
-> -void *sdw_intel_init(acpi_handle *parent_handle, struct sdw_intel_res *res);
+I will send a separate cleanup patch
 
-But prototype removed, so i think this is a miss in the series, can you
-fix that up
+Regards,
+Andreas
 
--- 
-~Vinod
+--Sig_/MuFE3bBo6T9L2my3GBgeHNO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl3w1lgACgkQl4jFM1s/
+ye8mzxAAwCQcnHLPZi7KSYFXNKvY03FrI5UA5XrQCmZuhsjhGl1WdxClm0fnj9Vw
+GDhsb6IJXyRJ+CyCokNnjD8mClv/Wis3Z/smz/10l2b89ZY8lryfaSWs4AAffQLi
+QXrOV+XR9gx66FralblNB8sCJdSIOVaDjnsQgrMVNrR7yXHvzG3q8vpl7ObI/1oj
+iXC2dzygKaBxBVtM/KTCBSHEbOgGMKWKU0Lvr5M6L9oktjnoOtLdMljiisMhlMgy
+stOEuAXJ33G112OkcW+He/F1zxLAydzmTT4ZYXvK+IqLAc3X1mrUgWg4O+HBNioe
+6LBGBV06gXtj7wgjHWGdq1yT5h1lSzAuZLonoaECocppkbqdUgMvOdFZcYch70Wj
+PAIDtguSQEAQOTWJS6kSkD66vZeHSSUm5xCopmGOijmBKYGvXS5MNeZLDXje2oag
+lTvJE2Z35wR3TYK2x4ynmMUKI6JQEcdaCt1V4+41WeFJGQg7zYZ82fdVejb9vrRR
+UDmLYoFFHKaYYdvg57S6Sz5UGb82aCnPjdWREPnQR2tfjpOA2GuHE0rVHK037vrv
+aVSgHfOJNVKeuzzvlRWX6fsRIv5j0pOL6KiZiiYRWk0Y+hLhl9WHPoo0HdwPeaxJ
+dwKmfJNEbktanEiGTago7CmyEgx7dwiYYxp1a5NaKozRl0EovKU=
+=lfsU
+-----END PGP SIGNATURE-----
+
+--Sig_/MuFE3bBo6T9L2my3GBgeHNO--
