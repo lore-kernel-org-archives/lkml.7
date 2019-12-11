@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61239C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A814EC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366AD2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 745742073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079527;
-	bh=2WtK5+o5+VGs1ikguea/UPfLL2YIwjkHhUqcuAEvgwY=;
+	s=default; t=1576079529;
+	bh=QqZtaoiTzgvFT0/xdxSmNilbB4vI6VA3v6uX4v+6WZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9Ns6q7CJfGptfgpBG9w3Cl3gY2Dvkhur38AqnC3vIJ+t2OmaD+otk8i6nMWdmBQi
-	 YvMe7ffA0cpLhuRrTJVHSHIP3amTGIP0viBVmZsdsuPK8ZO+8H4IPRkDc1FDz90ojl
-	 XXRgRERO4v5xt4NNBLF405VLdVAPM8vl6FQIT1Jw=
+	b=U011pOTCvhAP9iFJh4x1cM+mTV+4KzXzJ7WFXatGdJp50tkDuvC9qLnxNlU/pVPHg
+	 0MXtxW4N0Jr/ZjUiyPcvStTiB7iSy6rrF/n3ZkJeij+V8GbPJHnME1nD0tD6Tb/jsr
+	 /cxYgcETyX20k/vqJ49eMBVqqCQC4nqZqwufazTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732473AbfLKPVg (ORCPT
+        id S1732464AbfLKPVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732312AbfLKPV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:27 -0500
+        id S1729663AbfLKPV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E7B822527;
-        Wed, 11 Dec 2019 15:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEEF24658;
+        Wed, 11 Dec 2019 15:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077686;
-        bh=2WtK5+o5+VGs1ikguea/UPfLL2YIwjkHhUqcuAEvgwY=;
+        s=default; t=1576077689;
+        bh=QqZtaoiTzgvFT0/xdxSmNilbB4vI6VA3v6uX4v+6WZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qai0+xZBffS9AVj9H0edGnu3ssjzv+yqhLEmknp3zhhjY6WZNL5GF6sL50oetXW+T
-         y8GBDymn2nb7buOeGVnEI5M3IFMQLiSCKVyV28YCGJSoxkAHvnQ07jWecq/PqhHpt3
-         tXv6ASPwcRsvOrVCtM+JVDPoVYFfzhTGtZhnnm6c=
+        b=pDNZRZLtxAwBTvWV2PoRcz+gUgd24omRX81NBHOvaD5aGVvtzMatQR1PR5m7N8uEL
+         rgG+nYeGrm+WkEzNEH6mVCHCzs5DaaBNvB+KmGbguFU3gpwgwFTQ9iZW4EoVvXuHQp
+         S9nycrRx6bTuALzvS8Xs+LeQYpmAXLRZvhEhH6uI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 132/243] nfsd: fix a warning in __cld_pipe_upcall()
-Date:   Wed, 11 Dec 2019 16:04:54 +0100
-Message-Id: <20191211150348.040647637@linuxfoundation.org>
+Subject: [PATCH 4.19 133/243] bpf: btf: implement btf_name_valid_identifier()
+Date:   Wed, 11 Dec 2019 16:04:55 +0100
+Message-Id: <20191211150348.108202779@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,87 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit b493fd31c0b89d9453917e977002de58bebc3802 ]
+[ Upstream commit cdbb096adddb3f42584cecb5ec2e07c26815b71f ]
 
-__cld_pipe_upcall() emits a "do not call blocking ops when
-!TASK_RUNNING" warning due to the dput() call in rpc_queue_upcall().
-Fix it by using a completion instead of hand coding the wait.
+Function btf_name_valid_identifier() have been implemented in
+bpf-next commit 2667a2626f4d ("bpf: btf: Add BTF_KIND_FUNC and
+BTF_KIND_FUNC_PROTO"). Backport this function so later patch
+can use it.
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 69b693f0aefa ("bpf: btf: Introduce BPF Type Format (BTF)")
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4recover.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ kernel/bpf/btf.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index 9c247fa1e9594..5188f9f70c78c 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -662,7 +662,7 @@ struct cld_net {
- struct cld_upcall {
- 	struct list_head	 cu_list;
- 	struct cld_net		*cu_net;
--	struct task_struct	*cu_task;
-+	struct completion	 cu_done;
- 	struct cld_msg		 cu_msg;
- };
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index cfa27b7d1168c..f0f9109f59bac 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -5,6 +5,7 @@
+ #include <uapi/linux/types.h>
+ #include <linux/seq_file.h>
+ #include <linux/compiler.h>
++#include <linux/ctype.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
+ #include <linux/anon_inodes.h>
+@@ -426,6 +427,30 @@ static bool btf_name_offset_valid(const struct btf *btf, u32 offset)
+ 		offset < btf->hdr.str_len;
+ }
  
-@@ -671,23 +671,18 @@ __cld_pipe_upcall(struct rpc_pipe *pipe, struct cld_msg *cmsg)
++/* Only C-style identifier is permitted. This can be relaxed if
++ * necessary.
++ */
++static bool btf_name_valid_identifier(const struct btf *btf, u32 offset)
++{
++	/* offset must be valid */
++	const char *src = &btf->strings[offset];
++	const char *src_limit;
++
++	if (!isalpha(*src) && *src != '_')
++		return false;
++
++	/* set a limit on identifier length */
++	src_limit = src + KSYM_NAME_LEN;
++	src++;
++	while (*src && src < src_limit) {
++		if (!isalnum(*src) && *src != '_')
++			return false;
++		src++;
++	}
++
++	return !*src;
++}
++
+ static const char *btf_name_by_offset(const struct btf *btf, u32 offset)
  {
- 	int ret;
- 	struct rpc_pipe_msg msg;
-+	struct cld_upcall *cup = container_of(cmsg, struct cld_upcall, cu_msg);
- 
- 	memset(&msg, 0, sizeof(msg));
- 	msg.data = cmsg;
- 	msg.len = sizeof(*cmsg);
- 
--	/*
--	 * Set task state before we queue the upcall. That prevents
--	 * wake_up_process in the downcall from racing with schedule.
--	 */
--	set_current_state(TASK_UNINTERRUPTIBLE);
- 	ret = rpc_queue_upcall(pipe, &msg);
- 	if (ret < 0) {
--		set_current_state(TASK_RUNNING);
- 		goto out;
- 	}
- 
--	schedule();
-+	wait_for_completion(&cup->cu_done);
- 
- 	if (msg.errno < 0)
- 		ret = msg.errno;
-@@ -754,7 +749,7 @@ cld_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- 	if (copy_from_user(&cup->cu_msg, src, mlen) != 0)
- 		return -EFAULT;
- 
--	wake_up_process(cup->cu_task);
-+	complete(&cup->cu_done);
- 	return mlen;
- }
- 
-@@ -769,7 +764,7 @@ cld_pipe_destroy_msg(struct rpc_pipe_msg *msg)
- 	if (msg->errno >= 0)
- 		return;
- 
--	wake_up_process(cup->cu_task);
-+	complete(&cup->cu_done);
- }
- 
- static const struct rpc_pipe_ops cld_upcall_ops = {
-@@ -900,7 +895,7 @@ restart_search:
- 			goto restart_search;
- 		}
- 	}
--	new->cu_task = current;
-+	init_completion(&new->cu_done);
- 	new->cu_msg.cm_vers = CLD_UPCALL_VERSION;
- 	put_unaligned(cn->cn_xid++, &new->cu_msg.cm_xid);
- 	new->cu_net = cn;
+ 	if (!offset)
 -- 
 2.20.1
 
