@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC71C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83088C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B9C2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5428120652
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079539;
-	bh=nZclWlApGY5pU7wPW025S/sgkSEEpV2el8r4Y2YgVWo=;
+	s=default; t=1576079554;
+	bh=wPH1ASaSFlhbjvw8DtlszMkLA3HruIqPfzIMd5a2MLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cE6eFqTkMn41lvpFL2jkCpiYwsZEhHDOPxzhGCkeYCSoHdPgaDg5p5VNFvCOZcr9o
-	 wfi9uErRewSQmCz8yh3P0BDrsswTyVcfUmPe6JQyAkDQmWN2M+4keXodGfFL+7pQr3
-	 DBWqVX9FfvEhDxYHkorwzX9T9IEQ2Bld+ujhn318=
+	b=nTziLw4XNNx4oLDG75o3uc086WuhMH0f4QvMrHzZmcWq8gWIFroWD7jbf6eNSKg5a
+	 EeYoqxbe5JNL/+2uhluavPYR/gm9uxCVQNU2B0tZNp+mHp6nWmDDu5Ki8h6hlrhlRq
+	 37VRzX+e+7g/SXzaqg9cZBNvE+8FDrf5mYElVUYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732418AbfLKPVH (ORCPT
+        id S1732547AbfLKPwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50984 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:52:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732275AbfLKPVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:03 -0500
+        id S1731986AbfLKPUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ADF122527;
-        Wed, 11 Dec 2019 15:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F6122527;
+        Wed, 11 Dec 2019 15:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077662;
-        bh=nZclWlApGY5pU7wPW025S/sgkSEEpV2el8r4Y2YgVWo=;
+        s=default; t=1576077642;
+        bh=wPH1ASaSFlhbjvw8DtlszMkLA3HruIqPfzIMd5a2MLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxB//2Md7zC/e/lRSCmmiIW3tVTOCFLNHVZOr74H1rvZETWGiT1YBgfGq44uTtdHJ
-         oPDdpmPg5J6K7oI50B+sjOzEPNbyxxBArn4URzZxn9pwtZMRO5X4U9RVmi15cZirAW
-         7VtbLnnVgXemULqUdtsD/ncWZ14hZn7z335N0xNo=
+        b=UtUYzfjTW7Mwq2LBWkDA86sMP5rpmgQs8+2d79uzvq6PDBQplEhpMbH6shCeCIg+v
+         bwrCWdm8My5pgl/Q6CfkhocukLqg1FZ8R+Np/kcCB3mEATY04CR3kJ72lOxhrasGCZ
+         APkbahywqTUuJaRPqImfMvvWkCI/78cEhN7q4g3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 124/243] ARM: dts: sun5i: a10s: Fix HDMI output DTC warning
-Date:   Wed, 11 Dec 2019 16:04:46 +0100
-Message-Id: <20191211150347.500124183@linuxfoundation.org>
+        stable@vger.kernel.org, Xiumei Mu <xmu@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 067/243] sctp: count sk_wmem_alloc by skb truesize in sctp_packet_transmit
+Date:   Wed, 11 Dec 2019 16:03:49 +0100
+Message-Id: <20191211150343.622625855@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,34 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit ed5fc60b909427be6ca93d3e07a0a5f296d7000a ]
+[ Upstream commit 02968ccf0125d39b08ecef5946300a8a873c0942 ]
 
-Our HDMI output endpoint on the A10s DTSI has a warning under DTC: "graph
-node has single child node 'endpoint', #address-cells/#size-cells are not
-necessary". Fix this by removing those properties.
+Now sctp increases sk_wmem_alloc by 1 when doing set_owner_w for the
+skb allocked in sctp_packet_transmit and decreases by 1 when freeing
+this skb.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+But when this skb goes through networking stack, some subcomponents
+might change skb->truesize and add the same amount on sk_wmem_alloc.
+However sctp doesn't know the amount to decrease by, it would cause
+a leak on sk->sk_wmem_alloc and the sock can never be freed.
+
+Xiumei found this issue when it hit esp_output_head() by using sctp
+over ipsec, where skb->truesize is added and so is sk->sk_wmem_alloc.
+
+Since sctp has used sk_wmem_queued to count for writable space since
+Commit cd305c74b0f8 ("sctp: use sk_wmem_queued to check for writable
+space"), it's ok to fix it by counting sk_wmem_alloc by skb truesize
+in sctp_packet_transmit.
+
+Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
+Reported-by: Xiumei Mu <xmu@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun5i-a10s.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ net/sctp/output.c | 21 +--------------------
+ 1 file changed, 1 insertion(+), 20 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 316cb8b2945b1..a66d9f92f58f5 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -104,8 +104,6 @@
- 				};
+diff --git a/net/sctp/output.c b/net/sctp/output.c
+index 08601223b0bfa..b0e74a3e77ec5 100644
+--- a/net/sctp/output.c
++++ b/net/sctp/output.c
+@@ -399,25 +399,6 @@ finish:
+ 	return retval;
+ }
  
- 				hdmi_out: port@1 {
--					#address-cells = <1>;
--					#size-cells = <0>;
- 					reg = <1>;
- 				};
- 			};
+-static void sctp_packet_release_owner(struct sk_buff *skb)
+-{
+-	sk_free(skb->sk);
+-}
+-
+-static void sctp_packet_set_owner_w(struct sk_buff *skb, struct sock *sk)
+-{
+-	skb_orphan(skb);
+-	skb->sk = sk;
+-	skb->destructor = sctp_packet_release_owner;
+-
+-	/*
+-	 * The data chunks have already been accounted for in sctp_sendmsg(),
+-	 * therefore only reserve a single byte to keep socket around until
+-	 * the packet has been transmitted.
+-	 */
+-	refcount_inc(&sk->sk_wmem_alloc);
+-}
+-
+ static void sctp_packet_gso_append(struct sk_buff *head, struct sk_buff *skb)
+ {
+ 	if (SCTP_OUTPUT_CB(head)->last == head)
+@@ -604,7 +585,7 @@ int sctp_packet_transmit(struct sctp_packet *packet, gfp_t gfp)
+ 	if (!head)
+ 		goto out;
+ 	skb_reserve(head, packet->overhead + MAX_HEADER);
+-	sctp_packet_set_owner_w(head, sk);
++	skb_set_owner_w(head, sk);
+ 
+ 	/* set sctp header */
+ 	sh = skb_push(head, sizeof(struct sctphdr));
 -- 
 2.20.1
 
