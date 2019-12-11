@@ -2,139 +2,212 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9573EC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6693FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6984D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D38A2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R5p8cM1R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q7KS2Oyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727209AbfLKBG6 (ORCPT
+        id S1727049AbfLKBQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:06:58 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34533 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfLKBG5 (ORCPT
+        Tue, 10 Dec 2019 20:16:22 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38067 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfLKBQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:06:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l18so15315691lfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:06:55 -0800 (PST)
+        Tue, 10 Dec 2019 20:16:22 -0500
+Received: by mail-pj1-f68.google.com with SMTP id l4so8218257pjt.5;
+        Tue, 10 Dec 2019 17:16:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T3U5Ton5GkI2QD9NYugFaf5BRq2pqUxCkGGQRfb840Q=;
-        b=R5p8cM1REpNhwNG/S5JozlDrfWJgObKwfHJFLWfvYis1Ng08mRoAMlI0ycQSAeEcd6
-         zeaPJeZGj7VhZvnEdIa+scrFuK0MppI/lpyBTfgIMcgTtliSBQrIhjZP5YFFE3kQCxWM
-         fnMjAPdttTJzRAwTscCs7zhgii0RJlQ54lIy8=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rCjmuwdX9VxfrJW96q0Pn6Kl1LaCaUN5yA+3sx0sci8=;
+        b=Q7KS2OyjSso0tnnM+Jg97xqNHVBE/99Bs8Z5BKAHSMdmJHa3MvRRoQ16QGfSU1k3SX
+         BPtUdztm2lPhGwHZaBvOfQyOk58AN4b4T0u8sMjapWdsWnK67belDEW37UaEZaoHg5jY
+         A80/WkRFlESBtM4uB7Z0AubHXydxAVSz07klbYoWkfn6Z680Q5CuhQCGLeSAHfETo9CW
+         uT3gYX3B5pOUhM/wqqrcKOJkZCJfPXMQACHws5ZMHK81ELS3dcrKzYXf66vN5K8fkhXy
+         mxhcpD4iKteTmjNpP7apwqf30KPslU0iTdcXSRHnsc2gKTmfxqlNEmodoXdwAx/czxHn
+         fptw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T3U5Ton5GkI2QD9NYugFaf5BRq2pqUxCkGGQRfb840Q=;
-        b=t12dWmNEzeZmmp5e5p1BmTs2Sy5J/snYMzhiatejVRECYig9j5dL2+0WjbKhcJRN0l
-         5/D5fhlkc8D84aO8MPOC65hTdF5j1vVquDy73TtZsL5XS7GOlIeo8/kmOVgHF3EaN/5d
-         N9+XkXD+9Jk0TfDeoBtp4ltyxwWK3/vestJznfRQxvFa1h9SFAPxLt0lazrRXGn2/qIP
-         47sk49BBhqoGKIFjwOwXSTiSmVK+anSyduHr6ZqOg5XIK0aeRZXwAKcAA03zneGwxbQY
-         eeCeUiGzkshi+lOL+Lw/AO9M0ghqNp1L2gu33QdiC0ZMYBqoHZXVL/7VMdB9/kde4/bI
-         b2WA==
-X-Gm-Message-State: APjAAAUSoUsA+BUmZRLGxRxV65Li2+mFzZiE+54qL5KoQY2VKlfFqhS1
-        6ZLBr6AVj+p5bgjTJcJjgJydYWFT6wc=
-X-Google-Smtp-Source: APXvYqxPXnq+5qLS4xw5ZkJ5K4eoEEuEBCrc7EfTDvgcMoD8oxKyQn6W2dWR7ota5s7jnjgAmCUW0Q==
-X-Received: by 2002:ac2:465e:: with SMTP id s30mr473363lfo.134.1576026414509;
-        Tue, 10 Dec 2019 17:06:54 -0800 (PST)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id j19sm235378lfb.90.2019.12.10.17.06.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2019 17:06:54 -0800 (PST)
-Received: by mail-lf1-f49.google.com with SMTP id 9so15283580lfq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 17:06:53 -0800 (PST)
-X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr478455lfp.106.1576026413534;
- Tue, 10 Dec 2019 17:06:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rCjmuwdX9VxfrJW96q0Pn6Kl1LaCaUN5yA+3sx0sci8=;
+        b=sTaUUSgcCquaGccqIE1uo04+ghIhc6x7HAoMYxxC5anITVcB7NPCB+kjgVw5VgpdM5
+         vsXGRFt9tktWH13+6aHVIHAf6us7np3V2QtXPHXjGeWj18PSIQL6jKHztwnCPcW/2JFG
+         3Xf2tcVZrPj9+D+5KA+EKqc6bqdqjFbgl7Ki8F2I7ADN2YZO4LLehxSkDpFPZP4SLKio
+         CuMPAhKwJJuTWYFFQN0c5asjvW1/5CQjYyRlRUTjCb/niBS6Ac8YU7YOKY4zrDoAnv33
+         Bsy2cs3n+ulRzYb8alvlHv5Gh6KhfT6dPgXax1U1zhRzs7BHapS/c2OtrcrRLwWgbAuo
+         JWaA==
+X-Gm-Message-State: APjAAAV+WcCva+Xp4un+fFB7kb1/djBQ00IWPTwxjTGnzXAghW83aiOZ
+        /pItP2uiyQEekR4jc5PhPWQ=
+X-Google-Smtp-Source: APXvYqx7za/8a59lShrbf7a2PwFUPMXtSFvPyw+oBcUvd+rJ1W2+osFsfVw/fxoruwNDVMSchYzM8g==
+X-Received: by 2002:a17:90a:a4cb:: with SMTP id l11mr478116pjw.47.1576026981243;
+        Tue, 10 Dec 2019 17:16:21 -0800 (PST)
+Received: from sol (220-235-124-2.dyn.iinet.net.au. [220.235.124.2])
+        by smtp.gmail.com with ESMTPSA id o12sm265495pfg.152.2019.12.10.17.16.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 17:16:20 -0800 (PST)
+Date:   Wed, 11 Dec 2019 09:16:15 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>
+Subject: Re: [PATCH] gpio: gpio-mockup: Fix usage of new GPIO_LINE_DIRECTION
+Message-ID: <20191211011615.GA9373@sol>
+References: <20191210021525.13455-1-warthog618@gmail.com>
+ <CAMRc=Md4PmbcGAKxP1LG08bREtWCtsXbt=ZgL50PrizF4F4pxg@mail.gmail.com>
+ <20191210145515.GB3509@sol>
 MIME-Version: 1.0
-References: <20191210085759.14763-1-kraxel@redhat.com>
-In-Reply-To: <20191210085759.14763-1-kraxel@redhat.com>
-From:   Gurchetan Singh <gurchetansingh@chromium.org>
-Date:   Tue, 10 Dec 2019 17:06:42 -0800
-X-Gmail-Original-Message-ID: <CAAfnVB=prUDgkPjZdB9QcA9XHdcBCQSPcf4mBL75LG8QJ4D=0Q@mail.gmail.com>
-Message-ID: <CAAfnVB=prUDgkPjZdB9QcA9XHdcBCQSPcf4mBL75LG8QJ4D=0Q@mail.gmail.com>
-Subject: Re: [PATCH] drm/virtio: fix mmap page attributes
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191210145515.GB3509@sol>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:58 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> virtio-gpu uses cached mappings.  shmem helpers use writecombine though.
-> So roll our own mmap function, wrapping drm_gem_shmem_mmap(), to tweak
-> vm_page_prot accordingly.
->
-> Reported-by: Gurchetan Singh <gurchetansingh@chromium.org>
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_object.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> index 017a9e0fc3bb..158610902054 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> @@ -75,6 +75,22 @@ static void virtio_gpu_free_object(struct drm_gem_object *obj)
->         drm_gem_shmem_free_object(obj);
->  }
->
-> +static int virtio_gpu_gem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
-> +{
-> +       pgprot_t prot;
-> +       int ret;
-> +
-> +       ret = drm_gem_shmem_mmap(obj, vma);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       /* virtio-gpu needs normal caching, so clear writecombine */
-> +       prot = vm_get_page_prot(vma->vm_flags);
-> +       prot = pgprot_decrypted(prot);
-> +       vma->vm_page_prot = prot;
-> +       return 0;
-> +}
-> +
->  static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
->         .free = virtio_gpu_free_object,
->         .open = virtio_gpu_gem_object_open,
-> @@ -86,7 +102,7 @@ static const struct drm_gem_object_funcs virtio_gpu_gem_funcs = {
->         .get_sg_table = drm_gem_shmem_get_sg_table,
->         .vmap = drm_gem_shmem_vmap,
+On Tue, Dec 10, 2019 at 10:55:15PM +0800, Kent Gibson wrote:
+> On Tue, Dec 10, 2019 at 03:11:12PM +0100, Bartosz Golaszewski wrote:
+> > wt., 10 gru 2019 o 03:15 Kent Gibson <warthog618@gmail.com> napisał(a):
+> > >
+> > > Restore the external behavior of gpio-mockup to what it was prior to the
+> > > change to using GPIO_LINE_DIRECTION.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > ---
+> > >
+> > > Fix a regression introduced in v5.5-rc1.
+> > >
+> > > The change to GPIO_LINE_DIRECTION reversed the polarity of the
+> > > dir field within gpio-mockup.c, but overlooked inverting the value on
+> > > initialization and when returned by gpio_mockup_get_direction.
+> > > The latter is a bug.
+> > > The former is a problem for tests which assume initial conditions,
+> > > specifically the mockup used to initialize chips with all lines as inputs.
+> > > That superficially appeared to be the case after the previous patch due
+> > > to the bug in gpio_mockup_get_direction.
+> > >
+> > >  drivers/gpio/gpio-mockup.c | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> > > index 56d647a30e3e..c4fdc192ea4e 100644
+> > > --- a/drivers/gpio/gpio-mockup.c
+> > > +++ b/drivers/gpio/gpio-mockup.c
+> > > @@ -226,7 +226,7 @@ static int gpio_mockup_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > >         int direction;
+> > >
+> > >         mutex_lock(&chip->lock);
+> > > -       direction = !chip->lines[offset].dir;
+> > > +       direction = chip->lines[offset].dir;
+> > >         mutex_unlock(&chip->lock);
+> > >
+> > >         return direction;
+> > > @@ -395,7 +395,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > >         struct gpio_chip *gc;
+> > >         struct device *dev;
+> > >         const char *name;
+> > > -       int rv, base;
+> > > +       int rv, base, i;
+> > >         u16 ngpio;
+> > >
+> > >         dev = &pdev->dev;
+> > > @@ -447,6 +447,9 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+> > >         if (!chip->lines)
+> > >                 return -ENOMEM;
+> > >
+> > > +       for (i = 0; i < gc->ngpio; i++)
+> > > +               chip->lines[i].dir = GPIO_LINE_DIRECTION_IN;
+> > > +
+> > >         if (device_property_read_bool(dev, "named-gpio-lines")) {
+> > >                 rv = gpio_mockup_name_lines(dev, chip);
+> > >                 if (rv)
+> > > --
+> > > 2.24.0
+> > >
+> > 
+> > Hi Kent,
+> > 
+> > I was applying and testing your libgpiod series and noticed that the
+> > gpio-tools tests fail after applying patches 16 & 17 (with linux
+> > v5.5-rc1). Is this fix related to this?
+> > 
+> 
+> I don't think so.  I've only been able to trip this problem with a
+> couple of corner cases in my Go uapi test suite.
+> I have been unable to reproduce it with the tools as it requires
+> multiple requests with the same chip fd, including an as-is, to trip.
+> 
 
-Do we need vmap/vmunap?  It seems optionable and also uses non-cacheable memory?
+It turns out that I can reproduce the bug with my gpiod tools:
 
->         .vunmap = drm_gem_shmem_vunmap,
-> -       .mmap = &drm_gem_shmem_mmap,
-> +       .mmap = &virtio_gpu_gem_mmap,
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# uname -a
+Linux firefly 5.5.0-rc1 #23 SMP Mon Dec 9 16:26:33 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# modprobe gpio-mockup gpio_mockup_ranges=-1,4
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl get gpiochip0 1
+0
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl info
+gpiochip0 - 4 lines:
+	line   0:     unnamed      unused   input  active-high
+	line   1:     unnamed      unused   input  active-high
+	line   2:     unnamed      unused   input  active-high
+	line   3:     unnamed      unused   input  active-high
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl get --as-is gpiochip0 1
+0
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl info
+gpiochip0 - 4 lines:
+	line   0:     unnamed      unused   input  active-high
+	line   1:     unnamed      unused  output  active-high
+	line   2:     unnamed      unused   input  active-high
+	line   3:     unnamed      unused   input  active-high
 
-Why the &virtio_gpu_gem_mmap?  Shouldn't just virtio_gpu_gem_mmap work?
+Note that the line 1 direction has flipped for no reason.
+
+With the patched kernel that doesn't happen:
+
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# uname -a
+Linux firefly 5.5.0-rc1+ #27 SMP Tue Dec 10 01:07:59 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# modprobe gpio-mockup gpio_mockup_ranges=-1,4
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl get gpiochip0 1
+0
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl info
+gpiochip0 - 4 lines:
+	line   0:     unnamed      unused   input  active-high
+	line   1:     unnamed      unused   input  active-high
+	line   2:     unnamed      unused   input  active-high
+	line   3:     unnamed      unused   input  active-high
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl get --as-is gpiochip0 1
+0
+root@firefly:/home/kent/gpiod/cmd/gpiodctl# ./gpiodctl info
+gpiochip0 - 4 lines:
+	line   0:     unnamed      unused   input  active-high
+	line   1:     unnamed      unused   input  active-high
+	line   2:     unnamed      unused   input  active-high
+	line   3:     unnamed      unused   input  active-high
 
 
+I would prefer to demonstrate this with the libgpiod tools, but they
+don't support as-is on gets.  I recall suggesting adding it and you
+asking why - who would need it.  This is a concrete example of my
+response at the time - so you can exercise the full API for testing.
 
->  };
->
->  struct drm_gem_object *virtio_gpu_create_object(struct drm_device *dev,
-> --
-> 2.18.1
->
+Cheers,
+Kent.
+
