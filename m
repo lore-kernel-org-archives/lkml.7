@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C4FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0AAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793012077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7172073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077722;
-	bh=tXGxWGiCLf1tP9dGSPQuinYfaFl1pAiIalZ3u2Tyzks=;
+	s=default; t=1576077725;
+	bh=MXdq6v4VdAeAT1IaLq5MUg/YDKhiJOWxehovXYVbj9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AsPni+42C4I5+H2JjBpwJYRWfYbFbQdr0rr09bR8dhK64E5xraveWS/0I55mA6fuD
-	 aaIRQeFjgFJs8r28R560XxuM6BVgM9XQ0trQp638jogp5GC7rkL8K1XKClrCZDOmTP
-	 uVFbOxdkCv18u2Qf9Yi7/1w62sUtHFKjgztiQETw=
+	b=x5svM7MhVfhsz1rUEnyUuciV1M7oHNlmwcvccRZQXQp5x8fy5RWcs4g7fqzBNyTX+
+	 Gz41CEH9IHQb39iJ/1sAIZFv7IMi1DTwqv1DQoxifhZPLq3h88dTzMOhPSM7AUZSV3
+	 xJQTSA/BmBjYpEzG9VMJJGWoJZQsSZFy1JYulAO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732551AbfLKPWB (ORCPT
+        id S1729513AbfLKPWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52490 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731800AbfLKPV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:59 -0500
+        id S1731800AbfLKPWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF8D2073D;
-        Wed, 11 Dec 2019 15:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F47A2073D;
+        Wed, 11 Dec 2019 15:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077718;
-        bh=tXGxWGiCLf1tP9dGSPQuinYfaFl1pAiIalZ3u2Tyzks=;
+        s=default; t=1576077722;
+        bh=MXdq6v4VdAeAT1IaLq5MUg/YDKhiJOWxehovXYVbj9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiy8DemKUYDKIUW4RNl4zy7IFYje9pMKn5WVTwdoTTpuIdptmQT+pcQrSJ1yI4kyC
-         6rY7DNcTVZbxc+8Acl5G+pkS5CVIdWiL9DxYLyYqu1frwfoTAFP95OSFVlKjGseek8
-         xaFM7cWwIhnLP9dOwEJAvLFZE9AIU3b4/aujls84=
+        b=lCqu6FmYmoYh9lXvqt2mQnK9RbMhr4Ki73s+vd9cNAJhiHDgclTlyeDiLuE48zYMU
+         COp2bvwTXa9PmJ0CauWfLgXQ5lNslUzFhONM2u0NRyw25x1jkjaxEPLouGLDoYnDWc
+         EkBifJwTHl7xbMDeaQPo3XVp1w19V6BPbaQRgcNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 143/243] net/x25: fix called/calling length calculation in x25_parse_address_block
-Date:   Wed, 11 Dec 2019 16:05:05 +0100
-Message-Id: <20191211150348.818536126@linuxfoundation.org>
+Subject: [PATCH 4.19 144/243] net/x25: fix null_x25_address handling
+Date:   Wed, 11 Dec 2019 16:05:06 +0100
+Message-Id: <20191211150348.887008369@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,31 +62,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit d449ba3d581ed29f751a59792fdc775572c66904 ]
+[ Upstream commit 06137619f061f498c2924f6543fa45b7d39f0501 ]
 
-The length of the called and calling address was not calculated
-correctly (BCD encoding).
+o x25_find_listener(): the compare for the null_x25_address was wrong.
+   We have to check the x25_addr of the listener socket instead of the
+   x25_addr of the incomming call.
+
+ o x25_bind(): it was not possible to bind a socket to null_x25_address
 
 Signed-off-by: Martin Schiller <ms@dev.tdt.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/x25/af_x25.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/x25/af_x25.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/net/x25/af_x25.c b/net/x25/af_x25.c
-index f7f53f9ae7efb..3150648206b68 100644
+index 3150648206b68..20a511398389d 100644
 --- a/net/x25/af_x25.c
 +++ b/net/x25/af_x25.c
-@@ -100,7 +100,7 @@ int x25_parse_address_block(struct sk_buff *skb,
+@@ -288,7 +288,7 @@ static struct sock *x25_find_listener(struct x25_address *addr,
+ 	sk_for_each(s, &x25_list)
+ 		if ((!strcmp(addr->x25_addr,
+ 			x25_sk(s)->source_addr.x25_addr) ||
+-				!strcmp(addr->x25_addr,
++				!strcmp(x25_sk(s)->source_addr.x25_addr,
+ 					null_x25_address.x25_addr)) &&
+ 					s->sk_state == TCP_LISTEN) {
+ 			/*
+@@ -685,11 +685,15 @@ static int x25_bind(struct socket *sock, struct sockaddr *uaddr, int addr_len)
+ 		goto out;
  	}
  
- 	len = *skb->data;
--	needed = 1 + (len >> 4) + (len & 0x0f);
-+	needed = 1 + ((len >> 4) + (len & 0x0f) + 1) / 2;
+-	len = strlen(addr->sx25_addr.x25_addr);
+-	for (i = 0; i < len; i++) {
+-		if (!isdigit(addr->sx25_addr.x25_addr[i])) {
+-			rc = -EINVAL;
+-			goto out;
++	/* check for the null_x25_address */
++	if (strcmp(addr->sx25_addr.x25_addr, null_x25_address.x25_addr)) {
++
++		len = strlen(addr->sx25_addr.x25_addr);
++		for (i = 0; i < len; i++) {
++			if (!isdigit(addr->sx25_addr.x25_addr[i])) {
++				rc = -EINVAL;
++				goto out;
++			}
+ 		}
+ 	}
  
- 	if (!pskb_may_pull(skb, needed)) {
- 		/* packet is too short to hold the addresses it claims
 -- 
 2.20.1
 
