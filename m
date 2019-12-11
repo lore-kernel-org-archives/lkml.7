@@ -3,56 +3,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB57BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C9BC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E0220409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2DD20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730678AbfLKR5M (ORCPT
+        id S1730815AbfLKR5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:57:12 -0500
-Received: from mga12.intel.com ([192.55.52.136]:21273 "EHLO mga12.intel.com"
+        Wed, 11 Dec 2019 12:57:50 -0500
+Received: from mga14.intel.com ([192.55.52.115]:28533 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729228AbfLKR5M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:57:12 -0500
-X-Amp-Result: UNSCANNABLE
+        id S1729228AbfLKR5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:57:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:57:11 -0800
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:37:18 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
-   d="scan'208";a="225618282"
+   d="scan'208";a="225610402"
 Received: from cmclough-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.152])
-  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 09:57:05 -0800
-Date:   Wed, 11 Dec 2019 19:57:03 +0200
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 09:37:13 -0800
+Date:   Wed, 11 Dec 2019 19:37:12 +0200
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "# v4 . 10+" <stable@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM
- power is managed by firmware
-Message-ID: <20191211175651.GK4516@linux.intel.com>
-References: <20191210210735.9077-1-sashal@kernel.org>
- <20191210210735.9077-238-sashal@kernel.org>
- <CABXOdTdO16V4AtO1t=BwXW2=HAtT6CYoSddmrn5T2qZP9hs0eQ@mail.gmail.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        arnd@arndb.de
+Subject: Re: [PATCH V2] tpm_tis_spi: use new `delay` structure for SPI
+ transfer delays
+Message-ID: <20191211173700.GE4516@linux.intel.com>
+References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+ <20191210065619.7395-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABXOdTdO16V4AtO1t=BwXW2=HAtT6CYoSddmrn5T2qZP9hs0eQ@mail.gmail.com>
+In-Reply-To: <20191210065619.7395-1-alexandru.ardelean@analog.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,28 +51,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:32:15PM -0800, Guenter Roeck wrote:
-> On Tue, Dec 10, 2019 at 1:12 PM Sasha Levin <sashal@kernel.org> wrote:
-> >
-> > From: Stephen Boyd <swboyd@chromium.org>
-> >
-> > [ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
-> >
-> > On some platforms, the TPM power is managed by firmware and therefore we
-> > don't need to stop the TPM on suspend when going to a light version of
-> > suspend such as S0ix ("freeze" suspend state). Add a chip flag,
-> > TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
-> > platforms can probe for the usage of this light suspend and avoid
-> > touching the TPM state across suspend/resume.
-> >
+On Tue, Dec 10, 2019 at 08:56:19AM +0200, Alexandru Ardelean wrote:
+> In a recent change to the SPI subsystem [1], a new `delay` struct was added
+> to replace the `delay_usecs`. This change replaces the current `delay_usecs`
+> with `delay` for this driver.
 > 
-> Are the patches needed to support CR50 (which need this patch) going
-> to be applied to v5.4.y as well ? If not, what is the purpose of
-> applying this patch to v5.4.y ?
+> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+> that both `delay_usecs` & `delay` are used (in this order to preserve
+> backwards compatibility).
 > 
-> Thanks,
-> Guenter
+> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+> `spi_transfer` + spi_transfer_delay_exec()")
 
-Thanks Guenter. I think not.
+Not sure why you use ` and not '?
 
 /Jarkko
