@@ -2,129 +2,256 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A9DC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4007F222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:06:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="pNip4Ipk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jj9j0Yly"
+	by mail.kernel.org (Postfix) with ESMTP id 21B43214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576051769;
+	bh=7mATrIrAdSckXuBxVS+9tlzmyi4a3KtZjE9k9PKL/2c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lNlOvIhVhgYzf6aCREkkWSlelfGbiZJ4Mq0EJymrPnfHXp5CwrNxnXDs3PCVMk9sJ
+	 /xP0iVYcAOXfx6AdpaQ8PcPyxwn6wJ5dPFEjpJyP2MDoQwXw1xa/61EFn1RQCJSKw7
+	 s9dxMvcxSkuZDKyPJPmudhPIu4lN1L79fV9QNSi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfLKIGi (ORCPT
+        id S1728241AbfLKIJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:06:38 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:55957 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbfLKIGh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:06:37 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id C866B22138;
-        Wed, 11 Dec 2019 03:06:36 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 11 Dec 2019 03:06:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=hwPGVZSfhiMxz+WWKnEgFwPNaIp
-        NoOUWvpk6+9E3qN4=; b=pNip4IpkG9LKvVBXYoyj4iVJS/ovoPIw9uWvOPk5cd9
-        aeaF/jCv7glBQ+oKn8wpOl6n3UrLb0rgftmS04wkr50FD1IkkFHTMYvonRZw86Lj
-        rIxwCZ6cNOEPfbb0UmR7pNOh3W8Tin3r2rF48bQskZY+1mLE/4zjEU7Lttik/FJI
-        n8jQEQBF1wfSCShgauIgmygzeTmEYzHl8gW9Cipklj/+z0SGicb0Oef+ZCrnXbpy
-        2LtsLThBsWK9Q7i5Mvc8GxhhFC6z6Cg0whP53l11XVHQwbn1CHVNnpEOK3kAStYf
-        PYwKSDBhhcd95w233qcW/ZL7lhTiWF7eewTLoRU07ig==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=hwPGVZ
-        SfhiMxz+WWKnEgFwPNaIpNoOUWvpk6+9E3qN4=; b=jj9j0YlySSDVxgY0h/vfI/
-        aBM5pZSEUheItTPmultGLLgrgaBhHTdUTeNy4c41344yAtToDW3qW6/G83+QyggH
-        sm3g6pf7cEXj1zUWIfLGKTsY44dhhovQamRUtTQtBA+p8tqvMA+14KLCSOCjGMnp
-        wXMHTL2W+IfRxZrpRy5xOQAzkd4wt0TJ/Oy1dsxlCXGAtRrX5GwLqfns5zgxJWgt
-        adK9eQS9r5Rud6MWzRraNXrxsG1MtxQ9/h9lBnNK5cCJ7KV+XtjpWF86PMoKEP18
-        dFSX8G8JlEcREUqZwBpXrBhvKyj1SduXIfRAePAw817s1//ZjTbA5OkZYf4u2r8g
-        ==
-X-ME-Sender: <xms:jKPwXfXqZ_5EeTjpf0WKqXeWJktHHwg9Hv0q58PoZoj3nTZoHjIwSw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudelgedguddtkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtudenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucfkpheple
-    dtrdekledrieekrdejieenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegt
-    vghrnhhordhtvggthhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:jKPwXSl6xGsb9BnnvKa9iCOm1T5zBt8VRYeehfUjcihda8tyWGH7sw>
-    <xmx:jKPwXYg_duZ4YteFKA2eq--62RBE3EUDVTzlmiFFH1OgnjMeCKELKQ>
-    <xmx:jKPwXS5eunZZjFT3NveH4Rpe-x2fnIaaEwQZn7a1LrmQs-O310SuYA>
-    <xmx:jKPwXXnbpFRNjLVoZD7ulW-OOlvofq2rh8P0vhnr9WhEweg_S1Xe_A>
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B864880070;
-        Wed, 11 Dec 2019 03:06:35 -0500 (EST)
-Date:   Wed, 11 Dec 2019 09:06:33 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Chen-Yu Tsai <wens@csie.org>,
-        linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6
- example
-Message-ID: <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-References: <20191210174710.10649-1-peron.clem@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="44tksmdnwrh2gezn"
-Content-Disposition: inline
-In-Reply-To: <20191210174710.10649-1-peron.clem@gmail.com>
+        Wed, 11 Dec 2019 03:09:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726543AbfLKIJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 03:09:27 -0500
+Received: from devnote2 (unknown [180.50.127.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA9F206A5;
+        Wed, 11 Dec 2019 08:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576051766;
+        bh=7mATrIrAdSckXuBxVS+9tlzmyi4a3KtZjE9k9PKL/2c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CoD+fj3i545t6ZLR+JB/ypMDr7LVEunS9cf8vtXK+i9rzbkrWUj+M6InzOhqI0atH
+         55+IKzkVWX2ErfcArpI4oZTjOsft7hNFVhMZZVdn8MVRdP7DUaPzT1aznQnU1+BWfV
+         mYUTC558stOZw//07JyL/rL73tVehuJA8gvaTzfw=
+Date:   Wed, 11 Dec 2019 17:09:19 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, namit@vmware.com, hpa@zytor.com,
+        luto@kernel.org, ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        jeyu@kernel.org, alexei.starovoitov@gmail.com
+Subject: Re: [PATCH -tip 1/2] x86/alternative: Sync bp_patching update for
+ avoiding NULL pointer exception
+Message-Id: <20191211170919.54f6546d294f8a45c0a176c7@kernel.org>
+In-Reply-To: <20191211000943.GG2871@hirez.programming.kicks-ass.net>
+References: <157483420094.25881.9190014521050510942.stgit@devnote2>
+        <157483421229.25881.15314414408559963162.stgit@devnote2>
+        <20191209143940.GI2810@hirez.programming.kicks-ass.net>
+        <20191211014401.2f0c27f259a83d1f32aa6f2e@kernel.org>
+        <20191210173209.GP2844@hirez.programming.kicks-ass.net>
+        <20191211000943.GG2871@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Peter,
 
---44tksmdnwrh2gezn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 11 Dec 2019 01:09:43 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Tue, Dec 10, 2019 at 06:47:10PM +0100, Cl=E9ment P=E9ron wrote:
-> Latest linux-next doesn't build due to the following error:
->
-> Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.exam=
-ple.dts:35.37-38
-> syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
-wm.example.dt.yaml]
-> Error 1
->
-> This is due to missing header in the device-tree yaml example.
->
-> Fix this by adding the missing headers.
->
-> Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description=
-")
-> Reported-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> On Tue, Dec 10, 2019 at 06:32:09PM +0100, Peter Zijlstra wrote:
+> 
+> > I feel that is actually more complicated...  Let me try to see if I can
+> > simplify things.
+> 
+> How is this then?
 
-Applied, thanks!
-Maxime
+This looks perfectly good to me :)
 
---44tksmdnwrh2gezn
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 
------BEGIN PGP SIGNATURE-----
+Thank you!
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXfCjiQAKCRDj7w1vZxhR
-xTcEAP9uGGmta1bRoVSRk92LUIUmW8iSPPITd+A+9/tLuXcG3QEAkBBswRhpwUQ9
-IcmAHUp2Yo34CHA+/krrKKxL0JUADQc=
-=UP4/
------END PGP SIGNATURE-----
+> 
+> ---
+>  arch/x86/kernel/alternative.c | 84 +++++++++++++++++++++++++++----------------
+>  1 file changed, 53 insertions(+), 31 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> index 30e86730655c..34360ca301a2 100644
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -948,10 +948,29 @@ struct text_poke_loc {
+>  	const u8 text[POKE_MAX_OPCODE_SIZE];
+>  };
+>  
+> -static struct bp_patching_desc {
+> +struct bp_patching_desc {
+>  	struct text_poke_loc *vec;
+>  	int nr_entries;
+> -} bp_patching;
+> +	atomic_t refs;
+> +};
+> +
+> +static struct bp_patching_desc *bp_desc;
+> +
+> +static inline struct bp_patching_desc *try_get_desc(struct bp_patching_desc **descp)
+> +{
+> +	struct bp_patching_desc *desc = READ_ONCE(*descp); /* rcu_dereference */
+> +
+> +	if (!desc || !atomic_inc_not_zero(&desc->refs))
+> +		return NULL;
+> +
+> +	return desc;
+> +}
+> +
+> +static inline void put_desc(struct bp_patching_desc *desc)
+> +{
+> +	smp_mb__before_atomic();
+> +	atomic_dec(&desc->refs);
+> +}
+>  
+>  static inline void *text_poke_addr(struct text_poke_loc *tp)
+>  {
+> @@ -972,26 +991,26 @@ NOKPROBE_SYMBOL(patch_cmp);
+>  
+>  int notrace poke_int3_handler(struct pt_regs *regs)
+>  {
+> +	struct bp_patching_desc *desc;
+>  	struct text_poke_loc *tp;
+> +	int len, ret = 0;
+>  	void *ip;
+> -	int len;
+> +
+> +	if (user_mode(regs))
+> +		return 0;
+>  
+>  	/*
+>  	 * Having observed our INT3 instruction, we now must observe
+> -	 * bp_patching.nr_entries.
+> +	 * bp_desc:
+>  	 *
+> -	 *	nr_entries != 0			INT3
+> +	 *	bp_desc = desc			INT3
+>  	 *	WMB				RMB
+> -	 *	write INT3			if (nr_entries)
+> -	 *
+> -	 * Idem for other elements in bp_patching.
+> +	 *	write INT3			if (desc)
+>  	 */
+>  	smp_rmb();
+>  
+> -	if (likely(!bp_patching.nr_entries))
+> -		return 0;
+> -
+> -	if (user_mode(regs))
+> +	desc = try_get_desc(&bp_desc);
+> +	if (!desc)
+>  		return 0;
+>  
+>  	/*
+> @@ -1002,16 +1021,16 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+>  	/*
+>  	 * Skip the binary search if there is a single member in the vector.
+>  	 */
+> -	if (unlikely(bp_patching.nr_entries > 1)) {
+> -		tp = bsearch(ip, bp_patching.vec, bp_patching.nr_entries,
+> +	if (unlikely(desc->nr_entries > 1)) {
+> +		tp = bsearch(ip, desc->vec, desc->nr_entries,
+>  			     sizeof(struct text_poke_loc),
+>  			     patch_cmp);
+>  		if (!tp)
+> -			return 0;
+> +			goto out_put;
+>  	} else {
+> -		tp = bp_patching.vec;
+> +		tp = desc->vec;
+>  		if (text_poke_addr(tp) != ip)
+> -			return 0;
+> +			goto out_put;
+>  	}
+>  
+>  	len = text_opcode_size(tp->opcode);
+> @@ -1023,7 +1042,7 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+>  		 * Someone poked an explicit INT3, they'll want to handle it,
+>  		 * do not consume.
+>  		 */
+> -		return 0;
+> +		goto out_put;
+>  
+>  	case CALL_INSN_OPCODE:
+>  		int3_emulate_call(regs, (long)ip + tp->rel32);
+> @@ -1038,7 +1057,11 @@ int notrace poke_int3_handler(struct pt_regs *regs)
+>  		BUG();
+>  	}
+>  
+> -	return 1;
+> +	ret = 1;
+> +
+> +out_put:
+> +	put_desc(desc);
+> +	return ret;
+>  }
+>  NOKPROBE_SYMBOL(poke_int3_handler);
+>  
+> @@ -1069,14 +1092,18 @@ static int tp_vec_nr;
+>   */
+>  static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries)
+>  {
+> +	struct bp_patching_desc desc = {
+> +		.vec = tp,
+> +		.nr_entries = nr_entries,
+> +		.refs = ATOMIC_INIT(1),
+> +	};
+>  	unsigned char int3 = INT3_INSN_OPCODE;
+>  	unsigned int i;
+>  	int do_sync;
+>  
+>  	lockdep_assert_held(&text_mutex);
+>  
+> -	bp_patching.vec = tp;
+> -	bp_patching.nr_entries = nr_entries;
+> +	smp_store_release(&bp_desc, &desc); /* rcu_assign_pointer */
+>  
+>  	/*
+>  	 * Corresponding read barrier in int3 notifier for making sure the
+> @@ -1131,17 +1158,12 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+>  		text_poke_sync();
+>  
+>  	/*
+> -	 * sync_core() implies an smp_mb() and orders this store against
+> -	 * the writing of the new instruction.
+> +	 * Remove and synchronize_rcu(), except we have a very primitive
+> +	 * refcount based completion.
+>  	 */
+> -	bp_patching.nr_entries = 0;
+> -	/*
+> -	 * This sync_core () call ensures that all INT3 handlers in progress
+> -	 * have finished. This allows poke_int3_handler() after this to
+> -	 * avoid touching bp_paching.vec by checking nr_entries == 0.
+> -	 */
+> -	text_poke_sync();
+> -	bp_patching.vec = NULL;
+> +	WRITE_ONCE(bp_desc, NULL); /* RCU_INIT_POINTER */
+> +	if (!atomic_dec_and_test(&desc.refs))
+> +		atomic_cond_read_acquire(&desc.refs, !VAL);
+>  }
+>  
+>  void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
 
---44tksmdnwrh2gezn--
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
