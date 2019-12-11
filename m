@@ -2,88 +2,93 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5D1C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683CCC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4051020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:21:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HmRTRhxc"
+	by mail.kernel.org (Postfix) with ESMTP id 424EB206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfLKDVE (ORCPT
+        id S1727032AbfLKD0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:21:04 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49031 "EHLO ozlabs.org"
+        Tue, 10 Dec 2019 22:26:23 -0500
+Received: from mx.socionext.com ([202.248.49.38]:46298 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfLKDVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:21:04 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Xhz15Fchz9sR7;
-        Wed, 11 Dec 2019 14:21:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576034461;
-        bh=lltzgu2HV7j5rxYl5lhex07J61NitzEC2ZoE4pCHpIg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HmRTRhxcZ9grRCSEYT2/9DRrMDDdddr0z1TdOQtRwQOw9zmNu9Ix9dhNSthsEKFnu
-         Anvpom5GkRcAEwQoNDc4dPEULUz5QwX0LkqAm02kHtUUZzR8MSJM1Amf2YonnDImrt
-         /uk6uNIHEaaHltb0+Bbm1gVT1+xxE6HNZHc/6ypjvf+LYa2LM0pHesTDwAWG9SO+FL
-         8jzKlZAn0book0XDxuEFc7x2/UOtqWxXxqqwi9LopBId7sOxFKLE3cab3tWUgnPipv
-         Qzg+hWK5bC4XiMPrpJyDbKO3pTOpbrMoyE/WfzZjiZtDnir0F5ajXeZ4+qPoZt2Crz
-         AH2gio3AJgdfg==
-Date:   Wed, 11 Dec 2019 14:21:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the cpufreq-arm
- tree
-Message-ID: <20191211142100.423ef8b0@canb.auug.org.au>
+        id S1726642AbfLKD0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 22:26:22 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 11 Dec 2019 12:26:20 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 19871603AB;
+        Wed, 11 Dec 2019 12:26:21 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Wed, 11 Dec 2019 12:26:51 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 8879F4034C;
+        Wed, 11 Dec 2019 12:26:20 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 6B65512044A;
+        Wed, 11 Dec 2019 12:26:20 +0900 (JST)
+Date:   Wed, 11 Dec 2019 12:26:20 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] PCI: endpoint: Fix clearing start entry in configfs
+Cc:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <1568282211-24713-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1568282211-24713-1-git-send-email-hayashi.kunihiko@socionext.com>
+Message-Id: <20191211122620.F5A9.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/YJZo=hBYa+PDgd8yq.d8AT0";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/YJZo=hBYa+PDgd8yq.d8AT0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Is there any comments about this?
+I think this fix needs to stop and restart endpoint controller
+using configfs 'logically' at least.
 
-Commit
+Thank you,
 
-  dfb3f45d17b6 ("cpufreq: scmi: Match scmi device by both name and protocol=
- id")
+On Thu, 12 Sep 2019 18:56:51 +0900 <hayashi.kunihiko@socionext.com> wrote:
 
-is missing a Signed-off-by from its committer.
+> The value of 'start' entry is no change whenever writing 0 to configfs.
+> So the endpoint that stopped once can't restart.
+> 
+> Fixes: d74679911610 ("PCI: endpoint: Introduce configfs entry for configuring EP functions")
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/endpoint/pci-ep-cfs.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> Since the possibility of restarting endpoint is up to each controller,
+> if restart is prohibited on purpose for some reason, this patch can be
+> ignored.
+> 
+> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> index d1288a0..4fead88 100644
+> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> @@ -58,6 +58,7 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+>  
+>  	if (!start) {
+>  		pci_epc_stop(epc);
+> +		epc_group->start = 0;
+>  		return len;
+>  	}
+>  
+> -- 
+> 2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
+---
+Best Regards,
+Kunihiko Hayashi
 
---Sig_/YJZo=hBYa+PDgd8yq.d8AT0
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3wYJwACgkQAVBC80lX
-0GyUAwf/VIgHycApPnRen02Fqa5tcvRjO4MwWBJn5AWUEM01CHmt/u38yLFT5r5U
-HV/zAvol5YYgskpBh63MSpzIrlqdJkQ19hKlsmvqWiaCBzN08YLht7fuy9QBf2gU
-HPu5aLY+06XI22pJas5EF9nI8c7BDrsvdaOsafCT+zZ1kyxflAetJcdU2nmKjlw9
-pqPsB3IeJ/dBJDhSGgdrH93uNmMN8NGGDZJqmhWxqHiiSwCMz0XFzmUwJhL8EdIw
-QNeNiCKPxZfTNUonsJjgIAY2dkmQpEzTVQ8FWU/iUYbXdwuNTrfind2OeW8jopp3
-Kar68MufKyNMdmia0EsEfj3Xu1usnw==
-=1Fr0
------END PGP SIGNATURE-----
-
---Sig_/YJZo=hBYa+PDgd8yq.d8AT0--
