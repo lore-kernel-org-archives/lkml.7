@@ -2,97 +2,107 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF4FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B574C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDE8020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7502020836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbfLKIdf convert rfc822-to-8bit (ORCPT
+        id S1728349AbfLKIex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:33:35 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46932 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfLKIdf (ORCPT
+        Wed, 11 Dec 2019 03:34:53 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33929 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbfLKIew (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:33:35 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m8so18639328edi.13;
-        Wed, 11 Dec 2019 00:33:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HzQhBjl4CEATxmwnIgxUg2g0u1Z69db5jVtArs+GAuc=;
-        b=dQRppAsGdy3FvauCVF7oYCrZHl2I79rgZuPJixQwb4C5MoZZyaEyIBUsVRdPfqbxnU
-         xHvrBCtCUZkSdJw7ivlikRK4LrKHAjrZC2/+QVci0YUwhCQHqi80Zw8jxpOMznTnrUYy
-         YBcg3r+7KDWSwQI1oihAooUVaRIJl/82wd7zSSMvK3D+qi42a4PzkccRo3fNxTyeYkEe
-         vWgYZ5/GXBSaF2lZNzFsOKGPPnP6En3vq1RyUMDjC+Ho1LIitEkT+f98ukzQheyq+xto
-         jQb9YRu/uJmLvcIeY//ekghPAtVom0ckfVpbwomS194Cm5ycV8oPChQTj81QqmmJEWNl
-         CHqQ==
-X-Gm-Message-State: APjAAAVyD03+ZwIcumqlYlcHnrCmyb6A0bLQ4vR+bjI/jG9vOHZFVvnN
-        Fc4ORy6zCZ+uYSuIWoAAM7kxMWDWPx0=
-X-Google-Smtp-Source: APXvYqzwQTuYd/TjOPWeR3KKV7am/bZZPm2uZWfhkZtV7xZYTGc/D59x8oNVY8mQByduPUhvCHkP0w==
-X-Received: by 2002:a50:ce56:: with SMTP id k22mr1969229edj.34.1576053212561;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id bx25sm22710edb.80.2019.12.11.00.33.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id t2so23051585wrr.1;
-        Wed, 11 Dec 2019 00:33:32 -0800 (PST)
-X-Received: by 2002:adf:81e3:: with SMTP id 90mr2310139wra.23.1576053211823;
- Wed, 11 Dec 2019 00:33:31 -0800 (PST)
+        Wed, 11 Dec 2019 03:34:52 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iexSF-00042B-PL; Wed, 11 Dec 2019 08:34:43 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] ath11k: fix several spelling mistakes
+Date:   Wed, 11 Dec 2019 08:34:43 +0000
+Message-Id: <20191211083443.372506-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191210174710.10649-1-peron.clem@gmail.com> <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-In-Reply-To: <20191211080633.a6yzwbxi7fcmislp@gilmour.lan>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 11 Dec 2019 16:33:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Message-ID: <CAGb2v66mWgDKyZEWVVYqq5McOaYmiY0PSP7iXE8TBtVZv03u1Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: allwinner: Fix missing header in H6 example
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:06 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Tue, Dec 10, 2019 at 06:47:10PM +0100, Clément Péron wrote:
-> > Latest linux-next doesn't build due to the following error:
-> >
-> > Error: Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dts:35.37-38
-> > syntax error
-> > FATAL ERROR: Unable to parse input tree
-> > make[1]: *** [Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.example.dt.yaml]
-> > Error 1
-> >
-> > This is due to missing header in the device-tree yaml example.
-> >
-> > Fix this by adding the missing headers.
-> >
-> > Fixes: 4ee929b3f08e ("dt-bindings: pwm: allwinner: Add H6 PWM description")
-> > Reported-by: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
->
-> Applied, thanks!
-> Maxime
+From: Colin Ian King <colin.king@canonical.com>
 
-Maybe squash it instead? :)
+There are several spelling mistakes in warning and debug messages,
+fix them.
 
-ChenYu
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/wireless/ath/ath11k/debug.c           | 4 ++--
+ drivers/net/wireless/ath/ath11k/debug_htt_stats.c | 2 +-
+ drivers/net/wireless/ath/ath11k/wmi.c             | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/debug.c b/drivers/net/wireless/ath/ath11k/debug.c
+index c27fffd13a5d..e00b5739fb00 100644
+--- a/drivers/net/wireless/ath/ath11k/debug.c
++++ b/drivers/net/wireless/ath/ath11k/debug.c
+@@ -704,7 +704,7 @@ static ssize_t ath11k_write_extd_rx_stats(struct file *file,
+ 					       DP_RX_BUFFER_SIZE, &tlv_filter);
+ 
+ 	if (ret) {
+-		ath11k_warn(ar->ab, "failed to set rx filter for moniter status ring\n");
++		ath11k_warn(ar->ab, "failed to set rx filter for monitor status ring\n");
+ 		goto exit;
+ 	}
+ 
+@@ -948,7 +948,7 @@ static ssize_t ath11k_write_pktlog_filter(struct file *file,
+ 					       HAL_RXDMA_MONITOR_STATUS,
+ 					       DP_RX_BUFFER_SIZE, &tlv_filter);
+ 	if (ret) {
+-		ath11k_warn(ar->ab, "failed to set rx filter for moniter status ring\n");
++		ath11k_warn(ar->ab, "failed to set rx filter for monitor status ring\n");
+ 		goto out;
+ 	}
+ 
+diff --git a/drivers/net/wireless/ath/ath11k/debug_htt_stats.c b/drivers/net/wireless/ath/ath11k/debug_htt_stats.c
+index 27b301bc1a1b..a824826f562c 100644
+--- a/drivers/net/wireless/ath/ath11k/debug_htt_stats.c
++++ b/drivers/net/wireless/ath/ath11k/debug_htt_stats.c
+@@ -3512,7 +3512,7 @@ htt_print_rx_pdev_fw_stats_phy_err_tlv(const void *tag_buf,
+ 	len += HTT_DBG_OUT(buf + len, buf_len - len, "HTT_RX_PDEV_FW_STATS_PHY_ERR_TLV:");
+ 	len += HTT_DBG_OUT(buf + len, buf_len - len, "mac_id__word = %u",
+ 			   htt_stats_buf->mac_id__word);
+-	len += HTT_DBG_OUT(buf + len, buf_len - len, "tota_phy_err_nct = %u",
++	len += HTT_DBG_OUT(buf + len, buf_len - len, "total_phy_err_nct = %u",
+ 			   htt_stats_buf->total_phy_err_cnt);
+ 
+ 	ARRAY_TO_STRING(phy_errs,
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.c b/drivers/net/wireless/ath/ath11k/wmi.c
+index b05642617b78..682563ccfe5a 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.c
++++ b/drivers/net/wireless/ath/ath11k/wmi.c
+@@ -2544,7 +2544,7 @@ ath11k_wmi_send_twt_disable_cmd(struct ath11k *ar, u32 pdev_id)
+ 	ret = ath11k_wmi_cmd_send(wmi, skb,
+ 				  WMI_TWT_DISABLE_CMDID);
+ 	if (ret) {
+-		ath11k_warn(ab, "Failed to send WMI_TWT_DIeABLE_CMDID");
++		ath11k_warn(ab, "Failed to send WMI_TWT_DISABLE_CMDID");
+ 		dev_kfree_skb(skb);
+ 	}
+ 	return ret;
+-- 
+2.24.0
+
