@@ -2,219 +2,149 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BCBC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCC7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA76208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CE02077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080167;
-	bh=zhohHsVX+GTtYTqbaLSoGKPyiR4OLejXpIJpJGzzvqw=;
+	s=default; t=1576080171;
+	bh=5xNR6jI9+0OjgRnmsvUhBM684dKe2zQ9o5G22OtrEhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VAxhfOF9SousExxOYNhWl6ojmuLA80jJu8l/h2gQSSAgBGPateljo3sGV6Vy6d1/u
-	 MIcDeq7giNB7WZg0yg1mX/jRkLpaq3vrfBlvzW0nsnAQmtBtQB7A3fOl4jyD3kFUFI
-	 qYTwo48VKerjAvws4ndVU973Ws1v/TqI5cfiu0RY=
+	b=NdKWr/DymQLnOCt+qYU0RtL73KQp40JFdN6neUxHTlcVAPefO7AT0Ks0LLCbILpfm
+	 uOvoFiQDeccvBBzCgtGzV96QkY4SRwIxyJyh089f7UXMOZWxNGZZiiKp+WJqq82ddC
+	 fxW+BeYwNNxuZC9rhv9kZmU45+UiddllaqKmK1Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbfLKQCp (ORCPT
+        id S2388678AbfLKQCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:02:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36152 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731264AbfLKPNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:09 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730908AbfLKPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A94122B48;
-        Wed, 11 Dec 2019 15:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BAFB2467C;
+        Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077189;
-        bh=zhohHsVX+GTtYTqbaLSoGKPyiR4OLejXpIJpJGzzvqw=;
+        s=default; t=1576077186;
+        bh=5xNR6jI9+0OjgRnmsvUhBM684dKe2zQ9o5G22OtrEhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTVMzuuzFCh6WBnGHxnLFtVpP6ZpSrk3FavYCmtKt8HgBs3yDyvJX0DLHWObaVQYx
-         U6F0mnMHuLsdQKgaA2jXX9UIHE0aw+tLaW2X4jj2Rg6FKN2+P7B723Le3wUzqjMOX3
-         y8XgetJbny8Io9D5ueBIvl5QVlmDwHS5SHsvZKCE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 072/134] scsi: atari_scsi: sun3_scsi: Set sg_tablesize to 1 instead of SG_NONE
-Date:   Wed, 11 Dec 2019 10:10:48 -0500
-Message-Id: <20191211151150.19073-72-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=LAiDJCai6UOxF7paoO3wRuWRRuqBkmbTNw/sgYTfsrjKd+Jmux5FghjDLMGwmuzEO
+         ZZZgiJ/1P9ioBPIDj4iIJgFGIdph2WG0og0SInu9qqfxhknktOh7aqRRIe4s65xr1F
+         jXGUZLRcZrbj/BuZq75u4ns50IKmtTWsRUOuy1CU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Guillem Jover <guillem@hadrons.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 014/105] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
+Date:   Wed, 11 Dec 2019 16:05:03 +0100
+Message-Id: <20191211150224.289343749@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Guillem Jover <guillem@hadrons.org>
 
-[ Upstream commit 79172ab20bfd8437b277254028efdb68484e2c21 ]
+[ Upstream commit 97eba80fcca754856d09e048f469db22773bec68 ]
 
-Since the scsi subsystem adopted the blk-mq API, a host with zero
-sg_tablesize crashes with a NULL pointer dereference.
+This type is used to pass the sigset_t from userland to the kernel,
+but it was using the kernel native pointer type for the member
+representing the compat userland pointer to the userland sigset_t.
 
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-scsi target0:0:0: Beginning Domain Validation
-scsi target0:0:0: Domain Validation skipping write tests
-scsi target0:0:0: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
-scsi target0:0:1: Beginning Domain Validation
-scsi target0:0:1: Domain Validation skipping write tests
-scsi target0:0:1: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-scsi 0:0:2:0: CD-ROM            QEMU     QEMU CD-ROM      2.5+ PQ: 0 ANSI: 5
-scsi target0:0:2: Beginning Domain Validation
-scsi target0:0:2: Domain Validation skipping write tests
-scsi target0:0:2: Ending Domain Validation
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-blk_queue_max_segments: set to minimum 1
-sr 0:0:2:0: Power-on or device reset occurred
-sd 0:0:0:0: Power-on or device reset occurred
-sd 0:0:1:0: Power-on or device reset occurred
-sd 0:0:0:0: [sda] 10485762 512-byte logical blocks: (5.37 GB/5.00 GiB)
-sd 0:0:0:0: [sda] Write Protect is off
-sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
-Unable to handle kernel NULL pointer dereference at virtual address (ptrval)
-Oops: 00000000
-Modules linked in:
-PC: [<001cd874>] blk_mq_free_request+0x66/0xe2
-SR: 2004  SP: (ptrval)  a2: 00874520
-d0: 00000000    d1: 00000000    d2: 009ba800    d3: 00000000
-d4: 00000000    d5: 08000002    a0: 0087be68    a1: 009a81e0
-Process kworker/u2:2 (pid: 15, task=(ptrval))
-Frame format=7 eff addr=0000007a ssw=0505 faddr=0000007a
-wb 1 stat/addr/data: 0000 00000000 00000000
-wb 2 stat/addr/data: 0000 00000000 00000000
-wb 3 stat/addr/data: 0000 0000007a 00000000
-push data: 00000000 00000000 00000000 00000000
-Stack from 0087bd98:
-        00000002 00000000 0087be72 009a7820 0087bdb4 001c4f6c 009a7820 0087bdd4
-        0024d200 009a7820 0024d0dc 0087be72 009baa00 0087be68 009a5000 0087be7c
-        00265d10 009a5000 0087be72 00000003 00000000 00000000 00000000 0087be68
-        00000bb8 00000005 00000000 00000000 00000000 00000000 00265c56 00000000
-        009ba60c 0036ddf4 00000002 ffffffff 009baa00 009ba600 009a50d6 0087be74
-        00227ba0 009baa08 00000001 009baa08 009ba60c 0036ddf4 00000000 00000000
-Call Trace: [<001c4f6c>] blk_put_request+0xe/0x14
- [<0024d200>] __scsi_execute+0x124/0x174
- [<0024d0dc>] __scsi_execute+0x0/0x174
- [<00265d10>] sd_revalidate_disk+0xba/0x1f02
- [<00265c56>] sd_revalidate_disk+0x0/0x1f02
- [<0036ddf4>] strlen+0x0/0x22
- [<00227ba0>] device_add+0x3da/0x604
- [<0036ddf4>] strlen+0x0/0x22
- [<00267e64>] sd_probe+0x30c/0x4b4
- [<0002da44>] process_one_work+0x0/0x402
- [<0022b978>] really_probe+0x226/0x354
- [<0022bc34>] driver_probe_device+0xa4/0xf0
- [<0002da44>] process_one_work+0x0/0x402
- [<0022bcd0>] __driver_attach_async_helper+0x50/0x70
- [<00035dae>] async_run_entry_fn+0x36/0x130
- [<0002db88>] process_one_work+0x144/0x402
- [<0002e1aa>] worker_thread+0x0/0x570
- [<0002e29a>] worker_thread+0xf0/0x570
- [<0002e1aa>] worker_thread+0x0/0x570
- [<003768d8>] schedule+0x0/0xb8
- [<0003f58c>] __init_waitqueue_head+0x0/0x12
- [<00033e92>] kthread+0xc2/0xf6
- [<000331e8>] kthread_parkme+0x0/0x4e
- [<003768d8>] schedule+0x0/0xb8
- [<00033dd0>] kthread+0x0/0xf6
- [<00002c10>] ret_from_kernel_thread+0xc/0x14
-Code: 0280 0006 0800 56c0 4400 0280 0000 00ff <52b4> 0c3a 082b 0006 0013 6706 2042 53a8 00c4 4ab9 0047 3374 6640 202d 000c 670c
-Disabling lock debugging due to kernel taint
+This messes up the layout, and makes the kernel eat up both the
+userland pointer and the size members into the kernel pointer, and
+then reads garbage into the kernel sigsetsize. Which makes the sigset_t
+size consistency check fail, and consequently the syscall always
+returns -EINVAL.
 
-Avoid this by setting sg_tablesize = 1.
+This breaks both libaio and strace on 32-bit userland running on 64-bit
+kernels. And there are apparently no users in the wild of the current
+broken layout (at least according to codesearch.debian.org and a brief
+check over github.com search). So it looks safe to fix this directly
+in the kernel, instead of either letting userland deal with this
+permanently with the additional overhead or trying to make the syscall
+infer what layout userland used, even though this is also being worked
+around in libaio to temporarily cope with kernels that have not yet
+been fixed.
 
-Link: https://lore.kernel.org/r/4567bcae94523b47d6f3b77450ba305823bca479.1572656814.git.fthain@telegraphics.com.au
-Reported-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
-References: commit 68ab2d76e4be ("scsi: cxlflash: Set sg_tablesize to 1 instead of SG_NONE")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
+
+Fixes: 7a074e96dee6 ("aio: implement io_pgetevents")
+Signed-off-by: Guillem Jover <guillem@hadrons.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/atari_scsi.c | 6 +++---
- drivers/scsi/mac_scsi.c   | 2 +-
- drivers/scsi/sun3_scsi.c  | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ fs/aio.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/atari_scsi.c b/drivers/scsi/atari_scsi.c
-index e809493d0d063..a82b63a666356 100644
---- a/drivers/scsi/atari_scsi.c
-+++ b/drivers/scsi/atari_scsi.c
-@@ -742,7 +742,7 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
- 		atari_scsi_template.sg_tablesize = SG_ALL;
- 	} else {
- 		atari_scsi_template.can_queue    = 1;
--		atari_scsi_template.sg_tablesize = SG_NONE;
-+		atari_scsi_template.sg_tablesize = 1;
- 	}
+diff --git a/fs/aio.c b/fs/aio.c
+index 01e0fb9ae45ae..0d9a559d488c1 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -2179,7 +2179,7 @@ SYSCALL_DEFINE5(io_getevents_time32, __u32, ctx_id,
+ #ifdef CONFIG_COMPAT
  
- 	if (setup_can_queue > 0)
-@@ -751,8 +751,8 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
- 	if (setup_cmd_per_lun > 0)
- 		atari_scsi_template.cmd_per_lun = setup_cmd_per_lun;
+ struct __compat_aio_sigset {
+-	compat_sigset_t __user	*sigmask;
++	compat_uptr_t		sigmask;
+ 	compat_size_t		sigsetsize;
+ };
  
--	/* Leave sg_tablesize at 0 on a Falcon! */
--	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize >= 0)
-+	/* Don't increase sg_tablesize on Falcon! */
-+	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize > 0)
- 		atari_scsi_template.sg_tablesize = setup_sg_tablesize;
+@@ -2193,7 +2193,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 		struct old_timespec32 __user *, timeout,
+ 		const struct __compat_aio_sigset __user *, usig)
+ {
+-	struct __compat_aio_sigset ksig = { NULL, };
++	struct __compat_aio_sigset ksig = { 0, };
+ 	struct timespec64 t;
+ 	bool interrupted;
+ 	int ret;
+@@ -2204,7 +2204,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
+ 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
+ 		return -EFAULT;
  
- 	if (setup_hostid >= 0) {
-diff --git a/drivers/scsi/mac_scsi.c b/drivers/scsi/mac_scsi.c
-index 9c5566217ef6a..b5dde9d0d0545 100644
---- a/drivers/scsi/mac_scsi.c
-+++ b/drivers/scsi/mac_scsi.c
-@@ -464,7 +464,7 @@ static int __init mac_scsi_probe(struct platform_device *pdev)
- 		mac_scsi_template.can_queue = setup_can_queue;
- 	if (setup_cmd_per_lun > 0)
- 		mac_scsi_template.cmd_per_lun = setup_cmd_per_lun;
--	if (setup_sg_tablesize >= 0)
-+	if (setup_sg_tablesize > 0)
- 		mac_scsi_template.sg_tablesize = setup_sg_tablesize;
- 	if (setup_hostid >= 0)
- 		mac_scsi_template.this_id = setup_hostid & 7;
-diff --git a/drivers/scsi/sun3_scsi.c b/drivers/scsi/sun3_scsi.c
-index 955e4c938d49e..701b842296f05 100644
---- a/drivers/scsi/sun3_scsi.c
-+++ b/drivers/scsi/sun3_scsi.c
-@@ -501,7 +501,7 @@ static struct scsi_host_template sun3_scsi_template = {
- 	.eh_host_reset_handler	= sun3scsi_host_reset,
- 	.can_queue		= 16,
- 	.this_id		= 7,
--	.sg_tablesize		= SG_NONE,
-+	.sg_tablesize		= 1,
- 	.cmd_per_lun		= 2,
- 	.dma_boundary		= PAGE_SIZE - 1,
- 	.cmd_size		= NCR5380_CMD_SIZE,
-@@ -523,7 +523,7 @@ static int __init sun3_scsi_probe(struct platform_device *pdev)
- 		sun3_scsi_template.can_queue = setup_can_queue;
- 	if (setup_cmd_per_lun > 0)
- 		sun3_scsi_template.cmd_per_lun = setup_cmd_per_lun;
--	if (setup_sg_tablesize >= 0)
-+	if (setup_sg_tablesize > 0)
- 		sun3_scsi_template.sg_tablesize = setup_sg_tablesize;
- 	if (setup_hostid >= 0)
- 		sun3_scsi_template.this_id = setup_hostid & 7;
+-	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
++	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -2228,7 +2228,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 		struct __kernel_timespec __user *, timeout,
+ 		const struct __compat_aio_sigset __user *, usig)
+ {
+-	struct __compat_aio_sigset ksig = { NULL, };
++	struct __compat_aio_sigset ksig = { 0, };
+ 	struct timespec64 t;
+ 	bool interrupted;
+ 	int ret;
+@@ -2239,7 +2239,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
+ 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
+ 		return -EFAULT;
+ 
+-	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
++	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
+ 	if (ret)
+ 		return ret;
+ 
 -- 
 2.20.1
+
+
 
