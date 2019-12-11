@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15594C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F585C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D289B24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463382077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078380;
-	bh=gfZMDrKpO5XomRYU3+D6o4on4E2evPxiXZgonU8DO4w=;
+	s=default; t=1576078384;
+	bh=MZxWCjPMdzRp2j19rWZIMdoTzcngRZidA8+i0wdeXIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IlXvbY8xFZpfI9DhnIDCN2xme+mbwRGYal8nG6dDDOVM85Q4pvIZ5GL+unSjEO+u
-	 ss+NWJDQOvQHjsXa9GMUJoIAwwJk+fmAX7RZASjy6CrO+qb6sk+auqBMIeJ89I/Ngq
-	 xszTZ1IfOHYf6EvpGUbTG8gdtpE9p+Jc2ZClMiHY=
+	b=zMBJy4jD/paHIvsOwdd0q+oXSdXGiTsEubV88lRj0yRKGNAQxCZjl3r7v31iSsTvT
+	 8dJh+6xT+Rfe0YpgC5xOWu//N983hNxhvgrt4Bu35WM9s0N2Pn21hG9F6RjEtn6N3N
+	 Bg8d09QNYVUhJgtyeS79hb6mJIFTeWt/RrP1Oz8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbfLKPc7 (ORCPT
+        id S2388043AbfLKPdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:32:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35216 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:33:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733010AbfLKP2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:50 -0500
+        id S2387719AbfLKP2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8397222C4;
-        Wed, 11 Dec 2019 15:28:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C97B424679;
+        Wed, 11 Dec 2019 15:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078129;
-        bh=gfZMDrKpO5XomRYU3+D6o4on4E2evPxiXZgonU8DO4w=;
+        s=default; t=1576078128;
+        bh=MZxWCjPMdzRp2j19rWZIMdoTzcngRZidA8+i0wdeXIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mz6ywcteVHfgwGuFACXC58FPaSXo9ZVQzaiunVlhkCxDILhD6vziWGl65qUr7pU4o
-         eE/5ZHj7lj/uKqdufIhJ0P4Y7wBvI+CM8z/8337jyUlBLdfFAV5kteqfpA/JxjId+v
-         Q8X/ZBuLSrmJD1vEhjeasE+uipXYivUOwfzaHsmQ=
+        b=CJjGn9CR4Z8TzbgNNSGZDqqpOVXNg1C5Was9EoB8tHDZIG6+bcGKVjmlplnMTCOd6
+         Hu5GUsKlVbfTH3Q2e//pEZGmUS60TIKoSTJ8uWzjt/V2wtXWfmgooa90mjpRMSsZZ+
+         64rIVz8iamQdouWnZAbKi2Lg8venVM/Hgk9wvamw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 17/58] jbd2: Fix statistics for the number of logged blocks
-Date:   Wed, 11 Dec 2019 10:27:50 -0500
-Message-Id: <20191211152831.23507-17-sashal@kernel.org>
+Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
+        Jan Kara <jack@suse.cz>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/58] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
+Date:   Wed, 11 Dec 2019 10:27:49 -0500
+Message-Id: <20191211152831.23507-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -58,59 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
 
-[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
+[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
 
-jbd2 statistics counting number of blocks logged in a transaction was
-wrong. It didn't count the commit block and more importantly it didn't
-count revoke descriptor blocks. Make sure these get properly counted.
+This patch updates the lock pattern in ext4_direct_IO_read() to not
+block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
+locking condition implemented here is similar to that of 942491c9e6d6
+("xfs: fix AIM7 regression").
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
+Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
+Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
+Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
 Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/ext4/inode.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 0567b17a970c2..7dd6133925921 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -726,7 +726,6 @@ start_journal_io:
- 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
- 			}
- 			cond_resched();
--			stats.run.rs_blocks_logged += bufs;
- 
- 			/* Force a new descriptor to be generated next
-                            time round the loop. */
-@@ -813,6 +812,7 @@ start_journal_io:
- 		if (unlikely(!buffer_uptodate(bh)))
- 			err = -EIO;
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 
- 		/*
- 		 * The list contains temporary buffer heads created by
-@@ -858,6 +858,7 @@ start_journal_io:
- 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
- 		clear_buffer_jwrite(bh);
- 		jbd2_unfile_log_bh(bh);
-+		stats.run.rs_blocks_logged++;
- 		__brelse(bh);		/* One for getblk */
- 		/* AKPM: bforget here */
- 	}
-@@ -879,6 +880,7 @@ start_journal_io:
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
-+	stats.run.rs_blocks_logged++;
- 	if (jbd2_has_feature_async_commit(journal) &&
- 	    journal->j_flags & JBD2_BARRIER) {
- 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index b3d5fd84b4856..f746abfd96977 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3787,7 +3787,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+ 	 * writes & truncates and since we take care of writing back page cache,
+ 	 * we are protected against page writeback as well.
+ 	 */
+-	inode_lock_shared(inode);
++	if (iocb->ki_flags & IOCB_NOWAIT) {
++		if (!inode_trylock_shared(inode))
++			return -EAGAIN;
++	} else {
++		inode_lock_shared(inode);
++	}
++
+ 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
+ 					   iocb->ki_pos + count - 1);
+ 	if (ret)
 -- 
 2.20.1
 
