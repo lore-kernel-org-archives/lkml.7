@@ -2,132 +2,147 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6316BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BECC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EF920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A972077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080002;
-	bh=LGW7v87sNgdj7lp4cac8DXf/BuQaHXMOQQGoLFkmpZE=;
+	s=default; t=1576080007;
+	bh=YZDLaGpkkxhtgpLhTYujEHIkbxT4G+SnPCF1vw6ijWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BrxyZiHIzcXOQqspu/PTeAWaVFVI8N73vuknTgNMO/JZg42h6UntNPzZPCESY7gPG
-	 uoEINST6BvpZqDiD3lIcWXc0fttIEQ6NlrGwc3Hq46EAbeyfwzJ+mYEhDOgySC5SYl
-	 dvUBU/0752ExcfxFSfSMerwhsoRN5KIl/y3T6Lf8=
+	b=le/X2m8zEbIEbzlHUj8rCwFNvElMwbrWwXRyTD8AtTaz4a1PtaUctnod7RZkTPG4X
+	 MnJVcZ29taMXdrha1ENDsIOJf/uoO6SzD0qhj3H67BEKfRG2fUzTw0WanmC0SMcBhJ
+	 lfaNkGnHWvpWPylqMQkaIZsdPxVyOby9jSu/9hnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731826AbfLKQAA (ORCPT
+        id S1730917AbfLKQAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:00:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:00:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731536AbfLKPN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:57 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731518AbfLKPNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E948C24654;
-        Wed, 11 Dec 2019 15:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D3C24671;
+        Wed, 11 Dec 2019 15:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077237;
-        bh=LGW7v87sNgdj7lp4cac8DXf/BuQaHXMOQQGoLFkmpZE=;
+        s=default; t=1576077233;
+        bh=YZDLaGpkkxhtgpLhTYujEHIkbxT4G+SnPCF1vw6ijWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKpPVzOo9XpfVsE460KoARdwU5mpvXWOcrRDZSEVflB3doKmuUBSj8lkcFxMHXrXg
-         cVzdxDW+8TRRgR+9godw0ZQWy+7PUV/9VT77+Dg5gTgZdfoGP32z161OCReL1ipU9b
-         od0hKycPVJUMrG7p8bH+L2aUqocWzeMh6sfTDdnc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.3 068/105] nfsd: Ensure CLONE persists data and metadata changes to the target file
-Date:   Wed, 11 Dec 2019 16:05:57 +0100
-Message-Id: <20191211150249.287893236@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=pZVxuWjeMQzGUfHsytUkCgN8io5okDIN0x0xutV6PVFDO2T2KYg+KHbEryGJ2ZUxB
+         +3JRr64eavq3ZUlCI6EXK6Ob70MJY+Eq6VLJRgQYtCCXT5t1UXC+17keEFKdJBugwg
+         nX/SdeVA0lUoYIuej8jvM8S2b69LNOc/kRcvcvW8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chengguang Xu <cgxu519@mykernel.net>, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 112/134] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
+Date:   Wed, 11 Dec 2019 10:11:28 -0500
+Message-Id: <20191211151150.19073-112-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit a25e3726b32c746c0098125d4c7463bb84df72bb upstream.
+[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
 
-The NFSv4.2 CLONE operation has implicit persistence requirements on the
-target file, since there is no protocol requirement that the client issue
-a separate operation to persist data.
-For that reason, we should call vfs_fsync_range() on the destination file
-after a successful call to vfs_clone_file_range().
+Setting softlimit larger than hardlimit seems meaningless
+for disk quota but currently it is allowed. In this case,
+there may be a bit of comfusion for users when they run
+df comamnd to directory which has project quota.
 
-Fixes: ffa0160a1039 ("nfsd: implement the NFSv4.2 CLONE operation")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.5+
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+For example, we set 20M softlimit and 10M hardlimit of
+block usage limit for project quota of test_dir(project id 123).
 
+[root@hades f2fs]# repquota -P -a
+*** Report for project quotas on device /dev/nvme0n1p8
+Block grace time: 7days; Inode grace time: 7days
+Block limits File limits
+Project used soft hard grace used soft hard grace
+----------------------------------------------------------------------
+0 -- 4 0 0 1 0 0
+123 +- 10248 20480 10240 2 0 0
+
+The result of df command as below:
+
+[root@hades f2fs]# df -h /mnt/f2fs/test
+Filesystem Size Used Avail Use% Mounted on
+/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
+
+Even though it looks like there is another 10M free space to use,
+if we write new data to diretory test(inherit project id),
+the write will fail with errno(-EDQUOT).
+
+After this patch, the df result looks like below.
+
+[root@hades f2fs]# df -h /mnt/f2fs/test
+Filesystem Size Used Avail Use% Mounted on
+/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
+
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4proc.c |    3 ++-
- fs/nfsd/vfs.c      |    8 +++++++-
- fs/nfsd/vfs.h      |    2 +-
- 3 files changed, 10 insertions(+), 3 deletions(-)
+ fs/f2fs/super.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1083,7 +1083,8 @@ nfsd4_clone(struct svc_rqst *rqstp, stru
- 		goto out;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 1443cee158633..a2af155567b80 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1213,9 +1213,13 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dquot->dq_dqb_lock);
  
- 	status = nfsd4_clone_file_range(src, clone->cl_src_pos,
--			dst, clone->cl_dst_pos, clone->cl_count);
-+			dst, clone->cl_dst_pos, clone->cl_count,
-+			EX_ISSYNC(cstate->current_fh.fh_export));
+-	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+-		 dquot->dq_dqb.dqb_bsoftlimit :
+-		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_bsoftlimit)
++		limit = dquot->dq_dqb.dqb_bsoftlimit;
++	if (dquot->dq_dqb.dqb_bhardlimit &&
++			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
++		limit = dquot->dq_dqb.dqb_bhardlimit;
++
+ 	if (limit && buf->f_blocks > limit) {
+ 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
+ 		buf->f_blocks = limit;
+@@ -1224,9 +1228,13 @@ static int f2fs_statfs_project(struct super_block *sb,
+ 			 (buf->f_blocks - curblock) : 0;
+ 	}
  
- 	fput(dst);
- 	fput(src);
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -552,7 +552,7 @@ __be32 nfsd4_set_nfs4_label(struct svc_r
- #endif
- 
- __be32 nfsd4_clone_file_range(struct file *src, u64 src_pos, struct file *dst,
--		u64 dst_pos, u64 count)
-+		u64 dst_pos, u64 count, bool sync)
- {
- 	loff_t cloned;
- 
-@@ -561,6 +561,12 @@ __be32 nfsd4_clone_file_range(struct fil
- 		return nfserrno(cloned);
- 	if (count && cloned != count)
- 		return nfserrno(-EINVAL);
-+	if (sync) {
-+		loff_t dst_end = count ? dst_pos + count - 1 : LLONG_MAX;
-+		int status = vfs_fsync_range(dst, dst_pos, dst_end, 0);
-+		if (status < 0)
-+			return nfserrno(status);
-+	}
- 	return 0;
- }
- 
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -58,7 +58,7 @@ __be32          nfsd4_set_nfs4_label(str
- __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
- 				    struct file *, loff_t, loff_t, int);
- __be32		nfsd4_clone_file_range(struct file *, u64, struct file *,
--			u64, u64);
-+				       u64, u64, bool);
- #endif /* CONFIG_NFSD_V4 */
- __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
- 				char *name, int len, struct iattr *attrs,
-
+-	limit = dquot->dq_dqb.dqb_isoftlimit ?
+-		dquot->dq_dqb.dqb_isoftlimit :
+-		dquot->dq_dqb.dqb_ihardlimit;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_isoftlimit)
++		limit = dquot->dq_dqb.dqb_isoftlimit;
++	if (dquot->dq_dqb.dqb_ihardlimit &&
++			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
++		limit = dquot->dq_dqb.dqb_ihardlimit;
++
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
+ 		buf->f_ffree =
+-- 
+2.20.1
 
