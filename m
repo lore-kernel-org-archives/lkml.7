@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCFFC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55ABC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51FF12073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F622073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078961;
-	bh=3yZk5gCJMJfepGkZDihxg/Xw/FlD4lDWN2ZbF36XecI=;
+	s=default; t=1576078968;
+	bh=x1o75/pPbJN5W7XdirsxfqS6hHRUyHfUWq6zbH4oR9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jmwlxBI6bd8NmKUqG6krHwNyA2dPf3eqjflnD0SW39oI5QUJvlJ4c0+HG7R5S7lI0
-	 llNyprGvH53COwKiYxF1IE17d1zKuPq3kMAf3wYJWmuaUp1KVSCFPW8H2I07I/SQ80
-	 umWW3sI3M1ngflKz/aIpZmTrqlE8j+LiNJtpzNeA=
+	b=xb+g96cRvmmWlklwyqMi4sf8y8ZHYX3exJL+2U1TYIvMfseX4O0T6w1exppt6eiql
+	 G/9adCK4vRzV4bw4AqYuvziagUZ20DLOUEi+5zE9adKkR5gWFouGdOvrt7MZUD8dFN
+	 s+6LZwy3vpfcwSmlN6O+4KVhG7PXEyXYpi3wUiA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388602AbfLKPmc (ORCPT
+        id S2388569AbfLKPmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:42:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33486 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:42:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387454AbfLKP1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:42 -0500
+        id S2387447AbfLKP1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2C622527;
-        Wed, 11 Dec 2019 15:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D2A72465A;
+        Wed, 11 Dec 2019 15:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078062;
-        bh=3yZk5gCJMJfepGkZDihxg/Xw/FlD4lDWN2ZbF36XecI=;
+        s=default; t=1576078059;
+        bh=x1o75/pPbJN5W7XdirsxfqS6hHRUyHfUWq6zbH4oR9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvDlkeLUVHd78mpwUx8SEz0dUf5gcw7zfflJKVFbbSvsAcr/S41EsI9rNTaaSjqhR
-         k2jkEhQZ7HNz/9pZ3C9P2Bc8TJQwY95RqXr+TRL9RphSHloGl1p1uV6PrOVESJ0q4l
-         bJpTGlGm9qipgJMvw98Nqx0QzCVmFKf8QKZbGjRU=
+        b=l0EV+dRZVCYOsC6iNgtrOLCaO7iu9O+CFGVw6gtuxiwDMkDNDyyJ6T/ySuzsXiTW2
+         IOOuN956cHm6Bq34sRwIBHQUV1vMTS6cyX1l5IDIep71Auvtcwc4Px6CZ+a8g/dfy2
+         e4l5AAwEZdoJn5dMySMEk/7OfuSpHfViq870HLl0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 54/79] watchdog: aspeed: Fix clock behaviour for ast2600
-Date:   Wed, 11 Dec 2019 10:26:18 -0500
-Message-Id: <20191211152643.23056-54-sashal@kernel.org>
+Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 52/79] HID: Improve Windows Precision Touchpad detection.
+Date:   Wed, 11 Dec 2019 10:26:16 -0500
+Message-Id: <20191211152643.23056-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -62,64 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Stanley <joel@jms.id.au>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-[ Upstream commit c04571251b3d842096f1597f5d4badb508be016d ]
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-The ast2600 no longer uses bit 4 in the control register to indicate a
-1MHz clock (It now controls whether this watchdog is reset by a SOC
-reset). This means we do not want to set it. It also does not need to be
-set for the ast2500, as it is read-only on that SoC.
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-The comment next to the clock rate selection wandered away from where it
-was set, so put it back next to the register setting it's describing.
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-Fixes: b3528b487448 ("watchdog: aspeed: Add support for AST2600")
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191108032905.22463-1-joel@jms.id.au
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
+
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/aspeed_wdt.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index ffde179a9bb2c..d84d6cbd96977 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -207,11 +207,6 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	if (IS_ERR(wdt->base))
- 		return PTR_ERR(wdt->base);
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index b0c8fae7f903d..3a359716fb386 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -780,6 +780,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
  
--	/*
--	 * The ast2400 wdt can run at PCLK, or 1MHz. The ast2500 only
--	 * runs at 1MHz. We chose to always run at 1MHz, as there's no
--	 * good reason to have a faster watchdog counter.
--	 */
- 	wdt->wdd.info = &aspeed_wdt_info;
- 	wdt->wdd.ops = &aspeed_wdt_ops;
- 	wdt->wdd.max_hw_heartbeat_ms = WDT_MAX_TIMEOUT_MS;
-@@ -227,7 +222,16 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	config = ofdid->data;
- 
--	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-+	/*
-+	 * On clock rates:
-+	 *  - ast2400 wdt can run at PCLK, or 1MHz
-+	 *  - ast2500 only runs at 1MHz, hard coding bit 4 to 1
-+	 *  - ast2600 always runs at 1MHz
-+	 *
-+	 * Set the ast2400 to run at 1MHz as it simplifies the driver.
-+	 */
-+	if (of_device_is_compatible(np, "aspeed,ast2400-wdt"))
-+		wdt->ctrl = WDT_CTRL_1MHZ_CLK;
- 
- 	/*
- 	 * Control reset on a per-device basis to ensure the
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
 -- 
 2.20.1
 
