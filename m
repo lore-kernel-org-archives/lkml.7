@@ -2,51 +2,52 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2194C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E19120663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B524520663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077085;
-	bh=lLytQxX7qdL6iU0dEIKBgm6bxyJ3D/XPmqK/cZk5ARA=;
+	s=default; t=1576077088;
+	bh=iCe981dpQcbeniIuJo78yCB5icEWgktPbevCe92sIE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2HGt1mA/6YMzIDAJ0ipS+vzgJN64kmHsbWNFhUYU2OhoMiUwpXcE14LjmTqUEdukK
-	 aXFauLLncmeVBXAVjO+oyuaZuvWrz6w9CgO2Kd1N1X6Gvj6+aMQu7ymgYgfo6p4ojt
-	 FSagocwL6FQDfZotXZFMwE46xnYdbff9Xe7s7mm0=
+	b=emRYb2t17OxmDWNd+xyQZNW29SyXG335KKkkgjgTxi6MFi2uEvwRR7lVPrRCBF8iq
+	 EALFW6vfKk5dTHbHIEE4KwpTnBT1N3DwcvRtEWugBmEokUAArjfr+mqS3D3gDZAa/v
+	 6oUBQ7w+KE71uw5AC3oaYYZxP2TyuZ78AEja3U0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730922AbfLKPLY (ORCPT
+        id S1730543AbfLKPL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59904 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfLKPLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:22 -0500
+        id S1729797AbfLKPLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6E1A222C4;
-        Wed, 11 Dec 2019 15:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 483F522B48;
+        Wed, 11 Dec 2019 15:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077082;
-        bh=lLytQxX7qdL6iU0dEIKBgm6bxyJ3D/XPmqK/cZk5ARA=;
+        s=default; t=1576077084;
+        bh=iCe981dpQcbeniIuJo78yCB5icEWgktPbevCe92sIE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FwHkBtrHlkPjbyFrP9pJcY6V6AX6+87g0m5EajoSnbs1BBSzjDK0fcB5PtlMYMEbV
-         /fKVkPnnLqxLXU67h6PCBGZtyNxp/jUXc2+GZTYdZ4/pJ1/6BpwT51yYbOiUtrgqaQ
-         MnS4NoYvt6li4OP80frIiNO0OVjh+6zIz/RfMIX4=
+        b=0EazbO5qBnKV5m1s07bSuR3gyCqzGFekAg3kJQ+dqt3Q4YP5SQqtiVbq9BTSs2oNm
+         NxC2nRqL+Egt3K1RwNPw7M3GfpJlzEojFi3EuqIf55U9dPfsG4+QFPXJgsrhqRRrEe
+         +Gt4ejIRNoCN83j3lLpcywY/6wWmUgpHDzyi1NBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.3 002/105] arm64: tegra: Fix active-low warning for Jetson TX1 regulator
-Date:   Wed, 11 Dec 2019 16:04:51 +0100
-Message-Id: <20191211150222.076299623@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.3 003/105] perf scripts python: exported-sql-viewer.py: Fix use of TRUE with SQLite
+Date:   Wed, 11 Dec 2019 16:04:52 +0100
+Message-Id: <20191211150222.212877093@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -59,44 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 1e5e929c009559bd7e898ac8e17a5d01037cb057 upstream.
+commit af833988c088d3fed3e7188e7c3dd9ca17178dc3 upstream.
 
-Commit 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-added a regulator for HDMI on the Jetson TX1 platform. This regulator
-has an active high enable, but the GPIO specifier for enabling the
-regulator incorrectly defines it as active-low. This causes the
-following warning to occur on boot ...
+Prior to version 3.23 SQLite does not support TRUE or FALSE, so always
+use 1 and 0 for SQLite.
 
- WARNING KERN regulator@10 GPIO handle specifies active low - ignored
-
-The fixed-regulator binding does not use the active-low flag from the
-gpio specifier and purely relies of the presence of the
-'enable-active-high' property to determine if it is active high or low
-(if this property is omitted). Fix this warning by setting the GPIO
-to active-high in the GPIO specifier which aligns with the presense of
-the 'enable-active-high' property.
-
-Fixes: 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Fixes: 26c11206f433 ("perf scripts python: exported-sql-viewer.py: Use new 'has_calls' column")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org # v5.3+
+Link: http://lore.kernel.org/lkml/20191113120206.26957-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[Adrian: backported to v5.3, v5.4]
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/scripts/python/exported-sql-viewer.py |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1612,7 +1612,7 @@
- 			regulator-name = "VDD_HDMI_5V0";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&exp1 12 GPIO_ACTIVE_LOW>;
-+			gpio = <&exp1 12 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -625,7 +625,7 @@ class CallGraphRootItem(CallGraphLevelIt
+ 		self.query_done = True
+ 		if_has_calls = ""
+ 		if IsSelectable(glb.db, "comms", columns = "has_calls"):
+-			if_has_calls = " WHERE has_calls = TRUE"
++			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
+ 		query = QSqlQuery(glb.db)
+ 		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
+ 		while query.next():
+@@ -905,7 +905,7 @@ class CallTreeRootItem(CallGraphLevelIte
+ 		self.query_done = True
+ 		if_has_calls = ""
+ 		if IsSelectable(glb.db, "comms", columns = "has_calls"):
+-			if_has_calls = " WHERE has_calls = TRUE"
++			if_has_calls = " WHERE has_calls = " + glb.dbref.TRUE
+ 		query = QSqlQuery(glb.db)
+ 		QueryExec(query, "SELECT id, comm FROM comms" + if_has_calls)
+ 		while query.next():
+@@ -3509,6 +3509,12 @@ class DBRef():
+ 	def __init__(self, is_sqlite3, dbname):
+ 		self.is_sqlite3 = is_sqlite3
+ 		self.dbname = dbname
++		self.TRUE = "TRUE"
++		self.FALSE = "FALSE"
++		# SQLite prior to version 3.23 does not support TRUE and FALSE
++		if self.is_sqlite3:
++			self.TRUE = "1"
++			self.FALSE = "0"
+ 
+ 	def Open(self, connection_name):
+ 		dbname = self.dbname
 
 
