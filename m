@@ -2,108 +2,135 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16968C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D20AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E71FA2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:26:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93032073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:33:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EgDqi25I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfLKC0D (ORCPT
+        id S1727538AbfLKCdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:26:03 -0500
-Received: from mga01.intel.com ([192.55.52.88]:15739 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727230AbfLKC0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:26:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:26:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="387778864"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga005.jf.intel.com with ESMTP; 10 Dec 2019 18:25:59 -0800
-Date:   Wed, 11 Dec 2019 10:27:22 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
-Message-ID: <20191211022722.GA13190@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-4-weijiang.yang@intel.com>
- <20191210211821.GL15758@linux.intel.com>
- <20191211013207.GA12845@local-michael-cet-test>
- <20191211015052.GF23765@linux.intel.com>
+        Tue, 10 Dec 2019 21:33:10 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39973 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfLKCdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:33:10 -0500
+Received: by mail-io1-f68.google.com with SMTP id x1so21043888iop.7
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 18:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3GrAG6kLQMvFo2FrJr01O5T9GlO2dR89/UhNJQdzENU=;
+        b=EgDqi25IbUwAwp7dwIJhuNEqwyNNOtC85pn5r70RBay5vcedNi9BB6aacz7YXTABx1
+         wDSX3ggjnYQw/3Kgl72WpvAaNrOmq92b8OGHK4t9UxS051jmAHU1DciGdAuQDvrlsi+W
+         qfSneVBUZgjr0xAS3HYgLC3l4xKXXx6Zm2yNy6Lzd8G7QRfRfz6QT03+PoJqwu960eSI
+         BzGc85fwzHV/oDCv5TCHrCwKoTGqvmYsJXIGPdxM06JeDB1Xdu2sGDZI463+xpQPDYEt
+         7wQK4x2QSNZcu8ejPlZCIZyE7hyF3v3iIds+A3rnpnYTztYybJ/0O4RMadNMlOfpfiUv
+         WBwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3GrAG6kLQMvFo2FrJr01O5T9GlO2dR89/UhNJQdzENU=;
+        b=GEeHiBmYgnC5A5PycrwPaW8giZNuyJkaW4qX4mZMYKjfHlQMq8hm7wclo0Rb8wPfar
+         IDl+z/Kg1r7Y76y5d12iJGdWQUgD/Inhkjmp0PA2H4uVeFXbK76aAcp95yBohlDDMAzv
+         1l31+YgLkKapB8CDHy14nouY0HSp9rCiUC4hNhS+ptoI3x/BVdMaJHBiKMLdwC1j8BAK
+         r/V/KgZ7NHYKGFy4kEtpemQKueFuZaEa8kZK95KYtS7FT7bEdhZIKe77TnKlMpD/ST+M
+         lCeVG/Q5Vax60hVaPEb4JDkZ4KFpObmG+jBxQGc1NutcQ/TklGkovAdKIqQVSbTYzpmh
+         8bCg==
+X-Gm-Message-State: APjAAAUM9JWeuf7LI1WSheMdIQbihO2Pt5zsabBi7pFt7X5X4iFVI7TV
+        qkd635yPB8fWBTj2RYL5xuhjg4euRyL6ZspQT78=
+X-Google-Smtp-Source: APXvYqyCaLIIOXPLUgXqGqbeH81ULEklvTw5RLv+9WPZZBso5Pi8eKoTJ2dHz6EXIBOrL/9X1WVoBRuzDrjHc7dKkEQ=
+X-Received: by 2002:a6b:c3c2:: with SMTP id t185mr987251iof.252.1576031589271;
+ Tue, 10 Dec 2019 18:33:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211015052.GF23765@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20191021211449.9104-1-navid.emamdoost@gmail.com>
+ <CAEkB2ERA6Rx9fZiwXH+m8_OV8to0TuLJRVRiUKfKtSoeoT0uJw@mail.gmail.com> <CAEkB2ER4dof02PcH6BDQoFNhkkds=zrPf+5-rSygUh=XU8H0zQ@mail.gmail.com>
+In-Reply-To: <CAEkB2ER4dof02PcH6BDQoFNhkkds=zrPf+5-rSygUh=XU8H0zQ@mail.gmail.com>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Tue, 10 Dec 2019 20:32:58 -0600
+Message-ID: <CAEkB2EQiJXmc6U9axYEg8cgh5L9vFtoD5x0byAey+GCc-WTwOA@mail.gmail.com>
+Subject: Re: [PATCH] drm/nouveau: Fix memory leak in nouveau_bo_alloc
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     Navid Emamdoost <emamd001@umn.edu>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:50:52PM -0800, Sean Christopherson wrote:
-> On Wed, Dec 11, 2019 at 09:32:07AM +0800, Yang Weijiang wrote:
-> > On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
-> > > On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
-> > > > CET MSRs pass through Guest directly to enhance performance.
-> > > > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> > > > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> > > > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> > > > these MSRs are defined in kernel and re-used here.
-> > > > 
-> > > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > > index dd387a785c1e..4166c4fcad1e 100644
-> > > > --- a/arch/x86/kvm/cpuid.c
-> > > > +++ b/arch/x86/kvm/cpuid.c
-> > > > @@ -371,13 +371,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
-> > > >  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
-> > > >  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
-> > > >  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> > > > -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B);
-> > > > +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | F(SHSTK);
-> > > >  
-> > > >  	/* cpuid 7.0.edx*/
-> > > >  	const u32 kvm_cpuid_7_0_edx_x86_features =
-> > > >  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
-> > > >  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> > > > -		F(MD_CLEAR);
-> > > > +		F(MD_CLEAR) | F(IBT);
-> > > 
-> > > Advertising CET to userspace/guest needs to be done at the end of the
-> > > series, or at least after CR4.CET is no longer reserved, e.g. KVM_SET_SREGS
-> > > will fail and the guest will get a #GP when trying to set CR4.CET.
-> > > 
-> > > I'm pretty sure I've said this at least twice in previous versions of
-> > > this series...
-> > 
-> > Thanks Sean for picking these up!
-> > The reason is, starting from this patch, I'm using guest_cpuid_has(CET)
-> > to check the availability of guest CET CPUID, so logically I would like to let
-> > the readers understand CET related CPUID word is
-> > defined as above. But no problem, I can move these definitions to a
-> > latter patch as the patchset only meaningful as a whole. 
-> 
-> Adding usage of guest_cpuid_has(CET) without advertising CET is perfectly
-> ok from a functionality perspective.  Having a user without a consumer
-> isn't ideal, but it's better than having one gigantic patch.
-> 
-> The problem with advertising CET when it's not fully supported is that it
-> will break bisection, e.g. trying to boot a CET-enabled guest would get a
-> #GP during boot and likely crash.  Whether or not a series is useful when
-> taken as a whole is orthogonal to the integrity of each invidiual patch.
+ping ...
 
-Oh, I omitted case likes bisection, you're right, I'll change it, thanks
-a lot!
+On Tue, Nov 26, 2019 at 11:50 AM Navid Emamdoost
+<navid.emamdoost@gmail.com> wrote:
+>
+> ping...
+>
+> On Thu, Nov 21, 2019 at 12:09 PM Navid Emamdoost
+> <navid.emamdoost@gmail.com> wrote:
+> >
+> > On Mon, Oct 21, 2019 at 4:14 PM Navid Emamdoost
+> > <navid.emamdoost@gmail.com> wrote:
+> > >
+> > > In the implementation of nouveau_bo_alloc() if it fails to determine the
+> > > target page size via pi, then the allocated memory for nvbo should be
+> > > released.
+> > >
+> > > Fixes: 019cbd4a4feb ("drm/nouveau: Initialize GEM object before TTM object")
+> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> >
+> > Would you please review this patch?
+> >
+> >
+> > Thanks,
+> > Navid.
+> >
+> > > ---
+> > >  drivers/gpu/drm/nouveau/nouveau_bo.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/nouveau/nouveau_bo.c b/drivers/gpu/drm/nouveau/nouveau_bo.c
+> > > index f8015e0318d7..18857cf44068 100644
+> > > --- a/drivers/gpu/drm/nouveau/nouveau_bo.c
+> > > +++ b/drivers/gpu/drm/nouveau/nouveau_bo.c
+> > > @@ -276,8 +276,10 @@ nouveau_bo_alloc(struct nouveau_cli *cli, u64 *size, int *align, u32 flags,
+> > >                         break;
+> > >         }
+> > >
+> > > -       if (WARN_ON(pi < 0))
+> > > +       if (WARN_ON(pi < 0)) {
+> > > +               kfree(nvbo);
+> > >                 return ERR_PTR(-EINVAL);
+> > > +       }
+> > >
+> > >         /* Disable compression if suitable settings couldn't be found. */
+> > >         if (nvbo->comp && !vmm->page[pi].comp) {
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Navid.
+>
+>
+>
+> --
+> Navid.
 
+
+
+-- 
+Navid.
