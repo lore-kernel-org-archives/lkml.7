@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73904C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A94208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8B62173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077105;
-	bh=9hkSsYRPRAWqxI8SaMw18ck/Ae/RkQLUV7K73205vVs=;
+	s=default; t=1576077108;
+	bh=Fhbul9K/HMLRSX3c55X5Ifo4uMXJN3nyNeySuYAWwxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRwfwjyTeNhKfHjf/ID1O1/VmvQKs2Ur/QxiQNvJAeUQQmQ4SZxAfmUGDfHfFHDA7
-	 9avLF5TMgqovTqmRht8aJnBSGbEH1w8G8oZRvvz1jjSXQdSXS72Fbpy4CbEzU1aqbR
-	 RRXpDSfW1wAoI5ZmkQHLtTWgKNe4Q/iEA2M+Z0QU=
+	b=Igx8kPqEjfc05OXO95dhOg3t1LGxydHGJBbK72fx3evv8vTKiqMwcGaRe71h5iAYW
+	 g4ZLY8Wy/VnqcHKRFJox/A28xO8nWaunbzRnUg2yy8ZMgsf0yxdKfku2+6fdzQ/iwP
+	 2Kp/GVdfs4FiAoH/ELK0/u4joj8BkVKMz7gvM32k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfLKPLn (ORCPT
+        id S1730977AbfLKPLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730947AbfLKPLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:39 -0500
+        id S1730973AbfLKPLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895AE2173E;
-        Wed, 11 Dec 2019 15:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E06EC24656;
+        Wed, 11 Dec 2019 15:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077098;
-        bh=9hkSsYRPRAWqxI8SaMw18ck/Ae/RkQLUV7K73205vVs=;
+        s=default; t=1576077103;
+        bh=Fhbul9K/HMLRSX3c55X5Ifo4uMXJN3nyNeySuYAWwxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KC1lg7Oz6x/g4zir1NTTFNWK60y5tmAkgthX42T01+adwhrm6V+YVOvr4xnhU3nDp
-         UBVvA19LL1NZMrR6dlBTUNIqasviSzestuFwzSLl/ybgtZImn+Z323RMzuH0HDFqXy
-         Z7sjCi9bMzV2A4Aip1pc3sB2KbbhFkY9EGT6+BPs=
+        b=yZEKJZXftrDHcEcDUUeIE5OVD+dxS41OYH4z+AxaMnGDsX0rYpVP3GE6iu+KFX6JG
+         mqVy3ZQw57ZLdZBT5fNflWhCmr/cb7+TJf5jX7ySizyR+K6R1tTIJRTFK0OJHVaeQS
+         X01AaTdY37Th8j8fp/CKm2vDxYCp+UsmMV9NO3SE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Wenpeng Liang <liangwenpeng@huawei.com>,
+        Weihang Li <liweihang@hisilicon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 016/105] MIPS: SGI-IP27: fix exception handler replication
-Date:   Wed, 11 Dec 2019 16:05:05 +0100
-Message-Id: <20191211150224.498621488@linuxfoundation.org>
+Subject: [PATCH 5.3 018/105] RDMA/hns: Correct the value of srq_desc_size
+Date:   Wed, 11 Dec 2019 16:05:07 +0100
+Message-Id: <20191211150225.287486982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -64,97 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Wenpeng Liang <liangwenpeng@huawei.com>
 
-[ Upstream commit 637346748245e94c877aa746e6fe0d7079b7736a ]
+[ Upstream commit 411c1e6774e2e1f96b1ccce4f119376b94ade3e4 ]
 
-Commit 775b089aeffa ("MIPS: tlbex: Remove cpu_has_local_ebase") removed
-generating tlb refill handlers for every CPU, which was needed for
-generating per node exception handlers on IP27. Instead of resurrecting
-(and fixing) refill handler generation, we simply copy all exception
-vectors from the boot node to the other nodes. Also remove the config
-option since the memory tradeoff for expection handler replication
-is just 8k per node.
+srq_desc_size should be rounded up to pow of two before used, or related
+calculation may cause allocating wrong size of memory for srq buffer.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Fixes: c7bcb13442e1 ("RDMA/hns: Add SRQ support for hip08 kernel mode")
+Link: https://lore.kernel.org/r/1572575610-52530-3-git-send-email-liweihang@hisilicon.com
+Signed-off-by: Wenpeng Liang <liangwenpeng@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/sgi-ip27/Kconfig       |  7 -------
- arch/mips/sgi-ip27/ip27-init.c   | 21 ++++++---------------
- arch/mips/sgi-ip27/ip27-memory.c |  4 ----
- 3 files changed, 6 insertions(+), 26 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_srq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/sgi-ip27/Kconfig b/arch/mips/sgi-ip27/Kconfig
-index ef3847e7aee02..e5b6cadbec857 100644
---- a/arch/mips/sgi-ip27/Kconfig
-+++ b/arch/mips/sgi-ip27/Kconfig
-@@ -38,10 +38,3 @@ config REPLICATE_KTEXT
- 	  Say Y here to enable replicating the kernel text across multiple
- 	  nodes in a NUMA cluster.  This trades memory for speed.
+diff --git a/drivers/infiniband/hw/hns/hns_roce_srq.c b/drivers/infiniband/hw/hns/hns_roce_srq.c
+index 38bb548eaa6d8..9768e377cd22c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_srq.c
++++ b/drivers/infiniband/hw/hns/hns_roce_srq.c
+@@ -221,7 +221,7 @@ int hns_roce_create_srq(struct ib_srq *ib_srq,
+ 	srq->max = roundup_pow_of_two(srq_init_attr->attr.max_wr + 1);
+ 	srq->max_gs = srq_init_attr->attr.max_sge;
  
--config REPLICATE_EXHANDLERS
--	bool "Exception handler replication support"
--	depends on SGI_IP27
--	help
--	  Say Y here to enable replicating the kernel exception handlers
--	  across multiple nodes in a NUMA cluster. This trades memory for
--	  speed.
-diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
-index 066b33f50bcc4..db58ebf02870f 100644
---- a/arch/mips/sgi-ip27/ip27-init.c
-+++ b/arch/mips/sgi-ip27/ip27-init.c
-@@ -69,23 +69,14 @@ static void per_hub_init(cnodeid_t cnode)
+-	srq_desc_size = max(16, 16 * srq->max_gs);
++	srq_desc_size = roundup_pow_of_two(max(16, 16 * srq->max_gs));
  
- 	hub_rtc_init(cnode);
+ 	srq->wqe_shift = ilog2(srq_desc_size);
  
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--	/*
--	 * If this is not a headless node initialization,
--	 * copy over the caliased exception handlers.
--	 */
--	if (get_compact_nodeid() == cnode) {
--		extern char except_vec2_generic, except_vec3_generic;
--		extern void build_tlb_refill_handler(void);
--
--		memcpy((void *)(CKSEG0 + 0x100), &except_vec2_generic, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x80);
--		build_tlb_refill_handler();
--		memcpy((void *)(CKSEG0 + 0x100), (void *) CKSEG0, 0x80);
--		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x100);
-+	if (nasid) {
-+		/* copy exception handlers from first node to current node */
-+		memcpy((void *)NODE_OFFSET_TO_K0(nasid, 0),
-+		       (void *)CKSEG0, 0x200);
- 		__flush_cache_all();
-+		/* switch to node local exception handlers */
-+		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
- 	}
--#endif
- }
- 
- void per_cpu_init(void)
-diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-index fb077a9475756..8624a885d95bf 100644
---- a/arch/mips/sgi-ip27/ip27-memory.c
-+++ b/arch/mips/sgi-ip27/ip27-memory.c
-@@ -332,11 +332,7 @@ static void __init mlreset(void)
- 		 * thinks it is a node 0 address.
- 		 */
- 		REMOTE_HUB_S(nasid, PI_REGION_PRESENT, (region_mask | 1));
--#ifdef CONFIG_REPLICATE_EXHANDLERS
--		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
--#else
- 		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_0);
--#endif
- 
- #ifdef LATER
- 		/*
 -- 
 2.20.1
 
