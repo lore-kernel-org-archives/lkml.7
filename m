@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF15EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943312173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715D82173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077854;
-	bh=Dq0fNFRV/9xFsNZdstNwHE220HFU4gDryd/VbmIWB/M=;
+	s=default; t=1576077859;
+	bh=Kwz4p3q0xjiBMR4tx+Z2hf0uv4OjZCHsCcNDLY1JdEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=anKW+jfIx+wppbbGgL4bYvLOmWF6NCWY9n/gQnxyyPIoEvsLV7r7yRZ9oUs1t+hVe
-	 vw7/yvQKQQ8rzVlTnXccXZDANBgcHEUiVjmgekg+TMZF3TexWCfXCp/k+Er1K7EDNS
-	 /OfrB2MRLBK/JDv1yCec1wlKfmIzQrb5OLnyW6y4=
+	b=LOehyqtWsOJKTqCnMImpZd5IiUHdwqdZ10fWgzwYMfIwcIB3UReJsqogjvH8TNSru
+	 vMELnBEKyrzQZXvzPpgSaGpOPnyWm6xSdqpVhsTliTMR88o8AUdUqgx8YtQfivfGoM
+	 UkRPO0xEtvEz67GePmBF5yOJZESeTFxOIjo9JEq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732813AbfLKPYN (ORCPT
+        id S1732831AbfLKPYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55406 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:24:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732648AbfLKPYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:10 -0500
+        id S1732428AbfLKPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 143182077B;
-        Wed, 11 Dec 2019 15:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88611222C4;
+        Wed, 11 Dec 2019 15:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077849;
-        bh=Dq0fNFRV/9xFsNZdstNwHE220HFU4gDryd/VbmIWB/M=;
+        s=default; t=1576077852;
+        bh=Kwz4p3q0xjiBMR4tx+Z2hf0uv4OjZCHsCcNDLY1JdEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxCOO1CubyJPeeyEyqihxxGSIYCx3Z0ifRekKv3gjEYdMvaUwLr6ArPItQ6fKbqc+
-         7PCQMmdHRwwnxhkcOPtxMtWtusd8b7v2ssk/uFrX5btrLqok3sbblvIu57u5/UsKLL
-         NIqUkVAeba3xX5hhgdTdh4gqscapehbd3KcrZHe8=
+        b=KvS18ZiQAwsJSpg4KdERMdhr1hyhGAQCgnKsQV/3Sp66auZVTnCfmEasijRkIDisK
+         IJlscV/+iHouwuSx9m1gNgEHEFqxz6zmSFPpW2ceG8sH2wIcmMVyftpP3wOufn8cCo
+         o/XmYmdtRWiLWVZTGUnWcPdSb0lSbrvgRGiGLqs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuchung Cheng <ycheng@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 157/243] tcp: fix SNMP TCP timeout under-estimation
-Date:   Wed, 11 Dec 2019 16:05:19 +0100
-Message-Id: <20191211150349.766066209@linuxfoundation.org>
+Subject: [PATCH 4.19 148/243] soc: renesas: r8a77970-sysc: Correct names of A2DP/A2CN power domains
+Date:   Wed, 11 Dec 2019 16:05:10 +0100
+Message-Id: <20191211150349.160913026@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,60 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuchung Cheng <ycheng@google.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit e1561fe2dd69dc5dddd69bd73aa65355bdfb048b ]
+[ Upstream commit b5eb730e031acaba2d25e8f522ac5966a70885ae ]
 
-Previously the SNMP TCPTIMEOUTS counter has inconsistent accounting:
-1. It counts all SYN and SYN-ACK timeouts
-2. It counts timeouts in other states except recurring timeouts and
-   timeouts after fast recovery or disorder state.
+The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+renamed the A2IR2 and A2IR3 power domains on R-Car V3M to A2DP resp.
+A2CN.
 
-Such selective accounting makes analysis difficult and complicated. For
-example the monitoring system needs to collect many other SNMP counters
-to infer the total amount of timeout events. This patch makes TCPTIMEOUTS
-counter simply counts all the retransmit timeout (SYN or data or FIN).
+As these definitions are not yet used from DT, they can just be renamed.
 
-Signed-off-by: Yuchung Cheng <ycheng@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+While at it, fix the indentation of the A3IR definition.
+
+Fixes: 833bdb47c826a1a6 ("dt-bindings: power: add R8A77970 SYSC power domain definitions")
+Fixes: bab9b2a74fe9da96 ("soc: renesas: rcar-sysc: add R8A77970 support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_timer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/soc/renesas/r8a77970-sysc.c       | 4 ++--
+ include/dt-bindings/power/r8a77970-sysc.h | 6 +++---
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-index 50b15e1c633b4..681882a409686 100644
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -482,11 +482,12 @@ void tcp_retransmit_timer(struct sock *sk)
- 		goto out_reset_timer;
- 	}
+diff --git a/drivers/soc/renesas/r8a77970-sysc.c b/drivers/soc/renesas/r8a77970-sysc.c
+index caf894f193edc..77422baa7a56a 100644
+--- a/drivers/soc/renesas/r8a77970-sysc.c
++++ b/drivers/soc/renesas/r8a77970-sysc.c
+@@ -27,8 +27,8 @@ static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
+ 	{ "a3ir",	0x180, 0, R8A77970_PD_A3IR,	R8A77970_PD_ALWAYS_ON },
+ 	{ "a2ir0",	0x400, 0, R8A77970_PD_A2IR0,	R8A77970_PD_A3IR },
+ 	{ "a2ir1",	0x400, 1, R8A77970_PD_A2IR1,	R8A77970_PD_A3IR },
+-	{ "a2ir2",	0x400, 2, R8A77970_PD_A2IR2,	R8A77970_PD_A3IR },
+-	{ "a2ir3",	0x400, 3, R8A77970_PD_A2IR3,	R8A77970_PD_A3IR },
++	{ "a2dp",	0x400, 2, R8A77970_PD_A2DP,	R8A77970_PD_A3IR },
++	{ "a2cn",	0x400, 3, R8A77970_PD_A2CN,	R8A77970_PD_A3IR },
+ 	{ "a2sc0",	0x400, 4, R8A77970_PD_A2SC0,	R8A77970_PD_A3IR },
+ 	{ "a2sc1",	0x400, 5, R8A77970_PD_A2SC1,	R8A77970_PD_A3IR },
+ };
+diff --git a/include/dt-bindings/power/r8a77970-sysc.h b/include/dt-bindings/power/r8a77970-sysc.h
+index bf54779d16252..9eaf824b15826 100644
+--- a/include/dt-bindings/power/r8a77970-sysc.h
++++ b/include/dt-bindings/power/r8a77970-sysc.h
+@@ -19,10 +19,10 @@
+ #define R8A77970_PD_CR7			13
+ #define R8A77970_PD_CA53_SCU		21
+ #define R8A77970_PD_A2IR0		23
+-#define R8A77970_PD_A3IR			24
++#define R8A77970_PD_A3IR		24
+ #define R8A77970_PD_A2IR1		27
+-#define R8A77970_PD_A2IR2		28
+-#define R8A77970_PD_A2IR3		29
++#define R8A77970_PD_A2DP		28
++#define R8A77970_PD_A2CN		29
+ #define R8A77970_PD_A2SC0		30
+ #define R8A77970_PD_A2SC1		31
  
-+	__NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPTIMEOUTS);
- 	if (tcp_write_timeout(sk))
- 		goto out;
- 
- 	if (icsk->icsk_retransmits == 0) {
--		int mib_idx;
-+		int mib_idx = 0;
- 
- 		if (icsk->icsk_ca_state == TCP_CA_Recovery) {
- 			if (tcp_is_sack(tp))
-@@ -501,10 +502,9 @@ void tcp_retransmit_timer(struct sock *sk)
- 				mib_idx = LINUX_MIB_TCPSACKFAILURES;
- 			else
- 				mib_idx = LINUX_MIB_TCPRENOFAILURES;
--		} else {
--			mib_idx = LINUX_MIB_TCPTIMEOUTS;
- 		}
--		__NET_INC_STATS(sock_net(sk), mib_idx);
-+		if (mib_idx)
-+			__NET_INC_STATS(sock_net(sk), mib_idx);
- 	}
- 
- 	tcp_enter_loss(sk);
 -- 
 2.20.1
 
