@@ -2,199 +2,171 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B56AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681E8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E611B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 342E4206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXqmIn6Q"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WWDt9XZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731438AbfLKSQN (ORCPT
+        id S1731452AbfLKSQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:16:13 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:38763 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731256AbfLKSPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:32 -0500
-Received: by mail-yb1-f194.google.com with SMTP id l129so9394402ybf.5;
-        Wed, 11 Dec 2019 10:15:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7I5s5+li3nljC6wHzNrZU5/96VN1MItgnWEWQ5aryAs=;
-        b=BXqmIn6QWMFzu9Icv3FBMdnPbCtCO8Pr7dD8B5WVKaZrEDpRKgijDdRVLMfEGj8R/H
-         N3umMOMWaXKJLjQQdlWwoKeZ1h+2uQbmmS87zBKv4SPtWdd9gPxdhkehxXWwefypiChV
-         VygcHtk1fIbkdFEfDQqhKulxyXhr+BD7nTR5uYB9GcRstSe2EfsCq1rSVyYYUz8w0vFH
-         ZY2hdqADYlJubFp0VqTGgvP+E9xiuUo+EKTSP8dlKBAYGVERqbDBNzpXlMUR7HE/EmkV
-         eh1CWeHmf0B0pRYmiNyxAbMvE86K22mL9cbzK5VIhf70iPW/WrgS9W+jIqGzfZWp73oc
-         MDnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7I5s5+li3nljC6wHzNrZU5/96VN1MItgnWEWQ5aryAs=;
-        b=E09OJQR+WIWlBYoFEJ7JadvNNoLtScqY8Y8814rMz53MlB9o+4QQpzDIHYOO21dD5T
-         BzH6EecPy9GwLeYNEC2Qjlj+cyWPeAqP04sxu4sd1EpKK5YM8DUC3AT6tzWIpi9SLYqY
-         svrA/fny608Ht04aBr+/sMqYA2EVSZl9s2Aak6xRlAJY7a1o6o25tKiKWCdZmKj568hh
-         DQaQynAgxQtIN/KyNi4cztrVv9ADOLFlqW0BV62oeDeunbOpYZliSWGc3EnWjcDMQFre
-         a5o7v/L0UzwKXirsa7Q3Qh+qoU/ogrc2fOxaEUSayVtI+SY5rdDB88lpgcYQUcV3FZDg
-         gtkg==
-X-Gm-Message-State: APjAAAUtut1s3NJjNypL6v0zJex7Zwj75N5VLjyGvIILflHaLDT1RoFN
-        dWiAWR5s8ZHwYfvQyD1P3kww0I6iDaS0IQ==
-X-Google-Smtp-Source: APXvYqzBFRSNG5mzR+KkwQKgqdVGULRwVYx8jwhLm9wpLnTj0bYFm/rzRSDf70+CI8mUtOJfZYrL7Q==
-X-Received: by 2002:a25:b90b:: with SMTP id x11mr932114ybj.209.1576088130443;
-        Wed, 11 Dec 2019 10:15:30 -0800 (PST)
-Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id l39sm1361403ywk.36.2019.12.11.10.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:30 -0800 (PST)
-From:   Scott Schafer <schaferjscott@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Scott Schafer <schaferjscott@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 17/23] staging: qlge: Fix WARNING: else is not generally useful after a break or return
-Date:   Wed, 11 Dec 2019 12:12:46 -0600
-Message-Id: <5ddcdb4a507b29a8e2824e0839cc10f77f3cb7e5.1576086080.git.schaferjscott@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
-References: <cover.1576086080.git.schaferjscott@gmail.com>
+        Wed, 11 Dec 2019 13:16:18 -0500
+Received: from mout.gmx.net ([212.227.15.15]:39169 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731439AbfLKSQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:16:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576088173;
+        bh=yGINRQU++szqyB2dKBcwmy5FgTVWGIaMocWgfU3OpZk=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=WWDt9XZEi3S6SXY5qmL3/enuSGMx15Et6BVrEQs+IRQGXj9cZthRtkn4+8gWtAdYb
+         cKndhlhx/yRtHSzlVtO/djyBJpIVOfQDHh7fgntsCppzRrXAdkGXE5mvxgAMyZ2zyd
+         B55fM2Gnx+72/qfego3DPJA9mtwLGjuMR8LdhLPU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.24] ([95.112.79.148]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MXXyP-1iDuSo2uRb-00Yx08; Wed, 11
+ Dec 2019 19:16:13 +0100
+To:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+Subject: BTRFS with kernel 5.4.1: df -h shows 0 Bytes available but btrfs
+ tells me that there are 1.06 TiB free
+Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9df7f98b-271f-8b1d-f360-00a737d49911@gmx.de>
+Date:   Wed, 11 Dec 2019 19:16:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:llQP24DdraPE2rf9G3Iloui7iQfhqHXXiz2KFEC234o1T41SzNH
+ CRt1C29WRKe9ykqmHizdeEEZxEdM4CqtFE3AOTHiGH+10PgpBV1e8QP4zZPHup08BqcxPAh
+ CEAIWB4zt224HaaynqyPLUC7ds1O78h49OyogMSwyck1DqUdLyQI7GA0+9OjhZ+4vosRdVc
+ ELqphhvC9Wtgb1wxOJQlQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LlnyD8R28a4=:wHcOfx5faCHxy9BpFpWQCO
+ iJFKxmjBZio83qKpv919ODpKtUeB7rViGpC6sD/FSbRMQtUugOsu4wBmLYbkZKToaiT75czbC
+ F1Vw80s42iMmLriaEgba5i/PEN/tmt2d1Bfw4lTGU9CkDpq/7veI0IrTdSc7Bcr6Zy4kvfsBJ
+ 63AwKxY6VREJ2xEUQJaxo2+JIOrgZEHnnA8HsyE3QLkTbpAYTx9/CaFMXAZsznFjhE9usEiyH
+ m0/SrmJwjuo+TIuGOYTTgEo61KKxv1hIr3k06k/Z8N9ovu5vRnMZ7mIJK/cYceXeBD9h+lAVK
+ +X0lp9PAwwL5adg8MFm++nwEaV4Jue0/s/ikdo+yI+k2sIpaXJ0PnmCs3kg1mzNZVuABExgbh
+ TJdfz8PRNKInZVj9F+aznzj+Op8qlMDWJdlTmhArOBBhQF1TMmoQC9ojxOISMTUf/21wgkrXu
+ TtbvZ8thDhtf6XAWx0EstsOHYmgUBbnAiMe8LEPS0MlfFUndDyae8UASgnG8gJW4ypD5U/fqM
+ jdLJT66QHKpS+WIel3bGg1H9NuQECnk82euQRJv99sfh5x8cFK3csMWzVnnprSho7k5USEjCo
+ wf2sl8rW1A+bFUguEt0SNMi7aNAlEPZ0n6ib3RJ1B23CuCHOaDMriaXgfSIfY0HoftvlQL2kF
+ aYpnPLpWHfK8/GqpjyztFL+PAvTnjBXvVpvfsXUWT3/aSB1C+r19YWGAX5Ixbaf/vCHsXXucm
+ P2ol/BsIfcBGguhdyU5nTsNoh2NYw1pLl68JNudjga6W3IikgEPfXRfeINVbc5A+PrCJHqJjQ
+ bsKs2eLQuRvi7aUXeWfEWyMbbJbSkIUdX7OTX8rZKsT3ax8Aqs2rG2GzwMe9cA8lRMsYEfoGT
+ k1lB4JVH3oOzd57WUglStyK4xv7cM0WvM0WpJKK07ypbmvluzcV3SC4aViAsYbr5QH/C8Spt2
+ 5vu5biUp+Nf850EfLkFWvAIs5YXdG+qF4XFBgATGbSYBpwjWEA7tgSHKwhJ2QI0WqNn4CF7sw
+ 7pDJOj0rxmHczZwIPUfm/765y0MJd3qGfrI3aPZK6UFfWd8zewNg7EHrKHKRQJF80BTioM3+8
+ OUzXzn/zDx04+J39FmRHl7dN3UAo06vUzqOAgZCVwLB8ITVVPx0eBLdaTFE/YJ3WWET8sc0In
+ g4X++RJsdTeBg2xfI1YA8p5q2Mg9P5dLM8vfC9Y7b9kzlH/qEMBJgPAFNkt2+fCyvs1FlgdU2
+ TraoLr3upmoP1pEQOR04TrdxgPwIf+QkECjEXp4va26lg4tChZm73+qftrbc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: else is not generally useful after a break or return in,
-qlge_dbg.c, qlge_main.c, and qlge_mpi.c
+Since 5.4 (5.3.xy was fine) I do get every few days:
 
-Moved everything out of the else block wothout changing any logic
+# df -h /home/tinderbox/img1
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda5       1.7T  614G     0 100% /home/tinderbox/img1
 
-Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
----
- drivers/staging/qlge/qlge_dbg.c  | 23 ++++++++++-------------
- drivers/staging/qlge/qlge_main.c | 10 ++++------
- drivers/staging/qlge/qlge_mpi.c  | 13 +++++--------
- 3 files changed, 19 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 3324f0650286..0f1e1b62662d 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -1409,12 +1409,11 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of mac index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value[0])
--				pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
--				       qdev->ndev->name, i, value[1], value[0],
--				       value[2]);
- 		}
-+		if (value[0])
-+			pr_err("%s: CAM index %d CAM Lookup Lower = 0x%.08x:%.08x, Output = 0x%.08x\n",
-+			       qdev->ndev->name, i, value[1], value[0],
-+			       value[2]);
- 	}
- 	for (i = 0; i < 32; i++) {
- 		if (ql_get_mac_addr_reg
-@@ -1422,11 +1421,10 @@ static void ql_dump_cam_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of mac index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value[0])
--				pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
--				       qdev->ndev->name, i, value[1], value[0]);
- 		}
-+		if (value[0])
-+			pr_err("%s: MCAST index %d CAM Lookup Lower = 0x%.08x:%.08x\n",
-+			       qdev->ndev->name, i, value[1], value[0]);
- 	}
- 	ql_sem_unlock(qdev, SEM_MAC_ADDR_MASK);
- }
-@@ -1445,11 +1443,10 @@ void ql_dump_routing_entries(struct ql_adapter *qdev)
- 			pr_err("%s: Failed read of routing index register\n",
- 			       __func__);
- 			return;
--		} else {
--			if (value)
--				pr_err("%s: Routing Mask %d = 0x%.08x\n",
--				       qdev->ndev->name, i, value);
- 		}
-+		if (value)
-+			pr_err("%s: Routing Mask %d = 0x%.08x\n",
-+			       qdev->ndev->name, i, value);
- 	}
- 	ql_sem_unlock(qdev, SEM_RT_IDX_MASK);
- }
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 90509fd1d95c..c6e26a757268 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -3788,14 +3788,12 @@ static int ql_wol(struct ql_adapter *qdev)
- 				  "Failed to set magic packet on %s.\n",
- 				  qdev->ndev->name);
- 			return status;
--		} else
--			netif_info(qdev, drv, qdev->ndev,
--				   "Enabled magic packet successfully on %s.\n",
--				   qdev->ndev->name);
--
-+		}
-+		netif_info(qdev, drv, qdev->ndev,
-+			   "Enabled magic packet successfully on %s.\n",
-+			   qdev->ndev->name);
- 		wol |= MB_WOL_MAGIC_PKT;
- 	}
--
- 	if (qdev->wol) {
- 		wol |= MB_WOL_MODE_ON;
- 		status = ql_mb_wol_mode(qdev, wol);
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index 15c97c935618..ba8ce3506a59 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -278,9 +278,8 @@ static void ql_link_up(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 			netif_err(qdev, ifup, qdev->ndev,
- 				  "Failed to init CAM/Routing tables.\n");
- 			return;
--		} else {
--			clear_bit(QL_CAM_RT_SET, &qdev->flags);
- 		}
-+		clear_bit(QL_CAM_RT_SET, &qdev->flags);
- 	}
- 
- 	/* Queue up a worker to check the frame
-@@ -940,13 +939,11 @@ static int ql_idc_wait(struct ql_adapter *qdev)
- 			netif_err(qdev, drv, qdev->ndev, "IDC Success.\n");
- 			status = 0;
- 			break;
--		} else {
--			netif_err(qdev, drv, qdev->ndev,
--				  "IDC: Invalid State 0x%.04x.\n",
--				  mbcp->mbox_out[0]);
--			status = -EIO;
--			break;
- 		}
-+		netif_err(qdev, drv, qdev->ndev,
-+			  "IDC: Invalid State 0x%.04x.\n", mbcp->mbox_out[0]);
-+		status = -EIO;
-+		break;
- 	} while (wait_time);
- 
- 	return status;
--- 
-2.20.1
+# btrfs filesystem usage /home/tinderbox/img1
+Overall:
+    Device size:                   1.66TiB
+    Device allocated:            614.02GiB
+    Device unallocated:            1.06TiB
+    Device missing:                  0.00B
+    Used:                        613.38GiB
+    Free (estimated):              1.06TiB      (min: 543.50GiB)
+    Data ratio:                       1.00
+    Metadata ratio:                   2.00
+    Global reserve:              512.00MiB      (used: 0.00B)
 
+Data,RAID0: Size:566.00GiB, Used:565.50GiB (99.91%)
+   /dev/sda5     283.00GiB
+   /dev/sdb1     283.00GiB
+
+Metadata,RAID1: Size:24.00GiB, Used:23.94GiB (99.76%)
+   /dev/sda5      24.00GiB
+   /dev/sdb1      24.00GiB
+
+System,RAID1: Size:8.00MiB, Used:64.00KiB (0.78%)
+   /dev/sda5       8.00MiB
+   /dev/sdb1       8.00MiB
+
+Unallocated:
+   /dev/sda5     542.99GiB
+   /dev/sdb1     542.99GiB
+
+
+This is a hardened Gentoo linux acting as a QA build bot for their package=
+s:
+
+# uname -a
+Linux mr-fox 5.4.2 #2 SMP Thu Dec 5 01:18:19 CET 2019 x86_64 Intel(R) Xeon=
+(R) CPU E5-1650 v3 @ 3.50GHz GenuineIntel GNU/Linux
+
+
+I do appreciate hints to overcome this situation.
+
+=2D-
+Toralf
