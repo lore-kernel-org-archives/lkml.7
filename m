@@ -2,152 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C94C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5400AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6142073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:35:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBZmtIH8"
+	by mail.kernel.org (Postfix) with ESMTP id 2A48D22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576082204;
+	bh=yb6fhQ8MZR+X/3cVB0+ufP2Yk2jR747xOpy7WOBO6rU=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=BST8X98rpruRT6dp9zgfGXFTjS9ueHd70al4dZMfbPT3A+GQMVrZT6KWr0/iNHQzh
+	 Hypyaqid6huLJBxGp03DtRNoE06qirBiDYR/LWhXTA8OKAJIwtVF/oQqT/i7jh3Eay
+	 8sdyptpZtr6HnlXoXgH6KC9J3jfx7rZL+/rLj7dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfLKQfj (ORCPT
+        id S1730408AbfLKQgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:35:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39376 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729260AbfLKQfi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:35:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576082137;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=G2ZB3omzRfSfFMjDrR0LBqamRCs0vWgnzAtR96DPAFU=;
-        b=TBZmtIH8PN8dWdMGlZxjiDmI9JZx/31WBjsVncYt2fLHWhEEOCaPzzEfsnDqKubXVrCWBn
-        wOWmrhwOmN1FDQZLsXpAa55dm9KHfRHQReVOQwoq/UtAQLIjycdCiHHW5gOBr6I7CYCbO5
-        djJIYcQzl86cmCB/h/ZFHMj2lft6Fjw=
-Received: from mail-yw1-f70.google.com (mail-yw1-f70.google.com
- [209.85.161.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-216--ERRxf7MPzWx5EH9xbsn6w-1; Wed, 11 Dec 2019 11:35:35 -0500
-X-MC-Unique: -ERRxf7MPzWx5EH9xbsn6w-1
-Received: by mail-yw1-f70.google.com with SMTP id 199so17738719ywe.20
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:35:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=G2ZB3omzRfSfFMjDrR0LBqamRCs0vWgnzAtR96DPAFU=;
-        b=oz4spAwVmkpaTDpdVtlz9Q9tWejB/S3IVC7gGGyymPyqUE3GnEaRCMJ2P75ghPEa/T
-         dbZ6Yb1cDli7gPjxfDQ0WTAdnKaa4FUny0o4WRGbzsOoSDvxPhAyTX4c0G3/LhWHRzqX
-         L7dHwwHYQCgNZF6w+gSVI7RzpQfhhfjOhT4fknX7/aIaMQODhBirten07LG9UAG9B3eR
-         47RK7Pi77/QT0qI7tbbHQbVCav7hua3D6SRxjxu+5/FyL1EyizxN0cclSsPj+6CyG4IA
-         YXvUqICBXVhkiQhrEdaKLN/JmDcE6l4/cCc9SV4v+cXQp1HGhzlC6WxavbYtpzFKzM6s
-         JmUw==
-X-Gm-Message-State: APjAAAWRbdQXtC3Kd2t/27/afKy9bzONaD+cSnyD/X7rbVsr4ULftR2z
-        d+fP0EigWnZHV1a0iVtBJjww06bRxkKVKqMWG36zrLtggQV6nR+Hm5JOVnQ4TnlQT9y5+iZmiOs
-        7xdxvYCGjDQ2cMWY8q/qSSRHT
-X-Received: by 2002:a81:de03:: with SMTP id k3mr496981ywj.504.1576082135406;
-        Wed, 11 Dec 2019 08:35:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwQSheQ86BeD+t6fYx16LhovjTZbO/zkP9rZdQVuw6RgshPVg8mCAb+RC0yN7OH2NIGsZ9xUg==
-X-Received: by 2002:a81:de03:: with SMTP id k3mr496966ywj.504.1576082135136;
-        Wed, 11 Dec 2019 08:35:35 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id l74sm1168529ywc.45.2019.12.11.08.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 08:35:34 -0800 (PST)
-Date:   Wed, 11 Dec 2019 09:35:11 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
-Message-ID: <20191211163511.gjju2s3yy4sus44w@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20191211014015.7898-1-baolu.lu@linux.intel.com>
+        Wed, 11 Dec 2019 11:36:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729260AbfLKQgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:36:43 -0500
+Received: from localhost (unknown [40.117.208.15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91567206A5;
+        Wed, 11 Dec 2019 16:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576082201;
+        bh=yb6fhQ8MZR+X/3cVB0+ufP2Yk2jR747xOpy7WOBO6rU=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=tpczmveGVICETHKuVwzWZZcljSQ2PvqYJVAixI9c+rxW/JyiTmgmSWZOivMgoH6Hi
+         9OT1caIa3cC+lrj5/7cO84X/O7rbTV4c0v/iPB7cmFIvLc+r77LyEfWComGyu/LPz0
+         /x4FwSAVQYMzcfXPyyAaxGGrZrx+6PuHKBU3qPWQ=
+Date:   Wed, 11 Dec 2019 16:36:40 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: use CPUID to locate host page table reserved bits
+In-Reply-To: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
+References: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
+Message-Id: <20191211163641.91567206A5@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed Dec 11 19, Lu Baolu wrote:
->If the default DMA domain of a group doesn't fit a device, it
->will still sit in the group but use a private identity domain.
->When map/unmap/iova_to_phys come through iommu API, the driver
->should still serve them, otherwise, other devices in the same
->group will be impacted. Since identity domain has been mapped
->with the whole available memory space and RMRRs, we don't need
->to worry about the impact on it.
->
+Hi,
 
-Does this pose any potential issues with the reverse case where the
-group has a default identity domain, and the first device fits that,
-but a later device in the group needs dma and gets a private dma
-domain?
+[This is an automated email]
 
->Link: https://www.spinics.net/lists/iommu/msg40416.html
->Cc: Jerry Snitselaar <jsnitsel@redhat.com>
->Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
->Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced with private")
->Cc: stable@vger.kernel.org # v5.3+
->Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->---
-> drivers/iommu/intel-iommu.c | 8 --------
-> 1 file changed, 8 deletions(-)
->
->diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->index 0c8d81f56a30..b73bebea9148 100644
->--- a/drivers/iommu/intel-iommu.c
->+++ b/drivers/iommu/intel-iommu.c
->@@ -5478,9 +5478,6 @@ static int intel_iommu_map(struct iommu_domain *domain,
-> 	int prot = 0;
-> 	int ret;
->
->-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
->-		return -EINVAL;
->-
-> 	if (iommu_prot & IOMMU_READ)
-> 		prot |= DMA_PTE_READ;
-> 	if (iommu_prot & IOMMU_WRITE)
->@@ -5523,8 +5520,6 @@ static size_t intel_iommu_unmap(struct iommu_domain *domain,
-> 	/* Cope with horrid API which requires us to unmap more than the
-> 	   size argument if it happens to be a large-page mapping. */
-> 	BUG_ON(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level));
->-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
->-		return 0;
->
-> 	if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
-> 		size = VTD_PAGE_SIZE << level_to_offset_bits(level);
->@@ -5556,9 +5551,6 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
-> 	int level = 0;
-> 	u64 phys = 0;
->
->-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
->-		return 0;
->-
-> 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
-> 	if (pte)
-> 		phys = dma_pte_addr(pte);
->-- 
->2.17.1
->
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
+The bot has tested the following trees: v5.4.2, v5.3.15, v4.19.88, v4.14.158, v4.9.206, v4.4.206.
+
+v5.4.2: Build OK!
+v5.3.15: Failed to apply! Possible dependencies:
+    Unable to calculate
+
+v4.19.88: Failed to apply! Possible dependencies:
+    7b6f8a06e482 ("kvm: x86: Move kvm_set_mmio_spte_mask() from x86.c to mmu.c")
+    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
+
+v4.14.158: Failed to apply! Possible dependencies:
+    7b6f8a06e482 ("kvm: x86: Move kvm_set_mmio_spte_mask() from x86.c to mmu.c")
+    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
+
+v4.9.206: Failed to apply! Possible dependencies:
+    114df303a7ee ("kvm: x86: reduce collisions in mmu_page_hash")
+    28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+    312b616b30d8 ("kvm: x86: mmu: Set SPTE_SPECIAL_MASK within mmu.c")
+    37f0e8fe6b10 ("kvm: x86: mmu: Do not use bit 63 for tracking special SPTEs")
+    66d73e12f278 ("KVM: X86: MMU: no mmu_notifier_seq++ in kvm_age_hva")
+    83ef6c8155c0 ("kvm: x86: mmu: Refactor accessed/dirty checks in mmu_spte_update/clear")
+    97dceba29a6a ("kvm: x86: mmu: Fast Page Fault path retries")
+    daa07cbc9ae3 ("KVM: x86: fix L1TF's MMIO GFN calculation")
+    dcdca5fed5f6 ("x86: kvm: mmu: make spte mmio mask more explicit")
+    ea4114bcd3a8 ("kvm: x86: mmu: Rename spte_is_locklessly_modifiable()")
+    f160c7b7bb32 ("kvm: x86: mmu: Lockless access tracking for Intel CPUs without EPT A bits.")
+    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
+
+v4.4.206: Failed to apply! Possible dependencies:
+    018aabb56d61 ("KVM: x86: MMU: Encapsulate the type of rmap-chain head in a new struct")
+    0e3d0648bd90 ("KVM: x86: MMU: always set accessed bit in shadow PTEs")
+    114df303a7ee ("kvm: x86: reduce collisions in mmu_page_hash")
+    14f4760562e4 ("kvm: set page dirty only if page has been writable")
+    28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+    37f0e8fe6b10 ("kvm: x86: mmu: Do not use bit 63 for tracking special SPTEs")
+    83ef6c8155c0 ("kvm: x86: mmu: Refactor accessed/dirty checks in mmu_spte_update/clear")
+    8d5cf1610da5 ("kvm: mmu: extend the is_present check to 32 bits")
+    daa07cbc9ae3 ("KVM: x86: fix L1TF's MMIO GFN calculation")
+    ea4114bcd3a8 ("kvm: x86: mmu: Rename spte_is_locklessly_modifiable()")
+    f160c7b7bb32 ("kvm: x86: mmu: Lockless access tracking for Intel CPUs without EPT A bits.")
+    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
+    ffb128c89b77 ("kvm: mmu: don't set the present bit unconditionally")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks,
+Sasha
