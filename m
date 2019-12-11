@@ -2,116 +2,145 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF9AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B120C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA67321556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576074026;
-	bh=2112vcRvffbbbfNLim0Vo0faBMt99YUI8qgiqHAGLqk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0OTjlJXh0+/Jxs9Z/XuwbTjybhYDT1oJnOAbRxdl/l79g6SLhS0dbNCyceptMlwzx
-	 eUUBcNBHiQYadPg++yWH12cvYA25aq/etP/ROz0dB9+CWzzrzBu0OFuCGFDukSdtqF
-	 zEH3zWUn1aAbxvCFToz2RspefVLkMDHndK1Wz3oo=
+	by mail.kernel.org (Postfix) with ESMTP id 3727A22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbfLKOUY (ORCPT
+        id S1729827AbfLKOVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:20:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 09:21:54 -0500
+Received: from mga04.intel.com ([192.55.52.120]:40036 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfLKOUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:20:24 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729705AbfLKOVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:21:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 06:21:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="225542708"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 06:21:49 -0800
+Received: from [10.125.249.93] (rsudarik-mobl.ccr.corp.intel.com [10.125.249.93])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF6D214AF;
-        Wed, 11 Dec 2019 14:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576074024;
-        bh=2112vcRvffbbbfNLim0Vo0faBMt99YUI8qgiqHAGLqk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=nu8bvQlOLmTPRsrn+c+H1hyBH50QH6IXCOetMbMqKW5Y7S5UXeh13ojI5cLmBF6wt
-         cSgcERk+vhQAE5dvLKeKLAt7lHT+zKNjsG/Cizxwdod0woiuW52sQ4dBNq1BjavF1y
-         +6fvpZq9547S28MAHy9ZyEhc1aKFDFu2Ma/pXsfM=
-Date:   Wed, 11 Dec 2019 08:20:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
-        robh@kernel.org, linux-kernel@vger.kernel.org,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
-Message-ID: <20191211142022.GA26342@google.com>
+        by linux.intel.com (Postfix) with ESMTPS id 6AF1E580297;
+        Wed, 11 Dec 2019 06:21:46 -0800 (PST)
+Subject: Re: [PATCH v2 2/3] perf x86: Add compaction function for uncore
+ attributes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-kernel@vger.kernel.org,
+        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
+        kan.liang@linux.intel.com, alexander.antonov@intel.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20191210091451.6054-1-roman.sudarikov@linux.intel.com>
+ <20191210091451.6054-3-roman.sudarikov@linux.intel.com>
+ <20191210103710.GM2844@hirez.programming.kicks-ass.net>
+From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
+Message-ID: <8e198b00-2e43-8f85-ec13-714433681f20@linux.intel.com>
+Date:   Wed, 11 Dec 2019 17:21:42 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191210103710.GM2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
-> 
-> On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
-> > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
-> > > Add support to PCIe RC controller on Intel Gateway SoCs.
-> > > PCIe controller is based of Synopsys DesignWare PCIe core.
-> > > 
-> > > Intel PCIe driver requires Upconfigure support, Fast Training
-> > > Sequence and link speed configurations. So adding the respective
-> > > helper functions in the PCIe DesignWare framework.
-> > > It also programs hardware autonomous speed during speed
-> > > configuration so defining it in pci_regs.h.
-> > > 
-> > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
-> > > as Synopsys DesignWare framework depends on the
-> > > PCI_MSI_IRQ_DOMAIN.
-> > > 
-> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+On 10.12.2019 13:37, Peter Zijlstra wrote:
+> On Tue, Dec 10, 2019 at 12:14:50PM +0300, roman.sudarikov@linux.intel.com wrote:
+>> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>>
+>> In current design, there is an implicit assumption that array of pointers
+>> to uncore type attributes is NULL terminated. However, not all attributes
+>> are mandatory for each Uncore unit type, e.g. "events" is required for
+>> IMC but doesn't exist for CHA. That approach correctly supports only one
+>> optional attribute which also must be the last in the row.
+>> The patch removes limitation by safely removing embedded NULL elements.
+>>
+>> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
+>> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
+>> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+>> ---
+>>   arch/x86/events/intel/uncore.c | 22 ++++++++++++++++++++++
+>>   1 file changed, 22 insertions(+)
+>>
+>> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+>> index 24e120289018..a05352c4fc01 100644
+>> --- a/arch/x86/events/intel/uncore.c
+>> +++ b/arch/x86/events/intel/uncore.c
+>> @@ -923,6 +923,22 @@ static void uncore_types_exit(struct intel_uncore_type **types)
+>>   		uncore_type_exit(*types);
+>>   }
+>>   
+>> +static void uncore_type_attrs_compaction(struct intel_uncore_type *type)
+>> +{
+>> +	int i, j;
+>> +	int size = ARRAY_SIZE(type->attr_groups);
+>> +
+>> +	for (i = 0, j = 0; i < size; i++) {
+>> +		if (!type->attr_groups[i])
+>> +			continue;
+>> +		if (i > j) {
+>> +			type->attr_groups[j] = type->attr_groups[i];
+>> +			type->attr_groups[i] = NULL;
+>> +		}
+>> +		j++;
+>> +	}
+>> +}
+> GregKH had objections to us playing silly games like that and made us
+> use is_visible() for the regular PMU driver. Also see commit:
+>
+>    baa0c83363c7 ("perf/x86: Use the new pmu::update_attrs attribute group")
 
-> > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
-> > > +{
-> > > +	u32 old;
-> > > +
-> > > +	old = readl(base + ofs);
-> > > +	val = (old & ~mask) | (val & mask);
-> > > +
-> > > +	if (val != old)
-> > > +		writel(val, base + ofs);
-> > I assume this is never used on registers where the "old & ~mask" part
-> > contains RW1C bits?  If there are RW1C bits in that part, this will
-> > corrupt them.
-> There is no impact because RW1C bits of respective registers are 0s at the
-> time of this function call.
 
-Sounds ... dangerous, but I'll take your word for it.
+Removed theuncore_type_attrs_compaction() function and implemented Kan's
+suggestion to replace NULL events_group by the empty attributes group:
 
-> I see, this patch series is merged in the maintainer tree.
-> Should i need to submit as a separate patch on top of maintainer tree or
-> submit the new version of whole patch series?
-> Please let me know the best practice.
 
-Sorry, I didn't realize this had already been merged to Lorenzo's
-tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
-Andrew and Lorenzo want to handle this.  None of these are important,
-so you could just ignore these comments.
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index e8532923bd45..110b3603f56f 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -923,6 +923,14 @@ static void uncore_types_exit(struct 
+intel_uncore_type **types)
+                 uncore_type_exit(*types);
+  }
 
-What I personally would do is rebase the branch, e.g.,
-lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
-Andrew and Lorenzo whether they want to do anything.
++static struct attribute *empty_attrs[] = {
++       NULL,
++};
++
++static const struct attribute_group empty_group = {
++       .attrs = empty_attrs,
++};
++
+  static int __init uncore_type_init(struct intel_uncore_type *type, 
+bool setid)
+  {
+         struct intel_uncore_pmu *pmus;
+@@ -968,7 +976,8 @@ static int __init uncore_type_init(struct 
+intel_uncore_type *type, bool setid)
+                         attr_group->attrs[j] = 
+&type->event_descs[j].attr.attr;
 
-Bjorn
+                 type->events_group = &attr_group->group;
+-       }
++       } else
++               type->events_group = &empty_group;
+
+         type->pmu_group = &uncore_pmu_attr_group;
+
