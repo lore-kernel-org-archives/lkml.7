@@ -2,169 +2,252 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6378C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A7C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A96A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38022208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="lUxBBO/3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bFUpf2yp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TPBxCuu5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfLKLLb (ORCPT
+        id S1728964AbfLKLMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:11:31 -0500
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:55934 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLKLLa (ORCPT
+        Wed, 11 Dec 2019 06:12:14 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27877 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727493AbfLKLMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:11:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1576062690; x=1607598690;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=F6fcjZXSymfVTTzKhizoyBBZp3M/jsP9O4cjmq3JhKw=;
-  b=lUxBBO/3ik5E0cVArQ9f2B7NugSUHR23x5yPhfgu6QakOK56lCs0sj8/
-   wRRgQxz8ZxPNwrBF0wcS1mIuajhZtQ/cvavMJtTA9fzyKFUD+E0PSJD+3
-   fQMHB5Bp5KtiFJdTzq4VS8ZG9E6CH04Xe22ryrHPYGbecXNKWC/JqOke8
-   ACVUjRl1cDSb4N23PWtFxjeKpmSxF8KRPumZhpJcrIiXlXjgV6qox/vJi
-   zxc089gpkxEh/vOJdNz1nzCgxbfqtpfoK08x5A/i1qy9Qbnz4jQn1cnpX
-   ZyLEJlSC4z3iW3G0dTJwh/GGLZjwshjXROyqB4mta2tajqV4u/ceSPEft
-   Q==;
-IronPort-SDR: GKqMzr8tdsC8v3g4AgaXd3hFab9kLgOFe5tobZvP3YrUT+PeHQVCKHd8iL+SaCSGByvBVNYIw4
- fsN/F3ILPZ+nnTJJTUxw2eWi3bvYiYnmKhuKjHX5BKHqmpHRj6MiVrz4d99zQTZzVZilFk15Od
- w+SrKJ/+mBsgTm/pIdGTgmVjYYKgaH7oGPaEjiYDp2+iHHTaxvAqb7uC7rIteU8XdAFiKgCZIw
- UFzC7nUcFLfvvfRX6L5b37EcT0Mb223ibet68KQKgmdAWU0SjEQAWQiJjgfmcei077qDsuM/Ot
- Xkw=
-X-IronPort-AV: E=Sophos;i="5.69,301,1571673600"; 
-   d="scan'208";a="125088031"
-Received: from mail-sn1nam02lp2053.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.53])
-  by ob1.hgst.iphmx.com with ESMTP; 11 Dec 2019 19:11:28 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eG03D1BUyynttjxnvz5YYO2/t8uQX9sKTqR3hFj8PBMw+uBGNc7l6MnVhzLZZaUy12fhhJfqjJxaO/lg7suIrg4XpgXb/Ag/fUdyTxjKLir1UGX1qUeI37KSIg5zYQQeFa4evaO/LcD/0atpmgkTUUgzOWBoUKdd3ON/R0YsoB0RzW3BnAgZ6sFsjHqoqG5T9Fpg9hsqdPyuT2IboNMYvwdPZF5uh8Tx9vQB7vmiOgajyLRxoBWUyewJdLD+pGm/EW+XKfPEsV1M2j9Ktf35gqcC+WgNFTBEt/JkR3p6ZJ0i3JuV3NFp8CfN2RgTc+BMwNnHQf0monBpdfCKhCuPTA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AI3rPJ4ZKfDq3iJHa8M6ZMhTmFZQSaPq9T7Zp/SnQMM=;
- b=VU+NkZiz9T2FVUSpRHZXmw8VXQ9qkiNmwRkjLPJJO5WQIKVDfjp9GPKJUpivrr/n1uKNovE311r/w4bf2jil5c764qAXn7PvCpbfdgTpInuR87OwMDxCTxHXqNtwS9Z5//58fyFaYt+HcDC1pfN+B95fBZgktD1JNjpheEmzTFNvrKE9o1s0sNKmUIe8A2yYu16Z7EF08vDLU5oGgk6Qs/1hUfeAMGxXKdDFHzSSGZmWuorR139Qh5qkNpY6S6X5jIWI6vfkZ7Js0Akb+w2nUt4SqLhmIsPd+lDoJiVx7H6JnFdChIX1MxWNiZ/MmLzRVY95qLRBVl6g5MhmfTMnSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AI3rPJ4ZKfDq3iJHa8M6ZMhTmFZQSaPq9T7Zp/SnQMM=;
- b=bFUpf2ypr+v/WZnn8j6QRnR5h6myrz7wb4Q0uJ7hjLGQTaVRlDAS7zHcYLCnc4DmGQ3FZDsdWDGyFz5oYbr6wLAXU/ZKTwAUb06qgi0VNrp1x4U9aT7ZHacK1AtUtgbNyz/9S6VbguDKb7s7sExbL8Jjsw0fcQ3dO2XrFyM/qBI=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB6078.namprd04.prod.outlook.com (20.178.248.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.14; Wed, 11 Dec 2019 11:11:27 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9447:fa71:53df:f866]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9447:fa71:53df:f866%3]) with mapi id 15.20.2538.012; Wed, 11 Dec 2019
- 11:11:26 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 3/3] arm64: defconfig: Compile ufs-bsg as a module
-Thread-Topic: [PATCH v2 3/3] arm64: defconfig: Compile ufs-bsg as a module
-Thread-Index: AQHVsANQIZ1l2EY9sk2jTqldL02xFKe0xiRQ
-Date:   Wed, 11 Dec 2019 11:11:26 +0000
-Message-ID: <MN2PR04MB6991B27D797044D8FFDFAE8FFC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <0101016ef43c56d3-c7064a44-6025-4349-afd4-a2c91a9d9ffe-000000@us-west-2.amazonses.com>
-In-Reply-To: <0101016ef43c56d3-c7064a44-6025-4349-afd4-a2c91a9d9ffe-000000@us-west-2.amazonses.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bc6a3802-eeb2-4168-e924-08d77e2addb4
-x-ms-traffictypediagnostic: MN2PR04MB6078:
-x-microsoft-antispam-prvs: <MN2PR04MB6078B2DB1F5285676C33C75BFC5A0@MN2PR04MB6078.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:2449;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(136003)(39860400002)(346002)(376002)(199004)(189003)(54906003)(26005)(2906002)(81166006)(8676002)(478600001)(8936002)(81156014)(6506007)(7696005)(9686003)(110136005)(55016002)(66476007)(71200400001)(33656002)(66946007)(186003)(66556008)(86362001)(4326008)(52536014)(316002)(76116006)(66446008)(4744005)(64756008)(5660300002)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6078;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IZd3RE466ZLj07r9gq3MFbRlR9Q183v939B1+bvszqVYNmm1E6vcr92+qBX+kmTU+EUnRe4F8Xu9oDaITIsNzS4NpwCa5C/pKs+DKu9D25/wf9mkZSRx8HSwA6ROV9kJ5PwoxA9DCwAsx6ElC/h5ii8kWaGTj5qCqPYO3hPvKYTkUvj2BGv5BE6YcqOAVn+xbFgUTpKU0PNLhldj/Cuyz6PmKRkOuVzFUBN+Qks5/lkhGOtzVOpLM3FMQ+MEoj3uppWB5NlsKrQwdRkTYJfVEPcpGDf1r7zkmg+wkpvMontpaGdPV+PMSkXd3lPoFZOoogz4PGCNWuS3gBs12PqYg0o4Yi7nYY91Fc8k2zFfB5gukE9iHgWqW37fqzRQ+AxZEucAZ+bQkmGHOK4DGQpdq3yLfVCQsIbCP0X0WYuulFZF5XQO47KAtCzkNTXNvRGX
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 06:12:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576062731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AIUC3DC68tW13C70sI2Mc94lf9X5dPyiBLILa6qq1WY=;
+        b=TPBxCuu5Vrfk98tjb1MJfXTSl8+d7hj07Kl5nK5EbDDPnc2buH38CCIPuzn08nWyllF9nt
+        FopMTxcShZUpg8lPVDMFTVtEY/86Mte5evHQG8Hj+U9Q1frBFCIK2/NQWiO4dEcxDA2zx9
+        5yp+j6zkgo/1n3YeB1WqwsaUeq3TPPk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-ZUUmr4ZKNtSGkvYBAgz2aA-1; Wed, 11 Dec 2019 06:12:08 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 240DC189CD09;
+        Wed, 11 Dec 2019 11:12:07 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-117-148.ams2.redhat.com [10.36.117.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5439060BF3;
+        Wed, 11 Dec 2019 11:11:53 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Yumei Huang <yuhuang@redhat.com>, stable@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jiang Liu <liuj97@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Igor Mammedov <imammedo@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3] virtio-balloon: fix managed page counts when migrating pages between zones
+Date:   Wed, 11 Dec 2019 12:11:52 +0100
+Message-Id: <20191211111152.6553-1-david@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc6a3802-eeb2-4168-e924-08d77e2addb4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 11:11:26.6624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SzgqeKd1kwH+YAJ1onq94n6Vgheph73PZYNH2xiDne8D8rtOMlLc2xBNz01DdPWEU2pRK1fklFum2dn2IHtxRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6078
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: ZUUmr4ZKNtSGkvYBAgz2aA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In case we have to migrate a ballon page to a newpage of another zone, the
+managed page count of both zones is wrong. Paired with memory offlining
+(which will adjust the managed page count), we can trigger kernel crashes
+and all kinds of different symptoms.
 
+One way to reproduce:
+1. Start a QEMU guest with 4GB, no NUMA
+2. Hotplug a 1GB DIMM and online the memory to ZONE_NORMAL
+3. Inflate the balloon to 1GB
+4. Unplug the DIMM (be quick, otherwise unmovable data ends up on it)
+5. Observe /proc/zoneinfo
+  Node 0, zone   Normal
+    pages free     16810
+          min      24848885473806
+          low      18471592959183339
+          high     36918337032892872
+          spanned  262144
+          present  262144
+          managed  18446744073709533486
+6. Do anything that requires some memory (e.g., inflate the balloon some
+more). The OOM goes crazy and the system crashes
+  [  238.324946] Out of memory: Killed process 537 (login) total-vm:27584kB=
+, anon-rss:860kB, file-rss:0kB, shmem-rss:00
+  [  238.338585] systemd invoked oom-killer: gfp_mask=3D0x100cca(GFP_HIGHUS=
+ER_MOVABLE), order=3D0, oom_score_adj=3D0
+  [  238.339420] CPU: 0 PID: 1 Comm: systemd Tainted: G      D W         5.=
+4.0-next-20191204+ #75
+  [  238.340139] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
+S rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
+  [  238.341121] Call Trace:
+  [  238.341337]  dump_stack+0x8f/0xd0
+  [  238.341630]  dump_header+0x61/0x5ea
+  [  238.341942]  oom_kill_process.cold+0xb/0x10
+  [  238.342299]  out_of_memory+0x24d/0x5a0
+  [  238.342625]  __alloc_pages_slowpath+0xd12/0x1020
+  [  238.343024]  __alloc_pages_nodemask+0x391/0x410
+  [  238.343407]  pagecache_get_page+0xc3/0x3a0
+  [  238.343757]  filemap_fault+0x804/0xc30
+  [  238.344083]  ? ext4_filemap_fault+0x28/0x42
+  [  238.344444]  ext4_filemap_fault+0x30/0x42
+  [  238.344789]  __do_fault+0x37/0x1a0
+  [  238.345087]  __handle_mm_fault+0x104d/0x1ab0
+  [  238.345450]  handle_mm_fault+0x169/0x360
+  [  238.345790]  do_user_addr_fault+0x20d/0x490
+  [  238.346154]  do_page_fault+0x31/0x210
+  [  238.346468]  async_page_fault+0x43/0x50
+  [  238.346797] RIP: 0033:0x7f47eba4197e
+  [  238.347110] Code: Bad RIP value.
+  [  238.347387] RSP: 002b:00007ffd7c0c1890 EFLAGS: 00010293
+  [  238.347834] RAX: 0000000000000002 RBX: 000055d196a20a20 RCX: 00007f47e=
+ba4197e
+  [  238.348437] RDX: 0000000000000033 RSI: 00007ffd7c0c18c0 RDI: 000000000=
+0000004
+  [  238.349047] RBP: 00007ffd7c0c1c20 R08: 0000000000000000 R09: 000000000=
+0000033
+  [  238.349660] R10: 00000000ffffffff R11: 0000000000000293 R12: 000000000=
+0000001
+  [  238.350261] R13: ffffffffffffffff R14: 0000000000000000 R15: 00007ffd7=
+c0c18c0
+  [  238.350878] Mem-Info:
+  [  238.351085] active_anon:3121 inactive_anon:51 isolated_anon:0
+  [  238.351085]  active_file:12 inactive_file:7 isolated_file:0
+  [  238.351085]  unevictable:0 dirty:0 writeback:0 unstable:0
+  [  238.351085]  slab_reclaimable:5565 slab_unreclaimable:10170
+  [  238.351085]  mapped:3 shmem:111 pagetables:155 bounce:0
+  [  238.351085]  free:720717 free_pcp:2 free_cma:0
+  [  238.353757] Node 0 active_anon:12484kB inactive_anon:204kB active_file=
+:48kB inactive_file:28kB unevictable:0kB iss
+  [  238.355979] Node 0 DMA free:11556kB min:36kB low:48kB high:60kB reserv=
+ed_highatomic:0KB active_anon:152kB inactivB
+  [  238.358345] lowmem_reserve[]: 0 2955 2884 2884 2884
+  [  238.358761] Node 0 DMA32 free:2677864kB min:7004kB low:10028kB high:13=
+052kB reserved_highatomic:0KB active_anon:0B
+  [  238.361202] lowmem_reserve[]: 0 0 72057594037927865 72057594037927865 =
+72057594037927865
+  [  238.361888] Node 0 Normal free:193448kB min:99395541895224kB low:73886=
+371836733356kB high:147673348131571488kB reB
+  [  238.364765] lowmem_reserve[]: 0 0 0 0 0
+  [  238.365101] Node 0 DMA: 7*4kB (U) 5*8kB (UE) 6*16kB (UME) 2*32kB (UM) =
+1*64kB (U) 2*128kB (UE) 3*256kB (UME) 2*512B
+  [  238.366379] Node 0 DMA32: 0*4kB 1*8kB (U) 2*16kB (UM) 2*32kB (UM) 2*64=
+kB (UM) 1*128kB (U) 1*256kB (U) 1*512kB (U)B
+  [  238.367654] Node 0 Normal: 1985*4kB (UME) 1321*8kB (UME) 844*16kB (UME=
+) 524*32kB (UME) 300*64kB (UME) 138*128kB (B
+  [  238.369184] Node 0 hugepages_total=3D0 hugepages_free=3D0 hugepages_su=
+rp=3D0 hugepages_size=3D2048kB
+  [  238.369915] 130 total pagecache pages
+  [  238.370241] 0 pages in swap cache
+  [  238.370533] Swap cache stats: add 0, delete 0, find 0/0
+  [  238.370981] Free swap  =3D 0kB
+  [  238.371239] Total swap =3D 0kB
+  [  238.371488] 1048445 pages RAM
+  [  238.371756] 0 pages HighMem/MovableOnly
+  [  238.372090] 306992 pages reserved
+  [  238.372376] 0 pages cma reserved
+  [  238.372661] 0 pages hwpoisoned
 
->=20
-> Compiling ufs-bsg as a module to improve flexibility of its usage.
->=20
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-Not sure we want to make it loadable by default.
-The platform vendor should decide if this module is available or not,
-Don't you think?
+In another instance (older kernel), I was able to observe this
+(negative page count :/):
+  [  180.896971] Offlined Pages 32768
+  [  182.667462] Offlined Pages 32768
+  [  184.408117] Offlined Pages 32768
+  [  186.026321] Offlined Pages 32768
+  [  187.684861] Offlined Pages 32768
+  [  189.227013] Offlined Pages 32768
+  [  190.830303] Offlined Pages 32768
+  [  190.833071] Built 1 zonelists, mobility grouping on.  Total pages: -36=
+920272750453009
 
+In another instance (older kernel), I was no longer able to start any
+process:
+  [root@vm ~]# [  214.348068] Offlined Pages 32768
+  [  215.973009] Offlined Pages 32768
+  cat /proc/meminfo
+  -bash: fork: Cannot allocate memory
+  [root@vm ~]# cat /proc/meminfo
+  -bash: fork: Cannot allocate memory
 
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig =
-index
-> 8e05c39..169a6e6 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -227,6 +227,7 @@ CONFIG_SCSI_UFSHCD=3Dy
-> CONFIG_SCSI_UFSHCD_PLATFORM=3Dy  CONFIG_SCSI_UFS_QCOM=3Dm
-> CONFIG_SCSI_UFS_HISI=3Dy
-> +CONFIG_SCSI_UFS_BSG=3Dm
->  CONFIG_ATA=3Dy
->  CONFIG_SATA_AHCI=3Dy
->  CONFIG_SATA_AHCI_PLATFORM=3Dy
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum=
-,
-> a Linux Foundation Collaborative Project
+Fix it by properly adjusting the managed page count when migrating if
+the zone changed. The managed page count of the zones now looks after
+unplug of the DIMM (and after deflating the balloon) just like before
+inflating the balloon (and plugging+onlining the DIMM).
+
+We'll temporarily modify the totalram page count. If this ever becomes a
+problem, we can fine tune by providing helpers that don't touch
+the totalram pages (e.g., adjust_zone_managed_page_count()).
+
+Please note that fixing up the managed page count is only necessary when
+we adjusted the managed page count when inflating - only if we
+don't have VIRTIO_BALLOON_F_DEFLATE_ON_OOM. With that feature, the
+managed page count is not touched when inflating/deflating.
+
+Reported-by: Yumei Huang <yuhuang@redhat.com>
+Fixes: 3dcc0571cd64 ("mm: correctly update zone->managed_pages")
+Cc: <stable@vger.kernel.org> # v3.11+
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Jiang Liu <liuj97@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Igor Mammedov <imammedo@redhat.com>
+Cc: virtualization@lists.linux-foundation.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+v2 -> v3:
+- Refine comment
+- s/only/online/ in description
+- Clarify why VIRTIO_BALLOON_F_DEFLATE_ON_OOM has to be checked
+
+v1 -> v2:
+- Adjust count before enquing newpage (and it possibly gets free form the
+  balloon)
+- Check if the zone changed
+
+---
+ drivers/virtio/virtio_balloon.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloo=
+n.c
+index 15b7f1d8c334..93f995f6cf36 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -722,6 +722,17 @@ static int virtballoon_migratepage(struct balloon_dev_=
+info *vb_dev_info,
+=20
+ =09get_page(newpage); /* balloon reference */
+=20
++=09/*
++=09  * When we migrate a page to a different zone and adjusted the
++=09  * managed page count when inflating, we have to fixup the count of
++=09  * both involved zones.
++=09  */
++=09if (!virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM) &&
++=09    page_zone(page) !=3D page_zone(newpage)) {
++=09=09adjust_managed_page_count(page, 1);
++=09=09adjust_managed_page_count(newpage, -1);
++=09}
++
+ =09/* balloon's page migration 1st step  -- inflate "newpage" */
+ =09spin_lock_irqsave(&vb_dev_info->pages_lock, flags);
+ =09balloon_page_insert(vb_dev_info, newpage);
+--=20
+2.23.0
 
