@@ -2,64 +2,65 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C2AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775E1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84126206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48A7622464
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyOt2yK7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N4OxiWEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbfLKKq0 (ORCPT
+        id S1728511AbfLKKq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:46:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727493AbfLKKq0 (ORCPT
+        Wed, 11 Dec 2019 05:46:29 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31610 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727469AbfLKKq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:46:26 -0500
+        Wed, 11 Dec 2019 05:46:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576061184;
+        s=mimecast20190719; t=1576061185;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=K4H0zSCO2QSm/eggmwjamKsM01zRajc55w+V6waEM80=;
-        b=eyOt2yK79JnvKsNX2iLZ1E0ZUJbhFx9hQPjFvTMS0FQLS5IoYmtNNp7gfO0Ewvk9YiRnk9
-        3OSJBmRA0daQJyz2VwwjepccGP9OdyhUHAvGQudPg046sCvwx4JjORJx0u1e2+Ea2ko3Rw
-        PYPs4FPhwcMq6XQ9nERArupGf9K9kcs=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-sjk1RgsmMvWGMb_yPgPYKw-1; Wed, 11 Dec 2019 05:46:23 -0500
-Received: by mail-wm1-f72.google.com with SMTP id o205so2231360wmo.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:46:23 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jE+isrP9gJ3LfiLQuHLtxY+E9i+PYFyCHT4kzF4aVX4=;
+        b=N4OxiWECjOgRgm+9AvcLghlnfxfF3Z/sg/ynI7luTTx8MRIb687BAZ9tEm42a/ixuXBcRi
+        i8a9fPjjtJSuQ//O2OgOmJGSuu4LtslWFLxY34rgFVpUXMjI2CeKcQ5Pw7QCim17oHCUur
+        DMz280dPmrgoHGYWFlBcznNU6vAudPk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-fhJPh-V7N4O4jVgM7Jgi2w-1; Wed, 11 Dec 2019 05:46:24 -0500
+Received: by mail-wm1-f70.google.com with SMTP id t17so298186wmi.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:46:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rAWXwRmtKcTKVeo5rctfBGlbD9osl7KY6CkodtUNWGo=;
-        b=cSyXVkT/ioc10tf07J7rqpDZbeyk5/hxUUnRvA1v64hs3Pk5OrS1kiwZv2VSnlub8o
-         eKfcEnop6sfZeEFt9fPZ1DjzV8bQ+Wpt0JMrQXqP1GD17UchL0uRpcm9e459R20jLJ68
-         UrYv3xSKMNAtJ2leUSE32PJUmu6IIO04B1I/bcz3vo488antmSTdst6hokORSwejOoWb
-         ebSESjE90vLH3crEANXWqhuwNmwj6WWOgX+CpOoVeh5a/GfDrl1qS4g8DI5sRZsEiyw+
-         9qYB/8/cTZiI1HxNbrzSiojhWqk/M0+oFGRkA48YJChg3iGyKEdc4M/4xZR4zm66aJ8I
-         ZusA==
-X-Gm-Message-State: APjAAAUWlgq3NTzlW2o5EJuKya1gM3AjEEuioST/YnxEzGt+dUUkALd2
-        AYBrRMDDPNqpXYz+wADgbyO5arF2sDVLsxZWsCmuoVsxObOCURQJ4vtQyfT2trnLaXxrIhUxKIT
-        xnjW2JEQZCympfPygw+kpsl3r
-X-Received: by 2002:a5d:4acb:: with SMTP id y11mr3136318wrs.106.1576061181678;
-        Wed, 11 Dec 2019 02:46:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxkgJU2agR+Z5q42YP9ARXBeSx7dL46TxPCzZ6G8qxxaMgrd/eV07ev8lxG62+yxAB0cKD0Lg==
-X-Received: by 2002:a5d:4acb:: with SMTP id y11mr3136284wrs.106.1576061181391;
-        Wed, 11 Dec 2019 02:46:21 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JH1T+zEL6Fh7Z3FAc2TFJ9ucwEFM+C4d7iALZ0J6POk=;
+        b=lcHNs0CKOXX1dsbY68nBpEAyYqUYxt0wwlwev0S+tfN5rMlSsgkxju8+NOPmlGYXKZ
+         JJKERH+yO2Y9TXZLNpLFbM/3/a03mKOppGNm7PQKOfuMv+CzegPsZMu95In+KyGMMo5b
+         dc1agQXnw5zSkpm9mB23LznA3W8SWSHTrOUJLAa2dZscRpc7QTip1ZaC2gBNCX8AKT3V
+         7G5zxgeq41xlvUpNeDk1EXNWfDPjKXHfk5GvXkOhyuX/w4cnkfPsrlRKFr9UBmH6M4NN
+         sxZrR7SZFT+WJgcc5LB/eSK/LJ0A7QBqb5VYKjwFUfNMIu26vUEEdiIrNZGZ+p43uthz
+         1QKw==
+X-Gm-Message-State: APjAAAVkRlcm5SqYZ4yQyobZHQJ/i8gAdbqAWgsj0nBr2YJ5PEUcwoB+
+        A9cP0yVLNeSXksE+o7fOJIsdSVyMzIwIQkHe7HhYYv+fAEswU+pqpFktj3UtFBQvmCGYdUpChxT
+        ZEXq/yZc7tcpH8qKB+skaORp2
+X-Received: by 2002:a7b:cf01:: with SMTP id l1mr2724298wmg.86.1576061183220;
+        Wed, 11 Dec 2019 02:46:23 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyudGse1WVPQ8R9pkCZ4v+3Kcb8LkbR1Dsw6fUKZPZekK4OR6zBQdF6aR68tkB3ry80QWGQHA==
+X-Received: by 2002:a7b:cf01:: with SMTP id l1mr2724278wmg.86.1576061183050;
+        Wed, 11 Dec 2019 02:46:23 -0800 (PST)
 Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id s15sm1818465wrp.4.2019.12.11.02.46.20
+        by smtp.gmail.com with ESMTPSA id g17sm1693366wmc.37.2019.12.11.02.46.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 02:46:20 -0800 (PST)
+        Wed, 11 Dec 2019 02:46:22 -0800 (PST)
 From:   Oleksandr Natalenko <oleksandr@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
@@ -73,12 +74,14 @@ Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 0/1] init/Kconfig: enable -O3 for all arches
-Date:   Wed, 11 Dec 2019 11:46:18 +0100
-Message-Id: <20191211104619.114557-1-oleksandr@redhat.com>
+Subject: [PATCH 1/1] init/Kconfig: enable -O3 for all arches
+Date:   Wed, 11 Dec 2019 11:46:19 +0100
+Message-Id: <20191211104619.114557-2-oleksandr@redhat.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211104619.114557-1-oleksandr@redhat.com>
+References: <20191211104619.114557-1-oleksandr@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: sjk1RgsmMvWGMb_yPgPYKw-1
+X-MC-Unique: fhJPh-V7N4O4jVgM7Jgi2w-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -87,31 +90,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this submission is to expose -O3 for all the
-architectures, not only ARC, since it helps in hunting some bugs (see
-the commit message for specific example).
+Building a kernel with -O3 may help in hunting bugs like [1] and thus
+using this switch should not be restricted to one specific arch only.
 
-Previously this was posted as RFC here: [1]. With this submission I'm
-addressing Krzysztof's concern regarding commit message. No other
-changes are made.
+With that, lets expose it for everyone.
 
-The RFC was accepted into -mm tree here: [2]. If needed, please replace
-that one with this one since this one has a nicer commit message.
+[1] https://lore.kernel.org/lkml/673b885183fb64f1cbb3ed2387524077@natalenko=
+.name/
 
-The patch is made against next-20191210 tag.
-
-Thanks.
-
-[1] https://lore.kernel.org/lkml/20191210145657.105808-1-oleksandr@redhat.c=
-om/
-[2] https://marc.info/?l=3Dlinux-mm-commits&m=3D157602335225239&w=3D2
-
-Oleksandr Natalenko (1):
-  init/Kconfig: enable -O3 for all arches
-
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+---
  init/Kconfig | 1 -
  1 file changed, 1 deletion(-)
 
+diff --git a/init/Kconfig b/init/Kconfig
+index a34064a031a5..b41b18edb10e 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1228,7 +1228,6 @@ config CC_OPTIMIZE_FOR_PERFORMANCE
+=20
+ config CC_OPTIMIZE_FOR_PERFORMANCE_O3
+ =09bool "Optimize more for performance (-O3)"
+-=09depends on ARC
+ =09imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED  # avoid false positives
+ =09help
+ =09  Choosing this option will pass "-O3" to your compiler to optimize
 --=20
 2.24.1
 
