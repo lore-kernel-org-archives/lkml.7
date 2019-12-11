@@ -2,57 +2,114 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7A4C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91337C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74F020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:02:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD0521556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfLKTCi (ORCPT
+        id S1728196AbfLKTDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:02:38 -0500
-Received: from verein.lst.de ([213.95.11.211]:56918 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727133AbfLKTCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:02:38 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BD11668AFE; Wed, 11 Dec 2019 20:02:35 +0100 (CET)
-Date:   Wed, 11 Dec 2019 20:02:35 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     joro@8bytes.org, hch@lst.de, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, stephan@gerhold.net,
-        natechancellor@gmail.com, nsaenzjulienne@suse.de, arnd@arndb.de
-Subject: Re: [PATCH v2] iommu/dma: Rationalise types for DMA masks
-Message-ID: <20191211190235.GA17854@lst.de>
-References: <00d1ddf9439a8c79fb561b0fc740bddf9e6fe6b1.1576089015.git.robin.murphy@arm.com>
+        Wed, 11 Dec 2019 14:03:14 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44316 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfLKTDN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 14:03:13 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1if7GA-0002R7-Ht; Wed, 11 Dec 2019 20:02:54 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E4E311C2917;
+        Wed, 11 Dec 2019 20:02:53 +0100 (CET)
+Date:   Wed, 11 Dec 2019 19:02:53 -0000
+From:   "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce/therm_throt: Mark throttle_active_work() as
+ __maybe_unused
+Cc:     Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@suse.de>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        bberg@redhat.com, ckellner@redhat.com,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        hdegoede@redhat.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "linux-edac" <linux-edac@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>, "x86-ml" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191210203925.3119091-1-arnd@arndb.de>
+References: <20191210203925.3119091-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00d1ddf9439a8c79fb561b0fc740bddf9e6fe6b1.1576089015.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-ID: <157609097376.30329.7393768210336577758.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 06:33:26PM +0000, Robin Murphy wrote:
-> Since iommu_dma_alloc_iova() combines incoming masks with the u64 bus
-> limit, it makes more sense to pass them around in their native u64
-> rather than converting to dma_addr_t early. Do that, and resolve the
-> remaining type discrepancy against the domain geometry with a cheeky
-> cast to keep things simple.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+The following commit has been merged into the ras/core branch of tip:
 
-Looks good to me:
+Commit-ID:     30357ea370345133949dbba199e8a5137a2b419c
+Gitweb:        https://git.kernel.org/tip/30357ea370345133949dbba199e8a5137a2b419c
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Tue, 10 Dec 2019 21:39:13 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 11 Dec 2019 19:54:29 +01:00
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
 
-Joerg, let me know if you want to pick this up through the iommu tree as
-it touches the iommu code, or through the dma-mapping tree that
-introduced the warning.
+throttle_active_work() is only called if CONFIG_SYSFS is set, otherwise
+we get a harmless warning:
+
+  arch/x86/kernel/cpu/mce/therm_throt.c:238:13: error: 'throttle_active_work' \
+	  defined but not used [-Werror=unused-function]
+
+Mark the function as __maybe_unused to avoid the warning.
+
+Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: bberg@redhat.com
+Cc: ckellner@redhat.com
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: hdegoede@redhat.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20191210203925.3119091-1-arnd@arndb.de
+---
+ arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
+index b38010b..8963493 100644
+--- a/arch/x86/kernel/cpu/mce/therm_throt.c
++++ b/arch/x86/kernel/cpu/mce/therm_throt.c
+@@ -235,7 +235,7 @@ static void get_therm_status(int level, bool *proc_hot, u8 *temp)
+ 	*temp = (msr_val >> 16) & 0x7F;
+ }
+ 
+-static void throttle_active_work(struct work_struct *work)
++static void __maybe_unused throttle_active_work(struct work_struct *work)
+ {
+ 	struct _thermal_state *state = container_of(to_delayed_work(work),
+ 						struct _thermal_state, therm_work);
