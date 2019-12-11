@@ -2,253 +2,83 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB2AC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C428C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A242020836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:07:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nFadFFCJ";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="RWclBU+a"
+	by mail.kernel.org (Postfix) with ESMTP id 61D23214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576048075;
+	bh=8msHcIRu3PefYDklXS+Yt8ZWDv8UpIyQUU1KePcXvUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Hk3g//Zs9Zl1tT2dEz54pNAgRAyn6+p+Ki0QZw9Qo9bS+l53uQcHtZ8a6G2/veay
+	 KpNE1Z5r4bsyIR90Db2QBuDBCs7tnn327bonUxl017IlX2cedkc4ACSHo4t55GFe3t
+	 02aHdtygqAOZcBtEfynVWpOnqzj/YmL1V8QUbRHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfLKHHk (ORCPT
+        id S1727979AbfLKHHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:07:40 -0500
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:44442
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfLKHHk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:07:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576048059;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=Sq8yrXilaY15YTnEYzS5KeLGNcDEpkKHmwsXUHCFgqU=;
-        b=nFadFFCJuH4a0HRXSa8C0QXwaXa0A+E1/hv1SeG5yQ36JKYh9HQNRh49z8fhrDkY
-        kRHbtopZPeQLqocRndghFtwpZ9g31BFcnQM/WO3tZyH9f7J0YtNkS7eNLfpZJe3CRog
-        TfvNkKyMa2UNpNmIggfW/1LXZCe4cyGo7yP+zHj8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576048058;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=Sq8yrXilaY15YTnEYzS5KeLGNcDEpkKHmwsXUHCFgqU=;
-        b=RWclBU+akBR6++TYdvrPvKaNqxviAoDTt9lWCCOuy4vGW4W1CLStnpuf0UyG23Dj
-        SMJQmV3OwCL6dQ42Q0URTLRvTiZgf6jjYO3rXD3B5765JccwpPYvNxzpyAMGuj43BL+
-        gUMbN483j30wwtcqwXvfTUjdWvvKYe7hIuit09l0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B4969C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v2 2/2] pinctrl: qcom: sc7180: Add new qup functions
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, dianders@chromium.org
-References: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org>
- <0101016ef36a9118-f2919277-effa-4cd5-adf8-bbc8016f31df-000000@us-west-2.amazonses.com>
- <20191211063829.GC3143381@builder>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0101016ef3c8e1d5-12f675ad-c849-4aa4-b81b-1bec6e2b90af-000000@us-west-2.amazonses.com>
-Date:   Wed, 11 Dec 2019 07:07:38 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 11 Dec 2019 02:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725800AbfLKHHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:07:53 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23CA520836;
+        Wed, 11 Dec 2019 07:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576048073;
+        bh=8msHcIRu3PefYDklXS+Yt8ZWDv8UpIyQUU1KePcXvUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I6qcpZab4oL1uW14v+yRpdRAmH74HJX44/xxYLcSVUaU32XzcNP4JLGJBnNmveSFV
+         MmDkfr/0zyM16WKOx7IBoLVqAnppDSdic4/Gy8TTKhNPvwZhbdT5BHxUZD9xkBq1XH
+         rW0BSLiJ6z5+LOmelSd8ur+Vfj/c7gjpBRnM+27U=
+Date:   Wed, 11 Dec 2019 15:07:40 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH V2] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Message-ID: <20191211070739.GL15858@dragon>
+References: <1575879445-15386-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211063829.GC3143381@builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.12.11-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1575879445-15386-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/11/2019 12:08 PM, Bjorn Andersson wrote:
-> On Tue 10 Dec 21:24 PST 2019, Rajendra Nayak wrote:
+On Mon, Dec 09, 2019 at 08:19:55AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
->> on sc7180 we have cases where multiple functions from the same
->> qup instance share the same pin. This is true for qup02/04/11 and qup13.
->> Add new function names to distinguish which qup function to use.
->>
->> The device tree files for this platform haven't landed in mainline yet,
->> so there aren't any users upstream who should break with this change
->> in function names, however, anyone using the devicetree files that were
->> posted on the lists and using these specific function names will need
->> to update their changes.
+> The usage of readl_poll_timeout is wrong, the 3rd parameter(cond)
+> should be "val & LOCK_STATUS" not "val & LOCK_TIMEOUT_US",
+> It is not check whether the pll locked, LOCK_STATUS reflects the mask,
+> not LOCK_TIMEOUT_US.
 > 
-> I don't think this paragraph adds value to the git log, but the patch
-> looks good.
+> Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+> Cc: <stable@vger.kernel.org>
+> Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Right, I should have mentioned that bit after the --- so its not in the
-changelog :/
-
-Linus, do you want me to resend with that paragraph moved below --- ?
-
->>
->> Reported-by: Stephen Boyd <swboyd@chromium.org>
->> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> Regards,
-> Bjorn
-> 
->> ---
->>   drivers/pinctrl/qcom/pinctrl-sc7180.c | 60 +++++++++++++++++++++++------------
->>   1 file changed, 40 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
->> index d6cfad7..6247d92 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
->> @@ -456,14 +456,18 @@ enum sc7180_functions {
->>   	msm_mux_qspi_data,
->>   	msm_mux_qup00,
->>   	msm_mux_qup01,
->> -	msm_mux_qup02,
->> +	msm_mux_qup02_i2c,
->> +	msm_mux_qup02_uart,
->>   	msm_mux_qup03,
->> -	msm_mux_qup04,
->> +	msm_mux_qup04_i2c,
->> +	msm_mux_qup04_uart,
->>   	msm_mux_qup05,
->>   	msm_mux_qup10,
->> -	msm_mux_qup11,
->> +	msm_mux_qup11_i2c,
->> +	msm_mux_qup11_uart,
->>   	msm_mux_qup12,
->> -	msm_mux_qup13,
->> +	msm_mux_qup13_i2c,
->> +	msm_mux_qup13_uart,
->>   	msm_mux_qup14,
->>   	msm_mux_qup15,
->>   	msm_mux_sdc1_tb,
->> @@ -543,7 +547,10 @@ static const char * const sdc1_tb_groups[] = {
->>   static const char * const sdc2_tb_groups[] = {
->>   	"gpio5",
->>   };
->> -static const char * const qup11_groups[] = {
->> +static const char * const qup11_i2c_groups[] = {
->> +	"gpio6", "gpio7",
->> +};
->> +static const char * const qup11_uart_groups[] = {
->>   	"gpio6", "gpio7",
->>   };
->>   static const char * const ddr_bist_groups[] = {
->> @@ -593,7 +600,10 @@ static const char * const qdss_groups[] = {
->>   static const char * const pll_reset_groups[] = {
->>   	"gpio14",
->>   };
->> -static const char * const qup02_groups[] = {
->> +static const char * const qup02_i2c_groups[] = {
->> +	"gpio15", "gpio16",
->> +};
->> +static const char * const qup02_uart_groups[] = {
->>   	"gpio15", "gpio16",
->>   };
->>   static const char * const cci_i2c_groups[] = {
->> @@ -698,7 +708,10 @@ static const char * const wlan1_adc1_groups[] = {
->>   static const char * const atest_usb13_groups[] = {
->>   	"gpio44",
->>   };
->> -static const char * const qup13_groups[] = {
->> +static const char * const qup13_i2c_groups[] = {
->> +	"gpio46", "gpio47",
->> +};
->> +static const char * const qup13_uart_groups[] = {
->>   	"gpio46", "gpio47",
->>   };
->>   static const char * const gcc_gp1_groups[] = {
->> @@ -848,7 +861,10 @@ static const char * const usb_phy_groups[] = {
->>   static const char * const mss_lte_groups[] = {
->>   	"gpio108", "gpio109",
->>   };
->> -static const char * const qup04_groups[] = {
->> +static const char * const qup04_i2c_groups[] = {
->> +	"gpio115", "gpio116",
->> +};
->> +static const char * const qup04_uart_groups[] = {
->>   	"gpio115", "gpio116",
->>   };
->>   
->> @@ -929,14 +945,18 @@ static const struct msm_function sc7180_functions[] = {
->>   	FUNCTION(qspi_data),
->>   	FUNCTION(qup00),
->>   	FUNCTION(qup01),
->> -	FUNCTION(qup02),
->> +	FUNCTION(qup02_i2c),
->> +	FUNCTION(qup02_uart),
->>   	FUNCTION(qup03),
->> -	FUNCTION(qup04),
->> +	FUNCTION(qup04_i2c),
->> +	FUNCTION(qup04_uart),
->>   	FUNCTION(qup05),
->>   	FUNCTION(qup10),
->> -	FUNCTION(qup11),
->> +	FUNCTION(qup11_i2c),
->> +	FUNCTION(qup11_uart),
->>   	FUNCTION(qup12),
->> -	FUNCTION(qup13),
->> +	FUNCTION(qup13_i2c),
->> +	FUNCTION(qup13_uart),
->>   	FUNCTION(qup14),
->>   	FUNCTION(qup15),
->>   	FUNCTION(sdc1_tb),
->> @@ -976,8 +996,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->>   	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
->>   	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _),
->>   	[5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
->> -	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _),
->> -	[7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
->> +	[6] = PINGROUP(6, NORTH, qup11_i2c, qup11_uart, _, _, _, _, _, _, _),
->> +	[7] = PINGROUP(7, NORTH, qup11_i2c, qup11_uart, ddr_bist, _, _, _, _, _, _),
->>   	[8] = PINGROUP(8, NORTH, gp_pdm1, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _),
->>   	[9] = PINGROUP(9, NORTH, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _, _),
->>   	[10] = PINGROUP(10, NORTH, mdp_vsync, ddr_bist, _, _, _, _, _, _, _),
->> @@ -985,8 +1005,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->>   	[12] = PINGROUP(12, SOUTH, mdp_vsync, m_voc, qup01, _, phase_flag, wlan2_adc0, atest_usb10, ddr_pxi3, _),
->>   	[13] = PINGROUP(13, SOUTH, cam_mclk, pll_bypassnl, qdss, _, _, _, _, _, _),
->>   	[14] = PINGROUP(14, SOUTH, cam_mclk, pll_reset, qdss, _, _, _, _, _, _),
->> -	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
->> -	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
->> +	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
->> +	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
->>   	[17] = PINGROUP(17, SOUTH, cci_i2c, _, phase_flag, qdss, _, wlan1_adc0, atest_usb12, ddr_pxi1, atest_char),
->>   	[18] = PINGROUP(18, SOUTH, cci_i2c, agera_pll, _, phase_flag, qdss, vsense_trigger, ddr_pxi0, atest_char3, _),
->>   	[19] = PINGROUP(19, SOUTH, cci_i2c, _, phase_flag, qdss, atest_char2, _, _, _, _),
->> @@ -1016,8 +1036,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->>   	[43] = PINGROUP(43, NORTH, qup12, _, _, _, _, _, _, _, _),
->>   	[44] = PINGROUP(44, NORTH, qup12, _, phase_flag, qdss_cti, wlan1_adc1, atest_usb13, ddr_pxi1, _, _),
->>   	[45] = PINGROUP(45, NORTH, qup12, qdss_cti, _, _, _, _, _, _, _),
->> -	[46] = PINGROUP(46, NORTH, qup13, qup13, _, _, _, _, _, _, _),
->> -	[47] = PINGROUP(47, NORTH, qup13, qup13, _, _, _, _, _, _, _),
->> +	[46] = PINGROUP(46, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
->> +	[47] = PINGROUP(47, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
->>   	[48] = PINGROUP(48, NORTH, gcc_gp1, _, _, _, _, _, _, _, _),
->>   	[49] = PINGROUP(49, WEST, mi2s_1, btfm_slimbus, _, _, _, _, _, _, _),
->>   	[50] = PINGROUP(50, WEST, mi2s_1, btfm_slimbus, gp_pdm1, _, _, _, _, _, _),
->> @@ -1085,8 +1105,8 @@ static const struct msm_pingroup sc7180_groups[] = {
->>   	[112] = PINGROUP(112, NORTH, _, _, _, _, _, _, _, _, _),
->>   	[113] = PINGROUP(113, NORTH, _, _, _, _, _, _, _, _, _),
->>   	[114] = PINGROUP(114, NORTH, _, _, _, _, _, _, _, _, _),
->> -	[115] = PINGROUP(115, WEST, qup04, qup04, _, _, _, _, _, _, _),
->> -	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
->> +	[115] = PINGROUP(115, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
->> +	[116] = PINGROUP(116, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
->>   	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
->>   	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
->>   	[119] = UFS_RESET(ufs_reset, 0x7f000),
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
->>
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Applied, thanks.
