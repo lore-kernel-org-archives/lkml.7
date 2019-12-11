@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F745C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0DDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 762492077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03B12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078345;
-	bh=4y9xGbhnrjK2hjcSMbEbcwqhZJeI4tF5cKVYU0MuI1E=;
+	s=default; t=1576078350;
+	bh=zOPcfZ1SLYGoJVTmrwswS2FCwdpBvV3SaVk7cnj/fDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hj6FiQS7o+1nM0DwTaIx3El1W/ks2rAIg+F3gHxPGqZlIiFwJAbe/q6l8UK9HD2GM
-	 hOmNNXynPyahmuElbbO/b5OWsU8pVvqmBsQniGH42j2tvSVaBZfEeO+yisSVGq1YId
-	 mMrskZmjhKgoi/D7ZGpGHN47kowcbD2633HR+pOo=
+	b=clvQUQqA2DAp227f4bB+UduKlOszUQzTcrLEcoLDN0cSOuwlh4df6nOwz5hb0w0/M
+	 4rjZfVccsTTZcToA2wBadhmzoACUVLDGRudTYuQHoDle2ca4o7Mvkgg7pDiAtizghS
+	 C1tHrKVFEjFRiyHH2+PGm6ru3HO97m41xk2645ws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387768AbfLKP26 (ORCPT
+        id S2387774AbfLKPc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:32:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387739AbfLKP2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:54 -0500
+        id S2387764AbfLKP26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3124E222C4;
-        Wed, 11 Dec 2019 15:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5627524684;
+        Wed, 11 Dec 2019 15:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078132;
-        bh=4y9xGbhnrjK2hjcSMbEbcwqhZJeI4tF5cKVYU0MuI1E=;
+        s=default; t=1576078137;
+        bh=zOPcfZ1SLYGoJVTmrwswS2FCwdpBvV3SaVk7cnj/fDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f/X2jir1knQ9bv45wXF7kFjnLsCKK2egs71nxb+bQ6/KC3oFNCQBEzGIn04kwhVD2
-         GaMMJlZnZh2XT2Fvq15ANlTSoIsHrP7WY7ma9UJG/Brn3xJq/tJJLTGfHUOWWHs2er
-         L3beCITZes4WDuwqdEleWN3qi0vjz/R3UHh2Ug6g=
+        b=pzZUw4eUyDncFQY5SzllRjcJ1HA/6538WwSNuuDJJwEL+6jr7aMpY83HDji8i0jWh
+         QGXwyrukQ0XPgc1WGwZ5324zAFQJdizjO5xtgczESOyeWDYmBKRSKN+PKeb9rT/UXq
+         3u6FzlFMftvkHGA/zMqQqt+ZddLMi9t+JuyzN1ms=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Eric Biggers <ebiggers@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 20/58] f2fs: fix to update dir's i_pino during cross_rename
-Date:   Wed, 11 Dec 2019 10:27:53 -0500
-Message-Id: <20191211152831.23507-20-sashal@kernel.org>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/58] fs/quota: handle overflows of sysctl fs.quota.* and report as unsigned long
+Date:   Wed, 11 Dec 2019 10:27:58 -0500
+Message-Id: <20191211152831.23507-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -60,92 +58,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 2a60637f06ac94869b2e630eaf837110d39bf291 ]
+[ Upstream commit 6fcbcec9cfc7b3c6a2c1f1a23ebacedff7073e0a ]
 
-As Eric reported:
+Quota statistics counted as 64-bit per-cpu counter. Reading sums per-cpu
+fractions as signed 64-bit int, filters negative values and then reports
+lower half as signed 32-bit int.
 
-RENAME_EXCHANGE support was just added to fsstress in xfstests:
+Result may looks like:
 
-	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
-	Author: kaixuxia <xiakaixu1987@gmail.com>
-	Date:   Thu Oct 31 14:41:48 2019 +0800
+fs.quota.allocated_dquots = 22327
+fs.quota.cache_hits = -489852115
+fs.quota.drops = -487288718
+fs.quota.free_dquots = 22083
+fs.quota.lookups = -486883485
+fs.quota.reads = 22327
+fs.quota.syncs = 335064
+fs.quota.writes = 3088689
 
-	    fsstress: add EXCHANGE renameat2 support
+Values bigger than 2^31-1 reported as negative.
 
-This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
-I'm not sure what the problem is, but it still happens even with all the
-fs-verity stuff in the test commented out, so that the test just runs fsstress.
+All counters except "allocated_dquots" and "free_dquots" are monotonic,
+thus they should be reported as is without filtering negative values.
 
-generic/579 23s ... 	[10:02:25]
-[    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-(see /results/f2fs/results-default/generic/579.full for details)
- [10:02:47]
-Ran: generic/579
-Failures: generic/579
-Failed 1 of 1 tests
-Xunit report: /results/f2fs/results-default/result.xml
+Kernel doesn't have generic helper for 64-bit sysctl yet,
+let's use at least unsigned long.
 
-Here's the contents of 579.full:
-
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-*** fsck.f2fs output ***
-[ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
-
-The root cause is that we forgot to update directory's i_pino during
-cross_rename, fix it.
-
-Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Link: https://lore.kernel.org/r/157337934693.2078.9842146413181153727.stgit@buzz
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/namei.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ fs/quota/dquot.c      | 29 +++++++++++++++++------------
+ include/linux/quota.h |  2 +-
+ 2 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index b80e7db3b55b5..b13383948fca3 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -862,7 +862,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	if (!old_dir_entry || whiteout)
- 		file_lost_pino(old_inode);
- 	else
--		F2FS_I(old_inode)->i_pino = new_dir->i_ino;
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+index 9c81fd9734187..da6456b95db60 100644
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -2848,68 +2848,73 @@ EXPORT_SYMBOL(dquot_quotactl_sysfile_ops);
+ static int do_proc_dqstats(struct ctl_table *table, int write,
+ 		     void __user *buffer, size_t *lenp, loff_t *ppos)
+ {
+-	unsigned int type = (int *)table->data - dqstats.stat;
++	unsigned int type = (unsigned long *)table->data - dqstats.stat;
++	s64 value = percpu_counter_sum(&dqstats.counter[type]);
++
++	/* Filter negative values for non-monotonic counters */
++	if (value < 0 && (type == DQST_ALLOC_DQUOTS ||
++			  type == DQST_FREE_DQUOTS))
++		value = 0;
  
- 	old_inode->i_ctime = current_time(old_inode);
-@@ -1027,7 +1028,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(old_dir, old_entry, old_page, new_inode);
+ 	/* Update global table */
+-	dqstats.stat[type] =
+-			percpu_counter_sum_positive(&dqstats.counter[type]);
+-	return proc_dointvec(table, write, buffer, lenp, ppos);
++	dqstats.stat[type] = value;
++	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
+ }
  
- 	down_write(&F2FS_I(old_inode)->i_sem);
--	file_lost_pino(old_inode);
-+	if (!old_dir_entry)
-+		file_lost_pino(old_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+ static struct ctl_table fs_dqstats_table[] = {
+ 	{
+ 		.procname	= "lookups",
+ 		.data		= &dqstats.stat[DQST_LOOKUPS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "drops",
+ 		.data		= &dqstats.stat[DQST_DROPS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "reads",
+ 		.data		= &dqstats.stat[DQST_READS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "writes",
+ 		.data		= &dqstats.stat[DQST_WRITES],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "cache_hits",
+ 		.data		= &dqstats.stat[DQST_CACHE_HITS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "allocated_dquots",
+ 		.data		= &dqstats.stat[DQST_ALLOC_DQUOTS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "free_dquots",
+ 		.data		= &dqstats.stat[DQST_FREE_DQUOTS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+ 	{
+ 		.procname	= "syncs",
+ 		.data		= &dqstats.stat[DQST_SYNCS],
+-		.maxlen		= sizeof(int),
++		.maxlen		= sizeof(unsigned long),
+ 		.mode		= 0444,
+ 		.proc_handler	= do_proc_dqstats,
+ 	},
+diff --git a/include/linux/quota.h b/include/linux/quota.h
+index 5ac9de4fcd6fc..aa9a42eceab09 100644
+--- a/include/linux/quota.h
++++ b/include/linux/quota.h
+@@ -263,7 +263,7 @@ enum {
+ };
  
- 	old_dir->i_ctime = current_time(old_dir);
-@@ -1042,7 +1047,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(new_dir, new_entry, new_page, old_inode);
+ struct dqstats {
+-	int stat[_DQST_DQSTAT_LAST];
++	unsigned long stat[_DQST_DQSTAT_LAST];
+ 	struct percpu_counter counter[_DQST_DQSTAT_LAST];
+ };
  
- 	down_write(&F2FS_I(new_inode)->i_sem);
--	file_lost_pino(new_inode);
-+	if (!new_dir_entry)
-+		file_lost_pino(new_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(new_inode, old_dir->i_ino);
- 	up_write(&F2FS_I(new_inode)->i_sem);
- 
- 	new_dir->i_ctime = current_time(new_dir);
 -- 
 2.20.1
 
