@@ -2,87 +2,131 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CF5C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D728EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C2112077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576088866;
-	bh=gHlCBn0ZHH3LHnMqSeDPjmDBICp9tgkzGh4pUIHCkno=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=TrJSIBLYJ7RLLwioJLD7EfG8klh6fYQxm0xpq6aMeS2LkQUAEHEdiITvulE+E/Noz
-	 REtVwedeTg33glN0nKz1vRVYvEtvl7531bpj3s1dD05YRBBfaCbw+PDHfymypv2AG9
-	 3v+44jbOo5Za0alkGWxIB9K199DMRC2UqqzfECm0=
+	by mail.kernel.org (Postfix) with ESMTP id A904222527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:27:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQutmLP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730801AbfLKS1p (ORCPT
+        id S1731172AbfLKS1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:27:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39040 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729230AbfLKS1o (ORCPT
+        Wed, 11 Dec 2019 13:27:51 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42101 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729230AbfLKS1v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:27:44 -0500
-Received: by mail-ed1-f67.google.com with SMTP id v16so20245652edy.6;
-        Wed, 11 Dec 2019 10:27:43 -0800 (PST)
+        Wed, 11 Dec 2019 13:27:51 -0500
+Received: by mail-io1-f68.google.com with SMTP id f82so23690334ioa.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:27:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mzDObby2jR84VqCAR2NNwsNmUH6L34aJzVs2dTgYaFM=;
+        b=SQutmLP/sTlMS+zEASMFyKHYZa5f7ZvuA3wQ6jac0fGgK7KhPy0pJYlK9Ep86yG+qw
+         wzyZcPvXgatCP1WzKGQ9qaWIfawy6sjA+myEUnoItidWjoBwaXzm6GzH8/YNDPrFYuNi
+         KI1ImvVwYFkcjW2tTODNRvj/3xdCFvtFVcraGylloS+K8e19bwK5TLnyt3JKe/jYM7/q
+         MRhQX0c6GfsJx/dvNnwivAkIfnoi4aXV/lLLKOWOsYzeiFLRupKYp1Z3i6jc9iTsZ9d8
+         sdmC37PlxSS1zykHsxTjLMi/rf/gqm3CKQU1vUKQHLuQbovcOtO8cKbIH3pwgCb1Qyxe
+         Y4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ff7CQdMliIKDFZWCzAdUrG86rvuqf7GP0H4SQLsLeJ8=;
-        b=r3g2M0sQFfeGY4gsIr9J3WhVNjQbv7Otg+2XlGUBUML2ETTFS6Jg0vbTasWuuIXXY5
-         s1j5tGolNK1l7vGhuCylD7roW9TidmAZhKM8z6UAJAcqBvqq6hMLXa0OHei4mFBXS+0L
-         +gKvd4QRYwIl7x6223f2WQfGa7sGU1CeyoeYcl8UfagdyGeGF9jWWDSoKjgYsDQT+nL8
-         kD6wqj17tj6J+Y+1h8wAR8lYDem3i5sUm0JGvzFfi1SXM+VbtfP864kl+bdK/aPfFgEW
-         YKUGzOEQk1ERKcHaCrz/q7TT6FWM3HmRcYFs7gMaNA+dMpQxNrQ76wOQjnQdXFPlFlns
-         bqhQ==
-X-Gm-Message-State: APjAAAV1LvXu4QlcRXgsUGE8hxVPShfmpuu7gvHDTOp5HKex/cgV/aN3
-        tGllvvg7dS3fCdnmmi4toOs=
-X-Google-Smtp-Source: APXvYqyJ7PblsCZH6vXzuWl2i8OZSvSR9RTMyV0zfdp9izG/UcT0/mLxk6V7A62vz392qKGcAPOvrg==
-X-Received: by 2002:a17:906:a950:: with SMTP id hh16mr4812284ejb.75.1576088862984;
-        Wed, 11 Dec 2019 10:27:42 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id x15sm64891edl.48.2019.12.11.10.27.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 10:27:42 -0800 (PST)
-Date:   Wed, 11 Dec 2019 19:27:39 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pinctrl: samsung: Enable compile test for build
- coverage
-Message-ID: <20191211182739.GA6931@kozik-lap>
-References: <20191209163937.8156-1-krzk@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mzDObby2jR84VqCAR2NNwsNmUH6L34aJzVs2dTgYaFM=;
+        b=dyF+FUYx8uiPhKNims6mZTXdToN4MunUjCsD94bc3yWPJRsqF4k5m3z/H2wEdNjEPT
+         QfQKhQo6Ropw/o5CbgF+yg8MG0BNVvZWPPHbUp6JVPWJHh+prWk5yJxk6RgCwdO9tmEz
+         dxPb32fvtIt60jV4ImHFdT9Mrew1SCZGcAW3AhfYOBGywfdLpHDiQLE3/tc5Ur20Twh5
+         vwNZEhVB6T4DhOf0Tymd4RMqcDJ3ic5+x2zAeZDk3Zu2drCbGrPTwg6s+XzFkdbvJVEI
+         kyJ+L3D4nO5GPwrque9R7xpXOwO6JO74kttthoItKPa7bS71pGgYAdD5jw+QbNOSlbRT
+         SSgg==
+X-Gm-Message-State: APjAAAXS0eV8pXEZ8sAzQ8498t8bQ1yT+Y1xXLKEhyOY0wctvPtekQkt
+        JCneYzerK+TKH4Mcjt52WKjN8mezK6bb2cyjxOwg7cVt
+X-Google-Smtp-Source: APXvYqzr/oijDkWCcNuhvBnIVjwCPuuM7oI1QguAVqVj6YMeD8ttf/i0DbRLSFLpONolcFkrV56yhH2S3xvlzv460ao=
+X-Received: by 2002:a6b:1455:: with SMTP id 82mr3759846iou.200.1576088870232;
+ Wed, 11 Dec 2019 10:27:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191209163937.8156-1-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191211084216.25405-1-kraxel@redhat.com> <20191211084216.25405-2-kraxel@redhat.com>
+In-Reply-To: <20191211084216.25405-2-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Wed, 11 Dec 2019 10:27:39 -0800
+Message-ID: <CAPaKu7TyMPt4Wpq9FoWyTJSppURrz9XuFqD4fmFg6aX_9p+jtw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/virtio: skip set_scanout if framebuffer didn't change
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 05:39:36PM +0100, Krzysztof Kozlowski wrote:
-> The Samsung pinctrl drivers require only GPIOLIB and OF for building.
-> The should be buildable on all architectures so enable COMPILE_TEST.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Wed, Dec 11, 2019 at 12:42 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > ---
->  drivers/pinctrl/samsung/Kconfig | 8 +++++---
-
-Applied both to my tree. I'll send them to you Linus later in pull
-request (unless 0-day catches some build failures).
-
-Best regards,
-Krzysztof
-
+>  drivers/gpu/drm/virtio/virtgpu_plane.c | 31 ++++++++++++++------------
+>  1 file changed, 17 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index bc4bc4475a8c..a0f91658c2bc 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -151,20 +151,23 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+>         if (bo->dumb)
+>                 virtio_gpu_update_dumb_bo(vgdev, bo, plane->state);
+>
+> -       DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+> -                 bo->hw_res_handle,
+> -                 plane->state->crtc_w, plane->state->crtc_h,
+> -                 plane->state->crtc_x, plane->state->crtc_y,
+> -                 plane->state->src_w >> 16,
+> -                 plane->state->src_h >> 16,
+> -                 plane->state->src_x >> 16,
+> -                 plane->state->src_y >> 16);
+> -       virtio_gpu_cmd_set_scanout(vgdev, output->index,
+> -                                  bo->hw_res_handle,
+> -                                  plane->state->src_w >> 16,
+> -                                  plane->state->src_h >> 16,
+> -                                  plane->state->src_x >> 16,
+> -                                  plane->state->src_y >> 16);
+> +       if (plane->state->fb != old_state->fb) {
+Should we check src_{w,h,x,y} as well?
+> +               DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+> +                         bo->hw_res_handle,
+> +                         plane->state->crtc_w, plane->state->crtc_h,
+> +                         plane->state->crtc_x, plane->state->crtc_y,
+> +                         plane->state->src_w >> 16,
+> +                         plane->state->src_h >> 16,
+> +                         plane->state->src_x >> 16,
+> +                         plane->state->src_y >> 16);
+> +               virtio_gpu_cmd_set_scanout(vgdev, output->index,
+> +                                          bo->hw_res_handle,
+> +                                          plane->state->src_w >> 16,
+> +                                          plane->state->src_h >> 16,
+> +                                          plane->state->src_x >> 16,
+> +                                          plane->state->src_y >> 16);
+> +       }
+> +
+>         virtio_gpu_cmd_resource_flush(vgdev, bo->hw_res_handle,
+>                                       plane->state->src_x >> 16,
+>                                       plane->state->src_y >> 16,
+> --
+> 2.18.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
