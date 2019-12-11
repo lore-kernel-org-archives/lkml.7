@@ -2,72 +2,88 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E72C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0731DC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9BB2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF7A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vVvt1OVH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfLKEzl (ORCPT
+        id S1726518AbfLKFGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:55:41 -0500
-Received: from mail.windriver.com ([147.11.1.11]:38048 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfLKEzl (ORCPT
+        Wed, 11 Dec 2019 00:06:53 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33927 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfLKFGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:55:41 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xBB4tJbv010057
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 20:55:19 -0800 (PST)
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 10 Dec
- 2019 20:55:18 -0800
-Subject: Re: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected()
- with rcu_replace_pointer()
-To:     Tuong Lien Tong <tuong.t.lien@dektech.com.au>, <paulmck@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mingo@kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <kernel-team@fb.com>, <torvalds@linux-foundation.org>,
-        <davem@davemloft.net>
-References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
- <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
- <20191210223825.GS2889@paulmck-ThinkPad-P72>
- <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
- <707801d5afc6$cac68190$605384b0$@dektech.com.au>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <db88d33f-8e25-8859-84ec-3372a108c759@windriver.com>
-Date:   Wed, 11 Dec 2019 12:42:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 00:06:52 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so10171575pgf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 21:06:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ifjsPJTQzkQ2KlgKp76bEF84qFDaLY48iNcB7Bofick=;
+        b=vVvt1OVHSL5OQJeIbM36oMNSMhmv1CaIQUmRcBppurMgdJYqfT4JjdCQECqr5i9T9j
+         SnaN/VrPUt5s6UNCAyFFMkg401bPAC1kakvx6GZ7yl9cMeqVjr2Dv3YBwCMrQXSVxRaR
+         M36+jQ48T8w5U/vVOk+BEyfH7Cu068fg+ppB1MF/h7Odyacbk4Fv1MyZ3e8RWJYPe8Wj
+         DAixZ8kOrMDsB8jRPudLtwUR1yGesqx3/VUm2FiBcFXwrQ4Dh7t7DzJfcahilT8IIKEP
+         hWtIIUZbJyMyFwXrQRsz5EwWCGWRPZmrPubWqVNs6ZZjERYpBDbNL9XnyRaYCjFhNIA3
+         iCOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ifjsPJTQzkQ2KlgKp76bEF84qFDaLY48iNcB7Bofick=;
+        b=EJjp+dG5X9UNA27rumGOHxOOV2yjlsMEBOeSPHy2EnAgc+pmEF6rZRgmiItE975DWt
+         Evv3RAQcXRAp2WQbRdDaJcfvy9zv3PlvE+GCcl+sOAjYW9lobXyAsTGABDlIhI4yrK12
+         JGufoCdw177gnzYjKooXdb0YzS2BAnKlCEb7Ya5kW/JwHvNQJm/FfZCC/3wC9d+ip0Xk
+         mtSwWiGUv2XW1UrjDTdOyWGZBMak32uNKFOfItboH20DCYc+MXjtZ8Ei9Y/xge3hIZ5y
+         259uQHa9h5/+mr1HUQL3u0QoMGodFhQOnOMqgEGtMZ8vuKsxBfHd0dt9a/VjkSVV9vCG
+         zB2g==
+X-Gm-Message-State: APjAAAWUvoZYy06GaW0m3SYDerSbDEmG5TPr/InBXSXWxsx0So8+Gjtu
+        K8Q8d1CR6kK47KL/LCrD3jCSvg==
+X-Google-Smtp-Source: APXvYqxbK292MGhDd5Bk+LBvMluPSMJquMNhdtJad9GSB25pwbMbUKFckEq1WO5QxUgL15z0v3EMrg==
+X-Received: by 2002:a63:7843:: with SMTP id t64mr2068017pgc.144.1576040812087;
+        Tue, 10 Dec 2019 21:06:52 -0800 (PST)
+Received: from localhost ([122.171.112.123])
+        by smtp.gmail.com with ESMTPSA id w5sm763907pgb.78.2019.12.10.21.06.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 10 Dec 2019 21:06:51 -0800 (PST)
+Date:   Wed, 11 Dec 2019 10:36:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the cpufreq-arm
+ tree
+Message-ID: <20191211050649.2dgu3ufn2ltkgvce@vireshk-i7>
+References: <20191211142100.423ef8b0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <707801d5afc6$cac68190$605384b0$@dektech.com.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211142100.423ef8b0@canb.auug.org.au>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 10:00 AM, Tuong Lien Tong wrote:
->>  
->>  	/* Move passive key if any */
->>  	if (key.passive) {
->> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
->> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2,
-> &rx->lock);
-> The 3rd parameter should be the lockdep condition checking instead of the
-> spinlock's pointer i.e. "lockdep_is_held(&rx->lock)"?
-> That's why I'd prefer to use the 'tipc_aead_rcu_swap ()' macro, which is
-> clear & concise at least for the context here. It might be re-used later as
-> well...
+On 11-12-19, 14:21, Stephen Rothwell wrote:
+> Hi all,
 > 
+> Commit
+> 
+>   dfb3f45d17b6 ("cpufreq: scmi: Match scmi device by both name and protocol id")
+> 
+> is missing a Signed-off-by from its committer.
 
-Right. The 3rd parameter of rcu_replace_pointer() should be
-"lockdep_is_held(&rx->lock)" instead of "&rx->lock".
+Fixed, thanks.
+
+-- 
+viresh
