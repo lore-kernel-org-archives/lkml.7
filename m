@@ -4,135 +4,281 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F92C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DB9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C047122B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C9222B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfLKNVP (ORCPT
+        id S1729504AbfLKNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:21:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:58030 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728976AbfLKNVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:21:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C66521FB;
-        Wed, 11 Dec 2019 05:21:14 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562E43F6CF;
-        Wed, 11 Dec 2019 05:21:14 -0800 (PST)
-Subject: Re: [PATCH 05/15] firmware: arm_scmi: Add versions and identifier
- attributes using dev_groups
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
- <20191210145345.11616-6-sudeep.holla@arm.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <91d5617d-85da-b3a3-1ef3-2438baa93ba7@arm.com>
-Date:   Wed, 11 Dec 2019 13:21:13 +0000
+        Wed, 11 Dec 2019 08:21:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39672 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729132AbfLKNVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:21:16 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E584ABF6;
+        Wed, 11 Dec 2019 13:21:14 +0000 (UTC)
+Subject: Re: [PATCH v3 1/4] drm: add pgprot callback to drm_gem_object_funcs
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
+        gurchetansingh@chromium.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20191211121957.18637-1-kraxel@redhat.com>
+ <20191211121957.18637-2-kraxel@redhat.com>
+ <20191211123835.GZ624164@phenom.ffwll.local>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <226bad4b-09db-4c89-0611-d3c89e3628cd@suse.de>
+Date:   Wed, 11 Dec 2019 14:21:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191210145345.11616-6-sudeep.holla@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191211123835.GZ624164@phenom.ffwll.local>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/2019 14:53, Sudeep Holla wrote:
-> Platform drivers now have the option to have the platform core create
-> and remove any needed sysfs attribute files. Using the same, let's add
-> the scmi firmware and protocol version attributes as well as vendor and
-> sub-vendor identifiers to sysfs.
-> 
-> It helps to identify the firmware details from the sysfs entries similar
-> to ARM SCPI implementation.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/firmware/arm_scmi/driver.c | 47 ++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
-> 
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index 0bbdc7c9eb0f..26b2c438bd59 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -979,6 +979,52 @@ static int scmi_remove(struct platform_device *pdev)
->  	return ret;
->  }
-> 
-> +static ssize_t protocol_version_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct scmi_info *info = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%u.%u\n", info->version.major_ver,
-> +		       info->version.minor_ver);
-> +}
-> +static DEVICE_ATTR_RO(protocol_version);
-> +
-> +static ssize_t firmware_version_show(struct device *dev,
-> +				     struct device_attribute *attr, char *buf)
-> +{
-> +	struct scmi_info *info = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "0x%x\n", info->version.impl_ver);
-> +}
-> +static DEVICE_ATTR_RO(firmware_version);
-> +
-> +static ssize_t vendor_id_show(struct device *dev,
-> +			      struct device_attribute *attr, char *buf)
-> +{
-> +	struct scmi_info *info = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%s\n", info->version.vendor_id);
-> +}
-> +static DEVICE_ATTR_RO(vendor_id);
-> +
-> +static ssize_t sub_vendor_id_show(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
-> +{
-> +	struct scmi_info *info = dev_get_drvdata(dev);
-> +
-> +	return sprintf(buf, "%s\n", info->version.sub_vendor_id);
-> +}
-> +static DEVICE_ATTR_RO(sub_vendor_id);
-> +
-> +static struct attribute *versions_attrs[] = {
-> +	&dev_attr_firmware_version.attr,
-> +	&dev_attr_protocol_version.attr,
-> +	&dev_attr_vendor_id.attr,
-> +	&dev_attr_sub_vendor_id.attr,
-> +	NULL,
-> +};
-> +ATTRIBUTE_GROUPS(versions);
-> +
->  static const struct scmi_desc scmi_generic_desc = {
->  	.max_rx_timeout_ms = 30,	/* We may increase this if required */
->  	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
-> @@ -997,6 +1043,7 @@ static struct platform_driver scmi_driver = {
->  	.driver = {
->  		   .name = "arm-scmi",
->  		   .of_match_table = scmi_of_match,
-> +		   .dev_groups = versions_groups,
->  		   },
->  	.probe = scmi_probe,
->  	.remove = scmi_remove,
-> --
-> 2.17.1
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2
+Content-Type: multipart/mixed; boundary="ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
+ gurchetansingh@chromium.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
+ open list <linux-kernel@vger.kernel.org>
+Message-ID: <226bad4b-09db-4c89-0611-d3c89e3628cd@suse.de>
+Subject: Re: [PATCH v3 1/4] drm: add pgprot callback to drm_gem_object_funcs
+References: <20191211121957.18637-1-kraxel@redhat.com>
+ <20191211121957.18637-2-kraxel@redhat.com>
+ <20191211123835.GZ624164@phenom.ffwll.local>
+In-Reply-To: <20191211123835.GZ624164@phenom.ffwll.local>
 
-LGTM.
+--ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Hi
+
+Am 11.12.19 um 13:38 schrieb Daniel Vetter:
+> On Wed, Dec 11, 2019 at 01:19:53PM +0100, Gerd Hoffmann wrote:
+>> The callback allows drivers and helpers to tweak pgprot for mappings.
+>> This is especially helpful when using shmem helpers.  It allows driver=
+s
+>> to switch mappings from writecombine (default) to something else (cach=
+ed
+>> for example) on a per-object base without having to supply their own
+>> mmap() and vmap() functions.
+>>
+>> The patch also adds two implementations for the callback, for cached a=
+nd
+>> writecombine mappings, and the drm_gem_pgprot() function to update
+>> pgprot for a given object, using the new &drm_gem_object_funcs.pgprot
+>> callback if available.
+>>
+>> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+>> ---
+>>  include/drm/drm_gem.h     | 15 +++++++++++++
+>>  drivers/gpu/drm/drm_gem.c | 46 ++++++++++++++++++++++++++++++++++++++=
+-
+>>  2 files changed, 60 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+>> index 0b375069cd48..5beef7226e69 100644
+>> --- a/include/drm/drm_gem.h
+>> +++ b/include/drm/drm_gem.h
+>> @@ -163,6 +163,17 @@ struct drm_gem_object_funcs {
+>>  	 */
+>>  	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);=
+
+>> =20
+>> +	/**
+>> +	 * @pgprot:
+>> +	 *
+>> +	 * Tweak pgprot as needed, typically used to set cache bits.
+>> +	 *
+>> +	 * This callback is optional.
+>> +	 *
+>> +	 * If unset drm_gem_pgprot_wc() will be used.
+>> +	 */
+>> +	pgprot_t (*pgprot)(struct drm_gem_object *obj, pgprot_t prot);
+>=20
+> I kinda prefer v1, mostly because this is a huge can of worms, and solv=
+ing
+> this properly is going to be real hard (and will necessarily involve
+> dma-buf and dma-api and probably more). Charging ahead here just risks
+> that we dig ourselves into a corner. You're v1 is maybe not the most
+> clean, but just a few code bits here&there should be more flexible and
+> easier to hack on and experiment around with.
+> -Daniel
+
+I agree; at least patch v1 is known to be a sound approach. The others
+might fall on our feet at some point. Sorry, Gerd, if my proposals added
+lots of work for you.
+
+Best regards
+Thomas
+
+>=20
+>> +
+>>  	/**
+>>  	 * @vm_ops:
+>>  	 *
+>> @@ -350,6 +361,10 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, =
+unsigned long obj_size,
+>>  		     struct vm_area_struct *vma);
+>>  int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma);
+>> =20
+>> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t p=
+rot);
+>> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot)=
+;
+>> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot);
+>> +
+>>  /**
+>>   * drm_gem_object_get - acquire a GEM buffer object reference
+>>   * @obj: GEM buffer object
+>> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+>> index 56f42e0f2584..1c468fe8e342 100644
+>> --- a/drivers/gpu/drm/drm_gem.c
+>> +++ b/drivers/gpu/drm/drm_gem.c
+>> @@ -1119,7 +1119,8 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj,=
+ unsigned long obj_size,
+>>  			return -EINVAL;
+>> =20
+>>  		vma->vm_flags |=3D VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;=
+
+>> -		vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_=
+flags));
+>> +		vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
+>> +		vma->vm_page_prot =3D drm_gem_pgprot(obj, vma->vm_page_prot);
+>>  		vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
+>>  	}
+>> =20
+>> @@ -1210,6 +1211,49 @@ int drm_gem_mmap(struct file *filp, struct vm_a=
+rea_struct *vma)
+>>  }
+>>  EXPORT_SYMBOL(drm_gem_mmap);
+>> =20
+>> +/**
+>> + * drm_gem_mmap - update pgprot for objects needing a cachable mappin=
+g.
+>> + * @obj: the GEM object.
+>> + * @prot: page attributes.
+>> + *
+>> + * This function can be used as &drm_gem_object_funcs.pgprot callback=
+=2E
+>> + */
+>> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t p=
+rot)
+>> +{
+>> +	return prot;
+>> +}
+>> +EXPORT_SYMBOL(drm_gem_pgprot_cached);
+>> +
+>> +/**
+>> + * drm_gem_mmap - update pgprot for objects needing a wc mapping.
+>> + * @obj: the GEM object.
+>> + * @prot: page attributes.
+>> + *
+>> + * This function can be used as &drm_gem_object_funcs.pgprot callback=
+=2E
+>> + */
+>> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot)=
+
+>> +{
+>> +	return pgprot_writecombine(prot);
+>> +}
+>> +EXPORT_SYMBOL(drm_gem_pgprot_wc);
+>> +
+>> +/**
+>> + * drm_gem_mmap - update pgprot for a given gem object.
+>> + * @obj: the GEM object.
+>> + * @prot: page attributes.
+>> + *
+>> + * This function updates pgprot according to the needs of the given
+>> + * object.  If present &drm_gem_object_funcs.pgprot callback will be
+>> + * used, otherwise drm_gem_pgprot_wc() is called.
+>> + */
+>> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot)
+>> +{
+>> +	if (obj->funcs->pgprot)
+>> +		return obj->funcs->pgprot(obj, prot);
+>> +	return drm_gem_pgprot_wc(obj, prot);
+>> +}
+>> +EXPORT_SYMBOL(drm_gem_pgprot);
+>> +
+>>  void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
+>>  			const struct drm_gem_object *obj)
+>>  {
+>> --=20
+>> 2.18.1
+>>
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
-Cristian
+--ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m--
 
+--8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3w7UUACgkQaA3BHVML
+eiMNAgf9EYgarwDWgI5cEixKKpWA5Vm47XNqgXIrxMCcqbzy4qAsymMEokX+o+4e
+IQQNzkQG5DT+j4MX/b9QnrNkZoerodmLjxksg3jPQHEWENEl/tScL7RktpMVf355
+LKBqtkwuPEEAWOzb2nbLkcMSvYYcvNNboVdMlum45YbVj4gcTlajAV/rqyFdlGW+
+urccISoEMka+7MDy5slnpCNT4jSUQc4Ofy+VxApeWd2o7An4p/Zb5SJ00oH5YiUo
+SS4n8CTOf25ghWPVE+uDnfH0FW1A0t6bV/hETfTed4NTTbUMBuQR4XEUp7faXwIW
+ii6pKDDwHF3+FSFOOODtss/+MfLy4A==
+=AHVo
+-----END PGP SIGNATURE-----
+
+--8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2--
