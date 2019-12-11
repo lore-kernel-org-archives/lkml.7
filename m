@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D50C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B439C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8043424654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4D122B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077779;
-	bh=sBp0YHgt70jpnj3jI0N7+0m0ZK2YV5St8lYmC2G7qZE=;
+	s=default; t=1576077784;
+	bh=GV1g4sMqmTSGFJASFaRg3b/yajlyg7qgx76zRdLk9gM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rS/5dILyZkdjLOywY7rbAFWpVAjcsxgvLS5wumzM69nzena3yP3UVQRm62shdHGkv
-	 z/DuXOgWYa43vbcCou0VfiWQE0YHpqE0kzHkbnZAXtTFvql0+iTIxAYrXglFVh2aoY
-	 SxeO4/KIx1A82A2z+NFmKqRSh8V5I3sF5JzMAY5o=
+	b=GuL1wnmHeZhPsZ2jaAouLeWPESu9MAaQAWD8r8tk06gGG2z6qgl8WraekBFLoCfAr
+	 5+VaKqZAlqPDpfWwsMOkouuebGa+/zJiOyS4xUmTF5cYtwz96EqEsYZmQ7Ttrrie0i
+	 VvuLd/IbPdj6kP8R1VD+BjewyF/xY+lhQ8FP1OzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732360AbfLKPWx (ORCPT
+        id S1732661AbfLKPXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53622 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732630AbfLKPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:48 -0500
+        id S1732373AbfLKPWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64EA2073D;
-        Wed, 11 Dec 2019 15:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F20B2077B;
+        Wed, 11 Dec 2019 15:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077768;
-        bh=sBp0YHgt70jpnj3jI0N7+0m0ZK2YV5St8lYmC2G7qZE=;
+        s=default; t=1576077773;
+        bh=GV1g4sMqmTSGFJASFaRg3b/yajlyg7qgx76zRdLk9gM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaL1puFx465wH96rLpkoFRK1HxTOKafX4J9KaqNRB2Tb5C/nm1j8R0O3sJpLGnFmp
-         bb6wCJJehNLq4wTWfpbAs4HeIHA+iOnFz+OaB0bRJvF1dh3l7FVB/Sn7gb5LQESLnn
-         A3nWsAFLTMTO79DoZIZ4oUAtEiJzYVMGrW6WNXNI=
+        b=tdEq6xDJM4xnJx1R0twKPE7OVIMYaCx9zkfi8BbJ51XlISgimexWDcleAdw6q425+
+         lLvCj7x8ILu7CvZYea7r56G6sn2N8fAViqa67vskgdiMabMIR/Jvx+ZFxMohg6UO6j
+         bC5DTksCUXF7TfClNXoL/48cjvIfeFW2CzieCHzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 164/243] clk: qcom: Fix MSM8998 resets
-Date:   Wed, 11 Dec 2019 16:05:26 +0100
-Message-Id: <20191211150350.236425961@linuxfoundation.org>
+Subject: [PATCH 4.19 166/243] ARM: dts: realview: Fix some more duplicate regulator nodes
+Date:   Wed, 11 Dec 2019 16:05:28 +0100
+Message-Id: <20191211150350.374909288@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,71 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jhugo@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 4f89f7b59a6ea17e81cff212c18a0b580ff5ff27 ]
+[ Upstream commit f3b2f758ec1e6cdb13c925647cbd8ad4938b78fb ]
 
-The offsets for the defined BCR reset registers does not match the hardware
-documentation.  Update the values to match the hardware documentation.
+There's a bug in dtc in checking for duplicate node names when there's
+another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
+another section. Upon removal of skeleton.dtsi, the dtb fails to build
+due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
+much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
+by renaming the nodes to something unique. In the process, drop the
+unit-address which shouldn't be present wtihout reg property.
 
-Fixes: b5f5f525c547 (clk: qcom: Add MSM8998 Global Clock Control (GCC) driver)
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-msm8998.c | 38 +++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 4 ++--
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
-index cd937ce6aaaf6..5fd6662a1beac 100644
---- a/drivers/clk/qcom/gcc-msm8998.c
-+++ b/drivers/clk/qcom/gcc-msm8998.c
-@@ -2743,25 +2743,25 @@ static struct gdsc *gcc_msm8998_gdscs[] = {
- };
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index f2a1d25eb6cf3..83e0fbc4a1a10 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -45,7 +45,7 @@
+ 	};
  
- static const struct qcom_reset_map gcc_msm8998_resets[] = {
--	[GCC_BLSP1_QUP1_BCR] = { 0x102400 },
--	[GCC_BLSP1_QUP2_BCR] = { 0x110592 },
--	[GCC_BLSP1_QUP3_BCR] = { 0x118784 },
--	[GCC_BLSP1_QUP4_BCR] = { 0x126976 },
--	[GCC_BLSP1_QUP5_BCR] = { 0x135168 },
--	[GCC_BLSP1_QUP6_BCR] = { 0x143360 },
--	[GCC_BLSP2_QUP1_BCR] = { 0x155648 },
--	[GCC_BLSP2_QUP2_BCR] = { 0x163840 },
--	[GCC_BLSP2_QUP3_BCR] = { 0x172032 },
--	[GCC_BLSP2_QUP4_BCR] = { 0x180224 },
--	[GCC_BLSP2_QUP5_BCR] = { 0x188416 },
--	[GCC_BLSP2_QUP6_BCR] = { 0x196608 },
--	[GCC_PCIE_0_BCR] = { 0x438272 },
--	[GCC_PDM_BCR] = { 0x208896 },
--	[GCC_SDCC2_BCR] = { 0x81920 },
--	[GCC_SDCC4_BCR] = { 0x90112 },
--	[GCC_TSIF_BCR] = { 0x221184 },
--	[GCC_UFS_BCR] = { 0x479232 },
--	[GCC_USB_30_BCR] = { 0x61440 },
-+	[GCC_BLSP1_QUP1_BCR] = { 0x19000 },
-+	[GCC_BLSP1_QUP2_BCR] = { 0x1b000 },
-+	[GCC_BLSP1_QUP3_BCR] = { 0x1d000 },
-+	[GCC_BLSP1_QUP4_BCR] = { 0x1f000 },
-+	[GCC_BLSP1_QUP5_BCR] = { 0x21000 },
-+	[GCC_BLSP1_QUP6_BCR] = { 0x23000 },
-+	[GCC_BLSP2_QUP1_BCR] = { 0x26000 },
-+	[GCC_BLSP2_QUP2_BCR] = { 0x28000 },
-+	[GCC_BLSP2_QUP3_BCR] = { 0x2a000 },
-+	[GCC_BLSP2_QUP4_BCR] = { 0x2c000 },
-+	[GCC_BLSP2_QUP5_BCR] = { 0x2e000 },
-+	[GCC_BLSP2_QUP6_BCR] = { 0x30000 },
-+	[GCC_PCIE_0_BCR] = { 0x6b000 },
-+	[GCC_PDM_BCR] = { 0x33000 },
-+	[GCC_SDCC2_BCR] = { 0x14000 },
-+	[GCC_SDCC4_BCR] = { 0x16000 },
-+	[GCC_TSIF_BCR] = { 0x36000 },
-+	[GCC_UFS_BCR] = { 0x75000 },
-+	[GCC_USB_30_BCR] = { 0xf000 },
- };
+ 	/* The voltage to the MMC card is hardwired at 3.3V */
+-	vmmc: fixedregulator@0 {
++	vmmc: regulator-vmmc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -53,7 +53,7 @@
+ 		regulator-boot-on;
+         };
  
- static const struct regmap_config gcc_msm8998_regmap_config = {
+-	veth: fixedregulator@0 {
++	veth: regulator-veth {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "veth";
+ 		regulator-min-microvolt = <3300000>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index 7f9cbdf33a510..2f6aa24a0b67c 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -145,7 +145,7 @@
+ 	};
+ 
+ 	/* The voltage to the MMC card is hardwired at 3.3V */
+-	vmmc: fixedregulator@0 {
++	vmmc: regulator-vmmc {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vmmc";
+ 		regulator-min-microvolt = <3300000>;
+@@ -153,7 +153,7 @@
+ 		regulator-boot-on;
+         };
+ 
+-	veth: fixedregulator@0 {
++	veth: regulator-veth {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "veth";
+ 		regulator-min-microvolt = <3300000>;
 -- 
 2.20.1
 
