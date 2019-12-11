@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A31C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B6A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40689208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077980;
-	bh=yKYyV8WCc8qaM7E40q6OGjSrK/U8pEFIfTyF9vhkoGY=;
+	s=default; t=1576077983;
+	bh=wqWB3edme22S00bQqrqhZjtMi9qt3abxS/gc7xLxhS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EA4VC91BR1UOc4O+prNqlQk92gzsBQLr31ngeQ54tGFOT9hY+kn/4oQSln3O1Lycq
-	 UUdHm4fFoc7PcJu6YjK15wIKloFJorbJfuqsr7pWvkQaNPHR3+TwTh4eLvdfoeWX0z
-	 YlLVpUrPwjfFJ7P7QmT0Eo2yijEYWEHWUAfafM1E=
+	b=HjFio6pbRye3FPVdByW+11z9mLy3EgFu6rK2SXT98ZN8Jcc6RAXH0ii8EGAvaXWwC
+	 AWc3Q3c6nwGb2d0kcebHlo0r9bzu66pq70ge3JXLNULNWlJxbnRg4YbXMiPuS+amKk
+	 M9atWRZeSOJcn6kFbSee9r5LEIyq6r9q+wMGJKok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbfLKP0T (ORCPT
+        id S1732820AbfLKP0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732801AbfLKP0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:17 -0500
+        id S1733098AbfLKP0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E595122527;
-        Wed, 11 Dec 2019 15:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 667F4222C4;
+        Wed, 11 Dec 2019 15:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077976;
-        bh=yKYyV8WCc8qaM7E40q6OGjSrK/U8pEFIfTyF9vhkoGY=;
+        s=default; t=1576077978;
+        bh=wqWB3edme22S00bQqrqhZjtMi9qt3abxS/gc7xLxhS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pq+m8OxVp9cmy0WGvCmLoP/oOTJpL9J9icDjaTiHJLEeTJpPetIGSJIbWBSBfN1Uu
-         Wrek7ZjmTy+TOMqQnapHASv7NSU6/81uQLwpiY+ZSLn+KNgy2cKCgq2GCIHICPADOM
-         y0E3HYtFVPVLuVr9hNVVtx/ZSDhSK+28WSI5X4KE=
+        b=nl5xIxJth88VP46NM9Ct5ct+pz0cmOq1I3oKTkk9PQRZeh0CDKOfmItXWpE+e+vyU
+         /UF3fdz9MI2ll4KUhwB2ysrD3HXUvE6LI/xJCa/WuPnOxFvmzLE9NpO34bnNfMeBQP
+         nGDYVaaKO33QikYV18mEfoPSMVtq+q8J0Kxaqtlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 4.19 243/243] binder: Handle start==NULL in binder_update_page_range()
-Date:   Wed, 11 Dec 2019 16:06:45 +0100
-Message-Id: <20191211150355.743952632@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 230/243] crypto: atmel-aes - Fix IV handling when req->nbytes < ivsize
+Date:   Wed, 11 Dec 2019 16:06:32 +0100
+Message-Id: <20191211150354.861227340@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,65 +60,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
+commit 86ef1dfcb561473fbf5e199d58d18c55554d78be upstream.
 
-The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
-continuing backwards to index -1 and crashing.
+commit 394a9e044702 ("crypto: cfb - add missing 'chunksize' property")
+adds a test vector where the input length is smaller than the IV length
+(the second test vector). This revealed a NULL pointer dereference in
+the atmel-aes driver, that is caused by passing an incorrect offset in
+scatterwalk_map_and_copy() when atmel_aes_complete() is called.
 
-Luckily you need to be highly privileged to map things at NULL, so it's not
-a big problem.
+Do not save the IV in req->info of ablkcipher_request (or equivalently
+req->iv of skcipher_request) when req->nbytes < ivsize, because the IV
+will not be further used.
 
-Fix it by adjusting the loop so that the loop variable is always in bounds.
+While touching the code, modify the type of ivsize from int to
+unsigned int, to comply with the return type of
+crypto_ablkcipher_ivsize().
 
-This patch is deliberately minimal to simplify backporting, but IMO this
-function could use a refactor. The jump labels in the second loop body are
-horrible (the error gotos should be jumping to free_range instead), and
-both loops would look nicer if they just iterated upwards through indices.
-And the up_read()+mmput() shouldn't be duplicated like that.
-
-Cc: stable@vger.kernel.org
-Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
+Fixes: 91308019ecb4 ("crypto: atmel-aes - properly set IV after {en,de}crypt")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/crypto/atmel-aes.c |   53 +++++++++++++++++++++++++--------------------
+ 1 file changed, 30 insertions(+), 23 deletions(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -295,8 +295,7 @@ static int binder_update_page_range(stru
- 	return 0;
+--- a/drivers/crypto/atmel-aes.c
++++ b/drivers/crypto/atmel-aes.c
+@@ -493,6 +493,29 @@ static inline bool atmel_aes_is_encrypt(
+ static void atmel_aes_authenc_complete(struct atmel_aes_dev *dd, int err);
+ #endif
  
- free_range:
--	for (page_addr = end - PAGE_SIZE; page_addr >= start;
--	     page_addr -= PAGE_SIZE) {
-+	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
- 		bool ret;
- 		size_t index;
++static void atmel_aes_set_iv_as_last_ciphertext_block(struct atmel_aes_dev *dd)
++{
++	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
++	struct atmel_aes_reqctx *rctx = ablkcipher_request_ctx(req);
++	struct crypto_ablkcipher *ablkcipher = crypto_ablkcipher_reqtfm(req);
++	unsigned int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
++
++	if (req->nbytes < ivsize)
++		return;
++
++	if (rctx->mode & AES_FLAGS_ENCRYPT) {
++		scatterwalk_map_and_copy(req->info, req->dst,
++					 req->nbytes - ivsize, ivsize, 0);
++	} else {
++		if (req->src == req->dst)
++			memcpy(req->info, rctx->lastc, ivsize);
++		else
++			scatterwalk_map_and_copy(req->info, req->src,
++						 req->nbytes - ivsize,
++						 ivsize, 0);
++	}
++}
++
+ static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
+ {
+ #ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
+@@ -503,26 +526,8 @@ static inline int atmel_aes_complete(str
+ 	clk_disable(dd->iclk);
+ 	dd->flags &= ~AES_FLAGS_BUSY;
  
-@@ -309,6 +308,8 @@ free_range:
- 		WARN_ON(!ret);
+-	if (!dd->ctx->is_aead) {
+-		struct ablkcipher_request *req =
+-			ablkcipher_request_cast(dd->areq);
+-		struct atmel_aes_reqctx *rctx = ablkcipher_request_ctx(req);
+-		struct crypto_ablkcipher *ablkcipher =
+-			crypto_ablkcipher_reqtfm(req);
+-		int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
+-
+-		if (rctx->mode & AES_FLAGS_ENCRYPT) {
+-			scatterwalk_map_and_copy(req->info, req->dst,
+-				req->nbytes - ivsize, ivsize, 0);
+-		} else {
+-			if (req->src == req->dst) {
+-				memcpy(req->info, rctx->lastc, ivsize);
+-			} else {
+-				scatterwalk_map_and_copy(req->info, req->src,
+-					req->nbytes - ivsize, ivsize, 0);
+-			}
+-		}
+-	}
++	if (!dd->ctx->is_aead)
++		atmel_aes_set_iv_as_last_ciphertext_block(dd);
  
- 		trace_binder_free_lru_end(alloc, index);
-+		if (page_addr == start)
-+			break;
- 		continue;
+ 	if (dd->is_async)
+ 		dd->areq->complete(dd->areq, err);
+@@ -1128,10 +1133,12 @@ static int atmel_aes_crypt(struct ablkci
+ 	rctx->mode = mode;
  
- err_vm_insert_page_failed:
-@@ -318,7 +319,8 @@ err_map_kernel_failed:
- 		page->page_ptr = NULL;
- err_alloc_page_failed:
- err_page_ptr_cleared:
--		;
-+		if (page_addr == start)
-+			break;
+ 	if (!(mode & AES_FLAGS_ENCRYPT) && (req->src == req->dst)) {
+-		int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
++		unsigned int ivsize = crypto_ablkcipher_ivsize(ablkcipher);
+ 
+-		scatterwalk_map_and_copy(rctx->lastc, req->src,
+-			(req->nbytes - ivsize), ivsize, 0);
++		if (req->nbytes >= ivsize)
++			scatterwalk_map_and_copy(rctx->lastc, req->src,
++						 req->nbytes - ivsize,
++						 ivsize, 0);
  	}
- err_no_vma:
- 	if (mm) {
+ 
+ 	return atmel_aes_handle_queue(dd, &req->base);
 
 
