@@ -2,129 +2,193 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8215EC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354A1206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CF0214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="idUboWCj"
+	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="cWBLp/GP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbfLKQrk (ORCPT
+        id S1730404AbfLKQxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:47:40 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:38768 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730072AbfLKQrP (ORCPT
+        Wed, 11 Dec 2019 11:53:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36455 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730058AbfLKQxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:47:15 -0500
-Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 578EE20B71AD;
-        Wed, 11 Dec 2019 08:47:15 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 578EE20B71AD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576082835;
-        bh=KJn3Zp501nKBSZf5EQB9MYQOthw+bgPAllE5fe8Yjs4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idUboWCjolLNjidzXiSZh8W8wOxlnyewn6QsLdw1aJs5eOFTWqRCh4JqIlQN9n7CD
-         EQhv9O/2+RjL/iuURJOml7NUBMVaCJJaCc6nXraVgIrV7TZbmgns2hGII71SqEtP1X
-         fR42Xps/Y/yyBEwb4p1zAM72s3vIgyjW3y0edjQo=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Subject: [PATCH v11 4/6] KEYS: Call the IMA hook to measure keys
-Date:   Wed, 11 Dec 2019 08:47:05 -0800
-Message-Id: <20191211164707.4698-5-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211164707.4698-1-nramas@linux.microsoft.com>
-References: <20191211164707.4698-1-nramas@linux.microsoft.com>
+        Wed, 11 Dec 2019 11:53:00 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so7742770wma.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:52:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxtx.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fl7Is/227Xkupce2trJJJrsnTq1Teu4U8XUaGw3152I=;
+        b=cWBLp/GPZGoKuBJ8dsv+TMZRrbzBXSstVTLxIXi/BlmooE6meRq08qQmG9rZWE5M9o
+         GXWeAMB/Sex87iLqvlE0lzp+xzgwpzYZDUqI2SAb08d7tXVBNJcwqEdG9fI5zJhjNXBk
+         4AzRV2ZAnelvnFparpQcFZvUl54U4nGcDFBqM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fl7Is/227Xkupce2trJJJrsnTq1Teu4U8XUaGw3152I=;
+        b=VqJ98ASJnfdJFaAUMjRci0Hnmg597lAcfrkFv2fgBcSJcle5UPn3f9scnt6eh7wDmj
+         U/O/GyffjSYXAiwqhpINOBfasTEZ2CxXXKzXBEYwC+85oy+qJaUsY1qeThHH1RQbHY04
+         di1WEnZChYCfHNpm82WlSZTV7quKTDlfLekwTeiSbiftiUCcJAnBK88YCkJ2TL8XqFRl
+         fc67y0qQaF8STPiDBnOoa3QbeTXfbDnL9qXLrRooGnDL56NX2WqivYSeAfRHRLusklfC
+         wTRycvr6d8Tk2qg8MC9rEDUbLcPQmRPxp6uc2OXpZ3i5Ot2QwZqe6sp6aKi3gZDIpjgT
+         lQ1w==
+X-Gm-Message-State: APjAAAUmmqjOhbH6Yp6K5lACjm4EMKVapgCdwP0VcG3LY2OKcE8MfERb
+        snz3u01+a9xKv83rY4pe/EFy6jfZbno4Dp0b7oQz7A==
+X-Google-Smtp-Source: APXvYqxQ/81XeKvFtm1/WNxQRu/wNJRlqT0NFJHNgcrVecBqhjXTNjZXqgLQYu8pNL92MJEv7xeKM3Lw3lZAYTcReXo=
+X-Received: by 2002:a7b:c389:: with SMTP id s9mr841991wmj.7.1576083177581;
+ Wed, 11 Dec 2019 08:52:57 -0800 (PST)
+MIME-Version: 1.0
+References: <20191201195728.4161537-1-aurelien@aurel32.net>
+ <87zhgbe0ix.fsf@mpe.ellerman.id.au> <20191202093752.GA1535@localhost.localdomain>
+ <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
+ <20191210222553.GA4580@calabresa> <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+ <20191211160133.GB4580@calabresa>
+In-Reply-To: <20191211160133.GB4580@calabresa>
+From:   Justin Forbes <jmforbes@linuxtx.org>
+Date:   Wed, 11 Dec 2019 10:52:46 -0600
+Message-ID: <CAFxkdAp9OGjJS1Sdny+TiG2+zU4n0Nj+ZVrZt5J6iVsS_zqqcw@mail.gmail.com>
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with recent binutils
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF (Safe dynamic programs and tools)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Call the IMA hook from key_create_or_update() function to measure
-the payload when a new key is created or an existing key is updated.
+On Wed, Dec 11, 2019 at 10:01 AM Thadeu Lima de Souza Cascardo
+<cascardo@canonical.com> wrote:
+>
+> On Wed, Dec 11, 2019 at 09:33:53AM -0600, Justin Forbes wrote:
+> > On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
+> > <cascardo@canonical.com> wrote:
+> > >
+> > > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
+> > > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> > > > >
+> > > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
+> > > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
+> > > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
+> > > > > > > field when dumping the symbols of an object file. For example:
+> > > > > > >
+> > > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+> > > > > > >
+> > > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+> > > > > > > be computed correctly and causes the checkabi target to fail.
+> > > > > > >
+> > > > > > > Fix that by looking for the symbol name in the last field instead of the
+> > > > > > > 8th one. This way it should also cope with future extra fields.
+> > > > > > >
+> > > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+> > > > > > > ---
+> > > > > > >  tools/lib/bpf/Makefile | 4 ++--
+> > > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > Thanks for fixing that, it's been on my very long list of test failures
+> > > > > > for a while.
+> > > > > >
+> > > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+> > > > >
+> > > > > Looks good & also continues to work on x86. Applied, thanks!
+> > > >
+> > > > This actually seems to break horribly on PPC64le with binutils 2.33.1
+> > > > resulting in:
+> > > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
+> > > > match with num of versioned symbols in libbpf.so (184). Please make
+> > > > sure all LIBBPF_API symbols are versioned in libbpf.map.
+> > > >
+> > > > This is the only arch that fails, with x86/arm/aarch64/s390 all
+> > > > building fine.  Reverting this patch allows successful build across
+> > > > all arches.
+> > > >
+> > > > Justin
+> > >
+> > > Well, I ended up debugging this same issue and had the same fix as Jarno's when
+> > > I noticed his fix was already applied.
+> > >
+> > > I just installed a system with the latest binutils, 2.33.1, and it still breaks
+> > > without such fix. Can you tell what is the output of the following command on
+> > > your system?
+> > >
+> > > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
+> > >
+> >
+> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
+> > -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
+> > !/UND/ {print $0}'
+> >    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1
+> > libbpf_num_possible_cpus [<localentry>: 8]
+> >    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free
+> > [<localentry>: 8]
+> [...]
+>
+> This is a patch on binutils carried by Fedora:
+>
+> https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
+>
+> " b8265c Have readelf display extra symbol information at the end of the line. "
+>
+> It has the following comment:
+>
+> # FIXME:    The proper fix would be to update the scripts that are expecting
+> #           a fixed output from readelf.  But it seems that some of them are
+> #           no longer being maintained.
+>
+> This commit is from 2017, had it been on binutils upstream, maybe the situation
+> right now would be different.
+>
+> Honestly, it seems the best way out is to filter the other information in the
+> libbpf Makefile.
+>
+> Does the following patch work for you?
+>
+>
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index 56ce6292071b..e6f99484d7d5 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -145,6 +145,7 @@ PC_FILE             := $(addprefix $(OUTPUT),$(PC_FILE))
+>
+>  GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+>                            cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+> +                          sed 's/\[.*\]//' | \
+>                            awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}' | \
+>                            sort -u | wc -l)
+>  VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+> @@ -217,6 +218,7 @@ check_abi: $(OUTPUT)libbpf.so
+>                      "versioned in $(VERSION_SCRIPT)." >&2;              \
+>                 readelf -s --wide $(OUTPUT)libbpf-in.o |                 \
+>                     cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |   \
+> +                   sed 's/\[.*\]//' |                                   \
+>                     awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$8}'|   \
+>                     sort -u > $(OUTPUT)libbpf_global_syms.tmp;           \
+>                 readelf -s --wide $(OUTPUT)libbpf.so |                   \
 
-This patch adds the call to the IMA hook from key_create_or_update()
-function to measure the key on key create or update.
+This patch was against the older version, but when updated for current
+5.5-rc1, it does indeed work for me.
 
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- include/linux/ima.h | 14 ++++++++++++++
- security/keys/key.c | 10 ++++++++++
- 2 files changed, 24 insertions(+)
-
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6d904754d858..3b89136bc218 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -101,6 +101,20 @@ static inline void ima_add_kexec_buffer(struct kimage *image)
- {}
- #endif
- 
-+#if defined(CONFIG_IMA) && defined(CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE)
-+extern void ima_post_key_create_or_update(struct key *keyring,
-+					  struct key *key,
-+					  const void *payload, size_t plen,
-+					  unsigned long flags, bool create);
-+#else
-+static inline void ima_post_key_create_or_update(struct key *keyring,
-+						 struct key *key,
-+						 const void *payload,
-+						 size_t plen,
-+						 unsigned long flags,
-+						 bool create) {}
-+#endif  /* CONFIG_IMA && CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
-+
- #ifdef CONFIG_IMA_APPRAISE
- extern bool is_ima_appraise_enabled(void);
- extern void ima_inode_post_setattr(struct dentry *dentry);
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 764f4c57913e..718bf7217420 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/workqueue.h>
- #include <linux/random.h>
-+#include <linux/ima.h>
- #include <linux/err.h>
- #include "internal.h"
- 
-@@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 		goto error_link_end;
- 	}
- 
-+	ima_post_key_create_or_update(keyring, key, payload, plen,
-+				      flags, true);
-+
- 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
- 
- error_link_end:
-@@ -965,6 +969,12 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 	}
- 
- 	key_ref = __key_update(key_ref, &prep);
-+
-+	if (!IS_ERR(key_ref))
-+		ima_post_key_create_or_update(keyring, key,
-+					      payload, plen,
-+					      flags, false);
-+
- 	goto error_free_prep;
- }
- EXPORT_SYMBOL(key_create_or_update);
--- 
-2.17.1
-
+Thanks,
+Justin
