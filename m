@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5E3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2060C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428872465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D47C22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077404;
-	bh=sujIkRHrGw4eY/KTasIs6iMCrU8CKRJ35rDad+eWp1U=;
+	s=default; t=1576077407;
+	bh=alt0cE64um7geTG1ykx+Ul4Wk8Q7Jv+jdze3bmdFT80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lD5iV4wFY2XWqmCH1OJyVB3RLtEjeYUOa+n8OB8B/VUKWGctm2TUkWP7l5iKb4hfU
-	 Iw8nLcJCgc6SxZKLmhzZdoLYp5S3oyLlsRLroJnqUY0Mx8IiC4GFbr5TBHguEbTHR9
-	 w1InjUvlv0eaEnbBnB4vBWAny8tkXAAOHioPCvDY=
+	b=s2JJ/hCMsQn/VPH6Yoi+l53EKacZh8+4yMnCnqjgunkXpDXqWSdaItk6voTp2iK6O
+	 bvg96R65yscOz2/0H8DC1v/yoQCLKocUDNjSl9YrfG9KjXByrhpQH7p1N5JquQSaqD
+	 WhoQQ4ysbWxyl8YYxe50BAP9S/8UJnenqzKewqNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfLKPQm (ORCPT
+        id S1731944AbfLKPQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbfLKPQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:37 -0500
+        id S1731927AbfLKPQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A622465B;
-        Wed, 11 Dec 2019 15:16:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 255BB22B48;
+        Wed, 11 Dec 2019 15:16:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077396;
-        bh=sujIkRHrGw4eY/KTasIs6iMCrU8CKRJ35rDad+eWp1U=;
+        s=default; t=1576077401;
+        bh=alt0cE64um7geTG1ykx+Ul4Wk8Q7Jv+jdze3bmdFT80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=up//WdcJkiTIsnKL+OABL6l822FIeCm7C8dVl5P7+/Op4MP74yZXPKHDAJ1i01ExY
-         2lIjtFh0LsG2kN7f3viKG9zzr/m0Hr/fgCBTa0ZzgYZwIk/qgxWr5jqDd7bn4TFsL3
-         N3GlE/AKP/SWwLoQ9v0qPGb0NY7LtZ7rsC/tW0Dw=
+        b=S/SnUsih4ZmMopVEhVYtLzLS2PJ8q6NV1bDaje9NsZpo3PRxqiUDUjhsRUpy2FmOD
+         0lAZKdp7d+Q7EvRa4woKC0Lj0HNvCGJ2IMclrrjovR51zce/VIps9FKwNWe+5GRMnM
+         rJN46qcMphKC/7/62Mna8HkEWXJMe48N1inF8O/w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/243] selftests: kvm: fix build with glibc >= 2.30
-Date:   Wed, 11 Dec 2019 16:03:05 +0100
-Message-Id: <20191211150340.502096048@linuxfoundation.org>
+Subject: [PATCH 4.19 025/243] net: ep93xx_eth: fix mismatch of request_mem_region in remove
+Date:   Wed, 11 Dec 2019 16:03:07 +0100
+Message-Id: <20191211150340.606983620@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,51 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit e37f9f139f62deddff90c7298ae3a85026a71067 ]
+[ Upstream commit 3df70afe8d33f4977d0e0891bdcfb639320b5257 ]
 
-Glibc-2.30 gained gettid() wrapper, selftests fail to compile:
+The driver calls release_resource in remove to match request_mem_region
+in probe, which is incorrect.
+Fix it by using the right one, release_mem_region.
 
-lib/assert.c:58:14: error: static declaration of ‘gettid’ follows non-static declaration
-   58 | static pid_t gettid(void)
-      |              ^~~~~~
-In file included from /usr/include/unistd.h:1170,
-                 from include/test_util.h:18,
-                 from lib/assert.c:10:
-/usr/include/bits/unistd_ext.h:34:16: note: previous declaration of ‘gettid’ was here
-   34 | extern __pid_t gettid (void) __THROW;
-      |                ^~~~~~
-
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kvm/lib/assert.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cirrus/ep93xx_eth.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/lib/assert.c b/tools/testing/selftests/kvm/lib/assert.c
-index cd01144d27c8d..d306677065699 100644
---- a/tools/testing/selftests/kvm/lib/assert.c
-+++ b/tools/testing/selftests/kvm/lib/assert.c
-@@ -56,7 +56,7 @@ static void test_dump_stack(void)
- #pragma GCC diagnostic pop
- }
- 
--static pid_t gettid(void)
-+static pid_t _gettid(void)
+diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
+index 13dfdfca49fc7..edc1d19c9c02e 100644
+--- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
++++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
+@@ -767,6 +767,7 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
  {
- 	return syscall(SYS_gettid);
- }
-@@ -73,7 +73,7 @@ test_assert(bool exp, const char *exp_str,
- 		fprintf(stderr, "==== Test Assertion Failure ====\n"
- 			"  %s:%u: %s\n"
- 			"  pid=%d tid=%d - %s\n",
--			file, line, exp_str, getpid(), gettid(),
-+			file, line, exp_str, getpid(), _gettid(),
- 			strerror(errno));
- 		test_dump_stack();
- 		if (fmt) {
+ 	struct net_device *dev;
+ 	struct ep93xx_priv *ep;
++	struct resource *mem;
+ 
+ 	dev = platform_get_drvdata(pdev);
+ 	if (dev == NULL)
+@@ -782,8 +783,8 @@ static int ep93xx_eth_remove(struct platform_device *pdev)
+ 		iounmap(ep->base_addr);
+ 
+ 	if (ep->res != NULL) {
+-		release_resource(ep->res);
+-		kfree(ep->res);
++		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++		release_mem_region(mem->start, resource_size(mem));
+ 	}
+ 
+ 	free_netdev(dev);
 -- 
 2.20.1
 
