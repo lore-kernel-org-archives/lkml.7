@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 289BAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C900CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF96221D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D47F24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eyYSAOGb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mzf9cK+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbfLKMcJ (ORCPT
+        id S1729474AbfLKMcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:32:09 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55114 "EHLO
+        Wed, 11 Dec 2019 07:32:05 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:55090 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbfLKMcE (ORCPT
+        with ESMTP id S1729442AbfLKMb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:32:04 -0500
+        Wed, 11 Dec 2019 07:31:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=FvghZFBaoqrMAEVkDDRcPbYOLQl3+Nssq3SxvKZJaQI=; b=eyYSAOGbwuKI+/tsaYEU5bznHd
-        rczIvlRuyztabhFl3bCt9VDUhDf4mBhA+lY7x9tqz4PAb0skfrtoPhJTPMeiZ4XeRU53ia0VekyOO
-        uAo2tqtKGg8GYJfmFe9iPytIgsf5uDNGXLsqdXk4pgOgeu+PaWVbZ6XrF9+bIxUA40EqldwR/L/Gb
-        /qnN85DQU/nWxRFmoXeIpZ6vSzYHsewDDJIpLLokkREYuXmaxAYWyPBx5cLIRYgv3yoAJz/+6TlUL
-        YYV/irr9dWhr4QniMt6SZQNJfFTAIx7bAWgrQ6qJF3PGPEbAwbt1uGi0X0Axl/q0HTGQr3Kh7KjY5
-        mAIfyp/A==;
+        bh=krexXFAWafcSDWP7nl53PyLhwjx3LAnf0o/FpsyPrGc=; b=Mzf9cK+2CmiAS4VMfcObJYmTHI
+        AxATk9mhf/VYv6YQbPqClbGHnPHwPiWDg76zUcgOoadRhn31LVxj9DQxfILmwLoIzH1So/ebZA+uL
+        j7pszd4ugX+U5PK3UnJAzcPnAtTLT+v8CPAlzHNSIqrzfG10MMGYBd+jkXUOOiLQIWTxDVaz6nrui
+        uqRgZPI0gzkpmVKsX9/1Zu2L8Ty+qeBnvWTATNzlkw993CiP61OrFyw270zfhFbcbdw+EsAHOX2jJ
+        310kxZij0cDqU5GDH4JAT224CKhq6jj5itwSamZfEHWRiPqnYVPyw8E6/4TISpLpRAA77V5Vv0k14
+        RhlPw++w==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if191-0003sl-9d; Wed, 11 Dec 2019 12:31:07 +0000
+        id 1if191-0003sk-9J; Wed, 11 Dec 2019 12:31:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E6C463066B3;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9CB2E306060;
         Wed, 11 Dec 2019 13:29:43 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3B16F20137CB2; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
-Message-Id: <20191211122956.169764611@infradead.org>
+        id 3287320137CB1; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
+Message-Id: <20191211122955.997638865@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 11 Dec 2019 13:07:22 +0100
+Date:   Wed, 11 Dec 2019 13:07:19 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Will Deacon <will@kernel.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -65,7 +65,7 @@ Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
         Richard Henderson <rth@twiddle.net>,
         Nick Hu <nickhu@andestech.com>,
         Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 09/17] sh/tlb: Fix __pmd_free_tlb()
+Subject: [PATCH 06/17] asm-generic/tlb: Rename HAVE_MMU_GATHER_PAGE_SIZE
 References: <20191211120713.360281197@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -74,67 +74,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SH violates the freeing order for it's PMD page directories. It's
-__pmd_free_tlb() does not ensure there is a TLB invalidation between
-itself and the eventualy freeing of the page.
-
-Further complicating the situation is that SH uses non page based
-allocation for it's PMDs.
-
-Use the shiny new HAVE_TABLE_FREE option to enable a custom page table
-freeer.
-
-(SuperH uses IPI based TLB invalidation and therefore doesn't need
-HAVE_RCU_TABLE_FREE for its HAVE_FAST_GUP).
+Towards a more consistent naming scheme.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/sh/Kconfig               |    1 +
- arch/sh/include/asm/pgalloc.h |    3 ++-
- arch/sh/mm/pgtable.c          |    6 ++++++
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ arch/Kconfig              |    2 +-
+ arch/powerpc/Kconfig      |    2 +-
+ include/asm-generic/tlb.h |    9 ++++++---
+ mm/mmu_gather.c           |    4 ++--
+ 4 files changed, 10 insertions(+), 7 deletions(-)
 
---- a/arch/sh/Kconfig
-+++ b/arch/sh/Kconfig
-@@ -15,6 +15,7 @@ config SUPERH
- 	select HAVE_PERF_EVENTS
- 	select HAVE_DEBUG_BUGVERBOSE
- 	select HAVE_FAST_GUP if MMU
-+	select MMU_GATHER_TABLE_FREE if X2TLB
- 	select ARCH_HAVE_CUSTOM_GPIO_H
- 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
- 	select ARCH_HAS_GCOV_PROFILE_ALL
---- a/arch/sh/include/asm/pgalloc.h
-+++ b/arch/sh/include/asm/pgalloc.h
-@@ -12,7 +12,8 @@ extern void pgd_free(struct mm_struct *m
- extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
- extern pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address);
- extern void pmd_free(struct mm_struct *mm, pmd_t *pmd);
--#define __pmd_free_tlb(tlb, pmdp, addr)		pmd_free((tlb)->mm, (pmdp))
-+extern void __tlb_remove_table(void *table);
-+#define __pmd_free_tlb(tlb, pmdp, addr)	tlb_remove_table((tlb), (pmdp))
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -400,7 +400,7 @@ config MMU_GATHER_NO_TABLE_INVALIDATE
+ 	bool
+ 	depends on MMU_GATHER_RCU_TABLE_FREE
+ 
+-config HAVE_MMU_GATHER_PAGE_SIZE
++config MMU_GATHER_PAGE_SIZE
+ 	bool
+ 
+ config MMU_GATHER_NO_RANGE
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -224,7 +224,7 @@ config PPC
+ 	select HAVE_PERF_USER_STACK_DUMP
+ 	select MMU_GATHER_RCU_TABLE_FREE		if SMP
+ 	select MMU_GATHER_NO_TABLE_INVALIDATE	if MMU_GATHER_RCU_TABLE_FREE
+-	select HAVE_MMU_GATHER_PAGE_SIZE
++	select MMU_GATHER_PAGE_SIZE
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_RELIABLE_STACKTRACE		if PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
+ 	select HAVE_SYSCALL_TRACEPOINTS
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -121,11 +121,14 @@
+  *
+  * Additionally there are a few opt-in features:
+  *
+- *  HAVE_MMU_GATHER_PAGE_SIZE
++ *  MMU_GATHER_PAGE_SIZE
+  *
+  *  This ensures we call tlb_flush() every time tlb_change_page_size() actually
+  *  changes the size and provides mmu_gather::page_size to tlb_flush().
+  *
++ *  This might be useful if your architecture has size specific TLB
++ *  invalidation instructions.
++ *
+  *  MMU_GATHER_RCU_TABLE_FREE
+  *
+  *  This provides tlb_remove_table(), to be used instead of tlb_remove_page()
+@@ -271,7 +274,7 @@ struct mmu_gather {
+ 	struct mmu_gather_batch	local;
+ 	struct page		*__pages[MMU_GATHER_BUNDLE];
+ 
+-#ifdef CONFIG_HAVE_MMU_GATHER_PAGE_SIZE
++#ifdef CONFIG_MMU_GATHER_PAGE_SIZE
+ 	unsigned int page_size;
+ #endif
+ #endif
+@@ -422,7 +425,7 @@ static inline void tlb_remove_page(struc
+ static inline void tlb_change_page_size(struct mmu_gather *tlb,
+ 						     unsigned int page_size)
+ {
+-#ifdef CONFIG_HAVE_MMU_GATHER_PAGE_SIZE
++#ifdef CONFIG_MMU_GATHER_PAGE_SIZE
+ 	if (tlb->page_size && tlb->page_size != page_size) {
+ 		if (!tlb->fullmm && !tlb->need_flush_all)
+ 			tlb_flush_mmu(tlb);
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -69,7 +69,7 @@ bool __tlb_remove_page_size(struct mmu_g
+ 
+ 	VM_BUG_ON(!tlb->end);
+ 
+-#ifdef CONFIG_HAVE_MMU_GATHER_PAGE_SIZE
++#ifdef CONFIG_MMU_GATHER_PAGE_SIZE
+ 	VM_WARN_ON(tlb->page_size != page_size);
  #endif
  
- static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
---- a/arch/sh/mm/pgtable.c
-+++ b/arch/sh/mm/pgtable.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/mm.h>
- #include <linux/slab.h>
-+#include <asm/pgalloc.h>
+@@ -223,7 +223,7 @@ void tlb_gather_mmu(struct mmu_gather *t
+ #ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+ 	tlb->batch = NULL;
+ #endif
+-#ifdef CONFIG_HAVE_MMU_GATHER_PAGE_SIZE
++#ifdef CONFIG_MMU_GATHER_PAGE_SIZE
+ 	tlb->page_size = 0;
+ #endif
  
- #define PGALLOC_GFP GFP_KERNEL | __GFP_ZERO
- 
-@@ -55,4 +56,9 @@ void pmd_free(struct mm_struct *mm, pmd_
- {
- 	kmem_cache_free(pmd_cachep, pmd);
- }
-+
-+void __tlb_remove_table(void *table)
-+{
-+	pmd_free(NULL, table);
-+}
- #endif /* PAGETABLE_LEVELS > 2 */
 
 
