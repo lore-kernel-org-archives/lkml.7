@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDE6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8AA6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02A65206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A11BC206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfUavIKv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ARRfo75c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbfLKSQw (ORCPT
+        id S1731538AbfLKSRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:16:52 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:38751 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbfLKSPR (ORCPT
+        Wed, 11 Dec 2019 13:17:01 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:37289 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731125AbfLKSPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:17 -0500
-Received: by mail-yb1-f196.google.com with SMTP id l129so9394094ybf.5;
-        Wed, 11 Dec 2019 10:15:16 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:15 -0500
+Received: by mail-yb1-f195.google.com with SMTP id x139so9399057ybe.4;
+        Wed, 11 Dec 2019 10:15:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d13RLX6NhyAv5ZdFefjfKBGNP9hWY+i8u20CJzTC+ac=;
-        b=TfUavIKv9uEq7wg4iS9gbh0Jx4VTX8vw7590D9U3L/bJblXqToqS+gM0nQJenfkwwf
-         J2qowTuuhNz7s1dDFWqOc4okguAuLh7D0y6sj5RkdydhdeAyNtHuv4z3jNUFL//vwAAl
-         DbCRxN2us9teEcCyPEcl3YMnkYYdnlurYPcghdf3Qghy49cdIHa2AmH/UNKvQ558hQEI
-         MhHWHrTgpUAGIX7FFALKsP9zE28NUn3kWjNmQvRHvSbRh71v4el+egZB4xvHWbO193wf
-         T3TOxVavcWjWgX+6IHzjgc3LnPKS6VRFpnjZZJNDB0TVHFm3GdvQddiTp/StY3FBg4Py
-         4kvQ==
+        bh=ZXx8l/KZR9WA/iLmy6R3NDKrk90jnB1w9ZPxl/FOlyA=;
+        b=ARRfo75caDlaUM77eb9NKZr7s/hpRohQ4HGRG0FRSrHEI+miHD5iMIscYEQRdwjftZ
+         WXRG2nO+AHuhNonEp4gnSS51mMBorNML4802ZpMBOpp1869MpJk8POi8iGKA+cN9iSIf
+         QVhVAvfRrDEUlAgWSZUhZZhNPkcsQVrKMBw9zBFxPKsxlpcO6UtoeaHseQizxGf3bAWV
+         7ALww8cBfK7DaCMD84RkRtD8yUr9b2kMaITXc7SPU4ygffVhvpIKJaR7ApZYwHfMPWSF
+         AwhVe6RYQFNMIpq1c0bQ7D44YEItov48Rnb3MQ6a8Dtx+huWhkFflnSA6GmZxVfviHzR
+         4YjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d13RLX6NhyAv5ZdFefjfKBGNP9hWY+i8u20CJzTC+ac=;
-        b=UP0sBOn+GyU06aGwPyjETAPYQGCE7+mw7a7Z98kawp2oL7mQT1Gy7kkuJ7DV8FTKTH
-         cnuG8vdMKdF39KhHaJGmpHUK12g7FYLNmh8grF7+FFfpXokGxVMiZbWnL2PkZgs/qTAe
-         Lq8rHsD0YdTQ0omI3vNF9ZYx4QRf+3QZWv/E8V5sv8IbMHW3u4WEpdXp6BVTj/bieDGw
-         O9iBHbCMygO/8pLQLQ1iEeSKYlEPTy55eU+8Ro4zALwVbOljfxx1M+aehGZ7G3Dt/8iF
-         cjv/JjEa5FvUjx8qOcVxklp/SJRdXof5lpOK6noL4j15jq1D7T0BY79U9BFLZ0ax9Znc
-         ouDw==
-X-Gm-Message-State: APjAAAUojgq9v056S53tyFVxRkYFSMP1DC5DyHEPyjcsTx0ihvmd+yme
-        DyUQqxyya7xBQShunICsWyepqQV1uML6qA==
-X-Google-Smtp-Source: APXvYqx0PyEq0X95gP3rmHgsA/8bcB8XqHkjAz3WmSh1MSMIo6lwgD82jrxWNNN1M/6fp2nXGr+LQQ==
-X-Received: by 2002:a25:aa05:: with SMTP id s5mr926645ybi.513.1576088116289;
-        Wed, 11 Dec 2019 10:15:16 -0800 (PST)
+        bh=ZXx8l/KZR9WA/iLmy6R3NDKrk90jnB1w9ZPxl/FOlyA=;
+        b=RsWET3b/WRg/qymbn34SnaWdG4hBZP1GKHEnCYlEtj43nnK+UGA9AvUbdtziJ7ZyQ5
+         cPJPAgTsJEYqleU7s69X8qu/CIF69XvIYWhAbbuA7PCEu5EOwiNUSOlnW5BPqwHQa3bU
+         uARQBUSl8jXsmkf6+R9ci8k0sjsdjxUzD8rMwsQ8okhyyT8fnNbfB0Z7pwVJ6DGY0vE/
+         2kquVT9vwu/tRr163F+d0sz/HTQulDBojt1VIGcVOw3HDBuXsJgEfa2F+hWAmyMIwO0k
+         zrB/zd2+7rnpmdCrjQnDTmotFPZilMyIdKKH8axbuGRZRcorGJYjKZHzDKtZH2hHWeMD
+         T5ig==
+X-Gm-Message-State: APjAAAUedTUpOSKBAtOeF6VvGHb3wLbcpF4FH4Gw6lJfMNfuOSOGKGcV
+        YTsP7nVx+G+NoKMARa91xuxJYR7GOpgPPg==
+X-Google-Smtp-Source: APXvYqwiW7be29TyHRSkp63bTis8H0+I9y8yxv7gHYZM74/5pzH8MtPi0+eDz8hszKlRg7d/ExEDkw==
+X-Received: by 2002:a25:76c7:: with SMTP id r190mr1008957ybc.214.1576088113095;
+        Wed, 11 Dec 2019 10:15:13 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id 207sm1260876ywq.100.2019.12.11.10.15.15
+        by smtp.gmail.com with ESMTPSA id a23sm1299972ywa.32.2019.12.11.10.15.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:15 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:12 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/23] staging: qlge: Fix CHECK: Unnecessary parentheses around mpi_coredump->mpi_global_header
-Date:   Wed, 11 Dec 2019 12:12:37 -0600
-Message-Id: <d6b36b83cf1069b20cc0a720c2fd82974b9053d5.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 06/23] staging: qlge: Fix CHECK: Blank lines aren't necessary after an open brace '{'
+Date:   Wed, 11 Dec 2019 12:12:35 -0600
+Message-Id: <bf74d7ad7868f5b826b527ade55460658d32e53f.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,36 +76,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix CHECK: Unnecessary parentheses around
-mpi_coredump->mpi_global_header in file qlge_dbg.c
+Fix CHECK: Blank lines aren't necessary after an open brace '{' in the
+following files:
+
+qlge.h
+qlge_dbg.c
+qlge_main.c
+qlge_mpi.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge_dbg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/qlge/qlge.h      | 3 ---
+ drivers/staging/qlge/qlge_dbg.c  | 1 -
+ drivers/staging/qlge/qlge_main.c | 6 ------
+ drivers/staging/qlge/qlge_mpi.c  | 2 --
+ 4 files changed, 12 deletions(-)
 
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index d45c53a053c2..ede767a70b10 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -119,7 +119,6 @@ enum {
+  * Processor Address Register (PROC_ADDR) bit definitions.
+  */
+ enum {
+-
+ 	/* Misc. stuff */
+ 	MAILBOX_COUNT = 16,
+ 	MAILBOX_TIMEOUT = 5,
+@@ -1762,7 +1761,6 @@ struct ql_nic_misc {
+ };
+ 
+ struct ql_reg_dump {
+-
+ 	/* segment 0 */
+ 	struct mpi_coredump_global_header mpi_global_header;
+ 
+@@ -2059,7 +2057,6 @@ enum {
+ };
+ 
+ struct nic_operations {
+-
+ 	int (*get_flash) (struct ql_adapter *);
+ 	int (*port_initialize) (struct ql_adapter *);
+ };
 diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 1d4de39a2a70..f8b2f105592f 100644
+index b44f80e93b27..6b740a712943 100644
 --- a/drivers/staging/qlge/qlge_dbg.c
 +++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -737,7 +737,7 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
+@@ -610,7 +610,6 @@ static void ql_get_mac_protocol_registers(struct ql_adapter *qdev, u32 *buf)
+ 
+ 	for (type = 0; type < MAC_ADDR_TYPE_COUNT; type++) {
+ 		switch (type) {
+-
+ 		case 0: /* CAM */
+ 			initial_val |= MAC_ADDR_ADR;
+ 			max_index = MAC_ADDR_MAX_CAM_ENTRIES;
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 1a5b82b68b44..f5cc235e9854 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -2119,7 +2119,6 @@ static int ql_clean_outbound_rx_ring(struct rx_ring *rx_ring)
+ 	struct tx_ring *tx_ring;
+ 	/* While there are entries in the completion queue. */
+ 	while (prod != rx_ring->cnsmr_idx) {
+-
+ 		netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 			     "cq_id = %d, prod = %d, cnsmr = %d\n",
+ 			     rx_ring->cq_id, prod, rx_ring->cnsmr_idx);
+@@ -2127,7 +2126,6 @@ static int ql_clean_outbound_rx_ring(struct rx_ring *rx_ring)
+ 		net_rsp = (struct ob_mac_iocb_rsp *)rx_ring->curr_entry;
+ 		rmb();
+ 		switch (net_rsp->opcode) {
+-
+ 		case OPCODE_OB_MAC_TSO_IOCB:
+ 		case OPCODE_OB_MAC_IOCB:
+ 			ql_process_mac_tx_intr(qdev, net_rsp);
+@@ -2166,7 +2164,6 @@ static int ql_clean_inbound_rx_ring(struct rx_ring *rx_ring, int budget)
+ 
+ 	/* While there are entries in the completion queue. */
+ 	while (prod != rx_ring->cnsmr_idx) {
+-
+ 		netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 			     "cq_id = %d, prod = %d, cnsmr = %d\n",
+ 			     rx_ring->cq_id, prod, rx_ring->cnsmr_idx);
+@@ -2479,7 +2476,6 @@ static irqreturn_t qlge_isr(int irq, void *dev_id)
+ 
+ static int ql_tso(struct sk_buff *skb, struct ob_mac_tso_iocb_req *mac_iocb_ptr)
+ {
+-
+ 	if (skb_is_gso(skb)) {
+ 		int err;
+ 		__be16 l3_proto = vlan_get_protocol(skb);
+@@ -2886,7 +2882,6 @@ static void ql_free_rx_resources(struct ql_adapter *qdev,
+ static int ql_alloc_rx_resources(struct ql_adapter *qdev,
+ 				 struct rx_ring *rx_ring)
+ {
+-
+ 	/*
+ 	 * Allocate the completion queue for this rx_ring.
+ 	 */
+@@ -3815,7 +3810,6 @@ static int ql_wol(struct ql_adapter *qdev)
+ 
+ static void ql_cancel_all_work_sync(struct ql_adapter *qdev)
+ {
+-
+ 	/* Don't kill the reset worker thread if we
+ 	 * are in the process of recovery.
+ 	 */
+diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
+index 0f9bd9a8b523..4f8365cf2092 100644
+--- a/drivers/staging/qlge/qlge_mpi.c
++++ b/drivers/staging/qlge/qlge_mpi.c
+@@ -360,7 +360,6 @@ static int ql_aen_lost(struct ql_adapter *qdev, struct mbox_params *mbcp)
+ 		for (i = 0; i < mbcp->out_count; i++)
+ 			netif_err(qdev, drv, qdev->ndev, "mbox_out[%d] = 0x%.08x.\n",
+ 				  i, mbcp->mbox_out[i]);
+-
+ 	}
+ 	return status;
+ }
+@@ -407,7 +406,6 @@ static int ql_mpi_handler(struct ql_adapter *qdev, struct mbox_params *mbcp)
  	}
  
- 	/* Insert the global header */
--	memset(&(mpi_coredump->mpi_global_header), 0,
-+	memset(&mpi_coredump->mpi_global_header, 0,
- 	       sizeof(struct mpi_coredump_global_header));
- 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
- 	mpi_coredump->mpi_global_header.header_size =
-@@ -1225,7 +1225,7 @@ static void ql_gen_reg_dump(struct ql_adapter *qdev,
- {
- 	int i, status;
- 
--	memset(&(mpi_coredump->mpi_global_header), 0,
-+	memset(&mpi_coredump->mpi_global_header, 0,
- 	       sizeof(struct mpi_coredump_global_header));
- 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
- 	mpi_coredump->mpi_global_header.header_size =
+ 	switch (mbcp->mbox_out[0]) {
+-
+ 	/* This case is only active when we arrive here
+ 	 * as a result of issuing a mailbox command to
+ 	 * the firmware.
 -- 
 2.20.1
 
