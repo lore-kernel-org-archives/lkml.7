@@ -2,105 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFD4C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA237C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891E62073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907AD2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080361;
-	bh=lAqpPvsOS9BthCfvdevNWpNkG2Skb+dssWOVCt/bnKQ=;
+	s=default; t=1576080368;
+	bh=ugpmlOyr7TaG72VcGP0lAPfC8pVHr4pczswXTIfCbl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HcBkMveC0k/l/ashLYyWHEMrnp6eyitWgwT3pjcLAtYXfU3uG4u9QHpVk6dmY5/KR
-	 MY9yRhsSrr51G5QtwD+RbyTghqfqQAl8TOrs2wRIdfOiXo1CE/58cTcTOfVkR5AlJu
-	 mxUUir6fDWEzzqyj8l6nNlvNrJew2VDvzARREbGE=
+	b=Dlkkoz5Pdh4gV9grgHALpqrgvzpdXvauWJQL0jd9v6/MjZ4t40HJx1YBnxe/3yHE9
+	 Pw4VPEEwkY2AjBh/t3qiTwE/gY60gnb3CpXzce+pAXmhiwG1eoPmUsjmvSAqLMvngW
+	 FxLDYQhboac3m93q9nZQ8aVeWFNmarizdxVbWiPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388858AbfLKQGA (ORCPT
+        id S1730141AbfLKQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:06:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731223AbfLKPMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731216AbfLKPMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:45 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F7024681;
-        Wed, 11 Dec 2019 15:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FC422465B;
+        Wed, 11 Dec 2019 15:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077164;
-        bh=lAqpPvsOS9BthCfvdevNWpNkG2Skb+dssWOVCt/bnKQ=;
+        s=default; t=1576077163;
+        bh=ugpmlOyr7TaG72VcGP0lAPfC8pVHr4pczswXTIfCbl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dySFNjzLbpZs0U/sDS60zYJH69nWsLcsY2392HNggJXb34OU7l/2e8XHAJWO0V/56
-         MjyTV4WWs7XFtTcywvGJjEXEW+fqHygJqis6NWzRC0A+XFmum+4eU5188ifN7BUFzy
-         ovY4Vt9Y8n22VIiCrkrfOdB2U6XwKkfQcDWdylw4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Hennerich <michael.hennerich@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 050/134] clk: clk-gpio: propagate rate change to parent
-Date:   Wed, 11 Dec 2019 10:10:26 -0500
-Message-Id: <20191211151150.19073-50-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=vc0EfWpcv/rtU3Z2GkxywbTXa5uLhZPbzeuYy9ys16/JewZL8kiaqedhwP2SGc/23
+         daN1YtdwSAjk9NRsrhHfw5ZbDB3NdWtl9s8y6Yt5T7U/uhKIxtg5ocftJxmSxGk+w7
+         KcswZOmhsqoH7Z1eEuyt8uN/JN17xb9ZxyWtTZFI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yunsheng Lin <linyunsheng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 039/105] net: hns3: reallocate SSU buffer size when pfc_en changes
+Date:   Wed, 11 Dec 2019 16:05:28 +0100
+Message-Id: <20191211150236.251208894@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+From: Yunsheng Lin <linyunsheng@huawei.com>
 
-[ Upstream commit fc59462c5ce60da119568fac325c92fc6b7c6175 ]
+[ Upstream commit aea8cfb35a82d6c2f3517c86694933ba766635e5 ]
 
-For an external clock source, which is gated via a GPIO, the
-rate change should typically be propagated to the parent clock.
+When a TC's PFC is disabled or enabled, the RX private buffer for
+this TC need to be changed too, otherwise this may cause packet
+dropped problem.
 
-The situation where we are requiring this propagation, is when an
-external clock is connected to override an internal clock (which typically
-has a fixed rate). The external clock can have a different rate than the
-internal one, and may also be variable, thus requiring the rate
-propagation.
+This patch fixes it by calling hclge_buffer_alloc to reallocate
+buffer when pfc_en changes.
 
-This rate change wasn't propagated until now, and it's unclear about cases
-where this shouldn't be propagated. Thus, it's unclear whether this is
-fixing a bug, or extending the current driver behavior. Also, it's unsure
-about whether this may break any existing setups; in the case that it does,
-a device-tree property may be added to disable this flag.
-
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lkml.kernel.org/r/20191108071718.17985-1-alexandru.ardelean@analog.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: cacde272dd00 ("net: hns3: Add hclge_dcb module for the support of DCB feature")
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c  | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 9d930edd65162..13304cf5f2a8f 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -280,7 +280,7 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
- 	else
- 		clk = clk_register_gpio_gate(&pdev->dev, node->name,
- 				parent_names ?  parent_names[0] : NULL, gpiod,
--				0);
-+				CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+index bac4ce13f6ae4..d9136a199d8db 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+@@ -302,6 +302,7 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 	struct hclge_vport *vport = hclge_get_vport(h);
+ 	struct hclge_dev *hdev = vport->back;
+ 	u8 i, j, pfc_map, *prio_tc;
++	int ret;
  
+ 	if (!(hdev->dcbx_cap & DCB_CAP_DCBX_VER_IEEE) ||
+ 	    hdev->flag & HCLGE_FLAG_MQPRIO_ENABLE)
+@@ -327,7 +328,21 @@ static int hclge_ieee_setpfc(struct hnae3_handle *h, struct ieee_pfc *pfc)
+ 
+ 	hclge_tm_pfc_info_update(hdev);
+ 
+-	return hclge_pause_setup_hw(hdev, false);
++	ret = hclge_pause_setup_hw(hdev, false);
++	if (ret)
++		return ret;
++
++	ret = hclge_notify_client(hdev, HNAE3_DOWN_CLIENT);
++	if (ret)
++		return ret;
++
++	ret = hclge_buffer_alloc(hdev);
++	if (ret) {
++		hclge_notify_client(hdev, HNAE3_UP_CLIENT);
++		return ret;
++	}
++
++	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
+ }
+ 
+ /* DCBX configuration */
 -- 
 2.20.1
+
+
 
