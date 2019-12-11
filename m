@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A81C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2BF122527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E7B22527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076891;
-	bh=73y6llFQMMIZCQOShezk0KW2VUlhcWIdRCpboFMbUQs=;
+	s=default; t=1576076893;
+	bh=tr+1e9o/dxv8AaZA9vfOB+7WeDev9gn5MoZi7rZXbX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fMLFbs2uPzOcABz6qslta32Gnlr7LxyTGiYFtK4K8Mdy5RVwjcTCYdOOZV2s28vJB
-	 ocZxFaqZW/WmCwKEp0tD2b8tJ5bP98C1PQHNdAPUqSaxou5mNWyhvG3z5/J9wQ9GWX
-	 GSuSXgsM0uol2q7iHaFyHewd6YOR4ouY477nfF9Q=
+	b=kzgHBUN8CLAA+lv7gkydKTMpjej7q3f4qayGgKcp6043z+lkFov5fJakLiLfPA4xt
+	 TRfZO33j0FfR6QCm91uxw2uPoHW6tsGxqHZTqflpnnrxHunXOTRoAo1s4nXKDpKE/y
+	 lS/o6S+GI6w9jSQLn14DF8MwwjZlAKOwAgo36BsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbfLKPIJ (ORCPT
+        id S1730291AbfLKPIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55528 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfLKPII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:08 -0500
+        id S1729513AbfLKPIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11E1B2173E;
-        Wed, 11 Dec 2019 15:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E48624654;
+        Wed, 11 Dec 2019 15:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076887;
-        bh=73y6llFQMMIZCQOShezk0KW2VUlhcWIdRCpboFMbUQs=;
+        s=default; t=1576076890;
+        bh=tr+1e9o/dxv8AaZA9vfOB+7WeDev9gn5MoZi7rZXbX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDucN8fTgDGKyZo5O296+54PlJr5RMqYdgDUVTbIqg7xGdFm8cYDfO7R5QggWDru0
-         73J4beN+oC9abOjxhaCXiuMfo7t5IkkuAj52O9BRMtbEyv1LsVo24H4IHGosk4yVEO
-         j/YxzWhPKkvvQ4+6e1aKfooFujiFB5VmZm7qhvys=
+        b=k2ftVIMd5/FYXH7LT5wpeEYccrlXAs6S6sG6R0WRvVohFrnIeQVeB+xxbQY6q2zJm
+         Yin+lqJvP1zUjYv5prPI70nkZeMenRNm0YCNw2RS+o1JdsCHOJKQF3j3encc6cDIA9
+         sImmEFknkvjdfu5D4mO29oYqhSR95lO0ebFpePGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.4 28/92] SUNRPC: Avoid RPC delays when exiting suspend
-Date:   Wed, 11 Dec 2019 16:05:19 +0100
-Message-Id: <20191211150232.779719650@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 29/92] ALSA: hda/realtek - Enable internal speaker of ASUS UX431FLC
+Date:   Wed, 11 Dec 2019 16:05:20 +0100
+Message-Id: <20191211150232.944154973@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,37 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 66eb3add452aa1be65ad536da99fac4b8f620b74 upstream.
+commit 436e25505f3458cc92c7f3c985e9cbc198a98209 upstream.
 
-Jon Hunter: "I have been tracking down another suspend/NFS related
-issue where again I am seeing random delays exiting suspend. The delays
-can be up to a couple minutes in the worst case and this is causing a
-suspend test we have to fail."
+Laptops like ASUS UX431FLC and UX431FL can share the same audio quirks.
+But UX431FLC needs one more step to enable the internal speaker: Pull
+the GPIO from CODEC to initialize the AMP.
 
-Change the use of a deferrable work to a standard delayed one.
-
-Reported-by: Jon Hunter <jonathanh@nvidia.com>
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 60083f9e94b2 ("ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL")
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191125093405.5702-1-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/sched.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_que
- 	rpc_reset_waitqueue_priority(queue);
- 	queue->qlen = 0;
- 	queue->timer_list.expires = 0;
--	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
-+	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
- 	INIT_LIST_HEAD(&queue->timer_list.list);
- 	rpc_assign_waitqueue_name(queue, qname);
- }
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5892,6 +5892,7 @@ enum {
+ 	ALC299_FIXUP_PREDATOR_SPK,
+ 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
+ 	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
++	ALC294_FIXUP_ASUS_INTSPK_GPIO,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6982,6 +6983,13 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
+ 	},
++	[ALC294_FIXUP_ASUS_INTSPK_GPIO] = {
++		.type = HDA_FIXUP_FUNC,
++		/* The GPIO must be pulled to initialize the AMP */
++		.v.func = alc_fixup_gpio4,
++		.chained = true,
++		.chain_id = ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7141,7 +7149,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
+ 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
+ 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
+-	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_GPIO),
+ 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
+ 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
 
 
