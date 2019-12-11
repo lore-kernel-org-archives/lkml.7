@@ -2,211 +2,298 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CD1C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED39C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B208214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRVnrjYw"
+	by mail.kernel.org (Postfix) with ESMTP id 4F5882173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfLKMUb (ORCPT
+        id S1729273AbfLKMUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:20:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45940 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729220AbfLKMUa (ORCPT
+        Wed, 11 Dec 2019 07:20:39 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:37223 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729220AbfLKMUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:20:30 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so10299089pgk.12;
-        Wed, 11 Dec 2019 04:20:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=2Gmp6YOucsMACQ792uGEILrIHWMUBHy7q5oV2O7SluA=;
-        b=JRVnrjYwlGgiNuY9z9sJPe5x3p7yIqHAAaxAHgZaKPbn6qAKUunT/+/UW43RuECKc4
-         Fz7/1CyWe9Nnr0bufgys/lYP7FNEusO6pGxKENaIBEv3JxfJf9QGVjJxMa8GPzhKJYqe
-         TTw7JG70ixN3LTZZcFwGCKaI3ls/RjpBaaKVBGwMxS4DpsJytgO8TloZ7wKrXYzxYh0I
-         4nfK3IQRAwVvBWD4ovfnnJF0mT6q3y210aZR55HmMyomS93fmwLwmFejWptLEv92NmZL
-         ilMHFogMmh+/Yd7zxmWlExDA96Mqnjg+pNQnO2k57eAtw9w/9lx47W757FE6Jv1kFmTp
-         MOjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=2Gmp6YOucsMACQ792uGEILrIHWMUBHy7q5oV2O7SluA=;
-        b=je1Us8qxBhMqxkE7vqRPMwaBmcDhwLQYvAMZBt6sgDGgxwhk8PyZE3tHj5shsQIUXc
-         iiHScEyZm7uUzyNDIH4hXSy117Escxn05Y0UZ4+dGxrxo3bEpKIAXyIynNJKDLPAgTND
-         Wzqu1fzxQMbY2qCSsC1thlezxc2ZdAPh5LyIVkI97rVGw6DoKmr0ld5TxOiPFiMCpGAT
-         CN0cJQfqwv+qYmWMH6hApYa9JnJWKPJo3/lS1BLWupWH2xFjszUWqS4BSNTK9AJDtSqc
-         lX/wTuhWeN95ycj3it6snj6XfRXULGwFBFyuYUXYI8sOomTttFsEHf7xjmen4AGzWmAp
-         BmxA==
-X-Gm-Message-State: APjAAAVAn4ejryfqlaCTCvOHqwnMT0FiCm4ZqYFd8BspNJv7lktjBWJ/
-        iyIib+31cpWd7MwUjayS7eg=
-X-Google-Smtp-Source: APXvYqzAqmTEma+xlFtP5yw9S0mHaSrSRi2QfNYSRFP3vN+eRcvJJchAFpIQQ6RRZqkQyrRDh8Z+Dg==
-X-Received: by 2002:a62:ac03:: with SMTP id v3mr3371967pfe.17.1576066829511;
-        Wed, 11 Dec 2019 04:20:29 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id e20sm2848907pff.96.2019.12.11.04.20.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 04:20:28 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Cc:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
-        "SeongJae Park" <sjpark@amazon.de>, pdurrant@amazon.com,
-        sjpark@amazon.com, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v6 1/3] xenbus/backend: Add memory pressure handler callback
-Date:   Wed, 11 Dec 2019 13:20:11 +0100
-Message-Id: <20191211122011.16231-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.2
+        Wed, 11 Dec 2019 07:20:39 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
+ 2019 20:21:10 +0800
+Subject: Re: [PATCH v2] arm64: dts: meson-a1: add I2C nodes
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191211032802.83309-1-jian.hu@amlogic.com>
+ <1jk173kxyf.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <96ba0480-3cac-4a5e-482c-01491563c820@amlogic.com>
+Date:   Wed, 11 Dec 2019 20:21:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191211114651.GN980@Air-de-Roger> (raw)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1jk173kxyf.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 12:46:51 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 
-> > Granting pages consumes backend system memory.  In systems configured
-> > with insufficient spare memory for those pages, it can cause a memory
-> > pressure situation.  However, finding the optimal amount of the spare
->                                                               ^ s/the//
-> > memory is challenging for large systems having dynamic resource
-> > utilization patterns.  Also, such a static configuration might lack
-> > flexibility.
-> > 
-> > To mitigate such problems, this commit adds a memory reclaim callback to
-> > 'xenbus_driver'.  If a memory pressure is detected, 'xenbus' requests
->                        ^ s/a//
-> > every backend driver to volunarily release its memory.
-> > 
-> > Note that it would be able to improve the callback facility for more
->                         ^ possible
-> > sophisticated handlings of general pressures.  For example, it would be
->                 ^ handling of resource starvation.
-> > possible to monitor the memory consumption of each device and issue the
-> > release requests to only devices which causing the pressure.  Also, the
-> > callback could be extended to handle not only memory, but general
-> > resources.  Nevertheless, this version of the implementation defers such
-> > sophisticated goals as a future work.
-> > 
-> > Reviewed-by: Juergen Gross <jgross@suse.com>
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  drivers/xen/xenbus/xenbus_probe_backend.c | 32 +++++++++++++++++++++++
-> >  include/xen/xenbus.h                      |  1 +
-> >  2 files changed, 33 insertions(+)
-> > 
-> > diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-> > index b0bed4faf44c..aedbe2198de5 100644
-> > --- a/drivers/xen/xenbus/xenbus_probe_backend.c
-> > +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-> > @@ -248,6 +248,35 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
-> >  	return NOTIFY_DONE;
-> >  }
-> >  
-> > +static int xenbus_backend_reclaim(struct device *dev, void *data)
+
+On 2019/12/11 17:34, Jerome Brunet wrote:
 > 
-> No need for the xenbus_ prefix since it's a static function, ie:
-> backend_reclaim_memory should be fine IMO.
-
-Agreed, will change the name in the next version.
-
+> On Wed 11 Dec 2019 at 04:28, Jian Hu <jian.hu@amlogic.com> wrote:
 > 
-> > +{
-> > +	struct xenbus_driver *drv;
+>> There are four I2C controllers in A1 series,
+>> Share the same comptible with AXG. Compared to AXG,
+>> Drive strength feature is newly added in A1.
 > 
-> I've asked for this variable to be constified in v5, is it not
-> possible to make it const?
-
-Sorry, my mistake...  I was difinitely too hurry.
-
+> Until here, OK
 > 
-> > +
-> > +	if (!dev->driver)
-> > +		return 0;
-> > +	drv = to_xenbus_driver(dev->driver);
-> > +	if (drv && drv->reclaim)
-> > +		drv->reclaim(to_xenbus_device(dev));
-> > +	return 0;
-> > +}
-> > +
-> > +/*
-> > + * Returns 0 always because we are using shrinker to only detect memory
-> > + * pressure.
-> > + */
-> > +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
-> > +				struct shrink_control *sc)
-> > +{
-> > +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
-> > +			xenbus_backend_reclaim);
-> > +	return 0;
-> > +}
-> > +
-> > +static struct shrinker xenbus_backend_shrinker = {
+>> This patch depends on A1 clock driver.
 > 
-> I would drop the xenbus prefix, and I think it's not possible to
-> constify this due to register_shrinker expecting a non-const
-> parameter?
-
-Yes, constifying it results in another compile warning.  Will drop the prefix.
-
+> This last sentence is a valuable piece of information for the maintainer
+> but should not appear is the commit description as it is something we
+> want is the history
 > 
-> > +	.count_objects = xenbus_backend_shrink_count,
-> > +	.seeks = DEFAULT_SEEKS,
-> > +};
-> > +
-> >  static int __init xenbus_probe_backend_init(void)
-> >  {
-> >  	static struct notifier_block xenstore_notifier = {
-> > @@ -264,6 +293,9 @@ static int __init xenbus_probe_backend_init(void)
-> >  
-> >  	register_xenstore_notifier(&xenstore_notifier);
-> >  
-> > +	if (register_shrinker(&xenbus_backend_shrinker))
-> > +		pr_warn("shrinker registration failed\n");
+OK, I will remove the last sentence.
+> Please move this bellow the '---' *AND*
+> Add a link like " https://lkml.kernel.org/r/..." to help the maintainer
+> locate the related series
 > 
-> Can you add a xenbus prefix to the error message? Or else it's hard to
-> know which subsystem is complaining when you see such message on the
-> log. ie: "xenbus: shrinker ..."
-
-Because we have #define `pr_fmt(fmt) KBUILD_MODNAME ": " fmt` in the beginning
-of the file, the message will have a proper prefix.
-
+OK, I have added the dependent patch link below.
 > 
-> > +
-> >  	return 0;
-> >  }
-> >  subsys_initcall(xenbus_probe_backend_init);
-> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> > index 869c816d5f8c..196260017666 100644
-> > --- a/include/xen/xenbus.h
-> > +++ b/include/xen/xenbus.h
-> > @@ -104,6 +104,7 @@ struct xenbus_driver {
-> >  	struct device_driver driver;
-> >  	int (*read_otherend_details)(struct xenbus_device *dev);
-> >  	int (*is_ready)(struct xenbus_device *dev);
-> > +	void (*reclaim)(struct xenbus_device *dev);
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>>
+>> ---
+>> This patch depends on A1 clock patchset at[0]
+>>
+>> Changes since v1 at [1]:
+>> -change reg length to 0x20
+>> -assign i2c bus alias in dts file
+>> -add new feature note compared to AXG in changelog
+>>
+>> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+>> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+>> ---
+>> ---
+>>   .../arm64/boot/dts/amlogic/meson-a1-ad401.dts |   4 +
+>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 142 ++++++++++++++++++
+>>   2 files changed, 146 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>> index 69c25c68c358..2d0457976233 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>> @@ -13,6 +13,10 @@
+>>   
+>>   	aliases {
+>>   		serial0 = &uart_AO_B;
+>> +		i2c0 = &i2c0;
+>> +		i2c1 = &i2c1;
+>> +		i2c2 = &i2c2;
+>> +		i2c3 = &i2c3;
 > 
-> reclaim_memory (if Juergen agrees).
-
-Okay.
-
-
-Thanks,
-SeongJae Park
-
+> It is not necessary to define alias for all the possible buses,
+> especially it some won't be used on the platform.
 > 
-> Thanks, Roger.
+> Will this platform use all 4 busses ?
+> 
+it will not use all 4 busses.
+> In any case, the aliases can added later, as needed when the related i2c
+> bus is enabled on the board
+OK, I will remove the i2c bus alias first. It will be added when used.
+> 
+>>   	};
+>>   
+>>   	chosen {
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> index eab2ecd36aa8..66d5206a57de 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -117,6 +117,46 @@
+>>   				};
+>>   			};
+>>   
+>> +			i2c0: i2c@1400 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x1400 0x0 0x20>;
+>> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c1: i2c@5c00 {
+> 
+> Please order nodes by address when then have one.
+> The 3 following i2c busses should appear after the uarts
+OK, I will order them by address.
+> 
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x5c00 0x0 0x20>;
+>> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c2: i2c@6800 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x6800 0x0 0x20>;
+>> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>> +			i2c3: i2c@6c00 {
+>> +				compatible = "amlogic,meson-axg-i2c";
+>> +				reg = <0x0 0x6c00 0x0 0x20>;
+>> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+>> +				status = "disabled";
+>> +			};
+>> +
+>>   			uart_AO: serial@1c00 {
+>>   				compatible = "amlogic,meson-gx-uart",
+>>   					     "amlogic,meson-ao-uart";
+>> @@ -171,3 +211,105 @@
+>>   		#clock-cells = <0>;
+>>   	};
+>>   };
+>> +
+>> +&periphs_pinctrl {
+>> +	i2c0_f11_pins:i2c0-f11 {
+>> +		mux {
+>> +			groups = "i2c0_sck_f11",
+>> +				"i2c0_sda_f12";
+>> +			function = "i2c0";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c0_f9_pins:i2c0-f9 {
+> 
+> When the nodes don't have an address, please order them
+> alpha-numerically by node name.
+Ok, I will order the node alpha-numerically.
+> 
+>> +		mux {
+>> +			groups = "i2c0_sck_f9",
+>> +				"i2c0_sda_f10";
+>> +			function = "i2c0";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c1_x_pins:i2c1-x {
+>> +		mux {
+>> +			groups = "i2c1_sck_x",
+>> +				"i2c1_sda_x";
+>> +			function = "i2c1";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c1_a_pins:i2c1-a {
+>> +		mux {
+>> +			groups = "i2c1_sck_a",
+>> +				"i2c1_sda_a";
+>> +			function = "i2c1";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c2_x0_pins:i2c2-x0 {
+>> +		mux {
+>> +			groups = "i2c2_sck_x0",
+>> +				"i2c2_sda_x1";
+>> +			function = "i2c2";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c2_x15_pins:i2c2-x15 {
+>> +		mux {
+>> +			groups = "i2c2_sck_x15",
+>> +				"i2c2_sda_x16";
+>> +			function = "i2c2";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c2_a4_pins:i2c2-a4 {
+>> +		mux {
+>> +			groups = "i2c2_sck_a4",
+>> +				"i2c2_sda_a5";
+>> +			function = "i2c2";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c2_a8_pins:i2c2-a8 {
+>> +		mux {
+>> +			groups = "i2c2_sck_a8",
+>> +				"i2c2_sda_a9";
+>> +			function = "i2c2";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c3_x_pins:i2c3-x {
+>> +		mux {
+>> +			groups = "i2c3_sck_x",
+>> +				"i2c3_sda_x";
+>> +			function = "i2c3";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +
+>> +	i2c3_f_pins:i2c3-f {
+>> +		mux {
+>> +			groups = "i2c3_sck_f",
+>> +				"i2c3_sda_f";
+>> +			function = "i2c3";
+>> +			bias-pull-up;
+>> +			drive-strength-microamp = <3000>;
+>> +		};
+>> +	};
+>> +};
+> 
+> .
 > 
