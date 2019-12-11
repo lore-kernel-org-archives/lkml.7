@@ -2,81 +2,67 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA7BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5778CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72051208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576069151;
-	bh=qiT+xSbAZvNk4JKVs9YsOP6T2z7d+7SiVART93y9REw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=InMmmWdTEP6I/qUI8nrjDkE8ZcjyTJ3SL5TscIJWnfyX9DJRvgw0WgPZiZbHTn/wC
-	 3ySeNF8VAf6SsLzHTOyH7PHudlUPm0aZc8jo7brLYzURkawySnuZiYGqa2JcZraJDp
-	 JrKe18+0w9T9B1hfFtTPyEU1M3fh6xgNbxfNH9eU=
+	by mail.kernel.org (Postfix) with ESMTP id 1FD982077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfLKM7K (ORCPT
+        id S1729382AbfLKNAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:59:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728128AbfLKM7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:59:10 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D1062077B;
-        Wed, 11 Dec 2019 12:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576069149;
-        bh=qiT+xSbAZvNk4JKVs9YsOP6T2z7d+7SiVART93y9REw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t+yblEiw4zA7nSQwN9zoBEaTpnJNvwnFK6kGbSNdGSSsUh47Z6aP9z+ZQZjXsg6CM
-         lAxPzRkLxMn/X8mYoyzYL/49c+WFOcYc7EJnid7Ikamc5RGKMoUaRIlWuN2UdCZ11Q
-         D0kzUxiU0RcwGQ/han+2LdHO2vbI5NekX2MZt9MQ=
-Date:   Wed, 11 Dec 2019 20:58:53 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>
-Subject: Re: [RESEND v2 00/11] clk: imx: Trivial cleanups for clk_hw based API
-Message-ID: <20191211112029.GY15858@dragon>
-References: <1576056350-20715-1-git-send-email-abel.vesa@nxp.com>
+        Wed, 11 Dec 2019 08:00:35 -0500
+Received: from www62.your-server.de ([213.133.104.62]:53664 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLKNAe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:00:34 -0500
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=localhost)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1if1bU-0002Im-Km; Wed, 11 Dec 2019 14:00:32 +0100
+Date:   Wed, 11 Dec 2019 14:00:32 +0100
+From:   Daniel Borkmann <daniel@iogearbox.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: Fix build in minimal configurations, again
+Message-ID: <20191211130032.GB23015@linux.fritz.box>
+References: <20191210203553.2941035-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576056350-20715-1-git-send-email-abel.vesa@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191210203553.2941035-1-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.101.4/25660/Wed Dec 11 10:47:07 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:25:39AM +0200, Abel Vesa wrote:
-> Shawn, just rebased on your clk/imx branch as requested.
+On Tue, Dec 10, 2019 at 09:35:46PM +0100, Arnd Bergmann wrote:
+> Building with -Werror showed another failure:
 > 
-> Abel Vesa (11):
->   clk: imx: Add correct failure handling for clk based helpers
->   clk: imx: Rename the SCCG to SSCG
->   clk: imx: Replace all the clk based helpers with macros
->   clk: imx: pllv1: Switch to clk_hw based API
->   clk: imx: pllv2: Switch to clk_hw based API
->   clk: imx: imx7ulp composite: Rename to show is clk_hw based
->   clk: imx: Rename sccg and frac pll register to suggest clk_hw
->   clk: imx: Rename the imx_clk_pllv4 to imply it's clk_hw based
->   clk: imx: Rename the imx_clk_pfdv2 to imply it's clk_hw based
->   clk: imx: Rename the imx_clk_divider_gate to imply it's clk_hw based
->   clk: imx7up: Rename the clks to hws
+> kernel/bpf/btf.c: In function 'btf_get_prog_ctx_type.isra.31':
+> kernel/bpf/btf.c:3508:63: error: array subscript 0 is above array bounds of 'u8[0]' {aka 'unsigned char[0]'} [-Werror=array-bounds]
+>   ctx_type = btf_type_member(conv_struct) + bpf_ctx_convert_map[prog_type] * 2;
+> 
+> I don't actually understand why the array is empty, but a similar
+> fix has addressed a related problem, so I suppose we can do the
+> same thing here.
+> 
+> Fixes: ce27709b8162 ("bpf: Fix build in minimal configurations")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied all, thanks.
+Applied, thanks!
