@@ -2,139 +2,97 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1061FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D1CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68FE2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B4E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079830;
-	bh=nOm+tV4ZUwxfkY1cs2BzzyQcL1QNwQg1T6MXmVbtODE=;
+	s=default; t=1576079834;
+	bh=Xc0eyKlXnbwXsBZJnAPM3DHLQ9UKo918HSZqaDGVZZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dOJIhFylBLrKiujfAwEnzgjrCcOotR5Ao0qYrTx22iCx+MJw3B5tebdHY7nuE+2Us
-	 tSixbcWS1hykMsgo5aXKmS/h8zNkzTUIT2GlPi0HHN4xQO8bRorpbyaOlt9tQEvOVJ
-	 4dCztYIKfWQOSo1Rg/6HrPrUOEGBG5bZByLNscrA=
+	b=SToduw1APwc7EDpkhQIlnuCs+K20HF0iiPHn6XKf7mk2oiR03FOdfbAS8DBJp4qHz
+	 Rr1wlJJSuTisse1Xdg5Z34pstLF3j+zeJlRmARdQwylSNcdorWVWUokIb6AoNStt8T
+	 qUabrBVoTKySZoP7uqZo8SuVIycJSKlcMkE5rzx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfLKPPO (ORCPT
+        id S1731935AbfLKP5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38912 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:57:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730905AbfLKPOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730183AbfLKPPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53F1B2467A;
-        Wed, 11 Dec 2019 15:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DD220663;
+        Wed, 11 Dec 2019 15:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077248;
-        bh=nOm+tV4ZUwxfkY1cs2BzzyQcL1QNwQg1T6MXmVbtODE=;
+        s=default; t=1576077313;
+        bh=Xc0eyKlXnbwXsBZJnAPM3DHLQ9UKo918HSZqaDGVZZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jPB/OBUF9Av6aINx+HAJEZEXA3P4c7JLW8BzA6sA08JhoZ3uXB76s3wDs0OYAYtCX
-         E1QiYMrEAlmS5mE/jnqNOmBaia55PnXLbNn/JYaCS2N+xfUvNqUnt8lZPKQfHqcOk/
-         dFWsbFLe8l6IsJx7U0BGSGllRT6QYuATdHchIOPs=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 125/134] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
-Date:   Wed, 11 Dec 2019 10:11:41 -0500
-Message-Id: <20191211151150.19073-125-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=x548kTV/OGwYiojk9CaQs36BgA13OQX7PACV+Bbn5yjWnDW8eykeEzupQZYcuHIPM
+         CP7jYkBIGVOk2H6ieRnYJIwEitNkueMJZQ/yzWr4k5fWANIql5gSx1nz/Vc8vEZijC
+         z2yQMF8/5Xr5RFvsWUTPr14uVSG0Y7c+xCwUDcC4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
+        Martin Elshuber <martin.elshuber@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 5.3 098/105] can: ucan: fix non-atomic allocation in completion handler
+Date:   Wed, 11 Dec 2019 16:06:27 +0100
+Message-Id: <20191211150303.001640688@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
+commit 870db5d1015c8bd63e93b579e857223c96249ff7 upstream.
 
-The DTC v1.5.1 added references to (U)INT32_MAX.
+USB completion handlers are called in atomic context and must
+specifically not allocate memory using GFP_KERNEL.
 
-This is no problem for user-space programs since <stdint.h> defines
-(U)INT32_MAX along with (u)int32_t.
+Fixes: 9f2d3eae88d2 ("can: ucan: add driver for Theobroma Systems UCAN devices")
+Cc: stable <stable@vger.kernel.org>     # 4.19
+Cc: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+Cc: Martin Elshuber <martin.elshuber@theobroma-systems.com>
+Cc: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-For the kernel space, libfdt_env.h needs to be adjusted before we
-pull in the changes.
-
-In the kernel, we usually use s/u32 instead of (u)int32_t for the
-fixed-width types.
-
-Accordingly, we already have S/U32_MAX for their max values.
-So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
-
-Instead, add them to the in-kernel libfdt_env.h to compile the
-latest libfdt.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 4 +++-
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 3 +++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/can/usb/ucan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index b36c0289a308e..6a0f1f524466e 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -2,11 +2,13 @@
- #ifndef _ARM_LIBFDT_ENV_H
- #define _ARM_LIBFDT_ENV_H
+--- a/drivers/net/can/usb/ucan.c
++++ b/drivers/net/can/usb/ucan.c
+@@ -792,7 +792,7 @@ resubmit:
+ 			  up);
  
-+#include <linux/limits.h>
- #include <linux/types.h>
- #include <linux/string.h>
- #include <asm/byteorder.h>
+ 	usb_anchor_urb(urb, &up->rx_urbs);
+-	ret = usb_submit_urb(urb, GFP_KERNEL);
++	ret = usb_submit_urb(urb, GFP_ATOMIC);
  
--#define INT_MAX			((int)(~0U>>1))
-+#define INT32_MAX	S32_MAX
-+#define UINT32_MAX	U32_MAX
- 
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 2abc8e83b95e9..9757d4f6331e7 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -6,6 +6,8 @@
- #include <string.h>
- 
- #define INT_MAX			((int)(~0U>>1))
-+#define UINT32_MAX		((u32)~0U)
-+#define INT32_MAX		((s32)(UINT32_MAX >> 1))
- 
- #include "of.h"
- 
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index edb0f0c309044..1adf54aad2df1 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -7,6 +7,9 @@
- 
- #include <asm/byteorder.h>
- 
-+#define INT32_MAX	S32_MAX
-+#define UINT32_MAX	U32_MAX
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
--- 
-2.20.1
+ 	if (ret < 0) {
+ 		netdev_err(up->netdev,
+
 
