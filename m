@@ -2,90 +2,61 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8200BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBB7C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F8F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pfltpKZn"
+	by mail.kernel.org (Postfix) with ESMTP id 7EF0D20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730864AbfLKR6D (ORCPT
+        id S1730916AbfLKR6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:58:03 -0500
-Received: from mailgw02.mediatek.com ([216.200.240.185]:41887 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729228AbfLKR6C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:58:02 -0500
-X-UUID: 62157b23eeb545c7ab86c1fe8c47aeb5-20191211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=u7qv1t+UEdcZ3p9avQ8ygs4s73dg8OSg8iN56BmCOVg=;
-        b=pfltpKZnVgfgvpFUQxqIxY0veuIleO4Ge2hVHVj5TRDVqWu0xtE0EUSqsQAYLqHYfPyZ2m2f5ZlZwE26Le74VT+Bu4WuBj2YyPmmlSF38TWsWMJXeC43255okcdazeonO0x8R15xhQJx4tla1DDHBdjSGnfKu5xNDkixsXm/r/s=;
-X-UUID: 62157b23eeb545c7ab86c1fe8c47aeb5-20191211
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw02.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1466117543; Wed, 11 Dec 2019 09:58:00 -0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Dec 2019 09:48:35 -0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 01:47:31 +0800
-Message-ID: <1576086486.23763.61.camel@mtksdccf07>
-Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of
- MT7531 switch
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>
-Date:   Thu, 12 Dec 2019 01:48:06 +0800
-In-Reply-To: <20191210164855.GE27714@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
-         <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
-         <20191210164855.GE27714@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 11 Dec 2019 12:58:10 -0500
+Received: from mga11.intel.com ([192.55.52.93]:46936 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729228AbfLKR6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:58:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:58:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
+   d="scan'208";a="225618649"
+Received: from cmclough-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.152])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 09:58:07 -0800
+Date:   Wed, 11 Dec 2019 19:58:05 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: selftests: cleanup after unseal with wrong policy
+ test
+Message-ID: <20191211175805.GL4516@linux.intel.com>
+References: <157601492070.15343.464606544465753590.stgit@tstruk-mobl1>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157601492070.15343.464606544465753590.stgit@tstruk-mobl1>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTExIGF0IDAwOjQ4ICswODAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-PiArc3RhdGljIGludCBtdDc1MzFfc2V0dXAoc3RydWN0IGRzYV9zd2l0Y2ggKmRzKQ0KPiA+ICt7
-DQo+ID4gKwkvKiBFbmFibGUgUEhZIHBvd2VyLCBzaW5jZSBwaHlfZGV2aWNlIGhhcyBub3QgeWV0
-IGJlZW4gY3JlYXRlZA0KPiA+ICsJICogcHJvdmlkZWQgZm9yIHBoeV9bcmVhZCx3cml0ZV1fbW1k
-X2luZGlyZWN0IGlzIGNhbGxlZCwgd2UgcHJvdmlkZQ0KPiA+ICsJICogb3VyIG93biBtdDc1MzFf
-aW5kX21tZF9waHlfW3JlYWQsd3JpdGVdIHRvIGNvbXBsZXRlIHRoaXMNCj4gPiArCSAqIGZ1bmN0
-aW9uLg0KPiA+ICsJICovDQo+ID4gKwl2YWwgPSBtdDc1MzFfaW5kX21tZF9waHlfcmVhZChwcml2
-LCAwLCBQSFlfREVWMUYsDQo+ID4gKwkJCQkgICAgICBNVDc1MzFfUEhZX0RFVjFGX1JFR180MDMp
-Ow0KPiA+ICsJdmFsIHw9IE1UNzUzMV9QSFlfRU5fQllQQVNTX01PREU7DQo+ID4gKwl2YWwgJj0g
-fk1UNzUzMV9QSFlfUE9XRVJfT0ZGOw0KPiA+ICsJbXQ3NTMxX2luZF9tbWRfcGh5X3dyaXRlKHBy
-aXYsIDAsIFBIWV9ERVYxRiwNCj4gPiArCQkJCSBNVDc1MzFfUEhZX0RFVjFGX1JFR180MDMsIHZh
-bCk7DQo+ID4gKw0KPiANCj4gSXMgdGhpcyBwb3dlciB0byBhbGwgdGhlIFBIWXM/IE9yIGp1c3Qg
-b25lPw0KVGhpcyBpcyBhbiBpbnRlcm5hbCBjaXJjdWl0IHRoYXQgY29udHJvbHMgdGhlIHBvd2Vy
-IHRvIGFsbCBQSFlzIGJlZm9yZQ0KR2VuZXJpYyBNSUkgcmVnaXN0ZXJzIGFyZSBhdmFpbGFibGUu
-DQoNCkxhbmRlbg0KPiANCj4gICAgQW5kcmV3DQoNCg==
+On Tue, Dec 10, 2019 at 01:55:20PM -0800, Tadeusz Struk wrote:
+> Unseal with wrong policy tests affects DA lockout and eventually
+> causes to fail with:
+> "ProtocolError: TPM_RC_LOCKOUT: cc=0x00000153, rc=0x00000921",
+> when the test runs multiple times. Send tpm clear command
+> after the test to reset the DA counters.
+> 
+> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
 
+You could pick this also to the same patch set.
+
+/Jarkko
