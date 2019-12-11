@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4AAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2A7C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D83652073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 349612073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080284;
-	bh=vJ2u5zoEkcD9bMt34VoLMySskA6MnTSy5Sxos5XHylc=;
+	s=default; t=1576080286;
+	bh=KhsJlt8mJmKhtd62rZZlnvygPNnMkacTIfjNnVH+Zqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/uFeC/46Hq0VOHI2NKh963ZRJx16EEJy9KMtQz1SgJ3gmdSJHUzEiceI3NKzgAmA
-	 lrSBFxbPzxncQORzU5e8DOfTcExUibFjn/eP0b0AAkdM/CltBIoiJmbZhHTZgDraum
-	 A0OK4aGYgZp5ay6wX4WeWi8AMbX6hiHeEmWFtqFs=
+	b=oEDIx+3Y6cDbEryXGvwVUCXP6oiuxbFqZkGfE3yHf635w5Q15n6pKeX1BQX3lSCNx
+	 zgPx65rOTKJR/RJyRSwzXlsY2cNsMOId5tJyvYBCV5RQmEID3SANC+wFtxO9Xsm4WM
+	 jwiCy8wFl/+RUkz7wOpqbvh1CcfdHeLYLOeskie8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388873AbfLKQEl (ORCPT
+        id S1731297AbfLKPM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:04:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35676 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731295AbfLKPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:00 -0500
+        id S1730815AbfLKPMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:40 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9953E2464B;
-        Wed, 11 Dec 2019 15:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E262465E;
+        Wed, 11 Dec 2019 15:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077179;
-        bh=vJ2u5zoEkcD9bMt34VoLMySskA6MnTSy5Sxos5XHylc=;
+        s=default; t=1576077159;
+        bh=KhsJlt8mJmKhtd62rZZlnvygPNnMkacTIfjNnVH+Zqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YjyecVvkke6gu2IUiZ9sDZOwMAMxG1bKC1fN7su4h0mKWUY9+SgmKwps7LPAnlziV
-         sqFwWr/TKsTTHsILRrV9sLYuATkMVPqfRbKwNQsL/+Po2UUBo0/wpPwXNN4+DHBAAr
-         jnGuUJFqrT0itDUyAMq6qP25UQ8lwZQUbpJUV5wo=
+        b=L/eth3NzEXp8Jn9p5ESnx1AYIKTLibV02Y4/2RkzRIyX8OJ19Y/wAzq9q04z7p6Ak
+         kEytisqzA3/5MUgNxiOUZqQgE25mZx5yRlK05NF7D/aGm7KRgFVPMwaQiSPrQ0PGFE
+         bmfZDM3cpIFBMIKuZQUVJR/RbUl2qJT+mWjYyu1c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 063/134] PCI: rpaphp: Fix up pointer to first drc-info entry
-Date:   Wed, 11 Dec 2019 10:10:39 -0500
-Message-Id: <20191211151150.19073-63-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 045/134] scsi: lpfc: Fix unexpected error messages during RSCN handling
+Date:   Wed, 11 Dec 2019 10:10:21 -0500
+Message-Id: <20191211151150.19073-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,41 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 9723c25f99aff0451cfe6392e1b9fdd99d0bf9f0 ]
+[ Upstream commit 2332e6e475b016e2026763f51333f84e2e6c57a3 ]
 
-The first entry of the ibm,drc-info property is an int encoded count
-of the number of drc-info entries that follow. The "value" pointer
-returned by of_prop_next_u32() is still pointing at the this value
-when we call of_read_drc_info_cell(), but the helper function
-expects that value to be pointing at the first element of an entry.
+During heavy RCN activity and log_verbose = 0 we see these messages:
 
-Fix up by incrementing the "value" pointer to point at the first
-element of the first drc-info entry prior.
+  2754 PRLI failure DID:521245 Status:x9/xb2c00, data: x0
+  0231 RSCN timeout Data: x0 x3
+  0230 Unexpected timeout, hba link state x5
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-5-git-send-email-tyreld@linux.ibm.com
+This is due to delayed RSCN activity.
+
+Correct by avoiding the timeout thus the messages by restarting the
+discovery timeout whenever an rscn is received.
+
+Filter PRLI responses such that severity depends on whether expected for
+the configuration or not. For example, PRLI errors on a fabric will be
+informational (they are expected), but Point-to-Point errors are not
+necessarily expected so they are raised to an error level.
+
+Link: https://lore.kernel.org/r/20191105005708.7399-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/lpfc/lpfc_els.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 18627bb21e9ec..e3502644a45c3 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -239,6 +239,8 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 	value = of_prop_next_u32(info, NULL, &entries);
- 	if (!value)
- 		return -EINVAL;
-+	else
-+		value++;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index f293b48616ae9..4794a58deaf3c 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -2236,6 +2236,7 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 	struct Scsi_Host  *shost = lpfc_shost_from_vport(vport);
+ 	IOCB_t *irsp;
+ 	struct lpfc_nodelist *ndlp;
++	char *mode;
  
- 	for (j = 0; j < entries; j++) {
- 		of_read_drc_info_cell(&info, &value, &drc);
+ 	/* we pass cmdiocb to state machine which needs rspiocb as well */
+ 	cmdiocb->context_un.rsp_iocb = rspiocb;
+@@ -2273,8 +2274,17 @@ lpfc_cmpl_els_prli(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 			goto out;
+ 		}
+ 
++		/* If we don't send GFT_ID to Fabric, a PRLI error
++		 * could be expected.
++		 */
++		if ((vport->fc_flag & FC_FABRIC) ||
++		    (vport->cfg_enable_fc4_type != LPFC_ENABLE_BOTH))
++			mode = KERN_ERR;
++		else
++			mode = KERN_INFO;
++
+ 		/* PRLI failed */
+-		lpfc_printf_vlog(vport, KERN_ERR, LOG_ELS,
++		lpfc_printf_vlog(vport, mode, LOG_ELS,
+ 				 "2754 PRLI failure DID:%06X Status:x%x/x%x, "
+ 				 "data: x%x\n",
+ 				 ndlp->nlp_DID, irsp->ulpStatus,
+@@ -6455,7 +6465,7 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 	uint32_t payload_len, length, nportid, *cmd;
+ 	int rscn_cnt;
+ 	int rscn_id = 0, hba_id = 0;
+-	int i;
++	int i, tmo;
+ 
+ 	pcmd = (struct lpfc_dmabuf *) cmdiocb->context2;
+ 	lp = (uint32_t *) pcmd->virt;
+@@ -6561,6 +6571,13 @@ lpfc_els_rcv_rscn(struct lpfc_vport *vport, struct lpfc_iocbq *cmdiocb,
+ 
+ 		spin_lock_irq(shost->host_lock);
+ 		vport->fc_flag |= FC_RSCN_DEFERRED;
++
++		/* Restart disctmo if its already running */
++		if (vport->fc_flag & FC_DISC_TMO) {
++			tmo = ((phba->fc_ratov * 3) + 3);
++			mod_timer(&vport->fc_disctmo,
++				  jiffies + msecs_to_jiffies(1000 * tmo));
++		}
+ 		if ((rscn_cnt < FC_MAX_HOLD_RSCN) &&
+ 		    !(vport->fc_flag & FC_RSCN_DISCOVERY)) {
+ 			vport->fc_flag |= FC_RSCN_MODE;
 -- 
 2.20.1
 
