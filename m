@@ -2,165 +2,287 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 335C8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75624C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF01722527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3638E21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:44:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZVx8uTD1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="adUlVTiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLKWmu (ORCPT
+        id S1726890AbfLKWoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:42:50 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:35748 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLKWmu (ORCPT
+        Wed, 11 Dec 2019 17:44:05 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39534 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726592AbfLKWoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:42:50 -0500
-Received: from [192.168.0.20] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D4C119D6;
-        Wed, 11 Dec 2019 23:42:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576104167;
-        bh=lMgSa0SNr+HPX38wchwUZz0XON4bjQEc4SadsB/SUVc=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZVx8uTD1A+w9VZNfOpqr4isjmtfsDeHo5KTup1XF+SXMXYuz6fPQGQN+aQt9WxsP1
-         m1S5wBrMATGHBdFdTdXGsBpEZxgI7COFOwFj11ZQRzOnbPaFnDlKE7MBPoeoqtssSG
-         Kdhia/Yd4zReF+EvNjizrGDAhF/6Hkso5YuNgKQM=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: Regulator probe on demand (or circular dependencies)
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
- <20191209163755.GF5483@sirena.org.uk>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <fb87c957-40e8-587e-5789-33b740f8326d@ideasonboard.com>
-Date:   Wed, 11 Dec 2019 22:42:43 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 17:44:04 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d5so98391wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:44:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eHar8caGVk2CHYCleN7lzgXckcrdAjaPRcEzE+leMkc=;
+        b=adUlVTiTz/iXrhnDM4CQmeVqAvo6g5aR4wZlXa2/qvQCfFdJBMaA2fP1Ktz4VgakJ9
+         BBO+16TMexseKta7EmbwHlfuSVpAUrBIWuLnAcmcbhRlSQYM6MMjAGNk+cmk3dzipVKv
+         5yCOUdWh0IB2vW2QZ/ipPZ6smv+S6mBHKcruTY9jukDzyAdeoICyWz1xtbaXYzMSfl/a
+         NCjpGmD1r4vd2dBLCDnZiK1efTFD/2/OnfIvbI8G3NGDY4khNeRauKAu1pEEqxOH1049
+         UF4UA8Yy1Xme/7jfzyq9w2d9PQzmCjdGMfBXhYWITGHxf4AMCkQPj5C+0izWgcdzs+fw
+         NJqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eHar8caGVk2CHYCleN7lzgXckcrdAjaPRcEzE+leMkc=;
+        b=kq4kqR52uFUMrJ4VKhJsfrThZX3ifuFGrFcEbY0xpyo6Jw6rSlnxRRBzXFT/u/sWDv
+         hKzeJxwJranbU2YeqSEPcL0folpktLLCIrjUdI54EdORCXhuS+KiNBQKZJdKz0+LzNjS
+         Xp8RkS+h8+hbzaeluvrCp83hYjbSoQZ/88oXNQfoGh/kdhMhw37qWF+i12q0JcGym0Va
+         NyMJ4uPI5ZrlSSFrw4xkebyL9988inRGocUGdbttxAwGTflYtgnFp70Vhk9Rdqd9k2VV
+         zml4Y9YAH1C2Z/96Va7mRJXGIdgjYFYUfa5KsL2mD2CgLb5M8m3PCLg3iYIuNUZCvKNX
+         2k8A==
+X-Gm-Message-State: APjAAAWLjCaMZeEFoIG2y9qWGtKqfJk06X0IrDSJuEXvsFlLRM/gzGr0
+        UA2VMuhlfQ1yy6LTu6lbOqvWSw==
+X-Google-Smtp-Source: APXvYqxWuk+Lrm/FHXMVcb/FiFoVob5UTEWEOs3xuQsfhMJjYIGsVdmNDISq1z+WL1stPmn98F97Hw==
+X-Received: by 2002:a7b:c7d3:: with SMTP id z19mr2420119wmk.94.1576104241537;
+        Wed, 11 Dec 2019 14:44:01 -0800 (PST)
+Received: from localhost.localdomain ([2a01:e34:ed2f:f020:48f7:48fb:71cb:f13a])
+        by smtp.gmail.com with ESMTPSA id s16sm3798809wrn.78.2019.12.11.14.44.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 14:44:00 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rui.zhang@intel.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
+        linux-kernel@vger.kernel.org, martin.kepplinger@puri.sm
+Subject: [PATCH V5 1/3] thermal/drivers/cpu_cooling: Add idle cooling device documentation
+Date:   Wed, 11 Dec 2019 23:43:45 +0100
+Message-Id: <20191211224347.1001-1-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20191209163755.GF5483@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Provide some documentation for the idle injection cooling effect in
+order to let people to understand the rational of the approach for the
+idle injection CPU cooling device.
 
-On 09/12/2019 16:37, Mark Brown wrote:
-> On Fri, Dec 06, 2019 at 04:38:04PM +0000, Kieran Bingham wrote:
-> 
->> The MAX9286 also exposes 2 GPIO pins, as such I have configured the
->> MAX9286 driver [1] to expose a gpio-chip [2].
-> 
-> So this seems like a MFD then?  The nice thing about using the MFD
-> subsystem is that it means that the drivers for the various subsystems
-> on the device can instantiate in any order and defer separately without
-> interfering with each other which seems like it's the issue here.
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+  V4:
+    - Fixed typos, replaced 'period' per 'duty cycles', clarified some
+      wording (Amit Kucheria)
+---
+ .../driver-api/thermal/cpu-idle-cooling.rst   | 189 ++++++++++++++++++
+ 1 file changed, 189 insertions(+)
+ create mode 100644 Documentation/driver-api/thermal/cpu-idle-cooling.rst
 
-As long as we can defer and not break the other layers this could
-potentially work.
-
-Breaking the GMSL driver out to have it's own bus (generically for
-serdes buses) and allowing the MAX9286 to probe fully before probing any
-subdevices is another alternative suggestion I've had (but much more
-work I think).
-
->>  - is there anything I can do here within regulator_dev_lookup() to
->>    attempt creating the regulator_dev 'on-demand' when
->>    of_find_regulator_by_node(node) returns empty? (or is that crazy, and
->>    just a rabbit-hole?)
-> 
-> This seems like a terrible idea, you'll have a half baked regulator in
-
-Ohh eep, I just re-read my description, and I don't think I described my
-intention very well at all. (or at all!)
-
-I wouldn't want to have just a half baked struct regulator_dev on it's
-own ... I was more wondering if we can kick the core driver framework to
-fully probe this regulator (which would thus create the required
-regulator_dev structures). It was more a question of can we guide the
-core driver framework that it really needs to probe this device
-immediately ...
-
-I was sort of wondering if something like this could optimise away some
-of the -EPROBE_DEFER iterations at a more global level, but I don't know
-how or if that would work anyway.
-
-> the system which will need special casing all over the place and
-> doubtless be an ongoing source of bugs.
-
-Indeed, I wasn't expecting to have some different case non-probed
-regulator ...
-
-Anyway, it's possibly a moot point I think - Niklas has suggested that
-he can indeed resolve the -EPROBE_DEFER restrictions.
-
-I'm not yet sure if we want to go full MFD yet ... so I've left this
-feature out of my latest posting for the driver - and we'll discuss the
-direction for solving this in our team.
-
-Thanks again,
+diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+new file mode 100644
+index 000000000000..13d7fe4e8de8
+--- /dev/null
++++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
+@@ -0,0 +1,189 @@
++
++Situation:
++----------
++
++Under certain circumstances a SoC can reach a critical temperature
++limit and is unable to stabilize the temperature around a temperature
++control. When the SoC has to stabilize the temperature, the kernel can
++act on a cooling device to mitigate the dissipated power. When the
++critical temperature is reached, a decision must be taken to reduce
++the temperature, that, in turn impacts performance.
++
++Another situation is when the silicon temperature continues to
++increase even after the dynamic leakage is reduced to its minimum by
++clock gating the component. This runaway phenomenon can continue due
++to the static leakage. The only solution is to power down the
++component, thus dropping the dynamic and static leakage that will
++allow the component to cool down.
++
++Last but not least, the system can ask for a specific power budget but
++because of the OPP density, we can only choose an OPP with a power
++budget lower than the requested one and under-utilize the CPU, thus
++losing performance. In other words, one OPP under-utilizes the CPU
++with a power less than the requested power budget and the next OPP
++exceeds the power budget. An intermediate OPP could have been used if
++it were present.
++
++Solutions:
++----------
++
++If we can remove the static and the dynamic leakage for a specific
++duration in a controlled period, the SoC temperature will
++decrease. Acting on the idle state duration or the idle cycle
++injection period, we can mitigate the temperature by modulating the
++power budget.
++
++The Operating Performance Point (OPP) density has a great influence on
++the control precision of cpufreq, however different vendors have a
++plethora of OPP density, and some have large power gap between OPPs,
++that will result in loss of performance during thermal control and
++loss of power in other scenarios.
++
++At a specific OPP, we can assume that injecting idle cycle on all CPUs
++belong to the same cluster, with a duration greater than the cluster
++idle state target residency, we lead to dropping the static and the
++dynamic leakage for this period (modulo the energy needed to enter
++this state). So the sustainable power with idle cycles has a linear
++relation with the OPP’s sustainable power and can be computed with a
++coefficient similar to:
++
++	    Power(IdleCycle) = Coef x Power(OPP)
++
++Idle Injection:
++---------------
++
++The base concept of the idle injection is to force the CPU to go to an
++idle state for a specified time each control cycle, it provides
++another way to control CPU power and heat in addition to
++cpufreq. Ideally, if all CPUs belonging to the same cluster, inject
++their idle cycles synchronously, the cluster can reach its power down
++state with a minimum power consumption and reduce the static leakage
++to almost zero.  However, these idle cycles injection will add extra
++latencies as the CPUs will have to wakeup from a deep sleep state.
++
++We use a fixed duration of idle injection that gives an acceptable
++performance penalty and a fixed latency. Mitigation can be increased
++or decreased by modulating the duty cycle of the idle injection.
++
++     ^
++     |
++     |
++     |-------                         -------
++     |_______|_______________________|_______|___________
++
++     <------>
++       idle  <---------------------->
++                    running
++
++      <----------------------------->
++              duty cycle 25%
++
++	      
++The implementation of the cooling device bases the number of states on
++the duty cycle percentage. When no mitigation is happening the cooling
++device state is zero, meaning the duty cycle is 0%.
++
++When the mitigation begins, depending on the governor's policy, a
++starting state is selected. With a fixed idle duration and the duty
++cycle (aka the cooling device state), the running duration can be
++computed.
++
++The governor will change the cooling device state thus the duty cycle
++and this variation will modulate the cooling effect.
++
++     ^
++     |
++     |
++     |-------                 -------
++     |_______|_______________|_______|___________
++
++     <------>
++       idle  <-------------->
++                running
++
++      <----------------------------->
++              duty cycle 33%
++
++
++     ^
++     |
++     |
++     |-------         -------
++     |_______|_______|_______|___________
++
++     <------>
++       idle  <------>
++              running
++
++      <------------->
++       duty cycle 50%
++
++The idle injection duration value must comply with the constraints:
++
++- It is less than or equal to the latency we tolerate when the
++  mitigation begins. It is platform dependent and will depend on the
++  user experience, reactivity vs performance trade off we want. This
++  value should be specified.
++
++- It is greater than the idle state’s target residency we want to go
++  for thermal mitigation, otherwise we end up consuming more energy.
++
++Power considerations
++--------------------
++  
++When we reach the thermal trip point, we have to sustain a specified
++power for a specific temperature but at this time we consume:
++
++ Power = Capacitance x Voltage^2 x Frequency x Utilisation
++
++... which is more than the sustainable power (or there is something
++wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
++fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
++because we don’t want to change the OPP. We can group the
++‘Capacitance’ and the ‘Utilisation’ into a single term which is the
++‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
++
++ Pdyn = Cdyn x Voltage^2 x Frequency
++
++The power allocator governor will ask us somehow to reduce our power
++in order to target the sustainable power defined in the device
++tree. So with the idle injection mechanism, we want an average power
++(Ptarget) resulting in an amount of time running at full power on a
++specific OPP and idle another amount of time. That could be put in a
++equation:
++
++ P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
++			(Trunning + Tidle)
++  ...
++
++ Tidle = Trunning x ((P(opp)running / P(opp)target) - 1)
++
++At this point if we know the running period for the CPU, that gives us
++the idle injection we need. Alternatively if we have the idle
++injection duration, we can compute the running duration with:
++
++ Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
++
++Practically, if the running power is less than the targeted power, we
++end up with a negative time value, so obviously the equation usage is
++bound to a power reduction, hence a higher OPP is needed to have the
++running power greater than the targeted power.
++
++However, in this demonstration we ignore three aspects:
++
++ * The static leakage is not defined here, we can introduce it in the
++   equation but assuming it will be zero most of the time as it is
++   difficult to get the values from the SoC vendors
++
++ * The idle state wake up latency (or entry + exit latency) is not
++   taken into account, it must be added in the equation in order to
++   rigorously compute the idle injection
++
++ * The injected idle duration must be greater than the idle state
++   target residency, otherwise we end up consuming more energy and
++   potentially invert the mitigation effect
++
++So the final equation is:
++
++ Trunning = (Tidle - Twakeup ) x
++		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
 -- 
-Regards
---
-Kieran
+2.17.1
+
