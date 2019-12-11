@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CA2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E127C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E09024671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402FE2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078189;
-	bh=g8kxsHDM1Xv8XjTmikpgJjaMib4xUu9DDNMw/+DsTBY=;
+	s=default; t=1576078195;
+	bh=IpzqZ8U2q1cIKIIYL06rQOFBJOT+/SNNiKO5NCgdzgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PaGqTaFc02HKD2o1DiuW6vGAnAvAKQYzYRzYTq1MBxAUZuAwqyCzttRHHkyfYiTHd
-	 1HW7QIJlPq//qWFyOPl/VTh+7INJaST0VFP1JyP3o5itAvcLkUV3jDSCkQJ5SoNo1a
-	 w7aaiqb7gtwI7g4QxInZqpKlnA+gNMJfPcb6ln/E=
+	b=bvEnLMpoEGEFE5CW829nnKZwBMQOeBP3botJtu8AKzFXuvrMnsrWK7A1O8Brg3GDO
+	 /req/oFX8wgNBZRO/sM6QjzlHzg9gmzNx9Duc4qpYSNnx9tgnCsOjxQL7cd61+/N3w
+	 GNdm492HllbLETqEZsJBxaLAUQaHlEtNi7j2f0vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbfLKP3h (ORCPT
+        id S2387697AbfLKP3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36350 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387879AbfLKP31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:27 -0500
+        id S2387925AbfLKP3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3812465B;
-        Wed, 11 Dec 2019 15:29:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 555142465B;
+        Wed, 11 Dec 2019 15:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078166;
-        bh=g8kxsHDM1Xv8XjTmikpgJjaMib4xUu9DDNMw/+DsTBY=;
+        s=default; t=1576078175;
+        bh=IpzqZ8U2q1cIKIIYL06rQOFBJOT+/SNNiKO5NCgdzgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ECXfowsjdcvnaSIy15Al6MYSreY3N7owgmBruWdGp09OxGjeAjiWLhQkRzGNFb58B
-         v7d3AVw0d3g39X0NrC20P71po/eaxY40SchXx3RxGYpghhKFgoRA68li5A+LEFj8Be
-         /O4Z88H3tVRBTngxhGOY7bAV7iiH5JmCYTXcMor8=
+        b=0OQ8oQtfkok95UgRMhau9VaKNBP/bUd6S0W0nDNulOuBk0UScPC00KoHk3/bH/WBZ
+         GqyGBftl3p/+vSuyq6Uhp4kgQqRPHA7k4wjb+dF24v0qBNjZkOOpEXdaje1+CH1oSB
+         hWRkUG9wk0hn5FWx05w0LNJ1ygPf8XemjYdMqBfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 51/58] perf script: Fix brstackinsn for AUXTRACE
-Date:   Wed, 11 Dec 2019 10:28:24 -0500
-Message-Id: <20191211152831.23507-51-sashal@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Daniel Colascione <dancol@google.com>,
+        Jann Horn <jannh@google.com>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 58/58] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+Date:   Wed, 11 Dec 2019 10:28:31 -0500
+Message-Id: <20191211152831.23507-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -60,64 +69,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 0cd032d3b5fcebf5454315400ab310746a81ca53 ]
+[ Upstream commit 3c1c24d91ffd536de0a64688a9df7f49e58fadbc ]
 
-brstackinsn must be allowed to be set by the user when AUX area data has
-been captured because, in that case, the branch stack might be
-synthesized on the fly. This fixes the following error:
+A while ago Andy noticed
+(http://lkml.kernel.org/r/CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com)
+that UFFD_FEATURE_EVENT_FORK used by an unprivileged user may have
+security implications.
 
-Before:
+As the first step of the solution the following patch limits the availably
+of UFFD_FEATURE_EVENT_FORK only for those having CAP_SYS_PTRACE.
 
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-  Display of branch stack assembler requested, but non all-branch filter set
-  Hint: run 'perf record -b ...'
+The usage of CAP_SYS_PTRACE ensures compatibility with CRIU.
 
-After:
+Yet, if there are other users of non-cooperative userfaultfd that run
+without CAP_SYS_PTRACE, they would be broken :(
 
-  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
-  [ perf record: Woken up 19 times to write data ]
-  [ perf record: Captured and wrote 2.274 MB perf.data ]
-  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
-            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
-        bmexec+2485:
-        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
-        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
-        00005641d5806bd6                        add %rdi, %rax
-        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
-        00005641d5806bdd                        cmp %rax, %r14
-        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
-        mismatch of LBR data and executable
-        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
+descriptor table from the read() implementation of uffd, which may have
+security implications for unprivileged use of the userfaultfd.
 
-Fixes: 48d02a1d5c13 ("perf script: Add 'brstackinsn' for branch stacks")
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191127095322.15417-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
+CAP_SYS_PTRACE.
+
+Link: http://lkml.kernel.org/r/1572967777-8812-2-git-send-email-rppt@linux.ibm.com
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Daniel Colascione <dancol@google.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Lokesh Gidra <lokeshgidra@google.com>
+Cc: Nick Kralevich <nnk@google.com>
+Cc: Nosh Minwalla <nosh@google.com>
+Cc: Pavel Emelyanov <ovzxemul@gmail.com>
+Cc: Tim Murray <timmurray@google.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/userfaultfd.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 76789523429ad..09c4380bc2255 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -355,7 +355,7 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
- 		       "selected. Hence, no address to lookup the source line number.\n");
- 		return -EINVAL;
- 	}
--	if (PRINT_FIELD(BRSTACKINSN) &&
-+	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
- 	    !(perf_evlist__combined_branch_type(session->evlist) &
- 	      PERF_SAMPLE_BRANCH_ANY)) {
- 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
+diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+index a609d480606da..e2b2196fd9428 100644
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -1807,13 +1807,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
+ 		goto out;
+ 	features = uffdio_api.features;
+-	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
+-		memset(&uffdio_api, 0, sizeof(uffdio_api));
+-		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
+-			goto out;
+-		ret = -EINVAL;
+-		goto out;
+-	}
++	ret = -EINVAL;
++	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
++		goto err_out;
++	ret = -EPERM;
++	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
++		goto err_out;
+ 	/* report all available features and ioctls to userland */
+ 	uffdio_api.features = UFFD_API_FEATURES;
+ 	uffdio_api.ioctls = UFFD_API_IOCTLS;
+@@ -1826,6 +1825,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
+ 	ret = 0;
+ out:
+ 	return ret;
++err_out:
++	memset(&uffdio_api, 0, sizeof(uffdio_api));
++	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
++		ret = -EFAULT;
++	goto out;
+ }
+ 
+ static long userfaultfd_ioctl(struct file *file, unsigned cmd,
 -- 
 2.20.1
 
