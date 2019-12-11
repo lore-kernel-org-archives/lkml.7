@@ -2,284 +2,208 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61DBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0FAC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28A02053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED33D2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0zmGy5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfLKKHc (ORCPT
+        id S1728799AbfLKKIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:07:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36898 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728404AbfLKKHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:07:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A3A02AD75;
-        Wed, 11 Dec 2019 10:07:29 +0000 (UTC)
-Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
- attributes
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        gurchetansingh@chromium.org
-References: <20191211081810.20079-1-kraxel@redhat.com>
- <20191211081810.20079-2-kraxel@redhat.com>
- <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
-Date:   Wed, 11 Dec 2019 11:07:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 05:08:01 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35737 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728678AbfLKKIA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:08:00 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so1960833wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:07:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gk81PzAbLI8o98/2oqILv8CnZ7KtzZ7BGCA4s/qRTQo=;
+        b=l0zmGy5nn/XJOskQPekSMLWGfaDGaziwasSrhR/VtnGbL6OmzWoGTFV7oIUqABr97R
+         a8jSQzR6DL6rQ6WZaVNx7dWAnRhEqbV7CLxB2WeckvubXRGpv8pnnB9/tt662tToGI23
+         qOVc2NKUue0s7faGQrdTJOQw6a+uoRftgHaiW1ZJlrmf/dV85oN8GFEDt0qwwXZJ9MhD
+         aW+GoAjR4xKRP+hv0ZWB6X6W6azavprw7nkbC6LIkL2JqJ4z0MuOCQl9+fssxUlIxWgs
+         ggoxo+G1CfP8n8/oRgykuzAI2hDNP5SjNexs1i81PX4GdggpHUiZuW6lCwwx3bcNa6gq
+         HCgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gk81PzAbLI8o98/2oqILv8CnZ7KtzZ7BGCA4s/qRTQo=;
+        b=EB+5My+/XGkdwR2CuDlaScDq3joEw1rurjIm09qHQ5kdPLMv1xurzF5KPj0etHELcT
+         zKEiYX88cf2krBF8eDyP8RdytT9WkJutP/mG5dnAsIDE0WCaSUAiSnmhgz3XAFT00JaI
+         R1OJw/3jUG2MGkh3jnLorITdXy9EN0+VPMOp457UfLycP0iYKmsdF9t8fiBTh06dLsor
+         mVLpBja3j5jAAFaOmHZpNzptoY5UKx/IRAR3fyrJ/0/HYcLoaDUJUk+1hXAuZLSXs9sq
+         eRDLeJlJkKsP6EuZkTyLiQL6G160VguTuiKYrr2vjPKg85lNKteDqMa/XmmtVuxp9I4U
+         evSw==
+X-Gm-Message-State: APjAAAWuoEtHKEwG8X0yZc0BY+PuxGDo8Dt55cjY5YwnVoJZ4Unz1RxA
+        Ze+0RmjOABw5RkVYRF38AX23arp8rWYO2CSUJmqhpg==
+X-Google-Smtp-Source: APXvYqwI6Cs4wMfaSiJabTG1VtEx71hprkRtI8lhwa9L9Yrmea6XD4zJIFcrmydevphRyDbiD5J3g6rP6zX5G7cSERo=
+X-Received: by 2002:a1c:a943:: with SMTP id s64mr2546152wme.148.1576058877140;
+ Wed, 11 Dec 2019 02:07:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl"
+References: <20191210210735.9077-1-sashal@kernel.org> <20191210210735.9077-277-sashal@kernel.org>
+In-Reply-To: <20191210210735.9077-277-sashal@kernel.org>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 11 Dec 2019 10:07:54 +0000
+Message-ID: <CAKv+Gu-KLGFUEP55iGFp-irspwoG1uc0ZVPW15YDFX9MtXQW2Q@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.4 316/350] int128: move __uint128_t compiler
+ test to Kconfig
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-riscv@lists.infradead.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl
-Content-Type: multipart/mixed; boundary="PWptc28KfncWqAB1I31NMJorptpyGRJEF";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>, open list
- <linux-kernel@vger.kernel.org>, gurchetansingh@chromium.org
-Message-ID: <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
-Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
- attributes
-References: <20191211081810.20079-1-kraxel@redhat.com>
- <20191211081810.20079-2-kraxel@redhat.com>
- <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
-In-Reply-To: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+On Tue, 10 Dec 2019 at 22:13, Sasha Levin <sashal@kernel.org> wrote:
+>
+> From: Ard Biesheuvel <ardb@kernel.org>
+>
+> [ Upstream commit c12d3362a74bf0cd9e1d488918d40607b62a3104 ]
+>
+> In order to use 128-bit integer arithmetic in C code, the architecture
+> needs to have declared support for it by setting ARCH_SUPPORTS_INT128,
+> and it requires a version of the toolchain that supports this at build
+> time. This is why all existing tests for ARCH_SUPPORTS_INT128 also test
+> whether __SIZEOF_INT128__ is defined, since this is only the case for
+> compilers that can support 128-bit integers.
+>
+> Let's fold this additional test into the Kconfig declaration of
+> ARCH_SUPPORTS_INT128 so that we can also use the symbol in Makefiles,
+> e.g., to decide whether a certain object needs to be included in the
+> first place.
+>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
---PWptc28KfncWqAB1I31NMJorptpyGRJEF
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This does not fix a bug so no need to put it in -stable
 
-
-
-Am 11.12.19 um 10:58 schrieb Thomas Zimmermann:
-> Hi Gerd
->=20
-> Am 11.12.19 um 09:18 schrieb Gerd Hoffmann:
->> Add caching field to drm_gem_shmem_object to specify the cachine
->> attributes for mappings.  Add helper function to tweak pgprot
->> accordingly.  Switch vmap and mmap functions to the new helper.
->>
->> Set caching to write-combine when creating the object so behavior
->> doesn't change by default.  Drivers can override that later if
->> needed.
->>
->> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->=20
-> If you want to merge this patch, you have my
->=20
-> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->=20
-> Please see my comment below.
->=20
->> ---
->>  include/drm/drm_gem_shmem_helper.h     | 12 ++++++++++++
->>  drivers/gpu/drm/drm_gem_shmem_helper.c | 24 +++++++++++++++++++++---
->>  2 files changed, 33 insertions(+), 3 deletions(-)
->>
->> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_=
-shmem_helper.h
->> index 6748379a0b44..9d6e02c6205f 100644
->> --- a/include/drm/drm_gem_shmem_helper.h
->> +++ b/include/drm/drm_gem_shmem_helper.h
->> @@ -17,6 +17,11 @@ struct drm_mode_create_dumb;
->>  struct drm_printer;
->>  struct sg_table;
->> =20
->> +enum drm_gem_shmem_caching {
->> +	DRM_GEM_SHMEM_CACHED =3D 1,
->> +	DRM_GEM_SHMEM_WC,
->> +};
->> +
->>  /**
->>   * struct drm_gem_shmem_object - GEM object backed by shmem
->>   */
->> @@ -83,6 +88,11 @@ struct drm_gem_shmem_object {
->>  	 * The address are un-mapped when the count reaches zero.
->>  	 */
->>  	unsigned int vmap_use_count;
->> +
->> +	/**
->> +	 * @caching: caching attributes for mappings.
->> +	 */
->> +	enum drm_gem_shmem_caching caching;
->>  };
->> =20
->>  #define to_drm_gem_shmem_obj(obj) \
->> @@ -130,6 +140,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_dev=
-ice *dev,
->> =20
->>  struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *o=
-bj);
->> =20
->> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pg=
-prot_t prot);
->> +
->>  /**
->>   * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
->>   *
->> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/=
-drm_gem_shmem_helper.c
->> index a421a2eed48a..5bb94e130a50 100644
->> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
->> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
->> @@ -76,6 +76,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create(st=
-ruct drm_device *dev, size_t
->>  	mutex_init(&shmem->pages_lock);
->>  	mutex_init(&shmem->vmap_lock);
->>  	INIT_LIST_HEAD(&shmem->madv_list);
->> +	shmem->caching =3D DRM_GEM_SHMEM_WC;
->> =20
->>  	/*
->>  	 * Our buffers are kept pinned, so allocating them
->> @@ -256,9 +257,11 @@ static void *drm_gem_shmem_vmap_locked(struct drm=
-_gem_shmem_object *shmem)
->> =20
->>  	if (obj->import_attach)
->>  		shmem->vaddr =3D dma_buf_vmap(obj->import_attach->dmabuf);
->> -	else
->> +	else {
->> +		pgprot_t prot =3D drm_gem_shmem_caching(shmem, PAGE_KERNEL);
->>  		shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHIFT,
->> -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
->> +				    VM_MAP, prot);
->> +	}
->> =20
->>  	if (!shmem->vaddr) {
->>  		DRM_DEBUG_KMS("Failed to vmap pages\n");
->> @@ -540,7 +543,8 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj,=
- struct vm_area_struct *vma)
->>  	}
->> =20
->>  	vma->vm_flags |=3D VM_MIXEDMAP | VM_DONTEXPAND;
->> -	vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_f=
-lags));
->> +	vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
->> +	vma->vm_page_prot =3D drm_gem_shmem_caching(shmem, vma->vm_page_prot=
-);
->>  	vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
->>  	vma->vm_ops =3D &drm_gem_shmem_vm_ops;
->> =20
->> @@ -683,3 +687,17 @@ drm_gem_shmem_prime_import_sg_table(struct drm_de=
-vice *dev,
->>  	return ERR_PTR(ret);
->>  }
->>  EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
->> +
->> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pg=
-prot_t prot)
->> +{
->> +	switch (shmem->caching) {
->> +	case DRM_GEM_SHMEM_CACHED:
->> +		return prot;
->> +	case DRM_GEM_SHMEM_WC:
->> +		return pgprot_writecombine(prot);
->> +	default:
->> +		WARN_ON_ONCE(1);
->> +		return prot;
->> +	}
->> +}
->> +EXPORT_SYMBOL_GPL(drm_gem_shmem_caching);
->=20
-> Two reason why I'd reconsider this design.
->=20
-> I don't like switch statements new the bottom of the call graph. The
-> code ends up with default warnings, such as this one.
->=20
-> Udl has different caching flags for imported and 'native' buffers. This=
-
-> would require a new constant and additional code here.
->=20
-> What do you think about turning this function into a callback in struct=
-
-> shmem_funcs? The default implementation would be for WC, virtio would
-> use CACHED. The individual implementations could still be located in th=
-e
-> shmem code. Udl would later provide its own code.
-
-On a second thought, all this might be over-engineered and v1 of the
-patchset was the correct approach. You can add my
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-if you prefer to merge v1.
-
->=20
-> Best regards
-> Thomas
->=20
->>
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---PWptc28KfncWqAB1I31NMJorptpyGRJEF--
-
---r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3wv90ACgkQaA3BHVML
-eiO64Qf/YBbsWDQuJn4oSmZ4mtNOipUzxozbGDzsimdp95A//zGbwtYuSiAsEaom
-gqnUWkfh4aZ6eDwixlNmyUwZa7duLQ6Nw5QmA36BCyzhHdjoUoNt22gggKMHP6Jv
-ODbtVVpOkdMpNo9MrrxKI0zwiaZFFPEbNLH1Dg6B2JcwLupSAJs4C9JITQ3vqgct
-fQsNDJqQtQk5ylIh7J4qiC9/zvt0wsfQhHFTc0YkeHv24ejvi3o37dXe2vmGKMjM
-xzILi2sG6pRPzJPx/LxkU4hcYUSAd9C9gKlkLSt2ncae+3Vh9fQajphP/1sZv+0z
-eXjXG/FPxleeSVzZenwW4dE0rgiJhQ==
-=ZM7a
------END PGP SIGNATURE-----
-
---r8TvLUVhGQQ8aTEs6Xg8KLXS7KMPkSUSl--
+> ---
+>  arch/arm64/Kconfig | 2 +-
+>  arch/riscv/Kconfig | 2 +-
+>  arch/x86/Kconfig   | 2 +-
+>  crypto/ecc.c       | 2 +-
+>  init/Kconfig       | 4 ++++
+>  lib/ubsan.c        | 2 +-
+>  lib/ubsan.h        | 2 +-
+>  7 files changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 3f047afb982c8..54c38c9cab88a 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -67,7 +67,7 @@ config ARM64
+>         select ARCH_USE_QUEUED_SPINLOCKS
+>         select ARCH_SUPPORTS_MEMORY_FAILURE
+>         select ARCH_SUPPORTS_ATOMIC_RMW
+> -       select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
+> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
+>         select ARCH_SUPPORTS_NUMA_BALANCING
+>         select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
+>         select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 8eebbc8860bbd..75a6c91176221 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -164,7 +164,7 @@ config ARCH_RV32I
+>  config ARCH_RV64I
+>         bool "RV64I"
+>         select 64BIT
+> -       select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000
+> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
+>         select HAVE_FUNCTION_TRACER
+>         select HAVE_FUNCTION_GRAPH_TRACER
+>         select HAVE_FTRACE_MCOUNT_RECORD
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 8ef85139553f5..f2aed8012e9c0 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -24,7 +24,7 @@ config X86_64
+>         depends on 64BIT
+>         # Options that are inherently 64-bit kernel only:
+>         select ARCH_HAS_GIGANTIC_PAGE
+> -       select ARCH_SUPPORTS_INT128
+> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+>         select ARCH_USE_CMPXCHG_LOCKREF
+>         select HAVE_ARCH_SOFT_DIRTY
+>         select MODULES_USE_ELF_RELA
+> diff --git a/crypto/ecc.c b/crypto/ecc.c
+> index dfe114bc0c4af..6e6aab6c987c2 100644
+> --- a/crypto/ecc.c
+> +++ b/crypto/ecc.c
+> @@ -336,7 +336,7 @@ static u64 vli_usub(u64 *result, const u64 *left, u64 right,
+>  static uint128_t mul_64_64(u64 left, u64 right)
+>  {
+>         uint128_t result;
+> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
+> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
+>         unsigned __int128 m = (unsigned __int128)left * right;
+>
+>         result.m_low  = m;
+> diff --git a/init/Kconfig b/init/Kconfig
+> index b4daad2bac233..020526f681c03 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -785,6 +785,10 @@ config ARCH_SUPPORTS_NUMA_BALANCING
+>  config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+>         bool
+>
+> +config CC_HAS_INT128
+> +       def_bool y
+> +       depends on !$(cc-option,-D__SIZEOF_INT128__=0)
+> +
+>  #
+>  # For architectures that know their GCC __int128 support is sound
+>  #
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index 0c4681118fcd2..fc552d524ef77 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -119,7 +119,7 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
+>  {
+>         if (type_is_int(type)) {
+>                 if (type_bit_width(type) == 128) {
+> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
+> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
+>                         u_max val = get_unsigned_val(type, value);
+>
+>                         scnprintf(str, size, "0x%08x%08x%08x%08x",
+> diff --git a/lib/ubsan.h b/lib/ubsan.h
+> index b8fa83864467f..7b56c09473a98 100644
+> --- a/lib/ubsan.h
+> +++ b/lib/ubsan.h
+> @@ -78,7 +78,7 @@ struct invalid_value_data {
+>         struct type_descriptor *type;
+>  };
+>
+> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
+> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
+>  typedef __int128 s_max;
+>  typedef unsigned __int128 u_max;
+>  #else
+> --
+> 2.20.1
+>
