@@ -2,84 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC9AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC790C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D3A205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82777205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XHByjpVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfLKQUH (ORCPT
+        id S1730268AbfLKQU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:20:07 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57899 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728912AbfLKQUG (ORCPT
+        Wed, 11 Dec 2019 11:20:56 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43701 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730036AbfLKQU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:20:06 -0500
-Received: from callcc.thunk.org (guestnat-104-132-34-105.corp.google.com [104.132.34.105] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xBBGK0x7002440
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 11 Dec 2019 11:20:00 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id CCB6C421A48; Wed, 11 Dec 2019 11:19:59 -0500 (EST)
-Date:   Wed, 11 Dec 2019 11:19:59 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.4 27/37] ext4: work around deleting a file with
- i_nlink == 0 safely
-Message-ID: <20191211161959.GB129186@mit.edu>
-References: <20191211153813.24126-1-sashal@kernel.org>
- <20191211153813.24126-27-sashal@kernel.org>
+        Wed, 11 Dec 2019 11:20:56 -0500
+Received: by mail-lj1-f195.google.com with SMTP id a13so24729295ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:20:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
+        b=XHByjpVpksAhQp6qWGC8ANRLf3D8pRxjhxA0kZBgeoQGbehbI4T4UsJjHdjOSy3qGm
+         lUR2sJZ7SZ8KAasxNhMFG8wLboHF8Zhuv/dN4u9DCZ5V4ZcQbl9wog+i3wbxinYLhBn9
+         MWXrZ28CAqcehkq7JynVp3OljN9N9gEfCTpst2pHJdC3HM3jJEPO1gskys5+aLtTz/0D
+         sZ9MGH3g1KvShyB5NXhEXXirzTrpo14gy5QN41m5YeZTKRpCjKTtkOrWf0IA3LPwDp1W
+         +PsL2xzzi6yBkHO+ybkGzuDYvoNZ/nsonXCW4Er4mOvDb5LTfMggKU4Onf4p87/ZLLUS
+         iNDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
+        b=O1FZRKiIivihPqb8/cqY4vqJjCW/2MHT2pMhkYIi908TVSxld7p2GHcIdUlRHmD1uE
+         fLAisgnCQaO6phuVl5n7qzuk3IgzjnD/Z/c2MtygQF6VVAMMhZ8MqCUA1/gwoEOhaTPL
+         cQI5XvDMF243dq41QUbmQbYzK4let804Jdp5EtN/9DjX6ffaUOc5Izzey8QNPLxkKZWZ
+         vt06J6pqUsg+T/wy+/ak5C346yQx3xokoQrz/NaFB44bxdstRx9UgTrfiV+1BYGhoy1r
+         QBACCL+d+lIw1LW+cKwVYlV2ioR5MnK8P8OZcvXvstFfVH7tBlNx/ArLjQ7WEJWPgE0a
+         I1hw==
+X-Gm-Message-State: APjAAAXQbkYgXTSuWptqmJyYJRkj8vm3Zl+CeDgbCaRDlFMlCiPaxZvk
+        tOEGOXy24jS7MlhSdxO0BYvKQw==
+X-Google-Smtp-Source: APXvYqx7JrnjYVzZSKhxIhgqUUFwGRNOWBlKZgUUrH2giZBqcw9jTeOd1HzQIZ2qu+jUtLHmUW373g==
+X-Received: by 2002:a2e:b017:: with SMTP id y23mr2776840ljk.229.1576081254052;
+        Wed, 11 Dec 2019 08:20:54 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
+        by smtp.gmail.com with ESMTPSA id n19sm1434257lfl.85.2019.12.11.08.20.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 08:20:53 -0800 (PST)
+Subject: Re: [PATCH RFC 0/2] Add Renesas RPC-IF support
+To:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <0af05149-78f5-8639-4a23-84edda0073ea@cogentembedded.com>
+Date:   Wed, 11 Dec 2019 19:20:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211153813.24126-27-sashal@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:38:03AM -0500, Sasha Levin wrote:
-> From: Theodore Ts'o <tytso@mit.edu>
-> 
-> [ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
-> 
-> If the file system is corrupted such that a file's i_links_count is
-> too small, then it's possible that when unlinking that file, i_nlink
-> will already be zero.  Previously we were working around this kind of
-> corruption by forcing i_nlink to one; but we were doing this before
-> trying to delete the directory entry --- and if the file system is
-> corrupted enough that ext4_delete_entry() fails, then we exit with
-> i_nlink elevated, and this causes the orphan inode list handling to be
-> FUBAR'ed, such that when we unmount the file system, the orphan inode
-> list can get corrupted.
-> 
-> A better way to fix this is to simply skip trying to call drop_nlink()
-> if i_nlink is already zero, thus moving the check to the place where
-> it makes the most sense.
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=205433
-> 
-> Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
-> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-> Cc: stable@kernel.org
-> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On 12/11/2019 05:33 PM, Chris Brandt wrote:
 
-I'm confused; this was explicitly cc'ed to stable@kernel.org, so why
-is your AUTOSEL picking this up?  I would have thought this would get
-picked up via the normal stable kernel processes.
+>> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+>> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC to
+>> be accessed via the external address space read mode or the manual mode.
+> 
+> Looking at this driver, all it is are APIs. Meaning another driver is 
+> needed to sit in between the MTD layer and this HW driver layer.
+> 
+> In the driver that I did, if the "RPC" HW is going to be used to control
+> a SPI Flash device, it registered a spi controller and then the MTD 
+> layer could access the device
 
-Thanks,
+   Via the SPI-to-MTD sublayer for (at least) direct mapping -- grep for "dirmap"
+in drivers/mtd/spi-nor/spi-nor.c...
 
-						- Ted
+> just like any other SPI controller driver. No
+> additional drivers are needed.
+
+   Then why do we have *struct* spi_controller_mem_ops? Do All drivers implement
+such ops?
+
+[...]
+
+MBR, Sergei
