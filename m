@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06F4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD5CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB7724654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506F82465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077602;
-	bh=JBPU3/vrUj+oKai8Q/oTSq69QE5XbAgQhbOd/sQgtcM=;
+	s=default; t=1576077607;
+	bh=MDPQbXfIzz95FDeFh5TA0B89QcPp6G1c8uengSOHZG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRXA1qpn8MQ3z+q4e5OvHL2NPk3Ir7MDt/ME/CRRuqXj1T9mu/c/XkBxMAyqtISIv
-	 lSJ85DtTN+SQmjQqu1Xl6GHH97QTa9lOlpmhNQyrKZ9gU0YID0M958HgrJEgx9u1mY
-	 Cbt/KNHz+Z2J/51hEFSlKYKgMCdualhB5Hb8+zJ4=
+	b=Q0QkCRgwlofmMUevHIe04KB8jTOTdjRsrCwMQppNjilw4xSw4ypnz/RcKbqidlUOk
+	 9rOv8E8X4W6ys9fmHux02eE1X+jIix2xfkYz37eE06T1Vxbcdw+wtx3P6IqrUowOGs
+	 XPz76jG5JsCTWTZ3dqXDvYJcigcd0p5ukrniMYfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbfLKPUB (ORCPT
+        id S1732302AbfLKPUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:20:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48932 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:20:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732287AbfLKPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:56 -0500
+        id S1731900AbfLKPUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8073208C3;
-        Wed, 11 Dec 2019 15:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4A9208C3;
+        Wed, 11 Dec 2019 15:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077596;
-        bh=JBPU3/vrUj+oKai8Q/oTSq69QE5XbAgQhbOd/sQgtcM=;
+        s=default; t=1576077601;
+        bh=MDPQbXfIzz95FDeFh5TA0B89QcPp6G1c8uengSOHZG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJqz2SS78OF5QxehRM2qE19nj7xk3z1i9WyYxdzM/DwrQRAoSK1xAC5I4OhGUv8NB
-         D3ejOzufk2uhu8W1X+D1jX3sDs7+UdLhyf1Wa+IRu41AOW1ZtV2bY9lyaziJVsfPBM
-         jbU0eU3Dp2ZYUvzD4NSDxtpcixUj8YsNGt+UBuHQ=
+        b=OhU7ooBgVtvoh7lNyMGQqX3xp0s0IyyPGh1RsSj0A/+/+k01IH1YW7zzLMgIKh9YR
+         Q80qL0SIM243PrZ+UvIoDAhgZ7iN7cqX4tYujwKPZU8CdZFqnFKDMxonJR3mK2dP2J
+         a1rsgr7OqAycTswZD6q5FadphyLeCYqB3QhYP49M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/243] selftests/powerpc: Allocate base registers
-Date:   Wed, 11 Dec 2019 16:04:19 +0100
-Message-Id: <20191211150345.664023716@linuxfoundation.org>
+Subject: [PATCH 4.19 099/243] usb: dwc3: debugfs: Properly print/set link state for HS
+Date:   Wed, 11 Dec 2019 16:04:21 +0100
+Message-Id: <20191211150345.799359877@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,141 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
+From: Thinh Nguyen <thinh.nguyen@synopsys.com>
 
-[ Upstream commit 5249497a7bb6334fcc128588d6a7e1e21786515a ]
+[ Upstream commit 0d36dede457873404becd7c9cb9d0f2bcfd0dcd9 ]
 
-Some ptrace selftests are passing input operands using a constraint that
-can allocate any register for the operand, and using these registers on
-load/store operations.
+Highspeed device and below has different state names than superspeed and
+higher. Add proper checks and printouts of link states for highspeed and
+below.
 
-If the register allocated by the compiler happens to be zero (r0), it might
-cause an invalid memory address access, since load and store operations
-consider the content of 0x0 address if the base register is r0, instead of
-the content of the r0 register. For example:
-
-	r1 := 0xdeadbeef
-	r0 := 0xdeadbeef
-
-	ld r2, 0(1) /* will load into r2 the content of r1 address */
-	ld r2, 0(0) /* will load into r2 the content of 0x0 */
-
-In order to avoid this possible problem, the inline assembly constraint
-should be aware that these registers will be used as a base register, thus,
-r0 should not be allocated.
-
-Other than that, this patch removes inline assembly operands that are not
-used by the tests.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/ptrace/ptrace-gpr.c        | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-gpr.c     | 4 ++--
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c | 3 +--
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-spr.c     | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c     | 2 +-
- tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c     | 3 +--
- 7 files changed, 8 insertions(+), 10 deletions(-)
+ drivers/usb/dwc3/debug.h   | 29 +++++++++++++++++++++++++++++
+ drivers/usb/dwc3/debugfs.c | 19 +++++++++++++++++--
+ 2 files changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-gpr.c b/tools/testing/selftests/powerpc/ptrace/ptrace-gpr.c
-index 0b4ebcc2f485a..ca29fafeed5d9 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-gpr.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-gpr.c
-@@ -31,7 +31,7 @@ void gpr(void)
- 		ASM_LOAD_GPR_IMMED(gpr_1)
- 		ASM_LOAD_FPR_SINGLE_PRECISION(flt_1)
- 		:
--		: [gpr_1]"i"(GPR_1), [flt_1] "r" (&a)
-+		: [gpr_1]"i"(GPR_1), [flt_1] "b" (&a)
- 		: "memory", "r6", "r7", "r8", "r9", "r10",
- 		"r11", "r12", "r13", "r14", "r15", "r16", "r17",
- 		"r18", "r19", "r20", "r21", "r22", "r23", "r24",
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-gpr.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-gpr.c
-index 59206b96e98a5..a08a91594dbe5 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-gpr.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-gpr.c
-@@ -59,8 +59,8 @@ trans:
- 		"3: ;"
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
- 		: [gpr_1]"i"(GPR_1), [gpr_2]"i"(GPR_2),
--		[sprn_texasr] "i" (SPRN_TEXASR), [flt_1] "r" (&a),
--		[flt_2] "r" (&b), [cptr1] "r" (&cptr[1])
-+		[sprn_texasr] "i" (SPRN_TEXASR), [flt_1] "b" (&a),
-+		[flt_2] "b" (&b), [cptr1] "b" (&cptr[1])
- 		: "memory", "r7", "r8", "r9", "r10",
- 		"r11", "r12", "r13", "r14", "r15", "r16",
- 		"r17", "r18", "r19", "r20", "r21", "r22",
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-index b3c061dc95122..f471747462312 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-tar.c
-@@ -72,7 +72,7 @@ trans:
- 		"3: ;"
+diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
+index c66d216dcc304..4f75ab3505b77 100644
+--- a/drivers/usb/dwc3/debug.h
++++ b/drivers/usb/dwc3/debug.h
+@@ -116,6 +116,35 @@ dwc3_gadget_link_string(enum dwc3_link_state link_state)
+ 	}
+ }
  
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
--		: [val] "r" (cptr[1]), [sprn_dscr]"i"(SPRN_DSCR),
-+		: [sprn_dscr]"i"(SPRN_DSCR),
- 		[sprn_tar]"i"(SPRN_TAR), [sprn_ppr]"i"(SPRN_PPR),
- 		[sprn_texasr]"i"(SPRN_TEXASR), [tar_1]"i"(TAR_1),
- 		[dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2), [dscr_2]"i"(DSCR_2),
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-index 277dade1b382f..18a685bf6a097 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spd-vsx.c
-@@ -77,8 +77,7 @@ trans:
++/**
++ * dwc3_gadget_hs_link_string - returns highspeed and below link name
++ * @link_state: link state code
++ */
++static inline const char *
++dwc3_gadget_hs_link_string(enum dwc3_link_state link_state)
++{
++	switch (link_state) {
++	case DWC3_LINK_STATE_U0:
++		return "On";
++	case DWC3_LINK_STATE_U2:
++		return "Sleep";
++	case DWC3_LINK_STATE_U3:
++		return "Suspend";
++	case DWC3_LINK_STATE_SS_DIS:
++		return "Disconnected";
++	case DWC3_LINK_STATE_RX_DET:
++		return "Early Suspend";
++	case DWC3_LINK_STATE_RECOV:
++		return "Recovery";
++	case DWC3_LINK_STATE_RESET:
++		return "Reset";
++	case DWC3_LINK_STATE_RESUME:
++		return "Resume";
++	default:
++		return "UNKNOWN link state\n";
++	}
++}
++
+ /**
+  * dwc3_trb_type_string - returns TRB type as a string
+  * @type: the type of the TRB
+diff --git a/drivers/usb/dwc3/debugfs.c b/drivers/usb/dwc3/debugfs.c
+index df8e73ec3342e..04ce7c01a09e6 100644
+--- a/drivers/usb/dwc3/debugfs.c
++++ b/drivers/usb/dwc3/debugfs.c
+@@ -433,13 +433,17 @@ static int dwc3_link_state_show(struct seq_file *s, void *unused)
+ 	unsigned long		flags;
+ 	enum dwc3_link_state	state;
+ 	u32			reg;
++	u8			speed;
  
- 		"3: ;"
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
--		: [fp_load] "r" (fp_load), [fp_load_ckpt] "r" (fp_load_ckpt),
--		[sprn_texasr] "i"  (SPRN_TEXASR)
-+		: [sprn_texasr] "i"  (SPRN_TEXASR)
- 		: "memory", "r0", "r1", "r3", "r4",
- 		"r7", "r8", "r9", "r10", "r11"
- 		);
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spr.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spr.c
-index 51427a2465f69..ba04999254e38 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spr.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-spr.c
-@@ -74,7 +74,7 @@ trans:
+ 	spin_lock_irqsave(&dwc->lock, flags);
+ 	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
+ 	state = DWC3_DSTS_USBLNKST(reg);
+-	spin_unlock_irqrestore(&dwc->lock, flags);
++	speed = reg & DWC3_DSTS_CONNECTSPD;
  
- 		"3: ;"
- 		: [tfhar] "=r" (tfhar), [res] "=r" (result),
--		[texasr] "=r" (texasr), [cptr1] "=r" (cptr1)
-+		[texasr] "=r" (texasr), [cptr1] "=b" (cptr1)
- 		: [sprn_texasr] "i"  (SPRN_TEXASR)
- 		: "memory", "r0", "r8", "r31"
- 		);
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-index 48b462f750230..f70023b25e6e8 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-tar.c
-@@ -65,7 +65,7 @@ trans:
- 		: [sprn_dscr]"i"(SPRN_DSCR), [sprn_tar]"i"(SPRN_TAR),
- 		[sprn_ppr]"i"(SPRN_PPR), [sprn_texasr]"i"(SPRN_TEXASR),
- 		[tar_1]"i"(TAR_1), [dscr_1]"i"(DSCR_1), [tar_2]"i"(TAR_2),
--		[dscr_2]"i"(DSCR_2), [cptr1] "r" (&cptr[1])
-+		[dscr_2]"i"(DSCR_2), [cptr1] "b" (&cptr[1])
- 		: "memory", "r0", "r1", "r3", "r4", "r5", "r6"
- 		);
+-	seq_printf(s, "%s\n", dwc3_gadget_link_string(state));
++	seq_printf(s, "%s\n", (speed >= DWC3_DSTS_SUPERSPEED) ?
++		   dwc3_gadget_link_string(state) :
++		   dwc3_gadget_hs_link_string(state));
++	spin_unlock_irqrestore(&dwc->lock, flags);
  
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-index 17c23cabac3ea..dfba800589776 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-tm-vsx.c
-@@ -65,8 +65,7 @@ trans:
+ 	return 0;
+ }
+@@ -457,6 +461,8 @@ static ssize_t dwc3_link_state_write(struct file *file,
+ 	unsigned long		flags;
+ 	enum dwc3_link_state	state = 0;
+ 	char			buf[32];
++	u32			reg;
++	u8			speed;
  
- 		"3: ;"
- 		: [res] "=r" (result), [texasr] "=r" (texasr)
--		: [fp_load] "r" (fp_load), [fp_load_ckpt] "r" (fp_load_ckpt),
--		[sprn_texasr] "i"  (SPRN_TEXASR), [cptr1] "r" (&cptr[1])
-+		: [sprn_texasr] "i"  (SPRN_TEXASR), [cptr1] "b" (&cptr[1])
- 		: "memory", "r0", "r1", "r3", "r4",
- 		"r7", "r8", "r9", "r10", "r11"
- 		);
+ 	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
+ 		return -EFAULT;
+@@ -477,6 +483,15 @@ static ssize_t dwc3_link_state_write(struct file *file,
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
++	reg = dwc3_readl(dwc->regs, DWC3_DSTS);
++	speed = reg & DWC3_DSTS_CONNECTSPD;
++
++	if (speed < DWC3_DSTS_SUPERSPEED &&
++	    state != DWC3_LINK_STATE_RECOV) {
++		spin_unlock_irqrestore(&dwc->lock, flags);
++		return -EINVAL;
++	}
++
+ 	dwc3_gadget_set_link_state(dwc, state);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
 -- 
 2.20.1
 
