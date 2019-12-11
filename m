@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC07BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F29C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A20208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CD720836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080489;
-	bh=za5x0gKKJydKjxfapHivmpXqDyIB5gTeC2ysaPAS+RU=;
+	s=default; t=1576080497;
+	bh=w6+LJT6U0oDXDjKsTcFOsNGMxK4pxLYkXKPrdHk6E+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tapHN5kBbCR3M+fcth/VdU1So4347KZCbQr7DHmeF3oaHAo2mW+kGVckUzFJyVPIv
-	 y7/2e5obONXBlRFP8ejp81MDZn7aAjdgtLmNAzwwe3WOIJis5Fz00P124NxSMq5vjo
-	 3aPDOiJwMz65OChTCix+0p7ubrHG81fZHS5GCXcc=
+	b=cDUVxbcyL6uoDTdKTaysMxn8sFIr3pu3GTzOBMiZ65W9PBxbCZjh185yI5BSUsuIm
+	 64MrSjbbod0j4iIFDTR9CFDbYmiA/nmf7/orUepO3XVFu9c2k/4MEu8yvokSQNccRo
+	 3kZERv7Nv6jcsQtoJdxnbAizSPFvnlYjUGPfYu1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731105AbfLKPMV (ORCPT
+        id S2388902AbfLKQIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32964 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731039AbfLKPMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:05 -0500
+        id S1731103AbfLKPMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F20208C3;
-        Wed, 11 Dec 2019 15:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 612372465E;
+        Wed, 11 Dec 2019 15:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077124;
-        bh=za5x0gKKJydKjxfapHivmpXqDyIB5gTeC2ysaPAS+RU=;
+        s=default; t=1576077141;
+        bh=w6+LJT6U0oDXDjKsTcFOsNGMxK4pxLYkXKPrdHk6E+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=koMbm9jlBsbDUD5X7KyhEW1r61E6Suj67FNuxIlsW/zREujZJyxNJtSP+K9obMpan
-         1d+BPnsmd34S/WLo+TP1IRAC6JB8KnX9EjOzsKPoTIpFGUXiDS/BtwInJGVWNaGLhI
-         70FDkgqs5L3hB41g6p0AnBy2bDD4EypqcxLUh2TU=
+        b=xx+HrnRlbgty5ATZmAN+dQyWVEiK8A08B6BGa2B3BF4r1n53QnEmc+pGVpXzMdriq
+         aiOffxnyhXxg7ZLaAWimTx97h/IJysPkiNYWha9DwP3VFjJWEiw3YP6c/XeY25PSUh
+         6OQbKinWZHaBfljW5CGBe2itm5T0oMM/jnwvyGow=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com,
-        =?UTF-8?q?Andreas=20Gr=C3=BCnbacher?= 
-        <andreas.gruenbacher@gmail.com>, Sasha Levin <sashal@kernel.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 013/134] splice: only read in as much information as there is pipe buffer space
-Date:   Wed, 11 Dec 2019 10:09:49 -0500
-Message-Id: <20191211151150.19073-13-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 028/134] dma-debug: add a schedule point in debug_dma_dump_mappings()
+Date:   Wed, 11 Dec 2019 10:10:04 -0500
+Message-Id: <20191211151150.19073-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,65 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3253d9d093376d62b4a56e609f15d2ec5085ac73 ]
+[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
 
-Andreas Grünbacher reports that on the two filesystems that support
-iomap directio, it's possible for splice() to return -EAGAIN (instead of
-a short splice) if the pipe being written to has less space available in
-its pipe buffers than the length supplied by the calling process.
+debug_dma_dump_mappings() can take a lot of cpu cycles :
 
-Months ago we fixed splice_direct_to_actor to clamp the length of the
-read request to the size of the splice pipe.  Do the same to do_splice.
+lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
+163435 /sys/kernel/debug/dma-api/dump
 
-Fixes: 17614445576b6 ("splice: don't read more than available pipe space")
-Reported-by: syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com
-Reported-by: Andreas Grünbacher <andreas.gruenbacher@gmail.com>
-Reviewed-by: Andreas Grünbacher <andreas.gruenbacher@gmail.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+real	0m0.463s
+user	0m0.003s
+sys	0m0.459s
+
+Let's add a cond_resched() to avoid holding cpu for too long.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Corentin Labbe <clabbe@baylibre.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/splice.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ kernel/dma/debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/splice.c b/fs/splice.c
-index 98412721f0562..e509239d7e06a 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -945,12 +945,13 @@ ssize_t splice_direct_to_actor(struct file *in, struct splice_desc *sd,
- 	WARN_ON_ONCE(pipe->nrbufs != 0);
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 099002d84f466..4ad74f5987ea9 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -420,6 +420,7 @@ void debug_dma_dump_mappings(struct device *dev)
+ 		}
  
- 	while (len) {
-+		unsigned int pipe_pages;
- 		size_t read_len;
- 		loff_t pos = sd->pos, prev_pos = pos;
+ 		spin_unlock_irqrestore(&bucket->lock, flags);
++		cond_resched();
+ 	}
+ }
  
- 		/* Don't try to read more the pipe has space for. */
--		read_len = min_t(size_t, len,
--				 (pipe->buffers - pipe->nrbufs) << PAGE_SHIFT);
-+		pipe_pages = pipe->buffers - pipe->nrbufs;
-+		read_len = min(len, (size_t)pipe_pages << PAGE_SHIFT);
- 		ret = do_splice_to(in, &pos, pipe, read_len, flags);
- 		if (unlikely(ret <= 0))
- 			goto out_release;
-@@ -1180,8 +1181,15 @@ static long do_splice(struct file *in, loff_t __user *off_in,
- 
- 		pipe_lock(opipe);
- 		ret = wait_for_space(opipe, flags);
--		if (!ret)
-+		if (!ret) {
-+			unsigned int pipe_pages;
-+
-+			/* Don't try to read more the pipe has space for. */
-+			pipe_pages = opipe->buffers - opipe->nrbufs;
-+			len = min(len, (size_t)pipe_pages << PAGE_SHIFT);
-+
- 			ret = do_splice_to(in, &offset, opipe, len, flags);
-+		}
- 		pipe_unlock(opipe);
- 		if (ret > 0)
- 			wakeup_pipe_readers(opipe);
 -- 
 2.20.1
 
