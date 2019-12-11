@@ -2,132 +2,128 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDE0C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C01C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325F02054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF1232173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jjExR/yp"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rpt14WTz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfLKUsc (ORCPT
+        id S1727168AbfLKUsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:48:32 -0500
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:33509 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfLKUsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:48:31 -0500
-Received: by mail-ua1-f74.google.com with SMTP id u20so6582793uap.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:48:30 -0800 (PST)
+        Wed, 11 Dec 2019 15:48:36 -0500
+Received: from mail-eopbgr690058.outbound.protection.outlook.com ([40.107.69.58]:8748
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727166AbfLKUse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:48:34 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kZBSKxPSgyDIRJs0goAj2cy/UL1uhqrR/1RVjK4RFz1/O1WORjAzN5ojw8kiU8D+vou0yGx/ksly4rqzsNebtGT2gr16UkpfzJyG1sWTZQ2ErC75lcW0cWnyiHKQmNZf0eccpb/YFUoZX8E4Xnlk/lBGRY+1JRrVx4KeH2zrztywsEO5BCZFYCuCc/C88vKaWCDOpuCfJzb3UbC/TE8Ag8kI9NJ+WZxc9ppkHYPVDPL0OYP4mxY7BcgiB14mXpcAP/HCRQSqBjh3gGPtjwXFz8F4XLL5EM5s7nC6jFhbHOL4GPT+qOlmwKdSVO9Bkwd7f2hhyCsT9P0dIE9Ys/YZXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aZyz/c2mAUARG6Zmav6IUnMOQzV6cmQl/4exC1qXr2Q=;
+ b=hMC3z5JJJLmEPH4PFBjhsPPxrkzVqilsVHLBBX5HVsYY2ezmUonBgJ69XkveE4m1ePH/ULw43ByiehGbMa8daGcnjUuZ1MsYMxhaWfh4bGynj48+uM/VlfbCM92SUBFfgwI8yfcT/bhVFs7bFwd++B4o6e7lFjh3da2+BApQ8GZa3kNdw8WaEbG+izEg+K6oAGlAhmx9ikLfdQsNhgben3J+pUQP5eI+ClE2Vpom0Le8mE0egbHQcEhFO43EfKDBJFATtrM0nmA/IKV0Ys+Gp1gqkQnn+kuPZ7oN3cV86kSh2GZ3ciCYJ2p7lvbz6vphuIQXFFhRjvV2GLE3hc+D6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=jlDyQ8V1A4E8vFOmfZoIbJ2QXkEwRCCLJLwBmOJe29A=;
-        b=jjExR/ypQVqELVfmZroUTsrHDq+Kyle0r7cM6GRFHucL2QDpMuZu3CdhmxcEj1+Ggx
-         T8So24lxdlDrhk+RuF27Un0DG77dq2CZ9HeYsLpV5QlMy2HtKC55VRqIb8qE+dHH0ITg
-         GSleJ9N1oeFDK3s2487N+mFccVTnmHlEbx7WcAxgELvTZjNngusHfdOSkg/QcdlZ1riq
-         qSeHd362e8Pu/ZhX+hsgtZ0jZ0iw8suFK6xgpZ2TVTpBplBECiph61eND0JBp2AbBmpq
-         y8snT3db8QYHtMiqkIYkCXFjwa9j8jV//DXickQMzbWZWaBg5Lf9mVwD5Hf2mz9W0kIa
-         v82A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=jlDyQ8V1A4E8vFOmfZoIbJ2QXkEwRCCLJLwBmOJe29A=;
-        b=aohQ3BK0rOiyIU2JVTZC0TNDLVUdpwR3v8xVPVITj2mJ3lzbaxWE8GghGCVyAN7BVp
-         uMLsw61DTfXxU0uLi1L3DaseZ8wWI14ZQeCVeRPXVKILnAiFYtOTO8r5rIwnXgm2ooZl
-         ABySVrVLknBTaXmwjGQ/fJ3ilAC2fc3oejJUhucsjBK14yi7M+tpi2UHffLbGIaDJekK
-         XJhRytPJRMins1+n5HGlfaLU5vgk9rNKiY34xW/qTIWmbDYPmliLxuhw0H/WjtDgN+0q
-         gafXjuSjgys4DdC8sLVxTWXtPgQjEzRtUEs1nGLI8QmepQJ23iv84j4nlwlTb9o1j/Sy
-         VaMQ==
-X-Gm-Message-State: APjAAAXwQor/IEkzqqbVEKsMhacV1Znv7RHSTrvtHCqKCxySocZ0s+j4
-        iw+Sc5JTNRajh1MAKKNScKfTNTTi/kvW
-X-Google-Smtp-Source: APXvYqyq+7rLt1Mbo63AO66IU/V2FHwB6iU0oZSlIduHJY1TtnmF475NNmuDKCUH1XyAbf89tAosu/+ebq+e
-X-Received: by 2002:a1f:ac57:: with SMTP id v84mr5636546vke.90.1576097310120;
- Wed, 11 Dec 2019 12:48:30 -0800 (PST)
-Date:   Wed, 11 Dec 2019 12:47:42 -0800
-In-Reply-To: <20191211204753.242298-1-pomonis@google.com>
-Message-Id: <20191211204753.242298-3-pomonis@google.com>
-Mime-Version: 1.0
-References: <20191211204753.242298-1-pomonis@google.com>
-X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-Subject: [PATCH v2 02/13] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data()
- from Spectre-v1/L1TF attacks
-From:   Marios Pomonis <pomonis@google.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Finco <nifi@google.com>, Andrew Honig <ahonig@google.com>,
-        Marios Pomonis <pomonis@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aZyz/c2mAUARG6Zmav6IUnMOQzV6cmQl/4exC1qXr2Q=;
+ b=rpt14WTzZVWFhuY+2qrERN5bJVzmvBoju4amairjDIHzSXyCVcJYomQrS7aQgdcGfYjXl/99jIr7zP7n6Nr6ZPdD3YZUo1y876aZoL9Z5HwyPoAdXGvBCg68RSv+6tJzDHsFC7u3kfgRdmft3NsESC+MbgX9tm7mIxAqu7cwsZU=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.71.154) by
+ DM6PR12MB3354.namprd12.prod.outlook.com (20.178.31.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.18; Wed, 11 Dec 2019 20:48:32 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::c16f:b437:4266:dbc1]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::c16f:b437:4266:dbc1%4]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 20:48:32 +0000
+Subject: Re: [PATCH v2] KVM: x86: use CPUID to locate host page table reserved
+ bits
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <1575474037-7903-1-git-send-email-pbonzini@redhat.com>
+ <8f7e3e87-15dc-2269-f5ee-c3155f91983c@amd.com>
+ <7b885f53-e0d3-2036-6a06-9cdcbb738ae2@redhat.com>
+ <3efabf0da4954239662e90ea08d99212a654977a.camel@intel.com>
+ <62438ac9-e186-32a7-d12f-5806054d56b2@redhat.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <4faef0e9-72aa-9328-9110-fc67b2580f91@amd.com>
+Date:   Wed, 11 Dec 2019 14:48:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+In-Reply-To: <62438ac9-e186-32a7-d12f-5806054d56b2@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN2PR01CA0028.prod.exchangelabs.com (2603:10b6:804:2::38)
+ To DM6PR12MB3163.namprd12.prod.outlook.com (2603:10b6:5:15e::26)
+MIME-Version: 1.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9407d02b-f4fe-4eef-ba69-08d77e7b7b91
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3354:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3354B2DCE67DD12E6FEF1F44EC5A0@DM6PR12MB3354.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 024847EE92
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(199004)(189003)(8676002)(110136005)(81156014)(54906003)(26005)(52116002)(81166006)(6666004)(8936002)(6486002)(186003)(478600001)(53546011)(6506007)(2616005)(6512007)(2906002)(66476007)(4326008)(31686004)(31696002)(5660300002)(66946007)(66556008)(316002)(36756003)(86362001)(4744005)(60764002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3354;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8hxfS+IIvSQo9JTptKeK3ofV+dHQSqAIadEwedCjnsMEl1xFjK0aAETYfa8uaZ3EaC7kgs1vNBC8mHCllY0UZrsRi7IbXoR+oU030UaGCpyBV5yPmrNaiYJKx31npdFe4+8ZxlWikdUcWjwyVJVFKC4joqkIc884eF9I8D4fMHObdNgMFkHC2PSHXnXOzhMnvThprX9yMTUjDB8QvRuEZv+YJ5YfciPltW/BGcykCzMwfLvZzQxyqrb3M3fv8WU7VegXi+tPZBtG3lQQdV+NIHZbv8nnKPHbR7rMiEPuRE9yVFOqNEjCJ8bO4lMRVFdq9rGkJaiYFVeYgX3PsAgR7RL6kNVsitVBhzc+brIpKWc8E3h40ayKFKXx7VGXu7zfwaTZWrjnNN49jrg72mDKThlSAHcHKNRr7SiyyPB2xBC1rvsh4d2m5n5KmWyOBBb1ky+Oh5f6z9vwXl76fAk4MDnWLKygdnmW7k+Y9X6/2Ik=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9407d02b-f4fe-4eef-ba69-08d77e7b7b91
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 20:48:31.8388
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lghKsLoCWwY9c8uLWGn0E7GZJ6zaKnx27eE37AowJ0OMwbrUKnqfm/XJgmFeQZlfY0P69kZ/FZEXPShDAR+VJA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3354
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
-and kvm_hv_msr_set_crash_data().
-These functions contain index computations that use the
-(attacker-controlled) MSR number.
+On 12/11/19 3:07 AM, Paolo Bonzini wrote:
+> On 11/12/19 01:11, Huang, Kai wrote:
+>>> kvm_get_shadow_phys_bits() must be conservative in that:
+>>>
+>>> 1) if a bit is reserved it _can_ return a value higher than its index
+>>>
+>>> 2) if a bit is used by the processor (for physical address or anything
+>>> else) it _must_ return a value higher than its index.
+>>>
+>>> In the SEV case we're not obeying (2), because the function returns 43
+>>> when the C bit is bit 47.  The patch fixes that.
+>> Could we guarantee that C-bit is always below bits reported by CPUID?
+> 
+> That's a question for AMD. :)  The C bit can move (and probably will,
+> otherwise they wouldn't have bothered adding it to CPUID) in future
+> generations of the processor.
 
-Fixes: commit e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
+Right, there's no way to guarantee that it is always below bits reported
+by CPUID. As Paolo stated, the position is reported by CPUID so that it
+can easily move and be accounted for programmatically.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
----
- arch/x86/kvm/hyperv.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thanks,
+Tom
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 23ff65504d7e..26408434b9bc 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -809,11 +809,12 @@ static int kvm_hv_msr_get_crash_data(struct kvm_vcpu *vcpu,
- 				     u32 index, u64 *pdata)
- {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
- 
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
- 
--	*pdata = hv->hv_crash_param[index];
-+	*pdata = hv->hv_crash_param[array_index_nospec(index, size)];
- 	return 0;
- }
- 
-@@ -852,11 +853,12 @@ static int kvm_hv_msr_set_crash_data(struct kvm_vcpu *vcpu,
- 				     u32 index, u64 data)
- {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
- 
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
- 
--	hv->hv_crash_param[index] = data;
-+	hv->hv_crash_param[array_index_nospec(index, size)] = data;
- 	return 0;
- }
- 
--- 
-2.24.0.525.g8f36a354ae-goog
-
+> 
+> Paolo
+> 
