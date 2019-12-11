@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A675CC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D32C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D52B2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E4E2465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076938;
-	bh=KY+MWFGnauWcY/Zv39yLl7TdEnCbPv7rV5WnpBMm7rY=;
+	s=default; t=1576076941;
+	bh=noXbfajkuCUqx3kDWjkN/HqcwjAS1DoO1i6jdrElR3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g5vfBNBL6UxplBMVfqbF9LexW8EKE2Q1IBgi+X2d4gncQTlPWcBaVcZSQkOa6jXFx
-	 +AGIWFZQLBtMICNrKN8cOoabN3WOF6BZ9zX0xzSUmrxl3QkU+vZS5inW4Z5qXoVAT5
-	 ubm1BOwsjZeK3wO7Gu/t5bfokmsW2bHKjJ6zK6xo=
+	b=SxbsAw5lgqodBVI2pfR5QdQILoX4dGG2EjEglS/0+GiGmQb8f2QYcxCOyGdMpbZj1
+	 YG7qj3pXzMc2dgFpqNXFV/D4WkUjYJOEtyEUDYWNuOzTgkRRWEwnTm8RB03AcVvCZj
+	 5oXPiSZyDPxJiEjzOHkyQ9dqMtixtPhWT0HZGAio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfLKPI5 (ORCPT
+        id S1730508AbfLKPI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56594 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbfLKPIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:52 -0500
+        id S1730496AbfLKPI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F070724658;
-        Wed, 11 Dec 2019 15:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 373D020663;
+        Wed, 11 Dec 2019 15:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076931;
-        bh=KY+MWFGnauWcY/Zv39yLl7TdEnCbPv7rV5WnpBMm7rY=;
+        s=default; t=1576076936;
+        bh=noXbfajkuCUqx3kDWjkN/HqcwjAS1DoO1i6jdrElR3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0mpuGxkU89kyYiSJkg9gOgSpER07suWA0DORGCOgfPSCDq1JEzNoOpkQ8Y0efssj
-         2cDCjPWrTbJuOIpDa555L3hH335lbPhNtoh+fVfw+JaDJgLO9vB2poVIy8S5m50ly3
-         xpxewzsGn3eQj2y6EiTw86UNmVBvbBHPhKmhtcFE=
+        b=D9dbwhwG1FwFmO+X0HkeZ5pgapmJCwuQrV9ABy4DuwRWU3ESdYl1W+XHlqLp18+th
+         IkT6dVx1uYBWpVneQHQkSbsMrphUj9YwHubRs/+0JzxfTFhzi1JwdEVgO3TFyfP+Li
+         kNroIZK7JrAOLnZGlNa4B0294fawXjltI7Qj970g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 09/92] staging/octeon: Use stubs for MIPS && !CAVIUM_OCTEON_SOC
-Date:   Wed, 11 Dec 2019 16:05:00 +0100
-Message-Id: <20191211150223.848490134@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.4 40/92] Input: goodix - add upside-down quirk for Teclast X89 tablet
+Date:   Wed, 11 Dec 2019 16:05:31 +0100
+Message-Id: <20191211150239.785954353@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -62,67 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 17a29fea086ba18b000d28439bd5cb4f2b0a527b upstream.
+commit df5b5e555b356662a5e4a23c6774fdfce8547d54 upstream.
 
-When building for a non-Cavium MIPS system with COMPILE_TEST=y, the
-Octeon ethernet driver hits a number of issues due to use of macros
-provided only for CONFIG_CAVIUM_OCTEON_SOC=y configurations. For
-example:
+The touchscreen on the Teclast X89 is mounted upside down in relation to
+the display orientation (the touchscreen itself is mounted upright, but the
+display is mounted upside-down). Add a quirk for this so that we send
+coordinates which match the display orientation.
 
-  drivers/staging/octeon/ethernet-rx.c:190:6: error:
-    'CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE' undeclared (first use in this function)
-  drivers/staging/octeon/ethernet-rx.c:472:25: error:
-    'OCTEON_IRQ_WORKQ0' undeclared (first use in this function)
-
-These come from various asm/ headers that a non-Octeon build will be
-using a non-Octeon version of.
-
-Fix this by using the octeon-stubs.h header for non-Cavium MIPS builds,
-and only using the real asm/octeon/ headers when building a Cavium
-Octeon kernel configuration.
-
-This requires that octeon-stubs.h doesn't redefine XKPHYS_TO_PHYS, which
-is defined for MIPS by asm/addrspace.h which is pulled in by many other
-common asm/ headers.
-
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-URL: https://lore.kernel.org/linux-mips/CAMuHMdXvu+BppwzsU9imNWVKea_hoLcRt9N+a29Q-QsjW=ip2g@mail.gmail.com/
-Fixes: 171a9bae68c7 ("staging/octeon: Allow test build on !MIPS")
-Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-Cc: David S. Miller <davem@davemloft.net>
-Link: https://lore.kernel.org/r/20191007231741.2012860-1-paul.burton@mips.com
-Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Bastien Nocera <hadess@hadess.net>
+Link: https://lore.kernel.org/r/20191202085636.6650-1-hdegoede@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/staging/octeon/octeon-ethernet.h |    2 +-
- drivers/staging/octeon/octeon-stubs.h    |    5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/staging/octeon/octeon-ethernet.h
-+++ b/drivers/staging/octeon/octeon-ethernet.h
-@@ -14,7 +14,7 @@
- #include <linux/of.h>
- #include <linux/phy.h>
- 
--#ifdef CONFIG_MIPS
-+#ifdef CONFIG_CAVIUM_OCTEON_SOC
- 
- #include <asm/octeon/octeon.h>
- 
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -1,5 +1,8 @@
- #define CONFIG_CAVIUM_OCTEON_CVMSEG_SIZE	512
--#define XKPHYS_TO_PHYS(p)			(p)
-+
-+#ifndef XKPHYS_TO_PHYS
-+# define XKPHYS_TO_PHYS(p)			(p)
-+#endif
- 
- #define OCTEON_IRQ_WORKQ0 0
- #define OCTEON_IRQ_RML 0
+---
+ drivers/input/touchscreen/goodix.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -129,6 +129,15 @@ static const unsigned long goodix_irq_fl
+ static const struct dmi_system_id rotated_screen[] = {
+ #if defined(CONFIG_DMI) && defined(CONFIG_X86)
+ 	{
++		.ident = "Teclast X89",
++		.matches = {
++			/* tPAD is too generic, also match on bios date */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
++			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
++		},
++	},
++	{
+ 		.ident = "WinBook TW100",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
 
 
