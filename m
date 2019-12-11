@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BAFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D590C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBD22173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7512422B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079125;
-	bh=9MJpB7t1Y1QQG2Yy3v7yUvWRZdfdBtNnwQoHMf2LRAA=;
+	s=default; t=1576079130;
+	bh=a/ouf4EpDGmZqFeyJWekK7dS7ijCAZoN0vTGv41RCSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YbJ+/hCBTS6+xnkPL/T9A9NYUsPP8D+OGSzoay9TpTuaYt3oOpAItLg0Sr6/SXFYh
-	 QRltrSr0IUf9RvyxzQlMVq/nuaNZznpSsZ6TmuS6IGxvl3oMnEmjy5R4atXmtJAoOm
-	 VDMAJwKf0UvVcQd9oNGO+SxBkxuaYmhOoVxMVpuc=
+	b=FH3P0svuFBwgFBscTaaJNwiF4ZU44WasPfo1T6M7Yhr/I0/m9gITGvjnnvz+irUmz
+	 Jzh737RLcsV2ST1U0QFGjyTXriZjWlUF1jEKq/Jm1ED8m362Uo61umKok706nMCC9x
+	 HtoMwZpRxTYnbtG4xQSivo/Jwv67RY3QKe6+WbYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388606AbfLKPpY (ORCPT
+        id S2388651AbfLKPp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:45:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60898 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:45:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733211AbfLKP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:10 -0500
+        id S1732747AbfLKP1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:08 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12D6F208C3;
-        Wed, 11 Dec 2019 15:27:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC7812465B;
+        Wed, 11 Dec 2019 15:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078029;
-        bh=9MJpB7t1Y1QQG2Yy3v7yUvWRZdfdBtNnwQoHMf2LRAA=;
+        s=default; t=1576078027;
+        bh=a/ouf4EpDGmZqFeyJWekK7dS7ijCAZoN0vTGv41RCSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V/VbddDjMx25+v/KCcJU6Us1Ifb4+/bkR7AT/bxIhYVuvkx1RDIqvD8oyuM1jgiBj
-         dssWKaQjcw3RZkswzRWEI7Ot5x9oqvwGLnPhc5qaR2MpgoNBtt7Eai417r/VebDw0N
-         hjHzyY2nNmtFst7j5U7R59Nfuhelv93ZJ0a1v8wY=
+        b=cEvdccc7PLYbO9ub/6HJwLoiZitWY+HJGJawPu3MoH06y4nwTozfU76hauTU96Z2u
+         GN51kUhpF2fo3hN47hoPfohgzS6lM0Z9WcjSMGeCUELttP9xRJoVulovDx7S2pAYdA
+         0E1N1PY9/3xF1HlE8sztvDzA+vV1/hN+RF0HB+CM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/79] ext4: iomap that extends beyond EOF should be marked dirty
-Date:   Wed, 11 Dec 2019 10:25:48 -0500
-Message-Id: <20191211152643.23056-24-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 22/79] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
+Date:   Wed, 11 Dec 2019 10:25:46 -0500
+Message-Id: <20191211152643.23056-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -61,59 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 2e9b51d78229d5145725a481bb5464ebc0a3f9b2 ]
+[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
 
-This patch addresses what Dave Chinner had discovered and fixed within
-commit: 7684e2c4384d. This changes does not have any user visible
-impact for ext4 as none of the current users of ext4_iomap_begin()
-that extend files depend on IOMAP_F_DIRTY.
+With large memory (8TB and more) hotplug, we can get soft lockup
+warnings as below. These were caused by a long loop without any
+explicit cond_resched which is a problem for !PREEMPT kernels.
 
-When doing a direct IO that spans the current EOF, and there are
-written blocks beyond EOF that extend beyond the current write, the
-only metadata update that needs to be done is a file size extension.
+Avoid this using cond_resched() while inserting hash page table
+entries. We already do similar cond_resched() in __add_pages(), see
+commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
+__add_pages").
 
-However, we don't mark such iomaps as IOMAP_F_DIRTY to indicate that
-there is IO completion metadata updates required, and hence we may
-fail to correctly sync file size extensions made in IO completion when
-O_DSYNC writes are being used and the hardware supports FUA.
+  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
+   (t=24003 jiffies g=4285 q=2002)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    nmi_cpu_backtrace+0x124/0x130
+    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
+    arch_trigger_cpumask_backtrace+0x28/0x3c
+    rcu_dump_cpu_stacks+0xf8/0x154
+    rcu_sched_clock_irq+0x878/0xb40
+    update_process_times+0x48/0x90
+    tick_sched_handle.isra.16+0x4c/0x80
+    tick_sched_timer+0x68/0xe0
+    __hrtimer_run_queues+0x180/0x430
+    hrtimer_interrupt+0x110/0x300
+    timer_interrupt+0x108/0x2f0
+    decrementer_common+0x114/0x120
+  --- interrupt: 901 at arch_add_memory+0xc0/0x130
+      LR = arch_add_memory+0x74/0x130
+    memremap_pages+0x494/0x650
+    devm_memremap_pages+0x3c/0xa0
+    pmem_attach_disk+0x188/0x750
+    nvdimm_bus_probe+0xac/0x2c0
+    really_probe+0x148/0x570
+    driver_probe_device+0x19c/0x1d0
+    device_driver_attach+0xcc/0x100
+    bind_store+0x134/0x1c0
+    drv_attr_store+0x44/0x60
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1a0/0x270
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
 
-Hence when setting IOMAP_F_DIRTY, we need to also take into account
-whether the iomap spans the current EOF. If it does, then we need to
-mark it dirty so that IO completion will call generic_write_sync() to
-flush the inode size update to stable storage correctly.
-
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/8b43ee9ee94bee5328da56ba0909b7d2229ef150.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/hash_utils_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 00d25a0643913..8eaf7a581be65 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3535,8 +3535,14 @@ retry:
- 			return ret;
- 	}
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index 11b41383e1672..8894c8f300eac 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -307,6 +307,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		if (ret < 0)
+ 			break;
  
-+	/*
-+	 * Writes that span EOF might trigger an I/O size update on completion,
-+	 * so consider them to be dirty for the purposes of O_DSYNC, even if
-+	 * there is no other metadata changes being made or are pending here.
-+	 */
- 	iomap->flags = 0;
--	if (ext4_inode_datasync_dirty(inode))
-+	if (ext4_inode_datasync_dirty(inode) ||
-+	    offset + length > i_size_read(inode))
- 		iomap->flags |= IOMAP_F_DIRTY;
- 	iomap->bdev = inode->i_sb->s_bdev;
- 	iomap->dax_dev = sbi->s_daxdev;
++		cond_resched();
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ 		if (debug_pagealloc_enabled() &&
+ 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
 -- 
 2.20.1
 
