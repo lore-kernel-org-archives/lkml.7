@@ -2,130 +2,121 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40130C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1DFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16F5E2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8456E20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080037;
-	bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
+	s=default; t=1576080039;
+	bh=JBmAVkhcp71r07TrM4idsZy9hXaAMVHGdeXcNZUvKro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mgbP94nFt/XRbdYY51MSvcqAlEE+YRXzwchenfSE7QP3Lc0li8gVYQxeB+9TEfg2o
-	 /QfC/x+vSaO+L+SWmFmyzTKgMjcBhK11sv4F25VTDmOIhTvpFAXU8trW2X7U/DXsMB
-	 U27bUzLjyw9xjxJyL0vlOd2n3TzLIinuagJOJ9JA=
+	b=BfaVAyH4sAV3dWRYywN0NrE0h9u2rRdFItkwBHIePEh3qdO1LBUFRmqx30Npg9OiM
+	 ulPb1lzQRUV9WOt6fjp65HCQKZGEAsDmaSkV5cCazselJDM8RwxzKan3JX680H9mm0
+	 w2Gv71rYOQkyR+4Xem3B5P/E+ZW8p0YVSstFqPIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbfLKQAf (ORCPT
+        id S1731490AbfLKPNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:00:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37812 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbfLKPNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731391AbfLKPNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7191D24658;
-        Wed, 11 Dec 2019 15:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9F52468A;
+        Wed, 11 Dec 2019 15:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077225;
-        bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
+        s=default; t=1576077199;
+        bh=JBmAVkhcp71r07TrM4idsZy9hXaAMVHGdeXcNZUvKro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L5Z/e6s4niHsPAmeP5ICSZxQpPD6JsC1Zis/B0Jnd0p/pDg5sQcntbQUMvvvoH3x3
-         6dJcn7xrpYTg+uB90o9ooQU4aJEmacASKBj5AJvxb1nNvuYnfK+Cbe+WidJscsI4Je
-         MBE11H4lfF58345MFozoW/OzXPvooj0qGhDyyhO0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.3 064/105] CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
-Date:   Wed, 11 Dec 2019 16:05:53 +0100
-Message-Id: <20191211150247.321102026@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=MjDMPozJ6pUXzMDRy0Mv2fDQij8vW+gJVci64/nwbywQbWT+3FTgXPrtT5ZMhvTc0
+         3I3Pa4eAYXI06WBAYTQam6KksipFiFE5rg3Cs0fLJzHfEaWsiVXZlvAuHyGLlXQGWY
+         LI3wDrp1RdWTxAKe5sgq5dZfN/B4zcn7UAtq5jDM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 082/134] HID: Improve Windows Precision Touchpad detection.
+Date:   Wed, 11 Dec 2019 10:10:58 -0500
+Message-Id: <20191211151150.19073-82-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Blaž Hrastnik <blaz@mxxn.io>
 
-commit 6f582b273ec23332074d970a7fb25bef835df71f upstream.
+[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
 
-Currently when the client creates a cifsFileInfo structure for
-a newly opened file, it allocates a list of byte-range locks
-with a pointer to the new cfile and attaches this list to the
-inode's lock list. The latter happens before initializing all
-other fields, e.g. cfile->tlink. Thus a partially initialized
-cifsFileInfo structure becomes available to other threads that
-walk through the inode's lock list. One example of such a thread
-may be an oplock break worker thread that tries to push all
-cached byte-range locks. This causes NULL-pointer dereference
-in smb2_push_mandatory_locks() when accessing cfile->tlink:
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-[598428.945633] BUG: kernel NULL pointer dereference, address: 0000000000000038
-...
-[598428.945749] Workqueue: cifsoplockd cifs_oplock_break [cifs]
-[598428.945793] RIP: 0010:smb2_push_mandatory_locks+0xd6/0x5a0 [cifs]
-...
-[598428.945834] Call Trace:
-[598428.945870]  ? cifs_revalidate_mapping+0x45/0x90 [cifs]
-[598428.945901]  cifs_oplock_break+0x13d/0x450 [cifs]
-[598428.945909]  process_one_work+0x1db/0x380
-[598428.945914]  worker_thread+0x4d/0x400
-[598428.945921]  kthread+0x104/0x140
-[598428.945925]  ? process_one_work+0x380/0x380
-[598428.945931]  ? kthread_park+0x80/0x80
-[598428.945937]  ret_from_fork+0x35/0x40
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-Fix this by reordering initialization steps of the cifsFileInfo
-structure: initialize all the fields first and then add the new
-byte-range lock list to the inode's lock list.
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
 
-Cc: Stable <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
 
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
+
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -313,9 +313,6 @@ cifs_new_fileinfo(struct cifs_fid *fid,
- 	INIT_LIST_HEAD(&fdlocks->locks);
- 	fdlocks->cfile = cfile;
- 	cfile->llist = fdlocks;
--	cifs_down_write(&cinode->lock_sem);
--	list_add(&fdlocks->llist, &cinode->llist);
--	up_write(&cinode->lock_sem);
- 
- 	cfile->count = 1;
- 	cfile->pid = current->tgid;
-@@ -339,6 +336,10 @@ cifs_new_fileinfo(struct cifs_fid *fid,
- 		oplock = 0;
- 	}
- 
-+	cifs_down_write(&cinode->lock_sem);
-+	list_add(&fdlocks->llist, &cinode->llist);
-+	up_write(&cinode->lock_sem);
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 2fa3587d974f4..e0b241bd3070c 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -781,6 +781,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
 +
- 	spin_lock(&tcon->open_file_lock);
- 	if (fid->pending_open->oplock != CIFS_OPLOCK_NO_CHANGE && oplock)
- 		oplock = fid->pending_open->oplock;
-
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
+ 
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+-- 
+2.20.1
 
