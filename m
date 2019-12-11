@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ABBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A81C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96CF22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2BF122527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076888;
-	bh=tbvVXASyep4qZkQz8fvqos3iAOlx2UlpqiDrH02qsu4=;
+	s=default; t=1576076891;
+	bh=73y6llFQMMIZCQOShezk0KW2VUlhcWIdRCpboFMbUQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1F94gZNw0hlp8B3dEar8+TpypKw+o8B0RPw65qJFpATUSVE6qUBTPpFLXm34Z5fy
-	 R4Ggxw2724r79anebs97TJxh8nglr6FxVFOvJ9aXxSPxXO0DIsM3zspv7uyuVboY71
-	 F0jg/YwMgGlp1CHYQplu72KeFJYwjNIa0V5/70oQ=
+	b=fMLFbs2uPzOcABz6qslta32Gnlr7LxyTGiYFtK4K8Mdy5RVwjcTCYdOOZV2s28vJB
+	 ocZxFaqZW/WmCwKEp0tD2b8tJ5bP98C1PQHNdAPUqSaxou5mNWyhvG3z5/J9wQ9GWX
+	 GSuSXgsM0uol2q7iHaFyHewd6YOR4ouY477nfF9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730249AbfLKPII (ORCPT
+        id S1730273AbfLKPIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbfLKPIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:05 -0500
+        id S1729513AbfLKPII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A2822527;
-        Wed, 11 Dec 2019 15:08:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11E1B2173E;
+        Wed, 11 Dec 2019 15:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076885;
-        bh=tbvVXASyep4qZkQz8fvqos3iAOlx2UlpqiDrH02qsu4=;
+        s=default; t=1576076887;
+        bh=73y6llFQMMIZCQOShezk0KW2VUlhcWIdRCpboFMbUQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=odN7gTqVPjiEZhy87bgNFV6aUgKXTOPaaMGN6TqbexOcChaiMa6u1quT9EiNyt766
-         sgUOg+siKPBHnMMNRbMvqX6VJUGpqEI+0Dz5hY2oLR716Hi8BPJv3vBlDNdvr14tCD
-         /IVz5CiSHIDIjLeOHNwGxmyLdrIVRQ2VU+6slRUU=
+        b=JDucN8fTgDGKyZo5O296+54PlJr5RMqYdgDUVTbIqg7xGdFm8cYDfO7R5QggWDru0
+         73J4beN+oC9abOjxhaCXiuMfo7t5IkkuAj52O9BRMtbEyv1LsVo24H4IHGosk4yVEO
+         j/YxzWhPKkvvQ4+6e1aKfooFujiFB5VmZm7qhvys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andres Freund <andres@anarazel.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 27/92] io_uring: ensure req->submit is copied when req is deferred
-Date:   Wed, 11 Dec 2019 16:05:18 +0100
-Message-Id: <20191211150231.942529314@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 5.4 28/92] SUNRPC: Avoid RPC delays when exiting suspend
+Date:   Wed, 11 Dec 2019 16:05:19 +0100
+Message-Id: <20191211150232.779719650@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,78 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-There's an issue with deferred requests through drain, where if we do
-need to defer, we're not copying over the sqe_submit state correctly.
-This can result in using uninitialized data when we then later go and
-submit the deferred request, like this check in __io_submit_sqe():
+commit 66eb3add452aa1be65ad536da99fac4b8f620b74 upstream.
 
-         if (unlikely(s->index >= ctx->sq_entries))
-                 return -EINVAL;
+Jon Hunter: "I have been tracking down another suspend/NFS related
+issue where again I am seeing random delays exiting suspend. The delays
+can be up to a couple minutes in the worst case and this is causing a
+suspend test we have to fail."
 
-with 's' being uninitialized, we can randomly fail this check. Fix this
-by copying sqe_submit state when we defer a request.
+Change the use of a deferrable work to a standard delayed one.
 
-Because it was fixed as part of a cleanup series in mainline, before
-anyone realized we had this issue. That removed the separate states
-of ->index vs ->submit.sqe. That series is not something I was
-comfortable putting into stable, hence the much simpler addition.
-Here's the patch in the series that fixes the same issue:
-
-commit cf6fd4bd559ee61a4454b161863c8de6f30f8dca
-Author: Pavel Begunkov <asml.silence@gmail.com>
-Date:   Mon Nov 25 23:14:39 2019 +0300
-
-    io_uring: inline struct sqe_submit
-
-Reported-by: Andres Freund <andres@anarazel.de>
-Reported-by: Tomáš Chaloupka
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: 7e0a0e38fcfea ("SUNRPC: Replace the queue timer with a delayed work function")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/sunrpc/sched.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2039,7 +2039,7 @@ add:
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -260,7 +260,7 @@ static void __rpc_init_priority_wait_que
+ 	rpc_reset_waitqueue_priority(queue);
+ 	queue->qlen = 0;
+ 	queue->timer_list.expires = 0;
+-	INIT_DEFERRABLE_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
++	INIT_DELAYED_WORK(&queue->timer_list.dwork, __rpc_queue_timer_fn);
+ 	INIT_LIST_HEAD(&queue->timer_list.list);
+ 	rpc_assign_waitqueue_name(queue, qname);
  }
- 
- static int io_req_defer(struct io_ring_ctx *ctx, struct io_kiocb *req,
--			const struct io_uring_sqe *sqe)
-+			struct sqe_submit *s)
- {
- 	struct io_uring_sqe *sqe_copy;
- 
-@@ -2057,7 +2057,8 @@ static int io_req_defer(struct io_ring_c
- 		return 0;
- 	}
- 
--	memcpy(sqe_copy, sqe, sizeof(*sqe_copy));
-+	memcpy(&req->submit, s, sizeof(*s));
-+	memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
- 	req->submit.sqe = sqe_copy;
- 
- 	INIT_WORK(&req->work, io_sq_wq_submit_work);
-@@ -2425,7 +2426,7 @@ static int io_queue_sqe(struct io_ring_c
- {
- 	int ret;
- 
--	ret = io_req_defer(ctx, req, s->sqe);
-+	ret = io_req_defer(ctx, req, s);
- 	if (ret) {
- 		if (ret != -EIOCBQUEUED) {
- 			io_free_req(req);
-@@ -2452,7 +2453,7 @@ static int io_queue_link_head(struct io_
- 	 * list.
- 	 */
- 	req->flags |= REQ_F_IO_DRAIN;
--	ret = io_req_defer(ctx, req, s->sqe);
-+	ret = io_req_defer(ctx, req, s);
- 	if (ret) {
- 		if (ret != -EIOCBQUEUED) {
- 			io_free_req(req);
 
 
