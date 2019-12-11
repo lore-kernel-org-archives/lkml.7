@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F74AC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EFAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55488208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4002A2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077127;
-	bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
+	s=default; t=1576077132;
+	bh=rjnKi9c9bSp4W5HmEkgKIOW16NgRTdaQnTGDcA+RRW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sFpKDY2l1c4MNB66OlDzsgl+hHoHnwG1SMB88ita+2DYDdIY23xRKvcP5mBKm0JTP
-	 CJRlHN1Y+ReyEHa4zdEk3E+6Wyi85L0QVVHe+HbGMAW6b/4jTM73nn0PUYuYTwg0+l
-	 DOauxDDYZP2w0PeU8mdAHOGrARG6Vtkps++pPiGo=
+	b=2F4yBoppQZnBvzSIapaS2pkXPGShLpPIYLB/wwatw5c7QeVUlO7wDiVrIvH8aj21k
+	 CIapECtbhiGZMU2pn2S4lzpXsFXxWh2e/56sqrsccngihvMXxLKqMHMFHK0a/nvCB3
+	 GgqjR8gwJIrpNONdfbaY7gmI80Wb3Go+VFIXKiIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfLKPMF (ORCPT
+        id S1730559AbfLKPML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbfLKPL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:58 -0500
+        id S1731031AbfLKPMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86AB2173E;
-        Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E30CC2467F;
+        Wed, 11 Dec 2019 15:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077117;
-        bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
+        s=default; t=1576077121;
+        bh=rjnKi9c9bSp4W5HmEkgKIOW16NgRTdaQnTGDcA+RRW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JcAB0e/CbI8YBwYoehpJzcMMFVSJPlxthIpWlIb3ITPx+a2Tq5j2G4L/Vb03IY/BK
-         uOeT37i8wuZBPoLb2EPNMu5evyRJ1QuYPSv/ts5OuXA5fVOivSCB/funX9BkxPu/Vq
-         XCWSglvn6f+fJtDDx57aIGAQp1a4N4eM+StGtKt0=
+        b=kK2N/LTxjaBNjmMbOrWFKp44u7rlRa1B7OHk3hbnKHhuCbOKO+h9IoqLAtNid1oNG
+         j13bJ29wpAyEuxYW2eGjSZq91dnYnMzor2+zL8tDHi+WXj5pcuQ/5aDbJhgdc3MthO
+         V51wEEuiWa/iif2n5hsSPAAVDTcUTObdHIwszfBE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anson Huang <Anson.Huang@nxp.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 006/134] gpio: mxc: Only get the second IRQ when there is more than one IRQ
-Date:   Wed, 11 Dec 2019 10:09:42 -0500
-Message-Id: <20191211151150.19073-6-sashal@kernel.org>
+Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 010/134] powerpc/papr_scm: Fix an off-by-one check in papr_scm_meta_{get, set}
+Date:   Wed, 11 Dec 2019 10:09:46 -0500
+Message-Id: <20191211151150.19073-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,61 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Vaibhav Jain <vaibhav@linux.ibm.com>
 
-[ Upstream commit c8f3d144004dd3f471ffd414690d15a005e4acd6 ]
+[ Upstream commit 612ee81b9461475b5a5612c2e8d71559dd3c7920 ]
 
-On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
-GPIO bank, so it is better to check the IRQ count before getting
-second IRQ to avoid below error message during probe:
+A validation check to prevent out of bounds read/write inside
+functions papr_scm_meta_{get,set}() is off-by-one that prevent reads
+and writes to the last byte of the label area.
 
-[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
-[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
-[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
-[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
-[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
-[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
-[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
-[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
+This bug manifests as a failure to probe a dimm when libnvdimm is
+unable to read the entire config-area as advertised by
+ND_CMD_GET_CONFIG_SIZE. This usually happens when there are large
+number of namespaces created in the region backed by the dimm and the
+label-index spans max possible config-area. An error of the form below
+usually reported in the kernel logs:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+[  255.293912] nvdimm: probe of nmem0 failed with error -22
+
+The patch fixes these validation checks there by letting libnvdimm
+access the entire config-area.
+
+Fixes: 53e80bd042773('powerpc/nvdimm: Add support for multibyte read/write for metadata')
+Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190927062002.3169-1-vaibhav@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-mxc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/powerpc/platforms/pseries/papr_scm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-index 7907a87558662..c77d474185f31 100644
---- a/drivers/gpio/gpio-mxc.c
-+++ b/drivers/gpio/gpio-mxc.c
-@@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	struct mxc_gpio_port *port;
-+	int irq_count;
- 	int irq_base;
- 	int err;
+diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+index 61883291defc3..ee07d0718bf1a 100644
+--- a/arch/powerpc/platforms/pseries/papr_scm.c
++++ b/arch/powerpc/platforms/pseries/papr_scm.c
+@@ -152,7 +152,7 @@ static int papr_scm_meta_get(struct papr_scm_priv *p,
+ 	int len, read;
+ 	int64_t ret;
  
-@@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
+-	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
++	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
+ 		return -EINVAL;
  
--	port->irq_high = platform_get_irq(pdev, 1);
--	if (port->irq_high < 0)
--		port->irq_high = 0;
-+	irq_count = platform_irq_count(pdev);
-+	if (irq_count < 0)
-+		return irq_count;
-+
-+	if (irq_count > 1) {
-+		port->irq_high = platform_get_irq(pdev, 1);
-+		if (port->irq_high < 0)
-+			port->irq_high = 0;
-+	}
+ 	for (len = hdr->in_length; len; len -= read) {
+@@ -206,7 +206,7 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
+ 	__be64 data_be;
+ 	int64_t ret;
  
- 	port->irq = platform_get_irq(pdev, 0);
- 	if (port->irq < 0)
+-	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
++	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
+ 		return -EINVAL;
+ 
+ 	for (len = hdr->in_length; len; len -= wrote) {
 -- 
 2.20.1
 
