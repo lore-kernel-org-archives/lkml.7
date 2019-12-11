@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEABC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4328AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15F924671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C5C020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077250;
-	bh=qLeT4GxcH0g5QErrR4SX5v90f8Y1T5ZXWdgd+HBEe+o=;
+	s=default; t=1576077254;
+	bh=k9dpj1B8c41icXDmGXJ4tL8WRoMBs6eIybywBy7mBVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o6OJm1EaBp6MiKDcz+CdfCwhN6W3r/Nkv3cvcC+sCnDq6usGDNnR9H659B0J13HM5
-	 W6abGXDOEqTokCemtYPW5LtK5FM4KBvWSgoRVvNbzpN4ylLOT4eX6xOAjyBYErT1DY
-	 daqAHjxQIRd9hRrezIW0lCkYTZWmVuSxFt2F7JLA=
+	b=o3dOK/gdc3DLdFUZn7JNDKv2gi9v0DBTBzqWkjBMaIMLAXNwTKSLRwvbE8saOoAq+
+	 ycvKeNTs0UniFQypA97Fh9K07LO/PxZtOhqs37ZZR2AVqQ8CHbDDN6yZ9iTv7T+mhk
+	 lHUELFfkk3RsyOqPZ1ua8VULBpY4jZgMOdDJFlnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfLKPOH (ORCPT
+        id S1731403AbfLKPOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37000 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731422AbfLKPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:28 -0500
+        id S1730331AbfLKPNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D93624685;
-        Wed, 11 Dec 2019 15:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A12CF208C3;
+        Wed, 11 Dec 2019 15:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077208;
-        bh=qLeT4GxcH0g5QErrR4SX5v90f8Y1T5ZXWdgd+HBEe+o=;
+        s=default; t=1576077209;
+        bh=k9dpj1B8c41icXDmGXJ4tL8WRoMBs6eIybywBy7mBVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+g1QBzWfRtZbQmfRb03b7TnVig/pnuafxpAon3anleMdmV75d/SmItBObdMdzZEz
-         mKqNY+oSVLdDliUiCirjazWHcipqjPKlTAHmqBFjWERaVJs14+o2OqI3LyxvrjenA8
-         OFfZl5JAeDH1rUWFXltzNy+nFFJF6Zc0ZF7rSkU0=
+        b=wFbTK89bLpnS/iCAF2NPvF/0kJQw+WJCWj/Ueh76608vOEkTz+4S9JjWNxnrarCFU
+         70HETL0VcgaVB1vyU5o8Z/GvqYnsE2wdgUjW3h8JcIEH7bzKP8Ljiu8iGPoQriZavz
+         TaJDX+IZg/bXvzDZ6kPTnTTfJxIUlP04jTAqNdGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 090/134] clk: Fix memory leak in clk_unregister()
-Date:   Wed, 11 Dec 2019 10:11:06 -0500
-Message-Id: <20191211151150.19073-90-sashal@kernel.org>
+Cc:     peter chang <dpf@google.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 091/134] scsi: pm80xx: Fix for SATA device discovery
+Date:   Wed, 11 Dec 2019 10:11:07 -0500
+Message-Id: <20191211151150.19073-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,58 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 8247470772beb38822f226c99a2ed8c195f6b438 ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-Memory allocated in alloc_clk() for 'struct clk' and
-'const char *con_id' while invoking clk_register() is never freed
-in clk_unregister(), resulting in kmemleak showing the following
-backtrace.
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-  backtrace:
-    [<00000000546f5dd0>] kmem_cache_alloc+0x18c/0x270
-    [<0000000073a32862>] alloc_clk+0x30/0x70
-    [<0000000082942480>] __clk_register+0xc8/0x760
-    [<000000005c859fca>] devm_clk_register+0x54/0xb0
-    [<00000000868834a8>] 0xffff800008c60950
-    [<00000000d5a80534>] platform_drv_probe+0x50/0xa0
-    [<000000001b3889fc>] really_probe+0x108/0x348
-    [<00000000953fa60a>] driver_probe_device+0x58/0x100
-    [<0000000008acc17c>] device_driver_attach+0x6c/0x90
-    [<0000000022813df3>] __driver_attach+0x84/0xc8
-    [<00000000448d5443>] bus_for_each_dev+0x74/0xc8
-    [<00000000294aa93f>] driver_attach+0x20/0x28
-    [<00000000e5e52626>] bus_add_driver+0x148/0x1f0
-    [<000000001de21efc>] driver_register+0x60/0x110
-    [<00000000af07c068>] __platform_driver_register+0x40/0x48
-    [<0000000060fa80ee>] 0xffff800008c66020
-
-Fix it here.
-
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Link: https://lkml.kernel.org/r/20191022071153.21118-1-kishon@ti.com
-Fixes: 1df4046a93e0 ("clk: Combine __clk_get() and __clk_create_clk()")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 1c677d7f7f530..2f2eea26c3750 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -3879,6 +3879,7 @@ void clk_unregister(struct clk *clk)
- 					__func__, clk->core->name);
- 
- 	kref_put(&clk->core->ref, __clk_release);
-+	free_clk(clk);
- unlock:
- 	clk_prepare_unlock();
- }
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 73261902d75d5..161bf4760eac7 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
