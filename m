@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1D1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5041EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5AF622527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF5C22527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078839;
-	bh=YDTVD4QiSfF95CsPZAPYB9nF6X4QVRMAdw/4MY99k9w=;
+	s=default; t=1576078843;
+	bh=t9TQtsoSji5+niuYb59uX5nOBO+cmKRvQ7yP21DTU9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PT+dEJ18WMmEeUvgKh8CG+ReRFd2mWGdA0CrfEJGngcT2pV2D+n2eHTDMyHweNCxX
-	 6Xv2i4E9Su57fwoU/z7EAP1/jP3SfASFMqngSgkkYR+1hO1Mh/RsDXbe6TxXYfvHYh
-	 pRw83+VD/17nYNtJZM/1o8LD31DfhWieiyJyPw78=
+	b=OO64TzuMf6j4UZgYjY3mk7LHtmxR0621q+n0SbghCfl18kr6E5TowXv3UMYtpzcNZ
+	 lr/Rl/ug6gOMoikg+muEdK4ixWfHLiZSCkenYEioS5wR8t9iAiQk2cAgOeSMElEyJC
+	 y6Z3YyzYPFrKbMT2dvQtCteBiX4yHyIRUoF4Irds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388517AbfLKPki (ORCPT
+        id S2388402AbfLKPi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:40:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733115AbfLKPi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:28 -0500
+        id S2388362AbfLKPiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9AE42077B;
-        Wed, 11 Dec 2019 15:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3B1D22B48;
+        Wed, 11 Dec 2019 15:38:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078707;
-        bh=YDTVD4QiSfF95CsPZAPYB9nF6X4QVRMAdw/4MY99k9w=;
+        s=default; t=1576078700;
+        bh=t9TQtsoSji5+niuYb59uX5nOBO+cmKRvQ7yP21DTU9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZtFsLfgc7z3Elm6wnbxJX/2N+c5kUhb388t6jE35oRgK7xXDuE3OtKtuUJ9Uwnrz
-         r+2ZcNHDmq4DWHkqttdNhGAvLnvCl6faeKJTXhwxFEEy8/iMfNB7FCeMu9SVpfossh
-         gEXJZQxnb18ebtpygk7SddYlyoQy+pRlZ5l6FcO0=
+        b=D5IR4QxXiCH1SHbq+8JVLcNOCJcA9Uni+CSVVoUAwuP0yO8AdNBbvE+ZslwY2QBnD
+         dqZgjXY0VNbG2FMNPaW0MgVr+78EyjPvjHcbLJDgF+RuqlYeN6cRdpbk1IAQHzWpH9
+         W4zq/nPFpWE5QEk8Lfi1PtkrgL9xtiAe1Nr7xEr0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/37] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
-Date:   Wed, 11 Dec 2019 10:37:49 -0500
-Message-Id: <20191211153813.24126-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 06/37] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
+Date:   Wed, 11 Dec 2019 10:37:42 -0500
+Message-Id: <20191211153813.24126-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -62,52 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
+[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
 
-According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
-blocks must be transferred. Make the SCSI tracing code follow SBC-2.
+When operating in private loop mode, PLOGI exchanges are racing and the
+driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
+the login with the other end causing the other end to abort its PLOGI as
+well. Discovery never fully completes.
 
-Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Douglas Gilbert <dgilbert@interlog.com>
-Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Fix by disabling the PLOGI abort when private loop and letting the state
+machine play out.
+
+Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_trace.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
-index 08bb47b53bc3e..551fd0329bca8 100644
---- a/drivers/scsi/scsi_trace.c
-+++ b/drivers/scsi/scsi_trace.c
-@@ -29,15 +29,18 @@ static const char *
- scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
- {
- 	const char *ret = trace_seq_buffer_ptr(p);
--	sector_t lba = 0, txlen = 0;
-+	u32 lba = 0, txlen;
- 
- 	lba |= ((cdb[1] & 0x1F) << 16);
- 	lba |=  (cdb[2] << 8);
- 	lba |=   cdb[3];
--	txlen = cdb[4];
-+	/*
-+	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
-+	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
-+	 */
-+	txlen = cdb[4] ? cdb[4] : 256;
- 
--	trace_seq_printf(p, "lba=%llu txlen=%llu",
--			 (unsigned long long)lba, (unsigned long long)txlen);
-+	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
- 	trace_seq_putc(p, 0);
- 
- 	return ret;
+diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
+index 3a4613f9fb9fc..6aa0698925dac 100644
+--- a/drivers/scsi/lpfc/lpfc_nportdisc.c
++++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
+@@ -454,8 +454,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
+ 	 * single discovery thread, this will cause a huge delay in
+ 	 * discovery. Also this will cause multiple state machines
+ 	 * running in parallel for this node.
++	 * This only applies to a fabric environment.
+ 	 */
+-	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
++	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
++	    (vport->fc_flag & FC_FABRIC)) {
+ 		/* software abort outstanding PLOGI */
+ 		lpfc_els_abort(phba, ndlp);
+ 	}
 -- 
 2.20.1
 
