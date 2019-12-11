@@ -2,67 +2,113 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DDBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B39C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F88206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2080B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfLKACD (ORCPT
+        id S1726932AbfLKAD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:02:03 -0500
-Received: from smtprelay0126.hostedemail.com ([216.40.44.126]:45817 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726522AbfLKACC (ORCPT
+        Tue, 10 Dec 2019 19:03:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726801AbfLKAD3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:02:02 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 2F575182CF666;
-        Wed, 11 Dec 2019 00:02:01 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: loaf54_4b49ceef1b95b
-X-Filterd-Recvd-Size: 1455
-Received: from XPS-9350 (unknown [66.178.38.77])
-        (Authenticated sender: joe@perches.com)
-        by omf03.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 11 Dec 2019 00:01:56 +0000 (UTC)
-Message-ID: <4f3e350d0fcef89e25350f7d68ea96f33dc4e3f0.camel@perches.com>
-Subject: Re: get_maintainer.pl produces non-deterministic results
-From:   Joe Perches <joe@perches.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Vegard Nossum <vegard.nossum@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Date:   Tue, 10 Dec 2019 16:01:15 -0800
-In-Reply-To: <CACT4Y+YcCW=xwys6tvhOLXiND=2Cwe-NFkn0MDKHi=8HdGWppg@mail.gmail.com>
-References: <CACT4Y+YcCW=xwys6tvhOLXiND=2Cwe-NFkn0MDKHi=8HdGWppg@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 10 Dec 2019 19:03:29 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBB02Cvh044028
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 19:03:28 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtf8h5qt8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 19:03:27 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 11 Dec 2019 00:03:25 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Dec 2019 00:03:21 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBB03KaJ45482106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 00:03:20 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EF4711C054;
+        Wed, 11 Dec 2019 00:03:20 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CAA011C04C;
+        Wed, 11 Dec 2019 00:03:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.214.111])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Dec 2019 00:03:18 +0000 (GMT)
+Subject: Re: [PATCH v10 1/6] IMA: Check IMA policy flag
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Tue, 10 Dec 2019 19:03:18 -0500
+In-Reply-To: <6385347a-bc40-7717-f9ad-8ed7dd7fee51@linux.microsoft.com>
+References: <20191204224131.3384-1-nramas@linux.microsoft.com>
+         <20191204224131.3384-2-nramas@linux.microsoft.com>
+         <1576017749.4579.40.camel@linux.ibm.com>
+         <6385347a-bc40-7717-f9ad-8ed7dd7fee51@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121100-0028-0000-0000-000003C75B93
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121100-0029-0000-0000-0000248A8D76
+Message-Id: <1576022598.4579.50.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-10_08:2019-12-10,2019-12-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 malwarescore=0 phishscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912100197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-10 at 14:47 +0100, Dmitry Vyukov wrote:
-> Hi Joe,
+On Tue, 2019-12-10 at 15:29 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/10/19 2:42 PM, Mimi Zohar wrote:
 > 
-> scripts/get_maintainer.pl fs/proc/task_mmu.c
-> non-deterministically gives me from 13 to 16 results, different number
-> every time (on upstream 6794862a). Perl v5.28.1. Michael confirmed
-> this with v5.28.2.
-> Vergard suggested to check PERL_HASH_SEED=0. Indeed it fixes
-> non-determinism. But I guess it's not the right solution, there should
-> be some logical problem.
-> My perl-fo is weak, I appreciate if somebody with proper perl-fo takes a look.
+> > Patch descriptions aren't suppose to be written as pseudo code.  Start
+> > with the current status and problem description.
+> > 
+> > For example, "process_buffer_measurement() may be called prior to IMA being initialized, which would result in a kernel panic.  This patch ..."
+> > 
+> > Mimi
 > 
-> Thanks
+> I'll update the patch description in this one and in the other patches 
+> per your comments.
+> 
+> Are you done reviewing all the patches in this set?
+> 
+> Other than the one code change per your comment on "[PATCH v10 5/6]" 
+> there are no other code changes I need to make?
+> Just wanted to confirm.
+> 
+> 	[PATCH v10 5/6] IMA: Add support to limit measuring keys
+> => With the additional "uid" support this isn't necessarily true any
+> more.
 
-https://lkml.org/lkml/2017/7/13/789
+Yes, other than the code change needed for this and the patch
+descriptions, it looks good.  Am continuing with reviewing the other
+patch set - queueing "key" measurements.
 
+Mimi
 
