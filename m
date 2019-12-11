@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7222DC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9DE24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151EA24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078293;
-	bh=6wMgZwKLgEGkwTL+1Vd9LfABc3xDvEAKNMrFn8ElL7I=;
+	s=default; t=1576078300;
+	bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jtEvSRDk7j2zTAY7PgZdWw8NO0ouhuLgdhc/xwgsAdIWhb4dicodrSCzXML1mn4lQ
-	 yZnLkpsagCaUiV9BKwow4iaZ2DckppOsHo2k6nCzYj3Y1q0UDWS9R6qMvZE31mMbyr
-	 1LjYoWebFO2NwUcRYzut5Dp/rIIaghJVbGmK21Rc=
+	b=nFhbDqQ5YOUlHLMz5oiJdR7lGjNWDOnV20XeGzDVG5ePuXtiEI1dpN7TTDV1WGpsN
+	 BF2X8aUfe2VykkQPMnsp88pgg2T92G+naIkNSCvU1ASuy21sYFQdEm9IuUzFZr+Wsm
+	 FMOChQa4QFUoS1lyZ6aHbtcy81IwEb3uen1lyTho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387839AbfLKP3R (ORCPT
+        id S2387755AbfLKPbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:31:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387804AbfLKP3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:06 -0500
+        id S2387794AbfLKP3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CE9E208C3;
-        Wed, 11 Dec 2019 15:29:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 993D524654;
+        Wed, 11 Dec 2019 15:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078145;
-        bh=6wMgZwKLgEGkwTL+1Vd9LfABc3xDvEAKNMrFn8ElL7I=;
+        s=default; t=1576078153;
+        bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fh+HePk7mfpLL7kyHJlnQwSBOiNinoRGBe03h8YpaH+C2FxNDv9m/TwVpci7IgeEN
-         t127DdVBiRVoaJkU08ieomCodoFZ75ijKd5SsdKRGCSAn1rYLUxtnES9g9Yd9nWZSW
-         i+2Hl3fX1Dy2EZqhhyMN9Ysuh3VISIEA/ZEtgWzo=
+        b=XRaqiYDiYT7Trx/xd08ci1AfDvlJgIpmPh9luUUy/ScY9J0jnSyUpmEJ91V15pUzT
+         e84uYdR3vLUjBGezDqL4wgVcPbXOg5yDJg8bk4vaXbeN+jkxKuIl+PnpMrSiUkaU7d
+         +6ENrHsi8Goev7ibHGYevrXiNfA5YNY4r92yBblc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org,
-        linux-raid@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 32/58] bcache: at least try to shrink 1 node in bch_mca_scan()
-Date:   Wed, 11 Dec 2019 10:28:05 -0500
-Message-Id: <20191211152831.23507-32-sashal@kernel.org>
+Cc:     peter chang <dpf@google.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 39/58] scsi: pm80xx: Fix for SATA device discovery
+Date:   Wed, 11 Dec 2019 10:28:12 -0500
+Message-Id: <20191211152831.23507-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -59,50 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 9fcc34b1a6dd4b8e5337e2b6ef45e428897eca6b ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-In bch_mca_scan(), the number of shrinking btree node is calculated
-by code like this,
-	unsigned long nr = sc->nr_to_scan;
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-        nr /= c->btree_pages;
-        nr = min_t(unsigned long, nr, mca_can_free(c));
-variable sc->nr_to_scan is number of objects (here is bcache B+tree
-nodes' number) to shrink, and pointer variable sc is sent from memory
-management code as parametr of a callback.
-
-If sc->nr_to_scan is smaller than c->btree_pages, after the above
-calculation, variable 'nr' will be 0 and nothing will be shrunk. It is
-frequeently observed that only 1 or 2 is set to sc->nr_to_scan and make
-nr to be zero. Then bch_mca_scan() will do nothing more then acquiring
-and releasing mutex c->bucket_lock.
-
-This patch checkes whether nr is 0 after the above calculation, if 0
-is the result then set 1 to variable 'n'. Then at least bch_mca_scan()
-will try to shrink a single B+tree node.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/btree.c | 2 ++
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 9406326216f17..96a6583e7b522 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -685,6 +685,8 @@ static unsigned long bch_mca_scan(struct shrinker *shrink,
- 	 * IO can always make forward progress:
- 	 */
- 	nr /= c->btree_pages;
-+	if (nr == 0)
-+		nr = 1;
- 	nr = min_t(unsigned long, nr, mca_can_free(c));
- 
- 	i = 0;
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 9edd61c063a1a..df5f0bc295875 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
