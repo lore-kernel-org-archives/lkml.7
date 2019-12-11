@@ -2,148 +2,137 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0405C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F92C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FCF2464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BfMpm+5A"
+	by mail.kernel.org (Postfix) with ESMTP id C047122B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfLKNU0 (ORCPT
+        id S1729455AbfLKNVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:20:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54267 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728976AbfLKNUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:20:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576070425;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=61Sm77wHsqBMMFdZKARKxx8aSpgfgeBKIFR7CjGK+3w=;
-        b=BfMpm+5AzaDindQjQk1W1JJYvKOK5EznNoF7YF1386QuZdiXBAcf1Xao2AvN8FhAZuLGGJ
-        LfMkunTEwMjXifNxjYF6iqZMlY460l9LyH75v450gwNvtWMwbaKLQ5CpmQdZi7GGCGtspe
-        8JcSiOy8NEDWsxLT1S6kPoaPYSqpKTo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-341-NGbFWe4PN1mC_x--I1LrmQ-1; Wed, 11 Dec 2019 08:20:22 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6EE68DB21;
-        Wed, 11 Dec 2019 13:20:20 +0000 (UTC)
-Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9A6B1001902;
-        Wed, 11 Dec 2019 13:20:19 +0000 (UTC)
-Date:   Wed, 11 Dec 2019 21:20:17 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, jgross@suse.com,
-        william.kucharski@oracle.com, mingo@kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH] mm/hotplug: Only respect mem= parameter during boot stage
-Message-ID: <20191211132017.GC28917@MiWiFi-R3L-srv>
-References: <20191206150524.14687-1-bhe@redhat.com>
- <20191209100717.GC6156@dhcp22.suse.cz>
- <20191210072453.GI2984@MiWiFi-R3L-srv>
- <20191210102834.GE10404@dhcp22.suse.cz>
- <20191210104303.GN2984@MiWiFi-R3L-srv>
- <20191210113341.GG10404@dhcp22.suse.cz>
- <20191210125557.GA28917@MiWiFi-R3L-srv>
- <20191210133202.GJ10404@dhcp22.suse.cz>
- <20191210140534.GB28917@MiWiFi-R3L-srv>
- <20191210141934.GL10404@dhcp22.suse.cz>
+        Wed, 11 Dec 2019 08:21:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:58030 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728976AbfLKNVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:21:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C66521FB;
+        Wed, 11 Dec 2019 05:21:14 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562E43F6CF;
+        Wed, 11 Dec 2019 05:21:14 -0800 (PST)
+Subject: Re: [PATCH 05/15] firmware: arm_scmi: Add versions and identifier
+ attributes using dev_groups
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191210145345.11616-1-sudeep.holla@arm.com>
+ <20191210145345.11616-6-sudeep.holla@arm.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <91d5617d-85da-b3a3-1ef3-2438baa93ba7@arm.com>
+Date:   Wed, 11 Dec 2019 13:21:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <20191210141934.GL10404@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: NGbFWe4PN1mC_x--I1LrmQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191210145345.11616-6-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 at 03:19pm, Michal Hocko wrote:
-> On Tue 10-12-19 22:05:34, Baoquan He wrote:
-> > On 12/10/19 at 02:32pm, Michal Hocko wrote:
-> > > On Tue 10-12-19 20:55:57, Baoquan He wrote:
-> > > [...]
-> > > > Btw, as you said at above, I am confused by the '[KNL,BOOT]', what =
-does
-> > > > the 'BOOT' mean in the documentation of 'mem=3D'? I checked all par=
-ameters
-> > > > with 'BOOT', still don't get it clearly.
-> > >=20
-> > > This is a good question indeed. I have checked closer and this is wha=
-t
-> > > documentation says
-> > > Documentation/admin-guide/kernel-parameters.rst
-> > > "
-> > >         BOOT    Is a boot loader parameter.
-> > >=20
-> > > Parameters denoted with BOOT are actually interpreted by the boot
-> > > loader, and have no meaning to the kernel directly.
-> > > "
-> > >=20
-> > > and that really doesn't fit, right? So I went to check the full histo=
-ry
-> > > git tree just to get to 2.4.0-test5 and no explanation whatsoever.
-> > > Fun, isn't it? ;)
-> >=20
-> > Yeah, very interesting. Finally I got their original purpose from
-> > Documentation/x86/boot.rst.
-> >=20
-> >=20
-> > Special Command Line Options
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >=20
-> > If the command line provided by the boot loader is entered by the
-> > user, the user may expect the following command line options to work.
-> > They should normally not be deleted from the kernel command line even
-> > though not all of them are actually meaningful to the kernel.  Boot
-> > loader authors who need additional command line options for the boot
-> > loader itself should get them registered in
-> > Documentation/admin-guide/kernel-parameters.rst to make sure they will =
-not
-> > conflict with actual kernel options now or in the future.
-> >=20
-> > ...
-> >=20
-> > So here, [KNL,BOOT], KNL means it's used for kernel, BOOT means it's
-> > needed by boot loader.
->=20
-> OK, that clarifies this a bit. Thanks for referencing to it!
-> That should explain how the behavior is not boot time restricted at all
-> and the current implementation is actually correct. So a change to it
-> should clearly state the new usecase as we have already discussed. In
-> case there are bootloaders which really rely on the original strict
-> meaning then we should be able to compare cost/benfits of those two
-> usecases.
+On 10/12/2019 14:53, Sudeep Holla wrote:
+> Platform drivers now have the option to have the platform core create
+> and remove any needed sysfs attribute files. Using the same, let's add
+> the scmi firmware and protocol version attributes as well as vendor and
+> sub-vendor identifiers to sysfs.
+> 
+> It helps to identify the firmware details from the sysfs entries similar
+> to ARM SCPI implementation.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/driver.c | 47 ++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 0bbdc7c9eb0f..26b2c438bd59 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -979,6 +979,52 @@ static int scmi_remove(struct platform_device *pdev)
+>  	return ret;
+>  }
+> 
+> +static ssize_t protocol_version_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct scmi_info *info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%u.%u\n", info->version.major_ver,
+> +		       info->version.minor_ver);
+> +}
+> +static DEVICE_ATTR_RO(protocol_version);
+> +
+> +static ssize_t firmware_version_show(struct device *dev,
+> +				     struct device_attribute *attr, char *buf)
+> +{
+> +	struct scmi_info *info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "0x%x\n", info->version.impl_ver);
+> +}
+> +static DEVICE_ATTR_RO(firmware_version);
+> +
+> +static ssize_t vendor_id_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct scmi_info *info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%s\n", info->version.vendor_id);
+> +}
+> +static DEVICE_ATTR_RO(vendor_id);
+> +
+> +static ssize_t sub_vendor_id_show(struct device *dev,
+> +				  struct device_attribute *attr, char *buf)
+> +{
+> +	struct scmi_info *info = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%s\n", info->version.sub_vendor_id);
+> +}
+> +static DEVICE_ATTR_RO(sub_vendor_id);
+> +
+> +static struct attribute *versions_attrs[] = {
+> +	&dev_attr_firmware_version.attr,
+> +	&dev_attr_protocol_version.attr,
+> +	&dev_attr_vendor_id.attr,
+> +	&dev_attr_sub_vendor_id.attr,
+> +	NULL,
+> +};
+> +ATTRIBUTE_GROUPS(versions);
+> +
+>  static const struct scmi_desc scmi_generic_desc = {
+>  	.max_rx_timeout_ms = 30,	/* We may increase this if required */
+>  	.max_msg = 20,		/* Limited by MBOX_TX_QUEUE_LEN */
+> @@ -997,6 +1043,7 @@ static struct platform_driver scmi_driver = {
+>  	.driver = {
+>  		   .name = "arm-scmi",
+>  		   .of_match_table = scmi_of_match,
+> +		   .dev_groups = versions_groups,
+>  		   },
+>  	.probe = scmi_probe,
+>  	.remove = scmi_remove,
+> --
+> 2.17.1
+> 
 
-Sounds reasonable to me. From the current parameters for x86, it only
-impact the bootloader during boot-time, e.g 'mem=3D ' says bootloader need
-this to place initrd. It might not give the trouble, anyway, we will
-say.
+LGTM.
 
-Just a little more, we have test case for memory hotplug which only test
-the DIMM added after boot. And the old 'mem=3D ' implementation in x86
-only erazes memory regions above 'mem=3D ' in e820 table. That is why the
-behaviour change immediately gave me a surprise when I noticed people
-back ported Jurgen's patch to our distros.=20
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
 
-So glad to see all is clear, thanks.
+
+Cristian
 
