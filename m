@@ -2,115 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7ABAC2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA9FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F052077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9372077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hpniJbqU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfLKGjH (ORCPT
+        id S1727905AbfLKGjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:39:07 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:42610 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725800AbfLKGjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:39:07 -0500
-Received: from [10.130.0.36] (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxfxfvjvBdz38JAA--.103S3;
-        Wed, 11 Dec 2019 14:38:41 +0800 (CST)
-Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
-To:     Al Viro <viro@zeniv.linux.org.uk>
-References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
- <20191211024858.GB732@sol.localdomain>
- <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
- <20191211044723.GC4203@ZenIV.linux.org.uk>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
-Date:   Wed, 11 Dec 2019 14:38:34 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 11 Dec 2019 01:39:37 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45847 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfLKGjh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:39:37 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so1271679pfg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 22:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kcW6WrBcvg8R/lYPM6ixJTQAiO/MQeqfUNHc5Kw90lo=;
+        b=hpniJbqUrDNCh9CxSRDGYGaZ5GA0fJjKFFDeR3ptHaI6VzBFOfUIxkVOeowTgF/Y4f
+         TtQjnNMpI7o8m/pSpCKzqMKdWgsy5jV7TQQt0cXIWCX4KwPYo27HPFcq9FP81h/owPgi
+         ZVxjU0vm5bxPss8T/tWzy8X+KNCyn6w2/qhwcUVrRQcqAv889XbNayb1ZLNCvyp76lsq
+         4mtnsX2KVSQtx0pNmhYNal3KlCNhIonJai0ZBOoAhigRpchIWvQkUgZ6UrXsT+kFHbzB
+         5BdonK61rQtYqHfiYiGAT1rmBYh1uGX8k2phFvq2RWX5RfEpgolSXi7yAf2B/aul2kRe
+         K8/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kcW6WrBcvg8R/lYPM6ixJTQAiO/MQeqfUNHc5Kw90lo=;
+        b=Mfcd/AwGc4ZOcaWbw57Yp8SIv05uiryqb413J/pwEevWKYkywsz9Zy/gf+muBrLfPL
+         prjKy2ZqyBcqd4WT47d8DeZgVAM5hPz/zhFxphuV3DyEeDqPg4Y0gONZ2K2hIEgFXdFy
+         k/SpgXhAQonVJ3e8Pxc015Zxj+Gf1iUWwGmSUdEDwqA/cMYKQXz5qa2epHWF9aFrJvUK
+         HgHkoiKqJgMakYWoV8++VbbyZ3jaUqE28jftWYsb1pjlexFXuIkRXQ2qk3i71Hfs41n0
+         HdYMr7/VIyUJqtbG6Woe2QJLl4FBDM914LTqbqEaQVtRNL8mLFOy4KtzlBEfV8qduEO8
+         9zZA==
+X-Gm-Message-State: APjAAAVnGe2eZh9x/9jrUjDTY1etjqX7dBG13X05crrwn0FS/FcBXH7O
+        W4ArUuElugVHSNvZ0iigkdq2Yw==
+X-Google-Smtp-Source: APXvYqyuF1aA0T4EDKsEb0XxR4EuXuNF7H4Vadx8g+kbRnhuYkm1szv3JcP02dztFnoFcvsw9bW1ig==
+X-Received: by 2002:aa7:85d8:: with SMTP id z24mr2115129pfn.202.1576046376453;
+        Tue, 10 Dec 2019 22:39:36 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y22sm1272741pfn.122.2019.12.10.22.39.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 22:39:35 -0800 (PST)
+Date:   Tue, 10 Dec 2019 22:39:33 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        swboyd@chromium.org, dianders@chromium.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add new qup functions
+ for sc7180
+Message-ID: <20191211063933.GD3143381@builder>
+References: <0101016ef36a5d13-457e6678-2e83-494e-8494-1b0776d5b7e4-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211044723.GC4203@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxfxfvjvBdz38JAA--.103S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xry3KF4UGF4furW3Xry5urg_yoWkGrX_ur
-        18Cw1DAF4UZr13ZwsxJFW7JFZxWFW5Wr1jvFyvv3y7AF98A398urWkKrsIva1UZr4fZFZI
-        kryjyrWIqrW29jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-AYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l
-        c7I2V7IY0VAS07AlzVAYIcxG8wCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr
-        0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j7jjgUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ef36a5d13-457e6678-2e83-494e-8494-1b0776d5b7e4-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 12:47 PM, Al Viro wrote:
-> On Wed, Dec 11, 2019 at 11:59:40AM +0800, Tiezhu Yang wrote:
->
->> static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
->> {
->>          if (len == 1 && name[0] == '.')
->>                  return true;
->>
->>          if (len == 2 && name[0] == '.' && name[1] == '.')
->>                  return true;
->>
->>          return false;
->> }
->>
->> Hi Matthew,
->>
->> How do you think? I think the performance influence is very small
->> due to is_dot_or_dotdot() is a such short static inline function.
-> It's a very short inline function called on a very hot codepath.
-> Often.
->
-> I mean it - it's done literally for every pathname component of
-> every pathname passed to a syscall.
+On Tue 10 Dec 21:24 PST 2019, Rajendra Nayak wrote:
 
-OK. I understand. Let us do not use the helper function in fs/namei.c,
-just use the following implementation for other callers:
+> Add new qup functions for qup02/04/11 and qup13 wherein multiple
+> functions (for i2c and uart) share the same pin. This allows users
+> to identify which specific qup function for the instance one needs
+> to use for the pin.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 
-static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-{
-         if (len >= 1 && unlikely(name[0] == '.')) {
-                 if (len < 2 || (len == 2 && name[1] == '.'))
-                         return true;
-         }
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-         return false;
-}
+Regards,
+Bjorn
 
-Special thanks for Matthew, Darrick, Al and Eric.
-If you have any more suggestion, please let me know.
-
-Thanks,
-
-Tiezhu Yang
-
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+> index b5767ee..6ffeac9 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.txt
+> @@ -125,8 +125,9 @@ to specify in a pin configuration subnode:
+>  		    mi2s_1, mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag,
+>  		    PLL_BIST, pll_bypassnl, pll_reset, prng_rosc, qdss,
+>  		    qdss_cti, qlink_enable, qlink_request, qspi_clk, qspi_cs,
+> -		    qspi_data, qup00, qup01, qup02, qup03, qup04, qup05,
+> -		    qup10, qup11, qup12, qup13, qup14, qup15, sdc1_tb,
+> +		    qspi_data, qup00, qup01, qup02_i2c, qup02_uart, qup03,
+> +		    qup04_i2c, qup04_uart, qup05, qup10, qup11_i2c, qup11_uart,
+> +		    qup12, qup13_i2c, qup13_uart, qup14, qup15, sdc1_tb,
+>  		    sdc2_tb, sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2,
+>  		    tgu_ch3, tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt,
+>  		    usb_phy, vfr_1, _V_GPIO, _V_PPS_IN, _V_PPS_OUT,
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
