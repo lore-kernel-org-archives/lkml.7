@@ -2,229 +2,165 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EADC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F88EC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0074214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="J+3gOEj9"
+	by mail.kernel.org (Postfix) with ESMTP id E936C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfLKXuE (ORCPT
+        id S1727189AbfLKXup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:50:04 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36122 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfLKXuE (ORCPT
+        Wed, 11 Dec 2019 18:50:45 -0500
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:40476 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfLKXuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:50:04 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n12so226808lfe.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 15:50:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=3ar8hSRxaWEDYYcaZhXo4D+jXpzHyiQxdbvMX4+sxbw=;
-        b=J+3gOEj9//BN+ky7TtDHfiFUhcWKKXu2q0p6enY7O+oXtkHhmLpg6Ex0ksSgm9rXw9
-         XUrVXLA1pS1Ifvi4qYIcqrMyHqRuwn3Ag46LEv62xxqIMCGnIMq+XrBZVuJN7HRW+X+9
-         i4FYhYcEVv+GB6LUDzvvpD5yFvgzrpVf0dxGuLqLkHwitL1PaY7ScPRB2ztP3o8McMuJ
-         AQMJuSVv8zBpVHFid1m/jyrbbxkxmW/eYqkaYFtUzjaY3ypVTu4XYti4SwFBJGCkrUQ9
-         Uh5eKXayjbTimhfZ9/lHUWch1Oq97UNT5h1AE613YkuVJhsV2vo79d6KmdsLRFsxLnRw
-         kowA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=3ar8hSRxaWEDYYcaZhXo4D+jXpzHyiQxdbvMX4+sxbw=;
-        b=oO8GoPKzGcgZyBxHLJ87fwh/XnMVIOVnqx6YpzySsRxcGDSksxJplVvDd4vk7l97TR
-         3zpXcf8+wGW6yey5j9zCubvGug/X9FcS2XaMfoVIE3o7Us8T7r47SzRAY+A9DlSj4uVp
-         3DRczsISMxQXrUKe8nfyokuOhjSq4YRtwbZmNp8T9UPAq54R9RgwYOc6Ut/9vw/IkuBh
-         njEK7YnbJ+eba2e2aZVHzYkTN8q9w0LtLgKBaakW5gtfKm2HsiKTKaqTobLMw273ckT1
-         +c0Xbv1IvYgzvXO9L+Bx5IsfMeFdpIpe+PzHVqKwLGKcIAzPZHvnWBe+Keeol8+/cYxa
-         H2mg==
-X-Gm-Message-State: APjAAAVqr7fjHlJsicuRpdAZMyIJesSWFAySPVxud2LQZXkNyVIRqjPy
-        SrP7rKb1hoNnHu9xWlduU3aD9g==
-X-Google-Smtp-Source: APXvYqxLBlm2lDvETlbo6tR3SMfMEiRwEcggIuyy2hd+tE015YJ2jzRHZ0h2rdzwNuMk3KFs/l7V0Q==
-X-Received: by 2002:a19:784:: with SMTP id 126mr3803119lfh.191.1576108200961;
-        Wed, 11 Dec 2019 15:50:00 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id 192sm1928868lfh.28.2019.12.11.15.49.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 15:50:00 -0800 (PST)
-Date:   Wed, 11 Dec 2019 15:49:52 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Yuval Avnery <yuvalav@mellanox.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
-Message-ID: <20191211154952.50109494@cakuba.netronome.com>
-In-Reply-To: <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
-        <20191211095854.6cd860f1@cakuba.netronome.com>
-        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211111537.416bf078@cakuba.netronome.com>
-        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211142401.742189cf@cakuba.netronome.com>
-        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-Organization: Netronome Systems, Ltd.
+        Wed, 11 Dec 2019 18:50:44 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id xBBNoRkW006249; Thu, 12 Dec 2019 08:50:28 +0900
+X-Iguazu-Qid: 34tMQJyII3CBYi1sWp
+X-Iguazu-QSIG: v=2; s=0; t=1576108227; q=34tMQJyII3CBYi1sWp; m=4p+g4j2xam2YUSHpoqyygsho0cdntaFG34MarWhkTHM=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1511) id xBBNoQKg013514;
+        Thu, 12 Dec 2019 08:50:26 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xBBNoQuh010066;
+        Thu, 12 Dec 2019 08:50:26 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xBBNoQcE005547;
+        Thu, 12 Dec 2019 08:50:26 +0900
+Date:   Thu, 12 Dec 2019 08:50:25 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 077/243] iomap: dio data corruption and spurious
+ errors when pipes fill
+X-TSB-HOP: ON
+Message-ID: <20191211235025.xukuecbyuub6hakt@toshiba.co.jp>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150344.304750036@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211150344.304750036@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 23:25:09 +0000, Yuval Avnery wrote:
-> > -----Original Message-----
-> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > Sent: Wednesday, December 11, 2019 2:24 PM
-> > To: Yuval Avnery <yuvalav@mellanox.com>
-> > Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
-> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
-> > 
-> > On Wed, 11 Dec 2019 19:57:34 +0000, Yuval Avnery wrote:  
-> > > > -----Original Message-----
-> > > > From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > > > Sent: Wednesday, December 11, 2019 11:16 AM
-> > > > To: Yuval Avnery <yuvalav@mellanox.com>
-> > > > Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
-> > > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
-> > > >
-> > > > On Wed, 11 Dec 2019 18:19:56 +0000, Yuval Avnery wrote:  
-> > > > > > On Wed, 11 Dec 2019 04:58:53 +0200, Yuval Avnery wrote:  
-> > > > > > > Currently there is no limit to the number of VFs netdevsim can enable.  
-> > > > > > > In a real systems this value exist and used by driver.
-> > > > > > > Fore example, Some features might need to consider this value
-> > > > > > > when allocating memory.  
-> > > > > >
-> > > > > > Thanks for the patch!
-> > > > > >
-> > > > > > Can you shed a little bit more light on where it pops up? Just
-> > > > > > for my  
-> > > > curiosity?  
-> > > > >
-> > > > > Yes, like we described in the subdev threads.
-> > > > > User should be able to configure some attributes before the VF was  
-> > > > enabled.  
-> > > > > So all those (persistent) VF attributes should be available for
-> > > > > query and configuration before VF was enabled.
-> > > > > The driver can allocate an array according to max_vfs to hold all
-> > > > > that data, like we do here in" vfconfigs".  
-> > > >
-> > > > I was after more practical reasoning, are you writing some tests for
-> > > > subdev stuff that will depend on this change? :)  
-> > >
-> > > Yes we are writing tests for subdev with this.  
-> > 
-> > Okay, please post v2 together with the tests. We don't accept netdevsim
-> > features without tests any more.  
+On Wed, Dec 11, 2019 at 04:03:59PM +0100, Greg Kroah-Hartman wrote:
+> From: Dave Chinner <dchinner@redhat.com>
 > 
-> I think the only test I can currently write is the enable SR-IOV max_vfs enforcement.
-> Because subdev is not in yet.
-> Will that be good enough?
-
-It'd be good to test some netdev API rather than just the enforcement
-itself which is entirely in netdevsim, I think.
-
-So max_vfs enforcement plus checking that ip link lists the correct
-number of entries (and perhaps the entries are in reset state after
-enable) would do IMO.
-
-> > > This is the way mlx5 works.. is that practical enough?
-> > >  
-> > > > > > > Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
-> > > > > > > Acked-by: Jiri Pirko <jiri@mellanox.com>
-> > > > > > >
-> > > > > > > diff --git a/drivers/net/netdevsim/bus.c
-> > > > > > > b/drivers/net/netdevsim/bus.c index 6aeed0c600f8..f1a0171080cb
-> > > > > > > 100644
-> > > > > > > --- a/drivers/net/netdevsim/bus.c
-> > > > > > > +++ b/drivers/net/netdevsim/bus.c
-> > > > > > > @@ -26,9 +26,9 @@ static struct nsim_bus_dev
-> > > > > > > *to_nsim_bus_dev(struct device *dev)  static int
-> > > > > > > nsim_bus_dev_vfs_enable(struct nsim_bus_dev  
-> > > > > > *nsim_bus_dev,  
-> > > > > > >  				   unsigned int num_vfs)
-> > > > > > >  {
-> > > > > > > -	nsim_bus_dev->vfconfigs = kcalloc(num_vfs,
-> > > > > > > -					  sizeof(struct  
-> > nsim_vf_config),  
-> > > > > > > -					  GFP_KERNEL);  
-> > > > > >
-> > > > > > You're changing the semantics of the enable/disable as well now.
-> > > > > > The old values used to be wiped when SR-IOV is disabled, now
-> > > > > > they will be retained across disable/enable pair.
-> > > > > >
-> > > > > > I think it'd be better if that wasn't the case. Users may expect
-> > > > > > a system to be in the same state after they enable SR-IOV,
-> > > > > > regardless if someone else used SR-IOV since last reboot.  
-> > > > >
-> > > > > Right,
-> > > > > But some values should retain across enable/disable, for example
-> > > > > MAC  
-> > > > address which is persistent.  
-> > > > > So maybe we need to retain some values, while resetting others on  
-> > > > disable?  
-> > > > > Would that work?  
-> > > >
-> > > > Mmm. That is a good question. For all practical purposes SR-IOV used
-> > > > to be local to the host that enables it until Smart/middle box NICs  
-> > emerged.  
-> > > >
-> > > > Perhaps the best way forward would be to reset the config that was
-> > > > set via legacy APIs and keep only the MACs provisioned via persistent  
-> > devlink API?  
-> > > >
-> > > > So for now we'd memset, and once devlink API lands reset selectively?  
-> > >
-> > > Legacy is also persistent.
-> > > Currently when you set mac address with "ip link vf set mac" it is persistent  
-> > (at least in mlx5).
-> > 
-> > "Currently in mlx5" - maybe, but this is netdevsim. Currently it clears the
-> > config on re-enable which I believe to be preferable as explained before.
-> >   
-> > > But ip link only exposes enabled VFS, so driver on VF has to reload to  
-> > acquire this MAC.  
-> > > With devlink subdev it will be possible to set the MAC before VF was  
-> > enabled.
-> > 
-> > Yup, sure. As I said, once subdev is implemented, we will treat the addresses
-> > set by it differently. Those are inherently persistent or rather their life time is
-> > independent of just the SR-IOV host.  
+> [ Upstream commit 4721a6010990971440b4ffefbdf014976b8eda2f ]
 > 
-> Ok, got it.
-> I am just wondering how this works when you have "ip link" and devlink setting the MAC independently.
-> Will they show the same MAC?
-> Or ip link will show the non-persistent MAC And devlink the persistent?
+> When doing direct IO to a pipe for do_splice_direct(), then pipe is
+> trivial to fill up and overflow as it can only hold 16 pages. At
+> this point bio_iov_iter_get_pages() then returns -EFAULT, and we
+> abort the IO submission process. Unfortunately, iomap_dio_rw()
+> propagates the error back up the stack.
+> 
+> The error is converted from the EFAULT to EAGAIN in
+> generic_file_splice_read() to tell the splice layers that the pipe
+> is full. do_splice_direct() completely fails to handle EAGAIN errors
+> (it aborts on error) and returns EAGAIN to the caller.
+> 
+> copy_file_write() then completely fails to handle EAGAIN as well,
+> and so returns EAGAIN to userspace, having failed to copy the data
+> it was asked to.
+> 
+> Avoid this whole steaming pile of fail by having iomap_dio_rw()
+> silently swallow EFAULT errors and so do short reads.
+> 
+> To make matters worse, iomap_dio_actor() has a stale data exposure
+> bug bio_iov_iter_get_pages() fails - it does not zero the tail block
+> that it may have been left uncovered by partial IO. Fix the error
+> handling case to drop to the sub-block zeroing rather than
+> immmediately returning the -EFAULT error.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-My knee jerk reaction is that we should populate the values to those set
-via devlink upon SR-IOV enable, but then if user overwrites those values
-that's their problem.
 
-Sort of mirror how VF MAC addrs work, just a level deeper. The VF
-defaults to the MAC addr provided by the PF after reset, but it can
-change it to something else (things may stop working because spoof
-check etc. will drop all its frames, but nothing stops the VF in legacy
-HW from writing its MAC addr register).
 
-IOW the devlink addr is the default/provisioned addr, not necessarily
-the addr the PF has set _now_.
+This commit also seems to require the following 2 commits:
 
-Other options I guess are (a) reject the changes of the address from
-the PF once devlink has set a value; (b) provide some device->control
-CPU notifier which can ack/reject a request from the PF to change
-devlink's value..?
+commit 8f67b5adc030553fbc877124306f3f3bdab89aa8
+Author: Darrick J. Wong <darrick.wong@oracle.com>
+Date:   Sun Dec 2 08:38:07 2018 -0800
 
-You guys posted the devlink patches a while ago, what was your
-implementation doing?
+    iomap: partially revert 4721a601099 (simulated directio short read on EFAULT)
+
+    In commit 4721a601099, we tried to fix a problem wherein directio reads
+    into a splice pipe will bounce EFAULT/EAGAIN all the way out to
+    userspace by simulating a zero-byte short read.  This happens because
+    some directio read implementations (xfs) will call
+    bio_iov_iter_get_pages to grab pipe buffer pages and issue asynchronous
+    reads, but as soon as we run out of pipe buffers that _get_pages call
+    returns EFAULT, which the splice code translates to EAGAIN and bounces
+    out to userspace.
+
+    In that commit, the iomap code catches the EFAULT and simulates a
+    zero-byte read, but that causes assertion errors on regular splice reads
+    because xfs doesn't allow short directio reads.  This causes infinite
+    splice() loops and assertion failures on generic/095 on overlayfs
+    because xfs only permit total success or total failure of a directio
+    operation.  The underlying issue in the pipe splice code has now been
+    fixed by changing the pipe splice loop to avoid avoid reading more data
+    than there is space in the pipe.
+
+    Therefore, it's no longer necessary to simulate the short directio, so
+    remove the hack from iomap.
+
+    Fixes: 4721a601099 ("iomap: dio data corruption and spurious errors when pipes fill")
+    Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+    Ranted-by: Amir Goldstein <amir73il@gmail.com>
+    Reviewed-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+i
+commit 17614445576b6af24e9cf36607c6448164719c96
+Author: Darrick J. Wong <darrick.wong@oracle.com>
+Date:   Fri Nov 30 10:37:49 2018 -0800
+
+    splice: don't read more than available pipe space
+
+    In commit 4721a601099, we tried to fix a problem wherein directio reads
+    into a splice pipe will bounce EFAULT/EAGAIN all the way out to
+    userspace by simulating a zero-byte short read.  This happens because
+    some directio read implementations (xfs) will call
+    bio_iov_iter_get_pages to grab pipe buffer pages and issue asynchronous
+    reads, but as soon as we run out of pipe buffers that _get_pages call
+    returns EFAULT, which the splice code translates to EAGAIN and bounces
+    out to userspace.
+
+    In that commit, the iomap code catches the EFAULT and simulates a
+    zero-byte read, but that causes assertion errors on regular splice reads
+    because xfs doesn't allow short directio reads.
+
+    The brokenness is compounded by splice_direct_to_actor immediately
+    bailing on do_splice_to returning <= 0 without ever calling ->actor
+    (which empties out the pipe), so if userspace calls back we'll EFAULT
+    again on the full pipe, and nothing ever gets copied.
+
+    Therefore, teach splice_direct_to_actor to clamp its requests to the
+    amount of free space in the pipe and remove the simulated short read
+    from the iomap directio code.
+
+    Fixes: 4721a601099 ("iomap: dio data corruption and spurious errors when pipes fill")
+    Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
+    Ranted-by: Amir Goldstein <amir73il@gmail.com>
+    Reviewed-by: Christoph Hellwig <hch@lst.de>
+    Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+
+Pleaase apply these commits.
+
+Best regards.
+  Nobuhiro
