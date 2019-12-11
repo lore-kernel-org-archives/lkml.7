@@ -2,258 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D2BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C2AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C4C1206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84126206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ZC5kwUK+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyOt2yK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbfLKKp7 (ORCPT
+        id S1728409AbfLKKq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:45:59 -0500
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:10135 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728696AbfLKKp6 (ORCPT
+        Wed, 11 Dec 2019 05:46:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727493AbfLKKq0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:45:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576061157;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Bakm+VQafiA0lPWjjq2Jn5aW7yKdm4BIfPd/HpC9RKg=;
-  b=ZC5kwUK+Qz3VJI3ygyk8RfK8/jMJzu1jKOeeCvxQU90KlYH+ncyLpdEu
-   9yWf1ZXYhLfcC5l2HtGiIkynoJsl+T810zU7vSWfaFKkX7E2KSfQ1kPR+
-   40bjl7y/i6AwPnTafHNynQtfkrw+MN8sH2/ndYHmREKiiIH8Ti7MmDwm3
-   0=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: I3Ws08a/zEqfI/lgYjM72AHmokfeQppgfWPU3XDYSw2zOVl+VcqZLiua6UdG10JD0HD+CRAwST
- NFDShGwJuQD6it7SIlmiN4CFZ696Ac8hP8twg2eOkSJVeMEdH2l/38FdahtXQ09pzYgq84RHr5
- l+DCF8NNv4uJgRyIeSKWnwogcxpb+RQfM0Mjncvo2Ohmq0VWJyB3jW0FWUYw/lbnmSytU9hw84
- bC58LNAm7aYK5l1pMCtVKXapqHENVca0nipPmZ3N+pP+kA0pu8G36aiva0YL5+HhtiBzwgTFCK
- YAo=
-X-SBRS: 2.7
-X-MesageID: 9925492
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
-   d="scan'208";a="9925492"
-Date:   Wed, 11 Dec 2019 11:45:50 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     Paul Durrant <pdurrant@amazon.com>
-CC:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: Re: [PATCH v2 4/4] xen-blkback: support dynamic unbind/bind
-Message-ID: <20191211104550.GJ980@Air-de-Roger>
-References: <20191210113347.3404-1-pdurrant@amazon.com>
- <20191210113347.3404-5-pdurrant@amazon.com>
+        Wed, 11 Dec 2019 05:46:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576061184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=K4H0zSCO2QSm/eggmwjamKsM01zRajc55w+V6waEM80=;
+        b=eyOt2yK79JnvKsNX2iLZ1E0ZUJbhFx9hQPjFvTMS0FQLS5IoYmtNNp7gfO0Ewvk9YiRnk9
+        3OSJBmRA0daQJyz2VwwjepccGP9OdyhUHAvGQudPg046sCvwx4JjORJx0u1e2+Ea2ko3Rw
+        PYPs4FPhwcMq6XQ9nERArupGf9K9kcs=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-168-sjk1RgsmMvWGMb_yPgPYKw-1; Wed, 11 Dec 2019 05:46:23 -0500
+Received: by mail-wm1-f72.google.com with SMTP id o205so2231360wmo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:46:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rAWXwRmtKcTKVeo5rctfBGlbD9osl7KY6CkodtUNWGo=;
+        b=cSyXVkT/ioc10tf07J7rqpDZbeyk5/hxUUnRvA1v64hs3Pk5OrS1kiwZv2VSnlub8o
+         eKfcEnop6sfZeEFt9fPZ1DjzV8bQ+Wpt0JMrQXqP1GD17UchL0uRpcm9e459R20jLJ68
+         UrYv3xSKMNAtJ2leUSE32PJUmu6IIO04B1I/bcz3vo488antmSTdst6hokORSwejOoWb
+         ebSESjE90vLH3crEANXWqhuwNmwj6WWOgX+CpOoVeh5a/GfDrl1qS4g8DI5sRZsEiyw+
+         9qYB/8/cTZiI1HxNbrzSiojhWqk/M0+oFGRkA48YJChg3iGyKEdc4M/4xZR4zm66aJ8I
+         ZusA==
+X-Gm-Message-State: APjAAAUWlgq3NTzlW2o5EJuKya1gM3AjEEuioST/YnxEzGt+dUUkALd2
+        AYBrRMDDPNqpXYz+wADgbyO5arF2sDVLsxZWsCmuoVsxObOCURQJ4vtQyfT2trnLaXxrIhUxKIT
+        xnjW2JEQZCympfPygw+kpsl3r
+X-Received: by 2002:a5d:4acb:: with SMTP id y11mr3136318wrs.106.1576061181678;
+        Wed, 11 Dec 2019 02:46:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxkgJU2agR+Z5q42YP9ARXBeSx7dL46TxPCzZ6G8qxxaMgrd/eV07ev8lxG62+yxAB0cKD0Lg==
+X-Received: by 2002:a5d:4acb:: with SMTP id y11mr3136284wrs.106.1576061181391;
+        Wed, 11 Dec 2019 02:46:21 -0800 (PST)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id s15sm1818465wrp.4.2019.12.11.02.46.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 02:46:20 -0800 (PST)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        David Howells <dhowells@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 0/1] init/Kconfig: enable -O3 for all arches
+Date:   Wed, 11 Dec 2019 11:46:18 +0100
+Message-Id: <20191211104619.114557-1-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210113347.3404-5-pdurrant@amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+X-MC-Unique: sjk1RgsmMvWGMb_yPgPYKw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 11:33:47AM +0000, Paul Durrant wrote:
-> By simply re-attaching to shared rings during connect_ring() rather than
-> assuming they are freshly allocated (i.e assuming the counters are zero)
-> it is possible for vbd instances to be unbound and re-bound from and to
-> (respectively) a running guest.
-> 
-> This has been tested by running:
-> 
-> while true;
->   do fio --name=randwrite --ioengine=libaio --iodepth=16 \
->   --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
->   done
-> 
-> in a PV guest whilst running:
-> 
-> while true;
->   do echo vbd-$DOMID-$VBD >unbind;
->   echo unbound;
->   sleep 5;
+The purpose of this submission is to expose -O3 for all the
+architectures, not only ARC, since it helps in hunting some bugs (see
+the commit message for specific example).
 
-Is there anyway to know when the unbind has finished? AFAICT
-xen_blkif_disconnect will return EBUSY if there are in flight
-requests, and the disconnect won't be completed until those requests
-are finished.
+Previously this was posted as RFC here: [1]. With this submission I'm
+addressing Krzysztof's concern regarding commit message. No other
+changes are made.
 
->   echo vbd-$DOMID-$VBD >bind;
->   echo bound;
->   sleep 3;
->   done
-> 
-> in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
-> re-bind its system disk image.
-> 
-> This is a highly useful feature for a backend module as it allows it to be
-> unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
-> This was also tested by running:
-> 
-> while true;
->   do echo vbd-$DOMID-$VBD >unbind;
->   echo unbound;
->   sleep 5;
->   rmmod xen-blkback;
->   echo unloaded;
->   sleep 1;
->   modprobe xen-blkback;
->   echo bound;
->   cd $(pwd);
->   sleep 3;
->   done
-> 
-> in dom0 whilst running the same loop as above in the (single) PV guest.
-> 
-> Some (less stressful) testing has also been done using a Windows HVM guest
-> with the latest 9.0 PV drivers installed.
-> 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> ---
-> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> 
-> v2:
->  - Apply a sanity check to the value of rsp_prod and fail the re-attach
->    if it is implausible
->  - Set allow_rebind to prevent ring from being closed on unbind
->  - Update test workload from dd to fio (with verification)
-> ---
->  drivers/block/xen-blkback/xenbus.c | 59 +++++++++++++++++++++---------
->  1 file changed, 41 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-> index e8c5c54e1d26..13d09630b237 100644
-> --- a/drivers/block/xen-blkback/xenbus.c
-> +++ b/drivers/block/xen-blkback/xenbus.c
-> @@ -181,6 +181,8 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
->  {
->  	int err;
->  	struct xen_blkif *blkif = ring->blkif;
-> +	struct blkif_common_sring *sring_common;
-> +	RING_IDX rsp_prod, req_prod;
->  
->  	/* Already connected through? */
->  	if (ring->irq)
-> @@ -191,46 +193,66 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
->  	if (err < 0)
->  		return err;
->  
-> +	sring_common = (struct blkif_common_sring *)ring->blk_ring;
-> +	rsp_prod = READ_ONCE(sring_common->rsp_prod);
-> +	req_prod = READ_ONCE(sring_common->req_prod);
-> +
->  	switch (blkif->blk_protocol) {
->  	case BLKIF_PROTOCOL_NATIVE:
->  	{
-> -		struct blkif_sring *sring;
-> -		sring = (struct blkif_sring *)ring->blk_ring;
-> -		BACK_RING_INIT(&ring->blk_rings.native, sring,
-> -			       XEN_PAGE_SIZE * nr_grefs);
-> +		struct blkif_sring *sring_native =
-> +			(struct blkif_sring *)ring->blk_ring;
+The RFC was accepted into -mm tree here: [2]. If needed, please replace
+that one with this one since this one has a nicer commit message.
 
-I think you can constify both sring_native and sring_common (and the
-other instances below).
+The patch is made against next-20191210 tag.
 
-> +		unsigned int size = __RING_SIZE(sring_native,
-> +						XEN_PAGE_SIZE * nr_grefs);
-> +
-> +		BACK_RING_ATTACH(&ring->blk_rings.native, sring_native,
-> +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-> +		err = (req_prod - rsp_prod > size) ? -EIO : 0;
->  		break;
->  	}
->  	case BLKIF_PROTOCOL_X86_32:
->  	{
-> -		struct blkif_x86_32_sring *sring_x86_32;
-> -		sring_x86_32 = (struct blkif_x86_32_sring *)ring->blk_ring;
-> -		BACK_RING_INIT(&ring->blk_rings.x86_32, sring_x86_32,
-> -			       XEN_PAGE_SIZE * nr_grefs);
-> +		struct blkif_x86_32_sring *sring_x86_32 =
-> +			(struct blkif_x86_32_sring *)ring->blk_ring;
-> +		unsigned int size = __RING_SIZE(sring_x86_32,
-> +						XEN_PAGE_SIZE * nr_grefs);
-> +
-> +		BACK_RING_ATTACH(&ring->blk_rings.x86_32, sring_x86_32,
-> +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-> +		err = (req_prod - rsp_prod > size) ? -EIO : 0;
->  		break;
->  	}
->  	case BLKIF_PROTOCOL_X86_64:
->  	{
-> -		struct blkif_x86_64_sring *sring_x86_64;
-> -		sring_x86_64 = (struct blkif_x86_64_sring *)ring->blk_ring;
-> -		BACK_RING_INIT(&ring->blk_rings.x86_64, sring_x86_64,
-> -			       XEN_PAGE_SIZE * nr_grefs);
-> +		struct blkif_x86_64_sring *sring_x86_64 =
-> +			(struct blkif_x86_64_sring *)ring->blk_ring;
-> +		unsigned int size = __RING_SIZE(sring_x86_64,
-> +						XEN_PAGE_SIZE * nr_grefs);
-> +
-> +		BACK_RING_ATTACH(&ring->blk_rings.x86_64, sring_x86_64,
-> +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-> +		err = (req_prod - rsp_prod > size) ? -EIO : 0;
+Thanks.
 
-This is repeated for all ring types, might be worth to pull it out of
-the switch...
+[1] https://lore.kernel.org/lkml/20191210145657.105808-1-oleksandr@redhat.c=
+om/
+[2] https://marc.info/?l=3Dlinux-mm-commits&m=3D157602335225239&w=3D2
 
->  		break;
->  	}
->  	default:
->  		BUG();
->  	}
-> +	if (err < 0)
-> +		goto fail;
+Oleksandr Natalenko (1):
+  init/Kconfig: enable -O3 for all arches
 
-...and placed here instead?
+ init/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks, Roger.
+--=20
+2.24.1
+
