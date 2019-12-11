@@ -2,115 +2,117 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5400AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED22C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A48D22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8EE222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576082204;
-	bh=yb6fhQ8MZR+X/3cVB0+ufP2Yk2jR747xOpy7WOBO6rU=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=BST8X98rpruRT6dp9zgfGXFTjS9ueHd70al4dZMfbPT3A+GQMVrZT6KWr0/iNHQzh
-	 Hypyaqid6huLJBxGp03DtRNoE06qirBiDYR/LWhXTA8OKAJIwtVF/oQqT/i7jh3Eay
-	 8sdyptpZtr6HnlXoXgH6KC9J3jfx7rZL+/rLj7dY=
+	s=default; t=1576082242;
+	bh=1g2Td3utqqHhZjL83xQD4Cf+Ww6NhdiupS21IpXpBGQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=U8LMh7OerHT5KomENA74H0uciHc+QRrS8eylWGd/IMu5jan/AUdwj0nreR4/trRKS
+	 dwlEReLGuALjJPWNrWHTvXfXPifpJnVczXllV4RLpVzTU6pBVoKE5Un4FubiflucqS
+	 6TaHlTYkVEcRXGRyMshvtiqrseeZrKBJ7v3qzGNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbfLKQgn (ORCPT
+        id S1730436AbfLKQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:36:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53908 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:37:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729260AbfLKQgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:36:43 -0500
-Received: from localhost (unknown [40.117.208.15])
+        id S1729880AbfLKQhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:37:21 -0500
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91567206A5;
-        Wed, 11 Dec 2019 16:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 150E62073D;
+        Wed, 11 Dec 2019 16:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576082201;
-        bh=yb6fhQ8MZR+X/3cVB0+ufP2Yk2jR747xOpy7WOBO6rU=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=tpczmveGVICETHKuVwzWZZcljSQ2PvqYJVAixI9c+rxW/JyiTmgmSWZOivMgoH6Hi
-         9OT1caIa3cC+lrj5/7cO84X/O7rbTV4c0v/iPB7cmFIvLc+r77LyEfWComGyu/LPz0
-         /x4FwSAVQYMzcfXPyyAaxGGrZrx+6PuHKBU3qPWQ=
-Date:   Wed, 11 Dec 2019 16:36:40 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: use CPUID to locate host page table reserved bits
-In-Reply-To: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
-References: <1575471060-55790-1-git-send-email-pbonzini@redhat.com>
-Message-Id: <20191211163641.91567206A5@mail.kernel.org>
+        s=default; t=1576082240;
+        bh=1g2Td3utqqHhZjL83xQD4Cf+Ww6NhdiupS21IpXpBGQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VCdj4GPu0Zu8W64dgZt/yWhxbfvDn+EEcFzr+tIbBuymMuPHe4G7LvQhYq4zi3qpA
+         //MV/ecEHFnXgwT2LM6lN3nRty9IhkCkXrNR4gNzSGD81i/aecO4XC1LlsveLPVwrm
+         /jpD6fw/JlHwz/tDlm5DJXZ1l41AuszWgQrTuzR8=
+Message-ID: <1576082238.2833.8.camel@kernel.org>
+Subject: Re: ftrace histogram sorting broken on BE architecures
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Sven Schnelle <svens@stackframe.org>
+Cc:     linux-trace-devel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 11 Dec 2019 10:37:18 -0600
+In-Reply-To: <20191211110959.2baeb70f@gandalf.local.home>
+References: <20191211123316.GD12147@stackframe.org>
+         <20191211103557.7bed6928@gandalf.local.home>
+         <20191211110959.2baeb70f@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Steve, Sven,
 
-[This is an automated email]
+On Wed, 2019-12-11 at 11:09 -0500, Steven Rostedt wrote:
+> On Wed, 11 Dec 2019 10:35:57 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > > Any thoughts on how to fix this? I'm not sure whether i fully
+> > > understand the
+> > > ftrace maps... ;-)  
+> > 
+> > Your analysis makes sense. I'll take a deeper look at it.
+> 
+> Sven,
+> 
+> Does this patch fix it for you?
+> 
+> Tom,
+> 
+> Correct me if I'm wrong, from what I can tell, all sums and keys are
+> u64 unless they are a string. Thus, I believe this patch should not
+> have any issues.
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+The sums are u64, but the keys may not be.  I'll take a look and see,
+but I'm out today and won't be able to look into it until tomorrow, if
+that's ok.
 
-The bot has tested the following trees: v5.4.2, v5.3.15, v4.19.88, v4.14.158, v4.9.206, v4.4.206.
+Tom
 
-v5.4.2: Build OK!
-v5.3.15: Failed to apply! Possible dependencies:
-    Unable to calculate
-
-v4.19.88: Failed to apply! Possible dependencies:
-    7b6f8a06e482 ("kvm: x86: Move kvm_set_mmio_spte_mask() from x86.c to mmu.c")
-    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
-
-v4.14.158: Failed to apply! Possible dependencies:
-    7b6f8a06e482 ("kvm: x86: Move kvm_set_mmio_spte_mask() from x86.c to mmu.c")
-    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
-
-v4.9.206: Failed to apply! Possible dependencies:
-    114df303a7ee ("kvm: x86: reduce collisions in mmu_page_hash")
-    28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-    312b616b30d8 ("kvm: x86: mmu: Set SPTE_SPECIAL_MASK within mmu.c")
-    37f0e8fe6b10 ("kvm: x86: mmu: Do not use bit 63 for tracking special SPTEs")
-    66d73e12f278 ("KVM: X86: MMU: no mmu_notifier_seq++ in kvm_age_hva")
-    83ef6c8155c0 ("kvm: x86: mmu: Refactor accessed/dirty checks in mmu_spte_update/clear")
-    97dceba29a6a ("kvm: x86: mmu: Fast Page Fault path retries")
-    daa07cbc9ae3 ("KVM: x86: fix L1TF's MMIO GFN calculation")
-    dcdca5fed5f6 ("x86: kvm: mmu: make spte mmio mask more explicit")
-    ea4114bcd3a8 ("kvm: x86: mmu: Rename spte_is_locklessly_modifiable()")
-    f160c7b7bb32 ("kvm: x86: mmu: Lockless access tracking for Intel CPUs without EPT A bits.")
-    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
-
-v4.4.206: Failed to apply! Possible dependencies:
-    018aabb56d61 ("KVM: x86: MMU: Encapsulate the type of rmap-chain head in a new struct")
-    0e3d0648bd90 ("KVM: x86: MMU: always set accessed bit in shadow PTEs")
-    114df303a7ee ("kvm: x86: reduce collisions in mmu_page_hash")
-    14f4760562e4 ("kvm: set page dirty only if page has been writable")
-    28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
-    37f0e8fe6b10 ("kvm: x86: mmu: Do not use bit 63 for tracking special SPTEs")
-    83ef6c8155c0 ("kvm: x86: mmu: Refactor accessed/dirty checks in mmu_spte_update/clear")
-    8d5cf1610da5 ("kvm: mmu: extend the is_present check to 32 bits")
-    daa07cbc9ae3 ("KVM: x86: fix L1TF's MMIO GFN calculation")
-    ea4114bcd3a8 ("kvm: x86: mmu: Rename spte_is_locklessly_modifiable()")
-    f160c7b7bb32 ("kvm: x86: mmu: Lockless access tracking for Intel CPUs without EPT A bits.")
-    f3ecb59dd49f ("kvm: x86: Fix reserved bits related calculation errors caused by MKTME")
-    ffb128c89b77 ("kvm: mmu: don't set the present bit unconditionally")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks,
-Sasha
+> 
+> -- Steve
+> 
+> diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+> index 9a1c22310323..9e31bfc818ff 100644
+> --- a/kernel/trace/tracing_map.c
+> +++ b/kernel/trace/tracing_map.c
+> @@ -148,8 +148,8 @@ static int tracing_map_cmp_atomic64(void *val_a,
+> void *val_b)
+>  #define DEFINE_TRACING_MAP_CMP_FN(type)				
+> 	\
+>  static int tracing_map_cmp_##type(void *val_a, void *val_b)		
+> \
+>  {									
+> \
+> -	type a = *(type *)val_a;					
+> \
+> -	type b = *(type *)val_b;					
+> \
+> +	type a = (type)(*(u64 *)val_a);				
+> 	\
+> +	type b = (type)(*(u64 *)val_b);				
+> 	\
+>  									
+> \
+>  	return (a > b) ? 1 : ((a < b) ? -1 : 0);			
+> \
+>  }
