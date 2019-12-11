@@ -2,332 +2,312 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF53C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25922C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7880220637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E482020637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:34:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VzDedKeM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfLKJdz (ORCPT
+        id S1728570AbfLKJeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:33:55 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39123 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLKJdz (ORCPT
+        Wed, 11 Dec 2019 04:34:20 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35710 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfLKJeT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:33:55 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e10so23238760ljj.6;
-        Wed, 11 Dec 2019 01:33:51 -0800 (PST)
+        Wed, 11 Dec 2019 04:34:19 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so1850204wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:34:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=2aHze3eD3qXxFb1do0AXNxi5Ns/Q9Iwwz2n3HPpJOcs=;
+        b=VzDedKeMxQaNjEiczxGBTICIPaIV8PnAeFP1Rr1OgYLJI0XPPZ8hsic40cqjmiTyo3
+         wYTDItCB0zXtkyaI42IJsnUV4D0yQCvnTnWO3F00uZ7dPqoIFPgzSDJBLe65rRZm3OVe
+         OBqCyUpJ+xq6g5nVO5nm6OYpdhun8nWnR8INhbYMnRBLIoascaSdvzMpS+J6p25Kre8e
+         3KkQ/rMdUKCU6OmbCGynjh0CgUo5q/5lFiY9bc8rvWo4BnD7+Xts/5+fBpVBAtTHkOU5
+         Syju8hBbNEbXRwgUmdisOR4FPwKw6Ut1p/I1D6tKeY03HyZFcugKDOCcrRv1IzQ5jJwx
+         QY2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TlYw4x/tHwVI0dRLY0QzV+kpny0bo02jjIsi/oQ03gU=;
-        b=nCck7R90EpD9xDsjVpymDmX6/wD1e797gXNP+6zJxkTEfUf/GYcuLXnwc0WIeXbpco
-         YFBTwnTtkzBFeXqu6+7mEfDqTYLOGliW8sK27tWMjgNmlRbjvbWwfxwqr2CDG/uCrG6Q
-         T7Ivb7u7KF9PES4wKfpkNxqapS+hz0WNCuYgMTRtyCo6lBTmEALppQrzlHnBYyBYoNvE
-         ZomeM90Rv+SYwzCQUT9evjfnvfgkOTZ//ktjfLLK4wqZPUSIE2gVCwEoZQTD59tBXWeT
-         45nLbFJPuqeLbpbO7yHaO6dMRN5/kitZmsH12nwXmh58T0AAzPgYv4sr/oGQXBVSZkHZ
-         slBw==
-X-Gm-Message-State: APjAAAWnssG/iL8ZOWBwWGL01wEGeWWeFk8VztjWR99KpZ0KvYURahzn
-        BnkYYu15kQvenhtagRhOda0=
-X-Google-Smtp-Source: APXvYqy+UY0L5JsVLPiSqpWo2g55mt10zvhkCTZu9sH5Ez2g+pG6biqXkIkDCjH/b77xpF4sLo75Ow==
-X-Received: by 2002:a2e:9b05:: with SMTP id u5mr1345153lji.59.1576056830465;
-        Wed, 11 Dec 2019 01:33:50 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id n11sm814317ljg.15.2019.12.11.01.33.48
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=2aHze3eD3qXxFb1do0AXNxi5Ns/Q9Iwwz2n3HPpJOcs=;
+        b=YWRGk6PLaP2tAdRUmkrKUuGKRubXKdwltFP6XYAepdAVYCDGHYeWkLx2xorQyN0lxz
+         frexeIXxNZY/RckEpwQqp4FNy1480sx93/RyYhGKluiyUGwy3VfpirBwjNn7jFpOKqVV
+         rvH4MvAXJmzHn2x0P3zxdS48sLE56sdQmBho26Td3XDjXG6X7MGrjEt8owetT8Z6lyrA
+         1lszNBpMwMh9Gz4VRhi48mTx1bQuflfnwq3Rbu1dGGn8UHL6Gby9DKUIfMTdzmxCDO2N
+         ydZJb+mKtSDANHhkHdjxkEOTiMXP3QA9a+gFIeOwIXD6eYdfedHNuFDJgx/LE983ABBJ
+         Ub9A==
+X-Gm-Message-State: APjAAAWFN2G8RmMx0y6rx5qLNAuaamP8YEpauCxmXplTmqnh+imikcrp
+        g+Y/3zGyjG76WqxsDOpYwchuHw==
+X-Google-Smtp-Source: APXvYqyaiVVPEaixzSy9hFWroTUOlG1fayabOrFMoHshKKilcKu2iFPikVV+wuyvp7vTFK3Tb0XS2Q==
+X-Received: by 2002:a1c:9e49:: with SMTP id h70mr2604822wme.79.1576056857130;
+        Wed, 11 Dec 2019 01:34:17 -0800 (PST)
+Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y10sm1594428wmm.3.2019.12.11.01.34.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:33:49 -0800 (PST)
-Date:   Wed, 11 Dec 2019 11:33:42 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Wed, 11 Dec 2019 01:34:16 -0800 (PST)
+References: <20191211032802.83309-1-jian.hu@amlogic.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Jian Hu <jian.hu@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "Rob Herring" <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Subject: [PATCH v6 00/15] Support ROHM BD71828 PMIC
-Message-ID: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: meson-a1: add I2C nodes
+In-reply-to: <20191211032802.83309-1-jian.hu@amlogic.com>
+Date:   Wed, 11 Dec 2019 10:34:16 +0100
+Message-ID: <1jk173kxyf.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Patch series introducing support for ROHM BD71828 PMIC
 
-ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
-regulators can be controlled individually via I2C. Bucks 1,2,6 and
-7 can also be assigned to a "regulator group" controlled by run-levels.
-Eg. Run level specific voltages and enable/disable statuses for each of
-these bucks can be set via register interface. The buck run-level group
-assignment (selection if buck is to be controlled individually or via
-run-levels) can be changed at run-time via I2C.
+On Wed 11 Dec 2019 at 04:28, Jian Hu <jian.hu@amlogic.com> wrote:
 
-This patch series brings only the basic support for controlling
-regulators individually via I2C.
+> There are four I2C controllers in A1 series,
+> Share the same comptible with AXG. Compared to AXG,
+> Drive strength feature is newly added in A1.
 
-In addition to the bucks and LDOs there are:
+Until here, OK
 
-- The usual clk gate
-- 4 IO pins (mostly usable as GPO or tied to specific purpose)
-- power button support
-- RTC
-- two LEDs
-- battery charger
-- HALL sensor input
+> This patch depends on A1 clock driver.
 
-This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
+This last sentence is a valuable piece of information for the maintainer
+but should not appear is the commit description as it is something we
+want is the history
 
-Power-supply driver for charger is not included in this series.
-
-The series also adds LED DT-node lookup based on node name or given
-property name/value pair in LED core. It also adds generic default-state
-and default-trigger property handling to LED core. Follow-up patches
-simplifying few other LED drivers should follow.
-
-In GPIO framework this series adds devm-support for gpio_array getting
-for MFD sub-devices whose GPIO consumer information may be in parent
-device's DT node. And while I was at it I also added few missing GPIO devm
-functions to the documentaton listing.
-
-Changelog v6:
-  Rebased on top of v5.5-rc1
-  LED core:
-    - Do new fw-node look-up only if the new match data is given. That
-      way behaviour for existing drivers is not changed
-    - Handle generic LED properties by core only if explisitly requested
-      in init-data. That way behaviour for existing drivers is not changed
-      until they are verified to work.
-  BD71828 LEDs:
-    - Fix module loading by adding "dummy" of_device_id table.
-  DT bindings:
-    All:
-    - Remove regulator run-level properties as run-level support was
-      dropped for now.
-    - Change SPDX to dual lisence
-    LED:
-    - added select: false
-    - replace oneOf + const by enum
-    Regulator:
-    - remove forgotten comments
-    - comment indenting
-    MFD:
-    - remove unnecessary descriptions
-  Regulators:
-    - Dropped patch 12 with run-level controls
-    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
-      already only filled for DVS bucks.
-  GPIO:
-    - rename internal function.
-  RTC:
-    - Added missing blank line
-  
-Changelog v5:
-  Only LED patch (patch 15) changed, rest as in v4.
-  LED:
-    - Fixed issues reported by Dan Carpenter and kbuild-bot static
-      analysis.
-Changelog v4 (first non RFC):
-  General:
-    - Changed subdevice loading and chip version identification to use
-      platform ID.
-    - License identifiers changed to GPL-2.0-only
-  MFD:
-    - Styling fixes mostly
-  DT-Bindings:
-    - a few more checks as suggested by Rob Herring.
-    - Order of DT patches changed.
-    - me as maintainer
-    - standard units to new properties (microvolts, ohms)
-    - runlevel values in an array
-  LED:
-    - BD71828 driver added (back)
-      - Added DT support
-    - Added LED DT node lookup in led framework when init_data is given
-      with DT node match information.
-    - Added common property parsing for default-state and
-      default-trigger.
-  Regulators:
-    - dropped sysfs interfaces
-    - fixed module unload/reload by binding gpio consumer information to
-      regulator device not to MFD.
-  GPIO:
-    - Added devm_gpiod_get_parent_array
-    - added few missing devm functions to documentation
-
-Changelog v3:
-  DT-Bindings:
-    - yamlify
-    - add LED binding doc
-  CLK:
-    - Move clk register definitions from MFD headers to clk driver
-  GPIO:
-    - Add generic direction define and use it.
-  LED:
-    - Drop LED driver from the series (for now).
-
-Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
-  General:
-    -Patch ordering changed to provide dt binding documents right after the
-     MFD core.
-  DT-Bindings for regulators (Patch 3)
-    -Fix typo in PMIC model number
-  RTC (patch 11)
-    -Reverted renaming in order to reduce patch size.
-    -Reworded commit message
-  BD71828 regulator (patch 7)
-    -Add MODULE_ALIAS
-  GPIO (patch 12)
-    -Remove file-name from comment
-    -prefix IN and OUT defines with chip type
-    -improved documentation for the INPUT only pin.
-    -removed empty left-over function
-    -removed unnecessary #ifdef CONFIG_OF_GPIO
-    -removed unnecessary error print
-    -Add MODULE_ALIAS
-
-Patch 1:
-        dt-bindings for regulators on BD71828 PMIC
-Patch 2:
-        dt-bindings for LEDs on BD71828 PMIC
-Patch 3:
-	dt-bindings for BD71828 PMIC
-Patch 4:
-	Convert rohm PMICs with common sub-devices to use platform_
-	device_id to match MFD sub-devices
-Patch 5:
-        BD71828 MFD core.
-Patch 6:
-	Power button support using GPIO keys.
-Patch 7:
-        CLK gate support using existing clk-bd718x7
-Patch 8:
-        Split existing bd718x7 regulator driver to generic ROHM dt
-        parsing portion (used by more than one ROHM drivers) and
-        bd718x8 specific parts
-Patch 9:
-        Basic regulator support (individual control via I2C). This
-        should be pretty standard stuff.
-Patch 10:
-	Add devm_gpiod_get_parent_array
-Patch 11:
-	Add missing managed GPIO array get functions to documentation
-Patch 12:
-        Support BD71828 RTC block using BD70528 RTC driver
-Patch 13:
-        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
-Patch 14:
-	Add LED node lookup and common LED binding parsing support
-	to LED class/core
-Patch 15:
-        Support toggling the LEDs on BD71828.
-
-This patch series is based on v5.5-rc1
-
----
-
-Matti Vaittinen (15):
-  dt-bindings: regulator: Document ROHM BD71282 regulator bindings
-  dt-bindings: leds: ROHM BD71282 PMIC LED driver
-  dt-bindings: mfd: Document ROHM BD71828 bindings
-  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
-  mfd: bd71828: Support ROHM BD71828 PMIC - core
-  mfd: input: bd71828: Add power-key support
-  clk: bd718x7: Support ROHM BD71828 clk block
-  regulator: bd718x7: Split driver to common and bd718x7 specific parts
-  regulator: bd71828: Basic support for ROHM bd71828 PMIC regulators
-  gpio: devres: Add devm_gpiod_get_parent_array
-  docs: driver-model: Add missing managed GPIO array get functions
-  rtc: bd70528 add BD71828 support
-  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
-  leds: Add common LED binding parsing support to LED class/core
-  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
-
- .../bindings/leds/rohm,bd71828-leds.yaml      |  52 ++
- .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 +++++
- .../regulator/rohm,bd71828-regulator.yaml     | 107 +++
- .../driver-api/driver-model/devres.rst        |   3 +
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  50 +-
- drivers/gpio/Kconfig                          |  12 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-bd71828.c                   | 159 ++++
- drivers/gpio/gpiolib-devres.c                 |  65 +-
- drivers/leds/Kconfig                          |  10 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/led-class.c                      |  99 ++-
- drivers/leds/led-core.c                       | 258 +++++-
- drivers/leds/leds-bd71828.c                   | 118 +++
- drivers/mfd/Kconfig                           |  15 +
- drivers/mfd/Makefile                          |   2 +-
- drivers/mfd/rohm-bd70528.c                    |   3 +-
- drivers/mfd/rohm-bd71828.c                    | 345 ++++++++
- drivers/mfd/rohm-bd718x7.c                    |  39 +-
- drivers/regulator/Kconfig                     |  16 +
- drivers/regulator/Makefile                    |   2 +
- drivers/regulator/bd71828-regulator.c         | 812 ++++++++++++++++++
- drivers/regulator/bd718x7-regulator.c         | 200 ++---
- drivers/regulator/rohm-regulator.c            |  95 ++
- drivers/rtc/Kconfig                           |   3 +-
- drivers/rtc/rtc-bd70528.c                     | 168 +++-
- include/linux/gpio/consumer.h                 |   5 +
- include/linux/leds.h                          |  94 +-
- include/linux/mfd/rohm-bd70528.h              |  19 +-
- include/linux/mfd/rohm-bd71828.h              | 423 +++++++++
- include/linux/mfd/rohm-bd718x7.h              |   6 -
- include/linux/mfd/rohm-generic.h              |  48 +-
- include/linux/mfd/rohm-shared.h               |  27 +
- 34 files changed, 3177 insertions(+), 279 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
- create mode 100644 drivers/gpio/gpio-bd71828.c
- create mode 100644 drivers/leds/leds-bd71828.c
- create mode 100644 drivers/mfd/rohm-bd71828.c
- create mode 100644 drivers/regulator/bd71828-regulator.c
- create mode 100644 drivers/regulator/rohm-regulator.c
- create mode 100644 include/linux/mfd/rohm-bd71828.h
- create mode 100644 include/linux/mfd/rohm-shared.h
-
--- 
-2.21.0
+Please move this bellow the '---' *AND*
+Add a link like " https://lkml.kernel.org/r/..." to help the maintainer
+locate the related series
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>
+> ---
+> This patch depends on A1 clock patchset at[0]
+>
+> Changes since v1 at [1]:
+> -change reg length to 0x20
+> -assign i2c bus alias in dts file
+> -add new feature note compared to AXG in changelog
+>
+> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
+> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
+> ---
+> ---
+>  .../arm64/boot/dts/amlogic/meson-a1-ad401.dts |   4 +
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 142 ++++++++++++++++++
+>  2 files changed, 146 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+> index 69c25c68c358..2d0457976233 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+> @@ -13,6 +13,10 @@
+>  
+>  	aliases {
+>  		serial0 = &uart_AO_B;
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+It is not necessary to define alias for all the possible buses,
+especially it some won't be used on the platform.
+
+Will this platform use all 4 busses ?
+
+In any case, the aliases can added later, as needed when the related i2c
+bus is enabled on the board
+
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index eab2ecd36aa8..66d5206a57de 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -117,6 +117,46 @@
+>  				};
+>  			};
+>  
+> +			i2c0: i2c@1400 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x1400 0x0 0x20>;
+> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c1: i2c@5c00 {
+
+Please order nodes by address when then have one.
+The 3 following i2c busses should appear after the uarts
+
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x5c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c2: i2c@6800 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6800 0x0 0x20>;
+> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
+> +				status = "disabled";
+> +			};
+> +
+> +			i2c3: i2c@6c00 {
+> +				compatible = "amlogic,meson-axg-i2c";
+> +				reg = <0x0 0x6c00 0x0 0x20>;
+> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_AO: serial@1c00 {
+>  				compatible = "amlogic,meson-gx-uart",
+>  					     "amlogic,meson-ao-uart";
+> @@ -171,3 +211,105 @@
+>  		#clock-cells = <0>;
+>  	};
+>  };
+> +
+> +&periphs_pinctrl {
+> +	i2c0_f11_pins:i2c0-f11 {
+> +		mux {
+> +			groups = "i2c0_sck_f11",
+> +				"i2c0_sda_f12";
+> +			function = "i2c0";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c0_f9_pins:i2c0-f9 {
+
+When the nodes don't have an address, please order them
+alpha-numerically by node name.
+
+> +		mux {
+> +			groups = "i2c0_sck_f9",
+> +				"i2c0_sda_f10";
+> +			function = "i2c0";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_x_pins:i2c1-x {
+> +		mux {
+> +			groups = "i2c1_sck_x",
+> +				"i2c1_sda_x";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c1_a_pins:i2c1-a {
+> +		mux {
+> +			groups = "i2c1_sck_a",
+> +				"i2c1_sda_a";
+> +			function = "i2c1";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x0_pins:i2c2-x0 {
+> +		mux {
+> +			groups = "i2c2_sck_x0",
+> +				"i2c2_sda_x1";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_x15_pins:i2c2-x15 {
+> +		mux {
+> +			groups = "i2c2_sck_x15",
+> +				"i2c2_sda_x16";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a4_pins:i2c2-a4 {
+> +		mux {
+> +			groups = "i2c2_sck_a4",
+> +				"i2c2_sda_a5";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c2_a8_pins:i2c2-a8 {
+> +		mux {
+> +			groups = "i2c2_sck_a8",
+> +				"i2c2_sda_a9";
+> +			function = "i2c2";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_x_pins:i2c3-x {
+> +		mux {
+> +			groups = "i2c3_sck_x",
+> +				"i2c3_sda_x";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +
+> +	i2c3_f_pins:i2c3-f {
+> +		mux {
+> +			groups = "i2c3_sck_f",
+> +				"i2c3_sda_f";
+> +			function = "i2c3";
+> +			bias-pull-up;
+> +			drive-strength-microamp = <3000>;
+> +		};
+> +	};
+> +};
+
