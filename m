@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1F0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF30CC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4405A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D7324654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078052;
-	bh=WqdzLOw1svIJXrp3BQkqyAvYYG4c3ZCv1Ywl8zqVggc=;
+	s=default; t=1576078061;
+	bh=1+PYsgrlVIXcy1sg+TkUNOPdnuEJTx9tNxWeA9loVaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w3nasRq4IjhHETL5CgMfY8vHOsplM5UpSrIV1vHvZobZQBePds0K8/0HPDIKVq9RD
-	 Q2nH/IDirHTlDk+XIbCdMuWD7axpripnYq16MDJNTWWWlSva5TITC+AdWpQ64Z6BCY
-	 h8mG4rFoZpxrQu8PKA0gG6TnzE1d2sKXXZECbkf4=
+	b=tF2TTTFYacV4AgrHdbjopjvpVgAtz04WgDyBb0hSmXri2Ys5DbZ0awZ/cMCo/a3Ga
+	 Ir7g9tHPDTfJlMzGTqxeEtisVbOPc2A1G3UY81yaok1j+LqkiBbgrCMmI8S1KpIAeC
+	 pK64ApT/iBs4810TyAy2YaNt9UaVgKc5cBRvDyOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733122AbfLKP1b (ORCPT
+        id S2387448AbfLKP1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733284AbfLKP1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:16 -0500
+        id S1732967AbfLKP1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8695024654;
-        Wed, 11 Dec 2019 15:27:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C8F924680;
+        Wed, 11 Dec 2019 15:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078036;
-        bh=WqdzLOw1svIJXrp3BQkqyAvYYG4c3ZCv1Ywl8zqVggc=;
+        s=default; t=1576078041;
+        bh=1+PYsgrlVIXcy1sg+TkUNOPdnuEJTx9tNxWeA9loVaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGVXSZD8tWn0M1iTy/JWEQeXx7HJY7wAQ2Jv3jsID2EAXrNc+vkbzPWbg6/DCiU/t
-         pNaQKa9SCE03/96lRCeW1rhjuIZ5zP2lzPLIE3VbKqZsnVlZ60CdGKqNhTnpAGcsgU
-         V5XclImLsrNY90MGY/ej7FC1kuM1p0yopoOGmWHU=
+        b=uuZDXOIG0qB2lgJw6W3jWOep+mtmFpWT+p2wkkoIf+OFvekYDLJMISGtOQ7QCPJd6
+         owci1RkA6PDWp6UktpVEtyqCDxCdVun31YsYjRZMFY0WCu/Sb4II/6xB+GCu4Ueav6
+         7X9JhCky0jbToIWGplT0Xu83X2dNP5n3WiShHxjg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Hennerich <michael.hennerich@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/79] clk: clk-gpio: propagate rate change to parent
-Date:   Wed, 11 Dec 2019 10:25:54 -0500
-Message-Id: <20191211152643.23056-30-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        coverity-bot <keescook+coverity-bot@chromium.org>,
+        James Bottomley <James.Bottomley@SteelEye.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 35/79] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
+Date:   Wed, 11 Dec 2019 10:25:59 -0500
+Message-Id: <20191211152643.23056-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,47 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit fc59462c5ce60da119568fac325c92fc6b7c6175 ]
+[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
 
-For an external clock source, which is gated via a GPIO, the
-rate change should typically be propagated to the parent clock.
+Coverity reported the following:
 
-The situation where we are requiring this propagation, is when an
-external clock is connected to override an internal clock (which typically
-has a fixed rate). The external clock can have a different rate than the
-internal one, and may also be variable, thus requiring the rate
-propagation.
+*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
+4433     			kfree(mp);
+4434     		}
+4435     		mempool_free(mbox, phba->mbox_mem_pool);
+4436     	}
+4437     out:
+4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
+vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+vvv     Dereferencing null pointer "shost".
+4439     		spin_lock_irq(shost->host_lock);
+4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+4441     		spin_unlock_irq(shost->host_lock);
+4442
+4443     		/* If the node is not being used by another discovery thread,
+4444     		 * and we are sending a reject, we are done with it.
 
-This rate change wasn't propagated until now, and it's unclear about cases
-where this shouldn't be propagated. Thus, it's unclear whether this is
-fixing a bug, or extending the current driver behavior. Also, it's unsure
-about whether this may break any existing setups; in the case that it does,
-a device-tree property may be added to disable this flag.
+Fix by adding a check for non-null shost in line 4438.
+The scenario when shost is set to null is when ndlp is null.
+As such, the ndlp check present was sufficient. But better safe
+than sorry so add the shost check.
 
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Link: https://lkml.kernel.org/r/20191108071718.17985-1-alexandru.ardelean@analog.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
+Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+
+CC: James Bottomley <James.Bottomley@SteelEye.com>
+CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC: linux-next@vger.kernel.org
+Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/clk-gpio.c | 2 +-
+ drivers/scsi/lpfc/lpfc_els.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-index 40af4fbab4d23..af9cc00d2d920 100644
---- a/drivers/clk/clk-gpio.c
-+++ b/drivers/clk/clk-gpio.c
-@@ -248,7 +248,7 @@ static int gpio_clk_driver_probe(struct platform_device *pdev)
- 	else
- 		clk = clk_register_gpio_gate(&pdev->dev, node->name,
- 				parent_names ?  parent_names[0] : NULL, gpiod,
--				0);
-+				CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
- 
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 4f4d1b3b3bbc4..7398350b08b41 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -4110,7 +4110,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 		mempool_free(mbox, phba->mbox_mem_pool);
+ 	}
+ out:
+-	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
++	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
+ 		spin_lock_irq(shost->host_lock);
+ 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+ 		spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
