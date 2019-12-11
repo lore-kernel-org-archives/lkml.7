@@ -2,142 +2,223 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65675C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C480214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="prencWNA"
+	by mail.kernel.org (Postfix) with ESMTP id 3CDC7206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfLKL0W (ORCPT
+        id S1729016AbfLKL2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:26:22 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39285 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfLKL0V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:26:21 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so23597685wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 03:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AXTqM53euYhJDX4R+qhI2h5dF93uoBPLPxhADwzStNg=;
-        b=prencWNALFk8vubbf2cYL0WZTuAMMC+KXeVtDHyFqN9T5OlfXSoh6sLZo8yDoaXqNZ
-         mV9vHouVCvcLe+/ZkY4pcf5eKh17/KYeMxha/GktmjTlnJ8GYa8ef23wsdznsYmgvJBG
-         umXDJOLaQd+e9AZhStaVCmeh+7eeuOY/psJRlTrasb8zL9wJjzg4uErg6duuBDQ62m9b
-         XGZ2dGPrer6mwuPu2iaFySv1J4Qfx6xb8XN3zrYPufnihcLQr5a0jz2Ooe9Q6bXjWlsu
-         Q+1vX4TE1l1PkAoy/XvuNiGjJT2wWPE20Sqg/556R+s1t051Mx40urpFHg7C47RkCVnC
-         B4Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AXTqM53euYhJDX4R+qhI2h5dF93uoBPLPxhADwzStNg=;
-        b=E5n4C7/1QQwq246OnLY0QgNQu/wj5RGzmIrNjTMQfIYrEimUSQYCjOqkM7cdVegOLl
-         c0vrnEDky6QhgiZ16uP8DkDnbFqwN0qjZFmLjMGvNK1BZwLXerxLmVOHeBz6ja1Nijbd
-         hjfPnuir6xvNoNO8Et8cQCkH4VPQCSlgPXpak+QuyeYVgaTJePXSr3Myo/LbEZVupTxN
-         9ZAx8rvfplTreJBBc3exbwlowdwKfcZSlBqMuq86LETODxGzYw3TITleSnnvbcUELvDj
-         sN+cEm0mt+E0Jktmv5M3vlOmYBQqiR6BvwwZfy9TDEBuTQMzg+E+Vm0UlixjnjXVyOJv
-         gQ/Q==
-X-Gm-Message-State: APjAAAXVWCk6VAdPW/K179RKbKcSKFg50Fasnt4tcx+SnsWBEgqNbXu/
-        AJi00/G/fjHRm4Q91iLgJvFK7glmM4ApOhCT0TC3BA==
-X-Google-Smtp-Source: APXvYqy9lCF01YcgEoakbGjQlZfWivLtBTQnZ+zyfahZ2E64gukPanZuEMFnU6xJJK4dHQKa4sWwobDSdvF5F9v4JyU=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr3181360wrs.200.1576063579504;
- Wed, 11 Dec 2019 03:26:19 -0800 (PST)
+        Wed, 11 Dec 2019 06:28:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60980 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727469AbfLKL2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 06:28:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4E902AD0E;
+        Wed, 11 Dec 2019 11:28:10 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 63C461E0B23; Wed, 11 Dec 2019 12:28:07 +0100 (CET)
+Date:   Wed, 11 Dec 2019 12:28:07 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v9 23/25] mm/gup: track FOLL_PIN pages
+Message-ID: <20191211112807.GN1551@quack2.suse.cz>
+References: <20191211025318.457113-1-jhubbard@nvidia.com>
+ <20191211025318.457113-24-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20191206165542.31469-1-ardb@kernel.org> <20191206165542.31469-7-ardb@kernel.org>
- <20191209191242.GA3075464@rani.riverdale.lan> <CAKv+Gu8QWcSwRajsO5voTQJxDHy613ugCd_R6=SStf9ABrmtfQ@mail.gmail.com>
- <20191210200546.GA55356@rani.riverdale.lan>
-In-Reply-To: <20191210200546.GA55356@rani.riverdale.lan>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 11 Dec 2019 11:26:17 +0000
-Message-ID: <CAKv+Gu_VUAEw0auwhOyEAHn4BjDBPc9P4a+WBwJuRb_cBVi0NQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] efi/earlycon: Remap entire framebuffer after page initialization
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211025318.457113-24-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 at 21:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Mon, Dec 09, 2019 at 07:24:13PM +0000, Ard Biesheuvel wrote:
-> > On Mon, 9 Dec 2019 at 20:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Fri, Dec 06, 2019 at 04:55:42PM +0000, Ard Biesheuvel wrote:
-> > > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > >
-> > > > When commit 69c1f396f25b
-> > > >
-> > > >   "efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation"
-> > > >
-> > > > moved the x86 specific EFI earlyprintk implementation to a shared location,
-> > > > it also tweaked the behaviour. In particular, it dropped a trick with full
-> > > > framebuffer remapping after page initialization, leading to two regressions:
-> > > > 1) very slow scrolling after page initialization,
-> > > > 2) kernel hang when the 'keep_bootcon' command line argument is passed.
-> > > >
-> > > > Putting the tweak back fixes #2 and mitigates #1, i.e., it limits the slow
-> > > > behavior to the early boot stages, presumably due to eliminating heavy
-> > > > map()/unmap() operations per each pixel line on the screen.
-> > > >
-> > >
-> > > Could the efi earlycon have an interaction with PCI resource allocation,
-> > > similar to what commit dcf8f5ce3165 ("drivers/fbdev/efifb: Allow BAR to
-> > > be moved instead of claiming it") fixed for efifb?
-> >
-> > Yes. If the BAR gets moved, things will break. This is mostly an issue
-> > for the keep_bootcon case, but that is documented as being a debug
-> > feature specifically for addressing console initialization related
-> > issues. Earlycon itself is also a debug feature, so if you hit the BAR
-> > reallocation issue, you're simply out of luck. Note that this happens
-> > rarely in practice, only on non-x86 systems where the firmware and the
-> > kernel have very different policies regarding BAR allocation, and on
-> > DT based systems, you can force the OS to honour the existing
-> > allocation by using linux,pci-probe-only
->
-> Thanks. Another q -- I tried out the earlycon=efifb, and it seems like
-> it gets disabled (without keep_bootcon) as soon as dummycon takes over,
-> which is well before the real console.
->
-> DUMMY_CONSOLE is defined as
->         depends on VGA_CONSOLE!=y || SGI_NEWPORT_CONSOLE!=y
->         default y
->
-> so it seems like it will pretty much always be enabled, as it doesn't
-> seem likely that VGA_CONSOLE=y and SGI_NEWPORT_CONSOLE=y would ever be
-> true simultaneously.
->
-> Am I missing something or is this the way it's supposed to work? So
-> keep_bootcon seems almost necessary with the EFI boot console? Would a
-> patch to not disable boot console when dummycon is initialized, but wait
-> for a real console, be useful?
->
+On Tue 10-12-19 18:53:16, John Hubbard wrote:
+> Add tracking of pages that were pinned via FOLL_PIN.
+> 
+> As mentioned in the FOLL_PIN documentation, callers who effectively set
+> FOLL_PIN are required to ultimately free such pages via unpin_user_page().
+> The effect is similar to FOLL_GET, and may be thought of as "FOLL_GET
+> for DIO and/or RDMA use".
+> 
+> Pages that have been pinned via FOLL_PIN are identifiable via a
+> new function call:
+> 
+>    bool page_dma_pinned(struct page *page);
+> 
+> What to do in response to encountering such a page, is left to later
+> patchsets. There is discussion about this in [1], [2], and [3].
+> 
+> This also changes a BUG_ON(), to a WARN_ON(), in follow_page_mask().
+> 
+> [1] Some slow progress on get_user_pages() (Apr 2, 2019):
+>     https://lwn.net/Articles/784574/
+> [2] DMA and get_user_pages() (LPC: Dec 12, 2018):
+>     https://lwn.net/Articles/774411/
+> [3] The trouble with get_user_pages() (Apr 30, 2018):
+>     https://lwn.net/Articles/753027/
 
-Well spotted!
+The patch looks mostly good to me now. Just a few smaller comments below.
 
-I have traced this down to [0] which combined various arch specific
-definitions into one, and obviously chose the wrong boolean operator
-for combining the conditions.
+> Suggested-by: Jan Kara <jack@suse.cz>
+> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
-Patches welcome.
+I think you inherited here the Reviewed-by tags from the "add flags" patch
+you've merged into this one but that's not really fair since this patch
+does much more... In particular I didn't give my Reviewed-by tag for this
+patch yet.
 
+> +/*
+> + * try_grab_compound_head() - attempt to elevate a page's refcount, by a
+> + * flags-dependent amount.
+> + *
+> + * This has a default assumption of "use FOLL_GET behavior, if FOLL_PIN is not
+> + * set".
+> + *
+> + * "grab" names in this file mean, "look at flags to decide whether to use
+> + * FOLL_PIN or FOLL_GET behavior, when incrementing the page's refcount.
+> + */
+> +static __maybe_unused struct page *try_grab_compound_head(struct page *page,
+> +							  int refs,
+> +							  unsigned int flags)
+> +{
+> +	if (flags & FOLL_PIN)
+> +		return try_pin_compound_head(page, refs);
+> +
+> +	return try_get_compound_head(page, refs);
+> +}
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/drivers/video/console/Kconfig?id=31d2a7d36d6989c714b792ec00358ada24c039e7
+I somewhat wonder about the asymmetry of try_grab_compound_head() vs
+try_grab_page() in the treatment of 'flags'. How costly would it be to make
+them symmetric (i.e., either set FOLL_GET for try_grab_compound_head()
+callers or make sure one of FOLL_GET, FOLL_PIN is set for try_grab_page())?
+
+Because this difference looks like a subtle catch in the long run...
+
+> +
+> +/**
+> + * try_grab_page() - elevate a page's refcount by a flag-dependent amount
+> + *
+> + * This might not do anything at all, depending on the flags argument.
+> + *
+> + * "grab" names in this file mean, "look at flags to decide whether to use
+> + * FOLL_PIN or FOLL_GET behavior, when incrementing the page's refcount.
+> + *
+> + * @page:	pointer to page to be grabbed
+> + * @flags:	gup flags: these are the FOLL_* flag values.
+> + *
+> + * Either FOLL_PIN or FOLL_GET (or neither) may be set, but not both at the same
+> + * time. (That's true throughout the get_user_pages*() and pin_user_pages*()
+> + * APIs.) Cases:
+> + *
+> + *	FOLL_GET: page's refcount will be incremented by 1.
+> + *      FOLL_PIN: page's refcount will be incremented by GUP_PIN_COUNTING_BIAS.
+> + *
+> + * Return: true for success, or if no action was required (if neither FOLL_PIN
+> + * nor FOLL_GET was set, nothing is done). False for failure: FOLL_GET or
+> + * FOLL_PIN was set, but the page could not be grabbed.
+> + */
+> +bool __must_check try_grab_page(struct page *page, unsigned int flags)
+> +{
+> +	if (flags & FOLL_GET)
+> +		return try_get_page(page);
+> +	else if (flags & FOLL_PIN) {
+> +		page = compound_head(page);
+> +		WARN_ON_ONCE(flags & FOLL_GET);
+> +
+> +		if (WARN_ON_ONCE(page_ref_zero_or_close_to_bias_overflow(page)))
+> +			return false;
+> +
+> +		page_ref_add(page, GUP_PIN_COUNTING_BIAS);
+> +		__update_proc_vmstat(page, NR_FOLL_PIN_REQUESTED, 1);
+> +	}
+> +
+> +	return true;
+> +}
+
+...
+
+> @@ -1522,8 +1536,8 @@ struct page *follow_trans_huge_pmd(struct vm_area_struct *vma,
+>  skip_mlock:
+>  	page += (addr & ~HPAGE_PMD_MASK) >> PAGE_SHIFT;
+>  	VM_BUG_ON_PAGE(!PageCompound(page) && !is_zone_device_page(page), page);
+> -	if (flags & FOLL_GET)
+> -		get_page(page);
+> +	if (!try_grab_page(page, flags))
+> +		page = ERR_PTR(-EFAULT);
+
+I think you need to also move the try_grab_page() earlier in the function.
+At this point the page may be marked as mlocked and you'd need to undo that
+in case try_grab_page() fails.
+
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ac65bb5e38ac..0aab6fe0072f 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -4356,7 +4356,13 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+>  same_page:
+>  		if (pages) {
+>  			pages[i] = mem_map_offset(page, pfn_offset);
+> -			get_page(pages[i]);
+> +			if (!try_grab_page(pages[i], flags)) {
+> +				spin_unlock(ptl);
+> +				remainder = 0;
+> +				err = -ENOMEM;
+> +				WARN_ON_ONCE(1);
+> +				break;
+> +			}
+>  		}
+
+This function does a refcount overflow check early so that it doesn't have
+to do try_get_page() here. So that check can be now removed when you do
+try_grab_page() here anyway since that early check seems to be just a tiny
+optimization AFAICT.
+
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
