@@ -2,114 +2,102 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2913FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E1FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8E52073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097EB214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:46:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="o88nLTeN";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="dfaKObj6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zcHHeaTL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbfLKLp2 (ORCPT
+        id S1729032AbfLKLqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:45:28 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:41558
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727365AbfLKLp2 (ORCPT
+        Wed, 11 Dec 2019 06:46:45 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40598 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfLKLqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:45:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576064727;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=JiPXq/eUqhlCbHe6rPsNhUYA8v5Xs7QVIRqJ0vKWarc=;
-        b=o88nLTeNBNMz266JfaBhfh1U4vFIK/tNpuvCWfneAv96iHYlViOkkTaY1pWu5AXW
-        D/0UShqZl/L9SX5X1FuoCTi413eui3ul5jBd1G3aO1YNEl9Lv25MpLY9ci55kkdnBYH
-        Ykv+rSeUvkf8/YWx6vKxwkIWq51DctTvduQR5hFA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576064727;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=JiPXq/eUqhlCbHe6rPsNhUYA8v5Xs7QVIRqJ0vKWarc=;
-        b=dfaKObj6pfCLm2/VKuhOQ6vUwvnzdelWdoUL0vOe4iucihFqvvFQY8WNu+DOb8by
-        18YRj4KnaiD95dNoJ3OTCWgAei7vcEkG9IgW8dVtz20I3Xio8OkaRnzazMLZYfbWHbF
-        lNs7RekohSwrnBXwgfmQ1ZOL1tDHBAMLVs+YJNTU=
+        Wed, 11 Dec 2019 06:46:45 -0500
+Received: by mail-lf1-f68.google.com with SMTP id i23so3982490lfo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 03:46:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mU5uShffkkUuqjaXRfA5AyLsxcErVHsMKowOFfb75hQ=;
+        b=zcHHeaTLvHfHpCWJyg3PhVsxOXpKeAB0hFltPzOamTwKIdlKvokdjC6vkLZwbtkx6h
+         b6l7MSjQM+DsflXK0Ig9WrATipwkVXF16mUAZGzOxvyfhQqwhhXGgVcdhNkhTm9UbcSN
+         yHUSpPgrQw6Onv/y9OM7udR1LqBvBwFxkjFW5LZUvY/oUfgCVJ/TCFZ+cYy8bT7skhxc
+         uN+Uvy5UdXU4a0FycFFTdH2A0ApI+WrVjUNI2FfE1kbVBEKNGg3JxbV9/B9P7mw+6Snn
+         H1tfKWFJtY8BLqwGVnw7K+6Yd97MAeX7bVWczb/W1nUImod1Zu/4XYKU9VKRBL2JrOsH
+         VTBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mU5uShffkkUuqjaXRfA5AyLsxcErVHsMKowOFfb75hQ=;
+        b=RVsGIKp3DInGiFd7zwY08clSF0tXvn/dH/H8UigbqHShxgHZT80qtvMUDyIjLwSyiM
+         hLxO7BdFi/jMNdF2XSbRi12IzYfkpHSdytqnek+4015u/ZicZAGxhbUA6JjWqJA5Yxp/
+         zbqzZ7vW36wILz2gRE9O7cvvgGZhY0d9z1AiJ+zJtTRRbHMvBs+p3gJsIbMDQZT6LVqf
+         DDdBNrMHc7F45ebd9w6b5gHpHxYh/XlQWyV2QMbkApuZhjw3n/cvePZAODFtpG6z6n9y
+         kmFQaHKoY5N7Bum9guwBuNrUeA4Oyaa0h4THWlg9QslkdDas5ionkbK5zafd06BFCpb4
+         jl4g==
+X-Gm-Message-State: APjAAAUPEVnDVEbpy/kuJd6kG9JDHJLeTwfWuqcux5Yc4wYlFsV0uG0+
+        j0p44Fqudk43MTyAko4H1ZrWiA==
+X-Google-Smtp-Source: APXvYqyq2xHKfwdPFg2pgKMjnqroaBqDcyYOnY/IyUdDNfLIXDcetPW5zcDVr3bBa5hSQvk6TpOz3A==
+X-Received: by 2002:ac2:4849:: with SMTP id 9mr1897305lfy.11.1576064803523;
+        Wed, 11 Dec 2019 03:46:43 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id y72sm1073719lfa.12.2019.12.11.03.46.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 03:46:42 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH] mfd: ab8500: Fix ab8500-clk typo
+Date:   Wed, 11 Dec 2019 12:46:39 +0100
+Message-Id: <20191211114639.748463-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Dec 2019 11:45:27 +0000
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        =?UTF-8?Q?Cl=C3=A9ment_P=C3=A9ron?= <peron.clem@gmail.com>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] arm64: defconfig: Compile ufs-bsg as a module
-In-Reply-To: <MN2PR04MB6991B27D797044D8FFDFAE8FFC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <0101016ef43c56d3-c7064a44-6025-4349-afd4-a2c91a9d9ffe-000000@us-west-2.amazonses.com>
- <MN2PR04MB6991B27D797044D8FFDFAE8FFC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <0101016ef4c73939-4ac7175d-40e4-4b34-bfbf-3f921a785503-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.11-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-11 19:11, Avri Altman wrote:
->> 
->> Compiling ufs-bsg as a module to improve flexibility of its usage.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
-> Not sure we want to make it loadable by default.
-> The platform vendor should decide if this module is available or not,
-> Don't you think?
-> 
-> 
+Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+has a typo error renaming "ab8500-clk" to "abx500-clk"
+with the result att ALSA SoC audio broke as the clock
+driver was not probing anymore. Fixed it up.
 
-Agree, I will remove this change from patchset in next versioin of it.
+Cc: Stephan Gerhold <stephan@gerhold.net>
+Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/mfd/ab8500-core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
+diff --git a/drivers/mfd/ab8500-core.c b/drivers/mfd/ab8500-core.c
+index bafc729fc434..3c6fda68e6bc 100644
+--- a/drivers/mfd/ab8500-core.c
++++ b/drivers/mfd/ab8500-core.c
+@@ -631,8 +631,8 @@ static const struct mfd_cell ab8500_devs[] = {
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-ext-regulator"),
+ 	OF_MFD_CELL("ab8500-regulator",
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-regulator"),
+-	OF_MFD_CELL("abx500-clk",
+-		    NULL, NULL, 0, 0, "stericsson,abx500-clk"),
++	OF_MFD_CELL("ab8500-clk",
++		    NULL, NULL, 0, 0, "stericsson,ab8500-clk"),
+ 	OF_MFD_CELL("ab8500-gpadc",
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-gpadc"),
+ 	OF_MFD_CELL("ab8500-rtc",
+-- 
+2.23.0
 
-Can Guo.
-
->> ---
->>  arch/arm64/configs/defconfig | 1 +
->>  1 file changed, 1 insertion(+)
->> 
->> diff --git a/arch/arm64/configs/defconfig 
->> b/arch/arm64/configs/defconfig index
->> 8e05c39..169a6e6 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -227,6 +227,7 @@ CONFIG_SCSI_UFSHCD=y
->> CONFIG_SCSI_UFSHCD_PLATFORM=y  CONFIG_SCSI_UFS_QCOM=m
->> CONFIG_SCSI_UFS_HISI=y
->> +CONFIG_SCSI_UFS_BSG=m
->>  CONFIG_ATA=y
->>  CONFIG_SATA_AHCI=y
->>  CONFIG_SATA_AHCI_PLATFORM=y
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
