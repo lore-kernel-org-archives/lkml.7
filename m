@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28CBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C77DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE96C20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AE420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077370;
-	bh=uXh2vBvBRQO36GgVX8ar8zmIAph80dMhJHJkUXgaPvw=;
+	s=default; t=1576077373;
+	bh=2Km62UTxAR2gppwCyblHhbvH1CTPz7TLqpLVTsiCnWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l26t1Pz8NFxWYLC9eA1KYZRBL1soJbYZ/3hp0nNycx6CQsZ6Cskzu6nduVCY/lXJb
-	 yoyXY48Am5FWBIlRcW8nsVyLKMYKnXi3zKzt/nM2nSm7XxgRhtgHiQTkQokQbyOM85
-	 C01nhFVSDQ7HJMVssLqoKrVxaIg/Lqp4i3kXb6Ns=
+	b=g4EzJxW3sGVqNCTmHQwPQ+whn6KeVDHP/sply565AF0OVghP8V9j2K0n3Ju2TVLm4
+	 hGocItJoIK7t8z/coKlalVPM6VyKGHlrfln3mblpLeWpssK7+Db64lRENb5BQpnL4T
+	 Yimo28eVkmXD1gmLfYAOFaWSOEVUb99Vj2//RzqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfLKPQG (ORCPT
+        id S1731865AbfLKPQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42842 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730511AbfLKPQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:03 -0500
+        id S1731858AbfLKPQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24EE720663;
-        Wed, 11 Dec 2019 15:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E7F62465B;
+        Wed, 11 Dec 2019 15:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077362;
-        bh=uXh2vBvBRQO36GgVX8ar8zmIAph80dMhJHJkUXgaPvw=;
+        s=default; t=1576077367;
+        bh=2Km62UTxAR2gppwCyblHhbvH1CTPz7TLqpLVTsiCnWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1hxwVOYHrIgi1jvF9vjj/fqMcezjeXr8n1G1BAymBxh1JBzUqUEq6f873X6EQg+rd
-         m5AeiDsZzVfxtl33H/bfnK1Lmn1aeaXwLZbiS8mnP6V/nlb5LghQS/apfkWAswzdiy
-         kHaasG3gfUu4l1VuKqIlSc7nrwv2n7RZa8Bt/9Xc=
+        b=S3qUBtJNTaQjSEtfDHvqumZpX6N0WiFZ6qT+x6oJ2WCiOV22y68K3BVbxXLEoKTnD
+         SK5+vBBmBpXN9UlDrmBKbV6fnrehp9vZyqLrmCE929eoOdvLFWFus0YkCu5ynYxEu3
+         KWxk7TmcriFmIYidFOl/c/44sqc7etm1hOBVQ1iY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org,
+        Mordechay Goodstein <mordechay.goodstein@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/243] autofs: fix a leak in autofs_expire_indirect()
-Date:   Wed, 11 Dec 2019 16:02:53 +0100
-Message-Id: <20191211150339.868438289@linuxfoundation.org>
+Subject: [PATCH 4.19 013/243] iwlwifi: pcie: dont consider IV len in A-MSDU
+Date:   Wed, 11 Dec 2019 16:02:55 +0100
+Message-Id: <20191211150339.973968349@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,37 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Mordechay Goodstein <mordechay.goodstein@intel.com>
 
-[ Upstream commit 03ad0d703df75c43f78bd72e16124b5b94a95188 ]
+[ Upstream commit cb1a4badf59275eb7221dcec621e8154917eabd1 ]
 
-if the second call of should_expire() in there ends up
-grabbing and returning a new reference to dentry, we need
-to drop it before continuing.
+>From gen2 PN is totally offloaded to hardware (also the space for the
+IV isn't part of the skb).  As you can see in mvm/mac80211.c:3545, the
+MAC for cipher types CCMP/GCMP doesn't set
+IEEE80211_KEY_FLAG_PUT_IV_SPACE for gen2 NICs.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+This causes all the AMSDU data to be corrupted with cipher enabled.
+
+Signed-off-by: Mordechay Goodstein <mordechay.goodstein@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs/expire.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../net/wireless/intel/iwlwifi/pcie/tx-gen2.c | 20 +++++++------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/fs/autofs/expire.c b/fs/autofs/expire.c
-index 28d9c2b1b3bb3..70e9afe589fbf 100644
---- a/fs/autofs/expire.c
-+++ b/fs/autofs/expire.c
-@@ -501,9 +501,10 @@ static struct dentry *autofs_expire_indirect(struct super_block *sb,
- 		 */
- 		how &= ~AUTOFS_EXP_LEAVES;
- 		found = should_expire(expired, mnt, timeout, how);
--		if (!found || found != expired)
--			/* Something has changed, continue */
-+		if (found != expired) { // something has changed, continue
-+			dput(found);
- 			goto next;
-+		}
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+index 316e2ba0c34d7..7b1dff92b7094 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c
+@@ -242,27 +242,23 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 	struct ieee80211_hdr *hdr = (void *)skb->data;
+ 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
+ 	unsigned int mss = skb_shinfo(skb)->gso_size;
+-	u16 length, iv_len, amsdu_pad;
++	u16 length, amsdu_pad;
+ 	u8 *start_hdr;
+ 	struct iwl_tso_hdr_page *hdr_page;
+ 	struct page **page_ptr;
+ 	struct tso_t tso;
  
- 		if (expired != dentry)
- 			dput(dentry);
+-	/* if the packet is protected, then it must be CCMP or GCMP */
+-	iv_len = ieee80211_has_protected(hdr->frame_control) ?
+-		IEEE80211_CCMP_HDR_LEN : 0;
+-
+ 	trace_iwlwifi_dev_tx(trans->dev, skb, tfd, sizeof(*tfd),
+ 			     &dev_cmd->hdr, start_len, 0);
+ 
+ 	ip_hdrlen = skb_transport_header(skb) - skb_network_header(skb);
+ 	snap_ip_tcp_hdrlen = 8 + ip_hdrlen + tcp_hdrlen(skb);
+-	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len - iv_len;
++	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len;
+ 	amsdu_pad = 0;
+ 
+ 	/* total amount of header we may need for this A-MSDU */
+ 	hdr_room = DIV_ROUND_UP(total_len, mss) *
+-		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr)) + iv_len;
++		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr));
+ 
+ 	/* Our device supports 9 segments at most, it will fit in 1 page */
+ 	hdr_page = get_page_hdr(trans, hdr_room);
+@@ -273,14 +269,12 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 	start_hdr = hdr_page->pos;
+ 	page_ptr = (void *)((u8 *)skb->cb + trans_pcie->page_offs);
+ 	*page_ptr = hdr_page->page;
+-	memcpy(hdr_page->pos, skb->data + hdr_len, iv_len);
+-	hdr_page->pos += iv_len;
+ 
+ 	/*
+-	 * Pull the ieee80211 header + IV to be able to use TSO core,
++	 * Pull the ieee80211 header to be able to use TSO core,
+ 	 * we will restore it for the tx_status flow.
+ 	 */
+-	skb_pull(skb, hdr_len + iv_len);
++	skb_pull(skb, hdr_len);
+ 
+ 	/*
+ 	 * Remove the length of all the headers that we don't actually
+@@ -355,8 +349,8 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
+ 		}
+ 	}
+ 
+-	/* re -add the WiFi header and IV */
+-	skb_push(skb, hdr_len + iv_len);
++	/* re -add the WiFi header */
++	skb_push(skb, hdr_len);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
