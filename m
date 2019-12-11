@@ -2,216 +2,211 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CD1C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FE9214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B208214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ky1+6Cjq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRVnrjYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfLKMUT (ORCPT
+        id S1729253AbfLKMUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:20:19 -0500
-Received: from mail-eopbgr30064.outbound.protection.outlook.com ([40.107.3.64]:3930
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729220AbfLKMUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:20:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QbA6ra3RLFt4C9dCGxeQpWnDOZ9ptErSdVanpM6a8dXMysWjP5ui07BmpwLV+R3Kt64PFfUko0jz9f8fPswNc68E3mclHBG8Q4AKwanavDt0zPpsFTrrLT27IxW8PHw86XfUD6F+Vt1/DterABUQrJC4zdO5wMA2C0EPYIpGZyRl8ZFva8rham6sy3iQXV4Q1v8DPmY2ZAXJ9ma3BYj7q/taboGOazscPeg5CV7CrJBPmnZR+P5MY13N0yzFEItrRKO7v0tbsTiWEBAqhPMeDSARfix9ZeXYOvcM+EY4kCUR43Ud7qv4SfeaG8o05lb1oRvKU31JCoJ4/0VCNbhT4g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9iuKx/crf9ymX992o3BlYkqaznBMTlcAbNO0Prwtv84=;
- b=jS/uRwq2t5uLhhhT1jvwdlS4F3SIpzVo3tY7xUwZe/o8VlHbizxwVeuRzK8ruFsF+ottoz43S6UOKiGs+73xDIcOyQTreNjHGKeX545eDP+CLKW2KYaNpPD39pT6Mz/nbVPOiMurSeHRpGNv/7zLZYw5r6fV6qMZZCjyLf+b1IiXIhk6BMXXVa8fhv3pAoJsqbyGRh4/mN0cQoJ64mtuYKVqZvQJ4tjN7dp+B2u5KZChVVg8Giu3tC2234huwvKOamu6YFtFaQQODQhGaPIBfn72v916hiwPbE5vmwESGvA+Avuj47HLaQdHHbyrx4zy/TFS436UxG8CjGIvT+YWzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9iuKx/crf9ymX992o3BlYkqaznBMTlcAbNO0Prwtv84=;
- b=ky1+6Cjqb0YezGZM6iKjHK2Mv2D0w8ZRpip6pddTkwEt56g3k7ucaYUTKh8BVteHAHgDAgKrta24A6mWwV/XY6wpqNYATfDGa/1u7IA65SNoBeuom+9OHnNkUFtOSGXd49rQ5U6GjNgOxdogSANkY689VsQX41dSu6dumYv4c90=
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
- VI1PR04MB5359.eurprd04.prod.outlook.com (20.178.122.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Wed, 11 Dec 2019 12:20:12 +0000
-Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::304d:b7d8:1233:2ae0]) by VI1PR04MB4445.eurprd04.prod.outlook.com
- ([fe80::304d:b7d8:1233:2ae0%6]) with mapi id 15.20.2538.012; Wed, 11 Dec 2019
- 12:20:12 +0000
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Bastian Krause <bst@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH 08/12] crypto: caam - support crypto_engine framework for
- SKCIPHER algorithms
-Thread-Topic: [PATCH 08/12] crypto: caam - support crypto_engine framework for
- SKCIPHER algorithms
-Thread-Index: AQHVnZa0/lOdW2TUXUqvGjTaL30gkA==
-Date:   Wed, 11 Dec 2019 12:20:11 +0000
-Message-ID: <VI1PR04MB44458A1566067B5456337AEE8C5A0@VI1PR04MB4445.eurprd04.prod.outlook.com>
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-9-git-send-email-iuliana.prodan@nxp.com>
- <c0fa1e68-107d-f9ee-fbf2-0d0e6ef8d39d@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=iuliana.prodan@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2d72f027-6742-4f12-ab74-08d77e34786f
-x-ms-traffictypediagnostic: VI1PR04MB5359:|VI1PR04MB5359:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB5359F5C9658591BA6F86C1F88C5A0@VI1PR04MB5359.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(136003)(39860400002)(366004)(346002)(51234002)(189003)(199004)(478600001)(8936002)(7696005)(26005)(186003)(52536014)(55016002)(316002)(2906002)(5660300002)(110136005)(4326008)(66946007)(44832011)(6636002)(81166006)(9686003)(66556008)(54906003)(91956017)(86362001)(8676002)(76116006)(6506007)(64756008)(33656002)(66476007)(71200400001)(53546011)(66446008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5359;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tjEyQvJsykQhptlRdCOMf+2rfT0aeG4pw8WApwg54/PYVu46N4CbFUDhqYWYXmEyFNu6zjDL9+nCjy2+cn2sJaL21bzg25nB5kNk2MrDhEWUpqrCVWL5PkXzvGVEZx93OM7CNrXmopaTYciLpURAwzJ30YczByz5w1UY7jJnspmtdXyxF5iZuV20YG/7x09aRvyOjUWlwZEtEYIU5rcC+ehNOI8B1F5HDzWR6G1jWRgDpmuprvVNg4pbpLNDIstN3l8l4rp+Wk5fj7ewmiJrX6mf4tGgVIo1zbe/rhjwZESTdHVQnD+tS54basBfeuDTPJmIe9tngv3wFSUMu0k2kz84NkaUhtglpjGv5cCazcvuL6z63kDYo4g7PQ+a7DRDr2MxlYPMm2Xzm459bRlDvqCvLG7gx/E2TrU+RgSpUNLRyEoQHzyZqjn9t5cnsbAlH4Xcn2wFQZtdMIN/gQhNUV0jHQmxVcAf0JNpO4sLEJBoT/C1u1a5H2Q2KQ76Ezl8
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 07:20:31 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45940 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729220AbfLKMUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 07:20:30 -0500
+Received: by mail-pg1-f194.google.com with SMTP id b9so10299089pgk.12;
+        Wed, 11 Dec 2019 04:20:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=2Gmp6YOucsMACQ792uGEILrIHWMUBHy7q5oV2O7SluA=;
+        b=JRVnrjYwlGgiNuY9z9sJPe5x3p7yIqHAAaxAHgZaKPbn6qAKUunT/+/UW43RuECKc4
+         Fz7/1CyWe9Nnr0bufgys/lYP7FNEusO6pGxKENaIBEv3JxfJf9QGVjJxMa8GPzhKJYqe
+         TTw7JG70ixN3LTZZcFwGCKaI3ls/RjpBaaKVBGwMxS4DpsJytgO8TloZ7wKrXYzxYh0I
+         4nfK3IQRAwVvBWD4ovfnnJF0mT6q3y210aZR55HmMyomS93fmwLwmFejWptLEv92NmZL
+         ilMHFogMmh+/Yd7zxmWlExDA96Mqnjg+pNQnO2k57eAtw9w/9lx47W757FE6Jv1kFmTp
+         MOjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=2Gmp6YOucsMACQ792uGEILrIHWMUBHy7q5oV2O7SluA=;
+        b=je1Us8qxBhMqxkE7vqRPMwaBmcDhwLQYvAMZBt6sgDGgxwhk8PyZE3tHj5shsQIUXc
+         iiHScEyZm7uUzyNDIH4hXSy117Escxn05Y0UZ4+dGxrxo3bEpKIAXyIynNJKDLPAgTND
+         Wzqu1fzxQMbY2qCSsC1thlezxc2ZdAPh5LyIVkI97rVGw6DoKmr0ld5TxOiPFiMCpGAT
+         CN0cJQfqwv+qYmWMH6hApYa9JnJWKPJo3/lS1BLWupWH2xFjszUWqS4BSNTK9AJDtSqc
+         lX/wTuhWeN95ycj3it6snj6XfRXULGwFBFyuYUXYI8sOomTttFsEHf7xjmen4AGzWmAp
+         BmxA==
+X-Gm-Message-State: APjAAAVAn4ejryfqlaCTCvOHqwnMT0FiCm4ZqYFd8BspNJv7lktjBWJ/
+        iyIib+31cpWd7MwUjayS7eg=
+X-Google-Smtp-Source: APXvYqzAqmTEma+xlFtP5yw9S0mHaSrSRi2QfNYSRFP3vN+eRcvJJchAFpIQQ6RRZqkQyrRDh8Z+Dg==
+X-Received: by 2002:a62:ac03:: with SMTP id v3mr3371967pfe.17.1576066829511;
+        Wed, 11 Dec 2019 04:20:29 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id e20sm2848907pff.96.2019.12.11.04.20.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 11 Dec 2019 04:20:28 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Cc:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        "SeongJae Park" <sjpark@amazon.de>, pdurrant@amazon.com,
+        sjpark@amazon.com, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH v6 1/3] xenbus/backend: Add memory pressure handler callback
+Date:   Wed, 11 Dec 2019 13:20:11 +0100
+Message-Id: <20191211122011.16231-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d72f027-6742-4f12-ab74-08d77e34786f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 12:20:11.8498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rseVABsPJDtP3vBH49bMzGt+mRNwZvxAi48wMOh9bjnpn9NgghziOfy65bVOEw4AlGOfZ5TdfJlgbOIgvruTNw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5359
+In-Reply-To: <20191211114651.GN980@Air-de-Roger> (raw)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,=0A=
-=0A=
-On 12/10/2019 5:27 PM, Bastian Krause wrote:=0A=
-> =0A=
-> Hi Iulia,=0A=
-> =0A=
-> On 11/17/19 11:30 PM, Iuliana Prodan wrote:=0A=
->> Integrate crypto_engine into CAAM, to make use of the engine queue.=0A=
->> Add support for SKCIPHER algorithms.=0A=
->>=0A=
->> This is intended to be used for CAAM backlogging support.=0A=
->> The requests, with backlog flag (e.g. from dm-crypt) will be listed=0A=
->> into crypto-engine queue and processed by CAAM when free.=0A=
->> This changes the return codes for caam_jr_enqueue:=0A=
->> -EINPROGRESS if OK, -EBUSY if request is backlogged,=0A=
->> -ENOSPC if the queue is full, -EIO if it cannot map the caller's=0A=
->> descriptor, -EINVAL if crypto_tfm not supported by crypto_engine.=0A=
->>=0A=
->> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
->> Signed-off-by: Franck LENORMAND <franck.lenormand@nxp.com>=0A=
->> Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
->> ---=0A=
->>   drivers/crypto/caam/Kconfig   |  1 +=0A=
->>   drivers/crypto/caam/caamalg.c | 84 +++++++++++++++++++++++++++++++++++=
---------=0A=
->>   drivers/crypto/caam/intern.h  |  2 ++=0A=
->>   drivers/crypto/caam/jr.c      | 51 ++++++++++++++++++++++++--=0A=
->>   4 files changed, 122 insertions(+), 16 deletions(-)=0A=
->>=0A=
->> diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig=
-=0A=
->> index 87053e4..1930e19 100644=0A=
->> --- a/drivers/crypto/caam/Kconfig=0A=
->> +++ b/drivers/crypto/caam/Kconfig=0A=
->> @@ -33,6 +33,7 @@ config CRYPTO_DEV_FSL_CAAM_DEBUG=0A=
->>   =0A=
-...=0A=
->>   =0A=
->> +static int skcipher_do_one_req(struct crypto_engine *engine, void *areq=
-)=0A=
->> +{=0A=
->> +	struct skcipher_request *req =3D skcipher_request_cast(areq);=0A=
->> +	struct caam_ctx *ctx =3D crypto_skcipher_ctx(crypto_skcipher_reqtfm(re=
-q));=0A=
->> +	struct caam_skcipher_req_ctx *rctx =3D skcipher_request_ctx(req);=0A=
->> +	struct caam_jr_request_entry *jrentry;=0A=
->> +	u32 *desc =3D rctx->edesc->hw_desc;=0A=
->> +	int ret;=0A=
->> +=0A=
->> +	jrentry =3D &rctx->edesc->jrentry;=0A=
->> +	jrentry->bklog =3D true;=0A=
->> +=0A=
->> +	ret =3D caam_jr_enqueue_no_bklog(ctx->jrdev, desc,=0A=
->> +				       rctx->skcipher_op_done, jrentry);=0A=
->> +=0A=
->> +	if (ret !=3D -EINPROGRESS) {=0A=
->> +		skcipher_unmap(ctx->jrdev, rctx->edesc, req);=0A=
->> +		kfree(rctx->edesc);=0A=
->> +	} else {=0A=
->> +		ret =3D 0;=0A=
->> +	}=0A=
->> +=0A=
->> +	return ret;=0A=
-> =0A=
-> While testing this on a i.MX6 DualLite I see -ENOSPC being returned here=
-=0A=
-> after a couple of GiB of data being encrypted (via dm-crypt with LUKS=0A=
-> extension). This results in these messages from crypto_engine:=0A=
-> =0A=
->    caam_jr 2101000.jr0: Failed to do one request from queue: -28=0A=
-> =0A=
-> And later..=0A=
-> =0A=
->    Buffer I/O error on device dm-0, logical block 59392=0A=
->    JBD2: Detected IO errors while flushing file data on dm-0-8=0A=
-> =0A=
-> Reproducible with something like this:=0A=
-> =0A=
->    echo "testkey" | cryptsetup luksFormat \=0A=
->      --cipher=3Daes-cbc-essiv:sha256 \=0A=
->      --key-file=3D- \=0A=
->      --key-size=3D256 \=0A=
->      /dev/mmcblk1p8=0A=
->    echo "testkey" | cryptsetup open \=0A=
->      --type luks \=0A=
->      --key-file=3D- \=0A=
->      /dev/mmcblk1p8 data=0A=
-> =0A=
->    mkfs.ext4 /dev/mapper/data=0A=
->    mount /dev/mapper/data /mnt=0A=
-> =0A=
->    set -x=0A=
->    while [ true ]; do=0A=
->      dd if=3D/dev/zero of=3D/mnt/big_file bs=3D1M count=3D1024=0A=
->      sync=0A=
->    done=0A=
-> =0A=
-> Any ideas?=0A=
-> =0A=
-=0A=
-Thanks for testing this!=0A=
-I reproduced this issue on imx6dl, _but_ only with the bypass sw queue =0A=
-patch. It only reproduces on some targets, e.g. on imx7d I don't get the =
-=0A=
--ENOSPC error. So, I believe there is a timing issue between =0A=
-crypto-engine and CAAM driver, both sending requests to CAAM hw.=0A=
-I'm debugging this and I'll let you know my findings.=0A=
-=0A=
-Best regards,=0A=
-Iulia=0A=
+On Wed, 11 Dec 2019 12:46:51 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+
+> > Granting pages consumes backend system memory.  In systems configured
+> > with insufficient spare memory for those pages, it can cause a memory
+> > pressure situation.  However, finding the optimal amount of the spare
+>                                                               ^ s/the//
+> > memory is challenging for large systems having dynamic resource
+> > utilization patterns.  Also, such a static configuration might lack
+> > flexibility.
+> > 
+> > To mitigate such problems, this commit adds a memory reclaim callback to
+> > 'xenbus_driver'.  If a memory pressure is detected, 'xenbus' requests
+>                        ^ s/a//
+> > every backend driver to volunarily release its memory.
+> > 
+> > Note that it would be able to improve the callback facility for more
+>                         ^ possible
+> > sophisticated handlings of general pressures.  For example, it would be
+>                 ^ handling of resource starvation.
+> > possible to monitor the memory consumption of each device and issue the
+> > release requests to only devices which causing the pressure.  Also, the
+> > callback could be extended to handle not only memory, but general
+> > resources.  Nevertheless, this version of the implementation defers such
+> > sophisticated goals as a future work.
+> > 
+> > Reviewed-by: Juergen Gross <jgross@suse.com>
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  drivers/xen/xenbus/xenbus_probe_backend.c | 32 +++++++++++++++++++++++
+> >  include/xen/xenbus.h                      |  1 +
+> >  2 files changed, 33 insertions(+)
+> > 
+> > diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > index b0bed4faf44c..aedbe2198de5 100644
+> > --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+> > +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > @@ -248,6 +248,35 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+> >  	return NOTIFY_DONE;
+> >  }
+> >  
+> > +static int xenbus_backend_reclaim(struct device *dev, void *data)
+> 
+> No need for the xenbus_ prefix since it's a static function, ie:
+> backend_reclaim_memory should be fine IMO.
+
+Agreed, will change the name in the next version.
+
+> 
+> > +{
+> > +	struct xenbus_driver *drv;
+> 
+> I've asked for this variable to be constified in v5, is it not
+> possible to make it const?
+
+Sorry, my mistake...  I was difinitely too hurry.
+
+> 
+> > +
+> > +	if (!dev->driver)
+> > +		return 0;
+> > +	drv = to_xenbus_driver(dev->driver);
+> > +	if (drv && drv->reclaim)
+> > +		drv->reclaim(to_xenbus_device(dev));
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * Returns 0 always because we are using shrinker to only detect memory
+> > + * pressure.
+> > + */
+> > +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
+> > +				struct shrink_control *sc)
+> > +{
+> > +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
+> > +			xenbus_backend_reclaim);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct shrinker xenbus_backend_shrinker = {
+> 
+> I would drop the xenbus prefix, and I think it's not possible to
+> constify this due to register_shrinker expecting a non-const
+> parameter?
+
+Yes, constifying it results in another compile warning.  Will drop the prefix.
+
+> 
+> > +	.count_objects = xenbus_backend_shrink_count,
+> > +	.seeks = DEFAULT_SEEKS,
+> > +};
+> > +
+> >  static int __init xenbus_probe_backend_init(void)
+> >  {
+> >  	static struct notifier_block xenstore_notifier = {
+> > @@ -264,6 +293,9 @@ static int __init xenbus_probe_backend_init(void)
+> >  
+> >  	register_xenstore_notifier(&xenstore_notifier);
+> >  
+> > +	if (register_shrinker(&xenbus_backend_shrinker))
+> > +		pr_warn("shrinker registration failed\n");
+> 
+> Can you add a xenbus prefix to the error message? Or else it's hard to
+> know which subsystem is complaining when you see such message on the
+> log. ie: "xenbus: shrinker ..."
+
+Because we have #define `pr_fmt(fmt) KBUILD_MODNAME ": " fmt` in the beginning
+of the file, the message will have a proper prefix.
+
+> 
+> > +
+> >  	return 0;
+> >  }
+> >  subsys_initcall(xenbus_probe_backend_init);
+> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+> > index 869c816d5f8c..196260017666 100644
+> > --- a/include/xen/xenbus.h
+> > +++ b/include/xen/xenbus.h
+> > @@ -104,6 +104,7 @@ struct xenbus_driver {
+> >  	struct device_driver driver;
+> >  	int (*read_otherend_details)(struct xenbus_device *dev);
+> >  	int (*is_ready)(struct xenbus_device *dev);
+> > +	void (*reclaim)(struct xenbus_device *dev);
+> 
+> reclaim_memory (if Juergen agrees).
+
+Okay.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks, Roger.
+> 
