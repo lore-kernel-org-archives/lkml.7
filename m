@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E485C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335ECC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241E920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D6D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080563;
-	bh=I2kL1eyh/q9jqbz6IjKwTQx2WHD3sCRx/+BtxzJk3T0=;
+	s=default; t=1576080568;
+	bh=fxbntyBqEKHsMYyHubFDmIaQLZIboAKHGpoYtKjsg4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQKtlXktFVUnkZm3htgzVo/tO3a1hwBlyMI4rsNSfC8L9KSOsBqvrZXeL9ZWUVAUz
-	 cKiCKStSTdaMzsTDUDE0c0MS+7C6ujpKbM2kF7odHQqkPJFHUcjqXxalydwA1ke2Hq
-	 T8ERFAjEVFDFILjprnrz1zoXQV4PZ69wxxxoS80o=
+	b=Hi7GD3DLsys+LcJpldtFk8Lcvc8OD9k1WlJ2Ps9gG3g9JpIgYdSWEcKdLSO62+Py6
+	 rd2CDUTCxeysVpswcn834sA4M05vuLq3Rm6EfSh9NNeVD7IAEm6ueivqEZ6vGuKVFj
+	 jNvQtH5p9ExvEdZEzAIa9WJU1IoeOtp/HAxUJHfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731724AbfLKQJW (ORCPT
+        id S2388949AbfLKQJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:09:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:09:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730720AbfLKPMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:09 -0500
+        id S1731053AbfLKPMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F2C208C3;
-        Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83FBA24671;
+        Wed, 11 Dec 2019 15:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077128;
-        bh=I2kL1eyh/q9jqbz6IjKwTQx2WHD3sCRx/+BtxzJk3T0=;
+        s=default; t=1576077127;
+        bh=fxbntyBqEKHsMYyHubFDmIaQLZIboAKHGpoYtKjsg4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nrmKqAIPxUiWWw+o928mlB+seHZmtt1pWFIwFBRNTqndVI2vdnd+ba6sLKlnFkO3t
-         7Vdl3ECgmgSU6y8IBNJcICejomPOEstp9QzBt2kYI847N7uS4DynTtXr8T6NbXEPaT
-         j3RRQow0rd43W6O+3CKPmSd9+7qlSoWLNJcXoobw=
+        b=cnBjh5EKotostD4mbSRdaxvgKHyrHUK6RKL0fLz5Xg70hm9CuQNIC96Kqb43kNAxP
+         i+carD6SYClJ9L/DdVqANqsUg895eVp71fUHcXMVbeFgnJwzY0o1fTzmtWyERyPoUZ
+         ++7bfrsWklPbbnu3T3ugF8yObAiuBrNQ8kp1qWao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicholas Graumann <nick.graumann@gmail.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 016/134] dmaengine: xilinx_dma: Clear desc_pendingcount in xilinx_dma_reset
-Date:   Wed, 11 Dec 2019 10:09:52 -0500
-Message-Id: <20191211151150.19073-16-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 015/134] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
+Date:   Wed, 11 Dec 2019 10:09:51 -0500
+Message-Id: <20191211151150.19073-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,40 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Graumann <nick.graumann@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 8a631a5a0f7d4a4a24dba8587d5d9152be0871cc ]
+[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
 
-Whenever we reset the channel, we need to clear desc_pendingcount
-along with desc_submitcount. Otherwise when a new transaction is
-submitted, the irq coalesce level could be programmed to an incorrect
-value in the axidma case.
+Page tables that reside in physical memory beyond the 4 GiB boundary are
+currently not working properly. The reason is that when the physical
+address for page directory entries is read, it gets truncated at 32 bits
+and can cause crashes when passing that address to the DMA API.
 
-This behavior can be observed when terminating pending transactions
-with xilinx_dma_terminate_all() and then submitting new transactions
-without releasing and requesting the channel.
+Fix this by first casting the PDE value to a dma_addr_t and then using
+the page frame number mask for the SMMU instance to mask out the invalid
+bits, which are typically used for mapping attributes, etc.
 
-Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Link: https://lore.kernel.org/r/1571150904-3988-8-git-send-email-radhey.shyam.pandey@xilinx.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/xilinx/xilinx_dma.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/tegra-smmu.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index 5d56f1e4d332c..43acba2a1c0ee 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1433,6 +1433,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 7293fc3f796d6..dd486233e2828 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -159,9 +159,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
+ 	return (addr & smmu->pfn_mask) == addr;
+ }
  
- 	chan->err = false;
- 	chan->idle = true;
-+	chan->desc_pendingcount = 0;
- 	chan->desc_submitcount = 0;
+-static dma_addr_t smmu_pde_to_dma(u32 pde)
++static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
+ {
+-	return pde << 12;
++	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
+ }
  
- 	return err;
+ static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
+@@ -549,6 +549,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 				  dma_addr_t *dmap)
+ {
+ 	unsigned int pd_index = iova_pd_index(iova);
++	struct tegra_smmu *smmu = as->smmu;
+ 	struct page *pt_page;
+ 	u32 *pd;
+ 
+@@ -557,7 +558,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 		return NULL;
+ 
+ 	pd = page_address(as->pd);
+-	*dmap = smmu_pde_to_dma(pd[pd_index]);
++	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
+ 
+ 	return tegra_smmu_pte_offset(pt_page, iova);
+ }
+@@ -599,7 +600,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+ 	} else {
+ 		u32 *pd = page_address(as->pd);
+ 
+-		*dmap = smmu_pde_to_dma(pd[pde]);
++		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
+ 	}
+ 
+ 	return tegra_smmu_pte_offset(as->pts[pde], iova);
+@@ -624,7 +625,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
+ 	if (--as->count[pde] == 0) {
+ 		struct tegra_smmu *smmu = as->smmu;
+ 		u32 *pd = page_address(as->pd);
+-		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
++		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
+ 
+ 		tegra_smmu_set_pde(as, iova, 0);
+ 
 -- 
 2.20.1
 
