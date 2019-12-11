@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEA8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3D9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A430E22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25912077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujnadWGq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DaxkaBWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfLKSP1 (ORCPT
+        id S1731275AbfLKSPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:15:27 -0500
-Received: from mail-yw1-f52.google.com ([209.85.161.52]:46676 "EHLO
-        mail-yw1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731213AbfLKSPX (ORCPT
+        Wed, 11 Dec 2019 13:15:33 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:33677 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731249AbfLKSP2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:23 -0500
-Received: by mail-yw1-f52.google.com with SMTP id u139so9275634ywf.13;
-        Wed, 11 Dec 2019 10:15:23 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:28 -0500
+Received: by mail-yb1-f194.google.com with SMTP id o63so9412409ybc.0;
+        Wed, 11 Dec 2019 10:15:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u0Uagrgs6mVpulGeA6eJiVL8yArUOnTFSWyALd4g4YI=;
-        b=ujnadWGq0oPO4Of9IgCS6nRRjtnRxlgyhTiuXznJvRjdGLIrxjGN+ZT6YSaJ/zzjF9
-         gys/f3FNf1guI/EXs76WKwwYGC63+7vrBH1MNwRZ88xWKb6wtqWl7COkEKkv8FW3FXOX
-         tWJ3VGYfxF17jJOgC4YnSeXBj8pCc3ac5LdI/SeqA9GR2WhRe/tyzADhh4xxKwqIX+iT
-         +jCu0ebQ1nTYc5lq44r4F2MeazAcD2TfV9y52U4vKn0XDxoUOIgdemT6RYHq/wFZp/zJ
-         xK3k+ujCpJ3nMoGdEPnN6+cg7Ot5AT13wBzbIDiXLuHBs8S2JsUMnK4I5qK2h0uNdTMg
-         MIlA==
+        bh=4awfmVKPws5vxP93HnYWNI+fZRnhVZj4z7QMlkLCxoc=;
+        b=DaxkaBWzP/miLV6xViB100JHzouBPUUAx3i+z9hL9GJAU5P5azAY5pzUDbMNu+Cehd
+         AU84mesIjytm+s1sJA1SB7DK6GN7F3gZbxQbJqvawyMErooS6aCe1CNiGjBwynyutjBW
+         wz2UJX69cdLQUQGEYRuaxFy+T8YVq1DbpcfSVo/qtHrhZSCIhLLBI0Vmtw5F+hF09HTQ
+         Cx14URfY/KOxLqyJC67HoZIjoFeidI2cu9G+cFVtmb3xxFqUV8tS8hRKyZ+5UJpVIl7X
+         FbNi/P1rTcsBx+jxFYR7ftTIt56L63JuPQDLpdnF2vHbr/2er2qoJ+5+sYF9R5niGGeb
+         K9HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u0Uagrgs6mVpulGeA6eJiVL8yArUOnTFSWyALd4g4YI=;
-        b=kVONOn0FC3D2DIwsZyUNzoJle4obqeOOMLHtSHnCi3Xo9gyconnhFwPlDwIWntzkLV
-         4KSlS4xDngyuDhutoVW4gW1bJMpe3Um+S07Cc1nkZGDFMkaOvZ2+54ZraRPOJniLF5Jv
-         dQUKewMvS77zhkCz9VP7cwApW2oLeFxTZvOD3Zlj7HYM4nGgI0U7se9UPWWDKtmrS9Xl
-         ws0CLCGkxjK7Neyg0JplYhxtIE+rCKM4uQ4gH6nrkzatKNhIabkDzvTtzG7H6YGfwo2T
-         zr3Em9KtOYQCqpVfNK8pnJo8FwojQJWR4WPORAB/kqsAwMX/yiEF8Cw54jCY1SlynV8X
-         HbLg==
-X-Gm-Message-State: APjAAAWwu6ZxS6Y3QyuiryokLDWvMr+K2cIsZCCx/n1IGmCU6IjYYFE+
-        DN2Q9TQnj6Q/IhH2fKysrZ9tlfwObvNsDw==
-X-Google-Smtp-Source: APXvYqxaALhyOvpU2ztGTYuOkeBXT/aFJSRD+TPM9gWmXKO27dD4VNr3Uybg0sFaUhMuVEhzABEEyg==
-X-Received: by 2002:a81:85c4:: with SMTP id v187mr820499ywf.445.1576088122451;
-        Wed, 11 Dec 2019 10:15:22 -0800 (PST)
+        bh=4awfmVKPws5vxP93HnYWNI+fZRnhVZj4z7QMlkLCxoc=;
+        b=Au4naWedgzWyKbX13rFwbi+qg0rteNJranGZsGMNj6GhBxwfBiRb1hGEJTS7RB8yD9
+         1a5yYRURwUasQzeLiqtl8Ugwyq0jV59e8YGuiaQrEUfFHY6nUnHedsDkSRClzt7Dp+7j
+         NtOFQgM5wnxhsocWFuS8M2bJgia0PR1Xw4TDqjdrztLDJFLqP1kjwDghuS72f5QIND/g
+         3pQtjOkd72dgXiJcX3n+Ye9ttHYeE6uQdGdNd9ZF8Zird2G8Iy+R6cLwhYGGy+w2Tj5t
+         FI6p1GS9zo1Gvy0rfBS1gpjyFeWFznNmhFpYsOaqqeRnMuc4vKwcdPqG5owrunrD1Kyo
+         z3TA==
+X-Gm-Message-State: APjAAAVjzxQkoCKgi37ypf0URnvk69vt8LpjAb2c/sN6kcwBsq91e0EH
+        pmQ3vJ0uO2lFxdFe9ux5DkIJtLaJVjtWgg==
+X-Google-Smtp-Source: APXvYqwB8EyYkZ5Vifm/xgiLEtGAKGndz9AKxvYQpmI2B23qc99C6RAXG9eweb+X3uRymoNYiZ5xbQ==
+X-Received: by 2002:a5b:451:: with SMTP id s17mr1014875ybp.8.1576088127402;
+        Wed, 11 Dec 2019 10:15:27 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id k30sm1328927ywh.94.2019.12.11.10.15.21
+        by smtp.gmail.com with ESMTPSA id d186sm1340039ywe.0.2019.12.11.10.15.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:22 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:27 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/23] staging: qlge: Fix WARNING: please, no space before tabs in qlge.h
-Date:   Wed, 11 Dec 2019 12:12:41 -0600
-Message-Id: <13546a2ebc6686da094b23ab576c4388fa61268b.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 15/23] staging: qlge: Fix WARNING: please, no spaces at the start of a line
+Date:   Wed, 11 Dec 2019 12:12:44 -0600
+Message-Id: <8fe7607b122493540f7c746d654b4a87afb9bd77.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,76 +76,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: please, no space before tabs in qlge.h
+Fix WARNING: please, no spaces at the start of a line in qlge_main.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/staging/qlge/qlge_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-index ede767a70b10..63642cb9e624 100644
---- a/drivers/staging/qlge/qlge.h
-+++ b/drivers/staging/qlge/qlge.h
-@@ -16,8 +16,8 @@
- /*
-  * General definitions...
-  */
--#define DRV_NAME  	"qlge"
--#define DRV_STRING 	"QLogic 10 Gigabit PCI-E Ethernet Driver "
-+#define DRV_NAME	"qlge"
-+#define DRV_STRING	"QLogic 10 Gigabit PCI-E Ethernet Driver "
- #define DRV_VERSION	"1.00.00.35"
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index 38d217ae4002..024c77518af3 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -52,16 +52,16 @@ MODULE_LICENSE("GPL");
+ MODULE_VERSION(DRV_VERSION);
  
- #define WQ_ADDR_ALIGN	0x3	/* 4 byte alignment */
-@@ -1076,8 +1076,8 @@ struct tx_buf_desc {
-  * IOCB Definitions...
-  */
+ static const u32 default_msg =
+-    NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
++	NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
+ /* NETIF_MSG_TIMER |	*/
+-    NETIF_MSG_IFDOWN |
+-    NETIF_MSG_IFUP |
+-    NETIF_MSG_RX_ERR |
+-    NETIF_MSG_TX_ERR |
++	NETIF_MSG_IFDOWN |
++	NETIF_MSG_IFUP |
++	NETIF_MSG_RX_ERR |
++	NETIF_MSG_TX_ERR |
+ /*  NETIF_MSG_TX_QUEUED | */
+ /*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
+ /* NETIF_MSG_PKTDATA | */
+-    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
++	NETIF_MSG_HW | NETIF_MSG_WOL | 0;
  
--#define OPCODE_OB_MAC_IOCB 			0x01
--#define OPCODE_OB_MAC_TSO_IOCB		0x02
-+#define OPCODE_OB_MAC_IOCB			0x01
-+#define OPCODE_OB_MAC_TSO_IOCB			0x02
- #define OPCODE_IB_MAC_IOCB			0x20
- #define OPCODE_IB_MPI_IOCB			0x21
- #define OPCODE_IB_AE_IOCB			0x3f
-@@ -1179,8 +1179,8 @@ struct ib_mac_iocb_rsp {
- #define IB_MAC_IOCB_RSP_M_MASK	0x60	/* Multicast info */
- #define IB_MAC_IOCB_RSP_M_NONE	0x00	/* Not mcast frame */
- #define IB_MAC_IOCB_RSP_M_HASH	0x20	/* HASH mcast frame */
--#define IB_MAC_IOCB_RSP_M_REG 	0x40	/* Registered mcast frame */
--#define IB_MAC_IOCB_RSP_M_PROM 	0x60	/* Promiscuous mcast frame */
-+#define IB_MAC_IOCB_RSP_M_REG	0x40	/* Registered mcast frame */
-+#define IB_MAC_IOCB_RSP_M_PROM	0x60	/* Promiscuous mcast frame */
- #define IB_MAC_IOCB_RSP_B	0x80	/* Broadcast frame */
- 	u8 flags2;
- #define IB_MAC_IOCB_RSP_P	0x01	/* Promiscuous frame */
-@@ -1200,8 +1200,8 @@ struct ib_mac_iocb_rsp {
- #define IB_MAC_IOCB_RSP_M_NONE	0x00	/* No RSS match */
- #define IB_MAC_IOCB_RSP_M_IPV4	0x04	/* IPv4 RSS match */
- #define IB_MAC_IOCB_RSP_M_IPV6	0x02	/* IPv6 RSS match */
--#define IB_MAC_IOCB_RSP_M_TCP_V4 	0x05	/* TCP with IPv4 */
--#define IB_MAC_IOCB_RSP_M_TCP_V6 	0x03	/* TCP with IPv6 */
-+#define IB_MAC_IOCB_RSP_M_TCP_V4	0x05	/* TCP with IPv4 */
-+#define IB_MAC_IOCB_RSP_M_TCP_V6	0x03	/* TCP with IPv6 */
- #define IB_MAC_IOCB_RSP_V4	0x08	/* IPV4 */
- #define IB_MAC_IOCB_RSP_V6	0x10	/* IPV6 */
- #define IB_MAC_IOCB_RSP_IH	0x20	/* Split after IP header */
-@@ -1238,10 +1238,10 @@ struct ib_ae_iocb_rsp {
- #define SOFT_ECC_ERROR_EVENT       0x07
- #define MGMT_ERR_EVENT             0x08
- #define TEN_GIG_MAC_EVENT          0x09
--#define GPI0_H2L_EVENT       	0x10
--#define GPI0_L2H_EVENT       	0x20
--#define GPI1_H2L_EVENT       	0x11
--#define GPI1_L2H_EVENT       	0x21
-+#define GPI0_H2L_EVENT		0x10
-+#define GPI0_L2H_EVENT		0x20
-+#define GPI1_H2L_EVENT		0x11
-+#define GPI1_L2H_EVENT		0x21
- #define PCI_ERR_ANON_BUF_RD        0x40
- 	u8 q_id;
- 	__le32 reserved[15];
+ static int debug = -1;	/* defaults above */
+ module_param(debug, int, 0664);
 -- 
 2.20.1
 
