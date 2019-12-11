@@ -2,137 +2,94 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C3AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D404C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81E5214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6248214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="baXc8w8n"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TlJRvRJH";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="WN6lb6Gw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfLKJNl (ORCPT
+        id S1728437AbfLKJNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:13:41 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39616 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbfLKJNk (ORCPT
+        Wed, 11 Dec 2019 04:13:46 -0500
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:48974
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727253AbfLKJNq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:13:40 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so1179369plk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:13:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5nDWGTJv3DbBm5FdVeD/qbyjSVi8fiYI1J1aTvInS6M=;
-        b=baXc8w8nzDdnAn1X5x3/tXmyNv/eBgdY9U47+D3NnLnuzBUvfe0uu/R4Q5z/pTisYu
-         p/7Ens/ifRT8KyRkVf4smSl4zjYLfvP0CWknhY/f6fj/T4g0lw+NRp+L+/FSPfyLftIE
-         KqcxDaWi5RLesdO8w53supuouTtW354DyTAHM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5nDWGTJv3DbBm5FdVeD/qbyjSVi8fiYI1J1aTvInS6M=;
-        b=TXwzooFmHgM3zvtigMCaGkLSt0nS3JRWYYkB5g4+YfG4UV0rFuD+MnQovuxFd4MsS9
-         TI/ReQZHXT+iRORO2hl6az6e4SvSTvGg7tQvpIeyuHeHmCR9ytT7KL8wf/FTa9qduJvN
-         6diukl/j8Uv4R4SVGjKiOGxxoOZGRo5KzXwyarXJ/LN4dxtpnkdGpwAHy58fsjmkDWV7
-         mDq2NlFe6DdV+3OSSZkIqJpiNiqgEaIyBiP4jLE9kZYaUNQEjBCHG8jsxki2LDOyNMVk
-         YjdHgm+Q+7QHeNnVxRe1L9cNTdPzWPZULedHN7UIJZLuzq1EZ16s/2I3umRtv1pJhtiQ
-         8JBg==
-X-Gm-Message-State: APjAAAVXOXDAqrgyWjel1y3RKXidIZM0y0BK6GICm2dmqMlhRVRagRTS
-        1x3zy1Ap0AMEw/32bl0qJdzvyA==
-X-Google-Smtp-Source: APXvYqyQaxhd16NIqEa4d2RbhVoJqAmzk0TvXPSGmOAsDzosGYrVXsAEPjtlDNgDcJWED+R9ZtqD8w==
-X-Received: by 2002:a17:90a:fb45:: with SMTP id iq5mr2318402pjb.93.1576055619868;
-        Wed, 11 Dec 2019 01:13:39 -0800 (PST)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id r20sm2047161pgu.89.2019.12.11.01.13.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:13:39 -0800 (PST)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi.kubota1012@sslab.ics.keio.ac.jp,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Avoid memory leak in process_system_preds()
-Date:   Wed, 11 Dec 2019 09:12:58 +0000
-Message-Id: <20191211091258.11310-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 11 Dec 2019 04:13:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576055625;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=42yNDIrjy8vmTGZpCOEq/aiq1nTIM3d9+rZoTsv/drQ=;
+        b=TlJRvRJHI9bvVQ3XjG87h4UaQzFj8t2FzMYfDzDYSeIJHz7wtXBI4J+LvvCi2uVt
+        JMecs7KV9e2IqYz9gsRIJycWldJWH2DgndPDxAhT1vn/U7avICEnERW8Ok6P57SvlIf
+        iYdZ3bhMq9qFAEtE5buyKjAShr71V6nZhBuXlVUQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576055625;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=42yNDIrjy8vmTGZpCOEq/aiq1nTIM3d9+rZoTsv/drQ=;
+        b=WN6lb6GwWL7Ae7tSzls9fhSZGoK4I/DGDhKXv6OKYJVJPI+VZguokGPkZgnmZeqi
+        ghfxG4TXA2MWcBUxDSYcjU+EqBNIkZhJ8MhchpY8a36eZzokPDQefZjSLb4qJ4NstfR
+        pv6pzvrL1iuNNRDSMnR21HltyIYwWUy1bofV0xYM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B186C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        cang@codeaurora.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT
+        (AARCH64 ARCHITECTURE)), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 3/3] arm64: defconfig: Compile ufs-bsg as a module
+Date:   Wed, 11 Dec 2019 09:13:45 +0000
+Message-ID: <0101016ef43c56d3-c7064a44-6025-4349-afd4-a2c91a9d9ffe-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 1.9.1
+X-SES-Outgoing: 2019.12.11-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When failing in the allocation of filter_item, process_system_preds()
-goes to fail_mem, where the allocated filter is freed.
+Compiling ufs-bsg as a module to improve flexibility of its usage.
 
-However, this leads to memory leak of filter->filter_string and
-filter->prog, which is allocated before and in process_preds().
-This bug has been detected by kmemleak as well.
-
-Fix this by changing kfree to __free_fiter.
-
-unreferenced object 0xffff8880658007c0 (size 32):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    63 6f 6d 6d 6f 6e 5f 70 69 64 20 20 3e 20 31 30  common_pid  > 10
-    00 00 00 00 00 00 00 00 65 73 00 00 00 00 00 00  ........es......
-  backtrace:
-    [<0000000067441602>] kstrdup+0x2d/0x60
-    [<00000000141cf7b7>] apply_subsystem_event_filter+0x378/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888060c22d00 (size 64):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    01 00 00 00 00 00 00 00 00 e8 d7 41 80 88 ff ff  ...........A....
-    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000b8c1b109>] process_preds+0x243/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888041d7e800 (size 512):
-  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
-  hex dump (first 32 bytes):
-    70 bc 85 97 ff ff ff ff 0a 00 00 00 00 00 00 00  p...............
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000001e04af34>] process_preds+0x71a/0x1820
-    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
-    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
-    [<0000000072da2bee>] vfs_write+0xe1/0x240
-    [<000000004f14f473>] ksys_write+0xb4/0x150
-    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
-    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 ---
- kernel/trace/trace_events_filter.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index c9a74f82b14a..bf44f6bbd0c3 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -1662,7 +1662,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
- 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
- 	return -EINVAL;
-  fail_mem:
--	kfree(filter);
-+	__free_filter(filter);
- 	/* If any call succeeded, we still need to sync */
- 	if (!fail)
- 		tracepoint_synchronize_unregister();
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 8e05c39..169a6e6 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -227,6 +227,7 @@ CONFIG_SCSI_UFSHCD=y
+ CONFIG_SCSI_UFSHCD_PLATFORM=y
+ CONFIG_SCSI_UFS_QCOM=m
+ CONFIG_SCSI_UFS_HISI=y
++CONFIG_SCSI_UFS_BSG=m
+ CONFIG_ATA=y
+ CONFIG_SATA_AHCI=y
+ CONFIG_SATA_AHCI_PLATFORM=y
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
