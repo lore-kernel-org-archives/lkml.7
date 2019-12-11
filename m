@@ -6,76 +6,52 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2868AC47409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7417BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEFD8207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1602073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576025375;
-	bh=mS7zyk9RzK8MLQp+5nvdMy6P3ysyYQCDC3Bah6kmlfs=;
+	s=default; t=1576025523;
+	bh=Gmj//zcm8fxwhe89OVHTfbVlyud7kzEoKjqmOhMmvNk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jqG/t4EgxSk+1p7Pa03boBLjS+xX1aDg+PoOqtRp9lgO/eiu0O+8vuuWxd+AZGdF6
-	 ztOgW97erWICb5i3N5LJzlF/sLLJEcEIk5NAWcTc1936CtpZ/IUu2L4Z3P2YkGH8y9
-	 96diJgcQ0U1JOzzbqtANT7EeG1UjkFhyb5XEM0zk=
+	b=Hckc47YbtipSV11NrGXQAI5Vwnym7SxM181Ynu3XIQC+Qkv690hNEvpGPPTYWajm9
+	 XWgePnhK9hYQ/S9CXDYIL8qW5ozTPxaxwj80wS0J3OVvmRLye8KqSXKGOU+MzA17Dg
+	 YHeDdE4F24N9wV4G1Crp1OYqPftB4S8DGfs2UI9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfLKAtd (ORCPT
+        id S1726691AbfLKAwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:49:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34076 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 19:52:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLKAtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:49:32 -0500
+        id S1725999AbfLKAwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:52:01 -0500
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ACEC206D5;
-        Wed, 11 Dec 2019 00:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE7A3206D9;
+        Wed, 11 Dec 2019 00:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576025371;
-        bh=mS7zyk9RzK8MLQp+5nvdMy6P3ysyYQCDC3Bah6kmlfs=;
+        s=default; t=1576025521;
+        bh=Gmj//zcm8fxwhe89OVHTfbVlyud7kzEoKjqmOhMmvNk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UvC0RIny6iqVEumpqrPw6rq1+xZGMHezDVxIFrfIHyEiEEKaKQc5hGaYaeoZSLVqv
-         OiKjZB9JvOrs5D8lM5PO+WX7OQOLW/u0awaO48QIwAJPLeFa0zJF2HELO5AISWbm2x
-         nMOoibFNiErcex5Kfzt1sOkhZk08/M0uQclzXbn4=
-Date:   Tue, 10 Dec 2019 16:49:29 -0800
+        b=CXNDcxTHMPMK9Ne+mkKixn7astwJb4fgJu2cfd0Y5NSf3a2NWtvt3HWdZ6U8HnVEB
+         qdie9HnwL0luO6emzSASA6tQIHZRnh5hedzZJQCxC/EkC1hnLDXgKoC4mHtY6stxZE
+         LPVju9ETWlOji4aGV4IHjFzUzGB8QCRxkvAVcCqE=
+Date:   Tue, 10 Dec 2019 16:52:00 -0800
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?ISO-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?ISO-8859-1?Q?J=E9r?= =?ISO-8859-1?Q?=F4me?= Glisse 
-        <jglisse@redhat.com>, Magnus Karlsson <magnus.karlsson@intel.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 20/26] powerpc: book3s64: convert to pin_user_pages()
- and put_user_page()
-Message-Id: <20191210164929.b3f54fe95c3fc4b6c756e65e@linux-foundation.org>
-In-Reply-To: <61e0c3a5-992e-4571-e22d-d63286ce10ec@nvidia.com>
-References: <20191209225344.99740-1-jhubbard@nvidia.com>
-        <20191209225344.99740-21-jhubbard@nvidia.com>
-        <08f5d716-8b31-b016-4994-19fbe829dc28@nvidia.com>
-        <61e0c3a5-992e-4571-e22d-d63286ce10ec@nvidia.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     zhanglin <zhang.lin16@zte.com.cn>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Steven Price <steven.price@arm.com>, david.engraf@sysgo.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] initramfs: forcing panic when kstrdup failed
+Message-Id: <20191210165200.a3c542b74afe7dd846a87e1a@linux-foundation.org>
+In-Reply-To: <CAMuHMdUWeH9u0hP9wCfgb7TJ0nQkbQTPREX+fpTh+ZVrTsCobg@mail.gmail.com>
+References: <1575946121-30548-1-git-send-email-zhang.lin16@zte.com.cn>
+        <CAMuHMdUWeH9u0hP9wCfgb7TJ0nQkbQTPREX+fpTh+ZVrTsCobg@mail.gmail.com>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -85,16 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Dec 2019 21:53:00 -0800 John Hubbard <jhubbard@nvidia.com> wrote:
+On Tue, 10 Dec 2019 09:15:54 +0100 Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> > Correction: this is somehow missing the fixes that resulted from Jan Kara's review (he
-> > noted that we can't take a page lock in this context). I must have picked up the
-> > wrong version of it, when I rebased for -rc1.
-> > 
+> > --- a/init/initramfs.c
+> > +++ b/init/initramfs.c
+> > @@ -125,6 +125,8 @@ static void __init dir_add(const char *name, time64_t mtime)
+> >                 panic("can't allocate dir_entry buffer");
+> >         INIT_LIST_HEAD(&de->list);
+> >         de->name = kstrdup(name, GFP_KERNEL);
+> > +       if (!de->name)
+> > +               panic("can't allocate dir_entry.name buffer");
+> >         de->mtime = mtime;
+> >         list_add(&de->list, &dir_list);
+> >  }
+> > @@ -340,6 +342,8 @@ static int __init do_name(void)
+> >                                 if (body_len)
+> >                                         ksys_ftruncate(wfd, body_len);
+> >                                 vcollected = kstrdup(collected, GFP_KERNEL);
+> > +                               if (!vcollected)
+> > +                                       panic("can not allocate vcollected buffer.");
+> >                                 state = CopyFile;
+> >                         }
+> >                 }
 > 
-> Andrew, given that the series is now in -mm, what's the preferred way for me to fix this?
-> Send a v9 version of the whole series? Or something else?
+> Do we really need to add more messages for out-of-memory conditions?
+> The trend is to remove the printing of those messages, as the memory
+> allocation subsystem will have printed a backtrace already anyway.
 
-I think a full resend is warranted at this time - it's only been in
-there a day and there seem to be quite a number of changes to be made.
+Yup.  And we traditionally assume that memory allocations won't fail at
+init time anyway.  The reasoning being that the system is so enormously
+messed up that the problem is both unrecoverable and very obvious.
 
