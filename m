@@ -2,93 +2,60 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E84C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D01AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EFD214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BEA20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbfLKGWn (ORCPT
+        id S1727758AbfLKG0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:22:43 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43406 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726357AbfLKGWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:22:43 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 996C79077831BCF46300;
-        Wed, 11 Dec 2019 14:22:40 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Dec 2019
- 14:22:31 +0800
-Subject: Re: [PATCH] perf/smmuv3: Remove the leftover put_cpu() in error path
-To:     Will Deacon <will@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1575974784-55046-1-git-send-email-guohanjun@huawei.com>
- <20191210132458.GA19183@willie-the-truck>
- <d251a136-2722-93ba-1bea-0000bf257db2@huawei.com>
- <20191210141029.GB19183@willie-the-truck>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <7dd33c04-3755-3eb6-d310-8e40207b16d9@huawei.com>
-Date:   Wed, 11 Dec 2019 14:22:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Wed, 11 Dec 2019 01:26:17 -0500
+Received: from mga07.intel.com ([134.134.136.100]:19962 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbfLKG0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:26:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 22:26:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="225400285"
+Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
+  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 22:26:14 -0800
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH 2/2] perf/x86/intel/bts: Fix the use of page_private()
+In-Reply-To: <20191211002334.GS2844@hirez.programming.kicks-ass.net>
+References: <20191205142853.28894-1-alexander.shishkin@linux.intel.com> <20191205142853.28894-3-alexander.shishkin@linux.intel.com> <20191211002334.GS2844@hirez.programming.kicks-ass.net>
+Date:   Wed, 11 Dec 2019 08:26:13 +0200
+Message-ID: <87h827cr96.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191210141029.GB19183@willie-the-truck>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/10 22:10, Will Deacon wrote:
-> On Tue, Dec 10, 2019 at 09:55:28PM +0800, Hanjun Guo wrote:
->> On 2019/12/10 21:24, Will Deacon wrote:
->>> On Tue, Dec 10, 2019 at 06:46:24PM +0800, Hanjun Guo wrote:
->>>> In smmu_pmu_probe(), there is put_cpu() in the error path,
->>>> which is wrong because we use raw_smp_processor_id() to
->>>> get the cpu ID, not get_cpu(), remove it.
->>>>
->>>> Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
->>>> ---
->>>>  drivers/perf/arm_smmuv3_pmu.c | 1 -
->>>>  1 file changed, 1 deletion(-)
->>>>
->>>> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
->>>> index 773128f..fd1d46a 100644
->>>> --- a/drivers/perf/arm_smmuv3_pmu.c
->>>> +++ b/drivers/perf/arm_smmuv3_pmu.c
->>>> @@ -834,7 +834,6 @@ static int smmu_pmu_probe(struct platform_device *pdev)
->>>>  out_unregister:
->>>>  	cpuhp_state_remove_instance_nocalls(cpuhp_state_num, &smmu_pmu->node);
->>>>  out_cpuhp_err:
->>>> -	put_cpu();
->>>>  	return err;
->>>
->>> Can we kill 'out_cpuhp_err' altogether then and just return err if we fail
->>> to add the hotplug instance?
->>
->> Makes sense, but I think we can go further to kill both 'out_cpuhp_err' and
->> 'out_register' as below [1], what do you think?
-> 
-> Although that's functionally correct, I'd prefer to keep out_unregister(),
-> since it acts as good reminder to anybody extending this function in future
-> that they need to unregister the hotplug instance on failure.
+Peter Zijlstra <peterz@infradead.org> writes:
 
-OK, I will add Robin's ACK and resend.
+>>  static size_t buf_size(struct page *page)
+>>  {
+>> -	return 1 << (PAGE_SHIFT + page_private(page));
+>> +	return 1 << (PAGE_SHIFT + buf_nr_pages(page));
+>
+> Hurmph, shouldn't that be:
+>
+> 	return buf_nr_pages(page) * PAGE_SIZE;
+>
+> ?
 
-Thanks
-Hanjun
-
+True, that one's broken.
