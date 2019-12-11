@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5F9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9004C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2D122B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA0D22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077065;
-	bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
+	s=default; t=1576077070;
+	bh=5gDgrFLeuOQRVW+M3t5BrTdqNSX5WJNIkR5ywsMvMSU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXDERyM5N1tK9UYexLkjN7DoV0afLtdVxQ1s5vO9P4oSHLoxLXGix9QncVs6jDyrD
-	 iTST+gqGZpbnEy3odPtk+RePZNeY9PHqea5m9CnHe4Ci54bqRRzp8B1/0Qyz5nx8mb
-	 a6/zjOMG8/Yz18RZ2YEU8J4QqraL85tZdJaNZD8U=
+	b=CqpufId3fb5J+klNoLMKKy8uT4cNWJHNiG3ixLDSXPYh5azSq30U23aadU+3Qrsma
+	 h2lIhQBEvVts97u0Qk+S4ShDwvn5JAWeAMZ4hbVy+1/w7cMl2ajuk4DatazfKrW+ID
+	 XH/WS8M08y7Kdhi10hT7VZ6xX+L7Zk8Vnc4lQE7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfLKPLD (ORCPT
+        id S1730882AbfLKPLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59482 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730862AbfLKPLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:01 -0500
+        id S1730875AbfLKPLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2DE124656;
-        Wed, 11 Dec 2019 15:11:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFE2822B48;
+        Wed, 11 Dec 2019 15:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077061;
-        bh=bMEM8CgX/6uIErmN9B5ttGlNi4wBwVVcAmuXfFf4Z8U=;
+        s=default; t=1576077066;
+        bh=5gDgrFLeuOQRVW+M3t5BrTdqNSX5WJNIkR5ywsMvMSU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zR38MCXqQRVg8vMJ0vx3RJB8EYorFw7AVeg9JexgvLwNLKf3vEEhANg6ZLjBH0guI
-         dYqqs/0Xd/bnOTsoxF6PR9Cnnv+OM3x/zZ5JvoWKdg9gBG+Ke3QW+zfm5hSca1dcW6
-         Fqm1jYq3LV749v5s8qGJnDJLePX9Tt/eWQk1gR8o=
+        b=m1w9S9HDZDsJzVpvtUv7ne1Y5a+JIk52370CEqL/8IpwtHzlw8Eqvv5R/VlESIZsl
+         xF6zhGD30MNo4ruF2/yLmvLiL7CfIW0MX8FiTp9ouzH9RsduN8aFzpKfcVXu0DfxKj
+         Feuuyp86LUqffcy/iveEGl6825PB1qWh5P+Q8fc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 82/92] RDMA/qib: Validate ->show()/store() callbacks before calling them
-Date:   Wed, 11 Dec 2019 16:06:13 +0100
-Message-Id: <20191211150300.723842793@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Laura Abbott <labbott@redhat.com>
+Subject: [PATCH 5.4 84/92] bdev: Factor out bdev revalidation into a common helper
+Date:   Wed, 11 Dec 2019 16:06:15 +0100
+Message-Id: <20191211150301.305868277@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,48 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Jan Kara <jack@suse.cz>
 
-commit 7ee23491b39259ae83899dd93b2a29ef0f22f0a7 upstream.
+commit 731dc4868311ee097757b8746eaa1b4f8b2b4f1c upstream.
 
-The permissions of the read-only or write-only sysfs files can be
-changed (as root) and the user can then try to read a write-only file or
-write to a read-only file which will lead to kernel crash here.
+Factor out code handling revalidation of bdev on disk change into a
+common helper.
 
-Protect against that by always validating the show/store callbacks.
-
-Link: https://lore.kernel.org/r/d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Laura Abbott <labbott@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/hw/qib/qib_sysfs.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/block_dev.c |   26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
---- a/drivers/infiniband/hw/qib/qib_sysfs.c
-+++ b/drivers/infiniband/hw/qib/qib_sysfs.c
-@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1512,6 +1512,14 @@ EXPORT_SYMBOL(bd_set_size);
  
-+	if (!pattr->show)
-+		return -EIO;
+ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part);
+ 
++static void bdev_disk_changed(struct block_device *bdev, bool invalidate)
++{
++	if (invalidate)
++		invalidate_partitions(bdev->bd_disk, bdev);
++	else
++		rescan_partitions(bdev->bd_disk, bdev);
++}
 +
- 	return pattr->show(ppd, buf);
- }
+ /*
+  * bd_mutex locking:
+  *
+@@ -1594,12 +1602,9 @@ static int __blkdev_get(struct block_dev
+ 			 * The latter is necessary to prevent ghost
+ 			 * partitions on a removed medium.
+ 			 */
+-			if (bdev->bd_invalidated) {
+-				if (!ret)
+-					rescan_partitions(disk, bdev);
+-				else if (ret == -ENOMEDIUM)
+-					invalidate_partitions(disk, bdev);
+-			}
++			if (bdev->bd_invalidated &&
++			    (!ret || ret == -ENOMEDIUM))
++				bdev_disk_changed(bdev, ret == -ENOMEDIUM);
  
-@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct
- 	struct qib_pportdata *ppd =
- 		container_of(kobj, struct qib_pportdata, pport_kobj);
- 
-+	if (!pattr->store)
-+		return -EIO;
-+
- 	return pattr->store(ppd, buf, len);
- }
- 
+ 			if (ret)
+ 				goto out_clear;
+@@ -1632,12 +1637,9 @@ static int __blkdev_get(struct block_dev
+ 			if (bdev->bd_disk->fops->open)
+ 				ret = bdev->bd_disk->fops->open(bdev, mode);
+ 			/* the same as first opener case, read comment there */
+-			if (bdev->bd_invalidated) {
+-				if (!ret)
+-					rescan_partitions(bdev->bd_disk, bdev);
+-				else if (ret == -ENOMEDIUM)
+-					invalidate_partitions(bdev->bd_disk, bdev);
+-			}
++			if (bdev->bd_invalidated &&
++			    (!ret || ret == -ENOMEDIUM))
++				bdev_disk_changed(bdev, ret == -ENOMEDIUM);
+ 			if (ret)
+ 				goto out_unlock_bdev;
+ 		}
 
 
