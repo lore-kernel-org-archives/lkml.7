@@ -2,205 +2,117 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DB4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1357C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D2E2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079513;
-	bh=eIdXhAGFn/ispwl6WOaxmFhWcCg+DsVNdF85o1I24SE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1+rDBty80wp3ZD92vyQ6Or59TAZab8Vt3IRmgWWEvywD7pNR40gCSFaHplJUy8pi
-	 CJDRbGuEA+MjrRd/1YZ0HIOkbMhkT6pzS/Jv1hH4TQxD+8Egku84YZWt0098B3hcfv
-	 /1Ft90ocdr5T2Zi+WTKucR78hCOmYlmg2zvY4G58=
+	by mail.kernel.org (Postfix) with ESMTP id 90CDA2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732479AbfLKPVh (ORCPT
+        id S1732742AbfLKPv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51922 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:51:57 -0500
+Received: from mga18.intel.com ([134.134.136.126]:5282 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732461AbfLKPVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB66422527;
-        Wed, 11 Dec 2019 15:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077692;
-        bh=eIdXhAGFn/ispwl6WOaxmFhWcCg+DsVNdF85o1I24SE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E5Do0nxJJFi7yBZ0DIAbl5DRfcNlViYXa8bdde1DXKwDaWbPvg3NBryeKDEXx4tuK
-         uO62km2FSCiLO61VAozxJN3gjmjXcWDWCNZSnCYDu6YKYC/gUnDUxK6GMacOH+oHn+
-         qVHmTmY/fptl7FYuBl71fsNDSLlAz60iKATtWln8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 134/243] bpf: btf: check name validity for various types
-Date:   Wed, 11 Dec 2019 16:04:56 +0100
-Message-Id: <20191211150348.188128369@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730499AbfLKPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:51:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 07:51:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="225568792"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 07:51:51 -0800
+Date:   Wed, 11 Dec 2019 07:51:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 6/6] KVM: Fix some writing mistakes
+Message-ID: <20191211155151.GB5044@linux.intel.com>
+References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+ <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+On Wed, Dec 11, 2019 at 02:26:25PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> Fix some writing mistakes in the comments.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h | 2 +-
+>  arch/x86/kvm/vmx/vmx.c          | 2 +-
+>  virt/kvm/kvm_main.c             | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 159a28512e4c..efba864ed42d 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -606,7 +606,7 @@ struct kvm_vcpu_arch {
+>  	 * Paging state of an L2 guest (used for nested npt)
+>  	 *
+>  	 * This context will save all necessary information to walk page tables
+> -	 * of the an L2 guest. This context is only initialized for page table
+> +	 * of the L2 guest. This context is only initialized for page table
 
-[ Upstream commit eb04bbb608e683f8fd3ef7f716e2fa32dd90861f ]
+I'd whack "the" instead of "and", i.e. ...walk page tables of an L2 guest,
+as KVM isn't limited to just one L2 guest.
 
-This patch added name checking for the following types:
- . BTF_KIND_PTR, BTF_KIND_ARRAY, BTF_KIND_VOLATILE,
-   BTF_KIND_CONST, BTF_KIND_RESTRICT:
-     the name must be null
- . BTF_KIND_STRUCT, BTF_KIND_UNION: the struct/member name
-     is either null or a valid identifier
- . BTF_KIND_ENUM: the enum type name is either null or a valid
-     identifier; the enumerator name must be a valid identifier.
- . BTF_KIND_FWD: the name must be a valid identifier
- . BTF_KIND_TYPEDEF: the name must be a valid identifier
+>  	 * walking and not for faulting since we never handle l2 page faults on
 
-For those places a valid name is required, the name must be
-a valid C identifier. This can be relaxed later if we found
-use cases for a different (non-C) frontend.
+While you're here, want to change "l2" to "L2"?
 
-Fixes: 69b693f0aefa ("bpf: btf: Introduce BPF Type Format (BTF)")
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/btf.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+>  	 * the host.
+>  	 */
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 1be3854f1090..dae712c8785e 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1922,7 +1922,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  }
+>  
+>  /*
+> - * Writes msr value into into the appropriate "register".
+> + * Writes msr value into the appropriate "register".
+>   * Returns 0 on success, non-0 otherwise.
+>   * Assumes vcpu_load() was already called.
+>   */
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index f0501272268f..1a6d5ebd5c42 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1519,7 +1519,7 @@ static inline int check_user_page_hwpoison(unsigned long addr)
+>  /*
+>   * The fast path to get the writable pfn which will be stored in @pfn,
+>   * true indicates success, otherwise false is returned.  It's also the
+> - * only part that runs if we can are in atomic context.
+> + * only part that runs if we can in atomic context.
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index f0f9109f59bac..3e2413345e718 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -1168,6 +1168,22 @@ static int btf_ref_type_check_meta(struct btf_verifier_env *env,
- 		return -EINVAL;
- 	}
- 
-+	/* typedef type must have a valid name, and other ref types,
-+	 * volatile, const, restrict, should have a null name.
-+	 */
-+	if (BTF_INFO_KIND(t->info) == BTF_KIND_TYPEDEF) {
-+		if (!t->name_off ||
-+		    !btf_name_valid_identifier(env->btf, t->name_off)) {
-+			btf_verifier_log_type(env, t, "Invalid name");
-+			return -EINVAL;
-+		}
-+	} else {
-+		if (t->name_off) {
-+			btf_verifier_log_type(env, t, "Invalid name");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	btf_verifier_log_type(env, t, NULL);
- 
- 	return 0;
-@@ -1325,6 +1341,13 @@ static s32 btf_fwd_check_meta(struct btf_verifier_env *env,
- 		return -EINVAL;
- 	}
- 
-+	/* fwd type must have a valid name */
-+	if (!t->name_off ||
-+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
-+		btf_verifier_log_type(env, t, "Invalid name");
-+		return -EINVAL;
-+	}
-+
- 	btf_verifier_log_type(env, t, NULL);
- 
- 	return 0;
-@@ -1381,6 +1404,12 @@ static s32 btf_array_check_meta(struct btf_verifier_env *env,
- 		return -EINVAL;
- 	}
- 
-+	/* array type should not have a name */
-+	if (t->name_off) {
-+		btf_verifier_log_type(env, t, "Invalid name");
-+		return -EINVAL;
-+	}
-+
- 	if (btf_type_vlen(t)) {
- 		btf_verifier_log_type(env, t, "vlen != 0");
- 		return -EINVAL;
-@@ -1557,6 +1586,13 @@ static s32 btf_struct_check_meta(struct btf_verifier_env *env,
- 		return -EINVAL;
- 	}
- 
-+	/* struct type either no name or a valid one */
-+	if (t->name_off &&
-+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
-+		btf_verifier_log_type(env, t, "Invalid name");
-+		return -EINVAL;
-+	}
-+
- 	btf_verifier_log_type(env, t, NULL);
- 
- 	last_offset = 0;
-@@ -1568,6 +1604,12 @@ static s32 btf_struct_check_meta(struct btf_verifier_env *env,
- 			return -EINVAL;
- 		}
- 
-+		/* struct member either no name or a valid one */
-+		if (member->name_off &&
-+		    !btf_name_valid_identifier(btf, member->name_off)) {
-+			btf_verifier_log_member(env, t, member, "Invalid name");
-+			return -EINVAL;
-+		}
- 		/* A member cannot be in type void */
- 		if (!member->type || !BTF_TYPE_ID_VALID(member->type)) {
- 			btf_verifier_log_member(env, t, member,
-@@ -1755,6 +1797,13 @@ static s32 btf_enum_check_meta(struct btf_verifier_env *env,
- 		return -EINVAL;
- 	}
- 
-+	/* enum type either no name or a valid one */
-+	if (t->name_off &&
-+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
-+		btf_verifier_log_type(env, t, "Invalid name");
-+		return -EINVAL;
-+	}
-+
- 	btf_verifier_log_type(env, t, NULL);
- 
- 	for (i = 0; i < nr_enums; i++) {
-@@ -1764,6 +1813,14 @@ static s32 btf_enum_check_meta(struct btf_verifier_env *env,
- 			return -EINVAL;
- 		}
- 
-+		/* enum member must have a valid name */
-+		if (!enums[i].name_off ||
-+		    !btf_name_valid_identifier(btf, enums[i].name_off)) {
-+			btf_verifier_log_type(env, t, "Invalid name");
-+			return -EINVAL;
-+		}
-+
-+
- 		btf_verifier_log(env, "\t%s val=%d\n",
- 				 btf_name_by_offset(btf, enums[i].name_off),
- 				 enums[i].val);
--- 
-2.20.1
+This should remove "can" instead of "are", i.e. ...part that runs if we are
+in atomic context.  The comment is calling out that hva_to_pfn() will return
+immediately if hva_to_pfn_fast() and the kernel is atomic context.
 
-
-
+>   */
+>  static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
+>  			    bool *writable, kvm_pfn_t *pfn)
+> -- 
+> 2.19.1
+> 
