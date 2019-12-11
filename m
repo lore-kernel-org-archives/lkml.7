@@ -2,117 +2,156 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8C7C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FD4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A95214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F162073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="A/LOMSEg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="URraAc9u";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="TD3NrOgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfLKLnp (ORCPT
+        id S1729080AbfLKLoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:43:45 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:40504 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbfLKLnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:43:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ysyNjTSsmEcgClf9ZxXEgP2ysGGg+LMv85Q0mUD/N2k=; b=A/LOMSEg2V59J0lHgD2cVZD75
-        ugtsfbeLru2x5FGQCofE/qiFcQZFRoJ5WTmhgRATb//dMfit2N/Y6oqH/4Mc5VfZuJ7+DEVia7es8
-        3naHAHrh/gRO1+PalhZ20fH71nctjrpLmaPDOTbutAAuagjczbp2l40iHY5L9+HwP5EY0=;
-Received: from leintor.e.ffh.zone ([81.3.6.94] helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1if0P3-0006ib-VN; Wed, 11 Dec 2019 12:43:38 +0100
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1if0P1-00060J-Iy; Wed, 11 Dec 2019 12:43:35 +0100
-Date:   Wed, 11 Dec 2019 12:43:20 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 3/6] mfd: rn5t618: add irq support
-Message-ID: <20191211124320.5744531f@kemnade.info>
-In-Reply-To: <20191211075021.GW3468@dell>
-References: <20191129212045.18325-1-andreas@kemnade.info>
-        <20191129212045.18325-4-andreas@kemnade.info>
-        <20191210093225.GT3468@dell>
-        <20191210175900.64df7de8@kemnade.info>
-        <20191211075021.GW3468@dell>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Wed, 11 Dec 2019 06:44:10 -0500
+Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:39350
+        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727365AbfLKLoK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 06:44:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576064648;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=SsfCfJa0hJtH6mmOozBYFGjGWd8Fea0xhWkIg2GJsis=;
+        b=URraAc9uX8ZPiqOn3n52TP2VHjePzZH6jysNOeabwzYeMsCIPDJIQ5+5g8+/o2CS
+        slG674NohNzl7nuGXzelwviE/7weBMfDbKc1AqF+CkBWvWgmgxSCmdPBVoREIus+1bi
+        BbprrExf09+a0j5R4k3TcoUbXK2Z2qzuYWVBzJ+w=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576064648;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=SsfCfJa0hJtH6mmOozBYFGjGWd8Fea0xhWkIg2GJsis=;
+        b=TD3NrOgx7l6OCs/F7DRd/mNVcJon3xsI6P2OpEz073fSjJK71EBJMgbAAFYWRiNU
+        /Qu+U2EdCpZskakkSa6dyvwM8qTqHvR1lKE6I7zJv4X320RDeBYMxrK9O0YFu61CwwM
+        /vssd4WXORRj/IaK4RMVrZDB63iMey9uAxcXDBJs=
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/MuFE3bBo6T9L2my3GBgeHNO"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Dec 2019 11:44:08 +0000
+From:   cang@codeaurora.org
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
+        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] scsi: ufs: Put SCSI host after remove it
+In-Reply-To: <MN2PR04MB6991754758E2840B6D529112FC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
+ <0101016ef4259a7c-76bdf010-88b1-4309-ba24-8c874734184e-000000@us-west-2.amazonses.com>
+ <MN2PR04MB699184D76E7F9BABA923043AFC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <0101016ef4a3e5f5-915372c8-5e1e-4db5-b3da-f97f7ca963e4-000000@us-west-2.amazonses.com>
+ <MN2PR04MB6991754758E2840B6D529112FC5A0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <0101016ef4c605e5-295b1cc0-19d7-41e8-be2e-5d026f72dcec-000000@us-west-2.amazonses.com>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.12.11-54.240.27.56
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MuFE3bBo6T9L2my3GBgeHNO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019-12-11 19:22, Avri Altman wrote:
+>> 
+>> 
+>> On 2019-12-11 18:37, Avri Altman wrote:
+>> >>
+>> >> In ufshcd_remove(), after SCSI host is removed, put it once so that
+>> >> its resources can be released.
+>> >>
+>> >> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> >
+>> > This is not really part of this patchset, is it?
+>> >
+>> 
+>> Hi Avri,
+>> 
+>> I put this change in the same patchset due to #1. The main patch has
+>> dependency on it #2. Consider a scenario where platform driver is also 
+>> compiled
+>> as a module, say ufs_qcom.ko.
+>>      In this case, we have two modules, ufs-qcom.ko and ufs-bsg.ko. If 
+>> do insmod
+>> ufs-qcom.ko
+>>      then rmmod ufs-qcom.ko and do insmod ufs-qcom.ko again, without 
+>> this
+>> change, because scsi
+>>      host was not release, the new scsi host will have a different 
+>> host number,
+>> meaning
+>>      hba->host->host_no will be 1, but not 0. Now if do insmod 
+>> ufs-bsg.ko now,
+>> the ufs-bsg dev
+>>      created in /dev/bsg/ will be ufs-bsg1, but not ufs-bsg0. If keep 
+>> trying these
+>> operations,
+>>      the ufs-bsg device's name will be messed up. This change make 
+>> sure after ufs-
+>> qcom.ko is removed
+>>      and installed back, its hba->host->host_no stays 0, so that 
+>> ufs-bsg device
+>> name stays same.
+> Looks like we needed to manage the ufs-bsg nodes using an IDA, instead
+> of host_no?
+> 
+> 
 
-On Wed, 11 Dec 2019 07:50:21 +0000
-Lee Jones <lee.jones@linaro.org> wrote:
+Marking one ufs-bsg dev with host_no still has its advantage. If we have 
+more
+than one hba host, we can find the right ufs-bsgX dev by reading the 
+sg/sd/bsg
+device's host->host_unique_id (through SCSI_IOCTL_GET_IDLUN for 
+example).
+But If ufs-bsg has its own ID, we will lost this "mapping".
 
-[...]
-> > > > +
-> > > >  static const struct i2c_device_id rn5t618_i2c_id[] =3D {
-> > > >  	{ }
-> > > >  };
-> > > >  MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);   =20
-> > >=20
-> > > Not this patch I know, but it's strange to see this empty. =20
-> >=20
-> > Yes, should be cleaned up. For now the device tree stuff seems to kick =
-in. =20
->=20
-> I think this can be removed completely.
->=20
-> Just make sure you use .probe2 and it should be automatic.
->=20
-Hmm, I cannot find probe2 but probe_new. So you mean probe_new?
+Thanks,
 
-I will send a separate cleanup patch
+Can Guo.
 
-Regards,
-Andreas
-
---Sig_/MuFE3bBo6T9L2my3GBgeHNO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl3w1lgACgkQl4jFM1s/
-ye8mzxAAwCQcnHLPZi7KSYFXNKvY03FrI5UA5XrQCmZuhsjhGl1WdxClm0fnj9Vw
-GDhsb6IJXyRJ+CyCokNnjD8mClv/Wis3Z/smz/10l2b89ZY8lryfaSWs4AAffQLi
-QXrOV+XR9gx66FralblNB8sCJdSIOVaDjnsQgrMVNrR7yXHvzG3q8vpl7ObI/1oj
-iXC2dzygKaBxBVtM/KTCBSHEbOgGMKWKU0Lvr5M6L9oktjnoOtLdMljiisMhlMgy
-stOEuAXJ33G112OkcW+He/F1zxLAydzmTT4ZYXvK+IqLAc3X1mrUgWg4O+HBNioe
-6LBGBV06gXtj7wgjHWGdq1yT5h1lSzAuZLonoaECocppkbqdUgMvOdFZcYch70Wj
-PAIDtguSQEAQOTWJS6kSkD66vZeHSSUm5xCopmGOijmBKYGvXS5MNeZLDXje2oag
-lTvJE2Z35wR3TYK2x4ynmMUKI6JQEcdaCt1V4+41WeFJGQg7zYZ82fdVejb9vrRR
-UDmLYoFFHKaYYdvg57S6Sz5UGb82aCnPjdWREPnQR2tfjpOA2GuHE0rVHK037vrv
-aVSgHfOJNVKeuzzvlRWX6fsRIv5j0pOL6KiZiiYRWk0Y+hLhl9WHPoo0HdwPeaxJ
-dwKmfJNEbktanEiGTago7CmyEgx7dwiYYxp1a5NaKozRl0EovKU=
-=lfsU
------END PGP SIGNATURE-----
-
---Sig_/MuFE3bBo6T9L2my3GBgeHNO--
+>> 
+>> Thanks,
+>> 
+>> Can Guo.
+>> 
+>> >> ---
+>> >>  drivers/scsi/ufs/ufshcd.c | 1 +
+>> >>  1 file changed, 1 insertion(+)
+>> >>
+>> >> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> >> index b5966fa..a86b0fd 100644
+>> >> --- a/drivers/scsi/ufs/ufshcd.c
+>> >> +++ b/drivers/scsi/ufs/ufshcd.c
+>> >> @@ -8251,6 +8251,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+>> >>         ufs_bsg_remove(hba);
+>> >>         ufs_sysfs_remove_nodes(hba->dev);
+>> >>         scsi_remove_host(hba->host);
+>> >> +       scsi_host_put(hba->host);
+>> >>         /* disable interrupts */
+>> >>         ufshcd_disable_intr(hba, hba->intr_mask);
+>> >>         ufshcd_hba_stop(hba, true);
+>> >> --
+>> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>> >> Forum, a Linux Foundation Collaborative Project
