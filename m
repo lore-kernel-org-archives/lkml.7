@@ -2,411 +2,215 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA99C43603
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA790C3F68F
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2062077B
+	by mail.kernel.org (Postfix) with ESMTP id A8A2122527
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n+ZARFho"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="REHNdmQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfLKWeU (ORCPT
+        id S1726969AbfLKWeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:34:20 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:34793 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbfLKWeS (ORCPT
+        Wed, 11 Dec 2019 17:34:24 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36860 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726916AbfLKWeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:34:18 -0500
-Received: by mail-pg1-f202.google.com with SMTP id w9so216840pgl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Y4D8Hun8+9595czEIJNfVkixcPf77pk7+sm5yWYYjUs=;
-        b=n+ZARFhoQ535NVrmfuKF3VOqS3CmGIVwrx2YK5WGONPsCwrpvZvYyUBOEtyiUCUf+/
-         evgXKfKCFC9ASzvVosbQsj7YxUNFTPmi8wUCPVSg5KKzTpHrzrP1uwuY7LRgidQjaH8P
-         zyzqgrdoRb2Or9OsULXEoxDi+S1q7wMK3Ziq7FaXRKz+QO++L/esS8tjw5rXOdSPziYD
-         JDP9Zro5FpDgUmIOzFP3/0CLof7xYVdgdtMqlAPZkGP5kylIAvSNZTbSTcPZy9tbftMh
-         sznLRvoLy93yFEU4Bc1EwMMSFRM6k2FdSwtDhBC3VdMuGVAZhR7av8aK2gRETta8HQM+
-         kBGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Y4D8Hun8+9595czEIJNfVkixcPf77pk7+sm5yWYYjUs=;
-        b=ZyvXPK+wVZ9yuG8kPcanrRRWKQLiz+PLCyy94bRz43+fpYPEi8v6SEw5/XxGOsGWdk
-         Jm1iQC2iY/9YMjodDugv0Lllqkdolnu03WKcU4ePu4lzvwDbPBrePTe2B3ictJJRUyAe
-         hpsXhz8aeqFEPaxTPZkSzPFk/uViuxUvIq+FmBvFHqfxWkJR2r6hokuk4HlPnswPZdsF
-         NWszx6BqAKb3tTibKP0+SIZ6Xg39LooFNyxcMzQZWi6AWuaFrwDQ994aMM2FgZ06aWkR
-         KhSjh7pQ6UlopCdXLjEbpYPoD4WU6hZWi6/sJcrqiCrZcREQAmNUJFNAPg/WiFM0A2iu
-         FhhQ==
-X-Gm-Message-State: APjAAAWklZb/Xr0IRY6fEG4o4a7clmmqU4y0WhpmaCAY49Rggf5WmjhG
-        qaQnFJwQt+39W00BfPaKNxlBBsz9zCpU
-X-Google-Smtp-Source: APXvYqyMADUFX33kcrWgeSMruNfr+ZYze4AbBp4I1mb+NFqGvYXoor3MzneVVSy2hvhsSXVBvc+zbvQLfN9d
-X-Received: by 2002:a63:31d0:: with SMTP id x199mr6974188pgx.286.1576103657067;
- Wed, 11 Dec 2019 14:34:17 -0800 (PST)
-Date:   Wed, 11 Dec 2019 14:33:34 -0800
-In-Reply-To: <20191211223344.165549-1-brianvv@google.com>
-Message-Id: <20191211223344.165549-2-brianvv@google.com>
-Mime-Version: 1.0
-References: <20191211223344.165549-1-brianvv@google.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH v3 bpf-next 01/11] bpf: add bpf_map_{value_size,update_value,map_copy_value}
- functions
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     Yonghong Song <yhs@fb.com>, Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 11 Dec 2019 17:34:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vGBSifJsetdNrHa2+mZGq0HtV+U08W9ZitlOZKuQo7I=; b=REHNdmQWdBrywQ+956MJ3OXt+
+        VwE+pSXHaKHGBrlg9BgZ3a5D9C0JimC5JLdbAg9oSBBvELMbw9w7FNgigVnTV9GMdz7nP4kIfLZrU
+        jLUNtTr/+J5p2+cIXO3TkKmcezotusUuchSAvMj2rqPV++k1JKwCTB3HStyCXyz+Ft2226OEfa7sA
+        RoOccjjNMWrXVlDcE/WAwvVUxP/ejcmg8lC7PLDDeu9/asES5VJZxk/+HvVwbrC+hbZrhmamr6P3v
+        RcEAM1OAx+JFacogc09bt+6TwNDU2jDeOAD37ep0F4yqcXU9BKrduHqp/mkxbsd2BAxHQ/5CaatP9
+        fxsZv1Vbg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifAYd-0002ln-JZ; Wed, 11 Dec 2019 22:34:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B04D7300565;
+        Wed, 11 Dec 2019 23:32:47 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4344720120E46; Wed, 11 Dec 2019 23:34:07 +0100 (CET)
+Date:   Wed, 11 Dec 2019 23:34:07 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191211223407.GT2844@hirez.programming.kicks-ass.net>
+References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
+ <20191121185303.GB199273@romley-ivt3.sc.intel.com>
+ <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
+ <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
+ <20191122092555.GA4097@hirez.programming.kicks-ass.net>
+ <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
+ <20191122203105.GE2844@hirez.programming.kicks-ass.net>
+ <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+ <20191211175202.GQ2827@hirez.programming.kicks-ass.net>
+ <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit moves reusable code from map_lookup_elem and map_update_elem
-to avoid code duplication in kernel/bpf/syscall.c.
+On Wed, Dec 11, 2019 at 10:12:56AM -0800, Andy Lutomirski wrote:
+> On Wed, Dec 11, 2019 at 9:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Nov 22, 2019 at 01:23:30PM -0800, Andy Lutomirski wrote:
+> > > On Fri, Nov 22, 2019 at 12:31 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > On Fri, Nov 22, 2019 at 05:48:14PM +0000, Luck, Tony wrote:
+> > > > > > When we use byte ops, we must consider the word as 4 independent
+> > > > > > variables. And in that case the later load might observe the lock-byte
+> > > > > > state from 3, because the modification to the lock byte from 4 is in
+> > > > > > CPU2's store-buffer.
+> > > > >
+> > > > > So we absolutely violate this with the optimization for constant arguments
+> > > > > to set_bit(), clear_bit() and change_bit() that are implemented as byte ops.
+> > > > >
+> > > > > So is code that does:
+> > > > >
+> > > > >       set_bit(0, bitmap);
+> > > > >
+> > > > > on one CPU. While another is doing:
+> > > > >
+> > > > >       set_bit(mybit, bitmap);
+> > > > >
+> > > > > on another CPU safe? The first operates on just one byte, the second  on 8 bytes.
+> > > >
+> > > > It is safe if all you care about is the consistency of that one bit.
+> > > >
+> > >
+> > > I'm still lost here.  Can you explain how one could write code that
+> > > observes an issue?  My trusty SDM, Vol 3 8.2.2 says "Locked
+> > > instructions have a total order."
+> >
+> > This is the thing I don't fully believe. Per this thread the bus-lock is
+> > *BAD* and not used for normal LOCK prefixed operations. But without the
+> > bus-lock it becomes very hard to guarantee total order.
+> >
+> > After all, if some CPU doesn't observe a specific variable, it doesn't
+> > care where in the order it fell. So I'm thinking they punted and went
+> > with some partial order that is near enough that it becomes very hard to
+> > tell the difference the moment you actually do observe stuff.
+> 
+> I hope that, if the SDM is indeed wrong, that Intel would fix the SDM.
+> It's definitely not fun to try to understand locking if we don't trust
+> the manual.
 
-Signed-off-by: Brian Vazquez <brianvv@google.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
----
- kernel/bpf/syscall.c | 275 ++++++++++++++++++++++++-------------------
- 1 file changed, 151 insertions(+), 124 deletions(-)
+I can try and find a HW person; but getting the SDM updated is
+difficult.
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 66b90eaf99fe8..2530266fa6477 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -129,6 +129,153 @@ static struct bpf_map *find_and_alloc_map(union bpf_attr *attr)
- 	return map;
- }
- 
-+static u32 bpf_map_value_size(struct bpf_map *map)
-+{
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY ||
-+	    map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE)
-+		return round_up(map->value_size, 8) * num_possible_cpus();
-+	else if (IS_FD_MAP(map))
-+		return sizeof(u32);
-+	else
-+		return  map->value_size;
-+}
-+
-+static void maybe_wait_bpf_programs(struct bpf_map *map)
-+{
-+	/* Wait for any running BPF programs to complete so that
-+	 * userspace, when we return to it, knows that all programs
-+	 * that could be running use the new map value.
-+	 */
-+	if (map->map_type == BPF_MAP_TYPE_HASH_OF_MAPS ||
-+	    map->map_type == BPF_MAP_TYPE_ARRAY_OF_MAPS)
-+		synchronize_rcu();
-+}
-+
-+static int bpf_map_update_value(struct bpf_map *map, struct fd f, void *key,
-+				void *value, __u64 flags)
-+{
-+	int err;
-+	/* Need to create a kthread, thus must support schedule */
-+	if (bpf_map_is_dev_bound(map)) {
-+		return bpf_map_offload_update_elem(map, key, value, flags);
-+	} else if (map->map_type == BPF_MAP_TYPE_CPUMAP ||
-+		   map->map_type == BPF_MAP_TYPE_SOCKHASH ||
-+		   map->map_type == BPF_MAP_TYPE_SOCKMAP) {
-+		return map->ops->map_update_elem(map, key, value, flags);
-+	}
-+
-+	/* must increment bpf_prog_active to avoid kprobe+bpf triggering from
-+	 * inside bpf map update or delete otherwise deadlocks are possible
-+	 */
-+	preempt_disable();
-+	__this_cpu_inc(bpf_prog_active);
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
-+		err = bpf_percpu_hash_update(map, key, value, flags);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
-+		err = bpf_percpu_array_update(map, key, value, flags);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
-+		err = bpf_percpu_cgroup_storage_update(map, key, value,
-+						       flags);
-+	} else if (IS_FD_ARRAY(map)) {
-+		rcu_read_lock();
-+		err = bpf_fd_array_map_update_elem(map, f.file, key, value,
-+						   flags);
-+		rcu_read_unlock();
-+	} else if (map->map_type == BPF_MAP_TYPE_HASH_OF_MAPS) {
-+		rcu_read_lock();
-+		err = bpf_fd_htab_map_update_elem(map, f.file, key, value,
-+						  flags);
-+		rcu_read_unlock();
-+	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
-+		/* rcu_read_lock() is not needed */
-+		err = bpf_fd_reuseport_array_update_elem(map, key, value,
-+							 flags);
-+	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-+		   map->map_type == BPF_MAP_TYPE_STACK) {
-+		err = map->ops->map_push_elem(map, value, flags);
-+	} else {
-+		rcu_read_lock();
-+		err = map->ops->map_update_elem(map, key, value, flags);
-+		rcu_read_unlock();
-+	}
-+	__this_cpu_dec(bpf_prog_active);
-+	preempt_enable();
-+	maybe_wait_bpf_programs(map);
-+
-+	return err;
-+}
-+
-+static int bpf_map_copy_value(struct bpf_map *map, void *key, void *value,
-+			      __u64 flags, bool do_delete)
-+{
-+	void *ptr;
-+	int err;
-+
-+
-+	if (bpf_map_is_dev_bound(map)) {
-+		err =  bpf_map_offload_lookup_elem(map, key, value);
-+
-+		if (!err && do_delete)
-+			err = bpf_map_offload_delete_elem(map, key);
-+
-+		return err;
-+	}
-+
-+	preempt_disable();
-+	this_cpu_inc(bpf_prog_active);
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
-+		err = bpf_percpu_hash_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
-+		err = bpf_percpu_array_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
-+		err = bpf_percpu_cgroup_storage_copy(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_STACK_TRACE) {
-+		err = bpf_stackmap_copy(map, key, value);
-+	} else if (IS_FD_ARRAY(map)) {
-+		err = bpf_fd_array_map_lookup_elem(map, key, value);
-+	} else if (IS_FD_HASH(map)) {
-+		err = bpf_fd_htab_map_lookup_elem(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
-+		err = bpf_fd_reuseport_array_lookup_elem(map, key, value);
-+	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-+		   map->map_type == BPF_MAP_TYPE_STACK) {
-+		err = map->ops->map_peek_elem(map, value);
-+	} else {
-+		rcu_read_lock();
-+		if (map->ops->map_lookup_elem_sys_only)
-+			ptr = map->ops->map_lookup_elem_sys_only(map, key);
-+		else
-+			ptr = map->ops->map_lookup_elem(map, key);
-+		if (IS_ERR(ptr)) {
-+			err = PTR_ERR(ptr);
-+		} else if (!ptr) {
-+			err = -ENOENT;
-+		} else {
-+			err = 0;
-+			if (flags & BPF_F_LOCK)
-+				/* lock 'ptr' and copy everything but lock */
-+				copy_map_value_locked(map, value, ptr, true);
-+			else
-+				copy_map_value(map, value, ptr);
-+			/* mask lock, since value wasn't zero inited */
-+			check_and_init_map_lock(map, value);
-+		}
-+		rcu_read_unlock();
-+	}
-+	if (do_delete)
-+		err = err ? err : map->ops->map_delete_elem(map, key);
-+
-+	this_cpu_dec(bpf_prog_active);
-+	preempt_enable();
-+	maybe_wait_bpf_programs(map);
-+
-+	return err;
-+}
-+
- static void *__bpf_map_area_alloc(u64 size, int numa_node, bool mmapable)
- {
- 	/* We really just want to fail instead of triggering OOM killer
-@@ -816,7 +963,7 @@ static int map_lookup_elem(union bpf_attr *attr)
- 	void __user *uvalue = u64_to_user_ptr(attr->value);
- 	int ufd = attr->map_fd;
- 	struct bpf_map *map;
--	void *key, *value, *ptr;
-+	void *key, *value;
- 	u32 value_size;
- 	struct fd f;
- 	int err;
-@@ -848,72 +995,14 @@ static int map_lookup_elem(union bpf_attr *attr)
- 		goto err_put;
- 	}
- 
--	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY ||
--	    map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE)
--		value_size = round_up(map->value_size, 8) * num_possible_cpus();
--	else if (IS_FD_MAP(map))
--		value_size = sizeof(u32);
--	else
--		value_size = map->value_size;
-+	value_size = bpf_map_value_size(map);
- 
- 	err = -ENOMEM;
- 	value = kmalloc(value_size, GFP_USER | __GFP_NOWARN);
- 	if (!value)
- 		goto free_key;
- 
--	if (bpf_map_is_dev_bound(map)) {
--		err = bpf_map_offload_lookup_elem(map, key, value);
--		goto done;
--	}
--
--	preempt_disable();
--	this_cpu_inc(bpf_prog_active);
--	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
--		err = bpf_percpu_hash_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
--		err = bpf_percpu_array_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
--		err = bpf_percpu_cgroup_storage_copy(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_STACK_TRACE) {
--		err = bpf_stackmap_copy(map, key, value);
--	} else if (IS_FD_ARRAY(map) || IS_FD_PROG_ARRAY(map)) {
--		err = bpf_fd_array_map_lookup_elem(map, key, value);
--	} else if (IS_FD_HASH(map)) {
--		err = bpf_fd_htab_map_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
--		err = bpf_fd_reuseport_array_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
--		   map->map_type == BPF_MAP_TYPE_STACK) {
--		err = map->ops->map_peek_elem(map, value);
--	} else {
--		rcu_read_lock();
--		if (map->ops->map_lookup_elem_sys_only)
--			ptr = map->ops->map_lookup_elem_sys_only(map, key);
--		else
--			ptr = map->ops->map_lookup_elem(map, key);
--		if (IS_ERR(ptr)) {
--			err = PTR_ERR(ptr);
--		} else if (!ptr) {
--			err = -ENOENT;
--		} else {
--			err = 0;
--			if (attr->flags & BPF_F_LOCK)
--				/* lock 'ptr' and copy everything but lock */
--				copy_map_value_locked(map, value, ptr, true);
--			else
--				copy_map_value(map, value, ptr);
--			/* mask lock, since value wasn't zero inited */
--			check_and_init_map_lock(map, value);
--		}
--		rcu_read_unlock();
--	}
--	this_cpu_dec(bpf_prog_active);
--	preempt_enable();
--
--done:
-+	err = bpf_map_copy_value(map, key, value, attr->flags, false);
- 	if (err)
- 		goto free_value;
- 
-@@ -932,16 +1021,6 @@ static int map_lookup_elem(union bpf_attr *attr)
- 	return err;
- }
- 
--static void maybe_wait_bpf_programs(struct bpf_map *map)
--{
--	/* Wait for any running BPF programs to complete so that
--	 * userspace, when we return to it, knows that all programs
--	 * that could be running use the new map value.
--	 */
--	if (map->map_type == BPF_MAP_TYPE_HASH_OF_MAPS ||
--	    map->map_type == BPF_MAP_TYPE_ARRAY_OF_MAPS)
--		synchronize_rcu();
--}
- 
- #define BPF_MAP_UPDATE_ELEM_LAST_FIELD flags
- 
-@@ -997,60 +1076,8 @@ static int map_update_elem(union bpf_attr *attr)
- 	if (copy_from_user(value, uvalue, value_size) != 0)
- 		goto free_value;
- 
--	/* Need to create a kthread, thus must support schedule */
--	if (bpf_map_is_dev_bound(map)) {
--		err = bpf_map_offload_update_elem(map, key, value, attr->flags);
--		goto out;
--	} else if (map->map_type == BPF_MAP_TYPE_CPUMAP ||
--		   map->map_type == BPF_MAP_TYPE_SOCKHASH ||
--		   map->map_type == BPF_MAP_TYPE_SOCKMAP) {
--		err = map->ops->map_update_elem(map, key, value, attr->flags);
--		goto out;
--	} else if (IS_FD_PROG_ARRAY(map)) {
--		err = bpf_fd_array_map_update_elem(map, f.file, key, value,
--						   attr->flags);
--		goto out;
--	}
-+	err = bpf_map_update_value(map, f, key, value, attr->flags);
- 
--	/* must increment bpf_prog_active to avoid kprobe+bpf triggering from
--	 * inside bpf map update or delete otherwise deadlocks are possible
--	 */
--	preempt_disable();
--	__this_cpu_inc(bpf_prog_active);
--	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
--		err = bpf_percpu_hash_update(map, key, value, attr->flags);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
--		err = bpf_percpu_array_update(map, key, value, attr->flags);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE) {
--		err = bpf_percpu_cgroup_storage_update(map, key, value,
--						       attr->flags);
--	} else if (IS_FD_ARRAY(map)) {
--		rcu_read_lock();
--		err = bpf_fd_array_map_update_elem(map, f.file, key, value,
--						   attr->flags);
--		rcu_read_unlock();
--	} else if (map->map_type == BPF_MAP_TYPE_HASH_OF_MAPS) {
--		rcu_read_lock();
--		err = bpf_fd_htab_map_update_elem(map, f.file, key, value,
--						  attr->flags);
--		rcu_read_unlock();
--	} else if (map->map_type == BPF_MAP_TYPE_REUSEPORT_SOCKARRAY) {
--		/* rcu_read_lock() is not needed */
--		err = bpf_fd_reuseport_array_update_elem(map, key, value,
--							 attr->flags);
--	} else if (map->map_type == BPF_MAP_TYPE_QUEUE ||
--		   map->map_type == BPF_MAP_TYPE_STACK) {
--		err = map->ops->map_push_elem(map, value, attr->flags);
--	} else {
--		rcu_read_lock();
--		err = map->ops->map_update_elem(map, key, value, attr->flags);
--		rcu_read_unlock();
--	}
--	__this_cpu_dec(bpf_prog_active);
--	preempt_enable();
--	maybe_wait_bpf_programs(map);
--out:
- free_value:
- 	kfree(value);
- free_key:
--- 
-2.24.1.735.g03f4e72817-goog
+Anyway, the way I see it, it is a scalability thing. Absolute total
+order is untenable, it cannot be, it would mean that if you have your 16
+socket 20 core system with hyperthreads, and each logical CPU doing a
+LOCK prefix instruction on a separate page, they all 640 need to sit
+down and discuss who goes first.
 
+Some sort of partial order that connects where variables/lines are
+actually shared is needed. Then again, I'm not a HW person, just a poor
+sod trying to understand how this can work.
+
+> > Sure, but we're talking two cpus here.
+> >
+> >         u32 var = 0;
+> >         u8 *ptr = &var;
+> >
+> >         CPU0                    CPU1
+> >
+> >                                 xchg(ptr, 1)
+> >
+> >         xchg((ptr+1, 1);
+> >         r = READ_ONCE(var);
+> >
+> > AFAICT nothing guarantees r == 0x0101. The CPU1 store can be stuck in
+> > CPU1's store-buffer. CPU0's xchg() does not overlap and therefore
+> > doesn't force a snoop or forward.
+> 
+> I think I don't quite understand.  The final value of var had better
+> be 0x0101 or something is severely wrong.  
+
+> But r can be 0x0100 because
+> nothing in this example guarantees that the total order of the locked
+> instructions has CPU 1's instruction first.
+
+Assuming CPU1 goes first, why would the load from CPU0 see CPU1's
+ptr[0]? It can be in CPU1 store buffer, and TSO allows regular reads to
+ignore (remote) store-buffers.
+
+> > From the perspective of the LOCK prefixed instructions CPU0 never
+> > observes the variable @ptr. And therefore doesn't need to provide order.
+> 
+> I suspect that the implementation works on whole cache lines for
+> everything except the actual store buffer entries, which would mean
+> that CPU 0 does think it observed ptr[0].
+
+Quite possible, but consider SMT where each thread has its own
+store-buffer. Then the core owns the line, but the value is still not
+visible.
+
+I don't know if they want to tie down those semantics.
+
+> > Note how the READ_ONCE() is a normal load on CPU0, and per the rules is
+> > only forced to happen after it's own LOCK prefixed instruction, but it
+> > is free to observe ptr[0,2,3] from before, only ptr[1] will be forwarded
+> > from its own store-buffer.
+> >
+> > This is exactly the one reorder TSO allows.
+> 
+> If so, then our optimized smp_mb() has all kinds of problems, no?
+
+Why? All smp_mb() guarantees is order between two memops and it does
+that just fine.
+
+> > Did this clarify, or confuse more?
+> 
+> Probably confuses more.
+
+Lets put it this way, the first approach has many questions and subtle
+points, the second approach must always work without question.
+
+> If you're actual concerned that the SDM is wrong, I think that roping
+> in some architects would be a good idea.
+
+I'll see what I can do, getting them to commit to something is always
+the hard part.
+
+> I still think that making set_bit() do 32-bit or smaller accesses is okay.
+
+Yes, that really should not be a problem. This whole subthread was more
+of a cautionary tale that it is not immediately obviously safe. And like
+I've said before, the bitops interface is across all archs, we must
+consider the weakest behaviour.
+
+Anyway, we considered these things when we did
+clear_bit_unlock_is_negative_byte(), and there is a reason we ended up
+with BIT(7), there is no way to slice up a byte.
