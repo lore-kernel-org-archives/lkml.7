@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E802C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD39C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC172077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A954A21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078695;
-	bh=HNbg6bCPyKPQgU9SbP1UWq4zicPzmIxrkPeN4xAmf0M=;
+	s=default; t=1576078698;
+	bh=sSeF2pOcrcOoEKD/5DY8hdbuJunIM9Yesp2liHcaKRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYxUCc1Up3HP7hvACigIcihuXz+KZvfeHkb06ey4YMTkHuH+9ESNrSnlUdpT2odQe
-	 L3zjh/f+B1F47pWU/FqB7OMc2+U1bzf1JjLSkBqx3yV+lFcihwOnn1IurMykhH80JN
-	 Ydnqcr7hIDzb5Hf51GINyBEt+Q2xcce+Yxsv2K8k=
+	b=pyK2etobSGM6QVrIZGVImP2iOL9h0p1vVXPKzUG38g5BjG9UNaUpxghjtsNQgOdAQ
+	 ojxjgCLkq8vOO6dSFyzsnv3ecrlE4cBE5W0b7FZRrubnAPD3TZHV5/XQq+322XJTbL
+	 ROinNjBqKcypIKNJ4Fm2G9NmTKiazEq0dinn0POk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388105AbfLKPfT (ORCPT
+        id S2388357AbfLKPiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44062 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388061AbfLKPfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:17 -0500
+        id S2388101AbfLKPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AD472173E;
-        Wed, 11 Dec 2019 15:35:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C21D324679;
+        Wed, 11 Dec 2019 15:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078516;
-        bh=HNbg6bCPyKPQgU9SbP1UWq4zicPzmIxrkPeN4xAmf0M=;
+        s=default; t=1576078519;
+        bh=sSeF2pOcrcOoEKD/5DY8hdbuJunIM9Yesp2liHcaKRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvbFFqblLAS/5m9ZvYm688pdQloEQfEpDYan7JQ0SO5gycse3RdNIhngSIxyO9yXa
-         c7NphTp5jkugO7jdwofPEBC6+wYqOX1lqIF5fLsSvmStxmATkM51I9vvWQVNbkXdqq
-         d5CZOyc97wLx4RGY6ghA84VO6kceEHXMJeZvCmb0=
+        b=au4WMGwjFGt9pH2XXTIMyyvKnoSZw+VyUkhChBkSDtEpaxYGTOd9eyGvOOwVuBuLS
+         tNIEw7D3itivzfq6pJLmWMfEyAPhlukLkSwO8odr+3ZupcQov8rLgF497Vfx4e3+d3
+         VCSZCOreQa7ky3QfNHpWBQNyFmz9aucFodHb+zBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Disseldorp <ddiss@suse.de>, Lee Duncan <lduncan@suse.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 05/42] scsi: target: compare full CHAP_A Algorithm strings
-Date:   Wed, 11 Dec 2019 10:34:33 -0500
-Message-Id: <20191211153510.23861-5-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 08/42] powerpc/pseries: Mark accumulate_stolen_time() as notrace
+Date:   Wed, 11 Dec 2019 10:34:36 -0500
+Message-Id: <20191211153510.23861-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -61,51 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
+[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
 
-RFC 2307 states:
+accumulate_stolen_time() is called prior to interrupt state being
+reconciled, which can trip the warning in arch_local_irq_restore():
 
-  For CHAP [RFC1994], in the first step, the initiator MUST send:
+  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
+  ...
+  NIP .arch_local_irq_restore+0x9c/0x130
+  LR  .rb_start_commit+0x38/0x80
+  Call Trace:
+    .ring_buffer_lock_reserve+0xe4/0x620
+    .trace_function+0x44/0x210
+    .function_trace_call+0x148/0x170
+    .ftrace_ops_no_ops+0x180/0x1d0
+    ftrace_call+0x4/0x8
+    .accumulate_stolen_time+0x1c/0xb0
+    decrementer_common+0x124/0x160
 
-      CHAP_A=<A1,A2...>
+For now just mark it as notrace. We may change the ordering to call it
+after interrupt state has been reconciled, but that is a larger
+change.
 
-   Where A1,A2... are proposed algorithms, in order of preference.
-...
-   For the Algorithm, as stated in [RFC1994], one value is required to
-   be implemented:
-
-       5     (CHAP with MD5)
-
-LIO currently checks for this value by only comparing a single byte in
-the tokenized Algorithm string, which means that any value starting with
-a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
-comparing the entire tokenized string.
-
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/iscsi/iscsi_target_auth.c | 2 +-
+ arch/powerpc/kernel/time.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index f0d97305575d7..aa3f98994c7d6 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -74,7 +74,7 @@ static int chap_check_algorithm(const char *a_str)
- 		if (!token)
- 			goto out;
- 
--		if (!strncmp(token, "5", 1)) {
-+		if (!strcmp(token, "5")) {
- 			pr_debug("Selected MD5 Algorithm\n");
- 			kfree(orig);
- 			return CHAP_DIGEST_MD5;
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index ab7b661b6da3a..412ac5d45160b 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -257,7 +257,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
+  * Accumulate stolen time by scanning the dispatch trace log.
+  * Called on entry from user mode.
+  */
+-void accumulate_stolen_time(void)
++void notrace accumulate_stolen_time(void)
+ {
+ 	u64 sst, ust;
+ 	u8 save_soft_enabled = local_paca->soft_enabled;
 -- 
 2.20.1
 
