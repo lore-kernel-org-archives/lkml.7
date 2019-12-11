@@ -2,71 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B7C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD092077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC9F20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:49:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576032542;
+	bh=yqkl8TN0O59NwfZP2OD2c0ghY0r4F9Diq35NeQInRfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dUP3fWqzheynlTE8lYLxy/cShWc+HqErCPN1+L6c+pbM90Ez7+0OPeIgza+siBRoz
+	 8AzOUAFQIbr948HCAZCt43UJva5HTXYB/4pTgmM9p+tLXXY/qIFIhIemOFk1o5u68y
+	 zxvqu24ZGcVZXR115CX/3PYHxEhNnFzAfNAMdJ94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfLKCoj (ORCPT
+        id S1727728AbfLKCtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:44:39 -0500
-Received: from mga07.intel.com ([134.134.136.100]:38038 "EHLO mga07.intel.com"
+        Tue, 10 Dec 2019 21:49:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbfLKCoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:44:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:44:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="363456285"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 10 Dec 2019 18:44:38 -0800
-Received: from [10.226.38.24] (unknown [10.226.38.24])
-        by linux.intel.com (Postfix) with ESMTP id D04125808CC;
-        Tue, 10 Dec 2019 18:44:36 -0800 (PST)
-Subject: Re: [PATCH v7 2/2] phy: intel-lgm-emmc: Add support for eMMC PHY
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        peter.harliman.liem@intel.com, Ramuthevar@smile.fi.intel.com
-References: <20191210025301.29551-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191210025301.29551-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191210135450.GX32742@smile.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <6dac436f-956f-534e-7e15-7aa2f0881217@linux.intel.com>
-Date:   Wed, 11 Dec 2019 10:44:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726619AbfLKCtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:49:00 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0DF7205ED;
+        Wed, 11 Dec 2019 02:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576032540;
+        bh=yqkl8TN0O59NwfZP2OD2c0ghY0r4F9Diq35NeQInRfE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=N6Mbhyj+zaSmcMmFEcvuAbn1RXZr+9mfbi1gq5t+KWhaDMkXHPd4QmJPAy6aAUcrj
+         2rSpBj0soqrTUIN01JzV7gVd2iu0r43RuzzHf62jss0Iw3umpotijYsugx3sPQ+ltC
+         4KFA6yIXyUlcDslwsYyBzYXbhBt4f/wF3+Zd9F6U=
+Date:   Tue, 10 Dec 2019 18:48:58 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
+Message-ID: <20191211024858.GB732@sol.localdomain>
+References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20191210135450.GX32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Dec 11, 2019 at 10:20:01AM +0800, Tiezhu Yang wrote:
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 7fe7b87..0fd9315 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
+>  	return error == -ESTALE && !(flags & LOOKUP_REVAL);
+>  }
+>  
+> +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> +{
+> +	if (unlikely(name[0] == '.')) {
+> +		if (len == 1 || (len == 2 && name[1] == '.'))
+> +			return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  #endif /* _LINUX_NAMEI_H */
 
-On 10/12/2019 9:54 PM, Andy Shevchenko wrote:
-> On Tue, Dec 10, 2019 at 10:53:01AM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add support for eMMC PHY on Intel's Lightning Mountain SoC.
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> Signed-off-by: Ramuthevar,Vadivel MuruganX <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Something wrong with the second SoB. And why you have two to begin with?
+I had suggested adding a len >= 1 check to handle the empty name case correctly.
+What I had in mind was
 
-Thanks Andy,  Good catch, I will correct it and send patch again.
+static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+{
+	if (len >= 1 && unlikely(name[0] == '.')) {
+		if (len < 2 || (len == 2 && name[1] == '.'))
+			return true;
+	}
 
-Best Regards
-vadivel
+	return false;
+}
+
+As is, you're proposing that it always dereference the first byte even when
+len=0, which seems like a bad idea for a shared helper function.  Did you check
+whether it's okay for all the existing callers?  fscrypt_fname_disk_to_usr() is
+called from 6 places, did you check all of them?
+
+How about keeping the existing optimized code for the hot path in fs/namei.c
+(i.e. not using the helper function), while having the helper function do the
+extra check to handle len=0 correctly?
+
+- Eric
