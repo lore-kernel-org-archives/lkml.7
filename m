@@ -2,127 +2,132 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B73C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEADC214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F12214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080417;
-	bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
+	s=default; t=1576080420;
+	bh=JIYkTjkZKzkk448lvE3EnKOSwdwBrCnXOQ87xWq4hrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eR4Th5uCHwHvQ2Z8Qf3wsYGP/geofuFyuTIZQ9F/LJiEsxH2LE6FGAFo7jx4SotZc
-	 0JUhFfKRLbFHqLxKkQHGigVphVKaZAdjdMymwwiUvypIN1xzdIHxOejtG8fgu9s+oG
-	 xwH3kVEgnoTOGJwLGn6zR93orDHhZI4ByIu8guBQ=
+	b=XVPjqd7ZpD33NK30+cXvLdhq3Qx/YDhjR9t2WNsr0pR5/pW1zcCVOqmxzZzeZIujO
+	 L0CVWQBrw6i/XTMnfpZedY5VbI0FbrnhbhswWyV2d2wigNuCDr+krByGfL+Z45p1h8
+	 xHZCFCA0RY9/vLEyJyk3sMclQln+P9LQvJIly4a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733104AbfLKQGz (ORCPT
+        id S2388302AbfLKQG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34372 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731083AbfLKPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730686AbfLKPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BC8E208C3;
-        Wed, 11 Dec 2019 15:12:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18D5E20663;
+        Wed, 11 Dec 2019 15:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077153;
-        bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
+        bh=JIYkTjkZKzkk448lvE3EnKOSwdwBrCnXOQ87xWq4hrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifXSSH1uvM8a0lpEZ+3s0vs/gwbyCz6cZRykY+E88TsLuPRTnAKmj7vOdbC07fA8e
-         at0lNlnC+uHJfwgEwQZp8aS676uIfkY12Iyq23KhjJvRn8eS4RgTnOGGetnGYXcsEI
-         PdIm2OYxA0xUQzypYssqBsfvmuR2vOjHYwZ3j3Mc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Subject: [PATCH 5.3 009/105] tty: serial: msm_serial: Fix flow control
-Date:   Wed, 11 Dec 2019 16:04:58 +0100
-Message-Id: <20191211150223.451692465@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=eRnF4hGls4DuCTFSEGNTX9C4kSrpbVmvnnei4JWR0BQ5tm0PNuG8h4cS/hP6hfkNg
+         dHGTWT/IOoorG/ojuGZzAV4Ov/XpHmFaD7bI8tgx9lVi6VfG83C6OBmxZPUuqhr+Te
+         45fpUfHlPkGPF2YZXEoZJSHJu8TRb3FVxhuszgnE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 040/134] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
+Date:   Wed, 11 Dec 2019 10:10:16 -0500
+Message-Id: <20191211151150.19073-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-commit b027ce258369cbfa88401a691c23dad01deb9f9b upstream.
+[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
 
-hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
-Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
-disables flow, configures the uart baudrate, and then reenables flow - at
-which point an event is expected to be received over the uart from the
-wcn3990.  It is observed that this event comes after the baudrate change
-but before hci_qca re-enables flow. This is unexpected, and is a result of
-msm_reset() being broken.
+With large memory (8TB and more) hotplug, we can get soft lockup
+warnings as below. These were caused by a long loop without any
+explicit cond_resched which is a problem for !PREEMPT kernels.
 
-According to the uart_dm hardware documentation, it is recommended that
-automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
-hw flow control will manage RFR based on the configured watermark.  When
-there is space to receive data, the hw will assert RFR.  When the watermark
-is hit, the hw will de-assert RFR.
+Avoid this using cond_resched() while inserting hash page table
+entries. We already do similar cond_resched() in __add_pages(), see
+commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
+__add_pages").
 
-The hardware documentation indicates that RFR can me manually managed via
-CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
-de-asserts RFR.
+  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
+   (t=24003 jiffies g=4285 q=2002)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    nmi_cpu_backtrace+0x124/0x130
+    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
+    arch_trigger_cpumask_backtrace+0x28/0x3c
+    rcu_dump_cpu_stacks+0xf8/0x154
+    rcu_sched_clock_irq+0x878/0xb40
+    update_process_times+0x48/0x90
+    tick_sched_handle.isra.16+0x4c/0x80
+    tick_sched_timer+0x68/0xe0
+    __hrtimer_run_queues+0x180/0x430
+    hrtimer_interrupt+0x110/0x300
+    timer_interrupt+0x108/0x2f0
+    decrementer_common+0x114/0x120
+  --- interrupt: 901 at arch_add_memory+0xc0/0x130
+      LR = arch_add_memory+0x74/0x130
+    memremap_pages+0x494/0x650
+    devm_memremap_pages+0x3c/0xa0
+    pmem_attach_disk+0x188/0x750
+    nvdimm_bus_probe+0xac/0x2c0
+    really_probe+0x148/0x570
+    driver_probe_device+0x19c/0x1d0
+    device_driver_attach+0xcc/0x100
+    bind_store+0x134/0x1c0
+    drv_attr_store+0x44/0x60
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1a0/0x270
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
 
-msm_reset() is broken because after resetting the hardware, it
-unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
-the current configuration, and would undo a previous flow disable
-operation.  It should instead de-assert RFR via RESET_RFR to block flow
-until the hardware is reconfigured.  msm_serial should rely on the client
-to specify that flow should be enabled, either via mctrl() or the termios
-structure, and only assert RFR in response to those triggers.
-
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Andy Gross <agross@kernel.org>
-Link: https://lore.kernel.org/r/20191021154616.25457-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/msm_serial.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/book3s64/hash_utils.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -980,6 +980,7 @@ static unsigned int msm_get_mctrl(struct
- static void msm_reset(struct uart_port *port)
- {
- 	struct msm_port *msm_port = UART_TO_MSM(port);
-+	unsigned int mr;
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 6e5a769ebcb80..83c51a7d7eee6 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -305,6 +305,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		if (ret < 0)
+ 			break;
  
- 	/* reset everything */
- 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
-@@ -987,7 +988,10 @@ static void msm_reset(struct uart_port *
- 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
--	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
-+	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
-+	mr = msm_read(port, UART_MR1);
-+	mr &= ~UART_MR1_RX_RDY_CTL;
-+	msm_write(port, mr, UART_MR1);
- 
- 	/* Disable DM modes */
- 	if (msm_port->is_uartdm)
-
++		cond_resched();
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ 		if (debug_pagealloc_enabled() &&
+ 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+-- 
+2.20.1
 
