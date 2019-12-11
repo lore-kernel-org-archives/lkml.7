@@ -2,122 +2,95 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F008C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C61FAC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 728A920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936A6208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080510;
-	bh=zqTUOEFIaUW8OAamEIz8kTudhAMpMV0HwrLv/f5BdIc=;
+	s=default; t=1576080512;
+	bh=y8mpjC+u8Jx70mOl50vaZHKS1XoR4ZEnZ1BHSjzhT8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=awv0y0tjTwSFrxg5Az6YNKXsV5HYjjrKjECysOqXzkga6jKIMPYeeTENEafQ+I3Hf
-	 KRHm4XarU+iQrZPVReBkPffQK07hjN3WF6QIa67m2OygcHvXWBEvbKO6GtCGHuyQoP
-	 5N8gCZTVXJEzbjQUuqJJS1A1mdxTWCF7Xd2yJ5qE=
+	b=A8qqXCyAMSr7n8DlCQmbi8MCTqyz1sVkvXrrhqmoaAddxYy0YIJ4hLsCeIvOSeBV6
+	 ftcDvv+1pwQFNwBP2tR4A+h/t4UxzrycocZHMRYw6ajN3XxUbnRR7l3mbawV0JUfaa
+	 8/qox8dlCcuoTs++VOSmjbX8JYi9vVVUv1gEj5rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388908AbfLKQI3 (ORCPT
+        id S1730698AbfLKPMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:08:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33612 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731080AbfLKPMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:17 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730468AbfLKPME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6684422B48;
-        Wed, 11 Dec 2019 15:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3293B22B48;
+        Wed, 11 Dec 2019 15:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077137;
-        bh=zqTUOEFIaUW8OAamEIz8kTudhAMpMV0HwrLv/f5BdIc=;
+        s=default; t=1576077123;
+        bh=y8mpjC+u8Jx70mOl50vaZHKS1XoR4ZEnZ1BHSjzhT8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJmzM2QUTSy+ztPrGFXFHGJw8qt6yebw32cpfU3/HKtWAjI1MNq6Z1ygcrP3N/ZzV
-         sXwqiyMhyaItWpvJDKRBdzjUi69JriCDaENqY8LokVcghD3YEGOFzxbUwu6hKnMgoD
-         q0F562TwzlIcgOzGLHeyNFe44WRiSUhutDjJQuFw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 024/134] powerpc/pseries: Don't fail hash page table insert for bolted mapping
-Date:   Wed, 11 Dec 2019 10:10:00 -0500
-Message-Id: <20191211151150.19073-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=RWWKtOCWdE3TNWQkve3adnG2xOYrLHbWmQXEPfkvzyGRyy5MVQAzu1RP2ZlpYInV0
+         O6ywEscbJCsed6y+bUQG3CYl9NQ5eK0nVg89TL0IKxowDlGIalJr6/BrZP3f9l7B6b
+         1Vy+GdPPOweSK4liub+bWTYPmCa7sxAOJfLs+S+0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 5.3 008/105] tty: serial: fsl_lpuart: use the sg count from dma_map_sg
+Date:   Wed, 11 Dec 2019 16:04:57 +0100
+Message-Id: <20191211150223.274323449@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Peng Fan <peng.fan@nxp.com>
 
-[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
+commit 487ee861de176090b055eba5b252b56a3b9973d6 upstream.
 
-If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
-insert by removing a random entry from the group.
+The dmaengine_prep_slave_sg needs to use sg count returned
+by dma_map_sg, not use sport->dma_tx_nents, because the return
+value of dma_map_sg is not always same with "nents".
 
-After some runtime, it is very well possible to find all the 8 hash page table
-entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
-in that case. With Storage class memory a user can find this error easily since
-a namespace enable/disable is equivalent to memory add/remove.
+When enabling iommu for lpuart + edma, iommu framework may concatenate
+two sgs into one.
 
-This results in failures as reported below:
+Fixes: 6250cc30c4c4e ("tty: serial: fsl_lpuart: Use scatter/gather DMA for Tx")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Link: https://lore.kernel.org/r/1572932977-17866-1-git-send-email-peng.fan@nxp.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
-libndctl: ndctl_dax_enable: dax1.3: failed to enable
-  Error: namespace1.2: failed to enable
-
-failed to create namespace: No such device or address
-
-In kernel log we find the details as below:
-
-Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
-dax_pmem: probe of dax1.3 failed with error -14
-
-This indicates that we failed to create a bolted hash table entry for direct-map
-address backing the namespace.
-
-We also observe failures such that not all namespaces will be enabled with
-ndctl enable-namespace all command.
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/tty/serial/fsl_lpuart.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 6c123760164e8..6e5a769ebcb80 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -294,7 +294,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
- 					       HPTE_V_BOLTED, psize, psize,
- 					       ssize);
--
-+		if (ret == -1) {
-+			/* Try to remove a non bolted entry */
-+			ret = mmu_hash_ops.hpte_remove(hpteg);
-+			if (ret != -1)
-+				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
-+							       HPTE_V_BOLTED, psize, psize,
-+							       ssize);
-+		}
- 		if (ret < 0)
- 			break;
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -436,8 +436,8 @@ static void lpuart_dma_tx(struct lpuart_
+ 	}
  
--- 
-2.20.1
+ 	sport->dma_tx_desc = dmaengine_prep_slave_sg(sport->dma_tx_chan, sgl,
+-					sport->dma_tx_nents,
+-					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
++					ret, DMA_MEM_TO_DEV,
++					DMA_PREP_INTERRUPT);
+ 	if (!sport->dma_tx_desc) {
+ 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
+ 		dev_err(dev, "Cannot prepare TX slave DMA!\n");
+
 
