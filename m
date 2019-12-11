@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E4FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5059BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47389208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2209A208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078220;
-	bh=GCz9esUbUwzSBgT2gpkimtUv73By8glepztBxqriKvU=;
+	s=default; t=1576078224;
+	bh=fFRxbGjEa8i+YFWoKPfCeNkLhbUUEZjmMuYMuQScdME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLvqipHAmNQOwc9yo+bgMXJkuwtUICkDv/aJepQpbSoNj+DshSLyoB7fl2ZIWlK18
-	 Oq/eAYa5qfSzLvshYT5cCGmP1LwwqhuRT5skfXWX0Hrm3rJgoh/pUUId1qbdZk7Gct
-	 GALhx0L0wGF8tIbc9ikaMHjxlSKni0na7DKjwDRY=
+	b=y3ndHiol5Rvas3CPkeGPIMtxkX/wfvK/BZTYqdXzy0W0qr4ZZOWgZPA0smr5TcLUa
+	 fSb+tBAdpt7+NJfbSqfdWttRjArPKuqWnyODHquGcRVILBxUbDc61hQM1A3YKo/05v
+	 j3d4Ijb64VjJ75HgYsd+xZHZOzOimvt/X4F4GLMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387910AbfLKP3c (ORCPT
+        id S1733252AbfLKPaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:30:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387866AbfLKP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:23 -0500
+        id S2387901AbfLKP3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3968C222C4;
-        Wed, 11 Dec 2019 15:29:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A6D0222C4;
+        Wed, 11 Dec 2019 15:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078162;
-        bh=GCz9esUbUwzSBgT2gpkimtUv73By8glepztBxqriKvU=;
+        s=default; t=1576078171;
+        bh=fFRxbGjEa8i+YFWoKPfCeNkLhbUUEZjmMuYMuQScdME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dvnIil53gzdIEOh6Jl4JXAfRW27BWr9ocRv4KBzKc11ZpQsmkrxOP2uwT5Dj5kK3v
-         2hKp6m3dyGAiaGR/AvW80IObBHv4nR4sbYTYNxAeMeEtkXjj8EwvlJOwJ3OgeQeeJk
-         xs3PunjYiOnygn7GtgTYvhrXH7PW89NExDQPU+KU=
+        b=SR3QAK9exA1oNBucOwdWIpT4NeGN41n+6rICK7qMp2I/Pe0JnQtgaTTYsKrsWJqJc
+         Ei07bKv/B0ACmANtXt9p8wpbtXK87hsswI/HS+uTshxmjFHFBA7vfNX4fPZOuGDyob
+         1oHBnp6bifCTF3TPoHDsvESK/4r1dClPpZodvrmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 47/58] scripts/kallsyms: fix definitely-lost memory leak
-Date:   Wed, 11 Dec 2019 10:28:20 -0500
-Message-Id: <20191211152831.23507-47-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 55/58] s390/cpum_sf: Check for SDBT and SDB consistency
+Date:   Wed, 11 Dec 2019 10:28:28 -0500
+Message-Id: <20191211152831.23507-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -58,46 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
+[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
 
-build_initial_tok_table() overwrites unused sym_entry to shrink the
-table size. Before the entry is overwritten, table[i].sym must be freed
-since it is malloc'ed data.
+Each SBDT is located at a 4KB page and contains 512 entries.
+Each entry of a SDBT points to a SDB, a 4KB page containing
+sampled data. The last entry is a link to another SDBT page.
 
-This fixes the 'definitely lost' report from valgrind. I ran valgrind
-against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
+When an event is created the function sequence executed is:
 
-[Before the fix]
+  __hw_perf_event_init()
+  +--> allocate_buffers()
+       +--> realloc_sampling_buffers()
+	    +---> alloc_sample_data_block()
 
-  LEAK SUMMARY:
-     definitely lost: 53,184 bytes in 2,874 blocks
+Both functions realloc_sampling_buffers() and
+alloc_sample_data_block() allocate pages and the allocation
+can fail. This is handled correctly and all allocated
+pages are freed and error -ENOMEM is returned to the
+top calling function. Finally the event is not created.
 
-[After the fix]
+Once the event has been created, the amount of initially
+allocated SDBT and SDB can be too low. This is detected
+during measurement interrupt handling, where the amount
+of lost samples is calculated. If the number of lost samples
+is too high considering sampling frequency and already allocated
+SBDs, the number of SDBs is enlarged during the next execution
+of cpumsf_pmu_enable().
 
-  LEAK SUMMARY:
-     definitely lost: 0 bytes in 0 blocks
+If more SBDs need to be allocated, functions
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+       realloc_sampling_buffers()
+       +---> alloc-sample_data_block()
+
+are called to allocate more pages. Page allocation may fail
+and the returned error is ignored. A SDBT and SDB setup
+already exists.
+
+However the modified SDBTs and SDBs might end up in a situation
+where the first entry of an SDBT does not point to an SDB,
+but another SDBT, basicly an SBDT without payload.
+This can not be handled by the interrupt handler, where an SDBT
+must have at least one entry pointing to an SBD.
+
+Add a check to avoid SDBTs with out payload (SDBs) when enlarging
+the buffer setup.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kallsyms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index b471022c81624..b43531899648a 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -510,6 +510,8 @@ static void build_initial_tok_table(void)
- 				table[pos] = table[i];
- 			learn_symbol(table[pos].sym, table[pos].len);
- 			pos++;
-+		} else {
-+			free(table[i].sym);
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 2e2fd9535f865..45304085b6eea 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -185,7 +185,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 				   unsigned long num_sdb, gfp_t gfp_flags)
+ {
+ 	int i, rc;
+-	unsigned long *new, *tail;
++	unsigned long *new, *tail, *tail_prev = NULL;
+ 
+ 	if (!sfb->sdbt || !sfb->tail)
+ 		return -EINVAL;
+@@ -224,6 +224,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 			sfb->num_sdbt++;
+ 			/* Link current page to tail of chain */
+ 			*tail = (unsigned long)(void *) new + 1;
++			tail_prev = tail;
+ 			tail = new;
  		}
+ 
+@@ -233,10 +234,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 		 * issue, a new realloc call (if required) might succeed.
+ 		 */
+ 		rc = alloc_sample_data_block(tail, gfp_flags);
+-		if (rc)
++		if (rc) {
++			/* Undo last SDBT. An SDBT with no SDB at its first
++			 * entry but with an SDBT entry instead can not be
++			 * handled by the interrupt handler code.
++			 * Avoid this situation.
++			 */
++			if (tail_prev) {
++				sfb->num_sdbt--;
++				free_page((unsigned long) new);
++				tail = tail_prev;
++			}
+ 			break;
++		}
+ 		sfb->num_sdb++;
+ 		tail++;
++		tail_prev = new = NULL;	/* Allocated at least one SBD */
  	}
- 	table_cnt = pos;
+ 
+ 	/* Link sampling buffer to its origin */
 -- 
 2.20.1
 
