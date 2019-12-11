@@ -4,59 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E127C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83751C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402FE2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514C724671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078195;
-	bh=IpzqZ8U2q1cIKIIYL06rQOFBJOT+/SNNiKO5NCgdzgY=;
+	s=default; t=1576078206;
+	bh=d/gDSFdYWlKq0/tr8QHvlZWvEWLb7k65q8nmPY7IaDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvEnLMpoEGEFE5CW829nnKZwBMQOeBP3botJtu8AKzFXuvrMnsrWK7A1O8Brg3GDO
-	 /req/oFX8wgNBZRO/sM6QjzlHzg9gmzNx9Duc4qpYSNnx9tgnCsOjxQL7cd61+/N3w
-	 GNdm492HllbLETqEZsJBxaLAUQaHlEtNi7j2f0vI=
+	b=TofQDUQI7guN/X1nE8wVOukXkYOAQOZmQ6Eo8ovfuRN9Nqg6nbINqtbvliCpqfpUT
+	 xlxiUnk7CoQ21N5Gzf50XohP03khiwDtZhQJvqgoSBbwb1xDcxhpz3jVlZQr/1CK4y
+	 u8inWOc/AZvNzPbd7ViHxHKqXdm9WC762D8GUztQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbfLKP3x (ORCPT
+        id S2387955AbfLKPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36596 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387925AbfLKP3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:36 -0500
+        id S2387914AbfLKP3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555142465B;
-        Wed, 11 Dec 2019 15:29:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51CBB24654;
+        Wed, 11 Dec 2019 15:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078175;
-        bh=IpzqZ8U2q1cIKIIYL06rQOFBJOT+/SNNiKO5NCgdzgY=;
+        s=default; t=1576078172;
+        bh=d/gDSFdYWlKq0/tr8QHvlZWvEWLb7k65q8nmPY7IaDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0OQ8oQtfkok95UgRMhau9VaKNBP/bUd6S0W0nDNulOuBk0UScPC00KoHk3/bH/WBZ
-         GqyGBftl3p/+vSuyq6Uhp4kgQqRPHA7k4wjb+dF24v0qBNjZkOOpEXdaje1+CH1oSB
-         hWRkUG9wk0hn5FWx05w0LNJ1ygPf8XemjYdMqBfA=
+        b=TuKWDzZzfI4OIPXHtuNSnr8Cs043ylJungBOiBfnhN22ZWbVLggKCkGl0CgEofGT1
+         iLEcH5iQLik1twvcGY2AJBKxXLkqWGseY/jd6CruZ1Ce5C+ldomcdiMq5y6jBRVrKY
+         bBAqhCjKtUGa+Afo9mcMaFH5DqtnI3s43OpV8gv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
+Cc:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 58/58] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-Date:   Wed, 11 Dec 2019 10:28:31 -0500
-Message-Id: <20191211152831.23507-58-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.14 56/58] ocfs2: fix passing zero to 'PTR_ERR' warning
+Date:   Wed, 11 Dec 2019 10:28:29 -0500
+Message-Id: <20191211152831.23507-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -69,84 +66,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-[ Upstream commit 3c1c24d91ffd536de0a64688a9df7f49e58fadbc ]
+[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
 
-A while ago Andy noticed
-(http://lkml.kernel.org/r/CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com)
-that UFFD_FEATURE_EVENT_FORK used by an unprivileged user may have
-security implications.
+Fix a static code checker warning:
+fs/ocfs2/acl.c:331
+	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
 
-As the first step of the solution the following patch limits the availably
-of UFFD_FEATURE_EVENT_FORK only for those having CAP_SYS_PTRACE.
-
-The usage of CAP_SYS_PTRACE ensures compatibility with CRIU.
-
-Yet, if there are other users of non-cooperative userfaultfd that run
-without CAP_SYS_PTRACE, they would be broken :(
-
-Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-descriptor table from the read() implementation of uffd, which may have
-security implications for unprivileged use of the userfaultfd.
-
-Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-CAP_SYS_PTRACE.
-
-Link: http://lkml.kernel.org/r/1572967777-8812-2-git-send-email-rppt@linux.ibm.com
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Nick Kralevich <nnk@google.com>
-Cc: Nosh Minwalla <nosh@google.com>
-Cc: Pavel Emelyanov <ovzxemul@gmail.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
+Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
+Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/userfaultfd.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ fs/ocfs2/acl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index a609d480606da..e2b2196fd9428 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1807,13 +1807,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
- 		goto out;
- 	features = uffdio_api.features;
--	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
--		memset(&uffdio_api, 0, sizeof(uffdio_api));
--		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
--			goto out;
--		ret = -EINVAL;
--		goto out;
--	}
-+	ret = -EINVAL;
-+	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
-+		goto err_out;
-+	ret = -EPERM;
-+	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
-+		goto err_out;
- 	/* report all available features and ioctls to userland */
- 	uffdio_api.features = UFFD_API_FEATURES;
- 	uffdio_api.ioctls = UFFD_API_IOCTLS;
-@@ -1826,6 +1825,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	ret = 0;
- out:
- 	return ret;
-+err_out:
-+	memset(&uffdio_api, 0, sizeof(uffdio_api));
-+	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
-+		ret = -EFAULT;
-+	goto out;
- }
- 
- static long userfaultfd_ioctl(struct file *file, unsigned cmd,
+diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
+index 917fadca8a7bc..b73b78771915d 100644
+--- a/fs/ocfs2/acl.c
++++ b/fs/ocfs2/acl.c
+@@ -335,8 +335,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
+ 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
+ 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
+ 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
+-	if (IS_ERR(acl) || !acl)
+-		return PTR_ERR(acl);
++	if (IS_ERR_OR_NULL(acl))
++		return PTR_ERR_OR_ZERO(acl);
+ 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
+ 	if (ret)
+ 		return ret;
 -- 
 2.20.1
 
