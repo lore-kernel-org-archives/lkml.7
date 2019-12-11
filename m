@@ -2,93 +2,99 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DE0C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CE3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826D02073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B822077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080343;
-	bh=0qzmkhe0xFH/EPUkezqD+PQOlzAtaEDDqNdrCSv+N8M=;
+	s=default; t=1576080347;
+	bh=8VCYKCYLmWQwWUoJfqKJ05SIdKRPFsPGHNN+S7jyXK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SkbU+WWKrVQiovMcO3ZVdjtEp5wPwiAKT1ANA+ZC6BmbEwdsGU6bnVOaxT0jwbags
-	 nHPl142Xtz0u1XMaQQR9tcM/KzTeZnV7Rl6Urx2NaT1aZ2f+qhMybrf1CnmuKxlRhI
-	 81UjvrcVWPScLo2nfpRCJ2GED4rI/PKu1zup0bkg=
+	b=CAw/VVKluNEMkeElzjfMk4M7tnp7+9GxEV+t2W5spZ3iwTwiefdMqH6LgKETexKPW
+	 nbQRN0uLzGwKDoY+AlUP2QS8WLDQIbbUzSHjSNp4Ot73q0x0H2Jsx4bbuAp7y7HZAV
+	 WrL2437F3dW0k/d0Iv4L8rGc0mW7kFhmPpXcJh5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388641AbfLKQFm (ORCPT
+        id S2388833AbfLKQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35116 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730045AbfLKPMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:47 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731210AbfLKPMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801392467D;
-        Wed, 11 Dec 2019 15:12:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D36A22464B;
+        Wed, 11 Dec 2019 15:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077167;
-        bh=0qzmkhe0xFH/EPUkezqD+PQOlzAtaEDDqNdrCSv+N8M=;
+        s=default; t=1576077166;
+        bh=8VCYKCYLmWQwWUoJfqKJ05SIdKRPFsPGHNN+S7jyXK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtJXMu1NiR2SCl8bAWzEL6qt39s38nEn264MIUJEf/iROLkbiAvCVabzXz19OEvOP
-         l1KpAYlE4CZcyEnvy9PpProSLT8WADv5Uya6fimewjiEtOzcCJoXLu7CVwEOBpKCSm
-         j2L+h1f3uN50kh/Vr/Q0hcGgVfsCpI1zQ2NjMQ+E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@linux-mips.org
-Subject: [PATCH AUTOSEL 5.4 052/134] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date:   Wed, 11 Dec 2019 10:10:28 -0500
-Message-Id: <20191211151150.19073-52-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=WodKHoJ2tj1hh6PQRfLb5WPEmPg+ISHdZahJPjUmusZQgBTmh8PLN1TSVlc9YXaJa
+         RYgDEPHh9ysSy6NUzuryuW3zOZL6sK4yGiIVxZkxv3zLcvFaasSOpEV1Od+MA5h8Vp
+         xfcI7v2hA+H1b3j/tcMKw3CwAhS/f77n55JuKEb8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 040/105] net: hns3: fix ETS bandwidth validation bug
+Date:   Wed, 11 Dec 2019 16:05:29 +0100
+Message-Id: <20191211150237.197851307@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Yonglong Liu <liuyonglong@huawei.com>
 
-[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
+[ Upstream commit c2d56897819338eb0ba8b93184f7d10329b36653 ]
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+Some device only support 4 TCs, but the driver check the total
+bandwidth of 8 TCs, so may cause wrong configurations write to
+the hw.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+This patch uses hdev->tc_max to instead HNAE3_MAX_TC to fix it.
+
+Fixes: e432abfb99e5 ("net: hns3: add common validation in hclge_dcb")
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fc75c61233aaf..58bec21269661 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -281,6 +281,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+index d9136a199d8db..f5c323e798343 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
+@@ -124,7 +124,7 @@ static int hclge_ets_validate(struct hclge_dev *hdev, struct ieee_ets *ets,
+ 	if (ret)
+ 		return ret;
  
+-	for (i = 0; i < HNAE3_MAX_TC; i++) {
++	for (i = 0; i < hdev->tc_max; i++) {
+ 		switch (ets->tc_tsa[i]) {
+ 		case IEEE_8021QAZ_TSA_STRICT:
+ 			if (hdev->tm_info.tc_info[i].tc_sch_mode !=
 -- 
 2.20.1
+
+
 
