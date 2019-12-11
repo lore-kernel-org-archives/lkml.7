@@ -2,109 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F414EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19C7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C334620836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F7B24653
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eQhg4POU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="R3GY/cMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfLKVop (ORCPT
+        id S1726901AbfLKVye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:44:45 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33248 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfLKVop (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 16:44:45 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so21369pgk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 13:44:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wkoNjmei5sIfxNKYIytd7zHyeLv+b+a83ECcT+r0WWE=;
-        b=eQhg4POUvSGfKDGmAfB3LhOnH9J0IJrxgIKZW7BGANMGUuByHKI+JnZLshJIG0WwcC
-         V5XHdW9lyQ0MxV4oCh5vmk6QOnMheyWSd7MtrBaQHzvG2phA2M+va7PryK+uMB/BaSC1
-         JVWjqwGDON2r046aP2D7HY9T/KlpEDvS7obk3LFAZSBSudOxMJvscBD73p+L02Li55xF
-         dmlNUnmolqzRBTmLtafIo/dt1oBuYT5nyE2kXVQNrbWoaowAaA5J+QAgxVr49uGPT8sR
-         AaOoPPhahDkiwf2miU8uH2JKMezkJfZyWM0/ojhYFkbC62EPJia6RoaCK0Oy74n9WXMU
-         zJLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wkoNjmei5sIfxNKYIytd7zHyeLv+b+a83ECcT+r0WWE=;
-        b=RaoymNurZzyhC2KYsrjRR7xg7mOA0TT5nDX+AlNfHXzglU7D9y+4mSkqX30XjEiUOL
-         Q5MxR0jJl5UVcCwWDHLeU/1ufQKY19waRfpyt0VGjEcX8k/6sEuZSijgxgV7pasHf7VD
-         5vGZ8UWPATTmHphhLh1eduwP/jZE1GZ2faURLXFLQvDv8Z9JjD7Wimh3gnle3BbrkvOD
-         axBd5dYaMoX9NduNTMsRhWGiL1x3xeVBeIzcJnQb1qJz+wcMXj6Z96NAVY/Zm7g6vgUU
-         6HN/u/il+L7ba6tvfNNFJ4zeHzlLZUNdbNfLUspIVgamMo9iLRPnM9zEgpQlQwpCWitK
-         MK8Q==
-X-Gm-Message-State: APjAAAWa3YbIRI1/IaHHJU1a5trwnKGGNucSpPAWhG7/hdUGCy+PrXIH
-        nyJmzAiQDgIeDgVl1Z8XOTI8og==
-X-Google-Smtp-Source: APXvYqw05tLSLBYBI71/bzNSgwOhxYrohKf19gPgNhSmYuZNKVWRhCaiynvJ1ckIYvm66/35qDD51Q==
-X-Received: by 2002:a62:7541:: with SMTP id q62mr6091794pfc.256.1576100684673;
-        Wed, 11 Dec 2019 13:44:44 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id y38sm3951314pgk.33.2019.12.11.13.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 13:44:43 -0800 (PST)
-Date:   Wed, 11 Dec 2019 13:44:43 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Ilya Dryomov <idryomov@gmail.com>
-cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Edward Chron <echron@arista.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm/oom: fix pgtables units mismatch in Killed process
- message
-In-Reply-To: <20191211202830.1600-1-idryomov@gmail.com>
-Message-ID: <alpine.DEB.2.21.1912111343050.97034@chino.kir.corp.google.com>
-References: <20191211202830.1600-1-idryomov@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 11 Dec 2019 16:54:34 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:36694 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfLKVyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 16:54:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=References:In-Reply-To:Message-Id:Date:Subject:
+        Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fGFLT4e/xlGZFRk64SBvODY97tOu+7KBubL0GgO60ZI=; b=R3GY/cMpFqihTBc1sZZpqn+6x
+        PyGyc7XSHY1ZHUFWrIjj0tiEz7WQDwvdnGlIVoJ+lwUBb7fLANrrEzmFQK0sTdBhL8AEKDDVEjqhM
+        ladygMhcw1nKVd7NkJnuKKqUlvmGQCwBW2WtcuTkn42ZKwooxXvtdMGn7n4oKJv0j3aus=;
+Received: from p5dcc331a.dip0.t-ipconnect.de ([93.204.51.26] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if9wD-0002FW-9K; Wed, 11 Dec 2019 22:54:29 +0100
+Received: from andi by eeepc with local (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1if9w8-00005f-P9; Wed, 11 Dec 2019 22:54:24 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v4 3/5] mfd: rn5t618: add RTC related registers
+Date:   Wed, 11 Dec 2019 22:54:07 +0100
+Message-Id: <20191211215409.32764-4-andreas@kemnade.info>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191211215409.32764-1-andreas@kemnade.info>
+References: <20191211215409.32764-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Ilya Dryomov wrote:
+Defines for some RTC related registers were missing, also
+they were not included in the volatile register list
 
-> pr_err() expects kB, but mm_pgtables_bytes() returns the number of
-> bytes.  As everything else is printed in kB, I chose to fix the value
-> rather than the string.
-> 
-> Before:
-> 
-> [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> ...
-> [   1878]  1000  1878   217253   151144  1269760        0             0 python
-> ...
-> Out of memory: Killed process 1878 (python) total-vm:869012kB, anon-rss:604572kB, file-rss:4kB, shmem-rss:0kB, UID:1000 pgtables:1269760kB oom_score_adj:0
-> 
-> After:
-> 
-> [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> ...
-> [   1436]  1000  1436   217253   151890  1294336        0             0 python
-> ...
-> Out of memory: Killed process 1436 (python) total-vm:869012kB, anon-rss:607516kB, file-rss:44kB, shmem-rss:0kB, UID:1000 pgtables:1264kB oom_score_adj:0
-> 
-> Fixes: 70cb6d267790 ("mm/oom: add oom_score_adj and pgtables to Killed process message")
-> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
 
-Acked-by: David Rientjes <rientjes@google.com>
+ drivers/mfd/rn5t618.c       |  2 ++
+ include/linux/mfd/rn5t618.h | 11 +++++++++++
+ 2 files changed, 13 insertions(+)
 
-I'd also suggest a
+diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
+index 76d997c0cfe4..d78eb29b94a4 100644
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -33,6 +33,8 @@ static bool rn5t618_volatile_reg(struct device *dev, unsigned int reg)
+ 	case RN5T618_IR_GPF:
+ 	case RN5T618_MON_IOIN:
+ 	case RN5T618_INTMON:
++	case RN5T618_RTC_CTRL1 ... RN5T618_RTC_CTRL2:
++	case RN5T618_RTC_SECONDS ... RN5T618_RTC_YEAR:
+ 		return true;
+ 	default:
+ 		return false;
+diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.h
+index 739571656f2b..fba0df13d9a8 100644
+--- a/include/linux/mfd/rn5t618.h
++++ b/include/linux/mfd/rn5t618.h
+@@ -139,6 +139,17 @@
+ #define RN5T618_INTPOL			0x9c
+ #define RN5T618_INTEN			0x9d
+ #define RN5T618_INTMON			0x9e
++
++#define RN5T618_RTC_SECONDS     0xA0
++#define RN5T618_RTC_MDAY        0xA4
++#define RN5T618_RTC_MONTH       0xA5
++#define RN5T618_RTC_YEAR        0xA6
++#define RN5T618_RTC_ADJUST      0xA7
++#define RN5T618_RTC_ALARM_Y_SEC 0xA8
++#define RN5T618_RTC_DAL_MONTH   0xAC
++#define RN5T618_RTC_CTRL1       0xAE
++#define RN5T618_RTC_CTRL2       0xAF
++
+ #define RN5T618_PREVINDAC		0xb0
+ #define RN5T618_BATDAC			0xb1
+ #define RN5T618_CHGCTL1			0xb3
+-- 
+2.11.0
 
-Cc: stable@vger.kernel.org # 5.4
