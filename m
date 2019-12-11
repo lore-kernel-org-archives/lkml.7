@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF924C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D64AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1569208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F42922B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077995;
-	bh=dRn+yS+kPoAvTsY/Yg5x1owoX167NMGs9lLA9+q0DJ4=;
+	s=default; t=1576078000;
+	bh=CUq/QJulsZE6gr8Sp5//TUm3pgrhKTYBsdvSjudCuyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umzUbskDKRuuTYFE2K23DOOeDJZL8bQyhlLMrhKiJMhQrByUEywzJ4/xuuSlYX0cW
-	 09ykhxPht/ULyJc5UYK+QBLoJ4Fe0iGHN+qtl62lIMijIw4ZKNmB12D35eEASb7g0W
-	 TY08aarK/oUI6Ve2hDD4JJ2cshztw+SNipQxoNe0=
+	b=tOQ5M68NOQ5oURJu21fmMPe4Pl93wnHvvtvPZxS0WUq89bjEPCJxsA8QKvsvtdTa2
+	 tuzFsdwsCq9AmFtUTdahKT8bv5MRB9tXUlp0AYQtuXzPAB47D2JKN/LRu7IcUmWjDY
+	 zi0ANu2chvQs8ddhKQbHduZyPpDtzAekQ0a46ELs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbfLKP0e (ORCPT
+        id S1733161AbfLKP0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732953AbfLKP0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:32 -0500
+        id S1733151AbfLKP0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9832173E;
-        Wed, 11 Dec 2019 15:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF8B524658;
+        Wed, 11 Dec 2019 15:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077991;
-        bh=dRn+yS+kPoAvTsY/Yg5x1owoX167NMGs9lLA9+q0DJ4=;
+        s=default; t=1576077997;
+        bh=CUq/QJulsZE6gr8Sp5//TUm3pgrhKTYBsdvSjudCuyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3eASnZINM+qLhr2TdZs0YqddRn5H9ZISSil0fRtLrHurbqzkvDKWZ8hI/3Jtmwxp
-         KsQSnEgVZEegsDIDruaAsg0IVs6q2F8oVhH5tXmeGNOTRqWcRAczu4T2aPIrLADArG
-         +SjBjHO6nzbcoP0phkKmqo8pbhLq4u/ee5kPhJ84=
+        b=iRTCsvNmfmLR1DW91h2hWKy7GeBjymv+5HNwwbhesvxlnWhmlqHTP5xPPAMc+QRly
+         +gHuAPl8okBFSurAMjl+5TJ5VXKV6t423OGM8grgQs3XI7aXl0v9PP0SQ6m7cM0li8
+         449tGvdsHey6A1qB2XEpTiyYAA9brpzTZQBnNUus=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 235/243] spi: atmel: Fix CS high support
-Date:   Wed, 11 Dec 2019 16:06:37 +0100
-Message-Id: <20191211150355.196921973@linuxfoundation.org>
+        Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>,
+        Martin Elshuber <martin.elshuber@theobroma-systems.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Johan Hovold <johan@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: [PATCH 4.19 237/243] can: ucan: fix non-atomic allocation in completion handler
+Date:   Wed, 11 Dec 2019 16:06:39 +0100
+Message-Id: <20191211150355.333300351@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,50 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
+commit 870db5d1015c8bd63e93b579e857223c96249ff7 upstream.
 
-Until a few years ago, this driver was only used with CS GPIO. The
-only exception is CS0 on AT91RM9200 which has to use internal CS. A
-limitation of the internal CS is that they don't support CS High.
+USB completion handlers are called in atomic context and must
+specifically not allocate memory using GFP_KERNEL.
 
-So by using the CS GPIO the CS high configuration was available except
-for the particular case CS0 on RM9200.
-
-When the support for the internal chip-select was added, the check of
-the CS high support was not updated. Due to this the driver accepts
-this configuration for all the SPI controller v2 (used by all SoCs
-excepting the AT91RM9200) whereas the hardware doesn't support it for
-infernal CS.
-
-This patch fixes the test to match the hardware capabilities.
-
-Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 9f2d3eae88d2 ("can: ucan: add driver for Theobroma Systems UCAN devices")
+Cc: stable <stable@vger.kernel.org>     # 4.19
+Cc: Jakob Unterwurzacher <jakob.unterwurzacher@theobroma-systems.com>
+Cc: Martin Elshuber <martin.elshuber@theobroma-systems.com>
+Cc: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-atmel.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/can/usb/ucan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1193,10 +1193,8 @@ static int atmel_spi_setup(struct spi_de
- 	as = spi_master_get_devdata(spi->master);
+--- a/drivers/net/can/usb/ucan.c
++++ b/drivers/net/can/usb/ucan.c
+@@ -796,7 +796,7 @@ resubmit:
+ 			  up);
  
- 	/* see notes above re chipselect */
--	if (!atmel_spi_is_v2(as)
--			&& spi->chip_select == 0
--			&& (spi->mode & SPI_CS_HIGH)) {
--		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-+	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
- 		return -EINVAL;
- 	}
+ 	usb_anchor_urb(urb, &up->rx_urbs);
+-	ret = usb_submit_urb(urb, GFP_KERNEL);
++	ret = usb_submit_urb(urb, GFP_ATOMIC);
  
+ 	if (ret < 0) {
+ 		netdev_err(up->netdev,
 
 
