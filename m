@@ -2,258 +2,144 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF8DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB9BC47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364A521556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576097784;
-	bh=W21JTWaGa/ZoqxuyazaAcOIJgri7SXi4lkogMT3HvPA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=CHTgfccOB+gpoFVMTZgAcIA8OSRALvl26MJs//cdAOyFBjly2Lr6kby3p/3Ml/Xod
-	 19UFYwPr53jVvaJXYCUTtZPnH2d+Sp91NZZPF2oDvyLPbvKlxi4IJu4U/louhrLroG
-	 f3R5uuOHY130r2LQjNwQVyZY/EK/7jHnubVIHWfo=
+	by mail.kernel.org (Postfix) with ESMTP id 4AF2622527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLKU4X (ORCPT
+        id S1726974AbfLKU5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:56:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50602 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 15:57:42 -0500
+Received: from ms.lwn.net ([45.79.88.28]:58190 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726141AbfLKU4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:56:22 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        id S1726141AbfLKU5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:57:41 -0500
+Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D93B20836;
-        Wed, 11 Dec 2019 20:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576097781;
-        bh=W21JTWaGa/ZoqxuyazaAcOIJgri7SXi4lkogMT3HvPA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YcJLoh79oaRfo8o/snWm+fsgAai5UlqO1s7cxWIwHawvowzpAMQqbn3XcWKbArK6M
-         oT9iCQnBRjeZcXPCjkRXvYtsRPVovTca/t52YqHpgQfZRcdG96w1ve/gzGaXId4TYO
-         lNiYJVErKtfwQZyyl/nGX07HqC9A/CZTbcDUireI=
-Date:   Wed, 11 Dec 2019 14:56:19 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     James Sewart <jamessewart@arista.com>
-Cc:     linux-pci@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
+        by ms.lwn.net (Postfix) with ESMTPSA id 7D799739;
+        Wed, 11 Dec 2019 20:57:38 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 13:57:37 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Alex Williamson <alex.williamson@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v6 2/3] PCI: Add parameter nr_devfns to pci_add_dma_alias
-Message-ID: <20191211205619.GA109675@google.com>
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFQ=?= =?UTF-8?B?w7ZwZWw=?= 
+        <bjorn.topel@intel.com>, Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v9 10/25] mm/gup: introduce pin_user_pages*() and
+ FOLL_PIN
+Message-ID: <20191211135737.581add2f@lwn.net>
+In-Reply-To: <20191211025318.457113-11-jhubbard@nvidia.com>
+References: <20191211025318.457113-1-jhubbard@nvidia.com>
+        <20191211025318.457113-11-jhubbard@nvidia.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <826A0459-FA8D-4BDB-A342-CE46974466DF@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:37:30PM +0000, James Sewart wrote:
-> > On 10 Dec 2019, at 22:37, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >> -void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-> >> +void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
-> >> {
-> >> +	int devfn_to;
-> >> +
-> >> +	nr_devfns = min(nr_devfns, (unsigned)MAX_NR_DEVFNS);
-> >> +	devfn_to = devfn_from + nr_devfns - 1;
-> > 
-> > I made this look like:
-> > 
-> > +       devfn_to = min(devfn_from + nr_devfns - 1,
-> > +                      (unsigned) MAX_NR_DEVFNS - 1);
-> > 
-> > so devfn_from=0xf0, nr_devfns=0x20 doesn't cause devfn_to to wrap
-> > around.
-> > 
-> > I did keep Logan's reviewed-by, so let me know if I broke something.
-> 
-> I think nr_devfns still needs updating as it is used for bitmap_set. 
-> Although thinking about it now we should limit the number to alias to be 
-> maximum (MAX_NR_DEVFNS - devfn_from), so that we don’t set past the end of 
-> the bitmap:
-> 
->  nr_devfns = min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
-> 
-> I think with this change we wont need to clip devfn_to.
+On Tue, 10 Dec 2019 18:53:03 -0800
+John Hubbard <jhubbard@nvidia.com> wrote:
 
-Indeed, you're right, thanks!  I put this in, so it now looks like
-the following.  I dropped Logan's reviewed-by to avoid putting words
-in his mouth ;)
+> Introduce pin_user_pages*() variations of get_user_pages*() calls,
+> and also pin_longterm_pages*() variations.
 
-commit 5ddcd840395a ("PCI: Add nr_devfns parameter to pci_add_dma_alias()")
-Author: James Sewart <jamessewart@arista.com>
-Date:   Tue Dec 10 16:07:30 2019 -0600
+Just a couple of nits on the documentation patch
 
-    PCI: Add nr_devfns parameter to pci_add_dma_alias()
-    
-    Add a "nr_devfns" parameter to pci_add_dma_alias() so it can be used to
-    create DMA aliases for a range of devfns.
-    
-    [bhelgaas: incorporate nr_devfns fix from James, update
-    quirk_pex_vca_alias() and setup_aliases()]
-    Signed-off-by: James Sewart <jamessewart@arista.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> +++ b/Documentation/core-api/pin_user_pages.rst
+> @@ -0,0 +1,232 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +====================================================
+> +pin_user_pages() and related calls
+> +====================================================
+> +
+> +.. contents:: :local:
+> +
+> +Overview
+> +========
+> +
+> +This document describes the following functions: ::
+> +
+> + pin_user_pages
+> + pin_user_pages_fast
+> + pin_user_pages_remote
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index bd25674ee4db..7a6c056b9b9c 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -230,11 +230,8 @@ static struct pci_dev *setup_aliases(struct device *dev)
- 	 */
- 	ivrs_alias = amd_iommu_alias_table[pci_dev_id(pdev)];
- 	if (ivrs_alias != pci_dev_id(pdev) &&
--	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number) {
--		pci_add_dma_alias(pdev, ivrs_alias & 0xff);
--		pci_info(pdev, "Added PCI DMA alias %02x.%d\n",
--			PCI_SLOT(ivrs_alias), PCI_FUNC(ivrs_alias));
--	}
-+	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number)
-+		pci_add_dma_alias(pdev, ivrs_alias & 0xff, 1);
- 
- 	clone_aliases(pdev);
- 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 7b5fa2eabe09..951099279192 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5998,7 +5998,8 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
- /**
-  * pci_add_dma_alias - Add a DMA devfn alias for a device
-  * @dev: the PCI device for which alias is added
-- * @devfn: alias slot and function
-+ * @devfn_from: alias slot and function
-+ * @nr_devfns: number of subsequent devfns to alias
-  *
-  * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
-  * which is used to program permissible bus-devfn source addresses for DMA
-@@ -6014,8 +6015,13 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
-  * cannot be left as a userspace activity).  DMA aliases should therefore
-  * be configured via quirks, such as the PCI fixup header quirk.
-  */
--void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
-+void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
- {
-+	int devfn_to;
-+
-+	nr_devfns = min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
-+	devfn_to = devfn_from + nr_devfns - 1;
-+
- 	if (!dev->dma_alias_mask)
- 		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
- 	if (!dev->dma_alias_mask) {
-@@ -6023,9 +6029,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
- 		return;
- 	}
- 
--	set_bit(devfn, dev->dma_alias_mask);
--	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
--		 PCI_SLOT(devfn), PCI_FUNC(devfn));
-+	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
-+
-+	if (nr_devfns == 1)
-+		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
-+				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
-+	else if (nr_devfns > 1)
-+		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
-+				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
-+				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
- }
- 
- bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 4937a088d7d8..2fcad18622eb 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3932,7 +3932,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, int probe)
- static void quirk_dma_func0_alias(struct pci_dev *dev)
- {
- 	if (PCI_FUNC(dev->devfn) != 0)
--		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
-+		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0), 1);
- }
- 
- /*
-@@ -3946,7 +3946,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
- static void quirk_dma_func1_alias(struct pci_dev *dev)
- {
- 	if (PCI_FUNC(dev->devfn) != 1)
--		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1));
-+		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1), 1);
- }
- 
- /*
-@@ -4031,7 +4031,7 @@ static void quirk_fixed_dma_alias(struct pci_dev *dev)
- 
- 	id = pci_match_id(fixed_dma_alias_tbl, dev);
- 	if (id)
--		pci_add_dma_alias(dev, id->driver_data);
-+		pci_add_dma_alias(dev, id->driver_data, 1);
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, quirk_fixed_dma_alias);
- 
-@@ -4072,9 +4072,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, quirk_use_pcie_bridge_dma_alias);
-  */
- static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
- {
--	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
--	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
--	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
-+	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
-+	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
-+	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
-@@ -4098,13 +4098,8 @@ static void quirk_pex_vca_alias(struct pci_dev *pdev)
- 	const unsigned int num_pci_slots = 0x20;
- 	unsigned int slot;
- 
--	for (slot = 0; slot < num_pci_slots; slot++) {
--		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
--		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
--		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
--		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
--		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
--	}
-+	for (slot = 0; slot < num_pci_slots; slot++)
-+		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0), 5);
- }
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
-@@ -5332,7 +5327,7 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
- 			pci_dbg(pdev,
- 				"Aliasing Partition %d Proxy ID %02x.%d\n",
- 				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
--			pci_add_dma_alias(pdev, devfn);
-+			pci_add_dma_alias(pdev, devfn, 1);
- 		}
- 	}
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index c393dff2d66f..930fab293073 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -2310,7 +2310,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
- }
- #endif
- 
--void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
-+void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns);
- bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
- int pci_for_each_dma_alias(struct pci_dev *pdev,
- 			   int (*fn)(struct pci_dev *pdev,
+You could just say "the following functions::" and get the result you're
+after with a slightly less alien plain-text reading experience.
+
+Of course, you could also just say "This document describes
+pin_user_pages(), pin_user_pages_fast(), and pin_user_pages_remote()." But
+that's a matter of personal taste, I guess.  Using the function() notation
+will cause the docs system to automatically link to the kerneldoc info,
+though.  
+
+> +Basic description of FOLL_PIN
+> +=============================
+> +
+> +FOLL_PIN and FOLL_LONGTERM are flags that can be passed to the get_user_pages*()
+> +("gup") family of functions. FOLL_PIN has significant interactions and
+> +interdependencies with FOLL_LONGTERM, so both are covered here.
+> +
+> +FOLL_PIN is internal to gup, meaning that it should not appear at the gup call
+> +sites. This allows the associated wrapper functions  (pin_user_pages*() and
+> +others) to set the correct combination of these flags, and to check for problems
+> +as well.
+> +
+> +FOLL_LONGTERM, on the other hand, *is* allowed to be set at the gup call sites.
+> +This is in order to avoid creating a large number of wrapper functions to cover
+> +all combinations of get*(), pin*(), FOLL_LONGTERM, and more. Also, the
+> +pin_user_pages*() APIs are clearly distinct from the get_user_pages*() APIs, so
+> +that's a natural dividing line, and a good point to make separate wrapper calls.
+> +In other words, use pin_user_pages*() for DMA-pinned pages, and
+> +get_user_pages*() for other cases. There are four cases described later on in
+> +this document, to further clarify that concept.
+> +
+> +FOLL_PIN and FOLL_GET are mutually exclusive for a given gup call. However,
+> +multiple threads and call sites are free to pin the same struct pages, via both
+> +FOLL_PIN and FOLL_GET. It's just the call site that needs to choose one or the
+> +other, not the struct page(s).
+> +
+> +The FOLL_PIN implementation is nearly the same as FOLL_GET, except that FOLL_PIN
+> +uses a different reference counting technique.
+> +
+> +FOLL_PIN is a prerequisite to FOLL_LONGTGERM. Another way of saying that is,
+
+FOLL_LONGTERM typoed there.
+
+Thanks,
+
+jon
