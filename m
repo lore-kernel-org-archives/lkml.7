@@ -2,168 +2,111 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19789C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF7FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95E0214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:58:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pLF6+ECJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4FDAD21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576072689;
+	bh=/uVwoZa0TH4qLvgsoOLTqHEdNpqp9s5ZOr6+MJr++8o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H2Twus9uA5kYbPfumQPX17ifwpLyCW2MprLJE9+tyv5BQFA/zMGuFlwD5BzXy7b2W
+	 3R5zChyRhHeRZchmxzOhgGKBpt5G3X98WdViPvtrpNKs05L6Rje8eQDSkuUSTVSDnM
+	 XwHE3zLOutYn3hmbal9vMVZjtC7xN4crcFYfWynM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfLKN6D (ORCPT
+        id S1729760AbfLKN6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:58:03 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:38463 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbfLKN6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:58:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576072682; x=1607608682;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=W8TTi/2IIEXbPsGUA9DEIj5AQ0RHJuHWIGTOmHVUQus=;
-  b=pLF6+ECJZtqBNaM3K4bnY13fxpzUOh5lElBDTq3fONH549VhWM+TCnnT
-   bfZwXkHHtcF0/gkTHM5Vf3T9l72Pfpfj1PzVuslTpe+jnCAHj4B73wQSI
-   8+MsXA0gQW++m9t1xTOtCDJYBuh9saAvI2sGrOE4ZdkQjyV+rp/ghZGvg
-   o=;
-IronPort-SDR: mkmquFRZdQ8fhag+H0SlzhM9qj48wmtmu0VhkeL9obp3+XTB70l/s1tnfYtMUyjId7XwSWkwiv
- Nb2KZPkVlIvA==
-X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
-   d="scan'208";a="4498934"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 11 Dec 2019 13:57:44 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-5bdc5131.us-west-2.amazon.com (Postfix) with ESMTPS id 38FCAA2707;
-        Wed, 11 Dec 2019 13:57:44 +0000 (UTC)
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 13:57:43 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC003.ant.amazon.com (10.43.164.24) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 13:57:42 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Wed, 11 Dec 2019 13:57:42 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     =?iso-8859-1?Q?Roger_Pau_Monn=E9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: RE: [PATCH] xen-blkback: prevent premature module unload
-Thread-Topic: [PATCH] xen-blkback: prevent premature module unload
-Thread-Index: AQHVr2mJT7izwmimDUiZW3emm6kz0qe0zXcAgAAhBkCAAAfzgIAAAGuQ
-Date:   Wed, 11 Dec 2019 13:57:42 +0000
-Message-ID: <4c9a0d81d0634f27a41fe10c8d93a4ea@EX13D32EUC003.ant.amazon.com>
-References: <20191210145305.6605-1-pdurrant@amazon.com>
- <20191211112754.GM980@Air-de-Roger>
- <14a01d62046c48ee9b2486917370b5f5@EX13D32EUC003.ant.amazon.com>
- <20191211135523.GP980@Air-de-Roger>
-In-Reply-To: <20191211135523.GP980@Air-de-Roger>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.164.172]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 08:58:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:59152 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbfLKN6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:58:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 25FC31FB;
+        Wed, 11 Dec 2019 05:58:05 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83FF83F67D;
+        Wed, 11 Dec 2019 05:58:04 -0800 (PST)
+Date:   Wed, 11 Dec 2019 13:58:03 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Weimer <fweimer@redhat.com>,
+        linux-kernel@vger.kernel.org, Sudakshina Das <sudi.das@arm.com>
+Subject: Re: [PATCH v3 02/12] ELF: Add ELF program property parsing support
+Message-ID: <20191211135803.GD3870@sirena.org.uk>
+References: <1571419545-20401-1-git-send-email-Dave.Martin@arm.com>
+ <1571419545-20401-3-git-send-email-Dave.Martin@arm.com>
+ <201910291611.69822D5E04@keescook>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
+Content-Disposition: inline
+In-Reply-To: <201910291611.69822D5E04@keescook>
+X-Cookie: NOBODY EXPECTS THE SPANISH INQUISITION!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Roger Pau Monn=E9 <roger.pau@citrix.com>
-> Sent: 11 December 2019 13:55
-> To: Durrant, Paul <pdurrant@amazon.com>; Juergen Gross <jgross@suse.com>
-> Cc: xen-devel@lists.xenproject.org; linux-block@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>;
-> Jens Axboe <axboe@kernel.dk>
-> Subject: Re: [PATCH] xen-blkback: prevent premature module unload
->=20
-> On Wed, Dec 11, 2019 at 01:27:42PM +0000, Durrant, Paul wrote:
-> > > -----Original Message-----
-> > > From: Roger Pau Monn=E9 <roger.pau@citrix.com>
-> > > Sent: 11 December 2019 11:29
-> > > To: Durrant, Paul <pdurrant@amazon.com>
-> > > Cc: xen-devel@lists.xenproject.org; linux-block@vger.kernel.org;
-> linux-
-> > > kernel@vger.kernel.org; Konrad Rzeszutek Wilk
-> <konrad.wilk@oracle.com>;
-> > > Jens Axboe <axboe@kernel.dk>
-> > > Subject: Re: [PATCH] xen-blkback: prevent premature module unload
-> > >
-> > > On Tue, Dec 10, 2019 at 02:53:05PM +0000, Paul Durrant wrote:
-> > > > Objects allocated by xen_blkif_alloc come from the 'blkif_cache'
-> kmem
-> > > > cache. This cache is destoyed when xen-blkif is unloaded so it is
-> > > > necessary to wait for the deferred free routine used for such
-> objects to
-> > > > complete. This necessity was missed in commit 14855954f636 "xen-
-> blkback:
-> > > > allow module to be cleanly unloaded". This patch fixes the problem
-> by
-> > > > taking/releasing extra module references in xen_blkif_alloc/free()
-> > > > respectively.
-> > > >
-> > > > Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> > >
-> > > Reviewed-by: Roger Pau Monn=E9 <roger.pau@citrix.com>
-> > >
-> > > One nit below.
-> > >
-> > > > ---
-> > > > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> > > > Cc: "Roger Pau Monn=E9" <roger.pau@citrix.com>
-> > > > Cc: Jens Axboe <axboe@kernel.dk>
-> > > > ---
-> > > >  drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >
-> > > > diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen=
--
-> > > blkback/xenbus.c
-> > > > index e8c5c54e1d26..59d576d27ca7 100644
-> > > > --- a/drivers/block/xen-blkback/xenbus.c
-> > > > +++ b/drivers/block/xen-blkback/xenbus.c
-> > > > @@ -171,6 +171,15 @@ static struct xen_blkif
-> *xen_blkif_alloc(domid_t
-> > > domid)
-> > > >  	blkif->domid =3D domid;
-> > > >  	atomic_set(&blkif->refcnt, 1);
-> > > >  	init_completion(&blkif->drain_complete);
-> > > > +
-> > > > +	/*
-> > > > +	 * Because freeing back to the cache may be deferred, it is
-> not
-> > > > +	 * safe to unload the module (and hence destroy the cache)
-> until
-> > > > +	 * this has completed. To prevent premature unloading, take an
-> > > > +	 * extra module reference here and release only when the
-> object
-> > > > +	 * has been free back to the cache.
-> > >                     ^ freed
-> >
-> > Oh yes. Can this be done on commit, or would you like me to send a v2?
->=20
-> Adjusting on commit would be fine for me, but it's up to Juergen since
-> he is the one that will pick this up. IIRC the module unload patches
-> didn't go through the block subsystem.
 
-True. I forgot manually add Juergen cc list.
+--3Gf/FFewwPeBMqCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Paul
+On Tue, Oct 29, 2019 at 04:14:47PM -0700, Kees Cook wrote:
+> On Fri, Oct 18, 2019 at 06:25:35PM +0100, Dave Martin wrote:
 
->=20
-> Thanks, Roger.
+A bit of a delay, sorry - I've taken this series over from Dave and
+wasn't on the CC so only just saw this.
+
+> > +#ifndef ELF_COMPAT
+> > +#define ELF_COMPAT 0
+> > +#endif
+
+> Why is "compat" interesting for the arch_ callback? Shouldn't just the
+> unsigned long size be needed?
+
+The set of properties handled or how they should be handled may vary
+depending on the ABI.  For example arm64 supports BTI only for AArch64
+but not for AArch32 so we should only handle the property for BTI for
+AArch64 binaries.
+
+--3Gf/FFewwPeBMqCJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3w9eoACgkQJNaLcl1U
+h9BmBgf+NNNCMclmwLDa2ZSVlL0/OBQcMH0ymsvXlLz6O8/LVbh/6UcTv2gnLRbZ
+4/onE8sI1dHBBZCYuiHk3LVyQElzoci7ntsEO96/Ej4HGEGddSJcy841btZcJF+o
+qJD7ZnkU9MR6mk+9QNiJ1Op5JbHinr42IhFw7jdgMDzjc3/BRzOCATyUibraciEN
+bocm5+nKJVPYNXiWolMgRER+8JH8w7I52Agj6Ob0zjZOZi9SBuxFIXTMzVqrvnyX
+iLIi/RIUpxLAdnb0ZRnyowuwgMFQdX38HKBxi6WLO2hcK4HUtytWbgez6KjRpnga
+K5oQP5sxINKD2ERveqnVOuVM/CNbJA==
+=RBvh
+-----END PGP SIGNATURE-----
+
+--3Gf/FFewwPeBMqCJ--
