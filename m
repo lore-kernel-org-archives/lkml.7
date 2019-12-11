@@ -2,117 +2,128 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1357C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CDA2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56EA82073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fhu8rDts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732742AbfLKPv5 (ORCPT
+        id S1732792AbfLKPwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Dec 2019 10:52:02 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44318 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732274AbfLKPv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:51:57 -0500
-Received: from mga18.intel.com ([134.134.136.126]:5282 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730499AbfLKPvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:51:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 07:51:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="225568792"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 07:51:51 -0800
-Date:   Wed, 11 Dec 2019 07:51:51 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 6/6] KVM: Fix some writing mistakes
-Message-ID: <20191211155151.GB5044@linux.intel.com>
-References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
- <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBFpsoN086679;
+        Wed, 11 Dec 2019 09:51:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576079514;
+        bh=S4bP18sWt9PdB574Es/xG9xm4co/SVmYIRkd4NjN7Mc=;
+        h=From:To:CC:Subject:Date;
+        b=Fhu8rDtsj4xPAeq455IHuahaTHo8BxykS+6EH19peSRW6dawz+izwoOmzAcc9TOlh
+         rKjdzZW2NSq1Nse2Ggsc2HCufMA5HHMwff9ZWVieZ2r/1d2U9LBcuhQ+laaWQWKVLx
+         DUxTnahBK654itz3o1v4wr/PZdwugjg3vyXjUCzo=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBFps8Y062541
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 09:51:54 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 09:51:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 09:51:54 -0600
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBFpprs030125;
+        Wed, 11 Dec 2019 09:51:52 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, <dannenberg@ti.com>,
+        <linux-omap@vger.kernel.org>
+Subject: [PATCH] spi: spi-ti-qspi: Fix a bug when accessing non default CS
+Date:   Wed, 11 Dec 2019 21:22:16 +0530
+Message-ID: <20191211155216.30212-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:26:25PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> Fix some writing mistakes in the comments.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 2 +-
->  arch/x86/kvm/vmx/vmx.c          | 2 +-
->  virt/kvm/kvm_main.c             | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 159a28512e4c..efba864ed42d 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -606,7 +606,7 @@ struct kvm_vcpu_arch {
->  	 * Paging state of an L2 guest (used for nested npt)
->  	 *
->  	 * This context will save all necessary information to walk page tables
-> -	 * of the an L2 guest. This context is only initialized for page table
-> +	 * of the L2 guest. This context is only initialized for page table
+When switching ChipSelect from default CS0 to any other CS, driver fails
+to update the bits in system control module register that control which
+CS is mapped for MMIO access. This causes reads to fail when driver
+tries to access QSPI flash on CS1/2/3.
 
-I'd whack "the" instead of "and", i.e. ...walk page tables of an L2 guest,
-as KVM isn't limited to just one L2 guest.
+Fix this by updating appropriate bits whenever active CS changes.
 
->  	 * walking and not for faulting since we never handle l2 page faults on
+Reported-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+ drivers/spi/spi-ti-qspi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-While you're here, want to change "l2" to "L2"?
+diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
+index 3cb65371ae3b..66dcb6128539 100644
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -62,6 +62,7 @@ struct ti_qspi {
+ 	u32 dc;
+ 
+ 	bool mmap_enabled;
++	int current_cs;
+ };
+ 
+ #define QSPI_PID			(0x0)
+@@ -487,6 +488,7 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
+ 				   MEM_CS_EN(spi->chip_select));
+ 	}
+ 	qspi->mmap_enabled = true;
++	qspi->current_cs = spi->chip_select;
+ }
+ 
+ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+@@ -498,6 +500,7 @@ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+ 				   MEM_CS_MASK, 0);
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
+ }
+ 
+ static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
+@@ -543,7 +546,7 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
+ 
+ 	mutex_lock(&qspi->list_lock);
+ 
+-	if (!qspi->mmap_enabled)
++	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select)
+ 		ti_qspi_enable_memory_map(mem->spi);
+ 	ti_qspi_setup_mmap_read(mem->spi, op->cmd.opcode, op->data.buswidth,
+ 				op->addr.nbytes, op->dummy.nbytes);
+@@ -799,6 +802,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
+ 
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (!ret)
+-- 
+2.24.0
 
->  	 * the host.
->  	 */
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 1be3854f1090..dae712c8785e 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1922,7 +1922,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  }
->  
->  /*
-> - * Writes msr value into into the appropriate "register".
-> + * Writes msr value into the appropriate "register".
->   * Returns 0 on success, non-0 otherwise.
->   * Assumes vcpu_load() was already called.
->   */
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index f0501272268f..1a6d5ebd5c42 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1519,7 +1519,7 @@ static inline int check_user_page_hwpoison(unsigned long addr)
->  /*
->   * The fast path to get the writable pfn which will be stored in @pfn,
->   * true indicates success, otherwise false is returned.  It's also the
-> - * only part that runs if we can are in atomic context.
-> + * only part that runs if we can in atomic context.
-
-This should remove "can" instead of "are", i.e. ...part that runs if we are
-in atomic context.  The comment is calling out that hva_to_pfn() will return
-immediately if hva_to_pfn_fast() and the kernel is atomic context.
-
->   */
->  static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
->  			    bool *writable, kvm_pfn_t *pfn)
-> -- 
-> 2.19.1
-> 
