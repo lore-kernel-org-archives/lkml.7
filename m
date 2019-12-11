@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0F1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0C2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D45524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22391222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076961;
-	bh=W0VANgufBlokocbYrRF/dsFVIFjy6aAmV9Ao17Jfg4U=;
+	s=default; t=1576076967;
+	bh=vkqTVeoP7Gmqtk/Duna3R/OH1Tk748TwIhp/xbYauV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRjy5SRYjdTSVy3CgyCQ792ia7OrOw+se0wo7ec7PMqrPuSG6SZXWsz89HpizoCfr
-	 pOEL+QIgTStiNPopZM+dE7V7DglBEooFmloct4i5jIc5mwv/Rg0xOnSR3da1rq/i18
-	 4PeVU6+24zwglW+G3qO7tgb/OfwRXFVpyI6Nh0yM=
+	b=eiMZz+9goQdGgGtFgoAvarYI3D+ZR07Q0/QTLMQi9zVQDSkLkaxXhAkHaBIZUZRht
+	 sFyeqS98qtNT4lCTcD+vkvBzojwBRiCvExpY1yXCSuH/zjER45xo8eWIAbbagsHwGo
+	 8Mfu/cYSQCVGHkRf84PAgXlN/futccE4H9XAgNh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730573AbfLKPJU (ORCPT
+        id S1730582AbfLKPJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:09:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729481AbfLKPJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:18 -0500
+        id S1729838AbfLKPJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1EF92464B;
-        Wed, 11 Dec 2019 15:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E6424654;
+        Wed, 11 Dec 2019 15:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076958;
-        bh=W0VANgufBlokocbYrRF/dsFVIFjy6aAmV9Ao17Jfg4U=;
+        s=default; t=1576076955;
+        bh=vkqTVeoP7Gmqtk/Duna3R/OH1Tk748TwIhp/xbYauV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=si1mhh958vUVvVscgQTW5fgwDMKJdgy/8eDMFmqk2ogrjF2iuYB1lE/T8oPlkDsb9
-         +MyXM0T8rVIrhfr+aVunJWzuk2RWxyxqlV4ZGtjG8zYCoqvqvaGm3BbEmeJu2f1lhY
-         oy6aAdVJi0NKBgAID9EfiS6rcnv8qylypSEQf/2A=
+        b=rPjMXRNmprMHKe0F1rT84EMQYAiemUgSk2up0rB7OrwQdcvo+JLZgxAaYLm1Zu/v8
+         P8GWltslGnzFO2M2gpggiK4DItC9MCiXs1uFbYWJNl6H5P+sswsqWd+NvtIVMpQaz5
+         eZKMZVVAYmpVIw5mdOLLCYzzExYQY5MrL4+Qz6oE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 5.4 56/92] drm/i810: Prevent underflow in ioctl
-Date:   Wed, 11 Dec 2019 16:05:47 +0100
-Message-Id: <20191211150247.145887780@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Deepak Rawat <drawat@vmware.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 5.4 55/92] drm: damage_helper: Fix race checking plane->state->fb
+Date:   Wed, 11 Dec 2019 16:05:46 +0100
+Message-Id: <20191211150246.621431176@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,43 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
+commit 354c2d310082d1c384213ba76c3757dd3cd8755d upstream.
 
-The "used" variables here come from the user in the ioctl and it can be
-negative.  It could result in an out of bounds write.
+Since the dirtyfb ioctl doesn't give us any hints as to which plane is
+scanning out the fb it's marking as damaged, we need to loop through
+planes to find it.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
-Cc: stable@vger.kernel.org
+Currently we just reach into plane state and check, but that can race
+with another commit changing the fb out from under us. This patch locks
+the plane before checking the fb and will release the lock if the plane
+is not displaying the dirty fb.
+
+Fixes: b9fc5e01d1ce ("drm: Add helper to implement legacy dirtyfb")
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Deepak Rawat <drawat@vmware.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Thomas Hellstrom <thellstrom@vmware.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v5.0+
+Reported-by: Daniel Vetter <daniel@ffwll.ch>
+Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190904202938.110207-1-sean@poorly.run
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i810/i810_dma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_damage_helper.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i810/i810_dma.c
-+++ b/drivers/gpu/drm/i810/i810_dma.c
-@@ -728,7 +728,7 @@ static void i810_dma_dispatch_vertex(str
- 	if (nbox > I810_NR_SAREA_CLIPRECTS)
- 		nbox = I810_NR_SAREA_CLIPRECTS;
+--- a/drivers/gpu/drm/drm_damage_helper.c
++++ b/drivers/gpu/drm/drm_damage_helper.c
+@@ -212,8 +212,14 @@ retry:
+ 	drm_for_each_plane(plane, fb->dev) {
+ 		struct drm_plane_state *plane_state;
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+-		if (plane->state->fb != fb)
++		ret = drm_modeset_lock(&plane->mutex, state->acquire_ctx);
++		if (ret)
++			goto out;
++
++		if (plane->state->fb != fb) {
++			drm_modeset_unlock(&plane->mutex);
+ 			continue;
++		}
  
- 	if (sarea_priv->dirty)
-@@ -1048,7 +1048,7 @@ static void i810_dma_dispatch_mc(struct
- 	if (u != I810_BUF_CLIENT)
- 		DRM_DEBUG("MC found buffer that isn't mine!\n");
- 
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
- 
- 	sarea_priv->dirty = 0x7f;
+ 		plane_state = drm_atomic_get_plane_state(state, plane);
+ 		if (IS_ERR(plane_state)) {
 
 
