@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F93C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CF72073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2952073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079818;
-	bh=2j01xrxU82dvx7hc0Z9HeqJbY1k1vJAGGnbMsKIBhaE=;
+	s=default; t=1576079822;
+	bh=vkqTVeoP7Gmqtk/Duna3R/OH1Tk748TwIhp/xbYauV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UD69WvPsK9EH5tH3iUw0bRgUyJ8wawPOcsAEdX7xsz6MuxkLXvkpxwZz9PL/dfSdD
-	 by3Ht9XU3fel6pm0UEmRv0b0p0xWXymPbEnM4tqtocmgGEJk1lpw2EIqkjx0gm5ZB5
-	 Lp7yoa0u8yNfiDvXlWGyVndyFgv5aIzWVjzbt9cA=
+	b=SKAYx0Hq/+6k2/EJRWCChppawvrM3+3SpdKT5uOngYqTiGPOCjIIf9cLMmfAoYFfp
+	 tPg8bJNaA+BUv8PlUFPup/aOdGd2pHmTNI7Gb0q44CCpozkzpZF7Be3b7y7I6Iiy+4
+	 VKIPZknYGrx+UPoQg4GuNbqa2pHkNwIaxj8CA2k4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbfLKPPU (ORCPT
+        id S1731397AbfLKPPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731598AbfLKPOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:12 -0500
+        id S1731589AbfLKPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D561524682;
-        Wed, 11 Dec 2019 15:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6605320663;
+        Wed, 11 Dec 2019 15:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077252;
-        bh=2j01xrxU82dvx7hc0Z9HeqJbY1k1vJAGGnbMsKIBhaE=;
+        s=default; t=1576077249;
+        bh=vkqTVeoP7Gmqtk/Duna3R/OH1Tk748TwIhp/xbYauV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9PnWj4+dPe787OHLrW3zogRQ0fFNCdvXN1dPXGvfKu3gJbJpgczJ35UHhPMAwKNA
-         0wEJ471Ak1gRUbONMJimr2tKCbOW3RHYPVbit9ItyXFoizqO9Pwq8cImrTmAE2OnML
-         OvAnK/H6do5W7bUlSHhYYeoPwtHTWc8vQnqHxe9k=
+        b=rD6kgdcr9+zaA1vtS7VS+3o/efZdD+d1oPj53uGKkUgBBOE2PEzDJFK6CAqoeBG0O
+         YAevbIdJ7OkeWpP9lw1P4CWSIlFMVVJOPFqh4Pl54p8Op20y1zT3TGOjn6TzRBxf65
+         Fejw9VMsXyZqA90watdFTg4wP3qrl1gC2Yd1BoSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andres Freund <andres@anarazel.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.3 047/105] io_uring: ensure req->submit is copied when req is deferred
-Date:   Wed, 11 Dec 2019 16:05:36 +0100
-Message-Id: <20191211150240.986496848@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@gmail.com>,
+        Deepak Rawat <drawat@vmware.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 5.3 073/105] drm: damage_helper: Fix race checking plane->state->fb
+Date:   Wed, 11 Dec 2019 16:06:02 +0100
+Message-Id: <20191211150252.259403546@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -59,69 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Sean Paul <seanpaul@chromium.org>
 
-There's an issue with deferred requests through drain, where if we do
-need to defer, we're not copying over the sqe_submit state correctly.
-This can result in using uninitialized data when we then later go and
-submit the deferred request, like this check in __io_submit_sqe():
+commit 354c2d310082d1c384213ba76c3757dd3cd8755d upstream.
 
-         if (unlikely(s->index >= ctx->sq_entries))
-                 return -EINVAL;
+Since the dirtyfb ioctl doesn't give us any hints as to which plane is
+scanning out the fb it's marking as damaged, we need to loop through
+planes to find it.
 
-with 's' being uninitialized, we can randomly fail this check. Fix this
-by copying sqe_submit state when we defer a request.
+Currently we just reach into plane state and check, but that can race
+with another commit changing the fb out from under us. This patch locks
+the plane before checking the fb and will release the lock if the plane
+is not displaying the dirty fb.
 
-Because it was fixed as part of a cleanup series in mainline, before
-anyone realized we had this issue. That removed the separate states
-of ->index vs ->submit.sqe. That series is not something I was
-comfortable putting into stable, hence the much simpler addition.
-Here's the patch in the series that fixes the same issue:
-
-commit cf6fd4bd559ee61a4454b161863c8de6f30f8dca
-Author: Pavel Begunkov <asml.silence@gmail.com>
-Date:   Mon Nov 25 23:14:39 2019 +0300
-
-    io_uring: inline struct sqe_submit
-
-Reported-by: Andres Freund <andres@anarazel.de>
-Reported-by: Tomáš Chaloupka
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: b9fc5e01d1ce ("drm: Add helper to implement legacy dirtyfb")
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Deepak Rawat <drawat@vmware.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Thomas Hellstrom <thellstrom@vmware.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v5.0+
+Reported-by: Daniel Vetter <daniel@ffwll.ch>
+Reviewed-by: Daniel Vetter <daniel@ffwll.ch>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190904202938.110207-1-sean@poorly.run
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_damage_helper.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -1787,7 +1787,7 @@ static int io_poll_add(struct io_kiocb *
- }
+--- a/drivers/gpu/drm/drm_damage_helper.c
++++ b/drivers/gpu/drm/drm_damage_helper.c
+@@ -212,8 +212,14 @@ retry:
+ 	drm_for_each_plane(plane, fb->dev) {
+ 		struct drm_plane_state *plane_state;
  
- static int io_req_defer(struct io_ring_ctx *ctx, struct io_kiocb *req,
--			const struct io_uring_sqe *sqe)
-+			struct sqe_submit *s)
- {
- 	struct io_uring_sqe *sqe_copy;
+-		if (plane->state->fb != fb)
++		ret = drm_modeset_lock(&plane->mutex, state->acquire_ctx);
++		if (ret)
++			goto out;
++
++		if (plane->state->fb != fb) {
++			drm_modeset_unlock(&plane->mutex);
+ 			continue;
++		}
  
-@@ -1805,7 +1805,8 @@ static int io_req_defer(struct io_ring_c
- 		return 0;
- 	}
- 
--	memcpy(sqe_copy, sqe, sizeof(*sqe_copy));
-+	memcpy(&req->submit, s, sizeof(*s));
-+	memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
- 	req->submit.sqe = sqe_copy;
- 
- 	INIT_WORK(&req->work, io_sq_wq_submit_work);
-@@ -2114,7 +2115,7 @@ static int io_queue_sqe(struct io_ring_c
- {
- 	int ret;
- 
--	ret = io_req_defer(ctx, req, s->sqe);
-+	ret = io_req_defer(ctx, req, s);
- 	if (ret) {
- 		if (ret != -EIOCBQUEUED) {
- 			io_free_req(req);
+ 		plane_state = drm_atomic_get_plane_state(state, plane);
+ 		if (IS_ERR(plane_state)) {
 
 
