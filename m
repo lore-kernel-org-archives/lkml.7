@@ -2,201 +2,158 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF55C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C660FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25462465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90D9E24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077265;
-	bh=jnI2aVqd+dVMKXXNwURJnPVtBpfgcrJFRoJasNHLwH4=;
+	s=default; t=1576077270;
+	bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ascJbZ/F+FUmQYzzO3gsd5YZ6GKYrxvH6l0JAvBeFYCGetQ90LKcUW7jWI2wN7u7q
-	 tdfNsxUWJIdUWjHsJ5mwajiTOckucaLwls4fpzkPhm1sMXGgU+uL0QchpDTyNY2xK0
-	 hbmRBaMATyzSStqPU7VtWjDFnkbDiQ4hR0cJ7ASQ=
+	b=X1tlKQkOmFQnJu4TQqwBg3P3uRTAgRuqwoaBbgSGqRfwABfQ9McTAGAjjSaJggeNf
+	 /h4PDrEel3tR79vtw/JN0KK/yOdsNPRhx4vmZHQpLcD62aYWbmhezTZ2aL/KUIr+TJ
+	 D/rbXZx2CJkyyK5nvuPlDhvGpZuqWkNLOrHp6X38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731625AbfLKPOX (ORCPT
+        id S1730730AbfLKPO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbfLKPNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730621AbfLKPNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:13:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 845602465C;
+        by mail.kernel.org (Postfix) with ESMTPSA id CD7F924654;
         Wed, 11 Dec 2019 15:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077218;
-        bh=jnI2aVqd+dVMKXXNwURJnPVtBpfgcrJFRoJasNHLwH4=;
+        bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GB7VUd3LkwWcmtrfEB+rk3OtfGnh8O78nDeOXATIsZjq1GRvfRGY5/GBrk6GCoa2Y
-         kY0T+yD+5mesYZwvuzZaLZ9ZMpSjucqk3K6/kRd05xW5irW7FY4JruyQ27qKnLt7yk
-         Tsw24W7WUGD+gP9xAowsDYaLpl90uxwuuY6YXhZI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Mike Christie <mchristi@redhat.com>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, open-iscsi@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 098/134] scsi: target: iscsi: Wait for all commands to finish before freeing a session
-Date:   Wed, 11 Dec 2019 10:11:14 -0500
-Message-Id: <20191211151150.19073-98-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=jyQUmKIEChNWI/nzcaTRaSajjTC6bs99MUxAgH6cWN6XWzY3lriZWmMFnWQrP7bvb
+         RNbrvddKq0dDWo/IJXFtNJZKo6DSTiFcm1mCAzohvbrWHucDtcX7304MB+HS+eUD3l
+         V0k7fZIZwojzWE/Yh5dKJE0tc27t+kXj6gVIsCEQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Joerg Roedel <jroedel@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.3 062/105] x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
+Date:   Wed, 11 Dec 2019 16:05:51 +0100
+Message-Id: <20191211150246.703073844@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+commit 9a62d20027da3164a22244d9f022c0c987261687 upstream.
 
-The iSCSI target driver is the only target driver that does not wait for
-ongoing commands to finish before freeing a session. Make the iSCSI target
-driver wait for ongoing commands to finish before freeing a session. This
-patch fixes the following KASAN complaint:
+The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
+ranges: before such vmap ranges are reused we make sure that they are
+unmapped from every task's page tables.
 
-BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
-Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
+This is really easy on pagetable setups where the kernel page tables
+are shared between all tasks - this is the case on 32-bit kernels
+with SHARED_KERNEL_PMD = 1.
 
-CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-Workqueue: target_completion target_complete_ok_work [target_core_mod]
-Call Trace:
- dump_stack+0x8a/0xd6
- print_address_description.constprop.0+0x40/0x60
- __kasan_report.cold+0x1b/0x33
- kasan_report+0x16/0x20
- __asan_load8+0x58/0x90
- __lock_acquire+0xb1a/0x2710
- lock_acquire+0xd3/0x200
- _raw_spin_lock_irqsave+0x43/0x60
- target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
- target_put_sess_cmd+0x2e/0x40 [target_core_mod]
- lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
- transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
- target_complete_ok_work+0x1b0/0x790 [target_core_mod]
- process_one_work+0x549/0xa40
- worker_thread+0x7a/0x5d0
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
+But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
+over the pgd_list and clearing all pmd entries in the pgds that
+are cleared in the init_mm.pgd, which is the reference pagetable
+that the vmalloc() code uses.
 
-Allocated by task 889:
- save_stack+0x23/0x90
- __kasan_kmalloc.constprop.0+0xcf/0xe0
- kasan_slab_alloc+0x12/0x20
- kmem_cache_alloc+0xf6/0x360
- transport_alloc_session+0x29/0x80 [target_core_mod]
- iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
+In that context the current practice of vmalloc_sync_all() iterating
+until FIX_ADDR_TOP is buggy:
 
-Freed by task 1025:
- save_stack+0x23/0x90
- __kasan_slab_free+0x13a/0x190
- kasan_slab_free+0x12/0x20
- kmem_cache_free+0x146/0x400
- transport_free_session+0x179/0x2f0 [target_core_mod]
- transport_deregister_session+0x130/0x180 [target_core_mod]
- iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
- iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
- iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
- iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
- kthread+0x1bc/0x210
- ret_from_fork+0x24/0x30
+        for (address = VMALLOC_START & PMD_MASK;
+             address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
+             address += PMD_SIZE) {
+                struct page *page;
 
-The buggy address belongs to the object at ffff8881154ec9c0
- which belongs to the cache se_sess_cache of size 352
-The buggy address is located 176 bytes inside of
- 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
-The buggy address belongs to the page:
-page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
-flags: 0x2fff000000010200(slab|head)
-raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
-raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
+address ranges:
 
-Memory state around the buggy address:
- ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
->ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
 
-Cc: Mike Christie <mchristi@redhat.com>
-Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
+that don't clear their pmds, but it's lethal for the LDT range,
+which relies on having different mappings in different processes,
+and 'synchronizing' them in the vmalloc sense corrupts those
+pagetable entries (clearing them).
+
+This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
+off and makes this the dominant mapping mode on 32-bit.
+
+To make LDT working again vmalloc_sync_all() must only iterate over
+the volatile parts of the kernel address range that are identical
+between all processes.
+
+So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
+to make sure the VMALLOC areas are synchronized and the LDT
+mapping is not falsely overwritten.
+
+The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
+but this is not really a proplem since their PMDs get established
+during bootup and never change.
+
+This change fixes the ldt_gdt selftest in my setup.
+
+[ mingo: Fixed up the changelog to explain the logic and modified the
+         copying to only happen up until VMALLOC_END. ]
+
+Reported-by: Borislav Petkov <bp@suse.de>
+Tested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: hpa@zytor.com
+Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
+Link: https://lkml.kernel.org/r/20191126111119.GA110513@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
- include/scsi/iscsi_proto.h          |  1 +
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/mm/fault.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
-index d19e051f2bc23..f194ffc4699e0 100644
---- a/drivers/target/iscsi/iscsi_target.c
-+++ b/drivers/target/iscsi/iscsi_target.c
-@@ -1165,7 +1165,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
- 		conn->cid);
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -197,7 +197,7 @@ void vmalloc_sync_all(void)
+ 		return;
  
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+ 	for (address = VMALLOC_START & PMD_MASK;
+-	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
++	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
+ 	     address += PMD_SIZE) {
+ 		struct page *page;
  
- 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
- 						     scsilun_to_int(&hdr->lun));
-@@ -2002,7 +2004,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
- 			      conn->sess->se_sess, 0, DMA_NONE,
- 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
- 
--	target_get_sess_cmd(&cmd->se_cmd, true);
-+	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
-+		return iscsit_add_reject_cmd(cmd,
-+				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
- 
- 	/*
- 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
-@@ -4232,6 +4236,8 @@ int iscsit_close_connection(
- 	 * must wait until they have completed.
- 	 */
- 	iscsit_check_conn_usage_count(conn);
-+	target_sess_cmd_list_set_waiting(sess->se_sess);
-+	target_wait_for_sess_cmds(sess->se_sess);
- 
- 	ahash_request_free(conn->conn_tx_hash);
- 	if (conn->conn_rx_hash) {
-diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
-index b71b5c4f418c5..533f56733ba84 100644
---- a/include/scsi/iscsi_proto.h
-+++ b/include/scsi/iscsi_proto.h
-@@ -627,6 +627,7 @@ struct iscsi_reject {
- #define ISCSI_REASON_BOOKMARK_INVALID	9
- #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
- #define ISCSI_REASON_NEGOTIATION_RESET	11
-+#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
- 
- /* Max. number of Key=Value pairs in a text message */
- #define MAX_KEY_VALUE_PAIRS	8192
--- 
-2.20.1
+
 
