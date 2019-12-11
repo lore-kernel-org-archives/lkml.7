@@ -2,167 +2,223 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A46C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B58C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084472073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760942073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfLKK1n (ORCPT
+        id S1728895AbfLKK2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:27:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34962 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728839AbfLKK1m (ORCPT
+        Wed, 11 Dec 2019 05:28:45 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43171 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728696AbfLKK2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:27:42 -0500
-Received: by mail-wr1-f66.google.com with SMTP id g17so23430577wro.2;
-        Wed, 11 Dec 2019 02:27:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=izYbmOCoes/LsYGzfApweM/paZftNhc8ig2YmA93Iek=;
-        b=dktV8W3qjSWDFsMCCmSkupvyv2D5omOSWSwl6P5a7dA2dMxgkT/EQgC3h8HIs4QVQ/
-         gWLXsVKT25j9/c1klc74wS7zpsFi6A+vcHjxVoZ6Wasw5El4rj0WQTVU/EPfeeMri+Mw
-         cIOPguow8HvR5xUAHxRe112D+TY58ZADZW1y6mpk8YSL/Igznlmuj1QUl+IRz2CGWd1M
-         ASsNLSTd4+qTacSmeGxPXlvA8BdHBD2EZAeIKX/cGZsQ23b2g/avCvPVwW74cL/IaF24
-         oEI3H1q81BRmSiwzK1beN45g8YLlXlQHcvO9vnD2a69GyEgVXwkGcUKJAZGrz7y7978J
-         2l/Q==
-X-Gm-Message-State: APjAAAVZkHRhKfG9pxh+3XnKDe4zeZ3QeTZd/w7wMAV1GX2XABghVoYX
-        r+AfKq4brpJmh7d56nHc8fmvalNUVV8=
-X-Google-Smtp-Source: APXvYqyKefPhCuv8OWJdNzJS6knz9WRw9M/rJ9/ZpIY7x3A1aYhhcZqTdcBBs3ixzoOkVIsZqVjMoQ==
-X-Received: by 2002:a5d:4a91:: with SMTP id o17mr3129463wrq.232.1576060059698;
-        Wed, 11 Dec 2019 02:27:39 -0800 (PST)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id v3sm1707333wru.32.2019.12.11.02.27.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 02:27:39 -0800 (PST)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH] MIPS: Add KSEG*ADDR definitions to CONFIG_64BIT
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Burton <paulburton@kernel.org>
-Cc:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191210172739.27131-1-efremov@linux.com>
- <20191210185716.3lkhbuuqtzj2vs3l@lantea.localdomain>
- <54db9ec6-a60a-8202-72d8-dafef9eb2f0e@linux.com>
- <d709de95-c736-464d-9a92-e7b4df5df697@gmail.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <132b4840-f499-01c2-dbb4-6bc9665c9335@linux.com>
-Date:   Wed, 11 Dec 2019 13:27:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 05:28:45 -0500
+Received: from 79.184.253.70.ipv4.supernova.orange.pl (79.184.253.70) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 2490e063850f2c90; Wed, 11 Dec 2019 11:28:41 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU offline
+Date:   Wed, 11 Dec 2019 11:28:41 +0100
+Message-ID: <2691942.bH9KnLg61H@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <d709de95-c736-464d-9a92-e7b4df5df697@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 2:04 AM, Florian Fainelli wrote:
-> On 12/10/19 12:14 PM, Denis Efremov wrote:
->> Hi,
->>
->> On 10.12.2019 21:57, Paul Burton wrote:
->>> Hi Denis,
->>>
->>> On Tue, Dec 10, 2019 at 08:27:39PM +0300, Denis Efremov wrote:
->>>> The patch adds KSEG0ADDR, KSEG1ADDR, KSEG2ADDR, KSEG3ADDR
->>>> definitions to CONFIG_64BIT ifdef. This fixes broken compilation:
->>>>   CC      drivers/watchdog/mtx-1_wdt.o
->>>> In file included from drivers/watchdog/mtx-1_wdt.c:44:
->>>> ./arch/mips/include/asm/mach-au1x00/au1000.h: In function ‘alchemy_rdsys’:
->>>> ./arch/mips/include/asm/mach-au1x00/au1000.h:603:36: error: implicit
->>>>   declaration of function ‘KSEG1ADDR’; did you mean ‘CKSEG1ADDR’?
->>>>   [-Werror=implicit-function-declaration]
->>>
->>> Since this driver is meant to run on a system that only supports 32 bit
->>> kernels, I think it would be better to correct its dependencies in
->>> Kconfig like so:
->>>
->>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>> index 58e7c100b6ad..509cbb6d2cea 100644
->>> --- a/drivers/watchdog/Kconfig
->>> +++ b/drivers/watchdog/Kconfig
->>> @@ -1648,7 +1648,7 @@ config JZ4740_WDT
->>>
->>>  config WDT_MTX1
->>>         tristate "MTX-1 Hardware Watchdog"
->>> -       depends on MIPS_MTX1 || (MIPS && COMPILE_TEST)
->>> +       depends on MIPS_MTX1 || (MIPS && 32BIT && COMPILE_TEST)
->>>         help
->>>           Hardware driver for the MTX-1 boards. This is a watchdog timer that
->>>           will reboot the machine after a 100 seconds timer expired.
->>>
->>> And mark this with the appropriate fixes tag:
->>>
->>>   Fixes: da2a68b3eb47 ("watchdog: Enable COMPILE_TEST where possible")
->>>
->>> What do you think?
->>>
->>> Alternatively the driver could just use the existing & equivalent
->>> CKSEG1ADDR() macro as the compiler suggested, but in that case it'd be
->>> good to check that's the only change needed to build cleanly with
->>> CONFIG_64BIT=y.
->>>
->>
->> Thank you for the suggestion. I will prepare V2 and fix the same way other
->> drivers that break the compilation with CONFIG_64BIT and missing KSEG1ADDR.
-> 
-> There is a much simpler solution actually:
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Well, I think you know better how to fix this. I think it will be better if you
-prepare the patch. Your solution seems more elegant, at least to me.
+The scheduler code calling cpufreq_update_util() may run during CPU
+offline on the target CPU after the IRQ work lists have been flushed
+for it, so the target CPU should be prevented from running code that
+may queue up an IRQ work item on it at that point.
 
-> 
-> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
-> index 8aa1cb4a295f..ea1bbf5ee528 100644
-> --- a/drivers/watchdog/mtx-1_wdt.c
-> +++ b/drivers/watchdog/mtx-1_wdt.c
-> @@ -41,8 +41,6 @@
->  #include <linux/uaccess.h>
->  #include <linux/gpio/consumer.h>
-> 
-> -#include <asm/mach-au1x00/au1000.h>
-> -
->  #define MTX1_WDT_INTERVAL      (5 * HZ)
-> 
->  static int ticks = 100 * HZ;
-> 
-> and then you can even push this further with:
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 1679e0dc869b..982897ff074e 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1651,7 +1651,7 @@ config JZ4740_WDT
-> 
->  config WDT_MTX1
->         tristate "MTX-1 Hardware Watchdog"
-> -       depends on MIPS_MTX1 || (MIPS && COMPILE_TEST)
-> +       depends on MIPS_MTX1 || COMPILE_TEST
->         help
->           Hardware driver for the MTX-1 boards. This is a watchdog timer
-> that
->           will reboot the machine after a 100 seconds timer expired.
-> 
-> I checked both an alchemy, non-alchemy MIPS build as well as a x86_64
-> build with the two patches applied.
-> 
-> In fact, this entire driver is just an older version of
-> drivers/watchdog/gpio_wdt.c and should be converted to it, if only I had
-> that box available.
+Unfortunately, that may not be the case if dvfs_possible_from_any_cpu
+is set for at least one cpufreq policy in the system, because that
+allows the CPU going offline to run the utilization update callback
+of the cpufreq governor on behalf of another (online) CPU in some
+cases.
+
+If that happens, the cpufreq governor callback may queue up an IRQ
+work on the CPU running it, which is going offline, and the IRQ work
+will not be flushed after that point.  Moreover, that IRQ work cannot
+be flushed until the "offlining" CPU goes back online, so if any
+other CPU calls irq_work_sync() to wait for the completion of that
+IRQ work, it will have to wait until the "offlining" CPU is back
+online and that may not happen forever.  In particular, a system-wide
+deadlock may occur during CPU online as a result of that.
+
+The failing scenario is as follows.  CPU0 is the boot CPU, so it
+creates a cpufreq policy and becomes the "leader" of it
+(policy->cpu).  It cannot go offline, because it is the boot CPU.
+Next, other CPUs join the cpufreq policy as they go online and they
+leave it when they go offline.  The last CPU to go offline, say CPU3,
+may queue up an IRQ work while running the governor callback on
+behalf of CPU0 after leaving the cpufreq policy because of the
+dvfs_possible_from_any_cpu effect described above.  Then, CPU0 is
+the only online CPU in the system and the stale IRQ work is still
+queued on CPU3.  When, say, CPU1 goes back online, it will run
+irq_work_sync() to wait for that IRQ work to complete and so it
+will wait for CPU3 to go back online (which may never happen even
+in principle), but (worse yet) CPU0 is waiting for CPU1 at that
+point too and a system-wide deadlock occurs.
+
+To address this problem notice that CPUs which cannot run cpufreq
+utilization update code for themselves (for example, because they
+have left the cpufreq policies that they belonged to), should also
+be prevented from running that code on behalf of the other CPUs that
+belong to a cpufreq policy with dvfs_possible_from_any_cpu set and so
+in that case the cpufreq_update_util_data pointer of the CPU running
+the code must not be NULL as well as for the CPU which is the target
+of the cpufreq utilization update in progress.
+
+Accordingly, change cpufreq_this_cpu_can_update() into a regular
+function in kernel/sched/cpufreq.c (instead of a static inline in a
+header file) and make it check the cpufreq_update_util_data pointer
+of the local CPU if dvfs_possible_from_any_cpu is set for the target
+cpufreq policy.
+
+Also update the schedutil governor to do the
+cpufreq_this_cpu_can_update() check in the non-fast-switch
+case too to avoid the stale IRQ work issues.
+
+Fixes: 99d14d0e16fa ("cpufreq: Process remote callbacks from any CPU if the platform permits")
+Link: https://lore.kernel.org/linux-pm/20191121093557.bycvdo4xyinbc5cb@vireshk-i7/
+Reported-by: Anson Huang <anson.huang@nxp.com>
+Cc: 4.14+ <stable@vger.kernel.org> # 4.14+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+Peter,
+
+The reason why I want to address the issue this way is because IMO
+the right place to do the check is the cpufreq governor.  Governors
+that don't use cpufreq_this_cpu_can_update() at all don't need to
+worry as well as governors that don't use IRQ works.
+
+The cpufreq governor is given an opportunity to update the frequency
+of the CPU and it needs to decide whether or not to really do that.
+
+Please let me know if you have any concerns.
+
+---
+ include/linux/cpufreq.h          |   11 -----------
+ include/linux/sched/cpufreq.h    |    3 +++
+ kernel/sched/cpufreq.c           |   18 ++++++++++++++++++
+ kernel/sched/cpufreq_schedutil.c |    8 +++-----
+ 4 files changed, 24 insertions(+), 16 deletions(-)
+
+Index: linux-pm/include/linux/cpufreq.h
+===================================================================
+--- linux-pm.orig/include/linux/cpufreq.h
++++ linux-pm/include/linux/cpufreq.h
+@@ -595,17 +595,6 @@ struct governor_attr {
+ 			 size_t count);
+ };
+ 
+-static inline bool cpufreq_this_cpu_can_update(struct cpufreq_policy *policy)
+-{
+-	/*
+-	 * Allow remote callbacks if:
+-	 * - dvfs_possible_from_any_cpu flag is set
+-	 * - the local and remote CPUs share cpufreq policy
+-	 */
+-	return policy->dvfs_possible_from_any_cpu ||
+-		cpumask_test_cpu(smp_processor_id(), policy->cpus);
+-}
+-
+ /*********************************************************************
+  *                     FREQUENCY TABLE HELPERS                       *
+  *********************************************************************/
+Index: linux-pm/kernel/sched/cpufreq.c
+===================================================================
+--- linux-pm.orig/kernel/sched/cpufreq.c
++++ linux-pm/kernel/sched/cpufreq.c
+@@ -5,6 +5,8 @@
+  * Copyright (C) 2016, Intel Corporation
+  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  */
++#include <linux/cpufreq.h>
++
+ #include "sched.h"
+ 
+ DEFINE_PER_CPU(struct update_util_data __rcu *, cpufreq_update_util_data);
+@@ -57,3 +59,19 @@ void cpufreq_remove_update_util_hook(int
+ 	rcu_assign_pointer(per_cpu(cpufreq_update_util_data, cpu), NULL);
+ }
+ EXPORT_SYMBOL_GPL(cpufreq_remove_update_util_hook);
++
++/**
++ * cpufreq_this_cpu_can_update - Check if cpufreq policy can be updated.
++ * @policy: cpufreq policy to check.
++ *
++ * Return 'true' if:
++ * - the local and remote CPUs share @policy,
++ * - dvfs_possible_from_any_cpu is set in @policy and the local CPU is not going
++ *   offline (in which case it is not expected to run cpufreq updates any more).
++ */
++bool cpufreq_this_cpu_can_update(struct cpufreq_policy *policy)
++{
++	return cpumask_test_cpu(smp_processor_id(), policy->cpus) ||
++		(policy->dvfs_possible_from_any_cpu &&
++		 rcu_dereference_sched(*this_cpu_ptr(&cpufreq_update_util_data)));
++}
+Index: linux-pm/include/linux/sched/cpufreq.h
+===================================================================
+--- linux-pm.orig/include/linux/sched/cpufreq.h
++++ linux-pm/include/linux/sched/cpufreq.h
+@@ -12,6 +12,8 @@
+ #define SCHED_CPUFREQ_MIGRATION	(1U << 1)
+ 
+ #ifdef CONFIG_CPU_FREQ
++struct cpufreq_policy;
++
+ struct update_util_data {
+        void (*func)(struct update_util_data *data, u64 time, unsigned int flags);
+ };
+@@ -20,6 +22,7 @@ void cpufreq_add_update_util_hook(int cp
+                        void (*func)(struct update_util_data *data, u64 time,
+ 				    unsigned int flags));
+ void cpufreq_remove_update_util_hook(int cpu);
++bool cpufreq_this_cpu_can_update(struct cpufreq_policy *policy);
+ 
+ static inline unsigned long map_util_freq(unsigned long util,
+ 					unsigned long freq, unsigned long cap)
+Index: linux-pm/kernel/sched/cpufreq_schedutil.c
+===================================================================
+--- linux-pm.orig/kernel/sched/cpufreq_schedutil.c
++++ linux-pm/kernel/sched/cpufreq_schedutil.c
+@@ -82,12 +82,10 @@ static bool sugov_should_update_freq(str
+ 	 * by the hardware, as calculating the frequency is pointless if
+ 	 * we cannot in fact act on it.
+ 	 *
+-	 * For the slow switching platforms, the kthread is always scheduled on
+-	 * the right set of CPUs and any CPU can find the next frequency and
+-	 * schedule the kthread.
++	 * This is needed on the slow switching platforms too to prevent CPUs
++	 * going offline from leaving stale IRQ work items behind.
+ 	 */
+-	if (sg_policy->policy->fast_switch_enabled &&
+-	    !cpufreq_this_cpu_can_update(sg_policy->policy))
++	if (!cpufreq_this_cpu_can_update(sg_policy->policy))
+ 		return false;
+ 
+ 	if (unlikely(sg_policy->limits_changed)) {
 
 
-Thanks,
-Denis
+
