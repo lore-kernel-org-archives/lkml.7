@@ -2,110 +2,108 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC790C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C28C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82777205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D208F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="XHByjpVp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C3TuCfZd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbfLKQU4 (ORCPT
+        id S1730304AbfLKQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:20:56 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43701 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbfLKQU4 (ORCPT
+        Wed, 11 Dec 2019 11:21:40 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58682 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728912AbfLKQVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:20:56 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so24729295ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:20:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
-        b=XHByjpVpksAhQp6qWGC8ANRLf3D8pRxjhxA0kZBgeoQGbehbI4T4UsJjHdjOSy3qGm
-         lUR2sJZ7SZ8KAasxNhMFG8wLboHF8Zhuv/dN4u9DCZ5V4ZcQbl9wog+i3wbxinYLhBn9
-         MWXrZ28CAqcehkq7JynVp3OljN9N9gEfCTpst2pHJdC3HM3jJEPO1gskys5+aLtTz/0D
-         sZ9MGH3g1KvShyB5NXhEXXirzTrpo14gy5QN41m5YeZTKRpCjKTtkOrWf0IA3LPwDp1W
-         +PsL2xzzi6yBkHO+ybkGzuDYvoNZ/nsonXCW4Er4mOvDb5LTfMggKU4Onf4p87/ZLLUS
-         iNDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tD2y5jZ8oTLJe6LbTN27zTEPS2JKCut3FdE1zrzBkUs=;
-        b=O1FZRKiIivihPqb8/cqY4vqJjCW/2MHT2pMhkYIi908TVSxld7p2GHcIdUlRHmD1uE
-         fLAisgnCQaO6phuVl5n7qzuk3IgzjnD/Z/c2MtygQF6VVAMMhZ8MqCUA1/gwoEOhaTPL
-         cQI5XvDMF243dq41QUbmQbYzK4let804Jdp5EtN/9DjX6ffaUOc5Izzey8QNPLxkKZWZ
-         vt06J6pqUsg+T/wy+/ak5C346yQx3xokoQrz/NaFB44bxdstRx9UgTrfiV+1BYGhoy1r
-         QBACCL+d+lIw1LW+cKwVYlV2ioR5MnK8P8OZcvXvstFfVH7tBlNx/ArLjQ7WEJWPgE0a
-         I1hw==
-X-Gm-Message-State: APjAAAXQbkYgXTSuWptqmJyYJRkj8vm3Zl+CeDgbCaRDlFMlCiPaxZvk
-        tOEGOXy24jS7MlhSdxO0BYvKQw==
-X-Google-Smtp-Source: APXvYqx7JrnjYVzZSKhxIhgqUUFwGRNOWBlKZgUUrH2giZBqcw9jTeOd1HzQIZ2qu+jUtLHmUW373g==
-X-Received: by 2002:a2e:b017:: with SMTP id y23mr2776840ljk.229.1576081254052;
-        Wed, 11 Dec 2019 08:20:54 -0800 (PST)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
-        by smtp.gmail.com with ESMTPSA id n19sm1434257lfl.85.2019.12.11.08.20.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 08:20:53 -0800 (PST)
-Subject: Re: [PATCH RFC 0/2] Add Renesas RPC-IF support
-To:     Chris Brandt <Chris.Brandt@renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
- <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <0af05149-78f5-8639-4a23-84edda0073ea@cogentembedded.com>
-Date:   Wed, 11 Dec 2019 19:20:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Wed, 11 Dec 2019 11:21:40 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBGKFu9192781;
+        Wed, 11 Dec 2019 16:21:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=G27KAk8ihnmv3NRbezvk5s4f+TPhwlFY9bBYBGkptkI=;
+ b=C3TuCfZdTRu5ekdce+Ah8NfvYt9ss0krj1FEG9EL7YnxnmmxwemUA28+pjyEFgpQLjsK
+ 4+Cmx1ijbkz4tYn6/HmUO8SK4u7c2Vm/bjMp5QLyr3dHSl1obvNg/f0iBurhvVv4BCI+
+ SqjCWOkTqJtUfYM88zChNxCdQoJDelVGtQFHYOkOiIR2lnz0C4/ZZHOL2ndnjnDNydIW
+ G45qcUyvjSLsVxlGoRl+WJWjnem99uypUvST4xZCz+aN0tuQPJLa1dD6mZ+40H2wZ7w0
+ I+Y1gOO/touqpVO9pHDpA9BGzdXY0pR88bxe32/Vm/tXJogDxehPd9QzUBH2trAZIGUX OQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2wrw4nahg9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 16:21:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBGF0BS134105;
+        Wed, 11 Dec 2019 16:21:30 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2wtqgc16ug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 16:21:29 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBBGLSN1001046;
+        Wed, 11 Dec 2019 16:21:29 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Dec 2019 08:21:28 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH] padata: update documentation file path in MAINTAINERS
+Date:   Wed, 11 Dec 2019 11:21:20 -0500
+Message-Id: <20191211162120.1007580-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912110137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912110138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 05:33 PM, Chris Brandt wrote:
+It's changed since the recent RST conversion.
 
->> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
->> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC to
->> be accessed via the external address space read mode or the manual mode.
-> 
-> Looking at this driver, all it is are APIs. Meaning another driver is 
-> needed to sit in between the MTD layer and this HW driver layer.
-> 
-> In the driver that I did, if the "RPC" HW is going to be used to control
-> a SPI Flash device, it registered a spi controller and then the MTD 
-> layer could access the device
+Fixes: bfcdcef8c8e3 ("padata: update documentation")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-   Via the SPI-to-MTD sublayer for (at least) direct mapping -- grep for "dirmap"
-in drivers/mtd/spi-nor/spi-nor.c...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8e9925328c6f..fecbfc35897c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12426,7 +12426,7 @@ L:	linux-crypto@vger.kernel.org
+ S:	Maintained
+ F:	kernel/padata.c
+ F:	include/linux/padata.h
+-F:	Documentation/padata.txt
++F:	Documentation/core-api/padata.rst
+ 
+ PAGE POOL
+ M:	Jesper Dangaard Brouer <hawk@kernel.org>
+-- 
+2.24.0
 
-> just like any other SPI controller driver. No
-> additional drivers are needed.
-
-   Then why do we have *struct* spi_controller_mem_ops? Do All drivers implement
-such ops?
-
-[...]
-
-MBR, Sergei
