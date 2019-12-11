@@ -4,56 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB816C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10820C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7FD214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADC2214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729423AbfLKNPo (ORCPT
+        id S1729437AbfLKNRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:15:44 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:12596 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729299AbfLKNPo (ORCPT
+        Wed, 11 Dec 2019 08:17:34 -0500
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:41467 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729131AbfLKNRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:15:44 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
- 2019 21:16:13 +0800
-Subject: Re: [PATCH] arm64: dts: meson: add A1 periphs and PLL clock nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191211070835.83489-1-jian.hu@amlogic.com>
- <1jimmnkxj5.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <a171b388-7f92-17cd-8b9a-dcb1c846b6f7@amlogic.com>
-Date:   Wed, 11 Dec 2019 21:16:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 11 Dec 2019 08:17:34 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0Tkd3Ra0_1576070243;
+Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0Tkd3Ra0_1576070243)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 11 Dec 2019 21:17:23 +0800
+Subject: Re: [PATCH] ocfs2: call journal flush to mark journal as empty after
+ journal recovery when mount
+To:     Kai Li <li.kai4@h3c.com>, mark@fasheh.com, jlbec@evilplan.org,
+        chge@linux.alibaba.com
+Cc:     ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+References: <20191211100338.510-1-li.kai4@h3c.com>
+From:   Joseph Qi <joseph.qi@linux.alibaba.com>
+Message-ID: <76d8166c-afe9-fc63-98b2-5293e3956669@linux.alibaba.com>
+Date:   Wed, 11 Dec 2019 21:17:23 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1jimmnkxj5.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20191211100338.510-1-li.kai4@h3c.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,96 +48,118 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2019/12/11 17:43, Jerome Brunet wrote:
+On 19/12/11 18:03, Kai Li wrote:
+> If journal is dirty when mount, it will be replayed but jbd2 sb
+> log tail cannot be updated to mark a new start because
+> journal->j_flag has already been set with JBD2_ABORT first
+> in journal_init_common. When a new transaction is committed, it
+> will be recored in block 1 first(journal->j_tail is set to 1 in
+> journal_reset).
 > 
-> On Wed 11 Dec 2019 at 08:08, Jian Hu <jian.hu@amlogic.com> wrote:
+> If emergency restart happens again before journal super block is
+> updated unfortunately, the new recorded trans will not be replayed
+> in the next mount.
 > 
->> Add A1 periphs and PLL clock controller nodes, Some clocks
->> in periphs controller are the parents of PLL clocks, Meanwhile
->> some clocks in PLL controller are those of periphs clocks.
->> They rely on each other.
+I think I've finally understood the problem. But I don't think it has
+been clearly described for reviewing. I strongly suggest you describe
+the problem in the way of timeline, such as in which step, do what
+operation, and what is the status, etc.
+
+
+> This exception happens when this lun is used by only one node. If it
+> is used by multi-nodes, other node will replay its journal and its
+> journal sb block will be updated after recovery.
 > 
->> Compared with the previous series,
->> the register region is only for the clock. So syscon is not
->> used in A1.
+> To fix this problem, use jbd2_journal_flush to mark journal as empty as
+> ocfs2_replay_journal has done.> 
+Sounds reasonable. But IMO, it is really a corner use scenario, using
+cluster filesystem in single node...
+
+Thanks,
+Joseph
+
+> The following jbd2 journal can be generated by touching a new file after
+> journal is replayed, and seq 15 is the first valid commit, but first seq
+> is 13 in journal super block.
+> logdump:
+> Block 0: Journal Superblock
+> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+> Blocksize: 4096   Total Blocks: 32768   First Block: 1
+> First Commit ID: 13   Start Log Blknum: 1
+> Error: 0
+> Feature Compat: 0
+> Feature Incompat: 2 block64
+> Feature RO compat: 0
+> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+> Per Txn Block Limit    Journal: 0    Data: 0
 > 
-> Again, while this is valuable information for the maintainer to keep up,
-> it is not something that should appear in the commit description.
+> Block 1: Journal Commit Block
+> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
 > 
-> The evolution of your commit should be described after the '---'
+> Block 2: Journal Descriptor
+> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+> No. Blocknum        Flags
+>  0. 587             none
+> UUID: 00000000000000000000000000000000
+>  1. 8257792         JBD2_FLAG_SAME_UUID
+>  2. 619             JBD2_FLAG_SAME_UUID
+>  3. 24772864        JBD2_FLAG_SAME_UUID
+>  4. 8257802         JBD2_FLAG_SAME_UUID
+>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+> ...
+> Block 7: Inode
+> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+> FS Generation: 2839773110 (0xa9437fb6)
+> CRC32: 00000000   ECC: 0000
+> Type: Regular   Attr: 0x0   Flags: Valid
+> Dynamic Features: (0x1) InlineData
+> User: 0 (root)   Group: 0 (root)   Size: 7
+> Links: 1   Clusters: 0
+> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+> ...
+> Block 9: Journal Commit Block
+> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
 > 
-OK, I will put the compared message after the '---'
-> Also, this obviously depends on another series. It should be mentioned
-> accordingly
-OK, I will add the dependent clock patchset.
+> The following is jouranl recovery log when recovering the upper jbd2
+> journal when mount again.
+> syslog:
+> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
 > 
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 26 +++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index 7210ad049d1d..de43a010fa6e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -5,6 +5,8 @@
->>   
->>   #include <dt-bindings/interrupt-controller/irq.h>
->>   #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/a1-pll-clkc.h>
->> +#include <dt-bindings/clock/a1-clkc.h>
+> Due to first commit seq 13 recorded in journal super is not consistent
+> with the value recorded in block 1(seq is 14), journal recovery will be
+> terminated before seq 15 even though it is an unbroken commit, inode
+> 8257802 is a new file and it will be lost.
 > 
-> When possible, please order the includes alpha-numerically
+> Signed-off-by: Kai Li <li.kai4@h3c.com>
+> ---
+>  fs/ocfs2/journal.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-OK, I will reorder it.
->>   
->>   / {
->>   	compatible = "amlogic,a1";
->> @@ -74,6 +76,30 @@
->>   			#size-cells = <2>;
->>   			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
->>   
->> +			clkc_periphs: periphs-clock-controller@800 {
->                                               ^
->>From DT spec: "The name of a node should be somewhat generic, reflecting
-> the function of the device and not its precise programming model."
-> 
-> Here, an appropriate node name would be "clock-controller", not
-> "periphs-clock-controller"
-OK, I will change the node name.
-> 
->> +				compatible = "amlogic,a1-periphs-clkc";
->> +				#clock-cells = <1>;
->> +				reg = <0 0x800 0 0x104>;
->> +				clocks = <&clkc_pll CLKID_FCLK_DIV2>,
->> +					<&clkc_pll CLKID_FCLK_DIV3>,
->> +					<&clkc_pll CLKID_FCLK_DIV5>,
->> +					<&clkc_pll CLKID_FCLK_DIV7>,
->> +					<&clkc_pll CLKID_HIFI_PLL>,
->> +					<&xtal>;
->> +				clock-names = "fclk_div2", "fclk_div3",
->> +					"fclk_div5", "fclk_div7",
->> +					"hifi_pll", "xtal";
->> +			};
->> +
->> +			clkc_pll: pll-clock-controller@7c80 {
-> 
-> Please order nodes by address when they have one.
-> This clock controller should appear after the uarts
-OK, I will reorder it.
-> 
->> +				compatible = "amlogic,a1-pll-clkc";
->> +				#clock-cells = <1>;
->> +				reg = <0 0x7c80 0 0x21c>;
->> +				clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
->> +					<&clkc_periphs CLKID_XTAL_HIFIPLL>;
->> +				clock-names = "xtal_fixpll", "xtal_hifipll";
->> +			};
->> +
->>   			uart_AO: serial@1c00 {
->>   				compatible = "amlogic,meson-gx-uart",
->>   					     "amlogic,meson-ao-uart";
-> 
-> .
+> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+> index 1afe57f425a0..b8b9d26fa731 100644
+> --- a/fs/ocfs2/journal.c
+> +++ b/fs/ocfs2/journal.c
+> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+>  
+>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+>  
+> +	if (replayed) {
+> +		/* wipe the journal */
+> +		jbd2_journal_lock_updates(journal->j_journal);
+> +		status = jbd2_journal_flush(journal->j_journal);
+> +		jbd2_journal_unlock_updates(journal->j_journal);
+> +		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
+> +	}
+> +
+>  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+>  	if (status < 0) {
+>  		mlog_errno(status);
 > 
