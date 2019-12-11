@@ -2,110 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E74C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E00C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6197C2464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078431;
-	bh=e6ded1V5IaVW7G0fvVHxMvQhqObyPDVK5jKXC+pLjQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSkEDbzwT4H5tdihykFHQvDf5zDSEqdPAg455MXMj08KfnzzjB9z5Fvsg+dATPtEf
-	 nHEPfodZe7HYQGNwFEijRrgq5SDRVDsdivz40XS+wBrj7vqlxC9GX5Aed0xJ7cLXed
-	 HRmWF7Q5YtnI1G+M0W3cnbRFmo5ZRqU2i90/002I=
+	by mail.kernel.org (Postfix) with ESMTP id CFCBD2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbfLKPdu (ORCPT
+        id S2387977AbfLKPdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732983AbfLKP2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:39 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3102465B;
-        Wed, 11 Dec 2019 15:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078118;
-        bh=e6ded1V5IaVW7G0fvVHxMvQhqObyPDVK5jKXC+pLjQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVVEhe1nmwGYACEhUDunj7i0KEbNXtdIKdbxq9sSQ3J2TtCjQkXlhOzfODDle0rAg
-         lDwnVuyGhDN+u1Lu7zEzWBqlyC4xs+hW9otPyqjegzbiP0YBOIEs3CkBgMBPXwype9
-         iTCHYe7tm6pKO1zApPgE705S9AKGWcNvQzxjRVeo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Disseldorp <ddiss@suse.de>, Lee Duncan <lduncan@suse.com>,
-        Mike Christie <mchristi@redhat.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/58] scsi: target: compare full CHAP_A Algorithm strings
-Date:   Wed, 11 Dec 2019 10:27:39 -0500
-Message-Id: <20191211152831.23507-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:33:54 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:40051 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730954AbfLKPdn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:33:43 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M8QiW-1iagGz3r5U-004So9 for <linux-kernel@vger.kernel.org>; Wed, 11 Dec
+ 2019 16:33:42 +0100
+Received: by mail-qk1-f179.google.com with SMTP id a203so9852840qkc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:33:41 -0800 (PST)
+X-Gm-Message-State: APjAAAUfwHqUwyRjRLa0V8vUcSrNdYTKsyuJsRftKD+spi9pkAz4Zijb
+        U1G+5jfGL0+5nJPVPJH6L377omzNs6G4n8TfCjA=
+X-Google-Smtp-Source: APXvYqxmeB8TjlMCMi/FqHf6Gou8DAqv4Puz6Gm0jsLC3WBKTCxWNeE/74JK2vXpaV3DnctI1gXS0DxSAbNlFi1R7Zc=
+X-Received: by 2002:a37:4e4e:: with SMTP id c75mr3368164qkb.3.1576078420833;
+ Wed, 11 Dec 2019 07:33:40 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <cover.1575977795.git.vitor.soares@synopsys.com>
+ <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
+ <CAK8P3a1cwoTbT3zsa-tfApwewDT1-ksHZs6_vkBYpKbgptsfjw@mail.gmail.com>
+ <CH2PR12MB4216E04995E421F04B7662DEAE5B0@CH2PR12MB4216.namprd12.prod.outlook.com>
+ <CAK8P3a00wfUbGU1a9nS1dtDsUo1GR1V1WqRwa+DmUKVStvicTw@mail.gmail.com> <CH2PR12MB4216CE03448AF3B39C23D3BCAE5A0@CH2PR12MB4216.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB4216CE03448AF3B39C23D3BCAE5A0@CH2PR12MB4216.namprd12.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Dec 2019 16:33:24 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2vRG9uiY6jCRip98DHVP5-FeWk_sToGrPSA_WcY0agcA@mail.gmail.com>
+Message-ID: <CAK8P3a2vRG9uiY6jCRip98DHVP5-FeWk_sToGrPSA_WcY0agcA@mail.gmail.com>
+Subject: Re: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:HwUutlWxhi/qNhj6rzdE4KlUvk+XYIo6tvEYWzJJ8njRHPRPTpX
+ piC+yOdBKynS5m+VAUeKRvMHoFhIcR0H+A2WBbf/V/X4Kp4wP//ixA9/wQQgMgwqsxvJGZC
+ rtC/qgtOFhSVDNi2dCq7qmGlILFet/r/Embr7DPz7S+nebMJu1IWfVqFT2KrTdd8lWf7ujn
+ tqvhLw43GEk+U0IUWmgJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bwReUF5jPXo=:S37LbxcmkNXcwIj7f5cNTz
+ tFGPBMRz+9fg6GrR+bpa5B0h9d46tElGfLzVLrBVIpauKyKi8tpNGzxKt4tKnh+/DnMcWJ2QB
+ rLp+DzbJO9VcASf2A1TGkVrxSX79H9YF5cPlaR36s9Fa7kmyA6FE5CfgsFSz/JgQjJ0dtSySN
+ PBb9PnaR62Rw0yaR/RYQB/TAHXDAK6FnV6uHb2WuoXdPcu4B5pN3kK8cXifEI6RCzTgJe+On9
+ NYI7WD6PoIis07NA8NXYydGNSA+pwU38DRu6fPSEIb32gJjK8z5HmZgoJHvp6vVFXwrSuopEC
+ Z8Xwe8HGb1CCeJ/jlE7/gv1axExC5Se0x5SBREW/MzTVsVdjESlD/L2TVREQOlbaPoq/Kwh8D
+ QvZqvuGI/pC4uzgGgNBX4PsfWI3cs9APrx32sJh3O04kaaKybVmyAoaolLf/DWfWxcakAP0fm
+ 42FW5Z06S1qRMDmF/r6PHh7SsLXTlB66OoVfWNL7a4Lgpy7xza+qKk632cOrwL12Brf2l3cMD
+ Aq+fEDDaQsbMWDfbyWczAxoTlftyiIzuxyhXbcARJIVbs+6mjt0Q6yHgSqYTXIAo+S/QfS2O5
+ TR2cSD+FJJHiCRV14Fguf9n7W8bMvDxrU3b4sb31fLEiG/mM/44d2o0OzM8/FLKmeCK0UwhEc
+ 6Uf+PI8weWhqfk23KjYSDjX0j5jfynD1CWbmcn3FID3mHADy2YiGFbRgI1MYo74mS8Widinz+
+ KJ7Mn30qxUxi51igy8DsZiCYnP6dp5awOR03M+iAcG5KXqNq+0PH+2grehZZbaMhNC5J5oTAH
+ xsvoV9vcRDJJ9f8V1voYjEcM/dXQ+HRqEPpcLAebt0yT3plJjot6cs9Sts7FMazEgE3Z009Jz
+ g7H89ldDqBIvB62BhxSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Disseldorp <ddiss@suse.de>
+On Wed, Dec 11, 2019 at 4:07 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Tue, Dec 10, 2019 at 19:37:14
+> > On Tue, Dec 10, 2019 at 8:15 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > > Date: Tue, Dec 10, 2019 at 17:51:14
+> > > > On Tue, Dec 10, 2019 at 4:37 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > As your interface is basically just read/write based, I wonder
+> > if there is a way to completely avoid the ioctl and instead
+> > use io_submit() as the primary interface.
+>
+> I confess that I wasn't familiar with io_submit() until now and went
+> straightway for the ioctl() approach.
+> So far, my understanding is that io_submit() will call .write or .read of
+> i3cdev module depending on the iocb command. if so, we won't be able to
+> do a repeated start between a multiple iocb in the same list, right?
 
-[ Upstream commit 9cef2a7955f2754257a7cddedec16edae7b587d0 ]
+I'm not sure what you mean with "repeated start", but it's definitely
+possible that io_submit() is not a useful interface for i3c. The main
+advantage would be that it avoids creating a complex ioctl command.
 
-RFC 2307 states:
+> Apart from this private read/write need, another requirement that leads
+> me to use the ioctl() was:
+> - When we support HDR command in i3c subsystem we can expand the ioctl()
+> command to support it.
+> - For now, device API doesn't expose CCC commands but some of them are
+> used for a private contract between master and device and we likely need
+> that support in the future as well.
 
-  For CHAP [RFC1994], in the first step, the initiator MUST send:
+I think you could still have both the io_submit() interface for basic I/O
+(if you can get it to do what you want), plus an ioctl interface for more
+complex interactions.
 
-      CHAP_A=<A1,A2...>
-
-   Where A1,A2... are proposed algorithms, in order of preference.
-...
-   For the Algorithm, as stated in [RFC1994], one value is required to
-   be implemented:
-
-       5     (CHAP with MD5)
-
-LIO currently checks for this value by only comparing a single byte in
-the tokenized Algorithm string, which means that any value starting with
-a '5' (e.g. "55") is interpreted as "CHAP with MD5". Fix this by
-comparing the entire tokenized string.
-
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Reviewed-by: Mike Christie <mchristi@redhat.com>
-Signed-off-by: David Disseldorp <ddiss@suse.de>
-Link: https://lore.kernel.org/r/20190912095547.22427-2-ddiss@suse.de
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/target/iscsi/iscsi_target_auth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/target/iscsi/iscsi_target_auth.c b/drivers/target/iscsi/iscsi_target_auth.c
-index e2fa3a3bc81df..b6bf605fa5c15 100644
---- a/drivers/target/iscsi/iscsi_target_auth.c
-+++ b/drivers/target/iscsi/iscsi_target_auth.c
-@@ -78,7 +78,7 @@ static int chap_check_algorithm(const char *a_str)
- 		if (!token)
- 			goto out;
- 
--		if (!strncmp(token, "5", 1)) {
-+		if (!strcmp(token, "5")) {
- 			pr_debug("Selected MD5 Algorithm\n");
- 			kfree(orig);
- 			return CHAP_DIGEST_MD5;
--- 
-2.20.1
-
+     Arnd
