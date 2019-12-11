@@ -2,81 +2,129 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D994C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C0FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7427920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hm5ukJbK"
+	by mail.kernel.org (Postfix) with ESMTP id E701120836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfLKNkc (ORCPT
+        id S1729739AbfLKNlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:40:32 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52272 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729694AbfLKNk3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:40:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TO/NQu43CwshSv+vhfJaELWZCqACamoqyzyHY52rGyI=; b=Hm5ukJbKRW/dIRfBb/2QNZWe2
-        Vae7uQ8jSnwfWdaHao9+Puztkj99WQrJ7zQDtxi3TKPOo51rd+fWVnahFZcDzJMLSfqaeCVOxY8r8
-        hSDFkS06G9RcE/1zSS+DssYsnx/A7E90d2pwJo7gUwe3HnBcGCaB6EInTzmXq7MjnqZrB6PQ9l80I
-        7ew0MBvO3B1tKmL5VXVbKgHK2ypAVx9SJpNzWZYDva4N0EkaT4mjOj0OdxLfNDh2Hm0LJ+ExnAOxv
-        /fglK8GQjc+Ilwz9wP2d/9ugBdBSYMjmgf/rR71BiJvLC/FiZ8ANkzJvpE2LyxvPeev4t3IujdjyX
-        vbRr8RJTA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if2Du-00050n-Qc; Wed, 11 Dec 2019 13:40:14 +0000
-Date:   Wed, 11 Dec 2019 05:40:14 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
-Message-ID: <20191211134014.GM32169@bombadil.infradead.org>
-References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
- <20191211024858.GB732@sol.localdomain>
- <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
- <20191211044723.GC4203@ZenIV.linux.org.uk>
- <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
- <20191211071711.GA231266@architecture4>
+        Wed, 11 Dec 2019 08:41:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:58606 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729719AbfLKNlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:41:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 089E01FB;
+        Wed, 11 Dec 2019 05:41:07 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 142BA3F6CF;
+        Wed, 11 Dec 2019 05:41:02 -0800 (PST)
+Subject: Re: [PATCH] ARM: dma-api: fix max_pfn off-by-one error in
+ __dma_supported()
+To:     Chen-Yu Tsai <wens@kernel.org>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191211104152.26496-1-wens@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <28dfaeab-73cd-041b-9894-776064d13245@arm.com>
+Date:   Wed, 11 Dec 2019 13:40:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211071711.GA231266@architecture4>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191211104152.26496-1-wens@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:17:11PM +0800, Gao Xiang wrote:
-> > static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-> > {
-> >         if (len >= 1 && unlikely(name[0] == '.')) {
+On 11/12/2019 10:41 am, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
 > 
+> max_pfn, as set in arch/arm/mm/init.c:
 > 
-> And I suggest drop "unlikely" here since files start with prefix
-> '.' (plus specical ".", "..") are not as uncommon as you expected...
+>      static void __init find_limits(unsigned long *min,
+> 				   unsigned long *max_low,
+> 				   unsigned long *max_high)
+>      {
+> 	    *max_low = PFN_DOWN(memblock_get_current_limit());
+> 	    *min = PFN_UP(memblock_start_of_DRAM());
+> 	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
+>      }
+> 
+> with memblock_end_of_DRAM() pointing to the next byte after DRAM. As
+> such, max_pfn points to the PFN after the end of DRAM.
+> 
+> Thus when using max_pfn to check DMA masks, we should subtract one
+> when checking DMA ranges against it.
+> 
+> Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
+> __dma_supported()") fixed the same issue, but missed this spot.
+> 
+> This issue was found while working on the sun4i-csi v4l2 driver on the
+> Allwinner R40 SoC. On Allwinner SoCs, DRAM is offset at 0x40000000,
+> and we are starting to use of_dma_configure() with the "dma-ranges"
+> property in the device tree to have the DMA API handle the offset.
+> 
+> In this particular instance, dma-ranges was set to the same range as
+> the actual available (2 GiB) DRAM. The following error appeared when
+> the driver attempted to allocate a buffer:
+> 
+>      sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
+>      covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
+>      sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
+> 
+> Fixing the off-by-one error makes things work.
+> 
+> Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
+> Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
+> Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>   arch/arm/mm/dma-mapping.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+> index e822af0d9219..f4daafdbac56 100644
+> --- a/arch/arm/mm/dma-mapping.c
+> +++ b/arch/arm/mm/dma-mapping.c
+> @@ -227,12 +227,12 @@ static int __dma_supported(struct device *dev, u64 mask, bool warn)
+>   	 * Translate the device's DMA mask to a PFN limit.  This
+>   	 * PFN number includes the page which we can DMA to.
+>   	 */
+> -	if (dma_to_pfn(dev, mask) < max_dma_pfn) {
+> +	if (dma_to_pfn(dev, mask) < max_dma_pfn - 1) {
 
-They absolutely are uncommon.  Even if you just consider
-/home/willy/kernel/linux/.git/config, only one of those six path elements
-starts with a '.'.
+I think this correction actually wants to happen a couple of lines up in 
+the definition:
+
+	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
+
+max_pfn is indeed an exclusive limit, but AFAICS arm_dma_pfn_limit is 
+inclusive, so none of these "+1"s and "-1"s can be entirely right for 
+both cases.
+
+Robin.
+
+>   		if (warn)
+>   			dev_warn(dev, "Coherent DMA mask %#llx (pfn %#lx-%#lx) covers a smaller range of system memory than the DMA zone pfn 0x0-%#lx\n",
+>   				 mask,
+>   				 dma_to_pfn(dev, 0), dma_to_pfn(dev, mask) + 1,
+> -				 max_dma_pfn + 1);
+> +				 max_dma_pfn);
+>   		return 0;
+>   	}
+>   
+> 
