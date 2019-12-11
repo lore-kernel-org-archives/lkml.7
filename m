@@ -2,105 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795CAC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F1AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E92A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A9B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gULcBt1f";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Hv7nCKaW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/p43d/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbfLKHNL (ORCPT
+        id S1727846AbfLKHTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:13:11 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:58514
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfLKHNL (ORCPT
+        Wed, 11 Dec 2019 02:19:49 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44962 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfLKHTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:13:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576048390;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=e4VFfWEMUXIjMa+iwXkArSXrLtzbwfCJw62x90LK0WQ=;
-        b=gULcBt1fRiW56Mf4gmLA/gtpJqgGEmdjvUtzo0tH36ngeWmYu8AV+5xFLe0I91gP
-        KT4rdU92bGR66wxVQeY7hcZrX90OR13j6U1+Y1bsSZ2bTWge8S36hLqWKcScuoeFJQK
-        XM/t6blRUKZF3XjKC5ZE+oEgkdepOIgZFma4buTA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576048390;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=e4VFfWEMUXIjMa+iwXkArSXrLtzbwfCJw62x90LK0WQ=;
-        b=Hv7nCKaW3k8fzh8uhQU/7gwPu2ZjuPDTMEr6CFX5fY3PoZFEIgDoSkKPKoaittVP
-        ZRwLWqsS3LBjYs410bKgJNeMaOJEhK6q93UQOtcZA+y/JOFt8qPgVjkWa4V9EqkUpuv
-        rzHf6M02sXw/69pjXjo9ZZiO28qwFrb1ZhKSGKuE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52939C447BB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        swboyd@chromium.org, dianders@chromium.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: sc7180: Add aliases for all i2c and spi devices
-Date:   Wed, 11 Dec 2019 07:13:10 +0000
-Message-ID: <0101016ef3cdf035-81663ddb-2978-4369-a621-d4a80c768911-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576048353-21154-1-git-send-email-rnayak@codeaurora.org>
-References: <1576048353-21154-1-git-send-email-rnayak@codeaurora.org>
-X-SES-Outgoing: 2019.12.11-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Wed, 11 Dec 2019 02:19:48 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so22797632wrm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:19:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ypLvgvGtDw9j9CPyIJrLnPSn6hKTQUTD19ZeLZRvxyc=;
+        b=l/p43d/nyC2Il3XgYnTbQBZzH91ar6R7qhAFoSM0+yk6c7oNFKaTJLd98O7asmmSVv
+         IHqFaj3mSxWEG8kMXqB+g0iPXEqOgegmpMQJVRCNcF15Pn5vYJgrDXvTwPlwB89hmlSZ
+         lQPraPHoZnF1rvR6/it9bAcLiYoDz6foEnrlAoYSzTIVIZFR8rz/dLzw73MzsZVy15RS
+         XGvhXJDc9WT2CAt9pYO8c8w0Cs6zqqcL/ZE1+UidC/MzDJwjm2KcPL7KM1GVZTa7dZSk
+         w4gx1XNjLedQCetFLLF0VCKs7Em8tvnXtMHG8BJyVBE3Pt4U1R5Gtm4Ki2Jz4fYzuynL
+         T7Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ypLvgvGtDw9j9CPyIJrLnPSn6hKTQUTD19ZeLZRvxyc=;
+        b=k5d6xGg1v8TUdH34t0HORvewDv4+GYFOJgeryJnZlMOKxh4BDIPYUlAUIOFcZGgjYQ
+         u+Y8ih3vKSkS3hZD76TnJHBfogmMBgDf6pOdKB5Y+Ppkv0dyIMu0HXAE1NOvrh7hYLfQ
+         czuuWtvMPkDjjzoHdcYEQO/PAgQMPbj1UXWAiYGMG61i+poa6bCJSpMYfZhUFibVCanG
+         VhJhbdFvWoDbDQXAhEAiFJt2GjV+ETEn2KgbeSXyNuxUEFY7eD0J9dMmxIDPooc1KH5j
+         ZpB2Qj/9TueON1ouhO71g7qRdh3o8i1knzr1yZB5eb3kfKL8VZrQ1nrhcUnzW6i512dP
+         VEMA==
+X-Gm-Message-State: APjAAAWaZ/MMHqpWqgKSdXbreTX4Ic94yxI8dp4zcBJvzoFJxSCgWtJF
+        02t9ggZUdhlyD4UOO68sEA==
+X-Google-Smtp-Source: APXvYqwR7YJ7wiLAIU/BCwXHX5tud0RNbgFhw976ys2u0UlpO6zQkFrDshf9aFEW9bmtPzv7BlEcxg==
+X-Received: by 2002:adf:e2cf:: with SMTP id d15mr1936907wrj.225.1576048786403;
+        Tue, 10 Dec 2019 23:19:46 -0800 (PST)
+Received: from avx2 ([46.53.249.49])
+        by smtp.gmail.com with ESMTPSA id s8sm1203367wrt.57.2019.12.10.23.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 23:19:45 -0800 (PST)
+Date:   Wed, 11 Dec 2019 10:19:43 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ELF: don't copy ELF header around
+Message-ID: <20191211071943.GA3700@avx2>
+References: <20191208171242.GA19716@avx2>
+ <20191210175611.d615f21e177d5a550a8926f0@linux-foundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191210175611.d615f21e177d5a550a8926f0@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add aliases for all i2c and spi nodes
+On Tue, Dec 10, 2019 at 05:56:11PM -0800, Andrew Morton wrote:
+> On Sun, 8 Dec 2019 20:12:42 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> 
+> > ELF header is read into bprm->buf[] by generic execve code.
+> > 
+> > Save a memcpy and allocate just one header for the interpreter instead
+> > of two headers (64 bytes instead of 128 on 64-bit).
+> 
+> Hard to review.  Why were there two copies in the first place?
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+That's a good question. Both can live on stack in fact
+but [rsp+disp32] addressing generates a lot of bloat (few KB).
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 88db1f5..eb02cd1 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -18,6 +18,29 @@
- 
- 	chosen { };
- 
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
-+		i2c4 = &i2c4;
-+		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+		i2c7 = &i2c7;
-+		i2c8 = &i2c8;
-+		i2c9 = &i2c9;
-+		i2c10 = &i2c10;
-+		i2c11 = &i2c11;
-+		spi0 = &spi0;
-+		spi1 = &spi1;
-+		spi3 = &spi3;
-+		spi5 = &spi5;
-+		spi6 = &spi6;
-+		spi8 = &spi8;
-+		spi10 = &spi10;
-+		spi11 = &spi11;
-+	};
-+
- 	clocks {
- 		xo_board: xo-board {
- 			compatible = "fixed-clock";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> Because of the need to modify the caller's version when we do
+> `loc->elf_ex.e_entry += load_bias', yes?  Any other place?
 
+No, but I'll double check. It was written this way presumably to not
+allocate one more stack variable.
+
+> Local variable `loc' can go away now, yes?
+
+It can.
+
+I have big plans to get rid of all allocations in the common case
+and "fetch" headers from pagecache. This is why all headers better to be
+"const" which this patch partially progresses to.
