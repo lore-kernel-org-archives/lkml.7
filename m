@@ -2,103 +2,127 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8892DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA81C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621F1205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014C82077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576028849;
+	bh=aJEBHOJgbmW5u/PI+IDmgyBqpJA+BGn7BUCYF8lBBXI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qSaxWR4WLqkWBQIlUpEsQtpUsfoqbeyZAnXt/lAYeAVQXHujcCfCW1Rwj8p/7iCey
+	 TjTsePIZN04lMpSTmeusmIOEvrSCB27vPrxyvRUCQCtWrqCmcWaEJ53/YQ1bMS4uZv
+	 Hx6ejpdx1m0qY5SMKtsiUlJlekLmAxiz8saaBCs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfLKBpk (ORCPT
+        id S1727406AbfLKBr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:45:40 -0500
-Received: from mail.windriver.com ([147.11.1.11]:51372 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfLKBpk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:45:40 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xBB1io9N011413
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 10 Dec 2019 17:44:51 -0800 (PST)
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 10 Dec
- 2019 17:44:50 -0800
-Subject: Re: [PATCH net/tipc] Replace rcu_swap_protected() with
- rcu_replace_pointer()
-To:     <paulmck@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <jon.maloy@ericsson.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>,
-        <torvalds@linux-foundation.org>, <mingo@kernel.org>,
-        <kernel-team@fb.com>
-References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
- <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
- <20191210223825.GS2889@paulmck-ThinkPad-P72>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
-Date:   Wed, 11 Dec 2019 09:31:32 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191210223825.GS2889@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Tue, 10 Dec 2019 20:47:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726532AbfLKBr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:47:27 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 021B2205ED;
+        Wed, 11 Dec 2019 01:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576028847;
+        bh=aJEBHOJgbmW5u/PI+IDmgyBqpJA+BGn7BUCYF8lBBXI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a4TeTJ8lJl8q2dLF6mL0GpmczoEuiJsnjXjb9qT5uG5YEyb5hp2C9lNnNhFyLBLB2
+         031Y12L8dQGuzjXBTdQPX+qPEUotS1ySZN21FJ3Zx0yaT5gq3Tjon5oFgMy6hOLPph
+         knl2US3pMczsLrw/0BNFyQN54wFMElQ3kUNz4c4k=
+Date:   Tue, 10 Dec 2019 17:47:26 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
+        linux-arch@vger.kernel.org, security@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
+Message-Id: <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
+In-Reply-To: <20191208171918.GC19716@avx2>
+References: <20191208171918.GC19716@avx2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 6:38 AM, Paul E. McKenney wrote:
-> commit 4ee8e2c68b076867b7a5af82a38010fffcab611c
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Mon Dec 9 19:13:45 2019 -0800
-> 
->     net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
->     
->     This commit replaces the use of rcu_swap_protected() with the more
->     intuitively appealing rcu_replace_pointer() as a step towards removing
->     rcu_swap_protected().
->     
->     Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
->     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
->     Reported-by: kbuild test robot <lkp@intel.com>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->     Cc: Jon Maloy <jon.maloy@ericsson.com>
->     Cc: Ying Xue <ying.xue@windriver.com>
->     Cc: "David S. Miller" <davem@davemloft.net>
->     Cc: <netdev@vger.kernel.org>
->     Cc: <tipc-discussion@lists.sourceforge.net>
-> 
+On Sun, 8 Dec 2019 20:19:18 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
 
-Acked-by: Ying Xue <ying.xue@windriver.com>
-
-> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-> index 990a872..978d2db 100644
-> --- a/net/tipc/crypto.c
-> +++ b/net/tipc/crypto.c
-> @@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
->  #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
->  	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
->  
-> -#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
-> -	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
-> -
->  #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
->  do {									\
->  	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
-> @@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
->  
->  	/* Move passive key if any */
->  	if (key.passive) {
-> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, &rx->lock);
->  		x = (key.passive - key.pending + new_pending) % KEY_MAX;
->  		new_passive = (x <= 0) ? x + KEY_MAX : x;
->  	}
+> There were few episodes of silent downgrade to an executable stack over
+> years:
 > 
+> 1) linking innocent looking assembly file will silently add executable
+>    stack if proper linker options is not given as well:
+> 
+> 	$ cat f.S
+> 	.intel_syntax noprefix
+> 	.text
+> 	.globl f
+> 	f:
+> 	        ret
+> 
+> 	$ cat main.c
+> 	void f(void);
+> 	int main(void)
+> 	{
+> 	        f();
+> 	        return 0;
+> 	}
+> 
+> 	$ gcc main.c f.S
+> 	$ readelf -l ./a.out
+> 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+>                          0x0000000000000000 0x0000000000000000  RWE    0x10
+> 			 					 ^^^
+> 
+> 2) converting C99 nested function into a closure
+> https://nullprogram.com/blog/2019/11/15/
+> 
+> 	void intsort2(int *base, size_t nmemb, _Bool invert)
+> 	{
+> 	    int cmp(const void *a, const void *b)
+> 	    {
+> 	        int r = *(int *)a - *(int *)b;
+> 	        return invert ? -r : r;
+> 	    }
+> 	    qsort(base, nmemb, sizeof(*base), cmp);
+> 	}
+> 
+> will silently require stack trampolines while non-closure version will not.
+> 
+> Without doubt this behaviour is documented somewhere, add a warning so that
+> developers and users can at least notice. After so many years of x86_64 having
+> proper executable stack support it should not cause too many problems.
+
+hm, OK, let's give it a trial run.
+
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
+>  		goto out_unlock;
+>  	BUG_ON(prev != vma);
+>  
+> +	if (unlikely(vm_flags & VM_EXEC)) {
+> +		pr_warn_once("process '%pD4' started with executable stack\n",
+> +			     bprm->file);
+> +	}
+> +
+>  	/* Move stack pages down in memory. */
+>  	if (stack_shift) {
+>  		ret = shift_arg_pages(vma, stack_shift);
+
+What are poor users supposed to do if this message comes out? 
+Hopefully google the message and end up at this thread.  What do you
+want to tell them?
+
