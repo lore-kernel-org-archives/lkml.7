@@ -2,176 +2,134 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C245C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3266C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28306208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB2E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="d+vkKjwN"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VvD10Ez0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfLKFWD (ORCPT
+        id S1727504AbfLKFWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 00:22:03 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46918 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfLKFWC (ORCPT
+        Wed, 11 Dec 2019 00:22:06 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:57350 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbfLKFWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 00:22:02 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z124so10149799pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 21:22:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=OGsdV5jSDDEFcnOk4gJS+m/O081C8UQbyskvOH4VTPw=;
-        b=d+vkKjwN/B7Eemt4aTf5+2EppVPiUSkGgGmMGibO69VudKHjSmIcTbfwnpxCCc+oVT
-         2S6XUMuiwAyy1OK8j/g/0ywNzRSnfEzqdVVtBSWr6aCDKX4cMZa65yqdTSngOAoSerQG
-         ZZ/fl2c0wRuhrRu2sVo6USDP7/ZGWJSzW6Sc4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=OGsdV5jSDDEFcnOk4gJS+m/O081C8UQbyskvOH4VTPw=;
-        b=XKWg2p3EkNyuXQqpaRUdtUGmdTPlDyltpd59ZkE7MS+yPlJWUXFdwWUBfD4Oxj2FOk
-         UkWfT1IiK/DuujqYrzGbVnMs07nIJpvqzmXLc1NVVMUilIfMbmwgaWrc5bFzllzA6ck9
-         w/WL4EiAEc8PYwRNurVjeHqBMmgTqC/X9T7JHd8n/9jWS8qPS00+SNr1MAICPuGNDhx1
-         TDmzzM9jsNJejSJle06EFQfnRvfsDav83WBVB88/VKSLB0RkeK/mUYc8BERsmX9CczEk
-         MKzXjTtYC8C/SLQQI5G/8fK55Yh9pXkBcHbAS+57RkrPfxDJSoJNorVeimx4qMh+xM40
-         RYkQ==
-X-Gm-Message-State: APjAAAUozQfWHSL72+k17p0tkxoGiXCrOUhxr3XBK+wfJtvUoKLpIbCH
-        aYzsX0kaMwzgW/cit2pbQFnq5A==
-X-Google-Smtp-Source: APXvYqy8kiPOFzQDhHNR7yZIAuZ3DCi8vXHTVH/NuDcXMhPAyICB5cohpd05/qlLbtvTlkWmL2TaeA==
-X-Received: by 2002:a63:5d4d:: with SMTP id o13mr2058179pgm.182.1576041721369;
-        Tue, 10 Dec 2019 21:22:01 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-899f-c50f-5647-b1f9.static.ipv6.internode.on.net. [2001:44b8:1113:6700:899f:c50f:5647:b1f9])
-        by smtp.gmail.com with ESMTPSA id y62sm966374pfg.45.2019.12.10.21.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 21:22:00 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
-        aneesh.kumar@linux.ibm.com
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
-References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
-Date:   Wed, 11 Dec 2019 16:21:57 +1100
-Message-ID: <875zincu8a.fsf@dja-thinkpad.axtens.net>
+        Wed, 11 Dec 2019 00:22:04 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191211052202epoutp0385bd9e2a3bd519b0a1648fc87c68c2b6~fOZiTclTx0872208722epoutp030
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:22:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191211052202epoutp0385bd9e2a3bd519b0a1648fc87c68c2b6~fOZiTclTx0872208722epoutp030
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576041722;
+        bh=LAZLvvExbGhSMU9CrBL0f+mi5y5whc4oHHjen45alVc=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=VvD10Ez08bDstL5o8GQsLpKs1Y5SZggBF/DH2RswmHJT/XP0GP53HIBamG5IpTO7Y
+         8DjumygVrmUmC6FP+zDKexgtbvwb//B8/AN1WtXExgfdzi/9zStusKapU3Jj9ofbBj
+         uw4pHeo1C4fUSW7wVz2Zjlk3w1wK9DUu62nBA2kI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191211052201epcas1p317994dd818153d76e46d1c4c42e130a3~fOZh21Cf01020910209epcas1p3h;
+        Wed, 11 Dec 2019 05:22:01 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47Xlfc6DYvzMqYm0; Wed, 11 Dec
+        2019 05:22:00 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C0.08.57028.8FC70FD5; Wed, 11 Dec 2019 14:22:00 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191211052200epcas1p1e26270f59e2aed6fe62544ceaa295573~fOZg1W34U1953819538epcas1p1M;
+        Wed, 11 Dec 2019 05:22:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191211052200epsmtrp152d99171da85fc14cb0d219f677c5b49~fOZg0vG4v1977619776epsmtrp1d;
+        Wed, 11 Dec 2019 05:22:00 +0000 (GMT)
+X-AuditID: b6c32a35-50bff7000001dec4-c7-5df07cf87882
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        33.F8.10238.8FC70FD5; Wed, 11 Dec 2019 14:22:00 +0900 (KST)
+Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191211052200epsmtip2c06cd5e704b61d73ced08bcb3fafd5d0~fOZgoM_i70186301863epsmtip2N;
+        Wed, 11 Dec 2019 05:22:00 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Vyacheslav Dubeyko'" <slava@dubeyko.com>
+Cc:     <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
+        <hch@lst.de>, <sj1557.seo@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+In-Reply-To: <288f07e3573e1dd242a892a6aeef211cda68bc61.camel@dubeyko.com>
+Subject: RE: [PATCH v6 03/13] exfat: add inode operations
+Date:   Wed, 11 Dec 2019 14:22:00 +0900
+Message-ID: <005201d5afe2$ea285880$be790980$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQJ4BHLZ9o05RvmzeddUXNtWjOPDsAKi8sUOAoVHeEQBkFJCUaY597lg
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFJsWRmVeSWpSXmKPExsWy7bCmru6Pmg+xBjN/GVk0L17PZrFy9VEm
+        iz17T7JYXN41h81iy78jrBaftsxmsrj0/gOLA7vHwfVvWDz2z13D7rH7ZgObR9+WVYwenzfJ
+        eRza/oYtgC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
+        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
+        oYGBkSlQZUJOxr790gUnmCq+t01ibWBsZOpi5OSQEDCR2L72IXsXIxeHkMAORonfy88wQzif
+        GCUmPDjPCuF8Y5RYebOPGaZl8bfHjBCJvYwSC59fgGp5xShxZE0XK0gVm4CuxL8/+9lAbBEB
+        PYkTG86DFTELrGCUePJ+Mth2TgFPiYbOmewgtrCApcSa2xvBmlkEVCVm7D0Gto4XKD5/8yo2
+        CFtQ4uTMJywgNrOAvMT2t3OgTlKQ2HH2NSPEMjeJxl2tjBA1IhKzO9vAFksIfGeT6OlcwgbR
+        4CJx9d9FqGZhiVfHt7BD2FISL/vbgGwOILta4uN+qJIORokX320hbGOJm+s3sIKUMAtoSqzf
+        pQ8RVpTY+Xsu1Fo+iXdfe1ghpvBKdLQJQZSoSvRdOgwNd2mJrvYP7BMYlWYheWwWksdmIXlg
+        FsKyBYwsqxjFUguKc9NTiw0LDJEjexMjOJ1qme5gnHLO5xCjAAejEg/vgu3vY4VYE8uKK3MP
+        MUpwMCuJ8B5vexcrxJuSWFmVWpQfX1Sak1p8iNEUGO4TmaVEk/OBqT6vJN7Q1MjY2NjCxMzc
+        zNRYSZyX48fFWCGB9MSS1OzU1ILUIpg+Jg5OqQZGWbmVugzC1nt/+U02ZdB9uqe+ssiB/dNn
+        K6fcLWz6nAvu6txymzVf6PxWu2+8U8q497lYvbgSf3mRzpN9d9a9/rm4+c3tKQYrtkuHTBLc
+        cajStpVNuTDmkOuj5/su2L5fmHkzLW9NX/zWE9e63wa4pSxl3u7bPflM4t7krtnhK6YfrrzP
+        8i+7VYmlOCPRUIu5qDgRAKT6diO9AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCIsWRmVeSWpSXmKPExsWy7bCSvO6Pmg+xButfSlg0L17PZrFy9VEm
+        iz17T7JYXN41h81iy78jrBaftsxmsrj0/gOLA7vHwfVvWDz2z13D7rH7ZgObR9+WVYwenzfJ
+        eRza/oYtgC2KyyYlNSezLLVI3y6BK2PffumCE0wV39smsTYwNjJ1MXJySAiYSCz+9pixi5GL
+        Q0hgN6NE78KdrBAJaYljJ84wdzFyANnCEocPF4OEhQReMEqcnFwGYrMJ6Er8+7OfDcQWEdCT
+        OLHhPDPIHGaBdYwSy+/vYYMY+otRom3uDrBtnAKeEg2dM9lBbGEBS4k1tzeCLWMRUJWYsfcY
+        M4jNCxSfv3kVG4QtKHFy5hMWEJtZQFui92ErI4QtL7H97RxmiEMVJHacfc0IcYWbROMumBoR
+        idmdbcwTGIVnIRk1C8moWUhGzULSsoCRZRWjZGpBcW56brFhgWFearlecWJucWleul5yfu4m
+        RnBcaWnuYLy8JP4QowAHoxIP74Lt72OFWBPLiitzDzFKcDArifAeb3sXK8SbklhZlVqUH19U
+        mpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU1ILUIpgsEwenVAOj2M2lzMGccpu1lupfdpOqVEg8
+        aGp/pJzp7MMrN6Y1hATay7ie2uv6y4vz4brc1z2B8zJ+ZPAfmtPUKrL01LWqr1ELd+8z/zPD
+        JWVjy+XjqoaWG7fu9nrqb+nu7p7Wcbd8qYrMm2Vqz3/dPmSQ+XP99Ai3+0y+GhKNxVeaV04I
+        cOKb69OzK26GEktxRqKhFnNRcSIAsDIYYKcCAAA=
+X-CMS-MailID: 20191211052200epcas1p1e26270f59e2aed6fe62544ceaa295573
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191209065459epcas1p3349caea59da1b9b458a73923d724ca35
+References: <20191209065149.2230-1-namjae.jeon@samsung.com>
+        <CGME20191209065459epcas1p3349caea59da1b9b458a73923d724ca35@epcas1p3.samsung.com>
+        <20191209065149.2230-4-namjae.jeon@samsung.com>
+        <288f07e3573e1dd242a892a6aeef211cda68bc61.camel@dubeyko.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Balbir,
 
->> +Discontiguous memory can occur when you have a machine with memory spread
->> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
->> +
->> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
->> + - then there's a gap,
->> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
->> +
->> +This can create _significant_ issues:
->> +
->> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
->> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
->> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
->> +   region. But when we try to access any of that, we'll try to access pages
->> +   that are not physically present.
->> +
->
-> If we reserved memory for KASAN from each node (discontig region), we might survive
-> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
-> out loud.
-
-The challenge is that - AIUI - in inline instrumentation, the compiler
-doesn't generate calls to things like __asan_loadN and
-__asan_storeN. Instead it uses -fasan-shadow-offset to compute the
-checks, and only calls the __asan_report* family of functions if it
-detects an issue. This also matches what I can observe with objdump
-across outline and inline instrumentation settings.
-
-This means that for this sort of thing to work we would need to either
-drop back to out-of-line calls, or teach the compiler how to use a
-nonlinear, NUMA aware mem-to-shadow mapping.
-
-I'll document this a bit better in the next spin.
-
->> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
->> +		kasan_memory_size =
->> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
->> +
->> +		if (top_phys_addr < kasan_memory_size) {
->> +			/*
->> +			 * We are doomed. Attempts to call e.g. panic() are
->> +			 * likely to fail because they call out into
->> +			 * instrumented code, which will almost certainly
->> +			 * access memory beyond the end of physical
->> +			 * memory. Hang here so that at least the NIP points
->> +			 * somewhere that will help you debug it if you look at
->> +			 * it in qemu.
->> +			 */
->> +			while (true)
->> +				;
->
-> Again with the right hooks in check_memory_region_inline() these are recoverable,
-> or so I think
-
-So unless I misunderstand the circumstances in which
-check_memory_region_inline is used, this isn't going to help with inline
-instrumentation.
-
->> +void __init kasan_init(void)
->> +{
->> +	int i;
->> +	void *k_start = kasan_mem_to_shadow((void *)RADIX_KERN_VIRT_START);
->> +	void *k_end = kasan_mem_to_shadow((void *)RADIX_VMEMMAP_END);
->> +
->> +	pte_t pte = __pte(__pa(kasan_early_shadow_page) |
->> +			  pgprot_val(PAGE_KERNEL) | _PAGE_PTE);
->> +
->> +	if (!early_radix_enabled())
->> +		panic("KASAN requires radix!");
->> +
->
-> I think this is avoidable, we could use a static key for disabling kasan in
-> the generic code. I wonder what happens if someone tries to boot this
-> image on a Power8 box and keeps panic'ing with no easy way of recovering.
-
-Again, assuming I understand correctly that the compiler generates raw
-IR->asm for these checks rather than calling out to a function, then I
-don't think we get a way to intercept those checks. It's too late to do
-anything at the __asan report stage because that will already have
-accessed memory that's not set up properly.
-
-If you try to boot this on a Power8 box it will panic and you'll have to
-boot into another kernel from the bootloader. I don't think it's
-avoidable without disabling inline instrumentation, but I'd love to be
-proven wrong.
-
->
-> NOTE: I can't test any of these, well may be with qemu, let me see if I can spin
-> the series and provide more feedback
-
-It's actually super easy to do simple boot tests with qemu, it works fine in TCG,
-Michael's wiki page at
-https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu is very helpful.
-
-I did this a lot in development.
-
-My full commandline, fwiw, is:
-
-qemu-system-ppc64  -m 8G -M pseries -cpu power9  -kernel ../out-3s-radix/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4
-
-Regards,
-Daniel
+> > +	ep2->stream_valid_size = cpu_to_le64(on_disk_size);
+> > +	ep2->stream_size = ep2->stream_valid_size;
+> > +
+> > +	ret = exfat_update_dir_chksum_with_entry_set(sb, es, sync);
+> > +	kfree(es);
+> 
+> The exfat_get_dentry_set() allocates the es by kmalloc? Am I correct?
+Yes.
+> 
+> 
+> > +	return ret;
+> > +}
+> > +
 
