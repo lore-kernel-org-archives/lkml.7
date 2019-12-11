@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BD3C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5561C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBF622B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC8D222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078147;
-	bh=V3c61UjcYe4scFRc07uwvsawsHuVtrB91ryO+pxN9bs=;
+	s=default; t=1576078154;
+	bh=m2kHXdSGO2m2+0B8tCsvKfhEWUthbr301EBF8qZEnIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0Yo5xNhGIQlKRgH/FZQc3EQegzLH3DQ3SqMf4gQvwtUkDjHD/cu2jlTmgBwzVaUm
-	 bwij9HjY81dXQs9n/DM3JMW1y2prbz7MwJy4r6/KwUm8LcfbP8kezghEJUYDv+iR8K
-	 9QvMqsEra4TWu3ampgFVYH7e9qCwNZ0xFQytynVQ=
+	b=I/L7hysBJCb7l7NOD5T/mVW9FxoaPf2+Ost8OU88gOE5mVaBkfad5VfuyJijlmdbd
+	 PqHiLd8RvJ7gI67LN+e8ZNmK82jchMGMLzcg/ujxuXSB+jmh/pe/QhV/yIYej2728D
+	 4vUU9hS1D/cnW3GUgZfHfq5/0xV3Z7o9/uVBRU+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387805AbfLKP3G (ORCPT
+        id S2387826AbfLKP3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387791AbfLKP3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:03 -0500
+        id S2387794AbfLKP3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E79A6222C4;
-        Wed, 11 Dec 2019 15:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3457324654;
+        Wed, 11 Dec 2019 15:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078142;
-        bh=V3c61UjcYe4scFRc07uwvsawsHuVtrB91ryO+pxN9bs=;
+        s=default; t=1576078144;
+        bh=m2kHXdSGO2m2+0B8tCsvKfhEWUthbr301EBF8qZEnIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zUi4a0kPU/sXMIbBPqx5ZPhAgsU+BKehomgZ8kOckr9vhAkoTgMH0R0yXO2qqBKHz
-         uNxeryu+amonz5Y7/HClhaMvud7eGn73yp8x+Kv4/685tWG71NVlcILTMKs5BtBoyi
-         MLTID55iJXlCalQ02BhFav68xccAb6ZEeG7hdMVI=
+        b=V6VWixn/z2ACXQDSSQKkMHVMzHKIjblS7HPNZIIj77XqDufXDcZHWT5U5Da06bMFY
+         CiOkVKKNaqqiVQK4jVqXZ2mPPCmhikBl/mge/NdR5tP7y/mQHKlBOP9SpwR3OgEJOT
+         Z/tO0r17dhN4u1OCrmOLzbBtQdjt/C0pPp2wsRpg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
-        "Mauro S . M . Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 29/58] powerpc/security: Fix wrong message when RFI Flush is disable
-Date:   Wed, 11 Dec 2019 10:28:02 -0500
-Message-Id: <20191211152831.23507-29-sashal@kernel.org>
+Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 31/58] clk: pxa: fix one of the pxa RTC clocks
+Date:   Wed, 11 Dec 2019 10:28:04 -0500
+Message-Id: <20191211152831.23507-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -60,93 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
+[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
 
-The issue was showing "Mitigation" message via sysfs whatever the
-state of "RFI Flush", but it should show "Vulnerable" when it is
-disabled.
+The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
+rtc-pxa drivers.
 
-If you have "L1D private" feature enabled and not "RFI Flush" you are
-vulnerable to meltdown attacks.
+A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
+fixed. This patch completes the previous one.
 
-"RFI Flush" is the key feature to mitigate the meltdown whatever the
-"L1D private" state.
-
-SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
-
-So the message should be as the truth table shows:
-
-  CPU | L1D private | RFI Flush |                sysfs
-  ----|-------------|-----------|-------------------------------------
-   P9 |    False    |   False   | Vulnerable
-   P9 |    False    |   True    | Mitigation: RFI Flush
-   P9 |    True     |   False   | Vulnerable: L1D private per thread
-   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
-   P8 |    False    |   False   | Vulnerable
-   P8 |    False    |   True    | Mitigation: RFI Flush
-
-Output before this fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: L1D private per thread
-
-Output after fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Vulnerable: L1D private per thread
-
-Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
+Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/security.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/clk/pxa/clk-pxa27x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index fef3f09fc238b..b3f540c9f4109 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -134,26 +134,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
- 
- 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
- 
--	if (rfi_flush || thread_priv) {
-+	if (rfi_flush) {
- 		struct seq_buf s;
- 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
- 
--		seq_buf_printf(&s, "Mitigation: ");
--
--		if (rfi_flush)
--			seq_buf_printf(&s, "RFI Flush");
--
--		if (rfi_flush && thread_priv)
--			seq_buf_printf(&s, ", ");
--
-+		seq_buf_printf(&s, "Mitigation: RFI Flush");
- 		if (thread_priv)
--			seq_buf_printf(&s, "L1D private per thread");
-+			seq_buf_printf(&s, ", L1D private per thread");
- 
- 		seq_buf_printf(&s, "\n");
- 
- 		return s.len;
- 	}
- 
-+	if (thread_priv)
-+		return sprintf(buf, "Vulnerable: L1D private per thread\n");
-+
- 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
- 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
- 		return sprintf(buf, "Not affected\n");
+diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
+index 25a30194d27a3..b67ea86ff1566 100644
+--- a/drivers/clk/pxa/clk-pxa27x.c
++++ b/drivers/clk/pxa/clk-pxa27x.c
+@@ -462,6 +462,7 @@ struct dummy_clk {
+ };
+ static struct dummy_clk dummy_clks[] __initdata = {
+ 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
++	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
+ 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
+ };
 -- 
 2.20.1
 
