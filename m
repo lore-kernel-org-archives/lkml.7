@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CEFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38240C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6822173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044422173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077938;
-	bh=05/K+HdX3XI5eOzqwwiLaJkiHzPHa6Dset8Agi/y9uQ=;
+	s=default; t=1576077941;
+	bh=F3/A8F98GMcNlAnUP0/wo9dpsX+L9fMdFUUEcEpTaPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E78ehM4YhoIX9IshE/e1KGDkqgJ3bQH/mf8kxPgJTECwDY0YYQmGd0Km3T3dFyehK
-	 Bk+yEbPoF3lZzjRIhjAlH3wilG7u+D9B+neR1vLbUdP41s1NLdNE5V9H6IIX3ImW5o
-	 Y+f/jIvpOiQ/X6WRpgyIsEsEeGZKCfJZLbg52Dto=
+	b=Bz9kIAusEMO0LWWIG3xbT3XMklYczuTwXWtgNLtXNT7LJiuUIonYgMTLOLmFfn8RU
+	 KKF5e569AKbEkUCMR5m5scjleTyi8WuNN73TUBlRSeBG9uXKN+nKDWXCgJK6AeBXAo
+	 OZj6YKAmjUtuF3yQ6GkWdSlIhEOM2YpsLQ594eZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbfLKPZh (ORCPT
+        id S1733034AbfLKPZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:25:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:25:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732782AbfLKPZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:25:34 -0500
+        id S1733025AbfLKPZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:25:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DD2208C3;
-        Wed, 11 Dec 2019 15:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 420432465B;
+        Wed, 11 Dec 2019 15:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077934;
-        bh=05/K+HdX3XI5eOzqwwiLaJkiHzPHa6Dset8Agi/y9uQ=;
+        s=default; t=1576077936;
+        bh=F3/A8F98GMcNlAnUP0/wo9dpsX+L9fMdFUUEcEpTaPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sr1KbbW51P+Yl1kz3ejd+UfaxDBKac1efiqVfuMbmh/GKMOlZmhOlhpsa+RSIDUUF
-         JEpQ6dfLbi1CJFzYKWqW+2AGJbQjRslMlWMAgNR3asNqbMoGf20KAbLH2hbLzM5J+b
-         fqyhCFfpNdsu5o2xhaTCzkqgpYaGlT+UO3Wj+7So=
+        b=oc9PddXdoYZcDTatcszul4UZYrJ3z8zJ6O78FYEG9C5drr8MuiPhNuUGPZx6P2o+n
+         YWw3426P1bkrXSyTwouZrzeD2gcHadmpBI97cfszogcRLbqb+LBOSz9/vxkUbiJ66R
+         GVIXULQomSrFWKIMVWhxk3cNeVgS1U2zqk05ToI0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: [PATCH 4.19 225/243] KVM: arm/arm64: vgic: Dont rely on the wrong pending table
-Date:   Wed, 11 Dec 2019 16:06:27 +0100
-Message-Id: <20191211150354.521461342@linuxfoundation.org>
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 226/243] KVM: x86: do not modify masked bits of shared MSRs
+Date:   Wed, 11 Dec 2019 16:06:28 +0100
+Message-Id: <20191211150354.591209799@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,54 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zenghui Yu <yuzenghui@huawei.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit ca185b260951d3b55108c0b95e188682d8a507b7 upstream.
+commit de1fca5d6e0105c9d33924e1247e2f386efc3ece upstream.
 
-It's possible that two LPIs locate in the same "byte_offset" but target
-two different vcpus, where their pending status are indicated by two
-different pending tables.  In such a scenario, using last_byte_offset
-optimization will lead KVM relying on the wrong pending table entry.
-Let us use last_ptr instead, which can be treated as a byte index into
-a pending table and also, can be vcpu specific.
+"Shared MSRs" are guest MSRs that are written to the host MSRs but
+keep their value until the next return to userspace.  They support
+a mask, so that some bits keep the host value, but this mask is
+only used to skip an unnecessary MSR write and the value written
+to the MSR is always the guest MSR.
 
-Fixes: 280771252c1b ("KVM: arm64: vgic-v3: KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES")
+Fix this and, while at it, do not update smsr->values[slot].curr if
+for whatever reason the wrmsr fails.  This should only happen due to
+reserved bits, so the value written to smsr->values[slot].curr
+will not match when the user-return notifier and the host value will
+always be restored.  However, it is untidy and in rare cases this
+can actually avoid spurious WRMSRs on return to userspace.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20191029071919.177-4-yuzenghui@huawei.com
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Tested-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/arm/vgic/vgic-v3.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -375,8 +375,8 @@ retry:
- int vgic_v3_save_pending_tables(struct kvm *kvm)
- {
- 	struct vgic_dist *dist = &kvm->arch.vgic;
--	int last_byte_offset = -1;
- 	struct vgic_irq *irq;
-+	gpa_t last_ptr = ~(gpa_t)0;
- 	int ret;
- 	u8 val;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -290,13 +290,14 @@ int kvm_set_shared_msr(unsigned slot, u6
+ 	struct kvm_shared_msrs *smsr = per_cpu_ptr(shared_msrs, cpu);
+ 	int err;
  
-@@ -396,11 +396,11 @@ int vgic_v3_save_pending_tables(struct k
- 		bit_nr = irq->intid % BITS_PER_BYTE;
- 		ptr = pendbase + byte_offset;
+-	if (((value ^ smsr->values[slot].curr) & mask) == 0)
++	value = (value & mask) | (smsr->values[slot].host & ~mask);
++	if (value == smsr->values[slot].curr)
+ 		return 0;
+-	smsr->values[slot].curr = value;
+ 	err = wrmsrl_safe(shared_msrs_global.msrs[slot], value);
+ 	if (err)
+ 		return 1;
  
--		if (byte_offset != last_byte_offset) {
-+		if (ptr != last_ptr) {
- 			ret = kvm_read_guest_lock(kvm, ptr, &val, 1);
- 			if (ret)
- 				return ret;
--			last_byte_offset = byte_offset;
-+			last_ptr = ptr;
- 		}
- 
- 		stored = val & (1U << bit_nr);
++	smsr->values[slot].curr = value;
+ 	if (!smsr->registered) {
+ 		smsr->urn.on_user_return = kvm_on_user_return;
+ 		user_return_notifier_register(&smsr->urn);
 
 
