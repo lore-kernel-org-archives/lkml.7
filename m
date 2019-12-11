@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66398C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C340C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEDE2464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46721208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076858;
-	bh=aPdqcuoYB/AxfN1Ijbok5sCn7AQwGNsV+TPJFrNmQa4=;
+	s=default; t=1576076863;
+	bh=LKxzpUfyF+oYSQX+FKuJTBK46/nO+5dzYVqWq0NnofU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pweOWjJMSbHkLTTst9hEABNWV1sS6A+ToC0XerZuikb4tE6e30cUCwprmP6qpEpeE
-	 /98qeiA4tXzZ27wzFvGR+B2mj6svVFvUKXowJS+BdmcqQ7esLakC5x+fU/rNlsmAXt
-	 ia+dGxdm+dEcuSiSpEtYdF2WnM+oLbij/RXJPr9k=
+	b=T2ff56JqPT3XBlLc/i9wCrljyvsnq5RLdKJJ7topNMjGmqcBIZPDSGlQOdE4EyfuZ
+	 1sO+KSKmm9jrAlVGYD6feq1FHQmOLxtI2AU0oUkoMS6yDzTTSwTOgexjQuJ+NGEd/D
+	 trKBw9TWEdKHKNA2SGFdu0pJURy4ZD/mi+VlXpl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730055AbfLKPHh (ORCPT
+        id S1730078AbfLKPHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:07:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbfLKPHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:07:36 -0500
+        id S1730010AbfLKPHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:07:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08F69222C4;
-        Wed, 11 Dec 2019 15:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF4B20663;
+        Wed, 11 Dec 2019 15:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076855;
-        bh=aPdqcuoYB/AxfN1Ijbok5sCn7AQwGNsV+TPJFrNmQa4=;
+        s=default; t=1576076858;
+        bh=LKxzpUfyF+oYSQX+FKuJTBK46/nO+5dzYVqWq0NnofU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NU99usv2kkyYI/OCZIcze7zoxJEkK154ShCAJogrNcBeT7bXw2aQfbnhcqDsO7lx1
-         kv7N7bzh2u1FN7K8fHl2HphGa74Z++fjVJpJtDTH6oGzvGQ3+cCDqsJEL2ZGiTKiL2
-         RSPKcBA7YM6rtTQ50Aa5hCoS41O//e7BTRw3EkH0=
+        b=XbP8AwfAjPxu/DGbMEvlz+0xgga6ge+hui840zxyHN2pcjA6BQ/rVIE0whCRUmpkZ
+         xcrV1gJ5pIFjaFqP32U0J1nZiRZCwVkl8fogWblXo0LdP6LI1rQdywNxJsAsEGCrlo
+         3QeMwCymzKkWzk8nNWa45oHvyIvomQ/n4++U6Dw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 17/92] serial: 8250_dw: Avoid double error messaging when IRQ absent
-Date:   Wed, 11 Dec 2019 16:05:08 +0100
-Message-Id: <20191211150226.742908160@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH 5.4 18/92] serial: ifx6x60: add missed pm_runtime_disable
+Date:   Wed, 11 Dec 2019 16:05:09 +0100
+Message-Id: <20191211150226.990625436@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,51 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 05faa64e73924556ba281911db24643e438fe7ba upstream.
+commit 50b2b571c5f3df721fc81bf9a12c521dfbe019ba upstream.
 
-Since the commit 7723f4c5ecdb ("driver core: platform: Add an error message
-to platform_get_irq*()") platform_get_irq() started issuing an error message.
-Thus, there is no need to have the same in the driver
+The driver forgets to call pm_runtime_disable in remove.
+Add the missed calls to fix it.
 
-Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191023103558.51862-1-andriy.shevchenko@linux.intel.com
+Link: https://lore.kernel.org/r/20191118024833.21587-1-hslester96@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_dw.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/tty/serial/ifx6x60.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -386,10 +386,10 @@ static int dw8250_probe(struct platform_
- {
- 	struct uart_8250_port uart = {}, *up = &uart;
- 	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	int irq = platform_get_irq(pdev, 0);
- 	struct uart_port *p = &up->port;
- 	struct device *dev = &pdev->dev;
- 	struct dw8250_data *data;
-+	int irq;
- 	int err;
- 	u32 val;
- 
-@@ -398,11 +398,9 @@ static int dw8250_probe(struct platform_
- 		return -EINVAL;
- 	}
- 
--	if (irq < 0) {
--		if (irq != -EPROBE_DEFER)
--			dev_err(dev, "cannot get irq\n");
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
- 		return irq;
--	}
- 
- 	spin_lock_init(&p->lock);
- 	p->mapbase	= regs->start;
+--- a/drivers/tty/serial/ifx6x60.c
++++ b/drivers/tty/serial/ifx6x60.c
+@@ -1230,6 +1230,9 @@ static int ifx_spi_spi_remove(struct spi
+ 	struct ifx_spi_device *ifx_dev = spi_get_drvdata(spi);
+ 	/* stop activity */
+ 	tasklet_kill(&ifx_dev->io_work_tasklet);
++
++	pm_runtime_disable(&spi->dev);
++
+ 	/* free irq */
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.reset_out), ifx_dev);
+ 	free_irq(gpio_to_irq(ifx_dev->gpio.srdy), ifx_dev);
 
 
