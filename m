@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F98C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57120C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BDB22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204C222527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077485;
-	bh=P0XpjsJYlFEVbD4liZs7NI70Ujoy8NXzHF2fp/q2yno=;
+	s=default; t=1576077489;
+	bh=uTVJWRqB+hrVmymygwybQVOn/weF1+2ifA1NVusuY64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kT71A2gM7BcaUWnl4z44L3kCblWfNqpMFFcuRvZ5Y53QP6FKaH09rLQi7/LsG8kAX
-	 cJJcVx0cG5tZ+RB6DfDeFiZDuaGa6bcT4GeFUG82DJ3fjgaxbQ+4qI67Q2uchjBByJ
-	 ETHk48Uq6c5qVLnx/VRVkhIVoSlHCe5sAgIfkFa8=
+	b=nuzIMC04jNrPQdTksprK4SoC3w3RjU9kAdxpJ+I24KrpBtzju/hver5h5/KnQpssX
+	 SYdAffOWPsl6BJWvQ7gR+yUiVYAs5w/LDGN7HPqsN4IGUDdV3J8kO7EmIszRbB5oyz
+	 5tsEEz72f4mCwafvZ0E2x5hLvmQ1SLXnmahZt9Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731948AbfLKPSD (ORCPT
+        id S1731947AbfLKPSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45658 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732077AbfLKPSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:00 -0500
+        id S1732086AbfLKPSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FC3A2073D;
-        Wed, 11 Dec 2019 15:17:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98E2324671;
+        Wed, 11 Dec 2019 15:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077479;
-        bh=P0XpjsJYlFEVbD4liZs7NI70Ujoy8NXzHF2fp/q2yno=;
+        s=default; t=1576077482;
+        bh=uTVJWRqB+hrVmymygwybQVOn/weF1+2ifA1NVusuY64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+ASRbfoxWx45U3krYBikKmRD63C9W5foPNPlEC46soCabzutCVOxFcQ949tqfdkt
-         UE70KUEcoDXX1wXI7+YAKxV+cfG04855hFUbQxkyDZk9hX5ZKGkEcohh91l8UgYtZb
-         z05c521y5Go5q2GB0iIIVjIVlOeLshBRM0Eoiogs=
+        b=GcwP1ahfOOLXV47aFHnphkQ641G1NMR1Sbm2HSkuW+Ds3OyzKGj+s+svPdFCRiolK
+         cCSwPlzxhdjzYgkDzedmQFxwWtxb3y3dMcv7Nm9cI+oPF5UKMYUZ0hfSngeKKliloI
+         Vi//fo9XrJ+2CSsGCD6lo0uq4hEzvF0k38FfWTQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Maxime Jourdan <mjourdan@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/243] scsi: zfcp: drop default switch case which might paper over missing case
-Date:   Wed, 11 Dec 2019 16:03:36 +0100
-Message-Id: <20191211150342.753674310@linuxfoundation.org>
+Subject: [PATCH 4.19 055/243] drivers: soc: Allow building the amlogic drivers without ARCH_MESON
+Date:   Wed, 11 Dec 2019 16:03:37 +0100
+Message-Id: <20191211150342.820041861@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Maier <maier@linux.ibm.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
 
-[ Upstream commit 0c902936e55cff9335b27ed632fc45e7115ced75 ]
+[ Upstream commit 41bb5769b7f4b7a85e4b92c37429228279b4f569 ]
 
-This was introduced with v4.18 commit 8c3d20aada70 ("scsi: zfcp: fix
-missing REC trigger trace for all objects in ERP_FAILED") but would now
-suppress helpful -Wswitch compiler warnings when building with W=1 such as
-the following forced example:
+The current condition makes it difficult to compile the amlogic/
+drivers with COMPILE_TEST, or without ARCH_MESON in general.
 
-drivers/s390/scsi/zfcp_erp.c: In function 'zfcp_erp_handle_failed':
-drivers/s390/scsi/zfcp_erp.c:126:2: warning: enumeration value 'ZFCP_ERP_ACTION_REOPEN_PORT_FORCED' not handled in switch [-Wswitch]
-  switch (want) {
-  ^~~~~~
+Fixes kbuild errors with patch series that depend on drivers in that
+directory, for instance the meson video decoder.
 
-But then again, only with W=1 we would notice unhandled enum cases.
-Without the default cases and a missed unhandled enum case, the code might
-perform unforeseen things we might not want...
-
-As of today, we never run through the removed default case, so removing it
-is no functional change.  In the future, we never should run through a
-default case but introduce the necessary specific case(s) to handle new
-functionality.
-
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_erp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/soc/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index 332701db7379d..f602b42b8343d 100644
---- a/drivers/s390/scsi/zfcp_erp.c
-+++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -172,9 +172,6 @@ static int zfcp_erp_handle_failed(int want, struct zfcp_adapter *adapter,
- 				adapter, ZFCP_STATUS_COMMON_ERP_FAILED);
- 		}
- 		break;
--	default:
--		need = 0;
--		break;
- 	}
- 
- 	return need;
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 113e884697fd8..f0d46b16e08c4 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -13,7 +13,7 @@ obj-$(CONFIG_ARCH_GEMINI)	+= gemini/
+ obj-$(CONFIG_ARCH_MXC)		+= imx/
+ obj-$(CONFIG_SOC_XWAY)		+= lantiq/
+ obj-y				+= mediatek/
+-obj-$(CONFIG_ARCH_MESON)	+= amlogic/
++obj-y				+= amlogic/
+ obj-y				+= qcom/
+ obj-y				+= renesas/
+ obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/
 -- 
 2.20.1
 
