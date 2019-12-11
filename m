@@ -3,72 +3,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1ECC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E26C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E69F208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FF8208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbfLKErp (ORCPT
+        id S1727209AbfLKEtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:47:45 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52522 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfLKErp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:47:45 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ietuF-0004dd-CH; Wed, 11 Dec 2019 04:47:23 +0000
-Date:   Wed, 11 Dec 2019 04:47:23 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
-Message-ID: <20191211044723.GC4203@ZenIV.linux.org.uk>
-References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
- <20191211024858.GB732@sol.localdomain>
- <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
+        Tue, 10 Dec 2019 23:49:08 -0500
+Received: from mail5.windriver.com ([192.103.53.11]:48610 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726613AbfLKEtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 23:49:07 -0500
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id xBB4mlae022410
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 10 Dec 2019 20:48:47 -0800
+Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 10 Dec
+ 2019 20:48:46 -0800
+Subject: Re: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected()
+ with rcu_replace_pointer()
+To:     <paulmck@kernel.org>, Tuong Lien Tong <tuong.t.lien@dektech.com.au>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingo@kernel.org>, <tipc-discussion@lists.sourceforge.net>,
+        <kernel-team@fb.com>, <torvalds@linux-foundation.org>,
+        <davem@davemloft.net>
+References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
+ <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
+ <20191210223825.GS2889@paulmck-ThinkPad-P72>
+ <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
+ <707801d5afc6$cac68190$605384b0$@dektech.com.au>
+ <20191211031751.GZ2889@paulmck-ThinkPad-P72>
+From:   Ying Xue <ying.xue@windriver.com>
+Message-ID: <fdbb5b2c-851e-11c1-7e52-5f70b7489504@windriver.com>
+Date:   Wed, 11 Dec 2019 12:35:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191211031751.GZ2889@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [128.224.155.90]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:59:40AM +0800, Tiezhu Yang wrote:
+On 12/11/19 11:17 AM, Paul E. McKenney wrote:
+>> Acked-by: Ying Xue <ying.xue@windriver.com>
+> As in the following?  If so, I will be very happy to apply your Acked-by.
 
-> static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-> {
->         if (len == 1 && name[0] == '.')
->                 return true;
-> 
->         if (len == 2 && name[0] == '.' && name[1] == '.')
->                 return true;
-> 
->         return false;
-> }
-> 
-> Hi Matthew,
-> 
-> How do you think? I think the performance influence is very small
-> due to is_dot_or_dotdot() is a such short static inline function.
-
-It's a very short inline function called on a very hot codepath.
-Often.
-
-I mean it - it's done literally for every pathname component of
-every pathname passed to a syscall.
+Yes. Thanks!
