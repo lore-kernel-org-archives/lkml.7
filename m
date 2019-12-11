@@ -2,105 +2,129 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DE9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB79C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C89862054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE9D52465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:13:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="bl9uGKdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfLKRND (ORCPT
+        id S1731031AbfLKRN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:13:03 -0500
-Received: from mga02.intel.com ([134.134.136.20]:25315 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbfLKRND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:13:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:11:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
-   d="scan'208";a="245357967"
-Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Dec 2019 09:11:42 -0800
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        xiaochen.shen@intel.com
-Subject: [PATCH] x86/resctrl: Check monitoring static key in MBM overflow handler
-Date:   Thu, 12 Dec 2019 01:41:43 +0800
-Message-Id: <1576086103-11640-1-git-send-email-xiaochen.shen@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 11 Dec 2019 12:13:27 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:30558 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfLKRN0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:13:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1576084404;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=oFk4a1ZHaFS5On1Vtt+xS8rJo9fx0S1BmG+yU5jRxZQ=;
+        b=bl9uGKdmv9SAMJzeUH7PDRCpYW4q4AqGgbTg+QC9NwCN3hGHJg9ei7KX8NkLHk1OlT
+        Mgi+KjuiCZEZH8P7w3lDe6G9VMb9pSbLZ6RTku88IudI5rvxidPXZV3qGxyDTe9drbmO
+        aXdhtLdbA556aYRcmQPgi0JYQ4Q2weXL+C/vOT0igEyckghKE4O7Lqhwnom1ma2tfDbM
+        o/P+GeujuMMSs6CZyE42AhoceD23yPrxvWtfxO9INHIg18al9TxsQcek7+t9it1PPD6a
+        +VLTSgddq339CwxVqNlPKVp+69OZFnuddm4bNdDDLw0LOMB3y6+dKjtzl3eW2olsO94J
+        LYYg==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u266EZF6ORJGV8vHxv6O"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.0.2 AUTH)
+        with ESMTPSA id R01a59vBBHDJo9R
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 11 Dec 2019 18:13:19 +0100 (CET)
+Date:   Wed, 11 Dec 2019 18:13:13 +0100
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, agross@kernel.org, swboyd@chromium.org,
+        olof@lixom.net, Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] drivers: thermal: tsens: Work with old DTBs
+Message-ID: <20191211171313.GA1530@gerhold.net>
+References: <cover.1576058136.git.amit.kucheria@linaro.org>
+ <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there are three static keys in resctrl file system:
-rdt_mon_enable_key and rdt_alloc_enable_key indicate if monitoring
-feature and allocation feature is enabled respectively. rdt_enable_key
-is enabled when either monitoring feature or allocation feature is
-enabled.
+Hi Amit,
 
-If no monitoring feature is supported (either hardware doesn't support
-monitoring feature or the feature is disabled by kernel command line
-option "rdt="), rdt_enable_key is still enabled but rdt_mon_enable_key
-is disabled.
+Thanks for the patch!
 
-MBM is a monitoring feature. MBM overflow handler intends to check if
-monitoring feature is not enabled for fast return. So the accurate check
-here is to check rdt_mon_enable_key instead of rdt_enable_key.
+On Wed, Dec 11, 2019 at 03:28:33PM +0530, Amit Kucheria wrote:
+> In order for the old DTBs to continue working, the new interrupt code
+> must not return an error if interrupts are not defined.
+> 
+> Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/qcom/tsens.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 015e7d2015985..d8f51067ed411 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -109,7 +109,7 @@ static int tsens_register(struct tsens_priv *priv)
+>  
+>  	irq = platform_get_irq_byname(pdev, "uplow");
+>  	if (irq < 0) {
+> -		ret = irq;
+> +		dev_warn(&pdev->dev, "Missing uplow irq in DT\n");
+>  		goto err_put_device;
+>  	}
 
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
----
- arch/x86/kernel/cpu/resctrl/internal.h | 1 +
- arch/x86/kernel/cpu/resctrl/monitor.c  | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+platform_get_irq_byname() already logs an error if the IRQ cannot be
+found: qcom-tsens 4a9000.thermal-sensor: IRQ uplow not found
 
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index e49b77283924..181c992f448c 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -57,6 +57,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
- }
- 
- DECLARE_STATIC_KEY_FALSE(rdt_enable_key);
-+DECLARE_STATIC_KEY_FALSE(rdt_mon_enable_key);
- 
- /**
-  * struct mon_evt - Entry in the event list of a resource
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 397206f23d14..773124b0e18a 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -514,7 +514,7 @@ void mbm_handle_overflow(struct work_struct *work)
- 
- 	mutex_lock(&rdtgroup_mutex);
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		goto out_unlock;
- 
- 	d = get_domain_from_cpu(cpu, &rdt_resources_all[RDT_RESOURCE_L3]);
-@@ -543,7 +543,7 @@ void mbm_setup_overflow_handler(struct rdt_domain *dom, unsigned long delay_ms)
- 	unsigned long delay = msecs_to_jiffies(delay_ms);
- 	int cpu;
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		return;
- 	cpu = cpumask_any(&dom->cpu_mask);
- 	dom->mbm_work_cpu = cpu;
--- 
-1.8.3.1
+To replace that error with a warning (not sure if that is worth it),
+we would need to replace the call with platform_get_irq_byname_optional().
 
+>  
+> @@ -118,7 +118,8 @@ static int tsens_register(struct tsens_priv *priv)
+>  					IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>  					dev_name(&pdev->dev), priv);
+>  	if (ret) {
+> -		dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+> +		dev_warn(&pdev->dev, "%s: failed to get uplow irq\n", __func__);
+> +		ret = 0;
+>  		goto err_put_device;
+
+In case of the old DT, platform_get_irq_byname() will return -ENXIO,
+because no interrupt is specified in the device tree.
+So we should have already run into the error earlier,
+and jumped to "err_put_device".
+
+Is this hunk really necessary?
+
+In other words, wouldn't it be enough to do something like
+
+@@ -110,6 +110,8 @@ static int tsens_register(struct tsens_priv *priv)
+ 	irq = platform_get_irq_byname(pdev, "uplow");
+ 	if (irq < 0) {
+ 		ret = irq;
++		if (ret == -ENXIO)
++			ret = 0;
+ 		goto err_put_device;
+ 	}
+
+... to essentially ignore only the "IRQ does not exist" condition
+for old device trees?
+
+Thanks,
+Stephan
