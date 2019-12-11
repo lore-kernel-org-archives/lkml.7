@@ -2,96 +2,124 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105CBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5823C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8E320836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079706;
-	bh=Kxa5WyMgQit6kjaJNFOCMh1jYPWLabPyHMg/gJX4mmo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T9iknjFPnXdRsc1O1c0xxWJ8xmrZWNfj/l+dTcFsJe+te1CkDlcK9518+Z4Og9ddP
-	 dPG+rsQY8sCBMMokzCmFAYjPsqkpBSdMqqJwAt7wb5XO5Sj0++BvmcbXTh4a+beJF4
-	 8VZmS+2zTIOILHl3nl1rh5raBHTMuMokDS7Zsr6o=
+	by mail.kernel.org (Postfix) with ESMTP id 9BEB12073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lg+VOPVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732241AbfLKPzE (ORCPT
+        id S1732399AbfLKPzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:55:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbfLKPQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:50 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A484208C3;
-        Wed, 11 Dec 2019 15:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077409;
-        bh=Kxa5WyMgQit6kjaJNFOCMh1jYPWLabPyHMg/gJX4mmo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gm5KqiyM5lw4zfD/o0azoFnXFVMWvQeWGyrlvHX8x8XaidnW2o9Ntd7qNSR2AuWdZ
-         oirSiAOH+c1BeRzVoebgKs4//PLLCnbQGQJfI7qdnEdXBIurfEQDJpIeO10ieaoxJI
-         8KztWUxes8akT0FPlLlTQo4LiQg3sJwHXU6WnsWM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.19 004/243] lp: fix sparc64 LPSETTIMEOUT ioctl
-Date:   Wed, 11 Dec 2019 16:02:46 +0100
-Message-Id: <20191211150339.449307512@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 11 Dec 2019 10:55:09 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41578 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730329AbfLKPzG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:55:06 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v2so6644474qtv.8;
+        Wed, 11 Dec 2019 07:55:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4qbpxDRbYg2u8lQ7TRQ+GrmKeOYvxZcCQg549V74FuQ=;
+        b=Lg+VOPVDCEHExTdgxd9GJmm6D7ZU2kN8s6A8U+mdlmbh8ln6wEANdsQ3b7z4I1dipu
+         K4MTgTXHkR1ArQPq44Lf5itXDiN04iplES1lbAKx4sl5hYLw6LhjIhNsO1yilH+hXK/3
+         drqJhr7iJri15v8oMZ1rqKCuLYxewX3xloaKhPBBiPYBbgKz85PXOE2JflE1ggWdbd0t
+         2drMU7k0biPOQcT1j3d9rRPgvT13NSRkh6alF0r0RD+WqevBYcW8RbotDzmLCiJ9IWn0
+         brtCEKyI3pMCu5G6wUtpNENhxz+A5DBQvcxuXDJ+YwMziMcE/P9gOuLbSfHGAEbQLz5y
+         le+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4qbpxDRbYg2u8lQ7TRQ+GrmKeOYvxZcCQg549V74FuQ=;
+        b=lLjDZ6GSSK6rKoj08esP+OfFeXptBmZqagC+THXKSVF9lQWpL0ZFyURJ268469yMrK
+         eTjTjozGp0C6VOKfOhVGRSLk5CtigZzsRXh57F9PTRlJfzzFyTS42utl2Q+ns5RMax3x
+         ytgI2Lf0HOcIEjXFCvfY7Hp8HY2e14EgdMw98BJNYDSgk7LWfenYQZSSPMPxe7wopTAV
+         mSQHfFrRQhVlhZ6nk8hXfji35ueo70d+xMXZADEsaJ4XjDl2AzWzkgOZykVwvacvJ4+c
+         OYb6ZUnkLB2e6lQ4aHOjqpmXak3nh2nY3vSxN5fwbJTC0Of0C2Ay8yIEccnGQ/20ds5t
+         mEpg==
+X-Gm-Message-State: APjAAAXucutHS2ridyQTg+GfOjvZ1zZKhtRtsFESnPPwAbgG8EwfJNLV
+        HPJOzlqp8+nthhoX/wlEfgo=
+X-Google-Smtp-Source: APXvYqwmqM7jnFz5jF5L13rgEwvrEc6B0RGShgKFd1rKkf9NkPIz0NGYWveINlPKY1rhoM8DwMR1gQ==
+X-Received: by 2002:aed:3ac6:: with SMTP id o64mr3377873qte.219.1576079705428;
+        Wed, 11 Dec 2019 07:55:05 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id q2sm605481qkm.5.2019.12.11.07.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:55:05 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 11 Dec 2019 10:55:03 -0500
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Subject: Re: [PATCH 6/6] efi/earlycon: Remap entire framebuffer after page
+ initialization
+Message-ID: <20191211155503.GA204038@rani.riverdale.lan>
+References: <20191206165542.31469-1-ardb@kernel.org>
+ <20191206165542.31469-7-ardb@kernel.org>
+ <20191209191242.GA3075464@rani.riverdale.lan>
+ <CAKv+Gu8QWcSwRajsO5voTQJxDHy613ugCd_R6=SStf9ABrmtfQ@mail.gmail.com>
+ <20191210200546.GA55356@rani.riverdale.lan>
+ <CAKv+Gu_VUAEw0auwhOyEAHn4BjDBPc9P4a+WBwJuRb_cBVi0NQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_VUAEw0auwhOyEAHn4BjDBPc9P4a+WBwJuRb_cBVi0NQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Dec 11, 2019 at 11:26:17AM +0000, Ard Biesheuvel wrote:
+> On Tue, 10 Dec 2019 at 21:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > Thanks. Another q -- I tried out the earlycon=efifb, and it seems like
+> > it gets disabled (without keep_bootcon) as soon as dummycon takes over,
+> > which is well before the real console.
+> >
+> > DUMMY_CONSOLE is defined as
+> >         depends on VGA_CONSOLE!=y || SGI_NEWPORT_CONSOLE!=y
+> >         default y
+> >
+> > so it seems like it will pretty much always be enabled, as it doesn't
+> > seem likely that VGA_CONSOLE=y and SGI_NEWPORT_CONSOLE=y would ever be
+> > true simultaneously.
+> >
+> > Am I missing something or is this the way it's supposed to work? So
+> > keep_bootcon seems almost necessary with the EFI boot console? Would a
+> > patch to not disable boot console when dummycon is initialized, but wait
+> > for a real console, be useful?
+> >
+> 
+> Well spotted!
+> 
+> I have traced this down to [0] which combined various arch specific
+> definitions into one, and obviously chose the wrong boolean operator
+> for combining the conditions.
+> 
+> Patches welcome.
+> 
+> 
+> [0] https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/drivers/video/console/Kconfig?id=31d2a7d36d6989c714b792ec00358ada24c039e7
 
-commit 45a2d64696b11913bcf1087b041740edbade3e21 upstream.
-
-The layout of struct timeval is different on sparc64 from
-anything else, and the patch I did long ago failed to take
-this into account.
-
-Change it now to handle sparc64 user space correctly again.
-
-Quite likely nobody cares about parallel ports on sparc64,
-but there is no reason not to fix it.
-
-Cc: stable@vger.kernel.org
-Fixes: 9a450484089d ("lp: support 64-bit time_t user space")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20191108203435.112759-7-arnd@arndb.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/char/lp.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/drivers/char/lp.c
-+++ b/drivers/char/lp.c
-@@ -708,6 +708,10 @@ static int lp_set_timeout64(unsigned int
- 	if (copy_from_user(karg, arg, sizeof(karg)))
- 		return -EFAULT;
- 
-+	/* sparc64 suseconds_t is 32-bit only */
-+	if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-+		karg[1] >>= 32;
-+
- 	return lp_set_timeout(minor, karg[0], karg[1]);
- }
- 
-
-
+Thanks! I was a little mistaken about what actually disables it though,
+it seems to be when vt_console_driver gets registered, and at that point
+the vt is still using dummy_con. I had thought dummy_con itself was a
+console driver.
