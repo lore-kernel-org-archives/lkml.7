@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C57C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE3CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F5C21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A5B521556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078792;
-	bh=fzxLBrcFCK4wmMAW1jImlZF2ZM5TpI9NA9ovPYQY4Ow=;
+	s=default; t=1576078794;
+	bh=AcpzLlGokLpEaRzUG2e4aacaJnmRSsq00Qq5CiJLUCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q2yl7KGAPgZJdZ995fwWbQYGdrS4DPJzRlE2+JbZJt3VW1C8imsCpH4szgBSgwl8R
-	 Blt8WjJ/tU2UFDTlnSAOeL0+beb5vOTYZngaVeKJQZ5HMHQVy4Gipwkp8G7JPHbd1W
-	 Bfj7yiURJ/S5iUUGZX9Y6W4jtkTToo/caMiVQ5S0=
+	b=apTIpesdJKCz0vrokuY37IoSp/OuOQVh+vwwbGZutGGrEuGQNZL2u+7zW7oa7fwdK
+	 vthw+0efY5S1P0h5dHyZarvnkdYnierXfBtcbEXTsqOkilOazcovYRJkOARYKNnmyu
+	 3qdxKdHfSqpHuE7P+a69zdeCSvg94Oji1h/k4GLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388314AbfLKPjv (ORCPT
+        id S1730633AbfLKPjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:39:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:39:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387841AbfLKPij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:39 -0500
+        id S2388309AbfLKPil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B6592077B;
-        Wed, 11 Dec 2019 15:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D2C24656;
+        Wed, 11 Dec 2019 15:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078718;
-        bh=fzxLBrcFCK4wmMAW1jImlZF2ZM5TpI9NA9ovPYQY4Ow=;
+        s=default; t=1576078720;
+        bh=AcpzLlGokLpEaRzUG2e4aacaJnmRSsq00Qq5CiJLUCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOwk1Gkr2Rbgg7j5F3k4iUC5wMdH2drJ5MgBd9VumsGFPSgOqc6PPJq2uIV1s959O
-         8mKy8gTu4ZmuxLnlzpR4oeIRZAZScL9Ne7UeTTfkJXFJxeX1iLN0CIWkLHxeaO2eq0
-         8m1QIvZYCt3zEt8VH0c4OVPhJx5dH/g3irEPvz2s=
+        b=nd3NDPFzyAJ/PtRP+myxeM2Qbiud8FZAC2tuMKtwhNH3v1UDqZAJW5hWAzG4bklyA
+         WgmY7vYyUIEhd+4dBOROVvkmyobr3el3QZi+D9LL6mQHinfiR0bRp7gKUmVZ9SVKZ5
+         LQvoysBfLDyh2I3QHzwsBJEp4Ax87Il2vyzoLQIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
-        "Mauro S . M . Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.4 23/37] powerpc/security: Fix wrong message when RFI Flush is disable
-Date:   Wed, 11 Dec 2019 10:37:59 -0500
-Message-Id: <20191211153813.24126-23-sashal@kernel.org>
+Cc:     Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 25/37] bcache: at least try to shrink 1 node in bch_mca_scan()
+Date:   Wed, 11 Dec 2019 10:38:01 -0500
+Message-Id: <20191211153813.24126-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -60,93 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
+[ Upstream commit 9fcc34b1a6dd4b8e5337e2b6ef45e428897eca6b ]
 
-The issue was showing "Mitigation" message via sysfs whatever the
-state of "RFI Flush", but it should show "Vulnerable" when it is
-disabled.
+In bch_mca_scan(), the number of shrinking btree node is calculated
+by code like this,
+	unsigned long nr = sc->nr_to_scan;
 
-If you have "L1D private" feature enabled and not "RFI Flush" you are
-vulnerable to meltdown attacks.
+        nr /= c->btree_pages;
+        nr = min_t(unsigned long, nr, mca_can_free(c));
+variable sc->nr_to_scan is number of objects (here is bcache B+tree
+nodes' number) to shrink, and pointer variable sc is sent from memory
+management code as parametr of a callback.
 
-"RFI Flush" is the key feature to mitigate the meltdown whatever the
-"L1D private" state.
+If sc->nr_to_scan is smaller than c->btree_pages, after the above
+calculation, variable 'nr' will be 0 and nothing will be shrunk. It is
+frequeently observed that only 1 or 2 is set to sc->nr_to_scan and make
+nr to be zero. Then bch_mca_scan() will do nothing more then acquiring
+and releasing mutex c->bucket_lock.
 
-SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
+This patch checkes whether nr is 0 after the above calculation, if 0
+is the result then set 1 to variable 'n'. Then at least bch_mca_scan()
+will try to shrink a single B+tree node.
 
-So the message should be as the truth table shows:
-
-  CPU | L1D private | RFI Flush |                sysfs
-  ----|-------------|-----------|-------------------------------------
-   P9 |    False    |   False   | Vulnerable
-   P9 |    False    |   True    | Mitigation: RFI Flush
-   P9 |    True     |   False   | Vulnerable: L1D private per thread
-   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
-   P8 |    False    |   False   | Vulnerable
-   P8 |    False    |   True    | Mitigation: RFI Flush
-
-Output before this fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: L1D private per thread
-
-Output after fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Vulnerable: L1D private per thread
-
-Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/security.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/md/bcache/btree.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index fc5c49046aa7d..45778c83038f8 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -135,26 +135,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 05aa3ac1381ba..5c93582c71cc6 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -686,6 +686,8 @@ static unsigned long bch_mca_scan(struct shrinker *shrink,
+ 	 * IO can always make forward progress:
+ 	 */
+ 	nr /= c->btree_pages;
++	if (nr == 0)
++		nr = 1;
+ 	nr = min_t(unsigned long, nr, mca_can_free(c));
  
- 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
- 
--	if (rfi_flush || thread_priv) {
-+	if (rfi_flush) {
- 		struct seq_buf s;
- 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
- 
--		seq_buf_printf(&s, "Mitigation: ");
--
--		if (rfi_flush)
--			seq_buf_printf(&s, "RFI Flush");
--
--		if (rfi_flush && thread_priv)
--			seq_buf_printf(&s, ", ");
--
-+		seq_buf_printf(&s, "Mitigation: RFI Flush");
- 		if (thread_priv)
--			seq_buf_printf(&s, "L1D private per thread");
-+			seq_buf_printf(&s, ", L1D private per thread");
- 
- 		seq_buf_printf(&s, "\n");
- 
- 		return s.len;
- 	}
- 
-+	if (thread_priv)
-+		return sprintf(buf, "Vulnerable: L1D private per thread\n");
-+
- 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
- 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
- 		return sprintf(buf, "Not affected\n");
+ 	i = 0;
 -- 
 2.20.1
 
