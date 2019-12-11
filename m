@@ -2,76 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F8EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3936C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3DA205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932BC205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PGeyFwB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728711AbfLKJiZ (ORCPT
+        id S1728718AbfLKJi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:38:25 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:54320 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727318AbfLKJiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:38:20 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ieyRn-00006H-Iu; Wed, 11 Dec 2019 17:38:19 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ieyRm-00050Y-Bl; Wed, 11 Dec 2019 17:38:18 +0800
-Date:   Wed, 11 Dec 2019 17:38:18 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Alison Wang <alison.wang@nxp.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v3] crypto: caam - do not reset pointer size from MCFGR
- register
-Message-ID: <20191211093818.tny64ctuqqxlznxq@gondor.apana.org.au>
-References: <1574808866-16764-1-git-send-email-iuliana.prodan@nxp.com>
+        Wed, 11 Dec 2019 04:38:58 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45876 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfLKJi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:38:58 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j42so23195013wrj.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:38:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vpAB2VunJi/hr5WJdoV5Gbgby6kk23SzTl+e0ymIH3E=;
+        b=PGeyFwB2stSmWA6Y07SK58oUwxsuOdFywJjIQOqKUtnN/Vgv26e5IJt3bLoso0HWAl
+         umL3nzIIcaCU3opZL0eacrNCQVS557vvz6S98jpxkp8k9Z97a4rjzLpuTZ2rnCXaoAuX
+         1krLvgrF1UFYXT6XpcrwcJXi7bDBwaPvAtsarvKYxc8YLV/tVicv9Wxsp/Rcsl9RYnMn
+         wdCg+wBrSfVU1o9dRhXb0kDBm9VJwATzO9KwGewATTyZDaBsTzVzpQAfIN4cgNjb558c
+         4Be2mIqIest13/lbhIEbYh2b3ca8dQJeqoiAuViGyuCj/kYIxCASXw8QQijYiLT/C+F9
+         d4Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vpAB2VunJi/hr5WJdoV5Gbgby6kk23SzTl+e0ymIH3E=;
+        b=X2tqrMpd31Tr8WBxwT7uS02ph6CwxYjOQdJLcU+y+vswzTh3RMYl93CQ0zLiSV4Tg2
+         NBAwhLUQd6xEWx1XjFFCes43AxPO8HoK9waObi6ntzhBdLSNkQYvVEIZS1LFZk1rmioo
+         s3xdmVykoZn219QKYQvO9dAdfajtAgUdqibI9eO1tEdPXuc2ESknCNsjl87NlpBJPzri
+         FgdvjviOf1IbgswlkAshgtVC4PWWaiK7kdp7CfL9aGLJqpEJlo1wBt3EOEqHK+wHtRgD
+         pWNqrbnJTun0m2/N4ugw0IAWYbsvNm9Dow9L+7b30D3uAO1zZqqqW5LKonQ1zPZTaH7s
+         34SA==
+X-Gm-Message-State: APjAAAV45khAfSvCib9qb57eY4Iu2jWZ4xNlgm4C4QZS4qhe9qL+Kl2T
+        UWWjH+PRKMUWfTX3TsZfn18JonKrZBOxhN3vQaXBYNYnP/fiYw==
+X-Google-Smtp-Source: APXvYqzS9NV895DIXOWDSxsk8Dt5Yb3kvVGBjEhZUimO4Ao8HcRX1tAJFyvLkxzffrJ9VDtoRG82u/OcFftgIXiBkLs=
+X-Received: by 2002:a5d:6652:: with SMTP id f18mr2765986wrw.246.1576057136102;
+ Wed, 11 Dec 2019 01:38:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1574808866-16764-1-git-send-email-iuliana.prodan@nxp.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191211102455.7b55218e@canb.auug.org.au> <20191211092640.107621-1-Jason@zx2c4.com>
+In-Reply-To: <20191211092640.107621-1-Jason@zx2c4.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 11 Dec 2019 09:38:54 +0000
+Message-ID: <CAKv+Gu80vONMAuv=2OpSOuZHvVv22quRxeNtbxnSkFBz_DvfbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] crypto: arm/curve25519 - add arch-specific key
+ generation function
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 12:54:26AM +0200, Iuliana Prodan wrote:
-> In commit 'a1cf573ee95 ("crypto: caam - select DMA address size at runtime")'
-> CAAM pointer size (caam_ptr_size) is changed from
-> sizeof(dma_addr_t) to runtime value computed from MCFGR register.
-> Therefore, do not reset MCFGR[PS].
-> 
-> Fixes: a1cf573ee95 ("crypto: caam - select DMA address size at runtime")
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> Cc: <stable@vger.kernel.org>
-> Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Alison Wang <alison.wang@nxp.com>
-> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> ---
-> Changes since v2:
-> - update description so the referred commit is not split on 2 lines;
-> - added Reviewed-by.
-> 
->  drivers/crypto/caam/ctrl.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+On Wed, 11 Dec 2019 at 10:27, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Somehow this was forgotten when Zinc was being split into oddly shaped
+> pieces, resulting in linker errors.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Zinc has no historical significance here, so it doesn't make sense to
+keep referring to it in the commit logs.
+
+> The x86_64 glue has a specific key
+> generation implementation, but the Arm one does not. However, it can
+> still receive the NEON speedups by calling the ordinary DH function
+> using the base point.
+>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+
+With the first sentence dropped,
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+> ---
+>  arch/arm/crypto/curve25519-glue.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/crypto/curve25519-glue.c b/arch/arm/crypto/curve25519-glue.c
+> index f3f42cf3b893..776ae07e0469 100644
+> --- a/arch/arm/crypto/curve25519-glue.c
+> +++ b/arch/arm/crypto/curve25519-glue.c
+> @@ -38,6 +38,13 @@ void curve25519_arch(u8 out[CURVE25519_KEY_SIZE],
+>  }
+>  EXPORT_SYMBOL(curve25519_arch);
+>
+> +void curve25519_base_arch(u8 pub[CURVE25519_KEY_SIZE],
+> +                         const u8 secret[CURVE25519_KEY_SIZE])
+> +{
+> +       return curve25519_arch(pub, secret, curve25519_base_point);
+> +}
+> +EXPORT_SYMBOL(curve25519_base_arch);
+> +
+>  static int curve25519_set_secret(struct crypto_kpp *tfm, const void *buf,
+>                                  unsigned int len)
+>  {
+> --
+> 2.24.0
+>
