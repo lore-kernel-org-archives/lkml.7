@@ -2,109 +2,121 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA17AC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81453C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE6BC22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D962173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rfjIOhRv"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q5J/DIHe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbfLKOFC (ORCPT
+        id S1730023AbfLKOFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:05:02 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44176 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729877AbfLKOFA (ORCPT
+        Wed, 11 Dec 2019 09:05:11 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51844 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729787AbfLKOEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:05:00 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so10812801pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:05:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cUUCtvV6dE7G+n+i4G2mZsNxXxqu2jZTcnec8ASN3Qc=;
-        b=rfjIOhRvPOYZ/dAXmCNf7a/TIjgXPUapHGuKnYw1EHqnxyIuWXwJdZ7OZ8vo5foJ4U
-         hipSjIC9xJF3uHK0K3sSyzjumI8s+p9XQbvx86oz/grSzOQ78igqPg9uOy+ACckg8He+
-         SnsZAvNfSZa3nxwuSgQ5q4zG/hFZt6EPR27tfVe+lrNtRkEjths8Y/cVTlR7XuL/DHU+
-         +VKpUKy0Ry1OIwFa4v3J+zZXHcsQgIwFekUdX6jtfacTftC7jRakvkh/6CD+FRbD/8/5
-         RKcsbuFt7fJjanI4qw7AVy4+gSvzQ4TXkF9C+wC/MVcLuyPuQuz91aFZjttOlxX0WFDA
-         O9eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cUUCtvV6dE7G+n+i4G2mZsNxXxqu2jZTcnec8ASN3Qc=;
-        b=XujxVRb7pP1hTmtkjqAyTfEdH6Pdta5xakyLMmmP+19TYG1DNWagOCilvBLRNPXpXd
-         Ny94KmqbPPihCiakKO4Zmm1CTjsqT3KVSJgM8LWccATlPBA25+Gr6MvzBJU9snVmTnhq
-         /obGhc1woIkK+xnBEm6a09hmPqMQOFY541tcDCsvt34gvSLBGKgy0JfCPoWZa8TZKnwU
-         v+7zaiNAaQsZAfCFwTqDVwZ39IdVrdVL0tA/FxK+21ryqNdCUd+9C5YQos/JpzA505cs
-         1Tzfgv4BW8SV7ii8NfF++Hh2oYi88sWTzsY1ZnMFMSN+CFyzmuCGBkOGMEg01YEV8+fD
-         /LLw==
-X-Gm-Message-State: APjAAAWP2k6iKZlhI7FoZhWGQ0yVzD/FgTbeYp3baC7phwa3r9sxjbFS
-        MAj3VHn/U8MG1UXg01TgLPU=
-X-Google-Smtp-Source: APXvYqw91JEsFIrGZNMXi9Usn6ggISlqDCZqbfwZNdXS+nPBATkP7rouWQW4phJsTFq+yy3p1gZxhQ==
-X-Received: by 2002:a62:ee09:: with SMTP id e9mr3734785pfi.243.1576073100169;
-        Wed, 11 Dec 2019 06:05:00 -0800 (PST)
-Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id o12sm3489656pfg.152.2019.12.11.06.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 06:04:58 -0800 (PST)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] ARM: dts: vf610-zii-scu4-aib: Add node for switch watchdog
-Date:   Wed, 11 Dec 2019 06:04:44 -0800
-Message-Id: <20191211140444.7076-2-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191211140444.7076-1-andrew.smirnov@gmail.com>
-References: <20191211140444.7076-1-andrew.smirnov@gmail.com>
+        Wed, 11 Dec 2019 09:04:54 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4p8E037846;
+        Wed, 11 Dec 2019 08:04:51 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576073091;
+        bh=L5dCzJ4MLlvcQIUgsV2WIumOeP0eGuScyKg7KrivO0o=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=q5J/DIHeZDofArp2czPkOaC7bBcFNu5A6mDLd57d4A/J63vhUXl+EZ2qNyCWbymL/
+         MP3zZmJWp6rK8sfHyKApdWHV+lUCejqZNUUOnK5ANKfxwJg7qkx0OGcW2VaCvZbRcF
+         i0V1bARBxCyiW8NCj9tDuvPNirh94hQRg2zprT6c=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE4paP128184
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 08:04:51 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 08:04:51 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 08:04:51 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4m6h088450;
+        Wed, 11 Dec 2019 08:04:51 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v5 3/3] ARM: dts: dra7: Add ti-sysc node for VPE
+Date:   Wed, 11 Dec 2019 08:08:10 -0600
+Message-ID: <20191211140810.10657-4-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211140810.10657-1-bparrot@ti.com>
+References: <20191211140810.10657-1-bparrot@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add I2C child node for switch watchdog present on SCU4.
+Add VPE node as a child of l4 interconnect in order for it to probe
+using ti-sysc.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/dra7-l4.dtsi | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-index a02c7ea3b92d..b642520199ba 100644
---- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-+++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-@@ -536,6 +536,11 @@
- 	pinctrl-0 = <&pinctrl_i2c1>;
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 7e7aa101d8a4..8fe428ac12d8 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4189,12 +4189,34 @@
+ 			ranges = <0x0 0x1b0000 0x10000>;
+ 		};
  
-+	watchdog@38 {
-+		compatible = "zii,rave-wdt";
-+		reg = <0x38>;
-+	};
+-		target-module@1d0000 {			/* 0x489d0000, ap 27 30.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x1d0010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&vpe_clkctrl DRA7_VPE_VPE_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1d0000 0x10000>;
 +
- 	adc@4a {
- 		compatible = "adi,adt7411";
- 		reg = <0x4a>;
++			vpe: vpe@0 {
++				compatible = "ti,dra7-vpe";
++				reg = <0x0000 0x120>,
++				      <0x0700 0x80>,
++				      <0x5700 0x18>,
++				      <0xd000 0x400>;
++				reg-names = "vpe_top",
++					    "sc",
++					    "csc",
++					    "vpdma";
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 	};
+ };
 -- 
-2.21.0
+2.17.1
 
