@@ -2,189 +2,208 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 812C3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E700C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A4D72464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D514920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n8KiQmLA"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="bFMQWnI1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfLKOYI (ORCPT
+        id S1729898AbfLKOZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:24:08 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34309 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbfLKOYG (ORCPT
+        Wed, 11 Dec 2019 09:25:05 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35052 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfLKOZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:24:06 -0500
-Received: by mail-pg1-f195.google.com with SMTP id r11so10865732pgf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:24:05 -0800 (PST)
+        Wed, 11 Dec 2019 09:25:04 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so10848302pgk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:25:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8KnatWRJvggnUcJXHtww4qB6FhD522LG/aumBjl9qUs=;
-        b=n8KiQmLAc8ZK5BVSQV+k0zHdgmk5QcojzmqCuPP/G5EqqLmvGvd/31aA+vmLC/jxZS
-         D9actdnYEsJTGtzyAfpwFJ+EO7OzKmTNsuYhUUA2Sf0aDwNEXRIPCKDHdEL8nYaGDa3W
-         /HE6WWnq5KaY8J5umcqmXMhwV3cL8LV/BnQfGYW4jLPSSpKwMKD+HTht8w0ritIwvQln
-         eT8p9O4f7MbrVxn/QaAa7EdIbzuNyCe4DDWYEtIlH0HUO8AbgYcdpLebuxmyAG3J1Ep8
-         TKAvqkqCy5IG5X3069ZSxgRaOfGYuDc3qiVHKmOccCrWRq/CbYIMEJVQ2W2avARRdHnU
-         RBFA==
+        d=axtens.net; s=google;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=098L4qWOo/dhHj7up13Q/6AGsTiEtq7zvqd33y20xho=;
+        b=bFMQWnI1gXtKeiW21Ws8EHVoOcE5cqQ2w2Df6osYM/2xsfsIpAWPWYxCufyaZoj4DI
+         DbCCvWw90Y+crXFC3bZL94l5YRUG0RBgiyIIz5kKgQW7pxE7sq8fpJ+ADLtnfSGsn3IH
+         hE2VnMFgCaV4BtHbpbf2+z09SPak4lBeQ7Txw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8KnatWRJvggnUcJXHtww4qB6FhD522LG/aumBjl9qUs=;
-        b=gAjmgIZ14DlSk6aGHrRIhPeZ1FOMWbgG8ooYTPD0DaIQ4lxTPhF4eOJoW1vv8PoAOO
-         O7cpKiyDj6CkFc1Rqb7WP/XC800hrzIinr1iO6WvNVk5fG/NTejNeG2Kg0GhxLZBeBkh
-         Zf1mrtzp7g595/Z1eHoHY4dSYDOUwY9prS9Hrlu14GeiMixt4+v3PGVCKoHSnaZmxwP9
-         6tSp3uwHPnpXAmXISV85238qBwIcOypDa75MHqaJF8Fpx+Su23Rhdbr7uO8zDJUNfBIQ
-         6SpUu8Go7kpX+5PXYjoDDTHscOIsWangjpb+IBxDfZ4hmaj4phvCBUprblAAgR08TR6d
-         XUrw==
-X-Gm-Message-State: APjAAAWYbhk5BE16K0WX3elRDEUNTM8cOIua9UbhfXK1u/x4yArcJPw9
-        VQTd8xVUiQlDsyvUa9HxvsenUNYJtPe09+uNDK4SSQ==
-X-Google-Smtp-Source: APXvYqwojB6kioMBHsLADT9ILNBxNH7/MTlgZ1GSprzRXFq+DanmmA7iuwQxb1WHEBhmTIgofpA1k5SqXdkf60aysjo=
-X-Received: by 2002:a63:c804:: with SMTP id z4mr4450211pgg.440.1576074244845;
- Wed, 11 Dec 2019 06:24:04 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=098L4qWOo/dhHj7up13Q/6AGsTiEtq7zvqd33y20xho=;
+        b=nieQSSQ1XZf7sUTZv6SurAchqDRPtRQsaNWtCOiJytWy3b1F00i8t0zzw7UzgQSJ2e
+         pSnnYo13bhgdvXpS1RWbDLGk85/jLZUfbk4dnYlPBNfah002rJF+EIw+hgnBrkijsIkv
+         MHOuS4bmmgSbf4OTYr0lPC3C3DG10odPT64SKndU4uDUVFTX0Uwmq7zWRa7pLtMlPnnJ
+         W4NFKIit9bnZ5yQ8Xa+cZb8WS+TPvPfJa8IhNiNMqD6ZgiR467o0fXZxZI5POZp6U+O0
+         /3dOwEN6hV7yANDChaX4vK8ZI76CubRB4b50HfU06hgt9tAAA7WuJjuDm1cYBT8ja1fG
+         hlBw==
+X-Gm-Message-State: APjAAAWAEi0DV3E3xtPta04hvFPrtkO79kJLYGfPvg03Vyh5MOx5J6iZ
+        meNYuiXpge0qHiMQl6mWxl0H+Q==
+X-Google-Smtp-Source: APXvYqxPxi+KaqBazUZaoJTrv1EEot9gnqUhrYprkTIb3+HbLUJJUrb1vIdkZL8Y+vj7jHi2BsmD6w==
+X-Received: by 2002:a65:6916:: with SMTP id s22mr4325069pgq.244.1576074303700;
+        Wed, 11 Dec 2019 06:25:03 -0800 (PST)
+Received: from localhost (2001-44b8-111e-5c00-b116-2689-a4a9-76f8.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:b116:2689:a4a9:76f8])
+        by smtp.gmail.com with ESMTPSA id j16sm3395784pfi.165.2019.12.11.06.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 06:25:02 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
+        aneesh.kumar@linux.ibm.com, Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
+References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com> <875zincu8a.fsf@dja-thinkpad.axtens.net> <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
+Date:   Thu, 12 Dec 2019 01:24:59 +1100
+Message-ID: <87wob3aqis.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-References: <00000000000031a0af05995eca0b@google.com> <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 11 Dec 2019 15:23:53 +0100
-Message-ID: <CAAeHK+wFBYX8-L-D8w_nep3W=QjYoLAZbc=-0eoWK684wnuayA@mail.gmail.com>
-Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Tue, 10 Dec 2019, syzbot wrote:
->
-> > > On Mon, 9 Dec 2019, syzbot wrote:
-> >
-> > >> Hello,
-> >
-> > >> syzbot found the following crash on:
-> >
-> > >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
-> > >> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
-> > >> kernel config:
-> > >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
-> > >> dashboard link:
-> > >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
-> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > >> Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > >> IMPORTANT: if you fix the bug, please add the following tag to the
-> > >> commit:
-> > >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
-> >
-> > >> ==================================================================
-> > >> BUG: KASAN: use-after-free in __mutex_lock_common
-> > >> kernel/locking/mutex.c:1043 [inline]
-> > >> BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
-> > >> kernel/locking/mutex.c:1106
-> > >> Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
-> >
-> > >> CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
-> > >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > >> Google 01/01/2011
-> > >> Call Trace:
-> > >>    __dump_stack lib/dump_stack.c:77 [inline]
-> > >>    dump_stack+0xef/0x16e lib/dump_stack.c:118
-> > >>    print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
-> > >>    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-> > >>    kasan_report+0xe/0x20 mm/kasan/common.c:638
-> > >>    __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
-> > >>    __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
-> > >>    usbvision_v4l2_open+0x77/0x340
-> > >> drivers/media/usb/usbvision/usbvision-video.c:314
-> > >>    v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
-> > >>    chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> > >>    do_dentry_open+0x494/0x1120 fs/open.c:797
-> > >>    do_last fs/namei.c:3412 [inline]
-> > >>    path_openat+0x142b/0x4030 fs/namei.c:3529
-> > >>    do_filp_open+0x1a1/0x280 fs/namei.c:3559
-> > >>    do_sys_open+0x3c0/0x580 fs/open.c:1097
-> > >>    do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
-> > >>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > > This looks like a race in v4l2_open(): The function drops the
-> > > videodev_lock mutex before calling the video driver's open routine, and
-> > > the device can be unregistered during the short time between.
-> >
-> > > This patch tries to make the race much more likely to happen, for
-> > > testing and verification.
-> >
-> > > Andrey, will syzbot run the same test with this patch, even though it
-> > > says it doesn't have a reproducer?
-> >
-> > > Alan Stern
-> >
-> > > #syz test: https://github.com/google/kasan.git 1f22d15c
-> >
-> > This crash does not have a reproducer. I cannot test it.
->
-> Let's try the same patch with a different bug report -- one that has a
-> reproducer.  I assume that syzbot gets the bug identity from the
-> email's From: line (which has been updated acoordingly) rather than the
-> Subject: line.
+Hi Balbir,
 
-Did you get a response for this test? I see the test attempt on the
-dashboard (the patch failed to build), but I didn't get an email with
-the result.
+>>>> +Discontiguous memory can occur when you have a machine with memory spread
+>>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
+>>>> +
+>>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
+>>>> + - then there's a gap,
+>>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
+>>>> +
+>>>> +This can create _significant_ issues:
+>>>> +
+>>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
+>>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
+>>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
+>>>> +   region. But when we try to access any of that, we'll try to access pages
+>>>> +   that are not physically present.
+>>>> +
+>>>
+>>> If we reserved memory for KASAN from each node (discontig region), we might survive
+>>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
+>>> out loud.
+>> 
+>> The challenge is that - AIUI - in inline instrumentation, the compiler
+>> doesn't generate calls to things like __asan_loadN and
+>> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
+>> checks, and only calls the __asan_report* family of functions if it
+>> detects an issue. This also matches what I can observe with objdump
+>> across outline and inline instrumentation settings.
+>> 
+>> This means that for this sort of thing to work we would need to either
+>> drop back to out-of-line calls, or teach the compiler how to use a
+>> nonlinear, NUMA aware mem-to-shadow mapping.
+>
+> Yes, out of line is expensive, but seems to work well for all use cases.
 
+I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
+stacks and globals will only be instrumented if you can provide
+KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
+static offset. I _think_ this is a compiler limitation, where some of
+those instrumentations only work/make sense with a static offset, but
+perhaps that's not right? Dmitry and Andrey, can you shed some light on
+this?
+
+Also, as it currently stands, the speed difference between inline and
+outline is approximately 2x, and given that we'd like to run this
+full-time in syzkaller I think there is value in trading off speed for
+some limitations.
+
+> BTW, the current set of patches just hang if I try to make the default
+> mode as out of line
+
+Do you have CONFIG_RELOCATABLE?
+
+I've tested the following process:
+
+# 1) apply patches on a fresh linux-next
+# 2) output dir
+mkdir ../out-3s-kasan
+
+# 3) merge in the relevant config snippets
+cat > kasan.config << EOF
+CONFIG_EXPERT=y
+CONFIG_LD_HEAD_STUB_CATCH=y
+
+CONFIG_RELOCATABLE=y
+
+CONFIG_KASAN=y
+CONFIG_KASAN_GENERIC=y
+CONFIG_KASAN_OUTLINE=y
+
+CONFIG_PHYS_MEM_SIZE_FOR_KASAN=2048
+EOF
+
+ARCH=powerpc CROSS_COMPILE=powerpc64-linux-gnu- ./scripts/kconfig/merge_config.sh -O ../out-3s-kasan/ arch/powerpc/configs/pseries_defconfig arch/powerpc/configs/le.config kasan.config
+
+# 4) make
+make O=../out-3s-kasan/ ARCH=powerpc CROSS_COMPILE=powerpc64-linux-gnu- -j8 vmlinux
+
+# 5) test
+qemu-system-ppc64  -m 2G -M pseries -cpu power9  -kernel ../out-3s-kasan/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4 
+
+This boots fine for me under TCG and KVM, with both CONFIG_KASAN_OUTLINE
+and CONFIG_KASAN_INLINE. You do still need to supply the size even in
+outline mode - I don't have code that switches over to vmalloced space
+when in outline mode. I will clarify the docs on that.
+
+
+>>>> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
+>>>> +		kasan_memory_size =
+>>>> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
+>>>> +
+>>>> +		if (top_phys_addr < kasan_memory_size) {
+>>>> +			/*
+>>>> +			 * We are doomed. Attempts to call e.g. panic() are
+>>>> +			 * likely to fail because they call out into
+>>>> +			 * instrumented code, which will almost certainly
+>>>> +			 * access memory beyond the end of physical
+>>>> +			 * memory. Hang here so that at least the NIP points
+>>>> +			 * somewhere that will help you debug it if you look at
+>>>> +			 * it in qemu.
+>>>> +			 */
+>>>> +			while (true)
+>>>> +				;
+>>>
+>>> Again with the right hooks in check_memory_region_inline() these are recoverable,
+>>> or so I think
+>> 
+>> So unless I misunderstand the circumstances in which
+>> check_memory_region_inline is used, this isn't going to help with inline
+>> instrumentation.
+>> 
 >
-> #syz test: https://github.com/google/kasan.git 1f22d15c
+> Yes, I understand. Same as above?
+
+Yes.
+
+>>> NOTE: I can't test any of these, well may be with qemu, let me see if I can spin
+>>> the series and provide more feedback
+>> 
+>> It's actually super easy to do simple boot tests with qemu, it works fine in TCG,
+>> Michael's wiki page at
+>> https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu is very helpful.
+>> 
+>> I did this a lot in development.
+>> 
+>> My full commandline, fwiw, is:
+>> 
+>> qemu-system-ppc64  -m 8G -M pseries -cpu power9  -kernel ../out-3s-radix/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4
 >
-> Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
-> +++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-> @@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
->                 wake_up_interruptible(&usbvision->wait_frame);
->                 wake_up_interruptible(&usbvision->wait_stream);
->         } else {
-> +               msleep(100);
->                 usbvision_release(usbvision);
->         }
->
-> Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-> ===================================================================
-> --- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
-> +++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-> @@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
->         video_get(vdev);
->         mutex_unlock(&videodev_lock);
->         if (vdev->fops->open) {
-> -               if (video_is_registered(vdev))
-> +               if (video_is_registered(vdev)) {
-> +                       msleep(200);
->                         ret = vdev->fops->open(filp);
-> -               else
-> +               } else
->                         ret = -ENODEV;
->         }
->
->
+> qemu has been crashing with KASAN enabled/ both inline/out-of-line options. I am running linux-next + the 4 patches you've posted. In one case I get a panic and a hang in the other. I can confirm that when I disable KASAN, the issue disappears
+
+Hopefully my script above can help narrow that down.
+
+Regards,
+Daniel
