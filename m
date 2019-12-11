@@ -2,222 +2,188 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA120C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67520C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928932173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F2A208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ddm7zJzq";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="JwlOT05c"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="o+/ASf+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfLKFYj (ORCPT
+        id S1727702AbfLKFZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 00:24:39 -0500
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:33458
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725973AbfLKFYi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 00:24:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576041877;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=iKfqfnGlqF3a6xjl+EmFOeS3F4HKZtyPO+p39iDyu+M=;
-        b=ddm7zJzqS8+cdmvtHeXKXUI6FD1OVRB4cBvQxmEPlMNoqx3yMwhOhpNm5u86qU1A
-        A5TUCVycbaD/qc/l/0e6dh2Its29r84pQvLukjgcz08uysXa8+V6S+ih1ZRj9/UeN+W
-        i3eVXpKZX7BhEUXD7Oe8JhqGevmlbNIbODO8hKgc=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576041877;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=iKfqfnGlqF3a6xjl+EmFOeS3F4HKZtyPO+p39iDyu+M=;
-        b=JwlOT05cCGb0IbzEBbNgrHfcDWVNlnZykSG5iRXRTouM6xVpiT7mF8xmL3nNdDcQ
-        IfZpbUDCwwCjBpgdQfSxoSeQTdiBAqBT3kxlym7c76Toux6zXFKn/OBo7rLdfvIfgH2
-        P4HetQ8XVVaLfUZWRcNHBzC4nfwRsC9+L0ntOpoQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA5D2C447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     linus.walleij@linaro.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, swboyd@chromium.org,
-        dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 2/2] pinctrl: qcom: sc7180: Add new qup functions
-Date:   Wed, 11 Dec 2019 05:24:37 +0000
-Message-ID: <0101016ef36a8ecf-b0d2c2af-5861-4b5b-b70e-6d0d574d4310-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org>
-References: <1576041834-23084-1-git-send-email-rnayak@codeaurora.org>
-X-SES-Outgoing: 2019.12.11-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Wed, 11 Dec 2019 00:25:02 -0500
+Received: from mail-eopbgr760040.outbound.protection.outlook.com ([40.107.76.40]:2326
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725973AbfLKFZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 00:25:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=npaeydtLWPECzF0Lz8wQQ21Qt8pnGzGmfzcRRee+nfiTVZmt9JB20zdYf7/yMIgdqtsOS4gbpluszPdPPE7kM1d/ndD5ozsGyAndJcEZ1+c04w8ujXhTsolZg0TK50qLw5ErNpXKS0UgB32RT/Au7YYm8QfkYM5wXwp4ZiP1RXRw3hdAYqBEea9q78cYCAXghATWhisDC9hkK0OGju+WS89r/WvAvJrLC5xOML31bhNDTwPgO1Cuaixyg18rR5IbbVi7h6wEkro1IBFutrOohxXWlW7mzRhb0i69CkjSIX57jb+HCLICtr6fvOXxhLgrAyb7B21039sdY9Ecl/TzoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O9nVuvmEHgKw9QnSUut2Jb27U2Nhe+2pVKZYgEO3c8s=;
+ b=Kn66H4wq6joQz/j3QkAgeuyJ5sEP4kLUHuj7KG40OPTi4QCr+InBB3daJQUnkmzk3IF4oWboD4nrLVVkpjOIimkQqyyf1N7OIBt25uIJyYXSoASLxKCSSeGwxoALwCVV6Sx27JZEb3AD2J9Z/im+goXS8M1HIWCw+mHZTf8O+BIdGfPBtgWXTYfAE7FNnafZQXbqqPGFkd2irHX1vzcblHjUQi9GSyyySMVPNF5sDuqwaxZUbalrnB2dAqgEup+GTaPnDSZ0QbY0+N0GOu6ZCYX/R3gt3xL6AVkjLeDZHlGK9cDkI6fhKCbfpXLVMFWdkLEEd0dSe01A/evzLu1IaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O9nVuvmEHgKw9QnSUut2Jb27U2Nhe+2pVKZYgEO3c8s=;
+ b=o+/ASf+S9bCraexFt04M5ULVPsZDjAX12Ng2ygVqSCtW431yWGpcwang9aueRRnw8qFwAnyQSHz+467If6FeqKNaQVgjTOYw56NHSA4xDQgvMbxF0AAWoDLoVrMurIFG25dQErI6G8PvSnU7O+zi70CegYMvk6kn6o+YWVEU848=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+Received: from MN2PR12MB3870.namprd12.prod.outlook.com (10.255.237.93) by
+ MN2PR12MB3214.namprd12.prod.outlook.com (20.179.83.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.13; Wed, 11 Dec 2019 05:24:55 +0000
+Received: from MN2PR12MB3870.namprd12.prod.outlook.com
+ ([fe80::354e:13c8:116b:1261]) by MN2PR12MB3870.namprd12.prod.outlook.com
+ ([fe80::354e:13c8:116b:1261%7]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
+ 05:24:55 +0000
+From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH] x86/fpu: Warn only when CPU-provided sizes less than
+ struct declaration
+To:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        jon.grimm@amd.com,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+References: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <b63e2111-b0c6-a716-3d99-88f91ad64e1d@intel.com>
+ <68bdd6f0-a229-433a-9234-303a3b02b092@amd.com>
+ <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
+Message-ID: <7a8fe748-2c57-295a-e6ed-8969c41462aa@amd.com>
+Date:   Wed, 11 Dec 2019 12:24:42 +0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+In-Reply-To: <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: KU1PR03CA0017.apcprd03.prod.outlook.com
+ (2603:1096:802:18::29) To MN2PR12MB3870.namprd12.prod.outlook.com
+ (2603:10b6:208:166::29)
+MIME-Version: 1.0
+X-Originating-IP: [165.204.80.7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 10211dec-e980-4942-70eb-08d77dfa74e1
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3214:|MN2PR12MB3214:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR12MB32142A876C8C728753F0922EF35A0@MN2PR12MB3214.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
+X-Forefront-PRVS: 024847EE92
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53546011)(31686004)(31696002)(6512007)(186003)(26005)(6506007)(54906003)(81156014)(316002)(2906002)(6486002)(66946007)(5660300002)(36756003)(66556008)(66476007)(81166006)(4326008)(6666004)(44832011)(2616005)(8936002)(478600001)(86362001)(8676002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3214;H:MN2PR12MB3870.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TCLqPPZ8ddVfClCW7h/I0t9OB1cGbregWRSoVS6ujAhIsTbhFZhfGpbKyWpbOtyMur7ueZOR1/JNTZRCg/qPzFUFDVdd+GZy1wg5IgDP3qrYAluvfRQad32wyk4W3Y0Whu8CDTc1peBs9z5vyaq1JnB0Cwra1KodPSse4leuflYyKYxcxu6Fx+bW8guYCdgGmAyLoOuZ7Rd0hc7wVfD6iHkygRDsko3J3mHhoLypkp6ME+4VODNxfoyU8HlDUPHj77aiJaj9yUQXhTTQq6X+HSfU62jbpnlwEeWwS0VQOuRt1SRpE4YMIyIzqDoj/osEnp7ivPncFNrQDEEhePMHo+RyXBI95GQLRTh1NqciJEYUnjEbVY62efolrddvY6BfdnzdgCxwhREZFeag1HwGGyJGwoAfXVTq1KBYQiBruvv9/r1FNrCtwLE6vbeLJkct
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 10211dec-e980-4942-70eb-08d77dfa74e1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 05:24:55.4670
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nx7xSxgHkwKC+XpgSq4uqXS1Ewq0ok6hyiDLTMbG2O7ma2X+uNouG1/f5TYaWbxD5UUDC98Jtkcm+rax0wy1bw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-on sc7180 we have cases where multiple functions from the same
-qup instance share the same pin. This is true for qup02/04/11 and qup13.
-Add new function names to distinguish which qup function to use.
+Dave
 
-The device tree files for this platform haven't landed in mainline yet,
-so there aren't any users upstream who should break with this change
-in function names, however, anyone using the devicetree files that were
-posted on the lists and using these specific function names will need
-to update their changes.
+On 12/6/19 10:28 PM, Dave Hansen wrote:
+> On 12/6/19 12:14 AM, Suravee Suthikulpanit wrote:
+>> On 12/4/19 12:27 AM, Dave Hansen wrote:
+>>> On 12/3/19 1:01 AM, Suravee Suthikulpanit wrote:
+>>>> The current XCHECK_SZ macro warns if the XFEATURE size reported
+>>>> by CPUID does not match the size of kernel structure. However, depending
+>>>> on the hardware implementation, CPUID can report the XSAVE state size
+>>>> larger than the size of C structures defined for each of the XSAVE state
+>>>> due to padding.
+>>>
+>>> We have existing architecture for padding.  See xfeature_is_aligned(),
+>>> for instance.  Are you saying that there are implementations out there
+>>> that do padding which is not otherwise enumerated and that they do it
+>>> within the size of the enumerated stat
+>> Yes, the implementation includes the padding size within the size of
+>> the enumerated state. This results in the reported size larger than
+>> the amount needed by the feature.
 
-Reported-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-sc7180.c | 60 +++++++++++++++++++++++------------
- 1 file changed, 40 insertions(+), 20 deletions(-)
+Actually, please allow me clarify my understanding for this part.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7180.c b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-index d6cfad7..6247d92 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7180.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7180.c
-@@ -456,14 +456,18 @@ enum sc7180_functions {
- 	msm_mux_qspi_data,
- 	msm_mux_qup00,
- 	msm_mux_qup01,
--	msm_mux_qup02,
-+	msm_mux_qup02_i2c,
-+	msm_mux_qup02_uart,
- 	msm_mux_qup03,
--	msm_mux_qup04,
-+	msm_mux_qup04_i2c,
-+	msm_mux_qup04_uart,
- 	msm_mux_qup05,
- 	msm_mux_qup10,
--	msm_mux_qup11,
-+	msm_mux_qup11_i2c,
-+	msm_mux_qup11_uart,
- 	msm_mux_qup12,
--	msm_mux_qup13,
-+	msm_mux_qup13_i2c,
-+	msm_mux_qup13_uart,
- 	msm_mux_qup14,
- 	msm_mux_qup15,
- 	msm_mux_sdc1_tb,
-@@ -543,7 +547,10 @@ static const char * const sdc1_tb_groups[] = {
- static const char * const sdc2_tb_groups[] = {
- 	"gpio5",
- };
--static const char * const qup11_groups[] = {
-+static const char * const qup11_i2c_groups[] = {
-+	"gpio6", "gpio7",
-+};
-+static const char * const qup11_uart_groups[] = {
- 	"gpio6", "gpio7",
- };
- static const char * const ddr_bist_groups[] = {
-@@ -593,7 +600,10 @@ static const char * const qdss_groups[] = {
- static const char * const pll_reset_groups[] = {
- 	"gpio14",
- };
--static const char * const qup02_groups[] = {
-+static const char * const qup02_i2c_groups[] = {
-+	"gpio15", "gpio16",
-+};
-+static const char * const qup02_uart_groups[] = {
- 	"gpio15", "gpio16",
- };
- static const char * const cci_i2c_groups[] = {
-@@ -698,7 +708,10 @@ static const char * const wlan1_adc1_groups[] = {
- static const char * const atest_usb13_groups[] = {
- 	"gpio44",
- };
--static const char * const qup13_groups[] = {
-+static const char * const qup13_i2c_groups[] = {
-+	"gpio46", "gpio47",
-+};
-+static const char * const qup13_uart_groups[] = {
- 	"gpio46", "gpio47",
- };
- static const char * const gcc_gp1_groups[] = {
-@@ -848,7 +861,10 @@ static const char * const usb_phy_groups[] = {
- static const char * const mss_lte_groups[] = {
- 	"gpio108", "gpio109",
- };
--static const char * const qup04_groups[] = {
-+static const char * const qup04_i2c_groups[] = {
-+	"gpio115", "gpio116",
-+};
-+static const char * const qup04_uart_groups[] = {
- 	"gpio115", "gpio116",
- };
- 
-@@ -929,14 +945,18 @@ static const struct msm_function sc7180_functions[] = {
- 	FUNCTION(qspi_data),
- 	FUNCTION(qup00),
- 	FUNCTION(qup01),
--	FUNCTION(qup02),
-+	FUNCTION(qup02_i2c),
-+	FUNCTION(qup02_uart),
- 	FUNCTION(qup03),
--	FUNCTION(qup04),
-+	FUNCTION(qup04_i2c),
-+	FUNCTION(qup04_uart),
- 	FUNCTION(qup05),
- 	FUNCTION(qup10),
--	FUNCTION(qup11),
-+	FUNCTION(qup11_i2c),
-+	FUNCTION(qup11_uart),
- 	FUNCTION(qup12),
--	FUNCTION(qup13),
-+	FUNCTION(qup13_i2c),
-+	FUNCTION(qup13_uart),
- 	FUNCTION(qup14),
- 	FUNCTION(qup15),
- 	FUNCTION(sdc1_tb),
-@@ -976,8 +996,8 @@ static const struct msm_pingroup sc7180_groups[] = {
- 	[3] = PINGROUP(3, SOUTH, qup01, sp_cmu, dbg_out, qdss_cti, _, _, _, _, _),
- 	[4] = PINGROUP(4, NORTH, sdc1_tb, _, qdss_cti, _, _, _, _, _, _),
- 	[5] = PINGROUP(5, NORTH, sdc2_tb, _, _, _, _, _, _, _, _),
--	[6] = PINGROUP(6, NORTH, qup11, qup11, _, _, _, _, _, _, _),
--	[7] = PINGROUP(7, NORTH, qup11, qup11, ddr_bist, _, _, _, _, _, _),
-+	[6] = PINGROUP(6, NORTH, qup11_i2c, qup11_uart, _, _, _, _, _, _, _),
-+	[7] = PINGROUP(7, NORTH, qup11_i2c, qup11_uart, ddr_bist, _, _, _, _, _, _),
- 	[8] = PINGROUP(8, NORTH, gp_pdm1, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _),
- 	[9] = PINGROUP(9, NORTH, ddr_bist, _, phase_flag, qdss_cti, _, _, _, _, _),
- 	[10] = PINGROUP(10, NORTH, mdp_vsync, ddr_bist, _, _, _, _, _, _, _),
-@@ -985,8 +1005,8 @@ static const struct msm_pingroup sc7180_groups[] = {
- 	[12] = PINGROUP(12, SOUTH, mdp_vsync, m_voc, qup01, _, phase_flag, wlan2_adc0, atest_usb10, ddr_pxi3, _),
- 	[13] = PINGROUP(13, SOUTH, cam_mclk, pll_bypassnl, qdss, _, _, _, _, _, _),
- 	[14] = PINGROUP(14, SOUTH, cam_mclk, pll_reset, qdss, _, _, _, _, _, _),
--	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
--	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02, qup02, qdss, _, _, _, _, _),
-+	[15] = PINGROUP(15, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
-+	[16] = PINGROUP(16, SOUTH, cam_mclk, qup02_i2c, qup02_uart, qdss, _, _, _, _, _),
- 	[17] = PINGROUP(17, SOUTH, cci_i2c, _, phase_flag, qdss, _, wlan1_adc0, atest_usb12, ddr_pxi1, atest_char),
- 	[18] = PINGROUP(18, SOUTH, cci_i2c, agera_pll, _, phase_flag, qdss, vsense_trigger, ddr_pxi0, atest_char3, _),
- 	[19] = PINGROUP(19, SOUTH, cci_i2c, _, phase_flag, qdss, atest_char2, _, _, _, _),
-@@ -1016,8 +1036,8 @@ static const struct msm_pingroup sc7180_groups[] = {
- 	[43] = PINGROUP(43, NORTH, qup12, _, _, _, _, _, _, _, _),
- 	[44] = PINGROUP(44, NORTH, qup12, _, phase_flag, qdss_cti, wlan1_adc1, atest_usb13, ddr_pxi1, _, _),
- 	[45] = PINGROUP(45, NORTH, qup12, qdss_cti, _, _, _, _, _, _, _),
--	[46] = PINGROUP(46, NORTH, qup13, qup13, _, _, _, _, _, _, _),
--	[47] = PINGROUP(47, NORTH, qup13, qup13, _, _, _, _, _, _, _),
-+	[46] = PINGROUP(46, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
-+	[47] = PINGROUP(47, NORTH, qup13_i2c, qup13_uart, _, _, _, _, _, _, _),
- 	[48] = PINGROUP(48, NORTH, gcc_gp1, _, _, _, _, _, _, _, _),
- 	[49] = PINGROUP(49, WEST, mi2s_1, btfm_slimbus, _, _, _, _, _, _, _),
- 	[50] = PINGROUP(50, WEST, mi2s_1, btfm_slimbus, gp_pdm1, _, _, _, _, _, _),
-@@ -1085,8 +1105,8 @@ static const struct msm_pingroup sc7180_groups[] = {
- 	[112] = PINGROUP(112, NORTH, _, _, _, _, _, _, _, _, _),
- 	[113] = PINGROUP(113, NORTH, _, _, _, _, _, _, _, _, _),
- 	[114] = PINGROUP(114, NORTH, _, _, _, _, _, _, _, _, _),
--	[115] = PINGROUP(115, WEST, qup04, qup04, _, _, _, _, _, _, _),
--	[116] = PINGROUP(116, WEST, qup04, qup04, _, _, _, _, _, _, _),
-+	[115] = PINGROUP(115, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
-+	[116] = PINGROUP(116, WEST, qup04_i2c, qup04_uart, _, _, _, _, _, _, _),
- 	[117] = PINGROUP(117, WEST, dp_hot, _, _, _, _, _, _, _, _),
- 	[118] = PINGROUP(118, WEST, _, _, _, _, _, _, _, _, _),
- 	[119] = UFS_RESET(ufs_reset, 0x7f000),
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+When you referred to "the existing architecture for padding", IIUC,
+that's the XSAVE state size, offset, and alignment of each extended
+feature reported by the CPUID Fn 0Dh E[A|B|C]X. By "padding", do you
+mean the additional area included as part of alignment?
 
+> I don't think we've ever had XSAVE state that differed in size between
+> implementations.  This kind of thing ensures that we can't have any
+> statically-defined inspection into the XSAVE state.
+>
+> It also increases the amount of blind trust that we have in the CPU
+> implementations.  However, those warnings were specifically added at
+> Ingo's behest (IIRC) to reduce our blind trust in the CPU.
+> 
+
+I am not quite sure what you meant by "statically-defined inspection" and
+"blind trust".
+
+>>>> Such case should be safe and should not need to generate warning
+>>>> message.
+>>>
+>>> I've seen these error messages trip before, but only on pre-production
+>>> processors with goofy microcode.  I'd be really suspicious that this is
+>>> just papering over a processor issue.  Or, that perhaps the compacted
+>>> form works but the standard form is broken somehow.
+>>
+>> I have verified with the HW folks and the have confirmed that this is
+>> to be expected.
+> 
+>  From a review perspective, I'd really appreciate being able to have a
+> concrete discussion about exactly which state this is and exactly how
+> much padding we are talking about and *why* the existing padding
+> architecture can't be used.  I'd also want guarantees about this state
+> not getting used for any real state, *ever*.
+
+Here is the warning message:
+
+     ------------[ cut here ]------------
+     XFEATURE_PKRU: struct is 8 bytes, cpu state 32 bytes
+     WARNING: CPU: 0 PID: 0 at arch/x86/kernel/fpu/xstate.c:558 fpu__init_system_xstate+0x2b5/0x8ea
+     .......
+
+In this case, the feature is PKRU (feature enum 9), and CPUID 0Dh instruction reports
+eax:0x20 (size), ebx:0x340 (offset), ecx:0(aligned). The warning is due to the 32-byte size
+is more than the 8 bytes required for struct pkru_state.
+
+What I have been told (by HW folks) is that the hardware reports 32 bytes for PKRU feature
+to account for additional padding (24 bytes) required to maintain offset for the XSAVE data
+in compact form where:
+
+     offset of the next component = offset of current component +
+                                    size of current component
+
+In this case, the hardware adds the padding needed before the offset of the subsequent
+feature into the PKRU xsave state size.
+
+Please correct me if I am wrong, but I believe this is similar to the case
+mentioned in the commit ef78f2a4bf84 ('x86/fpu: Check CPU-provided sizes against struct declarations'),
+where it mentions inconsistency b/w the MPX 'bndcsr' state and the C structures.
+
+However, my point is that it should not need to warn if the xsave size is greater than
+the size of the C structure.
+
+Thanks,
+Suravee
