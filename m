@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B439C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F4D122B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5C0208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077784;
-	bh=GV1g4sMqmTSGFJASFaRg3b/yajlyg7qgx76zRdLk9gM=;
+	s=default; t=1576077789;
+	bh=3aXXUP6CSHv5npCS0f3X5zHZNaBwI9CZNedUZywSiRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GuL1wnmHeZhPsZ2jaAouLeWPESu9MAaQAWD8r8tk06gGG2z6qgl8WraekBFLoCfAr
-	 5+VaKqZAlqPDpfWwsMOkouuebGa+/zJiOyS4xUmTF5cYtwz96EqEsYZmQ7Ttrrie0i
-	 VvuLd/IbPdj6kP8R1VD+BjewyF/xY+lhQ8FP1OzM=
+	b=wDiXkIe35Nbd611Y5SViRGyPWdySQJT1y1P2S6HGjIcNrLQgB1wsZwXLsVpkxX7Dj
+	 ind00ZfNAY1LEDLXH0PaIsRjJ8JlkHg0XaXA48kyezRAwh8nz9KH64bXDYUIlO4bGN
+	 +lSQ62cHvBjCnvkCYxHzMuxmCFlPQlQ57cuVaLZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732661AbfLKPXC (ORCPT
+        id S1732676AbfLKPXI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732373AbfLKPWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:53 -0500
+        id S1732184AbfLKPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F20B2077B;
-        Wed, 11 Dec 2019 15:22:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9AD0208C3;
+        Wed, 11 Dec 2019 15:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077773;
-        bh=GV1g4sMqmTSGFJASFaRg3b/yajlyg7qgx76zRdLk9gM=;
+        s=default; t=1576077784;
+        bh=3aXXUP6CSHv5npCS0f3X5zHZNaBwI9CZNedUZywSiRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdEq6xDJM4xnJx1R0twKPE7OVIMYaCx9zkfi8BbJ51XlISgimexWDcleAdw6q425+
-         lLvCj7x8ILu7CvZYea7r56G6sn2N8fAViqa67vskgdiMabMIR/Jvx+ZFxMohg6UO6j
-         bC5DTksCUXF7TfClNXoL/48cjvIfeFW2CzieCHzQ=
+        b=BmgFo2DH4Kt4jERr7/Cfv7Ynh/cFGM0g95M/+MceK3NWdebHW2koh8EeReCkYoVpR
+         Dj1LMdJFvJg8z965uynS46zf9GoQbrVn7YRqsMcTL/isPDjGj1wbIEwwMkpQmMjRYq
+         WzLbpKc4AERf/jEr7sVtNQDyVM/a5BCp2fXqz338=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 166/243] ARM: dts: realview: Fix some more duplicate regulator nodes
-Date:   Wed, 11 Dec 2019 16:05:28 +0100
-Message-Id: <20191211150350.374909288@linuxfoundation.org>
+Subject: [PATCH 4.19 169/243] pstore/ram: Avoid NULL deref in ftrace merging failure path
+Date:   Wed, 11 Dec 2019 16:05:31 +0100
+Message-Id: <20191211150350.589883633@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,71 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit f3b2f758ec1e6cdb13c925647cbd8ad4938b78fb ]
+[ Upstream commit 8665569e97dd52920713b95675409648986b5b0d ]
 
-There's a bug in dtc in checking for duplicate node names when there's
-another section (e.g. "/ { };"). In this case, skeleton.dtsi provides
-another section. Upon removal of skeleton.dtsi, the dtb fails to build
-due to a duplicate node 'fixedregulator@0'. As both nodes were pretty
-much the same 3.3V fixed regulator, it hasn't really mattered. Fix this
-by renaming the nodes to something unique. In the process, drop the
-unit-address which shouldn't be present wtihout reg property.
+Given corruption in the ftrace records, it might be possible to allocate
+tmp_prz without assigning prz to it, but still marking it as needing to
+be freed, which would cause at least a NULL dereference.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+smatch warnings:
+fs/pstore/ram.c:340 ramoops_pstore_read() error: we previously assumed 'prz' could be null (see line 255)
+
+https://lists.01.org/pipermail/kbuild-all/2018-December/055528.html
+
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 2fbea82bbb89 ("pstore: Merge per-CPU ftrace records into one")
+Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/arm-realview-pb1176.dts | 4 ++--
- arch/arm/boot/dts/arm-realview-pb11mp.dts | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/pstore/ram.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
-index f2a1d25eb6cf3..83e0fbc4a1a10 100644
---- a/arch/arm/boot/dts/arm-realview-pb1176.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
-@@ -45,7 +45,7 @@
- 	};
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 015d74ee31a03..631ae057ab537 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -301,6 +301,7 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
+ 					  GFP_KERNEL);
+ 			if (!tmp_prz)
+ 				return -ENOMEM;
++			prz = tmp_prz;
+ 			free_prz = true;
  
- 	/* The voltage to the MMC card is hardwired at 3.3V */
--	vmmc: fixedregulator@0 {
-+	vmmc: regulator-vmmc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vmmc";
- 		regulator-min-microvolt = <3300000>;
-@@ -53,7 +53,7 @@
- 		regulator-boot-on;
-         };
+ 			while (cxt->ftrace_read_cnt < cxt->max_ftrace_cnt) {
+@@ -323,7 +324,6 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
+ 					goto out;
+ 			}
+ 			record->id = 0;
+-			prz = tmp_prz;
+ 		}
+ 	}
  
--	veth: fixedregulator@0 {
-+	veth: regulator-veth {
- 		compatible = "regulator-fixed";
- 		regulator-name = "veth";
- 		regulator-min-microvolt = <3300000>;
-diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-index 7f9cbdf33a510..2f6aa24a0b67c 100644
---- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
-+++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
-@@ -145,7 +145,7 @@
- 	};
- 
- 	/* The voltage to the MMC card is hardwired at 3.3V */
--	vmmc: fixedregulator@0 {
-+	vmmc: regulator-vmmc {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vmmc";
- 		regulator-min-microvolt = <3300000>;
-@@ -153,7 +153,7 @@
- 		regulator-boot-on;
-         };
- 
--	veth: fixedregulator@0 {
-+	veth: regulator-veth {
- 		compatible = "regulator-fixed";
- 		regulator-name = "veth";
- 		regulator-min-microvolt = <3300000>;
 -- 
 2.20.1
 
