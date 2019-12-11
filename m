@@ -2,191 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A296C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630292054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2328F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="Z+uVRsdH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfLKRJc (ORCPT
+        id S1730946AbfLKRKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:09:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57161 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730812AbfLKRJb (ORCPT
+        Wed, 11 Dec 2019 12:10:17 -0500
+Received: from sonic301-22.consmr.mail.gq1.yahoo.com ([98.137.64.148]:36024
+        "EHLO sonic301-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730129AbfLKRKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:09:31 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1if5UG-0005Y6-BL; Wed, 11 Dec 2019 18:09:20 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1if5UE-0002i5-93; Wed, 11 Dec 2019 18:09:18 +0100
-Date:   Wed, 11 Dec 2019 18:09:18 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+        Wed, 11 Dec 2019 12:10:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1576084215; bh=zh+Qq4KKIZBWaPq05JcdqJTq0ZIdb2xT9gPdRoh6Iu4=; h=Date:From:To:Cc:Subject:References:From:Subject; b=Z+uVRsdHOXjOjjD9kXgyXgiLKGsj3ENObF3fxk7XwSy5K80VnFlmWQ4RYKetMSFs0vYkLW+LzHhOghKRoY2OoA6sa5kwxCrJwy7dCBCSBr8zyBNP+T4C22OTdEnxxICWIRkkHw9/kSByzfdu62QDKpe3pQFPmGV6QO/zh/Pt7l0mtjbAh2nki4PCXinp574TEXo0dHWm/NqyAYpL7qg+/fkQIK90+Ou7AAQ6/kTxpppRi14EScK12dij6bajPtWdkhIYrBHIA54URZ0k9YSN6arXRJg1dlfTCVxfW6Lh/zc4GDdWfv+qcDJFhx+F3V0V/8CG1YMlVusWrWoogYtQQg==
+X-YMail-OSG: WG8ijLUVM1kklRgyAHjAJW0GX8ixNnkB.BQrGKakTRErvtKWMMgVhn1zd2ZVceK
+ NdtyTOS.pE0VJ3X0j0YcdgenF4f3E_Yz8F7H4SiHQlMn5m46Lj8i.j3Q4_g9ONYm4OauQq9L0m_K
+ ERLQxrsbAqEL.T1z9NKHmvAjaVpHVbZZ2rPNOzPMzunok6QfhV7miYZhGWkUgf3Gx2az1pYr_8Bz
+ w_7K8OLUTex5GtLM38kK9sHSgvU8Gf_CGNX94RcTscCpUhhrCPqdjovKewaDtTojK17UE20OKDL8
+ ygnY5ed_cA6oT27gzyKcf55Lwr4_551HdcvJc16AW9.yf3p60aboUwMZNGKDkgxG5RFw5CFlouXo
+ 3ya7tVxa3LaxAEgZiWb0Lb9MAXPNqpC0DB53NMyfW9Os70jG9ibKkMz_DYvxyKmph1GynRg5KLqE
+ ovsNgOiXXYKkoplpnKDnzOuAP9t9DQXggapzFvR2rSuSZdXTYlv3t00Ob_rvk6KNkAVY1W0rBJb7
+ Dc9encw4cYxTopFCQ5j_aAnv4kBE4bXtI6PQhptegeACwIbLRAqv9CuPlrhEwWbNYXIB8g4zp6I_
+ jYKBNbK4oBUjUk7YcHi2gPqUd.U2uFmhBNM8sbzlGPrkeFKy6fFEJt41Mkfi_6lGbn_aofA8xIJZ
+ ceY9hSCoUtBN_4EWIeT75aHow2.J4N98eW2NgkW_4.k2fdgDVMWcseihOeyxCx2RFkbxsd9KdLsg
+ j_glcQtModUuCYoNeNR6JvZkLpvyLURWiL050PEwLk.vRMBr0_l_AGCz0OmYpPbR9jCNAyfdEhhl
+ KtPQ0J98Q2PqhDx1.a1U5tY_aSnis19.hlcB9oV1Kkq_yHaVbnERSdp3dFVlISxTo_Ki6bzDNdTm
+ 9SbyWYt3quGH6JFZaYcV4dmqOHH_uvEjJqcQL2gPmpsDBeXfEVkUlswcR4LVD9Zt19LSJK5wTsO6
+ PBjIXfgDnE4HETtrwZijzELnoRTbj6hl18XmBEmV7wHbe4i4WUYyKZ3MFfRia6CX96e.uCYd3gEu
+ 8IQcrQeSNQvsrFvwdrsgDdBOEd4LDndHg5JmRwFncasxCmzt_m.4ETAJYcjFPQMrOntdflK5lIFb
+ AzKm.lz.TSGFbxX9io7cq_.IpF7aEZ.JOxffZdntPQ3O.QIUfzDMkzzudZuvJLgrBCodCEVSzOIX
+ ffrXtZ5wkcWoANy8mBzvR1VQ91jSswxIPPTvH671QZrrpaC8ei5arEUFB3LMXSw68UPLwE4_zUSE
+ hnHs6gNXvtyynnkdkTyWZ2BFitDQUBhyYbuM4A81pAGH80hI_NIRfbtR7tq8aH4iP6MmsBRncc3m
+ _33mUcV_GPkTNmc_Xme5PPcskO6boB2jFJmNE1AQrqWIT6ZsO1FgPHA6oJzzeZNxFgYx83jARxwL
+ loPCHanaSMSkb
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Wed, 11 Dec 2019 17:10:15 +0000
+Received: by smtp413.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 78b50f606b195eafc3a6178574d6a883;
+          Wed, 11 Dec 2019 17:10:09 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 01:09:58 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-erofs@lists.ozlabs.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Michael <fedora.dm0@gmail.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Wang Li <wangli74@huawei.com>
+Subject: [GIT PULL] erofs fixes for 5.5-rc2
+Message-ID: <20191211170950.GA16027@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 17:23:39 up 26 days,  7:42, 33 users,  load average: 0.00, 0.00,
- 0.00
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211170950.GA16027.ref@hsiangkao-HP-ZHAN-66-Pro-G1>
+X-Mailer: WebService/1.1.14728 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Hi Linus,
 
-On 19-12-11 16:14, Adam Thomson wrote:
-> On 10 December 2019 09:42, Marco Felsch wrote:
-> 
-> > Hi Mark,
-> > 
-> > On 19-12-04 13:46, Mark Brown wrote:
-> > > On Fri, Nov 29, 2019 at 06:25:34PM +0100, Marco Felsch wrote:
-> > >
-> > > > +  Optional regulator device-specific properties:
-> > > > +  - dlg,vsel-sense-gpios : A GPIO reference to a local general purpose input,
-> > > > +    the datasheet calls it GPI. The regulator sense the input signal and select
-> > > > +    the active or suspend voltage settings. If the signal is active the
-> > > > +    active-settings are applied else the suspend-settings are applied.
-> > > > +    Attention: Sharing the same GPI for other purposes or across multiple
-> > > > +    regulators is possible but the polarity setting must equal.
-> > >
-> > > I'm really confused by this.  As far as I understand it it seems
-> > > to be doing pinmuxing on the chip using the GPIO bindings which
-> > > is itself a bit odd and I don't see anything here that configures
-> > > whatever sets the state of the pins.  Don't we need another GPIO
-> > > to set the vsel-sense inputs on the PMIC?
-> > 
-> > Yes the PMIC is very configurable and it took a while till I understand
-> > it.. @Adam please correct me if I'm wrong.
-> > 
-> > The PMIC regulators regardless of the type: ldo or buck can be
-> > simplified drawn as:
-> > 
-> > 
-> > 
-> > da9062-gpio               da9062-regulator
-> > 
-> >   +-------------------------------------------------------
-> >   |                  PMIC
-> >   |
-> >   > GPIO0            +--------------------------+
-> >   |                  |         REGULATOR-0      |
-> >   > GPIO1 -------+   |                          |
-> >   |              +-- > vsel-in    voltage-a-out <
-> >   > GPIO2        |   |                          |
-> >   |              |   > enable-in  voltage-b-out <
-> >   |              |   |                          |
-> >   |              |   +--------------------------+
-> >   |              |
-> >   |              |   +--------------------------+
-> >   |              |   |         REGULATOR-1      |
-> >   |              |   |                          |
-> >   |              +-- > vsel-in    voltage-a-out <
-> >   |                  |                          |
-> >   |                  > enable-in  voltage-b-out <
-> >   |                  |                          |
-> >   |                  +--------------------------+
-> >   |
-> > 
-> > The 'vsel-in' and 'enable-in' regulator inputs must be routed to the
-> > PMIC GPIOs which must be configured as input. If this is a pinmux in
-> > your opinion, then yes we need to do that. IMHO it isn't a pinmux
-> > because from the regulator point of view it is just a GPIO which comes
-> > from our own gpio-dev (da9062-gpio). So the abstraction is vald. Anyway
-> > I'm with you that this isn't the typical use-case.
-> 
-> We've had this discussion before and to me it felt more like pinmux than GPIO
-> although I understand we're configuring the GPIO pin as input before then
-> configuring a regulator to take that specific internal GPIO as the control
-> signal. We're defining a specific role to this pin in HW rather than it being a
-> general software handled GPI so it feels like this would be neater under pinmux.
-> There does still need to be a mapping between that pin and the regulator which I
-> guess would be served by passing the pin to the regulator through generic pinmux
-> bindings and then in the regulator code you're simply just enabling the
-> regulator to be controlled from that pin. The HW lets you control multiple
-> regulators from the same input pin so there's a flexibility there to be
-> captured, as you mention.
+Could you consider these fixes for this 5.5 round?
 
-I know that we already had this discussion but the result was to wait
-for the maintainers input. Since Linus is the pinctrl/gpio maintainer
-and Mark the regulator maintainer we now have some input so we can move
-forward. Linus made some comments on the dt-bindings and on the code but
-he didn't pointed out that this usage is wrong. So I guessed it would be
-fine for him. Mark did his first comments now and I explained the
-current state..
+Mainly address a regression reported by David recently observed
+together with overlayfs due to the improper return value of listxattr()
+without xattr. Update outdated expressions in document as well.
 
-I discussed it with a colleague again and he mentioned that pinctrl
-should be named pinctrl instead it should be named padctrl. We don't
-reconfigure the pad to a other function it is still a device general
-purpose input pad. The hw-signal flow goes always trough the gpio block
-so one argument more for my solution. Also we don't configure the "pad"
-to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
-function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
-Instead we tell the regulator to use _this_ GPIO e.g. for voltage
-selection so we go the other way around. My last argument why pinctrl
-isn't the correct place is that the GPIO1 can be used for
-regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
-have different states which is invalid IMHO.
+Thanks,
+Gao Xiang
 
-Regards,
-  Marco
+The following changes since commit 219d54332a09e8d8741c1e1982f5eae56099de85:
 
-> > Regards,
-> >   Marco
-> > 
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> > 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+  Linux 5.4 (2019-11-24 16:32:01 -0800)
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-5.5-rc2-fixes
+
+for you to fetch changes up to ffafde478309af01b2a495ecaf203125abfb35bd:
+
+  erofs: update documentation (2019-12-08 21:37:01 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+- Fix improper return value of listxattr() with no xattr;
+
+- Keep up documentation with latest code.
+
+----------------------------------------------------------------
+Gao Xiang (2):
+      erofs: zero out when listxattr is called with no xattr
+      erofs: update documentation
+
+ Documentation/filesystems/erofs.txt | 27 ++++++++++++++-------------
+ fs/erofs/xattr.c                    |  2 ++
+ 2 files changed, 16 insertions(+), 13 deletions(-)
