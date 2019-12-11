@@ -2,288 +2,267 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAAAC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490B7C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F957214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F49B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbfLKJ6c (ORCPT
+        id S1728809AbfLKJ6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:58:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58364 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 04:58:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58380 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727829AbfLKJ6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:58:31 -0500
+        id S1728743AbfLKJ6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:58:33 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DCABDAFF0;
-        Wed, 11 Dec 2019 09:58:29 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 8C796E00B7; Wed, 11 Dec 2019 10:58:29 +0100 (CET)
-Message-Id: <19c54ebe20401b61df64e9bf3090c39b7126f5d7.1576057593.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1576057593.git.mkubecek@suse.cz>
-References: <cover.1576057593.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next v3 4/5] ethtool: move string arrays into common file
-To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        John Linville <linville@tuxdriver.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 11 Dec 2019 10:58:29 +0100 (CET)
+        by mx1.suse.de (Postfix) with ESMTP id 509DCB016;
+        Wed, 11 Dec 2019 09:58:30 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
+ attributes
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        gurchetansingh@chromium.org
+References: <20191211081810.20079-1-kraxel@redhat.com>
+ <20191211081810.20079-2-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+Date:   Wed, 11 Dec 2019 10:58:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <20191211081810.20079-2-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="h36uiI064OZOMSRGfaZmTr15J9gWpNto6"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce file net/ethtool/common.c for code shared by ioctl and netlink
-ethtool interface. Move name tables of features, RSS hash functions,
-tunables and PHY tunables into this file.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--h36uiI064OZOMSRGfaZmTr15J9gWpNto6
+Content-Type: multipart/mixed; boundary="aIjyVSBGSfq2Aejb76muXztHLzmLbpR9s";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, open list
+ <linux-kernel@vger.kernel.org>, gurchetansingh@chromium.org
+Message-ID: <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
+ attributes
+References: <20191211081810.20079-1-kraxel@redhat.com>
+ <20191211081810.20079-2-kraxel@redhat.com>
+In-Reply-To: <20191211081810.20079-2-kraxel@redhat.com>
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
----
- net/ethtool/Makefile |  2 +-
- net/ethtool/common.c | 85 ++++++++++++++++++++++++++++++++++++++++++++
- net/ethtool/common.h | 17 +++++++++
- net/ethtool/ioctl.c  | 84 ++-----------------------------------------
- 4 files changed, 105 insertions(+), 83 deletions(-)
- create mode 100644 net/ethtool/common.c
- create mode 100644 net/ethtool/common.h
+--aIjyVSBGSfq2Aejb76muXztHLzmLbpR9s
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/ethtool/Makefile b/net/ethtool/Makefile
-index 7e5c9eb85c90..f68387618973 100644
---- a/net/ethtool/Makefile
-+++ b/net/ethtool/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-only
- 
--obj-y		+= ioctl.o
-+obj-y		+= ioctl.o common.o
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-new file mode 100644
-index 000000000000..8b5e11e7e0a6
---- /dev/null
-+++ b/net/ethtool/common.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include "common.h"
-+
-+const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
-+	[NETIF_F_SG_BIT] =               "tx-scatter-gather",
-+	[NETIF_F_IP_CSUM_BIT] =          "tx-checksum-ipv4",
-+	[NETIF_F_HW_CSUM_BIT] =          "tx-checksum-ip-generic",
-+	[NETIF_F_IPV6_CSUM_BIT] =        "tx-checksum-ipv6",
-+	[NETIF_F_HIGHDMA_BIT] =          "highdma",
-+	[NETIF_F_FRAGLIST_BIT] =         "tx-scatter-gather-fraglist",
-+	[NETIF_F_HW_VLAN_CTAG_TX_BIT] =  "tx-vlan-hw-insert",
-+
-+	[NETIF_F_HW_VLAN_CTAG_RX_BIT] =  "rx-vlan-hw-parse",
-+	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT] = "rx-vlan-filter",
-+	[NETIF_F_HW_VLAN_STAG_TX_BIT] =  "tx-vlan-stag-hw-insert",
-+	[NETIF_F_HW_VLAN_STAG_RX_BIT] =  "rx-vlan-stag-hw-parse",
-+	[NETIF_F_HW_VLAN_STAG_FILTER_BIT] = "rx-vlan-stag-filter",
-+	[NETIF_F_VLAN_CHALLENGED_BIT] =  "vlan-challenged",
-+	[NETIF_F_GSO_BIT] =              "tx-generic-segmentation",
-+	[NETIF_F_LLTX_BIT] =             "tx-lockless",
-+	[NETIF_F_NETNS_LOCAL_BIT] =      "netns-local",
-+	[NETIF_F_GRO_BIT] =              "rx-gro",
-+	[NETIF_F_GRO_HW_BIT] =           "rx-gro-hw",
-+	[NETIF_F_LRO_BIT] =              "rx-lro",
-+
-+	[NETIF_F_TSO_BIT] =              "tx-tcp-segmentation",
-+	[NETIF_F_GSO_ROBUST_BIT] =       "tx-gso-robust",
-+	[NETIF_F_TSO_ECN_BIT] =          "tx-tcp-ecn-segmentation",
-+	[NETIF_F_TSO_MANGLEID_BIT] =	 "tx-tcp-mangleid-segmentation",
-+	[NETIF_F_TSO6_BIT] =             "tx-tcp6-segmentation",
-+	[NETIF_F_FSO_BIT] =              "tx-fcoe-segmentation",
-+	[NETIF_F_GSO_GRE_BIT] =		 "tx-gre-segmentation",
-+	[NETIF_F_GSO_GRE_CSUM_BIT] =	 "tx-gre-csum-segmentation",
-+	[NETIF_F_GSO_IPXIP4_BIT] =	 "tx-ipxip4-segmentation",
-+	[NETIF_F_GSO_IPXIP6_BIT] =	 "tx-ipxip6-segmentation",
-+	[NETIF_F_GSO_UDP_TUNNEL_BIT] =	 "tx-udp_tnl-segmentation",
-+	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] = "tx-udp_tnl-csum-segmentation",
-+	[NETIF_F_GSO_PARTIAL_BIT] =	 "tx-gso-partial",
-+	[NETIF_F_GSO_SCTP_BIT] =	 "tx-sctp-segmentation",
-+	[NETIF_F_GSO_ESP_BIT] =		 "tx-esp-segmentation",
-+	[NETIF_F_GSO_UDP_L4_BIT] =	 "tx-udp-segmentation",
-+
-+	[NETIF_F_FCOE_CRC_BIT] =         "tx-checksum-fcoe-crc",
-+	[NETIF_F_SCTP_CRC_BIT] =        "tx-checksum-sctp",
-+	[NETIF_F_FCOE_MTU_BIT] =         "fcoe-mtu",
-+	[NETIF_F_NTUPLE_BIT] =           "rx-ntuple-filter",
-+	[NETIF_F_RXHASH_BIT] =           "rx-hashing",
-+	[NETIF_F_RXCSUM_BIT] =           "rx-checksum",
-+	[NETIF_F_NOCACHE_COPY_BIT] =     "tx-nocache-copy",
-+	[NETIF_F_LOOPBACK_BIT] =         "loopback",
-+	[NETIF_F_RXFCS_BIT] =            "rx-fcs",
-+	[NETIF_F_RXALL_BIT] =            "rx-all",
-+	[NETIF_F_HW_L2FW_DOFFLOAD_BIT] = "l2-fwd-offload",
-+	[NETIF_F_HW_TC_BIT] =		 "hw-tc-offload",
-+	[NETIF_F_HW_ESP_BIT] =		 "esp-hw-offload",
-+	[NETIF_F_HW_ESP_TX_CSUM_BIT] =	 "esp-tx-csum-hw-offload",
-+	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT] =	 "rx-udp_tunnel-port-offload",
-+	[NETIF_F_HW_TLS_RECORD_BIT] =	"tls-hw-record",
-+	[NETIF_F_HW_TLS_TX_BIT] =	 "tls-hw-tx-offload",
-+	[NETIF_F_HW_TLS_RX_BIT] =	 "tls-hw-rx-offload",
-+};
-+
-+const char
-+rss_hash_func_strings[ETH_RSS_HASH_FUNCS_COUNT][ETH_GSTRING_LEN] = {
-+	[ETH_RSS_HASH_TOP_BIT] =	"toeplitz",
-+	[ETH_RSS_HASH_XOR_BIT] =	"xor",
-+	[ETH_RSS_HASH_CRC32_BIT] =	"crc32",
-+};
-+
-+const char
-+tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
-+	[ETHTOOL_ID_UNSPEC]     = "Unspec",
-+	[ETHTOOL_RX_COPYBREAK]	= "rx-copybreak",
-+	[ETHTOOL_TX_COPYBREAK]	= "tx-copybreak",
-+	[ETHTOOL_PFC_PREVENTION_TOUT] = "pfc-prevention-tout",
-+};
-+
-+const char
-+phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
-+	[ETHTOOL_ID_UNSPEC]     = "Unspec",
-+	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
-+	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
-+	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
-+};
-diff --git a/net/ethtool/common.h b/net/ethtool/common.h
-new file mode 100644
-index 000000000000..336566430be4
---- /dev/null
-+++ b/net/ethtool/common.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef _ETHTOOL_COMMON_H
-+#define _ETHTOOL_COMMON_H
-+
-+#include <linux/ethtool.h>
-+
-+extern const char
-+netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN];
-+extern const char
-+rss_hash_func_strings[ETH_RSS_HASH_FUNCS_COUNT][ETH_GSTRING_LEN];
-+extern const char
-+tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN];
-+extern const char
-+phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
-+
-+#endif /* _ETHTOOL_COMMON_H */
-diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
-index cd9bc67381b2..b262db5a1d91 100644
---- a/net/ethtool/ioctl.c
-+++ b/net/ethtool/ioctl.c
-@@ -27,6 +27,8 @@
- #include <net/xdp_sock.h>
- #include <net/flow_offload.h>
- 
-+#include "common.h"
-+
- /*
-  * Some useful ethtool_ops methods that're device independent.
-  * If we find that all drivers want to do the same thing here,
-@@ -54,88 +56,6 @@ EXPORT_SYMBOL(ethtool_op_get_ts_info);
- 
- #define ETHTOOL_DEV_FEATURE_WORDS	((NETDEV_FEATURE_COUNT + 31) / 32)
- 
--static const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
--	[NETIF_F_SG_BIT] =               "tx-scatter-gather",
--	[NETIF_F_IP_CSUM_BIT] =          "tx-checksum-ipv4",
--	[NETIF_F_HW_CSUM_BIT] =          "tx-checksum-ip-generic",
--	[NETIF_F_IPV6_CSUM_BIT] =        "tx-checksum-ipv6",
--	[NETIF_F_HIGHDMA_BIT] =          "highdma",
--	[NETIF_F_FRAGLIST_BIT] =         "tx-scatter-gather-fraglist",
--	[NETIF_F_HW_VLAN_CTAG_TX_BIT] =  "tx-vlan-hw-insert",
--
--	[NETIF_F_HW_VLAN_CTAG_RX_BIT] =  "rx-vlan-hw-parse",
--	[NETIF_F_HW_VLAN_CTAG_FILTER_BIT] = "rx-vlan-filter",
--	[NETIF_F_HW_VLAN_STAG_TX_BIT] =  "tx-vlan-stag-hw-insert",
--	[NETIF_F_HW_VLAN_STAG_RX_BIT] =  "rx-vlan-stag-hw-parse",
--	[NETIF_F_HW_VLAN_STAG_FILTER_BIT] = "rx-vlan-stag-filter",
--	[NETIF_F_VLAN_CHALLENGED_BIT] =  "vlan-challenged",
--	[NETIF_F_GSO_BIT] =              "tx-generic-segmentation",
--	[NETIF_F_LLTX_BIT] =             "tx-lockless",
--	[NETIF_F_NETNS_LOCAL_BIT] =      "netns-local",
--	[NETIF_F_GRO_BIT] =              "rx-gro",
--	[NETIF_F_GRO_HW_BIT] =           "rx-gro-hw",
--	[NETIF_F_LRO_BIT] =              "rx-lro",
--
--	[NETIF_F_TSO_BIT] =              "tx-tcp-segmentation",
--	[NETIF_F_GSO_ROBUST_BIT] =       "tx-gso-robust",
--	[NETIF_F_TSO_ECN_BIT] =          "tx-tcp-ecn-segmentation",
--	[NETIF_F_TSO_MANGLEID_BIT] =	 "tx-tcp-mangleid-segmentation",
--	[NETIF_F_TSO6_BIT] =             "tx-tcp6-segmentation",
--	[NETIF_F_FSO_BIT] =              "tx-fcoe-segmentation",
--	[NETIF_F_GSO_GRE_BIT] =		 "tx-gre-segmentation",
--	[NETIF_F_GSO_GRE_CSUM_BIT] =	 "tx-gre-csum-segmentation",
--	[NETIF_F_GSO_IPXIP4_BIT] =	 "tx-ipxip4-segmentation",
--	[NETIF_F_GSO_IPXIP6_BIT] =	 "tx-ipxip6-segmentation",
--	[NETIF_F_GSO_UDP_TUNNEL_BIT] =	 "tx-udp_tnl-segmentation",
--	[NETIF_F_GSO_UDP_TUNNEL_CSUM_BIT] = "tx-udp_tnl-csum-segmentation",
--	[NETIF_F_GSO_PARTIAL_BIT] =	 "tx-gso-partial",
--	[NETIF_F_GSO_SCTP_BIT] =	 "tx-sctp-segmentation",
--	[NETIF_F_GSO_ESP_BIT] =		 "tx-esp-segmentation",
--	[NETIF_F_GSO_UDP_L4_BIT] =	 "tx-udp-segmentation",
--
--	[NETIF_F_FCOE_CRC_BIT] =         "tx-checksum-fcoe-crc",
--	[NETIF_F_SCTP_CRC_BIT] =        "tx-checksum-sctp",
--	[NETIF_F_FCOE_MTU_BIT] =         "fcoe-mtu",
--	[NETIF_F_NTUPLE_BIT] =           "rx-ntuple-filter",
--	[NETIF_F_RXHASH_BIT] =           "rx-hashing",
--	[NETIF_F_RXCSUM_BIT] =           "rx-checksum",
--	[NETIF_F_NOCACHE_COPY_BIT] =     "tx-nocache-copy",
--	[NETIF_F_LOOPBACK_BIT] =         "loopback",
--	[NETIF_F_RXFCS_BIT] =            "rx-fcs",
--	[NETIF_F_RXALL_BIT] =            "rx-all",
--	[NETIF_F_HW_L2FW_DOFFLOAD_BIT] = "l2-fwd-offload",
--	[NETIF_F_HW_TC_BIT] =		 "hw-tc-offload",
--	[NETIF_F_HW_ESP_BIT] =		 "esp-hw-offload",
--	[NETIF_F_HW_ESP_TX_CSUM_BIT] =	 "esp-tx-csum-hw-offload",
--	[NETIF_F_RX_UDP_TUNNEL_PORT_BIT] =	 "rx-udp_tunnel-port-offload",
--	[NETIF_F_HW_TLS_RECORD_BIT] =	"tls-hw-record",
--	[NETIF_F_HW_TLS_TX_BIT] =	 "tls-hw-tx-offload",
--	[NETIF_F_HW_TLS_RX_BIT] =	 "tls-hw-rx-offload",
--};
--
--static const char
--rss_hash_func_strings[ETH_RSS_HASH_FUNCS_COUNT][ETH_GSTRING_LEN] = {
--	[ETH_RSS_HASH_TOP_BIT] =	"toeplitz",
--	[ETH_RSS_HASH_XOR_BIT] =	"xor",
--	[ETH_RSS_HASH_CRC32_BIT] =	"crc32",
--};
--
--static const char
--tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
--	[ETHTOOL_ID_UNSPEC]     = "Unspec",
--	[ETHTOOL_RX_COPYBREAK]	= "rx-copybreak",
--	[ETHTOOL_TX_COPYBREAK]	= "tx-copybreak",
--	[ETHTOOL_PFC_PREVENTION_TOUT] = "pfc-prevention-tout",
--};
--
--static const char
--phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
--	[ETHTOOL_ID_UNSPEC]     = "Unspec",
--	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
--	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
--	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
--};
--
- static int ethtool_get_features(struct net_device *dev, void __user *useraddr)
- {
- 	struct ethtool_gfeatures cmd = {
--- 
-2.24.0
+Hi Gerd
 
+Am 11.12.19 um 09:18 schrieb Gerd Hoffmann:
+> Add caching field to drm_gem_shmem_object to specify the cachine
+> attributes for mappings.  Add helper function to tweak pgprot
+> accordingly.  Switch vmap and mmap functions to the new helper.
+>=20
+> Set caching to write-combine when creating the object so behavior
+> doesn't change by default.  Drivers can override that later if
+> needed.
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+
+If you want to merge this patch, you have my
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Please see my comment below.
+
+> ---
+>  include/drm/drm_gem_shmem_helper.h     | 12 ++++++++++++
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 24 +++++++++++++++++++++---
+>  2 files changed, 33 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_s=
+hmem_helper.h
+> index 6748379a0b44..9d6e02c6205f 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -17,6 +17,11 @@ struct drm_mode_create_dumb;
+>  struct drm_printer;
+>  struct sg_table;
+> =20
+> +enum drm_gem_shmem_caching {
+> +	DRM_GEM_SHMEM_CACHED =3D 1,
+> +	DRM_GEM_SHMEM_WC,
+> +};
+> +
+>  /**
+>   * struct drm_gem_shmem_object - GEM object backed by shmem
+>   */
+> @@ -83,6 +88,11 @@ struct drm_gem_shmem_object {
+>  	 * The address are un-mapped when the count reaches zero.
+>  	 */
+>  	unsigned int vmap_use_count;
+> +
+> +	/**
+> +	 * @caching: caching attributes for mappings.
+> +	 */
+> +	enum drm_gem_shmem_caching caching;
+>  };
+> =20
+>  #define to_drm_gem_shmem_obj(obj) \
+> @@ -130,6 +140,8 @@ drm_gem_shmem_prime_import_sg_table(struct drm_devi=
+ce *dev,
+> =20
+>  struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *ob=
+j);
+> =20
+> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pgp=
+rot_t prot);
+> +
+>  /**
+>   * DRM_GEM_SHMEM_DRIVER_OPS - Default shmem GEM operations
+>   *
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/d=
+rm_gem_shmem_helper.c
+> index a421a2eed48a..5bb94e130a50 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -76,6 +76,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create(str=
+uct drm_device *dev, size_t
+>  	mutex_init(&shmem->pages_lock);
+>  	mutex_init(&shmem->vmap_lock);
+>  	INIT_LIST_HEAD(&shmem->madv_list);
+> +	shmem->caching =3D DRM_GEM_SHMEM_WC;
+> =20
+>  	/*
+>  	 * Our buffers are kept pinned, so allocating them
+> @@ -256,9 +257,11 @@ static void *drm_gem_shmem_vmap_locked(struct drm_=
+gem_shmem_object *shmem)
+> =20
+>  	if (obj->import_attach)
+>  		shmem->vaddr =3D dma_buf_vmap(obj->import_attach->dmabuf);
+> -	else
+> +	else {
+> +		pgprot_t prot =3D drm_gem_shmem_caching(shmem, PAGE_KERNEL);
+>  		shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+> -				    VM_MAP, pgprot_writecombine(PAGE_KERNEL));
+> +				    VM_MAP, prot);
+> +	}
+> =20
+>  	if (!shmem->vaddr) {
+>  		DRM_DEBUG_KMS("Failed to vmap pages\n");
+> @@ -540,7 +543,8 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, =
+struct vm_area_struct *vma)
+>  	}
+> =20
+>  	vma->vm_flags |=3D VM_MIXEDMAP | VM_DONTEXPAND;
+> -	vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_fl=
+ags));
+> +	vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
+> +	vma->vm_page_prot =3D drm_gem_shmem_caching(shmem, vma->vm_page_prot)=
+;
+>  	vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
+>  	vma->vm_ops =3D &drm_gem_shmem_vm_ops;
+> =20
+> @@ -683,3 +687,17 @@ drm_gem_shmem_prime_import_sg_table(struct drm_dev=
+ice *dev,
+>  	return ERR_PTR(ret);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+> +
+> +pgprot_t drm_gem_shmem_caching(struct drm_gem_shmem_object *shmem, pgp=
+rot_t prot)
+> +{
+> +	switch (shmem->caching) {
+> +	case DRM_GEM_SHMEM_CACHED:
+> +		return prot;
+> +	case DRM_GEM_SHMEM_WC:
+> +		return pgprot_writecombine(prot);
+> +	default:
+> +		WARN_ON_ONCE(1);
+> +		return prot;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_caching);
+
+Two reason why I'd reconsider this design.
+
+I don't like switch statements new the bottom of the call graph. The
+code ends up with default warnings, such as this one.
+
+Udl has different caching flags for imported and 'native' buffers. This
+would require a new constant and additional code here.
+
+What do you think about turning this function into a callback in struct
+shmem_funcs? The default implementation would be for WC, virtio would
+use CACHED. The individual implementations could still be located in the
+shmem code. Udl would later provide its own code.
+
+Best regards
+Thomas
+
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--aIjyVSBGSfq2Aejb76muXztHLzmLbpR9s--
+
+--h36uiI064OZOMSRGfaZmTr15J9gWpNto6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3wvcEACgkQaA3BHVML
+eiOlZgf+JfNfDKHqnCYme9Oe3L7T6yVVKcej4ZjnuwULnqrmRASLV5rjKRAq3IP4
+EaS4fCZygClQF93dYK1EQ0iVEDTo6xIPmRTfDwYEZkZflLBi7I4Dzae1Lse+jXvP
+obKla7XmvvR4cv7+aRszAsnt2RbokT7rl8f9vwyOYfwWASJVyxd61HTwejJ2AniX
+gSwaI4Oq9jwQk0NgHD2Q0syY0NKDnCnBEI7YchsGDgQFOON8NhmM8GZ8c7P1ghaE
+MeP1g2NoDCzjmK8MenYRKrHltaWNOEw9sio9pgurUpVMprw3w4i6a6KuNp5GqSQP
+pWnSMtPakT25JtJBFj+lL5PNRrkdmg==
+=FtX0
+-----END PGP SIGNATURE-----
+
+--h36uiI064OZOMSRGfaZmTr15J9gWpNto6--
