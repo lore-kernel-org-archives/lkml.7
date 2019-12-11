@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3798C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB1CC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A922722527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E432D22527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076878;
-	bh=gXARI7YL3GAncgeBJs6Fnde+C0qoulYIfCAepgl0a+g=;
+	s=default; t=1576076882;
+	bh=dXQVMFhSGEw7T+9WILp/lPQV9hSx1Pd5Ln5VX+6r5XQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ARQNzmFpqYzwK5d/8+YjQ+1xWA45yQ5vqR4PzZ8wWVlPNueouEPZTiTFFseiDubk
-	 RvxtJCvKATLse2RG8/F3iF6iMmASGfEcLTxyT2bGtS0ISg4XrqitW3C4YK/gZ6RCLd
-	 pyGa7IJ5cjkgkF5muRdFhG+r6mKVzhWkVskV50og=
+	b=qRYYeHO2r8q5sXML54ukGR+MN0Mf/TWE3htzDIDgxriA5mxJF7HbXHwv06eR7eBAK
+	 +bLGWeyagJ9n3d3JebOxqMM5L5T3Uczon5RYTJMopA5T3Hnr/eqhHlmsINQ8WZZZWw
+	 VuwWi1Ez1okFm0Pdstd4Pj/rFSjOKk26xRPJWW3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbfLKPH4 (ORCPT
+        id S1730202AbfLKPIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730170AbfLKPHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:07:54 -0500
+        id S1730170AbfLKPH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:07:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D39AB24654;
-        Wed, 11 Dec 2019 15:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5700922B48;
+        Wed, 11 Dec 2019 15:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076874;
-        bh=gXARI7YL3GAncgeBJs6Fnde+C0qoulYIfCAepgl0a+g=;
+        s=default; t=1576076876;
+        bh=dXQVMFhSGEw7T+9WILp/lPQV9hSx1Pd5Ln5VX+6r5XQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DjN02p9d87S1TB63/SOGswWXArTm6HdrXcG2MdXKI7jdm03J/JgBDDIZ0tdHrX+aq
-         Q0T5c2pVLfYGIwuCrnYHGnCDH+XQuZbmI+NCUmSrXwy5IOGVAlzfjsH7/LkYFIzYga
-         ZAHpBbXeWSYL8cIAINsTHlsIgL4Oa8VheWikTdm4=
+        b=QjzPlwOgADRY47BA3qb4pwfALONBfw4gpApi9BnTcPPrYOcGxJ0MDpCB2xkLbQKqP
+         EXI6/MVOTa6h1vN2L1KUZwjG1iqcaBCMCTDX2FFSr2Mvaxx3kprvDkv5R9JTKDQbaF
+         4IaLhkQMsOvd4jUefQNC19mIo0w1WjjODsLV8e9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.4 23/92] fuse: verify nlink
-Date:   Wed, 11 Dec 2019 16:05:14 +0100
-Message-Id: <20191211150229.424302645@linuxfoundation.org>
+Subject: [PATCH 5.4 24/92] fuse: verify write return
+Date:   Wed, 11 Dec 2019 16:05:15 +0100
+Message-Id: <20191211150229.716710056@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,30 +60,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit c634da718db9b2fac201df2ae1b1b095344ce5eb upstream.
+commit 8aab336b14c115c6bf1d4baeb9247e41ed9ce6de upstream.
 
-When adding a new hard link, make sure that i_nlink doesn't overflow.
+Make sure filesystem is not returning a bogus number of bytes written.
 
-Fixes: ac45d61357e8 ("fuse: fix nlink after unlink")
-Cc: <stable@vger.kernel.org> # v3.4
+Fixes: ea9b9907b82a ("fuse: implement perform_write")
+Cc: <stable@vger.kernel.org> # v2.6.26
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/dir.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/fuse/file.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -862,7 +862,8 @@ static int fuse_link(struct dentry *entr
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1098,6 +1098,8 @@ static ssize_t fuse_send_write_pages(str
+ 	ia->write.in.flags = fuse_write_flags(iocb);
  
- 		spin_lock(&fi->lock);
- 		fi->attr_version = atomic64_inc_return(&fc->attr_version);
--		inc_nlink(inode);
-+		if (likely(inode->i_nlink < UINT_MAX))
-+			inc_nlink(inode);
- 		spin_unlock(&fi->lock);
- 		fuse_invalidate_attr(inode);
- 		fuse_update_ctime(inode);
+ 	err = fuse_simple_request(fc, &ap->args);
++	if (!err && ia->write.out.size > count)
++		err = -EIO;
+ 
+ 	offset = ap->descs[0].offset;
+ 	count = ia->write.out.size;
 
 
