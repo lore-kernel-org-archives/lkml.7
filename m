@@ -2,110 +2,104 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF40C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D63C2464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670D92464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FfJgOOlu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dE92+E8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfLKNUL (ORCPT
+        id S1729578AbfLKNUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:20:11 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:39256 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbfLKNUL (ORCPT
+        Wed, 11 Dec 2019 08:20:22 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52963 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728128AbfLKNUU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:20:11 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBDK4vN099616;
-        Wed, 11 Dec 2019 07:20:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576070404;
-        bh=GkhHaPX9UDNVUYDu93wWRNflhV/Vz2l5vZp7YzYxuYQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FfJgOOluYkKqpDli4kXsWHirurmSnFSzU8sydhPy+xpmaZt/61syyf/wC8IouSpQR
-         emEEdpzQmC4uNwvnPqhB6B9qU3grWeB47hzosPAHAc3uwD1yPft1CvTqKp3xKKcmbu
-         sWmkbwaqS1j4gbYX0/OusjQWUgkgHseWp9H455wM=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBDK4sE085099
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 07:20:04 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 07:20:04 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 07:20:04 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBDK2lH040964;
-        Wed, 11 Dec 2019 07:20:02 -0600
-Subject: Re: [PATCH 2/2] net: ethernet: ti: build cpsw-common for switchdev
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Andrew Lunn <andrew@lunn.ch>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211125643.1987157-1-arnd@arndb.de>
- <20191211125643.1987157-2-arnd@arndb.de>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <e6d7c4ec-dd85-e979-bc9f-49f5b0637447@ti.com>
-Date:   Wed, 11 Dec 2019 15:19:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 08:20:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576070419;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o/u/4ZEqQP0e+uS2+lCszxa5LZBpaQoPz1LVNN7voyg=;
+        b=dE92+E8Keo6YqSkUKbQr++CMuiQIjplKbMtXwxLR0fWUD8bB7y+amC3EK6XdBZG3b2yX/K
+        lp0cS0lQKTzj4978xYr3d/J15PIhdqDY8iDFyGL5vD2ZYDQDEFAgKHOIPeHZCagY9KIbYS
+        SX6HWPIMMFf0vzb0yKQw2XPkUbdr/UM=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-drEHkx9cNC2qmQrIYoLj9A-1; Wed, 11 Dec 2019 08:20:15 -0500
+Received: by mail-lf1-f70.google.com with SMTP id t8so2103303lfc.21
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:20:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=o/u/4ZEqQP0e+uS2+lCszxa5LZBpaQoPz1LVNN7voyg=;
+        b=ZV+Mt98F3X/m7eXxwSm7vSbDcownO0Hr3Ced9hl+LT69z87V/TmX7ZyNq/6u2fq4WM
+         xF204BdrefoZ91MJ13t1ZoMnA6JUl5LNsiVC+mV4lAz8I5yVYljOHFjgNQoO7XYrQNuZ
+         +1FszZBNZuJbAzbsCktX4yGikwna0/+CfsgyKrx05DoMS27K0MqFsQkO8EYoepejlgdt
+         me1UrAL8JRr4gcgjwDCR0wizrTXvJj+eYWKN4uHo7EnStozCma7Z96t5j3O+8DkX/YTz
+         cP5wUC2ngb7xr4Z6WeCyxbdvzw5DFXGlJa7R/tqDxyawLxeTmI4DbtJgE/zwVHPAPFR7
+         2Wrw==
+X-Gm-Message-State: APjAAAUxB62havg1GRoC44tzfVU1jH5zuaYfvyoj60zZbeA5iECFUPan
+        q/wFfBQvzkEGpD1E9Rvm3KLMEVPEfjAsXyCREvvu8CHCcGAMoXmH8oEsWgEpe7gBffr4GZ3zRwm
+        3Iy1Mk71cm+3c/1c1jGYMTKi5
+X-Received: by 2002:a2e:9b95:: with SMTP id z21mr1806008lji.112.1576070414501;
+        Wed, 11 Dec 2019 05:20:14 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxiBoj4+UzNM6MVzGlRn15zbpyF65rItNLpqEE+jZ6WQC2/2JVmPf9if2K7dMUlgg9zx4M+KA==
+X-Received: by 2002:a2e:9b95:: with SMTP id z21mr1805990lji.112.1576070414253;
+        Wed, 11 Dec 2019 05:20:14 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id c12sm1157656lfp.58.2019.12.11.05.20.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 05:20:13 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 64AA318033F; Wed, 11 Dec 2019 14:20:11 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Martin Lau <kafai@fb.com>
+Subject: Re: [PATCH bpf v2] bpftool: Don't crash on missing jited insns or ksyms
+In-Reply-To: <20191211130857.GB23383@linux.fritz.box>
+References: <20191210181412.151226-1-toke@redhat.com> <20191210125457.13f7821a@cakuba.netronome.com> <87eexbhopo.fsf@toke.dk> <20191211130857.GB23383@linux.fritz.box>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Wed, 11 Dec 2019 14:20:11 +0100
+Message-ID: <87zhfzf184.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <20191211125643.1987157-2-arnd@arndb.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MC-Unique: drEHkx9cNC2qmQrIYoLj9A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Daniel Borkmann <daniel@iogearbox.net> writes:
 
+> On Tue, Dec 10, 2019 at 10:09:55PM +0100, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:
+> [...]
+>> Anyhow, I don't suppose it'll hurt to have the Fixes: tag(s) in there;
+>> does Patchwork pick these up (or can you guys do that when you apply
+>> this?), or should I resend?
+>
+> Fixes tags should /always/ be present if possible, since they help to pro=
+vide
+> more context even if the buggy commit was in bpf-next, for example.
 
-On 11/12/2019 14:56, Arnd Bergmann wrote:
-> Without the common part of the driver, the new file fails to link:
-> 
-> drivers/net/ethernet/ti/cpsw_new.o: In function `cpsw_probe':
-> cpsw_new.c:(.text+0x312c): undefined reference to `ti_cm_get_macid'
-> 
-> Use the same Makefile hack as before, and build cpsw-common.o for
-> any driver that needs it.
-> 
-> Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   drivers/net/ethernet/ti/Makefile | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti/Makefile
-> index d34df8e5cf94..ecf776ad8689 100644
-> --- a/drivers/net/ethernet/ti/Makefile
-> +++ b/drivers/net/ethernet/ti/Makefile
-> @@ -5,6 +5,7 @@
->   
->   obj-$(CONFIG_TI_CPSW) += cpsw-common.o
->   obj-$(CONFIG_TI_DAVINCI_EMAC) += cpsw-common.o
-> +obj-$(CONFIG_TI_CPSW_SWITCHDEV) += cpsw-common.o
->   
->   obj-$(CONFIG_TLAN) += tlan.o
->   obj-$(CONFIG_CPMAC) += cpmac.o
-> 
+ACK, will do. Thank you for picking them up for this patch (did you do
+that manually, or is this part of your scripts?)
 
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+-Toke
 
--- 
-Best regards,
-grygorii
