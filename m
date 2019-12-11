@@ -2,141 +2,102 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD9FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7C4C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51DF20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B3A21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576104402;
+	bh=DO7UyfzEBz8p1xfKYT9necVU3BMFfuI27Qs6t3xiY3w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=hDTpPSDGruahivDT88oxxqYlDQ1hKEPvqwBf/7XnW0JoVIcjr9gRMiAsRgAq4OIAH
+	 uu74dbjfoDq+LmjZv9CiaJk4ENgvR2nqWRn896REtlKTedqHWMQYdgspZ9EbVvUK+z
+	 rlgYflcI89AHReIrcxLwtxoObOpTZJF0IUapfI84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfLKWqX (ORCPT
+        id S1726874AbfLKWql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:46:23 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46912 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726411AbfLKWqX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:46:23 -0500
-Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2394B82045C;
-        Thu, 12 Dec 2019 09:46:18 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ifAkL-0005w2-3b; Thu, 12 Dec 2019 09:46:17 +1100
-Date:   Thu, 12 Dec 2019 09:46:17 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Message-ID: <20191211224617.GE19256@dread.disaster.area>
-References: <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
- <20191211173829.GB21797@linux.vnet.ibm.com>
+        Wed, 11 Dec 2019 17:46:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfLKWqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 17:46:40 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 681C620836;
+        Wed, 11 Dec 2019 22:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576104400;
+        bh=DO7UyfzEBz8p1xfKYT9necVU3BMFfuI27Qs6t3xiY3w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=OnTKLlyWPmJTjY3iUjPJT0/C8AUPYg7+AIsI4GGDlsiPJBnvr4OMAGjBpVvXqflnb
+         /oqNzVnkS5LSZu4nbtJS26Gi/oc7tXBWG+5TcMNpdM+M7+yCdXeW524IcSsjnr3Dvg
+         IcCcZEpa5rYkE1c8W/kLCNqmx2nsvnKCUPuU8U9A=
+Date:   Wed, 11 Dec 2019 16:46:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Jingoo Han <jingoohan1@gmail.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCH 0/4] Redesign MSI-X support in PCIe Endpoint Core
+Message-ID: <20191211224636.GA122332@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211173829.GB21797@linux.vnet.ibm.com>
+In-Reply-To: <20191211124608.887-1-kishon@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
-        a=7-415B0cAAAA:8 a=DKMTVZrBpn61F86xKIIA:9 a=7pSkhifIAIoKH1Ap:21
-        a=Iepqc9itoRpRa7oB:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-        a=1c-WWmYQErFem0j6iXEC:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:08:29PM +0530, Srikar Dronamraju wrote:
-> A running task can wake-up a per CPU bound kthread on the same CPU.
-> If the current running task doesn't yield the CPU before the next load
-> balance operation, the scheduler would detect load imbalance and try to
-> balance the load. However this load balance would fail as the waiting
-> task is CPU bound, while the running task cannot be moved by the regular
-> load balancer. Finally the active load balancer would kick in and move
-> the task to a different CPU/Core. Moving the task to a different
-> CPU/core can lead to loss in cache affinity leading to poor performance.
+On Wed, Dec 11, 2019 at 06:16:04PM +0530, Kishon Vijay Abraham I wrote:
+> Existing MSI-X support in Endpoint core has limitations:
+>  1) MSIX table (which is mapped to a BAR) is not allocated by
+>     anyone. Ideally this should be allocated by endpoint
+>     function driver.
+>  2) Endpoint controller can choose any random BARs for MSIX
+>     table (irrespective of whether the endpoint function driver
+>     has allocated memory for it or not)
 > 
-> This is more prone to happen if the current running task is CPU
-> intensive and the sched_wake_up_granularity is set to larger value.
-> When the sched_wake_up_granularity was relatively small, it was observed
-> that the bound thread would complete before the load balancer would have
-> chosen to move the cache hot task to a different CPU.
+> In order to avoid these limitations, pci_epc_set_msix() is
+> modified to include BAR Indicator register (BIR) configuration
+> and MSIX table offset as arguments. This series also fixed MSIX
+> support in dwc driver and add MSI-X support in Cadence PCIe driver.
 > 
-> To deal with this situation, the current running task would yield to a
-> per CPU bound kthread, provided kthread is not CPU intensive.
-
-So a question for you here: when does the workqueue worker pre-empt
-the currently running task? Is it immediately? Or when a time-slice
-of the currently running task runs out?
-
-We don't want queued work immediately pre-empting the task that
-queued the work - the queued work is *deferred* work that should be
-run _soon_ but we want the currently running task to finish what it
-is doing first if possible. i.e. these are not synchronous wakeups,
-and so we shouldn't schedule kworker threads as though they are sync
-wakeups. That will affect batch processing effciency and reduce
-throughput because it will greatly increase the number of
-unnecessary context switches during IO completion processing....
-
-> /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+> The previous version of Cadence EP MSI-X support is @ [1].
+> This series is created on top of [2]
 > 
-> (With sched_wake_up_granularity set to 15ms)
+> [1] -> https://patchwork.ozlabs.org/patch/971160/
+> [2] -> http://lore.kernel.org/r/20191209092147.22901-1-kishon@ti.com
 > 
-> Performance counter stats for 'system wide' (5 runs):
-> event					    v5.4 				v5.4 + patch(v3)
-> probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                     4  ( +- 20.48% )
-> sched:sched_waking                     441,535  ( +-  0.17% )               914,630  ( +-  0.18% )
-> sched:sched_wakeup                     441,533  ( +-  0.17% )               914,630  ( +-  0.18% )
-> sched:sched_wakeup_new                   2,436  ( +-  8.08% )                   545  ( +-  4.02% )
-> sched:sched_switch                     797,007  ( +-  0.26% )             1,490,261  ( +-  0.10% )
-> sched:sched_migrate_task                20,998  ( +-  1.04% )                 2,492  ( +- 11.56% )
+> Alan Douglas (1):
+>   PCI: cadence: Add MSI-X support to Endpoint driver
+> 
+> Kishon Vijay Abraham I (3):
+>   PCI: endpoint: Fix ->set_msix() to take BIR and offset as arguments
+>   PCI: dwc: Fix dw_pcie_ep_raise_msix_irq() to get correct MSIX table
+>     address
+>   PCI: keystone: Add AM654 PCIe Endpoint to raise MSIX interrupt
 
-As we see here. We've doubled the number of context switches
-(increased by 700,000) just to avoid 17,000 incorrect load balancer
-task migrations.
+Trivial nits:
 
-That seems like we now make 700,000 incorrect decisions instead of
-just 20,000. The difference is that the consequence of making these
-many incorrect pre-emption decisions is vastly less than the
-consequence of making the wrong migration decision.
+  - There's a mix of "MSI-X" and "MSIX" in the subjects, commit logs,
+    and comments.  I prefer "MSI-X" to match usage in the spec.
 
-It seems to me that we should be checking this is_per_cpu_kthread()
-state for tasks queued on the runqueue during active load balancing,
-rather than at wakeup time.  i.e. in these cases we don't migrate
-the running task, we just let it run out it's timeslice out and the
-local per-cpu kthreads then run appropriately.
+  - "Fixes:" tags need not include "commit".  It doesn't *hurt*
+    anything, but it takes up space that could be used for the
+    subject.
 
-AFAICT this would have the same effect of avoiding unnecessary task
-migrations in this workload, but without causing a global change to
-the way workqueue kworkers are scheduled that has the potential to
-cause regressions in other workqueue intensive workloads....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+  - Commit references typically use a 12-char SHA1.  Again, doesn't
+    hurt anything.
