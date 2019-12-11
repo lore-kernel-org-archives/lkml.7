@@ -2,93 +2,100 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7417BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF71C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1602073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576025523;
-	bh=Gmj//zcm8fxwhe89OVHTfbVlyud7kzEoKjqmOhMmvNk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Hckc47YbtipSV11NrGXQAI5Vwnym7SxM181Ynu3XIQC+Qkv690hNEvpGPPTYWajm9
-	 XWgePnhK9hYQ/S9CXDYIL8qW5ozTPxaxwj80wS0J3OVvmRLye8KqSXKGOU+MzA17Dg
-	 YHeDdE4F24N9wV4G1Crp1OYqPftB4S8DGfs2UI9c=
+	by mail.kernel.org (Postfix) with ESMTP id 8E23B2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLKAwC (ORCPT
+        id S1726631AbfLKAzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:52:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35690 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 19:55:08 -0500
+Received: from mga05.intel.com ([192.55.52.43]:28187 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLKAwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:52:01 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE7A3206D9;
-        Wed, 11 Dec 2019 00:52:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576025521;
-        bh=Gmj//zcm8fxwhe89OVHTfbVlyud7kzEoKjqmOhMmvNk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CXNDcxTHMPMK9Ne+mkKixn7astwJb4fgJu2cfd0Y5NSf3a2NWtvt3HWdZ6U8HnVEB
-         qdie9HnwL0luO6emzSASA6tQIHZRnh5hedzZJQCxC/EkC1hnLDXgKoC4mHtY6stxZE
-         LPVju9ETWlOji4aGV4IHjFzUzGB8QCRxkvAVcCqE=
-Date:   Tue, 10 Dec 2019 16:52:00 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     zhanglin <zhang.lin16@zte.com.cn>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Steven Price <steven.price@arm.com>, david.engraf@sysgo.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
-        jiang.xuexin@zte.com.cn
-Subject: Re: [PATCH] initramfs: forcing panic when kstrdup failed
-Message-Id: <20191210165200.a3c542b74afe7dd846a87e1a@linux-foundation.org>
-In-Reply-To: <CAMuHMdUWeH9u0hP9wCfgb7TJ0nQkbQTPREX+fpTh+ZVrTsCobg@mail.gmail.com>
-References: <1575946121-30548-1-git-send-email-zhang.lin16@zte.com.cn>
-        <CAMuHMdUWeH9u0hP9wCfgb7TJ0nQkbQTPREX+fpTh+ZVrTsCobg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725999AbfLKAzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:55:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 16:55:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="225336040"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 10 Dec 2019 16:55:05 -0800
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <jroedel@suse.de>,
+        iommu@lists.linux-foundation.org, stable@vger.kernel.org
+Subject: Re: [PATCH] iommu: set group default domain before creating direct
+ mappings
+To:     Jerry Snitselaar <jsnitsel@redhat.com>,
+        linux-kernel@vger.kernel.org
+References: <20191210185606.11329-1-jsnitsel@redhat.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <49bca506-1f6a-ab2d-fac0-302073737af7@linux.intel.com>
+Date:   Wed, 11 Dec 2019 08:54:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <20191210185606.11329-1-jsnitsel@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 09:15:54 +0100 Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Hi,
 
-> > --- a/init/initramfs.c
-> > +++ b/init/initramfs.c
-> > @@ -125,6 +125,8 @@ static void __init dir_add(const char *name, time64_t mtime)
-> >                 panic("can't allocate dir_entry buffer");
-> >         INIT_LIST_HEAD(&de->list);
-> >         de->name = kstrdup(name, GFP_KERNEL);
-> > +       if (!de->name)
-> > +               panic("can't allocate dir_entry.name buffer");
-> >         de->mtime = mtime;
-> >         list_add(&de->list, &dir_list);
-> >  }
-> > @@ -340,6 +342,8 @@ static int __init do_name(void)
-> >                                 if (body_len)
-> >                                         ksys_ftruncate(wfd, body_len);
-> >                                 vcollected = kstrdup(collected, GFP_KERNEL);
-> > +                               if (!vcollected)
-> > +                                       panic("can not allocate vcollected buffer.");
-> >                                 state = CopyFile;
-> >                         }
-> >                 }
+On 12/11/19 2:56 AM, Jerry Snitselaar wrote:
+> iommu_group_create_direct_mappings uses group->default_domain, but
+> right after it is called, request_default_domain_for_dev calls
+> iommu_domain_free for the default domain, and sets the group default
+> domain to a different domain. Move the
+> iommu_group_create_direct_mappings call to after the group default
+> domain is set, so the direct mappings get associated with that domain.
 > 
-> Do we really need to add more messages for out-of-memory conditions?
-> The trend is to remove the printing of those messages, as the memory
-> allocation subsystem will have printed a backtrace already anyway.
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Lu Baolu <baolu.lu@linux.intel.com>
 
-Yup.  And we traditionally assume that memory allocations won't fail at
-init time anyway.  The reasoning being that the system is so enormously
-messed up that the problem is both unrecoverable and very obvious.
+This fix looks good to me.
 
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Best regards,
+baolu
+
+> Cc: iommu@lists.linux-foundation.org
+> Cc: stable@vger.kernel.org
+> Fixes: 7423e01741dd ("iommu: Add API to request DMA domain for device")
+> Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+> ---
+>   drivers/iommu/iommu.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index db7bfd4f2d20..fa908179b80b 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -2282,13 +2282,13 @@ request_default_domain_for_dev(struct device *dev, unsigned long type)
+>   		goto out;
+>   	}
+>   
+> -	iommu_group_create_direct_mappings(group, dev);
+> -
+>   	/* Make the domain the default for this group */
+>   	if (group->default_domain)
+>   		iommu_domain_free(group->default_domain);
+>   	group->default_domain = domain;
+>   
+> +	iommu_group_create_direct_mappings(group, dev);
+> +
+>   	dev_info(dev, "Using iommu %s mapping\n",
+>   		 type == IOMMU_DOMAIN_DMA ? "dma" : "direct");
+>   
+> 
