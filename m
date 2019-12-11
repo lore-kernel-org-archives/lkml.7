@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07442C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DC4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7E0214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EFB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vr4R+tO7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BPIgIt5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbfLKQcY (ORCPT
+        id S1730748AbfLKQc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:32:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31120 "EHLO
+        Wed, 11 Dec 2019 11:32:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41488 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730602AbfLKQcT (ORCPT
+        with ESMTP id S1730618AbfLKQcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:32:19 -0500
+        Wed, 11 Dec 2019 11:32:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576081937;
+        s=mimecast20190719; t=1576081941;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nItcTzNLcVS9l9nbV5eLnvl+iOeDyCeQ4Ep0E6Im280=;
-        b=Vr4R+tO7Fhf4h/mg3H+h/s/NiJsD2PwVfP6s4LEodWWHzOQkQxYTyprRPLjFVJzDEI1WSN
-        NbHXgSFGnf2gdp+JQzfd9O5xMBNY97kJ7zCHl45RyErDXChAaz05N/ag/Ge2Ej+9tJs8e3
-        RR6o1IZxtutJCsIBbiimInnOEtPLzzw=
+        bh=H/C4YIdlR5iqkfH1F0GZE8e7zY3LS+jdEFCQMbUyxA8=;
+        b=BPIgIt5sejw0qUppnMAcUQZp/I2u5X3S+77l5Zhvlylh69UI2T/x+pKIwxc6ITU++xyq90
+        DtBFQrK/y8lr33IXbVx9mTQwzFDNl98iD/FCOyihwFfOAwXIWjMEop1D2PR4KfTYCUqCKq
+        I6GwoHyuyB94eG+ZSUbv5W4o/LB6j1k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-ixmYRMiSMtC4rz-23nOpHw-1; Wed, 11 Dec 2019 11:32:14 -0500
-X-MC-Unique: ixmYRMiSMtC4rz-23nOpHw-1
+ us-mta-26-9O8TlD6XNTKheEeUUzWing-1; Wed, 11 Dec 2019 11:32:16 -0500
+X-MC-Unique: 9O8TlD6XNTKheEeUUzWing-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51EF28CC677;
-        Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 536C2100FD59;
+        Wed, 11 Dec 2019 16:32:15 +0000 (UTC)
 Received: from t480s.redhat.com (ovpn-117-148.ams2.redhat.com [10.36.117.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 77348605FF;
-        Wed, 11 Dec 2019 16:32:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A1AAB60BA8;
+        Wed, 11 Dec 2019 16:32:13 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 2/3] fs/proc/page.c: allow inspection of last section and fix end detection
-Date:   Wed, 11 Dec 2019 17:32:00 +0100
-Message-Id: <20191211163201.17179-3-david@redhat.com>
+        Dan Williams <dan.j.williams@intel.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Subject: [PATCH v2 3/3] mm: initialize memmap of unavailable memory directly
+Date:   Wed, 11 Dec 2019 17:32:01 +0100
+Message-Id: <20191211163201.17179-4-david@redhat.com>
 In-Reply-To: <20191211163201.17179-1-david@redhat.com>
 References: <20191211163201.17179-1-david@redhat.com>
 MIME-Version: 1.0
@@ -67,132 +66,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If max_pfn does not fall onto a section boundary, it is possible to inspe=
-ct
-PFNs up to max_pfn, and PFNs above max_pfn, however, max_pfn itself can't
-be inspected. We can have a valid (and online) memmap at and above max_pf=
-n
-if max_pfn is not aligned to a section boundary. The whole early section
-has a memmap and is marked online. Being able to inspect the state of the=
-se
-PFNs is valuable for debugging, especially because max_pfn can change on
-memory hotplug and expose these memmaps.
+Let's make sure that all memory holes are actually marked
+PageReserved(), that page_to_pfn() produces reliable results, and that
+these pages are not detected as "mmap" pages due to the mapcount.
 
-Also, querying page flags via "./page-types -r -a 0x144001,"
-(tools/vm/page-types.c) inside a x86-64 guest with 4160MB under QEMU
-results in an (almost) endless loop in user space, because the end is
-not detected properly when starting after max_pfn.
+E.g., booting a x86-64 QEMU guest with 4160 MB:
 
-Instead, let's allow to inspect all pages in the highest section and
-return 0 directly if we try to access pages above that section.
+[    0.010585] Early memory node ranges
+[    0.010586]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.010588]   node   0: [mem 0x0000000000100000-0x00000000bffdefff]
+[    0.010589]   node   0: [mem 0x0000000100000000-0x0000000143ffffff]
 
-While at it, check the count before adjusting it, to avoid masking user
-errors.
+max_pfn is 0x144000.
 
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Before this change:
+
+[root@localhost ~]# ./page-types -r -a 0x144000,
+             flags      page-count       MB  symbolic-flags              =
+       long-symbolic-flags
+0x0000000000000800           16384       64  ___________M________________=
+_______________        mmap
+             total           16384       64
+
+After this change:
+
+[root@localhost ~]# ./page-types -r -a 0x144000,
+             flags      page-count       MB  symbolic-flags              =
+       long-symbolic-flags
+0x0000000100000000           16384       64  ___________________________r=
+_______________        reserved
+             total           16384       64
+
+IOW, especially the unavailable physical memory ("memory hole") in the la=
+st
+section would not get properly marked PageReserved() and is indicated to =
+be
+"mmap" memory.
+
+Drop the trace of that function from include/linux/mm.h - nobody else
+needs it, and rename it accordingly.
+
+Note: The fake zone/node might not be covered by the zone/node span. This
+is not an urgent issue (for now, we had the same node/zone due to the
+zeroing). We'll need a clean way to mark memory holes (e.g., using a page
+type PageHole() if possible or a fake ZONE_INVALID) and eventually stop
+marking these memory holes PageReserved().
+
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Oscar Salvador <osalvador@suse.de>
 Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-fsdevel@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- fs/proc/page.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ include/linux/mm.h |  6 ------
+ mm/page_alloc.c    | 33 ++++++++++++++++++++++-----------
+ 2 files changed, 22 insertions(+), 17 deletions(-)
 
-diff --git a/fs/proc/page.c b/fs/proc/page.c
-index e40dbfe1168e..2984df28ccea 100644
---- a/fs/proc/page.c
-+++ b/fs/proc/page.c
-@@ -21,6 +21,21 @@
- #define KPMMASK (KPMSIZE - 1)
- #define KPMBITS (KPMSIZE * BITS_PER_BYTE)
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 5dfbc0e56e67..93ee776c2a1e 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2176,12 +2176,6 @@ extern int __meminit __early_pfn_to_nid(unsigned l=
+ong pfn,
+ 					struct mminit_pfnnid_cache *state);
+ #endif
 =20
-+static inline unsigned long get_max_dump_pfn(void)
-+{
-+#ifdef CONFIG_SPARSEMEM
-+	/*
-+	 * The memmap of early sections is completely populated and marked
-+	 * online even if max_pfn does not fall on a section boundary -
-+	 * pfn_to_online_page() will succeed on all pages. Allow inspecting
-+	 * these memmaps.
-+	 */
-+	return round_up(max_pfn, PAGES_PER_SECTION);
-+#else
-+	return max_pfn;
-+#endif
-+}
-+
- /* /proc/kpagecount - an array exposing page counts
+-#if !defined(CONFIG_FLAT_NODE_MEM_MAP)
+-void zero_resv_unavail(void);
+-#else
+-static inline void zero_resv_unavail(void) {}
+-#endif
+-
+ extern void set_dma_reserve(unsigned long new_dma_reserve);
+ extern void memmap_init_zone(unsigned long, int, unsigned long, unsigned=
+ long,
+ 		enum memmap_context, struct vmem_altmap *);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 1eb2ce7c79e4..85064abafcc3 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6901,10 +6901,10 @@ void __init free_area_init_node(int nid, unsigned=
+ long *zones_size,
+=20
+ #if !defined(CONFIG_FLAT_NODE_MEM_MAP)
+ /*
+- * Zero all valid struct pages in range [spfn, epfn), return number of s=
+truct
+- * pages zeroed
++ * Initialize all valid struct pages in the range [spfn, epfn) and mark =
+them
++ * PageReserved(). Return the number of struct pages that were initializ=
+ed.
+  */
+-static u64 zero_pfn_range(unsigned long spfn, unsigned long epfn)
++static u64 __init init_unavailable_range(unsigned long spfn, unsigned lo=
+ng epfn)
+ {
+ 	unsigned long pfn;
+ 	u64 pgcnt =3D 0;
+@@ -6915,7 +6915,13 @@ static u64 zero_pfn_range(unsigned long spfn, unsi=
+gned long epfn)
+ 				+ pageblock_nr_pages - 1;
+ 			continue;
+ 		}
+-		mm_zero_struct_page(pfn_to_page(pfn));
++		/*
++		 * Use a fake node/zone (0) for now. Some of these pages
++		 * (in memblock.reserved but not in memblock.memory) will
++		 * get re-initialized via reserve_bootmem_region() later.
++		 */
++		__init_single_page(pfn_to_page(pfn), pfn, 0, 0);
++		__SetPageReserved(pfn_to_page(pfn));
+ 		pgcnt++;
+ 	}
+=20
+@@ -6927,7 +6933,7 @@ static u64 zero_pfn_range(unsigned long spfn, unsig=
+ned long epfn)
+  * initialized by going through __init_single_page(). But, there are som=
+e
+  * struct pages which are reserved in memblock allocator and their field=
+s
+  * may be accessed (for example page_to_pfn() on some configuration acce=
+sses
+- * flags). We must explicitly zero those struct pages.
++ * flags). We must explicitly initialize those struct pages.
   *
-  * Each entry is a u64 representing the corresponding
-@@ -29,6 +44,7 @@
- static ssize_t kpagecount_read(struct file *file, char __user *buf,
- 			     size_t count, loff_t *ppos)
+  * This function also addresses a similar issue where struct pages are l=
+eft
+  * uninitialized because the physical address range is not covered by
+@@ -6935,7 +6941,7 @@ static u64 zero_pfn_range(unsigned long spfn, unsig=
+ned long epfn)
+  * layout is manually configured via memmap=3D, or when the highest phys=
+ical
+  * address (max_pfn) does not end on a section boundary.
+  */
+-void __init zero_resv_unavail(void)
++static void __init init_unavailable_mem(void)
  {
-+	const unsigned long max_dump_pfn =3D get_max_dump_pfn();
- 	u64 __user *out =3D (u64 __user *)buf;
- 	struct page *ppage;
- 	unsigned long src =3D *ppos;
-@@ -37,9 +53,11 @@ static ssize_t kpagecount_read(struct file *file, char=
- __user *buf,
- 	u64 pcount;
+ 	phys_addr_t start, end;
+ 	u64 i, pgcnt;
+@@ -6948,7 +6954,8 @@ void __init zero_resv_unavail(void)
+ 	for_each_mem_range(i, &memblock.memory, NULL,
+ 			NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL) {
+ 		if (next < start)
+-			pgcnt +=3D zero_pfn_range(PFN_DOWN(next), PFN_UP(start));
++			pgcnt +=3D init_unavailable_range(PFN_DOWN(next),
++							PFN_UP(start));
+ 		next =3D end;
+ 	}
 =20
- 	pfn =3D src / KPMSIZE;
--	count =3D min_t(size_t, count, (max_pfn * KPMSIZE) - src);
- 	if (src & KPMMASK || count & KPMMASK)
- 		return -EINVAL;
-+	if (src >=3D max_dump_pfn * KPMSIZE)
-+		return 0;
-+	count =3D min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
+@@ -6959,8 +6966,8 @@ void __init zero_resv_unavail(void)
+ 	 * considered initialized. Make sure that memmap has a well defined
+ 	 * state.
+ 	 */
+-	pgcnt +=3D zero_pfn_range(PFN_DOWN(next),
+-				round_up(max_pfn, PAGES_PER_SECTION));
++	pgcnt +=3D init_unavailable_range(PFN_DOWN(next),
++					round_up(max_pfn, PAGES_PER_SECTION));
 =20
- 	while (count > 0) {
- 		/*
-@@ -208,6 +226,7 @@ u64 stable_page_flags(struct page *page)
- static ssize_t kpageflags_read(struct file *file, char __user *buf,
- 			     size_t count, loff_t *ppos)
+ 	/*
+ 	 * Struct pages that do not have backing memory. This could be because
+@@ -6969,6 +6976,10 @@ void __init zero_resv_unavail(void)
+ 	if (pgcnt)
+ 		pr_info("Zeroed struct page in unavailable ranges: %lld pages", pgcnt)=
+;
+ }
++#else
++static inline void __init init_unavailable_mem(void)
++{
++}
+ #endif /* !CONFIG_FLAT_NODE_MEM_MAP */
+=20
+ #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+@@ -7398,7 +7409,7 @@ void __init free_area_init_nodes(unsigned long *max=
+_zone_pfn)
+ 	/* Initialise every node */
+ 	mminit_verify_pageflags_layout();
+ 	setup_nr_node_ids();
+-	zero_resv_unavail();
++	init_unavailable_mem();
+ 	for_each_online_node(nid) {
+ 		pg_data_t *pgdat =3D NODE_DATA(nid);
+ 		free_area_init_node(nid, NULL,
+@@ -7593,7 +7604,7 @@ void __init set_dma_reserve(unsigned long new_dma_r=
+eserve)
+=20
+ void __init free_area_init(unsigned long *zones_size)
  {
-+	const unsigned long max_dump_pfn =3D get_max_dump_pfn();
- 	u64 __user *out =3D (u64 __user *)buf;
- 	struct page *ppage;
- 	unsigned long src =3D *ppos;
-@@ -215,9 +234,11 @@ static ssize_t kpageflags_read(struct file *file, ch=
-ar __user *buf,
- 	ssize_t ret =3D 0;
-=20
- 	pfn =3D src / KPMSIZE;
--	count =3D min_t(unsigned long, count, (max_pfn * KPMSIZE) - src);
- 	if (src & KPMMASK || count & KPMMASK)
- 		return -EINVAL;
-+	if (src >=3D max_dump_pfn * KPMSIZE)
-+		return 0;
-+	count =3D min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
-=20
- 	while (count > 0) {
- 		/*
-@@ -253,6 +274,7 @@ static const struct file_operations proc_kpageflags_o=
-perations =3D {
- static ssize_t kpagecgroup_read(struct file *file, char __user *buf,
- 				size_t count, loff_t *ppos)
- {
-+	const unsigned long max_dump_pfn =3D get_max_dump_pfn();
- 	u64 __user *out =3D (u64 __user *)buf;
- 	struct page *ppage;
- 	unsigned long src =3D *ppos;
-@@ -261,9 +283,11 @@ static ssize_t kpagecgroup_read(struct file *file, c=
-har __user *buf,
- 	u64 ino;
-=20
- 	pfn =3D src / KPMSIZE;
--	count =3D min_t(unsigned long, count, (max_pfn * KPMSIZE) - src);
- 	if (src & KPMMASK || count & KPMMASK)
- 		return -EINVAL;
-+	if (src >=3D max_dump_pfn * KPMSIZE)
-+		return 0;
-+	count =3D min_t(unsigned long, count, (max_dump_pfn * KPMSIZE) - src);
-=20
- 	while (count > 0) {
- 		/*
+-	zero_resv_unavail();
++	init_unavailable_mem();
+ 	free_area_init_node(0, zones_size,
+ 			__pa(PAGE_OFFSET) >> PAGE_SHIFT, NULL);
+ }
 --=20
 2.23.0
 
