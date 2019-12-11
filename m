@@ -5,59 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4984AC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10CCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1686022B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF4124671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077395;
-	bh=zwqM+wS2Wryn1l8lu7xVA8FqBKoSghxz/FEIeQeJyFE=;
+	s=default; t=1576077398;
+	bh=PgmHLsBySMD/WAnnTimLDpSm6vxvYajJ38PYZvgkUhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=krADDKbnuoUuUeX232ugDUEFIF+BX89P/G3SVlEPyPGb09TQ9FH3Li8DoE3WbwOej
-	 E4+g+AUA7mVv6UeWDmIOsN4I8Mi6JHRIyoEz5/3SCexo4qRX31YaXGhuy2r6QPEsYh
-	 VPzmAuijs3LqkxG9E/HwQf3Ine3kwe1HWjWRpTmY=
+	b=Q2Wk53aGimGKs1gRJBTOBXocucfUXJIPafj+ZVeZghvD5M7Y5Nz0I20Pek5pv+GtP
+	 xT4yAa5PBHWP6B9QxfbZ+gQE7aksa+v6PbokyfUhm5LAmiEVykQw+pqfh9pKa5ZOQu
+	 +/pgS6S0zN9/qa1ph3/4eQAm1EAzvIhhf0Zy7Tnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731912AbfLKPQe (ORCPT
+        id S1731703AbfLKPQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731892AbfLKPQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:29 -0500
+        id S1729948AbfLKPQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5171208C3;
-        Wed, 11 Dec 2019 15:16:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FBBD22B48;
+        Wed, 11 Dec 2019 15:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077389;
-        bh=zwqM+wS2Wryn1l8lu7xVA8FqBKoSghxz/FEIeQeJyFE=;
+        s=default; t=1576077391;
+        bh=PgmHLsBySMD/WAnnTimLDpSm6vxvYajJ38PYZvgkUhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G5DGcmlEPi0eUXklVsHDeJ9CscfBxi33HHzngaoevYb6g2TzbarvKzw7cLgv0X+Ve
-         L0lDuWlwZ6zihGt689p5gbt6oF5bE5AkDmGT/iKEXR0mZNTWC/N1aL5Z3juYVOZU1W
-         c3xbCch+jG9N7FhrgDGl3A126Bj0oBvnC+wyv+co=
+        b=UMaPxVIBIWxeTZqJGgvYS16fZ4JxCp4KvkZO31vDQQjO4tcvSFuOFocyK3i3qHQ3o
+         BrjAv7tHphpEgpzbyggI+PCMjmNH5fdXcrd1DE5iQeL1jH0MZD/J7KHJKXXkh+sq77
+         9HnFAm2fRwMgHIRJlhFx+JawgACxy/bW1IGdJzrE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 020/243] perf/core: Consistently fail fork on allocation failures
-Date:   Wed, 11 Dec 2019 16:03:02 +0100
-Message-Id: <20191211150340.342470865@linuxfoundation.org>
+        stable@vger.kernel.org, paulhsia <paulhsia@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 021/243] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
+Date:   Wed, 11 Dec 2019 16:03:03 +0100
+Message-Id: <20191211150340.396129292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -70,53 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: paulhsia <paulhsia@chromium.org>
 
-[ Upstream commit 697d877849d4b34ab58d7078d6930bad0ef6fc66 ]
+[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
 
-Commit:
+If the nullity check for `substream->runtime` is outside of the lock
+region, it is possible to have a null runtime in the critical section
+if snd_pcm_detach_substream is called right before the lock.
 
-  313ccb9615948 ("perf: Allocate context task_ctx_data for child event")
-
-makes the inherit path skip over the current event in case of task_ctx_data
-allocation failure. This, however, is inconsistent with allocation failures
-in perf_event_alloc(), which would abort the fork.
-
-Correct this by returning an error code on task_ctx_data allocation
-failure and failing the fork in that case.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/20191105075702.60319-1-alexander.shishkin@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: paulhsia <paulhsia@chromium.org>
+Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/pcm_lib.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 625ba462e5bbd..460d5fd3ec4e4 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11377,7 +11377,7 @@ inherit_event(struct perf_event *parent_event,
- 						   GFP_KERNEL);
- 		if (!child_ctx->task_ctx_data) {
- 			free_event(child_event);
--			return NULL;
-+			return ERR_PTR(-ENOMEM);
- 		}
- 	}
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 4e6110d778bd2..ad52126d3d22e 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1797,11 +1797,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ 	struct snd_pcm_runtime *runtime;
+ 	unsigned long flags;
  
+-	if (PCM_RUNTIME_CHECK(substream))
++	if (snd_BUG_ON(!substream))
+ 		return;
+-	runtime = substream->runtime;
+ 
+ 	snd_pcm_stream_lock_irqsave(substream, flags);
++	if (PCM_RUNTIME_CHECK(substream))
++		goto _unlock;
++	runtime = substream->runtime;
++
+ 	if (!snd_pcm_running(substream) ||
+ 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
+ 		goto _end;
+@@ -1812,6 +1815,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
+ #endif
+  _end:
+ 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
++ _unlock:
+ 	snd_pcm_stream_unlock_irqrestore(substream, flags);
+ }
+ EXPORT_SYMBOL(snd_pcm_period_elapsed);
 -- 
 2.20.1
 
