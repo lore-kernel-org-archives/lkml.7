@@ -2,53 +2,56 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A1BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E1AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D05222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13A94208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077101;
-	bh=S1YkN6O6yv6W4P5KTj8GXvZtQ4bxmpqDV3ZgFsMXh38=;
+	s=default; t=1576077105;
+	bh=9hkSsYRPRAWqxI8SaMw18ck/Ae/RkQLUV7K73205vVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uhCHarh8AvWdd9Bvvr5A/5R0241QgsXW9if7Jyhat7Psb8mTHUMZ0TvvKH+GooazB
-	 zhI6cvVBgEuDqsNlC73fCKt7MwP6knLzpmUgKXjCUxly6MhG6xjbl1XjEZ3myjG3r4
-	 CChG/yDofkE69I/dKbEgSmzULAmpYVCpv5n3n8cY=
+	b=zRwfwjyTeNhKfHjf/ID1O1/VmvQKs2Ur/QxiQNvJAeUQQmQ4SZxAfmUGDfHfFHDA7
+	 9avLF5TMgqovTqmRht8aJnBSGbEH1w8G8oZRvvz1jjSXQdSXS72Fbpy4CbEzU1aqbR
+	 RRXpDSfW1wAoI5ZmkQHLtTWgKNe4Q/iEA2M+Z0QU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbfLKPLk (ORCPT
+        id S1730972AbfLKPLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLKPLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:35 -0500
+        id S1730947AbfLKPLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 745DF222C4;
-        Wed, 11 Dec 2019 15:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895AE2173E;
+        Wed, 11 Dec 2019 15:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077094;
-        bh=S1YkN6O6yv6W4P5KTj8GXvZtQ4bxmpqDV3ZgFsMXh38=;
+        s=default; t=1576077098;
+        bh=9hkSsYRPRAWqxI8SaMw18ck/Ae/RkQLUV7K73205vVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L8a2aq80O3F1muP6A0t+Ki392YqLk2r245fyUz+aUJP1bePRFGJnhk820rre3Sd6J
-         dnjFyVUKYOXzPR++JyKvIRC3RPzzwhyTsiLwsP4jG1EaT+t8fwkCHRyP7aMpJg8ka8
-         yVbAEf+fp5Y4iF/mAckso5O3aE13IMPa7RXEPXiA=
+        b=KC1lg7Oz6x/g4zir1NTTFNWK60y5tmAkgthX42T01+adwhrm6V+YVOvr4xnhU3nDp
+         UBVvA19LL1NZMrR6dlBTUNIqasviSzestuFwzSLl/ybgtZImn+Z323RMzuH0HDFqXy
+         Z7sjCi9bMzV2A4Aip1pc3sB2KbbhFkY9EGT6+BPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.3 007/105] usb: gadget: u_serial: add missing port entry locking
-Date:   Wed, 11 Dec 2019 16:04:56 +0100
-Message-Id: <20191211150223.060339802@linuxfoundation.org>
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 016/105] MIPS: SGI-IP27: fix exception handler replication
+Date:   Wed, 11 Dec 2019 16:05:05 +0100
+Message-Id: <20191211150224.498621488@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -61,36 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-commit daf82bd24e308c5a83758047aff1bd81edda4f11 upstream.
+[ Upstream commit 637346748245e94c877aa746e6fe0d7079b7736a ]
 
-gserial_alloc_line() misses locking (for a release barrier) while
-resetting port entry on TTY allocation failure. Fix this.
+Commit 775b089aeffa ("MIPS: tlbex: Remove cpu_has_local_ebase") removed
+generating tlb refill handlers for every CPU, which was needed for
+generating per node exception handlers on IP27. Instead of resurrecting
+(and fixing) refill handler generation, we simply copy all exception
+vectors from the boot node to the other nodes. Also remove the config
+option since the memory tradeoff for expection handler replication
+is just 8k per node.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Tested-by: Ladislav Michl <ladis@linux-mips.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_serial.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/mips/sgi-ip27/Kconfig       |  7 -------
+ arch/mips/sgi-ip27/ip27-init.c   | 21 ++++++---------------
+ arch/mips/sgi-ip27/ip27-memory.c |  4 ----
+ 3 files changed, 6 insertions(+), 26 deletions(-)
 
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -1239,8 +1239,10 @@ int gserial_alloc_line(unsigned char *li
- 				__func__, port_num, PTR_ERR(tty_dev));
+diff --git a/arch/mips/sgi-ip27/Kconfig b/arch/mips/sgi-ip27/Kconfig
+index ef3847e7aee02..e5b6cadbec857 100644
+--- a/arch/mips/sgi-ip27/Kconfig
++++ b/arch/mips/sgi-ip27/Kconfig
+@@ -38,10 +38,3 @@ config REPLICATE_KTEXT
+ 	  Say Y here to enable replicating the kernel text across multiple
+ 	  nodes in a NUMA cluster.  This trades memory for speed.
  
- 		ret = PTR_ERR(tty_dev);
-+		mutex_lock(&ports[port_num].lock);
- 		port = ports[port_num].port;
- 		ports[port_num].port = NULL;
-+		mutex_unlock(&ports[port_num].lock);
- 		gserial_free_port(port);
- 		goto err;
+-config REPLICATE_EXHANDLERS
+-	bool "Exception handler replication support"
+-	depends on SGI_IP27
+-	help
+-	  Say Y here to enable replicating the kernel exception handlers
+-	  across multiple nodes in a NUMA cluster. This trades memory for
+-	  speed.
+diff --git a/arch/mips/sgi-ip27/ip27-init.c b/arch/mips/sgi-ip27/ip27-init.c
+index 066b33f50bcc4..db58ebf02870f 100644
+--- a/arch/mips/sgi-ip27/ip27-init.c
++++ b/arch/mips/sgi-ip27/ip27-init.c
+@@ -69,23 +69,14 @@ static void per_hub_init(cnodeid_t cnode)
+ 
+ 	hub_rtc_init(cnode);
+ 
+-#ifdef CONFIG_REPLICATE_EXHANDLERS
+-	/*
+-	 * If this is not a headless node initialization,
+-	 * copy over the caliased exception handlers.
+-	 */
+-	if (get_compact_nodeid() == cnode) {
+-		extern char except_vec2_generic, except_vec3_generic;
+-		extern void build_tlb_refill_handler(void);
+-
+-		memcpy((void *)(CKSEG0 + 0x100), &except_vec2_generic, 0x80);
+-		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x80);
+-		build_tlb_refill_handler();
+-		memcpy((void *)(CKSEG0 + 0x100), (void *) CKSEG0, 0x80);
+-		memcpy((void *)(CKSEG0 + 0x180), &except_vec3_generic, 0x100);
++	if (nasid) {
++		/* copy exception handlers from first node to current node */
++		memcpy((void *)NODE_OFFSET_TO_K0(nasid, 0),
++		       (void *)CKSEG0, 0x200);
+ 		__flush_cache_all();
++		/* switch to node local exception handlers */
++		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
  	}
+-#endif
+ }
+ 
+ void per_cpu_init(void)
+diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
+index fb077a9475756..8624a885d95bf 100644
+--- a/arch/mips/sgi-ip27/ip27-memory.c
++++ b/arch/mips/sgi-ip27/ip27-memory.c
+@@ -332,11 +332,7 @@ static void __init mlreset(void)
+ 		 * thinks it is a node 0 address.
+ 		 */
+ 		REMOTE_HUB_S(nasid, PI_REGION_PRESENT, (region_mask | 1));
+-#ifdef CONFIG_REPLICATE_EXHANDLERS
+-		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_8K);
+-#else
+ 		REMOTE_HUB_S(nasid, PI_CALIAS_SIZE, PI_CALIAS_SIZE_0);
+-#endif
+ 
+ #ifdef LATER
+ 		/*
+-- 
+2.20.1
+
 
 
