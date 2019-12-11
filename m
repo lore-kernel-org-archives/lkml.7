@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A058BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED3EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697F924658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958112465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:15:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077340;
-	bh=mgQz3hISDSTI/qa7VNP2JguPcWL435cEwUX2fjxYZQg=;
+	s=default; t=1576077346;
+	bh=bEPZPVL0vaFMoN9AWWf5BU7pfcm6B55ATdt3z0aCsvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KyU8N72NX9fChwBjQ3zDEZeHDqb0HTCDqCfOxRH4vkRi823Q9/YjkgSxXr1kq+P44
-	 9bkG2Jqx/Sg1o9U/wJUBrgKOhFu6mJ93aJQkE/DR0d+ImO70Sfzgux3CqNItY1f7IY
-	 GiV3kcghFEatPtI9Lpi36K84GM/S11J3wjN4tzHc=
+	b=OcAzjUhv4VcGbpoEJFxHFkeWzpfqAU+wHeUqpCJ7U9nWtPvK1ihVovHba6acrUu9j
+	 Qwd8AQ/N3FdQMZSmq7/rWuLkLr80Xist+SEcstjpJWLZ7vKSA6BOBSaNdoO9efZvhy
+	 FdKi7AcZ8qIuTUYBAQjd2rp39AmV6Tc06XtSqrEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731543AbfLKPPj (ORCPT
+        id S1731591AbfLKPPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731679AbfLKPOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:55 -0500
+        id S1729955AbfLKPPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3C020663;
-        Wed, 11 Dec 2019 15:14:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8DAB24654;
+        Wed, 11 Dec 2019 15:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077294;
-        bh=mgQz3hISDSTI/qa7VNP2JguPcWL435cEwUX2fjxYZQg=;
+        s=default; t=1576077300;
+        bh=bEPZPVL0vaFMoN9AWWf5BU7pfcm6B55ATdt3z0aCsvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0tmGmku0sluBS7p1sBjN+jZp/UNwNLRt8iIvipNncAloxJzF6eTSnwBbLIrUIe2JS
-         2c/5XCklKKsfplW6wJrtsRqMq7eN0SF9FCkVyXZMwn4nkcPI6wSs4EI8Tdo4Jq468s
-         quWpSNVXQNn5j+rX3vZqMHNlE3pVKrWeubFIp+YY=
+        b=KQApkc+Sb+2lnhOSH4dwYhmmmW4qG8nXgIsZfH+1pmxVrtQuUIaXjtB+1KcJ62Y12
+         Nw1JpemlS0qObvBxUa4y5gbrNc0hHBeFLjYibZm5kVZXmgoB3dYzzG/4Q3n2h/bcvD
+         82ZkPFxsvNuPNpGJA7a0filYaPddI/KzMWwIMvgM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 053/105] ALSA: hda - Add mute led support for HP ProBook 645 G4
-Date:   Wed, 11 Dec 2019 16:05:42 +0100
-Message-Id: <20191211150242.599302815@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.3 085/105] crypto: crypto4xx - fix double-free in crypto4xx_destroy_sdr
+Date:   Wed, 11 Dec 2019 16:06:14 +0100
+Message-Id: <20191211150258.847739471@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -60,32 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Christian Lamparter <chunkeey@gmail.com>
 
-commit e190de6941db14813032af87873f5550ad5764fe upstream.
+commit 746c908c4d72e49068ab216c3926d2720d71a90d upstream.
 
-Mic mute led does not work on HP ProBook 645 G4.
-We can use CXT_FIXUP_MUTE_LED_GPIO fixup to support it.
+This patch fixes a crash that can happen during probe
+when the available dma memory is not enough (this can
+happen if the crypto4xx is built as a module).
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+The descriptor window mapping would end up being free'd
+twice, once in crypto4xx_build_pdr() and the second time
+in crypto4xx_destroy_sdr().
+
+Fixes: 5d59ad6eea82 ("crypto: crypto4xx - fix crypto4xx_build_pdr, crypto4xx_build_sdr leak")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191120082035.18937-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_conexant.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/amcc/crypto4xx_core.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -910,6 +910,7 @@ static const struct snd_pci_quirk cxt506
- 	SND_PCI_QUIRK(0x103c, 0x837f, "HP ProBook 470 G5", CXT_FIXUP_MUTE_LED_GPIO),
- 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
-+	SND_PCI_QUIRK(0x103c, 0x8402, "HP ProBook 645 G4", CXT_FIXUP_MUTE_LED_GPIO),
- 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x8456, "HP Z2 G4 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x103c, 0x8457, "HP Z2 G4 mini", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -365,12 +365,8 @@ static u32 crypto4xx_build_sdr(struct cr
+ 		dma_alloc_coherent(dev->core_dev->device,
+ 			PPC4XX_SD_BUFFER_SIZE * PPC4XX_NUM_SD,
+ 			&dev->scatter_buffer_pa, GFP_ATOMIC);
+-	if (!dev->scatter_buffer_va) {
+-		dma_free_coherent(dev->core_dev->device,
+-				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
+-				  dev->sdr, dev->sdr_pa);
++	if (!dev->scatter_buffer_va)
+ 		return -ENOMEM;
+-	}
+ 
+ 	for (i = 0; i < PPC4XX_NUM_SD; i++) {
+ 		dev->sdr[i].ptr = dev->scatter_buffer_pa +
 
 
