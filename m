@@ -2,53 +2,57 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1B5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BCEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E842022B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF5324658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078180;
-	bh=mfmoXPuMt+SWZYJCXaqac2QCsXVW2eA1HBiLmL+s3J4=;
+	s=default; t=1576078184;
+	bh=m6UjtObjWHHqzN+zVBv13rmE/XLn9eBaZMoC/IwllrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TR2De0Ln8rMbaj0NuIu7OwNIlObS0oDIVEGc0tbnfmzg+Nl/WSlrkSAk5FO5Atk6x
-	 kGP4W+rcHNFAtNMsVlVou8DPGIlh5GVEcEGi+aiMKwug34Jzq0FlIIT0Mh5bkmWtwh
-	 n6fc9aFJk5knEdsIbux6/LY/K1FzNaa+c964Fg00=
+	b=zygcrGxptc1wQrpegTHI+vrtnLbFzNGFPpNZiK3p0Ey3Lit8cqtzZNX2ZnEzVg70e
+	 0ItD3FngY/RE50hJ21BxJE1rgl9rw8DBP5WW2aLD3iLDtmiNb7J5FxeDquaQjhBmEf
+	 ESapq/cO5hjxGGpez9UlIIUKtaqOh5F0zn5gdp7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387937AbfLKP3i (ORCPT
+        id S2387951AbfLKP3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36382 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:29:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387882AbfLKP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:29 -0500
+        id S2387918AbfLKP3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3707424671;
-        Wed, 11 Dec 2019 15:29:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA9DC22B48;
+        Wed, 11 Dec 2019 15:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078167;
-        bh=mfmoXPuMt+SWZYJCXaqac2QCsXVW2eA1HBiLmL+s3J4=;
+        s=default; t=1576078174;
+        bh=m6UjtObjWHHqzN+zVBv13rmE/XLn9eBaZMoC/IwllrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/2uQZmNjMY5AsVNfiHPfZBjkNgEjujWC/TW4nbS3C6sRDrFoqBUIpBjody1MpDF4
-         Bf+ddTrhgFkYCmO+OwregwpWcERzVsaReZssV7tJFdkswDWuD4R63LdINC3B9zhFz0
-         OIGs/fpZGNdvT6448UR0nPZr1IfRtn9t8zwMfbuQ=
+        b=01QcaYtb7gqJUJBZxZpST/F2BuevfbQWGodrEpn5yZ2whFjYnoPH0PROH/PihsG9r
+         UO+lhTzVBYzol2xbWnlO9xkdOToYhs3LWwG2J4cgKmC+TfCYBc5ZYYBMK1QeStToux
+         aYh40agwNoq7sMEpdM1avuGj9EGlHfZB7iAINauA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 52/58] perf regs: Make perf_reg_name() return "unknown" instead of NULL
-Date:   Wed, 11 Dec 2019 10:28:25 -0500
-Message-Id: <20191211152831.23507-52-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 57/58] kernel: sysctl: make drop_caches write-only
+Date:   Wed, 11 Dec 2019 10:28:30 -0500
+Message-Id: <20191211152831.23507-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -61,84 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-To avoid breaking the build on arches where this is not wired up, at
-least all the other features should be made available and when using
-this specific routine, the "unknown" should point the user/developer to
-the need to wire this up on this particular hardware architecture.
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-Detected in a container mipsel debian cross build environment, where it
-shows up as:
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2:
-  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Also on mips64:
-
-  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_user__printf' at util/session.c:1139:3,
-      inlined from 'dump_sample' at util/session.c:1246:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_intr__printf' at util/session.c:1147:3,
-      inlined from 'dump_sample' at util/session.c:1249:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/perf_regs.h | 2 +-
+ kernel/sysctl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index c9319f8d17a6a..f732e3af2bd47 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -34,7 +34,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
- 
- static inline const char *perf_reg_name(int id __maybe_unused)
- {
--	return NULL;
-+	return "unknown";
- }
- 
- static inline int perf_reg_value(u64 *valp __maybe_unused,
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index cfc2c0d1369ab..74fc3a9d19235 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1397,7 +1397,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= &one,
+ 		.extra2		= &four,
 -- 
 2.20.1
 
