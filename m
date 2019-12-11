@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97D5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A792C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACD0208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10C5F22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077638;
-	bh=1xSY9jCPlfXG4Gzkm4kdzMo4hdl0dW8Kuh9oik0A7+I=;
+	s=default; t=1576077642;
+	bh=G5OC/VI4Alby3PvzflFKsf7W2Ngi9FARGAmkruBD+BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZMCsfk+JM2ZuXqnSfwalKgKqLKv+K8lzP9DIIxcGlGb/oiU0Ux+PWKGlsUPcbka6
-	 Zx3dxTOnBe049RO/m9NlwfpaZNn2Q59i+KmWfYOHcgsHdIvR7ghrfiwuBpD+V1KPB1
-	 dc2V8A7KB5xicAFFZDwnXH2Pk0MdMdTLlIJULb0w=
+	b=cAFF32SS8bU7sE31rryJpHGmka8B/kQe/eSvUgzS1978mApfB1yNBkAPy85E/Fmbv
+	 VKj3/D6syIO+KnfYVULzUWgLdm7Gh14SVHZRlcLaGqVQh0wet4BS5xZujYd+FBG4Xq
+	 lgD9Qr7BdK8Tehr8BTO2U1bwCN5R/gfXBykaYKs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732214AbfLKPUh (ORCPT
+        id S1732364AbfLKPUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:20:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:20:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732348AbfLKPUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:20:34 -0500
+        id S1732355AbfLKPUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA8A22527;
-        Wed, 11 Dec 2019 15:20:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6B72073D;
+        Wed, 11 Dec 2019 15:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077634;
-        bh=1xSY9jCPlfXG4Gzkm4kdzMo4hdl0dW8Kuh9oik0A7+I=;
+        s=default; t=1576077637;
+        bh=G5OC/VI4Alby3PvzflFKsf7W2Ngi9FARGAmkruBD+BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5fcwWboaxKmYSc6NtrAQIYmB1dsFnOaDujt/Jjkk74kjsJcu9UuTfVtgW0WGCOy3
-         SDAGS888LXtFnWcM6xsp5OJ0tYJj3d9czVx6RAUNNPzFcrgjBJEp8J3aFAJg+8cfEG
-         Au+1LgcdBJ+PBuZ15yfhNDaQukbfP1NRXFj5UAAM=
+        b=Pb3u8GK/qcb9rTi49O660UvsAgc3liZRnPA7jXy7PHtfvDNTUoD8sw20OrTg8xTB5
+         T0ss2s2HQX9AaBW1uHMEWUgNZRu4tNcLMWSUIBsbdTn/F3n91KUGo5xwY71WZNc2wU
+         sSWXBMUeUK7PpoFvtqgRIZbleDiu2sFLWUABHAw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruce Allan <bruce.w.allan@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/243] ice: Fix possible NULL pointer de-reference
-Date:   Wed, 11 Dec 2019 16:03:56 +0100
-Message-Id: <20191211150344.096155673@linuxfoundation.org>
+Subject: [PATCH 4.19 075/243] iomap: FUA is wrong for DIO O_DSYNC writes into unwritten extents
+Date:   Wed, 11 Dec 2019 16:03:57 +0100
+Message-Id: <20191211150344.165936043@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,36 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruce Allan <bruce.w.allan@intel.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit f25dad19ba70f7cc135da78ec013325042cd8c52 ]
+[ Upstream commit 0929d8580071c6a1cec1a7916a8f674c243ceee1 ]
 
-A recent update to smatch is causing it to report the error "we previously
-assumed 'm_entry->vsi_list_info' could be null". Fix that.
+When we write into an unwritten extent via direct IO, we dirty
+metadata on IO completion to convert the unwritten extent to
+written. However, when we do the FUA optimisation checks, the inode
+may be clean and so we issue a FUA write into the unwritten extent.
+This means we then bypass the generic_write_sync() call after
+unwritten extent conversion has ben done and we don't force the
+modified metadata to stable storage.
 
-Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This violates O_DSYNC semantics. The window of exposure is a single
+IO, as the next DIO write will see the inode has dirty metadata and
+hence will not use the FUA optimisation. Calling
+generic_write_sync() after completion of the second IO will also
+sync the first write and it's metadata.
+
+Fix this by avoiding the FUA optimisation when writing to unwritten
+extents.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_switch.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/iomap.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
-index 4012adbab0112..1bfc59dff51f7 100644
---- a/drivers/net/ethernet/intel/ice/ice_switch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_switch.c
-@@ -1023,6 +1023,9 @@ ice_handle_vsi_list_mgmt(struct ice_hw *hw,
- 		u16 vsi_id = new_fltr->fwd_id.vsi_id;
- 		enum ice_adminq_opc opcode;
+diff --git a/fs/iomap.c b/fs/iomap.c
+index fac45206418a2..914c07c9e0d6f 100644
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -1619,12 +1619,13 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
  
-+		if (!m_entry->vsi_list_info)
-+			return ICE_ERR_CFG;
-+
- 		/* A rule already exists with the new VSI being added */
- 		if (test_bit(vsi_id, m_entry->vsi_list_info->vsi_map))
- 			return 0;
+ 	if (iomap->flags & IOMAP_F_NEW) {
+ 		need_zeroout = true;
+-	} else {
++	} else if (iomap->type == IOMAP_MAPPED) {
+ 		/*
+-		 * Use a FUA write if we need datasync semantics, this
+-		 * is a pure data IO that doesn't require any metadata
+-		 * updates and the underlying device supports FUA. This
+-		 * allows us to avoid cache flushes on IO completion.
++		 * Use a FUA write if we need datasync semantics, this is a pure
++		 * data IO that doesn't require any metadata updates (including
++		 * after IO completion such as unwritten extent conversion) and
++		 * the underlying device supports FUA. This allows us to avoid
++		 * cache flushes on IO completion.
+ 		 */
+ 		if (!(iomap->flags & (IOMAP_F_SHARED|IOMAP_F_DIRTY)) &&
+ 		    (dio->flags & IOMAP_DIO_WRITE_FUA) &&
 -- 
 2.20.1
 
