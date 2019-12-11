@@ -2,388 +2,260 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A30FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB32C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 445ED222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:23:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576106629;
-	bh=7v2iBzVMgVQtbcTWCQgCDcnk8F7OuhUCybkSbrXWIT8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QnGVh/M8hsAgmdMlgR4xPRpDqrBeSg1cLpTXQHMFc3bTI/dPJyJvb3QV/2YFNMSAa
-	 XhyMSvanyKTCcnRDZPIeiuKfs4h+UgjDzLcGZ4MzlRnSPSDS1dmF0NlXasoU1nCawG
-	 6+1FgmY+v/p9GHu7W4H2Rnv0nFeWvrZ7ywzD0z54=
+	by mail.kernel.org (Postfix) with ESMTP id 4EBEE21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:25:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="s+gLBbMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbfLKXXs (ORCPT
+        id S1727076AbfLKXZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:23:48 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39089 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfLKXXs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:23:48 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a67so323812oib.6;
-        Wed, 11 Dec 2019 15:23:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Iya/yHlTMSrcXfTq+BjAO6UDDaWYcqAV3TDa5ziamNg=;
-        b=Z/msPW5vkB2FjihFdxvN2P2J1L9Hd+QeqcQ7eIfImCFQj8LWpP9YrM2rC/UHnyOgyf
-         tBejFggYnrjz1LYqQ4p2i8hIoeS/6+t0RPhJLNjwuzxdav7rfBxWCGN8rTHYX15tGe4Y
-         2UOuQJw7uw8NUYsHRdgTeG+FGkYSI3UD5j5z6dEz+7Ih12GtyH2lDypQDhnqFIg8GaLb
-         L/Q4oTIH3/ZAuD3dknSjqFahnZnRkduBWa4L9rg5EnjGq4r17DsL8krnhTyYaaBiDUeJ
-         qPldUHLkuDZuh6Ol6mlC9JSl1v22nIUN1OetRnlbg2Klo89DnAFSbS0ewSJi6E8Z/IXU
-         8BFQ==
-X-Gm-Message-State: APjAAAX7Zeg2Coc/lezo9cUcqlgo/8TZAt/oF78LWUdY5J8ZkXAJEwfN
-        OFVpUnOiyyKCZj2QyBbuHTEBoco=
-X-Google-Smtp-Source: APXvYqzADawi4Gb9Sc437zGVtg1VAXFv53DVCnI79dEXPkQyHhU2NtPjukwydNaaC86dORJ9fhsfCg==
-X-Received: by 2002:aca:36c5:: with SMTP id d188mr4693821oia.54.1576106626502;
-        Wed, 11 Dec 2019 15:23:46 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id s83sm1356533oif.33.2019.12.11.15.23.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 15:23:46 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Subject: [PATCH] of: Rework and simplify phandle cache to use a fixed size
-Date:   Wed, 11 Dec 2019 17:23:45 -0600
-Message-Id: <20191211232345.24810-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 11 Dec 2019 18:25:16 -0500
+Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:62212
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfLKXZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:25:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BMSCvQRLk/feNPeD1aLZAkGoBFumBGUgkR9YbYTolqAUTCDiEEfrs2qiNz6JoOaXMZ/c9XBVDkqSjT8jLnEUEQELqmIppOTPaSHSc+tP/EA3I2OcHHgp1jsiOJ3ooP+Xg3H7CS6aJ8qhblbmC1xu04y1SyRUPxBuZrAc/qwlqyicoiuGPaIKQrse9QsuXz0uiBruwm2H1++5P7OQbCYxS0xaT4CA98RHRCquWTfJLaOmymYmZWrFB0qXmZR6kNJUeAbQkJv/Jd5UFgm7y3Pa+DKWyxeyP8AHywfsmB/mnwKn83/jw9RLOIHRti5jwe+Z0KsKkZ0pn565LHw4vSTUqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UrPWbRnhcCW+HATEapINcyaPYKBAzAx6rl9bsrSMh1o=;
+ b=aww7IltZPxQNIUltIH+rapiWzUIsxjeY2x9a8yMmc8SqCZ5yhWTx4WjTHpFccFX/wh6goPx433q2jIzC9g3vHby2SiaSCm6HdI/lrqVdX0yRsGpCcixR7+Xc4Sogga4PaJFk+c8EDSwN9ukwEfTltxBmQD+ylVsl6K08FOMzcgx13MS/0R6aSPKycCDlVbav6E1aLK655oQo/4Y6HGa9L/aGd5AmnG4XaaqEYZdczvGX3GTnq33jzLOg6VdnLTep/ahQp+tQdrAclqRDfYAVXutMNGEIMN7pJRlrNMMEvkxCPxGBdY+a+NZio67DBolJ+VEaXuqiX3B1G12hnfGBlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UrPWbRnhcCW+HATEapINcyaPYKBAzAx6rl9bsrSMh1o=;
+ b=s+gLBbMF10hqEZIVan1X9x2aCb5gshKrd5EmtkVj9OZ0QoVDPI2s81e794EAZBbWiFgjuREf4N6t4xZ0V53BPP9DX1F/lRTY27FKdqyRDQXDc8sL+/TjvUBHSRpc/CA2OGquuAfQdqg24b2Ouyjsiq0mxmFG9J7Pmx46PS9StD8=
+Received: from AM6PR05MB5142.eurprd05.prod.outlook.com (20.177.197.210) by
+ AM6PR05MB4261.eurprd05.prod.outlook.com (52.135.165.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15; Wed, 11 Dec 2019 23:25:09 +0000
+Received: from AM6PR05MB5142.eurprd05.prod.outlook.com
+ ([fe80::e8d3:c539:7550:2fdd]) by AM6PR05MB5142.eurprd05.prod.outlook.com
+ ([fe80::e8d3:c539:7550:2fdd%6]) with mapi id 15.20.2538.016; Wed, 11 Dec 2019
+ 23:25:09 +0000
+From:   Yuval Avnery <yuvalav@mellanox.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     Jiri Pirko <jiri@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Thread-Topic: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Thread-Index: AQHVr871nDBB5hrvy0ak2C7+9Ay1lae1Oa8AgAAB1gCAABOZgIAACO8QgAArtYCAAAxfkA==
+Date:   Wed, 11 Dec 2019 23:25:09 +0000
+Message-ID: <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
+        <20191211095854.6cd860f1@cakuba.netronome.com>
+        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211111537.416bf078@cakuba.netronome.com>
+        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191211142401.742189cf@cakuba.netronome.com>
+In-Reply-To: <20191211142401.742189cf@cakuba.netronome.com>
+Accept-Language: he-IL, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yuvalav@mellanox.com; 
+x-originating-ip: [70.66.202.183]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d54cea21-21f9-43b8-b83d-08d77e915d10
+x-ms-traffictypediagnostic: AM6PR05MB4261:|AM6PR05MB4261:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR05MB4261E91AFBD6CD0AF7B08E8BC55A0@AM6PR05MB4261.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 024847EE92
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(189003)(199004)(13464003)(51914003)(9686003)(2906002)(478600001)(7696005)(8936002)(186003)(26005)(8676002)(55016002)(81156014)(81166006)(86362001)(4326008)(5660300002)(316002)(76116006)(71200400001)(52536014)(33656002)(64756008)(66446008)(6506007)(54906003)(66476007)(66556008)(66946007)(53546011)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB4261;H:AM6PR05MB5142.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oYSePND5cITKFLmHYbHO7orevOi+F2l2ZTIOxSVO7RKKV7wReJw4FTzg2u7X4bKTnmlGrirUyCa7dGO4Zo76TWXkrvXkY2z+sPqeZmw4ZJDwKsd+wQTk6Oy5FXgLy13AbMkrVhlW/NG32Z91s2xLZAgbrBhKMdSCxkL8ihwLqOCMq8mjRxjMwcO3eGwX1jptAd65z1J1eOjrQ4UjJP8X3U+xuz9LyRBVk2Y8B7LpzNchAU5stE8w3PoGiSY3ZOCOcl4FBOJt5iXDqx7WsgWSao5RMgB+tkjIFzwWlVETpcAUfpcnrVfxbhE4U+RKmSmqxIApkGwtuDkPFsY1k5X4nZN6fNGP0U50bsWY4qjYRJJc3n+XhxsjNxboKv6czdI2m/7LfW7anNL6XN0x/pDfrQfWdI02RbWQu8nhGBEC3t0eD3hzHluaUYRja8bCNDnNgnCTtDtmPH9CYusrU+VsRKZhAvQkrs+MMVXFbefZkM+5W/x9fSmnWLdKCXyl+sYadhsgcYQgwWHNjR4qjcSweg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d54cea21-21f9-43b8-b83d-08d77e915d10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 23:25:09.2169
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ITUTXKp9DJ3O2Lm5/Xfdds8C2t0bajjiJbBDVsQfMi0f/b66xmsY6+78PnSmPeE73MPLyAW9rYW3BPEht8RVng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phandle cache was added to speed up of_find_node_by_phandle() by
-avoiding walking the whole DT to find a matching phandle. The
-implementation has several shortcomings:
 
-  - The cache is designed to work on a linear set of phandle values.
-    This is true for dtc generated DTs, but not for other cases such as
-    Power.
-  - The cache isn't enabled until of_core_init() and a typical system
-    may see hundreds of calls to of_find_node_by_phandle() before that
-    point.
-  - The cache is freed and re-allocated when the number of phandles
-    changes.
-  - It takes a raw spinlock around a memory allocation which breaks on
-    RT.
 
-Change the implementation to a fixed size and use hash_32() as the
-cache index. This greatly simplifies the implementation. It avoids
-the need for any re-alloc of the cache and taking a reference on nodes
-in the cache. We only have a single source of removing cache entries
-which is of_detach_node().
+> -----Original Message-----
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Sent: Wednesday, December 11, 2019 2:24 PM
+> To: Yuval Avnery <yuvalav@mellanox.com>
+> Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+>=20
+> On Wed, 11 Dec 2019 19:57:34 +0000, Yuval Avnery wrote:
+> > > -----Original Message-----
+> > > From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > > Sent: Wednesday, December 11, 2019 11:16 AM
+> > > To: Yuval Avnery <yuvalav@mellanox.com>
+> > > Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
+> > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+> > >
+> > > On Wed, 11 Dec 2019 18:19:56 +0000, Yuval Avnery wrote:
+> > > > > On Wed, 11 Dec 2019 04:58:53 +0200, Yuval Avnery wrote:
+> > > > > > Currently there is no limit to the number of VFs netdevsim can
+> enable.
+> > > > > > In a real systems this value exist and used by driver.
+> > > > > > Fore example, Some features might need to consider this value
+> > > > > > when allocating memory.
+> > > > >
+> > > > > Thanks for the patch!
+> > > > >
+> > > > > Can you shed a little bit more light on where it pops up? Just
+> > > > > for my
+> > > curiosity?
+> > > >
+> > > > Yes, like we described in the subdev threads.
+> > > > User should be able to configure some attributes before the VF was
+> > > enabled.
+> > > > So all those (persistent) VF attributes should be available for
+> > > > query and configuration before VF was enabled.
+> > > > The driver can allocate an array according to max_vfs to hold all
+> > > > that data, like we do here in" vfconfigs".
+> > >
+> > > I was after more practical reasoning, are you writing some tests for
+> > > subdev stuff that will depend on this change? :)
+> >
+> > Yes we are writing tests for subdev with this.
+>=20
+> Okay, please post v2 together with the tests. We don't accept netdevsim
+> features without tests any more.
 
-Using hash_32() removes any assumption on phandle values improving
-the hit rate for non-linear phandle values. The effect on linear values
-using hash_32() is about a 10% collision. The chances of thrashing on
-colliding values seems to be low.
+I think the only test I can currently write is the enable SR-IOV max_vfs en=
+forcement.
+Because subdev is not in yet.
+Will that be good enough?
 
-To compare performance, I used a RK3399 board which is a pretty typical
-system. I found that just measuring boot time as done previously is
-noisy and may be impacted by other things. Also bringing up secondary
-cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
-With no caching, calls to of_find_node_by_phandle() take about 20124 us
-for 1248 calls. There's an additional 288 calls before time keeping is
-up. Using the average time per hit/miss with the cache, we can calculate
-these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
-and 13319 us with no cache or an uninitialized cache.
+>=20
+> > This is the way mlx5 works.. is that practical enough?
+> >
+> > > > > > Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
+> > > > > > Acked-by: Jiri Pirko <jiri@mellanox.com>
+> > > > > >
+> > > > > > diff --git a/drivers/net/netdevsim/bus.c
+> > > > > > b/drivers/net/netdevsim/bus.c index 6aeed0c600f8..f1a0171080cb
+> > > > > > 100644
+> > > > > > --- a/drivers/net/netdevsim/bus.c
+> > > > > > +++ b/drivers/net/netdevsim/bus.c
+> > > > > > @@ -26,9 +26,9 @@ static struct nsim_bus_dev
+> > > > > > *to_nsim_bus_dev(struct device *dev)  static int
+> > > > > > nsim_bus_dev_vfs_enable(struct nsim_bus_dev
+> > > > > *nsim_bus_dev,
+> > > > > >  				   unsigned int num_vfs)
+> > > > > >  {
+> > > > > > -	nsim_bus_dev->vfconfigs =3D kcalloc(num_vfs,
+> > > > > > -					  sizeof(struct
+> nsim_vf_config),
+> > > > > > -					  GFP_KERNEL);
+> > > > >
+> > > > > You're changing the semantics of the enable/disable as well now.
+> > > > > The old values used to be wiped when SR-IOV is disabled, now
+> > > > > they will be retained across disable/enable pair.
+> > > > >
+> > > > > I think it'd be better if that wasn't the case. Users may expect
+> > > > > a system to be in the same state after they enable SR-IOV,
+> > > > > regardless if someone else used SR-IOV since last reboot.
+> > > >
+> > > > Right,
+> > > > But some values should retain across enable/disable, for example
+> > > > MAC
+> > > address which is persistent.
+> > > > So maybe we need to retain some values, while resetting others on
+> > > disable?
+> > > > Would that work?
+> > >
+> > > Mmm. That is a good question. For all practical purposes SR-IOV used
+> > > to be local to the host that enables it until Smart/middle box NICs
+> emerged.
+> > >
+> > > Perhaps the best way forward would be to reset the config that was
+> > > set via legacy APIs and keep only the MACs provisioned via persistent
+> devlink API?
+> > >
+> > > So for now we'd memset, and once devlink API lands reset selectively?
+> >
+> > Legacy is also persistent.
+> > Currently when you set mac address with "ip link vf set mac" it is pers=
+istent
+> (at least in mlx5).
+>=20
+> "Currently in mlx5" - maybe, but this is netdevsim. Currently it clears t=
+he
+> config on re-enable which I believe to be preferable as explained before.
+>=20
+> > But ip link only exposes enabled VFS, so driver on VF has to reload to
+> acquire this MAC.
+> > With devlink subdev it will be possible to set the MAC before VF was
+> enabled.
+>=20
+> Yup, sure. As I said, once subdev is implemented, we will treat the addre=
+sses
+> set by it differently. Those are inherently persistent or rather their li=
+fe time is
+> independent of just the SR-IOV host.
 
-Comparing the 3 implementations the time spent in
-of_find_node_by_phandle() is:
+Ok, got it.
+I am just wondering how this works when you have "ip link" and devlink sett=
+ing the MAC independently.
+Will they show the same MAC?
+Or ip link will show the non-persistent MAC And devlink the persistent?
 
-no cache:        20124 us (+ 13319 us)
-128 entry cache:  5134 us (+ 690 us)
-current cache:     819 us (+ 13319 us)
+>=20
+> > I think we need to distinguish here between:
+> > - PF sets MAC to a VF - persistent.
+> > - VF sets MAC to itself - not persistent.
+> >
+> > But is the second case relevant in netdevsim?
+>=20
+> Not sure where you're going with this. Second case, i.e. if VF sets its M=
+AC, is
+> not exposed in the hypervisor. I think iproute2 should still list the MAC=
+ it
+> provisioned, or 00:00.. if unset.
 
-We could move the allocation of the cache earlier to improve the
-current cache, but that just further complicates the situation as it
-needs to be after slab is up, so we can't do it when unflattening (which
-uses memblock).
+Yes, these are two different unrelated MACs.
 
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/of/base.c       | 133 ++++++++--------------------------------
- drivers/of/dynamic.c    |   2 +-
- drivers/of/of_private.h |   4 +-
- drivers/of/overlay.c    |  10 ---
- 4 files changed, 28 insertions(+), 121 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index db7fbc0c0893..f7da162f126d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -135,115 +135,38 @@ int __weak of_node_to_nid(struct device_node *np)
- }
- #endif
- 
--/*
-- * Assumptions behind phandle_cache implementation:
-- *   - phandle property values are in a contiguous range of 1..n
-- *
-- * If the assumptions do not hold, then
-- *   - the phandle lookup overhead reduction provided by the cache
-- *     will likely be less
-- */
-+#define OF_PHANDLE_CACHE_BITS	7
-+#define OF_PHANDLE_CACHE_SZ	BIT(OF_PHANDLE_CACHE_BITS)
- 
--static struct device_node **phandle_cache;
--static u32 phandle_cache_mask;
-+static struct device_node *phandle_cache[OF_PHANDLE_CACHE_SZ];
- 
--/*
-- * Caller must hold devtree_lock.
-- */
--static void __of_free_phandle_cache(void)
-+static u32 of_phandle_cache_hash(phandle handle)
- {
--	u32 cache_entries = phandle_cache_mask + 1;
--	u32 k;
--
--	if (!phandle_cache)
--		return;
--
--	for (k = 0; k < cache_entries; k++)
--		of_node_put(phandle_cache[k]);
--
--	kfree(phandle_cache);
--	phandle_cache = NULL;
-+	return hash_32(handle, OF_PHANDLE_CACHE_BITS);
- }
- 
--int of_free_phandle_cache(void)
--{
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&devtree_lock, flags);
--
--	__of_free_phandle_cache();
--
--	raw_spin_unlock_irqrestore(&devtree_lock, flags);
--
--	return 0;
--}
--#if !defined(CONFIG_MODULES)
--late_initcall_sync(of_free_phandle_cache);
--#endif
--
- /*
-  * Caller must hold devtree_lock.
-  */
--void __of_free_phandle_cache_entry(phandle handle)
-+void __of_phandle_cache_inv_entry(phandle handle)
- {
--	phandle masked_handle;
-+	u32 handle_hash;
- 	struct device_node *np;
- 
- 	if (!handle)
- 		return;
- 
--	masked_handle = handle & phandle_cache_mask;
-+	handle_hash = of_phandle_cache_hash(handle);
- 
--	if (phandle_cache) {
--		np = phandle_cache[masked_handle];
--		if (np && handle == np->phandle) {
--			of_node_put(np);
--			phandle_cache[masked_handle] = NULL;
--		}
--	}
--}
--
--void of_populate_phandle_cache(void)
--{
--	unsigned long flags;
--	u32 cache_entries;
--	struct device_node *np;
--	u32 phandles = 0;
--
--	raw_spin_lock_irqsave(&devtree_lock, flags);
--
--	__of_free_phandle_cache();
--
--	for_each_of_allnodes(np)
--		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
--			phandles++;
--
--	if (!phandles)
--		goto out;
--
--	cache_entries = roundup_pow_of_two(phandles);
--	phandle_cache_mask = cache_entries - 1;
--
--	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
--				GFP_ATOMIC);
--	if (!phandle_cache)
--		goto out;
--
--	for_each_of_allnodes(np)
--		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
--			of_node_get(np);
--			phandle_cache[np->phandle & phandle_cache_mask] = np;
--		}
--
--out:
--	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	np = phandle_cache[handle_hash];
-+	if (np && handle == np->phandle)
-+		phandle_cache[handle_hash] = NULL;
- }
- 
- void __init of_core_init(void)
- {
- 	struct device_node *np;
- 
--	of_populate_phandle_cache();
- 
- 	/* Create the kset, and register existing nodes */
- 	mutex_lock(&of_mutex);
-@@ -253,8 +176,11 @@ void __init of_core_init(void)
- 		pr_err("failed to register existing nodes\n");
- 		return;
- 	}
--	for_each_of_allnodes(np)
-+	for_each_of_allnodes(np) {
- 		__of_attach_node_sysfs(np);
-+		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
-+			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
-+	}
- 	mutex_unlock(&of_mutex);
- 
- 	/* Symlink in /proc as required by userspace ABI */
-@@ -1235,36 +1161,29 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- {
- 	struct device_node *np = NULL;
- 	unsigned long flags;
--	phandle masked_handle;
-+	u32 handle_hash;
- 
- 	if (!handle)
- 		return NULL;
- 
-+	handle_hash = of_phandle_cache_hash(handle);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 
--	masked_handle = handle & phandle_cache_mask;
--
--	if (phandle_cache) {
--		if (phandle_cache[masked_handle] &&
--		    handle == phandle_cache[masked_handle]->phandle)
--			np = phandle_cache[masked_handle];
--		if (np && of_node_check_flag(np, OF_DETACHED)) {
--			WARN_ON(1); /* did not uncache np on node removal */
--			of_node_put(np);
--			phandle_cache[masked_handle] = NULL;
--			np = NULL;
--		}
-+	if (phandle_cache[handle_hash] &&
-+	    handle == phandle_cache[handle_hash]->phandle)
-+		np = phandle_cache[handle_hash];
-+	if (np && of_node_check_flag(np, OF_DETACHED)) {
-+		WARN_ON(1); /* did not uncache np on node removal */
-+		phandle_cache[handle_hash] = NULL;
-+		np = NULL;
- 	}
- 
- 	if (!np) {
- 		for_each_of_allnodes(np)
- 			if (np->phandle == handle &&
- 			    !of_node_check_flag(np, OF_DETACHED)) {
--				if (phandle_cache) {
--					/* will put when removed from cache */
--					of_node_get(np);
--					phandle_cache[masked_handle] = np;
--				}
-+				phandle_cache[handle_hash] = np;
- 				break;
- 			}
- 	}
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 49b16f76d78e..08fd823edac9 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -276,7 +276,7 @@ void __of_detach_node(struct device_node *np)
- 	of_node_set_flag(np, OF_DETACHED);
- 
- 	/* race with of_find_node_by_phandle() prevented by devtree_lock */
--	__of_free_phandle_cache_entry(np->phandle);
-+	__of_phandle_cache_inv_entry(np->phandle);
- }
- 
- /**
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 66294d29942a..582844c158ae 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -85,14 +85,12 @@ int of_resolve_phandles(struct device_node *tree);
- #endif
- 
- #if defined(CONFIG_OF_DYNAMIC)
--void __of_free_phandle_cache_entry(phandle handle);
-+void __of_phandle_cache_inv_entry(phandle handle);
- #endif
- 
- #if defined(CONFIG_OF_OVERLAY)
- void of_overlay_mutex_lock(void);
- void of_overlay_mutex_unlock(void);
--int of_free_phandle_cache(void);
--void of_populate_phandle_cache(void);
- #else
- static inline void of_overlay_mutex_lock(void) {};
- static inline void of_overlay_mutex_unlock(void) {};
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 9617b7df7c4d..97fe92c1f1d2 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -974,8 +974,6 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
- 		goto err_free_overlay_changeset;
- 	}
- 
--	of_populate_phandle_cache();
--
- 	ret = __of_changeset_apply_notify(&ovcs->cset);
- 	if (ret)
- 		pr_err("overlay apply changeset entry notify error %d\n", ret);
-@@ -1218,17 +1216,9 @@ int of_overlay_remove(int *ovcs_id)
- 
- 	list_del(&ovcs->ovcs_list);
- 
--	/*
--	 * Disable phandle cache.  Avoids race condition that would arise
--	 * from removing cache entry when the associated node is deleted.
--	 */
--	of_free_phandle_cache();
--
- 	ret_apply = 0;
- 	ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
- 
--	of_populate_phandle_cache();
--
- 	if (ret) {
- 		if (ret_apply)
- 			devicetree_state_flags |= DTSF_REVERT_FAIL;
--- 
-2.20.1
-
+>=20
+> The two cases I'm differentiating is reset behaviour for addresses set vi=
+a PF
+> vs via devlink.
+>=20
+> > > > > Could you add a memset(,0,) here?
+> > > > >
+> > > > > > +	if (nsim_bus_dev->max_vfs < num_vfs)
+> > > > > > +		return -ENOMEM;
+> > > > > > +
+> > > > > >  	if (!nsim_bus_dev->vfconfigs)
+> > > > > >  		return -ENOMEM;
+> > > > >
+> > > > > This check seems useless now, no? We will always have vfconfigs
