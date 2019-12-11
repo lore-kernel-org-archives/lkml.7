@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DD29C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F71AC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91182077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 033F12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078420;
-	bh=PUapq7A9/OUb4u2QU0C4bn2vpupibtTpKF043A5SH50=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGUb7ztMGmL12waEBkJHNWOAG3BJ9LhWsURjfEdI+skvpYC7zf1VrPsBuVK2t1fwT
-	 +t84kf5AvQ+8eLa9pi7EHSTCY9YZMWA+Y99UytfUQGRWXJQlZZs6NkNqyfB+BtoiVm
-	 YPl1Pe5GfsRqlrNPt3R9RizALk46EGvKs8Ok54ZU=
+	s=default; t=1576078422;
+	bh=H5RpH0KTP1WdEsC1g1b1nuAgCQ4XbfyZBBfrmrBOQkY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pATL2AKfeyyfMZBGnfj67yKGHoPoOYbcMu5v4PWGPdesU1JPrRjUUgTl3Yxx9BOFc
+	 YzmG1aCY8AwfdIYZJq0XAysNf8L41YhPbRVJzkoR+OXRgHA13ZtIi90W38f4eJTZuF
+	 zHzbDgG/cDeVvJSD7hFnrtShqW8ECd9Rv4fC8P7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbfLKPdj (ORCPT
+        id S2387691AbfLKP2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34972 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387689AbfLKP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:42 -0500
+        id S2387647AbfLKP2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33FB4222C4;
-        Wed, 11 Dec 2019 15:28:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD927208C3;
+        Wed, 11 Dec 2019 15:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078120;
-        bh=PUapq7A9/OUb4u2QU0C4bn2vpupibtTpKF043A5SH50=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KFpKFQqQYycaeynwoCrQ2sJhY55JlVAEXv0KpUCBRSLHNbMJHNgU2fd12VbLV8Xjo
-         baX0uFoy9OdMEH87Mese7SsOGwd995dQsIroXnkcfnc/MfkNnYXi4VrPmTQ9SA452o
-         4Wup+LWTfA2zbe0qoYH+bHQyf4HLsuGjCqP4DTKs=
+        s=default; t=1576078113;
+        bh=H5RpH0KTP1WdEsC1g1b1nuAgCQ4XbfyZBBfrmrBOQkY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SCVA1nIonX5TlWgto0IeKh0YWjmIzyW58EIu7R5zm9GobDjz/mrb4SfwmKQM2rFpa
+         1xgdcWqRcX5QjbwuSLa8cVVhgl89x3hhA01CdR5qo/epeUzDsBrpPobmm4egx3H9aS
+         XWhEZUCJNYvG2gQG86j4w1xUHdz3uviYZANAal5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/58] scsi: csiostor: Don't enable IRQs too early
-Date:   Wed, 11 Dec 2019 10:27:41 -0500
-Message-Id: <20191211152831.23507-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 01/58] scsi: lpfc: Fix discovery failures when target device connectivity bounces
+Date:   Wed, 11 Dec 2019 10:27:34 -0500
+Message-Id: <20191211152831.23507-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,98 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit d6c9b31ac3064fbedf8961f120a4c117daa59932 ]
+[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
 
-These are called with IRQs disabled from csio_mgmt_tmo_handler() so we
-can't call spin_unlock_irq() or it will enable IRQs prematurely.
+An issue was seen discovering all SCSI Luns when a target device undergoes
+link bounce.
 
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Link: https://lore.kernel.org/r/20191019085913.GA14245@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+The driver currently does not qualify the FC4 support on the target.
+Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
+that the target will reject the PRLI if it is not supported. If a PRLI
+times out, the driver will retry. The driver will not proceed with the
+device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
+the device is FCP only and does not respond to the NVMe PRLI, thus
+initiating the wait/retry loop in the driver.  During that time, a RSCN is
+received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
+response comes back before the PRLI mess is resolved and it prematurely
+cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
+state. Discovery with the target never completes or resets.
+
+Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
+thereby restarting the discovery process for the node.
+
+Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/csiostor/csio_lnode.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/csiostor/csio_lnode.c b/drivers/scsi/csiostor/csio_lnode.c
-index be5ee2d378155..957767d383610 100644
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -301,6 +301,7 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	struct fc_fdmi_port_name *port_name;
- 	uint8_t buf[64];
- 	uint8_t *fc4_type;
-+	unsigned long flags;
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 3f88f3d796227..4a0889dd4c1d0 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -5220,9 +5220,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
+ 			/* If we've already received a PLOGI from this NPort
+ 			 * we don't need to try to discover it again.
+ 			 */
+-			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
++			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
++			    !(ndlp->nlp_type &
++			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
+ 				return NULL;
  
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi rhba cmd\n",
-@@ -377,13 +378,13 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	len = (uint32_t)(pld - (uint8_t *)cmd);
- 
- 	/* Submit FDMI RPA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_done,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rpa req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /*
-@@ -404,6 +405,7 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	struct fc_fdmi_rpl *reg_pl;
- 	struct fs_fdmi_attrs *attrib_blk;
- 	uint8_t buf[64];
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dprt cmd\n",
-@@ -483,13 +485,13 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	attrib_blk->numattrs = htonl(numattrs);
- 
- 	/* Submit FDMI RHBA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_rhba_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rhba req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /*
-@@ -504,6 +506,7 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	void *cmd;
- 	struct fc_fdmi_port_name *port_name;
- 	uint32_t len;
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dhba cmd\n",
-@@ -534,13 +537,13 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *hw, struct csio_ioreq *fdmi_req)
- 	len += sizeof(*port_name);
- 
- 	/* Submit FDMI request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_dprt_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi dprt req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /**
++			ndlp->nlp_prev_state = ndlp->nlp_state;
++			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
++
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
+ 			spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
