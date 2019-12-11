@@ -2,93 +2,154 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4603CC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD3DC47409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5ED2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449E324671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078400;
-	bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wKHcqtQpzRoUYOvyr091FRxx2SRPA8gWXzi6THeQJgzy5eArJGV2DWG2jd0W6iW4a
-	 NMx7fbLPcVTimikeniUb2X9MVPPqH2U1d7oVYcK7zHTLJgKjLFdHlNrrci3SSEUC5j
-	 d3L3ZZrH/pkI4cQl/AgYT6CnpcPUu7vMT68q/iHI=
+	s=default; t=1576078402;
+	bh=23YlAnpt744eiuxvp4LvcKrabFlhDLD+8Q8Ilp9BmqY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=P7t0GBBoyrE5wJaKTlIAReu9WShRXLMIZP5fdYVdSNtxPrSgkdMfRepzzwmNFk10D
+	 g4UNCwc0KscOr3BHMwEN6BdzvLzz2AXv5FC++tJRZ9C2kg1F54k25b+gCtVxpRNEMx
+	 z9Lv+1TTd/3+S4fvy4QrZG3VQb+Recw8iFKBCi0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388052AbfLKPdT (ORCPT
+        id S2388060AbfLKPdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:33:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387712AbfLKP2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:46 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S2387423AbfLKPdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:33:17 -0500
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04BA3208C3;
-        Wed, 11 Dec 2019 15:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A042077B;
+        Wed, 11 Dec 2019 15:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078125;
-        bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQ4ddrshS7mQ255yh0fYT2GOIxO/3lhDfsk6/eUFAUsq3jfGy2/Z3DhzYdNJQVGID
-         n8UWmqLuQeh+UZirxSzlrmVpFGhGkq8Nnm1mnFfDpMA5srUPSmuBBep1coRHyomvbd
-         ll8QIAUdHQeLvMfLAo2y/+M2ef9/4tA/xc95TaMI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/58] clocksource/drivers/asm9260: Add a check for of_clk_get
-Date:   Wed, 11 Dec 2019 10:27:46 -0500
-Message-Id: <20191211152831.23507-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
+        s=default; t=1576078396;
+        bh=23YlAnpt744eiuxvp4LvcKrabFlhDLD+8Q8Ilp9BmqY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HlGrVixYom2ssG9+XLm7A52FHM9+bgKtLuuQ/18ur59yNWaULj75MFKcI3PpKX+2Z
+         7RmrdC8S2f81L+VlreVej0IgovZwco6qqLgr56mFuqRenY+ugnDwhXB2KJYQ7cNYEQ
+         7c2A37KwttEs2TgM4ezgBcYg1z9jEEe3EbnQS1dY=
+Received: by mail-wm1-f49.google.com with SMTP id a5so1811783wmb.0;
+        Wed, 11 Dec 2019 07:33:16 -0800 (PST)
+X-Gm-Message-State: APjAAAXRVsL7zN+BmSoXnfowql2oSzZvpAR+M2zBmhIra1ZdteboF06Y
+        5zvAhd6FNjrhMOk5rbd2+nlw2BZ8hKUu/bbMZ7U=
+X-Google-Smtp-Source: APXvYqwjSC19g0o0KY/WlIEeOOsXoviY4IAXr7g5yUJbzDXE4omBhvNmA6CAL+nCmUBxUwEofGEO2mzo6hRqBLipPL4=
+X-Received: by 2002:a05:600c:2409:: with SMTP id 9mr356922wmp.109.1576078394867;
+ Wed, 11 Dec 2019 07:33:14 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20191211104152.26496-1-wens@kernel.org> <28dfaeab-73cd-041b-9894-776064d13245@arm.com>
+In-Reply-To: <28dfaeab-73cd-041b-9894-776064d13245@arm.com>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Wed, 11 Dec 2019 23:33:05 +0800
+X-Gmail-Original-Message-ID: <CAGb2v640NEj+WK_zj-LouvwkLTVrwyMgWGq_xdU8qJkOKF0FFQ@mail.gmail.com>
+Message-ID: <CAGb2v640NEj+WK_zj-LouvwkLTVrwyMgWGq_xdU8qJkOKF0FFQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Chen-Yu Tsai <wens@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        stable <stable@vger.kernel.org>, Christoph Hellwig <hch@lst.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+On Wed, Dec 11, 2019 at 9:41 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 11/12/2019 10:41 am, Chen-Yu Tsai wrote:
+> > From: Chen-Yu Tsai <wens@csie.org>
+> >
+> > max_pfn, as set in arch/arm/mm/init.c:
+> >
+> >      static void __init find_limits(unsigned long *min,
+> >                                  unsigned long *max_low,
+> >                                  unsigned long *max_high)
+> >      {
+> >           *max_low = PFN_DOWN(memblock_get_current_limit());
+> >           *min = PFN_UP(memblock_start_of_DRAM());
+> >           *max_high = PFN_DOWN(memblock_end_of_DRAM());
+> >      }
+> >
+> > with memblock_end_of_DRAM() pointing to the next byte after DRAM. As
+> > such, max_pfn points to the PFN after the end of DRAM.
+> >
+> > Thus when using max_pfn to check DMA masks, we should subtract one
+> > when checking DMA ranges against it.
+> >
+> > Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
+> > __dma_supported()") fixed the same issue, but missed this spot.
+> >
+> > This issue was found while working on the sun4i-csi v4l2 driver on the
+> > Allwinner R40 SoC. On Allwinner SoCs, DRAM is offset at 0x40000000,
+> > and we are starting to use of_dma_configure() with the "dma-ranges"
+> > property in the device tree to have the DMA API handle the offset.
+> >
+> > In this particular instance, dma-ranges was set to the same range as
+> > the actual available (2 GiB) DRAM. The following error appeared when
+> > the driver attempted to allocate a buffer:
+> >
+> >      sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
+> >      covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
+> >      sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
+> >
+> > Fixing the off-by-one error makes things work.
+> >
+> > Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
+> > Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
+> > Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
+> > Cc: <stable@vger.kernel.org>
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >   arch/arm/mm/dma-mapping.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+> > index e822af0d9219..f4daafdbac56 100644
+> > --- a/arch/arm/mm/dma-mapping.c
+> > +++ b/arch/arm/mm/dma-mapping.c
+> > @@ -227,12 +227,12 @@ static int __dma_supported(struct device *dev, u64 mask, bool warn)
+> >        * Translate the device's DMA mask to a PFN limit.  This
+> >        * PFN number includes the page which we can DMA to.
+> >        */
+> > -     if (dma_to_pfn(dev, mask) < max_dma_pfn) {
+> > +     if (dma_to_pfn(dev, mask) < max_dma_pfn - 1) {
+>
+> I think this correction actually wants to happen a couple of lines up in
+> the definition:
+>
+>         unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
+>
+> max_pfn is indeed an exclusive limit, but AFAICS arm_dma_pfn_limit is
+> inclusive, so none of these "+1"s and "-1"s can be entirely right for
+> both cases.
 
-[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
+You're absolutely right. I'll fix it and send a v2 out.
 
-asm9260_timer_init misses a check for of_clk_get.
-Add a check for it and print errors like other clocksource drivers.
+Thanks
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clocksource/asm9260_timer.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ChenYu
 
-diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
-index 38cd2feb87c42..0ce760776406b 100644
---- a/drivers/clocksource/asm9260_timer.c
-+++ b/drivers/clocksource/asm9260_timer.c
-@@ -198,6 +198,10 @@ static int __init asm9260_timer_init(struct device_node *np)
- 	}
- 
- 	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("Failed to get clk!\n");
-+		return PTR_ERR(clk);
-+	}
- 
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
--- 
-2.20.1
-
+> Robin.
+>
+> >               if (warn)
+> >                       dev_warn(dev, "Coherent DMA mask %#llx (pfn %#lx-%#lx) covers a smaller range of system memory than the DMA zone pfn 0x0-%#lx\n",
+> >                                mask,
+> >                                dma_to_pfn(dev, 0), dma_to_pfn(dev, mask) + 1,
+> > -                              max_dma_pfn + 1);
+> > +                              max_dma_pfn);
+> >               return 0;
+> >       }
+> >
+> >
