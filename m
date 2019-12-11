@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF38C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572F7208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61162173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078036;
-	bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
+	s=default; t=1576078041;
+	bh=Jviwh3vJgi74E19q35hueu7i1yLk6agFMCkrNyCram8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBKpvAjkDqGPzTA7csRWpIdffiyulugyPZGWXxWXG91kuuqrgTOwED2lQlybt7F3k
-	 2yjHCWMUO4LNEplEwqV6oUaPuiG5L75pZmiBLW66gPQHg24PviYaZ6F/kPMGUiy3AS
-	 eY2DVFXyqaey/WhXbFeZfQKL9aSVx4qkFa7b4ywY=
+	b=t3LRhswMe4/4FVb5GefiG0wisQKo4skAo53x4mt/qxCgi4FfVUu2OJ4Mum63zhA4v
+	 kh2/CUk6gBZnXcoLxuYGMwNBvxBir649x2+K8fXA6UZLX/9kcC3KjyX+u2cxCCrySI
+	 hj/kItbGTx+SvW+qKS2+Ietmp/155/y6DtJ+G598=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733278AbfLKP1P (ORCPT
+        id S1733310AbfLKP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732720AbfLKP1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:05 -0500
+        id S1732764AbfLKP1M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 069A324680;
-        Wed, 11 Dec 2019 15:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E9A624679;
+        Wed, 11 Dec 2019 15:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078024;
-        bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
+        s=default; t=1576078032;
+        bh=Jviwh3vJgi74E19q35hueu7i1yLk6agFMCkrNyCram8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dTEbRJn4SdRDpm/QvEvdjaz7khVoeTC+RJNWn4ZNEKusriarrdmwqItKcgkebOa9/
-         mtATXeWLbkD1LqEAM7ytt0+l0NXeDEcTJ4i8buyJE39xH1ugVDbttRou0z8D8nngvw
-         DMFJd+lstMkX2sh+RRd7lVwajDHybD3DEhcCYEMA=
+        b=zLRiNA45b2Xzf6EV+nRkCgj8HXukKAr0GexYttDJtR1MfM3/hOrlo9xeFeoTFf93g
+         wwFZuV6COlzopC/mWfFoensWU1AMWUP6xuTt7LwQuqRyKPEUhuTpzbp2jeJ/4Dt+a3
+         Tg2pLXNbNngmD+4z4aGOwOkyMrDhvZfLAmilIoVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 19/79] clocksource/drivers/asm9260: Add a check for of_clk_get
-Date:   Wed, 11 Dec 2019 10:25:43 -0500
-Message-Id: <20191211152643.23056-19-sashal@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 26/79] scsi: tracing: Fix handling of TRANSFER LENGTH == 0 for READ(6) and WRITE(6)
+Date:   Wed, 11 Dec 2019 10:25:50 -0500
+Message-Id: <20191211152643.23056-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -59,36 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
+[ Upstream commit f6b8540f40201bff91062dd64db8e29e4ddaaa9d ]
 
-asm9260_timer_init misses a check for of_clk_get.
-Add a check for it and print errors like other clocksource drivers.
+According to SBC-2 a TRANSFER LENGTH field of zero means that 256 logical
+blocks must be transferred. Make the SCSI tracing code follow SBC-2.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
+Fixes: bf8162354233 ("[SCSI] add scsi trace core functions and put trace points")
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Link: https://lore.kernel.org/r/20191105215553.185018-1-bvanassche@acm.org
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/asm9260_timer.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/scsi_trace.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
-index 38cd2feb87c42..0ce760776406b 100644
---- a/drivers/clocksource/asm9260_timer.c
-+++ b/drivers/clocksource/asm9260_timer.c
-@@ -198,6 +198,10 @@ static int __init asm9260_timer_init(struct device_node *np)
- 	}
+diff --git a/drivers/scsi/scsi_trace.c b/drivers/scsi/scsi_trace.c
+index 0ff083bbf5b1f..617a607375908 100644
+--- a/drivers/scsi/scsi_trace.c
++++ b/drivers/scsi/scsi_trace.c
+@@ -30,15 +30,18 @@ static const char *
+ scsi_trace_rw6(struct trace_seq *p, unsigned char *cdb, int len)
+ {
+ 	const char *ret = trace_seq_buffer_ptr(p);
+-	sector_t lba = 0, txlen = 0;
++	u32 lba = 0, txlen;
  
- 	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("Failed to get clk!\n");
-+		return PTR_ERR(clk);
-+	}
+ 	lba |= ((cdb[1] & 0x1F) << 16);
+ 	lba |=  (cdb[2] << 8);
+ 	lba |=   cdb[3];
+-	txlen = cdb[4];
++	/*
++	 * From SBC-2: a TRANSFER LENGTH field set to zero specifies that 256
++	 * logical blocks shall be read (READ(6)) or written (WRITE(6)).
++	 */
++	txlen = cdb[4] ? cdb[4] : 256;
  
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
+-	trace_seq_printf(p, "lba=%llu txlen=%llu",
+-			 (unsigned long long)lba, (unsigned long long)txlen);
++	trace_seq_printf(p, "lba=%u txlen=%u", lba, txlen);
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
 -- 
 2.20.1
 
