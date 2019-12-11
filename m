@@ -2,164 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3A7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7125DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C87820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4373120663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dSFm1czu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730448AbfLKRpM (ORCPT
+        id S1730569AbfLKRpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:45:12 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:33743 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730157AbfLKRpL (ORCPT
+        Wed, 11 Dec 2019 12:45:20 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39175 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbfLKRpS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:45:11 -0500
-Received: by mail-io1-f71.google.com with SMTP id i8so16326082ioi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:45:11 -0800 (PST)
+        Wed, 11 Dec 2019 12:45:18 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so2152384pfx.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f0OGrv7lx+Zl9WZjIpgsG/9JjtlvMsK6Onor4QOzhiU=;
+        b=dSFm1czu+pm7SIs0bP6i1otiKyGyBdfhEZRT7//ic7M+oipYjchAdycG1x8Z9Lu4V+
+         CQIuES31Slfjt0oRLUO+N4wfsvQmw7z6HF0Q6B/x/jGGum093H02AtsWXp/SWE1/SZ3m
+         SOGhNmVT/p2ON2mW07FTcZt7wgkCkY2I5OW0mJHzLGmQc1yHrKBZRcMylRkRYmdHQdJp
+         ML2ECNENZdF+ZFsQaQbzGxQoMHmGMQ8O/hu7wQnu/HPzT5TQ5oK7OM/hBGBTeOyWdNxj
+         vrEkCrGLZq1wTc3b8hEXEHk5ry9DTB04uS/3b8511yyi647gaQ2rSBsvLjObpWfyL2vw
+         w+0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=bGzEf9LzAP4gAwQXTzFAj2TI2z3taIqnFPDrr/8/SGg=;
-        b=GkalffzHQLi6R/+rj9IFlVdB+JqO+pIjeQSvVyYsl2fm1+/WGwZcsa+YwIyzSXBNcF
-         xXNMm597m0B55S4yZBr+qkNarIDls7NymuL5X0DjuHCdB+6L2qY986EOhqwyna8Ijds6
-         qnG3wcFkat5bmnLlIynd4+5ygnB6bf02E0Y+4u6mf1g5ItVjFI8u7gsV0Io96sMYiFX1
-         hF1Wc4MEk8nCdu5mqMuuxc5ddBuqVwxNeo3RHyv5XgqnK9Y/PeBY6jgKHoCm1BUqEXaJ
-         mfx83EyWXZRThucn8Wyj1JCwU4TMNTY1PwoWiatfFUgCvnAaPHq9AOwfC8SUZqaJHxBs
-         GuVw==
-X-Gm-Message-State: APjAAAVl7Am1Y+E4OZaXlfWeb1Kn1krTGeWZwIxbOnmDQF6U4Z+TvXbj
-        hSygvWcyDuDGL46Of4AZVfE4R4g60sRcFKWFwJlJmF2o65NL
-X-Google-Smtp-Source: APXvYqzUUKN1p5zT2a4uMPfP7ORghqGAEJstkGMCW1zjf9dai9MpVLMMFFxPltPBFa/6Sn104Ldm1BARPYI1J8scjMCseLRMw9Fj
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f0OGrv7lx+Zl9WZjIpgsG/9JjtlvMsK6Onor4QOzhiU=;
+        b=eYoKUA4TdOax6nrh22fcwA1HSRA4tCYCVUC1iNn7c9vMPvft53vYvdrzWuLeDKaa4r
+         CFp8yuQUAuuYdTsx/CPLQa/C+i5xEes5RcuDt92XlKTE9A5Ryvvy0nck94ZPmVXocRcY
+         MkRPlN8jUawSSXWSIY3Zk+QdcqUSkoxl/5hgg5Lo+pV6qx2a53dMRipwpxqSV2NExo1d
+         I7gPl56awFz0TKcg0MNvn1/WLXNBH0wgYzBft+tg8+ZinbIEJghiWJ8EOF+QG6jhM00E
+         ksAREUiQg27CFEibmpHET+OyAfpEpvLgGP6uBlULUXRGHq8WvC/ZijLyFnfgT4mXumDv
+         Gj9g==
+X-Gm-Message-State: APjAAAWl05GrEzNisUGry8gpi/A+NPXGpaYzVWJ4WOL3oJwLnDaKDW7P
+        n7VhWqxwMwWepsJ5wDHc7z3Zgv3g6+pV7BdMkcPs6w==
+X-Google-Smtp-Source: APXvYqz7XjlAgHjobYmSc6XZ3IV9j5m9Gn/I2mq5n5sH6vxlj2+haEA9q7qO4eY1S7TizEeFPgB0uvoPBvBL9nZ6eVo=
+X-Received: by 2002:aa7:961b:: with SMTP id q27mr5064829pfg.23.1576086317561;
+ Wed, 11 Dec 2019 09:45:17 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:1f16:: with SMTP id i22mr4345985ile.206.1576086310881;
- Wed, 11 Dec 2019 09:45:10 -0800 (PST)
-Date:   Wed, 11 Dec 2019 09:45:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b214580599713029@google.com>
-Subject: KMSAN: uninit-value in __tipc_nl_compat_dumpit
-From:   syzbot <syzbot+b1fd2bf2c89d8407e15f@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, glider@google.com, jon.maloy@ericsson.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191211163310.4788-1-sj38.park@gmail.com> <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
+ <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com>
+In-Reply-To: <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 11 Dec 2019 09:45:07 -0800
+Message-ID: <CAFd5g4649_C0tSy3W-KzN05Y8K5zZtGUGVYFA9iAKvaXsPentw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Fix nits in the kunit
+To:     SeongJae Park <sj38.park@gmail.com>
+Cc:     shuah <shuah@kernel.org>, SeongJae Park <sjpark@amazon.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Dec 11, 2019 at 9:40 AM SeongJae Park <sj38.park@gmail.com> wrote:
+>
+> On Wed, Dec 11, 2019 at 6:22 PM shuah <shuah@kernel.org> wrote:
+> >
+> > On 12/11/19 9:33 AM, SeongJae Park wrote:
+> > > May I ask some comments?
+> > >
+> > >
+> > > Thanks,
+> > > SeongJae Park
+> > >
+> >
+> > + Brendan
+> >
+> > > On Thu, 5 Dec 2019 10:34:34 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> > >
+> > >>
+> > >> This patchset contains trivial fixes for the kunit documentations and
+> > >> the wrapper python scripts.
+> > >>
+> > >> This patchset is based on 'kselftest/test' branch of linux-kselftest[1]
+> > >> and depends on Heidi's patch[2].  A complete tree is available at my repo:
+> > >> https://github.com/sjp38/linux/tree/kunit_fix/20191205_v5
+> > >>
+> > >> Changes from v4
+> > >> (https://lore.kernel.org/linux-doc/1575490683-13015-1-git-send-email-sj38.park@gmail.com/):
+> > >>   - Rebased on Heidi Fahim's patch[2]
+> > >>   - Fix failing kunit_tool_test test
+> > >>   - Add 'build_dir' option test in 'kunit_tool_test.py'
+> > >>
+> >
+> > Please include Brendana Higgins on kunit patches.
+>
+> Not sure how I could forgot adding him.  I will never forget from next time.
 
-syzbot found the following crash on:
+No worries. I still got the email from the list :-)
 
-HEAD commit:    5ef742ba net: kasan: kmsan: support CONFIG_GENERIC_CSUM on..
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b40861e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8fd289db07d24f0c
-dashboard link: https://syzkaller.appspot.com/bug?extid=b1fd2bf2c89d8407e15f
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13f45aeae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17560232e00000
+I think I reviewed all the patches in this series; I just need to test
+them. I will try to have that done later today or tomorrow.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b1fd2bf2c89d8407e15f@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in __nlmsg_parse include/net/netlink.h:661 [inline]
-BUG: KMSAN: uninit-value in nlmsg_parse_deprecated  
-include/net/netlink.h:706 [inline]
-BUG: KMSAN: uninit-value in __tipc_nl_compat_dumpit+0x553/0x11e0  
-net/tipc/netlink_compat.c:215
-CPU: 0 PID: 12425 Comm: syz-executor062 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1c9/0x220 lib/dump_stack.c:118
-  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
-  __msan_warning+0x57/0xa0 mm/kmsan/kmsan_instr.c:245
-  __nlmsg_parse include/net/netlink.h:661 [inline]
-  nlmsg_parse_deprecated include/net/netlink.h:706 [inline]
-  __tipc_nl_compat_dumpit+0x553/0x11e0 net/tipc/netlink_compat.c:215
-  tipc_nl_compat_dumpit+0x761/0x910 net/tipc/netlink_compat.c:308
-  tipc_nl_compat_handle net/tipc/netlink_compat.c:1252 [inline]
-  tipc_nl_compat_recv+0x12e9/0x2870 net/tipc/netlink_compat.c:1311
-  genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
-  genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
-  genl_rcv_msg+0x1dd0/0x23a0 net/netlink/genetlink.c:734
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  genl_rcv+0x63/0x80 net/netlink/genetlink.c:745
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0xfa0/0x1100 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x11f0/0x1480 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg net/socket.c:659 [inline]
-  ____sys_sendmsg+0x1362/0x13f0 net/socket.c:2330
-  ___sys_sendmsg net/socket.c:2384 [inline]
-  __sys_sendmsg+0x4f0/0x5e0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:295
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x444179
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd2d6409c8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444179
-RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
-RBP: 00000000006ce018 R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e20
-R13: 0000000000401eb0 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was created at:
-  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:149 [inline]
-  kmsan_internal_poison_shadow+0x5c/0x110 mm/kmsan/kmsan.c:132
-  kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:86
-  slab_alloc_node mm/slub.c:2774 [inline]
-  __kmalloc_node_track_caller+0xe47/0x11f0 mm/slub.c:4382
-  __kmalloc_reserve net/core/skbuff.c:141 [inline]
-  __alloc_skb+0x309/0xa50 net/core/skbuff.c:209
-  alloc_skb include/linux/skbuff.h:1049 [inline]
-  nlmsg_new include/net/netlink.h:888 [inline]
-  tipc_nl_compat_dumpit+0x6e4/0x910 net/tipc/netlink_compat.c:301
-  tipc_nl_compat_handle net/tipc/netlink_compat.c:1252 [inline]
-  tipc_nl_compat_recv+0x12e9/0x2870 net/tipc/netlink_compat.c:1311
-  genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
-  genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
-  genl_rcv_msg+0x1dd0/0x23a0 net/netlink/genetlink.c:734
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  genl_rcv+0x63/0x80 net/netlink/genetlink.c:745
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0xfa0/0x1100 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x11f0/0x1480 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:639 [inline]
-  sock_sendmsg net/socket.c:659 [inline]
-  ____sys_sendmsg+0x1362/0x13f0 net/socket.c:2330
-  ___sys_sendmsg net/socket.c:2384 [inline]
-  __sys_sendmsg+0x4f0/0x5e0 net/socket.c:2417
-  __do_sys_sendmsg net/socket.c:2426 [inline]
-  __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
-  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
-  do_syscall_64+0xb6/0x160 arch/x86/entry/common.c:295
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Cheers!
