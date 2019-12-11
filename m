@@ -2,134 +2,229 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51185C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EADC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27493214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0074214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzZxNYP3"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="J+3gOEj9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbfLKXtu (ORCPT
+        id S1727184AbfLKXuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:49:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24083 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726989AbfLKXtu (ORCPT
+        Wed, 11 Dec 2019 18:50:04 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36122 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfLKXuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:49:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576108188;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=eZ6Qbamhyp6RLhy20TpwKVCBIKcGB4S+juUY4aaY00E=;
-        b=RzZxNYP374suPIvn1VvvPJJvBXLnvXgLBHsO3TQMV4uJSFD+FnCrG158WKyEfTqTS71ktH
-        tDRUKyotfb4yAjFmOFSmaGSpkbO+F1C8Nwmg8RPRJd+BNF6nEqKBiObUq7/WyPNkRcz3jT
-        AYV5estexCTN1IlPuCiOZRp/BqRk+zk=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-_EbgTpBhNKW__YKbENIfnA-1; Wed, 11 Dec 2019 18:49:47 -0500
-X-MC-Unique: _EbgTpBhNKW__YKbENIfnA-1
-Received: by mail-yb1-f199.google.com with SMTP id e11so386592ybn.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 15:49:47 -0800 (PST)
+        Wed, 11 Dec 2019 18:50:04 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n12so226808lfe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 15:50:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=3ar8hSRxaWEDYYcaZhXo4D+jXpzHyiQxdbvMX4+sxbw=;
+        b=J+3gOEj9//BN+ky7TtDHfiFUhcWKKXu2q0p6enY7O+oXtkHhmLpg6Ex0ksSgm9rXw9
+         XUrVXLA1pS1Ifvi4qYIcqrMyHqRuwn3Ag46LEv62xxqIMCGnIMq+XrBZVuJN7HRW+X+9
+         i4FYhYcEVv+GB6LUDzvvpD5yFvgzrpVf0dxGuLqLkHwitL1PaY7ScPRB2ztP3o8McMuJ
+         AQMJuSVv8zBpVHFid1m/jyrbbxkxmW/eYqkaYFtUzjaY3ypVTu4XYti4SwFBJGCkrUQ9
+         Uh5eKXayjbTimhfZ9/lHUWch1Oq97UNT5h1AE613YkuVJhsV2vo79d6KmdsLRFsxLnRw
+         kowA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=eZ6Qbamhyp6RLhy20TpwKVCBIKcGB4S+juUY4aaY00E=;
-        b=B9M7//ZZzBovHtj1Vz+D2bi4xH/ysu8QCBHbWKP3FM4Da/T/AX80rgkbEEacppROKG
-         Mb6a9DCaqKRQUiuXpsxoyh1SbKoO/WkGjtzLNnHMJv7XcKnev49ls+W20lrg5eVGG15g
-         RT7EYHa+mGPAKsVL+EqQDGdvfPeGIqHvMksWc8mj3N9Yy9Sz+T35nol3P+5nZoT66gFT
-         8nnwWCpc3CtjK5nMiKCIsszMGaOemoDA957rFaxbNgetLIpIXcQUaj3YxchlXnk+RiwZ
-         IRqgzoXnyh9Hv14pfiN9HwwJ09o4wCOTxbReP3OsWNzl4EucVSrq8y/IH6dhqsoo69Gg
-         ZGJA==
-X-Gm-Message-State: APjAAAXCEUMYumK2oYllmkd30emiyBLC0wA767dMgZ/4tAxoTSFN5QLT
-        MHlLhDDkMzZ4vu6cwf9QoboutYAKr3eXWw1owlAYTNkDl17/ASjmGdeZfZPWnySZqtO7i2x5mn9
-        VQkSskw9HFHepHI6ZPMY3G8s4
-X-Received: by 2002:a25:4192:: with SMTP id o140mr2186054yba.70.1576108187112;
-        Wed, 11 Dec 2019 15:49:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxLClP3vQPgqPh+Fd3ZVpB9+8LETd8k7MLAJik00X30raCPVWSm3eDeNxxwc6b60J3biJil5w==
-X-Received: by 2002:a25:4192:: with SMTP id o140mr2186040yba.70.1576108186854;
-        Wed, 11 Dec 2019 15:49:46 -0800 (PST)
-Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
-        by smtp.gmail.com with ESMTPSA id x184sm1816777ywg.4.2019.12.11.15.49.45
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=3ar8hSRxaWEDYYcaZhXo4D+jXpzHyiQxdbvMX4+sxbw=;
+        b=oO8GoPKzGcgZyBxHLJ87fwh/XnMVIOVnqx6YpzySsRxcGDSksxJplVvDd4vk7l97TR
+         3zpXcf8+wGW6yey5j9zCubvGug/X9FcS2XaMfoVIE3o7Us8T7r47SzRAY+A9DlSj4uVp
+         3DRczsISMxQXrUKe8nfyokuOhjSq4YRtwbZmNp8T9UPAq54R9RgwYOc6Ut/9vw/IkuBh
+         njEK7YnbJ+eba2e2aZVHzYkTN8q9w0LtLgKBaakW5gtfKm2HsiKTKaqTobLMw273ckT1
+         +c0Xbv1IvYgzvXO9L+Bx5IsfMeFdpIpe+PzHVqKwLGKcIAzPZHvnWBe+Keeol8+/cYxa
+         H2mg==
+X-Gm-Message-State: APjAAAVqr7fjHlJsicuRpdAZMyIJesSWFAySPVxud2LQZXkNyVIRqjPy
+        SrP7rKb1hoNnHu9xWlduU3aD9g==
+X-Google-Smtp-Source: APXvYqxLBlm2lDvETlbo6tR3SMfMEiRwEcggIuyy2hd+tE015YJ2jzRHZ0h2rdzwNuMk3KFs/l7V0Q==
+X-Received: by 2002:a19:784:: with SMTP id 126mr3803119lfh.191.1576108200961;
+        Wed, 11 Dec 2019 15:50:00 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id 192sm1928868lfh.28.2019.12.11.15.49.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 15:49:46 -0800 (PST)
-Date:   Wed, 11 Dec 2019 16:49:29 -0700
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH] tpm_tis: reserve chip for duration of tpm_tis_core_init
-Message-ID: <20191211234929.in7mrh3wq4pkhvsm@cantor>
-Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
-Mail-Followup-To: Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Bundy <christianbundy@fraction.io>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
- <20191211232612.miaizaxxikhlgvfj@cantor>
- <CAPcyv4iwJoX6tVVBUc0dSwHUwsu2duoUFayOnAhDEd5SjYug8g@mail.gmail.com>
+        Wed, 11 Dec 2019 15:50:00 -0800 (PST)
+Date:   Wed, 11 Dec 2019 15:49:52 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Yuval Avnery <yuvalav@mellanox.com>
+Cc:     Jiri Pirko <jiri@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Message-ID: <20191211154952.50109494@cakuba.netronome.com>
+In-Reply-To: <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
+        <20191211095854.6cd860f1@cakuba.netronome.com>
+        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211111537.416bf078@cakuba.netronome.com>
+        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+        <20191211142401.742189cf@cakuba.netronome.com>
+        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iwJoX6tVVBUc0dSwHUwsu2duoUFayOnAhDEd5SjYug8g@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed Dec 11 19, Dan Williams wrote:
->On Wed, Dec 11, 2019 at 3:27 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
->>
->> On Wed Dec 11 19, Jerry Snitselaar wrote:
->> >Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
->> >issuing commands to the tpm during initialization, just reserve the
->> >chip after wait_startup, and release it when we are ready to call
->> >tpm_chip_register.
->> >
->> >Cc: Christian Bundy <christianbundy@fraction.io>
->> >Cc: Dan Williams <dan.j.williams@intel.com>
->> >Cc: Peter Huewe <peterhuewe@gmx.de>
->> >Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> >Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> >Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
->> >Cc: stable@vger.kernel.org
->> >Cc: linux-intergrity@vger.kernel.org
->>
->> Typo on the list address, do you want me to resend Jarkko?
->>
->> >Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
->> >Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
->> >---
->>
->> I did some initial testing with both a 1.2 device and a 2.0 device here.
->> Christian, can you verify that this still solves your timeouts problem
->> you were seeing? Dan, can you try this on the internal system with
->> the interrupt issues? I will see if I can get the t490s owner to run
->> it as well.
->
->Will do. I assume you'd also want to add 'Fixes: 5b359c7c4372
->("tpm_tis_core: Turn on the TPM before probing IRQ's")' if it works?
->
+On Wed, 11 Dec 2019 23:25:09 +0000, Yuval Avnery wrote:
+> > -----Original Message-----
+> > From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > Sent: Wednesday, December 11, 2019 2:24 PM
+> > To: Yuval Avnery <yuvalav@mellanox.com>
+> > Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
+> > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+> > 
+> > On Wed, 11 Dec 2019 19:57:34 +0000, Yuval Avnery wrote:  
+> > > > -----Original Message-----
+> > > > From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> > > > Sent: Wednesday, December 11, 2019 11:16 AM
+> > > > To: Yuval Avnery <yuvalav@mellanox.com>
+> > > > Cc: Jiri Pirko <jiri@mellanox.com>; davem@davemloft.net;
+> > > > netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> > > > Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+> > > >
+> > > > On Wed, 11 Dec 2019 18:19:56 +0000, Yuval Avnery wrote:  
+> > > > > > On Wed, 11 Dec 2019 04:58:53 +0200, Yuval Avnery wrote:  
+> > > > > > > Currently there is no limit to the number of VFs netdevsim can enable.  
+> > > > > > > In a real systems this value exist and used by driver.
+> > > > > > > Fore example, Some features might need to consider this value
+> > > > > > > when allocating memory.  
+> > > > > >
+> > > > > > Thanks for the patch!
+> > > > > >
+> > > > > > Can you shed a little bit more light on where it pops up? Just
+> > > > > > for my  
+> > > > curiosity?  
+> > > > >
+> > > > > Yes, like we described in the subdev threads.
+> > > > > User should be able to configure some attributes before the VF was  
+> > > > enabled.  
+> > > > > So all those (persistent) VF attributes should be available for
+> > > > > query and configuration before VF was enabled.
+> > > > > The driver can allocate an array according to max_vfs to hold all
+> > > > > that data, like we do here in" vfconfigs".  
+> > > >
+> > > > I was after more practical reasoning, are you writing some tests for
+> > > > subdev stuff that will depend on this change? :)  
+> > >
+> > > Yes we are writing tests for subdev with this.  
+> > 
+> > Okay, please post v2 together with the tests. We don't accept netdevsim
+> > features without tests any more.  
+> 
+> I think the only test I can currently write is the enable SR-IOV max_vfs enforcement.
+> Because subdev is not in yet.
+> Will that be good enough?
 
-Yes. I'm not certain this deals with the interrupt issue though, so
-didn't want to stick it on there yet. I guess it should go on there
-anyways since it is replacing that code. I'll post a v2.
+It'd be good to test some netdev API rather than just the enforcement
+itself which is entirely in netdevsim, I think.
 
+So max_vfs enforcement plus checking that ip link lists the correct
+number of entries (and perhaps the entries are in reset state after
+enable) would do IMO.
+
+> > > This is the way mlx5 works.. is that practical enough?
+> > >  
+> > > > > > > Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
+> > > > > > > Acked-by: Jiri Pirko <jiri@mellanox.com>
+> > > > > > >
+> > > > > > > diff --git a/drivers/net/netdevsim/bus.c
+> > > > > > > b/drivers/net/netdevsim/bus.c index 6aeed0c600f8..f1a0171080cb
+> > > > > > > 100644
+> > > > > > > --- a/drivers/net/netdevsim/bus.c
+> > > > > > > +++ b/drivers/net/netdevsim/bus.c
+> > > > > > > @@ -26,9 +26,9 @@ static struct nsim_bus_dev
+> > > > > > > *to_nsim_bus_dev(struct device *dev)  static int
+> > > > > > > nsim_bus_dev_vfs_enable(struct nsim_bus_dev  
+> > > > > > *nsim_bus_dev,  
+> > > > > > >  				   unsigned int num_vfs)
+> > > > > > >  {
+> > > > > > > -	nsim_bus_dev->vfconfigs = kcalloc(num_vfs,
+> > > > > > > -					  sizeof(struct  
+> > nsim_vf_config),  
+> > > > > > > -					  GFP_KERNEL);  
+> > > > > >
+> > > > > > You're changing the semantics of the enable/disable as well now.
+> > > > > > The old values used to be wiped when SR-IOV is disabled, now
+> > > > > > they will be retained across disable/enable pair.
+> > > > > >
+> > > > > > I think it'd be better if that wasn't the case. Users may expect
+> > > > > > a system to be in the same state after they enable SR-IOV,
+> > > > > > regardless if someone else used SR-IOV since last reboot.  
+> > > > >
+> > > > > Right,
+> > > > > But some values should retain across enable/disable, for example
+> > > > > MAC  
+> > > > address which is persistent.  
+> > > > > So maybe we need to retain some values, while resetting others on  
+> > > > disable?  
+> > > > > Would that work?  
+> > > >
+> > > > Mmm. That is a good question. For all practical purposes SR-IOV used
+> > > > to be local to the host that enables it until Smart/middle box NICs  
+> > emerged.  
+> > > >
+> > > > Perhaps the best way forward would be to reset the config that was
+> > > > set via legacy APIs and keep only the MACs provisioned via persistent  
+> > devlink API?  
+> > > >
+> > > > So for now we'd memset, and once devlink API lands reset selectively?  
+> > >
+> > > Legacy is also persistent.
+> > > Currently when you set mac address with "ip link vf set mac" it is persistent  
+> > (at least in mlx5).
+> > 
+> > "Currently in mlx5" - maybe, but this is netdevsim. Currently it clears the
+> > config on re-enable which I believe to be preferable as explained before.
+> >   
+> > > But ip link only exposes enabled VFS, so driver on VF has to reload to  
+> > acquire this MAC.  
+> > > With devlink subdev it will be possible to set the MAC before VF was  
+> > enabled.
+> > 
+> > Yup, sure. As I said, once subdev is implemented, we will treat the addresses
+> > set by it differently. Those are inherently persistent or rather their life time is
+> > independent of just the SR-IOV host.  
+> 
+> Ok, got it.
+> I am just wondering how this works when you have "ip link" and devlink setting the MAC independently.
+> Will they show the same MAC?
+> Or ip link will show the non-persistent MAC And devlink the persistent?
+
+My knee jerk reaction is that we should populate the values to those set
+via devlink upon SR-IOV enable, but then if user overwrites those values
+that's their problem.
+
+Sort of mirror how VF MAC addrs work, just a level deeper. The VF
+defaults to the MAC addr provided by the PF after reset, but it can
+change it to something else (things may stop working because spoof
+check etc. will drop all its frames, but nothing stops the VF in legacy
+HW from writing its MAC addr register).
+
+IOW the devlink addr is the default/provisioned addr, not necessarily
+the addr the PF has set _now_.
+
+Other options I guess are (a) reject the changes of the address from
+the PF once devlink has set a value; (b) provide some device->control
+CPU notifier which can ack/reject a request from the PF to change
+devlink's value..?
+
+You guys posted the devlink patches a while ago, what was your
+implementation doing?
