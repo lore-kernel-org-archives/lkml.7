@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3729FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 587D0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F360A22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC11222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077076;
-	bh=npnDyANGudtfyjzeUNt85NO+xvI9VzCqSiWB+t0mvG4=;
+	s=default; t=1576077079;
+	bh=GWTL2yCipBHtU2kHyv7cXIR/GTd1lMozRfTVMML8/ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JcU9fW62/Kl9EkIe9LfrlZQI6yPSHSyAvTBQpt3OgOYDUMGSSiEmh6tYJbi0DxTZw
-	 NSv9fnfN/0s+d9PX9fN7XuS8WaKo/tlI/2iBhn24DJ3eGsHUjbBv5d/rb5vFEZLFkg
-	 ikm4SKc52+c+YEFUThSpCN6AReEPSSxgHHIjHThw=
+	b=zXQQh7nWCg6UW1lnavYgRlEYhWx41reD16f/Y/YJ7QzYIQvAsDUF/BBSZ8C9WGERd
+	 SvWWKnWPOWiFMGWT7UbQBAUwLJPtXEyBDPIJ77UFTaFsybLUW7PWmKq+jDAYlZy592
+	 A9tI46wu8A+2hZ1va6UNd2N9hrZPawQdz5SYI9ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfLKPLP (ORCPT
+        id S1730911AbfLKPLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59720 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730264AbfLKPLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:12 -0500
+        id S1729797AbfLKPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C62A424654;
-        Wed, 11 Dec 2019 15:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC7D2465A;
+        Wed, 11 Dec 2019 15:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077071;
-        bh=npnDyANGudtfyjzeUNt85NO+xvI9VzCqSiWB+t0mvG4=;
+        s=default; t=1576077076;
+        bh=GWTL2yCipBHtU2kHyv7cXIR/GTd1lMozRfTVMML8/ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kjaIGC+2xENpTluVEnpXTgTvBpK8GPmZqiRc1opFhTFTqr3YlSIx+5tUGDSPx0Sm
-         KBP/6RSPaXNyqVuwmz3z5ImNN8ZMaz5hdymmU4HUiji54AP8tH/H5jZLNt/uoXpnpa
-         fAvpvfeyMrQtWjC7rsXx5cQyBt1ez4ns+72b4VpU=
+        b=SG2ckwBFc3UPlFNrhX8ga+Tr8TE0VMlnMBZmQ0WgxTfcRIiiP18vwlYNrkJZAZYgD
+         Ps1nSOPbW8vFGT9Z789McnBhognrJbngZKisxxXNYo2KCzz93PAoaYHU21EHBTiW+W
+         +0JbdP25qew/r3zzIfO0UyAR/aTaA1L6IQ5lXwWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com,
-        Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.4 86/92] iomap: Fix pipe page leakage during splicing
-Date:   Wed, 11 Dec 2019 16:06:17 +0100
-Message-Id: <20191211150301.783180819@linuxfoundation.org>
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 78/92] spi: atmel: Fix CS high support
+Date:   Wed, 11 Dec 2019 16:06:09 +0100
+Message-Id: <20191211150258.847345643@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -62,52 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6 upstream.
+commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
 
-When splicing using iomap_dio_rw() to a pipe, we may leak pipe pages
-because bio_iov_iter_get_pages() records that the pipe will have full
-extent worth of data however if file size is not block size aligned
-iomap_dio_rw() returns less than what bio_iov_iter_get_pages() set up
-and splice code gets confused leaking a pipe page with the file tail.
+Until a few years ago, this driver was only used with CS GPIO. The
+only exception is CS0 on AT91RM9200 which has to use internal CS. A
+limitation of the internal CS is that they don't support CS High.
 
-Handle the situation similarly to the old direct IO implementation and
-revert iter to actually returned read amount which makes iter consistent
-with value returned from iomap_dio_rw() and thus the splice code is
-happy.
+So by using the CS GPIO the CS high configuration was available except
+for the particular case CS0 on RM9200.
 
-Fixes: ff6a9292e6f6 ("iomap: implement direct I/O")
-CC: stable@vger.kernel.org
-Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+When the support for the internal chip-select was added, the check of
+the CS high support was not updated. Due to this the driver accepts
+this configuration for all the SPI controller v2 (used by all SoCs
+excepting the AT91RM9200) whereas the hardware doesn't support it for
+infernal CS.
+
+This patch fixes the test to match the hardware capabilities.
+
+Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/iomap/direct-io.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/spi/spi-atmel.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -497,8 +497,15 @@ iomap_dio_rw(struct kiocb *iocb, struct
- 		}
- 		pos += ret;
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -1183,10 +1183,8 @@ static int atmel_spi_setup(struct spi_de
+ 	as = spi_master_get_devdata(spi->master);
  
--		if (iov_iter_rw(iter) == READ && pos >= dio->i_size)
-+		if (iov_iter_rw(iter) == READ && pos >= dio->i_size) {
-+			/*
-+			 * We only report that we've read data up to i_size.
-+			 * Revert iter to a state corresponding to that as
-+			 * some callers (such as splice code) rely on it.
-+			 */
-+			iov_iter_revert(iter, pos - dio->i_size);
- 			break;
-+		}
- 	} while ((count = iov_iter_count(iter)) > 0);
- 	blk_finish_plug(&plug);
+ 	/* see notes above re chipselect */
+-	if (!atmel_spi_is_v2(as)
+-			&& spi->chip_select == 0
+-			&& (spi->mode & SPI_CS_HIGH)) {
+-		dev_dbg(&spi->dev, "setup: can't be active-high\n");
++	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
++		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
+ 		return -EINVAL;
+ 	}
  
 
 
