@@ -2,88 +2,86 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A75AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48755C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D91C214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576050525;
-	bh=4JZ8e8dgIBsEwHJUXH82+M2U3AS11Z7JV21zGuOxey4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F4sAAPEM+WRAw6oQYc8Dpd7Lu8cy99psgbspJdm2LztuJMGeL7K+wTROwt1orkF6h
-	 vY0oZea4JwlJefiBXdwlZ/kkHzOUx4wQaskD3eg0AsjqSqZ6UKd1RDwiq9KJ9sxkUm
-	 SMe70amS0pzQeTBMBCMcOTZnzV2KtQcH6q1BlGiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 08BA4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:48:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5PHuxbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbfLKHsn (ORCPT
+        id S1728248AbfLKHsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:48:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbfLKHsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:48:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8893420637;
-        Wed, 11 Dec 2019 07:48:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576050523;
-        bh=4JZ8e8dgIBsEwHJUXH82+M2U3AS11Z7JV21zGuOxey4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvN9ujTG/rkSPBA5i7NrgPvxm87aTaJM2wrtcgGLTFab2somSSD3B4Z+GZU8Ms6QA
-         zOQO35JhqqwFaL/g+IQb5DBi6vgBbtOlvQPR97Ec+9DRQta/7N8go6pYKwjnu4M+mz
-         xRVtBveDUoLfGaCLOGRA5d2h0eCuUQDA74LOjyYI=
-Date:   Wed, 11 Dec 2019 08:48:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 077/130] rfkill: allocate static minor
-Message-ID: <20191211074840.GH398293@kroah.com>
-References: <20191210220301.13262-1-sashal@kernel.org>
- <20191210220301.13262-77-sashal@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210220301.13262-77-sashal@kernel.org>
+        Wed, 11 Dec 2019 02:48:51 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38701 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbfLKHst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:48:49 -0500
+Received: by mail-pg1-f194.google.com with SMTP id a33so10139392pgm.5;
+        Tue, 10 Dec 2019 23:48:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YZr4Epca+GuujTKa3m7m+IfakHaCFSR+D2ApesAFk1c=;
+        b=U5PHuxbRnHlJa1WF+pikiQbtPbj5pJ7lgV5v4nMGLt0Of0pIDalan3kAwk19+T1syH
+         ky7XJJOk+Ns+WGs/KvQjndmdhnllQqGZvOdbFFpuK9+lrlM600XMxEE//PHAyFKeOFuK
+         gTTc1HWEJFGqb+sbOKFDpdleIh8Av+xZ7FGZM0vYgdH+XdpaxC0hZgjCMDec5Jd4AKcW
+         n5pWSscHt5SMundXJo+6cJ/RBX00VU2TQzUAMQFW++Priw7PoIYrMPi1ncUz+UHqhHJp
+         oQ/5HJ1HkVRr95REdP9ZoW9T3XjRHobEwYMahgS8+VXu5xLi0hBey97bhL9s1OLBZjRJ
+         6BCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=YZr4Epca+GuujTKa3m7m+IfakHaCFSR+D2ApesAFk1c=;
+        b=e96ixj9jHi1jzfq7kzRudP/LVElwoub0Nv4SrZhjIQ48wiP/CWt4i1zh4eOLI4wzO2
+         19hxn99FRif7Cs8wT/WllUSH903rdLoBpUmomzeCa/z7mgVKbBW2bs/nE3noI6UUolSQ
+         xy6vMGibL0cxvmjJ+JQsLx9oSGhLbiDW3MR/wZz+HfQ/bad2pIcic6cN1u6mFtElWf9B
+         82AMcpf6szImFJlbWNJuAwlIUVNkxKLLcO250N+0qrg+BQcMxg0rCZDf0evVgzPVnz5u
+         wD+sefuDUzGB/2919qdvRFsnB+FZYc4fSkHeW9MwdUsOOLGufxbpDjzdf3vkD1IBuVna
+         2kGA==
+X-Gm-Message-State: APjAAAUgkLRKOXzWy/5Wua0aj/kgir/9yDikAPV+ID+lqPqL7nxj4RaG
+        8JPanng/v/m8KrfFxmsL1zQ=
+X-Google-Smtp-Source: APXvYqyZDQK3BrPblKtF9yFedeidgw6D3UCAXB1xQ+YRFW+Bk+WImrFuf0ioiY/CAhm3NHCwwlxpEQ==
+X-Received: by 2002:a62:b60c:: with SMTP id j12mr2351212pff.8.1576050528554;
+        Tue, 10 Dec 2019 23:48:48 -0800 (PST)
+Received: from localhost.localdomain ([2402:3a80:cdb:7615:9ccb:7dcb:bf59:4b2f])
+        by smtp.gmail.com with ESMTPSA id i4sm1608055pgc.51.2019.12.10.23.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 23:48:47 -0800 (PST)
+From:   madhuparnabhowmik04@gmail.com
+To:     kbuild-all@lists.01.org, trond.myklebust@hammerspace.com,
+        paulmck@kernel.org, anna.schumaker@netapp.com,
+        joel@joelfernandes.org
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rcu@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] fs: nfs: dir.c: Fix sparse error
+Date:   Wed, 11 Dec 2019 13:18:42 +0530
+Message-Id: <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <201912110621.WJ6oENgf%lkp@intel.com>
+References: <201912110621.WJ6oENgf%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:02:08PM -0500, Sasha Levin wrote:
-> From: Marcel Holtmann <marcel@holtmann.org>
-> 
-> [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
-> 
-> udev has a feature of creating /dev/<node> device-nodes if it finds
-> a devnode:<node> modalias. This allows for auto-loading of modules that
-> provide the node. This requires to use a statically allocated minor
-> number for misc character devices.
-> 
-> However, rfkill uses dynamic minor numbers and prevents auto-loading
-> of the module. So allocate the next static misc minor number and use
-> it for rfkill.
-> 
-> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  include/linux/miscdevice.h | 1 +
->  net/rfkill/core.c          | 9 +++++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
+This build error is because the macro list_tail_rcu() is
+not yet present in the mainline kernel.
 
-This is not needed in older kernels, please do not backport it unless
-the networking developers _REALLY_ think it is necessary.
+This patch is dependent on the patch : https://lore.kernel.org/linux-kernel-mentees/CAF65HP2SC89k9HJZfcLgeOMRPBKRyasCMiLo2gZgBKycjHuU6A@mail.gmail.com/T/#t
 
-thanks,
 
-greg k-h
+Thank you,
+Madhuparna
+
+
+
+
+
