@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A876C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BF5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE05C2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54D92073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="LEw3E0wq"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="p3uXzgrS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388856AbfLKQEA (ORCPT
+        id S2388863AbfLKQEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:04:00 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:17810 "EHLO rere.qmqm.pl"
+        Wed, 11 Dec 2019 11:04:05 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:51024 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388809AbfLKQD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:03:28 -0500
+        id S2388796AbfLKQD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:03:26 -0500
 Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Y1tj1TTTzwT;
-        Wed, 11 Dec 2019 17:03:25 +0100 (CET)
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Y1tg4PmbzvV;
+        Wed, 11 Dec 2019 17:03:23 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1576080205; bh=Oy1VvPQHyP5QeFjH7svcEiAPSnLBrr+l7IoFFshlf3Y=;
+        t=1576080203; bh=1wftf/sc5Mcn7PCeAzElPSOCJHjcXhZQgR2+XkpUKPM=;
         h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
-        b=LEw3E0wqPNydVX/ZrXBs0IBb9pg5KK3a+T+LbXtW5igMe6IBi+K1bq4hXsIg21AUm
-         VODV0aAF98Cwgb+g3cRWn7SjOOBlLp7+Wz2wxVk3AQWzXUEzu05I2LkKa+Y3CTQcVA
-         c5l8vPZsbrAtk9GXRrjhi43kzavr7vpp0RM99Axxu3mA3unVnaeAFwHSE6QhD9J6Xb
-         ku4J5dYV7/HsJX+C4iVeEwzmuv/xH0Rk5WEOzCp0SI8mNjwM/kbs5gL8GCSoX/R8E0
-         zN6wJyZgwjVjexs0VOt0eX800yb4GER2OV5aZhjHEae11QUMoanFZJOK0Jplz5+8Vi
-         6AHpepuqnm5zw==
+        b=p3uXzgrSlFm/OmUyWbq7KepJEmrglT+1hDL1NU86sR+F8VpgEyrjpQvrcxzMHqOtv
+         HVJFEPaIbaDcrwYtwfUmDzzoixbrYmt932n4uJhEC5IH8be6xeT3F1atHWccApQFNt
+         ACpE2zNQxrkgj3pdRd1xszp10bqYsZl8Zy/4pMMYxUBhzPlv4q/qHxPEkjRFQ7Fm96
+         4+O4tuwlcDLlbUZGPfhn5/zyOUA8q7aKbX6ZAO3qvxaX8uZluCFhD8KbHERdn0b3q1
+         dF3NmtjjPZPYRCdlFnUDKyPfgJJl8qXnYdM3g8lC3KCCh4wY+GpjMZu4ltxHGP3/W9
+         UVrHemTyHivVA==
 X-Virus-Status: Clean
 X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Wed, 11 Dec 2019 17:03:24 +0100
-Message-Id: <fb5d7ea800dbbd908ff5a497bb02055ab7fe7ea8.1576079249.git.mirq-linux@rere.qmqm.pl>
+Date:   Wed, 11 Dec 2019 17:03:23 +0100
+Message-Id: <7d211bcab8d649f70e5bd324585dc383592d4187.1576079249.git.mirq-linux@rere.qmqm.pl>
 In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
 References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
 From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 7/9] input: elants: support 0x66 reply opcode for reporting
- touches
+Subject: [PATCH v2 5/9] input: elants: refactor elants_i2c_execute_command()
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
         James Chen <james.chen@emc.com.tw>,
         Johnny Chuang <johnny.chuang@emc.com.tw>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -60,65 +59,294 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+Apply some DRY-ing to elants_i2c_execute_command() callers.
 
-eKTF3624 touchscreen firmware uses two variants of the reply opcodes for
-reporting touch events: one is 0x63 (used by older firmware) and other is
-0x66 (used by newer firmware). The 0x66 variant is equal to 0x63 of
-eKTH3500, while 0x63 needs small adjustment of the touch pressure value.
-
-Nexus 7 tablet device has eKTF3624 touchscreen and it uses 0x66 opcode for
-reporting touch events, let's support it now. Other devices, eg. ASUS TF300T,
-use 0x63.
-
-Note: CMD_HEADER_REK is used for replying to calibration requests, it has
-the same 0x66 opcode number which eKTF3624 uses for reporting touches.
-The calibration replies are handled separately from the the rest of the
-commands in the driver by entering into ELAN_WAIT_RECALIBRATION state
-and thus this change shouldn't change the old behavior.
-
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/input/touchscreen/elants_i2c.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/input/touchscreen/elants_i2c.c | 182 +++++++++++++------------
+ 1 file changed, 93 insertions(+), 89 deletions(-)
 
 diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-index 1c3eb49a22e4..d750eb97c912 100644
+index bc24f52b2932..369004678a46 100644
 --- a/drivers/input/touchscreen/elants_i2c.c
 +++ b/drivers/input/touchscreen/elants_i2c.c
-@@ -60,6 +60,15 @@
- #define QUEUE_HEADER_NORMAL	0X63
- #define QUEUE_HEADER_WAIT	0x64
+@@ -203,7 +203,8 @@ static int elants_i2c_read(struct i2c_client *client, void *data, size_t size)
  
-+/*
-+ * Depending on firmware version, eKTF3624 touchscreens may utilize one of
-+ * these opcodes for the touch events: 0x63 and 0x66. The 0x63 is used by
-+ * older firmware version and differs from 0x66 such that touch pressure
-+ * value needs to be adjusted. The 0x66 opcode of newer firmware is equal
-+ * to 0x63 of eKTH3500.
-+ */
-+#define QUEUE_HEADER_NORMAL2	0x66
+ static int elants_i2c_execute_command(struct i2c_client *client,
+ 				      const u8 *cmd, size_t cmd_size,
+-				      u8 *resp, size_t resp_size)
++				      u8 *resp, size_t resp_size,
++				      int retries, const char *cmd_name)
+ {
+ 	struct i2c_msg msgs[2];
+ 	int ret;
+@@ -219,30 +220,55 @@ static int elants_i2c_execute_command(struct i2c_client *client,
+ 		break;
+ 
+ 	default:
+-		dev_err(&client->dev, "%s: invalid command %*ph\n",
+-			__func__, (int)cmd_size, cmd);
++		dev_err(&client->dev, "(%s): invalid command: %*ph\n",
++			cmd_name, (int)cmd_size, cmd);
+ 		return -EINVAL;
+ 	}
+ 
+-	msgs[0].addr = client->addr;
+-	msgs[0].flags = client->flags & I2C_M_TEN;
+-	msgs[0].len = cmd_size;
+-	msgs[0].buf = (u8 *)cmd;
++	for (;;) {
++		msgs[0].addr = client->addr;
++		msgs[0].flags = client->flags & I2C_M_TEN;
++		msgs[0].len = cmd_size;
++		msgs[0].buf = (u8 *)cmd;
+ 
+-	msgs[1].addr = client->addr;
+-	msgs[1].flags = client->flags & I2C_M_TEN;
+-	msgs[1].flags |= I2C_M_RD;
+-	msgs[1].len = resp_size;
+-	msgs[1].buf = resp;
++		msgs[1].addr = client->addr;
++		msgs[1].flags = client->flags & I2C_M_TEN;
++		msgs[1].flags |= I2C_M_RD;
++		msgs[1].len = resp_size;
++		msgs[1].buf = resp;
+ 
+-	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+-	if (ret < 0)
+-		return ret;
++		ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
++		if (ret < 0) {
++			if (--retries > 0) {
++				dev_dbg(&client->dev,
++					"(%s) I2C transfer failed: %d (retrying)\n",
++					cmd_name, ret);
++				continue;
++			}
+ 
+-	if (ret != ARRAY_SIZE(msgs) || resp[FW_HDR_TYPE] != expected_response)
+-		return -EIO;
++			dev_err(&client->dev,
++				"(%s) I2C transfer failed: %d\n",
++				cmd_name, ret);
++			return ret;
++		}
+ 
+-	return 0;
++		if (ret != ARRAY_SIZE(msgs) ||
++		    resp[FW_HDR_TYPE] != expected_response) {
++			if (--retries > 0) {
++				dev_dbg(&client->dev,
++					"(%s) unexpected response: %*ph (retrying)\n",
++					cmd_name, ret, resp);
++				continue;
++			}
 +
- /* Command header definition */
- #define CMD_HEADER_WRITE	0x54
- #define CMD_HEADER_READ		0x53
-@@ -990,7 +999,6 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
- 		switch (ts->buf[FW_HDR_TYPE]) {
- 		case CMD_HEADER_HELLO:
- 		case CMD_HEADER_RESP:
--		case CMD_HEADER_REK:
- 			break;
++			dev_err(&client->dev,
++				"(%s) unexpected response: %*ph\n",
++				cmd_name, ret, resp);
++			return -EIO;
++		}
++
++		return --retries;
++	}
+ }
  
- 		case QUEUE_HEADER_WAIT:
-@@ -1010,6 +1018,7 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
- 			break;
+ static int elants_i2c_calibrate(struct elants_data *ts)
+@@ -315,27 +341,20 @@ static u16 elants_i2c_parse_version(u8 *buf)
+ static int elants_i2c_query_hw_version(struct elants_data *ts)
+ {
+ 	struct i2c_client *client = ts->client;
+-	int error, retry_cnt;
++	int retry_cnt = MAX_RETRIES;
+ 	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_FW_ID, 0x00, 0x01 };
+ 	u8 resp[HEADER_SIZE];
  
- 		case QUEUE_HEADER_NORMAL:
-+		case QUEUE_HEADER_NORMAL2:
- 			report_count = ts->buf[FW_HDR_COUNT];
- 			if (report_count == 0 || report_count > 3) {
- 				dev_err(&client->dev,
+-	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+-		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+-						   resp, sizeof(resp));
+-		if (!error) {
+-			ts->hw_version = elants_i2c_parse_version(resp);
+-			if (ts->hw_version != 0xffff)
+-				return 0;
+-		}
++	while (retry_cnt) {
++		retry_cnt = elants_i2c_execute_command(client, cmd, sizeof(cmd),
++						       resp, sizeof(resp),
++						       retry_cnt, "read fw id");
++		if (retry_cnt < 0)
++			return retry_cnt;
+ 
+-		dev_dbg(&client->dev, "read fw id error=%d, buf=%*phC\n",
+-			error, (int)sizeof(resp), resp);
+-	}
+-
+-	if (error) {
+-		dev_err(&client->dev,
+-			"Failed to read fw id: %d\n", error);
+-		return error;
++		ts->hw_version = elants_i2c_parse_version(resp);
++		if (ts->hw_version != 0xffff)
++			return 0;
+ 	}
+ 
+ 	dev_err(&client->dev, "Invalid fw id: %#04x\n", ts->hw_version);
+@@ -346,26 +365,28 @@ static int elants_i2c_query_hw_version(struct elants_data *ts)
+ static int elants_i2c_query_fw_version(struct elants_data *ts)
+ {
+ 	struct i2c_client *client = ts->client;
+-	int error, retry_cnt;
++	int retry_cnt = MAX_RETRIES;
+ 	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_FW_VER, 0x00, 0x01 };
+ 	u8 resp[HEADER_SIZE];
+ 
+-	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+-		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+-						   resp, sizeof(resp));
+-		if (!error) {
+-			ts->fw_version = elants_i2c_parse_version(resp);
+-			if (ts->fw_version != 0x0000 &&
+-			    ts->fw_version != 0xffff)
+-				return 0;
+-		}
++	while (retry_cnt) {
++		retry_cnt = elants_i2c_execute_command(client, cmd,
++						       sizeof(cmd),
++						       resp, sizeof(resp),
++						       retry_cnt,
++						       "read fw version");
++		if (retry_cnt < 0)
++			return retry_cnt;
+ 
+-		dev_dbg(&client->dev, "read fw version error=%d, buf=%*phC\n",
+-			error, (int)sizeof(resp), resp);
++		ts->fw_version = elants_i2c_parse_version(resp);
++		if (ts->fw_version != 0x0000 && ts->fw_version != 0xffff)
++			return 0;
++
++		dev_dbg(&client->dev, "(read fw version) resp %*phC\n",
++			(int)sizeof(resp), resp);
+ 	}
+ 
+-	dev_err(&client->dev,
+-		"Failed to read fw version or fw version is invalid\n");
++	dev_err(&client->dev, "Invalid fw ver: %#04x\n", ts->fw_version);
+ 
+ 	return -EINVAL;
+ }
+@@ -373,25 +394,20 @@ static int elants_i2c_query_fw_version(struct elants_data *ts)
+ static int elants_i2c_query_test_version(struct elants_data *ts)
+ {
+ 	struct i2c_client *client = ts->client;
+-	int error, retry_cnt;
++	int error;
+ 	u16 version;
+ 	const u8 cmd[] = { CMD_HEADER_READ, E_ELAN_INFO_TEST_VER, 0x00, 0x01 };
+ 	u8 resp[HEADER_SIZE];
+ 
+-	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
+-		error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+-						   resp, sizeof(resp));
+-		if (!error) {
+-			version = elants_i2c_parse_version(resp);
+-			ts->test_version = version >> 8;
+-			ts->solution_version = version & 0xff;
++	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
++					   resp, sizeof(resp), MAX_RETRIES,
++					   "read test version");
++	if (error >= 0) {
++		version = elants_i2c_parse_version(resp);
++		ts->test_version = version >> 8;
++		ts->solution_version = version & 0xff;
+ 
+-			return 0;
+-		}
+-
+-		dev_dbg(&client->dev,
+-			"read test version error rc=%d, buf=%*phC\n",
+-			error, (int)sizeof(resp), resp);
++		return 0;
+ 	}
+ 
+ 	dev_err(&client->dev, "Failed to read test version\n");
+@@ -408,13 +424,10 @@ static int elants_i2c_query_bc_version(struct elants_data *ts)
+ 	int error;
+ 
+ 	error = elants_i2c_execute_command(client, cmd, sizeof(cmd),
+-					   resp, sizeof(resp));
+-	if (error) {
+-		dev_err(&client->dev,
+-			"read BC version error=%d, buf=%*phC\n",
+-			error, (int)sizeof(resp), resp);
++					   resp, sizeof(resp), 1,
++					   "read BC version");
++	if (error)
+ 		return error;
+-	}
+ 
+ 	version = elants_i2c_parse_version(resp);
+ 	ts->bc_version = version >> 8;
+@@ -446,12 +459,10 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+ 	error = elants_i2c_execute_command(client,
+ 					   get_resolution_cmd,
+ 					   sizeof(get_resolution_cmd),
+-					   resp, sizeof(resp));
+-	if (error) {
+-		dev_err(&client->dev, "get resolution command failed: %d\n",
+-			error);
++					   resp, sizeof(resp), 1,
++					   "get resolution");
++	if (error)
+ 		return error;
+-	}
+ 
+ 	rows = resp[2] + resp[6] + resp[10];
+ 	cols = resp[3] + resp[7] + resp[11];
+@@ -459,36 +470,29 @@ static int elants_i2c_query_ts_info(struct elants_data *ts)
+ 	/* Process mm_to_pixel information */
+ 	error = elants_i2c_execute_command(client,
+ 					   get_osr_cmd, sizeof(get_osr_cmd),
+-					   resp, sizeof(resp));
+-	if (error) {
+-		dev_err(&client->dev, "get osr command failed: %d\n",
+-			error);
++					   resp, sizeof(resp), 1, "get osr");
++	if (error)
+ 		return error;
+-	}
+ 
+ 	osr = resp[3];
+ 
+ 	error = elants_i2c_execute_command(client,
+ 					   get_physical_scan_cmd,
+ 					   sizeof(get_physical_scan_cmd),
+-					   resp, sizeof(resp));
+-	if (error) {
+-		dev_err(&client->dev, "get physical scan command failed: %d\n",
+-			error);
++					   resp, sizeof(resp), 1,
++					   "get physical scan");
++	if (error)
+ 		return error;
+-	}
+ 
+ 	phy_x = get_unaligned_be16(&resp[2]);
+ 
+ 	error = elants_i2c_execute_command(client,
+ 					   get_physical_drive_cmd,
+ 					   sizeof(get_physical_drive_cmd),
+-					   resp, sizeof(resp));
+-	if (error) {
+-		dev_err(&client->dev, "get physical drive command failed: %d\n",
+-			error);
++					   resp, sizeof(resp), 1,
++					   "get physical drive");
++	if (error)
+ 		return error;
+-	}
+ 
+ 	phy_y = get_unaligned_be16(&resp[2]);
+ 
 -- 
 2.20.1
 
