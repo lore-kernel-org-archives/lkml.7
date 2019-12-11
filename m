@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4613DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299BAC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF26208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F325A2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079099;
-	bh=Ij6qeap0hI6cFj/+9nasKGNk7xnnnew3c0gdzp7vhk8=;
+	s=default; t=1576079102;
+	bh=9nk9rerF5dfHiQn04M8FxiEiugeF+MWThlhBeVFyJJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLK+Ewl7NEENIK4eGvDTz6UeIB1V6vlM6RhpPS3L3eqzh/B6iNTsXE6GUzRSEfOZ+
-	 S+6roRdX3D2oNoV2+04MJW/kCcCdq0QNE59GQ0dG7/TKxJHXHoBChkO7+pohHoefKu
-	 CQe/9hEmcCv96A15IEp1U6k0eFn2FbSafV195U2M=
+	b=dgiz4lAERMErOWNBW1eK7AoTQI1QpbZR7p447bpy3S88Obpq2gNtkuuJDkyo7XLwB
+	 jQ69JHs5YkisMx3kXamjDum0sO7pvjxLXw6b8R0wNNjo2iI3vKqdL5XUrFLCenNLUp
+	 I7x8fLbxARR16KfgWA10sgzC4DJUxkAHHW79HQaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733302AbfLKP1S (ORCPT
+        id S2388450AbfLKPpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60874 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:45:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733249AbfLKP1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:09 -0500
+        id S1733297AbfLKP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0E082173E;
-        Wed, 11 Dec 2019 15:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E73C24654;
+        Wed, 11 Dec 2019 15:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078028;
-        bh=Ij6qeap0hI6cFj/+9nasKGNk7xnnnew3c0gdzp7vhk8=;
+        s=default; t=1576078038;
+        bh=9nk9rerF5dfHiQn04M8FxiEiugeF+MWThlhBeVFyJJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pv/16BXy/j7OhieDdsEVXRERHQyYdG/k+KPPodQnTnpnJDV3HgEC4W18ISxAQyErF
-         Y+PNOV+mdSEcgBQEyYWYrk5r7ajYupV1z/baPuDewxNXOV3XS8/+U/bNscQQpzAkHw
-         hSZE9CkGXI+i5h4ejbyXC+VLq1rlP8T+ESk02bxc=
+        b=u9hWx4arBjZeAk+AUc8BcppDpYLI1fdayXRZ2YHEq1SaV2q6fJIS7bvi0l2Ri9n9M
+         Qu24Tmaqr7NwrVPwTmAT4do1Yx3dPfykAhOXik6vvzMtw7sAVE1b0cn6SliHJIUyjv
+         x1oTRd907YjtBbT2nshAn+tf1BOd+owXeSPCJvPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/79] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
-Date:   Wed, 11 Dec 2019 10:25:47 -0500
-Message-Id: <20191211152643.23056-23-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 32/79] irqchip: ingenic: Error out if IRQ domain creation failed
+Date:   Wed, 11 Dec 2019 10:25:56 -0500
+Message-Id: <20191211152643.23056-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -61,45 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
+[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
 
-This patch updates the lock pattern in ext4_direct_IO_read() to not
-block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
-locking condition implemented here is similar to that of 942491c9e6d6
-("xfs: fix AIM7 regression").
+If we cannot create the IRQ domain, the driver should fail to probe
+instead of succeeding with just a warning message.
 
-Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index f8a0af11a31e8..00d25a0643913 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3839,7 +3839,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
- 	 * writes & truncates and since we take care of writing back page cache,
- 	 * we are protected against page writeback as well.
- 	 */
--	inode_lock_shared(inode);
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock_shared(inode))
-+			return -EAGAIN;
-+	} else {
-+		inode_lock_shared(inode);
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index 2ff08986b5361..be6923abf9a4d 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -117,6 +117,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		goto out_unmap_irq;
+ 	}
+ 
++	domain = irq_domain_add_legacy(node, num_chips * 32,
++				       JZ4740_IRQ_BASE, 0,
++				       &irq_domain_simple_ops, NULL);
++	if (!domain) {
++		err = -ENOMEM;
++		goto out_unmap_base;
 +	}
 +
- 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
- 					   iocb->ki_pos + count - 1);
- 	if (ret)
+ 	for (i = 0; i < num_chips; i++) {
+ 		/* Mask all irqs */
+ 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
+@@ -143,14 +151,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 				       IRQ_NOPROBE | IRQ_LEVEL);
+ 	}
+ 
+-	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
+-				       &irq_domain_simple_ops, NULL);
+-	if (!domain)
+-		pr_warn("unable to register IRQ domain\n");
+-
+ 	setup_irq(parent_irq, &intc_cascade_action);
+ 	return 0;
+ 
++out_unmap_base:
++	iounmap(intc->base);
+ out_unmap_irq:
+ 	irq_dispose_mapping(parent_irq);
+ out_free:
 -- 
 2.20.1
 
