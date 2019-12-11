@@ -2,130 +2,141 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFC5C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9270C20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6349C208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080517;
-	bh=NqacZIeY751Sk6P9cZCPH3F55m9l65RSJBYodqLMxuc=;
+	s=default; t=1576080519;
+	bh=O/W07dSdGlWbNDMUsUSBXfWXUFhILzgxa65l8f5AhjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngG6bx5DJKcpsIEGDt/1rdWwD90iC8x+QBQ4Nb+Xp3cV7/CBiwASRBL/tgjEorJ/F
-	 lVqPVVDzq7cgc2MR+dGTsjlBmEtzt/A0iuyWPBSAM6djk07SE/mxM+IezytY4JqQqf
-	 aw1FYTWC3DYblKawJDIhsyZN6jopP0Llj2QuPAsc=
+	b=fTDbsyyDLm3mEwBRz846dlZ9i9RsOeRWN3vK6IDs+yv4X/EMajQAzS92f/fnkcEOH
+	 HSF3DUPqbIdX4B9YE9CSivO8lQApGEA1nh7QoP/w3Jwd3T2Wi3FQ06WO+uhLPCm8qy
+	 MLKsgg/s9NC7y2ZlTLgwyfUpnPTg5nG/KXXu1s3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfLKQIg (ORCPT
+        id S2388927AbfLKQIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:08:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:08:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbfLKPMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731071AbfLKPMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:14 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2142A24658;
-        Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B048208C3;
+        Wed, 11 Dec 2019 15:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077134;
-        bh=NqacZIeY751Sk6P9cZCPH3F55m9l65RSJBYodqLMxuc=;
+        bh=O/W07dSdGlWbNDMUsUSBXfWXUFhILzgxa65l8f5AhjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJoNaUjoNpLlRuIXUuAJsWLZ66tumSy9mDGwhZCyngo4KUrP7xRelydL/+dfAK+f8
-         B0GZ2sw7rU2NIZDTDOA4A+ibwW1GhDMwznpnbdf5NbA74LK0tSXy766hEXAO9NkDVD
-         j3RbCQEpCVGfPYjVEyXXiDpSKY1lxDdrJweZaJIs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
-        akpm@linux-foundation.org, bigeasy@linutronix.de, cl@linux.com,
-        keescook@chromium.org, penberg@kernel.org, rientjes@google.com,
-        thgarnie@google.com, tytso@mit.edu, will@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 029/105] sched/core: Avoid spurious lock dependencies
-Date:   Wed, 11 Dec 2019 16:05:18 +0100
-Message-Id: <20191211150230.036214995@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=Cf//cW48+l1aSKwTZOFOjoK8qE8LEFp4E9cmHVgmfChpEDwMRxc5bYWY++0apO3lE
+         eRW5lL+SxnFBO967YxgtPjJBVg3PLVZRwR8+tSrdsi6VF5iSeu7QdgXUAujZ6EBkaw
+         jD4BnM8mDRPaIRJxJBqeaN5siI1O215Y41/527EA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 021/134] scsi: hisi_sas: Replace in_softirq() check in hisi_sas_task_exec()
+Date:   Wed, 11 Dec 2019 10:09:57 -0500
+Message-Id: <20191211151150.19073-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit ff51ff84d82aea5a889b85f2b9fb3aa2b8691668 ]
+[ Upstream commit 550c0d89d52d3bec5c299f69b4ed5d2ee6b8a9a6 ]
 
-While seemingly harmless, __sched_fork() does hrtimer_init(), which,
-when DEBUG_OBJETS, can end up doing allocations.
+For IOs from upper layer, preemption may be disabled as it may be called by
+function __blk_mq_delay_run_hw_queue which will call get_cpu() (it disables
+preemption). So if flags HISI_SAS_REJECT_CMD_BIT is set in function
+hisi_sas_task_exec(), it may disable preempt twice after down() and up()
+which will cause following call trace:
 
-This then results in the following lock order:
+BUG: scheduling while atomic: fio/60373/0x00000002
+Call trace:
+dump_backtrace+0x0/0x150
+show_stack+0x24/0x30
+dump_stack+0xa0/0xc4
+__schedule_bug+0x68/0x88
+__schedule+0x4b8/0x548
+schedule+0x40/0xd0
+schedule_timeout+0x200/0x378
+__down+0x78/0xc8
+down+0x54/0x70
+hisi_sas_task_exec.isra.10+0x598/0x8d8 [hisi_sas_main]
+hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
+sas_queuecommand+0x168/0x1b0 [libsas]
+scsi_queue_rq+0x2ac/0x980
+blk_mq_dispatch_rq_list+0xb0/0x550
+blk_mq_do_dispatch_sched+0x6c/0x110
+blk_mq_sched_dispatch_requests+0x114/0x1d8
+__blk_mq_run_hw_queue+0xb8/0x130
+__blk_mq_delay_run_hw_queue+0x1c0/0x220
+blk_mq_run_hw_queue+0xb0/0x128
+blk_mq_sched_insert_requests+0xdc/0x208
+blk_mq_flush_plug_list+0x1b4/0x3a0
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x3c/0x50
+blkdev_direct_IO+0x404/0x550
+generic_file_read_iter+0x9c/0x848
+blkdev_read_iter+0x50/0x78
+aio_read+0xc8/0x170
+io_submit_one+0x1fc/0x8d8
+__arm64_sys_io_submit+0xdc/0x280
+el0_svc_common.constprop.0+0xe0/0x1e0
+el0_svc_handler+0x34/0x90
+el0_svc+0x10/0x14
+...
 
-  rq->lock
-    zone->lock.rlock
-      batched_entropy_u64.lock
+To solve the issue, check preemptible() to avoid disabling preempt multiple
+when flag HISI_SAS_REJECT_CMD_BIT is set.
 
-Which in turn causes deadlocks when we do wakeups while holding that
-batched_entropy lock -- as the random code does.
-
-Solve this by moving __sched_fork() out from under rq->lock. This is
-safe because nothing there relies on rq->lock, as also evident from the
-other __sched_fork() callsite.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: akpm@linux-foundation.org
-Cc: bigeasy@linutronix.de
-Cc: cl@linux.com
-Cc: keescook@chromium.org
-Cc: penberg@kernel.org
-Cc: rientjes@google.com
-Cc: thgarnie@google.com
-Cc: tytso@mit.edu
-Cc: will@kernel.org
-Fixes: b7d5dc21072c ("random: add a spinlock_t to struct batched_entropy")
-Link: https://lkml.kernel.org/r/20191001091837.GK4536@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/1571926105-74636-5-git-send-email-john.garry@huawei.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index fffe790d98bb2..9a839798851c2 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5874,10 +5874,11 @@ void init_idle(struct task_struct *idle, int cpu)
- 	struct rq *rq = cpu_rq(cpu);
- 	unsigned long flags;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 0847e682797be..20f0cb4698b7f 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -587,7 +587,13 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
+ 	dev = hisi_hba->dev;
  
-+	__sched_fork(0, idle);
-+
- 	raw_spin_lock_irqsave(&idle->pi_lock, flags);
- 	raw_spin_lock(&rq->lock);
+ 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
+-		if (in_softirq())
++		/*
++		 * For IOs from upper layer, it may already disable preempt
++		 * in the IO path, if disable preempt again in down(),
++		 * function schedule() will report schedule_bug(), so check
++		 * preemptible() before goto down().
++		 */
++		if (!preemptible())
+ 			return -EINVAL;
  
--	__sched_fork(0, idle);
- 	idle->state = TASK_RUNNING;
- 	idle->se.exec_start = sched_clock();
- 	idle->flags |= PF_IDLE;
+ 		down(&hisi_hba->sem);
 -- 
 2.20.1
-
-
 
