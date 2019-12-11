@@ -2,60 +2,61 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DA3C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0BAC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14E51214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E7A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CJDylWCe"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UCgE1MfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfLKODB (ORCPT
+        id S1729832AbfLKODL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:03:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47972 "EHLO
+        Wed, 11 Dec 2019 09:03:11 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48004 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729686AbfLKOC7 (ORCPT
+        with ESMTP id S1729522AbfLKODL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:02:59 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2eB9034203;
-        Wed, 11 Dec 2019 08:02:40 -0600
+        Wed, 11 Dec 2019 09:03:11 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2bZl034187;
+        Wed, 11 Dec 2019 08:02:38 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576072960;
-        bh=M257Xz7fAOlmSwrEbNXIJwipCrFIM2SaIl6IE3TF+hM=;
+        s=ti-com-17Q1; t=1576072958;
+        bh=4kLYBFMhQh0382iTclezUOe469xMQFfT70DHrwfXTIA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=CJDylWCeipf8CKUttWGo3+ahpp4Y1XWTGnotzOSEyx6uwXUO+3zu0QHCVmz3CuFxs
-         YMGpIVaVlma8862wgu8ih1kofw8J/HnIkFJMhO/qFVcOYnyXrEbisH9edkBpC2ZMWE
-         /aP4sOCDj4zfpLH2FUVutN6wBmcbQPKID6jMkrH4=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2exl094063
+        b=UCgE1MfHPYGRm/As8Cp/3R3DIhJ3fqpMNwawBBtd4RCGGhzYbZVBgIqYrjzbnSbaV
+         Dyoxbo44do0yd+94MumCS+xV4PQ9BSI8EpczzA+xNpJubd9qOCtnDXncN7shRJZs6J
+         Qn1JRzK94KLhQYQfwElT02NXUqs4KKJYhAELBHiM=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2b09124452
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:02:40 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 11 Dec 2019 08:02:37 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:02:39 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 08:02:37 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:02:39 -0600
+ Frontend Transport; Wed, 11 Dec 2019 08:02:37 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afn007398;
-        Wed, 11 Dec 2019 08:02:39 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afl007398;
+        Wed, 11 Dec 2019 08:02:37 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
         <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 03/10] ARM: OMAP: DRA7xx: Make CAM clock domain SWSUP only
-Date:   Wed, 11 Dec 2019 08:05:51 -0600
-Message-ID: <20191211140558.10407-4-bparrot@ti.com>
+Subject: [Patch v4 01/10] clk: ti: dra7: add cam clkctrl data
+Date:   Wed, 11 Dec 2019 08:05:49 -0600
+Message-ID: <20191211140558.10407-2-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191211140558.10407-1-bparrot@ti.com>
 References: <20191211140558.10407-1-bparrot@ti.com>
@@ -67,38 +68,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both CAL and VIP rely on this clock domain. But CAL DPHY require
-LVDSRX_96M_GFCLK to be active. When this domain is set to HWSUP the
-LVDSRX_96M_GFCLK is on;y active when VIP1 clock is also active.  If only
-CAL on DRA72x (which uses the VIP2 clkctrl) probes the CAM domain is
-enabled but the LVDSRX_96M_GFCLK is left gated. Since LVDSRX_96M_GFCLK
-is sourcing the input clock to the DPHY then actual frame capture cannot
-start as the phy are inactive.
-
-So we either have to also enabled VIP1 even if we don't intend on using
-it or we need to set the CAM domain to use SWSUP only.
-
-This patch implements the latter.
+Add clkctrl data for CAM domain.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Acked-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/mach-omap2/clockdomains7xx_data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/ti/clk-7xx.c         | 19 +++++++++++++++++++
+ include/dt-bindings/clock/dra7.h | 10 ++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/arch/arm/mach-omap2/clockdomains7xx_data.c b/arch/arm/mach-omap2/clockdomains7xx_data.c
-index 3068802824b7..27835c4d1aa9 100644
---- a/arch/arm/mach-omap2/clockdomains7xx_data.c
-+++ b/arch/arm/mach-omap2/clockdomains7xx_data.c
-@@ -606,7 +606,7 @@ static struct clockdomain cam_7xx_clkdm = {
- 	.dep_bit	  = DRA7XX_CAM_STATDEP_SHIFT,
- 	.wkdep_srcs	  = cam_wkup_sleep_deps,
- 	.sleepdep_srcs	  = cam_wkup_sleep_deps,
--	.flags		  = CLKDM_CAN_HWSUP_SWSUP,
-+	.flags		  = CLKDM_CAN_SWSUP,
+diff --git a/drivers/clk/ti/clk-7xx.c b/drivers/clk/ti/clk-7xx.c
+index 34e49f909a07..ddfce4b050e5 100644
+--- a/drivers/clk/ti/clk-7xx.c
++++ b/drivers/clk/ti/clk-7xx.c
+@@ -151,6 +151,24 @@ static const struct omap_clkctrl_reg_data dra7_vpe_clkctrl_regs[] __initconst =
+ 	{ 0 },
  };
  
- static struct clockdomain l4per_7xx_clkdm = {
++static const char * const dra7_cam_gfclk_mux_parents[] __initconst = {
++	"l3_iclk_div",
++	"core_iss_main_clk",
++	NULL,
++};
++
++static const struct omap_clkctrl_bit_data dra7_cam_bit_data[] __initconst = {
++	{ 24, TI_CLK_MUX, dra7_cam_gfclk_mux_parents, NULL },
++	{ 0 },
++};
++
++static const struct omap_clkctrl_reg_data dra7_cam_clkctrl_regs[] __initconst = {
++	{ DRA7_CAM_VIP1_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
++	{ DRA7_CAM_VIP2_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
++	{ DRA7_CAM_VIP3_CLKCTRL, dra7_cam_bit_data, CLKF_HW_SUP, "l3_iclk_div" },
++	{ 0 },
++};
++
+ static const struct omap_clkctrl_reg_data dra7_coreaon_clkctrl_regs[] __initconst = {
+ 	{ DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
+ 	{ DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL, NULL, CLKF_SW_SUP, "wkupaon_iclk_mux" },
+@@ -783,6 +801,7 @@ const struct omap_clkctrl_data dra7_clkctrl_data[] __initconst = {
+ 	{ 0x4a008c00, dra7_atl_clkctrl_regs },
+ 	{ 0x4a008d20, dra7_l4cfg_clkctrl_regs },
+ 	{ 0x4a008e20, dra7_l3instr_clkctrl_regs },
++	{ 0x4a009020, dra7_cam_clkctrl_regs },
+ 	{ 0x4a009120, dra7_dss_clkctrl_regs },
+ 	{ 0x4a009320, dra7_l3init_clkctrl_regs },
+ 	{ 0x4a0093b0, dra7_pcie_clkctrl_regs },
+diff --git a/include/dt-bindings/clock/dra7.h b/include/dt-bindings/clock/dra7.h
+index 2b765e579b2a..2c058a534bab 100644
+--- a/include/dt-bindings/clock/dra7.h
++++ b/include/dt-bindings/clock/dra7.h
+@@ -34,6 +34,11 @@
+ #define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
+ #define DRA7_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
+ 
++/* vip clocks */
++#define DRA7_VIP1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x20)
++#define DRA7_VIP2_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
++#define DRA7_VIP3_CLKCTRL	DRA7_CLKCTRL_INDEX(0x30)
++
+ /* coreaon clocks */
+ #define DRA7_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
+ #define DRA7_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
+@@ -202,6 +207,11 @@
+ #define DRA7_VPE_CLKCTRL_INDEX(offset)	((offset) - DRA7_VPE_CLKCTRL_OFFSET)
+ #define DRA7_VPE_VPE_CLKCTRL	DRA7_VPE_CLKCTRL_INDEX(0x64)
+ 
++/* vip clocks */
++#define DRA7_CAM_VIP1_CLKCTRL	DRA7_CLKCTRL_INDEX(0x20)
++#define DRA7_CAM_VIP2_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
++#define DRA7_CAM_VIP3_CLKCTRL	DRA7_CLKCTRL_INDEX(0x30)
++
+ /* coreaon clocks */
+ #define DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL	DRA7_CLKCTRL_INDEX(0x28)
+ #define DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL	DRA7_CLKCTRL_INDEX(0x38)
 -- 
 2.17.1
 
