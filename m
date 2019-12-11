@@ -2,84 +2,120 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9893FC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E79C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6134A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NFaAqNhi";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="CY4tcMHV"
+	by mail.kernel.org (Postfix) with ESMTP id 615552173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfLKHKC (ORCPT
+        id S1727948AbfLKHMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:10:02 -0500
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:51972
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725800AbfLKHKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:10:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576048201;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=mHGxYoR3gp9GoBg7R0dzI6EbViXJjFdJH4ruGbJEZe4=;
-        b=NFaAqNhiPEil+aOAw6cfAQctKv/L+e+MdQ11a0qE8QpTOJOsqxUb4uVy/Aej7WWi
-        xhPCVoII9S55oOp94IyCWpkHPye9DgU0eZ/u40w+YSJJ8aRYl5cewx9sqJTRamuqV1V
-        +So8jsjG6Bj/McTy3MhApzGC54ZSBKp/hvcLND2o=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576048201;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=mHGxYoR3gp9GoBg7R0dzI6EbViXJjFdJH4ruGbJEZe4=;
-        b=CY4tcMHV5B/bxG3Nf9CtXVbHryYS/DILj1pyvMtoOv1SgeYqDwE0wbFBWwozhosH
-        tGvNknAz0qNyF0yyBDp+ppAGss7Z8QMseT4iRf0ZNgT/RlLNk8yPXTUIxC4kIQtjekw
-        i0/dBs14ODZGSrHwyCWmp57B+bbn3E48W0wZl2fI=
+        Wed, 11 Dec 2019 02:12:08 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:42522 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726487AbfLKHMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:12:08 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 4ACD0B87F982C67764B5;
+        Wed, 11 Dec 2019 15:12:02 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 11 Dec 2019 15:12:01 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 11 Dec 2019 15:12:01 +0800
+Date:   Wed, 11 Dec 2019 15:17:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        <linux-fsdevel@vger.kernel.org>, <ecryptfs@vger.kernel.org>,
+        <linux-fscrypt@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
+Message-ID: <20191211071711.GA231266@architecture4>
+References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191211024858.GB732@sol.localdomain>
+ <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
+ <20191211044723.GC4203@ZenIV.linux.org.uk>
+ <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 11 Dec 2019 07:10:01 +0000
-From:   saiprakash.ranjan@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH 0/3] Add DT nodes for watchdog and llcc for SC7180 and
- SM8150 SoCs
-In-Reply-To: <20191211070216.GF3143381@builder>
-References: <0101016ef3391259-59ec5f0a-2ae7-45a8-881e-edc2d0bf7b26-000000@us-west-2.amazonses.com>
- <20191211070216.GF3143381@builder>
-Message-ID: <0101016ef3cb0d1d-73403d51-8cd5-4220-ac31-39f05134c9b8-000000@us-west-2.amazonses.com>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.11-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <4a90aaa9-18c8-f0a7-19e4-1c5bd5915a28@loongson.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme715-chm.china.huawei.com (10.1.199.111) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-11 12:32, Bjorn Andersson wrote:
-> On Tue 10 Dec 20:30 PST 2019, Sai Prakash Ranjan wrote:
+On Wed, Dec 11, 2019 at 02:38:34PM +0800, Tiezhu Yang wrote:
+> On 12/11/2019 12:47 PM, Al Viro wrote:
+> > On Wed, Dec 11, 2019 at 11:59:40AM +0800, Tiezhu Yang wrote:
+> > 
+> > > static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> > > {
+> > >          if (len == 1 && name[0] == '.')
+> > >                  return true;
+> > > 
+> > >          if (len == 2 && name[0] == '.' && name[1] == '.')
+> > >                  return true;
+> > > 
+> > >          return false;
+> > > }
+> > > 
+> > > Hi Matthew,
+> > > 
+> > > How do you think? I think the performance influence is very small
+> > > due to is_dot_or_dotdot() is a such short static inline function.
+> > It's a very short inline function called on a very hot codepath.
+> > Often.
+> > 
+> > I mean it - it's done literally for every pathname component of
+> > every pathname passed to a syscall.
 > 
->> This series adds device tree node for watchdog on SC7180 and SM8150.
->> It also adds a node for LLCC (Last level cache controller) on SC7180.
->> 
->> Patch 3 depends on the dt binding change to LLCC node name:
->>  - https://patchwork.kernel.org/patch/11246055/
->> 
+> OK. I understand. Let us do not use the helper function in fs/namei.c,
+> just use the following implementation for other callers:
 > 
-> Series applied
+> static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> {
+>         if (len >= 1 && unlikely(name[0] == '.')) {
+
+
+And I suggest drop "unlikely" here since files start with prefix
+'.' (plus specical ".", "..") are not as uncommon as you expected...
+
+
+Thanks,
+Gao Xiang
+
+
+>                 if (len < 2 || (len == 2 && name[1] == '.'))
+>                         return true;
+>         }
 > 
-
-Thanks Bjorn !!
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+>         return false;
+> }
+> 
+> Special thanks for Matthew, Darrick, Al and Eric.
+> If you have any more suggestion, please let me know.
+> 
+> Thanks,
+> 
+> Tiezhu Yang
+> 
