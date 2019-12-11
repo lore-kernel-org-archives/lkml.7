@@ -2,100 +2,151 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A309C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D4A20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6149E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079921;
-	bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
+	s=default; t=1576079922;
+	bh=uoThELQ/DKhuovqEU3HxwbjI98SblmxIV9ZGX2S5Wz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B0fI+8dlFdnlYZdO6tA+DA0niODTXT/X10ATgOsBXdx7yMNXUp01svTlrbwBtLWL+
-	 Brm9pQzTM6DpBLvKuR6q3w7lO3aA18jEyazgKi34v+bPBIWrWmAz2TK/grzPZi4sfE
-	 LkiOmMj6+jYOclvP1E9f81C/t6JY3Vhl9xhOwD4w=
+	b=qGklkh8QSFnl7zjC5eD952O5uDDkn6CT6QocnAooMZE40iRxcnRIDj5G9FnaxIWHZ
+	 DleWacAGH/i683SXDNpi6QBkjZ/aN7f7afNJS8n7GXvMCSaW1zLbS/a9z612SxNUJK
+	 vIWKltCfN6pbTKdwZwYLWWjbPr31TCDV/a7lfDPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732256AbfLKP6j (ORCPT
+        id S1731748AbfLKP6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:58:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:58:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbfLKPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:16 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731068AbfLKPOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:17 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E1D24691;
-        Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55F082468F;
+        Wed, 11 Dec 2019 15:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077255;
-        bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
+        s=default; t=1576077256;
+        bh=uoThELQ/DKhuovqEU3HxwbjI98SblmxIV9ZGX2S5Wz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twbLLzCDWIMYbq4nrY+NHUX7w4TdRtnEF9gAje4rOPsxBlksv731xoZ0Xz4PZM6WH
-         HsUvhBRC6Imp89YPvNP0k7wb6YEOiYnttEM2VtCjqLuznvEfGdKKvS/r2a25QzcJ6R
-         9LfKofL14xmNsb3Q92I5AolkfHtONeqIjuNwOYIU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: [PATCH 5.3 074/105] drm/i810: Prevent underflow in ioctl
-Date:   Wed, 11 Dec 2019 16:06:03 +0100
-Message-Id: <20191211150253.249313601@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=nQZnJS8yRZpPahhr+zzQ1LveMXtCgA6XmWQmDcKw2/v3jzqBjTRxYvumjAt7oWx46
+         4etkHiH5wPc/MgqyGGPslxuA0SRfHsgW1LbC+Er06OhCt+UtB9ue9Dr5SinFMsz8bB
+         N75fuCmmRT1OkHXoLiAWlnYxqhlxa4XtFED0ZHlo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
+        Chengguang Xu <cgxu519@mykernel.net>,
+        David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 132/134] mm/hugetlbfs: fix error handling when setting up mounts
+Date:   Wed, 11 Dec 2019 10:11:48 -0500
+Message-Id: <20191211151150.19073-132-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
+[ Upstream commit 8fc312b32b25c6b0a8b46fab4df8c68df5af1223 ]
 
-The "used" variables here come from the user in the ioctl and it can be
-negative.  It could result in an out of bounds write.
+It is assumed that the hugetlbfs_vfsmount[] array will contain either a
+valid vfsmount pointer or NULL for each hstate after initialization.
+Changes made while converting to use fs_context broke this assumption.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+While fixing the hugetlbfs_vfsmount issue, it was discovered that
+init_hugetlbfs_fs never did correctly clean up when encountering a vfs
+mount error.
 
+It was found during code inspection.  A small memory allocation failure
+would be the most likely cause of taking a error path with the bug.
+This is unlikely to happen as this is early init code.
+
+Link: http://lkml.kernel.org/r/94b6244d-2c24-e269-b12c-e3ba694b242d@oracle.com
+Reported-by: Chengguang Xu <cgxu519@mykernel.net>
+Fixes: 32021982a324 ("hugetlbfs: Convert to fs_context")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i810/i810_dma.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/hugetlbfs/inode.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
---- a/drivers/gpu/drm/i810/i810_dma.c
-+++ b/drivers/gpu/drm/i810/i810_dma.c
-@@ -721,7 +721,7 @@ static void i810_dma_dispatch_vertex(str
- 	if (nbox > I810_NR_SAREA_CLIPRECTS)
- 		nbox = I810_NR_SAREA_CLIPRECTS;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index a478df0356517..26e3906c18fe9 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1461,28 +1461,41 @@ static int __init init_hugetlbfs_fs(void)
+ 					sizeof(struct hugetlbfs_inode_info),
+ 					0, SLAB_ACCOUNT, init_once);
+ 	if (hugetlbfs_inode_cachep == NULL)
+-		goto out2;
++		goto out;
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+ 	error = register_filesystem(&hugetlbfs_fs_type);
+ 	if (error)
+-		goto out;
++		goto out_free;
  
- 	if (sarea_priv->dirty)
-@@ -1041,7 +1041,7 @@ static void i810_dma_dispatch_mc(struct
- 	if (u != I810_BUF_CLIENT)
- 		DRM_DEBUG("MC found buffer that isn't mine!\n");
++	/* default hstate mount is required */
++	mnt = mount_one_hugetlbfs(&hstates[default_hstate_idx]);
++	if (IS_ERR(mnt)) {
++		error = PTR_ERR(mnt);
++		goto out_unreg;
++	}
++	hugetlbfs_vfsmount[default_hstate_idx] = mnt;
++
++	/* other hstates are optional */
+ 	i = 0;
+ 	for_each_hstate(h) {
++		if (i == default_hstate_idx)
++			continue;
++
+ 		mnt = mount_one_hugetlbfs(h);
+-		if (IS_ERR(mnt) && i == 0) {
+-			error = PTR_ERR(mnt);
+-			goto out;
+-		}
+-		hugetlbfs_vfsmount[i] = mnt;
++		if (IS_ERR(mnt))
++			hugetlbfs_vfsmount[i] = NULL;
++		else
++			hugetlbfs_vfsmount[i] = mnt;
+ 		i++;
+ 	}
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+ 	return 0;
  
- 	sarea_priv->dirty = 0x7f;
-
+- out:
++ out_unreg:
++	(void)unregister_filesystem(&hugetlbfs_fs_type);
++ out_free:
+ 	kmem_cache_destroy(hugetlbfs_inode_cachep);
+- out2:
++ out:
+ 	return error;
+ }
+ fs_initcall(init_hugetlbfs_fs)
+-- 
+2.20.1
 
