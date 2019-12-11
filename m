@@ -2,110 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04D2C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F42FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAFD208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051CD20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080482;
-	bh=LrQPLvA8WyI77d5sSR7uzqf48NSFbyjdzRk8D4zjZlI=;
+	s=default; t=1576080485;
+	bh=TXhQgINiiHOmO+dIBob4x0n3LWwuAWVeGsy7mnGnAgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yDCLumqGkALg4idbijI9MqBW2p49jJm6dgLmMO+VKWqhFTtvoiplGxu31pB8rrWxS
-	 SdfXbmea2JG8sM6paWJYlU07uPDWPAYDNfVwQIPwNV7rFv/3f9+taa+KxVr3QKqf99
-	 oVbZFZBKgtKAW0XPNzoMCHvDavFgMGeGEODf1VsY=
+	b=KC9B8aib1nbAg21grcdS9Ag3o6Mroyhgwp9W5WJvoJY/uFBIvkuoZepU8wzfo9a6K
+	 HF/cgWDwt3bEiffss1WbCBgpuP1aEfUKT+V61FxDS0DvGDQ2fKdFSIuATBLCGwX/lj
+	 d/UepJYBIWihVuun/YsXeA3mAzO8SGI/ucyLJn1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388838AbfLKQIB (ORCPT
+        id S2388882AbfLKQID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:08:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33884 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:08:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731113AbfLKPMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731108AbfLKPMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:22 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DDE62465A;
-        Wed, 11 Dec 2019 15:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B7A2467A;
+        Wed, 11 Dec 2019 15:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077142;
-        bh=LrQPLvA8WyI77d5sSR7uzqf48NSFbyjdzRk8D4zjZlI=;
+        bh=TXhQgINiiHOmO+dIBob4x0n3LWwuAWVeGsy7mnGnAgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=psBo7x7ZJqHKlBdnxP89ndCFewLpWqz/ETw290LBFDwTpymV7u0x8tJXNLBtBDvJl
-         LPSYPtPTQSFjSFAWklfOTuiF0q1dvFWlcToHQmRCLi9aNpEw4fjv1hSCMLVxEOVhbx
-         tNi0FvsR/eIl1tls/LyLW87+ksgTildOwM49e/+c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, paulhsia <paulhsia@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 032/105] ALSA: pcm: Fix stream lock usage in snd_pcm_period_elapsed()
-Date:   Wed, 11 Dec 2019 16:05:21 +0100
-Message-Id: <20191211150231.942028611@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=ZpNZU3o+oK+g5YzeB7QNOY2RQRJhHkwZ8Jfyx4UqMezedDANTrO34VNeq0V7M4MZn
+         4Qkaqbu9lQHSTQNniwjmF8VN7SEK2wZltuyfeY06MWmaaRHokkoTKDAAGQ2kPTbAA+
+         3mYRfZTQG911aKmXAIZMck46OH//wKV1yczP8gkI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 029/134] dma-mapping: Add vmap checks to dma_map_single()
+Date:   Wed, 11 Dec 2019 10:10:05 -0500
+Message-Id: <20191211151150.19073-29-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: paulhsia <paulhsia@chromium.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit f5cdc9d4003a2f66ea57b3edd3e04acc2b1a4439 ]
+[ Upstream commit 4544b9f25e70eae9f70a243de0cc802aa5c8cb69 ]
 
-If the nullity check for `substream->runtime` is outside of the lock
-region, it is possible to have a null runtime in the critical section
-if snd_pcm_detach_substream is called right before the lock.
+As we've seen from USB and other areas[1], we need to always do runtime
+checks for DMA operating on memory regions that might be remapped. This
+adds vmap checks (similar to those already in USB but missing in other
+places) into dma_map_single() so all callers benefit from the checking.
 
-Signed-off-by: paulhsia <paulhsia@chromium.org>
-Link: https://lore.kernel.org/r/20191112171715.128727-2-paulhsia@chromium.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[1] https://git.kernel.org/linus/3840c5b78803b2b6cc1ff820100a74a092c40cbb
+
+Suggested-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+[hch: fixed the printk message]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/pcm_lib.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/dma-mapping.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
-index d80041ea4e01c..2236b5e0c1f25 100644
---- a/sound/core/pcm_lib.c
-+++ b/sound/core/pcm_lib.c
-@@ -1782,11 +1782,14 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime;
- 	unsigned long flags;
- 
--	if (PCM_RUNTIME_CHECK(substream))
-+	if (snd_BUG_ON(!substream))
- 		return;
--	runtime = substream->runtime;
- 
- 	snd_pcm_stream_lock_irqsave(substream, flags);
-+	if (PCM_RUNTIME_CHECK(substream))
-+		goto _unlock;
-+	runtime = substream->runtime;
-+
- 	if (!snd_pcm_running(substream) ||
- 	    snd_pcm_update_hw_ptr0(substream, 1) < 0)
- 		goto _end;
-@@ -1797,6 +1800,7 @@ void snd_pcm_period_elapsed(struct snd_pcm_substream *substream)
- #endif
-  _end:
- 	kill_fasync(&runtime->fasync, SIGIO, POLL_IN);
-+ _unlock:
- 	snd_pcm_stream_unlock_irqrestore(substream, flags);
- }
- EXPORT_SYMBOL(snd_pcm_period_elapsed);
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 4a1c4fca475ad..0aad641d662c3 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -583,6 +583,10 @@ static inline unsigned long dma_get_merge_boundary(struct device *dev)
+ static inline dma_addr_t dma_map_single_attrs(struct device *dev, void *ptr,
+ 		size_t size, enum dma_data_direction dir, unsigned long attrs)
+ {
++	/* DMA must never operate on areas that might be remapped. */
++	if (dev_WARN_ONCE(dev, is_vmalloc_addr(ptr),
++			  "rejecting DMA map of vmalloc memory\n"))
++		return DMA_MAPPING_ERROR;
+ 	debug_dma_map_single(dev, ptr, size);
+ 	return dma_map_page_attrs(dev, virt_to_page(ptr), offset_in_page(ptr),
+ 			size, dir, attrs);
 -- 
 2.20.1
-
-
 
