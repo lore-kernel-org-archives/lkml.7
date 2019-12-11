@@ -2,84 +2,175 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A054C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B79A6C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCC8214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCD92053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=piap.pl header.i=@piap.pl header.b="ddfu2lN5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iMahdVvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfLKHUU (ORCPT
+        id S1728094AbfLKHU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:20:20 -0500
-Received: from ni.piap.pl ([195.187.100.5]:34146 "EHLO ni.piap.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725800AbfLKHUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:20:19 -0500
-X-Greylist: delayed 583 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Dec 2019 02:20:19 EST
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ni.piap.pl (Postfix) with ESMTPSA id 8B26144395F;
-        Wed, 11 Dec 2019 08:10:34 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl 8B26144395F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=piap.pl; s=mail;
-        t=1576048235; bh=NzjEtJBbGMnp7Oker2Ku1W7VereultBIRwFu42VbqH0=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=ddfu2lN5c/GDpBgFP7CSUj0b136P+lVeJ7gwAXrjiOc/imCh/fKKl06s4jiNWd3W6
-         ghZTZ3rWpbxy0U0jx8x6F4oyrkOb+j4jZNenBXXxV0t87/bTxylOTmAAjyPY2pKW0j
-         p+4ER4qIEmPNUzF+DwzgjA2TKIAZAhR6S+H4y0LA=
-From:   khalasa@piap.pl (Krzysztof =?utf-8?Q?Ha=C5=82asa?=)
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
-        Andrew Hendry <andrew.hendry@gmail.com>,
-        linux-x25@vger.kernel.org, Kevin Curtis <kevin.curtis@farsite.com>,
-        "R.J.Dunlop" <bob.dunlop@farsite.com>,
-        Zhao Qiang <qiang.zhao@nxp.com>,
-        syzbot+429c200ffc8772bfe070@syzkaller.appspotmail.com,
-        syzbot+eec0c87f31a7c3b66f7b@syzkaller.appspotmail.com
-Subject: Re: [PATCH 4/4] [RFC] staging/net: move AF_X25 into drivers/staging
-References: <20191209151256.2497534-1-arnd@arndb.de>
-        <20191209151256.2497534-4-arnd@arndb.de>
-Date:   Wed, 11 Dec 2019 08:10:34 +0100
-In-Reply-To: <20191209151256.2497534-4-arnd@arndb.de> (Arnd Bergmann's message
-        of "Mon, 9 Dec 2019 16:12:56 +0100")
-Message-ID: <m3d0cvjq1h.fsf@t19.piap.pl>
+        Wed, 11 Dec 2019 02:20:57 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44027 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfLKHU5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:20:57 -0500
+Received: by mail-pf1-f195.google.com with SMTP id h14so1328871pfe.10
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:20:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zt7dD+G6CZ7JiW/OTyZRbi+QrgrCgEMr0EtbdbVOEvo=;
+        b=iMahdVvUtYzRqHNMafgKcr6aoqiCK7vmp3iXqmihp+FGIvNpLfNq/m2YTqfRe+k0Nq
+         kOgT74Udrg0WLXHns+nS0rhaInQiPaL9iouYgxrdAT5bAbwQwwHN7S42aW0rt0G1wpVs
+         /PzhtlbQuD9V6KkI5xOMC+fLmXXzxU2ho0S1E2oQPsyEFtfcJcHC/MlIeQGN+c7/OaEP
+         j+KfHH8baHU9oSpk3Qwwr3Y2ZIl0C0iSDFuYhCH9ASpnb4HysTH5LLb1HCrL+cuu5s09
+         6X8ZfQDg/XjLZW35aWVypgrT6JPBCcSgHQctQRkYClbxNQ21QZSwiFPBs9bCmQwV34g3
+         VOlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zt7dD+G6CZ7JiW/OTyZRbi+QrgrCgEMr0EtbdbVOEvo=;
+        b=WeU004JqzDnfKgoVvwE2rt3iiAGXLJ2tvsYEPHgbiySgYleZH+WILExSlY6tYpn6hq
+         CgoI+xY929NO7GzaAr3izmBnbZ4QkFVjsjNStFt0o6MgCElLcqgUvvSOfq44KqhZXl8a
+         i7+RYONpKJlpUskDFVEV4+oEp69Nsl/DZBrLj5gp6k/tbc58kgVSNjnPSqJCKvmxtIhA
+         or2hUlmqRflNKwYa95JbozpAR8a69F2Nx+j+xClczvDVLxcAij23FMd+UxBNIQqy5RPE
+         8SaX8ihkjZtsDBAhC5OdDwiLU9rdxrWwgLkuGICA1ZBOu9oPh50XKc3uLLe73me85T5d
+         xo1g==
+X-Gm-Message-State: APjAAAWnHFLRx9m7IYWZwDo6XFHFw7cG7m/fIoQtB4hTwFTdDF+SRazO
+        hGf5zibBDdnzWLl0KGAiNSCXww==
+X-Google-Smtp-Source: APXvYqw4cxozBp2uimntGWWy0jZ4dci8RUXiHQpPyTXnBRm14alWbArUZIe+OL2WJ+qkqlQdnpm8Ug==
+X-Received: by 2002:a63:684a:: with SMTP id d71mr2442865pgc.27.1576048856072;
+        Tue, 10 Dec 2019 23:20:56 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x4sm1496180pfx.68.2019.12.10.23.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 23:20:55 -0800 (PST)
+Date:   Tue, 10 Dec 2019 23:20:53 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module device
+ node
+Message-ID: <20191211072053.GH3143381@builder>
+References: <0101016ed018cde9-da3dc3e0-de6e-4b18-9add-bc6f88511ab2-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-KLMS-Rule-ID: 4
-X-KLMS-Message-Action: skipped
-X-KLMS-AntiSpam-Status: not scanned, whitelist
-X-KLMS-AntiPhishing: not scanned, whitelist
-X-KLMS-AntiVirus: Kaspersky Security 8.0 for Linux Mail Server, version 8.0.1.721, not scanned, whitelist
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016ed018cde9-da3dc3e0-de6e-4b18-9add-bc6f88511ab2-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd,
+On Wed 04 Dec 00:48 PST 2019, Rakesh Pillai wrote:
 
-Arnd Bergmann <arnd@arndb.de> writes:
+> Add device node for the ath10k SNOC platform driver probe
+> and add resources required for WCN3990 on sc7180 soc.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> ---
+> This change is dependent on the below set of changes
+> arm64: dts: sc7180: Add qupv3_0 and qupv3_1 (https://lore.kernel.org/patchwork/patch/1150367/)
 
-> - Most other supported HDLC hardware that we supoprt is for the ISA or
->   PCI buses.
+Why?
 
-I would be surprised if there is anybody left with ISA sync serial
-stuff, but the PCI hardware still has some users - these machines don't
-need to be upgraded yearly. Most people have migrated away, though.
---=20
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  4 ++++
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
+>  2 files changed, 31 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 189254f..8a6a760 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -248,6 +248,10 @@
+>  	status = "okay";
+>  };
+>  
+> +&wifi {
+> +	status = "okay";
 
-Krzysztof Halasa
+Please conclude on the representation of the "skip-hyp-mem-assign" and
+add it here, rather than in a subsequent patch - which implies that this
+patch doesn't work on its own.
 
-=C5=81UKASIEWICZ Research Network
-Industrial Research Institute for Automation and Measurements PIAP
-Al. Jerozolimskie 202, 02-486 Warsaw, Poland
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
+>  
+>  &qup_i2c2_default {
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 666e9b9..40c9971 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -42,6 +42,12 @@
+>  			compatible = "qcom,cmd-db";
+>  			no-map;
+>  		};
+> +
+> +		wlan_fw_mem: wlan_fw_region@93900000 {
+
+wlan_fw_mem: memory@93900000 {
+
+> +			compatible = "removed-dma-pool";
+> +			no-map;
+> +			reg = <0 0x93900000 0 0x200000>;
+> +		};
+>  	};
+>  
+>  	cpus {
+> @@ -1119,6 +1125,27 @@
+>  				#clock-cells = <1>;
+>  			};
+>  		};
+> +
+> +		wifi: wifi@18800000 {
+> +			status = "disabled";
+> +			compatible = "qcom,wcn3990-wifi";
+> +			reg = <0 0x18800000 0 0x800000>;
+> +			reg-names = "membase";
+> +			interrupts =
+> +				<GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
+> +				<GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
+> +				<GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
+> +				<GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
+> +				<GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
+> +				<GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
+> +				<GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
+> +				<GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
+> +				<GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
+> +				<GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
+> +				<GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
+> +				<GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
+> +			memory-region = <&wlan_fw_mem>;
+
+No iommus in sc7180?
+
+Regards,
+Bjorn
+
+> +		};
+>  	};
+>  
+>  	timer {
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
