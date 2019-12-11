@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFCBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A904F2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C2E2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079436;
-	bh=pfK74v3YmtA8H49th10aE3QUou3ru2WOeyG21yIhRK8=;
+	s=default; t=1576079441;
+	bh=0bDLDS4ZuQlvEv4vzWIIcKsFVIJMicqrSVRGeE7dx+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=siKjaHjb1rl3XG6NEGE8+1BHM4qhuu7Y5qFMM8410XZqRtk6vWh5u6TfnyAbfDW7/
-	 cIixSDzy7VDtAfufSGv1TIOWvEJXDANgxopwr4cBUcBLopivtotVYMVfzdyqIs4nUq
-	 uyaOEBK7uFi0RyQaxBWtPR+s3LvyIjikOK5y+fSg=
+	b=ghGb31utLhIGumJ6O+zP8G63/6JQWQEiSUjS+YkMoNpHLXBKWJ98iSyeprE8XTppg
+	 f0RtNQTHUD0aM5FJ+GzK71QHl5I22tmOMq2wMI3MM4t4QtvxL1ZQYRwiHykm5DkPX5
+	 Gd15f1I70DZbIdfDurBLSMnWJJq8HDk/LpOxIY6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732498AbfLKPXB (ORCPT
+        id S1733256AbfLKPuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53778 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:50:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732311AbfLKPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:57 -0500
+        id S1732235AbfLKPW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D8BA2073D;
-        Wed, 11 Dec 2019 15:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B66C6208C3;
+        Wed, 11 Dec 2019 15:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077776;
-        bh=pfK74v3YmtA8H49th10aE3QUou3ru2WOeyG21yIhRK8=;
+        s=default; t=1576077779;
+        bh=0bDLDS4ZuQlvEv4vzWIIcKsFVIJMicqrSVRGeE7dx+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1N245TRkyTHPinFymACc36oM4Gni2waSXu+OSVAu5jOdrVIFGuJ0Rg7wh4Cn6cjr/
-         IB9H72GoMZT5b7GC+L+/hi8s6SPiyuBH9rcoD9vLFjeBJDnOdhU2ciK7TCfoHHoAC0
-         tRRVwgzQXwBEqcrJLYNSDHcg7nU78QOCCJiM0k6g=
+        b=c/0tknN2AATn8gN3jsDruihIwjvRiBefGtwYikSRd24VFTnHcsmnjWWYoPKouzMzj
+         5QWGwmHSD13CD1qm4oZd6ub+PmoMbV0QhBgSLhmlG2b7NHv9bwA8Ha9RbSb4yyMqTG
+         I8i8uylwaS/wqzgT4Za4V/cwlcnzCI1GaFe7qYYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Teigland <teigland@redhat.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 167/243] dlm: fix invalid cluster name warning
-Date:   Wed, 11 Dec 2019 16:05:29 +0100
-Message-Id: <20191211150350.457147152@linuxfoundation.org>
+Subject: [PATCH 4.19 150/243] soc: renesas: r8a77980-sysc: Correct A3VIP[012] power domain hierarchy
+Date:   Wed, 11 Dec 2019 16:05:12 +0100
+Message-Id: <20191211150349.298368868@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,45 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Teigland <teigland@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 3595c559326d0b660bb088a88e22e0ca630a0e35 ]
+[ Upstream commit 160bfa7c724b348a90a12dd9694f351927a15b8e ]
 
-The warning added in commit 3b0e761ba83
-  "dlm: print log message when cluster name is not set"
+The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
+renamed the A3VIP power domain on R-Car V3H to A3VIP0, and clarified the
+power domain hierarchy for the A3VIP[012] power domains.
 
-did not account for the fact that lockspaces created
-from userland do not supply a cluster name, so bogus
-warnings are printed every time a userland lockspace
-is created.
+As the definition for the A3VIP0 domain is not yet used from DT, it can
+just be renamed.
 
-Signed-off-by: David Teigland <teigland@redhat.com>
+Fixes: 7755b40d07a8dba7 ("dt-bindings: power: add R8A77980 SYSC power domain definitions")
+Fixes: 41d6d8bd8ae94ca9 ("soc: renesas: rcar-sysc: add R8A77980 support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dlm/user.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/soc/renesas/r8a77980-sysc.c       | 6 +++---
+ include/dt-bindings/power/r8a77980-sysc.h | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/dlm/user.c b/fs/dlm/user.c
-index 13f29409600bb..3c84c62dadb7b 100644
---- a/fs/dlm/user.c
-+++ b/fs/dlm/user.c
-@@ -25,6 +25,7 @@
- #include "lvb_table.h"
- #include "user.h"
- #include "ast.h"
-+#include "config.h"
+diff --git a/drivers/soc/renesas/r8a77980-sysc.c b/drivers/soc/renesas/r8a77980-sysc.c
+index dbb2621ce4e3e..a8dbe55e8ba82 100644
+--- a/drivers/soc/renesas/r8a77980-sysc.c
++++ b/drivers/soc/renesas/r8a77980-sysc.c
+@@ -41,9 +41,9 @@ static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
+ 	{ "a2dp0",	0x400, 11, R8A77980_PD_A2DP0,	R8A77980_PD_A3IR },
+ 	{ "a2dp1",	0x400, 12, R8A77980_PD_A2DP1,	R8A77980_PD_A3IR },
+ 	{ "a2cn",	0x400, 13, R8A77980_PD_A2CN,	R8A77980_PD_A3IR },
+-	{ "a3vip",	0x2c0, 0, R8A77980_PD_A3VIP,	R8A77980_PD_ALWAYS_ON },
+-	{ "a3vip1",	0x300, 0, R8A77980_PD_A3VIP1,	R8A77980_PD_A3VIP },
+-	{ "a3vip2",	0x280, 0, R8A77980_PD_A3VIP2,	R8A77980_PD_A3VIP },
++	{ "a3vip0",	0x2c0, 0, R8A77980_PD_A3VIP0,	R8A77980_PD_ALWAYS_ON },
++	{ "a3vip1",	0x300, 0, R8A77980_PD_A3VIP1,	R8A77980_PD_ALWAYS_ON },
++	{ "a3vip2",	0x280, 0, R8A77980_PD_A3VIP2,	R8A77980_PD_ALWAYS_ON },
+ };
  
- static const char name_prefix[] = "dlm";
- static const struct file_operations device_fops;
-@@ -404,7 +405,7 @@ static int device_create_lockspace(struct dlm_lspace_params *params)
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
- 
--	error = dlm_new_lockspace(params->name, NULL, params->flags,
-+	error = dlm_new_lockspace(params->name, dlm_config.ci_cluster_name, params->flags,
- 				  DLM_USER_LVB_LEN, NULL, NULL, NULL,
- 				  &lockspace);
- 	if (error)
+ const struct rcar_sysc_info r8a77980_sysc_info __initconst = {
+diff --git a/include/dt-bindings/power/r8a77980-sysc.h b/include/dt-bindings/power/r8a77980-sysc.h
+index 7bebe7e8dbdbb..e12c8587b87ec 100644
+--- a/include/dt-bindings/power/r8a77980-sysc.h
++++ b/include/dt-bindings/power/r8a77980-sysc.h
+@@ -22,7 +22,7 @@
+ #define R8A77980_PD_CA53_CPU2		7
+ #define R8A77980_PD_CA53_CPU3		8
+ #define R8A77980_PD_A2CN		10
+-#define R8A77980_PD_A3VIP		11
++#define R8A77980_PD_A3VIP0		11
+ #define R8A77980_PD_A2IR5		12
+ #define R8A77980_PD_CR7			13
+ #define R8A77980_PD_A2IR4		15
 -- 
 2.20.1
 
