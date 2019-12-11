@@ -2,102 +2,94 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9B1C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ADCEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ECDA214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CD83214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:33:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576074793;
+	bh=lMF4SVdFYe5teruCSar5UwlZMqXNu/N0r9+0gD8Ka60=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IzJMDM84hG6ZzqNk0DjvvVHXI69TiR/xNoAILPSVKPuomMGghI2AizyAlBi6RX4hy
+	 PrYLt0yDiL12F0G2LBhqu/uypg+Ygp/chadl6H18F/7BHfHjiAqHtcN7A8/2ghCVs3
+	 F+QSXIu/NmHlpz31EJ8WBaHcwar45dn7e4WDjbD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729944AbfLKOdI (ORCPT
+        id S1729969AbfLKOdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:33:08 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35875 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729879AbfLKOdI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:33:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so24344578ljg.3;
-        Wed, 11 Dec 2019 06:33:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3BUu4hjVmyNGvfCGERUU1pdR+MP17NUT2rzccP4t4nU=;
-        b=eJoSidvkcWeeOf/sOXgMqoH5hjLAJiBrkJ5ldCUvVLvjY1lsKeuL1frzUXdvc7VUVW
-         9WJuqj7D7Ts6FuajkPFOn/wQv7y/DZvHTJUqpLkJuBEF8LDkAhhACVcy08lpfd34zhUg
-         FaTQojGRGWHAkkoog9eH9jrcfdQ0GrsxkpzxE4sfcxZUICl07LPmcBupN6N+cd1Jz/FM
-         dwjbdGjaHcj7aQcZwOY1HJHe6p3q8QsZJ3ok9pSOOlo8KfYvlb13jXw19vkf9tZ9DcIg
-         FJq6kW2WkHR8WOMj1uVPsxBLm65QM4NQlbzwhi7DIEIZJtweXdcU65PMIUNkYi1Aslgc
-         NkdQ==
-X-Gm-Message-State: APjAAAX4/ylntLB3phsLTT3w1CAUarcTa25dQsY27U/wOFoCiLS5KydS
-        +YQDTaBk8lUQ5MGZL3en8Jvvy+gt
-X-Google-Smtp-Source: APXvYqwM8eg8zOKlkXlr1dI6zhQIXZLwr2Tx5iKSGbba5UdWIPgu5Pn1frQYzR6BZ0Wi5VULUtPYgw==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr2323372ljj.47.1576074785503;
-        Wed, 11 Dec 2019 06:33:05 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id s7sm1267624ljo.43.2019.12.11.06.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 06:33:05 -0800 (PST)
-Date:   Wed, 11 Dec 2019 16:32:54 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] pinctrl: pinctrl-cherryview: Use GPIO direction
- definitions
-Message-ID: <1e962b7f5905a0336528eeb0a43eee0cf870879c.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 11 Dec 2019 09:33:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729879AbfLKOdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:33:09 -0500
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EDD920836;
+        Wed, 11 Dec 2019 14:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576074788;
+        bh=lMF4SVdFYe5teruCSar5UwlZMqXNu/N0r9+0gD8Ka60=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=yCmdZl5DM2uvBmxzfAagmgsJ75JL0KLzwgm++pntwZls8SZjCe1t/YsC5MgXg2nTG
+         JP5lXZIDjKtMckfVnVp9Yi5gSKPRZ+CPOj7/bEzwYSC4QqbQWByuadqhj2ik5b6+a2
+         j4ptD5uPGOio30igPgWLtsFA1p8B8pGndg2iJw2c=
+Date:   Wed, 11 Dec 2019 15:33:05 +0100 (CET)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        abhishekpandit@chromium.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HID: hidraw: add support uniq ioctl
+In-Reply-To: <20191204034109.21944-1-marcel@holtmann.org>
+Message-ID: <nycvar.YFH.7.76.1912111532550.4603@cbobk.fhfr.pm>
+References: <20191204034109.21944-1-marcel@holtmann.org>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1576073444.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use new GPIO_LINE_DIRECTION_IN and GPIO_LINE_DIRECTION_OUT when
-returning GPIO direction to GPIO framework.
+On Wed, 4 Dec 2019, Marcel Holtmann wrote:
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> Add support for reading out the uniq information from the underlying HID
+> device. This might be the iSerialNumber in case of USB or the BD_ADDR in
+> case of Bluetooth.
+> 
+> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> ---
+>  drivers/hid/hidraw.c        | 9 +++++++++
+>  include/uapi/linux/hidraw.h | 1 +
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+> index bbc6ec1aa5cb..039304069fd0 100644
+> --- a/drivers/hid/hidraw.c
+> +++ b/drivers/hid/hidraw.c
+> @@ -450,6 +450,15 @@ static long hidraw_ioctl(struct file *file, unsigned int cmd,
+>  						-EFAULT : len;
+>  					break;
+>  				}
+> +
+> +				if (_IOC_NR(cmd) == _IOC_NR(HIDIOCGRAWUNIQ(0))) {
+> +					int len = strlen(hid->uniq) + 1;
+> +					if (len > _IOC_SIZE(cmd))
+> +						len = _IOC_SIZE(cmd);
+> +					ret = copy_to_user(user_arg, hid->uniq, len) ?
+> +						-EFAULT : len;
+> +					break;
+> +				}
 
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 582fa8a75559..797a226e2043 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1287,7 +1287,8 @@ static int chv_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
- 	direction = ctrl0 & CHV_PADCTRL0_GPIOCFG_MASK;
- 	direction >>= CHV_PADCTRL0_GPIOCFG_SHIFT;
- 
--	return direction != CHV_PADCTRL0_GPIOCFG_GPO;
-+	return direction != CHV_PADCTRL0_GPIOCFG_GPO ? GPIO_LINE_DIRECTION_IN :
-+						       GPIO_LINE_DIRECTION_OUT;
- }
- 
- static int chv_gpio_direction_input(struct gpio_chip *chip, unsigned int offset)
+Queued for 5.6. Thanks,
+
 -- 
-2.21.0
+Jiri Kosina
+SUSE Labs
 
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
