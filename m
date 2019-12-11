@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C5FC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B57FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857B620836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18F82208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080011;
-	bh=5Uj4bM0O8FjLgNlO8oDlLoIbP3l5EsZRBR16B8GNODI=;
+	s=default; t=1576080019;
+	bh=hQ/UauJDG+Ahl5wENQlLIFAczqZfBM8cOYQwA1HoduA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hDfT+nqodwCVrS5x6zbFrmRulNXSiNDZSMvOqVgOoVC1wiUQsG0nO0KhGfd02b4g4
-	 1TYBGjP/Sv7YZqopwQwOYT3gBoZoCg+51vs2eWtPTE2Ln0f0yJPQ+4Q9DFzDarjge/
-	 6NQVN/TQVGNUuTmH5gX5uNOg8/hAHyq7KNOUtj4Q=
+	b=AOXZ4MdlSOZpdl37Joqub8grRUAesKWhTJquSc1DXtdfvr+qfRrrPS0AhXeOPp3oA
+	 dMD0Qj7o9RMiUV2KnXvXNYl7+VCH6/L1XU8micwHCLxdMrh4eIJLF1dXB0QwIGbJ6v
+	 rw1yau6YtU2nf5+M89ptnBvR7iqwLFipPiqC/tGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732983AbfLKQAK (ORCPT
+        id S1732175AbfLKQAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:00:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731515AbfLKPNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:53 -0500
+        id S1731505AbfLKPNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E959E24654;
-        Wed, 11 Dec 2019 15:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9D8A2467E;
+        Wed, 11 Dec 2019 15:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077232;
-        bh=5Uj4bM0O8FjLgNlO8oDlLoIbP3l5EsZRBR16B8GNODI=;
+        s=default; t=1576077228;
+        bh=hQ/UauJDG+Ahl5wENQlLIFAczqZfBM8cOYQwA1HoduA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7aae0jImROuaxScIR7CJfelJyAIJNqOb8RC1XzHr7dxWPTLXVrdNYmx3C/TPh1XQ
-         Idy96OUmKtQTDmt6Ong6k+J6XD6f6N2sPkuU45ZyFPw5mkOM/A/VrulVF+mQT5//fn
-         eUKw93SOvhn7Rx3oA5CNZ7bKQefIqv5sTiTqHuoo=
+        b=k29wZFwGDGW8K1TlWHtMKxWONp+4s21HT970SfPr7zpfAhLzXBO5dR2dmCXhPum9s
+         LwqwqmX5vjghnNLDanGMrAu6HjTWSxpVsSZwp5/oQTmJ6y57Umwx1MTtwuZ+tCofb4
+         TCiEwTqt8UnOF6EMZFjoHM97ybAZfxfGCsUKlSJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 111/134] powerpc: Don't add -mabi= flags when building with Clang
-Date:   Wed, 11 Dec 2019 10:11:27 -0500
-Message-Id: <20191211151150.19073-111-sashal@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, devel@linuxdriverproject.org
+Subject: [PATCH AUTOSEL 5.4 107/134] Drivers: hv: vmbus: Fix crash handler reset of Hyper-V synic
+Date:   Wed, 11 Dec 2019 10:11:23 -0500
+Message-Id: <20191211151150.19073-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,94 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Michael Kelley <mikelley@microsoft.com>
 
-[ Upstream commit 465bfd9c44dea6b55962b5788a23ac87a467c923 ]
+[ Upstream commit 7a1323b5dfe44a9013a2cc56ef2973034a00bf88 ]
 
-When building pseries_defconfig, building vdso32 errors out:
+The crash handler calls hv_synic_cleanup() to shutdown the
+Hyper-V synthetic interrupt controller.  But if the CPU
+that calls hv_synic_cleanup() has a VMbus channel interrupt
+assigned to it (which is likely the case in smaller VM sizes),
+hv_synic_cleanup() returns an error and the synthetic
+interrupt controller isn't shutdown.  While the lack of
+being shutdown hasn't caused a known problem, it still
+should be fixed for highest reliability.
 
-  error: unknown target ABI 'elfv1'
+So directly call hv_synic_disable_regs() instead of
+hv_synic_cleanup(), which ensures that the synic is always
+shutdown.
 
-This happens because -m32 in clang changes the target to 32-bit,
-which does not allow the ABI to be changed.
-
-Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-powerpc64le toolchain") added these flags to fix building big endian
-kernels with a little endian GCC.
-
-Clang doesn't need -mabi because the target triple controls the
-default value. -mlittle-endian and -mbig-endian manipulate the triple
-into either powerpc64-* or powerpc64le-*, which properly sets the
-default ABI.
-
-Adding a debug print out in the PPC64TargetInfo constructor after line
-383 above shows this:
-
-  $ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-Don't specify -mabi when building with clang to avoid the build error
-with -m32 and not change any code generation.
-
--mcall-aixdesc is not an implemented flag in clang so it can be safely
-excluded as well, see commit 238abecde8ad ("powerpc: Don't use gcc
-specific options on clang").
-
-pseries_defconfig successfully builds after this patch and
-powernv_defconfig and ppc44x_defconfig don't regress.
-
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-[mpe: Trim clang links in change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191119045712.39633-2-natechancellor@gmail.com
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hv/vmbus_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 83522c9fc7b66..37ac731a556b8 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -91,11 +91,13 @@ MULTIPLEWORD	:= -mmultiple
- endif
- 
- ifdef CONFIG_PPC64
-+ifndef CONFIG_CC_IS_CLANG
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
- aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
- endif
-+endif
- 
- ifndef CONFIG_CC_IS_CLANG
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
-@@ -141,6 +143,7 @@ endif
- endif
- 
- CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
-+ifndef CONFIG_CC_IS_CLANG
- ifdef CONFIG_CPU_LITTLE_ENDIAN
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
-@@ -149,6 +152,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
-+endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 53a60c81e220d..05ead1735c6e3 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2308,7 +2308,7 @@ static void hv_crash_handler(struct pt_regs *regs)
+ 	vmbus_connection.conn_state = DISCONNECTED;
+ 	cpu = smp_processor_id();
+ 	hv_stimer_cleanup(cpu);
+-	hv_synic_cleanup(cpu);
++	hv_synic_disable_regs(cpu);
+ 	hyperv_cleanup();
+ };
  
 -- 
 2.20.1
