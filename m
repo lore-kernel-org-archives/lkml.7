@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08704C2D0D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6554C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3557206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A757B20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Mu64ZmWO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LFvC0+w8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbfLKCxp (ORCPT
+        id S1727655AbfLKCxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:53:45 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16143 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfLKCxf (ORCPT
+        Tue, 10 Dec 2019 21:53:48 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2161 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727922AbfLKCxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 10 Dec 2019 21:53:35 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df05a270002>; Tue, 10 Dec 2019 18:53:27 -0800
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df05a240001>; Tue, 10 Dec 2019 18:53:25 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Dec 2019 18:53:34 -0800
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 10 Dec 2019 18:53:31 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Dec 2019 18:53:34 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 02:53:33 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 11 Dec 2019 02:53:32 +0000
+        by hqpgpgate101.nvidia.com on Tue, 10 Dec 2019 18:53:31 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 02:53:30 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 02:53:30 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 11 Dec 2019 02:53:30 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df05a2c0000>; Tue, 10 Dec 2019 18:53:32 -0800
+        id <B5df05a290000>; Tue, 10 Dec 2019 18:53:29 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -55,12 +58,11 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         Jonathan Corbet <corbet@lwn.net>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Michal Hocko <mhocko@suse.com>,
         Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
         Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
         <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
         <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
@@ -69,81 +71,68 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         John Hubbard <jhubbard@nvidia.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH v9 18/25] media/v4l2-core: pin_user_pages (FOLL_PIN) and put_user_page() conversion
-Date:   Tue, 10 Dec 2019 18:53:11 -0800
-Message-ID: <20191211025318.457113-19-jhubbard@nvidia.com>
+        "Daniel Vetter" <daniel.vetter@ffwll.ch>
+Subject: [PATCH v9 14/25] drm/via: set FOLL_PIN via pin_user_pages_fast()
+Date:   Tue, 10 Dec 2019 18:53:07 -0800
+Message-ID: <20191211025318.457113-15-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191211025318.457113-1-jhubbard@nvidia.com>
 References: <20191211025318.457113-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576032808; bh=sXkMwo6nCTbLEEe6A0fE3HZE6drkGcT2bf/xg2miV08=;
+        t=1576032805; bh=ky7gpstoQdJr5rtxFEQnjpS0lvKe5L6cg7jiu/68ipE=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=Mu64ZmWOiLroxy7Jk4HcziftHYKk2Y65S9gUi2CNVjIZ49Rbn19gozn0aYEl4HzfZ
-         W4DZU5XZgTCKk9lvP7qYE4WFAsDa+J3mohmQ6gjxlcEnYCTEntsnIb267IXtoGYMj+
-         j8W9Sh/plxpVVu8SU39JuMwJevFwtP1BWqMhuNNtzA+kFoAuhJXPqfMf9bV6j8xS1g
-         z7O+eTO1lSljBjFfPjDelqLN1v81NW6qQM6erHzV9bEAR9tXUSS4fNU3rtblHO1bdD
-         WaiAZq7RBOOfSiAIj6j7tNeks2MX/2zW68L3zqMz2qpG52RHJX0b9yl/+8Ay/tvcqK
-         JFvYuaOZz2b4A==
+         Content-Type:Content-Transfer-Encoding;
+        b=LFvC0+w82Ypn+sMKbs8fs6t31wpDg9MkaK5WuVKkO58UZX5B6aqYEHHGY1Ha0IIg5
+         CeyXndoKKwWs3zNoIlyK00SDSA3cpjAExrn0ps6oqR23EF0aEe7wZGH/wOkE3kqhOX
+         2fL/Ucq4S/wWX3q22BnWCDfvk0idk5o06SA+ZuPG/QP1685Ia0sOczY12SmnWjEiGF
+         M0r6VdUHabeIt5zajlTSJyq8QGi0eHUyeRe14GygOmuCPbbuWr7HftA9sv9bheCNox
+         JvUg6RKXPwNSeLSADN5K3Z+qd4xJ2m5MNmXZQAI9gTD1MZJY17SgrpHg/0wSCwruhT
+         slf9CB7P6igNQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Change v4l2 from get_user_pages() to pin_user_pages().
+Convert drm/via to use the new pin_user_pages_fast() call, which sets
+FOLL_PIN. Setting FOLL_PIN is now required for code that requires
+tracking of pinned pages, and therefore for any code that calls
+put_user_page().
 
-2. Because all FOLL_PIN-acquired pages must be released via
-put_user_page(), also convert the put_page() call over to
-put_user_pages_dirty_lock().
+In partial anticipation of this work, the drm/via driver was already
+calling put_user_page() instead of put_page(). Therefore, in order to
+convert from the get_user_pages()/put_page() model, to the
+pin_user_pages()/put_user_page() model, the only change required
+is to change get_user_pages() to pin_user_pages().
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/via/via_dmablit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2=
--core/videobuf-dma-sg.c
-index 28262190c3ab..162a2633b1e3 100644
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -183,12 +183,12 @@ static int videobuf_dma_init_user_locked(struct video=
-buf_dmabuf *dma,
- 	dprintk(1, "init user [0x%lx+0x%lx =3D> %d pages]\n",
- 		data, size, dma->nr_pages);
-=20
--	err =3D get_user_pages(data & PAGE_MASK, dma->nr_pages,
-+	err =3D pin_user_pages(data & PAGE_MASK, dma->nr_pages,
- 			     flags | FOLL_LONGTERM, dma->pages, NULL);
-=20
- 	if (err !=3D dma->nr_pages) {
- 		dma->nr_pages =3D (err >=3D 0) ? err : 0;
--		dprintk(1, "get_user_pages: err=3D%d [%d]\n", err,
-+		dprintk(1, "pin_user_pages: err=3D%d [%d]\n", err,
- 			dma->nr_pages);
- 		return err < 0 ? err : -EINVAL;
- 	}
-@@ -349,11 +349,8 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
- 	BUG_ON(dma->sglen);
-=20
- 	if (dma->pages) {
--		for (i =3D 0; i < dma->nr_pages; i++) {
--			if (dma->direction =3D=3D DMA_FROM_DEVICE)
--				set_page_dirty_lock(dma->pages[i]);
--			put_page(dma->pages[i]);
--		}
-+		put_user_pages_dirty_lock(dma->pages, dma->nr_pages,
-+					  dma->direction =3D=3D DMA_FROM_DEVICE);
- 		kfree(dma->pages);
- 		dma->pages =3D NULL;
- 	}
+diff --git a/drivers/gpu/drm/via/via_dmablit.c b/drivers/gpu/drm/via/via_dm=
+ablit.c
+index 3db000aacd26..37c5e572993a 100644
+--- a/drivers/gpu/drm/via/via_dmablit.c
++++ b/drivers/gpu/drm/via/via_dmablit.c
+@@ -239,7 +239,7 @@ via_lock_all_dma_pages(drm_via_sg_info_t *vsg,  drm_via=
+_dmablit_t *xfer)
+ 	vsg->pages =3D vzalloc(array_size(sizeof(struct page *), vsg->num_pages))=
+;
+ 	if (NULL =3D=3D vsg->pages)
+ 		return -ENOMEM;
+-	ret =3D get_user_pages_fast((unsigned long)xfer->mem_addr,
++	ret =3D pin_user_pages_fast((unsigned long)xfer->mem_addr,
+ 			vsg->num_pages,
+ 			vsg->direction =3D=3D DMA_FROM_DEVICE ? FOLL_WRITE : 0,
+ 			vsg->pages);
 --=20
 2.24.0
 
