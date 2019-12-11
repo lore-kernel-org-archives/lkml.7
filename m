@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CCAC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5C0208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB9022527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077789;
-	bh=3aXXUP6CSHv5npCS0f3X5zHZNaBwI9CZNedUZywSiRg=;
+	s=default; t=1576077791;
+	bh=Q7hEr/ng2akPOyoqJDAIaNGFTvBeyxSTxtU5oORaTQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wDiXkIe35Nbd611Y5SViRGyPWdySQJT1y1P2S6HGjIcNrLQgB1wsZwXLsVpkxX7Dj
-	 ind00ZfNAY1LEDLXH0PaIsRjJ8JlkHg0XaXA48kyezRAwh8nz9KH64bXDYUIlO4bGN
-	 +lSQ62cHvBjCnvkCYxHzMuxmCFlPQlQ57cuVaLZU=
+	b=e+Bv+bSO2HRVkcaRzvWkr/T4uTlZd/7D4PsrQzx4+FaLD+KebKuPrAneRB1/aNA9A
+	 wV4kaBh/40sjmFkzPYUIWpkfuT1by0l9eCe8lxvSVU4/nfMgoV2DCb0vhahyZmPyDN
+	 ZwSW8hBVZmOecEohFKyypZRrLHQk8X2Yzf2RdL6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732676AbfLKPXI (ORCPT
+        id S1732668AbfLKPXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732184AbfLKPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:05 -0500
+        id S1732507AbfLKPXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9AD0208C3;
-        Wed, 11 Dec 2019 15:23:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32B652073D;
+        Wed, 11 Dec 2019 15:23:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077784;
-        bh=3aXXUP6CSHv5npCS0f3X5zHZNaBwI9CZNedUZywSiRg=;
+        s=default; t=1576077781;
+        bh=Q7hEr/ng2akPOyoqJDAIaNGFTvBeyxSTxtU5oORaTQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmgFo2DH4Kt4jERr7/Cfv7Ynh/cFGM0g95M/+MceK3NWdebHW2koh8EeReCkYoVpR
-         Dj1LMdJFvJg8z965uynS46zf9GoQbrVn7YRqsMcTL/isPDjGj1wbIEwwMkpQmMjRYq
-         WzLbpKc4AERf/jEr7sVtNQDyVM/a5BCp2fXqz338=
+        b=aUeAe9kp5g2/b0oNMZJ0fM4fhVphy0v0SouhYsKr/uh1UlfDDFcGS9Qc9W+yp7lpW
+         EQ5+KT++A5bDxfTNlsfKHjEZZzm+s4PuuTpxcqIvxQmbh3+uXxiIfzrfwXmTZVg+xN
+         xjUNlwPAeRsMTErF02ZLNvGLfqazNQBSWOX4pdEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org, Erez Alfasi <ereza@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 169/243] pstore/ram: Avoid NULL deref in ftrace merging failure path
-Date:   Wed, 11 Dec 2019 16:05:31 +0100
-Message-Id: <20191211150350.589883633@linuxfoundation.org>
+Subject: [PATCH 4.19 168/243] net/mlx4_core: Fix return codes of unsupported operations
+Date:   Wed, 11 Dec 2019 16:05:30 +0100
+Message-Id: <20191211150350.523702472@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,47 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Erez Alfasi <ereza@mellanox.com>
 
-[ Upstream commit 8665569e97dd52920713b95675409648986b5b0d ]
+[ Upstream commit 95aac2cdafd8c8298c9b2589c52f44db0d824e0e ]
 
-Given corruption in the ftrace records, it might be possible to allocate
-tmp_prz without assigning prz to it, but still marking it as needing to
-be freed, which would cause at least a NULL dereference.
+Functions __set_port_type and mlx4_check_port_params returned
+-EINVAL while the proper return code is -EOPNOTSUPP as a
+result of an unsupported operation. All drivers should generate
+this and all users should check for it when detecting an
+unsupported functionality.
 
-smatch warnings:
-fs/pstore/ram.c:340 ramoops_pstore_read() error: we previously assumed 'prz' could be null (see line 255)
-
-https://lists.01.org/pipermail/kbuild-all/2018-December/055528.html
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: 2fbea82bbb89 ("pstore: Merge per-CPU ftrace records into one")
-Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Erez Alfasi <ereza@mellanox.com>
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/ram.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlx4/main.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index 015d74ee31a03..631ae057ab537 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -301,6 +301,7 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
- 					  GFP_KERNEL);
- 			if (!tmp_prz)
- 				return -ENOMEM;
-+			prz = tmp_prz;
- 			free_prz = true;
- 
- 			while (cxt->ftrace_read_cnt < cxt->max_ftrace_cnt) {
-@@ -323,7 +324,6 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
- 					goto out;
+diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
+index 6a046030e8734..4afe56a6eedfb 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -313,7 +313,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
+ 		for (i = 0; i < dev->caps.num_ports - 1; i++) {
+ 			if (port_type[i] != port_type[i + 1]) {
+ 				mlx4_err(dev, "Only same port types supported on this HCA, aborting\n");
+-				return -EINVAL;
++				return -EOPNOTSUPP;
  			}
- 			record->id = 0;
--			prz = tmp_prz;
  		}
  	}
+@@ -322,7 +322,7 @@ int mlx4_check_port_params(struct mlx4_dev *dev,
+ 		if (!(port_type[i] & dev->caps.supported_type[i+1])) {
+ 			mlx4_err(dev, "Requested port type for port %d is not supported on this HCA\n",
+ 				 i + 1);
+-			return -EINVAL;
++			return -EOPNOTSUPP;
+ 		}
+ 	}
+ 	return 0;
+@@ -1188,8 +1188,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ 		mlx4_err(mdev,
+ 			 "Requested port type for port %d is not supported on this HCA\n",
+ 			 info->port);
+-		err = -EINVAL;
+-		goto err_sup;
++		return -EOPNOTSUPP;
+ 	}
+ 
+ 	mlx4_stop_sense(mdev);
+@@ -1211,7 +1210,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ 		for (i = 1; i <= mdev->caps.num_ports; i++) {
+ 			if (mdev->caps.possible_type[i] == MLX4_PORT_TYPE_AUTO) {
+ 				mdev->caps.possible_type[i] = mdev->caps.port_type[i];
+-				err = -EINVAL;
++				err = -EOPNOTSUPP;
+ 			}
+ 		}
+ 	}
+@@ -1237,7 +1236,7 @@ static int __set_port_type(struct mlx4_port_info *info,
+ out:
+ 	mlx4_start_sense(mdev);
+ 	mutex_unlock(&priv->port_mutex);
+-err_sup:
++
+ 	return err;
+ }
  
 -- 
 2.20.1
