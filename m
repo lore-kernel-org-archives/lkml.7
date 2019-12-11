@@ -2,180 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380BCC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D83C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F552077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="KF5zXw54"
+	by mail.kernel.org (Postfix) with ESMTP id 1A37D21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079455;
+	bh=mAf0WnQYeLV7ICC6KqevtF7PXWLFmXkLFXBJEdViVAY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r7QwCOvAmfQQv0MY+Wp2Wr8LNeB9KJWZtfzPg+23nlDy6Foc/ex/WBSfVNDU224Un
+	 XuyilgvwqlSNyL2QlJ+29cZ91G2XLVoD3WVijx4FQNoANbknJG3FEFBaPIbZ+jGDTz
+	 ks7Y9qP+lxAy1CEcmPXb25nxRWxlq/KoiQ12dzeg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfLKPuv (ORCPT
+        id S1732639AbfLKPWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:50:51 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:46516 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387414AbfLKPur (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:50:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1576079438; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sz/wsBUGRl/3B6yGNXWjSD/WW8og/T1ubMIdBPmaXDI=;
-        b=KF5zXw54QJn/POO8s9HQHsxBSkMEjBV1Q/eTMTSJ03M67Owaj8GZW6NxnSxxsCMXPXaR9Y
-        Bx7/InBQCoFksg6+jpPUM+5T7k56jTU1f088Gw3JlYtbNX7jV1uqpACN+F7DzKc23wvo37
-        zbHfTyfz8jWKmmxVC33rl7QkhpiuaKM=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     od@zcrc.me, linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 2/3] usb: roles: Add API to register notifiers
-Date:   Wed, 11 Dec 2019 16:50:31 +0100
-Message-Id: <20191211155032.167032-2-paul@crapouillou.net>
-In-Reply-To: <20191211155032.167032-1-paul@crapouillou.net>
-References: <20191211155032.167032-1-paul@crapouillou.net>
+        Wed, 11 Dec 2019 10:22:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729512AbfLKPWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE43C208C3;
+        Wed, 11 Dec 2019 15:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077763;
+        bh=mAf0WnQYeLV7ICC6KqevtF7PXWLFmXkLFXBJEdViVAY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qldft/SXKn4MhWme+jV+Yr2OFSDLJE3AoLt7QAYPgkD1/1t+LWpvhUOL6HyRa0FIq
+         rspJxqB53ydY933VL02tQqkvH+H7gSi0lXa88bti8yv4MnCeEnYP3cGbgjqRpuEN5B
+         XnGMGG4jvLEYRZ7nB+4aRP55YP1qIO0YuUXt3m1I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jianxin Pan <jianxin.pan@amlogic.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 162/243] clk: meson: meson8b: fix the offset of vid_pll_dcos N value
+Date:   Wed, 11 Dec 2019 16:05:24 +0100
+Message-Id: <20191211150350.098521030@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add usb_role_switch_notifier_register() and
-usb_role_switch_notifier_unregister().
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-The registered notifiers will be called when the USB role is changed.
+[ Upstream commit 376d8c45bd6ac79f02ecf9ca1606dc5d1b271bc0 ]
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Unlike the other PLLs on Meson8b the N value "vid_pll_dco" (a better
+name would be hdmi_pll_dco or - as the datasheet calls it - HPLL) is
+located at HHI_VID_PLL_CNTL[14:10] instead of [13:9].
+This results in an incorrect calculation of the rate of this PLL because
+the value seen by the kernel is double the actual N (divider) value.
+Update the offset of the N value to fix the calculation of the PLL rate.
+
+Fixes: 28b9fcd016126e ("clk: meson8b: Add support for Meson8b clocks")
+Reported-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Link: https://lkml.kernel.org/r/20181202214220.7715-2-martin.blumenstingl@googlemail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/clk/meson/meson8b.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Notes:
-    v2: New patch
-
- drivers/usb/roles/class.c | 24 +++++++++++++++++++++++-
- include/linux/usb/role.h  | 20 ++++++++++++++++++++
- 2 files changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 8273126ffdf4..9b122b504b98 100644
---- a/drivers/usb/roles/class.c
-+++ b/drivers/usb/roles/class.c
-@@ -10,6 +10,7 @@
- #include <linux/usb/role.h>
- #include <linux/property.h>
- #include <linux/device.h>
-+#include <linux/notifier.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-@@ -19,6 +20,7 @@ static struct class *role_class;
- struct usb_role_switch {
- 	struct device dev;
- 	struct mutex lock; /* device lock*/
-+	struct blocking_notifier_head notifier_chain;
- 	enum usb_role role;
- 
- 	/* From descriptor */
-@@ -49,8 +51,11 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role)
- 	mutex_lock(&sw->lock);
- 
- 	ret = sw->set(sw->dev.parent, role);
--	if (!ret)
-+	if (!ret) {
- 		sw->role = role;
-+		ret = blocking_notifier_call_chain(&sw->notifier_chain,
-+						   (long)role, sw);
-+	}
- 
- 	mutex_unlock(&sw->lock);
- 
-@@ -85,6 +90,22 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
- }
- EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
- 
-+int
-+usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				  struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&sw->notifier_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_register_notifier);
-+
-+int
-+usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+				    struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&sw->notifier_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(usb_role_switch_unregister_notifier);
-+
- static void *usb_role_switch_match(struct device_connection *con, int ep,
- 				   void *data)
- {
-@@ -317,6 +338,7 @@ usb_role_switch_register(struct device *parent,
- 		return ERR_PTR(-ENOMEM);
- 
- 	mutex_init(&sw->lock);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&sw->notifier_chain);
- 
- 	sw->allow_userspace_control = desc->allow_userspace_control;
- 	sw->usb2_port = desc->usb2_port;
-diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
-index efac3af83d6b..5f67d42cd28d 100644
---- a/include/linux/usb/role.h
-+++ b/include/linux/usb/role.h
-@@ -6,6 +6,7 @@
- #include <linux/device.h>
- 
- struct usb_role_switch;
-+struct notifier_block;
- 
- enum usb_role {
- 	USB_ROLE_NONE,
-@@ -50,6 +51,11 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev);
- struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *node);
- void usb_role_switch_put(struct usb_role_switch *sw);
- 
-+int usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				      struct notifier_block *nb);
-+int usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+					struct notifier_block *nb);
-+
- struct usb_role_switch *
- usb_role_switch_find_by_fwnode(const struct fwnode_handle *fwnode);
- 
-@@ -82,6 +88,20 @@ fwnode_usb_role_switch_get(struct fwnode_handle *node)
- 
- static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
- 
-+static inline int
-+usb_role_switch_register_notifier(struct usb_role_switch *sw,
-+				  struct notifier_block *nb)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline int
-+usb_role_switch_unregister_notifier(struct usb_role_switch *sw,
-+				    struct notifier_block *nb)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline struct usb_role_switch *
- usb_role_switch_register(struct device *parent,
- 			 const struct usb_role_switch_desc *desc)
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 9d79ff857d83e..e90af556ff90f 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -144,7 +144,7 @@ static struct clk_regmap meson8b_vid_pll = {
+ 		},
+ 		.n = {
+ 			.reg_off = HHI_VID_PLL_CNTL,
+-			.shift   = 9,
++			.shift   = 10,
+ 			.width   = 5,
+ 		},
+ 		.od = {
 -- 
-2.24.0
+2.20.1
+
+
 
