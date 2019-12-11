@@ -2,110 +2,135 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E00C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B17C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFCBD2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D3C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078444;
+	bh=noZpgBJuRpZhcBM0WoGd9PdBBtglvU5KAndjmBZUy7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d/5zZrQEKMg5rNYKs0iEfToNmt91bFja4LqNa2PqaP8eyj9tJXIe328Eqc0WPmXWY
+	 fdcQ66GEtNpv3pn7hWMCjwZu9gkTZMkSalHXhIuM1CnYfhBDYCJfdBgO0fQ6CZbJ8Z
+	 eIBixozoXdkVZRu4QMDJtKeU71VoyKhtZct6W5js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbfLKPdy (ORCPT
+        id S2387974AbfLKPeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:54 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:40051 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730954AbfLKPdn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:33:43 -0500
-Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M8QiW-1iagGz3r5U-004So9 for <linux-kernel@vger.kernel.org>; Wed, 11 Dec
- 2019 16:33:42 +0100
-Received: by mail-qk1-f179.google.com with SMTP id a203so9852840qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:33:41 -0800 (PST)
-X-Gm-Message-State: APjAAAUfwHqUwyRjRLa0V8vUcSrNdYTKsyuJsRftKD+spi9pkAz4Zijb
-        U1G+5jfGL0+5nJPVPJH6L377omzNs6G4n8TfCjA=
-X-Google-Smtp-Source: APXvYqxmeB8TjlMCMi/FqHf6Gou8DAqv4Puz6Gm0jsLC3WBKTCxWNeE/74JK2vXpaV3DnctI1gXS0DxSAbNlFi1R7Zc=
-X-Received: by 2002:a37:4e4e:: with SMTP id c75mr3368164qkb.3.1576078420833;
- Wed, 11 Dec 2019 07:33:40 -0800 (PST)
+        Wed, 11 Dec 2019 10:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34870 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387674AbfLKP2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:38 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD64D208C3;
+        Wed, 11 Dec 2019 15:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078117;
+        bh=noZpgBJuRpZhcBM0WoGd9PdBBtglvU5KAndjmBZUy7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=svBKBZp947ObmheO0S6p/4n8xiYw8ru8Z/wh5jLn7W1aFXpcwpnYnhA73G+zbtlg1
+         rYwvOGSsoXWTdoWEx8VCgowFEw+dV02nOx47JRlyPg6kUM9rHI9L1f19LC1YV+Fu9h
+         w8oaQhEi3oFp6fFqdSbsD1I8ptSRZTO49HpriHZY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/58] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
+Date:   Wed, 11 Dec 2019 10:27:38 -0500
+Message-Id: <20191211152831.23507-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <cover.1575977795.git.vitor.soares@synopsys.com>
- <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
- <CAK8P3a1cwoTbT3zsa-tfApwewDT1-ksHZs6_vkBYpKbgptsfjw@mail.gmail.com>
- <CH2PR12MB4216E04995E421F04B7662DEAE5B0@CH2PR12MB4216.namprd12.prod.outlook.com>
- <CAK8P3a00wfUbGU1a9nS1dtDsUo1GR1V1WqRwa+DmUKVStvicTw@mail.gmail.com> <CH2PR12MB4216CE03448AF3B39C23D3BCAE5A0@CH2PR12MB4216.namprd12.prod.outlook.com>
-In-Reply-To: <CH2PR12MB4216CE03448AF3B39C23D3BCAE5A0@CH2PR12MB4216.namprd12.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 11 Dec 2019 16:33:24 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2vRG9uiY6jCRip98DHVP5-FeWk_sToGrPSA_WcY0agcA@mail.gmail.com>
-Message-ID: <CAK8P3a2vRG9uiY6jCRip98DHVP5-FeWk_sToGrPSA_WcY0agcA@mail.gmail.com>
-Subject: Re: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:HwUutlWxhi/qNhj6rzdE4KlUvk+XYIo6tvEYWzJJ8njRHPRPTpX
- piC+yOdBKynS5m+VAUeKRvMHoFhIcR0H+A2WBbf/V/X4Kp4wP//ixA9/wQQgMgwqsxvJGZC
- rtC/qgtOFhSVDNi2dCq7qmGlILFet/r/Embr7DPz7S+nebMJu1IWfVqFT2KrTdd8lWf7ujn
- tqvhLw43GEk+U0IUWmgJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bwReUF5jPXo=:S37LbxcmkNXcwIj7f5cNTz
- tFGPBMRz+9fg6GrR+bpa5B0h9d46tElGfLzVLrBVIpauKyKi8tpNGzxKt4tKnh+/DnMcWJ2QB
- rLp+DzbJO9VcASf2A1TGkVrxSX79H9YF5cPlaR36s9Fa7kmyA6FE5CfgsFSz/JgQjJ0dtSySN
- PBb9PnaR62Rw0yaR/RYQB/TAHXDAK6FnV6uHb2WuoXdPcu4B5pN3kK8cXifEI6RCzTgJe+On9
- NYI7WD6PoIis07NA8NXYydGNSA+pwU38DRu6fPSEIb32gJjK8z5HmZgoJHvp6vVFXwrSuopEC
- Z8Xwe8HGb1CCeJ/jlE7/gv1axExC5Se0x5SBREW/MzTVsVdjESlD/L2TVREQOlbaPoq/Kwh8D
- QvZqvuGI/pC4uzgGgNBX4PsfWI3cs9APrx32sJh3O04kaaKybVmyAoaolLf/DWfWxcakAP0fm
- 42FW5Z06S1qRMDmF/r6PHh7SsLXTlB66OoVfWNL7a4Lgpy7xza+qKk632cOrwL12Brf2l3cMD
- Aq+fEDDaQsbMWDfbyWczAxoTlftyiIzuxyhXbcARJIVbs+6mjt0Q6yHgSqYTXIAo+S/QfS2O5
- TR2cSD+FJJHiCRV14Fguf9n7W8bMvDxrU3b4sb31fLEiG/mM/44d2o0OzM8/FLKmeCK0UwhEc
- 6Uf+PI8weWhqfk23KjYSDjX0j5jfynD1CWbmcn3FID3mHADy2YiGFbRgI1MYo74mS8Widinz+
- KJ7Mn30qxUxi51igy8DsZiCYnP6dp5awOR03M+iAcG5KXqNq+0PH+2grehZZbaMhNC5J5oTAH
- xsvoV9vcRDJJ9f8V1voYjEcM/dXQ+HRqEPpcLAebt0yT3plJjot6cs9Sts7FMazEgE3Z009Jz
- g7H89ldDqBIvB62BhxSw==
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:07 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Tue, Dec 10, 2019 at 19:37:14
-> > On Tue, Dec 10, 2019 at 8:15 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > From: Arnd Bergmann <arnd@arndb.de>
-> > > Date: Tue, Dec 10, 2019 at 17:51:14
-> > > > On Tue, Dec 10, 2019 at 4:37 PM Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > As your interface is basically just read/write based, I wonder
-> > if there is a way to completely avoid the ioctl and instead
-> > use io_submit() as the primary interface.
->
-> I confess that I wasn't familiar with io_submit() until now and went
-> straightway for the ioctl() approach.
-> So far, my understanding is that io_submit() will call .write or .read of
-> i3cdev module depending on the iocb command. if so, we won't be able to
-> do a repeated start between a multiple iocb in the same list, right?
+From: Thierry Reding <treding@nvidia.com>
 
-I'm not sure what you mean with "repeated start", but it's definitely
-possible that io_submit() is not a useful interface for i3c. The main
-advantage would be that it avoids creating a complex ioctl command.
+[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
 
-> Apart from this private read/write need, another requirement that leads
-> me to use the ioctl() was:
-> - When we support HDR command in i3c subsystem we can expand the ioctl()
-> command to support it.
-> - For now, device API doesn't expose CCC commands but some of them are
-> used for a private contract between master and device and we likely need
-> that support in the future as well.
+Page tables that reside in physical memory beyond the 4 GiB boundary are
+currently not working properly. The reason is that when the physical
+address for page directory entries is read, it gets truncated at 32 bits
+and can cause crashes when passing that address to the DMA API.
 
-I think you could still have both the io_submit() interface for basic I/O
-(if you can get it to do what you want), plus an ioctl interface for more
-complex interactions.
+Fix this by first casting the PDE value to a dma_addr_t and then using
+the page frame number mask for the SMMU instance to mask out the invalid
+bits, which are typically used for mapping attributes, etc.
 
-     Arnd
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/tegra-smmu.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 40eb8138546ad..848dac3e4580f 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -156,9 +156,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
+ 	return (addr & smmu->pfn_mask) == addr;
+ }
+ 
+-static dma_addr_t smmu_pde_to_dma(u32 pde)
++static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
+ {
+-	return pde << 12;
++	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
+ }
+ 
+ static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
+@@ -543,6 +543,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 				  dma_addr_t *dmap)
+ {
+ 	unsigned int pd_index = iova_pd_index(iova);
++	struct tegra_smmu *smmu = as->smmu;
+ 	struct page *pt_page;
+ 	u32 *pd;
+ 
+@@ -551,7 +552,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 		return NULL;
+ 
+ 	pd = page_address(as->pd);
+-	*dmap = smmu_pde_to_dma(pd[pd_index]);
++	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
+ 
+ 	return tegra_smmu_pte_offset(pt_page, iova);
+ }
+@@ -593,7 +594,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+ 	} else {
+ 		u32 *pd = page_address(as->pd);
+ 
+-		*dmap = smmu_pde_to_dma(pd[pde]);
++		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
+ 	}
+ 
+ 	return tegra_smmu_pte_offset(as->pts[pde], iova);
+@@ -618,7 +619,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
+ 	if (--as->count[pde] == 0) {
+ 		struct tegra_smmu *smmu = as->smmu;
+ 		u32 *pd = page_address(as->pd);
+-		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
++		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
+ 
+ 		tegra_smmu_set_pde(as, iova, 0);
+ 
+-- 
+2.20.1
+
