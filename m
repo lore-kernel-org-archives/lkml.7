@@ -2,104 +2,127 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AC0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B73C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D84E208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEADC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080410;
-	bh=5285zd1TdAELL/o5urgylZ0a6GzUCTYHsFOCVhRotCg=;
+	s=default; t=1576080417;
+	bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tRIuBXVUE9OWAAph7FZoQdaUuFtrqJmukVOvg2gY7AMklygoDZtjUdBnw4W3nnXM9
-	 CboODrhvRfe5UN/0lRsmMf/1Ca3fQixQCUFt/njvb6l5yqmQtodB7OBcwbz4/ipzzs
-	 EMe79o/dw0BnOQiQaUmTGBciwb9wY8nfLjodT+N0=
+	b=eR4Th5uCHwHvQ2Z8Qf3wsYGP/geofuFyuTIZQ9F/LJiEsxH2LE6FGAFo7jx4SotZc
+	 0JUhFfKRLbFHqLxKkQHGigVphVKaZAdjdMymwwiUvypIN1xzdIHxOejtG8fgu9s+oG
+	 xwH3kVEgnoTOGJwLGn6zR93orDHhZI4ByIu8guBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbfLKQGs (ORCPT
+        id S1733104AbfLKQGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:06:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731088AbfLKPMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:35 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731083AbfLKPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:34 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20CCB2467D;
-        Wed, 11 Dec 2019 15:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BC8E208C3;
+        Wed, 11 Dec 2019 15:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077154;
-        bh=5285zd1TdAELL/o5urgylZ0a6GzUCTYHsFOCVhRotCg=;
+        s=default; t=1576077153;
+        bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=duX7v/W0XkWPYpI3GXx5evwCX2nIzuP4xGQtd8DzVF52H2Nl4njzHG2CbRPPVqggy
-         2jc36Mo/wytmrCwudDcEPOiHRShBy2ApFkbxM0WVum6lEXsbqOrro2ecLvQWpfcVNg
-         FGAxIfW1WK+H9mB2OmbFPKFZ3A44AvWTWb2AE7hQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Bobrowski <mbobrowski@mbobrowski.org>,
-        Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
-        linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 041/134] ext4: update direct I/O read lock pattern for IOCB_NOWAIT
-Date:   Wed, 11 Dec 2019 10:10:17 -0500
-Message-Id: <20191211151150.19073-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=ifXSSH1uvM8a0lpEZ+3s0vs/gwbyCz6cZRykY+E88TsLuPRTnAKmj7vOdbC07fA8e
+         at0lNlnC+uHJfwgEwQZp8aS676uIfkY12Iyq23KhjJvRn8eS4RgTnOGGetnGYXcsEI
+         PdIm2OYxA0xUQzypYssqBsfvmuR2vOjHYwZ3j3Mc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: [PATCH 5.3 009/105] tty: serial: msm_serial: Fix flow control
+Date:   Wed, 11 Dec 2019 16:04:58 +0100
+Message-Id: <20191211150223.451692465@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit 548feebec7e93e58b647dba70b3303dcb569c914 ]
+commit b027ce258369cbfa88401a691c23dad01deb9f9b upstream.
 
-This patch updates the lock pattern in ext4_direct_IO_read() to not
-block on inode lock in cases of IOCB_NOWAIT direct I/O reads. The
-locking condition implemented here is similar to that of 942491c9e6d6
-("xfs: fix AIM7 regression").
+hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+disables flow, configures the uart baudrate, and then reenables flow - at
+which point an event is expected to be received over the uart from the
+wcn3990.  It is observed that this event comes after the baudrate change
+but before hci_qca re-enables flow. This is unexpected, and is a result of
+msm_reset() being broken.
 
-Fixes: 16c54688592c ("ext4: Allow parallel DIO reads")
-Signed-off-by: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/c5d5e759f91747359fbd2c6f9a36240cf75ad79f.1572949325.git.mbobrowski@mbobrowski.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+According to the uart_dm hardware documentation, it is recommended that
+automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+hw flow control will manage RFR based on the configured watermark.  When
+there is space to receive data, the hw will assert RFR.  When the watermark
+is hit, the hw will de-assert RFR.
+
+The hardware documentation indicates that RFR can me manually managed via
+CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+de-asserts RFR.
+
+msm_reset() is broken because after resetting the hardware, it
+unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+the current configuration, and would undo a previous flow disable
+operation.  It should instead de-assert RFR via RESET_RFR to block flow
+until the hardware is reconfigured.  msm_serial should rely on the client
+to specify that flow should be enabled, either via mctrl() or the termios
+structure, and only assert RFR in response to those triggers.
+
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Andy Gross <agross@kernel.org>
+Link: https://lore.kernel.org/r/20191021154616.25457-1-jeffrey.l.hugo@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ext4/inode.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/tty/serial/msm_serial.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index d691d1783ed62..207b8c23e53d9 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3827,7 +3827,13 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
- 	 * writes & truncates and since we take care of writing back page cache,
- 	 * we are protected against page writeback as well.
- 	 */
--	inode_lock_shared(inode);
-+	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!inode_trylock_shared(inode))
-+			return -EAGAIN;
-+	} else {
-+		inode_lock_shared(inode);
-+	}
-+
- 	ret = filemap_write_and_wait_range(mapping, iocb->ki_pos,
- 					   iocb->ki_pos + count - 1);
- 	if (ret)
--- 
-2.20.1
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -980,6 +980,7 @@ static unsigned int msm_get_mctrl(struct
+ static void msm_reset(struct uart_port *port)
+ {
+ 	struct msm_port *msm_port = UART_TO_MSM(port);
++	unsigned int mr;
+ 
+ 	/* reset everything */
+ 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
+@@ -987,7 +988,10 @@ static void msm_reset(struct uart_port *
+ 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
+ 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
+-	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
++	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
++	mr = msm_read(port, UART_MR1);
++	mr &= ~UART_MR1_RX_RDY_CTL;
++	msm_write(port, mr, UART_MR1);
+ 
+ 	/* Disable DM modes */
+ 	if (msm_port->is_uartdm)
+
 
