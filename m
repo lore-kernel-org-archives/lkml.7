@@ -2,118 +2,84 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80A37C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2B9C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D771206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CBF2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576060422;
+	bh=+ZuEN6sbvx+HFSyKNfR9u2DU6UxvtkoeGe1OMt2sqOg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jqNMHuHLcURMzoGJhJjFfaCuvBRfwI1kpsszBTH3ahl8M5z46NiqiT6XGcLMqgcrp
+	 YCO2BEoFXcsGK0Td9/fLhCW5aasAHiZbCqkfaQg3QA3iduYftv9s4QljDUtToupQAb
+	 1NbtV0+uCf3Ej9CKhCqErCJKLoDgmCE6VRKkeREI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfLKKdL convert rfc822-to-8bit (ORCPT
+        id S1728919AbfLKKdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:33:11 -0500
-Received: from mga11.intel.com ([192.55.52.93]:10005 "EHLO mga11.intel.com"
+        Wed, 11 Dec 2019 05:33:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbfLKKdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:33:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 02:33:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="220421591"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Dec 2019 02:33:10 -0800
-Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 11 Dec 2019 02:33:10 -0800
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 11 Dec 2019 02:33:10 -0800
-Received: from shsmsx108.ccr.corp.intel.com ([169.254.8.46]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.164]) with mapi id 14.03.0439.000;
- Wed, 11 Dec 2019 18:33:08 +0800
-From:   "Zhang, Rui" <rui.zhang@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: RE: [PATCH] cpuidle: Drop unnecessary type cast in
- cpuidle_poll_time()
-Thread-Topic: [PATCH] cpuidle: Drop unnecessary type cast in
- cpuidle_poll_time()
-Thread-Index: AQHVsA4SzXyZ814bMUGo9YuVyvCTvKe0vHWA
-Date:   Wed, 11 Dec 2019 10:33:07 +0000
-Message-ID: <744357E9AAD1214791ACBA4B0B90926377677DF1@SHSMSX108.ccr.corp.intel.com>
-References: <9680649.eAqxiQ8Vpk@kreacher>
-In-Reply-To: <9680649.eAqxiQ8Vpk@kreacher>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWM0MmMxZjItMGMyNS00MzQxLWIwZmYtNWIwMmMzZTFiOTVhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiV3ZjVUF2M25mQVpiUW1BYXpya3lRZGRQZDhLZXU2NGRZbnpRMU9GXC9RSDZGM2RPa1hUZVBSSE12RDlENTlMTmwifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1728857AbfLKKdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:33:40 -0500
+Received: from localhost (unknown [171.76.100.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83AC5206A5;
+        Wed, 11 Dec 2019 10:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576060420;
+        bh=+ZuEN6sbvx+HFSyKNfR9u2DU6UxvtkoeGe1OMt2sqOg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gyTut+e0k0KShiB3ONmjUMsB2d2qtxQJAPj4b2599Rk8xQTs4kDp5HD3wcdY0a+mz
+         74ALyUrgeY0fjsR8lCzh2KgZDyqTZGdZcMW4VJbPlzqGZ8/tLxZ9/hcPLRv9ZVMH8Z
+         Ru5mZsvkXRfJYWgXT7UstgmHWW2qoQqNliK+tY9E=
+Date:   Wed, 11 Dec 2019 16:03:33 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     dmaengine@vger.kernel.org, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: Re: [PATCH] dmaengine: Fix access to uninitialized dma_slave_caps
+Message-ID: <20191211103333.GE2536@vkoul-mobl>
+References: <201912051630.Cb4fFTp2%lkp@intel.com>
+ <ca92998ccc054b4f2bfd60ef3adbab2913171eac.1575546234.git.lukas@wunner.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca92998ccc054b4f2bfd60ef3adbab2913171eac.1575546234.git.lukas@wunner.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05-12-19, 12:54, Lukas Wunner wrote:
+> dmaengine_desc_set_reuse() allocates a struct dma_slave_caps on the
+> stack, populates it using dma_get_slave_caps() and then accesses one
+> of its members.
+> 
+> However dma_get_slave_caps() may fail and this isn't accounted for,
+> leading to a legitimate warning of gcc-4.9 (but not newer versions):
+> 
+>    In file included from drivers/spi/spi-bcm2835.c:19:0:
+>    drivers/spi/spi-bcm2835.c: In function 'dmaengine_desc_set_reuse':
+> >> include/linux/dmaengine.h:1370:10: warning: 'caps.descriptor_reuse' is used uninitialized in this function [-Wuninitialized]
+>      if (caps.descriptor_reuse) {
+> 
+> Fix it, thereby also silencing the gcc-4.9 warning.
+> 
+> The issue has been present for 4 years but surfaces only now that
+> the first caller of dmaengine_desc_set_reuse() has been added in
+> spi-bcm2835.c. Another user of reusable DMA descriptors has existed
+> for a while in pxa_camera.c, but it sets the DMA_CTRL_REUSE flag
+> directly instead of calling dmaengine_desc_set_reuse(). Nevertheless,
+> tag this commit for stable in case there are out-of-tree users.
 
-> -----Original Message-----
-> From: linux-pm-owner@vger.kernel.org [mailto:linux-pm-
-> owner@vger.kernel.org] On Behalf Of Rafael J. Wysocki
-> Sent: Wednesday, December 11, 2019 6:31 PM
-> To: Linux PM <linux-pm@vger.kernel.org>
-> Cc: LKML <linux-kernel@vger.kernel.org>; Daniel Lezcano
-> <daniel.lezcano@linaro.org>
-> Subject: [PATCH] cpuidle: Drop unnecessary type cast in cpuidle_poll_time()
-> 
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> The data type of the target_residency_ns field in struct cpuidle_state is u64,
-> so it does not need to be cast into u64.
-> 
-> Get read of the unnecessary type cast.
+Applied, thanks
 
-s/read/rid
-
-thanks,
-rui
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> On top of the linux-next branch of linux-pm.git from today.
-> 
-> ---
->  drivers/cpuidle/cpuidle.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: linux-pm/drivers/cpuidle/cpuidle.c
-> ==============================================================
-> =====
-> --- linux-pm.orig/drivers/cpuidle/cpuidle.c
-> +++ linux-pm/drivers/cpuidle/cpuidle.c
-> @@ -381,7 +381,7 @@ u64 cpuidle_poll_time(struct cpuidle_dri
->  		if (dev->states_usage[i].disable)
->  			continue;
-> 
-> -		limit_ns = (u64)drv->states[i].target_residency_ns;
-> +		limit_ns = drv->states[i].target_residency_ns;
->  		break;
->  	}
-> 
-> 
-> 
-
+-- 
+~Vinod
