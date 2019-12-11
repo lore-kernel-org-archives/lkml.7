@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A450C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497F8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE7C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA4E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078096;
-	bh=n1S0LjUj2n6CfaBB+gcus2gpB7g/FfRC3iTuuai5Ovo=;
+	s=default; t=1576078102;
+	bh=xi74ZVVniSv4lmfRcm1AZ9uqfrGYPbPzQt/VMuZeStU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NmZzDDX5SQM41OsuYceL+h0DTz+MGjrkmDFGiWXUrFVOHa/R5UD6k3PjYYLNTwxWw
-	 FZ0PTOVU01nzPhTdGlTMRxh+17bQoKye2rOq/KLITt2D8bdxb2s4pU7BpZty9SLIgO
-	 gc5rw80uiUFc5SSfnkwifhpfR91FUiXrqLJdFQ2A=
+	b=V3E9xcD0/UlC0gGiA7h7Z7SeJKzGVKR9S/UNZWYtaWXQjkkuXY2Bj6JpwdQjuwAS0
+	 6SzzvcdwDms6J5qNIW1r1ZKfT4t+tD5X2uXqm/piT1VMdIhYfGI4iJo6gYx1+HI2Ex
+	 ksjzXPwoYiLySoLrNYQRzUf8GwwVDS9ccc+GMxP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbfLKP2P (ORCPT
+        id S2387592AbfLKP2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33810 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387503AbfLKP14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:56 -0500
+        id S2387520AbfLKP2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:01 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F952173E;
-        Wed, 11 Dec 2019 15:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04B9F2173E;
+        Wed, 11 Dec 2019 15:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078075;
-        bh=n1S0LjUj2n6CfaBB+gcus2gpB7g/FfRC3iTuuai5Ovo=;
+        s=default; t=1576078079;
+        bh=xi74ZVVniSv4lmfRcm1AZ9uqfrGYPbPzQt/VMuZeStU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qi2tn0LqDH/9PQ6xLZn7incBxPCmYMAOTOOjrLFvdy2+OWTqOUUWWeu50dQMs/JMM
-         2eM4VQ3nu4ASTzWQsdHK3bcJttP4VTm7zbYin2/nYbtTLGzxl8q0KmFc9t+640P0tR
-         Xw5PpmGMGLhNlKdbL9NLoL1yeE7uC4W+NqX+V0tE=
+        b=UJuPj/uaKvQm9nOUjX7MEpInzAqN/JSzIt1KdI8dY4Q/zvY4l7lHKQEcMpfSHDRje
+         4PYvaMkwuzYmqeNLNItZ89KloFGCf8nviUNh7RqXpbwQJ6NLHAWkbksT90ARXcbOSX
+         teL/MKZdYG+zdJA2oeljA+BRqrBo3QbpYbgmnneQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 66/79] powerpc: Don't add -mabi= flags when building with Clang
-Date:   Wed, 11 Dec 2019 10:26:30 -0500
-Message-Id: <20191211152643.23056-66-sashal@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 70/79] perf script: Fix invalid LBR/binary mismatch error
+Date:   Wed, 11 Dec 2019 10:26:34 -0500
+Message-Id: <20191211152643.23056-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,94 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 465bfd9c44dea6b55962b5788a23ac87a467c923 ]
+[ Upstream commit 5172672da02e483d9b3c4d814c3482d0c8ffb1a6 ]
 
-When building pseries_defconfig, building vdso32 errors out:
+The 'len' returned by grab_bb() includes an extra MAXINSN bytes to allow
+for the last instruction, so the the final 'offs' will not be 'len'.
+Fix the error condition logic accordingly.
 
-  error: unknown target ABI 'elfv1'
+Before:
 
-This happens because -m32 in clang changes the target to 32-bit,
-which does not allow the ABI to be changed.
+  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
+  [ perf record: Woken up 19 times to write data ]
+  [ perf record: Captured and wrote 2.274 MB perf.data ]
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+        bmexec+2485:
+        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+        00005641d5806bd6                        add %rdi, %rax
+        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+        00005641d5806bdd                        cmp %rax, %r14
+        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+        mismatch of LBR data and executable
+        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
 
-Commit 4dc831aa8813 ("powerpc: Fix compiling a BE kernel with a
-powerpc64le toolchain") added these flags to fix building big endian
-kernels with a little endian GCC.
+After:
 
-Clang doesn't need -mabi because the target triple controls the
-default value. -mlittle-endian and -mbig-endian manipulate the triple
-into either powerpc64-* or powerpc64le-*, which properly sets the
-default ABI.
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+        bmexec+2485:
+        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+        00005641d5806bd6                        add %rdi, %rax
+        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+        00005641d5806bdd                        cmp %rax, %r14
+        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+        00005641d58069c6                        add %rax, %rdi
 
-Adding a debug print out in the PPC64TargetInfo constructor after line
-383 above shows this:
-
-  $ echo | ./clang -E --target=powerpc64-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mbig-endian -o /dev/null -
-  Default ABI: elfv1
-
-  $ echo | ./clang -E --target=powerpc64le-linux -mlittle-endian -o /dev/null -
-  Default ABI: elfv2
-
-Don't specify -mabi when building with clang to avoid the build error
-with -m32 and not change any code generation.
-
--mcall-aixdesc is not an implemented flag in clang so it can be safely
-excluded as well, see commit 238abecde8ad ("powerpc: Don't use gcc
-specific options on clang").
-
-pseries_defconfig successfully builds after this patch and
-powernv_defconfig and ppc44x_defconfig don't regress.
-
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-[mpe: Trim clang links in change log]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191119045712.39633-2-natechancellor@gmail.com
+Fixes: e98df280bc2a ("perf script brstackinsn: Fix recovery from LBR/binary mismatch")
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191127095631.15663-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index dfcb698ec8f3b..e43321f46a3be 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -90,11 +90,13 @@ MULTIPLEWORD	:= -mmultiple
- endif
- 
- ifdef CONFIG_PPC64
-+ifndef CONFIG_CC_IS_CLANG
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- cflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mcall-aixdesc)
- aflags-$(CONFIG_CPU_BIG_ENDIAN)		+= $(call cc-option,-mabi=elfv1)
- aflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mabi=elfv2
- endif
-+endif
- 
- ifneq ($(cc-name),clang)
-   cflags-$(CONFIG_CPU_LITTLE_ENDIAN)	+= -mno-strict-align
-@@ -134,6 +136,7 @@ endif
- endif
- 
- CFLAGS-$(CONFIG_PPC64)	:= $(call cc-option,-mtraceback=no)
-+ifndef CONFIG_CC_IS_CLANG
- ifdef CONFIG_CPU_LITTLE_ENDIAN
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2,$(call cc-option,-mcall-aixdesc))
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv2)
-@@ -142,6 +145,7 @@ CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcall-aixdesc)
- AFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mabi=elfv1)
- endif
-+endif
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mcmodel=medium,$(call cc-option,-mminimal-toc))
- CFLAGS-$(CONFIG_PPC64)	+= $(call cc-option,-mno-pointers-to-nested-functions)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index d20f851796c52..a4c78499c838b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1037,7 +1037,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				insn++;
+ 			}
+ 		}
+-		if (off != (unsigned)len)
++		if (off != end - start)
+ 			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 	}
  
 -- 
 2.20.1
