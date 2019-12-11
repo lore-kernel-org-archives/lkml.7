@@ -2,105 +2,140 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C87BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A82C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CAFB2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:32:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JEbYtLe2"
+	by mail.kernel.org (Postfix) with ESMTP id B6A36208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfLKMcU (ORCPT
+        id S1729212AbfLKMga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:32:20 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:55136 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfLKMcQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:32:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-Id:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=U00e+4tun2sB5OFJt+4Nz4j/tQMLxpbE5HmgeSygRhM=; b=JEbYtLe2QQvWJBZw3kBcMpX6n
-        tBAowmpgFsrFe7dQcrlHu9enNYfiUdOacOl+zgv9Z7u5yxCQfPgW1KDmFDYKYNHo7wP8e8Gn/VD91
-        P6W+j2nko7cfaiMzf7fa5+icEmAyPH+OeD48Q7Tb9a02oV2anaEO2ed4eWyaEpMJ2FRm/2WEdzU+e
-        tpZ9QxwqHDedNrfp7E7sZDfYPfJgNwq+0RMZ6t8mmKvK42MJuIQIL+yEGI4vgC8qPuwOuFgOJalTm
-        pcAgXmi3Erb2xhoErSz/fm84DLDPRynDbGbQ5pgdgXS53L2uhmgqym1lZ+mBWIaWTlTf8/zrj6IUL
-        xNleP0tpg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if190-0003sf-JO; Wed, 11 Dec 2019 12:31:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7A6D8305E21;
-        Wed, 11 Dec 2019 13:29:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 184BC2026E819; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
-Message-Id: <20191211120713.360281197@infradead.org>
-User-Agent: quilt/0.65
-Date:   Wed, 11 Dec 2019 13:07:13 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: [PATCH 00/17] Fixup page directory freeing
+        Wed, 11 Dec 2019 07:36:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:3068 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728128AbfLKMga (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 07:36:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 04:36:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="220446098"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.254.211.25]) ([10.254.211.25])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Dec 2019 04:36:27 -0800
+Subject: Re: [PATCH v2 1/3] perf report: Change sort order by a specified
+ event in group
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20191211073036.31504-1-yao.jin@linux.intel.com>
+ <20191211113815.GB12087@krava>
+ <6ba174a8-309e-9410-e6ea-ac7bb7187757@linux.intel.com>
+ <20191211121453.GC12087@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <ae8d58b9-36a4-533e-323e-0a81a6ccdd6d@linux.intel.com>
+Date:   Wed, 11 Dec 2019 20:36:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191211121453.GC12087@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-While fixing a silly bug on SH (patch #1), I realized that even with the
-trivial patch to restore prior behaviour, page directory freeing was still
-broken.
 
-The thing is, on anything SMP, freeing page directories should observe the
-exact same order as normal page freeing:
+On 12/11/2019 8:14 PM, Jiri Olsa wrote:
+> On Wed, Dec 11, 2019 at 08:01:44PM +0800, Jin, Yao wrote:
+>>
+>>
+>> On 12/11/2019 7:38 PM, Jiri Olsa wrote:
+>>> On Wed, Dec 11, 2019 at 03:30:34PM +0800, Jin Yao wrote:
+>>>
+>>> SNIP
+>>>
+>>>> +
+>>>> +static int __hpp__group_sort_idx(struct hist_entry *a, struct hist_entry *b,
+>>>> +				 hpp_field_fn get_field, int idx)
+>>>> +{
+>>>> +	struct evsel *evsel = hists_to_evsel(a->hists);
+>>>> +	u64 *fields_a, *fields_b;
+>>>> +	int cmp, nr_members, ret, i;
+>>>> +
+>>>> +	cmp = field_cmp(get_field(a), get_field(b));
+>>>> +	if (!perf_evsel__is_group_event(evsel))
+>>>> +		return cmp;
+>>>> +
+>>>> +	nr_members = evsel->core.nr_members;
+>>>> +	ret = pair_fields_alloc(a, b, get_field, nr_members,
+>>>> +			      &fields_a, &fields_b);
+>>>> +	if (ret) {
+>>>> +		ret = cmp;
+>>>> +		goto out;
+>>>> +	}
+>>>> +
+>>>> +	for (i = 1; i < nr_members; i++) {
+>>>> +		if (i == idx) {
+>>>> +			ret = field_cmp(fields_a[i], fields_b[i]);
+>>>> +			if (ret)
+>>>> +				goto out;
+>>>> +		}
+>>>> +	}
+>>>> +
+>>>> +	if (cmp) {
+>>>> +		ret = cmp;
+>>>> +		goto out;
+>>>> +	}
+>>>> +
+>>>> +	for (i = 1; i < nr_members; i++) {
+>>>> +		if (i != idx) {
+>>>> +			ret = field_cmp(fields_a[i], fields_b[i]);
+>>>> +			if (ret)
+>>>> +				goto out;
+>>>> +		}
+>>>
+>>> hi,
+>>> I'm missing why we compare the fields for 2nd time in here
+>>>
+>>> thanks,
+>>> jirka
+>>>
+>>
+>> Hi,
+>>
+>> I think we may continue comparing the remaining of fields if the index field
+>> is equal. :)
+> 
+> aah, I missed it's actualy == used in the first one ;-)
+> 
+> why don't you just call it directly?
+> 
+> 	ret = field_cmp(fields_a[idx], fields_b[idx])
+> 	if (ret)
+> 		goto out;
+> 
+> jirka
+> 
 
- 1) unhook page/directory
- 2) TLB invalidate
- 3) free page/directory
+Oh, yes, we can use simpler code. For example,
 
-Without this any concurrent page-table walk could end up with a Use-after-Free.
-This is esp. trivial for anything that has software page-table walkers
-(HAVE_FAST_GUP / software TLB fill) or the hardware caches partial page-walks
-(ie. caches page directories).
+	if (idx >= 1 && idx < nr_members) {
+		ret = field_cmp(fields_a[idx], fields_b[idx]);
+		if (ret)
+			goto out;
+	}
 
-Even on UP this might give issues, since mmu_gather is preemptible these days.
-An interrupt or preempted task accessing user pages might stumble into the free
-page if the hardware caches page directories.
-
-So I've converted everything to always observe the above order, simply so we
-don't have to worry about it.
-
-If however I've been over zealous and your arch/mmu really doesn't need this
-and you're offended by this potentially superfluous code, please let me know
-and I'll replace the patch with one that adds a comment describing your
-rationale for why it is not needed.
-
-Also included are some patches that rename/document some of the mmu gather
-options.
+Thanks
+Jin Yao
 
