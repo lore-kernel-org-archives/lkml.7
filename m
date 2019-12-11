@@ -2,88 +2,77 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 101D1C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0461C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9CA120637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9100C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576050285;
-	bh=ZuAU5be4qPQdbwFzHFL1JYNpx9aOpGRnNoEqu23egts=;
+	s=default; t=1576050297;
+	bh=TEMavfYuWOfpHnuG9O9Kor9rb80myVXsQ6n2q6Fkm6E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ATrIB1sZiUl2Ka11y8cu7FGi4Q7ZQP+T9tVhuQ7Hic7e5MzcnaVgpO7LyIw6jQr/U
-	 QTPsLbpuOvCNdUkvABu8W/wTyuFHtdBaFiXz1ed8aPbYxSsJ/1BHFZHksuSLu+5+D3
-	 JYoL5WEkNnqflompqHD7wceWlY74mOiQoCJPuII8=
+	b=XCF+Mpc7k3ihOmqOJOhKsXHcyNMVDaNIm1+5HLu/OiJsP//Y8mX56v5fBxJUNwf7l
+	 eQ4chi/Aa7/pOUokI55805pLvk6RgRNPQO9mYvpZR2nzQHMeU9/1ufaAxjiSJp3ozA
+	 jwbstzwn6UIStSqV/rWmxuRYDGShAlFAA6vs3QuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbfLKHoo (ORCPT
+        id S1728188AbfLKHo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:44:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51876 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 02:44:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfLKHoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:44:44 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726151AbfLKHo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:44:56 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67AF120637;
-        Wed, 11 Dec 2019 07:44:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3843F20637;
+        Wed, 11 Dec 2019 07:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576050283;
-        bh=ZuAU5be4qPQdbwFzHFL1JYNpx9aOpGRnNoEqu23egts=;
+        s=default; t=1576050295;
+        bh=TEMavfYuWOfpHnuG9O9Kor9rb80myVXsQ6n2q6Fkm6E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qWjZGzu0wtMXb4AwOWR4UDh7DsnBjggDVmgGJwkcRsvYvK2h+P2z2y/eg9ttqpY3H
-         j0JaW+E/UCj9VmB5doricAVhY7xM9XAR/467JXvfYJuzUSh9ziOk5DNWcYF2Em4ev3
-         GJz1XQfzewUkCRRZl6q0KgqcXDfZeuflmX/F2QaI=
-Date:   Wed, 11 Dec 2019 08:44:41 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Kusanagi Kouichi <slash@ac.auone-net.jp>
-Subject: Re: [PATCH AUTOSEL 4.9 85/91] debugfs: Fix !DEBUG_FS
- debugfs_create_automount
-Message-ID: <20191211074441.GC398293@kroah.com>
-References: <20191210223035.14270-1-sashal@kernel.org>
- <20191210223035.14270-85-sashal@kernel.org>
+        b=isSk1otib+05g1fiVCSJ7A37LBOVycM0XDbFPDrZPOJ4Tpd2Ap0x00wO63Qmhty9b
+         OVdgEW0C2cWB6F2gYkvPomir9r64dO2OrCJ7HBLxm4wqwiKKBf7O+PO0wgpagYgyhE
+         WkLxqE4sTmDbQnOk5h65smy2mGcdXi7NwD5LYSMI=
+Date:   Wed, 11 Dec 2019 15:44:46 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] ARM: dts: imx6: rdu2: Add node for UCS1002 USB
+ charger chip
+Message-ID: <20191211074445.GQ15858@dragon>
+References: <20191209165018.21794-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210223035.14270-85-sashal@kernel.org>
+In-Reply-To: <20191209165018.21794-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 05:30:29PM -0500, Sasha Levin wrote:
-> From: Kusanagi Kouichi <slash@ac.auone-net.jp>
+On Mon, Dec 09, 2019 at 08:50:16AM -0800, Andrey Smirnov wrote:
+> Add node for UCS1002 USB charger chip connected to front panel USB and
+> replace "regulator-fixed" previously used to control VBUS.
 > 
-> [ Upstream commit 4250b047039d324e0ff65267c8beb5bad5052a86 ]
-> 
-> If DEBUG_FS=n, compile fails with the following error:
-> 
-> kernel/trace/trace.c: In function 'tracing_init_dentry':
-> kernel/trace/trace.c:8658:9: error: passing argument 3 of 'debugfs_create_automount' from incompatible pointer type [-Werror=incompatible-pointer-types]
->  8658 |         trace_automount, NULL);
->       |         ^~~~~~~~~~~~~~~
->       |         |
->       |         struct vfsmount * (*)(struct dentry *, void *)
-> In file included from kernel/trace/trace.c:24:
-> ./include/linux/debugfs.h:206:25: note: expected 'struct vfsmount * (*)(void *)' but argument is of type 'struct vfsmount * (*)(struct dentry *, void *)'
->   206 |      struct vfsmount *(*f)(void *),
->       |      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
-> 
-> Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
-> Link: https://lore.kernel.org/r/20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-This patch is only needed for 5.4 and newer kernels.  No need to
-backport it anywhere, please drop it from all of these trees.
-
-thanks,
-
-greg k-h
+Applied all, thanks.
