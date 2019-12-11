@@ -2,144 +2,250 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298ABC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57341C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0B3206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:19:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="q50bYmGY"
+	by mail.kernel.org (Postfix) with ESMTP id 268CA206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfLKCTk (ORCPT
+        id S1727700AbfLKCUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:19:40 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:59657 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727302AbfLKCTj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:19:39 -0500
-X-UUID: 165e4f02be654651ba7986a8681e7bd2-20191211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=rhfdqi2eRRPOmkQEKUGmuq54EZ73uOUii6nqn78dZ8M=;
-        b=q50bYmGYPizR+0jps0AvO/uOh8KtsxOOYaIgX10598imLcEZpN6cXQfF6TQuBAyS0jEsnOiK986JSxCyf2pLOC/tzMvO568Obf+hYDAblDvwVcFHe1iPILfiA7SVOtxL2Y9NK7gKhU2R3drDXwyLHha1CEDDxomlz1hhMETlSHY=;
-X-UUID: 165e4f02be654651ba7986a8681e7bd2-20191211
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 267267415; Wed, 11 Dec 2019 10:19:35 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Dec 2019 10:19:26 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Dec 2019 10:19:35 +0800
-Message-ID: <1576030774.24528.2.camel@mtksdaap41>
-Subject: Re: [PATCH v6 5/6] rtc: mt6397: fix alarm register overwrite
-From:   Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        <srv_heupstream@mediatek.com>, Ran Bi <ran.bi@mediatek.com>
-Date:   Wed, 11 Dec 2019 10:19:34 +0800
-In-Reply-To: <20191210164139.GT1463890@piout.net>
-References: <1575639183-17606-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1575639183-17606-6-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <20191210164139.GT1463890@piout.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Tue, 10 Dec 2019 21:20:38 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:59050 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727302AbfLKCUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:20:37 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxrxdqUvBdi2oJAA--.59S2;
+        Wed, 11 Dec 2019 10:20:26 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>
+Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
+Date:   Wed, 11 Dec 2019 10:20:01 +0800
+Message-Id: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxrxdqUvBdi2oJAA--.59S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxtF18ZF4rZrW5Jw1ftrW3GFg_yoW7Zr4UpF
+        sxJF97trs7GryY9r95tr1fCr1Yv3s7Wr17GrZxGa4vy34aqrn5XrWIvry09wn3JFWDX3Z0
+        ga98G34rCFy5JFJanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUPEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28I
+        cVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx
+        0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwAC
+        I402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVWUAVWUtwCY02Avz4vE14v_Gr1l42
+        xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1l
+        x2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14
+        v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IY
+        x2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I
+        8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73
+        UjIFyTuYvjxUgwSlUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFR1ZSwgMjAxOS0xMi0xMCBhdCAxNzo0MSArMDEwMCwgQWxleGFuZHJlIEJlbGxv
-bmkgd3JvdGU6DQo+IEhpLA0KPiANCj4gT24gMDYvMTIvMjAxOSAyMTozMzowMiswODAwLCBIc2lu
-LUhzaXVuZyBXYW5nIHdyb3RlOg0KPiA+IEZyb206IFJhbiBCaSA8cmFuLmJpQG1lZGlhdGVrLmNv
-bT4NCj4gPiANCj4gPiBBbGFybSByZWdpc3RlcnMgaGlnaCBieXRlIHdhcyByZXNlcnZlZCBmb3Ig
-b3RoZXIgZnVuY3Rpb25zLg0KPiA+IFRoaXMgYWRkIG1hc2sgaW4gYWxhcm0gcmVnaXN0ZXJzIG9w
-ZXJhdGlvbiBmdW5jdGlvbnMuDQo+ID4gVGhpcyBhbHNvIGZpeCBlcnJvciBjb25kaXRpb24gaW4g
-aW50ZXJydXB0IGhhbmRsZXIuDQo+ID4gDQo+ID4gRml4ZXM6IGZjMjk3OTExOGYzZiAoInJ0Yzog
-bWVkaWF0ZWs6IEFkZCBNVDYzOTcgUlRDIGRyaXZlciIpDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1i
-eTogUmFuIEJpIDxyYW4uYmlAbWVkaWF0ZWsuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhzaW4t
-SHNpdW5nIFdhbmcgPGhzaW4taHNpdW5nLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
-ICBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3LmMgfCA0NyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKystLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzMgaW5zZXJ0aW9u
-cygrKSwgMTQgZGVsZXRpb25zKC0pDQo+ID4gDQo+IA0KPiBDYW4geW91IHJlYmFzZSB0aGF0IG9u
-ZSBvbiB0b3Agb2YgdjUuNS1yYzEgc29vbj8gSSdsbCBpbmNsdWRlIGl0IGluIC1maXhlcy4NCj4g
-DQpTdXJlLCBJIHdpbGwgc2VuZCB0aGUgbmV4dCB2ZXJzaW9uIGxhdGVyLg0KDQo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcnRjL3J0Yy1tdDYzOTcuYyBiL2RyaXZlcnMvcnRjL3J0Yy1tdDYzOTcu
-Yw0KPiA+IGluZGV4IDcwNDIyOWUuLmIyMTZiZGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9y
-dGMvcnRjLW10NjM5Ny5jDQo+ID4gKysrIGIvZHJpdmVycy9ydGMvcnRjLW10NjM5Ny5jDQo+ID4g
-QEAgLTQ3LDYgKzQ3LDE0IEBADQo+ID4gIA0KPiA+ICAjZGVmaW5lIFJUQ19BTF9TRUMJCTB4MDAx
-OA0KPiA+ICANCj4gPiArI2RlZmluZSBSVENfQUxfU0VDX01BU0sJCTB4MDAzZg0KPiA+ICsjZGVm
-aW5lIFJUQ19BTF9NSU5fTUFTSwkJMHgwMDNmDQo+ID4gKyNkZWZpbmUgUlRDX0FMX0hPVV9NQVNL
-CQkweDAwMWYNCj4gPiArI2RlZmluZSBSVENfQUxfRE9NX01BU0sJCTB4MDAxZg0KPiA+ICsjZGVm
-aW5lIFJUQ19BTF9ET1dfTUFTSwkJMHgwMDA3DQo+ID4gKyNkZWZpbmUgUlRDX0FMX01USF9NQVNL
-CQkweDAwMGYNCj4gPiArI2RlZmluZSBSVENfQUxfWUVBX01BU0sJCTB4MDA3Zg0KPiA+ICsNCj4g
-PiAgI2RlZmluZSBSVENfUEROMgkJMHgwMDJlDQo+ID4gICNkZWZpbmUgUlRDX1BETjJfUFdST05f
-QUxBUk0JQklUKDQpDQo+ID4gIA0KPiA+IEBAIC0xMDMsNyArMTExLDcgQEAgc3RhdGljIGlycXJl
-dHVybl90IG10a19ydGNfaXJxX2hhbmRsZXJfdGhyZWFkKGludCBpcnEsIHZvaWQgKmRhdGEpDQo+
-ID4gIAkJaXJxZW4gPSBpcnFzdGEgJiB+UlRDX0lSUV9FTl9BTDsNCj4gPiAgCQltdXRleF9sb2Nr
-KCZydGMtPmxvY2spOw0KPiA+ICAJCWlmIChyZWdtYXBfd3JpdGUocnRjLT5yZWdtYXAsIHJ0Yy0+
-YWRkcl9iYXNlICsgUlRDX0lSUV9FTiwNCj4gPiAtCQkJCSBpcnFlbikgPCAwKQ0KPiA+ICsJCQkJ
-IGlycWVuKSA9PSAwKQ0KPiA+ICAJCQltdGtfcnRjX3dyaXRlX3RyaWdnZXIocnRjKTsNCj4gPiAg
-CQltdXRleF91bmxvY2soJnJ0Yy0+bG9jayk7DQo+ID4gIA0KPiA+IEBAIC0yMjUsMTIgKzIzMywx
-MiBAQCBzdGF0aWMgaW50IG10a19ydGNfcmVhZF9hbGFybShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0
-cnVjdCBydGNfd2thbHJtICphbG0pDQo+ID4gIAlhbG0tPnBlbmRpbmcgPSAhIShwZG4yICYgUlRD
-X1BETjJfUFdST05fQUxBUk0pOw0KPiA+ICAJbXV0ZXhfdW5sb2NrKCZydGMtPmxvY2spOw0KPiA+
-ICANCj4gPiAtCXRtLT50bV9zZWMgPSBkYXRhW1JUQ19PRkZTRVRfU0VDXTsNCj4gPiAtCXRtLT50
-bV9taW4gPSBkYXRhW1JUQ19PRkZTRVRfTUlOXTsNCj4gPiAtCXRtLT50bV9ob3VyID0gZGF0YVtS
-VENfT0ZGU0VUX0hPVVJdOw0KPiA+IC0JdG0tPnRtX21kYXkgPSBkYXRhW1JUQ19PRkZTRVRfRE9N
-XTsNCj4gPiAtCXRtLT50bV9tb24gPSBkYXRhW1JUQ19PRkZTRVRfTVRIXTsNCj4gPiAtCXRtLT50
-bV95ZWFyID0gZGF0YVtSVENfT0ZGU0VUX1lFQVJdOw0KPiA+ICsJdG0tPnRtX3NlYyA9IGRhdGFb
-UlRDX09GRlNFVF9TRUNdICYgUlRDX0FMX1NFQ19NQVNLOw0KPiA+ICsJdG0tPnRtX21pbiA9IGRh
-dGFbUlRDX09GRlNFVF9NSU5dICYgUlRDX0FMX01JTl9NQVNLOw0KPiA+ICsJdG0tPnRtX2hvdXIg
-PSBkYXRhW1JUQ19PRkZTRVRfSE9VUl0gJiBSVENfQUxfSE9VX01BU0s7DQo+ID4gKwl0bS0+dG1f
-bWRheSA9IGRhdGFbUlRDX09GRlNFVF9ET01dICYgUlRDX0FMX0RPTV9NQVNLOw0KPiA+ICsJdG0t
-PnRtX21vbiA9IGRhdGFbUlRDX09GRlNFVF9NVEhdICYgUlRDX0FMX01USF9NQVNLOw0KPiA+ICsJ
-dG0tPnRtX3llYXIgPSBkYXRhW1JUQ19PRkZTRVRfWUVBUl0gJiBSVENfQUxfWUVBX01BU0s7DQo+
-ID4gIA0KPiA+ICAJdG0tPnRtX3llYXIgKz0gUlRDX01JTl9ZRUFSX09GRlNFVDsNCj4gPiAgCXRt
-LT50bV9tb24tLTsNCj4gPiBAQCAtMjUxLDE0ICsyNTksMjUgQEAgc3RhdGljIGludCBtdGtfcnRj
-X3NldF9hbGFybShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGNfd2thbHJtICphbG0pDQo+
-ID4gIAl0bS0+dG1feWVhciAtPSBSVENfTUlOX1lFQVJfT0ZGU0VUOw0KPiA+ICAJdG0tPnRtX21v
-bisrOw0KPiA+ICANCj4gPiAtCWRhdGFbUlRDX09GRlNFVF9TRUNdID0gdG0tPnRtX3NlYzsNCj4g
-PiAtCWRhdGFbUlRDX09GRlNFVF9NSU5dID0gdG0tPnRtX21pbjsNCj4gPiAtCWRhdGFbUlRDX09G
-RlNFVF9IT1VSXSA9IHRtLT50bV9ob3VyOw0KPiA+IC0JZGF0YVtSVENfT0ZGU0VUX0RPTV0gPSB0
-bS0+dG1fbWRheTsNCj4gPiAtCWRhdGFbUlRDX09GRlNFVF9NVEhdID0gdG0tPnRtX21vbjsNCj4g
-PiAtCWRhdGFbUlRDX09GRlNFVF9ZRUFSXSA9IHRtLT50bV95ZWFyOw0KPiA+IC0NCj4gPiAgCW11
-dGV4X2xvY2soJnJ0Yy0+bG9jayk7DQo+ID4gKwlyZXQgPSByZWdtYXBfYnVsa19yZWFkKHJ0Yy0+
-cmVnbWFwLCBydGMtPmFkZHJfYmFzZSArIFJUQ19BTF9TRUMsDQo+ID4gKwkJCSAgICAgICBkYXRh
-LCBSVENfT0ZGU0VUX0NPVU5UKTsNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCWdvdG8gZXhp
-dDsNCj4gPiArDQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfU0VDXSA9ICgoZGF0YVtSVENfT0ZGU0VU
-X1NFQ10gJiB+KFJUQ19BTF9TRUNfTUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1fc2VjICYgUlRD
-X0FMX1NFQ19NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfTUlOXSA9ICgoZGF0YVtSVENf
-T0ZGU0VUX01JTl0gJiB+KFJUQ19BTF9NSU5fTUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1fbWlu
-ICYgUlRDX0FMX01JTl9NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfSE9VUl0gPSAoKGRh
-dGFbUlRDX09GRlNFVF9IT1VSXSAmIH4oUlRDX0FMX0hPVV9NQVNLKSkgfA0KPiA+ICsJCQkJKHRt
-LT50bV9ob3VyICYgUlRDX0FMX0hPVV9NQVNLKSk7DQo+ID4gKwlkYXRhW1JUQ19PRkZTRVRfRE9N
-XSA9ICgoZGF0YVtSVENfT0ZGU0VUX0RPTV0gJiB+KFJUQ19BTF9ET01fTUFTSykpIHwNCj4gPiAr
-CQkJCSh0bS0+dG1fbWRheSAmIFJUQ19BTF9ET01fTUFTSykpOw0KPiA+ICsJZGF0YVtSVENfT0ZG
-U0VUX01USF0gPSAoKGRhdGFbUlRDX09GRlNFVF9NVEhdICYgfihSVENfQUxfTVRIX01BU0spKSB8
-DQo+ID4gKwkJCQkodG0tPnRtX21vbiAmIFJUQ19BTF9NVEhfTUFTSykpOw0KPiA+ICsJZGF0YVtS
-VENfT0ZGU0VUX1lFQVJdID0gKChkYXRhW1JUQ19PRkZTRVRfWUVBUl0gJiB+KFJUQ19BTF9ZRUFf
-TUFTSykpIHwNCj4gPiArCQkJCSh0bS0+dG1feWVhciAmIFJUQ19BTF9ZRUFfTUFTSykpOw0KPiA+
-ICsNCj4gPiAgCWlmIChhbG0tPmVuYWJsZWQpIHsNCj4gPiAgCQlyZXQgPSByZWdtYXBfYnVsa193
-cml0ZShydGMtPnJlZ21hcCwNCj4gPiAgCQkJCQlydGMtPmFkZHJfYmFzZSArIFJUQ19BTF9TRUMs
-DQo+ID4gLS0gDQo+ID4gMi42LjQNCj4gDQoNCg==
+There exists many similar and duplicate codes to check "." and "..",
+so introduce is_dot_or_dotdot helper to make the code more clean.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+
+v5:
+  - remove "qname" variable in fscrypt_fname_disk_to_usr()
+  - modify "len < 2" to "len == 1" in is_dot_or_dotdot()
+
+v4:
+  - rename is_dot_dotdot() to is_dot_or_dotdot()
+
+v3:
+  - use "name" and "len" as arguments instead of qstr
+  - move is_dot_dotdot() to include/linux/namei.h
+
+v2:
+  - use the better performance implementation of is_dot_dotdot
+  - make it static inline and move it to include/linux/fs.h
+
+ fs/crypto/fname.c     | 17 +++--------------
+ fs/ecryptfs/crypto.c  | 12 +-----------
+ fs/f2fs/f2fs.h        | 11 -----------
+ fs/f2fs/hash.c        |  3 ++-
+ fs/namei.c            |  6 ++----
+ include/linux/namei.h | 10 ++++++++++
+ 6 files changed, 18 insertions(+), 41 deletions(-)
+
+diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+index 3da3707..bb41f5d 100644
+--- a/fs/crypto/fname.c
++++ b/fs/crypto/fname.c
+@@ -11,21 +11,11 @@
+  * This has not yet undergone a rigorous security audit.
+  */
+ 
++#include <linux/namei.h>
+ #include <linux/scatterlist.h>
+ #include <crypto/skcipher.h>
+ #include "fscrypt_private.h"
+ 
+-static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * fname_encrypt() - encrypt a filename
+  *
+@@ -252,10 +242,9 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
+ 			const struct fscrypt_str *iname,
+ 			struct fscrypt_str *oname)
+ {
+-	const struct qstr qname = FSTR_TO_QSTR(iname);
+ 	struct fscrypt_digested_name digested_name;
+ 
+-	if (fscrypt_is_dot_dotdot(&qname)) {
++	if (is_dot_or_dotdot(iname->name, iname->len)) {
+ 		oname->name[0] = '.';
+ 		oname->name[iname->len - 1] = '.';
+ 		oname->len = iname->len;
+@@ -323,7 +312,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
+ 	memset(fname, 0, sizeof(struct fscrypt_name));
+ 	fname->usr_fname = iname;
+ 
+-	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
++	if (!IS_ENCRYPTED(dir) || is_dot_or_dotdot(iname->name, iname->len)) {
+ 		fname->disk_name.name = (unsigned char *)iname->name;
+ 		fname->disk_name.len = iname->len;
+ 		return 0;
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index f91db24..c3bcbf0 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
+ 	return rc;
+ }
+ 
+-static bool is_dot_dotdot(const char *name, size_t name_size)
+-{
+-	if (name_size == 1 && name[0] == '.')
+-		return true;
+-	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
+  * @plaintext_name: The plaintext name
+@@ -2027,7 +2017,7 @@ int ecryptfs_decode_and_decrypt_filename(char **plaintext_name,
+ 
+ 	if ((mount_crypt_stat->flags & ECRYPTFS_GLOBAL_ENCRYPT_FILENAMES) &&
+ 	    !(mount_crypt_stat->flags & ECRYPTFS_ENCRYPTED_VIEW_ENABLED)) {
+-		if (is_dot_dotdot(name, name_size)) {
++		if (is_dot_or_dotdot(name, name_size)) {
+ 			rc = ecryptfs_copy_filename(plaintext_name,
+ 						    plaintext_name_size,
+ 						    name, name_size);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a888a0..3d5e684 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
+ 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+ }
+ 
+-static inline bool is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+index 5bc4dcd..ef155c2 100644
+--- a/fs/f2fs/hash.c
++++ b/fs/f2fs/hash.c
+@@ -15,6 +15,7 @@
+ #include <linux/cryptohash.h>
+ #include <linux/pagemap.h>
+ #include <linux/unicode.h>
++#include <linux/namei.h>
+ 
+ #include "f2fs.h"
+ 
+@@ -82,7 +83,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+ 	if (fname && !fname->disk_name.name)
+ 		return cpu_to_le32(fname->hash);
+ 
+-	if (is_dot_dotdot(name_info))
++	if (is_dot_or_dotdot(name, len))
+ 		return 0;
+ 
+ 	/* Initialize the default seed for the hash checksum functions */
+diff --git a/fs/namei.c b/fs/namei.c
+index d6c91d1..f3a4439 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2451,10 +2451,8 @@ static int lookup_one_len_common(const char *name, struct dentry *base,
+ 	if (!len)
+ 		return -EACCES;
+ 
+-	if (unlikely(name[0] == '.')) {
+-		if (len < 2 || (len == 2 && name[1] == '.'))
+-			return -EACCES;
+-	}
++	if (is_dot_or_dotdot(name, len))
++		return -EACCES;
+ 
+ 	while (len--) {
+ 		unsigned int c = *(const unsigned char *)name++;
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 7fe7b87..0fd9315 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
+ 	return error == -ESTALE && !(flags & LOOKUP_REVAL);
+ }
+ 
++static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
++{
++	if (unlikely(name[0] == '.')) {
++		if (len == 1 || (len == 2 && name[1] == '.'))
++			return true;
++	}
++
++	return false;
++}
++
+ #endif /* _LINUX_NAMEI_H */
+-- 
+2.1.0
 
