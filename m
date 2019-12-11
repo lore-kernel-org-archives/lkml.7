@@ -2,140 +2,144 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE327C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0C4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E7F20718
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I2EwFONY"
+	by mail.kernel.org (Postfix) with ESMTP id EE1202077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfLKEJB (ORCPT
+        id S1727663AbfLKEJk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:09:01 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:53182 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLKEJB (ORCPT
+        Tue, 10 Dec 2019 23:09:40 -0500
+Received: from sci-ig2.spreadtrum.com ([222.66.158.135]:29782 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726642AbfLKEJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:09:01 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB442Pp179945;
-        Wed, 11 Dec 2019 04:08:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=NsytSED1IdKLk5zj6xtHrR0U2YjxCSjKc6zTpdZVg4Q=;
- b=I2EwFONYap60CNgUAo3T/+I6fxoUgXpkeedOuHbGWnRe5I51yYyxDxB8z3fhUhTIdVGq
- ZPQ20I86VGh4Ks5AIiQkfmCZSiUm2M+rVhq8A5eMzeo92Hc5GvFOWSxTQKjS1masJky8
- BF1Khtt7o1kq+eQH6iBB/6ZxQBxkmaKv+727ppF+maxHdFucRZRQCN2u/5bou3oCcpJg
- ioYfSZgw5GArinBEWHxPE3bCgu/+01fPXDzZra81hUuj2utqRw1m2IA4Uu5IXTpDfOV1
- x7GuNkXCLQ1HudrnJb0A0U7kyq/qwGyE6TVil26Fp7vvoMABI6Ogw9yBwiCuLiRgrghy sQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2wrw4n6x8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 04:08:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBB4462h010025;
-        Wed, 11 Dec 2019 04:08:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wte9b9sm1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 04:08:36 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBB48YKM022438;
-        Wed, 11 Dec 2019 04:08:35 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Dec 2019 20:08:07 -0800
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org
-Subject: Re: [PATCH 0/1] Summary: hwmon driver for temperature sensors on SATA drives
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20191209052119.32072-1-linux@roeck-us.net>
-Date:   Tue, 10 Dec 2019 23:08:04 -0500
-In-Reply-To: <20191209052119.32072-1-linux@roeck-us.net> (Guenter Roeck's
-        message of "Sun, 8 Dec 2019 21:21:18 -0800")
-Message-ID: <yq15zinmrmj.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 10 Dec 2019 23:09:40 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xBB48siS021258
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 11 Dec 2019 12:08:54 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from localhost (10.0.74.130) by BJMBX02.spreadtrum.com (10.0.64.8)
+ with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 11 Dec 2019 12:09:00
+ +0800
+From:   Orson Zhai <orson.zhai@unisoc.com>
+To:     Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Lee Jones <lee.jones@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <baolin.wang@unisoc.com>,
+        <kevin.tang@unisoc.com>, <chunyan.zhang@unisoc.com>,
+        <liangcai.fan@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH v3] mfd: syscon: Add arguments support for syscon reference
+Date:   Wed, 11 Dec 2019 12:08:31 +0800
+Message-ID: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912110034
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9467 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912110034
+Content-Type: text/plain; charset="utf-8"
+X-Originating-IP: [10.0.74.130]
+X-ClientProxiedBy: shcas04.spreadtrum.com (10.29.35.89) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+Content-Transfer-Encoding: 8BIT
+X-MAIL: SHSQR01.spreadtrum.com xBB48siS021258
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are a lot of similar global registers being used across multiple SoCs
+from Unisoc. But most of these registers are assigned with different offset
+for different SoCs. It is hard to handle all of them in an all-in-one
+kernel image.
 
-Hi Guenter,
+Add a helper function to get regmap with arguments where we could put some
+extra information such as the offset value.
 
-> The most recent attempt was [1] by Linus Walleij. It went through a total
-> of seven iterations. At the end, it was rejected for a number of reasons;
-> see the provided link for details. This implementation resides in the
-> SCSI core. It originally resided in libata but was moved to SCSI per
-> maintainer request, where it was ultimately rejected.
+Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+Tested-by: Baolin Wang <baolin.wang@unisoc.com>
+---
+ drivers/mfd/syscon.c       | 29 +++++++++++++++++++++++++++++
+ include/linux/mfd/syscon.h | 14 ++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-While I am sure I come across as a curmudgeon, regressions is a major
-concern for me. That, and making sure we pick the right architecture. I
-thought we were making good progress in that department when Linus
-abandoned the effort.
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index e22197c..2918b05 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -224,6 +224,35 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
 
-> The feedback on this approach suggests to use the SCSI Temperature log
-> page [0x0d] as means to access drive temperature information. It is
-> unknown if this is implemented in any real SCSI drive.
++struct regmap *syscon_regmap_lookup_by_phandle_args(struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       struct device_node *syscon_np;
++       struct of_phandle_args args;
++       struct regmap *regmap;
++       unsigned int index;
++       int rc;
++
++       rc = of_parse_phandle_with_fixed_args(np, property, arg_count,
++                       0, &args);
++       if (rc)
++               return ERR_PTR(rc);
++
++       syscon_np = args.np;
++       if (!syscon_np)
++               return ERR_PTR(-ENODEV);
++
++       regmap = syscon_node_to_regmap(syscon_np);
++       for (index = 0; index < arg_count; index++)
++               out_args[index] = args.args[index];
++       of_node_put(syscon_np);
++
++       return regmap;
++}
++EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle_args);
++
+ static int syscon_probe(struct platform_device *pdev)
+ {
+        struct device *dev = &pdev->dev;
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index 112dc66..714cab1 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -23,6 +23,11 @@ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+                                        struct device_node *np,
+                                        const char *property);
++extern struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args);
+ #else
+ static inline struct regmap *device_node_to_regmap(struct device_node *np)
+ {
+@@ -45,6 +50,15 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ {
+        return ERR_PTR(-ENOTSUPP);
+ }
++
++static struct regmap *syscon_regmap_lookup_by_phandle_args(
++                                       struct device_node *np,
++                                       const char *property,
++                                       int arg_count,
++                                       unsigned int *out_args)
++{
++       return ERR_PTR(-ENOTSUPP);
++}
+ #endif
 
-Almost every SCSI drive has it.
+ #endif /* __LINUX_MFD_SYSCON_H__ */
+--
+2.7.4
 
-> The feedback also suggests to obtain temperature from ATA drives,
-> convert it into the SCSI temperature log page in libata-scsi, and to
-> use that information in a hardware monitoring driver. The format and
-> method to do this is documented in [3]. This is not currently
-> implemented in the Linux kernel.
-
-Correct, but I have no qualms over exporting the SCSI temperature log
-page. The devices that export that page are generally well-behaved.
-
-My concerns are wrt. identifying whether SMART data is available for
-USB/UAS. I am not too worried about ATA and "real" SCSI (ignoring RAID
-controllers that hide the real drives in various ways).
-
-I am not sure why the SCSI temperature log page parsing would be
-complex. I will have to go check smartmontools to see what that is all
-about. The spec is as simple as can be.
-
-Anyway. I think the overall approach wrt. SCT and falling back to
-well-known SMART fields is reasonably sane and fine for libata. But I
-don't understand the pushback wrt. using the SCSI temperature log page
-as a conduit. I think it would be fine if this worked out of the box for
-both SCSI and ATA drives.
-
-The elephant in the room remains USB. And coming up with a way we can
-reliably detect whether it is safe to start poking at the device to
-discover if SMART is provided. If we eventually want to pursue USB, I
-think your heuristic stuff needs to be a library that can be leveraged
-by both libata and USB. But that doesn't have to be part of the initial
-effort.
-
-And finally, my concerns wrt. reacting to bad sensors remain. Not too
-familiar with hwmon, but I would still like any actions based on
-reported temperatures to be under user control and not the kernel.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
