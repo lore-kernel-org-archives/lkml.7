@@ -2,182 +2,219 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 185A0C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BCBC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D893D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA76208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080162;
-	bh=kZsIXc7qd815VK8xJHuv+w3El9/y7Fu/2yASHZtpfTE=;
+	s=default; t=1576080167;
+	bh=zhohHsVX+GTtYTqbaLSoGKPyiR4OLejXpIJpJGzzvqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zG5Uqw2kLMKuGY7dqN3RwkB7jM9UH2qsZPqQthR2UWEuIQADDkByKq6E8h/z4AAGi
-	 fJw3iUKBXv2DJBwNHPzEaifpRgapjCO46aHyiQfSMzo67A2ACdyRbTV+RRjVMI5EoG
-	 +ipJUU7+AB6nMXvLJURQOThI0gupNjfef8p+vwPY=
+	b=VAxhfOF9SousExxOYNhWl6ojmuLA80jJu8l/h2gQSSAgBGPateljo3sGV6Vy6d1/u
+	 MIcDeq7giNB7WZg0yg1mX/jRkLpaq3vrfBlvzW0nsnAQmtBtQB7A3fOl4jyD3kFUFI
+	 qYTwo48VKerjAvws4ndVU973Ws1v/TqI5cfiu0RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfLKPNK (ORCPT
+        id S1730943AbfLKQCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35692 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:02:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731296AbfLKPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:00 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731264AbfLKPNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:09 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F319A2467F;
-        Wed, 11 Dec 2019 15:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A94122B48;
+        Wed, 11 Dec 2019 15:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077179;
-        bh=kZsIXc7qd815VK8xJHuv+w3El9/y7Fu/2yASHZtpfTE=;
+        s=default; t=1576077189;
+        bh=zhohHsVX+GTtYTqbaLSoGKPyiR4OLejXpIJpJGzzvqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S0hsPNKy9xNAdcZIR/glRRgwMrw9gJlNbtt8O7l1sb3w1B7jwBthqOEoTCAvju9Au
-         lk4nDG2oyvJj68YvVcM/CD6/lHREteGmGljPYa5CkhyYGQWmVluTb7w484bnCoerIM
-         qEWofJKRvJeghVK6s62kOivezWYN+meBVzLI0txY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Subject: [PATCH 5.3 011/105] serial: serial_core: Perform NULL checks for break_ctl ops
-Date:   Wed, 11 Dec 2019 16:05:00 +0100
-Message-Id: <20191211150223.698080739@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=MTVMzuuzFCh6WBnGHxnLFtVpP6ZpSrk3FavYCmtKt8HgBs3yDyvJX0DLHWObaVQYx
+         U6F0mnMHuLsdQKgaA2jXX9UIHE0aw+tLaW2X4jj2Rg6FKN2+P7B723Le3wUzqjMOX3
+         y8XgetJbny8Io9D5ueBIvl5QVlmDwHS5SHsvZKCE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 072/134] scsi: atari_scsi: sun3_scsi: Set sg_tablesize to 1 instead of SG_NONE
+Date:   Wed, 11 Dec 2019 10:10:48 -0500
+Message-Id: <20191211151150.19073-72-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-commit 7d73170e1c282576419f8b50a771f1fcd2b81a94 upstream.
+[ Upstream commit 79172ab20bfd8437b277254028efdb68484e2c21 ]
 
-Doing fuzz test on sbsa uart device, causes a kernel crash
-due to NULL pointer dereference:
+Since the scsi subsystem adopted the blk-mq API, a host with zero
+sg_tablesize crashes with a NULL pointer dereference.
 
-------------[ cut here ]------------
-Unable to handle kernel paging request at virtual address fffffffffffffffc
-pgd = ffffffe331723000
-[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
-Internal error: Oops: 96000005 [#1] PREEMPT SMP
-Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
-Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
-hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
-mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
-uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
-iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
-usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
-ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
-yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
-nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
-cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
-nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
-CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
-task: ffffffe32b23f110 task.stack: ffffffe32bda4000
-PC is at uart_break_ctl+0x44/0x84
-LR is at uart_break_ctl+0x34/0x84
-pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
-sp : ffffffe32bda7cc0
-x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
-x27: ffffff8393402000 x26: 0000000000000000
-x25: ffffffe32b233f40 x24: ffffffc07a8ec680
-x23: 0000000000005425 x22: 00000000ffffffff
-x21: ffffffe33ed73c98 x20: 0000000000000000
-x19: ffffffe33ed94168 x18: 0000000000000004
-x17: 0000007f92ae9d30 x16: ffffff8392fa6064
-x15: 0000000000000010 x14: 0000000000000000
-x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000020 x10: 0000007ffdac1708
-x9 : 0000000000000078 x8 : 000000000000001d
-x7 : 0000000052a64887 x6 : ffffffe32bda7e08
-x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
-x3 : ffffff83938d5018 x2 : 0000000000000080
-x1 : ffffffe32b23c040 x0 : ffffff83934428f8
-virtual start addr offset is 38ac00000
-module base offset is 2cd4cf1000
-linear region base offset is : 0
-Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
-Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
-7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
-7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
-7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
-7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
-7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
-7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
-7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
-7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
-7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
-7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
-7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
-7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
-7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
-7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
-7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
-7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
-7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
-7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
-7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
-7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
-7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
-7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
-7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
-7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
-7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
-Call trace:
-Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
-7aa0:                                   0000000000001000 0000007fffffffff
-7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
-7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
-7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
-7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
-7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
-7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
-7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
-7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
-7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
-7be0: 0000000000000000 0000000000000000
-[<ffffff8393196098>] uart_break_ctl+0x44/0x84
-[<ffffff8393177718>] send_break+0xa0/0x114
-[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
-[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
-[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
-[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
-Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
----[ end trace 8606094f1960c5e0 ]---
-Kernel panic - not syncing: Fatal exception
+blk_queue_max_segments: set to minimum 1
+scsi 0:0:0:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+scsi target0:0:0: Beginning Domain Validation
+scsi target0:0:0: Domain Validation skipping write tests
+scsi target0:0:0: Ending Domain Validation
+blk_queue_max_segments: set to minimum 1
+scsi 0:0:1:0: Direct-Access     QEMU     QEMU HARDDISK    2.5+ PQ: 0 ANSI: 5
+scsi target0:0:1: Beginning Domain Validation
+scsi target0:0:1: Domain Validation skipping write tests
+scsi target0:0:1: Ending Domain Validation
+blk_queue_max_segments: set to minimum 1
+scsi 0:0:2:0: CD-ROM            QEMU     QEMU CD-ROM      2.5+ PQ: 0 ANSI: 5
+scsi target0:0:2: Beginning Domain Validation
+scsi target0:0:2: Domain Validation skipping write tests
+scsi target0:0:2: Ending Domain Validation
+blk_queue_max_segments: set to minimum 1
+blk_queue_max_segments: set to minimum 1
+blk_queue_max_segments: set to minimum 1
+blk_queue_max_segments: set to minimum 1
+sr 0:0:2:0: Power-on or device reset occurred
+sd 0:0:0:0: Power-on or device reset occurred
+sd 0:0:1:0: Power-on or device reset occurred
+sd 0:0:0:0: [sda] 10485762 512-byte logical blocks: (5.37 GB/5.00 GiB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Unable to handle kernel NULL pointer dereference at virtual address (ptrval)
+Oops: 00000000
+Modules linked in:
+PC: [<001cd874>] blk_mq_free_request+0x66/0xe2
+SR: 2004  SP: (ptrval)  a2: 00874520
+d0: 00000000    d1: 00000000    d2: 009ba800    d3: 00000000
+d4: 00000000    d5: 08000002    a0: 0087be68    a1: 009a81e0
+Process kworker/u2:2 (pid: 15, task=(ptrval))
+Frame format=7 eff addr=0000007a ssw=0505 faddr=0000007a
+wb 1 stat/addr/data: 0000 00000000 00000000
+wb 2 stat/addr/data: 0000 00000000 00000000
+wb 3 stat/addr/data: 0000 0000007a 00000000
+push data: 00000000 00000000 00000000 00000000
+Stack from 0087bd98:
+        00000002 00000000 0087be72 009a7820 0087bdb4 001c4f6c 009a7820 0087bdd4
+        0024d200 009a7820 0024d0dc 0087be72 009baa00 0087be68 009a5000 0087be7c
+        00265d10 009a5000 0087be72 00000003 00000000 00000000 00000000 0087be68
+        00000bb8 00000005 00000000 00000000 00000000 00000000 00265c56 00000000
+        009ba60c 0036ddf4 00000002 ffffffff 009baa00 009ba600 009a50d6 0087be74
+        00227ba0 009baa08 00000001 009baa08 009ba60c 0036ddf4 00000000 00000000
+Call Trace: [<001c4f6c>] blk_put_request+0xe/0x14
+ [<0024d200>] __scsi_execute+0x124/0x174
+ [<0024d0dc>] __scsi_execute+0x0/0x174
+ [<00265d10>] sd_revalidate_disk+0xba/0x1f02
+ [<00265c56>] sd_revalidate_disk+0x0/0x1f02
+ [<0036ddf4>] strlen+0x0/0x22
+ [<00227ba0>] device_add+0x3da/0x604
+ [<0036ddf4>] strlen+0x0/0x22
+ [<00267e64>] sd_probe+0x30c/0x4b4
+ [<0002da44>] process_one_work+0x0/0x402
+ [<0022b978>] really_probe+0x226/0x354
+ [<0022bc34>] driver_probe_device+0xa4/0xf0
+ [<0002da44>] process_one_work+0x0/0x402
+ [<0022bcd0>] __driver_attach_async_helper+0x50/0x70
+ [<00035dae>] async_run_entry_fn+0x36/0x130
+ [<0002db88>] process_one_work+0x144/0x402
+ [<0002e1aa>] worker_thread+0x0/0x570
+ [<0002e29a>] worker_thread+0xf0/0x570
+ [<0002e1aa>] worker_thread+0x0/0x570
+ [<003768d8>] schedule+0x0/0xb8
+ [<0003f58c>] __init_waitqueue_head+0x0/0x12
+ [<00033e92>] kthread+0xc2/0xf6
+ [<000331e8>] kthread_parkme+0x0/0x4e
+ [<003768d8>] schedule+0x0/0xb8
+ [<00033dd0>] kthread+0x0/0xf6
+ [<00002c10>] ret_from_kernel_thread+0xc/0x14
+Code: 0280 0006 0800 56c0 4400 0280 0000 00ff <52b4> 0c3a 082b 0006 0013 6706 2042 53a8 00c4 4ab9 0047 3374 6640 202d 000c 670c
+Disabling lock debugging due to kernel taint
 
-Fix this problem by adding NULL checks prior to calling break_ctl ops.
+Avoid this by setting sg_tablesize = 1.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/4567bcae94523b47d6f3b77450ba305823bca479.1572656814.git.fthain@telegraphics.com.au
+Reported-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Reviewed-by: Michael Schmitz <schmitzmic@gmail.com>
+References: commit 68ab2d76e4be ("scsi: cxlflash: Set sg_tablesize to 1 instead of SG_NONE")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/atari_scsi.c | 6 +++---
+ drivers/scsi/mac_scsi.c   | 2 +-
+ drivers/scsi/sun3_scsi.c  | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1106,7 +1106,7 @@ static int uart_break_ctl(struct tty_str
- 	if (!uport)
- 		goto out;
+diff --git a/drivers/scsi/atari_scsi.c b/drivers/scsi/atari_scsi.c
+index e809493d0d063..a82b63a666356 100644
+--- a/drivers/scsi/atari_scsi.c
++++ b/drivers/scsi/atari_scsi.c
+@@ -742,7 +742,7 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
+ 		atari_scsi_template.sg_tablesize = SG_ALL;
+ 	} else {
+ 		atari_scsi_template.can_queue    = 1;
+-		atari_scsi_template.sg_tablesize = SG_NONE;
++		atari_scsi_template.sg_tablesize = 1;
+ 	}
  
--	if (uport->type != PORT_UNKNOWN)
-+	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
- 		uport->ops->break_ctl(uport, break_state);
- 	ret = 0;
- out:
-
+ 	if (setup_can_queue > 0)
+@@ -751,8 +751,8 @@ static int __init atari_scsi_probe(struct platform_device *pdev)
+ 	if (setup_cmd_per_lun > 0)
+ 		atari_scsi_template.cmd_per_lun = setup_cmd_per_lun;
+ 
+-	/* Leave sg_tablesize at 0 on a Falcon! */
+-	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize >= 0)
++	/* Don't increase sg_tablesize on Falcon! */
++	if (ATARIHW_PRESENT(TT_SCSI) && setup_sg_tablesize > 0)
+ 		atari_scsi_template.sg_tablesize = setup_sg_tablesize;
+ 
+ 	if (setup_hostid >= 0) {
+diff --git a/drivers/scsi/mac_scsi.c b/drivers/scsi/mac_scsi.c
+index 9c5566217ef6a..b5dde9d0d0545 100644
+--- a/drivers/scsi/mac_scsi.c
++++ b/drivers/scsi/mac_scsi.c
+@@ -464,7 +464,7 @@ static int __init mac_scsi_probe(struct platform_device *pdev)
+ 		mac_scsi_template.can_queue = setup_can_queue;
+ 	if (setup_cmd_per_lun > 0)
+ 		mac_scsi_template.cmd_per_lun = setup_cmd_per_lun;
+-	if (setup_sg_tablesize >= 0)
++	if (setup_sg_tablesize > 0)
+ 		mac_scsi_template.sg_tablesize = setup_sg_tablesize;
+ 	if (setup_hostid >= 0)
+ 		mac_scsi_template.this_id = setup_hostid & 7;
+diff --git a/drivers/scsi/sun3_scsi.c b/drivers/scsi/sun3_scsi.c
+index 955e4c938d49e..701b842296f05 100644
+--- a/drivers/scsi/sun3_scsi.c
++++ b/drivers/scsi/sun3_scsi.c
+@@ -501,7 +501,7 @@ static struct scsi_host_template sun3_scsi_template = {
+ 	.eh_host_reset_handler	= sun3scsi_host_reset,
+ 	.can_queue		= 16,
+ 	.this_id		= 7,
+-	.sg_tablesize		= SG_NONE,
++	.sg_tablesize		= 1,
+ 	.cmd_per_lun		= 2,
+ 	.dma_boundary		= PAGE_SIZE - 1,
+ 	.cmd_size		= NCR5380_CMD_SIZE,
+@@ -523,7 +523,7 @@ static int __init sun3_scsi_probe(struct platform_device *pdev)
+ 		sun3_scsi_template.can_queue = setup_can_queue;
+ 	if (setup_cmd_per_lun > 0)
+ 		sun3_scsi_template.cmd_per_lun = setup_cmd_per_lun;
+-	if (setup_sg_tablesize >= 0)
++	if (setup_sg_tablesize > 0)
+ 		sun3_scsi_template.sg_tablesize = setup_sg_tablesize;
+ 	if (setup_hostid >= 0)
+ 		sun3_scsi_template.this_id = setup_hostid & 7;
+-- 
+2.20.1
 
