@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8A1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D807C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A771208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558BA208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080454;
-	bh=ZKzO6I2uFUyULvy5O5qCEahJDu5QIYx52x9szvZRs+U=;
+	s=default; t=1576080461;
+	bh=augGkbXHJw6P2iLfo2wzGVeVGt69JYF7/I1eVjsO2S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlfoN2N8tbbQii4nSblDCObPDkL7ddH4c7mbzLjhzQKr8IYDfE8169sByQNxJ3xW6
-	 9pOukbo9jwvDyioGxteQZ1epSQXThssr6tF7VsVqsejbGTYaodTr791wYGNq1gQ9DG
-	 VTidlV+zqXHgc7Tc5ty5rr7zXo/QTZ8w2cX1jhOs=
+	b=otBskga/d3zSGqzl551Mfp9D9tiIt8z53jz4rPJ00ltlivfgL6U+Q16omG4bXHSY/
+	 4c0Q/JxQaD94gqPUnfDDXxqT8SmPia/kKMd13f6D7JV15L6oFdjYWmRPCqipWJkUbq
+	 lwCtnL/H/shuo63DymOgloHeWrDnZ5dWhr/AJ9Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388796AbfLKQHc (ORCPT
+        id S1731279AbfLKQHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:07:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:07:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731136AbfLKPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:29 -0500
+        id S1730779AbfLKPM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1B8D2467D;
-        Wed, 11 Dec 2019 15:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D16472173E;
+        Wed, 11 Dec 2019 15:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077148;
-        bh=ZKzO6I2uFUyULvy5O5qCEahJDu5QIYx52x9szvZRs+U=;
+        s=default; t=1576077145;
+        bh=augGkbXHJw6P2iLfo2wzGVeVGt69JYF7/I1eVjsO2S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m3IlIcZD+ydqTlOnMLcSY2uWd/Eg3oL2lUypo57BlClDSlxgBlqqN3L8SaeMXMQuk
-         F8T0ory7jfqZn320sBKivAZUHKIeCYLZUaaDgjVQx305Cys00FjBs9s3pHZhapHPOv
-         GJ5Tpud+9Ki1we5g2lH41livoyrArkeia2Q26mjk=
+        b=maAnRy/f9Z/h47H+PvCAjReHyVQNPyjk+d5JUnKvRkCYxeF2YZ1tHmcgnPwKi0nOK
+         5EuFpwTxkNdoCD2DuPk2xguZAfvFoZ5vBoQ6QBU8ELw01NY3v6qixPC9QB9uuIsdIY
+         ELJJhQ3Ucgq5cI+osN8kPCui7wflTILAOVxO3LkI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 035/134] clocksource/drivers/asm9260: Add a check for of_clk_get
-Date:   Wed, 11 Dec 2019 10:10:11 -0500
-Message-Id: <20191211151150.19073-35-sashal@kernel.org>
+Cc:     =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 032/134] leds: lm3692x: Handle failure to probe the regulator
+Date:   Wed, 11 Dec 2019 10:10:08 -0500
+Message-Id: <20191211151150.19073-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,36 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Guido Günther <agx@sigxcpu.org>
 
-[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
+[ Upstream commit 396128d2ffcba6e1954cfdc9a89293ff79cbfd7c ]
 
-asm9260_timer_init misses a check for of_clk_get.
-Add a check for it and print errors like other clocksource drivers.
+Instead use devm_regulator_get_optional since the regulator
+is optional and check for errors.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/asm9260_timer.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/leds/leds-lm3692x.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
-index 9f09a59161e70..5b39d3701fa3c 100644
---- a/drivers/clocksource/asm9260_timer.c
-+++ b/drivers/clocksource/asm9260_timer.c
-@@ -194,6 +194,10 @@ static int __init asm9260_timer_init(struct device_node *np)
+diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+index 3d381f2f73d04..1ac9a44570eed 100644
+--- a/drivers/leds/leds-lm3692x.c
++++ b/drivers/leds/leds-lm3692x.c
+@@ -334,9 +334,18 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
+ 		return ret;
  	}
  
- 	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		pr_err("Failed to get clk!\n");
-+		return PTR_ERR(clk);
+-	led->regulator = devm_regulator_get(&led->client->dev, "vled");
+-	if (IS_ERR(led->regulator))
++	led->regulator = devm_regulator_get_optional(&led->client->dev, "vled");
++	if (IS_ERR(led->regulator)) {
++		ret = PTR_ERR(led->regulator);
++		if (ret != -ENODEV) {
++			if (ret != -EPROBE_DEFER)
++				dev_err(&led->client->dev,
++					"Failed to get vled regulator: %d\n",
++					ret);
++			return ret;
++		}
+ 		led->regulator = NULL;
 +	}
  
- 	ret = clk_prepare_enable(clk);
- 	if (ret) {
+ 	child = device_get_next_child_node(&led->client->dev, child);
+ 	if (!child) {
 -- 
 2.20.1
 
