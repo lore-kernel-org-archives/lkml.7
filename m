@@ -2,104 +2,107 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7137FC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE650C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47BC0214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bNjp2CSw"
+	by mail.kernel.org (Postfix) with ESMTP id 853A421556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:14:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576055691;
+	bh=sWqE+PcnhDwEJHLDzeVDWNdfl/id8Y+dl/d6YHFPhmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MvP+9z8bLxq6V8cEaySm5ycbBfnor0B+jG7gKb3SjLTka8iBFYXeoD2txr63DEyGR
+	 jiB2VhoBwG8gJdHKsr7cHeRLUnUW0OE1YuXI6knVZetbW0xVKwqy4IpJnGFogxfnBO
+	 NvBWkE/9w3YJlbf50IS+ReENuxxVUWyU9MPeKv14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfLKJOa (ORCPT
+        id S1728467AbfLKJOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:14:30 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:42683 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbfLKJOa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:14:30 -0500
-Received: by mail-qv1-f67.google.com with SMTP id q19so5420302qvy.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:14:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r0gVQXuC6a8DJTUTEo5suxWb6NqvG3m1Y5eO4L17BxU=;
-        b=bNjp2CSwAwJBRkHlE21fA2+oQHaa1seGpALK5gMpFZBRUweh616cc6A6NjuV3+jP7t
-         g+avl1kCd9byKb6OLRWoCARmcnjUMCDWZEVNMYHwcwq2N14q+0Zs5gKmbn2v8QLkXlTu
-         qYT1j3fhiE+HvHPvq+5C8dY3pDcfH8rPaHt6qHrXYFCzpU3tQuLtDKmRQXWEU0wL1bu3
-         XD9Fpr5nzGis98WDLXJ2dEtgi9E9jwJki0nduViVaSEEfNJCDk7B2WzJW4nUmbeKRtSE
-         EwrMoY4b/3ywG1wFw8EbFjXcoFkI0JmL0qp722LB/JC0izmuz7ikSSrBNnztdHuLMnYW
-         93cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r0gVQXuC6a8DJTUTEo5suxWb6NqvG3m1Y5eO4L17BxU=;
-        b=mZeZOJV3Es6m/BQIUUeGf9IARdpSQeT8bXnIzhzNTC+FN19WHutrOiiPrDaZnI2Xph
-         ncK4T8KVJdnWu1sadGvVls2cfPeE+i8hePIgIopsg3d0R/Gx8bibol4IUiHCecLrbj9o
-         7uDzntUJ2xK3NCn+3FlAaqOZG+J4NoXMIOnI88v8qVQRFSaPT+coyOGOPcssIwL3qQns
-         U8tdgq1QTf1si5d6Y8oCNioxkGRjQKMpAr3G89a6AC/a8VY6DO0wW3Gp5fzOS5kgIWvJ
-         5UHYnDLXVcRF7sVo/jHjwBZmmk49OkhSvktSo77MHaCclIKLkKlgvBWwm0vjO/Rgu1ww
-         GQBA==
-X-Gm-Message-State: APjAAAUWeHRvcaYBoJwHSpfJogMqcJmci1QocY57mnW7GSuv/AgGy9eX
-        zGvkK8Dl7VwLrR2T/9Y9D3WKlYD0rnO8/rCpf4YIdg==
-X-Google-Smtp-Source: APXvYqzjKg+vHur/oJLRJqO8JGriJMPsHU3Yxw2c45bVX3cqASfK5p6p7v8TgWUig6+CE+I07XNmKBR7AxR/u500qXY=
-X-Received: by 2002:a0c:f990:: with SMTP id t16mr1951160qvn.134.1576055669090;
- Wed, 11 Dec 2019 01:14:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191210195414.705239-1-arnd@arndb.de> <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
-In-Reply-To: <01669f6c5d0e40c7a410da2dcce6c9e825e4a1d4.camel@alliedtelesis.co.nz>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 11 Dec 2019 10:14:18 +0100
-Message-ID: <CAMpxmJVuN5vqA1j0ddpctJQJJMPu1EnakduO2rJnBo3Ao==Enw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: xgs-iproc: remove __exit annotation for iproc_gpio_remove
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "arnd@arndb.de" <arnd@arndb.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "scott.branden@broadcom.com" <scott.branden@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "yoshihiro.shimoda.uh@renesas.com" <yoshihiro.shimoda.uh@renesas.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "rjui@broadcom.com" <rjui@broadcom.com>,
+        Wed, 11 Dec 2019 04:14:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728024AbfLKJOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:14:50 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3CD2214AF;
+        Wed, 11 Dec 2019 09:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576055689;
+        bh=sWqE+PcnhDwEJHLDzeVDWNdfl/id8Y+dl/d6YHFPhmA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mKolWP6/zNkaJDAq1mr0n9oO24i8kaPsJRDd3Dp/NZYOY7F9QumKj2uIhdgdsLMQu
+         VZ+HrToPi4ZuQeae+gCZnhKKsFTFQTeETG9LbIfEuldpN/50LPbIfDXyawdzRESIsw
+         fhqzZ4d6Md+Phzj1BzeVO5L+MidMps2jm/E3xrCM=
+Date:   Wed, 11 Dec 2019 17:14:35 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc:     Ashish Kumar <ashish.kumar@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Alison Wang <alison.wang@nxp.com>,
+        "Amit Jain (aj)" <amit.jain_1@nxp.com>,
+        "catalin.horghidan@nxp.com" <catalin.horghidan@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Jiafei Pan <jiafei.pan@nxp.com>, Leo Li <leoyang.li@nxp.com>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "rajat.srivastava@nxp.com" <rajat.srivastava@nxp.com>,
+        Rajesh Bhagat <rajesh.bhagat@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Michael Walle <michael@walle.cc>, Yinbo Zhu <yinbo.zhu@nxp.com>
+Subject: Re: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue
+ for dcfg
+Message-ID: <20191211091433.GU15858@dragon>
+References: <20190814072649.8237-3-yinbo.zhu@nxp.com>
+ <20191210000623.22321-1-michael@walle.cc>
+ <VI1PR0401MB2237D2D6708807511BDB8788F85B0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR0401MB2237D2D6708807511BDB8788F85B0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 10 gru 2019 o 21:24 Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> napisa=C5=82(a):
->
-> On Tue, 2019-12-10 at 20:54 +0100, Arnd Bergmann wrote:
-> > When built into the kernel, the driver causes a link problem:
-> >
-> > `iproc_gpio_remove' referenced in section `.data' of drivers/gpio/gpio-=
-xgs-iproc.o: defined in discarded section `.exit.text' of drivers/gpio/gpio=
--xgs-iproc.o
-> >
-> > Remove the incorrect annotation.
-> >
-> > Fixes: 6a41b6c5fc20 ("gpio: Add xgs-iproc driver")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Reviewed-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->
-> What's the current best practice w.r.t.__init and __exit? I seem to
-> have messed this up on multiple fronts.
->
+On Tue, Dec 10, 2019 at 02:34:30AM +0000, Y.b. Lu wrote:
+> + Shawn,
+> 
+> > -----Original Message-----
+> > From: Michael Walle <michael@walle.cc>
+> > Sent: Tuesday, December 10, 2019 8:06 AM
+> > To: Yinbo Zhu <yinbo.zhu@nxp.com>
+> > Cc: Ashish Kumar <ashish.kumar@nxp.com>; Alexandru Marginean
+> > <alexandru.marginean@nxp.com>; Alison Wang <alison.wang@nxp.com>;
+> > Amit Jain (aj) <amit.jain_1@nxp.com>; catalin.horghidan@nxp.com; Claudiu
+> > Manoil <claudiu.manoil@nxp.com>; devicetree@vger.kernel.org; Jiafei Pan
+> > <jiafei.pan@nxp.com>; Leo Li <leoyang.li@nxp.com>;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > linuxppc-dev@lists.ozlabs.org; mark.rutland@arm.com;
+> > rajat.srivastava@nxp.com; Rajesh Bhagat <rajesh.bhagat@nxp.com>;
+> > robh+dt@kernel.org; Vabhav Sharma <vabhav.sharma@nxp.com>; Xiaobo Xie
+> > <xiaobo.xie@nxp.com>; Y.b. Lu <yangbo.lu@nxp.com>; Michael Walle
+> > <michael@walle.cc>
+> > Subject: Re: [PATCH v1 3/4] arm64: dts: ls1028a: fix little-big endian issue for
+> > dcfg
+> > 
+> 
+> [Y.b. Lu] Acked-by: Yangbo Lu <yangbo.lu@nxp.com>
+> 
+> Hi Shawn, could you help to review and merge the two dts patches of this patch-set?
+> Thanks.
 
-Applied for fixes.
+Please resend them with me on recipients.
 
-Bartosz
+Shawn
