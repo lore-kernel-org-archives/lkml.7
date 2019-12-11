@@ -2,181 +2,93 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03358C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4603CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36A824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5ED2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078400;
+	bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wKHcqtQpzRoUYOvyr091FRxx2SRPA8gWXzi6THeQJgzy5eArJGV2DWG2jd0W6iW4a
+	 NMx7fbLPcVTimikeniUb2X9MVPPqH2U1d7oVYcK7zHTLJgKjLFdHlNrrci3SSEUC5j
+	 d3L3ZZrH/pkI4cQl/AgYT6CnpcPUu7vMT68q/iHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388047AbfLKPdP (ORCPT
+        id S2388052AbfLKPdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:33:15 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37891 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387423AbfLKPdI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:33:08 -0500
-Received: by mail-oi1-f193.google.com with SMTP id b8so13585956oiy.5;
-        Wed, 11 Dec 2019 07:33:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f5P25Si4pv99iP0qrSos6mF+77maXmQ/ZDO3HXBpXqE=;
-        b=PhQlpAuA19DEAcAgEFVx4qZBSt7waJ118aKV4TsU0dW++tEKwIk1fg6GDhlIGZHVrv
-         frMNXHxEyR63eUjLgicOFX74lex63afl/PHWUXpLY1yowmN/7Ab3KuTV1+fFsLjPSdN/
-         ORZDTBoxPa7hI3UAL3bCA+v0cwRipHJnYc2/pBD+lGeaS5lgTFqMBLRwrSKTfZ51fJuy
-         IyojJ3qnNwvuqAUuqd/pQOUZDJv44GOTs3CEYtEnfCITMil/EnNlMr75UEXrFqMJ4+VP
-         AsMuYsMN9Tru4yeZLd1xYd5zhoZxKtqgIXgant3NS5TDQ+pOiyhlgAuRcRFp45a41NRU
-         ojPw==
-X-Gm-Message-State: APjAAAVVegURNP1D3OxfHZ0FjqT/cbxI1Jos7bO3/lzYIxg9Kf3o3RRn
-        9LSW/eg1TTRjrHrVwYvVOXXuP+e2JsgIs+YgZ8I=
-X-Google-Smtp-Source: APXvYqxil2EmaM/dqweJcHtTfhDUlmKjy65GEn4NAbcDsfU0ROdt5CGKYoFFIB85oAv4vVN8I6Umv8ahu6gIC52KruA=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr3341766oia.102.1576078387298;
- Wed, 11 Dec 2019 07:33:07 -0800 (PST)
+        Wed, 11 Dec 2019 10:33:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387712AbfLKP2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:46 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04BA3208C3;
+        Wed, 11 Dec 2019 15:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078125;
+        bh=eEYsWr+eFCuXJVM3sKPLmXj1gpsJq1LjKsaQ+vTQuyg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rQ4ddrshS7mQ255yh0fYT2GOIxO/3lhDfsk6/eUFAUsq3jfGy2/Z3DhzYdNJQVGID
+         n8UWmqLuQeh+UZirxSzlrmVpFGhGkq8Nnm1mnFfDpMA5srUPSmuBBep1coRHyomvbd
+         ll8QIAUdHQeLvMfLAo2y/+M2ef9/4tA/xc95TaMI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/58] clocksource/drivers/asm9260: Add a check for of_clk_get
+Date:   Wed, 11 Dec 2019 10:27:46 -0500
+Message-Id: <20191211152831.23507-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190502123220.3016-1-geert+renesas@glider.be> <20190502123220.3016-2-geert+renesas@glider.be>
-In-Reply-To: <20190502123220.3016-2-geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 11 Dec 2019 16:32:36 +0100
-Message-ID: <CAMuHMdU2atxUFCMFJNsgVWak+Z1YcTm8BrKtk66cpXu16K+_tA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: interrupt-controller: Add Renesas
- RZ/A1 Interrupt Controller
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+From: Chuhong Yuan <hslester96@gmail.com>
 
-On Thu, May 2, 2019 at 2:32 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Add DT bindings for the Renesas RZ/A1 Interrupt Controller.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rza1-irqc.txt
-> @@ -0,0 +1,43 @@
-> +DT bindings for the Renesas RZ/A1 Interrupt Controller
-> +
-> +The RZ/A1 Interrupt Controller is a front-end for the GIC found on Renesas
-> +RZ/A1 and RZ/A2 SoCs:
-> +  - IRQ sense select for 8 external interrupts, 1:1-mapped to 8 GIC SPI
-> +    interrupts,
-> +  - NMI edge select.
-> +
-> +Required properties:
-> +  - compatible: Must be "renesas,<soctype>-irqc", and "renesas,rza1-irqc" as
-> +               fallback.
-> +               Examples with soctypes are:
-> +                 - "renesas,r7s72100-irqc" (RZ/A1H)
-> +                 - "renesas,r7s9210-irqc" (RZ/A2M)
-> +  - #interrupt-cells: Must be 2 (an interrupt index and flags, as defined
-> +                                in interrupts.txt in this directory)
-> +  - #address-cells: Must be zero
-> +  - interrupt-controller: Marks the device as an interrupt controller
-> +  - reg: Base address and length of the memory resource used by the interrupt
-> +         controller
-> +  - interrupt-map: Specifies the mapping from external interrupts to GIC
-> +                  interrupts
-> +  - interrupt-map-mask: Must be <7 0>
-> +
-> +Example:
-> +
-> +       irqc: interrupt-controller@fcfef800 {
-> +               compatible = "renesas,r7s72100-irqc", "renesas,rza1-irqc";
-> +               #interrupt-cells = <2>;
-> +               #address-cells = <0>;
-> +               interrupt-controller;
-> +               reg = <0xfcfef800 0x6>;
-> +               interrupt-map =
-> +                       <0 0 &gic GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <1 0 &gic GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <2 0 &gic GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <3 0 &gic GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <4 0 &gic GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <5 0 &gic GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <6 0 &gic GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <7 0 &gic GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +               interrupt-map-mask = <7 0>;
-> +       };
+asm9260_timer_init misses a check for of_clk_get.
+Add a check for it and print errors like other clocksource drivers.
 
-"make dtbs_check" does not like this example:
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clocksource/asm9260_timer.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-arch/arm/boot/dts/r7s72100-rskrza1.dt.yaml:
-interrupt-controller@fcfef800: {'compatible':
-['renesas,r7s72100-irqc', 'renesas,rza1-irqc'], '#interrupt-cells':
-[[2]], '#address-cells': [[0]], 'interrupt-controller': True, 'reg':
-[[4244568064, 6]], 'interrupt-map': [[0, 0, 3, 0, 0, 4], [1, 0, 3, 0,
-1, 4], [2, 0, 3, 0, 2, 4], [3, 0, 3, 0, 3, 4], [4, 0, 3, 0, 4, 4], [5,
-0, 3, 0, 5, 4], [6, 0, 3, 0, 6, 4], [7, 0, 3, 0, 7, 4]],
-'interrupt-map-mask': [[7, 0]], 'phandle': [[27]], '$nodename':
-['interrupt-controller@fcfef800']} is valid under each of {'required':
-['interrupt-map']}, {'required': ['interrupt-controller']}
-{'oneOf': [{'required': ['interrupt-controller']},
-           {'required': ['interrupt-map']}]}
-
-as it considers interrupt-controller and interrupt-map mutually-exclusive.
-
-This comes from
-dt-schema/meta-schemas/interrupts.yaml:
-
-    dependencies:
-      interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
-      '#interrupt-cells':
-        oneOf:
-          - required:
-              - interrupt-controller
-          - required:
-              - interrupt-map
-
-and/or dt-schema/schemas/interrupt-controller.yaml:
-
-    dependencies:
-      interrupt-controller: ['#interrupt-cells']
-      interrupt-map: ['#interrupt-cells', 'interrupt-map-mask']
-      "#interrupt-cells":
-        oneOf:
-          - required:
-              - interrupt-controller
-          - required:
-              - interrupt-map
-
-Removing the "interrupt-controller" property fixes the warning, but
-impacts the logic in of_irq_parse_raw().
-
-Is there something wrong with the base schema?
-Or perhaps this will just be be fixed by converting renesas,rza1-irqc.txt
-to yaml?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
+index 38cd2feb87c42..0ce760776406b 100644
+--- a/drivers/clocksource/asm9260_timer.c
++++ b/drivers/clocksource/asm9260_timer.c
+@@ -198,6 +198,10 @@ static int __init asm9260_timer_init(struct device_node *np)
+ 	}
+ 
+ 	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		pr_err("Failed to get clk!\n");
++		return PTR_ERR(clk);
++	}
+ 
+ 	ret = clk_prepare_enable(clk);
+ 	if (ret) {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
