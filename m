@@ -2,133 +2,152 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CE5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB229C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46FB92077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D48522527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="flsBnhRw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ebC2n5Jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfLKTno (ORCPT
+        id S1728402AbfLKTqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:43:44 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45216 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfLKTnn (ORCPT
+        Wed, 11 Dec 2019 14:46:39 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:48951 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfLKTqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:43:43 -0500
-Received: by mail-il1-f194.google.com with SMTP id p8so20479957iln.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:43:42 -0800 (PST)
+        Wed, 11 Dec 2019 14:46:38 -0500
+Received: by mail-pl1-f202.google.com with SMTP id v12so1830283plp.15
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:46:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WEsvDQ4frWg0g6hsrfrPUpwL5OB0pB+03rAe/lqxJKs=;
-        b=flsBnhRwZYV3x2jeRLaTFJggFGEUKvXMx7aFjFYS3tsR8jzvWNQoAoI6geow1bE3hH
-         Sm1LHlGve7GLu+f76odVmRz0tXt8hYDqPTJrJRYFvL0aMIGYCHbglAf0y9IBgG5JZcf1
-         BeLTAaE39MIUTOH4uRNWoLbPm1wDCHD8VhJPg=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xTTAjJf21FVVJPXeayVLtKF3IlyrepWpUnexj9VEhJs=;
+        b=ebC2n5JyjeehjclWkWSRXyOR7TPsVZVOBkzoZavzbWVbuvVk6Hp8HYxp2OOqkmC+ez
+         aOFsny+7gZ9si0XiJvk+i/xDtoxTzZqUTaohUpkO1ajuQ2CethlGM8XFiRwKl+fSOuEd
+         T+5DW/4a72q/nViyS8t61thMzb2lu11vcF235Fxd9qdi8B3LtHEE71qX4YspvvBp/jFg
+         K/zDE7Eezi84kn9t0JAen4KWjBdYwxyRqtcSK5I5W33Bpg6ky+F1LaWDQ0m2K1fxd+u1
+         qKXsq1WeyawYtQwDd0Ixxn1U+YFpw/zFXoXyN+Z+zLLhzRAOPDnSgHP/DaRinnJ04Eye
+         26Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WEsvDQ4frWg0g6hsrfrPUpwL5OB0pB+03rAe/lqxJKs=;
-        b=oDEGWytN6lFk4iNRwX5+UCTNP2wp/NIj5SUAVzmJcpjtaN+J7zn6ATtmRb2psX2sv+
-         pUIfqn5sBpE/J3JiCZev2U8Q3tNgbGTXIOP63vN4vy5xgMEIH5YeW+4RP1bpR6SOiQRr
-         lBXtD0sYK08LT7c+rm94kuGyCOcGlbk0Hf+IvLRzVt+zBR5DyKlvbvxcVwIDY41yf4Xh
-         2i5HxumyFmdtyfCY2buXZ1sbVlF6cT1h1srhSPQvK/Agf5rcKcll3oe6Y+0qx5vgMptN
-         pycO+MOZDXelxEvVLv13wHuKZCdvqPXUm+8yR9W9uNh6WSRNDkuvXj5TtTWgfV9iFgVh
-         2wWQ==
-X-Gm-Message-State: APjAAAWNfzLDAue24i3fvF9Gf3brH7kkyRPSaqf3UrpkXG5sYRn/1w+U
-        6fTPYeqNQKve1l2UHHd1qslEoPydC2s=
-X-Google-Smtp-Source: APXvYqzaGzwiUElXRA7WQ2bQk5JJ2YSaKLjAVtGFLkLiNoStbNQJC+CGXy70TyIQyV9/aR+8bWG+KA==
-X-Received: by 2002:a92:c0c7:: with SMTP id t7mr4966890ilf.113.1576093422151;
-        Wed, 11 Dec 2019 11:43:42 -0800 (PST)
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com. [209.85.166.172])
-        by smtp.gmail.com with ESMTPSA id o7sm978079ilo.58.2019.12.11.11.43.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 11:43:40 -0800 (PST)
-Received: by mail-il1-f172.google.com with SMTP id r81so20548636ilk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:43:40 -0800 (PST)
-X-Received: by 2002:a92:d581:: with SMTP id a1mr4374504iln.218.1576093420076;
- Wed, 11 Dec 2019 11:43:40 -0800 (PST)
-MIME-Version: 1.0
-References: <1574940787-1004-1-git-send-email-sanm@codeaurora.org> <1574940787-1004-2-git-send-email-sanm@codeaurora.org>
-In-Reply-To: <1574940787-1004-2-git-send-email-sanm@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 11 Dec 2019 11:43:28 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=Uy6ryrbpzFg1sesJkWrgh05tLgvtozx0afJPF_u4-ESA@mail.gmail.com>
-Message-ID: <CAD=FV=Uy6ryrbpzFg1sesJkWrgh05tLgvtozx0afJPF_u4-ESA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] usb: dwc3: Add support for SC7180 SOC
-To:     Sandeep Maheswaram <sanm@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-usb@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xTTAjJf21FVVJPXeayVLtKF3IlyrepWpUnexj9VEhJs=;
+        b=ZV6uSc8Z7vbKQM8uu/yOtSpcrvO8yrJnf+Ul2ILLJa+LLbtr3r0ArKxX7dB7BWSF5L
+         7k5nVl6yEPur8Ns2MYng/r1YFsF6aj+uGB/zOcnQZyJIDXP6puZeq/cOFDQFhzOxyz2W
+         sZQTxpY4NRl5GH+oXXjRX53BQ+l0EOX0YTwXxLZDB1aWpPlRYR84fUXqAKEVBYPZdmHJ
+         TqqgGma+X9pNK5IrSN5q6K1t9vFdS0UwWXjJxwOa6o0IzmvyTOdogERcbz0lhKJv7g7w
+         Xpad50XE1stu3lPordHfc5ppNl5hDNFvcHlrsJrYlP6quWVVVo7bJ1gD5CMe8HRYtVnL
+         Kl8w==
+X-Gm-Message-State: APjAAAX+UVfia09FaPAfELWvKV8Bk/Nw0jsmCkrfghrzw/fJkToOVsD4
+        V3FPcnVHuursWD2Brws/UoIRC2j8
+X-Google-Smtp-Source: APXvYqzum264DGIMoJbIoYDlLehggfMENzp1eoSv/AtM2VQGSLXKj3lGJHxjgd3af7xpXcw+E2S6hiPC
+X-Received: by 2002:a63:1106:: with SMTP id g6mr6000325pgl.13.1576093597574;
+ Wed, 11 Dec 2019 11:46:37 -0800 (PST)
+Date:   Wed, 11 Dec 2019 14:46:03 -0500
+Message-Id: <20191211194606.87940-1-brho@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
+Subject: [PATCH 0/3] iommu/vt-d bad RMRR workarounds
+From:   Barret Rhoden <brho@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Yian Chen <yian.chen@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi -
 
-On Thu, Nov 28, 2019 at 3:35 AM Sandeep Maheswaram <sanm@codeaurora.org> wrote:
->
-> Add compatible for SC7180 SOC in USB DWC3 driver
->
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 261af9e..1df2372 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -1,5 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> +/* Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
->   *
->   * Inspired by dwc3-of-simple.c
->   */
-> @@ -753,6 +753,7 @@ static const struct of_device_id dwc3_qcom_of_match[] = {
->         { .compatible = "qcom,dwc3" },
->         { .compatible = "qcom,msm8996-dwc3" },
->         { .compatible = "qcom,msm8998-dwc3" },
-> +       { .compatible = "qcom,sc7180-dwc3" },
->         { .compatible = "qcom,sdm845-dwc3" },
+Commit f036c7fa0ab6 ("iommu/vt-d: Check VT-d RMRR region in BIOS is
+reported as reserved") caused a machine to fail to boot for me, but only
+after a kexec.
 
-It is, of course, up to Felipe.  ...but in my opinion this is the
-wrong change and instead we should be deleting the SoC-specific
-strings (msm8996, msm8998, sdm845) from this file because they don't
-buy us anything.  To explain how it works:
+Firmware provided an RMRR entry with base and end both == 0:
 
-1. Device tree should have both the "SoC-specific" and generic
-"qcom,dwc3" strings.  Only the "qcom,dwc3" will actually be used but
-the SoC-specific string is there so if we find a case later where we
-need to handle a SoC-specific quirk then it'll already be there.
+	DMAR: RMRR base: 0x00000000000000 end: 0x00000000000000
 
-2. Bindings should have both the "SoC-specific" and generic
-"qcom,dwc3" strings.  The binding is describing what's in the device
-tree.
+Yes, firmware should not do that.  I'd like to be able to handle it.
 
-3. Until we have a SoC-specific quirk to handle, we _don't_ need to
-add the SoC-specific string to the driver itself.
+That bad entry was actually OK on a fresh boot, since the region of
+0x0000..0x0001 ([start, end + 1)) was type RESERVED due to this e820
+update call:
 
+	e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
 
--Doug
+However, after a kexec, for whatever reason that first entry changed from
+
+	BIOS-e820: [mem 0x0000000000000000-0x000000000009cbff] usable
+
+to
+
+	BIOS-e820: [mem 0x0000000000000100-0x000000000009cbff] usable
+
+It starts at 0x100, not 0x000.  Ultimately, the range for that bad RMRR
+[0x0, 0x1) isn't in the e820 map at all after a kexec.
+
+The existing code aborts all of the DMAR parsing, eventually my disk
+drivers fail, I can't mount the root filesystem, etc.  If you're
+curious, I get a bunch of these errors:
+
+	ata2.00: qc timeout (cmd 0xec)
+
+I can imagine a bunch of ways around this.
+
+One option is to hook in a check for buggy RMRRs in intel-iommu.c.  If
+the base and end are 0, just ignore the entry.  That works for my
+specific buggy DMAR entry.  There might be other buggy entries out
+there.  The docs specify some requirements on the base and end (called
+limit) addresses.
+
+Another option is to change the sanity check so that unmapped ranges are
+considered OK.  That would work for my case, but only because we're
+hiding the firmware bug: my DMAR has a bad RMRR that happens to fall into a
+reserved or non-existent range.  The downside here is that we'd
+presumably be setting up an IOMMU mapping for this bad RMRR.  But at
+least it's not pointing to any RAM we're using.  (That's actually what
+goes on in the current, non-kexec case for me.  Phys page 0 is marked
+RESERVED, and I have an RMRR that points to it.)  This option also would
+cover any buggy firmwares that use an actual RMRR that pointed to memory
+that was omitted from the e820 map.
+
+A third option: whenever the RMRR sanity check fails, just ignore it and
+return 0.  Don't set up the rmrru.  Right now, we completely abort DMAR
+processing.  If there was an actual device that needed to poke this
+memory that failed the sanity check (meaning, not RESERVED, currently),
+then we're already in trouble; that device could clobber RAM, right?  If
+we're going to use the IOMMU, I'd rather the device be behind an IOMMU
+with *no* mapping for the region, so it couldn't clobber whatever we
+happened to put in that location.
+
+I actually think all three options are reasonable ideas independently of
+one another.  This patchset that does all three.  Please take at least
+one of them.  =)  (May require a slight revision if you don't take all
+of them).
+
+Barret Rhoden (3):
+  iommu/vt-d: skip RMRR entries that fail the sanity check
+  iommu/vt-d: treat unmapped RMRR entries as sane
+  iommu/vt-d: skip invalid RMRR entries
+
+ arch/x86/include/asm/iommu.h |  2 ++
+ drivers/iommu/intel-iommu.c  | 16 ++++++++++++++--
+ 2 files changed, 16 insertions(+), 2 deletions(-)
+
+-- 
+2.24.0.525.g8f36a354ae-goog
+
