@@ -2,114 +2,126 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9508C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA992073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CF72073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079816;
-	bh=nqhmLgTvDrwYf+dN7astYkWp9WvFzdgSm3SH0Mprv9E=;
+	s=default; t=1576079818;
+	bh=2j01xrxU82dvx7hc0Z9HeqJbY1k1vJAGGnbMsKIBhaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BiGYynQdTeU+lp6jcOv6Itp7DK+2+1nksDiUXoSbTROW1s3iS+rbuViN/mrojvyZh
-	 IDf/SC+VHQrJJbETXuoo5I1wEbEazIsjCW3R7oBCDJ7IZWlb90dLVf9cwrC00PEv+2
-	 cjIQJdU9n/9Jv5sm3E7vKrA7gbpVCPtqW+4CLPkc=
+	b=UD69WvPsK9EH5tH3iUw0bRgUyJ8wawPOcsAEdX7xsz6MuxkLXvkpxwZz9PL/dfSdD
+	 by3Ht9XU3fel6pm0UEmRv0b0p0xWXymPbEnM4tqtocmgGEJk1lpw2EIqkjx0gm5ZB5
+	 Lp7yoa0u8yNfiDvXlWGyVndyFgv5aIzWVjzbt9cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbfLKPPV (ORCPT
+        id S1731746AbfLKPPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:15:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731121AbfLKPOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:18 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731598AbfLKPOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884DB24658;
-        Wed, 11 Dec 2019 15:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D561524682;
+        Wed, 11 Dec 2019 15:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077257;
-        bh=nqhmLgTvDrwYf+dN7astYkWp9WvFzdgSm3SH0Mprv9E=;
+        s=default; t=1576077252;
+        bh=2j01xrxU82dvx7hc0Z9HeqJbY1k1vJAGGnbMsKIBhaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h39cdc81oeJDvV394IwbXN+Mg6GxE1mstkjtd2pU545y8U+IfgvxyUsBZBUXtTqXu
-         pyvQhLpxCoWGoYqeQTZ1s4gpoUIrtOILBvzCv3Zli0/sSyS12+KLxobrKF2ZayD9to
-         O92cXmdQDYhvugDZixbn4EEC8mZVNKz3PWjpoG0E=
-From:   Sasha Levin <sashal@kernel.org>
+        b=B9PnWj4+dPe787OHLrW3zogRQ0fFNCdvXN1dPXGvfKu3gJbJpgczJ35UHhPMAwKNA
+         0wEJ471Ak1gRUbONMJimr2tKCbOW3RHYPVbit9ItyXFoizqO9Pwq8cImrTmAE2OnML
+         OvAnK/H6do5W7bUlSHhYYeoPwtHTWc8vQnqHxe9k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Down <chris@chrisdown.name>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 133/134] kernel: sysctl: make drop_caches write-only
-Date:   Wed, 11 Dec 2019 10:11:49 -0500
-Message-Id: <20191211151150.19073-133-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andres Freund <andres@anarazel.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.3 047/105] io_uring: ensure req->submit is copied when req is deferred
+Date:   Wed, 11 Dec 2019 16:05:36 +0100
+Message-Id: <20191211150240.986496848@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Weiner <hannes@cmpxchg.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
+There's an issue with deferred requests through drain, where if we do
+need to defer, we're not copying over the sqe_submit state correctly.
+This can result in using uninitialized data when we then later go and
+submit the deferred request, like this check in __io_submit_sqe():
 
-Currently, the drop_caches proc file and sysctl read back the last value
-written, suggesting this is somehow a stateful setting instead of a
-one-time command.  Make it write-only, like e.g.  compact_memory.
+         if (unlikely(s->index >= ctx->sq_entries))
+                 return -EINVAL;
 
-While mitigating a VM problem at scale in our fleet, there was confusion
-about whether writing to this file will permanently switch the kernel into
-a non-caching mode.  This influences the decision making in a tense
-situation, where tens of people are trying to fix tens of thousands of
-affected machines: Do we need a rollback strategy?  What are the
-performance implications of operating in a non-caching state for several
-days?  It also caused confusion when the kernel team said we may need to
-write the file several times to make sure it's effective ("But it already
-reads back 3?").
+with 's' being uninitialized, we can randomly fail this check. Fix this
+by copying sqe_submit state when we defer a request.
 
-Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Chris Down <chris@chrisdown.name>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: David Hildenbrand <david@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Because it was fixed as part of a cleanup series in mainline, before
+anyone realized we had this issue. That removed the separate states
+of ->index vs ->submit.sqe. That series is not something I was
+comfortable putting into stable, hence the much simpler addition.
+Here's the patch in the series that fixes the same issue:
+
+commit cf6fd4bd559ee61a4454b161863c8de6f30f8dca
+Author: Pavel Begunkov <asml.silence@gmail.com>
+Date:   Mon Nov 25 23:14:39 2019 +0300
+
+    io_uring: inline struct sqe_submit
+
+Reported-by: Andres Freund <andres@anarazel.de>
+Reported-by: Tomáš Chaloupka
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index b6f2f35d0bcf5..70665934d53e2 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1466,7 +1466,7 @@ static struct ctl_table vm_table[] = {
- 		.procname	= "drop_caches",
- 		.data		= &sysctl_drop_caches,
- 		.maxlen		= sizeof(int),
--		.mode		= 0644,
-+		.mode		= 0200,
- 		.proc_handler	= drop_caches_sysctl_handler,
- 		.extra1		= SYSCTL_ONE,
- 		.extra2		= &four,
--- 
-2.20.1
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1787,7 +1787,7 @@ static int io_poll_add(struct io_kiocb *
+ }
+ 
+ static int io_req_defer(struct io_ring_ctx *ctx, struct io_kiocb *req,
+-			const struct io_uring_sqe *sqe)
++			struct sqe_submit *s)
+ {
+ 	struct io_uring_sqe *sqe_copy;
+ 
+@@ -1805,7 +1805,8 @@ static int io_req_defer(struct io_ring_c
+ 		return 0;
+ 	}
+ 
+-	memcpy(sqe_copy, sqe, sizeof(*sqe_copy));
++	memcpy(&req->submit, s, sizeof(*s));
++	memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
+ 	req->submit.sqe = sqe_copy;
+ 
+ 	INIT_WORK(&req->work, io_sq_wq_submit_work);
+@@ -2114,7 +2115,7 @@ static int io_queue_sqe(struct io_ring_c
+ {
+ 	int ret;
+ 
+-	ret = io_req_defer(ctx, req, s->sqe);
++	ret = io_req_defer(ctx, req, s);
+ 	if (ret) {
+ 		if (ret != -EIOCBQUEUED) {
+ 			io_free_req(req);
+
 
