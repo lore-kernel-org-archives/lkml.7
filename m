@@ -2,53 +2,52 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2799C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8224DC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84212205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BD1208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:17:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="SWxYM5M2"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="t9OteOs+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfLKQR0 (ORCPT
+        id S1730199AbfLKQRZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:17:26 -0500
-Received: from mail.efficios.com ([167.114.142.138]:44000 "EHLO
+        Wed, 11 Dec 2019 11:17:25 -0500
+Received: from mail.efficios.com ([167.114.142.138]:43968 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbfLKQRY (ORCPT
+        with ESMTP id S1729676AbfLKQRY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 11:17:24 -0500
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 28725686C28;
-        Wed, 11 Dec 2019 11:17:23 -0500 (EST)
+        by mail.efficios.com (Postfix) with ESMTP id B9AFF686C0C;
+        Wed, 11 Dec 2019 11:17:22 -0500 (EST)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id EPJ9Ban-ojuM; Wed, 11 Dec 2019 11:17:22 -0500 (EST)
+        with ESMTP id Gh4eo9wCSM6n; Wed, 11 Dec 2019 11:17:22 -0500 (EST)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A4444686C0A;
+        by mail.efficios.com (Postfix) with ESMTP id 790E6686C00;
         Wed, 11 Dec 2019 11:17:22 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A4444686C0A
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 790E6686C00
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
         s=default; t=1576081042;
-        bh=XtEH5PGXdU9J9Un0UKLWRvsMum7tk4G/OgscPixXs5o=;
+        bh=sOPHKeVSlUx9J9iaH4EIDuqA+fQ4vt6RiiMi39IkxCc=;
         h=From:To:Date:Message-Id;
-        b=SWxYM5M2ejcsOs5LLI49aAxj7zcOoqKjoSo/nL/U1XU0w3BIm2OLeebyMMj2WXvDa
-         Zn2p0Cw7dq6uD/WAVeES8LoKvxlWo8vquVy8Pk8MjdA3K+MS3VoASqDk1y6Egj9w/h
-         1Uil7R9SuvVt2dEShamnOnMVpYtpaUOBcLpI0ucRjN5rvZd+ffl4Ug0Wv+wxISYzOv
-         5HwmBt+3qpMH9BfhskBAba4oXKSCLGqvXRIRSr23rQ7zZRH1Fd3PAmBtMAMgpPTcTQ
-         5s9Qv6HiCW98Oe3gWv4zIcmnUO0BrME+Ejx2LTcc7LFjvxqJMyVjiJcxcWZ99aZw5k
-         l+d2bXIZ4oiFQ==
+        b=t9OteOs+5s4QQ0nVZoQazft1wyou6HNl9vnu5zMSCgeeJFM4l3j8OrTHb13jQ8eD6
+         aE1DamoNQG49Dkk4EzaF3ZHiewwXplJAObzh4Xkg1rxWymqSSV0kFZoquUOG6KvWGp
+         tpJIpF5jRcaJ9kj7toas5vAVsFESgwASIsowcrHdVeIJgA8aHNuahVJXCTRvPPPMKQ
+         EsIGTtq0XB2FTygxDANx4YbZpmMMV8szxnu+vfVJEVZYAje0gMejNCn7FHuzIkuw13
+         1Dy2B4bkuJZZsJxj8tIlfkkz01xTcdW8n6jxdeoES8IybJdXUzp/ObYP/dweTGhvlK
+         ggr63iWCEm+nA==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id rHQU6bdTc5Ja; Wed, 11 Dec 2019 11:17:22 -0500 (EST)
+        with ESMTP id UzqRjtd3-YfZ; Wed, 11 Dec 2019 11:17:22 -0500 (EST)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id 6F872686BF4;
+        by mail.efficios.com (Postfix) with ESMTPSA id 2F796686BF2;
         Wed, 11 Dec 2019 11:17:22 -0500 (EST)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
@@ -59,47 +58,36 @@ Cc:     linux-kernel@vger.kernel.org,
         "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
         linux-api@vger.kernel.org, stable@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH for 5.5 1/3] rseq: Fix: Reject unknown flags on rseq unregister
-Date:   Wed, 11 Dec 2019 11:17:11 -0500
-Message-Id: <20191211161713.4490-2-mathieu.desnoyers@efficios.com>
+Subject: [PATCH for 5.5 0/3] Restartable Sequences Fixes
+Date:   Wed, 11 Dec 2019 11:17:10 -0500
+Message-Id: <20191211161713.4490-1-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211161713.4490-1-mathieu.desnoyers@efficios.com>
-References: <20191211161713.4490-1-mathieu.desnoyers@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is preferrable to reject unknown flags within rseq unregistration
-rather than to ignore them. It is an oversight caused by the fact that
-the check for unknown flags is after the rseq unregister flag check.
+Hi,
 
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Paul Turner <pjt@google.com>
-Cc: linux-api@vger.kernel.org
-Cc: <stable@vger.kernel.org>	# v4.18+
----
- kernel/rseq.c | 2 ++
- 1 file changed, 2 insertions(+)
+Here is a repost of a small set of rseq fixes which was initially posted
+in September 2019. It now targets kernel 5.5. Those should be backported
+to stable kernels >= 4.18.
 
-diff --git a/kernel/rseq.c b/kernel/rseq.c
-index 27c48eb7de40..a4f86a9d6937 100644
---- a/kernel/rseq.c
-+++ b/kernel/rseq.c
-@@ -310,6 +310,8 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
- 	int ret;
- 
- 	if (flags & RSEQ_FLAG_UNREGISTER) {
-+		if (flags & ~RSEQ_FLAG_UNREGISTER)
-+			return -EINVAL;
- 		/* Unregister rseq for current thread. */
- 		if (current->rseq != rseq || !current->rseq)
- 			return -EINVAL;
+Thanks,
+
+Mathieu
+
+Mathieu Desnoyers (3):
+  rseq: Fix: Reject unknown flags on rseq unregister
+  rseq: Fix: Unregister rseq for clone CLONE_VM
+  rseq/selftests: Fix: Namespace gettid() for compatibility with glibc
+    2.30
+
+ include/linux/sched.h                     |  4 ++--
+ kernel/rseq.c                             |  2 ++
+ tools/testing/selftests/rseq/param_test.c | 18 ++++++++++--------
+ 3 files changed, 14 insertions(+), 10 deletions(-)
+
 -- 
 2.17.1
 
