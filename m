@@ -2,144 +2,166 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6B9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B154C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 279B221D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576066650;
-	bh=1n4dRkvvdCKETj6YqGunEjOSbdyLrGPyEqXt3M6/6wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S0ma7o+XXVSvRL7MMY2CA2+7Y0VWmIhaXAbtktvfHiye7yFRVQ/DXNn0lXA3Meor8
-	 KmcIrGgrztUFRkMTT0e3Zon4Ezfb9pwUr8H4LgEG1IVli+ac/ycIkIgFJog5BOZdXq
-	 LF+pcuETxUKGt2k8uEN6VvzqTXw9KBaXO9vEF7yE=
+	by mail.kernel.org (Postfix) with ESMTP id 3C340214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:20:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JuWLwj81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfLKMR3 (ORCPT
+        id S1729110AbfLKMUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:17:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727365AbfLKMR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:17:28 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 11 Dec 2019 07:20:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53746 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727365AbfLKMUF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 07:20:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576066803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=CO314128W7CDNlXEcy+PWsJG51Toka8m6TWFPQjhhH4=;
+        b=JuWLwj81zqtQF8e+LsBv8NGYKCsZNglL4nfnKcdi4tf/FKyvx6dOXCEVfMn/EIbsb6EsCS
+        LPjPz7SkeoQzoznOSnZ8fWtsX+r5WlarJGMx3Et/xAtORd7cTemSe+Ui4AfhZc+MVHWdCT
+        KuPRKohOLyiJbdM5GsqS6jChUcHys24=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-ptuNYTXuPj6rCyVckKaV4A-1; Wed, 11 Dec 2019 07:20:02 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ADEA214D8;
-        Wed, 11 Dec 2019 12:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576066646;
-        bh=1n4dRkvvdCKETj6YqGunEjOSbdyLrGPyEqXt3M6/6wg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=THftVLfHvoU6YrX83eDiFEHMqmQzvJgd5DeuwSKhX2F4lhHXMy+pikZZxyRETijp3
-         kESWxqIVEK0BKR/gxeZZm9zuT6lD22QmeIKDUw9Cp0JkHxatXzo3qrCedCfutgWWAH
-         IZpPzdBjNzNsHQheWPxZC3At7oJRHln1BdIH3CcA=
-Date:   Wed, 11 Dec 2019 13:17:24 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Chng, Jack Ping" <jack.ping.chng@linux.intel.com>
-Cc:     devel@driverdev.osuosl.org, cheol.yong.kim@intel.com,
-        andriy.shevchenko@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mallikarjunax.reddy@linux.intel.com,
-        davem@davemloft.net
-Subject: Re: FW: [PATCH v2] staging: intel-gwdpa: gswip: Introduce Gigabit
- Ethernet Switch (GSWIP) device driver
-Message-ID: <20191211121724.GA514307@kroah.com>
-References: <5f85180573a3fb20238d6a340cdd990f140ed6f0.1576054234.git.jack.ping.chng@intel.com>
- <20191211092738.GA505511@kroah.com>
- <BYAPR11MB317606F8BE2B60C4BAD872F1DE5A0@BYAPR11MB3176.namprd11.prod.outlook.com>
- <c26e56cf-eb04-5992-252a-e66f6029d6ac@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c26e56cf-eb04-5992-252a-e66f6029d6ac@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C40E31804488;
+        Wed, 11 Dec 2019 12:20:00 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 464BC6364F;
+        Wed, 11 Dec 2019 12:19:58 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 91A7A17538; Wed, 11 Dec 2019 13:19:57 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     tzimmermann@suse.de, gurchetansingh@chromium.org,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 4/4] drm/udl: simplify gem object mapping.
+Date:   Wed, 11 Dec 2019 13:19:56 +0100
+Message-Id: <20191211121957.18637-5-kraxel@redhat.com>
+In-Reply-To: <20191211121957.18637-1-kraxel@redhat.com>
+References: <20191211121957.18637-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: ptuNYTXuPj6rCyVckKaV4A-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 06:37:42PM +0800, Chng, Jack Ping wrote:
-> Hi Greg,
-> 
-> > -----Original Message-----
-> > From: Greg KH <gregkh@linuxfoundation.org>
-> > Sent: Wednesday, December 11, 2019 5:28 PM
-> > To: Chng, Jack Ping <jack.ping.chng@intel.com>
-> > Cc: devel@driverdev.osuosl.org; Kim, Cheol Yong <cheol.yong.kim@intel.com>; Shevchenko, Andriy <andriy.shevchenko@intel.com>; netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>; davem@davemloft.net
-> > Subject: Re: [PATCH v2] staging: intel-gwdpa: gswip: Introduce Gigabit Ethernet Switch (GSWIP) device driver
-> > 
-> > On Wed, Dec 11, 2019 at 04:57:28PM +0800, Jack Ping CHNG wrote:
-> > > This driver enables the Intel's LGM SoC GSWIP block.
-> > > GSWIP is a core module tailored for L2/L3/L4+ data plane and QoS functions.
-> > > It allows CPUs and other accelerators connected to the SoC datapath to
-> > > enqueue and dequeue packets through DMAs.
-> > > Most configuration values are stored in tables such as Parsing and
-> > > Classification Engine tables, Buffer Manager tables and Pseudo MAC
-> > > tables.
-> > Odd line wrapping :(
-> > 
-> > > Signed-off-by: Jack Ping CHNG <jack.ping.chng@intel.com>
-> > > Signed-off-by: Amireddy Mallikarjuna reddy
-> > > <mallikarjunax.reddy@linux.intel.com>
-> > > ---
-> > > Changes on v2:
-> > > - Renamed intel-dpa to intel-gwdpa
-> > > - Added intel-gwdpa.txt(Intel Gateway Datapath Architecture)
-> > > - Added TODO (upstream plan)
-> > 
-> > > +Upstream plan
-> > > +--------------
-> > > +
-> > > +      GSWIP  CQM  PP  DPM     DCDP
-> > > +        |     |    |   |        |
-> > > +        |     |    |   |        |
-> > > +        V     V    V   V        V
-> > > +        -------------------------------------( drivers/staging/intel-gwdpa/* )
-> > > +                            |  (move to soc folder)
-> > > +                            V
-> > > +                    -------------------------(
-> > > + drivers/soc/intel/gwdpa-*/* )
-> > > +
-> > > +                            Eth driver  Wireless/
-> > > +                                |       WAN driver
-> > > +                                |         |
-> > > +                                V         V
-> > > +                             ----------------( drivers/net/ethernet/intel )
-> > > +                                             ( drivers/net/wireless )
-> > > +                                             ( drivers/net/wan)
-> > > +
-> > > +* Each driver will have a TODO list.
-> > Again, what kind of plan is this?  It's just a "these files need to be moved to this location" plan?
-> > 
-> > Why not do that today?
-> > 
-> > What is keeping this code from being accepted in the "correct" place today?  And why do you want it in staging?  You know it takes even more work to do things here, right?  Are you ready to sign up for that work (hint, you didn't add your names to the MAINTAINER file, so I worry about that...)
-> 
-> Thanks for the reply.
-> 
-> We are trying to upstream the datapath code for Intel new NoC gateway
-> (please refer to intel-gwdpa.txt at the end of the patch). It consists of
-> ethernet, WIFI and passive optics handling. Since the code is quite huge, we
-> have broken it into parts for internal review.
-> 
-> As we have seen past upstream example such as fsl/dpaa, we thought that it
-> is better for us to start the upstreaming of the driver into staging folder
-> to get feedback from the community.
-> 
-> Is this the right approach? Or do we upstream all the drivers into
-> drivers/soc folder when we have all the drivers ready?
+With shmem helpers allowing to update pgprot caching flags via
+drm_gem_object_funcs.pgprot we can just use that and ditch our own
+implementations of mmap() and vmap().
 
-Why is drivers/soc/ the place to put networking drivers?
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/udl/udl_gem.c | 62 ++++-------------------------------
+ 1 file changed, 7 insertions(+), 55 deletions(-)
 
-Please please please work with the Intel Linux kernel developers who
-know how to do this type of thing and do not require the kernel
-community to teach you all the proper development model and methods
-here.
+diff --git a/drivers/gpu/drm/udl/udl_gem.c b/drivers/gpu/drm/udl/udl_gem.c
+index b6e26f98aa0a..b82a4a921f1b 100644
+--- a/drivers/gpu/drm/udl/udl_gem.c
++++ b/drivers/gpu/drm/udl/udl_gem.c
+@@ -17,61 +17,12 @@
+  * GEM object funcs
+  */
+=20
+-static int udl_gem_object_mmap(struct drm_gem_object *obj,
+-=09=09=09       struct vm_area_struct *vma)
++static pgprot_t udl_gem_object_pgprot(struct drm_gem_object *obj,
++=09=09=09=09      pgprot_t pgprot)
+ {
+-=09int ret;
+-
+-=09ret =3D drm_gem_shmem_mmap(obj, vma);
+-=09if (ret)
+-=09=09return ret;
+-
+-=09vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
+ =09if (obj->import_attach)
+-=09=09vma->vm_page_prot =3D pgprot_writecombine(vma->vm_page_prot);
+-=09vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
+-
+-=09return 0;
+-}
+-
+-static void *udl_gem_object_vmap(struct drm_gem_object *obj)
+-{
+-=09struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
+-=09int ret;
+-
+-=09ret =3D mutex_lock_interruptible(&shmem->vmap_lock);
+-=09if (ret)
+-=09=09return ERR_PTR(ret);
+-
+-=09if (shmem->vmap_use_count++ > 0)
+-=09=09goto out;
+-
+-=09ret =3D drm_gem_shmem_get_pages(shmem);
+-=09if (ret)
+-=09=09goto err_zero_use;
+-
+-=09if (obj->import_attach)
+-=09=09shmem->vaddr =3D dma_buf_vmap(obj->import_attach->dmabuf);
+-=09else
+-=09=09shmem->vaddr =3D vmap(shmem->pages, obj->size >> PAGE_SHIFT,
+-=09=09=09=09    VM_MAP, PAGE_KERNEL);
+-
+-=09if (!shmem->vaddr) {
+-=09=09DRM_DEBUG_KMS("Failed to vmap pages\n");
+-=09=09ret =3D -ENOMEM;
+-=09=09goto err_put_pages;
+-=09}
+-
+-out:
+-=09mutex_unlock(&shmem->vmap_lock);
+-=09return shmem->vaddr;
+-
+-err_put_pages:
+-=09drm_gem_shmem_put_pages(shmem);
+-err_zero_use:
+-=09shmem->vmap_use_count =3D 0;
+-=09mutex_unlock(&shmem->vmap_lock);
+-=09return ERR_PTR(ret);
++=09=09pgprot =3D pgprot_writecombine(pgprot);
++=09return pgprot;
+ }
+=20
+ static const struct drm_gem_object_funcs udl_gem_object_funcs =3D {
+@@ -80,9 +31,10 @@ static const struct drm_gem_object_funcs udl_gem_object_=
+funcs =3D {
+ =09.pin =3D drm_gem_shmem_pin,
+ =09.unpin =3D drm_gem_shmem_unpin,
+ =09.get_sg_table =3D drm_gem_shmem_get_sg_table,
+-=09.vmap =3D udl_gem_object_vmap,
++=09.vmap =3D drm_gem_shmem_vmap,
+ =09.vunmap =3D drm_gem_shmem_vunmap,
+-=09.mmap =3D udl_gem_object_mmap,
++=09.mmap =3D drm_gem_shmem_mmap,
++=09.pgprot =3D udl_gem_object_pgprot,
+ };
+=20
+ /*
+--=20
+2.18.1
 
-thanks,
-
-greg k-h
