@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CBEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DC7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D592467F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F182467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078535;
-	bh=DrqW3VBnqbEBqqgF7gTtPyfSthVTP9D9rl1FaytQWFk=;
+	s=default; t=1576078539;
+	bh=oCM1UPKZGfugxY/zFkaEvRN39bNFEO/SayzMnW2mjgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fkrtRS/k7v2VI2xp9HaW6k1v9zqMzaQQ2A34A9o+u019+fVgMhELsPK53h5bGmUoq
-	 zNE3J79L8MsZnRCrI+U/N4CbXOmbrj7RIF2sG9c2vIgxoYeGyz9uhjPXA3NI6YIgR1
-	 4Q+fKWLkCZ9QNyXpKQQU0G4gaWWRgq0O2XZ1bl4o=
+	b=gDEgE7oujjBkZu+DyUx6b1mcXAk7X8U2/SiEkkuMzMG+sGJtRe6Zinv1+/lfdMKva
+	 gxMEJdd3qztdnOGbazQOA+wvw9KovH1CltX+IC/+CXTPa9QHiTJu0Ix8LvFqmDw9VZ
+	 7DvbjAWiA5KHE5Tlq7yjSNbq07rktVA0H2xJtV9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388172AbfLKPfe (ORCPT
+        id S2388185AbfLKPfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44486 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:35:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388160AbfLKPfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:32 -0500
+        id S1733091AbfLKPfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B925E2467F;
-        Wed, 11 Dec 2019 15:35:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C353824658;
+        Wed, 11 Dec 2019 15:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078531;
-        bh=DrqW3VBnqbEBqqgF7gTtPyfSthVTP9D9rl1FaytQWFk=;
+        s=default; t=1576078533;
+        bh=oCM1UPKZGfugxY/zFkaEvRN39bNFEO/SayzMnW2mjgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MC+4pIHWld9TkuJtnmFifdTpDEXCWwEK2TEeRsCZkay/2ALYk6Xe2Bu/3/No0Ic1O
-         vNWkVCbJkU9KO9kSEmWjoG0v+gP2XlFthSfpgaZh8eSOL0Wufmlh3cQ/4OpToWaZ5H
-         +Up1nELcX0/7ZTTlSgHkg7n8Q9Idd+rDN5PIR510=
+        b=pGnjHdpTSL6eXb0KsUuVN+qCz8Gz332th/d5S7HhP9eDO57chaE2wAx35gd7iYQiI
+         MAxItOXEXOUbO1vY7d2HP1Wl/iz4bEsRQj6eGzNmCBpAP9E+sq9m7OKcpMdWuuYAkE
+         rU5NvtAsZzYAMyfDHRPUwGUPTcz0aC+gIoiDs1Kk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Barry Song <Baohua.Song@csr.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 20/42] mfd: mfd-core: Honour Device Tree's request to disable a child-device
-Date:   Wed, 11 Dec 2019 10:34:48 -0500
-Message-Id: <20191211153510.23861-20-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        coverity-bot <keescook+coverity-bot@chromium.org>,
+        James Bottomley <James.Bottomley@SteelEye.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, "Ewan D . Milne" <emilne@redhat.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 22/42] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp(): Null pointer dereferences
+Date:   Wed, 11 Dec 2019 10:34:50 -0500
+Message-Id: <20191211153510.23861-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -61,47 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lee Jones <lee.jones@linaro.org>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
+[ Upstream commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 ]
 
-Until now, MFD has assumed all child devices passed to it (via
-mfd_cells) are to be registered. It does not take into account
-requests from Device Tree and the like to disable child devices
-on a per-platform basis.
+Coverity reported the following:
 
-Well now it does.
+*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
+4433     			kfree(mp);
+4434     		}
+4435     		mempool_free(mbox, phba->mbox_mem_pool);
+4436     	}
+4437     out:
+4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
+vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+vvv     Dereferencing null pointer "shost".
+4439     		spin_lock_irq(shost->host_lock);
+4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+4441     		spin_unlock_irq(shost->host_lock);
+4442
+4443     		/* If the node is not being used by another discovery thread,
+4444     		 * and we are sending a reject, we are done with it.
 
-Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
-Link: https://lkml.org/lkml/2019/8/22/1350
+Fix by adding a check for non-null shost in line 4438.
+The scenario when shost is set to null is when ndlp is null.
+As such, the ndlp check present was sufficient. But better safe
+than sorry so add the shost check.
 
-Reported-by: Barry Song <Baohua.Song@csr.com>
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
+Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+
+CC: James Bottomley <James.Bottomley@SteelEye.com>
+CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC: linux-next@vger.kernel.org
+Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/mfd-core.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/lpfc/lpfc_els.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 5c8ed2150c8bf..fae7bfe7a21a1 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -178,6 +178,11 @@ static int mfd_add_device(struct device *parent, int id,
- 	if (parent->of_node && cell->of_compatible) {
- 		for_each_child_of_node(parent->of_node, np) {
- 			if (of_device_is_compatible(np, cell->of_compatible)) {
-+				if (!of_device_is_available(np)) {
-+					/* Ignore disabled devices error free */
-+					ret = 0;
-+					goto fail_alias;
-+				}
- 				pdev->dev.of_node = np;
- 				pdev->dev.fwnode = &np->fwnode;
- 				break;
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 3702497b5b169..4901bf24916b5 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -3863,7 +3863,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
+ 		mempool_free(mbox, phba->mbox_mem_pool);
+ 	}
+ out:
+-	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
++	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
+ 		spin_lock_irq(shost->host_lock);
+ 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+ 		spin_unlock_irq(shost->host_lock);
 -- 
 2.20.1
 
