@@ -2,218 +2,261 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1474C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54003C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEDC208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBC3214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KJqVnq80"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FWdNHk8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfLKMik (ORCPT
+        id S1729179AbfLKMoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:38:40 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41053 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLKMik (ORCPT
+        Wed, 11 Dec 2019 07:44:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20830 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727402AbfLKMoq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:38:40 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c9so23874529wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 04:38:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oilqMrWOmUSWqLKTGEJQYVnIb6Khy8rZQCIwVkV2EgI=;
-        b=KJqVnq80OYD3nHpLiKB4RCWguQxg3gbAVtmRJIBQyahJ2cRtyqyDo24gpCh3PvkZOx
-         6a8X1IW2qjx02ByMsUMiXPy8XLnFUMVkQWttRFIURRebr1Gin1WWVnxvmX3RkhXVr8NA
-         u+L8IgnOyLqjKoBcQNBX5FpGthRxI5USPeFLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=oilqMrWOmUSWqLKTGEJQYVnIb6Khy8rZQCIwVkV2EgI=;
-        b=QWCUUGOIgbeE2PDV/LcQMFRjilzvT3Qgvg4I/XB8RgnXcV1K8DJkIQ8QUUeE4JPQn6
-         D985adp8Ov771G4OYG3ZqSyX36HqrvCUyJ9vs4mCqmyaZvUKh6ZJOafU/YgCJwBQlKf/
-         WphJvtsEWVdeUZsSF3RYXmVhOKi8KVMUUz4rleuagituWS8SIIwgmxNVJ6SZRQLOYPGF
-         jVnljvO/Xiijxz2L3WKKYTcrUTWchKIdJ8NXPcY80axrQhf3TvMTrcvQPfxnhvtMs37Z
-         vJ8VAwZZzdKZp1L1WoV7nINwmqhFKFH0Zg7vGn495lszpHglDD7wjkky6LKGKfhUKYT4
-         l8nA==
-X-Gm-Message-State: APjAAAUr/0FrwmOFaAG1VpEECFvGSX0m472hfo9qXuYD357TERkg1ttX
-        3HuK36fsNWJ0fXc9JfEB9t+G2gG/mZs=
-X-Google-Smtp-Source: APXvYqxNEgdkHL4Hk1D8WjL8Exvt/tX0nokfJtSU3/y8Vl7lUKInCWQgPwwg8G6SR3+J2hh8OSF6KQ==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr3767933wrj.357.1576067917745;
-        Wed, 11 Dec 2019 04:38:37 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:564b:0:7567:bb67:3d7f:f863])
-        by smtp.gmail.com with ESMTPSA id n12sm2200963wmd.1.2019.12.11.04.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 04:38:37 -0800 (PST)
-Date:   Wed, 11 Dec 2019 13:38:35 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        gurchetansingh@chromium.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] drm: add pgprot callback to drm_gem_object_funcs
-Message-ID: <20191211123835.GZ624164@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
-        gurchetansingh@chromium.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191211121957.18637-1-kraxel@redhat.com>
- <20191211121957.18637-2-kraxel@redhat.com>
+        Wed, 11 Dec 2019 07:44:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576068283;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RbM8X8BOJH7yhenGP5DWrVvrufrYWyYLc8Be5/5UfCw=;
+        b=FWdNHk8H8lKkR9E3UTVuCxWMIcScsY4IdA56HSWpev2LwDaZC3wbSjWMp6sQR14QlUB9GL
+        tX2hj7xhVjyGPsJIX+a8PPFevpgTvHQzwDJpdoExsvJlV1dVib0zD7a/74fsZlFgUdY016
+        brw/J7CmGtTImERpmF3X8Qcgxk9aSx0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-YVw6L6FPNTSw3-GZGKLciQ-1; Wed, 11 Dec 2019 07:44:41 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BAAC800D4C;
+        Wed, 11 Dec 2019 12:44:39 +0000 (UTC)
+Received: from krava (unknown [10.43.17.106])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9332560BE1;
+        Wed, 11 Dec 2019 12:44:37 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 13:44:34 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Steve MacLean <steve.maclean@linux.microsoft.com>,
+        Stephane Eranian <eranian@google.com>
+Cc:     Steve MacLean <Steve.MacLean@microsoft.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf inject --jit: Remove //anon mmap events
+Message-ID: <20191211124434.GA18167@krava>
+References: <1572553836-32361-1-git-send-email-steve.maclean@linux.microsoft.com>
 MIME-Version: 1.0
+In-Reply-To: <1572553836-32361-1-git-send-email-steve.maclean@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: YVw6L6FPNTSw3-GZGKLciQ-1
+X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191211121957.18637-2-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-2-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:19:53PM +0100, Gerd Hoffmann wrote:
-> The callback allows drivers and helpers to tweak pgprot for mappings.
-> This is especially helpful when using shmem helpers.  It allows drivers
-> to switch mappings from writecombine (default) to something else (cached
-> for example) on a per-object base without having to supply their own
-> mmap() and vmap() functions.
-> 
-> The patch also adds two implementations for the callback, for cached and
-> writecombine mappings, and the drm_gem_pgprot() function to update
-> pgprot for a given object, using the new &drm_gem_object_funcs.pgprot
-> callback if available.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+On Thu, Oct 31, 2019 at 01:30:36PM -0700, Steve MacLean wrote:
+> From: Steve MacLean <Steve.MacLean@Microsoft.com>
+>=20
+> While a JIT is jitting code it will eventually need to commit more pages =
+and
+> change these pages to executable permissions.
+>=20
+> Typically the JIT will want these colocated to minimize branch displaceme=
+nts.
+>=20
+> The kernel will coalesce these anonymous mapping with identical permissio=
+ns
+> before sending an MMAP event for the new pages. This means the mmap event=
+ for
+> the new pages will include the older pages.
+>=20
+> These anonymous mmap events will obscure the jitdump injected pseudo even=
+ts.
+> This means that the jitdump generated symbols, machine code, debugging in=
+fo,
+> and unwind info will no longer be used.
+>=20
+> Observations:
+>=20
+> When a process emits a jit dump marker and a jitdump file, the perf-xxx.m=
+ap
+> file represents inferior information which has been superceded by the
+> jitdump jit-xxx.dump file.
+>=20
+> Further the '//anon*' mmap events are only required for the legacy
+> perf-xxx.map mapping.
+>=20
+> When attaching to an existing process, the synthetic anon map events are
+> given a time stamp of -1. These should not obscure the jitdump events whi=
+ch
+> have an actual time.
+>=20
+> Summary:
+>=20
+> Use thread->priv to store whether a jitdump file has been processed
+>=20
+> During "perf inject --jit", discard "//anon*" mmap events for any pid whi=
+ch
+> has sucessfully processed a jitdump file.
+>=20
+> Committer testing:
+>=20
+> // jitdump case
+> perf record <app with jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+>=20
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+>=20
+> // no jitdump case
+> perf record <app without jitdump>
+> perf inject --jit --input perf.data --output perfjit.data
+>=20
+> // verify mmap "//anon" events present initially
+> perf script --input perf.data --show-mmap-events | grep '//anon'
+> // verify mmap "//anon" events not removed
+> perf script --input perfjit.data --show-mmap-events | grep '//anon'
+>=20
+> Repro:
+>=20
+> This issue was discovered while testing the initial CoreCLR jitdump
+> implementation. https://github.com/dotnet/coreclr/pull/26897.
+>=20
+
+Stephane,
+are you ok with this fix?
+
+thanks,
+jirka
+
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
 > ---
->  include/drm/drm_gem.h     | 15 +++++++++++++
->  drivers/gpu/drm/drm_gem.c | 46 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 60 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-> index 0b375069cd48..5beef7226e69 100644
-> --- a/include/drm/drm_gem.h
-> +++ b/include/drm/drm_gem.h
-> @@ -163,6 +163,17 @@ struct drm_gem_object_funcs {
->  	 */
->  	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
->  
-> +	/**
-> +	 * @pgprot:
-> +	 *
-> +	 * Tweak pgprot as needed, typically used to set cache bits.
-> +	 *
-> +	 * This callback is optional.
-> +	 *
-> +	 * If unset drm_gem_pgprot_wc() will be used.
-> +	 */
-> +	pgprot_t (*pgprot)(struct drm_gem_object *obj, pgprot_t prot);
-
-I kinda prefer v1, mostly because this is a huge can of worms, and solving
-this properly is going to be real hard (and will necessarily involve
-dma-buf and dma-api and probably more). Charging ahead here just risks
-that we dig ourselves into a corner. You're v1 is maybe not the most
-clean, but just a few code bits here&there should be more flexible and
-easier to hack on and experiment around with.
--Daniel
-
-> +
->  	/**
->  	 * @vm_ops:
->  	 *
-> @@ -350,6 +361,10 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
->  		     struct vm_area_struct *vma);
->  int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma);
->  
-> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t prot);
-> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot);
-> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot);
-> +
->  /**
->   * drm_gem_object_get - acquire a GEM buffer object reference
->   * @obj: GEM buffer object
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index 56f42e0f2584..1c468fe8e342 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -1119,7 +1119,8 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
->  			return -EINVAL;
->  
->  		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-> -		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-> +		vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-> +		vma->vm_page_prot = drm_gem_pgprot(obj, vma->vm_page_prot);
->  		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
->  	}
->  
-> @@ -1210,6 +1211,49 @@ int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma)
+>  tools/perf/builtin-inject.c |  4 ++--
+>  tools/perf/util/jitdump.c   | 31 ++++++++++++++++++++++++++++++-
+>  2 files changed, 32 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 372ecb3..0f38862 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -263,7 +263,7 @@ static int perf_event__jit_repipe_mmap(struct perf_to=
+ol *tool,
+>  =09 * if jit marker, then inject jit mmaps and generate ELF images
+>  =09 */
+>  =09ret =3D jit_process(inject->session, &inject->output, machine,
+> -=09=09=09  event->mmap.filename, sample->pid, &n);
+> +=09=09=09  event->mmap.filename, event->mmap.pid, &n);
+>  =09if (ret < 0)
+>  =09=09return ret;
+>  =09if (ret) {
+> @@ -301,7 +301,7 @@ static int perf_event__jit_repipe_mmap2(struct perf_t=
+ool *tool,
+>  =09 * if jit marker, then inject jit mmaps and generate ELF images
+>  =09 */
+>  =09ret =3D jit_process(inject->session, &inject->output, machine,
+> -=09=09=09  event->mmap2.filename, sample->pid, &n);
+> +=09=09=09  event->mmap2.filename, event->mmap2.pid, &n);
+>  =09if (ret < 0)
+>  =09=09return ret;
+>  =09if (ret) {
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index e3ccb0c..d18596e 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -26,6 +26,7 @@
+>  #include "jit.h"
+>  #include "jitdump.h"
+>  #include "genelf.h"
+> +#include "thread.h"
+> =20
+>  #include <linux/ctype.h>
+>  #include <linux/zalloc.h>
+> @@ -749,6 +750,28 @@ static int jit_repipe_debug_info(struct jit_buf_desc=
+ *jd, union jr_entry *jr)
+>  =09return 0;
 >  }
->  EXPORT_SYMBOL(drm_gem_mmap);
->  
-> +/**
-> + * drm_gem_mmap - update pgprot for objects needing a cachable mapping.
-> + * @obj: the GEM object.
-> + * @prot: page attributes.
-> + *
-> + * This function can be used as &drm_gem_object_funcs.pgprot callback.
-> + */
-> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t prot)
+> =20
+> +static void jit_add_pid(struct machine *machine, pid_t pid)
 > +{
-> +	return prot;
-> +}
-> +EXPORT_SYMBOL(drm_gem_pgprot_cached);
+> +=09struct thread *thread =3D machine__findnew_thread(machine, pid, pid);
 > +
-> +/**
-> + * drm_gem_mmap - update pgprot for objects needing a wc mapping.
-> + * @obj: the GEM object.
-> + * @prot: page attributes.
-> + *
-> + * This function can be used as &drm_gem_object_funcs.pgprot callback.
-> + */
-> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot)
+> +=09if (!thread) {
+> +=09=09pr_err("%s: thread %d not found or created\n", __func__, pid);
+> +=09=09return;
+> +=09}
+> +
+> +=09thread->priv =3D (void *)1;
+> +}
+> +
+> +static bool jit_has_pid(struct machine *machine, pid_t pid)
 > +{
-> +	return pgprot_writecombine(prot);
-> +}
-> +EXPORT_SYMBOL(drm_gem_pgprot_wc);
+> +=09struct thread *thread =3D machine__find_thread(machine, pid, pid);
 > +
-> +/**
-> + * drm_gem_mmap - update pgprot for a given gem object.
-> + * @obj: the GEM object.
-> + * @prot: page attributes.
-> + *
-> + * This function updates pgprot according to the needs of the given
-> + * object.  If present &drm_gem_object_funcs.pgprot callback will be
-> + * used, otherwise drm_gem_pgprot_wc() is called.
-> + */
-> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot)
-> +{
-> +	if (obj->funcs->pgprot)
-> +		return obj->funcs->pgprot(obj, prot);
-> +	return drm_gem_pgprot_wc(obj, prot);
-> +}
-> +EXPORT_SYMBOL(drm_gem_pgprot);
+> +=09if (!thread)
+> +=09=09return 0;
 > +
->  void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
->  			const struct drm_gem_object *obj)
->  {
-> -- 
-> 2.18.1
-> 
+> +=09return (bool)thread->priv;
+> +}
+> +
+>  int
+>  jit_process(struct perf_session *session,
+>  =09    struct perf_data *output,
+> @@ -764,8 +787,13 @@ static int jit_repipe_debug_info(struct jit_buf_desc=
+ *jd, union jr_entry *jr)
+>  =09/*
+>  =09 * first, detect marker mmap (i.e., the jitdump mmap)
+>  =09 */
+> -=09if (jit_detect(filename, pid))
+> +=09if (jit_detect(filename, pid)) {
+> +=09=09// Strip //anon* mmaps if we processed a jitdump for this pid
+> +=09=09if (jit_has_pid(machine, pid) && (strncmp(filename, "//anon", 6) =
+=3D=3D 0))
+> +=09=09=09return 1;
+> +
+>  =09=09return 0;
+> +=09}
+> =20
+>  =09memset(&jd, 0, sizeof(jd));
+> =20
+> @@ -784,6 +812,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc =
+*jd, union jr_entry *jr)
+> =20
+>  =09ret =3D jit_inject(&jd, filename);
+>  =09if (!ret) {
+> +=09=09jit_add_pid(machine, pid);
+>  =09=09*nbytes =3D jd.bytes_written;
+>  =09=09ret =3D 1;
+>  =09}
+> --=20
+> 1.8.3.1
+>=20
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
