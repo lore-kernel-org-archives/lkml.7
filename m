@@ -2,106 +2,81 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EA9C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D81EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD51D2465E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576088425;
-	bh=TXEAhtqD3tgxcqJu42x3BiK1JCY1RSod0Wk0VQDOpHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=btb42cW3xQk0omI0lwTmDWL+WcxSs5ken3+m86R3Jx2vwYm9W4dzbNYk1Uk8ZEBTw
-	 mJy9MikC3mgGGI/wfncNYSs2hdh7B3UxgJUVZbO59UUcKOaudVdYfqaO5W2ajNYNML
-	 mkrs7YuhRRTIRc7YvNu+x0SaTT4Tdah1EkIuAp9A=
+	by mail.kernel.org (Postfix) with ESMTP id 280E52077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfLKSUZ (ORCPT
+        id S1731113AbfLKSVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:20:25 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41430 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfLKSUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:20:24 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c26so20220083eds.8;
-        Wed, 11 Dec 2019 10:20:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cCq+YLmjndsqzVRfIXx595cSZyYTIfyoVBGa1n3MlZo=;
-        b=csOvR/hhPlWuwKRi5xvRzIXhe54IBHinIQVS++u/nqij0gEe7+NhVVrdwAPiYX1tm/
-         qhsyxp4hwZhIqmmDNi+llI8SyQc9n9+eJAjpCQlw19B4H4Y/NuSBsRydcebyYenFQf4z
-         J/4YOYDF2l53ju3wm7OQGr6s9x3hmbCiyM7hbaYQ7sSgxsC0QnlI/S+1PU+ciZnrWq+D
-         lW7ULnqTMY8YH1p8wqJ4vXoJ6vLqA8iSMh46qZkD6M4Ojpprso6VrBI+e4gl4rfkuqcq
-         ppDEQ52H4NBo8RGIuqDo5vjFWM/LYNKJ/BM5cY71Wtm/zWKiq+XsmTGYhHGJto0GAccv
-         bjOg==
-X-Gm-Message-State: APjAAAXdM85IdqATnJJ3Pg+v9xodkLAciDgdgFCCCi0RXOV+QJTGtGqU
-        QL1Q9UZkTuJxyMq8OIeKbjA=
-X-Google-Smtp-Source: APXvYqxSrBfPuZyxedBUFXHa4HwHCjZ0I74AtbkA+bPFUbpLrYb2Uyy2G8q4PvOG2wVqT+P/uDRiBA==
-X-Received: by 2002:a17:906:c791:: with SMTP id cw17mr4796655ejb.69.1576088422783;
-        Wed, 11 Dec 2019 10:20:22 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id b17sm67400edr.42.2019.12.11.10.20.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 10:20:22 -0800 (PST)
-Date:   Wed, 11 Dec 2019 19:20:19 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Kamil Konieczny <k.konieczny@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Andreas Faerber <afaerber@suse.de>,
-        Arjun K V <arjun.kv@samsung.com>
-Subject: Re: [PATCH 0/2] Increase CPU frequency in Exynos5422/5800 SoCs
-Message-ID: <20191211182019.GA2427@kozik-lap>
-References: <CGME20191210114035eucas1p213dc81b3934969baf2bb9235d5ab8d28@eucas1p2.samsung.com>
- <20191210114027.14910-1-m.szyprowski@samsung.com>
+        Wed, 11 Dec 2019 13:21:01 -0500
+Received: from verein.lst.de ([213.95.11.211]:56752 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729855AbfLKSVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:21:00 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 4FD2668AFE; Wed, 11 Dec 2019 19:20:56 +0100 (CET)
+Date:   Wed, 11 Dec 2019 19:20:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Michael Roth <mdroth@linux.vnet.ibm.com>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Ram Pai <linuxram@us.ibm.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, paulus@ozlabs.org, hch@lst.de,
+        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org,
+        leonardo@linux.ibm.com
+Subject: Re: [PATCH v5 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for
+ Secure VM.
+Message-ID: <20191211182056.GA17052@lst.de>
+References: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com> <1575681159-30356-2-git-send-email-linuxram@us.ibm.com> <1575681159-30356-3-git-send-email-linuxram@us.ibm.com> <157602860458.3810.8599908751067047456@sif> <be36117d-204e-bf59-287a-371103186e16@ozlabs.ru> <157608763756.3810.12346253559039287143@sif>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210114027.14910-1-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <157608763756.3810.12346253559039287143@sif>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 12:40:25PM +0100, Marek Szyprowski wrote:
-> Dear All,
+On Wed, Dec 11, 2019 at 12:07:17PM -0600, Michael Roth wrote:
+> > io_tlb_start/io_tlb_end are only guaranteed to stay within 4GB and our
+> > default DMA window is 1GB (KVM) or 2GB (PowerVM), ok, we can define
+> > ARCH_LOW_ADDRESS_LIMIT as 1GB.
 > 
-> This patchset is a resurrection of the patch posted about 3 years ago:
-> https://patchwork.kernel.org/patch/9475909/
-> 
-> That time it was not possible to merge it, because a few minor pieces
-> were still missing in mainline kernel. This has been finally resolved
-> and there should be no blockers for adding the higher CPU frequencies
-> in Exynos5422/5800 SoCs:
-> 
-> 1. support for coupled regulators (and all its dependencies) landed
->    in the regulator framework and patch #1 adds needed coupling for
->    the Exynos5422/5800 based boards;
-> 
-> 2. support for the Exynos ASV has been merged to v5.4
-> 
-> Patches has been rebased onto the v5.5-rc1 kernel release. They were
-> tested on the following boards: Odroid XU3, XU3-lite, XU4, HC1 and
-> Chromebook Pi.
-> 
-> Best regards
-> Marek Szyprowski
-> Samsung R&D Institute Poland
-> 
+> True, and limiting allocations to under 1GB might be brittle (also saw a
+> patching floating around that increased IO_TLB_DEFAULT_SIZE size to 1GB,
+> which obviously wouldn't work out with this approach, but not sure if
+> that's still needed or not: "powerpc/svm: Increase SWIOTLB buffer size")
 
-Thanks, applied both.
+FYI, there is a patch out there that allocates the powerpc swiotlb
+from the boottom of the memblock area instead of the top to fix a 85xx
+regression.
 
-Best regards,
-Krzysztof
+Also the AMD folks have been asking about non-GFP_DMA32 swiotlb pools
+as they have the same bounce buffer issue with SEV.  I think it is
+entirely doable to have multiple swiotlb pool, I just need a volunteer
+to implement that.
 
+> 
+> However that's only an issue if we insist on using an identity mapping
+> in the IOMMU, which would be nice because non-IOMMU virtio would
+> magically work, but since that's not a goal of this series I think we do
+> have the option of mapping io_tlb_start at DMA address 0 (or
+> thereabouts).
+> 
+> We'd probably need to modify __phys_to_dma to treat archdata.dma_offset
+> as a negative offset in this case, but it seems like it would work about
+> the same as with DDW offset.
+
+Or switch to the generic version of __phys_to_dma that has a negative
+offset.  We'd just need to look into a signed value for dma_pfn_offset
+to allow for the existing platforms that need the current positive
+offset.
