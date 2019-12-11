@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035E7C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E02C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CE322B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A3A24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077708;
-	bh=lUeKdsbS/fpjRHY+5vnLtxwUqjo+08ew+DKoQTd68/4=;
+	s=default; t=1576077713;
+	bh=AuO2UOvlPaxYHtlinuhycueMnHBJl4u9wwv8x9a8bHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WPXNkNmC1xCiSuxBlKYuNU3gtilEjXQ07KcAVVZUMe3vQEEGXyJq1lHQA05YLhS7S
-	 Ci+u8s/WqXL1kTCSPQpEn7I/wYR1kpqDr1drAZBlJMEG3mDhDNx3HCwxTWMk01TUMw
-	 y3Qv+ZGtjwyaR8/Jg3htZBLDkWzRdcIpFc1znyvo=
+	b=ZT1/yAj1vTOOBi6rS2WI/hMWSUQ84pf40qRs0g6PaXCRHJBMgUZqe28KWDIS/lhgS
+	 uWJrKW/3NoISfnK1rtSz8kEhwNDP3nIYsQwEFb5oUKJm2uvvYX1E4ga1FAWAkGMtdB
+	 7h9Ym+2m9Lqds0lPcGFHJdwfY8ikZWjetyJdn+cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732505AbfLKPVr (ORCPT
+        id S1732534AbfLKPVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732036AbfLKPVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:43 -0500
+        id S1732519AbfLKPVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8320D22527;
-        Wed, 11 Dec 2019 15:21:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C12B24654;
+        Wed, 11 Dec 2019 15:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077703;
-        bh=lUeKdsbS/fpjRHY+5vnLtxwUqjo+08ew+DKoQTd68/4=;
+        s=default; t=1576077710;
+        bh=AuO2UOvlPaxYHtlinuhycueMnHBJl4u9wwv8x9a8bHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOLy0E1Q9ecBZID+jgkhVsZ3SnKp8g6pJ27frN28UsRsLLhnGj84pcxN1o/xQBfIn
-         aoOIQPz7VfeCHldaPirfccDGpZiwydKW+EEx0Vxp5mfk9d1GVIE0oVtARcp3l5H8WA
-         rR7QgAfVfB7VG7wl3OJspqir2vIMz0MZy685Prjw=
+        b=qhIKingFlRlSzYs2v3iEMMWqMnwV5y60rvQ1RjVI7YTGgdR4/nnCxlQtpGOO5LjEb
+         O4tXXRlBqVCBiThhg0y1+PN15wtmkmxfNFPuHt/RHwEBqVSxTJzSIU33+jA6ufKPez
+         dCMcWpVpNjc3gKLddmOfotrZ8/rDOCrVuPKRBKGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/243] dma-mapping: fix return type of dma_set_max_seg_size()
-Date:   Wed, 11 Dec 2019 16:04:33 +0100
-Message-Id: <20191211150346.624706141@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 140/243] arm64: dts: meson-gxbb-nanopi-k2: fix GPIO lines names
+Date:   Wed, 11 Dec 2019 16:05:02 +0100
+Message-Id: <20191211150348.611213827@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,36 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit c9d76d0655c06b8c1f944e46c4fd9e9cf4b331c0 ]
+[ Upstream commit f0783f5edb52af14ecaae6c5ce4f38e0a358f5d8 ]
 
-The function dma_set_max_seg_size() can return either 0 on success or
--EIO on error. Change its return type from unsigned int to int to
-capture this.
+The gpio line names were set in the pinctrl node instead of the gpio node,
+at the time it was merged, it worked, but was obviously wrong.
+This patch moves the properties to the gpio nodes.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 12ada0513d7a ("ARM64: dts: meson-gxbb-nanopi-k2: Add GPIO lines names")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/dma-mapping.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 1db6a6b46d0d3..669cde2fa8723 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -674,8 +674,7 @@ static inline unsigned int dma_get_max_seg_size(struct device *dev)
- 	return SZ_64K;
- }
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+index cbe99bd4e06d2..8cd50b75171de 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+@@ -191,7 +191,7 @@
+ 	pinctrl-names = "default";
+ };
  
--static inline unsigned int dma_set_max_seg_size(struct device *dev,
--						unsigned int size)
-+static inline int dma_set_max_seg_size(struct device *dev, unsigned int size)
- {
- 	if (dev->dma_parms) {
- 		dev->dma_parms->max_segment_size = size;
+-&pinctrl_aobus {
++&gpio_ao {
+ 	gpio-line-names = "UART TX", "UART RX", "Power Control", "Power Key In",
+ 			  "VCCK En", "CON1 Header Pin31",
+ 			  "I2S Header Pin6", "IR In", "I2S Header Pin7",
+@@ -201,7 +201,7 @@
+ 			  "";
+ };
+ 
+-&pinctrl_periphs {
++&gpio {
+ 	gpio-line-names = /* Bank GPIOZ */
+ 			  "Eth MDIO", "Eth MDC", "Eth RGMII RX Clk",
+ 			  "Eth RX DV", "Eth RX D0", "Eth RX D1", "Eth RX D2",
 -- 
 2.20.1
 
