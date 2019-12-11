@@ -2,201 +2,120 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EFCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB05C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B2B2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400402073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080327;
-	bh=6E00oAINu4WSQ2OxBCVSoVj7KPtNBMXJcbpbuz32U0k=;
+	s=default; t=1576080331;
+	bh=AYCKDEj7tCppYmTX/i7HqzmL1YG16MndjEzUSKcYsA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oRoJ1BhKdfnuwvsf8EzEk8FATariqHZDkKgbiLVxjQ4KADA2l0VUyx3BssdFX1O6s
-	 4M+Juhpv+/WCyW23qKeGQ0IKs1JbNdkZhCPS5IeXLa5WouU1YbXTC5/NSS+0LZY/Au
-	 gQaBGo+2yvXYO5yUZ5tKaoC8wCnoNXHYcomNHhBo=
+	b=EeM0Whjm/QR/hDSQie4vvNhEhb8m5tdrpu0wlS2E3kdYmZNZyj9uWJLYBNH1KvTQV
+	 xrgeymhYPijHaXxkGo0FbhqP1rccv5t6o7pp0l81ky8g7c+q0TfCJGwTjfCGjbnuFg
+	 p+ZhTJHtThyOAULYuJbRR+i1A74wQE9kiflCVQjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfLKQF0 (ORCPT
+        id S2388891AbfLKQFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35224 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbfLKPMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:51 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730855AbfLKPMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 928702465B;
-        Wed, 11 Dec 2019 15:12:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B66124683;
+        Wed, 11 Dec 2019 15:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077171;
-        bh=6E00oAINu4WSQ2OxBCVSoVj7KPtNBMXJcbpbuz32U0k=;
+        s=default; t=1576077168;
+        bh=AYCKDEj7tCppYmTX/i7HqzmL1YG16MndjEzUSKcYsA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rPTVhdIvg9m/dXJEjlWA5RBhEFdFcJ41zXcT2lnd9pw/yIebuIB/hwbADYkma5dBM
-         zUBzk8Qvw/rCxztElHyVvRyQuDhoNIAa4ie1NO4VtcyTZvr2LLoimrVsfdrZUct6q2
-         og4hr6WdA2tuQsXPAgOONF+GxSFi6Lk0OqyVhqdA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 056/134] fs/quota: handle overflows of sysctl fs.quota.* and report as unsigned long
-Date:   Wed, 11 Dec 2019 10:10:32 -0500
-Message-Id: <20191211151150.19073-56-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=pzMfoyfB612bzquUkTbTtH0MMYZX1WdSzfb6wyROUbdaVjmTKO1sDWLLm7pd1Pzph
+         7HVI4NI/Jf5nzTMY4Jn4/YE/ICAvkfDzRlLq9aO+AzGjyejcBz1KGwDad5lhGWYETa
+         1yutuBHx8ons3mSM38w4L4H6fUw2nkE+SbRhemCs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 041/105] afs: Fix race in commit bulk status fetch
+Date:   Wed, 11 Dec 2019 16:05:30 +0100
+Message-Id: <20191211150237.770839148@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 6fcbcec9cfc7b3c6a2c1f1a23ebacedff7073e0a ]
+[ Upstream commit a28f239e296767ebf4ec4ae8a9ecb57d0d444b3f ]
 
-Quota statistics counted as 64-bit per-cpu counter. Reading sums per-cpu
-fractions as signed 64-bit int, filters negative values and then reports
-lower half as signed 32-bit int.
+When a lookup is done, the afs filesystem will perform a bulk status-fetch
+operation on the requested vnode (file) plus the next 49 other vnodes from
+the directory list (in AFS, directory contents are downloaded as blobs and
+parsed locally).  When the results are received, it will speculatively
+populate the inode cache from the extra data.
 
-Result may looks like:
+However, if the lookup races with another lookup on the same directory, but
+for a different file - one that's in the 49 extra fetches, then if the bulk
+status-fetch operation finishes first, it will try and update the inode
+from the other lookup.
 
-fs.quota.allocated_dquots = 22327
-fs.quota.cache_hits = -489852115
-fs.quota.drops = -487288718
-fs.quota.free_dquots = 22083
-fs.quota.lookups = -486883485
-fs.quota.reads = 22327
-fs.quota.syncs = 335064
-fs.quota.writes = 3088689
+If this other inode is still in the throes of being created, however, this
+will cause an assertion failure in afs_apply_status():
 
-Values bigger than 2^31-1 reported as negative.
+	BUG_ON(test_bit(AFS_VNODE_UNSET, &vnode->flags));
 
-All counters except "allocated_dquots" and "free_dquots" are monotonic,
-thus they should be reported as is without filtering negative values.
+on or about fs/afs/inode.c:175 because it expects data to be there already
+that it can compare to.
 
-Kernel doesn't have generic helper for 64-bit sysctl yet,
-let's use at least unsigned long.
+Fix this by skipping the update if the inode is being created as the
+creator will presumably set up the inode with the same information.
 
-Link: https://lore.kernel.org/r/157337934693.2078.9842146413181153727.stgit@buzz
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 39db9815da48 ("afs: Fix application of the results of a inline bulk status fetch")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/quota/dquot.c      | 29 +++++++++++++++++------------
- include/linux/quota.h |  2 +-
- 2 files changed, 18 insertions(+), 13 deletions(-)
+ fs/afs/dir.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-index 6e826b454082c..fa6ec4f96791d 100644
---- a/fs/quota/dquot.c
-+++ b/fs/quota/dquot.c
-@@ -2860,68 +2860,73 @@ EXPORT_SYMBOL(dquot_quotactl_sysfile_ops);
- static int do_proc_dqstats(struct ctl_table *table, int write,
- 		     void __user *buffer, size_t *lenp, loff_t *ppos)
- {
--	unsigned int type = (int *)table->data - dqstats.stat;
-+	unsigned int type = (unsigned long *)table->data - dqstats.stat;
-+	s64 value = percpu_counter_sum(&dqstats.counter[type]);
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 139b4e3cc9464..f4fdf3eaa5709 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -803,7 +803,12 @@ success:
+ 			continue;
+ 
+ 		if (cookie->inodes[i]) {
+-			afs_vnode_commit_status(&fc, AFS_FS_I(cookie->inodes[i]),
++			struct afs_vnode *iv = AFS_FS_I(cookie->inodes[i]);
 +
-+	/* Filter negative values for non-monotonic counters */
-+	if (value < 0 && (type == DQST_ALLOC_DQUOTS ||
-+			  type == DQST_FREE_DQUOTS))
-+		value = 0;
- 
- 	/* Update global table */
--	dqstats.stat[type] =
--			percpu_counter_sum_positive(&dqstats.counter[type]);
--	return proc_dointvec(table, write, buffer, lenp, ppos);
-+	dqstats.stat[type] = value;
-+	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
- }
- 
- static struct ctl_table fs_dqstats_table[] = {
- 	{
- 		.procname	= "lookups",
- 		.data		= &dqstats.stat[DQST_LOOKUPS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "drops",
- 		.data		= &dqstats.stat[DQST_DROPS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "reads",
- 		.data		= &dqstats.stat[DQST_READS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "writes",
- 		.data		= &dqstats.stat[DQST_WRITES],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "cache_hits",
- 		.data		= &dqstats.stat[DQST_CACHE_HITS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "allocated_dquots",
- 		.data		= &dqstats.stat[DQST_ALLOC_DQUOTS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "free_dquots",
- 		.data		= &dqstats.stat[DQST_FREE_DQUOTS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
- 	{
- 		.procname	= "syncs",
- 		.data		= &dqstats.stat[DQST_SYNCS],
--		.maxlen		= sizeof(int),
-+		.maxlen		= sizeof(unsigned long),
- 		.mode		= 0444,
- 		.proc_handler	= do_proc_dqstats,
- 	},
-diff --git a/include/linux/quota.h b/include/linux/quota.h
-index f32dd270b8e3f..27aab84fcbaac 100644
---- a/include/linux/quota.h
-+++ b/include/linux/quota.h
-@@ -263,7 +263,7 @@ enum {
- };
- 
- struct dqstats {
--	int stat[_DQST_DQSTAT_LAST];
-+	unsigned long stat[_DQST_DQSTAT_LAST];
- 	struct percpu_counter counter[_DQST_DQSTAT_LAST];
- };
- 
++			if (test_bit(AFS_VNODE_UNSET, &iv->flags))
++				continue;
++
++			afs_vnode_commit_status(&fc, iv,
+ 						scb->cb_break, NULL, scb);
+ 			continue;
+ 		}
 -- 
 2.20.1
+
+
 
