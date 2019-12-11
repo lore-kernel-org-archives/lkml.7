@@ -2,119 +2,102 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3E120836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3284320836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079653;
+	bh=YENSJB8KW4L7MlKMsQeYRD5sdXJJ44x2fE4JG3/ST58=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eJOx8ZsEyQvfwBDKDmv8W1fMSTejbayzl4F+ZPwEMiXoaXn8rsjcNIuZ8K75YYaV3
+	 Te7FrAM69t1yw31KxZ3kE/Iqqqqiasp0ZUXHQOrPoEOx1A28076kLc5VoNVrlE8avv
+	 jIizhJpUcTz26XLIrNSUHJ52J/3TxIE0ZkQv9C+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732936AbfLKPyG (ORCPT
+        id S1733103AbfLKPyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:54:06 -0500
-Received: from mail.monom.org ([188.138.9.77]:55848 "EHLO mail.monom.org"
+        Wed, 11 Dec 2019 10:54:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLKPyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:54:05 -0500
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id EB052500796;
-        Wed, 11 Dec 2019 16:54:02 +0100 (CET)
-Received: from [192.168.154.174] (b9168f78.cgn.dg-w.de [185.22.143.120])
-        by mail.monom.org (Postfix) with ESMTPSA id 76B80500243;
-        Wed, 11 Dec 2019 16:54:02 +0100 (CET)
-Subject: Re: Patch "mm, vmstat: make quiet_vmstat lighter" has been added to
- the 4.4-stable tree
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        "zhangyi (F)" <yi.zhang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        cl@linux.com, mgalbraith@suse.de, mhocko@suse.com,
-        torvalds@linux-foundation.org, umgwanakikbuti@gmail.com,
-        stable-commits@vger.kernel.org,
-        "Wangkefeng (Maro)" <wangkefeng.wang@huawei.com>,
-        Xie XiuQi <xiexiuqi@huawei.com>
-References: <156442332854185@kroah.com>
- <e4bd396a-1a10-1387-aa3f-4d61d31ab7b6@huawei.com>
- <20191211144614.GA637714@kroah.com>
-From:   Daniel Wagner <wagi@monom.org>
-Message-ID: <40460b0c-7fb0-a19d-3684-cb020e226a3f@monom.org>
-Date:   Wed, 11 Dec 2019 16:54:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1732101AbfLKPSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04D332073D;
+        Wed, 11 Dec 2019 15:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077489;
+        bh=YENSJB8KW4L7MlKMsQeYRD5sdXJJ44x2fE4JG3/ST58=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eUTuK/oVUJjv4mbPaQngr7Vd1ciBkLO78dw4wX4iz3SC21CXdwv39ewGX5ciswgYL
+         l+kM/72BbIXrCw/1nLkbgaIGQKUhOcLP7iqntCwZdc4CxM3/LuWRUYI3ywikDFBlxW
+         MvqZlHJmPUu/8oktKu3oDWG8uVSiBaIXCxILKdsc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 057/243] ARM: dts: imx6: RDU2: fix eGalax touchscreen node
+Date:   Wed, 11 Dec 2019 16:03:39 +0100
+Message-Id: <20191211150342.953226712@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191211144614.GA637714@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Lucas Stach <l.stach@pengutronix.de>
 
-On 2019-12-11 15:46, Greg KH wrote:
-> On Wed, Dec 11, 2019 at 10:32:49PM +0800, zhangyi (F) wrote:
->> We find a performance degradation under lmbench af_unix[1] test case after
->> mergeing this patch on my x86 qemu 4.4 machine. The test result is basically
->> stable for each teses.
->>
->> Host machine: CPU: Intel(R) Xeon(R) CPU E5-2690 v3
->>                CPU(s): 48
->>                MEM: 193047 MB
->>
->> Guest machine:  CPU: QEMU Virtual CPU version 2.5+
->>                  CPU(s): 8
->>                  MEM: 26065 MB
->>
->>    Before this patch:
->>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
->>    AF_UNIX sock stream latency: 133.7073 microseconds
->>
->>    After this patch:
->>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
->>    AF_UNIX sock stream latency: 156.4722 microseconds
->>
->> If we set task to a constant cpu, the degradation does not appear.
->>
->>    Before this patch:
->>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
->>    AF_UNIX sock stream latency: 17.9296 microseconds
->>
->>    After this patch:
->>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
->>    AF_UNIX sock stream latency: 17.7500 microseconds
->>
->> We also test it on the aarch64 hi1215 machine with 8 cpu cores.
->>
->>    Before this patch:
->>    [root@localhost ~]# ./lat_unix -P 1
->>    AF_UNIX sock stream latency: 30.7 microseconds
->>
->>    After this patch:
->>    [root@localhost ~]# ./lat_unix -P 1
->>    AF_UNIX sock stream latency: 37.5 microseconds
->>
->> Accessories included my reproduce config for x86 qemu. Any thoughts?
-> 
-> This fixes a bug, as reported by Daniel Wagner.  So it's probably better
-> to have a stable system instead of a broken one, right?  :)
-> 
-> Daniel can provide more information if needed.
+[ Upstream commit 749a5068f2e2453a38777b1d5fc322d503cabf1d ]
 
-IIRC, this patch got necessary because  bdf3c006b9a2 ("vmstat: make 
-vmstat_updater deferrable again and shut down on idle") was added to 
-stable. Without it v4.4-rt is not working at all.
+Use the correct compatible for the new protocol used by the firmware
+on the touch controller, the GPIO wakeup isn't used in that case.
+Also eGalax touch needs axis swapping, just as with the RMI4 touch.
 
- > What about when you run your tests on a 4.9 or newer kernel that
- > already has this integrated?
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-That said, I was going through all changes in vmstat.c upstream and we 
-backported almost all changes to v4.4 at that point. So if this is a 
-really giving you a performance hit, I suspect you would see it upstream 
-as well.
+diff --git a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+index 7fff3717cf7c0..315d0e7615f33 100644
+--- a/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi
+@@ -609,13 +609,14 @@
+ 	};
+ 
+ 	touchscreen@2a {
+-		compatible = "eeti,egalax_ts";
++		compatible = "eeti,exc3000";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_ts>;
+ 		reg = <0x2a>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+-		wakeup-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		touchscreen-inverted-x;
++		touchscreen-swapped-x-y;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.20.1
 
-Thanks,
-Daniel
+
+
