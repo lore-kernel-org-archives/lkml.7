@@ -2,90 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F3BC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10056C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEB7214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB64E214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YiKbE+m9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbfLKKNG (ORCPT
+        id S1728820AbfLKKNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:13:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:52332 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbfLKKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:13:06 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AEAF1FB;
-        Wed, 11 Dec 2019 02:13:05 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 521A83F6CF;
-        Wed, 11 Dec 2019 02:13:04 -0800 (PST)
-Date:   Wed, 11 Dec 2019 10:13:02 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 13/15] cpufreq: scmi: Match scmi device by both name and
- protocol id
-Message-ID: <20191211101302.GD20962@bogus>
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
- <20191210145345.11616-14-sudeep.holla@arm.com>
- <20191211023909.7iun7kdk6pjkync6@vireshk-i7>
+        Wed, 11 Dec 2019 05:13:44 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49892 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfLKKNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:13:43 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBAClIp046366;
+        Wed, 11 Dec 2019 04:12:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576059167;
+        bh=8BGngI7zTQTQPw9XUjrusxMSY5BvpVVhXIk8XhaPkjg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=YiKbE+m9ONDUBibMhEJdcGxQyJbj1sRfl1YT6JRXtuvy//mNi2fF5xWv/r4d9qpMp
+         +FNI9copTvKFG2tPdEynVITozZ9Xi7XcO4PuWSi+kkJAkOrx7dbrjR4UgwL3qFRcvF
+         9hEJ22o6XS44u9rvUxJs6MXpXolbkGIf1WK5AZBM=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBACl57080780
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 04:12:47 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 04:12:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 04:12:46 -0600
+Received: from [10.24.69.35] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBAChGZ119576;
+        Wed, 11 Dec 2019 04:12:43 -0600
+Subject: Re: [PATCH] ARM: davinci: select CONFIG_RESET_CONTROLLER
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     <stable@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Lechner <david@lechnology.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191210195202.622734-1-arnd@arndb.de>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <ba94531d-1f16-b985-5638-c226bab28d5b@ti.com>
+Date:   Wed, 11 Dec 2019 15:42:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211023909.7iun7kdk6pjkync6@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191210195202.622734-1-arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:09:09AM +0530, Viresh Kumar wrote:
-> On 10-12-19, 14:53, Sudeep Holla wrote:
-> > The scmi bus now has support to match the driver with devices not only
-> > based on their protocol id but also based on their device name if one is
-> > available. This was added to cater the need to support multiple devices
-> > and drivers for the same protocol.
-> >
-> > Let us add the name "cpufreq" to scmi_device_id table in the driver so
-> > that in matches only with device with the same name and protocol id
-> > SCMI_PROTOCOL_PERF. This will help to add "devfreq" device/driver.
-> >
-> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> > Cc: linux-pm@vger.kernel.org
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/cpufreq/scmi-cpufreq.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-> > index e6182c89df79..61623e2ff149 100644
-> > --- a/drivers/cpufreq/scmi-cpufreq.c
-> > +++ b/drivers/cpufreq/scmi-cpufreq.c
-> > @@ -261,7 +261,7 @@ static void scmi_cpufreq_remove(struct scmi_device *sdev)
-> >  }
-> >
-> >  static const struct scmi_device_id scmi_id_table[] = {
-> > -	{ SCMI_PROTOCOL_PERF },
-> > +	{ SCMI_PROTOCOL_PERF, "cpufreq" },
-> >  	{ },
-> >  };
-> >  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
->
-> Applied. Thanks.
+Hi Arnd,
 
-This will break the build without patch 1/15, so preferably must go as
-part of the series. Sorry for not missing to specify that detail.
+On 11/12/19 1:21 AM, Arnd Bergmann wrote:
+> Selecting RESET_CONTROLLER is actually required, otherwise we
+> can get a link failure in the clock driver:
+> 
+> drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks':
+> psc.c:(.text+0x9a0): undefined reference to `devm_reset_controller_register'
+> drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
+> psc-da850.c:(.text+0x24): undefined reference to `reset_controller_add_lookup'
+> 
+> Fixes: f962396ce292 ("ARM: davinci: support multiplatform build for ARM v5")
+> Cc: <stable@vger.kernel.org> # v5.4
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
---
-Regards,
-Sudeep
+Assuming you are going to apply directly to ARM-SoC,
+
+Acked-by: Sekhar Nori <nsekhar@ti.com>
+
+Thanks,
+Sekhar
+
+> ---
+>  arch/arm/mach-davinci/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+> index dd427bd2768c..02b180ad7245 100644
+> --- a/arch/arm/mach-davinci/Kconfig
+> +++ b/arch/arm/mach-davinci/Kconfig
+> @@ -9,6 +9,7 @@ menuconfig ARCH_DAVINCI
+>  	select PM_GENERIC_DOMAINS if PM
+>  	select PM_GENERIC_DOMAINS_OF if PM && OF
+>  	select REGMAP_MMIO
+> +	select RESET_CONTROLLER
+>  	select HAVE_IDE
+>  	select PINCTRL_SINGLE
+>  
+> -- 
+> 2.20.0
+> 
+
