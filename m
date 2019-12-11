@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E632C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35183C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16C6D2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3838222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077843;
-	bh=03Nh+NVS2P8g7+6KLFx/BlAGRm0adVFqyvzFBF/ZCaM=;
+	s=default; t=1576077846;
+	bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8Kj0V4dif3PHsOdUAfO0KB7x3Htl9QQU6YXW2xCPdr5LZm0Ylq7gBozQkgYrOKmN
-	 ViE9XnMrle87HyJuIx/g44ZpMJL2BBzTAfjAcDnB1C+ksVpGsN2AkEKbyC9SmrE3Fo
-	 jfq8T7vOjWZ895NgkA5cdJG370UFNuGuPXPOdZ+Y=
+	b=LOTJFbft2OGXLDE1stVQbNCMt4wtbpcx5JMapZNfovdIOKOCpeSL7Vl59ZjILoW95
+	 goEzAoQqnN69ZeETOvukeBt/3otTq1XwYi42blETGMGEQeYEvTOHHD3kk1wd6wan8G
+	 zgauf+lnSdaCO4j6aNMF1OWxLNmqOHwVOjKEiq1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732419AbfLKPYC (ORCPT
+        id S1732790AbfLKPYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55136 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:24:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732420AbfLKPX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:56 -0500
+        id S1732777AbfLKPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D73A42077B;
-        Wed, 11 Dec 2019 15:23:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6561622B48;
+        Wed, 11 Dec 2019 15:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077836;
-        bh=03Nh+NVS2P8g7+6KLFx/BlAGRm0adVFqyvzFBF/ZCaM=;
+        s=default; t=1576077838;
+        bh=wPJ8Eff7+YJjxgaQlzD1lfkJRng/4VLIGf6uMqVMwxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnoiHWbIuHOwfO2HdaER92CO44znXNosQZdYuqWg2UWwnc3W1W4W+8dAz/iCAsP6Y
-         JdUY/btaN7URUeu9ybEDOvJ/o3e1qt0rw50Z2QyRg0ar2/d6VOcqZcOOfiyLzB8siY
-         VBWPISwzMcexe05x1EY1mP5vMrvJVgmo4UZipqXI=
+        b=IZwvCCVM+GVfiaEVGME276GaOS9XtprO+G3EVzKNVCfOM4e5Uibm1iymz7LaNGCln
+         zL2uwtjQe0NKnN7kGe3jYbEQMmPAxPrqFnx7FFDxytBN4RXUzItpD54+o1kD0Lf2jK
+         eekM3MtGZLW73N5KrL2KeVRnTdu4rCt6KONllMVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean-Louis Dupond <jean-louis@dupond.be>,
-        Eric Dumazet <edumazet@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
+        Pavel Machek <pavel@ucw.cz>, Olof Johansson <olof@lixom.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 152/243] tcp: make tcp_space() aware of socket backlog
-Date:   Wed, 11 Dec 2019 16:05:14 +0100
-Message-Id: <20191211150349.433232970@linuxfoundation.org>
+Subject: [PATCH 4.19 153/243] ARM: dts: mmp2: fix the gpio interrupt cell number
+Date:   Wed, 11 Dec 2019 16:05:15 +0100
+Message-Id: <20191211150349.499772685@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -63,48 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
 
-[ Upstream commit 85bdf7db5b53cdcc7a901db12bcb3d0063e3866d ]
+[ Upstream commit 400583983f8a8e95ec02c9c9e2b50188753a87fb ]
 
-Jean-Louis Dupond reported poor iscsi TCP receive performance
-that we tracked to backlog drops.
+gpio-pxa uses two cell to encode the interrupt source: the pin number
+and the trigger type. Adjust the device node accordingly.
 
-Apparently we fail to send window updates reflecting the
-fact that we are under stress.
-
-Note that we might lack a proper window increase when
-backlog is fully processed, since __release_sock() clears
-sk->sk_backlog.len _after_ all skbs have been processed.
-
-This should not matter in practice. If we had a significant
-load through socket backlog, we are in a dangerous
-situation.
-
-Reported-by: Jean-Louis Dupond <jean-louis@dupond.be>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Tested-by: Jean-Louis Dupond<jean-louis@dupond.be>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/tcp.h | 2 +-
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index abcf53a6db045..3f4223a550d92 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1353,7 +1353,7 @@ static inline int tcp_win_from_space(const struct sock *sk, int space)
- /* Note: caller must be prepared to deal with negative returns */
- static inline int tcp_space(const struct sock *sk)
- {
--	return tcp_win_from_space(sk, sk->sk_rcvbuf -
-+	return tcp_win_from_space(sk, sk->sk_rcvbuf - sk->sk_backlog.len -
- 				  atomic_read(&sk->sk_rmem_alloc));
- }
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 47e5b63339d18..e95deed6a7973 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -180,7 +180,7 @@
+ 				clocks = <&soc_clocks MMP2_CLK_GPIO>;
+ 				resets = <&soc_clocks MMP2_CLK_GPIO>;
+ 				interrupt-controller;
+-				#interrupt-cells = <1>;
++				#interrupt-cells = <2>;
+ 				ranges;
  
+ 				gcb0: gpio@d4019000 {
 -- 
 2.20.1
 
