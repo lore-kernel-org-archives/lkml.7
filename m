@@ -2,101 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A47C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905ABC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D0D2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079173;
-	bh=McM3dhr1jVpD0AJ5FtS8xQ2qMJkB4Xzr3/8KHIfFeDI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjqY6Sbu0BUrWhfceK0pjAOPNHspnEOcpJ9sEmoSICaPAx35hI4R2v3pxSxwQAMNp
-	 7CyMWcU1H6z+v1xx6yBb4MPuVAzo7D4kPGjJlz/jMCtAaNrZJw6BDvcYJm6oGPY6Ep
-	 ap3NqA4p+ifxz1t62yAvDf5TV7LrelIesTbpewIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 719E72073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfLKPqM (ORCPT
+        id S1733295AbfLKPql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:46:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60458 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:46:41 -0500
+Received: from mga03.intel.com ([134.134.136.65]:39228 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733203AbfLKP04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:56 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E832C2467A;
-        Wed, 11 Dec 2019 15:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078015;
-        bh=McM3dhr1jVpD0AJ5FtS8xQ2qMJkB4Xzr3/8KHIfFeDI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uZdIRt2kRx6HygAZf2zPz3Nn/POxZUV9Pqk0Iw9x4wEzFT2wbgN9Za+PcZZ75oE5q
-         hrxRhHFx35p9dCuJwhN8CHmKYtOXCY9SznwYoX9xURu5kBOcDLXdV+PyUsdAN3bviw
-         aE4G6E3HyqkR6Tjp5BTkK4i9/z21W+/90WkqxNL0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 10/79] scsi: lpfc: Fix SLI3 hba in loop mode not discovering devices
-Date:   Wed, 11 Dec 2019 10:25:34 -0500
-Message-Id: <20191211152643.23056-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        id S1732678AbfLKPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:46:39 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 07:46:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="414898225"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 11 Dec 2019 07:46:37 -0800
+Date:   Wed, 11 Dec 2019 07:46:37 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 3/6] KVM: Fix some comment typos and missing parentheses
+Message-ID: <20191211154637.GA5044@linux.intel.com>
+References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+ <1576045585-8536-4-git-send-email-linmiaohe@huawei.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576045585-8536-4-git-send-email-linmiaohe@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+On Wed, Dec 11, 2019 at 02:26:22PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> Fix some typos and add missing parentheses in the comments.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/hyperv.c     | 2 +-
+>  arch/x86/kvm/lapic.c      | 2 +-
+>  arch/x86/kvm/vmx/nested.c | 2 +-
+>  arch/x86/kvm/vmx/vmx.c    | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index c7d4640b7b1c..a48d5708f1f8 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1122,7 +1122,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
+>  			return 1;
+>  
+>  		/*
+> -		 * Clear apic_assist portion of f(struct hv_vp_assist_page
+> +		 * Clear apic_assist portion of struct hv_vp_assist_page
+>  		 * only, there can be valuable data in the rest which needs
+>  		 * to be preserved e.g. on migration.
+>  		 */
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 679692b55f6d..ea402e741bd5 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -969,7 +969,7 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
+>   * - For single-destination interrupts, handle it in posted mode
+>   * - Else if vector hashing is enabled and it is a lowest-priority
+>   *   interrupt, handle it in posted mode and use the following mechanism
+> - *   to find the destinaiton vCPU.
+> + *   to find the destination vCPU.
+>   *	1. For lowest-priority interrupts, store all the possible
+>   *	   destination vCPUs in an array.
+>   *	2. Use "guest vector % max number of destination vCPUs" to find
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 7b01ef1d87e6..63ab49de324d 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -3427,7 +3427,7 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
+>  
+>  /*
+>   * On a nested exit from L2 to L1, vmcs12.guest_cr0 might not be up-to-date
+> - * because L2 may have changed some cr0 bits directly (CRO_GUEST_HOST_MASK).
+> + * because L2 may have changed some cr0 bits directly (CR0_GUEST_HOST_MASK).
 
-[ Upstream commit feff8b3d84d3d9570f893b4d83e5eab6693d6a52 ]
+Holy cow this one is hard to see :-)
 
-When operating in private loop mode, PLOGI exchanges are racing and the
-driver tries to abort it's PLOGI. But the PLOGI abort ends up terminating
-the login with the other end causing the other end to abort its PLOGI as
-well. Discovery never fully completes.
-
-Fix by disabling the PLOGI abort when private loop and letting the state
-machine play out.
-
-Link: https://lore.kernel.org/r/20191018211832.7917-5-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/lpfc/lpfc_nportdisc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_nportdisc.c b/drivers/scsi/lpfc/lpfc_nportdisc.c
-index bd8dc6a2243c0..3dfed191252cf 100644
---- a/drivers/scsi/lpfc/lpfc_nportdisc.c
-+++ b/drivers/scsi/lpfc/lpfc_nportdisc.c
-@@ -483,8 +483,10 @@ lpfc_rcv_plogi(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
- 	 * single discovery thread, this will cause a huge delay in
- 	 * discovery. Also this will cause multiple state machines
- 	 * running in parallel for this node.
-+	 * This only applies to a fabric environment.
- 	 */
--	if (ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) {
-+	if ((ndlp->nlp_state == NLP_STE_PLOGI_ISSUE) &&
-+	    (vport->fc_flag & FC_FABRIC)) {
- 		/* software abort outstanding PLOGI */
- 		lpfc_els_abort(phba, ndlp);
- 	}
--- 
-2.20.1
-
+>   * This function returns the new value we should put in vmcs12.guest_cr0.
+>   * It's not enough to just return the vmcs02 GUEST_CR0. Rather,
+>   *  1. Bits that neither L0 nor L1 trapped, were set directly by L2 and are now
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bf24fbb2056c..1be3854f1090 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6720,7 +6720,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+>  	 * If PML is turned on, failure on enabling PML just results in failure
+>  	 * of creating the vcpu, therefore we can simplify PML logic (by
+>  	 * avoiding dealing with cases, such as enabling PML partially on vcpus
+> -	 * for the guest, etc.
+> +	 * for the guest), etc.
+>  	 */
+>  	if (enable_pml) {
+>  		vmx->pml_pg = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+> -- 
+> 2.19.1
+> 
