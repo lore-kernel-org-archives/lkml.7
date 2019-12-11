@@ -2,283 +2,188 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DB9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79329C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C9222B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45165208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QHZ9kX0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfLKNVT (ORCPT
+        id S1729530AbfLKNVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:21:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39672 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729132AbfLKNVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:21:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4E584ABF6;
-        Wed, 11 Dec 2019 13:21:14 +0000 (UTC)
-Subject: Re: [PATCH v3 1/4] drm: add pgprot callback to drm_gem_object_funcs
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
-        gurchetansingh@chromium.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191211121957.18637-1-kraxel@redhat.com>
- <20191211121957.18637-2-kraxel@redhat.com>
- <20191211123835.GZ624164@phenom.ffwll.local>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <226bad4b-09db-4c89-0611-d3c89e3628cd@suse.de>
-Date:   Wed, 11 Dec 2019 14:21:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 08:21:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27480 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729241AbfLKNVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:21:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576070492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Fx/pdQPsQcpjbET1DdPNYibdtHFsVp/bssCr0g+dk5w=;
+        b=QHZ9kX0t4P/OAZ7P21BQgJbGaIWMgkghnmScTvIR5N5MyHDD1XgvPFEGCxjn1b5sF/jzge
+        pRap9dxCe6m4fJJGSXWxcE5QYA/i0kSrY/kr/qn+qLXg5Q6MnKNbeMJubJ9xj659GbCKBv
+        zbfpUe4fQLlLy4drDsH+CXdOycZHuCE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-343-K-VgDL2YOb6pEnqau5oD8Q-1; Wed, 11 Dec 2019 08:21:29 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D643C1005516;
+        Wed, 11 Dec 2019 13:21:27 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E4BD643E4;
+        Wed, 11 Dec 2019 13:21:27 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 04E5F20AE5; Wed, 11 Dec 2019 08:21:27 -0500 (EST)
+Date:   Wed, 11 Dec 2019 08:21:26 -0500
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     "Schumaker, Anna" <Anna.Schumaker@netapp.com>
+Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Subject: Re: [PATCH v6 00/27] nfs: Mount API conversion
+Message-ID: <20191211132126.GX4276@coeurl.usersys.redhat.com>
+References: <20191210123115.1655-1-smayhew@redhat.com>
+ <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211123835.GZ624164@phenom.ffwll.local>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2"
+In-Reply-To: <498258bf630d4c2667920f21341a2a6e82a3788d.camel@netapp.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: K-VgDL2YOb6pEnqau5oD8Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2
-Content-Type: multipart/mixed; boundary="ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
- gurchetansingh@chromium.org,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@linux.ie>,
- open list <linux-kernel@vger.kernel.org>
-Message-ID: <226bad4b-09db-4c89-0611-d3c89e3628cd@suse.de>
-Subject: Re: [PATCH v3 1/4] drm: add pgprot callback to drm_gem_object_funcs
-References: <20191211121957.18637-1-kraxel@redhat.com>
- <20191211121957.18637-2-kraxel@redhat.com>
- <20191211123835.GZ624164@phenom.ffwll.local>
-In-Reply-To: <20191211123835.GZ624164@phenom.ffwll.local>
+On Tue, 10 Dec 2019, Schumaker, Anna wrote:
 
---ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi
-
-Am 11.12.19 um 13:38 schrieb Daniel Vetter:
-> On Wed, Dec 11, 2019 at 01:19:53PM +0100, Gerd Hoffmann wrote:
->> The callback allows drivers and helpers to tweak pgprot for mappings.
->> This is especially helpful when using shmem helpers.  It allows driver=
-s
->> to switch mappings from writecombine (default) to something else (cach=
-ed
->> for example) on a per-object base without having to supply their own
->> mmap() and vmap() functions.
->>
->> The patch also adds two implementations for the callback, for cached a=
-nd
->> writecombine mappings, and the drm_gem_pgprot() function to update
->> pgprot for a given object, using the new &drm_gem_object_funcs.pgprot
->> callback if available.
->>
->> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->> ---
->>  include/drm/drm_gem.h     | 15 +++++++++++++
->>  drivers/gpu/drm/drm_gem.c | 46 ++++++++++++++++++++++++++++++++++++++=
--
->>  2 files changed, 60 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
->> index 0b375069cd48..5beef7226e69 100644
->> --- a/include/drm/drm_gem.h
->> +++ b/include/drm/drm_gem.h
->> @@ -163,6 +163,17 @@ struct drm_gem_object_funcs {
->>  	 */
->>  	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);=
-
->> =20
->> +	/**
->> +	 * @pgprot:
->> +	 *
->> +	 * Tweak pgprot as needed, typically used to set cache bits.
->> +	 *
->> +	 * This callback is optional.
->> +	 *
->> +	 * If unset drm_gem_pgprot_wc() will be used.
->> +	 */
->> +	pgprot_t (*pgprot)(struct drm_gem_object *obj, pgprot_t prot);
+> Hi Scott,
 >=20
-> I kinda prefer v1, mostly because this is a huge can of worms, and solv=
-ing
-> this properly is going to be real hard (and will necessarily involve
-> dma-buf and dma-api and probably more). Charging ahead here just risks
-> that we dig ourselves into a corner. You're v1 is maybe not the most
-> clean, but just a few code bits here&there should be more flexible and
-> easier to hack on and experiment around with.
-> -Daniel
+> On Tue, 2019-12-10 at 07:30 -0500, Scott Mayhew wrote:
+> > Hi Anna, Trond,
+> >=20
+> > Here's a set of patches that converts NFS to use the mount API.  Note t=
+hat
+> > there are a lot of preliminary patches, some from David and some from A=
+l.
+> > The final patch (the one that does the actual conversion) from the Davi=
+d's
+> > initial posting has been split into 5 separate patches, and the entire =
+set
+> > has been rebased on top of v5.5-rc1.
+>=20
+> Thanks for the updated patches! Everything looks okay to me, but I've onl=
+y
+> tested with the legacy mount command. I'm curious if you've tested it usi=
+ng the
+> new system?
 
-I agree; at least patch v1 is known to be a sound approach. The others
-might fall on our feet at some point. Sorry, Gerd, if my proposals added
-lots of work for you.
+My testing was also with the legacy mount command.  I can work on
+testing with the new syscalls now.
 
-Best regards
-Thomas
+-Scott
 
 >=20
->> +
->>  	/**
->>  	 * @vm_ops:
->>  	 *
->> @@ -350,6 +361,10 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, =
-unsigned long obj_size,
->>  		     struct vm_area_struct *vma);
->>  int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma);
->> =20
->> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t p=
-rot);
->> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot)=
-;
->> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot);
->> +
->>  /**
->>   * drm_gem_object_get - acquire a GEM buffer object reference
->>   * @obj: GEM buffer object
->> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
->> index 56f42e0f2584..1c468fe8e342 100644
->> --- a/drivers/gpu/drm/drm_gem.c
->> +++ b/drivers/gpu/drm/drm_gem.c
->> @@ -1119,7 +1119,8 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj,=
- unsigned long obj_size,
->>  			return -EINVAL;
->> =20
->>  		vma->vm_flags |=3D VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;=
-
->> -		vma->vm_page_prot =3D pgprot_writecombine(vm_get_page_prot(vma->vm_=
-flags));
->> +		vma->vm_page_prot =3D vm_get_page_prot(vma->vm_flags);
->> +		vma->vm_page_prot =3D drm_gem_pgprot(obj, vma->vm_page_prot);
->>  		vma->vm_page_prot =3D pgprot_decrypted(vma->vm_page_prot);
->>  	}
->> =20
->> @@ -1210,6 +1211,49 @@ int drm_gem_mmap(struct file *filp, struct vm_a=
-rea_struct *vma)
->>  }
->>  EXPORT_SYMBOL(drm_gem_mmap);
->> =20
->> +/**
->> + * drm_gem_mmap - update pgprot for objects needing a cachable mappin=
-g.
->> + * @obj: the GEM object.
->> + * @prot: page attributes.
->> + *
->> + * This function can be used as &drm_gem_object_funcs.pgprot callback=
-=2E
->> + */
->> +pgprot_t drm_gem_pgprot_cached(struct drm_gem_object *obj, pgprot_t p=
-rot)
->> +{
->> +	return prot;
->> +}
->> +EXPORT_SYMBOL(drm_gem_pgprot_cached);
->> +
->> +/**
->> + * drm_gem_mmap - update pgprot for objects needing a wc mapping.
->> + * @obj: the GEM object.
->> + * @prot: page attributes.
->> + *
->> + * This function can be used as &drm_gem_object_funcs.pgprot callback=
-=2E
->> + */
->> +pgprot_t drm_gem_pgprot_wc(struct drm_gem_object *obj, pgprot_t prot)=
-
->> +{
->> +	return pgprot_writecombine(prot);
->> +}
->> +EXPORT_SYMBOL(drm_gem_pgprot_wc);
->> +
->> +/**
->> + * drm_gem_mmap - update pgprot for a given gem object.
->> + * @obj: the GEM object.
->> + * @prot: page attributes.
->> + *
->> + * This function updates pgprot according to the needs of the given
->> + * object.  If present &drm_gem_object_funcs.pgprot callback will be
->> + * used, otherwise drm_gem_pgprot_wc() is called.
->> + */
->> +pgprot_t drm_gem_pgprot(struct drm_gem_object *obj, pgprot_t prot)
->> +{
->> +	if (obj->funcs->pgprot)
->> +		return obj->funcs->pgprot(obj, prot);
->> +	return drm_gem_pgprot_wc(obj, prot);
->> +}
->> +EXPORT_SYMBOL(drm_gem_pgprot);
->> +
->>  void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
->>  			const struct drm_gem_object *obj)
->>  {
->> --=20
->> 2.18.1
->>
+> Thanks,
+> Anna
 >=20
+> >=20
+> > Changes since v5:
+> > - fixed possible derefence of error pointer in nfs4_validate_fspath()
+> >   reported by Dan Carpenter
+> > - rebased on top of v5.5-rc1
+> > Changes since v4:
+> > - further split the original "NFS: Add fs_context support" patch (new
+> >   patch is about 25% smaller than the v4 patch)
+> > - fixed NFSv4 referral mounts (broken in the original patch)
+> > - fixed leak of nfs_fattr when fs_context is freed
+> > Changes since v3:
+> > - changed license and copyright text in fs/nfs/fs_context.c
+> > Changes since v2:
+> > - fixed the conversion of the nconnect=3D option
+> > - added '#if IS_ENABLED(CONFIG_NFS_V4)' around nfs4_parse_monolithic()
+> >   to avoid unused-function warning when compiling with v4 disabled
+> > Chagnes since v1:
+> > - split up patch 23 into 4 separate patches
+> >=20
+> > -Scott
+> >=20
+> > Al Viro (15):
+> >   saner calling conventions for nfs_fs_mount_common()
+> >   nfs: stash server into struct nfs_mount_info
+> >   nfs: lift setting mount_info from nfs4_remote{,_referral}_mount
+> >   nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
+> >   nfs: don't bother setting/restoring export_path around
+> >     do_nfs_root_mount()
+> >   nfs4: fold nfs_do_root_mount/nfs_follow_remote_path
+> >   nfs: lift setting mount_info from nfs_xdev_mount()
+> >   nfs: stash nfs_subversion reference into nfs_mount_info
+> >   nfs: don't bother passing nfs_subversion to ->try_mount() and
+> >     nfs_fs_mount_common()
+> >   nfs: merge xdev and remote file_system_type
+> >   nfs: unexport nfs_fs_mount_common()
+> >   nfs: don't pass nfs_subversion to ->create_server()
+> >   nfs: get rid of mount_info ->fill_super()
+> >   nfs_clone_sb_security(): simplify the check for server bogosity
+> >   nfs: get rid of ->set_security()
+> >=20
+> > David Howells (8):
+> >   NFS: Move mount parameterisation bits into their own file
+> >   NFS: Constify mount argument match tables
+> >   NFS: Rename struct nfs_parsed_mount_data to struct nfs_fs_context
+> >   NFS: Split nfs_parse_mount_options()
+> >   NFS: Deindent nfs_fs_context_parse_option()
+> >   NFS: Add a small buffer in nfs_fs_context to avoid string dup
+> >   NFS: Do some tidying of the parsing code
+> >   NFS: Add fs_context support.
+> >=20
+> > Scott Mayhew (4):
+> >   NFS: rename nfs_fs_context pointer arg in a few functions
+> >   NFS: Convert mount option parsing to use functionality from
+> >     fs_parser.h
+> >   NFS: Additional refactoring for fs_context conversion
+> >   NFS: Attach supplementary error information to fs_context.
+> >=20
+> >  fs/nfs/Makefile         |    2 +-
+> >  fs/nfs/client.c         |   80 +-
+> >  fs/nfs/fs_context.c     | 1424 +++++++++++++++++++++++++
+> >  fs/nfs/fscache.c        |    2 +-
+> >  fs/nfs/getroot.c        |   73 +-
+> >  fs/nfs/internal.h       |  132 +--
+> >  fs/nfs/namespace.c      |  146 ++-
+> >  fs/nfs/nfs3_fs.h        |    2 +-
+> >  fs/nfs/nfs3client.c     |    6 +-
+> >  fs/nfs/nfs3proc.c       |    2 +-
+> >  fs/nfs/nfs4_fs.h        |    9 +-
+> >  fs/nfs/nfs4client.c     |   99 +-
+> >  fs/nfs/nfs4file.c       |    1 +
+> >  fs/nfs/nfs4namespace.c  |  292 +++---
+> >  fs/nfs/nfs4proc.c       |    2 +-
+> >  fs/nfs/nfs4super.c      |  257 ++---
+> >  fs/nfs/proc.c           |    2 +-
+> >  fs/nfs/super.c          | 2217 +++++----------------------------------
+> >  include/linux/nfs_xdr.h |    9 +-
+> >  19 files changed, 2287 insertions(+), 2470 deletions(-)
+> >  create mode 100644 fs/nfs/fs_context.c
+> >=20
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---ZpRogva5wQ0Ag0bvgxTv8YttlUxQqsu2m--
-
---8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3w7UUACgkQaA3BHVML
-eiMNAgf9EYgarwDWgI5cEixKKpWA5Vm47XNqgXIrxMCcqbzy4qAsymMEokX+o+4e
-IQQNzkQG5DT+j4MX/b9QnrNkZoerodmLjxksg3jPQHEWENEl/tScL7RktpMVf355
-LKBqtkwuPEEAWOzb2nbLkcMSvYYcvNNboVdMlum45YbVj4gcTlajAV/rqyFdlGW+
-urccISoEMka+7MDy5slnpCNT4jSUQc4Ofy+VxApeWd2o7An4p/Zb5SJ00oH5YiUo
-SS4n8CTOf25ghWPVE+uDnfH0FW1A0t6bV/hETfTed4NTTbUMBuQR4XEUp7faXwIW
-ii6pKDDwHF3+FSFOOODtss/+MfLy4A==
-=AHVo
------END PGP SIGNATURE-----
-
---8rsNep00E8ys0bAoSOGO4rfAQ3Hgi85R2--
