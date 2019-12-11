@@ -2,129 +2,240 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C0FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A15FCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E701120836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A67B20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VXnTjr2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfLKNlI (ORCPT
+        id S1729567AbfLKNl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:41:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:58606 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbfLKNlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:41:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 089E01FB;
-        Wed, 11 Dec 2019 05:41:07 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 142BA3F6CF;
-        Wed, 11 Dec 2019 05:41:02 -0800 (PST)
-Subject: Re: [PATCH] ARM: dma-api: fix max_pfn off-by-one error in
- __dma_supported()
-To:     Chen-Yu Tsai <wens@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191211104152.26496-1-wens@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <28dfaeab-73cd-041b-9894-776064d13245@arm.com>
-Date:   Wed, 11 Dec 2019 13:40:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 08:41:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46720 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729511AbfLKNlz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:41:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576071714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z2GJ4J3PhJOPcXu4B3ubBrIUuGFzFaoIzu/7K9ESRCM=;
+        b=VXnTjr2fXr3RbPCODbZxoNb/nF/MQcp603D0Rbx4TWeALJ5i38hOtiIO13t3w4APCFvFmV
+        SgBEMNeKEce4UpXUmYfS2tD+HD1Jw4tAiC4gYTM6E8p5MPF53pBxLPHL/ZEMN+OvRfvuYj
+        4VxuRILh9IYnFb8aRwOZh6Kc0Zd+tqE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-QtAj0rj5N5OaVotD0GmW8g-1; Wed, 11 Dec 2019 08:41:50 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37B658E5454;
+        Wed, 11 Dec 2019 13:41:49 +0000 (UTC)
+Received: from ptitpuce (unknown [10.36.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D4ECC60BF1;
+        Wed, 11 Dec 2019 13:41:42 +0000 (UTC)
+References: <20191129213505.18472-1-peterx@redhat.com>
+User-agent: mu4e 1.3.5; emacs 26.2
+From:   Christophe de Dinechin <dinechin@redhat.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 00/15] KVM: Dirty ring interface
+In-reply-to: <20191129213505.18472-1-peterx@redhat.com>
+Message-ID: <m1r21bgest.fsf@redhat.com>
+Date:   Wed, 11 Dec 2019 14:41:38 +0100
 MIME-Version: 1.0
-In-Reply-To: <20191211104152.26496-1-wens@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: QtAj0rj5N5OaVotD0GmW8g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 10:41 am, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> max_pfn, as set in arch/arm/mm/init.c:
-> 
->      static void __init find_limits(unsigned long *min,
-> 				   unsigned long *max_low,
-> 				   unsigned long *max_high)
->      {
-> 	    *max_low = PFN_DOWN(memblock_get_current_limit());
-> 	    *min = PFN_UP(memblock_start_of_DRAM());
-> 	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
->      }
-> 
-> with memblock_end_of_DRAM() pointing to the next byte after DRAM. As
-> such, max_pfn points to the PFN after the end of DRAM.
-> 
-> Thus when using max_pfn to check DMA masks, we should subtract one
-> when checking DMA ranges against it.
-> 
-> Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
-> __dma_supported()") fixed the same issue, but missed this spot.
-> 
-> This issue was found while working on the sun4i-csi v4l2 driver on the
-> Allwinner R40 SoC. On Allwinner SoCs, DRAM is offset at 0x40000000,
-> and we are starting to use of_dma_configure() with the "dma-ranges"
-> property in the device tree to have the DMA API handle the offset.
-> 
-> In this particular instance, dma-ranges was set to the same range as
-> the actual available (2 GiB) DRAM. The following error appeared when
-> the driver attempted to allocate a buffer:
-> 
->      sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
->      covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
->      sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
-> 
-> Fixing the off-by-one error makes things work.
-> 
-> Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
-> Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
-> Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->   arch/arm/mm/dma-mapping.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-> index e822af0d9219..f4daafdbac56 100644
-> --- a/arch/arm/mm/dma-mapping.c
-> +++ b/arch/arm/mm/dma-mapping.c
-> @@ -227,12 +227,12 @@ static int __dma_supported(struct device *dev, u64 mask, bool warn)
->   	 * Translate the device's DMA mask to a PFN limit.  This
->   	 * PFN number includes the page which we can DMA to.
->   	 */
-> -	if (dma_to_pfn(dev, mask) < max_dma_pfn) {
-> +	if (dma_to_pfn(dev, mask) < max_dma_pfn - 1) {
 
-I think this correction actually wants to happen a couple of lines up in 
-the definition:
+Peter Xu writes:
 
-	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
+> Branch is here: https://github.com/xzpeter/linux/tree/kvm-dirty-ring
+>
+> Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> This is a continued work from Lei Cao <lei.cao@stratus.com> and Paolo
+> on the KVM dirty ring interface.  To make it simple, I'll still start
+> with version 1 as RFC.
+>
+> The new dirty ring interface is another way to collect dirty pages for
+> the virtual machine, but it is different from the existing dirty
+> logging interface in a few ways, majorly:
+>
+>   - Data format: The dirty data was in a ring format rather than a
+>     bitmap format, so the size of data to sync for dirty logging does
+>     not depend on the size of guest memory any more, but speed of
+>     dirtying.  Also, the dirty ring is per-vcpu (currently plus
+>     another per-vm ring, so total ring number is N+1), while the dirty
+>     bitmap is per-vm.
 
-max_pfn is indeed an exclusive limit, but AFAICS arm_dma_pfn_limit is 
-inclusive, so none of these "+1"s and "-1"s can be entirely right for 
-both cases.
+I like Sean's suggestion to fetch rings when dirtying. That could reduce
+the number of dirty rings to examine.
 
-Robin.
+Also, as is, this means that the same gfn may be present in multiple
+rings, right?
 
->   		if (warn)
->   			dev_warn(dev, "Coherent DMA mask %#llx (pfn %#lx-%#lx) covers a smaller range of system memory than the DMA zone pfn 0x0-%#lx\n",
->   				 mask,
->   				 dma_to_pfn(dev, 0), dma_to_pfn(dev, mask) + 1,
-> -				 max_dma_pfn + 1);
-> +				 max_dma_pfn);
->   		return 0;
->   	}
->   
-> 
+>
+>   - Data copy: The sync of dirty pages does not need data copy any more,
+>     but instead the ring is shared between the userspace and kernel by
+>     page sharings (mmap() on either the vm fd or vcpu fd)
+>
+>   - Interface: Instead of using the old KVM_GET_DIRTY_LOG,
+>     KVM_CLEAR_DIRTY_LOG interfaces, the new ring uses a new interface
+>     called KVM_RESET_DIRTY_RINGS when we want to reset the collected
+>     dirty pages to protected mode again (works like
+>     KVM_CLEAR_DIRTY_LOG, but ring based)
+>
+> And more.
+>
+> I would appreciate if the reviewers can start with patch "KVM:
+> Implement ring-based dirty memory tracking", especially the document
+> update part for the big picture.  Then I'll avoid copying into most of
+> them into cover letter again.
+>
+> I marked this series as RFC because I'm at least uncertain on this
+> change of vcpu_enter_guest():
+>
+>         if (kvm_check_request(KVM_REQ_DIRTY_RING_FULL, vcpu)) {
+>                 vcpu->run->exit_reason =3D KVM_EXIT_DIRTY_RING_FULL;
+>                 /*
+>                         * If this is requested, it means that we've
+>                         * marked the dirty bit in the dirty ring BUT
+>                         * we've not written the date.  Do it now.
+
+not written the "data" ?
+
+>                         */
+>                 r =3D kvm_emulate_instruction(vcpu, 0);
+>                 r =3D r >=3D 0 ? 0 : r;
+>                 goto out;
+>         }
+>
+> I did a kvm_emulate_instruction() when dirty ring reaches softlimit
+> and want to exit to userspace, however I'm not really sure whether
+> there could have any side effect.  I'd appreciate any comment of
+> above, or anything else.
+>
+> Tests
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> I wanted to continue work on the QEMU part, but after I noticed that
+> the interface might still prone to change, I posted this series first.
+> However to make sure it's at least working, I've provided unit tests
+> together with the series.  The unit tests should be able to test the
+> series in at least three major paths:
+>
+>   (1) ./dirty_log_test -M dirty-ring
+>
+>       This tests async ring operations: this should be the major work
+>       mode for the dirty ring interface, say, when the kernel is
+>       queuing more data, the userspace is collecting too.  Ring can
+>       hardly reaches full when working like this, because in most
+>       cases the collection could be fast.
+>
+>   (2) ./dirty_log_test -M dirty-ring -c 1024
+>
+>       This set the ring size to be very small so that ring soft-full
+>       always triggers (soft-full is a soft limit of the ring state,
+>       when the dirty ring reaches the soft limit it'll do a userspace
+>       exit and let the userspace to collect the data).
+>
+>   (3) ./dirty_log_test -M dirty-ring-wait-queue
+>
+>       This sololy test the extreme case where ring is full.  When the
+>       ring is completely full, the thread (no matter vcpu or not) will
+>       be put onto a per-vm waitqueue, and KVM_RESET_DIRTY_RINGS will
+>       wake the threads up (assuming until which the ring will not be
+>       full any more).
+
+Am I correct assuming that guest memory can be dirtied by DMA operations?
+Should
+
+Not being that familiar with the current implementation of dirty page
+tracking, I wonder who marks the pages dirty in that case, and when?
+If the VM ring is used for I/O threads, isn't it possible that a large
+DMA could dirty a sufficiently large number of GFNs to overflow the
+associated ring? Does this case need a separate way to queue the
+dirtying I/O thread?
+
+>
+> Thanks,
+>
+> Cao, Lei (2):
+>   KVM: Add kvm/vcpu argument to mark_dirty_page_in_slot
+>   KVM: X86: Implement ring-based dirty memory tracking
+>
+> Paolo Bonzini (1):
+>   KVM: Move running VCPU from ARM to common code
+>
+> Peter Xu (12):
+>   KVM: Add build-time error check on kvm_run size
+>   KVM: Implement ring-based dirty memory tracking
+>   KVM: Make dirty ring exclusive to dirty bitmap log
+>   KVM: Introduce dirty ring wait queue
+>   KVM: selftests: Always clear dirty bitmap after iteration
+>   KVM: selftests: Sync uapi/linux/kvm.h to tools/
+>   KVM: selftests: Use a single binary for dirty/clear log test
+>   KVM: selftests: Introduce after_vcpu_run hook for dirty log test
+>   KVM: selftests: Add dirty ring buffer test
+>   KVM: selftests: Let dirty_log_test async for dirty ring test
+>   KVM: selftests: Add "-c" parameter to dirty log test
+>   KVM: selftests: Test dirty ring waitqueue
+>
+>  Documentation/virt/kvm/api.txt                | 116 +++++
+>  arch/arm/include/asm/kvm_host.h               |   2 -
+>  arch/arm64/include/asm/kvm_host.h             |   2 -
+>  arch/x86/include/asm/kvm_host.h               |   5 +
+>  arch/x86/include/uapi/asm/kvm.h               |   1 +
+>  arch/x86/kvm/Makefile                         |   3 +-
+>  arch/x86/kvm/mmu/mmu.c                        |   6 +
+>  arch/x86/kvm/vmx/vmx.c                        |   7 +
+>  arch/x86/kvm/x86.c                            |  12 +
+>  include/linux/kvm_dirty_ring.h                |  67 +++
+>  include/linux/kvm_host.h                      |  37 ++
+>  include/linux/kvm_types.h                     |   1 +
+>  include/uapi/linux/kvm.h                      |  36 ++
+>  tools/include/uapi/linux/kvm.h                |  47 ++
+>  tools/testing/selftests/kvm/Makefile          |   2 -
+>  .../selftests/kvm/clear_dirty_log_test.c      |   2 -
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 452 ++++++++++++++++--
+>  .../testing/selftests/kvm/include/kvm_util.h  |   6 +
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 103 ++++
+>  .../selftests/kvm/lib/kvm_util_internal.h     |   5 +
+>  virt/kvm/arm/arm.c                            |  29 --
+>  virt/kvm/arm/perf.c                           |   6 +-
+>  virt/kvm/arm/vgic/vgic-mmio.c                 |  15 +-
+>  virt/kvm/dirty_ring.c                         | 156 ++++++
+>  virt/kvm/kvm_main.c                           | 315 +++++++++++-
+>  25 files changed, 1329 insertions(+), 104 deletions(-)
+>  create mode 100644 include/linux/kvm_dirty_ring.h
+>  delete mode 100644 tools/testing/selftests/kvm/clear_dirty_log_test.c
+>  create mode 100644 virt/kvm/dirty_ring.c
+
+
+--
+Cheers,
+Christophe de Dinechin (IRC c3d)
+
