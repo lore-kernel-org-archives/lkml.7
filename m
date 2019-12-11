@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8A5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3ACC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F12214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC3EB20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080420;
-	bh=JIYkTjkZKzkk448lvE3EnKOSwdwBrCnXOQ87xWq4hrk=;
+	s=default; t=1576080427;
+	bh=JTsTVhsy3zqt1vTyRg8yc3o1dJloENyZSI0v+uOIwYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XVPjqd7ZpD33NK30+cXvLdhq3Qx/YDhjR9t2WNsr0pR5/pW1zcCVOqmxzZzeZIujO
-	 L0CVWQBrw6i/XTMnfpZedY5VbI0FbrnhbhswWyV2d2wigNuCDr+krByGfL+Z45p1h8
-	 xHZCFCA0RY9/vLEyJyk3sMclQln+P9LQvJIly4a4=
+	b=EducKMpT5l5WF4QB8TV1TWojE9odGZbk2/rGyu1fb0pWxygpqhJ+zWAABMn7+z7Lr
+	 DeF0Qoz9KqMPJyWdNpe5k7EjGmq0DajfOxpPam7qr1/wBQU2HbuMUP2PmZi6JwtcyJ
+	 WnbcItAvBp9V3qi+AiTe3nrND8Futw7dabwYvcbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbfLKQG7 (ORCPT
+        id S2388779AbfLKQHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34396 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:07:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730686AbfLKPMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:34 -0500
+        id S1731158AbfLKPMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D5E20663;
-        Wed, 11 Dec 2019 15:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D301222C4;
+        Wed, 11 Dec 2019 15:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077153;
-        bh=JIYkTjkZKzkk448lvE3EnKOSwdwBrCnXOQ87xWq4hrk=;
+        s=default; t=1576077151;
+        bh=JTsTVhsy3zqt1vTyRg8yc3o1dJloENyZSI0v+uOIwYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eRnF4hGls4DuCTFSEGNTX9C4kSrpbVmvnnei4JWR0BQ5tm0PNuG8h4cS/hP6hfkNg
-         dHGTWT/IOoorG/ojuGZzAV4Ov/XpHmFaD7bI8tgx9lVi6VfG83C6OBmxZPUuqhr+Te
-         45fpUfHlPkGPF2YZXEoZJSHJu8TRb3FVxhuszgnE=
+        b=YC9de2q1X4n4uZtwfb+egEwTr7gSXTfrP0FvriM7TaAYdCtORBAuQIdP0aTfhpwXF
+         RYMQl+/fbcXsQZhtpZvxPk0kazMOAx6CMzwSer1y6WdjdLGClDBDtGG23XapfgBCnr
+         PiJhkLz6LOfDEjntb9/E/y0ACm8CShNmrhUOfeTY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 040/134] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
-Date:   Wed, 11 Dec 2019 10:10:16 -0500
-Message-Id: <20191211151150.19073-40-sashal@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 038/134] selftests/powerpc: Skip tm-signal-sigreturn-nt if TM not available
+Date:   Wed, 11 Dec 2019 10:10:14 -0500
+Message-Id: <20191211151150.19073-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,75 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
+[ Upstream commit 505127068d9b705a6cf335143239db91bfe7bbe2 ]
 
-With large memory (8TB and more) hotplug, we can get soft lockup
-warnings as below. These were caused by a long loop without any
-explicit cond_resched which is a problem for !PREEMPT kernels.
+On systems where TM (Transactional Memory) is disabled the
+tm-signal-sigreturn-nt test causes a SIGILL:
 
-Avoid this using cond_resched() while inserting hash page table
-entries. We already do similar cond_resched() in __add_pages(), see
-commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
-__add_pages").
+  test: tm_signal_sigreturn_nt
+  tags: git_version:7c202575ef63
+  !! child died by signal 4
+  failure: tm_signal_sigreturn_nt
 
-  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
-   (t=24003 jiffies g=4285 q=2002)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
-  Call Trace:
-    dump_stack+0xb0/0xf4 (unreliable)
-    nmi_cpu_backtrace+0x124/0x130
-    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
-    arch_trigger_cpumask_backtrace+0x28/0x3c
-    rcu_dump_cpu_stacks+0xf8/0x154
-    rcu_sched_clock_irq+0x878/0xb40
-    update_process_times+0x48/0x90
-    tick_sched_handle.isra.16+0x4c/0x80
-    tick_sched_timer+0x68/0xe0
-    __hrtimer_run_queues+0x180/0x430
-    hrtimer_interrupt+0x110/0x300
-    timer_interrupt+0x108/0x2f0
-    decrementer_common+0x114/0x120
-  --- interrupt: 901 at arch_add_memory+0xc0/0x130
-      LR = arch_add_memory+0x74/0x130
-    memremap_pages+0x494/0x650
-    devm_memremap_pages+0x3c/0xa0
-    pmem_attach_disk+0x188/0x750
-    nvdimm_bus_probe+0xac/0x2c0
-    really_probe+0x148/0x570
-    driver_probe_device+0x19c/0x1d0
-    device_driver_attach+0xcc/0x100
-    bind_store+0x134/0x1c0
-    drv_attr_store+0x44/0x60
-    sysfs_kf_write+0x64/0x90
-    kernfs_fop_write+0x1a0/0x270
-    __vfs_write+0x3c/0x70
-    vfs_write+0xd0/0x260
-    ksys_write+0xdc/0x130
-    system_call+0x5c/0x68
+We should skip the test if TM is not available.
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Fixes: 34642d70ac7e ("selftests/powerpc: Add checks for transactional sigreturn")
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
+Link: https://lore.kernel.org/r/20191104233524.24348-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/book3s64/hash_utils.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/powerpc/tm/tm-signal-sigreturn-nt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-index 6e5a769ebcb80..83c51a7d7eee6 100644
---- a/arch/powerpc/mm/book3s64/hash_utils.c
-+++ b/arch/powerpc/mm/book3s64/hash_utils.c
-@@ -305,6 +305,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
- 		if (ret < 0)
- 			break;
+diff --git a/tools/testing/selftests/powerpc/tm/tm-signal-sigreturn-nt.c b/tools/testing/selftests/powerpc/tm/tm-signal-sigreturn-nt.c
+index 56fbf9f6bbf30..07c388147b75e 100644
+--- a/tools/testing/selftests/powerpc/tm/tm-signal-sigreturn-nt.c
++++ b/tools/testing/selftests/powerpc/tm/tm-signal-sigreturn-nt.c
+@@ -10,10 +10,12 @@
+  */
  
-+		cond_resched();
- #ifdef CONFIG_DEBUG_PAGEALLOC
- 		if (debug_pagealloc_enabled() &&
- 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
+ #define _GNU_SOURCE
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <signal.h>
+ 
+ #include "utils.h"
++#include "tm.h"
+ 
+ void trap_signal_handler(int signo, siginfo_t *si, void *uc)
+ {
+@@ -29,6 +31,8 @@ int tm_signal_sigreturn_nt(void)
+ {
+ 	struct sigaction trap_sa;
+ 
++	SKIP_IF(!have_htm());
++
+ 	trap_sa.sa_flags = SA_SIGINFO;
+ 	trap_sa.sa_sigaction = trap_signal_handler;
+ 
 -- 
 2.20.1
 
