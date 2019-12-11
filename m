@@ -2,73 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3AEC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA34CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF95B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C915D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfLKNkP (ORCPT
+        id S1729639AbfLKNkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:40:15 -0500
-Received: from mail.manjaro.org ([176.9.38.148]:36224 "EHLO manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbfLKNkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:40:15 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by manjaro.org (Postfix) with ESMTP id 16D9636E237E;
-        Wed, 11 Dec 2019 14:40:14 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id z1cPnLJeGh3p; Wed, 11 Dec 2019 14:40:10 +0100 (CET)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     linux-kernel@vger.kernel.org, linux-pm@lists.linux-foundation.org,
-        linux-i2c@vger.kernel.org
-Cc:     anarsoul@gmail.com, sre@kernel.org, pali.rohar@gmail.com,
-        david@lechnology.com, afd@ti.com,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH 0/2] power: supply: add support for CW2015 Fuel Gauge
+        Wed, 11 Dec 2019 08:40:18 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:58301 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729438AbfLKNkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 08:40:17 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mdv2u-1i7M5t0wNC-00b4PK; Wed, 11 Dec 2019 14:39:55 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Emese Revfy <re.emese@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH] gcc-plugins: make it possible to disable CONFIG_GCC_PLUGINS again
 Date:   Wed, 11 Dec 2019 14:39:28 +0100
-Message-Id: <20191211133930.7488-1-t.schramm@manjaro.org>
+Message-Id: <20191211133951.401933-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:+nmB7TYbeF+BbF1KYAsTCC10nXeyaJq0hfe0KpydKA2p+Otku3i
+ /HMw47ZC370YdiwwA2iFeJ1n00wEOhd8ZpyGd2d3d+tUHhdNkk6xOI55m8KfR/Af1xXnmRk
+ uJnl8uAvfeWWu1lir93AVBa49mZdCBu9xhylvPGJSH6gET5l2DxsXTwEEyoV3FhgWLLMkRJ
+ uL1tGBQBgb0YkP3ZeMw2A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:mDV/RTPIJ3w=:eKif/Og3P8/X7Fw17BCTtN
+ Cl9jKu9p2v6izmw011BOHn6/K9GY07jxXMShZ4olfc2Gd6YCEdAMwkoa1mmX9jb0XkejA0sNp
+ tzEsDim8f70Eknt3szdPZb6SoX3WB2szAS7ogNjfsjntgPMInAjYdknD9LRLuId8OXdTIsJOy
+ h+a+VO3MILFVzFShouk4fs5XKrfFLbVi4UEcEtyFij9kYdEIwICWunPbC5SqNB+sHBByyqvUZ
+ Gf06xWAzHiUFfAi7ZHzAWcjqmSzoOlwu0hXAHHAFJIghq6vTEVNgqH2DXvTbMGWJxwz+M+rP6
+ NDwdSQLNbQaBJMRkQhGxO/IgNQDsGW9wZ/Oh201qXioUXKeOj2IdK5BxFOwXpPpWFrV72USuU
+ 9hz2NM8+9SH4hkVItgVH6FwI/eWKDYdX13Nwh7K069l2ICBOtm+VHXlqMFyW6sju0fhxDwdXr
+ EiznRvbD6dHKCyYaHdiqOlZeoAZaJfTOwHbiHi3hSruRGThx4nVgP7TY7VDOZI1mow0BoFHyO
+ cCRJWwijAd73s4x1X7wD+pFusfq7fAi79J01dpXjWm0Z0xijOhtBkiBDp6IYh9SKhKopL4vLu
+ u0LFX9ZYybNbddOwMcdeASQidktoVbgRIu5TU4R+RSWO2sZfCJ/n+7SbotKctVrsXGAif2atb
+ RJkSI4jo7pzA/bRKxxuO4L1eZP1nBvbTnPjGmopnp3LYJpwu7Jsh14Xc01g/a2sU4LZYcS187
+ /CslxGcFpLtXbOSYJAq/EX7UeKtipQigCXtVfk9pdUOhAxCfdjR9HVShXZ1dZKNcXsu7QHikh
+ FqoWuJXtSO4tZnP+SxE1pdoQ72G2KXpfLKvssLLWFro5jBV0CBTMJxKfUQgf0bXSta0TxDiw2
+ Qz9OmB190C+pXgfsJ+4Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for the CW2015 Fuel Gauge.
-The CW2015 fuel gauge is used in Pinebook Pro and some Raspberry Pi UPS HATs.
+I noticed that randconfig builds with gcc no longer produce a lot of
+ccache hits, unlike with clang, and traced this back to plugins
+now being enabled unconditionally if they are supported.
 
-Most of the code has been written by Rockchip. I've added devicetree support
-for power supplies as well as the alert level and done some general code
-cleanup.
-I'm submitting it now as part of an effort to get full mainline Linux support
-for the Pinebook Pro.
+I am now working around this by adding
 
-CCing some maintainers of other fuel gauge drivers here to get feedback on this
-patch.
+   export CCACHE_COMPILERCHECK=/usr/bin/size -A %compiler%
 
-Tobias Schramm (2):
-  power: supply: add CW2015 Fuel Gauge driver
-  dt-bindings: power: supply: cw2015_battery: add device tree binding
-    documentation
+to my top-level Makefile. This changes the heuristic that ccache uses
+to determine whether the plugins are the same after a 'make clean'.
 
- .../bindings/power/supply/cw2015_battery.txt  |  37 +
- drivers/power/supply/Kconfig                  |   7 +
- drivers/power/supply/Makefile                 |   1 +
- drivers/power/supply/cw2015_battery.c         | 962 ++++++++++++++++++
- include/linux/power/cw2015_battery.h          | 122 +++
- 5 files changed, 1129 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/cw2015_battery.txt
- create mode 100644 drivers/power/supply/cw2015_battery.c
- create mode 100644 include/linux/power/cw2015_battery.h
+However, it also seems that being able to just turn off the plugins is
+generally useful, at least for build testing it adds noticeable overhead
+but does not find a lot of bugs additional bugs, and may be easier for
+ccache users than my workaround.
 
+Fixes: 9f671e58159a ("security: Create "kernel hardening" config area")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ scripts/gcc-plugins/Kconfig | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
+index d33de0b9f4f5..e3569543bdac 100644
+--- a/scripts/gcc-plugins/Kconfig
++++ b/scripts/gcc-plugins/Kconfig
+@@ -14,8 +14,8 @@ config HAVE_GCC_PLUGINS
+ 	  An arch should select this symbol if it supports building with
+ 	  GCC plugins.
+ 
+-config GCC_PLUGINS
+-	bool
++menuconfig GCC_PLUGINS
++	bool "GCC plugins"
+ 	depends on HAVE_GCC_PLUGINS
+ 	depends on PLUGIN_HOSTCC != ""
+ 	default y
+@@ -25,8 +25,7 @@ config GCC_PLUGINS
+ 
+ 	  See Documentation/core-api/gcc-plugins.rst for details.
+ 
+-menu "GCC plugins"
+-	depends on GCC_PLUGINS
++if GCC_PLUGINS
+ 
+ config GCC_PLUGIN_CYC_COMPLEXITY
+ 	bool "Compute the cyclomatic complexity of a function" if EXPERT
+@@ -113,4 +112,4 @@ config GCC_PLUGIN_ARM_SSP_PER_TASK
+ 	bool
+ 	depends on GCC_PLUGINS && ARM
+ 
+-endmenu
++endif
 -- 
-2.24.0
+2.20.0
 
