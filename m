@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AA5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFC9C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F036208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E3E208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077057;
-	bh=9zpLNPI5XZRFD6601chy04kpn9vCfjMzRQc3/zkWmVo=;
+	s=default; t=1576077060;
+	bh=U/PTIccLrHkcvQkb1SEbf0dV+9X1H172GInbxSznbK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xfj6RFZDg4Mm9oZfXzyhjDNu9s0qJzgAjizN6Mai0xxcWIYxHvA1cET/tKRTmX9mk
-	 ixjIwaUdE/3Xh3t85iYr1fgyDPs37mk1zKnMPyvpXzA4TNctiTvY8ATi2/fmzN0l3z
-	 vYXtxHMyT9t0cV647TNU3EnNRYmYFq+40KD2Stic=
+	b=oopOJM6pZy4ToRR2/ysVwv5Shh65mWgbbeOqtGAYhRNsmTe5NYgpHrikptn1FiT6I
+	 JGlKyMqZBOyPijpbGOAs2q5OUNZJRNp7qSRehellE0jT/3NTyxyqLU2oeGUdGJBW62
+	 pWk7N1tU5lnwwEGU5LejEs4ikQFsBMrPBG1ex4Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfLKPK4 (ORCPT
+        id S1730166AbfLKPK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59316 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbfLKPKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:53 -0500
+        id S1730842AbfLKPK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 784FC24658;
-        Wed, 11 Dec 2019 15:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 528292173E;
+        Wed, 11 Dec 2019 15:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077053;
-        bh=9zpLNPI5XZRFD6601chy04kpn9vCfjMzRQc3/zkWmVo=;
+        s=default; t=1576077055;
+        bh=U/PTIccLrHkcvQkb1SEbf0dV+9X1H172GInbxSznbK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UYJap3NmmS7dl2Q61dJO55JioFopkmHkZdns5ILtTXL6qt0Jc8Sw8CHU22Yyu+/XP
-         rj0urF6ni8vuYMl2k/xr3vETOn2LUHBuIEgmHnkSZ8tKZeN2QtCK67r79jbdtZ2KST
-         hu6pFaLxhZKfBexXUfn7L9rFKvQnDfIpeLOtGCPY=
+        b=DsDLEqKaufvGQfKg7pExrxs4cKjuFvAyphZDQiO4WusPDshQ5TNmXPAewgV5uHfb8
+         UYLchp2Z9hZ19jq1IPHxzrTAnnHazDlelm57pQ2zSl/ptdKhiT/69HHQ9lWEw5BiQV
+         Fkk8nu+wkw6r/TcU7QRFhk+v/erKpBjI+Gvd9MiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 92/92] binder: Handle start==NULL in binder_update_page_range()
-Date:   Wed, 11 Dec 2019 16:06:23 +0100
-Message-Id: <20191211150303.283404907@linuxfoundation.org>
+        stable@vger.kernel.org, "kernelci.org bot" <bot@kernelci.org>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.4 80/92] spi: Fix NULL pointer when setting SPI_CS_HIGH for GPIO CS
+Date:   Wed, 11 Dec 2019 16:06:11 +0100
+Message-Id: <20191211150259.632611561@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,65 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
+commit 15f794bd977a0135328fbdd8a83cc64c1d267b39 upstream.
 
-The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
-continuing backwards to index -1 and crashing.
+Even if the flag use_gpio_descriptors is set, it is possible that
+cs_gpiods was not allocated, which leads to a kernel crash.
 
-Luckily you need to be highly privileged to map things at NULL, so it's not
-a big problem.
-
-Fix it by adjusting the loop so that the loop variable is always in bounds.
-
-This patch is deliberately minimal to simplify backporting, but IMO this
-function could use a refactor. The jump labels in the second loop body are
-horrible (the error gotos should be jumping to free_range instead), and
-both loops would look nicer if they just iterated upwards through indices.
-And the up_read()+mmput() shouldn't be duplicated like that.
-
-Cc: stable@vger.kernel.org
-Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
+Reported-by: "kernelci.org bot" <bot@kernelci.org>
+Fixes: 3e5ec1db8bfe ("spi: Fix SPI_CS_HIGH setting when using native and GPIO CS")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20191024141309.22434-1-gregory.clement@bootlin.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/android/binder_alloc.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/spi/spi.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/android/binder_alloc.c
-+++ b/drivers/android/binder_alloc.c
-@@ -277,8 +277,7 @@ static int binder_update_page_range(stru
- 	return 0;
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1780,7 +1780,8 @@ static int of_spi_parse_dt(struct spi_co
+ 	 * handled in the gpiolib, so all gpio chip selects are "active high"
+ 	 * in the logical sense, the gpiolib will invert the line if need be.
+ 	 */
+-	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods[spi->chip_select])
++	if ((ctlr->use_gpio_descriptors) && ctlr->cs_gpiods &&
++	    ctlr->cs_gpiods[spi->chip_select])
+ 		spi->mode |= SPI_CS_HIGH;
  
- free_range:
--	for (page_addr = end - PAGE_SIZE; page_addr >= start;
--	     page_addr -= PAGE_SIZE) {
-+	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
- 		bool ret;
- 		size_t index;
- 
-@@ -291,6 +290,8 @@ free_range:
- 		WARN_ON(!ret);
- 
- 		trace_binder_free_lru_end(alloc, index);
-+		if (page_addr == start)
-+			break;
- 		continue;
- 
- err_vm_insert_page_failed:
-@@ -298,7 +299,8 @@ err_vm_insert_page_failed:
- 		page->page_ptr = NULL;
- err_alloc_page_failed:
- err_page_ptr_cleared:
--		;
-+		if (page_addr == start)
-+			break;
- 	}
- err_no_vma:
- 	if (mm) {
+ 	/* Device speed */
 
 
