@@ -2,51 +2,62 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC988C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4984AC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C2D24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1686022B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077391;
-	bh=ATFsUaYlhEkZu6e7CBBYEk7GWFdSEEHIXtJl23rL5lo=;
+	s=default; t=1576077395;
+	bh=zwqM+wS2Wryn1l8lu7xVA8FqBKoSghxz/FEIeQeJyFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eSy5rC/6+UDGPz+uuOHCKmp1uJdqlwEpHNRcPazs30oDfV4fA97Ky0KSqhhVR92Cc
-	 ltCmA2dJCrb7GIOs2ef0H6f4q8cyyXDBuxFQdPJ12AYPguMm5Zmu90fLUOajugBn4O
-	 D7nfFXFiMFToSKegvrozGjOiG3MglFeuY/VC44SE=
+	b=krADDKbnuoUuUeX232ugDUEFIF+BX89P/G3SVlEPyPGb09TQ9FH3Li8DoE3WbwOej
+	 E4+g+AUA7mVv6UeWDmIOsN4I8Mi6JHRIyoEz5/3SCexo4qRX31YaXGhuy2r6QPEsYh
+	 VPzmAuijs3LqkxG9E/HwQf3Ine3kwe1HWjWRpTmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbfLKPQa (ORCPT
+        id S1731912AbfLKPQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43542 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731607AbfLKPQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:26 -0500
+        id S1731892AbfLKPQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73E3922B48;
-        Wed, 11 Dec 2019 15:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5171208C3;
+        Wed, 11 Dec 2019 15:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077385;
-        bh=ATFsUaYlhEkZu6e7CBBYEk7GWFdSEEHIXtJl23rL5lo=;
+        s=default; t=1576077389;
+        bh=zwqM+wS2Wryn1l8lu7xVA8FqBKoSghxz/FEIeQeJyFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ej+8G7dbSyth3op0RJODra4lGTbK300yquophCfSl4nnE5OxPd7WwsH8qDvVbGhkZ
-         Go+PfpDqzO7hGaG/FSQqzBNp0yska9KSc64yNQlzmY9m7onf5VUILoLPuUSKjjXwfx
-         h/HfLRxw8N66M4vP8vAvkEMPAG1n0zXGFcMcfjOY=
+        b=G5DGcmlEPi0eUXklVsHDeJ9CscfBxi33HHzngaoevYb6g2TzbarvKzw7cLgv0X+Ve
+         L0lDuWlwZ6zihGt689p5gbt6oF5bE5AkDmGT/iKEXR0mZNTWC/N1aL5Z3juYVOZU1W
+         c3xbCch+jG9N7FhrgDGl3A126Bj0oBvnC+wyv+co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.19 002/243] arm64: tegra: Fix active-low warning for Jetson TX1 regulator
-Date:   Wed, 11 Dec 2019 16:02:44 +0100
-Message-Id: <20191211150339.319676132@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Ahern <dsahern@gmail.com>, Jiri Olsa <jolsa@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 020/243] perf/core: Consistently fail fork on allocation failures
+Date:   Wed, 11 Dec 2019 16:03:02 +0100
+Message-Id: <20191211150340.342470865@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,44 +70,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 1e5e929c009559bd7e898ac8e17a5d01037cb057 upstream.
+[ Upstream commit 697d877849d4b34ab58d7078d6930bad0ef6fc66 ]
 
-Commit 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-added a regulator for HDMI on the Jetson TX1 platform. This regulator
-has an active high enable, but the GPIO specifier for enabling the
-regulator incorrectly defines it as active-low. This causes the
-following warning to occur on boot ...
+Commit:
 
- WARNING KERN regulator@10 GPIO handle specifies active low - ignored
+  313ccb9615948 ("perf: Allocate context task_ctx_data for child event")
 
-The fixed-regulator binding does not use the active-low flag from the
-gpio specifier and purely relies of the presence of the
-'enable-active-high' property to determine if it is active high or low
-(if this property is omitted). Fix this warning by setting the GPIO
-to active-high in the GPIO specifier which aligns with the presense of
-the 'enable-active-high' property.
+makes the inherit path skip over the current event in case of task_ctx_data
+allocation failure. This, however, is inconsistent with allocation failures
+in perf_event_alloc(), which would abort the fork.
 
-Fixes: 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Correct this by returning an error code on task_ctx_data allocation
+failure and failing the fork in that case.
 
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Link: https://lkml.kernel.org/r/20191105075702.60319-1-alexander.shishkin@linux.intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |    2 +-
+ kernel/events/core.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1589,7 +1589,7 @@
- 			regulator-name = "VDD_HDMI_5V0";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&exp1 12 GPIO_ACTIVE_LOW>;
-+			gpio = <&exp1 12 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 625ba462e5bbd..460d5fd3ec4e4 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -11377,7 +11377,7 @@ inherit_event(struct perf_event *parent_event,
+ 						   GFP_KERNEL);
+ 		if (!child_ctx->task_ctx_data) {
+ 			free_event(child_event);
+-			return NULL;
++			return ERR_PTR(-ENOMEM);
+ 		}
+ 	}
+ 
+-- 
+2.20.1
+
 
 
