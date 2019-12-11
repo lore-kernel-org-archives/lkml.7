@@ -2,148 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8C1C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C63C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D2B222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6CF208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079924;
-	bh=cQnHYqMKMnTnO6m2mJKlDYRQy3IpoH92Ix9Topw/7fc=;
+	s=default; t=1576079928;
+	bh=a+n6KNgx3G9rwCcYtxtazuj+4A3mkWZjxOFPQ1YfoLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F/dn4iGvPZBbiFzDyzFi9rzzf+n75QdjNsfCwI7ElXRYv0To3OK8wLLel4ABkWXZ0
-	 HPkbLmMnKZG/4ztU0ZvlQZp9SLjb0JsN1VOX2DFbDvwQ0O3J+2Gc+UZLpiw2n1jCku
-	 DC7glmf/6wB+LJgL/myPzntJyLziCZg7xy+4PF8Q=
+	b=sLJtZn5OWcjSH+q0xLzmkG4Xif2J5qL/xLtcWkisIZaYbLpVsjSaiw7U4K48JC4Qk
+	 3uPo3PuwaST0M/3XQSc43RDcLCR7Usl+AbRwIVx/GMYpX8QKc3Kk2CiaX4UzRQKqe2
+	 a4CwtNRT0YQ8Rh1+aCuyJajq7AqOP7PzpsaM8iwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbfLKPOP (ORCPT
+        id S1732316AbfLKP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:58:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731427AbfLKPNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730496AbfLKPOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:15 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9B532465C;
-        Wed, 11 Dec 2019 15:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2044224689;
+        Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077210;
-        bh=cQnHYqMKMnTnO6m2mJKlDYRQy3IpoH92Ix9Topw/7fc=;
+        s=default; t=1576077255;
+        bh=a+n6KNgx3G9rwCcYtxtazuj+4A3mkWZjxOFPQ1YfoLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GTz5S2PkPIGoHm4VgVL0v2LmKciuqpdkqfIeWRYqWCVbKxFdBsQGa9SZcBtuIjTo9
-         3VRd61r32l6gKnDeyMuM6/0VrJ/1E4jJwIQX3cOaKLc1a3KovTPh6jJfPgmrPUKpiD
-         /ITU/WkHs2kf9yz89sz7XbYz5y/6aRkRXWtEifwY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH 5.3 059/105] coresight: etm4x: Fix input validation for sysfs.
-Date:   Wed, 11 Dec 2019 16:05:48 +0100
-Message-Id: <20191211150244.203826612@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=FrSh4QqO0M1lAPwXxnWWP8+WQSIJyUoq2Q1W9BJH8RkkT7BxU8LzRkn1bPKsIk8wb
+         8qo/3kISAKpB/xt0TxkvozExagPOonjUID6F/n6IC+qISriV4OtKFeM/O3Fqr3plif
+         h2kF28XIw3xmo9WqNp0lwGRercuGJnIpYP+vIWS0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-api@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 131/134] selftests: vm: add fragment CONFIG_TEST_VMALLOC
+Date:   Wed, 11 Dec 2019 10:11:47 -0500
+Message-Id: <20191211151150.19073-131-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Leach <mike.leach@linaro.org>
+From: Anders Roxell <anders.roxell@linaro.org>
 
-commit 2fe6899e36aa174abefd017887f9cfe0cb60c43a upstream.
+[ Upstream commit 746dd4012d215b53152f0001a48856e41ea31730 ]
 
-A number of issues are fixed relating to sysfs input validation:-
+When running test_vmalloc.sh smoke the following print out states that
+the fragment is missing.
 
-1) bb_ctrl_store() - incorrect compare of bit select field to absolute
-value. Reworked per ETMv4 specification.
-2) seq_event_store() - incorrect mask value - register has two
-event values.
-3) cyc_threshold_store() - must mask with max before checking min
-otherwise wrapped values can set illegal value below min.
-4) res_ctrl_store() - update to mask off all res0 bits.
+ # ./test_vmalloc.sh: You must have the following enabled in your kernel:
+ # CONFIG_TEST_VMALLOC=m
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Fixes: a77de2637c9eb ("coresight: etm4x: moving sysFS entries to a dedicated file")
-Cc: stable <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20191104181251.26732-6-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Rework to add the fragment 'CONFIG_TEST_VMALLOC=m' to the config file.
 
+Link: http://lkml.kernel.org/r/20190916095217.19665-1-anders.roxell@linaro.org
+Fixes: a05ef00c9790 ("selftests/vm: add script helper for CONFIG_TEST_VMALLOC_MODULE")
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c |   21 ++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ tools/testing/selftests/vm/config | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -655,10 +655,13 @@ static ssize_t cyc_threshold_store(struc
- 
- 	if (kstrtoul(buf, 16, &val))
- 		return -EINVAL;
-+
-+	/* mask off max threshold before checking min value */
-+	val &= ETM_CYC_THRESHOLD_MASK;
- 	if (val < drvdata->ccitmin)
- 		return -EINVAL;
- 
--	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
-+	config->ccctlr = val;
- 	return size;
- }
- static DEVICE_ATTR_RW(cyc_threshold);
-@@ -689,14 +692,16 @@ static ssize_t bb_ctrl_store(struct devi
- 		return -EINVAL;
- 	if (!drvdata->nr_addr_cmp)
- 		return -EINVAL;
-+
- 	/*
--	 * Bit[7:0] selects which address range comparator is used for
--	 * branch broadcast control.
-+	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
-+	 * individual range comparators. If include then at least 1
-+	 * range must be selected.
- 	 */
--	if (BMVAL(val, 0, 7) > drvdata->nr_addr_cmp)
-+	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
- 		return -EINVAL;
- 
--	config->bb_ctrl = val;
-+	config->bb_ctrl = val & GENMASK(8, 0);
- 	return size;
- }
- static DEVICE_ATTR_RW(bb_ctrl);
-@@ -1329,8 +1334,8 @@ static ssize_t seq_event_store(struct de
- 
- 	spin_lock(&drvdata->spinlock);
- 	idx = config->seq_idx;
--	/* RST, bits[7:0] */
--	config->seq_ctrl[idx] = val & 0xFF;
-+	/* Seq control has two masks B[15:8] F[7:0] */
-+	config->seq_ctrl[idx] = val & 0xFFFF;
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-@@ -1585,7 +1590,7 @@ static ssize_t res_ctrl_store(struct dev
- 	if (idx % 2 != 0)
- 		/* PAIRINV, bit[21] */
- 		val &= ~BIT(21);
--	config->res_ctrl[idx] = val;
-+	config->res_ctrl[idx] = val & GENMASK(21, 0);
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-
+diff --git a/tools/testing/selftests/vm/config b/tools/testing/selftests/vm/config
+index 1c0d76cb5adfd..93b90a9b1eebf 100644
+--- a/tools/testing/selftests/vm/config
++++ b/tools/testing/selftests/vm/config
+@@ -1,2 +1,3 @@
+ CONFIG_SYSVIPC=y
+ CONFIG_USERFAULTFD=y
++CONFIG_TEST_VMALLOC=m
+-- 
+2.20.1
 
