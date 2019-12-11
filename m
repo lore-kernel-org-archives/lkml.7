@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894EBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AB3C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62DC22077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43FA5206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aUxLEcZU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmBiBCIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731382AbfLKSPq (ORCPT
+        id S1731293AbfLKSPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:15:46 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:38624 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731306AbfLKSPl (ORCPT
+        Wed, 11 Dec 2019 13:15:35 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:40877 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731242AbfLKSP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:41 -0500
-Received: by mail-yw1-f67.google.com with SMTP id 10so9308158ywv.5;
-        Wed, 11 Dec 2019 10:15:40 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:27 -0500
+Received: by mail-yw1-f68.google.com with SMTP id i126so9295324ywe.7;
+        Wed, 11 Dec 2019 10:15:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nwGdO4R8lji1D/r7NSUfswqgTgfKAYEWc+q0aQAaY34=;
-        b=aUxLEcZUouXI6SiOx6pzGdSVCiQx8vK4DJHmtxf40D8r2b8eE/Z7eFcVMho5BCcp5X
-         TWAopBJt6oZEaDrtyeLOmvzBUHni/LGxL7s3zooI5vp3hz+tf/sIY36AZ4ujyxRHdSM1
-         JW/i27mPlMCELPmiKLsbGaquGB0q4X7u10AVk6/TmUCwWN03CUXliusqyzdUQzTaTKm8
-         EmnzAmMs5HpqAoAL5Uh8/pasMHdghdduGWBgA4X5VWID+DVGHsYkcLwljb9EYVaya0T3
-         HlMFB3Nr7xLUmO3wfvrHAAHOSmPCjq6O5tjrX4lfjqHKVrh+78yKijz5Zl8ajfsy/tBN
-         RoIQ==
+        bh=WcxYr9RZCBsnbidLa8eleGOYukmYC7BtU1QAQ3T47uk=;
+        b=VmBiBCIVN/9mZ5ewjyFn0SXVBO5g9Kex9cLjyo3xJq+9dqNFK08YN2qa25Rs+lyAio
+         QMAoItaqttwy+ykk4s1UteT/EAxUgIF5VCoCuwiHsfsVTKBNadUDfmZRH9FJk3N7Cb6N
+         G7TRFWw2AabJkv1w58GKzQ6rZF86Y4sfYfwMTwmPJf97Cha8psc/jQ8PFKgzMbxjDGSJ
+         B5+aDAIOiWMt+dsYWOJgs6vpJgdMcNKMAinSxAk/Shh5OIk6MkZz8OKe1QeIMQL2INEm
+         PeRRn4w5JMNmvOz4wg+fSt76LDf/7Q7O+Zp5UkIITG2fNRIU4hgF98LitNuo5PIYMqe9
+         d+iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nwGdO4R8lji1D/r7NSUfswqgTgfKAYEWc+q0aQAaY34=;
-        b=cjS3o+fYnaMo/0HZ6gcHzbwFAhuEKfvhjfVZ3grJkFdDOn+7k3TPw97mnzjwGJJyKv
-         7HNMCctHwGlTdnYWIaPCNUXdZSRaMe+IjhySH1C+luA7fXydRgDxgjvQL2eAiAG6aEI9
-         Q4cbBkvjMFICCArd7hes4aBrFvLtbYU1KA7Xk8HXU1P7I4+GNRhj41XbglhZUpNxhRgf
-         wgHSV4KEa7l6P2+rpC1//I1BtsdxAZBU2b1lFD9caDf1Sstu+xv05USFCeb3azxSB4Vd
-         L7KZj6L/s+jsGakYpGjqqpVvP0t9T8/zfXvEIyWa+2Var18hSa50oRZg5ibkIOyBEDdL
-         LFBg==
-X-Gm-Message-State: APjAAAVrb4ZFSPs+N+1bnFbfNmRfTXWoEn2frzLmaRF9+bokvVfiotDC
-        PNyqDCQyoKTzdvl1lnY0N+07JDdv2/BVww==
-X-Google-Smtp-Source: APXvYqyozxGB2X1nuGDB7dAEJrbGUelIJWseYKoI5+DIGHJRwfsZF4g4z3Za9/kKACyVGBgBVB3tMw==
-X-Received: by 2002:a0d:d2c2:: with SMTP id u185mr875765ywd.211.1576088139917;
-        Wed, 11 Dec 2019 10:15:39 -0800 (PST)
+        bh=WcxYr9RZCBsnbidLa8eleGOYukmYC7BtU1QAQ3T47uk=;
+        b=NwdCD7IQPqh/aCLJfI/5kizp+GLG4BITaUZFpRBPXKU3FwQOPrYOrTAGqaRN0xHAzb
+         xMf+5H3xDUfduizSxASe/+iJpr0mftMzxLEf3t1AFqWTvy/Jy61MXLigvbszNU9b2yVt
+         RVoX0OCXyGqJKPSj7SshDok/1/MkzQkpPYPhLqxiOONd7SN7x3/3uDKcgHnGmyr6Py3T
+         X1OlGksRwZwCwwJ1eZmOqZM15/vFFv6V/VHZ/0dpRqcjVMX8OAteORjfLIUiDchrdFZ3
+         Fzd7pVn9DaCG7MDkAGt4/9bxH/1UboHkxZrYNxoqisEgCTdqj6vDiu/hqGVJfNNSoRuJ
+         //mA==
+X-Gm-Message-State: APjAAAVi5A801zgCRfzaZFR7EJSj56qwVfOCk9vbtRgTTLZcLJ55gDWX
+        dqYMYne4O8NKYppGOo+ISMiiWuCmmUV27g==
+X-Google-Smtp-Source: APXvYqwvjrbh/5FmBwa94ei1z66nQ5R93gCHgVkZdQTEs9tpJL+x1TSQNXy2LWP8oCPoaZ0RVOVX5w==
+X-Received: by 2002:a81:f50:: with SMTP id 77mr907958ywp.340.1576088125875;
+        Wed, 11 Dec 2019 10:15:25 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id f134sm1304186ywb.68.2019.12.11.10.15.39
+        by smtp.gmail.com with ESMTPSA id d207sm1298391ywa.62.2019.12.11.10.15.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:39 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:25 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 23/23] staging: qlge: Fix WARNING: Avoid multiple line dereference
-Date:   Wed, 11 Dec 2019 12:12:52 -0600
-Message-Id: <f2e9384f0940fb7e57649a8ea8493abae2c220ee.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 14/23] staging: qlge: Fix WARNING: Unnecessary space before function pointer arguments
+Date:   Wed, 11 Dec 2019 12:12:43 -0600
+Message-Id: <b80b28a9e4377bbaa8f33e78311302a97c2e5f41.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,43 +76,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: Avoid multiple line dereference in qlge_main.c
+WARNING: Unnecessary space before function pointer arguments in qlge.h
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge_main.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/staging/qlge/qlge.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 102da1fe9899..725db7262a9a 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -399,9 +399,8 @@ static int ql_set_mac_addr_reg(struct ql_adapter *qdev, u8 *addr, u32 type,
- 			 * the route field to NIC core.
- 			 */
- 			cam_output = (CAM_OUT_ROUTE_NIC |
--				      (qdev->
--				       func << CAM_OUT_FUNC_SHIFT) |
--					(0 << CAM_OUT_CQ_ID_SHIFT));
-+				      (qdev->func << CAM_OUT_FUNC_SHIFT) |
-+				      (0 << CAM_OUT_CQ_ID_SHIFT));
- 			if (qdev->ndev->features & NETIF_F_HW_VLAN_CTAG_RX)
- 				cam_output |= CAM_OUT_RV;
- 			/* route to NIC core */
-@@ -3428,10 +3427,9 @@ static int ql_request_irq(struct ql_adapter *qdev)
- 				     &qdev->rx_ring[0]);
- 			status =
- 			    request_irq(pdev->irq, qlge_isr,
--					test_bit(QL_MSI_ENABLED,
--						 &qdev->
--						 flags) ? 0 : IRQF_SHARED,
--					intr_context->name, &qdev->rx_ring[0]);
-+					test_bit(QL_MSI_ENABLED, &qdev->flags)
-+					? 0 : IRQF_SHARED, intr_context->name,
-+					&qdev->rx_ring[0]);
- 			if (status)
- 				goto err_irq;
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index 9ab4c7ce7714..010d39b4b30d 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -2057,8 +2057,8 @@ enum {
+ };
  
+ struct nic_operations {
+-	int (*get_flash) (struct ql_adapter *);
+-	int (*port_initialize) (struct ql_adapter *);
++	int (*get_flash)(struct ql_adapter *);
++	int (*port_initialize)(struct ql_adapter *);
+ };
+ 
+ /*
 -- 
 2.20.1
 
