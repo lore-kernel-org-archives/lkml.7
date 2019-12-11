@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0CBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5483BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95FE022B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2827D24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078362;
-	bh=R2iSsoYheVYUJsesqHMqyMD9vLzWbpg826TUGxQWD5g=;
+	s=default; t=1576078369;
+	bh=DwHgBaGQm+Eee8sSNHVvcjHdoYw8XkP65HCi5+x8xYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/rBwrKEbzPcYLrulLvt/FquLkci0/gT5VqilE9C1QVRg3NKw1vca/8mC8AKGp6EQ
-	 15zutMu9NaWthuzXsMgO9Ndnz0n4ZYQbUOCFVs4n6ojrcwGODY0KWMlTNCdUpB80gs
-	 BXDW01tGiRdKTK7JuOm2EupfTlfP/EasnnpG3/BY=
+	b=eYdvtZfu4loN3Df7GCCmU22rRBD6Eg0AsFTa0ycVEsN3lPjJ5+YfZHl65qN7ukg6A
+	 8wVHNtUMu5CeKXMd/tOARKzrGJ4wYGCEWKvUrBvVpXySasURdymUSOOvFaRNqHDnGY
+	 iAduH82JFelTcNmDsdwHsJhBLI2v972EIm//zxqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388038AbfLKPcl (ORCPT
+        id S2387801AbfLKPcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:32:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35340 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:32:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387748AbfLKP2z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:55 -0500
+        id S2387732AbfLKP2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45AE12467F;
-        Wed, 11 Dec 2019 15:28:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22FAC2467F;
+        Wed, 11 Dec 2019 15:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078134;
-        bh=R2iSsoYheVYUJsesqHMqyMD9vLzWbpg826TUGxQWD5g=;
+        s=default; t=1576078131;
+        bh=DwHgBaGQm+Eee8sSNHVvcjHdoYw8XkP65HCi5+x8xYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSBexvDXOTEhpP/G4sNTUxZZFm00mYZX75nfAaSbA+nk5b4jVsXxASy0BC1rrf6Cp
-         wYHCEb5P0ZBmqQQguRhk582BoMVWxloWI0v0L4kQdWLDSpulb1FSoax95SiNGnrqkB
-         SX96cDxMdVdL3vrNRPW8S7dhAacogvKG2h8RlTKk=
+        b=eRqcHdcebQAyUGZ/zwYup0wuYVhkr+zhIwvfodsBCqYxgeAaA87ZGQYzFJSTIkYgb
+         ykEtZMsBPlN/pknwWsYFuv57GJU8cWqC1eufcZAvyJg2nSR8YmkgDi36hAANpRiS62
+         dbgQbmSkX1e+gelIdLO+51yKoeZYcshUR++tIf4g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@linux-mips.org
-Subject: [PATCH AUTOSEL 4.14 22/58] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date:   Wed, 11 Dec 2019 10:27:55 -0500
-Message-Id: <20191211152831.23507-22-sashal@kernel.org>
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/58] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
+Date:   Wed, 11 Dec 2019 10:27:52 -0500
+Message-Id: <20191211152831.23507-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -59,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
+[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+If the driver receives a login that is later then LOGO'd by the remote port
+(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
+will logout the node and unregister the rpi that is being used for the
+node.  As part of the unreg, the node's rpi value is replaced by the
+LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
+offline walks the nodes and ensures they are logged out, which possibly
+entails unreg'ing their rpi values.  This path does not validate the node's
+rpi value, thus doesn't detect that it has been unreg'd already.  The
+replaced rpi value is then used when accessing the rpi bitmask array which
+tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
+index for the bitmask, it may fault the system.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+Revise the rpi release code to detect when the rpi value is the replaced
+RPI_ALLOC_ERROR value and ignore further release steps.
+
+Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 0b9a8b709abf8..b32988cac80c6 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -284,6 +284,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 5603c08f96843..07895ca2db30e 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -17500,6 +17500,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
+ static void
+ __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
+ {
++	/*
++	 * if the rpi value indicates a prior unreg has already
++	 * been done, skip the unreg.
++	 */
++	if (rpi == LPFC_RPI_ALLOC_ERROR)
++		return;
 +
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
- 
+ 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
+ 		phba->sli4_hba.rpi_count--;
+ 		phba->sli4_hba.max_cfg_param.rpi_used--;
 -- 
 2.20.1
 
