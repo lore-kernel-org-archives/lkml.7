@@ -2,77 +2,84 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F085FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA5BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C605C2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:10:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E1t0M/Yg"
+	by mail.kernel.org (Postfix) with ESMTP id 7D936206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:10:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbfLKSJ6 (ORCPT
+        id S1730800AbfLKSKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:09:58 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60326 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730486AbfLKSJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:09:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576087796;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to; bh=DjdU2OmaeCrCML7Z3SM+Bw8StC7ApXHGySv/mxZQmdI=;
-        b=E1t0M/Yg84qsH76YAqRuUJzLrOcHshKvmeRWwO3mv0zjfqQs/rxKBjEl/S1Fb0ssF9Xc4H
-        NeXDnr4LM3DdDTejEKPtO+cgX/igIWBnVbf8UkNpvpzi1Gc19rKlyOYES1sHV0GI/rn2qI
-        MjOuEhl5uWxV/qqmpqpr2SSg93wEBnE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-sfvTOy9pNgO7qN-050Z9RA-1; Wed, 11 Dec 2019 13:09:51 -0500
-X-MC-Unique: sfvTOy9pNgO7qN-050Z9RA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 935FB8CB827;
-        Wed, 11 Dec 2019 18:09:49 +0000 (UTC)
-Received: from greed.delorie.com (ovpn-116-25.phx2.redhat.com [10.3.116.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DA6AA7EB;
-        Wed, 11 Dec 2019 18:09:49 +0000 (UTC)
-Received: from greed.delorie.com.redhat.com (localhost [127.0.0.1])
-        by greed.delorie.com (8.14.7/8.14.7) with ESMTP id xBBI9i8x004393;
-        Wed, 11 Dec 2019 13:09:45 -0500
-From:   DJ Delorie <dj@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     vincent.guittot@linaro.org, dsterba@suse.cz, dhowells@redhat.com,
-        ebiggers@kernel.org, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@kernel.org
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-In-Reply-To: <CAHk-=wicgTacrHUJmSBbW9MYAdMPdrXzULPNqQ3G7+HkLeNf1Q@mail.gmail.com> (message from Linus Torvalds on Mon, 9 Dec 2019 09:48:27 -0800)
-Date:   Wed, 11 Dec 2019 13:09:44 -0500
-Message-ID: <xnpngusphz.fsf@greed.delorie.com>
+        Wed, 11 Dec 2019 13:10:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:42014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfLKSKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:10:31 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83F7431B;
+        Wed, 11 Dec 2019 10:10:30 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 014073F6CF;
+        Wed, 11 Dec 2019 10:10:29 -0800 (PST)
+Subject: Re: [PATCH 11/15] firmware: arm_scmi: Match scmi device by both name
+ and protocol id
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191210145345.11616-1-sudeep.holla@arm.com>
+ <20191210145345.11616-12-sudeep.holla@arm.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <9f30c06f-df22-a1cd-5ed2-c382348162a0@arm.com>
+Date:   Wed, 11 Dec 2019 18:10:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20191210145345.11616-12-sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> [ Added DJ to the participants, since he seems to be the Fedora make
-> maintainer - DJ, any chance that this absolutely horrid 'make' buf can
-> be fixed in older versions too, not just rawhide? The bugfix is two
-> and a half years old by now, and the bug looks real and very serious ]
+On 10/12/2019 14:53, Sudeep Holla wrote:
+> The scmi bus now has support to match the driver with devices not only
+> based on their protocol id but also based on their device name if one is
+> available. This was added to cater the need to support multiple devices
+> and drivers for the same protocol.
+> 
+> Let us add the name "genpd" to scmi_device_id table in the driver so
+> that in matches only with device with the same name and protocol id
+> SCMI_PROTOCOL_POWER.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> index 87f737e01473..bafbfe358f97 100644
+> --- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> +++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> @@ -112,7 +112,7 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+>  }
+> 
+>  static const struct scmi_device_id scmi_id_table[] = {
+> -	{ SCMI_PROTOCOL_POWER },
+> +	{ SCMI_PROTOCOL_POWER, "genpd" },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+> --
+> 2.17.1
+> 
+LGTM.
 
-Builds for F30 and F31 are in bodhi, waiting on testing and karma...
-https://bodhi.fedoraproject.org/updates/FEDORA-2019-bd81ed62bf
-https://bodhi.fedoraproject.org/updates/FEDORA-2019-a056aa61d4
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
 
-F29 is already EOL.
 
+Cristian
