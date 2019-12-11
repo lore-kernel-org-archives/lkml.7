@@ -2,312 +2,139 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25922C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D60C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E482020637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:34:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VzDedKeM"
+	by mail.kernel.org (Postfix) with ESMTP id 75F0720637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfLKJeU (ORCPT
+        id S1728526AbfLKJfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:34:20 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35710 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfLKJeT (ORCPT
+        Wed, 11 Dec 2019 04:35:01 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48212 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfLKJfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:34:19 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so1850204wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:34:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=2aHze3eD3qXxFb1do0AXNxi5Ns/Q9Iwwz2n3HPpJOcs=;
-        b=VzDedKeMxQaNjEiczxGBTICIPaIV8PnAeFP1Rr1OgYLJI0XPPZ8hsic40cqjmiTyo3
-         wYTDItCB0zXtkyaI42IJsnUV4D0yQCvnTnWO3F00uZ7dPqoIFPgzSDJBLe65rRZm3OVe
-         OBqCyUpJ+xq6g5nVO5nm6OYpdhun8nWnR8INhbYMnRBLIoascaSdvzMpS+J6p25Kre8e
-         3KkQ/rMdUKCU6OmbCGynjh0CgUo5q/5lFiY9bc8rvWo4BnD7+Xts/5+fBpVBAtTHkOU5
-         Syju8hBbNEbXRwgUmdisOR4FPwKw6Ut1p/I1D6tKeY03HyZFcugKDOCcrRv1IzQ5jJwx
-         QY2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=2aHze3eD3qXxFb1do0AXNxi5Ns/Q9Iwwz2n3HPpJOcs=;
-        b=YWRGk6PLaP2tAdRUmkrKUuGKRubXKdwltFP6XYAepdAVYCDGHYeWkLx2xorQyN0lxz
-         frexeIXxNZY/RckEpwQqp4FNy1480sx93/RyYhGKluiyUGwy3VfpirBwjNn7jFpOKqVV
-         rvH4MvAXJmzHn2x0P3zxdS48sLE56sdQmBho26Td3XDjXG6X7MGrjEt8owetT8Z6lyrA
-         1lszNBpMwMh9Gz4VRhi48mTx1bQuflfnwq3Rbu1dGGn8UHL6Gby9DKUIfMTdzmxCDO2N
-         ydZJb+mKtSDANHhkHdjxkEOTiMXP3QA9a+gFIeOwIXD6eYdfedHNuFDJgx/LE983ABBJ
-         Ub9A==
-X-Gm-Message-State: APjAAAWFN2G8RmMx0y6rx5qLNAuaamP8YEpauCxmXplTmqnh+imikcrp
-        g+Y/3zGyjG76WqxsDOpYwchuHw==
-X-Google-Smtp-Source: APXvYqyaiVVPEaixzSy9hFWroTUOlG1fayabOrFMoHshKKilcKu2iFPikVV+wuyvp7vTFK3Tb0XS2Q==
-X-Received: by 2002:a1c:9e49:: with SMTP id h70mr2604822wme.79.1576056857130;
-        Wed, 11 Dec 2019 01:34:17 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id y10sm1594428wmm.3.2019.12.11.01.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:34:16 -0800 (PST)
-References: <20191211032802.83309-1-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: meson-a1: add I2C nodes
-In-reply-to: <20191211032802.83309-1-jian.hu@amlogic.com>
-Date:   Wed, 11 Dec 2019 10:34:16 +0100
-Message-ID: <1jk173kxyf.fsf@starbuckisacylon.baylibre.com>
+        Wed, 11 Dec 2019 04:35:01 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C8A9B28B413
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] PCI: rockchip: Fix register number offset to program IO outbound ATU
+Date:   Wed, 11 Dec 2019 10:34:50 +0100
+Message-Id: <20191211093450.7481-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Since commit '62240a88004b ("PCI: rockchip: Drop storing driver private
+outbound resource data)' the offset calculation is wrong to access the
+register number to program the IO outbound ATU. The offset should be
+based on the IORESOURCE_MEM resource size instead of the IORESOURCE_IO
+size.
 
-On Wed 11 Dec 2019 at 04:28, Jian Hu <jian.hu@amlogic.com> wrote:
+This patch fixes the following 'synchronous external abort' bug:
 
-> There are four I2C controllers in A1 series,
-> Share the same comptible with AXG. Compared to AXG,
-> Drive strength feature is newly added in A1.
+[   15.362128] mwifiex_pcie 0000:01:00.0: enabling device (0000 -> 0002)
+[   15.369655] mwifiex_pcie: PCI memory map Virt0: 00000000a573ad00 PCI memory map Virt2: 00000000783126c4
+[   15.381466] Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+[   15.389965] Modules linked in: mwifiex_pcie(+) mwifiex uvcvideo cfg80211 atmel_mxt_ts videobuf2_vmalloc ...
+[   15.461095] CPU: 2 PID: 269 Comm: systemd-udevd Not tainted 5.4.0+ #327
+[   15.461097] Hardware name: Google Kevin (DT)
+[   15.461101] pstate: 60000005 (nZCv daif -PAN -UAO)
+[   15.461116] pc : mwifiex_register_dev+0x264/0x3f8 [mwifiex_pcie]
+[   15.461121] lr : mwifiex_register_dev+0x150/0x3f8 [mwifiex_pcie]
+[   15.461123] sp : ffff800012073860
+[   15.461128] x29: ffff800012073860 x28: ffff8000100a2e28
+[   15.509043] x27: ffff8000118b6210 x26: ffff800008f57458
+[   15.515055] x25: ffff0000ecfda000 x24: 0000000000000001
+[   15.521069] x23: ffff0000e9905080 x22: ffff800008f5d000
+[   15.527082] x21: ffff0000eecea078 x20: ffff0000e9905080
+[   15.533096] x19: ffff0000eecea000 x18: 0000000000000001
+[   15.539108] x17: 0000000000000000 x16: 0000000000000000
+[   15.545118] x15: ffffffffffffffff x14: ffff8000118998c8
+[   15.551128] x13: ffff000000000000 x12: 0000000000000008
+[   15.557138] x11: 0101010101010101 x10: ffff7f7fffff7fff
+[   15.563148] x9 : 0000000000000000 x8 : ffff0000e3c24240
+[   15.569159] x7 : 0000000000000000 x6 : ffff0000e3c24148
+[   15.575169] x5 : ffff0000e3c24148 x4 : ffff0000e7975ec8
+[   15.581178] x3 : 0000000000000001 x2 : 0000000000002b42
+[   15.587188] x1 : ffff800012c00008 x0 : ffff0000e9905080
+[   15.593200] Call trace:
+[   15.595970]  mwifiex_register_dev+0x264/0x3f8 [mwifiex_pcie]
+[   15.602398]  mwifiex_add_card+0x2f8/0x430 [mwifiex]
+[   15.607920]  mwifiex_pcie_probe+0x98/0x148 [mwifiex_pcie]
+[   15.614033]  local_pci_probe+0x3c/0xa0
+[   15.618275]  pci_device_probe+0x110/0x1a8
+[   15.622812]  really_probe+0xd4/0x308
+[   15.626856]  driver_probe_device+0x54/0xe8
+[   15.631491]  device_driver_attach+0x6c/0x78
+[   15.636224]  __driver_attach+0x54/0xd0
+[   15.640465]  bus_for_each_dev+0x70/0xc0
+[   15.644804]  driver_attach+0x20/0x28
+[   15.648847]  bus_add_driver+0x178/0x1d8
+[   15.653186]  driver_register+0x60/0x110
+[   15.657525]  __pci_register_driver+0x40/0x48
+[   15.662359]  mwifiex_pcie_init+0x24/0x1000 [mwifiex_pcie]
+[   15.668469]  do_one_initcall+0x74/0x1a8
+[   15.672810]  do_init_module+0x50/0x208
+[   15.677050]  load_module+0x1a78/0x1d18
+[   15.681290]  __do_sys_finit_module+0xd0/0xe8
+[   15.686120]  __arm64_sys_finit_module+0x1c/0x28
+[   15.691247]  el0_svc_common.constprop.2+0x88/0x150
+[   15.696668]  el0_svc_handler+0x20/0x80
+[   15.700909]  el0_sync_handler+0x118/0x188
+[   15.705444]  el0_sync+0x140/0x180
+[   15.716955] Code: a8c67bfd d65f03c0 f942ac01 91002021 (b9400021)
+[   15.731548] ---[ end trace 1488ca6d6b162849 ]---
 
-Until here, OK
+Fixes: 62240a88004b ("PCI: rockchip: Drop storing driver private outbound resource data)
+Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Suggested-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-> This patch depends on A1 clock driver.
+ drivers/pci/controller/pcie-rockchip-host.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This last sentence is a valuable piece of information for the maintainer
-but should not appear is the commit description as it is something we
-want is the history
-
-Please move this bellow the '---' *AND*
-Add a link like " https://lkml.kernel.org/r/..." to help the maintainer
-locate the related series
-
-
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->
-> ---
-> This patch depends on A1 clock patchset at[0]
->
-> Changes since v1 at [1]:
-> -change reg length to 0x20
-> -assign i2c bus alias in dts file
-> -add new feature note compared to AXG in changelog
->
-> [0] https://lkml.kernel.org/r/20191206074052.15557-1-jian.hu@amlogic.com
-> [1] https://lkml.kernel.org/r/20191202111253.94872-1-jian.hu@amlogic.com
-> ---
-> ---
->  .../arm64/boot/dts/amlogic/meson-a1-ad401.dts |   4 +
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 142 ++++++++++++++++++
->  2 files changed, 146 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> index 69c25c68c358..2d0457976233 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> @@ -13,6 +13,10 @@
->  
->  	aliases {
->  		serial0 = &uart_AO_B;
-> +		i2c0 = &i2c0;
-> +		i2c1 = &i2c1;
-> +		i2c2 = &i2c2;
-> +		i2c3 = &i2c3;
-
-It is not necessary to define alias for all the possible buses,
-especially it some won't be used on the platform.
-
-Will this platform use all 4 busses ?
-
-In any case, the aliases can added later, as needed when the related i2c
-bus is enabled on the board
-
->  	};
->  
->  	chosen {
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> index eab2ecd36aa8..66d5206a57de 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -117,6 +117,46 @@
->  				};
->  			};
->  
-> +			i2c0: i2c@1400 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x1400 0x0 0x20>;
-> +				interrupts = <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_A>;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c1: i2c@5c00 {
-
-Please order nodes by address when then have one.
-The 3 following i2c busses should appear after the uarts
-
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x5c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_B>;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c2: i2c@6800 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x6800 0x0 0x20>;
-> +				interrupts = <GIC_SPI 76 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_C>;
-> +				status = "disabled";
-> +			};
-> +
-> +			i2c3: i2c@6c00 {
-> +				compatible = "amlogic,meson-axg-i2c";
-> +				reg = <0x0 0x6c00 0x0 0x20>;
-> +				interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				clocks = <&clkc_periphs CLKID_I2C_M_D>;
-> +				status = "disabled";
-> +			};
-> +
->  			uart_AO: serial@1c00 {
->  				compatible = "amlogic,meson-gx-uart",
->  					     "amlogic,meson-ao-uart";
-> @@ -171,3 +211,105 @@
->  		#clock-cells = <0>;
->  	};
->  };
-> +
-> +&periphs_pinctrl {
-> +	i2c0_f11_pins:i2c0-f11 {
-> +		mux {
-> +			groups = "i2c0_sck_f11",
-> +				"i2c0_sda_f12";
-> +			function = "i2c0";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c0_f9_pins:i2c0-f9 {
-
-When the nodes don't have an address, please order them
-alpha-numerically by node name.
-
-> +		mux {
-> +			groups = "i2c0_sck_f9",
-> +				"i2c0_sda_f10";
-> +			function = "i2c0";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c1_x_pins:i2c1-x {
-> +		mux {
-> +			groups = "i2c1_sck_x",
-> +				"i2c1_sda_x";
-> +			function = "i2c1";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c1_a_pins:i2c1-a {
-> +		mux {
-> +			groups = "i2c1_sck_a",
-> +				"i2c1_sda_a";
-> +			function = "i2c1";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_x0_pins:i2c2-x0 {
-> +		mux {
-> +			groups = "i2c2_sck_x0",
-> +				"i2c2_sda_x1";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_x15_pins:i2c2-x15 {
-> +		mux {
-> +			groups = "i2c2_sck_x15",
-> +				"i2c2_sda_x16";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_a4_pins:i2c2-a4 {
-> +		mux {
-> +			groups = "i2c2_sck_a4",
-> +				"i2c2_sda_a5";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c2_a8_pins:i2c2-a8 {
-> +		mux {
-> +			groups = "i2c2_sck_a8",
-> +				"i2c2_sda_a9";
-> +			function = "i2c2";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c3_x_pins:i2c3-x {
-> +		mux {
-> +			groups = "i2c3_sck_x",
-> +				"i2c3_sda_x";
-> +			function = "i2c3";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +
-> +	i2c3_f_pins:i2c3-f {
-> +		mux {
-> +			groups = "i2c3_sck_f",
-> +				"i2c3_sda_f";
-> +			function = "i2c3";
-> +			bias-pull-up;
-> +			drive-strength-microamp = <3000>;
-> +		};
-> +	};
-> +};
+diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+index d9b63bfa5dd7..94af6f5828a3 100644
+--- a/drivers/pci/controller/pcie-rockchip-host.c
++++ b/drivers/pci/controller/pcie-rockchip-host.c
+@@ -834,10 +834,12 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+ 	if (!entry)
+ 		return -ENODEV;
+ 
++	/* store the register number offset to program RC io outbound ATU */
++	offset = size >> 20;
++
+ 	size = resource_size(entry->res);
+ 	pci_addr = entry->res->start - entry->offset;
+ 
+-	offset = size >> 20;
+ 	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
+ 		err = rockchip_pcie_prog_ob_atu(rockchip,
+ 						reg_no + 1 + offset,
+-- 
+2.20.1
 
