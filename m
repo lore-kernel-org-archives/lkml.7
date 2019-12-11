@@ -2,139 +2,180 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A453C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDCCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A8CF206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46294206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:01:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P468xW71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfLKEA2 (ORCPT
+        id S1727631AbfLKEBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:00:28 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:47994 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726642AbfLKEA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:00:28 -0500
-Received: from [10.130.0.36] (unknown [123.138.236.242])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxDxe3afBd0nEJAA--.6S3;
-        Wed, 11 Dec 2019 12:00:08 +0800 (CST)
-Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
- <20191211024858.GB732@sol.localdomain>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <febbd7eb-5e53-6e7c-582d-5b224e441e37@loongson.cn>
-Date:   Wed, 11 Dec 2019 11:59:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 10 Dec 2019 23:01:23 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37240 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726718AbfLKEBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 23:01:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576036882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cNipXhz3kcVRls/aNbq9+kWkGCjnAGD5cvo0k6au+L4=;
+        b=P468xW71oOzzN23lLg5B0kHhhZWeNKoFRdP0mXlAmeKa+P7rgayqDKQBKt+iwnb9cpdaTy
+        cHQcc5Ax9E0KIT2yBA+OAbMLDydER6x5SvvTFTj4b7idliqHIZMTQ391K5hLgpGOKiPk3z
+        IOHaiEhBIa4ks69RnHmBGBDTnEpZkUo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-0AXY0FNmMHKQW0CvPtHA3w-1; Tue, 10 Dec 2019 23:01:18 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A420FDB60;
+        Wed, 11 Dec 2019 04:01:15 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-23.pek2.redhat.com [10.72.8.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA41E60BE1;
+        Wed, 11 Dec 2019 04:01:02 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 12:00:58 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Andrea Vai <andrea.vai@unipv.it>,
+        "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+Message-ID: <20191211040058.GC6864@ming.t460p>
+References: <c1358b840b3a4971aa35a25d8495c2c8953403ea.camel@unipv.it>
+ <20191128091712.GD15549@ming.t460p>
+ <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+ <20191129005734.GB1829@ming.t460p>
+ <20191129023555.GA8620@ming.t460p>
+ <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
+ <20191203022337.GE25002@ming.t460p>
+ <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
+ <20191210080550.GA5699@ming.t460p>
+ <20191211024137.GB61323@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <20191211024858.GB732@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9DxDxe3afBd0nEJAA--.6S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw4rXryxJFW5WFyDWF4DArb_yoW8Zr1UpF
-        y5CFZYyF1IgFyUZF4vyw4fZF4Yvrs3XFyjy347K3s8AF1aqFnaqrW5Kr1093Z3JrZ5ZF1S
-        gay3WFyYk398AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
-        xwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-        1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73UjIFyTuYvjxU2rcTDUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+In-Reply-To: <20191211024137.GB61323@mit.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 0AXY0FNmMHKQW0CvPtHA3w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/2019 10:48 AM, Eric Biggers wrote:
-> On Wed, Dec 11, 2019 at 10:20:01AM +0800, Tiezhu Yang wrote:
->> diff --git a/include/linux/namei.h b/include/linux/namei.h
->> index 7fe7b87..0fd9315 100644
->> --- a/include/linux/namei.h
->> +++ b/include/linux/namei.h
->> @@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
->>   	return error == -ESTALE && !(flags & LOOKUP_REVAL);
->>   }
->>   
->> +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
->> +{
->> +	if (unlikely(name[0] == '.')) {
->> +		if (len == 1 || (len == 2 && name[1] == '.'))
->> +			return true;
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>   #endif /* _LINUX_NAMEI_H */
-> I had suggested adding a len >= 1 check to handle the empty name case correctly.
-> What I had in mind was
->
-> static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-> {
-> 	if (len >= 1 && unlikely(name[0] == '.')) {
-> 		if (len < 2 || (len == 2 && name[1] == '.'))
-> 			return true;
-> 	}
->
-> 	return false;
-> }
->
-> As is, you're proposing that it always dereference the first byte even when
-> len=0, which seems like a bad idea for a shared helper function.  Did you check
-> whether it's okay for all the existing callers?  fscrypt_fname_disk_to_usr() is
-> called from 6 places, did you check all of them?
->
-> How about keeping the existing optimized code for the hot path in fs/namei.c
-> (i.e. not using the helper function), while having the helper function do the
-> extra check to handle len=0 correctly?
+On Tue, Dec 10, 2019 at 09:41:37PM -0500, Theodore Y. Ts'o wrote:
+> On Tue, Dec 10, 2019 at 04:05:50PM +0800, Ming Lei wrote:
+> > > > The path[2] is expected behaviour. Not sure path [1] is correct,
+> > > > given
+> > > > ext4_release_file() is supposed to be called when this inode is
+> > > > released. That means the file is closed 4358 times during 1GB file
+> > > > copying to usb storage.
+> > > >=20
+> > > > [1] insert requests when returning to user mode from syscall
+> > > >=20
+> > > >   b'blk_mq_sched_request_inserted'
+> > > >   b'blk_mq_sched_request_inserted'
+> > > >   b'dd_insert_requests'
+> > > >   b'blk_mq_sched_insert_requests'
+> > > >   b'blk_mq_flush_plug_list'
+> > > >   b'blk_flush_plug_list'
+> > > >   b'io_schedule_prepare'
+> > > >   b'io_schedule'
+> > > >   b'rq_qos_wait'
+> > > >   b'wbt_wait'
+> > > >   b'__rq_qos_throttle'
+> > > >   b'blk_mq_make_request'
+> > > >   b'generic_make_request'
+> > > >   b'submit_bio'
+> > > >   b'ext4_io_submit'
+> > > >   b'ext4_writepages'
+> > > >   b'do_writepages'
+> > > >   b'__filemap_fdatawrite_range'
+> > > >   b'ext4_release_file'
+> > > >   b'__fput'
+> > > >   b'task_work_run'
+> > > >   b'exit_to_usermode_loop'
+> > > >   b'do_syscall_64'
+> > > >   b'entry_SYSCALL_64_after_hwframe'
+> > > >     4358
+>=20
+> I'm guessing that your workload is repeatedly truncating a file (or
+> calling open with O_TRUNC) and then writing data to it.  When you do
+> this, then when the file is closed, we assume that since you were
+> replacing the previous contents of a file with new contents, that you
+> would be unhappy if the file contents was replaced by a zero length
+> file after a crash.  That's because ten years, ago there were a *huge*
+> number of crappy applications that would replace a file by reading it
+> into memory, truncating it, and then write out the new contents of the
+> file.  This could be a high score file for a game, or a KDE or GNOME
+> state file, etc.
+>=20
+> So if someone does open, truncate, write, close, we still immediately
+> writing out the data on the close, assuming that the programmer really
+> wanted open, truncate, write, fsync, close, but was too careless to
+> actually do the right thing.
+>=20
+> Some workaround[1] like this is done by all of the major file systems,
+> and was fallout the agreement from the "O_PONIES"[2] controversy.
+> This was discussed and agreed to at the 2009 LSF/MM workshop.  (See
+> the "rename, fsync, and ponies" section.)
+>=20
+> [1] https://bugs.launchpad.net/ubuntu/+source/linux/+bug/317781/comments/=
+45
+> [2] https://blahg.josefsipek.net/?p=3D364
+> [3] https://lwn.net/Articles/327601/
+>=20
+> So if you're seeing a call to filemap_fdatawrite_range as the result
+> of a fput, that's why.
+>=20
+> In any case, this behavior has been around for a decade, and it
+> appears to be incidental to your performance difficulties with your
+> USB thumbdrive and block-mq.
 
-Hi Eric,
+I didn't reproduce the issue in my test environment, and follows
+Andrea's test commands[1]:
 
-Thank you for reminding me.  How about using the following helper for
-all callers?
+  mount UUID=3D$uuid /mnt/pendrive 2>&1 |tee -a $logfile
+  SECONDS=3D0
+  cp $testfile /mnt/pendrive 2>&1 |tee -a $logfile
+  umount /mnt/pendrive 2>&1 |tee -a $logfile
 
-static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-{
-         if (len == 1 && name[0] == '.')
-                 return true;
+The 'cp' command supposes to open/close the file just once, however
+ext4_release_file() & write pages is observed to run for 4358 times
+when executing the above 'cp' test.
 
-         if (len == 2 && name[0] == '.' && name[1] == '.')
-                 return true;
 
-         return false;
-}
+[1] https://marc.info/?l=3Dlinux-kernel&m=3D157486689806734&w=3D2
 
-Hi Matthew,
-
-How do you think? I think the performance influence is very small
-due to is_dot_or_dotdot() is a such short static inline function.
 
 Thanks,
-
-Tiezhu Yang
-
->
-> - Eric
+Ming
 
