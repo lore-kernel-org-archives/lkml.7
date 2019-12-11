@@ -4,31 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F44C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBF8C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196C72077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6662077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfLKJ0T (ORCPT
+        id S1728580AbfLKJ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:26:19 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:42734 "EHLO inva021.nxp.com"
+        Wed, 11 Dec 2019 04:26:17 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:42516 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbfLKJ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:26:10 -0500
+        id S1728370AbfLKJ0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:26:09 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C2952008DD;
-        Wed, 11 Dec 2019 10:26:08 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 48DD520098A;
+        Wed, 11 Dec 2019 10:26:03 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E21B20026A;
-        Wed, 11 Dec 2019 10:26:08 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 390E62002FE;
+        Wed, 11 Dec 2019 10:26:03 +0100 (CET)
 Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id AAF5420568;
-        Wed, 11 Dec 2019 10:26:07 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B190220568;
+        Wed, 11 Dec 2019 10:26:02 +0100 (CET)
 From:   Abel Vesa <abel.vesa@nxp.com>
 To:     Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Sascha Hauer <kernel@pengutronix.de>
@@ -39,9 +38,9 @@ Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
         linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Leonard Crestez <leonard.crestez@nxp.com>,
         Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>
-Subject: [RESEND v2 11/11] clk: imx7up: Rename the clks to hws
-Date:   Wed, 11 Dec 2019 11:25:50 +0200
-Message-Id: <1576056350-20715-12-git-send-email-abel.vesa@nxp.com>
+Subject: [RESEND v2 02/11] clk: imx: Rename the SCCG to SSCG
+Date:   Wed, 11 Dec 2019 11:25:41 +0200
+Message-Id: <1576056350-20715-3-git-send-email-abel.vesa@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1576056350-20715-1-git-send-email-abel.vesa@nxp.com>
 References: <1576056350-20715-1-git-send-email-abel.vesa@nxp.com>
@@ -51,321 +50,1182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is just to keep in line with the other i.MX clock drivers that are
-clk_hw based. Plus, it makes more sense to be called hws since its type is
-clk_hw not clk.
+According to the manual the acronym stands for
+Spread Sprectum Clock Generator.
 
 Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/clk-imx7ulp.c | 182 +++++++++++++++++++++---------------------
- 1 file changed, 91 insertions(+), 91 deletions(-)
+ drivers/clk/imx/Makefile       |   2 +-
+ drivers/clk/imx/clk-imx8mq.c   |   6 +-
+ drivers/clk/imx/clk-sccg-pll.c | 549 -----------------------------------------
+ drivers/clk/imx/clk-sscg-pll.c | 549 +++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/imx/clk.h          |   4 +-
+ 5 files changed, 555 insertions(+), 555 deletions(-)
+ delete mode 100644 drivers/clk/imx/clk-sccg-pll.c
+ create mode 100644 drivers/clk/imx/clk-sscg-pll.c
 
-diff --git a/drivers/clk/imx/clk-imx7ulp.c b/drivers/clk/imx/clk-imx7ulp.c
-index efd9a42..1ad1092 100644
---- a/drivers/clk/imx/clk-imx7ulp.c
-+++ b/drivers/clk/imx/clk-imx7ulp.c
-@@ -58,7 +58,7 @@ static struct clk **pcc3_uart_clks[ARRAY_SIZE(pcc3_uart_clk_ids) + 1] __initdata
- static void __init imx7ulp_clk_scg1_init(struct device_node *np)
- {
- 	struct clk_hw_onecell_data *clk_data;
--	struct clk_hw **clks;
-+	struct clk_hw **hws;
- 	void __iomem *base;
+diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+index 77a3d71..3724ba7 100644
+--- a/drivers/clk/imx/Makefile
++++ b/drivers/clk/imx/Makefile
+@@ -18,7 +18,7 @@ obj-$(CONFIG_MXC_CLK) += \
+ 	clk-pllv2.o \
+ 	clk-pllv3.o \
+ 	clk-pllv4.o \
+-	clk-sccg-pll.o \
++	clk-sscg-pll.o \
+ 	clk-pll14xx.o
  
- 	clk_data = kzalloc(struct_size(clk_data, hws, IMX7ULP_CLK_SCG1_END),
-@@ -67,76 +67,76 @@ static void __init imx7ulp_clk_scg1_init(struct device_node *np)
- 		return;
+ obj-$(CONFIG_MXC_CLK_SCU) += \
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 14a1483..d4da5b9 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -342,9 +342,9 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
  
- 	clk_data->num = IMX7ULP_CLK_SCG1_END;
--	clks = clk_data->hws;
-+	hws = clk_data->hws;
+ 	clks[IMX8MQ_SYS1_PLL_OUT] = imx_clk_fixed("sys1_pll_out", 800000000);
+ 	clks[IMX8MQ_SYS2_PLL_OUT] = imx_clk_fixed("sys2_pll_out", 1000000000);
+-	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sccg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 0, base + 0x48, CLK_IS_CRITICAL);
+-	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sccg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL | CLK_GET_RATE_NOCACHE);
+-	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sccg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
++	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sscg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 0, base + 0x48, CLK_IS_CRITICAL);
++	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sscg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL | CLK_GET_RATE_NOCACHE);
++	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sscg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
  
--	clks[IMX7ULP_CLK_DUMMY]		= imx_clk_hw_fixed("dummy", 0);
-+	hws[IMX7ULP_CLK_DUMMY]		= imx_clk_hw_fixed("dummy", 0);
- 
--	clks[IMX7ULP_CLK_ROSC]		= imx_obtain_fixed_clk_hw(np, "rosc");
--	clks[IMX7ULP_CLK_SOSC]		= imx_obtain_fixed_clk_hw(np, "sosc");
--	clks[IMX7ULP_CLK_SIRC]		= imx_obtain_fixed_clk_hw(np, "sirc");
--	clks[IMX7ULP_CLK_FIRC]		= imx_obtain_fixed_clk_hw(np, "firc");
--	clks[IMX7ULP_CLK_UPLL]		= imx_obtain_fixed_clk_hw(np, "upll");
-+	hws[IMX7ULP_CLK_ROSC]		= imx_obtain_fixed_clk_hw(np, "rosc");
-+	hws[IMX7ULP_CLK_SOSC]		= imx_obtain_fixed_clk_hw(np, "sosc");
-+	hws[IMX7ULP_CLK_SIRC]		= imx_obtain_fixed_clk_hw(np, "sirc");
-+	hws[IMX7ULP_CLK_FIRC]		= imx_obtain_fixed_clk_hw(np, "firc");
-+	hws[IMX7ULP_CLK_UPLL]		= imx_obtain_fixed_clk_hw(np, "upll");
- 
- 	/* SCG1 */
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
- 
- 	/* NOTE: xPLL config can't be changed when xPLL is enabled */
--	clks[IMX7ULP_CLK_APLL_PRE_SEL]	= imx_clk_hw_mux_flags("apll_pre_sel", base + 0x508, 0, 1, pll_pre_sels, ARRAY_SIZE(pll_pre_sels), CLK_SET_PARENT_GATE);
--	clks[IMX7ULP_CLK_SPLL_PRE_SEL]	= imx_clk_hw_mux_flags("spll_pre_sel", base + 0x608, 0, 1, pll_pre_sels, ARRAY_SIZE(pll_pre_sels), CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_APLL_PRE_SEL]	= imx_clk_hw_mux_flags("apll_pre_sel", base + 0x508, 0, 1, pll_pre_sels, ARRAY_SIZE(pll_pre_sels), CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_SPLL_PRE_SEL]	= imx_clk_hw_mux_flags("spll_pre_sel", base + 0x608, 0, 1, pll_pre_sels, ARRAY_SIZE(pll_pre_sels), CLK_SET_PARENT_GATE);
- 
- 	/*							   name		    parent_name	   reg			shift	width	flags */
--	clks[IMX7ULP_CLK_APLL_PRE_DIV]	= imx_clk_hw_divider_flags("apll_pre_div", "apll_pre_sel", base + 0x508,	8,	3,	CLK_SET_RATE_GATE);
--	clks[IMX7ULP_CLK_SPLL_PRE_DIV]	= imx_clk_hw_divider_flags("spll_pre_div", "spll_pre_sel", base + 0x608,	8,	3,	CLK_SET_RATE_GATE);
-+	hws[IMX7ULP_CLK_APLL_PRE_DIV]	= imx_clk_hw_divider_flags("apll_pre_div", "apll_pre_sel", base + 0x508,	8,	3,	CLK_SET_RATE_GATE);
-+	hws[IMX7ULP_CLK_SPLL_PRE_DIV]	= imx_clk_hw_divider_flags("spll_pre_div", "spll_pre_sel", base + 0x608,	8,	3,	CLK_SET_RATE_GATE);
- 
- 	/*						name	 parent_name	 base */
--	clks[IMX7ULP_CLK_APLL]		= imx_clk_hw_pllv4("apll",  "apll_pre_div", base + 0x500);
--	clks[IMX7ULP_CLK_SPLL]		= imx_clk_hw_pllv4("spll",  "spll_pre_div", base + 0x600);
-+	hws[IMX7ULP_CLK_APLL]		= imx_clk_hw_pllv4("apll",  "apll_pre_div", base + 0x500);
-+	hws[IMX7ULP_CLK_SPLL]		= imx_clk_hw_pllv4("spll",  "spll_pre_div", base + 0x600);
- 
- 	/* APLL PFDs */
--	clks[IMX7ULP_CLK_APLL_PFD0]	= imx_clk_hw_pfdv2("apll_pfd0", "apll", base + 0x50c, 0);
--	clks[IMX7ULP_CLK_APLL_PFD1]	= imx_clk_hw_pfdv2("apll_pfd1", "apll", base + 0x50c, 1);
--	clks[IMX7ULP_CLK_APLL_PFD2]	= imx_clk_hw_pfdv2("apll_pfd2", "apll", base + 0x50c, 2);
--	clks[IMX7ULP_CLK_APLL_PFD3]	= imx_clk_hw_pfdv2("apll_pfd3", "apll", base + 0x50c, 3);
-+	hws[IMX7ULP_CLK_APLL_PFD0]	= imx_clk_hw_pfdv2("apll_pfd0", "apll", base + 0x50c, 0);
-+	hws[IMX7ULP_CLK_APLL_PFD1]	= imx_clk_hw_pfdv2("apll_pfd1", "apll", base + 0x50c, 1);
-+	hws[IMX7ULP_CLK_APLL_PFD2]	= imx_clk_hw_pfdv2("apll_pfd2", "apll", base + 0x50c, 2);
-+	hws[IMX7ULP_CLK_APLL_PFD3]	= imx_clk_hw_pfdv2("apll_pfd3", "apll", base + 0x50c, 3);
- 
- 	/* SPLL PFDs */
--	clks[IMX7ULP_CLK_SPLL_PFD0]	= imx_clk_hw_pfdv2("spll_pfd0", "spll", base + 0x60C, 0);
--	clks[IMX7ULP_CLK_SPLL_PFD1]	= imx_clk_hw_pfdv2("spll_pfd1", "spll", base + 0x60C, 1);
--	clks[IMX7ULP_CLK_SPLL_PFD2]	= imx_clk_hw_pfdv2("spll_pfd2", "spll", base + 0x60C, 2);
--	clks[IMX7ULP_CLK_SPLL_PFD3]	= imx_clk_hw_pfdv2("spll_pfd3", "spll", base + 0x60C, 3);
-+	hws[IMX7ULP_CLK_SPLL_PFD0]	= imx_clk_hw_pfdv2("spll_pfd0", "spll", base + 0x60C, 0);
-+	hws[IMX7ULP_CLK_SPLL_PFD1]	= imx_clk_hw_pfdv2("spll_pfd1", "spll", base + 0x60C, 1);
-+	hws[IMX7ULP_CLK_SPLL_PFD2]	= imx_clk_hw_pfdv2("spll_pfd2", "spll", base + 0x60C, 2);
-+	hws[IMX7ULP_CLK_SPLL_PFD3]	= imx_clk_hw_pfdv2("spll_pfd3", "spll", base + 0x60C, 3);
- 
- 	/* PLL Mux */
--	clks[IMX7ULP_CLK_APLL_PFD_SEL]	= imx_clk_hw_mux_flags("apll_pfd_sel", base + 0x508, 14, 2, apll_pfd_sels, ARRAY_SIZE(apll_pfd_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
--	clks[IMX7ULP_CLK_SPLL_PFD_SEL]	= imx_clk_hw_mux_flags("spll_pfd_sel", base + 0x608, 14, 2, spll_pfd_sels, ARRAY_SIZE(spll_pfd_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
--	clks[IMX7ULP_CLK_APLL_SEL]	= imx_clk_hw_mux_flags("apll_sel", base + 0x508, 1, 1, apll_sels, ARRAY_SIZE(apll_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
--	clks[IMX7ULP_CLK_SPLL_SEL]	= imx_clk_hw_mux_flags("spll_sel", base + 0x608, 1, 1, spll_sels, ARRAY_SIZE(spll_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_APLL_PFD_SEL]	= imx_clk_hw_mux_flags("apll_pfd_sel", base + 0x508, 14, 2, apll_pfd_sels, ARRAY_SIZE(apll_pfd_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_SPLL_PFD_SEL]	= imx_clk_hw_mux_flags("spll_pfd_sel", base + 0x608, 14, 2, spll_pfd_sels, ARRAY_SIZE(spll_pfd_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_APLL_SEL]	= imx_clk_hw_mux_flags("apll_sel", base + 0x508, 1, 1, apll_sels, ARRAY_SIZE(apll_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
-+	hws[IMX7ULP_CLK_SPLL_SEL]	= imx_clk_hw_mux_flags("spll_sel", base + 0x608, 1, 1, spll_sels, ARRAY_SIZE(spll_sels), CLK_SET_RATE_PARENT | CLK_SET_PARENT_GATE);
- 
--	clks[IMX7ULP_CLK_SPLL_BUS_CLK]	= imx_clk_hw_divider_gate("spll_bus_clk", "spll_sel", CLK_SET_RATE_GATE, base + 0x604, 8, 3, 0, ulp_div_table, &imx_ccm_lock);
-+	hws[IMX7ULP_CLK_SPLL_BUS_CLK]	= imx_clk_hw_divider_gate("spll_bus_clk", "spll_sel", CLK_SET_RATE_GATE, base + 0x604, 8, 3, 0, ulp_div_table, &imx_ccm_lock);
- 
- 	/* scs/ddr/nic select different clock source requires that clock to be enabled first */
--	clks[IMX7ULP_CLK_SYS_SEL]	= imx_clk_hw_mux2("scs_sel", base + 0x14, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
--	clks[IMX7ULP_CLK_HSRUN_SYS_SEL] = imx_clk_hw_mux2("hsrun_scs_sel", base + 0x1c, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
--	clks[IMX7ULP_CLK_NIC_SEL]	= imx_clk_hw_mux2("nic_sel", base + 0x40, 28, 1, nic_sels, ARRAY_SIZE(nic_sels));
--	clks[IMX7ULP_CLK_DDR_SEL]	= imx_clk_hw_mux_flags("ddr_sel", base + 0x30, 24, 2, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
-+	hws[IMX7ULP_CLK_SYS_SEL]	= imx_clk_hw_mux2("scs_sel", base + 0x14, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
-+	hws[IMX7ULP_CLK_HSRUN_SYS_SEL] = imx_clk_hw_mux2("hsrun_scs_sel", base + 0x1c, 24, 4, scs_sels, ARRAY_SIZE(scs_sels));
-+	hws[IMX7ULP_CLK_NIC_SEL]	= imx_clk_hw_mux2("nic_sel", base + 0x40, 28, 1, nic_sels, ARRAY_SIZE(nic_sels));
-+	hws[IMX7ULP_CLK_DDR_SEL]	= imx_clk_hw_mux_flags("ddr_sel", base + 0x30, 24, 2, ddr_sels, ARRAY_SIZE(ddr_sels), CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE);
- 
--	clks[IMX7ULP_CLK_CORE_DIV]	= imx_clk_hw_divider_flags("divcore",	"scs_sel",  base + 0x14, 16, 4, CLK_SET_RATE_PARENT);
--	clks[IMX7ULP_CLK_HSRUN_CORE_DIV] = imx_clk_hw_divider_flags("hsrun_divcore", "hsrun_scs_sel", base + 0x1c, 16, 4, CLK_SET_RATE_PARENT);
-+	hws[IMX7ULP_CLK_CORE_DIV]	= imx_clk_hw_divider_flags("divcore",	"scs_sel",  base + 0x14, 16, 4, CLK_SET_RATE_PARENT);
-+	hws[IMX7ULP_CLK_HSRUN_CORE_DIV] = imx_clk_hw_divider_flags("hsrun_divcore", "hsrun_scs_sel", base + 0x1c, 16, 4, CLK_SET_RATE_PARENT);
- 
--	clks[IMX7ULP_CLK_DDR_DIV]	= imx_clk_hw_divider_gate("ddr_clk", "ddr_sel", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, base + 0x30, 0, 3,
-+	hws[IMX7ULP_CLK_DDR_DIV]	= imx_clk_hw_divider_gate("ddr_clk", "ddr_sel", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL, base + 0x30, 0, 3,
- 							       0, ulp_div_table, &imx_ccm_lock);
- 
--	clks[IMX7ULP_CLK_NIC0_DIV]	= imx_clk_hw_divider_flags("nic0_clk",		"nic_sel",  base + 0x40, 24, 4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
--	clks[IMX7ULP_CLK_NIC1_DIV]	= imx_clk_hw_divider_flags("nic1_clk",		"nic0_clk", base + 0x40, 16, 4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
--	clks[IMX7ULP_CLK_NIC1_BUS_DIV]	= imx_clk_hw_divider_flags("nic1_bus_clk",	"nic0_clk", base + 0x40, 4,  4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
-+	hws[IMX7ULP_CLK_NIC0_DIV]	= imx_clk_hw_divider_flags("nic0_clk",		"nic_sel",  base + 0x40, 24, 4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
-+	hws[IMX7ULP_CLK_NIC1_DIV]	= imx_clk_hw_divider_flags("nic1_clk",		"nic0_clk", base + 0x40, 16, 4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
-+	hws[IMX7ULP_CLK_NIC1_BUS_DIV]	= imx_clk_hw_divider_flags("nic1_bus_clk",	"nic0_clk", base + 0x40, 4,  4, CLK_SET_RATE_PARENT | CLK_IS_CRITICAL);
- 
--	clks[IMX7ULP_CLK_GPU_DIV]	= imx_clk_hw_divider("gpu_clk", "nic0_clk", base + 0x40, 20, 4);
-+	hws[IMX7ULP_CLK_GPU_DIV]	= imx_clk_hw_divider("gpu_clk", "nic0_clk", base + 0x40, 20, 4);
- 
--	clks[IMX7ULP_CLK_SOSC_BUS_CLK]	= imx_clk_hw_divider_gate("sosc_bus_clk", "sosc", 0, base + 0x104, 8, 3,
-+	hws[IMX7ULP_CLK_SOSC_BUS_CLK]	= imx_clk_hw_divider_gate("sosc_bus_clk", "sosc", 0, base + 0x104, 8, 3,
- 							       CLK_DIVIDER_READ_ONLY, ulp_div_table, &imx_ccm_lock);
--	clks[IMX7ULP_CLK_FIRC_BUS_CLK]	= imx_clk_hw_divider_gate("firc_bus_clk", "firc", 0, base + 0x304, 8, 3,
-+	hws[IMX7ULP_CLK_FIRC_BUS_CLK]	= imx_clk_hw_divider_gate("firc_bus_clk", "firc", 0, base + 0x304, 8, 3,
- 							       CLK_DIVIDER_READ_ONLY, ulp_div_table, &imx_ccm_lock);
- 
--	imx_check_clk_hws(clks, clk_data->num);
-+	imx_check_clk_hws(hws, clk_data->num);
- 
- 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
- }
-@@ -145,7 +145,7 @@ CLK_OF_DECLARE(imx7ulp_clk_scg1, "fsl,imx7ulp-scg1", imx7ulp_clk_scg1_init);
- static void __init imx7ulp_clk_pcc2_init(struct device_node *np)
- {
- 	struct clk_hw_onecell_data *clk_data;
--	struct clk_hw **clks;
-+	struct clk_hw **hws;
- 	void __iomem *base;
- 	int i;
- 
-@@ -155,42 +155,42 @@ static void __init imx7ulp_clk_pcc2_init(struct device_node *np)
- 		return;
- 
- 	clk_data->num = IMX7ULP_CLK_PCC2_END;
--	clks = clk_data->hws;
-+	hws = clk_data->hws;
- 
- 	/* PCC2 */
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
- 
--	clks[IMX7ULP_CLK_DMA1]		= imx_clk_hw_gate("dma1", "nic1_clk", base + 0x20, 30);
--	clks[IMX7ULP_CLK_RGPIO2P1]	= imx_clk_hw_gate("rgpio2p1", "nic1_bus_clk", base + 0x3c, 30);
--	clks[IMX7ULP_CLK_DMA_MUX1]	= imx_clk_hw_gate("dma_mux1", "nic1_bus_clk", base + 0x84, 30);
--	clks[IMX7ULP_CLK_CAAM]		= imx_clk_hw_gate("caam", "nic1_clk", base + 0x90, 30);
--	clks[IMX7ULP_CLK_LPTPM4]	= imx7ulp_clk_hw_composite("lptpm4",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x94);
--	clks[IMX7ULP_CLK_LPTPM5]	= imx7ulp_clk_hw_composite("lptpm5",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x98);
--	clks[IMX7ULP_CLK_LPIT1]		= imx7ulp_clk_hw_composite("lpit1",   periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x9c);
--	clks[IMX7ULP_CLK_LPSPI2]	= imx7ulp_clk_hw_composite("lpspi2",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xa4);
--	clks[IMX7ULP_CLK_LPSPI3]	= imx7ulp_clk_hw_composite("lpspi3",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xa8);
--	clks[IMX7ULP_CLK_LPI2C4]	= imx7ulp_clk_hw_composite("lpi2c4",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xac);
--	clks[IMX7ULP_CLK_LPI2C5]	= imx7ulp_clk_hw_composite("lpi2c5",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb0);
--	clks[IMX7ULP_CLK_LPUART4]	= imx7ulp_clk_hw_composite("lpuart4", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb4);
--	clks[IMX7ULP_CLK_LPUART5]	= imx7ulp_clk_hw_composite("lpuart5", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb8);
--	clks[IMX7ULP_CLK_FLEXIO1]	= imx7ulp_clk_hw_composite("flexio1", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xc4);
--	clks[IMX7ULP_CLK_USB0]		= imx7ulp_clk_hw_composite("usb0",    periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xcc);
--	clks[IMX7ULP_CLK_USB1]		= imx7ulp_clk_hw_composite("usb1",    periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xd0);
--	clks[IMX7ULP_CLK_USB_PHY]	= imx_clk_hw_gate("usb_phy", "nic1_bus_clk", base + 0xd4, 30);
--	clks[IMX7ULP_CLK_USDHC0]	= imx7ulp_clk_hw_composite("usdhc0",  periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xdc);
--	clks[IMX7ULP_CLK_USDHC1]	= imx7ulp_clk_hw_composite("usdhc1",  periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xe0);
--	clks[IMX7ULP_CLK_WDG1]		= imx7ulp_clk_hw_composite("wdg1",    periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0xf4);
--	clks[IMX7ULP_CLK_WDG2]		= imx7ulp_clk_hw_composite("wdg2",    periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0x10c);
+ 	/* SYS PLL1 fixed output */
+ 	clks[IMX8MQ_SYS1_PLL_40M_CG] = imx_clk_gate("sys1_pll_40m_cg", "sys1_pll_out", base + 0x30, 9);
+diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
+deleted file mode 100644
+index 5d65f65..00000000
+--- a/drivers/clk/imx/clk-sccg-pll.c
++++ /dev/null
+@@ -1,549 +0,0 @@
+-// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+-/*
+- * Copyright 2018 NXP.
+- *
+- * This driver supports the SCCG plls found in the imx8m SOCs
+- *
+- * Documentation for this SCCG pll can be found at:
+- *   https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=834
+- */
 -
--	imx_check_clk_hws(clks, clk_data->num);
-+	hws[IMX7ULP_CLK_DMA1]		= imx_clk_hw_gate("dma1", "nic1_clk", base + 0x20, 30);
-+	hws[IMX7ULP_CLK_RGPIO2P1]	= imx_clk_hw_gate("rgpio2p1", "nic1_bus_clk", base + 0x3c, 30);
-+	hws[IMX7ULP_CLK_DMA_MUX1]	= imx_clk_hw_gate("dma_mux1", "nic1_bus_clk", base + 0x84, 30);
-+	hws[IMX7ULP_CLK_CAAM]		= imx_clk_hw_gate("caam", "nic1_clk", base + 0x90, 30);
-+	hws[IMX7ULP_CLK_LPTPM4]		= imx7ulp_clk_hw_composite("lptpm4",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x94);
-+	hws[IMX7ULP_CLK_LPTPM5]		= imx7ulp_clk_hw_composite("lptpm5",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x98);
-+	hws[IMX7ULP_CLK_LPIT1]		= imx7ulp_clk_hw_composite("lpit1",   periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x9c);
-+	hws[IMX7ULP_CLK_LPSPI2]		= imx7ulp_clk_hw_composite("lpspi2",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xa4);
-+	hws[IMX7ULP_CLK_LPSPI3]		= imx7ulp_clk_hw_composite("lpspi3",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xa8);
-+	hws[IMX7ULP_CLK_LPI2C4]		= imx7ulp_clk_hw_composite("lpi2c4",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xac);
-+	hws[IMX7ULP_CLK_LPI2C5]		= imx7ulp_clk_hw_composite("lpi2c5",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb0);
-+	hws[IMX7ULP_CLK_LPUART4]	= imx7ulp_clk_hw_composite("lpuart4", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb4);
-+	hws[IMX7ULP_CLK_LPUART5]	= imx7ulp_clk_hw_composite("lpuart5", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xb8);
-+	hws[IMX7ULP_CLK_FLEXIO1]	= imx7ulp_clk_hw_composite("flexio1", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0xc4);
-+	hws[IMX7ULP_CLK_USB0]		= imx7ulp_clk_hw_composite("usb0",    periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xcc);
-+	hws[IMX7ULP_CLK_USB1]		= imx7ulp_clk_hw_composite("usb1",    periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xd0);
-+	hws[IMX7ULP_CLK_USB_PHY]	= imx_clk_hw_gate("usb_phy", "nic1_bus_clk", base + 0xd4, 30);
-+	hws[IMX7ULP_CLK_USDHC0]		= imx7ulp_clk_hw_composite("usdhc0",  periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xdc);
-+	hws[IMX7ULP_CLK_USDHC1]		= imx7ulp_clk_hw_composite("usdhc1",  periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xe0);
-+	hws[IMX7ULP_CLK_WDG1]		= imx7ulp_clk_hw_composite("wdg1",    periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0xf4);
-+	hws[IMX7ULP_CLK_WDG2]		= imx7ulp_clk_hw_composite("wdg2",    periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0x10c);
+-#include <linux/clk-provider.h>
+-#include <linux/err.h>
+-#include <linux/io.h>
+-#include <linux/iopoll.h>
+-#include <linux/slab.h>
+-#include <linux/bitfield.h>
+-
+-#include "clk.h"
+-
+-/* PLL CFGs */
+-#define PLL_CFG0		0x0
+-#define PLL_CFG1		0x4
+-#define PLL_CFG2		0x8
+-
+-#define PLL_DIVF1_MASK		GENMASK(18, 13)
+-#define PLL_DIVF2_MASK		GENMASK(12, 7)
+-#define PLL_DIVR1_MASK		GENMASK(27, 25)
+-#define PLL_DIVR2_MASK		GENMASK(24, 19)
+-#define PLL_DIVQ_MASK           GENMASK(6, 1)
+-#define PLL_REF_MASK		GENMASK(2, 0)
+-
+-#define PLL_LOCK_MASK		BIT(31)
+-#define PLL_PD_MASK		BIT(7)
+-
+-/* These are the specification limits for the SSCG PLL */
+-#define PLL_REF_MIN_FREQ		25000000UL
+-#define PLL_REF_MAX_FREQ		235000000UL
+-
+-#define PLL_STAGE1_MIN_FREQ		1600000000UL
+-#define PLL_STAGE1_MAX_FREQ		2400000000UL
+-
+-#define PLL_STAGE1_REF_MIN_FREQ		25000000UL
+-#define PLL_STAGE1_REF_MAX_FREQ		54000000UL
+-
+-#define PLL_STAGE2_MIN_FREQ		1200000000UL
+-#define PLL_STAGE2_MAX_FREQ		2400000000UL
+-
+-#define PLL_STAGE2_REF_MIN_FREQ		54000000UL
+-#define PLL_STAGE2_REF_MAX_FREQ		75000000UL
+-
+-#define PLL_OUT_MIN_FREQ		20000000UL
+-#define PLL_OUT_MAX_FREQ		1200000000UL
+-
+-#define PLL_DIVR1_MAX			7
+-#define PLL_DIVR2_MAX			63
+-#define PLL_DIVF1_MAX			63
+-#define PLL_DIVF2_MAX			63
+-#define PLL_DIVQ_MAX			63
+-
+-#define PLL_BYPASS_NONE			0x0
+-#define PLL_BYPASS1			0x2
+-#define PLL_BYPASS2			0x1
+-
+-#define SSCG_PLL_BYPASS1_MASK           BIT(5)
+-#define SSCG_PLL_BYPASS2_MASK           BIT(4)
+-#define SSCG_PLL_BYPASS_MASK		GENMASK(5, 4)
+-
+-#define PLL_SCCG_LOCK_TIMEOUT		70
+-
+-struct clk_sccg_pll_setup {
+-	int divr1, divf1;
+-	int divr2, divf2;
+-	int divq;
+-	int bypass;
+-
+-	uint64_t vco1;
+-	uint64_t vco2;
+-	uint64_t fout;
+-	uint64_t ref;
+-	uint64_t ref_div1;
+-	uint64_t ref_div2;
+-	uint64_t fout_request;
+-	int fout_error;
+-};
+-
+-struct clk_sccg_pll {
+-	struct clk_hw	hw;
+-	const struct clk_ops  ops;
+-
+-	void __iomem *base;
+-
+-	struct clk_sccg_pll_setup setup;
+-
+-	u8 parent;
+-	u8 bypass1;
+-	u8 bypass2;
+-};
+-
+-#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
+-
+-static int clk_sccg_pll_wait_lock(struct clk_sccg_pll *pll)
+-{
+-	u32 val;
+-
+-	val = readl_relaxed(pll->base + PLL_CFG0);
+-
+-	/* don't wait for lock if all plls are bypassed */
+-	if (!(val & SSCG_PLL_BYPASS2_MASK))
+-		return readl_poll_timeout(pll->base, val, val & PLL_LOCK_MASK,
+-						0, PLL_SCCG_LOCK_TIMEOUT);
+-
+-	return 0;
+-}
+-
+-static int clk_sccg_pll2_check_match(struct clk_sccg_pll_setup *setup,
+-					struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int new_diff = temp_setup->fout - temp_setup->fout_request;
+-	int diff = temp_setup->fout_error;
+-
+-	if (abs(diff) > abs(new_diff)) {
+-		temp_setup->fout_error = new_diff;
+-		memcpy(setup, temp_setup, sizeof(struct clk_sccg_pll_setup));
+-
+-		if (temp_setup->fout_request == temp_setup->fout)
+-			return 0;
+-	}
+-	return -1;
+-}
+-
+-static int clk_sccg_divq_lookup(struct clk_sccg_pll_setup *setup,
+-				struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int ret = -EINVAL;
+-
+-	for (temp_setup->divq = 0; temp_setup->divq <= PLL_DIVQ_MAX;
+-	     temp_setup->divq++) {
+-		temp_setup->vco2 = temp_setup->vco1;
+-		do_div(temp_setup->vco2, temp_setup->divr2 + 1);
+-		temp_setup->vco2 *= 2;
+-		temp_setup->vco2 *= temp_setup->divf2 + 1;
+-		if (temp_setup->vco2 >= PLL_STAGE2_MIN_FREQ &&
+-				temp_setup->vco2 <= PLL_STAGE2_MAX_FREQ) {
+-			temp_setup->fout = temp_setup->vco2;
+-			do_div(temp_setup->fout, 2 * (temp_setup->divq + 1));
+-
+-			ret = clk_sccg_pll2_check_match(setup, temp_setup);
+-			if (!ret) {
+-				temp_setup->bypass = PLL_BYPASS1;
+-				return ret;
+-			}
+-		}
+-	}
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_divf2_lookup(struct clk_sccg_pll_setup *setup,
+-					struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int ret = -EINVAL;
+-
+-	for (temp_setup->divf2 = 0; temp_setup->divf2 <= PLL_DIVF2_MAX;
+-	     temp_setup->divf2++) {
+-		ret = clk_sccg_divq_lookup(setup, temp_setup);
+-		if (!ret)
+-			return ret;
+-	}
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_divr2_lookup(struct clk_sccg_pll_setup *setup,
+-				struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int ret = -EINVAL;
+-
+-	for (temp_setup->divr2 = 0; temp_setup->divr2 <= PLL_DIVR2_MAX;
+-	     temp_setup->divr2++) {
+-		temp_setup->ref_div2 = temp_setup->vco1;
+-		do_div(temp_setup->ref_div2, temp_setup->divr2 + 1);
+-		if (temp_setup->ref_div2 >= PLL_STAGE2_REF_MIN_FREQ &&
+-		    temp_setup->ref_div2 <= PLL_STAGE2_REF_MAX_FREQ) {
+-			ret = clk_sccg_divf2_lookup(setup, temp_setup);
+-			if (!ret)
+-				return ret;
+-		}
+-	}
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_pll2_find_setup(struct clk_sccg_pll_setup *setup,
+-					struct clk_sccg_pll_setup *temp_setup,
+-					uint64_t ref)
+-{
+-
+-	int ret = -EINVAL;
+-
+-	if (ref < PLL_STAGE1_MIN_FREQ || ref > PLL_STAGE1_MAX_FREQ)
+-		return ret;
+-
+-	temp_setup->vco1 = ref;
+-
+-	ret = clk_sccg_divr2_lookup(setup, temp_setup);
+-	return ret;
+-}
+-
+-static int clk_sccg_divf1_lookup(struct clk_sccg_pll_setup *setup,
+-				struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int ret = -EINVAL;
+-
+-	for (temp_setup->divf1 = 0; temp_setup->divf1 <= PLL_DIVF1_MAX;
+-	     temp_setup->divf1++) {
+-		uint64_t vco1 = temp_setup->ref;
+-
+-		do_div(vco1, temp_setup->divr1 + 1);
+-		vco1 *= 2;
+-		vco1 *= temp_setup->divf1 + 1;
+-
+-		ret = clk_sccg_pll2_find_setup(setup, temp_setup, vco1);
+-		if (!ret) {
+-			temp_setup->bypass = PLL_BYPASS_NONE;
+-			return ret;
+-		}
+-	}
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_divr1_lookup(struct clk_sccg_pll_setup *setup,
+-				struct clk_sccg_pll_setup *temp_setup)
+-{
+-	int ret = -EINVAL;
+-
+-	for (temp_setup->divr1 = 0; temp_setup->divr1 <= PLL_DIVR1_MAX;
+-	     temp_setup->divr1++) {
+-		temp_setup->ref_div1 = temp_setup->ref;
+-		do_div(temp_setup->ref_div1, temp_setup->divr1 + 1);
+-		if (temp_setup->ref_div1 >= PLL_STAGE1_REF_MIN_FREQ &&
+-		    temp_setup->ref_div1 <= PLL_STAGE1_REF_MAX_FREQ) {
+-			ret = clk_sccg_divf1_lookup(setup, temp_setup);
+-			if (!ret)
+-				return ret;
+-		}
+-	}
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_pll1_find_setup(struct clk_sccg_pll_setup *setup,
+-					struct clk_sccg_pll_setup *temp_setup,
+-					uint64_t ref)
+-{
+-
+-	int ret = -EINVAL;
+-
+-	if (ref < PLL_REF_MIN_FREQ || ref > PLL_REF_MAX_FREQ)
+-		return ret;
+-
+-	temp_setup->ref = ref;
+-
+-	ret = clk_sccg_divr1_lookup(setup, temp_setup);
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_pll_find_setup(struct clk_sccg_pll_setup *setup,
+-					uint64_t prate,
+-					uint64_t rate, int try_bypass)
+-{
+-	struct clk_sccg_pll_setup temp_setup;
+-	int ret = -EINVAL;
+-
+-	memset(&temp_setup, 0, sizeof(struct clk_sccg_pll_setup));
+-	memset(setup, 0, sizeof(struct clk_sccg_pll_setup));
+-
+-	temp_setup.fout_error = PLL_OUT_MAX_FREQ;
+-	temp_setup.fout_request = rate;
+-
+-	switch (try_bypass) {
+-
+-	case PLL_BYPASS2:
+-		if (prate == rate) {
+-			setup->bypass = PLL_BYPASS2;
+-			setup->fout = rate;
+-			ret = 0;
+-		}
+-		break;
+-
+-	case PLL_BYPASS1:
+-		ret = clk_sccg_pll2_find_setup(setup, &temp_setup, prate);
+-		break;
+-
+-	case PLL_BYPASS_NONE:
+-		ret = clk_sccg_pll1_find_setup(setup, &temp_setup, prate);
+-		break;
+-	}
+-
+-	return ret;
+-}
+-
+-
+-static int clk_sccg_pll_is_prepared(struct clk_hw *hw)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-
+-	u32 val = readl_relaxed(pll->base + PLL_CFG0);
+-
+-	return (val & PLL_PD_MASK) ? 0 : 1;
+-}
+-
+-static int clk_sccg_pll_prepare(struct clk_hw *hw)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	u32 val;
+-
+-	val = readl_relaxed(pll->base + PLL_CFG0);
+-	val &= ~PLL_PD_MASK;
+-	writel_relaxed(val, pll->base + PLL_CFG0);
+-
+-	return clk_sccg_pll_wait_lock(pll);
+-}
+-
+-static void clk_sccg_pll_unprepare(struct clk_hw *hw)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	u32 val;
+-
+-	val = readl_relaxed(pll->base + PLL_CFG0);
+-	val |= PLL_PD_MASK;
+-	writel_relaxed(val, pll->base + PLL_CFG0);
+-}
+-
+-static unsigned long clk_sccg_pll_recalc_rate(struct clk_hw *hw,
+-					 unsigned long parent_rate)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	u32 val, divr1, divf1, divr2, divf2, divq;
+-	u64 temp64;
+-
+-	val = readl_relaxed(pll->base + PLL_CFG2);
+-	divr1 = FIELD_GET(PLL_DIVR1_MASK, val);
+-	divr2 = FIELD_GET(PLL_DIVR2_MASK, val);
+-	divf1 = FIELD_GET(PLL_DIVF1_MASK, val);
+-	divf2 = FIELD_GET(PLL_DIVF2_MASK, val);
+-	divq = FIELD_GET(PLL_DIVQ_MASK, val);
+-
+-	temp64 = parent_rate;
+-
+-	val = readl(pll->base + PLL_CFG0);
+-	if (val & SSCG_PLL_BYPASS2_MASK) {
+-		temp64 = parent_rate;
+-	} else if (val & SSCG_PLL_BYPASS1_MASK) {
+-		temp64 *= divf2;
+-		do_div(temp64, (divr2 + 1) * (divq + 1));
+-	} else {
+-		temp64 *= 2;
+-		temp64 *= (divf1 + 1) * (divf2 + 1);
+-		do_div(temp64, (divr1 + 1) * (divr2 + 1) * (divq + 1));
+-	}
+-
+-	return temp64;
+-}
+-
+-static int clk_sccg_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+-			    unsigned long parent_rate)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	struct clk_sccg_pll_setup *setup = &pll->setup;
+-	u32 val;
+-
+-	/* set bypass here too since the parent might be the same */
+-	val = readl(pll->base + PLL_CFG0);
+-	val &= ~SSCG_PLL_BYPASS_MASK;
+-	val |= FIELD_PREP(SSCG_PLL_BYPASS_MASK, setup->bypass);
+-	writel(val, pll->base + PLL_CFG0);
+-
+-	val = readl_relaxed(pll->base + PLL_CFG2);
+-	val &= ~(PLL_DIVF1_MASK | PLL_DIVF2_MASK);
+-	val &= ~(PLL_DIVR1_MASK | PLL_DIVR2_MASK | PLL_DIVQ_MASK);
+-	val |= FIELD_PREP(PLL_DIVF1_MASK, setup->divf1);
+-	val |= FIELD_PREP(PLL_DIVF2_MASK, setup->divf2);
+-	val |= FIELD_PREP(PLL_DIVR1_MASK, setup->divr1);
+-	val |= FIELD_PREP(PLL_DIVR2_MASK, setup->divr2);
+-	val |= FIELD_PREP(PLL_DIVQ_MASK, setup->divq);
+-	writel_relaxed(val, pll->base + PLL_CFG2);
+-
+-	return clk_sccg_pll_wait_lock(pll);
+-}
+-
+-static u8 clk_sccg_pll_get_parent(struct clk_hw *hw)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	u32 val;
+-	u8 ret = pll->parent;
+-
+-	val = readl(pll->base + PLL_CFG0);
+-	if (val & SSCG_PLL_BYPASS2_MASK)
+-		ret = pll->bypass2;
+-	else if (val & SSCG_PLL_BYPASS1_MASK)
+-		ret = pll->bypass1;
+-	return ret;
+-}
+-
+-static int clk_sccg_pll_set_parent(struct clk_hw *hw, u8 index)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	u32 val;
+-
+-	val = readl(pll->base + PLL_CFG0);
+-	val &= ~SSCG_PLL_BYPASS_MASK;
+-	val |= FIELD_PREP(SSCG_PLL_BYPASS_MASK, pll->setup.bypass);
+-	writel(val, pll->base + PLL_CFG0);
+-
+-	return clk_sccg_pll_wait_lock(pll);
+-}
+-
+-static int __clk_sccg_pll_determine_rate(struct clk_hw *hw,
+-					struct clk_rate_request *req,
+-					uint64_t min,
+-					uint64_t max,
+-					uint64_t rate,
+-					int bypass)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	struct clk_sccg_pll_setup *setup = &pll->setup;
+-	struct clk_hw *parent_hw = NULL;
+-	int bypass_parent_index;
+-	int ret = -EINVAL;
+-
+-	req->max_rate = max;
+-	req->min_rate = min;
+-
+-	switch (bypass) {
+-	case PLL_BYPASS2:
+-		bypass_parent_index = pll->bypass2;
+-		break;
+-	case PLL_BYPASS1:
+-		bypass_parent_index = pll->bypass1;
+-		break;
+-	default:
+-		bypass_parent_index = pll->parent;
+-		break;
+-	}
+-
+-	parent_hw = clk_hw_get_parent_by_index(hw, bypass_parent_index);
+-	ret = __clk_determine_rate(parent_hw, req);
+-	if (!ret) {
+-		ret = clk_sccg_pll_find_setup(setup, req->rate,
+-						rate, bypass);
+-	}
+-
+-	req->best_parent_hw = parent_hw;
+-	req->best_parent_rate = req->rate;
+-	req->rate = setup->fout;
+-
+-	return ret;
+-}
+-
+-static int clk_sccg_pll_determine_rate(struct clk_hw *hw,
+-				       struct clk_rate_request *req)
+-{
+-	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+-	struct clk_sccg_pll_setup *setup = &pll->setup;
+-	uint64_t rate = req->rate;
+-	uint64_t min = req->min_rate;
+-	uint64_t max = req->max_rate;
+-	int ret = -EINVAL;
+-
+-	if (rate < PLL_OUT_MIN_FREQ || rate > PLL_OUT_MAX_FREQ)
+-		return ret;
+-
+-	ret = __clk_sccg_pll_determine_rate(hw, req, req->rate, req->rate,
+-						rate, PLL_BYPASS2);
+-	if (!ret)
+-		return ret;
+-
+-	ret = __clk_sccg_pll_determine_rate(hw, req, PLL_STAGE1_REF_MIN_FREQ,
+-						PLL_STAGE1_REF_MAX_FREQ, rate,
+-						PLL_BYPASS1);
+-	if (!ret)
+-		return ret;
+-
+-	ret = __clk_sccg_pll_determine_rate(hw, req, PLL_REF_MIN_FREQ,
+-						PLL_REF_MAX_FREQ, rate,
+-						PLL_BYPASS_NONE);
+-	if (!ret)
+-		return ret;
+-
+-	if (setup->fout >= min && setup->fout <= max)
+-		ret = 0;
+-
+-	return ret;
+-}
+-
+-static const struct clk_ops clk_sccg_pll_ops = {
+-	.prepare	= clk_sccg_pll_prepare,
+-	.unprepare	= clk_sccg_pll_unprepare,
+-	.is_prepared	= clk_sccg_pll_is_prepared,
+-	.recalc_rate	= clk_sccg_pll_recalc_rate,
+-	.set_rate	= clk_sccg_pll_set_rate,
+-	.set_parent	= clk_sccg_pll_set_parent,
+-	.get_parent	= clk_sccg_pll_get_parent,
+-	.determine_rate	= clk_sccg_pll_determine_rate,
+-};
+-
+-struct clk *imx_clk_sccg_pll(const char *name,
+-				const char * const *parent_names,
+-				u8 num_parents,
+-				u8 parent, u8 bypass1, u8 bypass2,
+-				void __iomem *base,
+-				unsigned long flags)
+-{
+-	struct clk_sccg_pll *pll;
+-	struct clk_init_data init;
+-	struct clk_hw *hw;
+-	int ret;
+-
+-	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+-	if (!pll)
+-		return ERR_PTR(-ENOMEM);
+-
+-	pll->parent = parent;
+-	pll->bypass1 = bypass1;
+-	pll->bypass2 = bypass2;
+-
+-	pll->base = base;
+-	init.name = name;
+-	init.ops = &clk_sccg_pll_ops;
+-
+-	init.flags = flags;
+-	init.parent_names = parent_names;
+-	init.num_parents = num_parents;
+-
+-	pll->base = base;
+-	pll->hw.init = &init;
+-
+-	hw = &pll->hw;
+-
+-	ret = clk_hw_register(NULL, hw);
+-	if (ret) {
+-		kfree(pll);
+-		return ERR_PTR(ret);
+-	}
+-
+-	return hw->clk;
+-}
+diff --git a/drivers/clk/imx/clk-sscg-pll.c b/drivers/clk/imx/clk-sscg-pll.c
+new file mode 100644
+index 00000000..0669e17
+--- /dev/null
++++ b/drivers/clk/imx/clk-sscg-pll.c
+@@ -0,0 +1,549 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2018 NXP.
++ *
++ * This driver supports the SCCG plls found in the imx8m SOCs
++ *
++ * Documentation for this SCCG pll can be found at:
++ *   https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=834
++ */
 +
-+	imx_check_clk_hws(hws, clk_data->num);
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/slab.h>
++#include <linux/bitfield.h>
++
++#include "clk.h"
++
++/* PLL CFGs */
++#define PLL_CFG0		0x0
++#define PLL_CFG1		0x4
++#define PLL_CFG2		0x8
++
++#define PLL_DIVF1_MASK		GENMASK(18, 13)
++#define PLL_DIVF2_MASK		GENMASK(12, 7)
++#define PLL_DIVR1_MASK		GENMASK(27, 25)
++#define PLL_DIVR2_MASK		GENMASK(24, 19)
++#define PLL_DIVQ_MASK           GENMASK(6, 1)
++#define PLL_REF_MASK		GENMASK(2, 0)
++
++#define PLL_LOCK_MASK		BIT(31)
++#define PLL_PD_MASK		BIT(7)
++
++/* These are the specification limits for the SSCG PLL */
++#define PLL_REF_MIN_FREQ		25000000UL
++#define PLL_REF_MAX_FREQ		235000000UL
++
++#define PLL_STAGE1_MIN_FREQ		1600000000UL
++#define PLL_STAGE1_MAX_FREQ		2400000000UL
++
++#define PLL_STAGE1_REF_MIN_FREQ		25000000UL
++#define PLL_STAGE1_REF_MAX_FREQ		54000000UL
++
++#define PLL_STAGE2_MIN_FREQ		1200000000UL
++#define PLL_STAGE2_MAX_FREQ		2400000000UL
++
++#define PLL_STAGE2_REF_MIN_FREQ		54000000UL
++#define PLL_STAGE2_REF_MAX_FREQ		75000000UL
++
++#define PLL_OUT_MIN_FREQ		20000000UL
++#define PLL_OUT_MAX_FREQ		1200000000UL
++
++#define PLL_DIVR1_MAX			7
++#define PLL_DIVR2_MAX			63
++#define PLL_DIVF1_MAX			63
++#define PLL_DIVF2_MAX			63
++#define PLL_DIVQ_MAX			63
++
++#define PLL_BYPASS_NONE			0x0
++#define PLL_BYPASS1			0x2
++#define PLL_BYPASS2			0x1
++
++#define SSCG_PLL_BYPASS1_MASK           BIT(5)
++#define SSCG_PLL_BYPASS2_MASK           BIT(4)
++#define SSCG_PLL_BYPASS_MASK		GENMASK(5, 4)
++
++#define PLL_SCCG_LOCK_TIMEOUT		70
++
++struct clk_sscg_pll_setup {
++	int divr1, divf1;
++	int divr2, divf2;
++	int divq;
++	int bypass;
++
++	uint64_t vco1;
++	uint64_t vco2;
++	uint64_t fout;
++	uint64_t ref;
++	uint64_t ref_div1;
++	uint64_t ref_div2;
++	uint64_t fout_request;
++	int fout_error;
++};
++
++struct clk_sscg_pll {
++	struct clk_hw	hw;
++	const struct clk_ops  ops;
++
++	void __iomem *base;
++
++	struct clk_sscg_pll_setup setup;
++
++	u8 parent;
++	u8 bypass1;
++	u8 bypass2;
++};
++
++#define to_clk_sscg_pll(_hw) container_of(_hw, struct clk_sscg_pll, hw)
++
++static int clk_sscg_pll_wait_lock(struct clk_sscg_pll *pll)
++{
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++
++	/* don't wait for lock if all plls are bypassed */
++	if (!(val & SSCG_PLL_BYPASS2_MASK))
++		return readl_poll_timeout(pll->base, val, val & PLL_LOCK_MASK,
++						0, PLL_SCCG_LOCK_TIMEOUT);
++
++	return 0;
++}
++
++static int clk_sscg_pll2_check_match(struct clk_sscg_pll_setup *setup,
++					struct clk_sscg_pll_setup *temp_setup)
++{
++	int new_diff = temp_setup->fout - temp_setup->fout_request;
++	int diff = temp_setup->fout_error;
++
++	if (abs(diff) > abs(new_diff)) {
++		temp_setup->fout_error = new_diff;
++		memcpy(setup, temp_setup, sizeof(struct clk_sscg_pll_setup));
++
++		if (temp_setup->fout_request == temp_setup->fout)
++			return 0;
++	}
++	return -1;
++}
++
++static int clk_sscg_divq_lookup(struct clk_sscg_pll_setup *setup,
++				struct clk_sscg_pll_setup *temp_setup)
++{
++	int ret = -EINVAL;
++
++	for (temp_setup->divq = 0; temp_setup->divq <= PLL_DIVQ_MAX;
++	     temp_setup->divq++) {
++		temp_setup->vco2 = temp_setup->vco1;
++		do_div(temp_setup->vco2, temp_setup->divr2 + 1);
++		temp_setup->vco2 *= 2;
++		temp_setup->vco2 *= temp_setup->divf2 + 1;
++		if (temp_setup->vco2 >= PLL_STAGE2_MIN_FREQ &&
++				temp_setup->vco2 <= PLL_STAGE2_MAX_FREQ) {
++			temp_setup->fout = temp_setup->vco2;
++			do_div(temp_setup->fout, 2 * (temp_setup->divq + 1));
++
++			ret = clk_sscg_pll2_check_match(setup, temp_setup);
++			if (!ret) {
++				temp_setup->bypass = PLL_BYPASS1;
++				return ret;
++			}
++		}
++	}
++
++	return ret;
++}
++
++static int clk_sscg_divf2_lookup(struct clk_sscg_pll_setup *setup,
++					struct clk_sscg_pll_setup *temp_setup)
++{
++	int ret = -EINVAL;
++
++	for (temp_setup->divf2 = 0; temp_setup->divf2 <= PLL_DIVF2_MAX;
++	     temp_setup->divf2++) {
++		ret = clk_sscg_divq_lookup(setup, temp_setup);
++		if (!ret)
++			return ret;
++	}
++
++	return ret;
++}
++
++static int clk_sscg_divr2_lookup(struct clk_sscg_pll_setup *setup,
++				struct clk_sscg_pll_setup *temp_setup)
++{
++	int ret = -EINVAL;
++
++	for (temp_setup->divr2 = 0; temp_setup->divr2 <= PLL_DIVR2_MAX;
++	     temp_setup->divr2++) {
++		temp_setup->ref_div2 = temp_setup->vco1;
++		do_div(temp_setup->ref_div2, temp_setup->divr2 + 1);
++		if (temp_setup->ref_div2 >= PLL_STAGE2_REF_MIN_FREQ &&
++		    temp_setup->ref_div2 <= PLL_STAGE2_REF_MAX_FREQ) {
++			ret = clk_sscg_divf2_lookup(setup, temp_setup);
++			if (!ret)
++				return ret;
++		}
++	}
++
++	return ret;
++}
++
++static int clk_sscg_pll2_find_setup(struct clk_sscg_pll_setup *setup,
++					struct clk_sscg_pll_setup *temp_setup,
++					uint64_t ref)
++{
++
++	int ret = -EINVAL;
++
++	if (ref < PLL_STAGE1_MIN_FREQ || ref > PLL_STAGE1_MAX_FREQ)
++		return ret;
++
++	temp_setup->vco1 = ref;
++
++	ret = clk_sscg_divr2_lookup(setup, temp_setup);
++	return ret;
++}
++
++static int clk_sscg_divf1_lookup(struct clk_sscg_pll_setup *setup,
++				struct clk_sscg_pll_setup *temp_setup)
++{
++	int ret = -EINVAL;
++
++	for (temp_setup->divf1 = 0; temp_setup->divf1 <= PLL_DIVF1_MAX;
++	     temp_setup->divf1++) {
++		uint64_t vco1 = temp_setup->ref;
++
++		do_div(vco1, temp_setup->divr1 + 1);
++		vco1 *= 2;
++		vco1 *= temp_setup->divf1 + 1;
++
++		ret = clk_sscg_pll2_find_setup(setup, temp_setup, vco1);
++		if (!ret) {
++			temp_setup->bypass = PLL_BYPASS_NONE;
++			return ret;
++		}
++	}
++
++	return ret;
++}
++
++static int clk_sscg_divr1_lookup(struct clk_sscg_pll_setup *setup,
++				struct clk_sscg_pll_setup *temp_setup)
++{
++	int ret = -EINVAL;
++
++	for (temp_setup->divr1 = 0; temp_setup->divr1 <= PLL_DIVR1_MAX;
++	     temp_setup->divr1++) {
++		temp_setup->ref_div1 = temp_setup->ref;
++		do_div(temp_setup->ref_div1, temp_setup->divr1 + 1);
++		if (temp_setup->ref_div1 >= PLL_STAGE1_REF_MIN_FREQ &&
++		    temp_setup->ref_div1 <= PLL_STAGE1_REF_MAX_FREQ) {
++			ret = clk_sscg_divf1_lookup(setup, temp_setup);
++			if (!ret)
++				return ret;
++		}
++	}
++
++	return ret;
++}
++
++static int clk_sscg_pll1_find_setup(struct clk_sscg_pll_setup *setup,
++					struct clk_sscg_pll_setup *temp_setup,
++					uint64_t ref)
++{
++
++	int ret = -EINVAL;
++
++	if (ref < PLL_REF_MIN_FREQ || ref > PLL_REF_MAX_FREQ)
++		return ret;
++
++	temp_setup->ref = ref;
++
++	ret = clk_sscg_divr1_lookup(setup, temp_setup);
++
++	return ret;
++}
++
++static int clk_sscg_pll_find_setup(struct clk_sscg_pll_setup *setup,
++					uint64_t prate,
++					uint64_t rate, int try_bypass)
++{
++	struct clk_sscg_pll_setup temp_setup;
++	int ret = -EINVAL;
++
++	memset(&temp_setup, 0, sizeof(struct clk_sscg_pll_setup));
++	memset(setup, 0, sizeof(struct clk_sscg_pll_setup));
++
++	temp_setup.fout_error = PLL_OUT_MAX_FREQ;
++	temp_setup.fout_request = rate;
++
++	switch (try_bypass) {
++
++	case PLL_BYPASS2:
++		if (prate == rate) {
++			setup->bypass = PLL_BYPASS2;
++			setup->fout = rate;
++			ret = 0;
++		}
++		break;
++
++	case PLL_BYPASS1:
++		ret = clk_sscg_pll2_find_setup(setup, &temp_setup, prate);
++		break;
++
++	case PLL_BYPASS_NONE:
++		ret = clk_sscg_pll1_find_setup(setup, &temp_setup, prate);
++		break;
++	}
++
++	return ret;
++}
++
++
++static int clk_sscg_pll_is_prepared(struct clk_hw *hw)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++
++	u32 val = readl_relaxed(pll->base + PLL_CFG0);
++
++	return (val & PLL_PD_MASK) ? 0 : 1;
++}
++
++static int clk_sscg_pll_prepare(struct clk_hw *hw)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val &= ~PLL_PD_MASK;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++
++	return clk_sscg_pll_wait_lock(pll);
++}
++
++static void clk_sscg_pll_unprepare(struct clk_hw *hw)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	u32 val;
++
++	val = readl_relaxed(pll->base + PLL_CFG0);
++	val |= PLL_PD_MASK;
++	writel_relaxed(val, pll->base + PLL_CFG0);
++}
++
++static unsigned long clk_sscg_pll_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	u32 val, divr1, divf1, divr2, divf2, divq;
++	u64 temp64;
++
++	val = readl_relaxed(pll->base + PLL_CFG2);
++	divr1 = FIELD_GET(PLL_DIVR1_MASK, val);
++	divr2 = FIELD_GET(PLL_DIVR2_MASK, val);
++	divf1 = FIELD_GET(PLL_DIVF1_MASK, val);
++	divf2 = FIELD_GET(PLL_DIVF2_MASK, val);
++	divq = FIELD_GET(PLL_DIVQ_MASK, val);
++
++	temp64 = parent_rate;
++
++	val = readl(pll->base + PLL_CFG0);
++	if (val & SSCG_PLL_BYPASS2_MASK) {
++		temp64 = parent_rate;
++	} else if (val & SSCG_PLL_BYPASS1_MASK) {
++		temp64 *= divf2;
++		do_div(temp64, (divr2 + 1) * (divq + 1));
++	} else {
++		temp64 *= 2;
++		temp64 *= (divf1 + 1) * (divf2 + 1);
++		do_div(temp64, (divr1 + 1) * (divr2 + 1) * (divq + 1));
++	}
++
++	return temp64;
++}
++
++static int clk_sscg_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			    unsigned long parent_rate)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	struct clk_sscg_pll_setup *setup = &pll->setup;
++	u32 val;
++
++	/* set bypass here too since the parent might be the same */
++	val = readl(pll->base + PLL_CFG0);
++	val &= ~SSCG_PLL_BYPASS_MASK;
++	val |= FIELD_PREP(SSCG_PLL_BYPASS_MASK, setup->bypass);
++	writel(val, pll->base + PLL_CFG0);
++
++	val = readl_relaxed(pll->base + PLL_CFG2);
++	val &= ~(PLL_DIVF1_MASK | PLL_DIVF2_MASK);
++	val &= ~(PLL_DIVR1_MASK | PLL_DIVR2_MASK | PLL_DIVQ_MASK);
++	val |= FIELD_PREP(PLL_DIVF1_MASK, setup->divf1);
++	val |= FIELD_PREP(PLL_DIVF2_MASK, setup->divf2);
++	val |= FIELD_PREP(PLL_DIVR1_MASK, setup->divr1);
++	val |= FIELD_PREP(PLL_DIVR2_MASK, setup->divr2);
++	val |= FIELD_PREP(PLL_DIVQ_MASK, setup->divq);
++	writel_relaxed(val, pll->base + PLL_CFG2);
++
++	return clk_sscg_pll_wait_lock(pll);
++}
++
++static u8 clk_sscg_pll_get_parent(struct clk_hw *hw)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	u32 val;
++	u8 ret = pll->parent;
++
++	val = readl(pll->base + PLL_CFG0);
++	if (val & SSCG_PLL_BYPASS2_MASK)
++		ret = pll->bypass2;
++	else if (val & SSCG_PLL_BYPASS1_MASK)
++		ret = pll->bypass1;
++	return ret;
++}
++
++static int clk_sscg_pll_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	u32 val;
++
++	val = readl(pll->base + PLL_CFG0);
++	val &= ~SSCG_PLL_BYPASS_MASK;
++	val |= FIELD_PREP(SSCG_PLL_BYPASS_MASK, pll->setup.bypass);
++	writel(val, pll->base + PLL_CFG0);
++
++	return clk_sscg_pll_wait_lock(pll);
++}
++
++static int __clk_sscg_pll_determine_rate(struct clk_hw *hw,
++					struct clk_rate_request *req,
++					uint64_t min,
++					uint64_t max,
++					uint64_t rate,
++					int bypass)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	struct clk_sscg_pll_setup *setup = &pll->setup;
++	struct clk_hw *parent_hw = NULL;
++	int bypass_parent_index;
++	int ret = -EINVAL;
++
++	req->max_rate = max;
++	req->min_rate = min;
++
++	switch (bypass) {
++	case PLL_BYPASS2:
++		bypass_parent_index = pll->bypass2;
++		break;
++	case PLL_BYPASS1:
++		bypass_parent_index = pll->bypass1;
++		break;
++	default:
++		bypass_parent_index = pll->parent;
++		break;
++	}
++
++	parent_hw = clk_hw_get_parent_by_index(hw, bypass_parent_index);
++	ret = __clk_determine_rate(parent_hw, req);
++	if (!ret) {
++		ret = clk_sscg_pll_find_setup(setup, req->rate,
++						rate, bypass);
++	}
++
++	req->best_parent_hw = parent_hw;
++	req->best_parent_rate = req->rate;
++	req->rate = setup->fout;
++
++	return ret;
++}
++
++static int clk_sscg_pll_determine_rate(struct clk_hw *hw,
++				       struct clk_rate_request *req)
++{
++	struct clk_sscg_pll *pll = to_clk_sscg_pll(hw);
++	struct clk_sscg_pll_setup *setup = &pll->setup;
++	uint64_t rate = req->rate;
++	uint64_t min = req->min_rate;
++	uint64_t max = req->max_rate;
++	int ret = -EINVAL;
++
++	if (rate < PLL_OUT_MIN_FREQ || rate > PLL_OUT_MAX_FREQ)
++		return ret;
++
++	ret = __clk_sscg_pll_determine_rate(hw, req, req->rate, req->rate,
++						rate, PLL_BYPASS2);
++	if (!ret)
++		return ret;
++
++	ret = __clk_sscg_pll_determine_rate(hw, req, PLL_STAGE1_REF_MIN_FREQ,
++						PLL_STAGE1_REF_MAX_FREQ, rate,
++						PLL_BYPASS1);
++	if (!ret)
++		return ret;
++
++	ret = __clk_sscg_pll_determine_rate(hw, req, PLL_REF_MIN_FREQ,
++						PLL_REF_MAX_FREQ, rate,
++						PLL_BYPASS_NONE);
++	if (!ret)
++		return ret;
++
++	if (setup->fout >= min && setup->fout <= max)
++		ret = 0;
++
++	return ret;
++}
++
++static const struct clk_ops clk_sscg_pll_ops = {
++	.prepare	= clk_sscg_pll_prepare,
++	.unprepare	= clk_sscg_pll_unprepare,
++	.is_prepared	= clk_sscg_pll_is_prepared,
++	.recalc_rate	= clk_sscg_pll_recalc_rate,
++	.set_rate	= clk_sscg_pll_set_rate,
++	.set_parent	= clk_sscg_pll_set_parent,
++	.get_parent	= clk_sscg_pll_get_parent,
++	.determine_rate	= clk_sscg_pll_determine_rate,
++};
++
++struct clk *imx_clk_sscg_pll(const char *name,
++				const char * const *parent_names,
++				u8 num_parents,
++				u8 parent, u8 bypass1, u8 bypass2,
++				void __iomem *base,
++				unsigned long flags)
++{
++	struct clk_sscg_pll *pll;
++	struct clk_init_data init;
++	struct clk_hw *hw;
++	int ret;
++
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return ERR_PTR(-ENOMEM);
++
++	pll->parent = parent;
++	pll->bypass1 = bypass1;
++	pll->bypass2 = bypass2;
++
++	pll->base = base;
++	init.name = name;
++	init.ops = &clk_sscg_pll_ops;
++
++	init.flags = flags;
++	init.parent_names = parent_names;
++	init.num_parents = num_parents;
++
++	pll->base = base;
++	pll->hw.init = &init;
++
++	hw = &pll->hw;
++
++	ret = clk_hw_register(NULL, hw);
++	if (ret) {
++		kfree(pll);
++		return ERR_PTR(ret);
++	}
++
++	return hw->clk;
++}
+diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+index 00ec481..4770a03 100644
+--- a/drivers/clk/imx/clk.h
++++ b/drivers/clk/imx/clk.h
+@@ -24,7 +24,7 @@ enum imx_pllv1_type {
+ 	IMX_PLLV1_IMX35,
+ };
  
- 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
+-enum imx_sccg_pll_type {
++enum imx_sscg_pll_type {
+ 	SCCG_PLL1,
+ 	SCCG_PLL2,
+ };
+@@ -110,7 +110,7 @@ struct clk *imx_clk_pllv2(const char *name, const char *parent,
+ struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
+ 			     void __iomem *base);
  
- 	for (i = 0; i < ARRAY_SIZE(pcc2_uart_clk_ids); i++) {
- 		int index = pcc2_uart_clk_ids[i];
- 
--		pcc2_uart_clks[i] = &clks[index]->clk;
-+		pcc2_uart_clks[i] = &hws[index]->clk;
- 	}
- 
- 	imx_register_uart_clocks(pcc2_uart_clks);
-@@ -200,7 +200,7 @@ CLK_OF_DECLARE(imx7ulp_clk_pcc2, "fsl,imx7ulp-pcc2", imx7ulp_clk_pcc2_init);
- static void __init imx7ulp_clk_pcc3_init(struct device_node *np)
- {
- 	struct clk_hw_onecell_data *clk_data;
--	struct clk_hw **clks;
-+	struct clk_hw **hws;
- 	void __iomem *base;
- 	int i;
- 
-@@ -210,41 +210,41 @@ static void __init imx7ulp_clk_pcc3_init(struct device_node *np)
- 		return;
- 
- 	clk_data->num = IMX7ULP_CLK_PCC3_END;
--	clks = clk_data->hws;
-+	hws = clk_data->hws;
- 
- 	/* PCC3 */
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
- 
--	clks[IMX7ULP_CLK_LPTPM6]	= imx7ulp_clk_hw_composite("lptpm6",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x84);
--	clks[IMX7ULP_CLK_LPTPM7]	= imx7ulp_clk_hw_composite("lptpm7",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x88);
-+	hws[IMX7ULP_CLK_LPTPM6]	= imx7ulp_clk_hw_composite("lptpm6",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x84);
-+	hws[IMX7ULP_CLK_LPTPM7]	= imx7ulp_clk_hw_composite("lptpm7",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x88);
- 
--	clks[IMX7ULP_CLK_MMDC]		= clk_hw_register_gate(NULL, "mmdc", "nic1_clk", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-+	hws[IMX7ULP_CLK_MMDC]		= clk_hw_register_gate(NULL, "mmdc", "nic1_clk", CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
- 							       base + 0xac, 30, 0, &imx_ccm_lock);
--	clks[IMX7ULP_CLK_LPI2C6]	= imx7ulp_clk_hw_composite("lpi2c6",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x90);
--	clks[IMX7ULP_CLK_LPI2C7]	= imx7ulp_clk_hw_composite("lpi2c7",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x94);
--	clks[IMX7ULP_CLK_LPUART6]	= imx7ulp_clk_hw_composite("lpuart6", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x98);
--	clks[IMX7ULP_CLK_LPUART7]	= imx7ulp_clk_hw_composite("lpuart7", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x9c);
--	clks[IMX7ULP_CLK_DSI]		= imx7ulp_clk_hw_composite("dsi",     periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0xa4);
--	clks[IMX7ULP_CLK_LCDIF]		= imx7ulp_clk_hw_composite("lcdif",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xa8);
-+	hws[IMX7ULP_CLK_LPI2C6]	= imx7ulp_clk_hw_composite("lpi2c6",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x90);
-+	hws[IMX7ULP_CLK_LPI2C7]	= imx7ulp_clk_hw_composite("lpi2c7",  periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x94);
-+	hws[IMX7ULP_CLK_LPUART6]	= imx7ulp_clk_hw_composite("lpuart6", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x98);
-+	hws[IMX7ULP_CLK_LPUART7]	= imx7ulp_clk_hw_composite("lpuart7", periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, false, true, base + 0x9c);
-+	hws[IMX7ULP_CLK_DSI]		= imx7ulp_clk_hw_composite("dsi",     periph_bus_sels, ARRAY_SIZE(periph_bus_sels), true, true,  true, base + 0xa4);
-+	hws[IMX7ULP_CLK_LCDIF]		= imx7ulp_clk_hw_composite("lcdif",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, true,  true, base + 0xa8);
- 
--	clks[IMX7ULP_CLK_VIU]		= imx_clk_hw_gate("viu",   "nic1_clk",	   base + 0xa0, 30);
--	clks[IMX7ULP_CLK_PCTLC]		= imx_clk_hw_gate("pctlc", "nic1_bus_clk", base + 0xb8, 30);
--	clks[IMX7ULP_CLK_PCTLD]		= imx_clk_hw_gate("pctld", "nic1_bus_clk", base + 0xbc, 30);
--	clks[IMX7ULP_CLK_PCTLE]		= imx_clk_hw_gate("pctle", "nic1_bus_clk", base + 0xc0, 30);
--	clks[IMX7ULP_CLK_PCTLF]		= imx_clk_hw_gate("pctlf", "nic1_bus_clk", base + 0xc4, 30);
-+	hws[IMX7ULP_CLK_VIU]		= imx_clk_hw_gate("viu",   "nic1_clk",	   base + 0xa0, 30);
-+	hws[IMX7ULP_CLK_PCTLC]		= imx_clk_hw_gate("pctlc", "nic1_bus_clk", base + 0xb8, 30);
-+	hws[IMX7ULP_CLK_PCTLD]		= imx_clk_hw_gate("pctld", "nic1_bus_clk", base + 0xbc, 30);
-+	hws[IMX7ULP_CLK_PCTLE]		= imx_clk_hw_gate("pctle", "nic1_bus_clk", base + 0xc0, 30);
-+	hws[IMX7ULP_CLK_PCTLF]		= imx_clk_hw_gate("pctlf", "nic1_bus_clk", base + 0xc4, 30);
- 
--	clks[IMX7ULP_CLK_GPU3D]		= imx7ulp_clk_hw_composite("gpu3d",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, false, true, base + 0x140);
--	clks[IMX7ULP_CLK_GPU2D]		= imx7ulp_clk_hw_composite("gpu2d",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, false, true, base + 0x144);
-+	hws[IMX7ULP_CLK_GPU3D]		= imx7ulp_clk_hw_composite("gpu3d",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, false, true, base + 0x140);
-+	hws[IMX7ULP_CLK_GPU2D]		= imx7ulp_clk_hw_composite("gpu2d",   periph_plat_sels, ARRAY_SIZE(periph_plat_sels), true, false, true, base + 0x144);
- 
--	imx_check_clk_hws(clks, clk_data->num);
-+	imx_check_clk_hws(hws, clk_data->num);
- 
- 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
- 
- 	for (i = 0; i < ARRAY_SIZE(pcc3_uart_clk_ids); i++) {
- 		int index = pcc3_uart_clk_ids[i];
- 
--		pcc3_uart_clks[i] = &clks[index]->clk;
-+		pcc3_uart_clks[i] = &hws[index]->clk;
- 	}
- 
- 	imx_register_uart_clocks(pcc3_uart_clks);
-@@ -254,7 +254,7 @@ CLK_OF_DECLARE(imx7ulp_clk_pcc3, "fsl,imx7ulp-pcc3", imx7ulp_clk_pcc3_init);
- static void __init imx7ulp_clk_smc1_init(struct device_node *np)
- {
- 	struct clk_hw_onecell_data *clk_data;
--	struct clk_hw **clks;
-+	struct clk_hw **hws;
- 	void __iomem *base;
- 
- 	clk_data = kzalloc(struct_size(clk_data, hws, IMX7ULP_CLK_SMC1_END),
-@@ -263,15 +263,15 @@ static void __init imx7ulp_clk_smc1_init(struct device_node *np)
- 		return;
- 
- 	clk_data->num = IMX7ULP_CLK_SMC1_END;
--	clks = clk_data->hws;
-+	hws = clk_data->hws;
- 
- 	/* SMC1 */
- 	base = of_iomap(np, 0);
- 	WARN_ON(!base);
- 
--	clks[IMX7ULP_CLK_ARM] = imx_clk_hw_mux_flags("arm", base + 0x10, 8, 2, arm_sels, ARRAY_SIZE(arm_sels), CLK_IS_CRITICAL);
-+	hws[IMX7ULP_CLK_ARM] = imx_clk_hw_mux_flags("arm", base + 0x10, 8, 2, arm_sels, ARRAY_SIZE(arm_sels), CLK_IS_CRITICAL);
- 
--	imx_check_clk_hws(clks, clk_data->num);
-+	imx_check_clk_hws(hws, clk_data->num);
- 
- 	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
- }
+-struct clk *imx_clk_sccg_pll(const char *name,
++struct clk *imx_clk_sscg_pll(const char *name,
+ 				const char * const *parent_names,
+ 				u8 num_parents,
+ 				u8 parent, u8 bypass1, u8 bypass2,
 -- 
 2.7.4
 
