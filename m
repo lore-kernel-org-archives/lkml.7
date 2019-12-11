@@ -2,124 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF40C2D0BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C16C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EE12073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2A92073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 00:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZsA1gWWz"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Jn2SQvPi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfLKA1w (ORCPT
+        id S1727123AbfLKA3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 19:27:52 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9928 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfLKA1t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:27:49 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df037ed0000>; Tue, 10 Dec 2019 16:27:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 10 Dec 2019 16:27:47 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 10 Dec 2019 16:27:47 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 00:27:46 +0000
-Received: from [10.110.48.28] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 00:27:45 +0000
-Subject: Re: [PATCH v8 23/26] mm/gup: pass flags arg to __gup_device_*
- functions
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "Shuah Khan" <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
-        <bpf@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <kvm@vger.kernel.org>, <linux-block@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <netdev@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20191209225344.99740-1-jhubbard@nvidia.com>
- <20191209225344.99740-24-jhubbard@nvidia.com>
- <20191210124957.GG1551@quack2.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <017cb337-99f0-785c-7fd9-223d3f05e840@nvidia.com>
-Date:   Tue, 10 Dec 2019 16:27:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 10 Dec 2019 19:29:23 -0500
+Received: from ozlabs.org ([203.11.71.1]:40799 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725999AbfLKA3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:29:23 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Xd8v5C5Hz9sP3;
+        Wed, 11 Dec 2019 11:29:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576024160;
+        bh=kmbp6MpyHsnC/owM/o4yDj8cWLNwjC0odjA8A0F3r2Y=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Jn2SQvPiqev5TL35DBK5lCO8mnXg+BTtXzArbhl7WqrvTJu5M+ZoiCVATKvHzLOLD
+         /490q3sNuoaS8RrCEOiJfUlfiOE7FyR1xupxy+LuXjQrlnNee0sKWSvxRdwvkmFzJL
+         8cX9BG/37iHETX+SK6OEUNldhJo0kpLbionDwCbFGHrNEr/2bHr8GHHP8EvBJp2w5d
+         Oq7Yqge4fyyFATWKyy/JiMHOdF3ZSJiokdKFsNzkoblZu7BIUOmrVNWAjFd0ArDVZD
+         MSOu1H54hdcXdP2PAhbK8MNYDb646YZe392xvS8NArPz8yhZ0UaP34j/Lsl3ab+Us5
+         zD/LY1lWBWRBw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, kasan-dev@googlegroups.com,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops)
+In-Reply-To: <20191210101545.GL2844@hirez.programming.kicks-ass.net>
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <87wob4pwnl.fsf@mpe.ellerman.id.au> <20191210101545.GL2844@hirez.programming.kicks-ass.net>
+Date:   Wed, 11 Dec 2019 11:29:16 +1100
+Message-ID: <87lfrjpuw3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191210124957.GG1551@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576024046; bh=qun8cg/sHOBwx96E42yhjWjklRPzRNtkdXEjGWJis9k=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZsA1gWWzEMoxNw4sGMBn0IB6PCN0ayjG1bjHlLTvRKvZNYWfFY6GadphhHH5/oXSG
-         JeeIACrDEldkCsiwLSqi7Sb/+s/lrstUEM6ZSkaa3ocFKRVk5BHiT+XSKQ7ZrvWG+N
-         y0FLTJm8bSQI8BERNijJq98G8+9Vm3vXUx29fLwfgq+J6rOLjwbNTnpcEijsnqylin
-         SaZDw8jS4hgJd1nkfZeanVmYjGG39ms/U3WiHxJYVbPGGDJYFEo916VNZt+5U5P0Or
-         fjh47kokYfS4lafjqrrwAa0dWo+eZljJp5xfyflXDQpDbHXAnqoG/R22NwcPm4jWYI
-         CAgkYrlfpd8+A==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10/19 4:49 AM, Jan Kara wrote:
-> On Mon 09-12-19 14:53:41, John Hubbard wrote:
->> A subsequent patch requires access to gup flags, so pass the flags
->> argument through to the __gup_device_* functions.
->>
->> Also placate checkpatch.pl by shortening a nearby line.
->>
->> TODO: Christoph Hellwig requested folding this into the patch the uses
->> the gup flags arguments.
-> 
-> You should probably implement this TODO? :)
-> 
-> 								Honza
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Tue, Dec 10, 2019 at 04:38:54PM +1100, Michael Ellerman wrote:
+>
+>> Good question, I'll have a look.
+>> 
+>> There seems to be confusion about what the type of the bit number is,
+>> which is leading to sign extension in some cases and not others.
+>
+> Shiny.
+>
+>> It looks like the type should be unsigned long?
+>
+> I'm thinking unsigned makes most sense, I mean, negative bit offsets
+> should 'work' but that's almost always guaranteed to be an out-of-bound
+> operation.
 
-Yes. Done for v9.
+Yeah I agree.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+> As to 'long' vs 'int', I'm not sure, 4G bits is a long bitmap. But I
+> suppose since the bitmap itself is 'unsigned long', we might as well use
+> 'unsigned long' for the bitnr too.
+
+4G is a lot of bits, but it's not *that* many.
+
+eg. If we had a bit per 4K page on a 32T machine that would be 8G bits.
+
+So unsigned long seems best.
+
+>>   Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
+>>   arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+>>   arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
+>>   arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+>>   arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
+>>   include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
+>>   include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
+>> 
+>> So I guess step one is to convert our versions to use unsigned long, so
+>> we're at least not tripping over that difference when comparing the
+>> assembly.
+>
+> Yeah, I'll look at fixing the generic code, bitops/atomic.h and
+> bitops/non-atomic.h don't even agree on the type of bitnr.
+
+Thanks.
+
+cheers
