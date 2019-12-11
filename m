@@ -2,139 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AF1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E485C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AC420836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080560;
-	bh=II8nkJraDvslJudv4jma/RouXM7QGwblB9oSjvMRg2U=;
+	s=default; t=1576080563;
+	bh=I2kL1eyh/q9jqbz6IjKwTQx2WHD3sCRx/+BtxzJk3T0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j8xYCK7bdM3AWLxDKsu2jVbUt3Isqm/GctsT4P14duoRXhpc5ds7dDbk/kLAEwQlL
-	 5OGAAYGPYew3FuK6ckvUIlj62yEcNF8pn4hDDuWZau4XImnJfrzV6HRhWFqajPcVN1
-	 5OsuzAIDLMt8s9No6wwfLUT1EvoWH36hf4xDYw2o=
+	b=GQKtlXktFVUnkZm3htgzVo/tO3a1hwBlyMI4rsNSfC8L9KSOsBqvrZXeL9ZWUVAUz
+	 cKiCKStSTdaMzsTDUDE0c0MS+7C6ujpKbM2kF7odHQqkPJFHUcjqXxalydwA1ke2Hq
+	 T8ERFAjEVFDFILjprnrz1zoXQV4PZ69wxxxoS80o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbfLKQJS (ORCPT
+        id S1731724AbfLKQJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:09:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:09:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730703AbfLKPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:10 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730720AbfLKPMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:09 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 643E522B48;
-        Wed, 11 Dec 2019 15:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F2C208C3;
+        Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077128;
-        bh=II8nkJraDvslJudv4jma/RouXM7QGwblB9oSjvMRg2U=;
+        bh=I2kL1eyh/q9jqbz6IjKwTQx2WHD3sCRx/+BtxzJk3T0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4BkSiNTo1IJTPZ4BG1TGtFnYEofgwJ78TaDaGMTe0GwqYQka2Ff4VZBVV4g6RjVC
-         lCPQp4O2dqxtQ+n5Gv3FjAeyiURQAYlf+kvjwgZRZGAFV4ekXp/5WYk16SbD6CFdv3
-         1tG07t9EEcdvyFw0THeD5do85p7gdYk/n/krt7LE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 027/105] block: check bi_size overflow before merge
-Date:   Wed, 11 Dec 2019 16:05:16 +0100
-Message-Id: <20191211150229.642179241@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=nrmKqAIPxUiWWw+o928mlB+seHZmtt1pWFIwFBRNTqndVI2vdnd+ba6sLKlnFkO3t
+         7Vdl3ECgmgSU6y8IBNJcICejomPOEstp9QzBt2kYI847N7uS4DynTtXr8T6NbXEPaT
+         j3RRQow0rd43W6O+3CKPmSd9+7qlSoWLNJcXoobw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nicholas Graumann <nick.graumann@gmail.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 016/134] dmaengine: xilinx_dma: Clear desc_pendingcount in xilinx_dma_reset
+Date:   Wed, 11 Dec 2019 10:09:52 -0500
+Message-Id: <20191211151150.19073-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+From: Nicholas Graumann <nick.graumann@gmail.com>
 
-[ Upstream commit e3a5d8e386c3fb973fa75f2403622a8f3640ec06 ]
+[ Upstream commit 8a631a5a0f7d4a4a24dba8587d5d9152be0871cc ]
 
-__bio_try_merge_page() may merge a page to bio without bio_full() check
-and cause bi_size overflow.
+Whenever we reset the channel, we need to clear desc_pendingcount
+along with desc_submitcount. Otherwise when a new transaction is
+submitted, the irq coalesce level could be programmed to an incorrect
+value in the axidma case.
 
-The overflow typically ends up with sd_init_command() warning on zero
-segment request with call trace like this:
+This behavior can be observed when terminating pending transactions
+with xilinx_dma_terminate_all() and then submitting new transactions
+without releasing and requesting the channel.
 
-    ------------[ cut here ]------------
-    WARNING: CPU: 2 PID: 1986 at drivers/scsi/scsi_lib.c:1025 scsi_init_io+0x156/0x180
-    CPU: 2 PID: 1986 Comm: kworker/2:1H Kdump: loaded Not tainted 5.4.0-rc7 #1
-    Workqueue: kblockd blk_mq_run_work_fn
-    RIP: 0010:scsi_init_io+0x156/0x180
-    RSP: 0018:ffffa11487663bf0 EFLAGS: 00010246
-    RAX: 00000000002be0a0 RBX: ffff8e6e9ff30118 RCX: 0000000000000000
-    RDX: 00000000ffffffe1 RSI: 0000000000000000 RDI: ffff8e6e9ff30118
-    RBP: ffffa11487663c18 R08: ffffa11487663d28 R09: ffff8e6e9ff30150
-    R10: 0000000000000001 R11: 0000000000000000 R12: ffff8e6e9ff30000
-    R13: 0000000000000001 R14: ffff8e74a1cf1800 R15: ffff8e6e9ff30000
-    FS:  0000000000000000(0000) GS:ffff8e6ea7680000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 00007fff18cf0fe8 CR3: 0000000659f0a001 CR4: 00000000001606e0
-    Call Trace:
-     sd_init_command+0x326/0xb40 [sd_mod]
-     scsi_queue_rq+0x502/0xaa0
-     ? blk_mq_get_driver_tag+0xe7/0x120
-     blk_mq_dispatch_rq_list+0x256/0x5a0
-     ? elv_rb_del+0x24/0x30
-     ? deadline_remove_request+0x7b/0xc0
-     blk_mq_do_dispatch_sched+0xa3/0x140
-     blk_mq_sched_dispatch_requests+0xfb/0x170
-     __blk_mq_run_hw_queue+0x81/0x130
-     blk_mq_run_work_fn+0x1b/0x20
-     process_one_work+0x179/0x390
-     worker_thread+0x4f/0x3e0
-     kthread+0x105/0x140
-     ? max_active_store+0x80/0x80
-     ? kthread_bind+0x20/0x20
-     ret_from_fork+0x35/0x40
-    ---[ end trace f9036abf5af4a4d3 ]---
-    blk_update_request: I/O error, dev sdd, sector 2875552 op 0x1:(WRITE) flags 0x0 phys_seg 0 prio class 0
-    XFS (sdd1): writeback error on sector 2875552
-
-__bio_try_merge_page() should check the overflow before actually doing
-merge.
-
-Fixes: 07173c3ec276c ("block: enable multipage bvecs")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Link: https://lore.kernel.org/r/1571150904-3988-8-git-send-email-radhey.shyam.pandey@xilinx.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/xilinx/xilinx_dma.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/bio.c b/block/bio.c
-index 299a0e7651ec0..31d56e7e2ce05 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -769,7 +769,7 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
- 	if (WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED)))
- 		return false;
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 5d56f1e4d332c..43acba2a1c0ee 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -1433,6 +1433,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
  
--	if (bio->bi_vcnt > 0) {
-+	if (bio->bi_vcnt > 0 && !bio_full(bio, len)) {
- 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 	chan->err = false;
+ 	chan->idle = true;
++	chan->desc_pendingcount = 0;
+ 	chan->desc_submitcount = 0;
  
- 		if (page_is_mergeable(bv, page, len, off, same_page)) {
+ 	return err;
 -- 
 2.20.1
-
-
 
