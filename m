@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8C4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38B8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F84C2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAF2020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076930;
-	bh=7UVAZ7gxEN90st/uMx5OYFi4SnNcFg3kdCwkpBG6f+E=;
+	s=default; t=1576076934;
+	bh=uDFUA9JX959zDWtIDmfvG05ifKToXnSxeZF2PdDumeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OJzrIka86fnznnQ1l/G93v1oXP6r9O86VFddTwFqueH+6d+kLfUt7so74gqg3Mi08
-	 H+jR+R9BZN9rGhCvYwCrmSw04TNwruHZdoA4Ko3ZRolrqWxyhk95J/xKubqGnP+HK0
-	 v+AriNzzCRUIRRL4zW6+cc9f6LlF4cnNc+it8iEE=
+	b=0j9iJYFmbYA+17bPZdqFmY+5+c1taJaIQ4bGczP5hCakhd3YzMRt6qov47seIBX6m
+	 rlnBcwCaERauLMhCzyHIYYcfmt8rr+VWnmUhyfPSSPPnBM59z1mH2cPlgFpGnPWEEh
+	 S+cQdGS2q1saa1rbX9+nh62j9QWHNpbXH//2SstA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfLKPIs (ORCPT
+        id S1730480AbfLKPIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56368 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730433AbfLKPIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:42 -0500
+        id S1730468AbfLKPIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 246F1222C4;
-        Wed, 11 Dec 2019 15:08:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83BCA222C4;
+        Wed, 11 Dec 2019 15:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076921;
-        bh=7UVAZ7gxEN90st/uMx5OYFi4SnNcFg3kdCwkpBG6f+E=;
+        s=default; t=1576076929;
+        bh=uDFUA9JX959zDWtIDmfvG05ifKToXnSxeZF2PdDumeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQABqhyDkOFI2nu74SS75RSiQPOQjLIs+iHz//xPw/iW+kYq+NH1MdLL2DYufBAJv
-         N2/PBJDmWp5XT8QrRzkO1mzcfZRod1aZhntWYenamxPSGks60tG1+GcqN7nV1hlw6P
-         XzKPNIabKF7qkYnn8wudpvT16516wH+Uua2rJJxE=
+        b=RAmm5Qj2cFxxuX4kvV5sYrLn7BcG7vSTwXadHtwUoPEsFN0dlNwcURL1VIJNuj5Qm
+         sC3vPBi+a3sM6KKrdh3IdQMQkA2F4EW928eGgVJPHnuT9B3NURhLnissMup0ykmq2c
+         OJDRnpw9mlRV14sNkDeYUrrmPETPnAhWVhPO4Ruk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5.4 05/92] sparc64: implement ioremap_uc
-Date:   Wed, 11 Dec 2019 16:04:56 +0100
-Message-Id: <20191211150223.083344935@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 08/92] mailbox: tegra: Fix superfluous IRQ error message
+Date:   Wed, 11 Dec 2019 16:04:59 +0100
+Message-Id: <20191211150223.724847486@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -61,34 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuowen Zhao <ztuowen@gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 38e45d81d14e5f78cd67922596b1c37b4c22ec74 upstream.
+commit c745da8d4320c49e54662c0a8f7cb6b8204f44c4 upstream.
 
-On sparc64, the whole physical IO address space is accessible using
-physically addressed loads and stores. *_uc does nothing like the
-others.
+Commit 7723f4c5ecdb ("driver core: platform: Add an error message to
+platform_get_irq*()") added an error message to avoid drivers having
+to print an error message when IRQ lookup fails. However, there are
+some cases where IRQs are optional and so new optional versions of
+the platform_get_irq*() APIs have been added for these cases.
 
-Cc: <stable@vger.kernel.org> # v4.19+
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Tuowen Zhao <ztuowen@gmail.com>
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+The IRQs for Tegra HSP module are optional because not all instances
+of the module have the doorbell and all of the shared interrupts.
+Hence, since the above commit was applied the following error messages
+are now seen on Tegra194 ...
+
+ ERR KERN tegra-hsp c150000.hsp: IRQ doorbell not found
+ ERR KERN tegra-hsp c150000.hsp: IRQ shared0 not found
+
+The Tegra HSP driver deliberately does not fail if these are not found
+and so fix the above errors by updating the Tegra HSP driver to use
+the platform_get_irq_byname_optional() API.
+
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20191011083459.11551-1-jonathanh@nvidia.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sparc/include/asm/io_64.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mailbox/tegra-hsp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/sparc/include/asm/io_64.h
-+++ b/arch/sparc/include/asm/io_64.h
-@@ -407,6 +407,7 @@ static inline void __iomem *ioremap(unsi
- }
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -657,7 +657,7 @@ static int tegra_hsp_probe(struct platfo
+ 	hsp->num_db = (value >> HSP_nDB_SHIFT) & HSP_nINT_MASK;
+ 	hsp->num_si = (value >> HSP_nSI_SHIFT) & HSP_nINT_MASK;
  
- #define ioremap_nocache(X,Y)		ioremap((X),(Y))
-+#define ioremap_uc(X,Y)			ioremap((X),(Y))
- #define ioremap_wc(X,Y)			ioremap((X),(Y))
- #define ioremap_wt(X,Y)			ioremap((X),(Y))
+-	err = platform_get_irq_byname(pdev, "doorbell");
++	err = platform_get_irq_byname_optional(pdev, "doorbell");
+ 	if (err >= 0)
+ 		hsp->doorbell_irq = err;
  
+@@ -677,7 +677,7 @@ static int tegra_hsp_probe(struct platfo
+ 			if (!name)
+ 				return -ENOMEM;
+ 
+-			err = platform_get_irq_byname(pdev, name);
++			err = platform_get_irq_byname_optional(pdev, name);
+ 			if (err >= 0) {
+ 				hsp->shared_irqs[i] = err;
+ 				count++;
 
 
