@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF3DC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96201C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 503E82173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6998A22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078022;
-	bh=HGMIwK7kHHWFbOrmHAzoIA5/7fNSo+gHtARiMjYlJ3s=;
+	s=default; t=1576078025;
+	bh=dAvEyrdOLPuy69abLBwLiuLHza6QgT3/miqzjjbp3oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnBO3y6hlF5TAm9LTPPOJQhT8inJJBVNSPxwS24X8d+gwLWDzKlNQGwDUE/HnQLNd
-	 NMbUEilqJOqUKlqEgIiHITFPWkTpZcmQECYZ9YDZDvDmDnqObWhqW9Rl8eZ3DJLM51
-	 VDojrC+iGsK6EYJiv7B8c/QkdO9kGsH2MtPjazII=
+	b=Ui4XeCANzih2Ck4Di4StBn4pB1b0u5QAeYUrkOxQ8Ce7YOHETsRpePKd2I4qaTmu4
+	 NleIKh9ZudKJQqKDwAOdvJpnaybeG+cvXAcJ730SyGlhOtg2RiQqu61uHhjfx2mn83
+	 b3uXjg+Y3JWlpeLcIn9MYjO4ItexR9KujiZFOnJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733221AbfLKP1B (ORCPT
+        id S1732729AbfLKP1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732726AbfLKP0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:48 -0500
+        id S1732720AbfLKP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E838E22527;
-        Wed, 11 Dec 2019 15:26:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 748F422B48;
+        Wed, 11 Dec 2019 15:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078007;
-        bh=HGMIwK7kHHWFbOrmHAzoIA5/7fNSo+gHtARiMjYlJ3s=;
+        s=default; t=1576078012;
+        bh=dAvEyrdOLPuy69abLBwLiuLHza6QgT3/miqzjjbp3oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2wUNJBwoQVIkHAsi69yOX7Kij1Csv3v1jWLCi5pancDgGTLmlDDdwMq9rqAbs6d4
-         0dSqrqJjxQCy5sSsYgPQp71Did8tpRgb7lh5aDNoyzTrkwErdCrtlug5OrnQLbUTjp
-         zLNySLvMXrPB5HR7HlEJRYFl4IFI3xsBjfoQHfzc=
+        b=oCZkrgaf1vwUj/GKrLsb+40dLV+61nOZT58IpjYT08qD8qmDOwCMym1Dhhv9y1R2U
+         Ee8b9q/KD2hxd6f8yjZo7X6lSt7ZPmXDMuqgonULtrhoYkI5hA+DXfMQAWJh2Bbxrg
+         hy5BS4hSJ6NDpBCFl9D2aAlGgIc6xZNDryMRoZmU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/79] scsi: lpfc: Fix locking on mailbox command completion
-Date:   Wed, 11 Dec 2019 10:25:27 -0500
-Message-Id: <20191211152643.23056-3-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/79] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
+Date:   Wed, 11 Dec 2019 10:25:31 -0500
+Message-Id: <20191211152643.23056-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,66 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 07b8582430370097238b589f4e24da7613ca6dd3 ]
+[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
 
-Symptoms were seen of the driver not having valid data for mailbox
-commands. After debugging, the following sequence was found:
+Page tables that reside in physical memory beyond the 4 GiB boundary are
+currently not working properly. The reason is that when the physical
+address for page directory entries is read, it gets truncated at 32 bits
+and can cause crashes when passing that address to the DMA API.
 
-The driver maintains a port-wide pointer of the mailbox command that is
-currently in execution. Once finished, the port-wide pointer is cleared
-(done in lpfc_sli4_mq_release()). The next mailbox command issued will set
-the next pointer and so on.
+Fix this by first casting the PDE value to a dma_addr_t and then using
+the page frame number mask for the SMMU instance to mask out the invalid
+bits, which are typically used for mapping attributes, etc.
 
-The mailbox response data is only copied if there is a valid port-wide
-pointer.
-
-In the failing case, it was seen that a new mailbox command was being
-attempted in parallel with the completion.  The parallel path was seeing
-the mailbox no long in use (flag check under lock) and thus set the port
-pointer.  The completion path had cleared the active flag under lock, but
-had not touched the port pointer.  The port pointer is cleared after the
-lock is released. In this case, the completion path cleared the just-set
-value by the parallel path.
-
-Fix by making the calls that clear mbox state/port pointer while under
-lock.  Also slightly cleaned up the error path.
-
-Link: https://lore.kernel.org/r/20190922035906.10977-8-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/iommu/tegra-smmu.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 755803ff6cfef..51b06b8a1dc72 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -12936,13 +12936,19 @@ send_current_mbox:
- 	phba->sli.sli_flag &= ~LPFC_SLI_MBOX_ACTIVE;
- 	/* Setting active mailbox pointer need to be in sync to flag clear */
- 	phba->sli.mbox_active = NULL;
-+	if (bf_get(lpfc_trailer_consumed, mcqe))
-+		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
- 	spin_unlock_irqrestore(&phba->hbalock, iflags);
- 	/* Wake up worker thread to post the next pending mailbox command */
- 	lpfc_worker_wake_up(phba);
-+	return workposted;
-+
- out_no_mqe_complete:
-+	spin_lock_irqsave(&phba->hbalock, iflags);
- 	if (bf_get(lpfc_trailer_consumed, mcqe))
- 		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
--	return workposted;
-+	spin_unlock_irqrestore(&phba->hbalock, iflags);
-+	return false;
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 121d3cb7ddd1d..fa0ecb5e63809 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -164,9 +164,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
+ 	return (addr & smmu->pfn_mask) == addr;
  }
  
- /**
+-static dma_addr_t smmu_pde_to_dma(u32 pde)
++static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
+ {
+-	return pde << 12;
++	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
+ }
+ 
+ static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
+@@ -551,6 +551,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 				  dma_addr_t *dmap)
+ {
+ 	unsigned int pd_index = iova_pd_index(iova);
++	struct tegra_smmu *smmu = as->smmu;
+ 	struct page *pt_page;
+ 	u32 *pd;
+ 
+@@ -559,7 +560,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
+ 		return NULL;
+ 
+ 	pd = page_address(as->pd);
+-	*dmap = smmu_pde_to_dma(pd[pd_index]);
++	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
+ 
+ 	return tegra_smmu_pte_offset(pt_page, iova);
+ }
+@@ -601,7 +602,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+ 	} else {
+ 		u32 *pd = page_address(as->pd);
+ 
+-		*dmap = smmu_pde_to_dma(pd[pde]);
++		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
+ 	}
+ 
+ 	return tegra_smmu_pte_offset(as->pts[pde], iova);
+@@ -626,7 +627,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
+ 	if (--as->count[pde] == 0) {
+ 		struct tegra_smmu *smmu = as->smmu;
+ 		u32 *pd = page_address(as->pd);
+-		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
++		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
+ 
+ 		tegra_smmu_set_pde(as, iova, 0);
+ 
 -- 
 2.20.1
 
