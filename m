@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B302DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2367C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886262073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F84220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079738;
-	bh=WY4vBWzloZIFoF9RuCdF85ivO+hMUaBPhoaIRVUSlMo=;
+	s=default; t=1576079744;
+	bh=iH6s6hb83y0+8ucvZhthbdgyKVAB00e62LYQeVafVRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zBkWvZ390GiOx82/DchiBiXFw1IOvvPyLXM6pi7znXm9xLTd7ALr16FmI9LU0/qgt
-	 a+a10a/cKjHi3pwJ7wPyrxt0zV54/Cpv2uljlGLf3bC8+FkNPzG09N1gakJF8cgXZL
-	 FupvhRrjqd14WBRxn7pR6ED2+QTANP1SIRk0PikQ=
+	b=UtpAyY6PdfoH3AVmKQJ511p1Gboa6BsRQgv2YhOu8EGjmkDxGVNT2ZO/owN4kWB8W
+	 Vbs28Cjha8zR8aSX0yRXw3s9whtkn/CPSQ64i5UfN4xOcJI3g0RytHn/6QjQGCAnhH
+	 nFShfoR1OaXpDQq54AGdHAX5lX+j2wcGF2Syn5SY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbfLKPzh (ORCPT
+        id S1731825AbfLKPPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:55:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730771AbfLKPPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:15:54 -0500
+        id S1729996AbfLKPPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B0A42465B;
-        Wed, 11 Dec 2019 15:15:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 627762465C;
+        Wed, 11 Dec 2019 15:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077352;
-        bh=WY4vBWzloZIFoF9RuCdF85ivO+hMUaBPhoaIRVUSlMo=;
+        s=default; t=1576077318;
+        bh=iH6s6hb83y0+8ucvZhthbdgyKVAB00e62LYQeVafVRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aVvv36irae304vRYGpot9I+WBnFCqbXMFN6YjrSI544+nFKEU9vmLMvDIvtOfgInk
-         /h8hrk6NUS/F8UmxYox5Wg1bd08klllVSsnB00YndLCd4NHVIBapwoj5usJgYD3vVI
-         orX3BPdF9htieXglgY/q0fwEbFtDynKcUSv9irHE=
+        b=sMZSFBMTaw6COZ+rav6z4Ttc8WV0jS7tWYnSlugxU8DUGITXcBdgkSQ3+IriY0xay
+         Dc+TQl/ZAR6n41ZfHC1WT/SfCe2dDyM1aXF+zLwCJrUenUiRwqQpv/4tZjeY9DPYK9
+         hczMACsJsLWF57wiXANPlOvm5LJFVKc6BNfA4KTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Han Xu <han.xu@nxp.com>, Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.3 093/105] spi: spi-fsl-qspi: Clear TDH bits in FLSHCR register
-Date:   Wed, 11 Dec 2019 16:06:22 +0100
-Message-Id: <20191211150301.615112837@linuxfoundation.org>
+        syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.3 100/105] iomap: Fix pipe page leakage during splicing
+Date:   Wed, 11 Dec 2019 16:06:29 +0100
+Message-Id: <20191211150303.825813412@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -60,126 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
+From: Jan Kara <jack@suse.cz>
 
-commit f6910679e17ad4915f008bd2c614d38052426f7c upstream.
+commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6 upstream.
 
-Later versions of the QSPI controller (e.g. in i.MX6UL/ULL and i.MX7)
-seem to have an additional TDH setting in the FLSHCR register, that
-needs to be set in accordance with the access mode that is used (DDR
-or SDR).
+When splicing using iomap_dio_rw() to a pipe, we may leak pipe pages
+because bio_iov_iter_get_pages() records that the pipe will have full
+extent worth of data however if file size is not block size aligned
+iomap_dio_rw() returns less than what bio_iov_iter_get_pages() set up
+and splice code gets confused leaking a pipe page with the file tail.
 
-Previous bootstages such as BootROM or bootloader might have used the
-DDR mode to access the flash. As we currently only use SDR mode, we
-need to make sure the TDH bits are cleared upon initialization.
+Handle the situation similarly to the old direct IO implementation and
+revert iter to actually returned read amount which makes iter consistent
+with value returned from iomap_dio_rw() and thus the splice code is
+happy.
 
-Fixes: 84d043185dbe ("spi: Add a driver for the Freescale/NXP QuadSPI controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Acked-by: Han Xu <han.xu@nxp.com>
-Link: https://lore.kernel.org/r/20191007071933.26786-1-frieder.schrempf@kontron.de
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: ff6a9292e6f6 ("iomap: implement direct I/O")
+CC: stable@vger.kernel.org
+Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-fsl-qspi.c |   38 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+ fs/iomap/direct-io.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-fsl-qspi.c
-+++ b/drivers/spi/spi-fsl-qspi.c
-@@ -63,6 +63,11 @@
- #define QUADSPI_IPCR			0x08
- #define QUADSPI_IPCR_SEQID(x)		((x) << 24)
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -501,8 +501,15 @@ iomap_dio_rw(struct kiocb *iocb, struct
+ 		}
+ 		pos += ret;
  
-+#define QUADSPI_FLSHCR			0x0c
-+#define QUADSPI_FLSHCR_TCSS_MASK	GENMASK(3, 0)
-+#define QUADSPI_FLSHCR_TCSH_MASK	GENMASK(11, 8)
-+#define QUADSPI_FLSHCR_TDH_MASK		GENMASK(17, 16)
-+
- #define QUADSPI_BUF3CR			0x1c
- #define QUADSPI_BUF3CR_ALLMST_MASK	BIT(31)
- #define QUADSPI_BUF3CR_ADATSZ(x)	((x) << 8)
-@@ -95,6 +100,9 @@
- #define QUADSPI_FR			0x160
- #define QUADSPI_FR_TFF_MASK		BIT(0)
+-		if (iov_iter_rw(iter) == READ && pos >= dio->i_size)
++		if (iov_iter_rw(iter) == READ && pos >= dio->i_size) {
++			/*
++			 * We only report that we've read data up to i_size.
++			 * Revert iter to a state corresponding to that as
++			 * some callers (such as splice code) rely on it.
++			 */
++			iov_iter_revert(iter, pos - dio->i_size);
+ 			break;
++		}
+ 	} while ((count = iov_iter_count(iter)) > 0);
+ 	blk_finish_plug(&plug);
  
-+#define QUADSPI_RSER			0x164
-+#define QUADSPI_RSER_TFIE		BIT(0)
-+
- #define QUADSPI_SPTRCLR			0x16c
- #define QUADSPI_SPTRCLR_IPPTRC		BIT(8)
- #define QUADSPI_SPTRCLR_BFPTRC		BIT(0)
-@@ -112,9 +120,6 @@
- #define QUADSPI_LCKER_LOCK		BIT(0)
- #define QUADSPI_LCKER_UNLOCK		BIT(1)
- 
--#define QUADSPI_RSER			0x164
--#define QUADSPI_RSER_TFIE		BIT(0)
--
- #define QUADSPI_LUT_BASE		0x310
- #define QUADSPI_LUT_OFFSET		(SEQID_LUT * 4 * 4)
- #define QUADSPI_LUT_REG(idx) \
-@@ -181,6 +186,12 @@
-  */
- #define QUADSPI_QUIRK_BASE_INTERNAL	BIT(4)
- 
-+/*
-+ * Controller uses TDH bits in register QUADSPI_FLSHCR.
-+ * They need to be set in accordance with the DDR/SDR mode.
-+ */
-+#define QUADSPI_QUIRK_USE_TDH_SETTING	BIT(5)
-+
- struct fsl_qspi_devtype_data {
- 	unsigned int rxfifo;
- 	unsigned int txfifo;
-@@ -209,7 +220,8 @@ static const struct fsl_qspi_devtype_dat
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
- 	.ahb_buf_size = SZ_1K,
--	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
-+	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
-+		  QUADSPI_QUIRK_USE_TDH_SETTING,
- 	.little_endian = true,
- };
- 
-@@ -217,7 +229,8 @@ static const struct fsl_qspi_devtype_dat
- 	.rxfifo = SZ_128,
- 	.txfifo = SZ_512,
- 	.ahb_buf_size = SZ_1K,
--	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK,
-+	.quirks = QUADSPI_QUIRK_TKT253890 | QUADSPI_QUIRK_4X_INT_CLK |
-+		  QUADSPI_QUIRK_USE_TDH_SETTING,
- 	.little_endian = true,
- };
- 
-@@ -275,6 +288,11 @@ static inline int needs_amba_base_offset
- 	return !(q->devtype_data->quirks & QUADSPI_QUIRK_BASE_INTERNAL);
- }
- 
-+static inline int needs_tdh_setting(struct fsl_qspi *q)
-+{
-+	return q->devtype_data->quirks & QUADSPI_QUIRK_USE_TDH_SETTING;
-+}
-+
- /*
-  * An IC bug makes it necessary to rearrange the 32-bit data.
-  * Later chips, such as IMX6SLX, have fixed this bug.
-@@ -710,6 +728,16 @@ static int fsl_qspi_default_setup(struct
- 	qspi_writel(q, QUADSPI_MCR_MDIS_MASK | QUADSPI_MCR_RESERVED_MASK,
- 		    base + QUADSPI_MCR);
- 
-+	/*
-+	 * Previous boot stages (BootROM, bootloader) might have used DDR
-+	 * mode and did not clear the TDH bits. As we currently use SDR mode
-+	 * only, clear the TDH bits if necessary.
-+	 */
-+	if (needs_tdh_setting(q))
-+		qspi_writel(q, qspi_readl(q, base + QUADSPI_FLSHCR) &
-+			    ~QUADSPI_FLSHCR_TDH_MASK,
-+			    base + QUADSPI_FLSHCR);
-+
- 	reg = qspi_readl(q, base + QUADSPI_SMPR);
- 	qspi_writel(q, reg & ~(QUADSPI_SMPR_FSDLY_MASK
- 			| QUADSPI_SMPR_FSPHS_MASK
 
 
