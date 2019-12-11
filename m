@@ -2,123 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FFAC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B65C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C0F214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:37:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576053471;
-	bh=L6lTmn6ZJo8jEKrZuiY/fFMRppBnU5FIObjyAg+xgL4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hTKBHZhlOMfvaizRC6zp2LgRWb0LbGWhyfMQYlQW8dnPxWQE2EDLRlt/nuR4jAGz3
-	 mjQlZGkJlaIBYjZBOtr9c5exU75qWU5NXnyE0T861+0Y0h5+umRh8vl4Qi8/lZXJhZ
-	 6DUzIjk23wv9OYe2eF/9GimjcdmvkbMeKhTKYEYQ=
+	by mail.kernel.org (Postfix) with ESMTP id BCBB12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfLKIhu (ORCPT
+        id S1728262AbfLKIjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:37:50 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51374 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfLKIht (ORCPT
+        Wed, 11 Dec 2019 03:39:53 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35262 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfLKIjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:37:49 -0500
-Received: by mail-wm1-f67.google.com with SMTP id d73so2785565wmd.1;
-        Wed, 11 Dec 2019 00:37:47 -0800 (PST)
+        Wed, 11 Dec 2019 03:39:53 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k196so12561888oib.2
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 00:39:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RT9pTTqiwT2L0hZKyzfnOGnReyBEaT0I8SJou9/ZWtA=;
-        b=WycEzKWaK87nhxlV+2EnWYZecESj4FbRNoi3hrm59tb9XC6hCqXSjM4FfXbMKeEUm3
-         QHVKYM/geYUsGFQVqIUO17nCkau3cYresxD8ELPEcTlOSnpARGAhe2r7e3W8SB7Xj3tD
-         9vgv8KL+ZwNoo7iBblJArA/vpx785kJUmTHKTvTfmOa2O+tTEp6HBl+KPitv5BN4tTQ7
-         eaRCDrAOWWRsjq4o/BS5/SktQiwyJD9oBmZelDa590PS2o3mCZSoOYrXGc5aQl5eAUDQ
-         uwMjhnbHcTeq9GqhQTb69EV5hruX/kgWR63lS1/4+U75dNRELl9j5XzPBw5C5yzyF/A0
-         iEkQ==
-X-Gm-Message-State: APjAAAUlYha9geLJLxhmF7pSAS0CtRxtrtToKb/trammq74ARU5gMd+g
-        fMzcboodHab5MsSuBbnd96uEYOZk
-X-Google-Smtp-Source: APXvYqw61QRsYL0Lq+p6xXB8wylpboyl1Ts6lCVX0L7iemSth1vHmOlbDD2iTtXwvmvWkyZL3xVJiQ==
-X-Received: by 2002:a7b:cf18:: with SMTP id l24mr2029460wmg.95.1576053467280;
-        Wed, 11 Dec 2019 00:37:47 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id f1sm1406269wrp.93.2019.12.11.00.37.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 00:37:46 -0800 (PST)
-Date:   Wed, 11 Dec 2019 09:37:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the
- pgprot_t in arch_add_memory()
-Message-ID: <20191211083745.GA14655@dhcp22.suse.cz>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
- <20191210100432.GC10404@dhcp22.suse.cz>
- <6da2b279-6a6d-d89c-a34c-962ed021d91d@redhat.com>
- <20191210103452.GF10404@dhcp22.suse.cz>
- <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
- <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mq+nJWNrU10kDl2/GzcnaogYUfjOD4ecwSEbpxiarc4=;
+        b=mlVlEnU9J9JMh3/ZRp9xBfq3FC4Rg0VO7Uh/3+VqTdpKDldAUwMtLi6t1yA03ZpILo
+         8bp6sMixPZSPtQ09xK1al+2b1jeBqOmRhEzVWnbVHiiqSMnTVyaNwIVBNbb2SBmTgPBX
+         aMiKrPCMTtIjdnOueHrJZKX84lCezkAWwe/kPTTMXoqOa7iFwMLRvWDWCWi8CpYhQlFr
+         fltpXX7vtL5kI0uDyhAunCHf8iaS50nXPnoYob8IT+EuHn2XFg+j2T1x98sT9p1Ewl03
+         pYxvXwQ+SVf3B2OaS6u3tbmFOXoR/F1KOfbExEJvkfulBRPT3NjkAULrvPG3DW3P99y6
+         kO1w==
+X-Gm-Message-State: APjAAAWv6urBPMrVNo3b9AYTiCWFHU5cROfo8LmFRuLFhYoTt051O/yA
+        BzhG99FTsw2uGtEQappvzMCCtXcgKhG3BC4elHvVSwB/
+X-Google-Smtp-Source: APXvYqxIsG86kgBilRQBdKKrWwzgfwKqOs9z8nWWpdZuWkCuANAZE1sBk07t6w7+r4AIumoCnXkRxblAO1YsWJlBUNY=
+X-Received: by 2002:a05:6808:8ec:: with SMTP id d12mr1735907oic.131.1576053591964;
+ Wed, 11 Dec 2019 00:39:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191210212108.222514-1-brendanhiggins@google.com>
+In-Reply-To: <20191210212108.222514-1-brendanhiggins@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 11 Dec 2019 09:39:41 +0100
+Message-ID: <CAMuHMdVyjjZAoO3Q-Vr88fUGFwrn4EoiSxBmG_FV+o87BuBmwQ@mail.gmail.com>
+Subject: Re: [PATCH v1] uml: make CONFIG_STATIC_LINK actually static
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        davidgow@google.com, linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Berg <johannes.berg@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 10-12-19 16:52:31, Logan Gunthorpe wrote:
-[...]
-> In my opinion, having a coder and reviewer see PAGE_KERNEL and ask if
-> that makes sense is a benefit. Having it hidden because we don't want
-> people to think about it is worse, harder to understand and results in
-> bugs that are more difficult to spot.
+Hi Brendan,
 
-My experience would disagree here. We have several examples in the MM
-where an overly complex and versatile APIs led to suble bugs, a lot of
-copy&pasting and cargo cult programing (just look at the page allocator
-as a shiny example - e.g. gfp_flags). So I am always trying to be
-carefull here.
+On Tue, Dec 10, 2019 at 10:21 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+> UML_NET_PCAP; this is because glibc tries to load NSS which does not
+> support being statically linked. So make CONFIG_STATIC_LINK depend on
+> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
+>
+> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  arch/um/Kconfig | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 2a6d04fcb3e91..1ddc8745123f2 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -63,6 +63,7 @@ source "arch/$(HEADER_ARCH)/um/Kconfig"
+>
+>  config STATIC_LINK
+>         bool "Force a static link"
+> +       depends on !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP
 
-> Though, we may be overthinking this: arch_add_memory() is a low level
-> non-exported API that's currently used in exactly two places.
+"depends on !FORBID_STATIC_LINK"?
 
-This is a fair argument. Most users are and should be using
-add_memory().
+Then all the drivers that are incompatible with static linking can just
+select FORBID_STATIC_LINK in their own Kconfig block.
 
-> I don't
-> think there's going to be many, if any, valid new use cases coming up
-> for it in the future. That's more what memremap_pages() is for.
+>         default n
+>         help
+>           This option gives you the ability to force a static link of UML.
+> @@ -72,6 +73,9 @@ config STATIC_LINK
+>           Additionally, this option enables using higher memory spaces (up to
+>           2.75G) for UML.
+>
+> +         NOTE: This option is incompatible with some networking features which
+> +         depend on features that require being dynamically loaded (like NSS).
+> +
+>  config LD_SCRIPT_STATIC
+>         bool
+>         default y
+> --
+> 2.24.0.525.g8f36a354ae-goog
 
-OK, fair enough. If this is indeed the simplest way forward then I will
-not stand in the way.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Michal Hocko
-SUSE Labs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
