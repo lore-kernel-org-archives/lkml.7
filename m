@@ -2,149 +2,113 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCC7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 293DBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2CE02077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F373B2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080171;
-	bh=5xNR6jI9+0OjgRnmsvUhBM684dKe2zQ9o5G22OtrEhE=;
+	s=default; t=1576080178;
+	bh=NVUSMFBeU6giYFVWU6X0SZEzw/TcFc6R5zCxRAbfVsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NdKWr/DymQLnOCt+qYU0RtL73KQp40JFdN6neUxHTlcVAPefO7AT0Ks0LLCbILpfm
-	 uOvoFiQDeccvBBzCgtGzV96QkY4SRwIxyJyh089f7UXMOZWxNGZZiiKp+WJqq82ddC
-	 fxW+BeYwNNxuZC9rhv9kZmU45+UiddllaqKmK1Z0=
+	b=vp2qTicJMrGVnbxCEw26n6Dq0wdej3XyMCWFqKALabCubSsZNUsVmQn7fVCHVUJCn
+	 vfULnRxuxspYnizhDcPNFU27zaNMkpIoF9SHcKTZQh9k59OadGt7AaosYNHFidud6p
+	 GLCYg3AmSeqO5LAzg7xx8qL3NF3nEzN74tBGC8bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388678AbfLKQCu (ORCPT
+        id S2388726AbfLKQC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:02:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:02:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730908AbfLKPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731343AbfLKPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:13:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BAFB2467C;
-        Wed, 11 Dec 2019 15:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DC9208C3;
+        Wed, 11 Dec 2019 15:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077186;
-        bh=5xNR6jI9+0OjgRnmsvUhBM684dKe2zQ9o5G22OtrEhE=;
+        bh=NVUSMFBeU6giYFVWU6X0SZEzw/TcFc6R5zCxRAbfVsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAiDJCai6UOxF7paoO3wRuWRRuqBkmbTNw/sgYTfsrjKd+Jmux5FghjDLMGwmuzEO
-         ZZZgiJ/1P9ioBPIDj4iIJgFGIdph2WG0og0SInu9qqfxhknktOh7aqRRIe4s65xr1F
-         jXGUZLRcZrbj/BuZq75u4ns50IKmtTWsRUOuy1CU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillem Jover <guillem@hadrons.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 014/105] aio: Fix io_pgetevents() struct __compat_aio_sigset layout
-Date:   Wed, 11 Dec 2019 16:05:03 +0100
-Message-Id: <20191211150224.289343749@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=z5iYJYvPwQlpEU/Z62N7o0+NM9FcWaWR2Yr6Y7DKfSHDsCp4ItFi1JRy7oSuLUeUA
+         MxDiqU87Dz5HR8Dfe81BO6B2/Ttmrqq8sJ8KmNufJoY9SBAkQfh7WgPNHE0GP3L1ig
+         EYgJSRfydqDk4o1ffCTSJIW7TpBwp7ks8/OgzcXo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sam Bobroff <sbobroff@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.4 070/134] powerpc/eeh: differentiate duplicate detection message
+Date:   Wed, 11 Dec 2019 10:10:46 -0500
+Message-Id: <20191211151150.19073-70-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillem Jover <guillem@hadrons.org>
+From: Sam Bobroff <sbobroff@linux.ibm.com>
 
-[ Upstream commit 97eba80fcca754856d09e048f469db22773bec68 ]
+[ Upstream commit de84ffc3ccbeec3678f95a3d898fc188efa0d9c5 ]
 
-This type is used to pass the sigset_t from userland to the kernel,
-but it was using the kernel native pointer type for the member
-representing the compat userland pointer to the userland sigset_t.
+Currently when an EEH error is detected, the system log receives the
+same (or almost the same) message twice:
 
-This messes up the layout, and makes the kernel eat up both the
-userland pointer and the size members into the kernel pointer, and
-then reads garbage into the kernel sigsetsize. Which makes the sigset_t
-size consistency check fail, and consequently the syscall always
-returns -EINVAL.
+  EEH: PHB#0 failure detected, location: N/A
+  EEH: PHB#0 failure detected, location: N/A
+or
+  EEH: eeh_dev_check_failure: Frozen PHB#0-PE#0 detected
+  EEH: Frozen PHB#0-PE#0 detected
 
-This breaks both libaio and strace on 32-bit userland running on 64-bit
-kernels. And there are apparently no users in the wild of the current
-broken layout (at least according to codesearch.debian.org and a brief
-check over github.com search). So it looks safe to fix this directly
-in the kernel, instead of either letting userland deal with this
-permanently with the additional overhead or trying to make the syscall
-infer what layout userland used, even though this is also being worked
-around in libaio to temporarily cope with kernels that have not yet
-been fixed.
+This looks like a bug, but in fact the messages are from different
+functions and mean slightly different things.  So keep both but change
+one of the messages slightly, so that it's clear they are different:
 
-We use a proper compat_uptr_t instead of a compat_sigset_t pointer.
+  EEH: PHB#0 failure detected, location: N/A
+  EEH: Recovering PHB#0, location: N/A
+or
+  EEH: eeh_dev_check_failure: Frozen PHB#0-PE#0 detected
+  EEH: Recovering PHB#0-PE#0
 
-Fixes: 7a074e96dee6 ("aio: implement io_pgetevents")
-Signed-off-by: Guillem Jover <guillem@hadrons.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/43817cb6e6631b0828b9a6e266f60d1f8ca8eb22.1571288375.git.sbobroff@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/aio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/powerpc/kernel/eeh_driver.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 01e0fb9ae45ae..0d9a559d488c1 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -2179,7 +2179,7 @@ SYSCALL_DEFINE5(io_getevents_time32, __u32, ctx_id,
- #ifdef CONFIG_COMPAT
+diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+index d9279d0ee9f54..c031be8d41ffd 100644
+--- a/arch/powerpc/kernel/eeh_driver.c
++++ b/arch/powerpc/kernel/eeh_driver.c
+@@ -897,12 +897,12 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
  
- struct __compat_aio_sigset {
--	compat_sigset_t __user	*sigmask;
-+	compat_uptr_t		sigmask;
- 	compat_size_t		sigsetsize;
- };
+ 	/* Log the event */
+ 	if (pe->type & EEH_PE_PHB) {
+-		pr_err("EEH: PHB#%x failure detected, location: %s\n",
++		pr_err("EEH: Recovering PHB#%x, location: %s\n",
+ 			pe->phb->global_number, eeh_pe_loc_get(pe));
+ 	} else {
+ 		struct eeh_pe *phb_pe = eeh_phb_pe_get(pe->phb);
  
-@@ -2193,7 +2193,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 		struct old_timespec32 __user *, timeout,
- 		const struct __compat_aio_sigset __user *, usig)
- {
--	struct __compat_aio_sigset ksig = { NULL, };
-+	struct __compat_aio_sigset ksig = { 0, };
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2204,7 +2204,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
-@@ -2228,7 +2228,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 		struct __kernel_timespec __user *, timeout,
- 		const struct __compat_aio_sigset __user *, usig)
- {
--	struct __compat_aio_sigset ksig = { NULL, };
-+	struct __compat_aio_sigset ksig = { 0, };
- 	struct timespec64 t;
- 	bool interrupted;
- 	int ret;
-@@ -2239,7 +2239,7 @@ COMPAT_SYSCALL_DEFINE6(io_pgetevents_time64,
- 	if (usig && copy_from_user(&ksig, usig, sizeof(ksig)))
- 		return -EFAULT;
- 
--	ret = set_compat_user_sigmask(ksig.sigmask, ksig.sigsetsize);
-+	ret = set_compat_user_sigmask(compat_ptr(ksig.sigmask), ksig.sigsetsize);
- 	if (ret)
- 		return ret;
- 
+-		pr_err("EEH: Frozen PHB#%x-PE#%x detected\n",
++		pr_err("EEH: Recovering PHB#%x-PE#%x\n",
+ 		       pe->phb->global_number, pe->addr);
+ 		pr_err("EEH: PE location: %s, PHB location: %s\n",
+ 		       eeh_pe_loc_get(pe), eeh_pe_loc_get(phb_pe));
 -- 
 2.20.1
-
-
 
