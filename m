@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2A5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB60AC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974CD2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30572077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A3mlfrRS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFCv+Dy8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730756AbfLKSPR (ORCPT
+        id S1731164AbfLKSPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:15:17 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36063 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbfLKSPH (ORCPT
+        Wed, 11 Dec 2019 13:15:19 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:43495 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731074AbfLKSPM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:07 -0500
-Received: by mail-yw1-f66.google.com with SMTP id n184so2543765ywc.3;
-        Wed, 11 Dec 2019 10:15:06 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:12 -0500
+Received: by mail-yw1-f68.google.com with SMTP id s187so9288650ywe.10;
+        Wed, 11 Dec 2019 10:15:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wf4U8S55NS29nIX2MAXcq5psdR7k5pO3qtIDUjhcvoE=;
-        b=A3mlfrRSpEtlwdK9iTaJ3EpY39raLid+/qUwTN5+vyRDDMDIjbwvHnM10sR5yHIBNq
-         SZ+VL+4otOYDgMUsCIa7pEPz+DbvS+TZRNSAuaPno9bX8VgaXfSUhJ+SuOB7mLySl2dG
-         KTImdrrEtkkDuOAg859Y7y+jZ6oEfDqh3JbLFaY2n1BInC2WD99L3gktOjGzG8i6ApUn
-         04XBtbBtUV9gRYTFaZG6ki3Pw2BuWxzTRkX0hRWsrPWXd56NCddJ56kOko6VKfhU38hv
-         T5PL2u7UWhi7idmjkTwkZw/HE9AL7rMWsR8Br9zwGGciN/HDsy78BJi+btcwMZRPVeju
-         tK6w==
+        bh=hG8SSrSMjGXENG9FtwgNHRKUSBYB279zh/9HfEeLdlg=;
+        b=SFCv+Dy8JK6iTtiVINTIW483rnpfX1DCbm/ACl7OLyTVcAjbl4psdVD/Kgnaovm3ky
+         8Dfl7wPFcmdoG74f7mRj7HaTo9Bs5IinIBDoMKZGtriKYlvXFwNighzMHA2wEz8KQXDD
+         xbXast2JCelPZEi6Dawwkok36exSUOK2gCsDz2aTBRBDKFBAL7efErVqMuOKaTEX89iS
+         p0irw/CZjx5qgSg/m69yiPeRQmCLHInHwLNk3ZayNQp2X+bondF810Dm9K+ZuwnnrcoJ
+         vuN1QW/US7nDvRRnPLbXC2Ac89pJDyHwbnkL1GYzPQCIXPCfO1ZJUY/yLObr6jF1cFVY
+         TIGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wf4U8S55NS29nIX2MAXcq5psdR7k5pO3qtIDUjhcvoE=;
-        b=QAupXBMdF9TzasiM9VO6qNq3u0GOyzNK5rndsw59R84pw8vakY9QNEyCDHaanYXXQe
-         EKtPtLI+s/FKZ5vQFYXOQBUe9ppE2jw30qt52GZpJAGf3pfvTkpzAkqvekjdfzNGEVYo
-         FZe6NMwCJ8wvRhNeCBXV9IxmQKtPgVatxUzvbcAke9sx+ZbGAqqlUFrgNLqRgnuiDKJB
-         NNqwijOeIOhoCHQsqrOUjwDcLZ6FqV5J77kjRXB5N0ynjc0A36g637sJgJlW/Z4Ho3cm
-         F8xtXvNPSKMK48VK+6Bas/ZFSXuV1EJh144SnIk8JOlGaLaDrh3aX+3fAZOu/f8/VzL4
-         3daA==
-X-Gm-Message-State: APjAAAVHAfbg6BXoIfNo3pmS4SV4k5tQSwJkDjFWbImR6yosPUQO1M3w
-        GoNYTLeL/393OeGFLDvZOi1hQdRI5TZBSA==
-X-Google-Smtp-Source: APXvYqzFyjmE+1u8XWATNn1K+5u8H7GFptU3mVAg5nxKYFiHRBp9lsQrZseAywZ67jeoUsunKcsHgg==
-X-Received: by 2002:a0d:e982:: with SMTP id s124mr840401ywe.435.1576088105381;
-        Wed, 11 Dec 2019 10:15:05 -0800 (PST)
+        bh=hG8SSrSMjGXENG9FtwgNHRKUSBYB279zh/9HfEeLdlg=;
+        b=BuY+uj7jE3x7vr7VB78U+xbThHyK6ZKvgdLppVrhfMHg8EL3QxyZignbaJO2FqVDtB
+         vheLA5UVM0S2xJhjfWMLYRBK11NUpvSEUNG9/ZLnXtnbEiSEKqYuli5CTm9KIWXimUXK
+         3/7tBnE9oLYLiQNoz8n804Hxzkh2G5gh/4J98vxyCPaVk4MHFD7B2caZhVHjz/Gcb3dC
+         5K4e9efMXjEwktvBAtCobxgvQ+Jp/LgLE+XAKdhXDmHmmefN/N6dXdFEO42ekVKpTZ5Z
+         d4cxUxPIUp9DBUoh0caTsZ2uogBH84tauAMs0MJUrY6yOn/VlCOdzMaygiA34T/ysYpL
+         l0iw==
+X-Gm-Message-State: APjAAAU5u7qWvz7KW+jnwuJrgyI5ExBivfwpYOEiuOsTye8y/jeUt4E+
+        VV3frrHtMWvodrJngPmuJVj1n4Wsnx9r8g==
+X-Google-Smtp-Source: APXvYqzI09j+iI9VlzxzIt3J86LSOyuAGfFjie2v5mkyADXX0r06wRpML08SdBCGfCWqDNt1AkQmYg==
+X-Received: by 2002:a81:a00a:: with SMTP id x10mr838433ywg.475.1576088111598;
+        Wed, 11 Dec 2019 10:15:11 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id e63sm1276152ywd.64.2019.12.11.10.15.04
+        by smtp.gmail.com with ESMTPSA id y9sm1332383ywc.19.2019.12.11.10.15.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:05 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:11 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/23] staging: qlge: Fix CHECK extra blank lines in many files
-Date:   Wed, 11 Dec 2019 12:12:30 -0600
-Message-Id: <9387760ae35bdeb606dc03ca9dd167f5214cd3a8.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 05/23] staging: qlge: Fix CHECK: Blank lines aren't necessary before a close brace '}'
+Date:   Wed, 11 Dec 2019 12:12:34 -0600
+Message-Id: <ca11055798ea77bfe8f8e78f3f6f721b48eeea6a.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,142 +76,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix CHECK: Please don't use multiple blank lines in qlge.h, qlge_dbg.c,
-qlge_ethtool.c, qlge_main.c, and qlge_mpi.c
+Fix CHECK: Blank lines aren't necessary before a close brace '}' in the
+following files:
+
+qlge_dbg.c
+qlge_main.c
+qlge_mpi.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge.h         | 1 -
- drivers/staging/qlge/qlge_dbg.c     | 4 ----
- drivers/staging/qlge/qlge_ethtool.c | 1 -
- drivers/staging/qlge/qlge_main.c    | 2 --
- drivers/staging/qlge/qlge_mpi.c     | 5 -----
- 5 files changed, 13 deletions(-)
+ drivers/staging/qlge/qlge_dbg.c  | 3 ---
+ drivers/staging/qlge/qlge_main.c | 3 ---
+ drivers/staging/qlge/qlge_mpi.c  | 2 --
+ 3 files changed, 8 deletions(-)
 
-diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-index 57884aac308f..4bc5d5fce9bf 100644
---- a/drivers/staging/qlge/qlge.h
-+++ b/drivers/staging/qlge/qlge.h
-@@ -63,7 +63,6 @@
- #define UDELAY_COUNT 3
- #define UDELAY_DELAY 100
- 
--
- #define TX_DESC_PER_IOCB 8
- 
- #if ((MAX_SKB_FRAGS - TX_DESC_PER_IOCB) + 2) > 0
 diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index 1fe16602ece8..c82a38c1b770 100644
+index 71fce1f850c7..b44f80e93b27 100644
 --- a/drivers/staging/qlge/qlge_dbg.c
 +++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -142,7 +142,6 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 	u32 *direct_ptr, temp;
- 	u32 *indirect_ptr;
- 
+@@ -553,7 +553,6 @@ static int ql_get_probe_dump(struct ql_adapter *qdev, unsigned int *buf)
+ 	buf = ql_get_probe(qdev, PRB_MX_ADDR_FC_CLOCK,
+ 			   PRB_MX_ADDR_VALID_FC_MOD, buf);
+ 	return 0;
 -
- 	/* The XAUI needs to be read out per port */
- 	status = ql_read_other_func_serdes_reg(qdev,
- 			XG_SERDES_XAUI_HSS_PCS_START, &temp);
-@@ -297,7 +296,6 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
- 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
- 				   xfi_direct_valid, xfi_indirect_valid);
+ }
  
+ /* Read out the routing index registers */
+@@ -1205,7 +1204,6 @@ int ql_core_dump(struct ql_adapter *qdev, struct ql_mpi_coredump *mpi_coredump)
+ err:
+ 	ql_sem_unlock(qdev, SEM_PROC_REG_MASK); /* does flush too */
+ 	return status;
 -
- 	/* Get XAUI_XFI_HSS_PLL register block. */
- 	if (qdev->func & 1) {
- 		direct_ptr =
-@@ -1227,7 +1225,6 @@ static void ql_gen_reg_dump(struct ql_adapter *qdev,
- {
- 	int i, status;
+ }
  
+ static void ql_get_core_dump(struct ql_adapter *qdev)
+@@ -1860,7 +1858,6 @@ void ql_dump_tx_desc(struct tx_buf_desc *tbd)
+ 	pr_err("tbd->flags = %s %s\n",
+ 	       tbd->len & TX_DESC_C ? "C" : ".",
+ 	       tbd->len & TX_DESC_E ? "E" : ".");
 -
- 	memset(&(mpi_coredump->mpi_global_header), 0,
- 	       sizeof(struct mpi_coredump_global_header));
- 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
-@@ -1238,7 +1235,6 @@ static void ql_gen_reg_dump(struct ql_adapter *qdev,
- 	strncpy(mpi_coredump->mpi_global_header.id_string, "MPI Coredump",
- 		sizeof(mpi_coredump->mpi_global_header.id_string));
+ }
  
--
- 	/* segment 16 */
- 	ql_build_coredump_seg_header(&mpi_coredump->misc_nic_seg_hdr,
- 				     MISC_NIC_INFO_SEG_NUM,
-diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
-index ea7bc6f2dde2..792b4d754ab8 100644
---- a/drivers/staging/qlge/qlge_ethtool.c
-+++ b/drivers/staging/qlge/qlge_ethtool.c
-@@ -32,7 +32,6 @@
- #include <linux/mm.h>
- #include <linux/vmalloc.h>
- 
--
- #include "qlge.h"
- 
- struct ql_stats {
+ void ql_dump_ob_mac_iocb(struct ob_mac_iocb_req *ob_mac_iocb)
 diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 29861f01ca26..b2f826822a51 100644
+index 34786e2c0247..1a5b82b68b44 100644
 --- a/drivers/staging/qlge/qlge_main.c
 +++ b/drivers/staging/qlge/qlge_main.c
-@@ -207,7 +207,6 @@ static int ql_wait_cfg(struct ql_adapter *qdev, u32 bit)
- 	return -ETIMEDOUT;
+@@ -775,7 +775,6 @@ static int ql_get_8012_flash_params(struct ql_adapter *qdev)
+ 				  "Error reading flash.\n");
+ 			goto exit;
+ 		}
+-
+ 	}
+ 
+ 	status = ql_validate_flash(qdev,
+@@ -1244,7 +1243,6 @@ static void ql_unmap_send(struct ql_adapter *qdev,
+ 						     maplen), PCI_DMA_TODEVICE);
+ 		}
+ 	}
+-
  }
  
+ /* Map the buffers for this transmit.  This will return
+@@ -1358,7 +1356,6 @@ static int ql_map_send(struct ql_adapter *qdev,
+ 		dma_unmap_addr_set(&tx_ring_desc->map[map_idx], mapaddr, map);
+ 		dma_unmap_len_set(&tx_ring_desc->map[map_idx], maplen,
+ 				  skb_frag_size(frag));
 -
- /* Used to issue init control blocks to hw. Maps control block,
-  * sets address, triggers download, waits for completion.
-  */
-@@ -2641,7 +2640,6 @@ static netdev_tx_t qlge_send(struct sk_buff *skb, struct net_device *ndev)
- 	return NETDEV_TX_OK;
- }
- 
--
- static void ql_free_shadow_space(struct ql_adapter *qdev)
- {
- 	if (qdev->rx_ring_shadow_reg_area) {
+ 	}
+ 	/* Save the number of segments we've mapped. */
+ 	tx_ring_desc->map_cnt = map_idx;
 diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index 9e422bbbb6ab..843b32240a73 100644
+index 22ebd6cb8525..0f9bd9a8b523 100644
 --- a/drivers/staging/qlge/qlge_mpi.c
 +++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -544,7 +544,6 @@ static int ql_mailbox_command(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 	if (status)
- 		goto end;
+@@ -122,7 +122,6 @@ int ql_own_firmware(struct ql_adapter *qdev)
+ 		return 1;
  
+ 	return 0;
 -
- 	/* If we're generating a system error, then there's nothing
- 	 * to wait for.
- 	 */
-@@ -730,7 +729,6 @@ int ql_mb_set_port_cfg(struct ql_adapter *qdev)
- 	mbcp->mbox_in[1] = qdev->link_config;
- 	mbcp->mbox_in[2] = qdev->max_frame_size;
+ }
  
--
- 	status = ql_mailbox_command(qdev, mbcp);
- 	if (status)
- 		return status;
-@@ -768,7 +766,6 @@ static int ql_mb_dump_ram(struct ql_adapter *qdev, u64 req_dma, u32 addr,
- 	mbcp->mbox_in[7] = LSW(MSD(req_dma));
- 	mbcp->mbox_in[8] = MSW(addr);
+ static int ql_get_mb_sts(struct ql_adapter *qdev, struct mbox_params *mbcp)
+@@ -363,7 +362,6 @@ static int ql_aen_lost(struct ql_adapter *qdev, struct mbox_params *mbcp)
+ 				  i, mbcp->mbox_out[i]);
  
+ 	}
 -
- 	status = ql_mailbox_command(qdev, mbcp);
- 	if (status)
- 		return status;
-@@ -850,7 +847,6 @@ int ql_mb_wol_mode(struct ql_adapter *qdev, u32 wol)
- 	mbcp->mbox_in[0] = MB_CMD_SET_WOL_MODE;
- 	mbcp->mbox_in[1] = wol;
+ 	return status;
+ }
  
--
- 	status = ql_mailbox_command(qdev, mbcp);
- 	if (status)
- 		return status;
-@@ -965,7 +961,6 @@ int ql_mb_set_led_cfg(struct ql_adapter *qdev, u32 led_config)
- 	mbcp->mbox_in[0] = MB_CMD_SET_LED_CFG;
- 	mbcp->mbox_in[1] = led_config;
- 
--
- 	status = ql_mailbox_command(qdev, mbcp);
- 	if (status)
- 		return status;
 -- 
 2.20.1
 
