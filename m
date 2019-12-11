@@ -2,99 +2,120 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CE3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8220FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83B822077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BA92073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080347;
-	bh=8VCYKCYLmWQwWUoJfqKJ05SIdKRPFsPGHNN+S7jyXK8=;
+	s=default; t=1576080354;
+	bh=yh3ml+xLLZtTq6OwV4H71CWStS2hc1TgeU9LOfQMSzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAw/VVKluNEMkeElzjfMk4M7tnp7+9GxEV+t2W5spZ3iwTwiefdMqH6LgKETexKPW
-	 nbQRN0uLzGwKDoY+AlUP2QS8WLDQIbbUzSHjSNp4Ot73q0x0H2Jsx4bbuAp7y7HZAV
-	 WrL2437F3dW0k/d0Iv4L8rGc0mW7kFhmPpXcJh5c=
+	b=CKDs5wWUlDlj5xqDBBffNh3F/czD6X/FAa3wjhKUTmBd+p8M/PSxV33jeZOEcWewq
+	 1Hts95gk06NJuZy2CVVkkKot+8L010Jcr52FVSNQrJ8eA8d3ngjfPibPMuHoNIQHug
+	 G34Cq7HVF5h+oVJYwa1RS+wt52+6GZR61sDj2YcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388833AbfLKQFq (ORCPT
+        id S1731466AbfLKQFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbfLKPMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731228AbfLKPMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D36A22464B;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C86F2467C;
         Wed, 11 Dec 2019 15:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077166;
-        bh=8VCYKCYLmWQwWUoJfqKJ05SIdKRPFsPGHNN+S7jyXK8=;
+        bh=yh3ml+xLLZtTq6OwV4H71CWStS2hc1TgeU9LOfQMSzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WodKHoJ2tj1hh6PQRfLb5WPEmPg+ISHdZahJPjUmusZQgBTmh8PLN1TSVlc9YXaJa
-         RYgDEPHh9ysSy6NUzuryuW3zOZL6sK4yGiIVxZkxv3zLcvFaasSOpEV1Od+MA5h8Vp
-         xfcI7v2hA+H1b3j/tcMKw3CwAhS/f77n55JuKEb8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 040/105] net: hns3: fix ETS bandwidth validation bug
-Date:   Wed, 11 Dec 2019 16:05:29 +0100
-Message-Id: <20191211150237.197851307@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=v3EE2+zMs6s2PhDGUgkFwHn9avqqkAIrYK2grHmsEOlRIt1z1zBkIf5KqpV6xYjop
+         2h5c3qkrMePfjvcOSyZPG8zghlTZ5SAghx1jZGUkpkuCSjKXnq2Bc0KwPxAgAigGX7
+         2f2k7+MHqH6ZR41nsmG4jU0uGLgrdJbXOiHs8Hag=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Michael Hernandez <mhernandez@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        Martin Wilck <mwilck@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 051/134] scsi: qla2xxx: Fix a dma_pool_free() call
+Date:   Wed, 11 Dec 2019 10:10:27 -0500
+Message-Id: <20191211151150.19073-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit c2d56897819338eb0ba8b93184f7d10329b36653 ]
+[ Upstream commit 162b805e38327135168cb0938bd37b131b481cb0 ]
 
-Some device only support 4 TCs, but the driver check the total
-bandwidth of 8 TCs, so may cause wrong configurations write to
-the hw.
+This patch fixes the following kernel warning:
 
-This patch uses hdev->tc_max to instead HNAE3_MAX_TC to fix it.
+DMA-API: qla2xxx 0000:00:0a.0: device driver frees DMA memory with different size [device address=0x00000000c7b60000] [map size=4088 bytes] [unmap size=512 bytes]
+WARNING: CPU: 3 PID: 1122 at kernel/dma/debug.c:1021 check_unmap+0x4d0/0xbd0
+CPU: 3 PID: 1122 Comm: rmmod Tainted: G           O      5.4.0-rc1-dbg+ #1
+RIP: 0010:check_unmap+0x4d0/0xbd0
+Call Trace:
+ debug_dma_free_coherent+0x123/0x173
+ dma_free_attrs+0x76/0xe0
+ qla2x00_mem_free+0x329/0xc40 [qla2xxx_scst]
+ qla2x00_free_device+0x170/0x1c0 [qla2xxx_scst]
+ qla2x00_remove_one+0x4f0/0x6d0 [qla2xxx_scst]
+ pci_device_remove+0xd5/0x1f0
+ device_release_driver_internal+0x159/0x280
+ driver_detach+0x8b/0xf2
+ bus_remove_driver+0x9a/0x15a
+ driver_unregister+0x51/0x70
+ pci_unregister_driver+0x2d/0x130
+ qla2x00_module_exit+0x1c/0xbc [qla2xxx_scst]
+ __x64_sys_delete_module+0x22a/0x300
+ do_syscall_64+0x6f/0x2e0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Fixes: e432abfb99e5 ("net: hns3: add common validation in hclge_dcb")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3f006ac342c0 ("scsi: qla2xxx: Secure flash update support for ISP28XX") # v5.2-rc1~130^2~270.
+Cc: Michael Hernandez <mhernandez@marvell.com>
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Link: https://lore.kernel.org/r/20191106044226.5207-3-bvanassche@acm.org
+Reviewed-by: Martin Wilck <mwilck@suse.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-index d9136a199d8db..f5c323e798343 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_dcb.c
-@@ -124,7 +124,7 @@ static int hclge_ets_validate(struct hclge_dev *hdev, struct ieee_ets *ets,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 726ad4cbf4a64..9fc0789c9d3c3 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -4666,7 +4666,8 @@ qla2x00_mem_free(struct qla_hw_data *ha)
+ 	ha->sfp_data = NULL;
  
--	for (i = 0; i < HNAE3_MAX_TC; i++) {
-+	for (i = 0; i < hdev->tc_max; i++) {
- 		switch (ets->tc_tsa[i]) {
- 		case IEEE_8021QAZ_TSA_STRICT:
- 			if (hdev->tm_info.tc_info[i].tc_sch_mode !=
+ 	if (ha->flt)
+-		dma_free_coherent(&ha->pdev->dev, SFP_DEV_SIZE,
++		dma_free_coherent(&ha->pdev->dev,
++		    sizeof(struct qla_flt_header) + FLT_REGIONS_SIZE,
+ 		    ha->flt, ha->flt_dma);
+ 	ha->flt = NULL;
+ 	ha->flt_dma = 0;
 -- 
 2.20.1
-
-
 
