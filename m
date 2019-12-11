@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDBCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DBA2465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C86824658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077678;
-	bh=beiUjmyuBgp35NQy+gRPHb1sOJ7HQPGyZw4jEV+9fjA=;
+	s=default; t=1576077680;
+	bh=NQvIw2rVgnv+jiI8qw5LiO95gjHWJcKOs0BHIyA9hSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEabhzX2tMtoobwtmtPprmv4v1FaXJGPKi3wGtlPg0OrPtP3XiSviqkEKIzv3jRO9
-	 kzZrKkWbX8PLiRfNhrkC4E8LZE8KM9dH/GS52N1ApZCl46f5aPDX68lf/sUGWdX+Sy
-	 6sFc2M+reg0f9NYYudzKOxdC02Hlss0f3nT+Xr4k=
+	b=I5ZBIzOvqYSfoWRZUqAaVAQ7bdmqdgImofVPt0ywakuizbHGl/Y2RjXVQojMNyXvE
+	 5fM6rb5tIE47hu+MH937SGk1pZQiB82tKZITPAA3YLoTspt4QplfJXvSg4/ph66qM4
+	 Yqe7U1mayueqJigRZyL81+nqvCms10N1nVfp8j4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732445AbfLKPVQ (ORCPT
+        id S1732453AbfLKPVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732433AbfLKPVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:21:14 -0500
+        id S1732446AbfLKPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461982073D;
-        Wed, 11 Dec 2019 15:21:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CADFB214AF;
+        Wed, 11 Dec 2019 15:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077673;
-        bh=beiUjmyuBgp35NQy+gRPHb1sOJ7HQPGyZw4jEV+9fjA=;
+        s=default; t=1576077676;
+        bh=NQvIw2rVgnv+jiI8qw5LiO95gjHWJcKOs0BHIyA9hSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=epu5EwdQ/z0gor9VZGg2MrJaQjgtrr+RcN7dSVyphuU+/Jk9pW59/Jt1x+NNp9oDx
-         hkBkjwHrfpxGrWhmRKFt/DqxFo3T45WnBOOAdYfNs5f+GjO3EqyB9SEJTLWOMulsvT
-         Xz7u+BEPdJkc8yRQvBZTB/jrhWhpjl9CR9C604KM=
+        b=MpXkj9xFh13XkRX+LC5Gfxfxt3i0zWAaDYO+jNiHT2AE/W/yBMNN+9/0V+xypc8Ta
+         /1wAzeLbXwoYGqzQ0GSOeHx0+qmFNWiJJDiyejIJWoaf5i+iCxAqXP/Gi3eVf5soW7
+         BncW8+Q43BkdezIqfPIXPtz1G725y0lDrGBbYVNc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 110/243] nvme: Free ctrl device name on init failure
-Date:   Wed, 11 Dec 2019 16:04:32 +0100
-Message-Id: <20191211150346.558585307@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 128/243] ARM: dts: sun8i: v3s: Change pinctrl nodes to avoid warning
+Date:   Wed, 11 Dec 2019 16:04:50 +0100
+Message-Id: <20191211150347.770109278@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,34 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Keith Busch <keith.busch@intel.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit d6a2b9535d1e52bea269c138614c4801469d10e1 ]
+[ Upstream commit 438a44ce7e51ce571f942433c6c7cb87c4c0effd ]
 
-Free the kobject name that was allocated for the controller device on
-failure rather than its parent.
+All our pinctrl nodes were using a node name convention with a unit-address
+to differentiate the different muxing options. However, since those nodes
+didn't have a reg property, they were generating warnings in DTC.
 
-Fixes: d22524a4782a9 ("nvme: switch controller refcounting to use struct device")
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+In order to accomodate for this, convert the old nodes to the syntax we've
+been using for the new SoCs, including removing the letter suffix of the
+node labels to the bank of those pins to make things more readable.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts |  4 ++--
+ arch/arm/boot/dts/sun8i-v3s.dtsi              | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index c4ff4f079448e..b2d9bd564960a 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3652,7 +3652,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+index 387fc2aa546d6..333df90e8037c 100644
+--- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
++++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
+@@ -78,7 +78,7 @@
+ };
  
- 	return 0;
- out_free_name:
--	kfree_const(dev->kobj.name);
-+	kfree_const(ctrl->device->kobj.name);
- out_release_instance:
- 	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
- out:
+ &mmc0 {
+-	pinctrl-0 = <&mmc0_pins_a>;
++	pinctrl-0 = <&mmc0_pins>;
+ 	pinctrl-names = "default";
+ 	broken-cd;
+ 	bus-width = <4>;
+@@ -87,7 +87,7 @@
+ };
+ 
+ &uart0 {
+-	pinctrl-0 = <&uart0_pins_a>;
++	pinctrl-0 = <&uart0_pb_pins>;
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index 443b083c6adc9..92fcb756a08a9 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -292,17 +292,17 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+ 
+-			i2c0_pins: i2c0 {
++			i2c0_pins: i2c0-pins {
+ 				pins = "PB6", "PB7";
+ 				function = "i2c0";
+ 			};
+ 
+-			uart0_pins_a: uart0@0 {
++			uart0_pb_pins: uart0-pb-pins {
+ 				pins = "PB8", "PB9";
+ 				function = "uart0";
+ 			};
+ 
+-			mmc0_pins_a: mmc0@0 {
++			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2", "PF3",
+ 				       "PF4", "PF5";
+ 				function = "mmc0";
+@@ -310,7 +310,7 @@
+ 				bias-pull-up;
+ 			};
+ 
+-			mmc1_pins: mmc1 {
++			mmc1_pins: mmc1-pins {
+ 				pins = "PG0", "PG1", "PG2", "PG3",
+ 				       "PG4", "PG5";
+ 				function = "mmc1";
+@@ -318,7 +318,7 @@
+ 				bias-pull-up;
+ 			};
+ 
+-			spi0_pins: spi0 {
++			spi0_pins: spi0-pins {
+ 				pins = "PC0", "PC1", "PC2", "PC3";
+ 				function = "spi0";
+ 			};
 -- 
 2.20.1
 
