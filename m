@@ -2,106 +2,99 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6CBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E91C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2197D214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051F72173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eUK89sLk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PmekdAsd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfLKNRj (ORCPT
+        id S1729502AbfLKNSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:17:39 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30119 "EHLO
+        Wed, 11 Dec 2019 08:18:36 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20082 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729443AbfLKNRi (ORCPT
+        by vger.kernel.org with ESMTP id S1729260AbfLKNSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:17:38 -0500
+        Wed, 11 Dec 2019 08:18:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576070257;
+        s=mimecast20190719; t=1576070314;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AX5fhWmUkcVTK2FGEAydksRsVVwg5DCyda4UF354+FM=;
-        b=eUK89sLkwK4WEdYCOh7XW/Z+JcNRL6Az0F2MZG9jvMfovTfcJ/HF8+8XE+Xh7jHZ1eIuO2
-        7M+iOwXoUuBZZWPkLmsD3BRvGCaw6DFkkBg0BHdhNccRi55g3E9zyydJVGcP1MmGby68Wc
-        5/PncOVfERKJzoZeNfSvp4GlaEy19tc=
+        bh=2N/bBwWcHDSxRKQdSq6NZCU6mWtdHnd96mKLJxL2OHM=;
+        b=PmekdAsd9zND+nddEutLQJV+7driDUcFW8mSx8kgwhTVPFVIld+PCzkU7CuM5LZnqJ6T23
+        IpIuOZOp4kfJIhdSfk0LWNb45v79vi1T/IZLlKFqsGqgaPNNu0TUVC0JJXMbCphBbl+LFP
+        a0a+YD8RVOWG2575pxN2OdVZMiiPf0c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-OSi8-b5bP9uGf_WTtpb2Qw-1; Wed, 11 Dec 2019 08:17:34 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-215-pjXuj2LDO8GVkc_Sq06EOg-1; Wed, 11 Dec 2019 08:18:33 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B441DB25;
-        Wed, 11 Dec 2019 13:17:32 +0000 (UTC)
-Received: from carbon (ovpn-200-56.brq.redhat.com [10.40.200.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D1BDD100EBA4;
-        Wed, 11 Dec 2019 13:17:25 +0000 (UTC)
-Date:   Wed, 11 Dec 2019 14:17:23 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     brouer@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: ethernet: ti: select PAGE_POOL for switchdev
- driver
-Message-ID: <20191211141723.2cb3d5e9@carbon>
-In-Reply-To: <20191211125643.1987157-1-arnd@arndb.de>
-References: <20191211125643.1987157-1-arnd@arndb.de>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEF3F18044A7;
+        Wed, 11 Dec 2019 13:18:31 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9286D19756;
+        Wed, 11 Dec 2019 13:18:31 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 7F97716E05; Wed, 11 Dec 2019 14:18:30 +0100 (CET)
+Date:   Wed, 11 Dec 2019 14:18:30 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        gurchetansingh@chromium.org
+Subject: Re: [PATCH v2 1/2] drm/shmem: add support for per object caching
+ attributes
+Message-ID: <20191211131830.iz3a2o4xzmmkjsp7@sirius.home.kraxel.org>
+References: <20191211081810.20079-1-kraxel@redhat.com>
+ <20191211081810.20079-2-kraxel@redhat.com>
+ <0b64e917-48f7-487e-9335-2838b6c62808@suse.de>
+ <ed9142da-ce10-7df2-8a85-ba9ad0c26551@suse.de>
+ <20191211123635.GY624164@phenom.ffwll.local>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: OSi8-b5bP9uGf_WTtpb2Qw-1
+In-Reply-To: <20191211123635.GY624164@phenom.ffwll.local>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: pjXuj2LDO8GVkc_Sq06EOg-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 13:56:09 +0100
-Arnd Bergmann <arnd@arndb.de> wrote:
+  Hi,
 
-> The new driver misses a dependency:
-> 
-> drivers/net/ethernet/ti/cpsw_new.o: In function `cpsw_rx_handler':
-> cpsw_new.c:(.text+0x259c): undefined reference to `__page_pool_put_page'
-> cpsw_new.c:(.text+0x25d0): undefined reference to `page_pool_alloc_pages'
-> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_fill_rx_channels':
-> cpsw_priv.c:(.text+0x22d8): undefined reference to `page_pool_alloc_pages'
-> cpsw_priv.c:(.text+0x2420): undefined reference to `__page_pool_put_page'
-> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_create_xdp_rxqs':
-> cpsw_priv.c:(.text+0x2624): undefined reference to `page_pool_create'
-> drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_run_xdp':
-> cpsw_priv.c:(.text+0x2dc8): undefined reference to `__page_pool_put_page'
-> 
-> Other drivers use 'select' for PAGE_POOL, so do the same here.
-> 
-> Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> btw on why udl does this: Imported bo are usually rendered by real hw, an=
+d
+> reading it uncached/wc is the more defensive setting. It would be kinda
+> nice if dma-buf would expose this, but I fear dma-api maintainers would
+> murder us if we even just propose that ... so it's a mess right now.
 
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+I suspect for imported dma-bufs we should leave the mmap() to the
+exporter instead of pulling the pages out of the sgt and map them
+ourself.
 
-Thanks for fixing this.
+> btw the issue extends to dma access by devices too, e.g. both i915 and
+> amdgpu can select the coherency mode at runtime (using e.g. the pcie
+> no-snoop transaction mode), and we have similar uncoordinated hacks in
+> there too, like in udl.
 
--- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+Hmm.  Ok.  I guess I'm not going to try solve all that properly just for
+the little virtio fix.
+
+Just curious:  How do you tell your hardware?  Are there bits for that
+in the gtt, simliar to the caching bits in the x86 page tables?
+
+cheers,
+  Gerd
 
