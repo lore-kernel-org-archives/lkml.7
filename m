@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7F2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522B6C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DE32073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D9C62073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079716;
-	bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
+	s=default; t=1576079722;
+	bh=8NshHneGRG7k7YiIYNZXeV+IEn+KbPHnQmV0vh4/T0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6RibSs3Vh2MuJtrOdpWGAmXCS6rzWI/utbu0HUjsQtMj8T1f1cJNmJ3mxDlKZbaL
-	 y85OSkNFHuu7IuDEgGA3wXypNeIvKSXkwIe+jgSSFMUiFPU0jnwrJpU93XlFKCKiQx
-	 Ds4umlDUpy2ZnOBQ51QMPsoaPCUwm2+tcpXVGdJk=
+	b=jrNtX4nLN+89IPPjc+XKOrVGgDZ0Pld0oSwUUoEOTS0Zhp6TdN+RAc064ApVusnQU
+	 fAs3AalEqfbZdCCzUsy+gJqYV0juBckFw8YIKpVw+vwkQwomf9ETawhdEy+9f4Z8TG
+	 Of+xAEqYTe+Z3ru2y1o6WIn8He7P/+qslQDyzn+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbfLKPQk (ORCPT
+        id S1731896AbfLKPQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:16:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:16:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731711AbfLKPQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:34 -0500
+        id S1731885AbfLKPQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:16:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE312465C;
-        Wed, 11 Dec 2019 15:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34AE2465B;
+        Wed, 11 Dec 2019 15:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077394;
-        bh=Mpu/ReJMOFNKMRYs/AEeNTxpA1xP5T5VDaCkFifPux0=;
+        s=default; t=1576077381;
+        bh=8NshHneGRG7k7YiIYNZXeV+IEn+KbPHnQmV0vh4/T0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaJLqgXtJQS2eSxmkmYA5t4LQNAgsXCQCicfbfo1UHAiw15B77gLxgMcSpio4OlRL
-         7FnBtJTkvfzb2blCC2EP1Ln0mIqqlvUHTLqprhIwcqoZ9uMnPPJ7g5QoBvgnIlqpjU
-         K7dMg3lIxlZIrBvLU5R6cZkdCbJCSdUpOeCImGjo=
+        b=jZqvbsQ3Ux2ycB5LibTjXQc3ZHj1Mwi/eVUVYlnEEdJY4rn3vytNTTS6Tj4ijtaIS
+         dCP7PfTmnwGGDv30tGN3hgV6VLmzppuYwhAw0ivNRu1SJNMZk4SszYhOG27EYmXmsp
+         9iohi45kBnpTGyYjeW0HHYQ+P66nwEOvU8wb7xIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunhao Tian <t123yh@outlook.com>,
-        Maxime Ripard <maxime@cerno.tech>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/243] drm/sun4i: tcon: Set min division of TCON0_DCLK to 1.
-Date:   Wed, 11 Dec 2019 16:03:04 +0100
-Message-Id: <20191211150340.448717735@linuxfoundation.org>
+Subject: [PATCH 4.19 018/243] Input: cyttsp4_core - fix use after free bug
+Date:   Wed, 11 Dec 2019 16:03:00 +0100
+Message-Id: <20191211150340.237192688@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,42 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhao Tian <t123yh@outlook.com>
+From: Pan Bian <bianpan2016@163.com>
 
-[ Upstream commit 0b8e7bbde5e7e2c419567e1ee29587dae3b78ee3 ]
+[ Upstream commit 79aae6acbef16f720a7949f8fc6ac69816c79d62 ]
 
-The datasheet of V3s (and various other chips) wrote
-that TCON0_DCLK_DIV can be >= 1 if only dclk is used,
-and must >= 6 if dclk1 or dclk2 is used. As currently
-neither dclk1 nor dclk2 is used (no writes to these
-bits), let's set minimal division to 1.
+The device md->input is used after it is released. Setting the device
+data to NULL is unnecessary as the device is never used again. Instead,
+md->input should be assigned NULL to avoid accessing the freed memory
+accidently. Besides, checking md->si against NULL is superfluous as it
+points to a variable address, which cannot be NULL.
 
-If this minimal division is 6, some common dot clock
-frequencies can't be produced (e.g. 30MHz will not be
-possible and will fallback to 25MHz), which is
-obviously not an expected behaviour.
-
-Signed-off-by: Yunhao Tian <t123yh@outlook.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://lore.kernel.org/linux-arm-kernel/MN2PR08MB57905AD8A00C08DA219377C989760@MN2PR08MB5790.namprd08.prod.outlook.com/
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/1572936379-6423-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/cyttsp4_core.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 8c31c9ab06f8b..fda1ae12069a7 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -423,7 +423,7 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
+index 727c3232517cd..c84ee739a8d50 100644
+--- a/drivers/input/touchscreen/cyttsp4_core.c
++++ b/drivers/input/touchscreen/cyttsp4_core.c
+@@ -2000,11 +2000,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
  
- 	WARN_ON(!tcon->quirks->has_channel_0);
+ 	/* get sysinfo */
+ 	md->si = &cd->sysinfo;
+-	if (!md->si) {
+-		dev_err(dev, "%s: Fail get sysinfo pointer from core p=%p\n",
+-			__func__, md->si);
+-		goto error_get_sysinfo;
+-	}
  
--	tcon->dclk_min_div = 6;
-+	tcon->dclk_min_div = 1;
- 	tcon->dclk_max_div = 127;
- 	sun4i_tcon0_mode_set_common(tcon, mode);
+ 	rc = cyttsp4_setup_input_device(cd);
+ 	if (rc)
+@@ -2014,8 +2009,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
  
+ error_init_input:
+ 	input_free_device(md->input);
+-error_get_sysinfo:
+-	input_set_drvdata(md->input, NULL);
+ error_alloc_failed:
+ 	dev_err(dev, "%s failed.\n", __func__);
+ 	return rc;
 -- 
 2.20.1
 
