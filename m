@@ -2,86 +2,130 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36C2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B5CC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EC320836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="0voqs/p2"
+	by mail.kernel.org (Postfix) with ESMTP id 522502073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079694;
+	bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZPsYuwPofHXSW45X06Ch8FuuJbGkOsUEAWzCTbj0wbC83X8VuXLvOi+aOR1Uob1wh
+	 1mKqyjc/5wQtV+OQ5ED8Bd+tDgnjsxtiRrHU3RsaTW+AuanPfsq5d4INwxrAPQrqlw
+	 veACL3YUKI3LoR35JQF/MKoSijxp49xny9R+VwTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbfLKPyv (ORCPT
+        id S1731970AbfLKPRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:54:51 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45866 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731796AbfLKPyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:54:45 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 203so17043063lfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:54:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pNpk4oXfDNHca9JX4JXRKtvQeEv6BIYEvqyTZhw9VO4=;
-        b=0voqs/p2IwXU8GClGbWYDwhurKNgEFA6KIZecdCes+hnpGciBbWjIg1UwkTEJAA3Vf
-         VnCSlslqpNg410p8Pupt2jJ/S6Fv8fiAsUSyMC+0yIvF1kDLeTUXrbQVhcyFogAOTtVU
-         9ka3v+FIcXQ4SledqdLrVQ3yBMLBrUNo3gkCV8wImUpHJmwfnES9xmdjuMhu5LqH09S4
-         Qs6JR9VRLkDmX+IELmVugpPoW5+oPH10T3cR2/qozsXkvr955YDsGhhwun8YAkCOjyju
-         1L34U5u3KXLXgjKlkeH+qy+areSkxkz3yt2mfAxxGrLbGEQIOw8Qpg+mj2PLIV5Jj9YK
-         ngnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pNpk4oXfDNHca9JX4JXRKtvQeEv6BIYEvqyTZhw9VO4=;
-        b=LHJP6PJTHeSIGdHJI1Hx9y8SzZWRGXvM8a5XjVTUEI8F1UXO7dda7tSXP5KYbKUkFx
-         jsZxuEXH/3zhwAAVKN2BzADIGOQooNaLEAdMha9OXffAfoCK+yAxSZU/qkWpCK82Nc6z
-         1GKmBwwNxHWDJM/AMJiERk1PngIC62KHIOt9A7b/K01FbQDg53KxaC7yzWqLukT/E600
-         iIfK7m8yshK1HIsNmRF82Mp6uufznaOtJ/lpWQ0cXZWARif0qcvU56k0mQrQd7k2LSvu
-         KumtqRIPNx8z/nnARVIviz/Bp3b3hKn35HWm0OvLbtHwJSZy9HJvZcnSYP5M+PLuitgY
-         5aHA==
-X-Gm-Message-State: APjAAAXV5+8QR81efwvUEXp9L5C2YIEHG4jP/G2f68GaL3X+99o5uvaa
-        Bn/sbYFLCtFouxbDLkxNtfoH3Q==
-X-Google-Smtp-Source: APXvYqz84+KK003VsOsEluRtdv+DNGgcMmqgCuu+nFqEFdjyLl8a4FngY/HtxgoY5gucbWBBtMiNXQ==
-X-Received: by 2002:a19:6455:: with SMTP id b21mr2535676lfj.45.1576079684121;
-        Wed, 11 Dec 2019 07:54:44 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w17sm1398565lfn.22.2019.12.11.07.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 07:54:43 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 154CF101218; Wed, 11 Dec 2019 18:54:44 +0300 (+03)
-Date:   Wed, 11 Dec 2019 18:54:44 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mircea CIRJALIU - MELIU <mcirjaliu@bitdefender.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>
-Subject: Re: [RFC PATCH v1 3/4] thp: fix huge page zapping for special PMDs
-Message-ID: <20191211155444.nx4o363rlskmvyhr@box>
-References: <DB7PR02MB3979BC324920A783BD5BB721BB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
+        Wed, 11 Dec 2019 10:17:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731790AbfLKPRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:00 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2BD720663;
+        Wed, 11 Dec 2019 15:16:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077420;
+        bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dPfBQtc5C5gW9FUpZS7Dhe9+/DCn/3dsO/pk5Vv8VdtYcFwGxYMM6yO4syIBJ1fco
+         HDIwwaEgltlOBVhOc/efmJsM36NraZuWNNYgtPhtplNEEyHked7RVf+6jefe56rhs9
+         CXI/+NUHpVJNQY1KuVTXrTK8Z1WSY69b/7dlklso=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH 4.19 008/243] serial: pl011: Fix DMA ->flush_buffer()
+Date:   Wed, 11 Dec 2019 16:02:50 +0100
+Message-Id: <20191211150339.685757300@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR02MB3979BC324920A783BD5BB721BB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:29:20AM +0000, Mircea CIRJALIU - MELIU wrote:
-> When calling zap_vma_ptes() on VM_PFNMAP VMAs involving huge mappings,
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-Do we have such VMAs?
+commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
 
--- 
- Kirill A. Shutemov
+PL011's ->flush_buffer() implementation releases and reacquires the port
+lock.  Due to a race condition here, data can end up being added to the
+circular buffer but neither being discarded nor being sent out.  This
+leads to, for example, tcdrain(2) waiting indefinitely.
+
+Process A                       Process B
+
+uart_flush_buffer()
+ - acquire lock
+ - circ_clear
+ - pl011_flush_buffer()
+ -- release lock
+ -- dmaengine_terminate_all()
+
+                                uart_write()
+                                - acquire lock
+                                - add chars to circ buffer
+                                - start_tx()
+                                -- start DMA
+                                - release lock
+
+ -- acquire lock
+ -- turn off DMA
+ -- release lock
+
+                                // Data in circ buffer but DMA is off
+
+According to the comment in the code, the releasing of the lock around
+dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
+callback.  However, since the time this code was written, the DMA engine
+API documentation seems to have been clarified to say that
+dmaengine_terminate_all() (in the identically implemented but
+differently named dmaengine_terminate_async() variant) does not wait for
+any running complete callback to be completed and can even be called
+from a complete callback.  So there is no possibility of deadlock if the
+DMA engine driver implements this API correctly.
+
+So we should be able to just remove this release and reacquire of the
+lock to prevent the aforementioned race condition.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/amba-pl011.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
+ 	if (!uap->using_tx_dma)
+ 		return;
+ 
+-	/* Avoid deadlock with the DMA engine callback */
+-	spin_unlock(&uap->port.lock);
+-	dmaengine_terminate_all(uap->dmatx.chan);
+-	spin_lock(&uap->port.lock);
++	dmaengine_terminate_async(uap->dmatx.chan);
++
+ 	if (uap->dmatx.queued) {
+ 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
+ 			     DMA_TO_DEVICE);
+
+
