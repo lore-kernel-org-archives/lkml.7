@@ -2,161 +2,73 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A33C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C259C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9722077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="efP68Y8Y"
+	by mail.kernel.org (Postfix) with ESMTP id 163642073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfLKQW6 (ORCPT
+        id S1730604AbfLKQXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:22:58 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:2565 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729118AbfLKQW4 (ORCPT
+        Wed, 11 Dec 2019 11:23:01 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:55630 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730571AbfLKQW7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:22:56 -0500
-X-UUID: b8cee362e4d44ea598e1b5b0f8e49d2e-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=BhFStqHINugZXLbNdVW+BFM4oGLuOot6pcNXv0LqlEM=;
-        b=efP68Y8YJbnvPVFkYyQSUBATOnmWXEvoTZoafSrK9Emc4eiwQLqpFNtgpzXsZSXwnYIhqf/MeICwGX0pzkceUnOr71bi6W20iC+eLc0S9CbM1njAIEgzSDQ62D1lEKPEeqMa+VOgcGD8m+okcfRM7FOyzO48PoKWoNcAzKDf3Zo=;
-X-UUID: b8cee362e4d44ea598e1b5b0f8e49d2e-20191212
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <jiaxin.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 880074018; Thu, 12 Dec 2019 00:22:51 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 00:22:25 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 00:22:14 +0800
-From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>
-Subject: [PATCH v6 2/2] watchdog: mtk_wdt: mt8183: Add reset controller
-Date:   Thu, 12 Dec 2019 00:22:36 +0800
-Message-ID: <1576081356-18298-3-git-send-email-jiaxin.yu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
-References: <1576081356-18298-1-git-send-email-jiaxin.yu@mediatek.com>
+        Wed, 11 Dec 2019 11:22:59 -0500
+Received: (qmail 4502 invoked by uid 2102); 11 Dec 2019 11:22:58 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 11 Dec 2019 11:22:58 -0500
+Date:   Wed, 11 Dec 2019 11:22:58 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Dmitry Vyukov <dvyukov@google.com>
+cc:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-media@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+In-Reply-To: <CACT4Y+ZSmwr4y2VrUxZSvFCL0Ws4cp6T5FwyVRg_CqhCf354HQ@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1912111111510.1549-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogInlvbmcubGlhbmciIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCg0KQWRkIHJlc2V0
-IGNvbnRyb2xsZXIgQVBJIGluIHdhdGNoZG9nIGRyaXZlci4NCkJlc2lkZXMgd2F0Y2hkb2csIE1U
-SyB0b3ByZ3UgbW9kdWxlIGFsc2EgcHJvdmlkZSBzdWItc3lzdGVtIChlZywgYXVkaW8sDQpjYW1l
-cmEsIGNvZGVjIGFuZCBjb25uZWN0aXZpdHkpIHNvZnR3YXJlIHJlc2V0IGZ1bmN0aW9uYWxpdHku
-DQoNClNpZ25lZC1vZmYtYnk6IHlvbmcubGlhbmcgPHlvbmcubGlhbmdAbWVkaWF0ZWsuY29tPg0K
-LS0tDQogZHJpdmVycy93YXRjaGRvZy9LY29uZmlnICAgfCAgIDEgKw0KIGRyaXZlcnMvd2F0Y2hk
-b2cvbXRrX3dkdC5jIHwgMTA5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0N
-CiAyIGZpbGVzIGNoYW5nZWQsIDEwOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcgYi9kcml2ZXJzL3dhdGNoZG9nL0tj
-b25maWcNCmluZGV4IDJlMDdjYWFiOWRiMi4uNjI5MjQ5ZmU1MzA1IDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy93YXRjaGRvZy9LY29uZmlnDQorKysgYi9kcml2ZXJzL3dhdGNoZG9nL0tjb25maWcNCkBA
-IC03MTcsNiArNzE3LDcgQEAgY29uZmlnIE1FRElBVEVLX1dBVENIRE9HDQogCXRyaXN0YXRlICJN
-ZWRpYXRlayBTb0NzIHdhdGNoZG9nIHN1cHBvcnQiDQogCWRlcGVuZHMgb24gQVJDSF9NRURJQVRF
-SyB8fCBDT01QSUxFX1RFU1QNCiAJc2VsZWN0IFdBVENIRE9HX0NPUkUNCisJc2VsZWN0IFJFU0VU
-X0NPTlRST0xMRVINCiAJaGVscA0KIAkgIFNheSBZIGhlcmUgdG8gaW5jbHVkZSBzdXBwb3J0IGZv
-ciB0aGUgd2F0Y2hkb2cgdGltZXINCiAJICBpbiBNZWRpYXRlayBTb0NzLg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMN
-CmluZGV4IDljM2QwMDMzMjYwZC4uNjY3MzgwMDMxZGZkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy93
-YXRjaGRvZy9tdGtfd2R0LmMNCisrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jDQpAQCAt
-OSw2ICs5LDkgQEANCiAgKiBCYXNlZCBvbiBzdW54aV93ZHQuYw0KICAqLw0KIA0KKyNpbmNsdWRl
-IDxkdC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaD4NCisjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxODMtcmVzZXRzLmg+DQorI2luY2x1
-ZGUgPGxpbnV4L2RlbGF5Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KICNpbmNsdWRlIDxs
-aW51eC9pbml0Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQpAQCAtMTYsMTAgKzE5LDEyIEBA
-DQogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KICNpbmNsdWRlIDxsaW51eC9tb2R1bGVwYXJh
-bS5oPg0KICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2Uu
-aD4NCiAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQorI2luY2x1ZGUgPGxpbnV4
-L3Jlc2V0LWNvbnRyb2xsZXIuaD4NCisjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNpbmNsdWRl
-IDxsaW51eC90eXBlcy5oPg0KICNpbmNsdWRlIDxsaW51eC93YXRjaGRvZy5oPg0KLSNpbmNsdWRl
-IDxsaW51eC9kZWxheS5oPg0KIA0KICNkZWZpbmUgV0RUX01BWF9USU1FT1VUCQkzMQ0KICNkZWZp
-bmUgV0RUX01JTl9USU1FT1VUCQkxDQpAQCAtNDQsNiArNDksOSBAQA0KICNkZWZpbmUgV0RUX1NX
-UlNUCQkweDE0DQogI2RlZmluZSBXRFRfU1dSU1RfS0VZCQkweDEyMDkNCiANCisjZGVmaW5lIFdE
-VF9TV1NZU1JTVAkJMHgxOFUNCisjZGVmaW5lIFdEVF9TV1NZU19SU1RfS0VZCTB4ODgwMDAwMDAN
-CisNCiAjZGVmaW5lIERSVl9OQU1FCQkibXRrLXdkdCINCiAjZGVmaW5lIERSVl9WRVJTSU9OCQki
-MS4wIg0KIA0KQEAgLTUzLDggKzYxLDk3IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQgdGltZW91dDsN
-CiBzdHJ1Y3QgbXRrX3dkdF9kZXYgew0KIAlzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlIHdkdF9kZXY7
-DQogCXZvaWQgX19pb21lbSAqd2R0X2Jhc2U7DQorCXNwaW5sb2NrX3QgbG9jazsgLyogcHJvdGVj
-dHMgV0RUX1NXU1lTUlNUIHJlZyAqLw0KKwlzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgcmNk
-ZXY7DQorfTsNCisNCitzdHJ1Y3QgbXRrX3dkdF9kYXRhIHsNCisJaW50IGluZnJhY2ZnX3N3X3Jz
-dF9udW07DQorCWludCB0b3ByZ3Vfc3dfcnN0X251bTsNCit9Ow0KKw0KK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgbXRrX3dkdF9kYXRhIG10MjcxMl9kYXRhID0gew0KKwkudG9wcmd1X3N3X3JzdF9udW0g
-PSBNVDI3MTJfVE9QUkdVX1NXX1JTVF9OVU0sDQorfTsNCisNCitzdGF0aWMgY29uc3Qgc3RydWN0
-IG10a193ZHRfZGF0YSBtdDgxODNfZGF0YSA9IHsNCisJLmluZnJhY2ZnX3N3X3JzdF9udW0gPSBN
-VDgxODNfSU5GUkFDRkdfU1dfUlNUX05VTSwNCisJLnRvcHJndV9zd19yc3RfbnVtID0gTVQ4MTgz
-X1RPUFJHVV9TV19SU1RfTlVNLA0KK307DQorDQorc3RhdGljIGludCB0b3ByZ3VfcmVzZXRfdXBk
-YXRlKHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQorCQkJICAgICAgIHVuc2ln
-bmVkIGxvbmcgaWQsIGJvb2wgYXNzZXJ0KQ0KK3sNCisJdW5zaWduZWQgaW50IHRtcDsNCisJdW5z
-aWduZWQgbG9uZyBmbGFnczsNCisNCisJc3RydWN0IG10a193ZHRfZGV2ICpkYXRhID0NCisJCSBj
-b250YWluZXJfb2YocmNkZXYsIHN0cnVjdCBtdGtfd2R0X2RldiwgcmNkZXYpOw0KKw0KKwlzcGlu
-X2xvY2tfaXJxc2F2ZSgmZGF0YS0+bG9jaywgZmxhZ3MpOw0KKw0KKwl0bXAgPSByZWFkbChkYXRh
-LT53ZHRfYmFzZSArIFdEVF9TV1NZU1JTVCk7DQorCWlmIChhc3NlcnQpDQorCQl0bXAgfD0gQklU
-KGlkKTsNCisJZWxzZQ0KKwkJdG1wICY9IH5CSVQoaWQpOw0KKwl0bXAgfD0gV0RUX1NXU1lTX1JT
-VF9LRVk7DQorCXdyaXRlbCh0bXAsIGRhdGEtPndkdF9iYXNlICsgV0RUX1NXU1lTUlNUKTsNCisN
-CisJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZGF0YS0+bG9jaywgZmxhZ3MpOw0KKw0KKwlyZXR1
-cm4gMDsNCit9DQorDQorc3RhdGljIGludCB0b3ByZ3VfcmVzZXRfYXNzZXJ0KHN0cnVjdCByZXNl
-dF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQorCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgaWQpDQor
-ew0KKwlyZXR1cm4gdG9wcmd1X3Jlc2V0X3VwZGF0ZShyY2RldiwgaWQsIHRydWUpOw0KK30NCisN
-CitzdGF0aWMgaW50IHRvcHJndV9yZXNldF9kZWFzc2VydChzdHJ1Y3QgcmVzZXRfY29udHJvbGxl
-cl9kZXYgKnJjZGV2LA0KKwkJCQkgdW5zaWduZWQgbG9uZyBpZCkNCit7DQorCXJldHVybiB0b3By
-Z3VfcmVzZXRfdXBkYXRlKHJjZGV2LCBpZCwgZmFsc2UpOw0KK30NCisNCitzdGF0aWMgaW50IHRv
-cHJndV9yZXNldChzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0KKwkJCXVuc2ln
-bmVkIGxvbmcgaWQpDQorew0KKwlpbnQgcmV0Ow0KKw0KKwlyZXQgPSB0b3ByZ3VfcmVzZXRfYXNz
-ZXJ0KHJjZGV2LCBpZCk7DQorCWlmIChyZXQpDQorCQlyZXR1cm4gcmV0Ow0KKw0KKwlyZXR1cm4g
-dG9wcmd1X3Jlc2V0X2RlYXNzZXJ0KHJjZGV2LCBpZCk7DQorfQ0KKw0KK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgcmVzZXRfY29udHJvbF9vcHMgdG9wcmd1X3Jlc2V0X29wcyA9IHsNCisJLmFzc2VydCA9
-IHRvcHJndV9yZXNldF9hc3NlcnQsDQorCS5kZWFzc2VydCA9IHRvcHJndV9yZXNldF9kZWFzc2Vy
-dCwNCisJLnJlc2V0ID0gdG9wcmd1X3Jlc2V0LA0KIH07DQogDQorc3RhdGljIGludCB0b3ByZ3Vf
-cmVnaXN0ZXJfcmVzZXRfY29udHJvbGxlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LA0K
-KwkJCQkJICAgIGludCByc3RfbnVtKQ0KK3sNCisJaW50IHJldDsNCisJc3RydWN0IG10a193ZHRf
-ZGV2ICptdGtfd2R0ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQorDQorCXNwaW5fbG9j
-a19pbml0KCZtdGtfd2R0LT5sb2NrKTsNCisNCisJbXRrX3dkdC0+cmNkZXYub3duZXIgPSBUSElT
-X01PRFVMRTsNCisJbXRrX3dkdC0+cmNkZXYubnJfcmVzZXRzID0gcnN0X251bTsNCisJbXRrX3dk
-dC0+cmNkZXYub3BzID0gJnRvcHJndV9yZXNldF9vcHM7DQorCW10a193ZHQtPnJjZGV2Lm9mX25v
-ZGUgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCisJcmV0ID0gZGV2bV9yZXNldF9jb250cm9sbGVyX3Jl
-Z2lzdGVyKCZwZGV2LT5kZXYsICZtdGtfd2R0LT5yY2Rldik7DQorCWlmIChyZXQgIT0gMCkNCisJ
-CWRldl9lcnIoJnBkZXYtPmRldiwNCisJCQkiY291bGRuJ3QgcmVnaXN0ZXIgd2R0IHJlc2V0IGNv
-bnRyb2xsZXI6ICVkXG4iLCByZXQpOw0KKwlyZXR1cm4gcmV0Ow0KK30NCisNCiBzdGF0aWMgaW50
-IG10a193ZHRfcmVzdGFydChzdHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICp3ZHRfZGV2LA0KIAkJCSAg
-IHVuc2lnbmVkIGxvbmcgYWN0aW9uLCB2b2lkICpkYXRhKQ0KIHsNCkBAIC0xNTUsNiArMjUyLDcg
-QEAgc3RhdGljIGludCBtdGtfd2R0X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQogew0KIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KIAlzdHJ1Y3QgbXRrX3dk
-dF9kZXYgKm10a193ZHQ7DQorCXN0cnVjdCBtdGtfd2R0X2RhdGEgKndkdF9kYXRhOw0KIAlpbnQg
-ZXJyOw0KIA0KIAltdGtfd2R0ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCptdGtfd2R0KSwg
-R0ZQX0tFUk5FTCk7DQpAQCAtMTkwLDYgKzI4OCwxMyBAQCBzdGF0aWMgaW50IG10a193ZHRfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiAJZGV2X2luZm8oZGV2LCAiV2F0Y2hk
-b2cgZW5hYmxlZCAodGltZW91dD0lZCBzZWMsIG5vd2F5b3V0PSVkKVxuIiwNCiAJCSBtdGtfd2R0
-LT53ZHRfZGV2LnRpbWVvdXQsIG5vd2F5b3V0KTsNCiANCisJd2R0X2RhdGEgPSAoc3RydWN0IG10
-a193ZHRfZGF0YSAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KKwlpZiAod2R0X2Rh
-dGEpIHsNCisJCWVyciA9IHRvcHJndV9yZWdpc3Rlcl9yZXNldF9jb250cm9sbGVyKHBkZXYsDQor
-CQkJCQkJICAgICAgIHdkdF9kYXRhLT50b3ByZ3Vfc3dfcnN0X251bSk7DQorCQlpZiAoZXJyKQ0K
-KwkJCXJldHVybiBlcnI7DQorCX0NCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTIxOCw3ICszMjMs
-OSBAQCBzdGF0aWMgaW50IG10a193ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikNCiAjZW5k
-aWYNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfd2R0X2R0X2lkc1td
-ID0gew0KKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi13ZHQiLCAuZGF0YSA9ICZt
-dDI3MTJfZGF0YSB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjU4OS13ZHQiIH0s
-DQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsIC5kYXRhID0gJm10ODE4
-M19kYXRhIH0sDQogCXsgLyogc2VudGluZWwgKi8gfQ0KIH07DQogTU9EVUxFX0RFVklDRV9UQUJM
-RShvZiwgbXRrX3dkdF9kdF9pZHMpOw0KLS0gDQoyLjE4LjANCg==
+On Wed, 11 Dec 2019, Dmitry Vyukov wrote:
+
+> > > By the way, do you know why syzbot sent _two_ reply messages?  One with
+> > > message ID <00000000000031a0af05995eca0b@google.com> and the other with
+> > > message ID <000000000000441a4205995eca11@google.com>?  It seems like
+> > > overkill.
+> >
+> > Hm, I'm not sure. Dmitry?
+> 
+> I would assume it received 2 emails (second from syzkaller-bugs@
+> mailing list) and deduplication logic did not work somehow. So it
+> replied to both.
+
+Does that mean when I send in a test request, it's better to omit 
+syzkaller-bugs from the CC: list?
+
+Also, whatever did happen to the most recent test request (the one sent 
+to syzbot+7fa38a608b1075dfd634 even though it was meant to test the 
+bug reported by syzbot+c7b0ec009a216143df30)?  Did it truly fail to 
+build?  I can't find anything about it in the dashboard link for either 
+bug report, and I haven't gotten a reply from syzbot.
+
+Alan Stern
 
