@@ -2,141 +2,147 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6CC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FB6C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8572077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5E220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 04:24:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kBfPqw5i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C44Wii17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfLKEKY (ORCPT
+        id S1727054AbfLKEYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 23:10:24 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35666 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfLKEKY (ORCPT
+        Tue, 10 Dec 2019 23:24:53 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39096 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbfLKEYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 23:10:24 -0500
-Received: by mail-io1-f68.google.com with SMTP id v18so21269319iol.2;
-        Tue, 10 Dec 2019 20:10:23 -0800 (PST)
+        Tue, 10 Dec 2019 23:24:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id v93so8398699pjb.6;
+        Tue, 10 Dec 2019 20:24:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=X/8Op0hbC9FcMl5P88Fh+jNn8kY8fhf7703ZK88DExI=;
-        b=kBfPqw5ioDQvcQCWSwiAqQwXjkcBx5JDwz3yvDNnIO5WEryzR9vNZdOo2Rfgccn+LO
-         hA8rU8w+PpjDLB9MiNXD7jU+qb4fhhGHvO7ie9Zp+OnN2+5C1QeiTmuQLftrZOilffBR
-         wbe8H2WmJWk4yTaycpoRctP4RDWWKM5yEIDF5G3DQ3tBItFg6Ocgjhg+FNzia6S6XMos
-         lLjRSBQefodKfLM62vfMekrIiM9MGcmL2yAvyNTKrOxzu5idDo8CXI0R+EHxFIBz3JAH
-         pMnPhDt8YWNj56mo+6H2AUObCRtt2nbrkRsh53ujLnAFrv62WlsGDS8OJwu/Hirlo1LX
-         2RNg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uCFfqgYBUHORRZAXz0u1t9CrHuOIZanYgjOuQc5MI40=;
+        b=C44Wii177/uMXj8Mmpff75pIIpPmcFQwgaPEBWdhU7hQoVs+n+MJmNVNXMIXxLKrDW
+         9edlLaBI8+4/iTI92+z4856xb/GnEtBWETNGkQoETSY1ukQfDLyf1VBC8KJYkxgqNnsy
+         RToZcu66XFgKlic4ml2Myo0UmaR0d9p7fz0H3FFXyqx6cIbs6ak8F+6PaafLfnHpEndi
+         VE2qIisgz8HptNV+CctKjKEmv1VgmuSPN/AzM+ZHKdr6OYdzt8J8iHX9wmiYNQ8Kd8eT
+         9wBkfOh2n0qOb//QX1kgNqn6infiNH2mbzaHgYI6sAU7u1sGZ6T/ncUH97nJASNvkNMn
+         +jaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=X/8Op0hbC9FcMl5P88Fh+jNn8kY8fhf7703ZK88DExI=;
-        b=RYwpUqx6qszw7nAR8G5ILoM003uJJsvAYDcaUeUOtTBUtgfb/FxCAvdxXNMIOx0FTR
-         e14SadmAoD26kQu8H0DCNq4vl69Vf1h45dyWihz6t2RH2bX4gy6Oxo03Wc8x7K/Hoxu+
-         e/xs8ACbR7rfbp1sV4NA5v35nKZnHXCmTvfU2RTJvAto857uymkidbBfe+Ph5H2TVFuB
-         kT/z5VxfxmdWknVRBNrhupfxp2B/5mwNgfKCdMn/j27FnLGfx27qNgsv4vywB/p23xgE
-         aLgu+SzkENUTHWnkhCpbXnKl0CU+ZL7UPQKR9lEQM4J0Je61GukhUVx261Hkd3ZKu/FP
-         vmGw==
-X-Gm-Message-State: APjAAAX4Lm4plHn/UTb2dgVigDzxgudnAuI6bj98RhU5FfYOWFWzNRI0
-        DbSCifF+JDuzd0ngp2pgTHWrrw51jAoEq+UO6tlQkAG7
-X-Google-Smtp-Source: APXvYqx5WAqik/eCozmhH4/CIxvAum7u3esCCyxXvao5eIuBHooq1DrtQqQ1a/ndHqNmFE5FGaNIecqPO/DkL6/wSTE=
-X-Received: by 2002:a6b:7201:: with SMTP id n1mr1043223ioc.37.1576037423377;
- Tue, 10 Dec 2019 20:10:23 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uCFfqgYBUHORRZAXz0u1t9CrHuOIZanYgjOuQc5MI40=;
+        b=UpBuo6q28rIaZT4kF7x6xcjSWcDgxBOSKlE2HKjBnOd3vXS9w7D2wgC0h//Cm2glAw
+         EtNwwcWOVOEEyD0x3fvC62FYrtfr12urfE50Fz4WoQlCk4fcCYhp2egHbT23USxjyM/l
+         TC/bChTdbXYkPn7RpTIQDFLEfaVWzWp7aoxX9nfSyI2FZ0q2nQIsqpHTteLR69UUo3mF
+         A/oiuVmEx1oE68GwJI13/7blQ4YOAbN4hlZucfECH6/4zLyqBklUef2kCBGGCcbXtu94
+         7Gf3hUAjnqwbNRTFl4NofMfpfn2WoGK6u3ZlvdE6HoWJ0NTH3ppEW4pKSaOfOAqNyEmk
+         spjA==
+X-Gm-Message-State: APjAAAUeBfPQiQ8NPErd5rE5JLRteF9dOqK6Lno1oxZ33i8zthk/ETAy
+        cskCot+ypwRg8N/p7mG9UWc=
+X-Google-Smtp-Source: APXvYqwuDHvHi0kuhv5k7XhTYVm0P1tUAaFRdqch3kOwlNDt+3YGwFscAsMaal2g+E/WWOX862OunA==
+X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr1095998plp.54.1576038292830;
+        Tue, 10 Dec 2019 20:24:52 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id z23sm586738pgj.43.2019.12.10.20.24.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 20:24:51 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
+To:     jgross@suse.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        roger.pau@citrix.com
+Cc:     SeongJae Park <sjpark@amazon.de>, pdurrant@amazon.com,
+        sjpark@amazon.com, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/2] xenbus/backend: Add a memory pressure handler callback
+Date:   Wed, 11 Dec 2019 04:24:25 +0000
+Message-Id: <20191211042428.5961-1-sjpark@amazon.de>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20191206181051.GA121021@google.com> <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
-In-Reply-To: <6ebfcfc7-f9f0-bee0-172c-89c93530d94b@huawei.com>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Tue, 10 Dec 2019 22:10:12 -0600
-Message-ID: <CABhMZUX8spN93es+qtZWtMSUi3M+c99649ect4ZAkcrPLqfO=g@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Add quirk for HiSilicon NP 5896 devices
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, andrew.murray@arm.com,
-        linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        wangkefeng.wang@huawei.com, huawei.libin@huawei.com,
-        guohanjun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 9:28 PM Xiongfeng Wang
-<wangxiongfeng2@huawei.com> wrote:
->
->
->
-> On 2019/12/7 2:10, Bjorn Helgaas wrote:
-> > On Fri, Dec 06, 2019 at 03:01:45PM +0800, Xiongfeng Wang wrote:
-> >> HiSilicon PCI Network Processor 5896 devices misreport the class type as
-> >> 'NOT_DEFINED', but it is actually a network device. Also the size of
-> >> BAR3 is reported as 265T, but this BAR is actually unused.
-> >> This patch modify the class type to 'CLASS_NETWORK' and disable the
-> >> unused BAR3.
-> >
-> > "NOT_DEFINED" is not the value in the Class Code register.  The commit
-> > message should include the actual value.
->
-> The actual value is 0, I will update the commit message.
->
-> >
-> >> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> >> ---
-> >>  drivers/pci/quirks.c    | 29 +++++++++++++++++++++++++++++
-> >>  include/linux/pci_ids.h |  1 +
-> >>  2 files changed, 30 insertions(+)
-> >>
-> >> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> >> index 4937a08..b9adebb 100644
-> >> --- a/drivers/pci/quirks.c
-> >> +++ b/drivers/pci/quirks.c
-> >> @@ -5431,3 +5431,32 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgpu(struct pci_dev *pdev)
-> >>  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-> >>                            PCI_CLASS_DISPLAY_VGA, 8,
-> >>                            quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> >> +
-> >> +static void quirk_hisi_fixup_np_class(struct pci_dev *pdev)
-> >> +{
-> >> +    u32 class = pdev->class;
-> >> +
-> >> +    pdev->class = PCI_BASE_CLASS_NETWORK << 8;
-> >> +    pci_info(pdev, "PCI class overriden (%#08x -> %#08x)\n",
-> >> +             class, pdev->class);
-> >> +}
-> >> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HISI_5896,
-> >> +                    quirk_hisi_fixup_np_class);
-> >> +
-> >> +/*
-> >> + * HiSilicon NP 5896 devices BAR3 size is reported as 256T and causes problem
-> >> + * when assigning the resources. But this BAR is actually unused by the driver,
-> >> + * so let's disable it.
-> >
-> > The question is not whether the BAR is used by the driver; the
-> > question is whether the device responds to accesses to the region
-> > described by the BAR when PCI_COMMAND_MEMORY is turned on.
->
-> I asked the hardware engineer. He said I can not write an address into that BAR.
+Granting pages consumes backend system memory.  In systems configured
+with insufficient spare memory for those pages, it can cause a memory
+pressure situation.  However, finding the optimal amount of the spare
+memory is challenging for large systems having dynamic resource
+utilization patterns.  Also, such a static configuration might lack
+flexibility.
 
-If the BAR is not writable, I think sizing should fail, so I suspect
-some of the bits are actually writable.
+To mitigate such problems, this patchset adds a memory reclaim callback
+to 'xenbus_driver' (patch 1) and use it to mitigate the problem in
+'xen-blkback' (patch 2).  The third patch is a trivial cleanup of
+variable names.
 
-What do you see in dmesg when this device is enumerated?  Can you
-instrument the code in __pci_read_base() and see what we read/write to
-that BAR?
+Base Version
+------------
 
-Per spec, if the BAR is not implemented, it should be read-only zero.
-But obviously the whole reason for the quirk is that the device
-doesn't comply with the spec.
+This patch is based on v5.4.  A complete tree is also available at my
+public git repo:
+https://github.com/sjp38/linux/tree/blkback_squeezing_v6
 
-Bjorn
+
+Patch History
+-------------
+
+Changes from v5
+(https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
+ - Wordsmith the commit messages (suggested by Roger Pau Monné)
+ - Change the reclaim callback return type (suggested by Roger Pau Monné)
+ - Change the type of the blkback squeeze duration variable
+   (suggested by Roger Pau Monné)
+ - Add a patch for removal of unnecessary static variable name prefixes
+   (suggested by Roger Pau Monné)
+ - Fix checkpatch.pl warnings
+
+Changes from v4
+(https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
+ - Remove domain id parameter from the callback (suggested by Juergen Gross)
+ - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
+
+Changes from v3
+(https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
+ - Add general callback in xen_driver and use it (suggested by Juergen Gross)
+
+Changes from v2
+(https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
+ - Rename the module parameter and variables for brevity
+   (aggressive shrinking -> squeezing)
+
+Changes from v1
+(https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
+ - Adjust the description to not use the term, `arbitrarily`
+   (suggested by Paul Durrant)
+ - Specify time unit of the duration in the parameter description,
+   (suggested by Maximilian Heyne)
+ - Change default aggressive shrinking duration from 1ms to 10ms
+ - Merge two patches into one single patch
+
+SeongJae Park (2):
+  xenbus/backend: Add memory pressure handler callback
+  xen/blkback: Squeeze page pools if a memory pressure is detected
+
+ drivers/block/xen-blkback/blkback.c       | 23 +++++++++++++++--
+ drivers/block/xen-blkback/common.h        |  1 +
+ drivers/block/xen-blkback/xenbus.c        |  3 ++-
+ drivers/xen/xenbus/xenbus_probe_backend.c | 31 +++++++++++++++++++++++
+ include/xen/xenbus.h                      |  1 +
+ 5 files changed, 56 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
