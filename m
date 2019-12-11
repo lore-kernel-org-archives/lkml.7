@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AE4C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241742077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756CC208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077818;
-	bh=yrCqURBF1LS8Yk5NB9S0YYrG5mdalSXhXTNPvL/2Jew=;
+	s=default; t=1576077824;
+	bh=WVbx/xSLrJRM55gfBGknfSkubQWDH97aP25vQ5Xw9bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlIb7oqe8Rziw5EY2BGyo2tAAPmk43dJjWGRIaWybZj58AEWpeSsLBw4P/yBDm0p9
-	 WR0Say6DEQHciV57MoLYwcAosXD/LnL8pCHTBp62KjpW06vduoiov08kByD6XJVxAz
-	 IXUEnkH7RetCV1cUwmVPEX43Y166mnBKr0gC+E2k=
+	b=ReTm9hPvslaG+c4sjMPKUKgpvgBe1tUKIGSF5dxW6s4bPnNUsw0VsfijQxJ5GLfNv
+	 fC5GyvuWulaYIQPywKSr9Jx/2LaiqfbQKehz+RXRZqiVkf+h+3zYdxVvULX2P+uHKU
+	 rTnYyWfi/c4cUsaIDMDBpXl2oaqPxsYz6XaQdWKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732737AbfLKPXh (ORCPT
+        id S1732751AbfLKPXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54606 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732729AbfLKPXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:33 -0500
+        id S1731907AbfLKPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E382073D;
-        Wed, 11 Dec 2019 15:23:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D7B2464B;
+        Wed, 11 Dec 2019 15:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077813;
-        bh=yrCqURBF1LS8Yk5NB9S0YYrG5mdalSXhXTNPvL/2Jew=;
+        s=default; t=1576077815;
+        bh=WVbx/xSLrJRM55gfBGknfSkubQWDH97aP25vQ5Xw9bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ud+4YPcf0yUUf70YR3lG3ugiFczwk1vCDdfS/itV45PGcCeOwZG8iYUnHwBMFLfht
-         iJAKp4ziBPSeOuDrZq9W5vvZEBzEcjCw8VFJ+TrvYQar7Poilgw8YODschpcll7n43
-         WchR4r5l3vwG4EKaVdbpEluRi6kdaOyQwEFyV9AM=
+        b=V1z/21yfFwO4pxQvPqALE27H2tsfQYCjL8QpraSifHeZLRM/PxbBcl7fkQSn3irN3
+         gyfQTIhWNVqzQkh29b355kdASSSAFo/XbJ1JbmMZGFxbEHGWezhFeRdJoAJ9RRjlKw
+         LLEfhCwEMor9a0U5NYqfE+E+LfwN/ifgmd56bxt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Pape <ap@ca-pape.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 179/243] media: stkwebcam: Bugfix for wrong return values
-Date:   Wed, 11 Dec 2019 16:05:41 +0100
-Message-Id: <20191211150351.254659809@linuxfoundation.org>
+Subject: [PATCH 4.19 180/243] firmware: qcom: scm: fix compilation error when disabled
+Date:   Wed, 11 Dec 2019 16:05:42 +0100
+Message-Id: <20191211150351.322476729@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,40 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Pape <ap@ca-pape.de>
+From: Jonathan Marek <jonathan@marek.ca>
 
-[ Upstream commit 3c28b91380dd1183347d32d87d820818031ebecf ]
+[ Upstream commit 16ad9501b1f2edebe24f8cf3c09da0695871986b ]
 
-usb_control_msg returns in case of a successfully sent message the number
-of sent bytes as a positive number. Don't use this value as a return value
-for stk_camera_read_reg, as a non-zero return value is used as an error
-condition in some cases when stk_camera_read_reg is called.
+This fixes the case when CONFIG_QCOM_SCM is not enabled, and linux/errno.h
+has not been included previously.
 
-Signed-off-by: Andreas Pape <ap@ca-pape.de>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/stkwebcam/stk-webcam.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/qcom_scm.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/usb/stkwebcam/stk-webcam.c b/drivers/media/usb/stkwebcam/stk-webcam.c
-index 6e3f234e790b8..e33fa78ef98dd 100644
---- a/drivers/media/usb/stkwebcam/stk-webcam.c
-+++ b/drivers/media/usb/stkwebcam/stk-webcam.c
-@@ -164,7 +164,11 @@ int stk_camera_read_reg(struct stk_camera *dev, u16 index, u8 *value)
- 		*value = *buf;
- 
- 	kfree(buf);
--	return ret;
+diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+index 5d65521260b3d..116b81ac442ad 100644
+--- a/include/linux/qcom_scm.h
++++ b/include/linux/qcom_scm.h
+@@ -65,6 +65,9 @@ extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
+ extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
+ extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
+ #else
 +
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return 0;
- }
- 
- static int stk_start_stream(struct stk_camera *dev)
++#include <linux/errno.h>
++
+ static inline
+ int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+ {
 -- 
 2.20.1
 
