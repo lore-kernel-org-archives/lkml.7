@@ -2,169 +2,170 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0056C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63050C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29AF214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BEiRXRNt"
+	by mail.kernel.org (Postfix) with ESMTP id 434B3205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfLKJna (ORCPT
+        id S1728689AbfLKJnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:43:30 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39628 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728370AbfLKJna (ORCPT
+        Wed, 11 Dec 2019 04:43:35 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45692 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728370AbfLKJnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:43:30 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y11so23235949wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:43:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=z0QzLt7cguGjhYkQBQHVG6HhXU8NuMmHzTVdwtHS9ig=;
-        b=BEiRXRNtnIBFjpCSBExLUGZx1Pa6SKsAtXeeJLD6W0NIrioRnhtiOEgMsi4ugdJ3zp
-         QSz4GgMNADAajE9pqGigE9t7kXg8yQJn8TM4iG5K2aCTnKRPwWn7UTEzF3a77XnBSxgT
-         9JE2grqONb42g6IFklDtyXxlEtrbdRdAQZkRTkXN+VULb9YNs4MsFIzC1v9S1at2bASB
-         w6qdaGWc8SDPWo1Uk4S+4IxaK3s0DW4T8dtMxPlBlLziHdeozq+skjRn3dptiBgKm96t
-         ffDDrYpcOA+HKEZEcdgbMK2sJwZJ0KEZk3T/SHXU7aCp3kncTv3eIfsNdJZUNiGiuJXO
-         +QoQ==
+        Wed, 11 Dec 2019 04:43:33 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 203so16100462lfa.12;
+        Wed, 11 Dec 2019 01:43:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=z0QzLt7cguGjhYkQBQHVG6HhXU8NuMmHzTVdwtHS9ig=;
-        b=ddYMvfRhkAKSoUQzXAR5SZTTBkPd57YFDA7aPZ9KXWxaSKvj7cJPFif+gtyH+Rvofa
-         bx0zfkXxcJrKKUjgsWLy9q8tYHsGJg+gl7GAAw1o/RWFApy2x2DOzxv95MxYIzH+f/L1
-         V4TUj8RnwedyjgO7j0P2KtY2DKLC9smiJADkSg7HMwJxSZf+9ouiZcEtsyDFh8VX+pIn
-         m09jTwPS+DNCox23QjcnCi6D9+zaZb8l78D8ANYsulHFq4CLNLZSAazXgmc/q+B8LYvN
-         lFaJx9rrY7USMiBD43nvcxUncYY7cFCbaVgn2QkhUEpc6+kE1az4qB6cdRn9iKNYvcMg
-         doBQ==
-X-Gm-Message-State: APjAAAVlhzb5kIOG6IRqW1Q3qAwKE85bRESqe45jzj1r+XOnJEy64daZ
-        6u9ONzT3IvULdoHpdaSjCervAQcIN4Y=
-X-Google-Smtp-Source: APXvYqyRpPjVZqQ6wK30FYYM+9G40xoHiGPwj/gyIyeDl0yqTe5vb7IVvt4aDak5sZieLFEduj9Sog==
-X-Received: by 2002:adf:f3d0:: with SMTP id g16mr2843035wrp.2.1576057407844;
-        Wed, 11 Dec 2019 01:43:27 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id s25sm1586444wmh.4.2019.12.11.01.43.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+biBEQreu589nhDfTn2/9rER8Ofo2M73AkOaXykP3cY=;
+        b=Dgx/fJMXoX30hYDAFkrQ5CmLRvrBKwc1D3OTUSlWonvIoRaZolizs2sE5QDtmXOZmX
+         eBXw7KevbLNAHeYBM7QAPXtD+k9glaAU+30/8Qd4stHzJ4wIy5rC4TaREZecqlddEdEK
+         UnnIFvKhRe0RstkO3wdT7lZUTaIKiQ3XCevtzhRl1bnM79oNDPHGrzk5tTzCb4nr9fPl
+         WdvdqV5mi7OhGOKbN0CkcLk8T4HoJk+jypUupNhBe3OVL5TLb++njtP+D9d+aGdlHWN6
+         is1GMU8Tsek/6pAdBG7FjJ3JrgVeIwjj/loekAU2ttqgMxHX5IMyUaXT5dPc5D4LhHKv
+         05ZQ==
+X-Gm-Message-State: APjAAAW7hFvFd6gLuQdAzInjhXjRx+qDdPjiwUKQzx1gF4bDhi/4owpX
+        QTfuNFS3oehOecdynt5A6aw=
+X-Google-Smtp-Source: APXvYqzfy3MGetNTGCQwBQiEPvpTeLG1Lv7I3w3JEVExp0tqLwNz5RTxNqn61tFOCFdJuWHe9TS8Uw==
+X-Received: by 2002:a19:4a:: with SMTP id 71mr1573471lfa.50.1576057410729;
+        Wed, 11 Dec 2019 01:43:30 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 207sm897874ljj.72.2019.12.11.01.43.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:43:27 -0800 (PST)
-References: <20191211070835.83489-1-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Wed, 11 Dec 2019 01:43:30 -0800 (PST)
+Date:   Wed, 11 Dec 2019 11:43:18 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: add A1 periphs and PLL clock nodes
-In-reply-to: <20191211070835.83489-1-jian.hu@amlogic.com>
-Date:   Wed, 11 Dec 2019 10:43:26 +0100
-Message-ID: <1jimmnkxj5.fsf@starbuckisacylon.baylibre.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v6 06/15] mfd: input: bd71828: Add power-key support
+Message-ID: <3ae6840d5984463f2d6f3ce068242269dba21989.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use gpio_keys to send power input-event to user-space when power
+button (short) press is detected.
 
-On Wed 11 Dec 2019 at 08:08, Jian Hu <jian.hu@amlogic.com> wrote:
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
 
-> Add A1 periphs and PLL clock controller nodes, Some clocks
-> in periphs controller are the parents of PLL clocks, Meanwhile
-> some clocks in PLL controller are those of periphs clocks.
-> They rely on each other.
+No changes since v5
 
-> Compared with the previous series,
-> the register region is only for the clock. So syscon is not
-> used in A1.
+ drivers/mfd/rohm-bd71828.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-Again, while this is valuable information for the maintainer to keep up,
-it is not something that should appear in the commit description.
+diff --git a/drivers/mfd/rohm-bd71828.c b/drivers/mfd/rohm-bd71828.c
+index 7f445d699fd9..b892b50ec555 100644
+--- a/drivers/mfd/rohm-bd71828.c
++++ b/drivers/mfd/rohm-bd71828.c
+@@ -4,7 +4,9 @@
+ //
+ // ROHM BD71828 PMIC driver
+ 
++#include <linux/gpio_keys.h>
+ #include <linux/i2c.h>
++#include <linux/input.h>
+ #include <linux/interrupt.h>
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+@@ -15,6 +17,18 @@
+ #include <linux/regmap.h>
+ #include <linux/types.h>
+ 
++static struct gpio_keys_button button = {
++	.code = KEY_POWER,
++	.gpio = -1,
++	.type = EV_KEY,
++};
++
++static struct gpio_keys_platform_data bd71828_powerkey_data = {
++	.buttons = &button,
++	.nbuttons = 1,
++	.name = "bd71828-pwrkey",
++};
++
+ static const struct resource rtc_irqs[] = {
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC0, "bd71828-rtc-alm-0"),
+ 	DEFINE_RES_IRQ_NAMED(BD71828_INT_RTC1, "bd71828-rtc-alm-1"),
+@@ -35,6 +49,10 @@ static struct mfd_cell bd71828_mfd_cells[] = {
+ 		.name = "bd71828-rtc",
+ 		.resources = rtc_irqs,
+ 		.num_resources = ARRAY_SIZE(rtc_irqs),
++	}, {
++		.name = "gpio-keys",
++		.platform_data = &bd71828_powerkey_data,
++		.pdata_size = sizeof(bd71828_powerkey_data),
+ 	},
+ };
+ 
+@@ -288,6 +306,14 @@ static int bd71828_i2c_probe(struct i2c_client *i2c)
+ 	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+ 		bd71828_irq_chip.num_irqs);
+ 
++	ret = regmap_irq_get_virq(irq_data, BD71828_INT_SHORTPUSH);
++	if (ret < 0) {
++		dev_err(&i2c->dev, "Failed to get the power-key IRQ\n");
++		return ret;
++	}
++
++	button.irq = ret;
++
+ 	ret = devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+ 				   bd71828_mfd_cells,
+ 				   ARRAY_SIZE(bd71828_mfd_cells), NULL, 0,
+-- 
+2.21.0
 
-The evolution of your commit should be described after the '---'
 
-Also, this obviously depends on another series. It should be mentioned
-accordingly
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 26 +++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> index 7210ad049d1d..de43a010fa6e 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -5,6 +5,8 @@
->  
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/a1-pll-clkc.h>
-> +#include <dt-bindings/clock/a1-clkc.h>
-
-When possible, please order the includes alpha-numerically
-
->  
->  / {
->  	compatible = "amlogic,a1";
-> @@ -74,6 +76,30 @@
->  			#size-cells = <2>;
->  			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
->  
-> +			clkc_periphs: periphs-clock-controller@800 {
-                                             ^
-From DT spec: "The name of a node should be somewhat generic, reflecting
-the function of the device and not its precise programming model."
-
-Here, an appropriate node name would be "clock-controller", not
-"periphs-clock-controller"
-
-> +				compatible = "amlogic,a1-periphs-clkc";
-> +				#clock-cells = <1>;
-> +				reg = <0 0x800 0 0x104>;
-> +				clocks = <&clkc_pll CLKID_FCLK_DIV2>,
-> +					<&clkc_pll CLKID_FCLK_DIV3>,
-> +					<&clkc_pll CLKID_FCLK_DIV5>,
-> +					<&clkc_pll CLKID_FCLK_DIV7>,
-> +					<&clkc_pll CLKID_HIFI_PLL>,
-> +					<&xtal>;
-> +				clock-names = "fclk_div2", "fclk_div3",
-> +					"fclk_div5", "fclk_div7",
-> +					"hifi_pll", "xtal";
-> +			};
-> +
-> +			clkc_pll: pll-clock-controller@7c80 {
-
-Please order nodes by address when they have one.
-This clock controller should appear after the uarts
-
-> +				compatible = "amlogic,a1-pll-clkc";
-> +				#clock-cells = <1>;
-> +				reg = <0 0x7c80 0 0x21c>;
-> +				clocks = <&clkc_periphs CLKID_XTAL_FIXPLL>,
-> +					<&clkc_periphs CLKID_XTAL_HIFIPLL>;
-> +				clock-names = "xtal_fixpll", "xtal_hifipll";
-> +			};
-> +
->  			uart_AO: serial@1c00 {
->  				compatible = "amlogic,meson-gx-uart",
->  					     "amlogic,meson-ao-uart";
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
