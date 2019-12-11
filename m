@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C959C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6587FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D62B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7782073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079156;
-	bh=sjnsZOZDsbB53F4dQC13LCsU2cKRuRJiJyKpA1cHH6A=;
+	s=default; t=1576079161;
+	bh=/oRw1hHn/HqEoOg2oBQIHsidAuwkS4CZnGiO4urvvmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sg0QKMiqMPHA6QxSYV0QRCydh9Dv5GmeOqv27hquiaM3UwQxWeVt/DzWEeVI9pG2+
-	 muhZuxtcoofhOUDsF3aVn6mQyFz0h6Gmo0BCg1FrCKhlNw7SJm9OSyRV13q9Lmv300
-	 ZFiqc20Fy9rT7opXL+61cIp5GRJPp4kHbT34VX24=
+	b=SexVo6N11dmzn3/hPML7wUZu01NjsMNR2NqS0lrlfaY6AYzuAOsbpfVs1MqXml4s4
+	 S3jkHsLTQ+mlW15ZBD3W7ROAeBsWe5T9TjQ9p3DQny0M0utW1jSjfJ/xbUAhuv3jIy
+	 p5Xd1+BFE8cn+ouYkZegkHriDn9Lut2MaWmPyA/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733212AbfLKP07 (ORCPT
+        id S2388625AbfLKPqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:46:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732569AbfLKP0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:52 -0500
+        id S1733193AbfLKP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2011324679;
-        Wed, 11 Dec 2019 15:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0EFF22527;
+        Wed, 11 Dec 2019 15:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078011;
-        bh=sjnsZOZDsbB53F4dQC13LCsU2cKRuRJiJyKpA1cHH6A=;
+        s=default; t=1576078017;
+        bh=/oRw1hHn/HqEoOg2oBQIHsidAuwkS4CZnGiO4urvvmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OucdVJEryUoi5pX7FhunvSWO+pTtXWUtOtUEuHXq71ZXdo5A9NAr8NxaScj4/v5na
-         2jPbMUADQRSvnSwEkflFtlyapqmpr0vUEx47t+oLCQTZ/irdMXt7I3JrAqT6lQVjaC
-         q5J/1My5J1NpT+iUOulkSmRsrYGb7Cb7/u7x4Tsw=
+        b=iby9bL6eqz5gyAsbDk2XNd8tBXrp+yVPLZP5oX3F8YEsNKvWwHNN7zdnBn0SZqTPW
+         aW/4w6q9Txqb6TQmtMiw5932o4DAMpsAsB1QI2YwnV+6QdUb3akqOno3GsOmqRHXjo
+         52+L+fBPK3BCVi33k/t16JmHmrTUcnxUpug9Exd0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 06/79] iommu: rockchip: Free domain on .domain_free
-Date:   Wed, 11 Dec 2019 10:25:30 -0500
-Message-Id: <20191211152643.23056-6-sashal@kernel.org>
+Cc:     Xiang Chen <chenxiang66@hisilicon.com>,
+        John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/79] scsi: hisi_sas: Replace in_softirq() check in hisi_sas_task_exec()
+Date:   Wed, 11 Dec 2019 10:25:36 -0500
+Message-Id: <20191211152643.23056-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -64,62 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ezequiel Garcia <ezequiel@collabora.com>
+From: Xiang Chen <chenxiang66@hisilicon.com>
 
-[ Upstream commit 42bb97b80f2e3bf592e3e99d109b67309aa1b30e ]
+[ Upstream commit 550c0d89d52d3bec5c299f69b4ed5d2ee6b8a9a6 ]
 
-IOMMU domain resource life is well-defined, managed
-by .domain_alloc and .domain_free.
+For IOs from upper layer, preemption may be disabled as it may be called by
+function __blk_mq_delay_run_hw_queue which will call get_cpu() (it disables
+preemption). So if flags HISI_SAS_REJECT_CMD_BIT is set in function
+hisi_sas_task_exec(), it may disable preempt twice after down() and up()
+which will cause following call trace:
 
-Therefore, domain-specific resources shouldn't be tied to
-the device life, but instead to its domain.
+BUG: scheduling while atomic: fio/60373/0x00000002
+Call trace:
+dump_backtrace+0x0/0x150
+show_stack+0x24/0x30
+dump_stack+0xa0/0xc4
+__schedule_bug+0x68/0x88
+__schedule+0x4b8/0x548
+schedule+0x40/0xd0
+schedule_timeout+0x200/0x378
+__down+0x78/0xc8
+down+0x54/0x70
+hisi_sas_task_exec.isra.10+0x598/0x8d8 [hisi_sas_main]
+hisi_sas_queue_command+0x28/0x38 [hisi_sas_main]
+sas_queuecommand+0x168/0x1b0 [libsas]
+scsi_queue_rq+0x2ac/0x980
+blk_mq_dispatch_rq_list+0xb0/0x550
+blk_mq_do_dispatch_sched+0x6c/0x110
+blk_mq_sched_dispatch_requests+0x114/0x1d8
+__blk_mq_run_hw_queue+0xb8/0x130
+__blk_mq_delay_run_hw_queue+0x1c0/0x220
+blk_mq_run_hw_queue+0xb0/0x128
+blk_mq_sched_insert_requests+0xdc/0x208
+blk_mq_flush_plug_list+0x1b4/0x3a0
+blk_flush_plug_list+0xdc/0x110
+blk_finish_plug+0x3c/0x50
+blkdev_direct_IO+0x404/0x550
+generic_file_read_iter+0x9c/0x848
+blkdev_read_iter+0x50/0x78
+aio_read+0xc8/0x170
+io_submit_one+0x1fc/0x8d8
+__arm64_sys_io_submit+0xdc/0x280
+el0_svc_common.constprop.0+0xe0/0x1e0
+el0_svc_handler+0x34/0x90
+el0_svc+0x10/0x14
+...
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Acked-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+To solve the issue, check preemptible() to avoid disabling preempt multiple
+when flag HISI_SAS_REJECT_CMD_BIT is set.
+
+Link: https://lore.kernel.org/r/1571926105-74636-5-git-send-email-john.garry@huawei.com
+Signed-off-by: Xiang Chen <chenxiang66@hisilicon.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/rockchip-iommu.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
-index ad3e2b97469ed..140b287e886c8 100644
---- a/drivers/iommu/rockchip-iommu.c
-+++ b/drivers/iommu/rockchip-iommu.c
-@@ -977,13 +977,13 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
- 	if (!dma_dev)
- 		return NULL;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index f478d1f50dfc0..ea4882f12c50e 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -485,7 +485,13 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
+ 	struct hisi_sas_dq *dq = NULL;
  
--	rk_domain = devm_kzalloc(dma_dev, sizeof(*rk_domain), GFP_KERNEL);
-+	rk_domain = kzalloc(sizeof(*rk_domain), GFP_KERNEL);
- 	if (!rk_domain)
- 		return NULL;
+ 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
+-		if (in_softirq())
++		/*
++		 * For IOs from upper layer, it may already disable preempt
++		 * in the IO path, if disable preempt again in down(),
++		 * function schedule() will report schedule_bug(), so check
++		 * preemptible() before goto down().
++		 */
++		if (!preemptible())
+ 			return -EINVAL;
  
- 	if (type == IOMMU_DOMAIN_DMA &&
- 	    iommu_get_dma_cookie(&rk_domain->domain))
--		return NULL;
-+		goto err_free_domain;
- 
- 	/*
- 	 * rk32xx iommus use a 2 level pagetable.
-@@ -1018,6 +1018,8 @@ err_free_dt:
- err_put_cookie:
- 	if (type == IOMMU_DOMAIN_DMA)
- 		iommu_put_dma_cookie(&rk_domain->domain);
-+err_free_domain:
-+	kfree(rk_domain);
- 
- 	return NULL;
- }
-@@ -1046,6 +1048,7 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
- 
- 	if (domain->type == IOMMU_DOMAIN_DMA)
- 		iommu_put_dma_cookie(&rk_domain->domain);
-+	kfree(rk_domain);
- }
- 
- static int rk_iommu_add_device(struct device *dev)
+ 		down(&hisi_hba->sem);
 -- 
 2.20.1
 
