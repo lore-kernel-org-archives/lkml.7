@@ -2,127 +2,156 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A96C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4237C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D78208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A747C205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576080792;
+	bh=G1JJ7gfWeu4OxtOizcMo67AaxaqVvWp53DVz/+7WWCM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sqqJUAelSmgva4BRDNXNAk5oojHOk5mFnoPJwUWoa/wVzYxttws3sny8rPgOn2wwh
+	 bYP6mTx7brAYWaCyMxGMSzw3BNtE/BSL11hI94gGtzV3KfDZLrlm1NiN7ZP8OGmIeO
+	 MxVlRLun8AKfq1UYYvadkfRmj3mRsz3Zb2eIPdi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbfLKQNJ (ORCPT
+        id S1731362AbfLKQNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:13:09 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:55056 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730381AbfLKPI2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:13:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730375AbfLKPI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:08:28 -0500
-Received: (qmail 1705 invoked by uid 2102); 11 Dec 2019 10:08:27 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 11 Dec 2019 10:08:27 -0500
-Date:   Wed, 11 Dec 2019 10:08:27 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@intel.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] USB: core: Attempt power cycle port when it's in
- eSS.Disabled state
-In-Reply-To: <62C4527A-5231-4A69-BE7C-9844E2123A90@canonical.com>
-Message-ID: <Pine.LNX.4.44L0.1912111006280.1549-100000@iolanthe.rowland.org>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A5282173E;
+        Wed, 11 Dec 2019 15:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576076907;
+        bh=G1JJ7gfWeu4OxtOizcMo67AaxaqVvWp53DVz/+7WWCM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ICSvGbXxZ3ZAlbLyikzuHTN3EE+c/YM6t2/QdQ82zd0ZpuzNtAOOggUh7LCAkE53d
+         ybVxjGCNrCBv4YLbgdS5MXVNE/4ZfMnoLu2WHVzkSuN8UYbLat7ncQAD3VlNFtSkBm
+         m7IWfhRquarC73tWWUGHBz5AqwT4X+YJR1yY0aVU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 35/92] ALSA: hda: Modify stream stripe mask only when needed
+Date:   Wed, 11 Dec 2019 16:05:26 +0100
+Message-Id: <20191211150237.977324939@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
+References: <20191211150221.977775294@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019, Kai-Heng Feng wrote:
+From: Takashi Iwai <tiwai@suse.de>
 
-> 
-> 
-> > On Nov 30, 2019, at 01:41, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> > 
-> > On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
-> > then connects to ASMedia xHCI's root hub:
-> > 
-> > /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
-> >    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
-> >            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
-> > 
-> > Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-> > Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
-> > Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
-> > 
-> > The SMSC hub may disconnect after system resume from suspend. When this
-> > happens, the reset resume attempt fails, and the last resort to disable
-> > the port and see something comes up later, also fails.
-> > 
-> > When the issue occurs, the link state stays in eSS.Disabled state
-> > despite the warm reset attempts. Accoding to spec this can be caused by
-> > invalid VBus, after some expiremets, the SMSC hub can be brought back
-> > after a powercycle.
-> > 
-> > So let's power cycle the port at the end of reset resume attempt, if
-> > it's in eSS.Disabled state.
-> 
-> If there's no objection, can this fix be reviewed and merged?
-> 
-> Kai-Heng
+commit e38e486d66e2a3b902768fd71c32dbf10f77e1cb upstream.
 
-The patch is okay as far as I'm concerned, since it doesn't do anything 
-for non-SuperSpeed connections.  It should be reviewed by Mathias.
+The recent commit in HD-audio stream management for changing the
+stripe control seems causing a regression on some platforms.  The
+stripe control is currently used only by HDMI codec, and applying the
+stripe mask unconditionally may lead to scratchy and static noises as
+seen on some MacBooks.
 
-Alan Stern
+For addressing the regression, this patch changes the stream
+management code to apply the stripe mask conditionally only when the
+codec driver requested.
 
-> > 
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> > v2:
-> > - Lower dev_info() to dev_dbg().
-> > 
-> > drivers/usb/core/hub.c | 16 ++++++++++++++++
-> > 1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> > index 6b6cd76ac5e6..a2e6001046f5 100644
-> > --- a/drivers/usb/core/hub.c
-> > +++ b/drivers/usb/core/hub.c
-> > @@ -2739,6 +2739,18 @@ static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
-> > 		|| link_state == USB_SS_PORT_LS_COMP_MOD;
-> > }
-> > 
-> > +static bool hub_port_power_cycle_required(struct usb_hub *hub, int port1,
-> > +		u16 portstatus)
-> > +{
-> > +	u16 link_state;
-> > +
-> > +	if (!hub_is_superspeed(hub->hdev))
-> > +		return false;
-> > +
-> > +	link_state = portstatus & USB_PORT_STAT_LINK_STATE;
-> > +	return link_state == USB_SS_PORT_LS_SS_DISABLED;
-> > +}
-> > +
-> > static void hub_port_power_cycle(struct usb_hub *hub, int port1)
-> > {
-> > 	struct usb_port *port_dev = hub->ports[port1  - 1];
-> > @@ -3601,6 +3613,10 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
-> > 	if (status < 0) {
-> > 		dev_dbg(&udev->dev, "can't resume, status %d\n", status);
-> > 		hub_port_logical_disconnect(hub, port1);
-> > +		if (hub_port_power_cycle_required(hub, port1, portstatus)) {
-> > +			dev_dbg(&udev->dev, "device in disabled state, attempt power cycle\n");
-> > +			hub_port_power_cycle(hub, port1);
-> > +		}
-> > 	} else  {
-> > 		/* Try to enable USB2 hardware LPM */
-> > 		usb_enable_usb2_hardware_lpm(udev);
-> > -- 
-> > 2.17.1
+Fixes: 9b6f7e7a296e ("ALSA: hda: program stripe bits for controller")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204477
+Tested-by: Michael Pobega <mpobega@neverware.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191202074947.1617-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/sound/hdaudio.h    |    1 +
+ sound/hda/hdac_stream.c    |   19 ++++++++++++-------
+ sound/pci/hda/patch_hdmi.c |    5 +++++
+ 3 files changed, 18 insertions(+), 7 deletions(-)
+
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -493,6 +493,7 @@ struct hdac_stream {
+ 	bool prepared:1;
+ 	bool no_period_wakeup:1;
+ 	bool locked:1;
++	bool stripe:1;			/* apply stripe control */
+ 
+ 	/* timestamp */
+ 	unsigned long start_wallclk;	/* start + minimum wallclk */
+--- a/sound/hda/hdac_stream.c
++++ b/sound/hda/hdac_stream.c
+@@ -96,12 +96,14 @@ void snd_hdac_stream_start(struct hdac_s
+ 			      1 << azx_dev->index,
+ 			      1 << azx_dev->index);
+ 	/* set stripe control */
+-	if (azx_dev->substream)
+-		stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
+-	else
+-		stripe_ctl = 0;
+-	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
+-				stripe_ctl);
++	if (azx_dev->stripe) {
++		if (azx_dev->substream)
++			stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
++		else
++			stripe_ctl = 0;
++		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
++					stripe_ctl);
++	}
+ 	/* set DMA start and interrupt mask */
+ 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
+ 				0, SD_CTL_DMA_START | SD_INT_MASK);
+@@ -118,7 +120,10 @@ void snd_hdac_stream_clear(struct hdac_s
+ 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
+ 				SD_CTL_DMA_START | SD_INT_MASK, 0);
+ 	snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK); /* to be sure */
+-	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
++	if (azx_dev->stripe) {
++		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
++		azx_dev->stripe = 0;
++	}
+ 	azx_dev->running = false;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_stream_clear);
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -32,6 +32,7 @@
+ #include <sound/hda_codec.h>
+ #include "hda_local.h"
+ #include "hda_jack.h"
++#include "hda_controller.h"
+ 
+ static bool static_hdmi_pcm;
+ module_param(static_hdmi_pcm, bool, 0644);
+@@ -1240,6 +1241,10 @@ static int hdmi_pcm_open(struct hda_pcm_
+ 	per_pin->cvt_nid = per_cvt->cvt_nid;
+ 	hinfo->nid = per_cvt->cvt_nid;
+ 
++	/* flip stripe flag for the assigned stream if supported */
++	if (get_wcaps(codec, per_cvt->cvt_nid) & AC_WCAP_STRIPE)
++		azx_stream(get_azx_dev(substream))->stripe = 1;
++
+ 	snd_hda_set_dev_select(codec, per_pin->pin_nid, per_pin->dev_id);
+ 	snd_hda_codec_write_cache(codec, per_pin->pin_nid, 0,
+ 			    AC_VERB_SET_CONNECT_SEL,
+
 
