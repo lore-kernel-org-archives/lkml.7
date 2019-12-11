@@ -2,147 +2,154 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407E3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A632C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1173B22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078253;
-	bh=FD+yAWf7DdVp37fOeN6SheKubiE2hRXA+it56OtqirY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XPepvkrHVamUFuW9NZESw8dJ1POqel2LZfQx7HhhhHcZLm6ssvleVwnYRlQpLo8Zu
-	 f1MRzjGj9NR9V2IztPDFOfUsvjsRiWrBggPVbGkKzlkB57FbrH8ROWDd8VbW3ax3LN
-	 sD9Dwg0abDfbosSsn9CciGDYPc7bc1JmZAp89iAc=
+	by mail.kernel.org (Postfix) with ESMTP id 4F83B24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="trIiLL+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbfLKPav (ORCPT
+        id S2388001AbfLKPaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:30:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387869AbfLKP3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:24 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07918208C3;
-        Wed, 11 Dec 2019 15:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078163;
-        bh=FD+yAWf7DdVp37fOeN6SheKubiE2hRXA+it56OtqirY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o9Wo8/u2eoroI4ylswqm4q70UaSd487V5O2uJ1AM0ZZ2FQMghaTj405rUcdghe3Pc
-         WhANEmSLiaC+xnwb9AjEHXOYg1s0VLyqWkeD0YtOxI/t9qV0BfX52dHHLD1rEN3/2X
-         NPl0E/U/iHW7MGp+Uy9nHwAYrvkOICBaoz+fxO8o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@mykernel.net>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.14 48/58] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Wed, 11 Dec 2019 10:28:21 -0500
-Message-Id: <20191211152831.23507-48-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:30:55 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10288 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387680AbfLKPaw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:30:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576078251; x=1607614251;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SKfQoX2A8rZ0EnP2XkyIWyJjMF/So/eVFwUYzJEpgTw=;
+  b=trIiLL+jeKQk4aIryp5tyAmL9BBvgLbLwpkQEUcbXbYVIX8jXMhRc7WU
+   /kPttwswhWMzcjH70fTRxWCqqY7AaO1iMlLRMzR6KliXstR+se+VlQJ8Q
+   c/qDWjbxAQDutpUJss0YkxROM6pc3ZSuiIjIlMWs6FzNghY/BNpKJELqP
+   k=;
+IronPort-SDR: ynn3GjgWJ7AJmj+IiCD63/an9xfGjEvulKIW2ESukaoYU3xV38CEmegp9TBobp4VnugtQwnRoH
+ dToGlfSk+tuQ==
+X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
+   d="scan'208";a="14303724"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 11 Dec 2019 15:30:40 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (Postfix) with ESMTPS id 0FDA8A2146;
+        Wed, 11 Dec 2019 15:30:39 +0000 (UTC)
+Received: from EX13D32EUB004.ant.amazon.com (10.43.166.212) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D32EUB004.ant.amazon.com (10.43.166.212) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 15:30:10 +0000
+Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
+ mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 15:30:07 +0000
+From:   Paul Durrant <pdurrant@amazon.com>
+To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Paul Durrant <pdurrant@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>
+Subject: [PATCH v3 3/4] xen/interface: re-define FRONT/BACK_RING_ATTACH()
+Date:   Wed, 11 Dec 2019 15:29:55 +0000
+Message-ID: <20191211152956.5168-4-pdurrant@amazon.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
-References: <20191211152831.23507-1-sashal@kernel.org>
+In-Reply-To: <20191211152956.5168-1-pdurrant@amazon.com>
+References: <20191211152956.5168-1-pdurrant@amazon.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+Currently these macros are defined to re-initialize a front/back ring
+(respectively) to values read from the shared ring in such a way that any
+requests/responses that are added to the shared ring whilst the front/back
+is detached will be skipped over. This, in general, is not a desirable
+semantic since most frontend implementations will eventually block waiting
+for a response which would either never appear or never be processed.
 
-[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
+Since the macros are currently unused, take this opportunity to re-define
+them to re-initialize a front/back ring using specified values. This also
+allows FRONT/BACK_RING_INIT() to be re-defined in terms of
+FRONT/BACK_RING_ATTACH() using a specified value of 0.
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+NOTE: BACK_RING_ATTACH() will be used directly in a subsequent patch.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
-
-[root@hades f2fs]# repquota -P -a
-*** Report for project quotas on device /dev/nvme0n1p8
-Block grace time: 7days; Inode grace time: 7days
-Block limits File limits
-Project used soft hard grace used soft hard grace
-----------------------------------------------------------------------
-0 -- 4 0 0 1 0 0
-123 +- 10248 20480 10240 2 0 0
-
-The result of df command as below:
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
-
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test(inherit project id),
-the write will fail with errno(-EDQUOT).
-
-After this patch, the df result looks like below.
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 ---
- fs/f2fs/super.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index e4aabfc21bd43..8635df6cba553 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -912,9 +912,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dq_data_lock);
+A patch to add the FRONT/BACK_RING_ATTACH() macros to the canonical
+ring.h in xen.git will be sent once the definitions have been agreed.
+
+v2:
+ - change definitions to take explicit initial index values
+---
+ include/xen/interface/io/ring.h | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
+
+diff --git a/include/xen/interface/io/ring.h b/include/xen/interface/io/ring.h
+index 3f40501fc60b..2af7a1cd6658 100644
+--- a/include/xen/interface/io/ring.h
++++ b/include/xen/interface/io/ring.h
+@@ -125,35 +125,24 @@ struct __name##_back_ring {						\
+     memset((_s)->pad, 0, sizeof((_s)->pad));				\
+ } while(0)
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -923,9 +927,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
- 	}
+-#define FRONT_RING_INIT(_r, _s, __size) do {				\
+-    (_r)->req_prod_pvt = 0;						\
+-    (_r)->rsp_cons = 0;							\
++#define FRONT_RING_ATTACH(_r, _s, _i, __size) do {			\
++    (_r)->req_prod_pvt = (_i);						\
++    (_r)->rsp_cons = (_i);						\
+     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+     (_r)->sring = (_s);							\
+ } while (0)
  
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
+-#define BACK_RING_INIT(_r, _s, __size) do {				\
+-    (_r)->rsp_prod_pvt = 0;						\
+-    (_r)->req_cons = 0;							\
+-    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+-    (_r)->sring = (_s);							\
+-} while (0)
++#define FRONT_RING_INIT(_r, _s, __size) FRONT_RING_ATTACH(_r, _s, 0, __size)
+ 
+-/* Initialize to existing shared indexes -- for recovery */
+-#define FRONT_RING_ATTACH(_r, _s, __size) do {				\
+-    (_r)->sring = (_s);							\
+-    (_r)->req_prod_pvt = (_s)->req_prod;				\
+-    (_r)->rsp_cons = (_s)->rsp_prod;					\
++#define BACK_RING_ATTACH(_r, _s, _i, __size) do {			\
++    (_r)->rsp_prod_pvt = (_i);						\
++    (_r)->req_cons = (_i);						\
+     (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+-} while (0)
+-
+-#define BACK_RING_ATTACH(_r, _s, __size) do {				\
+     (_r)->sring = (_s);							\
+-    (_r)->rsp_prod_pvt = (_s)->rsp_prod;				\
+-    (_r)->req_cons = (_s)->req_prod;					\
+-    (_r)->nr_ents = __RING_SIZE(_s, __size);				\
+ } while (0)
+ 
++#define BACK_RING_INIT(_r, _s, __size) BACK_RING_ATTACH(_r, _s, 0, __size)
 +
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
+ /* How big is this ring? */
+ #define RING_SIZE(_r)							\
+     ((_r)->nr_ents)
 -- 
 2.20.1
 
