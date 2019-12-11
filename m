@@ -4,115 +4,135 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B225BC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C3AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FFA214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E81E5214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:13:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="aPSG7JoW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="baXc8w8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbfLKJL2 (ORCPT
+        id S1728389AbfLKJNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:11:28 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44607 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbfLKJL2 (ORCPT
+        Wed, 11 Dec 2019 04:13:41 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39616 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbfLKJNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:11:28 -0500
-Received: by mail-pf1-f194.google.com with SMTP id d199so1480098pfd.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:11:26 -0800 (PST)
+        Wed, 11 Dec 2019 04:13:40 -0500
+Received: by mail-pl1-f193.google.com with SMTP id o9so1179369plk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:13:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=clN4DZ1+UzZ8X2+xnLk0rPl0nRDgP4NWoUukx7osbdw=;
-        b=aPSG7JoWCAdyw1wBNQ0w4sI9pX6XrOeEDHMDtr7JYmGiXyfntBvIPcOmrQabyctr2S
-         8oYrpYA9ngfb1x36uv5EOfSzc7f54jPfl1QLhnKurOV2D5bTL6TrcoWfuZiYqQxqc65w
-         RjTyYAJmxblhquQjD1fu31x6W0CVrPOcrrlNs=
+        h=from:to:cc:subject:date:message-id;
+        bh=5nDWGTJv3DbBm5FdVeD/qbyjSVi8fiYI1J1aTvInS6M=;
+        b=baXc8w8nzDdnAn1X5x3/tXmyNv/eBgdY9U47+D3NnLnuzBUvfe0uu/R4Q5z/pTisYu
+         p/7Ens/ifRT8KyRkVf4smSl4zjYLfvP0CWknhY/f6fj/T4g0lw+NRp+L+/FSPfyLftIE
+         KqcxDaWi5RLesdO8w53supuouTtW354DyTAHM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=clN4DZ1+UzZ8X2+xnLk0rPl0nRDgP4NWoUukx7osbdw=;
-        b=Em8J0XdpnUVjx7wE+aFwZD1sSzx8MOwDGdqtb/fffRyRmasrgiFIDHlGu1eJZT07r8
-         ALZ0Katk14WB5n5ZDzy07IzAXpqg+yIQYFxEcFggF8pnSm/aLAg3vBnHlR1biMET7I73
-         bHM4hpHy7I4v5IC4JupwNgtzwMuV3BVTXtrkHo9MgPPmoNFZxglNn7kVkh8PqgMSQqel
-         gh16EG9NUm33Mye2IUqRrJf3qfGm/P5Ajwr568SyzSjpgR8GwhtZXejdM6SbrD3tKpkS
-         FpGFpDWlOIrtKvre4r03vA33bdl9xV99Ypfgs+q8TW0Wrh2adEr9Dv5gUzYhNhTBlROK
-         fIyw==
-X-Gm-Message-State: APjAAAW6i76m8YQov87wPMbIZ/slhy1+yrV4CyFjOgM5BnE7UjWtkGST
-        zbJrkWKyZne41kHn3K7irmAamg==
-X-Google-Smtp-Source: APXvYqxP1CFPPOVd0xjT+TIWrmflIBJlnchwj32/k9sp3Jr/v3tHlGkFrFjdZ9TLtugXmzmlGYJivg==
-X-Received: by 2002:a63:504f:: with SMTP id q15mr2962436pgl.8.1576055485667;
-        Wed, 11 Dec 2019 01:11:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5nDWGTJv3DbBm5FdVeD/qbyjSVi8fiYI1J1aTvInS6M=;
+        b=TXwzooFmHgM3zvtigMCaGkLSt0nS3JRWYYkB5g4+YfG4UV0rFuD+MnQovuxFd4MsS9
+         TI/ReQZHXT+iRORO2hl6az6e4SvSTvGg7tQvpIeyuHeHmCR9ytT7KL8wf/FTa9qduJvN
+         6diukl/j8Uv4R4SVGjKiOGxxoOZGRo5KzXwyarXJ/LN4dxtpnkdGpwAHy58fsjmkDWV7
+         mDq2NlFe6DdV+3OSSZkIqJpiNiqgEaIyBiP4jLE9kZYaUNQEjBCHG8jsxki2LDOyNMVk
+         YjdHgm+Q+7QHeNnVxRe1L9cNTdPzWPZULedHN7UIJZLuzq1EZ16s/2I3umRtv1pJhtiQ
+         8JBg==
+X-Gm-Message-State: APjAAAVXOXDAqrgyWjel1y3RKXidIZM0y0BK6GICm2dmqMlhRVRagRTS
+        1x3zy1Ap0AMEw/32bl0qJdzvyA==
+X-Google-Smtp-Source: APXvYqyQaxhd16NIqEa4d2RbhVoJqAmzk0TvXPSGmOAsDzosGYrVXsAEPjtlDNgDcJWED+R9ZtqD8w==
+X-Received: by 2002:a17:90a:fb45:: with SMTP id iq5mr2318402pjb.93.1576055619868;
+        Wed, 11 Dec 2019 01:13:39 -0800 (PST)
 Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id y62sm2201092pfg.45.2019.12.11.01.11.23
+        by smtp.googlemail.com with ESMTPSA id r20sm2047161pgu.89.2019.12.11.01.13.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 01:11:25 -0800 (PST)
+        Wed, 11 Dec 2019 01:13:39 -0800 (PST)
 From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
 Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi.kubota1012@sslab.ics.keio.ac.jp, naohiro.aota@wdc.com,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] block/genhd: Fix memory leak in error path of __alloc_disk_node()
-Date:   Wed, 11 Dec 2019 09:10:49 +0000
-Message-Id: <20191211091049.11080-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
+        takafumi.kubota1012@sslab.ics.keio.ac.jp,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Avoid memory leak in process_system_preds()
+Date:   Wed, 11 Dec 2019 09:12:58 +0000
+Message-Id: <20191211091258.11310-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191127024057.5827-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
-References: <20191127024057.5827-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'disk->part_tbl' is malloced in disk_expand_part_tbl() and should be
-freed before leaving from the error handling cases. However, current code
-does not free this, causing a memory leak. Add disk_replace_part_tbl()
-before freeing 'disk'.
+When failing in the allocation of filter_item, process_system_preds()
+goes to fail_mem, where the allocated filter is freed.
 
-I have tested this by randomly causing failures to the target code,
-and verified on kmemleak that this memory leak does occur.
+However, this leads to memory leak of filter->filter_string and
+filter->prog, which is allocated before and in process_preds().
+This bug has been detected by kmemleak as well.
 
-unreferenced object 0xffff888006dad500 (size 64):
-  comm "systemd-udevd", pid 116, jiffies 4294895558 (age 121.716s)
+Fix this by changing kfree to __free_fiter.
+
+unreferenced object 0xffff8880658007c0 (size 32):
+  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
   hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    63 6f 6d 6d 6f 6e 5f 70 69 64 20 20 3e 20 31 30  common_pid  > 10
+    00 00 00 00 00 00 00 00 65 73 00 00 00 00 00 00  ........es......
+  backtrace:
+    [<0000000067441602>] kstrdup+0x2d/0x60
+    [<00000000141cf7b7>] apply_subsystem_event_filter+0x378/0x932
+    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
+    [<0000000072da2bee>] vfs_write+0xe1/0x240
+    [<000000004f14f473>] ksys_write+0xb4/0x150
+    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
+    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff888060c22d00 (size 64):
+  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
+  hex dump (first 32 bytes):
+    01 00 00 00 00 00 00 00 00 e8 d7 41 80 88 ff ff  ...........A....
     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
   backtrace:
-    [<00000000eec79bf3>] disk_expand_part_tbl+0xab/0x170
-    [<00000000624e7d03>] __alloc_disk_node+0xb1/0x1c0
-    [<00000000ca3f4185>] 0xffffffffc01b8584
-    [<000000006f88a6ee>] do_one_initcall+0x8b/0x2a4
-    [<0000000016058199>] do_init_module+0xfd/0x380
-    [<00000000b6fde336>] load_module+0x3fae/0x4240
-    [<00000000c523d013>] __do_sys_finit_module+0x11a/0x1b0
-    [<00000000f07bba26>] do_syscall_64+0x6d/0x1e0
-    [<00000000979467fd>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 6c71013ecb7e ("block: partition: convert percpu ref")
+    [<00000000b8c1b109>] process_preds+0x243/0x1820
+    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
+    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
+    [<0000000072da2bee>] vfs_write+0xe1/0x240
+    [<000000004f14f473>] ksys_write+0xb4/0x150
+    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
+    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff888041d7e800 (size 512):
+  comm "bash", pid 579, jiffies 4295096372 (age 17.752s)
+  hex dump (first 32 bytes):
+    70 bc 85 97 ff ff ff ff 0a 00 00 00 00 00 00 00  p...............
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000001e04af34>] process_preds+0x71a/0x1820
+    [<000000003972c7f0>] apply_subsystem_event_filter+0x3be/0x932
+    [<000000009ca32334>] subsystem_filter_write+0x5a/0x90
+    [<0000000072da2bee>] vfs_write+0xe1/0x240
+    [<000000004f14f473>] ksys_write+0xb4/0x150
+    [<00000000a968b4a0>] do_syscall_64+0x6d/0x1e0
+    [<000000001a189f40>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Reviewed-by: Naohiro Aota <naohiro.aota@wdc.com>
 ---
- block/genhd.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/trace/trace_events_filter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index ff6268970ddc..8c4b63d7f507 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1504,6 +1504,7 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
- 		 */
- 		seqcount_init(&disk->part0.nr_sects_seq);
- 		if (hd_ref_init(&disk->part0)) {
-+			disk_replace_part_tbl(disk, NULL);
- 			hd_free_part(&disk->part0);
- 			kfree(disk);
- 			return NULL;
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index c9a74f82b14a..bf44f6bbd0c3 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1662,7 +1662,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 	return -EINVAL;
+  fail_mem:
+-	kfree(filter);
++	__free_filter(filter);
+ 	/* If any call succeeded, we still need to sync */
+ 	if (!fail)
+ 		tracepoint_synchronize_unregister();
 -- 
 2.17.1
 
