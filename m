@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE58C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 947A1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16C624658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D2D324658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077422;
-	bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
+	s=default; t=1576077427;
+	bh=UyXEQ+tAlQt+Yu23yxJAiQdjXXAYP7Pb3o7XRCSGrL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfrsiJH3rUB9XEQqkyWZBQOn9wnes+faX59SHNOh3OieKl3IV/oW1SQ8vm4VpoHDH
-	 z2VKlAbCATI3Qt4TMdAGAK6ZikSplLAiT6a9bOYz1U6TAUysk/T5DPbshDQSyxa0v0
-	 +e+UyrrTjiq+8UTIsnCCNGc3yAWDBglGK3gS8XFs=
+	b=RrplF08KKTMPKgEJrep+EiFqixUdWIxBEiL41ODhY2TkZlVReBLFlccpi2obtrY78
+	 m7WMCVx+uIKCnWdeLu2sYU+tQ5iIcWQ/0W2YgnnKoPYNSUkhejeICnp8TZvb2CdtIl
+	 si358Spc+rN6V32sNffwyX7dukWXYGQLnLmIk5Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731963AbfLKPRB (ORCPT
+        id S1731837AbfLKPRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:17:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:17:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731959AbfLKPQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:16:58 -0500
+        id S1731966AbfLKPRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD0022B48;
-        Wed, 11 Dec 2019 15:16:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2530822B48;
+        Wed, 11 Dec 2019 15:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077417;
-        bh=b9/T+4wPcyLPyVncmvBzEbAy3vXyz2XW65TL7H7amlY=;
+        s=default; t=1576077422;
+        bh=UyXEQ+tAlQt+Yu23yxJAiQdjXXAYP7Pb3o7XRCSGrL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhG0C+LETnX21YaQSmVWCpuOXCtm5lV3V75lw22ZvsrBumTQR1cKE+Dr3PptaFua7
-         yPzflqBjvXYgHOF9kCcfKRCbFe8OHIeeRMDLKEdfl+glo97glT0LWn91Z/cWeGOIhJ
-         2P/II4sn1CLXngREf9g0onQmRsdtnRTvng42IqZo=
+        b=gIfocy3sM0st98s9e+XTlZmrIi6sW0BKbbzNL6ojzfCU0gEjOpgHSJLY1j4Gee7MK
+         13UIY190m1t+y1vzIPNlmyRzFZyXZuygI3wsuKrFvIgfqRBJOmnRpXKag1z7ThXGCp
+         AlzHztce0Rmbo7Z1Eg0znMpFqp6C/xxemfiKwn2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Subject: [PATCH 4.19 007/243] tty: serial: msm_serial: Fix flow control
-Date:   Wed, 11 Dec 2019 16:02:49 +0100
-Message-Id: <20191211150339.621497747@linuxfoundation.org>
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Subject: [PATCH 4.19 009/243] serial: serial_core: Perform NULL checks for break_ctl ops
+Date:   Wed, 11 Dec 2019 16:02:51 +0100
+Message-Id: <20191211150339.749995128@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,69 +58,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-commit b027ce258369cbfa88401a691c23dad01deb9f9b upstream.
+commit 7d73170e1c282576419f8b50a771f1fcd2b81a94 upstream.
 
-hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
-Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
-disables flow, configures the uart baudrate, and then reenables flow - at
-which point an event is expected to be received over the uart from the
-wcn3990.  It is observed that this event comes after the baudrate change
-but before hci_qca re-enables flow. This is unexpected, and is a result of
-msm_reset() being broken.
+Doing fuzz test on sbsa uart device, causes a kernel crash
+due to NULL pointer dereference:
 
-According to the uart_dm hardware documentation, it is recommended that
-automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
-hw flow control will manage RFR based on the configured watermark.  When
-there is space to receive data, the hw will assert RFR.  When the watermark
-is hit, the hw will de-assert RFR.
+------------[ cut here ]------------
+Unable to handle kernel paging request at virtual address fffffffffffffffc
+pgd = ffffffe331723000
+[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+Internal error: Oops: 96000005 [#1] PREEMPT SMP
+Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+PC is at uart_break_ctl+0x44/0x84
+LR is at uart_break_ctl+0x34/0x84
+pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+sp : ffffffe32bda7cc0
+x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+x27: ffffff8393402000 x26: 0000000000000000
+x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+x23: 0000000000005425 x22: 00000000ffffffff
+x21: ffffffe33ed73c98 x20: 0000000000000000
+x19: ffffffe33ed94168 x18: 0000000000000004
+x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+x15: 0000000000000010 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000020 x10: 0000007ffdac1708
+x9 : 0000000000000078 x8 : 000000000000001d
+x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+x3 : ffffff83938d5018 x2 : 0000000000000080
+x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+virtual start addr offset is 38ac00000
+module base offset is 2cd4cf1000
+linear region base offset is : 0
+Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+Call trace:
+Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+7aa0:                                   0000000000001000 0000007fffffffff
+7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+7be0: 0000000000000000 0000000000000000
+[<ffffff8393196098>] uart_break_ctl+0x44/0x84
+[<ffffff8393177718>] send_break+0xa0/0x114
+[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+---[ end trace 8606094f1960c5e0 ]---
+Kernel panic - not syncing: Fatal exception
 
-The hardware documentation indicates that RFR can me manually managed via
-CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
-de-asserts RFR.
+Fix this problem by adding NULL checks prior to calling break_ctl ops.
 
-msm_reset() is broken because after resetting the hardware, it
-unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
-the current configuration, and would undo a previous flow disable
-operation.  It should instead de-assert RFR via RESET_RFR to block flow
-until the hardware is reconfigured.  msm_serial should rely on the client
-to specify that flow should be enabled, either via mctrl() or the termios
-structure, and only assert RFR in response to those triggers.
-
-Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Andy Gross <agross@kernel.org>
-Link: https://lore.kernel.org/r/20191021154616.25457-1-jeffrey.l.hugo@gmail.com
+Link: https://lore.kernel.org/r/1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/msm_serial.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/tty/serial/serial_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/msm_serial.c
-+++ b/drivers/tty/serial/msm_serial.c
-@@ -980,6 +980,7 @@ static unsigned int msm_get_mctrl(struct
- static void msm_reset(struct uart_port *port)
- {
- 	struct msm_port *msm_port = UART_TO_MSM(port);
-+	unsigned int mr;
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1112,7 +1112,7 @@ static int uart_break_ctl(struct tty_str
+ 	if (!uport)
+ 		goto out;
  
- 	/* reset everything */
- 	msm_write(port, UART_CR_CMD_RESET_RX, UART_CR);
-@@ -987,7 +988,10 @@ static void msm_reset(struct uart_port *
- 	msm_write(port, UART_CR_CMD_RESET_ERR, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_BREAK_INT, UART_CR);
- 	msm_write(port, UART_CR_CMD_RESET_CTS, UART_CR);
--	msm_write(port, UART_CR_CMD_SET_RFR, UART_CR);
-+	msm_write(port, UART_CR_CMD_RESET_RFR, UART_CR);
-+	mr = msm_read(port, UART_MR1);
-+	mr &= ~UART_MR1_RX_RDY_CTL;
-+	msm_write(port, mr, UART_MR1);
- 
- 	/* Disable DM modes */
- 	if (msm_port->is_uartdm)
+-	if (uport->type != PORT_UNKNOWN)
++	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
+ 		uport->ops->break_ctl(uport, break_state);
+ 	ret = 0;
+ out:
 
 
