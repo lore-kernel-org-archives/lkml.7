@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AB9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC07C208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060B12073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079115;
-	bh=o+OfEXRo/CR/7nckr17Av4sSDFLQaNkT8OLm8QIYyaY=;
+	s=default; t=1576079118;
+	bh=T4EooRhKtBil5rWh1xTbhaj84r+8wFe+9wG1MwmvJD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgFpUOYtXXMzu2uqH+m6q1myYfCOAN8tpglJxjsRv9t2XO9d4QiNSWTRuDYoyO2jU
-	 41d9lbtP1Iktv1BYBfTn1ADvxj7sYhrkLSsLALs98bj+M8pKaCdllMr0p+UbY0RVGf
-	 CLwkll6brxxCWhF+j6GL4gL34cAZwH4nimSiPXEo=
+	b=Ft2yXT+K1fnWgEgZWOM7gjUPBDkO8YwlTgf5sgh6jO/9DRJGT1vYMlEpgTRYiAiaB
+	 RSfuE+qVhjp3yGPiw91WaVV4QohV3Xdgy7CY3i+8R9f7GYfgruU6GHtOVegUSdfYCP
+	 bNSyDt3bC/cC19RaZmp4LmuI/QrrRKFue4zBHLA4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbfLKP1L (ORCPT
+        id S2388555AbfLKPpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60618 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732726AbfLKP1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:02 -0500
+        id S1733257AbfLKP1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D54E424658;
-        Wed, 11 Dec 2019 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 341242173E;
+        Wed, 11 Dec 2019 15:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078021;
-        bh=o+OfEXRo/CR/7nckr17Av4sSDFLQaNkT8OLm8QIYyaY=;
+        s=default; t=1576078030;
+        bh=T4EooRhKtBil5rWh1xTbhaj84r+8wFe+9wG1MwmvJD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBHtWxA0WYuVFEhqqqIxl4hhLao6Wza0vgKn1jiaaj8SZBA0gjNfd2cyw0ZnaTsM1
-         6upFCMWfWFV+eihvtjvL18pttR0eCjIRY17N2ZqGFSWh1+YPsHU3MClGyQvCWeoHRb
-         d31s7bG8636ld8uaVbiqIUcvB1fxKe3HCQb4DsVE=
+        b=mOr1mMG+Aw0x7kU2cmQWDHQnAyOK0xttXI9AkQj13FFMuHmOn5ePyc23dRbnsveWB
+         H6rGQ0VCUMQN2YSBqURO4t4iklpFVGATXS4RtlqIYH3XzysKBAwawZ+VNn+ZW1l9KK
+         3EY+UVC5ge/ZnmITHu7oq0bZvoutiR3bbv6Gx7nc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 16/79] dma-debug: add a schedule point in debug_dma_dump_mappings()
-Date:   Wed, 11 Dec 2019 10:25:40 -0500
-Message-Id: <20191211152643.23056-16-sashal@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 25/79] jbd2: Fix statistics for the number of logged blocks
+Date:   Wed, 11 Dec 2019 10:25:49 -0500
+Message-Id: <20191211152643.23056-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -61,43 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
+[ Upstream commit 015c6033068208d6227612c878877919f3fcf6b6 ]
 
-debug_dma_dump_mappings() can take a lot of cpu cycles :
+jbd2 statistics counting number of blocks logged in a transaction was
+wrong. It didn't count the commit block and more importantly it didn't
+count revoke descriptor blocks. Make sure these get properly counted.
 
-lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
-163435 /sys/kernel/debug/dma-api/dump
-
-real	0m0.463s
-user	0m0.003s
-sys	0m0.459s
-
-Let's add a cond_resched() to avoid holding cpu for too long.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Corentin Labbe <clabbe@baylibre.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-13-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/debug.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/jbd2/commit.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index c007d25bee098..3a2397444076e 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -442,6 +442,7 @@ void debug_dma_dump_mappings(struct device *dev)
- 		}
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 24f86ffe11d74..020bd7a0d8e03 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -724,7 +724,6 @@ start_journal_io:
+ 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
+ 			}
+ 			cond_resched();
+-			stats.run.rs_blocks_logged += bufs;
  
- 		spin_unlock_irqrestore(&bucket->lock, flags);
-+		cond_resched();
+ 			/* Force a new descriptor to be generated next
+                            time round the loop. */
+@@ -811,6 +810,7 @@ start_journal_io:
+ 		if (unlikely(!buffer_uptodate(bh)))
+ 			err = -EIO;
+ 		jbd2_unfile_log_bh(bh);
++		stats.run.rs_blocks_logged++;
+ 
+ 		/*
+ 		 * The list contains temporary buffer heads created by
+@@ -856,6 +856,7 @@ start_journal_io:
+ 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
+ 		clear_buffer_jwrite(bh);
+ 		jbd2_unfile_log_bh(bh);
++		stats.run.rs_blocks_logged++;
+ 		__brelse(bh);		/* One for getblk */
+ 		/* AKPM: bforget here */
  	}
- }
- 
+@@ -877,6 +878,7 @@ start_journal_io:
+ 	}
+ 	if (cbh)
+ 		err = journal_wait_on_commit_record(journal, cbh);
++	stats.run.rs_blocks_logged++;
+ 	if (jbd2_has_feature_async_commit(journal) &&
+ 	    journal->j_flags & JBD2_BARRIER) {
+ 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
 -- 
 2.20.1
 
