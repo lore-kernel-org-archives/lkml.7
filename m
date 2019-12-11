@@ -2,136 +2,162 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683E7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706E8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1E821655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F63220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Gu0wgLpK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROptf8hF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfLKXxZ (ORCPT
+        id S1727238AbfLKXz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:53:25 -0500
-Received: from mout.web.de ([217.72.192.78]:57387 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfLKXxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:53:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576108391;
-        bh=4up7UPdrXKf7f4RHv1AgVYW/yVkK9as9YFQa80qMoKU=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Gu0wgLpKWDiMw/KjGhRNXZ9fgdBWNCo60e8XriKrwIng+KPeNqpb/kEhnfL61n8xU
-         y5uala2/lTNOlXb13l0+YYMpnYRQXNnxT+eF5/UJuF6VzvntIVODJG/yru99dgUhdx
-         grgsKlgO5zws0iRjvX+lUFlh/JJwtKWBbhs5reT0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from localhost.localdomain ([89.204.139.166]) by smtp.web.de
- (mrweb101 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0M5fsK-1hm9Ms2iPg-00xdVy; Thu, 12 Dec 2019 00:53:10 +0100
-From:   Soeren Moch <smoch@web.de>
-To:     Kalle Valo <kvalo@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>
-Cc:     Soeren Moch <smoch@web.de>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/9] brcmfmac: fix rambase for 4359/9
-Date:   Thu, 12 Dec 2019 00:52:47 +0100
-Message-Id: <20191211235253.2539-4-smoch@web.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211235253.2539-1-smoch@web.de>
-References: <20191211235253.2539-1-smoch@web.de>
+        Wed, 11 Dec 2019 18:55:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23308 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727101AbfLKXz2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:55:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576108527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G4wpjlektt4yYwx0w6/RAR7IM+7TmJ4/Z5bpkn88zOE=;
+        b=ROptf8hFmOKBRJEJx7CCLHjFVmBR33iu16v8Xv94hju97rt3MRCo4nsjedPYGlY2h7PJgJ
+        lL3s5yR+p1qnmXtevaqvejns3JrldDkNIldC9QRHoabZPEpy2RaBMkQPDWY1XFV4NrlxgS
+        LwSagZjwRQ9MAPBxPZ2rrQNVRkLTs1o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-OEuByi8_M2i7AF-ZGDEvmQ-1; Wed, 11 Dec 2019 18:55:26 -0500
+X-MC-Unique: OEuByi8_M2i7AF-ZGDEvmQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33EEEDB6B;
+        Wed, 11 Dec 2019 23:55:24 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-116-36.phx2.redhat.com [10.3.116.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 727E210013A1;
+        Wed, 11 Dec 2019 23:55:05 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Bundy <christianbundy@fraction.io>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
+Date:   Wed, 11 Dec 2019 16:54:55 -0700
+Message-Id: <20191211235455.24424-1-jsnitsel@redhat.com>
+In-Reply-To: <20191211231758.22263-1-jsnitsel@redhat.com>
+References: <20191211231758.22263-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:J+qJb/2Nw7OkPT3SxGUR8foewlU/Godf2lJr2WJR7yAVKyzHMHD
- qqJRwEwFwDhjVM4go/USRgAOn7yIJ7hgH0ExeEB8svnzBOJMvZm9v/oljINQkZksxz9yNOA
- nZNEOx3OYiAWZsAF9XCEJRfKHyQj1eGGSJYFqKM4drCj450VoEt1a3CZfYDmSsgUY/TjIq9
- kDe/TDllVqMrz07yDQuvA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eZTTKvKqCQQ=:6Ufks9S8uTxW4FlPFgpy0Q
- 71OY5XEmQ3puqHczlBr9G3y68a7jVmC4MRrtYw/khbu/oi4xTOfBxnEuLUSNqWDo5NuVfk6YQ
- WapEexeYcScN7aZ1zXFZbAu1f7Z7M4qtsmXLA6jGSufrsxzQfVP3IN1pf3GaPnizWcWf/bNIj
- O4Gh2od3tRllFMrzAJdr8VKhEJMr2Ct1LUDHAzGpmpxDF3l68Ma2mGBWlo0wvsOitYg04hQal
- mO8Eo9Rt9R1xJyzlXy/2jXuQ1/jDClhLabD+H4vfdQUJinP2q5mmcYFYQwq1EqczeTe71+v6+
- k4z9DtxSPIgIGV2ONgBvabwQz3Vw/fpTi22AkUNPF3f6FqsafoDnyMVBPfkQC99sjZ7TEAhHZ
- VUNXg92gOV7gPf8vWr8Kv6y/szKOGKrnYTDqPN2DVdrE4uSwNUTSxE/Hz11G+iAtBhVew+wH6
- I1sgG0LtAVJ+nN18k5MePHtETVFCploNouuXpHmwfChr55+hQG1KbUPh2vQdp7dvJtCiLjzGv
- kXsh0eKa3Sdv11WGjk4jads0yY5UjX9LYzYVJ+P4Kcn6i/0yhRVIYpY1b7J/QsENZy1TOr/XW
- VNiHhyOYcy7SzHKPMbtVaQF4W0V/377BbepKwymrnartfDkj9XPp/W62Hp9wG+hMKwigsg3Sb
- ifpkVeyAMdTzFM5xL+EgqNgKXkW/AsS+pa7dPhrINbc1vsd9gVCSk7pNPAh0JSGogpsic3+i8
- VKiKUU7PunL1Lpji2UjNO6nt9vgFFkPbD981hlsERwu2nxMtAfydLD6YhcP8qR5rHqB7eYeyV
- JJX3v7lJfobutiPHvkc1n9f9ePG1U0pU8LNfQ8f6CY93mp3RZEuM+wuyLDoMxncbmz7mhXStd
- ru1xsPWf+ZgsEnGCFQL+aH7X0JgJjXDPVg6x3vc0Zbr4WJw2MMqfC7qsFscAx7sqoyfMPPn06
- Nil6mLEGhUEM/W6x1H43WXV9MBqFoN6p+FWFm0N/MyfAeE+PqKqKL1CH75ZtoZ6LYDbQFFqq9
- 9zSDIiIkd9pWD7Nsbr4Qu2MzWw0a0YIQXBXDh2btzsroEe34y0fvhfHrsdeeuIk8nHdlRsKx5
- cHHk+V8QTPrsRo4NowK3YbQDhTB+mNQo2qu7m7l9MWj+m5Jbm7LJyS7+jDLP4KJaDER5YPpCV
- I5QlQfPw7W77CbOXYX/IbQEl1hswoCQ0UwhOKTml+ue5HgLic42YIXpinn1+Sdh/oCLZdFPsM
- ayYpBwmhI8hqkatdtbKb/ugFIcs9ed3ldOf+M2Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer 4359 chip revisions need a different rambase address.
-This fixes firmware download on such devices which fails otherwise.
+Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
+issuing commands to the tpm during initialization, just reserve the
+chip after wait_startup, and release it when we are ready to call
+tpm_chip_register.
 
-Signed-off-by: Soeren Moch <smoch@web.de>
-=2D--
-changes in v2: none
+Cc: Christian Bundy <christianbundy@fraction.io>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Cc: linux-integrity@vger.kernel.org
+Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit=
+()")
+Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's"=
+)
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+---
+v2: Fix integrity list address and add 5b359c7c4372 to fixes
 
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc: Franky Lin <franky.lin@broadcom.com>
-Cc: Hante Meuleman <hante.meuleman@broadcom.com>
-Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Cc: Wright Feng <wright.feng@cypress.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: brcm80211-dev-list.pdl@broadcom.com
-Cc: brcm80211-dev-list@cypress.com
-Cc: netdev@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-=2D--
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/char/tpm/tpm_tis_core.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/dri=
-vers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-index 0b5fbe5d8270..baf72e3984fc 100644
-=2D-- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-@@ -712,7 +712,6 @@ static u32 brcmf_chip_tcm_rambase(struct brcmf_chip_pr=
-iv *ci)
- 	case BRCM_CC_43569_CHIP_ID:
- 	case BRCM_CC_43570_CHIP_ID:
- 	case BRCM_CC_4358_CHIP_ID:
--	case BRCM_CC_4359_CHIP_ID:
- 	case BRCM_CC_43602_CHIP_ID:
- 	case BRCM_CC_4371_CHIP_ID:
- 		return 0x180000;
-@@ -722,6 +721,8 @@ static u32 brcmf_chip_tcm_rambase(struct brcmf_chip_pr=
-iv *ci)
- 	case BRCM_CC_4366_CHIP_ID:
- 	case BRCM_CC_43664_CHIP_ID:
- 		return 0x200000;
-+	case BRCM_CC_4359_CHIP_ID:
-+		return (ci->pub.chiprev < 9) ? 0x180000 : 0x160000;
- 	case CY_CC_4373_CHIP_ID:
- 		return 0x160000;
- 	default:
-=2D-
-2.17.1
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
+ore.c
+index 8af2cee1a762..308756d278b3 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -978,13 +978,13 @@ int tpm_tis_core_init(struct device *dev, struct tp=
+m_tis_data *priv, int irq,
+=20
+ 	if (wait_startup(chip, 0) !=3D 0) {
+ 		rc =3D -ENODEV;
+-		goto out_err;
++		goto out_start;
+ 	}
+=20
+ 	/* Take control of the TPM's interrupt hardware and shut it off */
+ 	rc =3D tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
+ 	if (rc < 0)
+-		goto out_err;
++		goto out_start;
+=20
+ 	intmask |=3D TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
+ 		   TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
+@@ -993,9 +993,8 @@ int tpm_tis_core_init(struct device *dev, struct tpm_=
+tis_data *priv, int irq,
+=20
+ 	rc =3D tpm_chip_start(chip);
+ 	if (rc)
+-		goto out_err;
++		goto out_start;
+ 	rc =3D tpm2_probe(chip);
+-	tpm_chip_stop(chip);
+ 	if (rc)
+ 		goto out_err;
+=20
+@@ -1059,7 +1058,6 @@ int tpm_tis_core_init(struct device *dev, struct tp=
+m_tis_data *priv, int irq,
+ 			goto out_err;
+ 		}
+=20
+-		tpm_chip_start(chip);
+ 		chip->flags |=3D TPM_CHIP_FLAG_IRQ;
+ 		if (irq) {
+ 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
+@@ -1070,18 +1068,17 @@ int tpm_tis_core_init(struct device *dev, struct =
+tpm_tis_data *priv, int irq,
+ 		} else {
+ 			tpm_tis_probe_irq(chip, intmask);
+ 		}
+-		tpm_chip_stop(chip);
+ 	}
++	tpm_chip_stop(chip);
+=20
+ 	rc =3D tpm_chip_register(chip);
+ 	if (rc)
+-		goto out_err;
+-
+-	if (chip->ops->clk_enable !=3D NULL)
+-		chip->ops->clk_enable(chip, false);
++		goto out_start;
+=20
+ 	return 0;
+ out_err:
++	tpm_chip_stop(chip);
++out_start:
+ 	if ((chip->ops !=3D NULL) && (chip->ops->clk_enable !=3D NULL))
+ 		chip->ops->clk_enable(chip, false);
+=20
+--=20
+2.24.0
 
