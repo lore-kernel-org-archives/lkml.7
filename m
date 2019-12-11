@@ -2,174 +2,92 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC80C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D86C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54934214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C886D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080068;
-	bh=QzZyIlv3e+f0yiiUgnn5LfILedViL6/F9hkS/D/ZS0E=;
+	s=default; t=1576080073;
+	bh=m2FDG6Fw3Fq/ydclieVj27dDUEt6I8X68OhLjNVJiCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CpgVEPg5mV8idc0apMOte4ReFwpqx2iVMNZApzScX+OtXHZZVZCggkJt51EGI4aWj
-	 XnsBZ9rmEtBNK1Hcn9EWzgnq90TYqoKle8EnvHm4NYIm43W9APdRP1p/BoEARhc9Mh
-	 MymANnMijRwN0HZaX71s6jxNtiRqoVnkXPXtSGk0=
+	b=fb4YrAnv9RRU+JZrtCkj7zYHwbsS8ySEyX/xJGRibGoB2mQmU04Bvn8VLvSUekP6z
+	 lwhecKTxZpN638tEyOUw7Zo5DKZ5ueeLFe6z/7shdJZlB+GPlq+XSWfcAMnZ+a3ci3
+	 IHnsyuayWotkPrKkPRO2wFAbMiABFhX6ro2OfyaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387490AbfLKQBH (ORCPT
+        id S2387646AbfLKQBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:01:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37362 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:01:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731453AbfLKPNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:37 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731454AbfLKPNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD7CD24658;
-        Wed, 11 Dec 2019 15:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744F824654;
+        Wed, 11 Dec 2019 15:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077215;
-        bh=QzZyIlv3e+f0yiiUgnn5LfILedViL6/F9hkS/D/ZS0E=;
+        bh=m2FDG6Fw3Fq/ydclieVj27dDUEt6I8X68OhLjNVJiCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sp2Mk/PEHveU86AgPk/5/dRMmQdBSNXnLSnf1AL0/58zYpjXmarM4TInFomt+rKxY
-         riW1G4p1jr0yGRtT0YdtWtpCzt8F96zqOjESwlbW7ja5dyHdl/eTF/pUux3rrzBC2P
-         LpcukhZjLwOki6ZGZ36PHoG6azvyzlza8mioSv1M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Can Guo <cang@codeaurora.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 096/134] scsi: ufs: Fix up auto hibern8 enablement
-Date:   Wed, 11 Dec 2019 10:11:12 -0500
-Message-Id: <20191211151150.19073-96-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=UCoPruJgKoEp9nLMi+lKgQUFDe0dbpjX3jCmmTOyKpMty0QJiacVKGEt7MTFa3lDs
+         FIlyl521A26LOA+2I1+I7+ADfq118+055ss4tAFwFqOyamr/OYW3MfL/oJ9pggBM9P
+         GWqOn96lp8krYk1ERde9EK9KdM1AgO02Gsuusk4c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.3 061/105] media: rc: mark input device as pointing stick
+Date:   Wed, 11 Dec 2019 16:05:50 +0100
+Message-Id: <20191211150245.940231429@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Can Guo <cang@codeaurora.org>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit 71d848b8d97ec0f8e993d63cf9de6ac8b3f7c43d ]
+commit ce819649b03d932dc19b0cb6be513779bf64fad3 upstream.
 
-Fix up possible unclocked register access to auto hibern8 register in
-resume path and through sysfs entry. Meanwhile, enable auto hibern8 only
-after device is fully initialized in probe path.
+libinput refuses pointer movement from rc-core, since it believes it's not
+a pointer-type device:
 
-Link: https://lore.kernel.org/r/1573798172-20534-4-git-send-email-cang@codeaurora.org
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+libinput error: event17 - Media Center Ed. eHome Infrared Remote Transceiver (1784:0008): libinput bug: REL_X/Y from a non-pointer device
+
+Fixes: 158bc148a31e ("media: rc: mce_kbd: input events via rc-core's input device")
+Fixes: 0ac5a603a732 ("media: rc: imon: report mouse events using rc-core's input device")
+Cc: stable@vger.kernel.org # 4.20+
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/ufs/ufs-sysfs.c | 15 +++++++++------
- drivers/scsi/ufs/ufshcd.c    | 14 +++++++-------
- drivers/scsi/ufs/ufshcd.h    |  2 ++
- 3 files changed, 18 insertions(+), 13 deletions(-)
+ drivers/media/rc/rc-main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-index 969a36b15897b..ad2abc96c0f19 100644
---- a/drivers/scsi/ufs/ufs-sysfs.c
-+++ b/drivers/scsi/ufs/ufs-sysfs.c
-@@ -126,13 +126,16 @@ static void ufshcd_auto_hibern8_update(struct ufs_hba *hba, u32 ahit)
- 		return;
+--- a/drivers/media/rc/rc-main.c
++++ b/drivers/media/rc/rc-main.c
+@@ -1773,6 +1773,7 @@ static int rc_prepare_rx_device(struct r
+ 	set_bit(MSC_SCAN, dev->input_dev->mscbit);
  
- 	spin_lock_irqsave(hba->host->host_lock, flags);
--	if (hba->ahit == ahit)
--		goto out_unlock;
--	hba->ahit = ahit;
--	if (!pm_runtime_suspended(hba->dev))
--		ufshcd_writel(hba, hba->ahit, REG_AUTO_HIBERNATE_IDLE_TIMER);
--out_unlock:
-+	if (hba->ahit != ahit)
-+		hba->ahit = ahit;
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
-+	if (!pm_runtime_suspended(hba->dev)) {
-+		pm_runtime_get_sync(hba->dev);
-+		ufshcd_hold(hba, false);
-+		ufshcd_auto_hibern8_enable(hba);
-+		ufshcd_release(hba);
-+		pm_runtime_put(hba->dev);
-+	}
- }
- 
- /* Convert Auto-Hibernate Idle Timer register value to microseconds */
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 0036dcffc4a90..25a6a25b17a28 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3950,7 +3950,7 @@ static int ufshcd_uic_hibern8_exit(struct ufs_hba *hba)
- 	return ret;
- }
- 
--static void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
-+void ufshcd_auto_hibern8_enable(struct ufs_hba *hba)
- {
- 	unsigned long flags;
- 
-@@ -6890,9 +6890,6 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 	/* UniPro link is active now */
- 	ufshcd_set_link_active(hba);
- 
--	/* Enable Auto-Hibernate if configured */
--	ufshcd_auto_hibern8_enable(hba);
--
- 	ret = ufshcd_verify_dev_init(hba);
- 	if (ret)
- 		goto out;
-@@ -6943,6 +6940,9 @@ static int ufshcd_probe_hba(struct ufs_hba *hba)
- 	/* set the state as operational after switching to desired gear */
- 	hba->ufshcd_state = UFSHCD_STATE_OPERATIONAL;
- 
-+	/* Enable Auto-Hibernate if configured */
-+	ufshcd_auto_hibern8_enable(hba);
-+
- 	/*
- 	 * If we are in error handling context or in power management callbacks
- 	 * context, no need to scan the host
-@@ -7959,12 +7959,12 @@ static int ufshcd_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- 	if (hba->clk_scaling.is_allowed)
- 		ufshcd_resume_clkscaling(hba);
- 
--	/* Schedule clock gating in case of no access to UFS device yet */
--	ufshcd_release(hba);
--
- 	/* Enable Auto-Hibernate if configured */
- 	ufshcd_auto_hibern8_enable(hba);
- 
-+	/* Schedule clock gating in case of no access to UFS device yet */
-+	ufshcd_release(hba);
-+
- 	goto out;
- 
- set_old_link_state:
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index c94cfda528290..52c9676a12425 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -916,6 +916,8 @@ int ufshcd_query_attr(struct ufs_hba *hba, enum query_opcode opcode,
- int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
- 	enum flag_idn idn, bool *flag_res);
- 
-+void ufshcd_auto_hibern8_enable(struct ufs_hba *hba);
-+
- #define SD_ASCII_STD true
- #define SD_RAW false
- int ufshcd_read_string_desc(struct ufs_hba *hba, u8 desc_index,
--- 
-2.20.1
+ 	/* Pointer/mouse events */
++	set_bit(INPUT_PROP_POINTING_STICK, dev->input_dev->propbit);
+ 	set_bit(EV_REL, dev->input_dev->evbit);
+ 	set_bit(REL_X, dev->input_dev->relbit);
+ 	set_bit(REL_Y, dev->input_dev->relbit);
+
 
