@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC97C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1293C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E2D22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C819E22527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078816;
-	bh=XAlmk93Kl6MODzxZ/JUg0dDVy2/6qw2U8APbTx7Z2zU=;
+	s=default; t=1576078820;
+	bh=Tx5MCI3Qql+KbrRHjeZLJvrry2OrUVUoaWFEF2fGWfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aJtl7G1AjhoYheDoUv9w2mER7+AYBg+vjOHmHWLBqAJeNzDYfTv4nekSmz9x7Okrf
-	 ir6WovAtsqtLYTTM2Rils9qyN58yiir29Nrdb+ofVk6nYy91L391aJDH0CSIkspsae
-	 T3B1R6L+hzpVyA4SVI660w9thq2CQ+69gBVxPsR0=
+	b=PzOaOBNeb3TqvO7JezztIVmeduj5ZTrA9kpcc+jGO65Z5g3E3rU1xhw7JyLaf7gk7
+	 AOk/gWatbfHeLGV0L5LxaGyi7D5OtAFCHrXHYzzzMQSJSKU26WOew+V/zqVDoz8Zdl
+	 k/kqlI91G2p49JWDXaO8WRORbjd0GNK08WEB6Hvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388595AbfLKPkP (ORCPT
+        id S2388432AbfLKPia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48966 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388434AbfLKPib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:31 -0500
+        id S2388354AbfLKPiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F198524656;
-        Wed, 11 Dec 2019 15:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF39F222C4;
+        Wed, 11 Dec 2019 15:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078710;
-        bh=XAlmk93Kl6MODzxZ/JUg0dDVy2/6qw2U8APbTx7Z2zU=;
+        s=default; t=1576078704;
+        bh=Tx5MCI3Qql+KbrRHjeZLJvrry2OrUVUoaWFEF2fGWfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i++ElNI3omGOgCjkQ8P6bznUZGCi68ksI6asSyyLjtBap/fpr0I1AqjXQ874vSTxV
-         yrSM5GqevGYoerLvluiQdpvcXZZqtu18w2m6j7pFgL6t+ZjQfbLt/WNXEKry4fMZgX
-         UOx80aIvTVz2Zlbrw7bW3VHLwxrA/0OyMmyVAIng=
+        b=btcPxN1CD6764T50K7YNilo1CebHuzT0DqXH6pi8QfezJ4Fqwuy0sVFgK/bj96H34
+         a7WD2qe8n+QUaopsxkG/22AnIRGCfRDy+XShGnnTie+gmEX6dGygQgHUSG6uv7eRJk
+         qLwWuAfHJqrzDoI+TNLtD2o3CKcNQ+fMW26EmGGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@linux-mips.org
-Subject: [PATCH AUTOSEL 4.4 16/37] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date:   Wed, 11 Dec 2019 10:37:52 -0500
-Message-Id: <20191211153813.24126-16-sashal@kernel.org>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/37] clocksource/drivers/asm9260: Add a check for of_clk_get
+Date:   Wed, 11 Dec 2019 10:37:46 -0500
+Message-Id: <20191211153813.24126-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -59,36 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
+[ Upstream commit 6e001f6a4cc73cd06fc7b8c633bc4906c33dd8ad ]
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+asm9260_timer_init misses a check for of_clk_get.
+Add a check for it and print errors like other clocksource drivers.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20191016124330.22211-1-hslester96@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
+ drivers/clocksource/asm9260_timer.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 6fb34bf0f3527..34e13623f29d7 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -283,6 +283,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
+diff --git a/drivers/clocksource/asm9260_timer.c b/drivers/clocksource/asm9260_timer.c
+index 217438d39eb36..38a28240f84fa 100644
+--- a/drivers/clocksource/asm9260_timer.c
++++ b/drivers/clocksource/asm9260_timer.c
+@@ -196,6 +196,10 @@ static void __init asm9260_timer_init(struct device_node *np)
+ 		panic("%s: unable to map resource", np->name);
  
+ 	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		pr_err("Failed to get clk!\n");
++		return PTR_ERR(clk);
++	}
+ 
+ 	ret = clk_prepare_enable(clk);
+ 	if (ret)
 -- 
 2.20.1
 
