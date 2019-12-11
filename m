@@ -2,122 +2,121 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905ABC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9C6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719E72073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1043F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:46:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkDYur5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733295AbfLKPql (ORCPT
+        id S2387484AbfLKPqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:46:41 -0500
-Received: from mga03.intel.com ([134.134.136.65]:39228 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732678AbfLKPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:46:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 07:46:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="414898225"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 11 Dec 2019 07:46:37 -0800
-Date:   Wed, 11 Dec 2019 07:46:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/6] KVM: Fix some comment typos and missing parentheses
-Message-ID: <20191211154637.GA5044@linux.intel.com>
-References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
- <1576045585-8536-4-git-send-email-linmiaohe@huawei.com>
+        Wed, 11 Dec 2019 10:46:45 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42060 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733015AbfLKPqi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:46:38 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y19so17034496lfl.9;
+        Wed, 11 Dec 2019 07:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Hb49b1TTgt6OexHutblEuNW1wSf9d52k2K2OJyi3uuU=;
+        b=PkDYur5uKLoW9VhvC2aZGxAYkKOERHduE37OR7NaumcyTiSKtWlWnL0YhAPocF4gyW
+         i/2Ma5FcnPrB9FHWe3iICD5xAY3QajO+jJbaVQH6KWtwutz8e9PQj5v0KAyH2cpvEZmG
+         wSdlkeBQXijgqdUDXTVJmK81fJ9UGojdfW+++x+d7hsPy+uaKYFYjdTM5X0ql9xutYaT
+         7JcsaOhLlylyP4SqXdy3Kx05UKW323rSrU8cWgU/xU+MPxyIin2Qq/7wxNN/tmEfhfKo
+         wIz0CBYRJgoEliIMaZmtHcB/2GJ+86fimeFGh2DjuJVshD2g2NT7hPjvo5bGyFv7wH5I
+         kNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Hb49b1TTgt6OexHutblEuNW1wSf9d52k2K2OJyi3uuU=;
+        b=fzmGHuonwjDtWGtc8fOggXuzriJXy6bCYJ2bkx+EGXddVNhXZvXyTc3WlOKaatR5bT
+         YrN7KqU0aWycsIguwp1Io+X+3Ufx0Dwx0dTC3J+4VYvyXzCc0s67AnJFBSK0HRaNDnz+
+         OP+zgxzfxYHMxcpYmNmHWIW1WpHNfN9/lcsqoSAO/MDJaT6MpHYc+6F1JfHy7j255k1q
+         n2miyR/hqWoyS+gGWjBb1xNcKQyoAw/fgh98k9FnbNl0bDzLI5ubM7wZX9RWsS9OPEhB
+         p2xI/YREhD+12cmE3OFlj7QaQhI3MOgHRSpHByhwVdpjCJQaebCC+/yR6zoJF+xGKjv4
+         xUlw==
+X-Gm-Message-State: APjAAAX4LQbEicAwEYH6qHuk8cOAjVDxjAx5ZrZdTIrxpeNt7m/HPv+e
+        ZzF65briUAZwFTZEkwzDhz0IY8+/
+X-Google-Smtp-Source: APXvYqy67rQ6NDMYoPXkX1ni2G1d870R9UN7KWCu2PvsM+xokjKjbXFrB2RpHDe1scGGslddP6CKJg==
+X-Received: by 2002:ac2:4909:: with SMTP id n9mr2693030lfi.21.1576079195882;
+        Wed, 11 Dec 2019 07:46:35 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e12sm1403826ljj.17.2019.12.11.07.46.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 07:46:35 -0800 (PST)
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191210014011.21987-1-digetx@gmail.com>
+ <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com>
+Date:   Wed, 11 Dec 2019 18:46:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576045585-8536-4-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 02:26:22PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> Fix some typos and add missing parentheses in the comments.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  arch/x86/kvm/hyperv.c     | 2 +-
->  arch/x86/kvm/lapic.c      | 2 +-
->  arch/x86/kvm/vmx/nested.c | 2 +-
->  arch/x86/kvm/vmx/vmx.c    | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index c7d4640b7b1c..a48d5708f1f8 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1122,7 +1122,7 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
->  			return 1;
->  
->  		/*
-> -		 * Clear apic_assist portion of f(struct hv_vp_assist_page
-> +		 * Clear apic_assist portion of struct hv_vp_assist_page
->  		 * only, there can be valuable data in the rest which needs
->  		 * to be preserved e.g. on migration.
->  		 */
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 679692b55f6d..ea402e741bd5 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -969,7 +969,7 @@ bool kvm_irq_delivery_to_apic_fast(struct kvm *kvm, struct kvm_lapic *src,
->   * - For single-destination interrupts, handle it in posted mode
->   * - Else if vector hashing is enabled and it is a lowest-priority
->   *   interrupt, handle it in posted mode and use the following mechanism
-> - *   to find the destinaiton vCPU.
-> + *   to find the destination vCPU.
->   *	1. For lowest-priority interrupts, store all the possible
->   *	   destination vCPUs in an array.
->   *	2. Use "guest vector % max number of destination vCPUs" to find
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 7b01ef1d87e6..63ab49de324d 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -3427,7 +3427,7 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
->  
->  /*
->   * On a nested exit from L2 to L1, vmcs12.guest_cr0 might not be up-to-date
-> - * because L2 may have changed some cr0 bits directly (CRO_GUEST_HOST_MASK).
-> + * because L2 may have changed some cr0 bits directly (CR0_GUEST_HOST_MASK).
+Hello Ulf,
 
-Holy cow this one is hard to see :-)
-
->   * This function returns the new value we should put in vmcs12.guest_cr0.
->   * It's not enough to just return the vmcs02 GUEST_CR0. Rather,
->   *  1. Bits that neither L0 nor L1 trapped, were set directly by L2 and are now
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index bf24fbb2056c..1be3854f1090 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6720,7 +6720,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
->  	 * If PML is turned on, failure on enabling PML just results in failure
->  	 * of creating the vcpu, therefore we can simplify PML logic (by
->  	 * avoiding dealing with cases, such as enabling PML partially on vcpus
-> -	 * for the guest, etc.
-> +	 * for the guest), etc.
->  	 */
->  	if (enable_pml) {
->  		vmx->pml_pg = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> -- 
-> 2.19.1
+11.12.2019 11:11, Ulf Hansson пишет:
+> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+>> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+>> In a result high-speed mode isn't enabled for the WiFi card and this
+>> results in a malfunctioning SDIO communication.
 > 
+> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR_SPEED?
+
+Yes, the SDIO_SPEED_SHS bit is set.
+
+>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>>
+>> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+>> the problem, let's do the same in upstream.
+>>
+>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+>> which overrides card's info for the TI wl1251 WiFi.
+> 
+> This is a temporary solution and should be replaced by doing the DT
+> parsing during
+> 
+> So, yes, let's see if we can use a card quirk instead. That's the first option.
+> 
+> A second option is simply to parse the DT subnode for a new DT
+> property during mmc_sdio_init_card(). Along the lines of what we do
+> for the broken-hpi DT binding for eMMC.
+
+Let's try the first option. My understanding is that the problem affects
+only the specific model of the WiFi chip and it's not a board-specific
+problem. I'll add Broadcom driver people to CC for the next version of
+the patch, maybe they'll have something to say.
+
+[snip]
