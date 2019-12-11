@@ -2,122 +2,201 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E6FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAF7C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F3F208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vYZAFWNO"
+	by mail.kernel.org (Postfix) with ESMTP id EFF64208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078231;
+	bh=DoX+NmS/gL5a7fRBmvKXPAm5WByTsPoPrxnScA8So/I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q7D4SCqlRPc0VZRFmrXlTnOdzdTBjMdV0h36hVTkB07UFTEFXOZDRj6+dTVyeXt35
+	 wGNPvqbjQ4xBBhiCjMpZsw1bYRohAISMHBDz6sVTRZDDwaJg6EauIyOTAOtLgoxvhh
+	 rtKrai4XYSe05zRNydXWs8J1d7auavjJ40352JrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387845AbfLKPa0 (ORCPT
+        id S2387411AbfLKP3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:30:26 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44181 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387557AbfLKPaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:30:20 -0500
-Received: by mail-qk1-f195.google.com with SMTP id w127so8156047qkb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:30:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7gIWTbNCIzJwL9xUV5DD3mPfI7Jx6t2VjpSZrx1r784=;
-        b=vYZAFWNOCXrTdUXacREX512Q1z9yDyARAcKw3YXP92ObelIWEgxEkn2uK5+eYh6Xll
-         5azZ2vZrN0W7AYcHJ5PPZ5Y16505hme4EKPIlf3c9Mb+FYPl4tYcg1rClPgoUB4Sn8DA
-         BG97fdDQW5BxlUQHf387cnIkiA0Miyi7c6ikFC7G/OQhXZP6AH6GzUd2nn0UTEapB5nU
-         7TTE+fCOftymUTuxRpLo5zDOFBu3hgMlWq+ScX8SMfmlJz63wIVNzw5ZjqI6zhbHFUbW
-         itdKSZzBzk3AvaRQc7NKT9Cjmu13FDnMEO2pnzNiEOztmPMOObrIJkKtkacVTrL/eJJR
-         p+pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7gIWTbNCIzJwL9xUV5DD3mPfI7Jx6t2VjpSZrx1r784=;
-        b=l7504RZ0DaaIJ5c3CvXxkBsiT75x3PE0kPqvYmThHupXLYgAXO5wWC7BWGC5iK9TVU
-         kuCDgBRkr9czm4DHVFhNPCtBAdbGTBHZZ9NPmYEGxFnkPIj0mvKi2cXcmycm7/xU83NW
-         MDH7bsHFBPOf8fq1z4mLzj9x2uHKdyU4CaWvXDoJfr3zUv+konDElKlSAbbTD/RNcHdE
-         VUKswA/hVUVGPMqNbI3JJxX7ERtuDDuEudSDmq5q8Bgybwq7quhe6d05Wf3n77F+IabD
-         WRZPjFcxEgXsGp5rD7DEbQhTL5wj0ciG6Hg1Dzo008EwyYMlWqbBHNSlvjkmn89sUOs7
-         3Cug==
-X-Gm-Message-State: APjAAAWt/+D68q7dyRjnWBPDdmNF8Dk8ShkyqXV8GS6qFXftXB1qCmq3
-        mszzKg759fg3oHonnsqVH/nTGX1/otXVZ2ugJV7q3w==
-X-Google-Smtp-Source: APXvYqzKhG7/NQuJEPIGWplJ6Qbn0BjctBewhELQS7qEq/VHgtqAruzctcA9KxpZaclkS1lWbstLjUi/z9EMJAeU+LA=
-X-Received: by 2002:ae9:eb48:: with SMTP id b69mr3401822qkg.43.1576078219045;
- Wed, 11 Dec 2019 07:30:19 -0800 (PST)
+        Wed, 11 Dec 2019 10:29:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36072 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733236AbfLKP3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:20 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D203E24654;
+        Wed, 11 Dec 2019 15:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078159;
+        bh=DoX+NmS/gL5a7fRBmvKXPAm5WByTsPoPrxnScA8So/I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pPztGNDAChUQDaHtlNKJ/yDfr/GnPkevGK30SqAxlFlrXTCS8nQ3IQC40jqGFLK7v
+         EMTTPozJ2hiOtKvyb3Belj2wOFc4SWHU0YibidBNKu3JgBSFkN73MNMpH3ZKwo52gb
+         ud1RFoqwWM9JiGcQKtypVrgCSjy5sYWxrRL1T7B8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Mike Christie <mchristi@redhat.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, open-iscsi@googlegroups.com
+Subject: [PATCH AUTOSEL 4.14 44/58] scsi: target: iscsi: Wait for all commands to finish before freeing a session
+Date:   Wed, 11 Dec 2019 10:28:17 -0500
+Message-Id: <20191211152831.23507-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <CAAeHK+wY+35uBvr0=FnKsWOj91QhXuVE++V7frn5AihAPLvo5Q@mail.gmail.com>
- <Pine.LNX.4.44L0.1912101508470.1647-100000@iolanthe.rowland.org> <CAAeHK+xTjUdP5D+DzRD-ZBd-8MmhWxT5n=CqO5u37FrEy6T-8Q@mail.gmail.com>
-In-Reply-To: <CAAeHK+xTjUdP5D+DzRD-ZBd-8MmhWxT5n=CqO5u37FrEy6T-8Q@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 11 Dec 2019 16:30:06 +0100
-Message-ID: <CACT4Y+ZSmwr4y2VrUxZSvFCL0Ws4cp6T5FwyVRg_CqhCf354HQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbvision_v4l2_open
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        syzbot <syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 3:23 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Tue, Dec 10, 2019 at 9:13 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Tue, 10 Dec 2019, Andrey Konovalov wrote:
-> >
-> > > On Tue, Dec 10, 2019 at 8:48 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > > > This looks like a race in v4l2_open(): The function drops the
-> > > > videodev_lock mutex before calling the video driver's open routine, and
-> > > > the device can be unregistered during the short time between.
-> > > >
-> > > > This patch tries to make the race much more likely to happen, for
-> > > > testing and verification.
-> > > >
-> > > > Andrey, will syzbot run the same test with this patch, even though it
-> > > > says it doesn't have a reproducer?
-> > >
-> > > Hi Alan,
-> > >
-> > > No, unfortunately there's nothing to run if there's no reproducer.
-> > > It's technically possible to run the same program log that triggered
-> > > the bug initially, but since the bug wasn't reproduced with this log
-> > > even without the patch, there isn't much sense in running it with the
-> > > patch applied.
-> >
-> > Actually it does make sense.  That bug was caused by a race, and the
-> > patch tries to make the race much more likely to happen, so the same
-> > test should fail again.
-> >
-> > But never mind; I'll try a different approach.  There's another syzbot
-> > bug report, one with a reproducer, and with this patch in place it
-> > should trigger the same race.  I'll try submitting it that way.
-> >
-> > By the way, do you know why syzbot sent _two_ reply messages?  One with
-> > message ID <00000000000031a0af05995eca0b@google.com> and the other with
-> > message ID <000000000000441a4205995eca11@google.com>?  It seems like
-> > overkill.
->
-> Hm, I'm not sure. Dmitry?
+From: Bart Van Assche <bvanassche@acm.org>
 
-I would assume it received 2 emails (second from syzkaller-bugs@
-mailing list) and deduplication logic did not work somehow. So it
-replied to both.
+[ Upstream commit e9d3009cb936bd0faf0719f68d98ad8afb1e613b ]
+
+The iSCSI target driver is the only target driver that does not wait for
+ongoing commands to finish before freeing a session. Make the iSCSI target
+driver wait for ongoing commands to finish before freeing a session. This
+patch fixes the following KASAN complaint:
+
+BUG: KASAN: use-after-free in __lock_acquire+0xb1a/0x2710
+Read of size 8 at addr ffff8881154eca70 by task kworker/0:2/247
+
+CPU: 0 PID: 247 Comm: kworker/0:2 Not tainted 5.4.0-rc1-dbg+ #6
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+Workqueue: target_completion target_complete_ok_work [target_core_mod]
+Call Trace:
+ dump_stack+0x8a/0xd6
+ print_address_description.constprop.0+0x40/0x60
+ __kasan_report.cold+0x1b/0x33
+ kasan_report+0x16/0x20
+ __asan_load8+0x58/0x90
+ __lock_acquire+0xb1a/0x2710
+ lock_acquire+0xd3/0x200
+ _raw_spin_lock_irqsave+0x43/0x60
+ target_release_cmd_kref+0x162/0x7f0 [target_core_mod]
+ target_put_sess_cmd+0x2e/0x40 [target_core_mod]
+ lio_check_stop_free+0x12/0x20 [iscsi_target_mod]
+ transport_cmd_check_stop_to_fabric+0xd8/0xe0 [target_core_mod]
+ target_complete_ok_work+0x1b0/0x790 [target_core_mod]
+ process_one_work+0x549/0xa40
+ worker_thread+0x7a/0x5d0
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Allocated by task 889:
+ save_stack+0x23/0x90
+ __kasan_kmalloc.constprop.0+0xcf/0xe0
+ kasan_slab_alloc+0x12/0x20
+ kmem_cache_alloc+0xf6/0x360
+ transport_alloc_session+0x29/0x80 [target_core_mod]
+ iscsi_target_login_thread+0xcd6/0x18f0 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+Freed by task 1025:
+ save_stack+0x23/0x90
+ __kasan_slab_free+0x13a/0x190
+ kasan_slab_free+0x12/0x20
+ kmem_cache_free+0x146/0x400
+ transport_free_session+0x179/0x2f0 [target_core_mod]
+ transport_deregister_session+0x130/0x180 [target_core_mod]
+ iscsit_close_session+0x12c/0x350 [iscsi_target_mod]
+ iscsit_logout_post_handler+0x136/0x380 [iscsi_target_mod]
+ iscsit_response_queue+0x8de/0xbe0 [iscsi_target_mod]
+ iscsi_target_tx_thread+0x27f/0x370 [iscsi_target_mod]
+ kthread+0x1bc/0x210
+ ret_from_fork+0x24/0x30
+
+The buggy address belongs to the object at ffff8881154ec9c0
+ which belongs to the cache se_sess_cache of size 352
+The buggy address is located 176 bytes inside of
+ 352-byte region [ffff8881154ec9c0, ffff8881154ecb20)
+The buggy address belongs to the page:
+page:ffffea0004553b00 refcount:1 mapcount:0 mapping:ffff888101755400 index:0x0 compound_mapcount: 0
+flags: 0x2fff000000010200(slab|head)
+raw: 2fff000000010200 dead000000000100 dead000000000122 ffff888101755400
+raw: 0000000000000000 0000000080130013 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881154ec900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881154ec980: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+>ffff8881154eca00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                             ^
+ ffff8881154eca80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881154ecb00: fb fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc
+
+Cc: Mike Christie <mchristi@redhat.com>
+Link: https://lore.kernel.org/r/20191113220508.198257-3-bvanassche@acm.org
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/iscsi/iscsi_target.c | 10 ++++++++--
+ include/scsi/iscsi_proto.h          |  1 +
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index fb7bd422e2e1f..21ce92ee16527 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -1158,7 +1158,9 @@ int iscsit_setup_scsi_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
+ 		hdr->cmdsn, be32_to_cpu(hdr->data_length), payload_length,
+ 		conn->cid);
+ 
+-	target_get_sess_cmd(&cmd->se_cmd, true);
++	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
++		return iscsit_add_reject_cmd(cmd,
++				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+ 
+ 	cmd->sense_reason = transport_lookup_cmd_lun(&cmd->se_cmd,
+ 						     scsilun_to_int(&hdr->lun));
+@@ -2004,7 +2006,9 @@ iscsit_handle_task_mgt_cmd(struct iscsi_conn *conn, struct iscsi_cmd *cmd,
+ 			      conn->sess->se_sess, 0, DMA_NONE,
+ 			      TCM_SIMPLE_TAG, cmd->sense_buffer + 2);
+ 
+-	target_get_sess_cmd(&cmd->se_cmd, true);
++	if (target_get_sess_cmd(&cmd->se_cmd, true) < 0)
++		return iscsit_add_reject_cmd(cmd,
++				ISCSI_REASON_WAITING_FOR_LOGOUT, buf);
+ 
+ 	/*
+ 	 * TASK_REASSIGN for ERL=2 / connection stays inside of
+@@ -4236,6 +4240,8 @@ int iscsit_close_connection(
+ 	 * must wait until they have completed.
+ 	 */
+ 	iscsit_check_conn_usage_count(conn);
++	target_sess_cmd_list_set_waiting(sess->se_sess);
++	target_wait_for_sess_cmds(sess->se_sess);
+ 
+ 	ahash_request_free(conn->conn_tx_hash);
+ 	if (conn->conn_rx_hash) {
+diff --git a/include/scsi/iscsi_proto.h b/include/scsi/iscsi_proto.h
+index df156f1d50b2d..f0a01a54bd153 100644
+--- a/include/scsi/iscsi_proto.h
++++ b/include/scsi/iscsi_proto.h
+@@ -638,6 +638,7 @@ struct iscsi_reject {
+ #define ISCSI_REASON_BOOKMARK_INVALID	9
+ #define ISCSI_REASON_BOOKMARK_NO_RESOURCES	10
+ #define ISCSI_REASON_NEGOTIATION_RESET	11
++#define ISCSI_REASON_WAITING_FOR_LOGOUT	12
+ 
+ /* Max. number of Key=Value pairs in a text message */
+ #define MAX_KEY_VALUE_PAIRS	8192
+-- 
+2.20.1
+
