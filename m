@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ECAC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E939724685
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784172467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077182;
-	bh=91iWh5fmI1a06yBOSNjXj8il8TOi4Ro8Y8i/EzjO7lA=;
+	s=default; t=1576077183;
+	bh=a4j3f4oI2h7jDrF7xEcDPyR0F0vYGjUi2/Tx+D7Uo84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfWdOBenHtg3Q7ALQuTQGglGIujbfOxq/rOVnETLH/3di6/neqzuH+XrYLsJ9X4OR
-	 RJxh30lRTZzLwHhIMkGA1xluqv50TEcN4RUZhGFs5MHI3yjonNrgh7QmWsdXMWgNYO
-	 2ps+yXDeom2vHSUM1mBqG2XlbHO72fIyE7ulNRkk=
+	b=CNKbIbCywnFWU/AyIpneQJ3lCKuQUK7+2HbGOGfo/0T2u2zps7JwIv74X4bDbIC74
+	 yL9Ffp2p/If3CVxj7e8uB2IGNlkhAJrSEsP+GVcR2Oi+D8lUOxLu61IFJYr5tj1z4u
+	 cMTMIV3/RvrRi1Lxvp+7vQdF+mtRJdlGjvyJkJe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731305AbfLKPNB (ORCPT
+        id S1731312AbfLKPNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34804 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbfLKPMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:43 -0500
+        id S1730850AbfLKPMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B1F20663;
-        Wed, 11 Dec 2019 15:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7281B24686;
+        Wed, 11 Dec 2019 15:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077162;
-        bh=91iWh5fmI1a06yBOSNjXj8il8TOi4Ro8Y8i/EzjO7lA=;
+        s=default; t=1576077169;
+        bh=a4j3f4oI2h7jDrF7xEcDPyR0F0vYGjUi2/Tx+D7Uo84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGGrDo5FbnSvVdMGO+eIOgRqfeXtjkOfJ+A0dAokOogkQzrn3FX70zpJgI+YqsWen
-         E8DfihFU/JzbHJr3itsBYgTPBEQDckJ3H+ns11GvtjR/yY0cay5wjBQVkdpWYLXefd
-         fAdDxhdX6WNsnt6qRiDG3Zr7g98YfK7Zb9oE+5Ds=
+        b=O9MPLrs51ZnJImuPWkJS/WvVt/kb18XR2SJ3UlwNlERGxhHebhbOGXs08yF6NgUi2
+         NuoQN/mUmK2uKEl5Nswhtxe6hUEujYqJRNVZGLaBEFnmXnYIBNt7mK5RVaNQPfe2jV
+         7MV8LXRA4ltjvO56S56fUFKLRiNiDSggyZd/Ue7k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 048/134] clk: qcom: smd: Add missing pnoc clock
-Date:   Wed, 11 Dec 2019 10:10:24 -0500
-Message-Id: <20191211151150.19073-48-sashal@kernel.org>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 054/134] dma-direct: check for overflows on 32 bit DMA addresses
+Date:   Wed, 11 Dec 2019 10:10:30 -0500
+Message-Id: <20191211151150.19073-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,52 +58,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit ba1d366de261981c0dd04fac44d2ce3a5eba2eaa ]
+[ Upstream commit b12d66278dd627cbe1ea7c000aa4715aaf8830c8 ]
 
-When MSM8998 support was added, and analysis was done to determine what
-clocks would be consumed.  That analysis had a flaw, which caused the
-pnoc to be skipped.  The pnoc clock needs to be on to access the uart
-for the console.  The clock is on from boot, but has no consumer votes
-in the RPM.  When we attempt to boot the modem, it causes the RPM to
-turn off pnoc, which kills our access to the console and causes CPU hangs.
+As seen on the new Raspberry Pi 4 and sta2x11's DMA implementation it is
+possible for a device configured with 32 bit DMA addresses and a partial
+DMA mapping located at the end of the address space to overflow. It
+happens when a higher physical address, not DMAable, is translated to
+it's DMA counterpart.
 
-We need pnoc to be defined, so that clk_smd_rpm_handoff() will put in
-an implicit vote for linux and prevent issues when booting modem.
-Hopefully pnoc can be consumed by the interconnect framework in future
-so that Linux can rely on explicit votes.
+For example the Raspberry Pi 4, configurable up to 4 GB of memory, has
+an interconnect capable of addressing the lower 1 GB of physical memory
+with a DMA offset of 0xc0000000. It transpires that, any attempt to
+translate physical addresses higher than the first GB will result in an
+overflow which dma_capable() can't detect as it only checks for
+addresses bigger then the maximum allowed DMA address.
 
-Fixes: 6131dc81211c ("clk: qcom: smd: Add support for MSM8998 rpm clocks")
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Link: https://lkml.kernel.org/r/20191107190615.5656-1-jeffrey.l.hugo@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fix this by verifying in dma_capable() if the DMA address range provided
+is at any point lower than the minimum possible DMA address on the bus.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-smd-rpm.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/dma-direct.h | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
-index fef5e81570614..930fa4a4c52a8 100644
---- a/drivers/clk/qcom/clk-smd-rpm.c
-+++ b/drivers/clk/qcom/clk-smd-rpm.c
-@@ -648,6 +648,7 @@ static const struct rpm_smd_clk_desc rpm_clk_qcs404 = {
- };
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index adf993a3bd580..6a18a97b76a87 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -3,8 +3,11 @@
+ #define _LINUX_DMA_DIRECT_H 1
  
- /* msm8998 */
-+DEFINE_CLK_SMD_RPM(msm8998, pcnoc_clk, pcnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 0);
- DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
- DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
- DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
-@@ -670,6 +671,8 @@ DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
- DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
- DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
- static struct clk_smd_rpm *msm8998_clks[] = {
-+	[RPM_SMD_PCNOC_CLK] = &msm8998_pcnoc_clk,
-+	[RPM_SMD_PCNOC_A_CLK] = &msm8998_pcnoc_a_clk,
- 	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
- 	[RPM_SMD_SNOC_A_CLK] = &msm8998_snoc_a_clk,
- 	[RPM_SMD_CNOC_CLK] = &msm8998_cnoc_clk,
+ #include <linux/dma-mapping.h>
++#include <linux/memblock.h> /* for min_low_pfn */
+ #include <linux/mem_encrypt.h>
+ 
++static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
++
+ #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+ #include <asm/dma-direct.h>
+ #else
+@@ -24,11 +27,16 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+ 
+ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
+ {
++	dma_addr_t end = addr + size - 1;
++
+ 	if (!dev->dma_mask)
+ 		return false;
+ 
+-	return addr + size - 1 <=
+-		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
++	if (!IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT) &&
++	    min(addr, end) < phys_to_dma(dev, PFN_PHYS(min_low_pfn)))
++		return false;
++
++	return end <= min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
+ }
+ #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+ 
 -- 
 2.20.1
 
