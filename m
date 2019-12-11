@@ -2,113 +2,103 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8FDC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A78BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A41214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4F921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbfLKM4m (ORCPT
+        id S1729363AbfLKM5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:56:42 -0500
-Received: from relay.sw.ru ([185.231.240.75]:46022 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727402AbfLKM4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 07:56:42 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1if1Wl-00067R-Gc; Wed, 11 Dec 2019 15:55:40 +0300
-Subject: [PATCH RFC v2 3/3] ext4: Notify block device about
- fallocate(0)-assigned blocks
-To:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-Cc:     axboe@kernel.dk, tytso@mit.edu, adilger.kernel@dilger.ca,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com
-References: <157599668662.12112.10184894900037871860.stgit@localhost.localdomain>
- <157599697948.12112.3846364542350011691.stgit@localhost.localdomain>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <766824cc-8b40-aa8d-4f94-e015bc8122d4@virtuozzo.com>
-Date:   Wed, 11 Dec 2019 15:55:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 11 Dec 2019 07:57:15 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:46431 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbfLKM5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 07:57:14 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MoOIi-1hugFE2B6e-00ol0h; Wed, 11 Dec 2019 13:56:48 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH 1/2] net: ethernet: ti: select PAGE_POOL for switchdev driver
+Date:   Wed, 11 Dec 2019 13:56:09 +0100
+Message-Id: <20191211125643.1987157-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <157599697948.12112.3846364542350011691.stgit@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:6xobw418PyXkV3CYCKrKrkqYW/pQBVgYt++7QWDd1Gfizh2agwO
+ DVm/zQK2J9mYF45nZz9r+hJW5WNEs79PYMDjvnpCSaz+juIGroWBy+kCKJnkSjiwJe11xtJ
+ k/+cxrj1Koa2WOT96iYKn1gdzuSDKeOI8MdVKGY93tjVmy1yqI1rjd3nnnrS9tPiOVyoTsC
+ /UcNApcongbQFK1MvZ1Dg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:o0oCe+1KPDY=:3I5WOPzsVQn/dZchhDjCqQ
+ 362M8WJcGI1zUSC5T1bN8rol0rStp2wLcrxKXY6cluhRZo5wN8Jvxk/QLnjxYIRVTXT2MpWbB
+ EWbwwJcZWosRBqy0qiRQMiTBFxrugsUEJqMDUyVUUIv6bELxjsLUpQP38V/bEXfuZojr/e4Iz
+ fAc5mEgni8MZvt3ZpoLAcf/oqzg4kSt4ozZCtHCqHaGwj5pNcwkjslkFFJ0sGmdOxH7JEN97b
+ aRxht6GJ4K5+oIaIgxo4aAIgD2UCZQt++998LUrdGAAatwt/dOaMbVkp/Z+aVkqk/pHPHwDEj
+ QhPae0wjGTMc3aDNNftsZlRkgIxIk8vvU0qjXxKt4NBgUpul0TNMgSlTYAd3EOCMH5F5orh/d
+ 47rul2ONxiLGR2eLHWxAyf/w6nP5CqBNuhYAftdpeBO8n8a2Iu1GDOJZTjMZmMxIt5G9CfdTb
+ maj1cjiINatkodirADoJuRBBOWX8PXWMXTkkSET2JMv8mpcR/0V2GsjIRdLYHw4rPMEEoYuDP
+ bkhtwEJMPj0JJfR6D/8UtHelmmEtbDaKcj+5m+I+k1zWE1Dom4Vih/NH4p4kYPBG2HyHEIDTF
+ Jl5LLAYu1/lmyvi98ARkZ5znucnpkiSIlyTCQOi/jRs004JSUwSJli/V9/tZgsh/freQ2zvd8
+ ef0/tcmcni0MQ0ich7AoLXGPcaP8m7jyCqc4XjmMA1xe3jrMQvyjTvVlp8rCCUmXAj91vkgkK
+ H/DWKrdI8c9/HoHxzSRqoiNyK4wM3fh2VoWnYKVoVXAYPkHSgZc/sl/CEzHyBSZJjnNaFoHpj
+ T/v3JsjU2qv8AfVVyBxCy0URjCrIguF4CeAodvrr90ebvLc5HAv9syu2r+E4dof+aqzWXB3XU
+ gbVQZ0jxc2A8xn/jcMVw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[I missed debug hunk appeared in v1. Please, see correct patch below]
+The new driver misses a dependency:
 
-Call sb_issue_assign_range() after extent range was allocated
-on user request. Hopeful, this helps block device to maintain
-its internals in the best way, if this is appliable.
+drivers/net/ethernet/ti/cpsw_new.o: In function `cpsw_rx_handler':
+cpsw_new.c:(.text+0x259c): undefined reference to `__page_pool_put_page'
+cpsw_new.c:(.text+0x25d0): undefined reference to `page_pool_alloc_pages'
+drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_fill_rx_channels':
+cpsw_priv.c:(.text+0x22d8): undefined reference to `page_pool_alloc_pages'
+cpsw_priv.c:(.text+0x2420): undefined reference to `__page_pool_put_page'
+drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_create_xdp_rxqs':
+cpsw_priv.c:(.text+0x2624): undefined reference to `page_pool_create'
+drivers/net/ethernet/ti/cpsw_priv.o: In function `cpsw_run_xdp':
+cpsw_priv.c:(.text+0x2dc8): undefined reference to `__page_pool_put_page'
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Other drivers use 'select' for PAGE_POOL, so do the same here.
+
+Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/ext4/ext4.h    |    1 +
- fs/ext4/extents.c |   11 +++++++++--
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ti/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index f8578caba40d..fe2263c00c0e 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -622,6 +622,7 @@ enum {
- 	 * allows jbd2 to avoid submitting data before commit. */
- #define EXT4_GET_BLOCKS_IO_SUBMIT		0x0400
- 
-+#define EXT4_GET_BLOCKS_SUBMIT_ALLOC		0x0800
- /*
-  * The bit position of these flags must not overlap with any of the
-  * EXT4_GET_BLOCKS_*.  They are used by ext4_find_extent(),
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 0e8708b77da6..68335e1d6893 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -4490,6 +4490,13 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
- 		ar.len = allocated;
- 
- got_allocated_blocks:
-+	if ((flags & EXT4_GET_BLOCKS_SUBMIT_ALLOC)) {
-+		err = sb_issue_assign_range(inode->i_sb, newblock,
-+			EXT4_C2B(sbi, allocated_clusters), GFP_NOFS);
-+		if (err)
-+			goto free_on_err;
-+	}
-+
- 	/* try to insert new extent into found leaf and return */
- 	ext4_ext_store_pblock(&newex, newblock + offset);
- 	newex.ee_len = cpu_to_le16(ar.len);
-@@ -4506,7 +4513,7 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
- 	if (!err)
- 		err = ext4_ext_insert_extent(handle, inode, &path,
- 					     &newex, flags);
--
-+free_on_err:
- 	if (err && free_on_err) {
- 		int fb_flags = flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE ?
- 			EXT4_FREE_BLOCKS_NO_QUOT_UPDATE : 0;
-@@ -4926,7 +4933,7 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
- 	lblk = offset >> blkbits;
- 
- 	max_blocks = EXT4_MAX_BLOCKS(len, offset, blkbits);
--	flags = EXT4_GET_BLOCKS_CREATE_UNWRIT_EXT;
-+	flags = EXT4_GET_BLOCKS_CREATE_UNWRIT_EXT | EXT4_GET_BLOCKS_SUBMIT_ALLOC;
- 	if (mode & FALLOC_FL_KEEP_SIZE)
- 		flags |= EXT4_GET_BLOCKS_KEEP_SIZE;
- 
+diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+index a46f4189fde3..bf98e0fa7d8b 100644
+--- a/drivers/net/ethernet/ti/Kconfig
++++ b/drivers/net/ethernet/ti/Kconfig
+@@ -63,6 +63,7 @@ config TI_CPSW_SWITCHDEV
+ 	tristate "TI CPSW Switch Support with switchdev"
+ 	depends on ARCH_DAVINCI || ARCH_OMAP2PLUS || COMPILE_TEST
+ 	depends on NET_SWITCHDEV
++	select PAGE_POOL
+ 	select TI_DAVINCI_MDIO
+ 	select MFD_SYSCON
+ 	select REGMAP
+-- 
+2.20.0
 
