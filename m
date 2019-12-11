@@ -2,93 +2,89 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB09C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 517E0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D991214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 237472053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbfLKJvr (ORCPT
+        id S1728494AbfLKJ6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:51:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56051 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfLKJvr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:51:47 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ieyek-00028x-1P; Wed, 11 Dec 2019 10:51:42 +0100
-Message-ID: <9d8fd7d89e035c41a3be7d5a5fa2e370b32910f1.camel@pengutronix.de>
-Subject: Re: [PATCH 15/15] reset: reset-scmi: Match scmi device by both name
- and protocol id
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Cristian Marussi <cristian.marussi@arm.com>
-Date:   Wed, 11 Dec 2019 10:51:41 +0100
-In-Reply-To: <20191210145345.11616-16-sudeep.holla@arm.com>
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
-         <20191210145345.11616-16-sudeep.holla@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 11 Dec 2019 04:58:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727493AbfLKJ6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:58:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B4972AC46;
+        Wed, 11 Dec 2019 09:58:13 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 73A45E00B7; Wed, 11 Dec 2019 10:58:09 +0100 (CET)
+Message-Id: <cover.1576057593.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next v3 0/5] ethtool netlink interface, preliminary part
+To:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 11 Dec 2019 10:58:09 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sudeep,
+As Jakub Kicinski suggested in ethtool netlink v7 discussion, this
+submission consists only of preliminary patches which raised no objections;
+first four patches already have Acked-by or Reviewed-by.
 
-On Tue, 2019-12-10 at 14:53 +0000, Sudeep Holla wrote:
-> The scmi bus now has support to match the driver with devices not only
-> based on their protocol id but also based on their device name if one is
-> available. This was added to cater the need to support multiple devices
-> and drivers for the same protocol.
-> 
-> Let us add the name "reset" to scmi_device_id table in the driver so
-> that in matches only with device with the same name and protocol id
-> SCMI_PROTOCOL_RESET.
-> 
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  drivers/reset/reset-scmi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/reset-scmi.c b/drivers/reset/reset-scmi.c
-> index b46df80ec6c3..8d3a858e3b19 100644
-> --- a/drivers/reset/reset-scmi.c
-> +++ b/drivers/reset/reset-scmi.c
-> @@ -108,7 +108,7 @@ static int scmi_reset_probe(struct scmi_device *sdev)
->  }
-> 
->  static const struct scmi_device_id scmi_id_table[] = {
-> -	{ SCMI_PROTOCOL_RESET },
-> +	{ SCMI_PROTOCOL_RESET, "reset" },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
-> --
-> 2.17.1
+- patch 1 exposes permanent hardware address (as shown by "ethtool -P")
+  via rtnetlink
+- patch 2 is renames existing netlink helper to a better name
+- patch 3 and 4 reorganize existing ethtool code (no functional change)
+- patch 5 makes the table of link mode names available as an ethtool string
+  set (will be needed for the netlink interface) 
 
-I can't speak to the correctness of this approach, but in case the rest
-of the series passes review, this patch is
+Once we get these out of the way, v8 of the first part of the ethtool
+netlink interface will follow.
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Changes from v2 to v3: fix SPDX licence identifiers (patch 3 and 5).
 
-to be merged together with the other patches.
+Changes from v1 to v2: restore build time check that all link modes have
+assigned a name (patch 5).
 
-regards
-Philipp
+Michal Kubecek (5):
+  rtnetlink: provide permanent hardware address in RTM_NEWLINK
+  netlink: rename nl80211_validate_nested() to nla_validate_nested()
+  ethtool: move to its own directory
+  ethtool: move string arrays into common file
+  ethtool: provide link mode names as a string set
+
+ include/net/netlink.h                   |   8 +-
+ include/uapi/linux/ethtool.h            |   2 +
+ include/uapi/linux/if_link.h            |   1 +
+ net/Makefile                            |   2 +-
+ net/core/Makefile                       |   2 +-
+ net/core/rtnetlink.c                    |   5 +
+ net/ethtool/Makefile                    |   3 +
+ net/ethtool/common.c                    | 171 ++++++++++++++++++++++++
+ net/ethtool/common.h                    |  22 +++
+ net/{core/ethtool.c => ethtool/ioctl.c} |  90 ++-----------
+ net/wireless/nl80211.c                  |   3 +-
+ 11 files changed, 219 insertions(+), 90 deletions(-)
+ create mode 100644 net/ethtool/Makefile
+ create mode 100644 net/ethtool/common.c
+ create mode 100644 net/ethtool/common.h
+ rename net/{core/ethtool.c => ethtool/ioctl.c} (95%)
+
+-- 
+2.24.0
 
