@@ -2,93 +2,106 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E6DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D04C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90C524658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F38E22173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078234;
-	bh=JQzQ2DYa8/YLrp70/Glnv+01jA+qGk/ngB4y2h3S+Bs=;
+	s=default; t=1576078239;
+	bh=vaIAzNlcw7syzXlDvK64mbKUZ0HDblQUzGJmKyy4I6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxC1pnddwLAplxC00WI5DbPj2ErtTJUJMr7uwDwbfiwdSOVzJBfjlDgGVQgosIetp
-	 fgeym7aW6++qYTqoBifPUE044TbF9O27Ghgb6RBOFwlum4n3B/yED4/F6pWO41BeeO
-	 RbndFgwP5BE/kcjDKvqVhlWMtsJfffV0RHeNQJZ8=
+	b=gBiCrnpyIFLwnFwofUGhFsb6mFl5S+Ae5KerytM5m8YwRFDbKEUT9kZa8hmmbOHab
+	 5xSgOwp0kxM45o4jznVklM/J+hYfFr9RVfHgvQou6FQarEJuKM8Pm1vjZMYR3sauCy
+	 SWmDsE44jN5QELwBel4Ck5pQ+rMx8EUVs1HWhfLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387983AbfLKPad (ORCPT
+        id S2387989AbfLKPai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:30:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:30:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387897AbfLKP3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:30 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387889AbfLKP33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:29 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599392467D;
-        Wed, 11 Dec 2019 15:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45B332467B;
+        Wed, 11 Dec 2019 15:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078169;
-        bh=JQzQ2DYa8/YLrp70/Glnv+01jA+qGk/ngB4y2h3S+Bs=;
+        s=default; t=1576078168;
+        bh=vaIAzNlcw7syzXlDvK64mbKUZ0HDblQUzGJmKyy4I6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+gYQkobpL7os+SgSCqmpEWqtfCMfCJ9wBP1pT99pKIzxQtmH6dNq0Tx3wyZ/uMT3
-         uQZa5gYoJHdjEFpJTyulPvavb8l2b9vIFzr0xlvSaUIW4Sb8b0iEHVUBN8K2aLxLjp
-         XvIqhPLYEwyoOUzcarXg0FrykrX/ciFxG5mcCE5k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Chiou, Cooper" <cooper.chiou@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 024/105] ALSA: hda: Add Cometlake-S PCI ID
-Date:   Wed, 11 Dec 2019 16:05:13 +0100
-Message-Id: <20191211150228.207802839@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=i+xv825W3uqT1xTjGXrN9CePMNWf1XXEZ+1pKtT4OE3IXxEmfOYJ/KFkkHzcghLEp
+         mGaVhtlQyBjjjpBrutrACeWDi5g51I0ZzcWeddRR5o0XxBk6GPKe+oW2H9+gOsDvkj
+         mzlZFL+Md3proxctUrpnOxER5ZQ4ogKpi1kRXzTs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 53/58] s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
+Date:   Wed, 11 Dec 2019 10:28:26 -0500
+Message-Id: <20191211152831.23507-53-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chiou, Cooper <cooper.chiou@intel.com>
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-[ Upstream commit b73a58549ea37a44434c7afab3c7ad9af210cfd9 ]
+[ Upstream commit 6733775a92eacd612ac88afa0fd922e4ffeb2bc7 ]
 
-Add HD Audio Device PCI ID for the Intel Cometlake-S platform
+This patch introduces support for a new architectured reply
+code 0x8B indicating that a hypervisor layer (if any) has
+rejected an ap message.
 
-Signed-off-by: Chiou, Cooper <cooper.chiou@intel.com>
-Link: https://lore.kernel.org/r/20191108071349.12840-1-cooper.chiou@intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Linux may run as a guest on top of a hypervisor like zVM
+or KVM. So the crypto hardware seen by the ap bus may be
+restricted by the hypervisor for example only a subset like
+only clear key crypto requests may be supported. Other
+requests will be filtered out - rejected by the hypervisor.
+The new reply code 0x8B will appear in such cases and needs
+to get recognized by the ap bus and zcrypt device driver zoo.
+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/s390/crypto/zcrypt_error.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index e1791d01ccc01..46c2b1022495f 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2428,6 +2428,9 @@ static const struct pci_device_id azx_ids[] = {
- 	/* CometLake-H */
- 	{ PCI_DEVICE(0x8086, 0x06C8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
-+	/* CometLake-S */
-+	{ PCI_DEVICE(0x8086, 0xa3f0),
-+	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
- 	/* Icelake */
- 	{ PCI_DEVICE(0x8086, 0x34c8),
- 	  .driver_data = AZX_DRIVER_SKL | AZX_DCAPS_INTEL_SKYLAKE},
+diff --git a/drivers/s390/crypto/zcrypt_error.h b/drivers/s390/crypto/zcrypt_error.h
+index 9499cd3a05f85..02a936db00923 100644
+--- a/drivers/s390/crypto/zcrypt_error.h
++++ b/drivers/s390/crypto/zcrypt_error.h
+@@ -75,6 +75,7 @@ struct error_hdr {
+ #define REP82_ERROR_EVEN_MOD_IN_OPND	    0x85
+ #define REP82_ERROR_RESERVED_FIELD	    0x88
+ #define REP82_ERROR_INVALID_DOMAIN_PENDING  0x8A
++#define REP82_ERROR_FILTERED_BY_HYPERVISOR  0x8B
+ #define REP82_ERROR_TRANSPORT_FAIL	    0x90
+ #define REP82_ERROR_PACKET_TRUNCATED	    0xA0
+ #define REP82_ERROR_ZERO_BUFFER_LEN	    0xB0
+@@ -105,6 +106,7 @@ static inline int convert_error(struct zcrypt_queue *zq,
+ 	case REP82_ERROR_INVALID_DOMAIN_PRECHECK:
+ 	case REP82_ERROR_INVALID_DOMAIN_PENDING:
+ 	case REP82_ERROR_INVALID_SPECIAL_CMD:
++	case REP82_ERROR_FILTERED_BY_HYPERVISOR:
+ 	//   REP88_ERROR_INVALID_KEY		// '82' CEX2A
+ 	//   REP88_ERROR_OPERAND		// '84' CEX2A
+ 	//   REP88_ERROR_OPERAND_EVEN_MOD	// '85' CEX2A
 -- 
 2.20.1
-
-
 
