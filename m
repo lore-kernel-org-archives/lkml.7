@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86449C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9255BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 527542073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672D42465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077522;
-	bh=5LheclpOGsgHwvenYPaZGCTGNZTsutQjVMbV3lFliA8=;
+	s=default; t=1576077526;
+	bh=zVD3PMl7eTpIEw1qbbF8rndFpadGWkrOfpETKL+kGXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lijkjEj1Ruczhy6gJkS/YIMVaiqiXrJKnk0DH6+uMLJC0naTx6xU+fOBR/J8j2+Mk
-	 pUS+cE/H6a+9yVGVy2igDb5CCEEu0ZYFx/QGbkjvxhjZhgoTDzOiogIIBFOrFUNFOa
-	 fmqhL1l34ApHlrWoI4HK/N5SrU1AByqsrnvAgUtA=
+	b=AX1of/H/sngiPVP55Z2Ujwbiz6tjbF3+rF5ivnlLbPFMbM0B0xaJx8rkDKud+Zg2t
+	 CLdqgdvU8dxQtSd7LlDatbvX6lbj+PZaVKYqL3ip4+kUCcl7Iz7r4QqcmJFmHnLpQd
+	 uQpLgx9zHLvw+y7Ktu0KpBB8mdTWN24KVpx3oR0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfLKPSl (ORCPT
+        id S1732155AbfLKPSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732127AbfLKPSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:33 -0500
+        id S1731852AbfLKPSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 718462073D;
-        Wed, 11 Dec 2019 15:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 175BF2465C;
+        Wed, 11 Dec 2019 15:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077512;
-        bh=5LheclpOGsgHwvenYPaZGCTGNZTsutQjVMbV3lFliA8=;
+        s=default; t=1576077521;
+        bh=zVD3PMl7eTpIEw1qbbF8rndFpadGWkrOfpETKL+kGXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A21pFT+3NthvgJwC/WVZzIi0jS8D2orEseMhF1yjaCszKsxXz4Zo+4Owi7OaCzHav
-         YWQbMHhPkoGyUigZVoQacA5HfDxnn2UJ1hsXqJRQBlyb9TcpD4c0QgjcgIwEfFvVy5
-         xkOwF1AT9AJsuapkCvZhq/leiT2W+6KhAhPbYeWU=
+        b=I8tLeGskMdJT10aJfKfEN2GkQYepVBJLVs3dy/VBU4m5g1FYGx7rbN0I2zSRysNP4
+         R6mCvM0RDJ9Mi0I4LDfpZaRBxQqjCQ7VFsKaNbqZeUKCyNg1uu8apBqPtWrM+RJVGv
+         Hfot99dV0gM7h+lJAj+WxNbeG/Z8HpwIN2CHIohk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Richard Guy Briggs <rgb@redhat.com>,
+        Jan Kara <jack@suse.cz>, Paul Moore <paul@paul-moore.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/243] clk: rockchip: fix ID of 8ch clock of I2S1 for rk3328
-Date:   Wed, 11 Dec 2019 16:03:48 +0100
-Message-Id: <20191211150343.554548784@linuxfoundation.org>
+Subject: [PATCH 4.19 033/243] audit: Embed key into chunk
+Date:   Wed, 11 Dec 2019 16:03:15 +0100
+Message-Id: <20191211150341.508849666@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,33 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit df7b1f2e0a4ae0fceff261e29cde63dafcf2360f ]
+[ Upstream commit 8d20d6e9301d7b3777d66d47dd5b89acd645cd39 ]
 
-This patch fixes mistakes in HCLK_I2S1_8CH for running I2S1
-successfully.
+Currently chunk hash key (which is in fact pointer to the inode) is
+derived as chunk->mark.conn->obj. It is tricky to make this dereference
+reliable for hash table lookups only under RCU as mark can get detached
+from the connector and connector gets freed independently of the
+running lookup. Thus there is a possible use after free / NULL ptr
+dereference issue:
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+CPU1					CPU2
+					untag_chunk()
+					  ...
+audit_tree_lookup()
+  list_for_each_entry_rcu(p, list, hash) {
+					  list_del_rcu(&chunk->hash);
+					  fsnotify_destroy_mark(entry);
+					  fsnotify_put_mark(entry)
+    chunk_to_key(p)
+      if (!chunk->mark.connector)
+					    ...
+					    hlist_del_init_rcu(&mark->obj_list);
+					    if (hlist_empty(&conn->list)) {
+					      inode = fsnotify_detach_connector_from_object(conn);
+					    mark->connector = NULL;
+					    ...
+					    frees connector from workqueue
+      chunk->mark.connector->obj
+
+This race is probably impossible to hit in practice as the race window
+on CPU1 is very narrow and CPU2 has a lot of code to execute. Still it's
+better to have this fixed. Since the inode the chunk is attached to is
+constant during chunk's lifetime it is easy to cache the key in the
+chunk itself and thus avoid these issues.
+
+Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/dt-bindings/clock/rk3328-cru.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/audit_tree.c | 27 ++++++++-------------------
+ 1 file changed, 8 insertions(+), 19 deletions(-)
 
-diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
-index a82a0109faffe..9d5f799469eee 100644
---- a/include/dt-bindings/clock/rk3328-cru.h
-+++ b/include/dt-bindings/clock/rk3328-cru.h
-@@ -178,7 +178,7 @@
- #define HCLK_TSP		309
- #define HCLK_GMAC		310
- #define HCLK_I2S0_8CH		311
--#define HCLK_I2S1_8CH		313
-+#define HCLK_I2S1_8CH		312
- #define HCLK_I2S2_2CH		313
- #define HCLK_SPDIF_8CH		314
- #define HCLK_VOP		315
+diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
+index ea43181cde4a2..04f59dfd3e71f 100644
+--- a/kernel/audit_tree.c
++++ b/kernel/audit_tree.c
+@@ -24,6 +24,7 @@ struct audit_tree {
+ 
+ struct audit_chunk {
+ 	struct list_head hash;
++	unsigned long key;
+ 	struct fsnotify_mark mark;
+ 	struct list_head trees;		/* with root here */
+ 	int dead;
+@@ -172,21 +173,6 @@ static unsigned long inode_to_key(const struct inode *inode)
+ 	return (unsigned long)&inode->i_fsnotify_marks;
+ }
+ 
+-/*
+- * Function to return search key in our hash from chunk. Key 0 is special and
+- * should never be present in the hash.
+- */
+-static unsigned long chunk_to_key(struct audit_chunk *chunk)
+-{
+-	/*
+-	 * We have a reference to the mark so it should be attached to a
+-	 * connector.
+-	 */
+-	if (WARN_ON_ONCE(!chunk->mark.connector))
+-		return 0;
+-	return (unsigned long)chunk->mark.connector->obj;
+-}
+-
+ static inline struct list_head *chunk_hash(unsigned long key)
+ {
+ 	unsigned long n = key / L1_CACHE_BYTES;
+@@ -196,12 +182,12 @@ static inline struct list_head *chunk_hash(unsigned long key)
+ /* hash_lock & entry->lock is held by caller */
+ static void insert_hash(struct audit_chunk *chunk)
+ {
+-	unsigned long key = chunk_to_key(chunk);
+ 	struct list_head *list;
+ 
+ 	if (!(chunk->mark.flags & FSNOTIFY_MARK_FLAG_ATTACHED))
+ 		return;
+-	list = chunk_hash(key);
++	WARN_ON_ONCE(!chunk->key);
++	list = chunk_hash(chunk->key);
+ 	list_add_rcu(&chunk->hash, list);
+ }
+ 
+@@ -213,7 +199,7 @@ struct audit_chunk *audit_tree_lookup(const struct inode *inode)
+ 	struct audit_chunk *p;
+ 
+ 	list_for_each_entry_rcu(p, list, hash) {
+-		if (chunk_to_key(p) == key) {
++		if (p->key == key) {
+ 			atomic_long_inc(&p->refs);
+ 			return p;
+ 		}
+@@ -297,6 +283,7 @@ static void untag_chunk(struct node *p)
+ 
+ 	chunk->dead = 1;
+ 	spin_lock(&hash_lock);
++	new->key = chunk->key;
+ 	list_replace_init(&chunk->trees, &new->trees);
+ 	if (owner->root == chunk) {
+ 		list_del_init(&owner->same_root);
+@@ -378,6 +365,7 @@ static int create_chunk(struct inode *inode, struct audit_tree *tree)
+ 		tree->root = chunk;
+ 		list_add(&tree->same_root, &chunk->trees);
+ 	}
++	chunk->key = inode_to_key(inode);
+ 	insert_hash(chunk);
+ 	spin_unlock(&hash_lock);
+ 	spin_unlock(&entry->lock);
+@@ -462,6 +450,7 @@ static int tag_chunk(struct inode *inode, struct audit_tree *tree)
+ 		fsnotify_put_mark(old_entry);
+ 		return 0;
+ 	}
++	chunk->key = old->key;
+ 	list_replace_init(&old->trees, &chunk->trees);
+ 	for (n = 0, p = chunk->owners; n < old->count; n++, p++) {
+ 		struct audit_tree *s = old->owners[n].owner;
+@@ -661,7 +650,7 @@ void audit_trim_trees(void)
+ 			/* this could be NULL if the watch is dying else where... */
+ 			node->index |= 1U<<31;
+ 			if (iterate_mounts(compare_root,
+-					   (void *)chunk_to_key(chunk),
++					   (void *)(chunk->key),
+ 					   root_mnt))
+ 				node->index &= ~(1U<<31);
+ 		}
 -- 
 2.20.1
 
