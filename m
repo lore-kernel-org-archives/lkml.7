@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD39C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D392AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A954A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D30B24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078698;
-	bh=sSeF2pOcrcOoEKD/5DY8hdbuJunIM9Yesp2liHcaKRI=;
+	s=default; t=1576078705;
+	bh=uf2xgCfpZ8cmkve4hMKcHLItuIAxk6+rmhcD6cfl6HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyK2etobSGM6QVrIZGVImP2iOL9h0p1vVXPKzUG38g5BjG9UNaUpxghjtsNQgOdAQ
-	 ojxjgCLkq8vOO6dSFyzsnv3ecrlE4cBE5W0b7FZRrubnAPD3TZHV5/XQq+322XJTbL
-	 ROinNjBqKcypIKNJ4Fm2G9NmTKiazEq0dinn0POk=
+	b=PwMwDUN6F1n1upNOug0ZfMLTj/Pa5+5XQ47cvAckLF7bfHZ5vzVeRIr8C4EPSnWic
+	 qDmgmU2+sAUkwdg32WdeUkpYdqnmDCNs3qnJ/tYM1g7jTTiw60WXQhVcvxeqOxekbm
+	 ly8C4tB6xzUy/MUqgR0p0hYkwgH7HvgjanuOaPgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388357AbfLKPiR (ORCPT
+        id S2388392AbfLKPiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:38:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44182 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388101AbfLKPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:20 -0500
+        id S2388354AbfLKPiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C21D324679;
-        Wed, 11 Dec 2019 15:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F13022B48;
+        Wed, 11 Dec 2019 15:38:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078519;
-        bh=sSeF2pOcrcOoEKD/5DY8hdbuJunIM9Yesp2liHcaKRI=;
+        s=default; t=1576078697;
+        bh=uf2xgCfpZ8cmkve4hMKcHLItuIAxk6+rmhcD6cfl6HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=au4WMGwjFGt9pH2XXTIMyyvKnoSZw+VyUkhChBkSDtEpaxYGTOd9eyGvOOwVuBuLS
-         tNIEw7D3itivzfq6pJLmWMfEyAPhlukLkSwO8odr+3ZupcQov8rLgF497Vfx4e3+d3
-         VCSZCOreQa7ky3QfNHpWBQNyFmz9aucFodHb+zBQ=
+        b=HUdIX5FORpkPnooyJVGbW6tfeG3S5lj0Bx6Rt3cKz7v2wWgSWPK3yLfEnYe3nGL8v
+         wWuzLVQyUxfn36Vc+050EOFBDmBQnCNKqHqepW/byr+JaL9hNTkxwyGhIVRQH74gy/
+         bRaRITWX3KGw58VPHDqDginJnRbjQpnSw2EuCaP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.9 08/42] powerpc/pseries: Mark accumulate_stolen_time() as notrace
-Date:   Wed, 11 Dec 2019 10:34:36 -0500
-Message-Id: <20191211153510.23861-8-sashal@kernel.org>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/37] Input: atmel_mxt_ts - disable IRQ across suspend
+Date:   Wed, 11 Dec 2019 10:37:39 -0500
+Message-Id: <20191211153813.24126-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
-References: <20191211153510.23861-1-sashal@kernel.org>
+In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
+References: <20191211153813.24126-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,50 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit eb8e20f89093b64f48975c74ccb114e6775cee22 ]
+[ Upstream commit 463fa44eec2fef50d111ed0199cf593235065c04 ]
 
-accumulate_stolen_time() is called prior to interrupt state being
-reconciled, which can trip the warning in arch_local_irq_restore():
+Across suspend and resume, we are seeing error messages like the following:
 
-  WARNING: CPU: 5 PID: 1017 at arch/powerpc/kernel/irq.c:258 .arch_local_irq_restore+0x9c/0x130
-  ...
-  NIP .arch_local_irq_restore+0x9c/0x130
-  LR  .rb_start_commit+0x38/0x80
-  Call Trace:
-    .ring_buffer_lock_reserve+0xe4/0x620
-    .trace_function+0x44/0x210
-    .function_trace_call+0x148/0x170
-    .ftrace_ops_no_ops+0x180/0x1d0
-    ftrace_call+0x4/0x8
-    .accumulate_stolen_time+0x1c/0xb0
-    decrementer_common+0x124/0x160
+atmel_mxt_ts i2c-PRP0001:00: __mxt_read_reg: i2c transfer failed (-121)
+atmel_mxt_ts i2c-PRP0001:00: Failed to read T44 and T5 (-121)
 
-For now just mark it as notrace. We may change the ordering to call it
-after interrupt state has been reconciled, but that is a larger
-change.
+This occurs because the driver leaves its IRQ enabled. Upon resume, there
+is an IRQ pending, but the interrupt is serviced before both the driver and
+the underlying I2C bus have been resumed. This causes EREMOTEIO errors.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024055932.27940-1-mpe@ellerman.id.au
+Disable the IRQ in suspend, and re-enable it on resume. If there are cases
+where the driver enters suspend with interrupts disabled, that's a bug we
+should fix separately.
+
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
-index ab7b661b6da3a..412ac5d45160b 100644
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -257,7 +257,7 @@ static u64 scan_dispatch_log(u64 stop_tb)
-  * Accumulate stolen time by scanning the dispatch trace log.
-  * Called on entry from user mode.
-  */
--void accumulate_stolen_time(void)
-+void notrace accumulate_stolen_time(void)
- {
- 	u64 sst, ust;
- 	u8 save_soft_enabled = local_paca->soft_enabled;
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index be2f2521c1c50..d955841da57d6 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -2701,6 +2701,8 @@ static int __maybe_unused mxt_suspend(struct device *dev)
+ 
+ 	mutex_unlock(&input_dev->mutex);
+ 
++	disable_irq(data->irq);
++
+ 	return 0;
+ }
+ 
+@@ -2713,6 +2715,8 @@ static int __maybe_unused mxt_resume(struct device *dev)
+ 	if (!input_dev)
+ 		return 0;
+ 
++	enable_irq(data->irq);
++
+ 	mutex_lock(&input_dev->mutex);
+ 
+ 	if (input_dev->users)
 -- 
 2.20.1
 
