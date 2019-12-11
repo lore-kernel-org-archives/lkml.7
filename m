@@ -2,195 +2,141 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 061D4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD9FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5CEC20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:44:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B0n4QzR+"
+	by mail.kernel.org (Postfix) with ESMTP id C51DF20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:46:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfLKWoJ (ORCPT
+        id S1726743AbfLKWqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:44:09 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34949 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfLKWoH (ORCPT
+        Wed, 11 Dec 2019 17:46:23 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:46912 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726411AbfLKWqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:44:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so483651wro.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:44:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sBcrCTViVT+buUkazP6ndZ+R56LFcmai8/NG1/x431U=;
-        b=B0n4QzR+8Dn/PNjTG+BqYKuWbD7QPHneTDLFVbLSZ2vbKcCA8M0sPy1gbo7O2ooZPv
-         81yQDTKkSE5CACbD71h/ZRug72pThiHj68475hZLEbnQS4D9qYhGm+/+4ZcAJ224d03+
-         sKe+LTGrbqsqKUtyjtfLVzngNo65pmDx4kPQS+Lb2Fe+zBeNyVBerBw/1PfAuy9ksv/9
-         WCGhsGUoDHWvVSR52Y3IHoie5IVwAp9RyMAUVJmdiJ9/DxUtqKA8eBduUWskwkbWM1oN
-         i2g0qGyQ/wkpVeRmfQZAlmlccmsYXUH/jmHpllykYndBPlcoup6xnCznmwTe9zkhPGJC
-         duuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sBcrCTViVT+buUkazP6ndZ+R56LFcmai8/NG1/x431U=;
-        b=bcT68drDY/duermakVj5FVmt5gEvOfB3L7pYxtfJpExWshFm/d/rUKo0vJAs1tPdvR
-         FoeHkMBwjLeGkJHbw+ZESz8PT9c4KvHrcf14dpUIG+OScJ3ldPhsYAb00NUDJ1IG03Z7
-         mEHSdUp5O11aIecdpoipuThLQvEpb5h4vHukRM9ZUCHVycMrYNWGNHdVMVZiHiFGKlA5
-         DbJz1585NHXKs1JbaUuDfllKERIcZ0JrbZzw7exUVAW1jY/JgAbh2cIFYCpNI+BGfOmt
-         HLYhK/elBH98fDn0LNS9KHP+94YqporruHXwYKDuBzRaP2qeyHCKVfgcMcmlxXN6y5g0
-         el9g==
-X-Gm-Message-State: APjAAAXotGoVA0osjEUQ7qEpctzWwWJToiImiw5or4WWvT3VaaUsjGzr
-        W9k7ZlT9JvwfwD3z6sQyZaDw7g==
-X-Google-Smtp-Source: APXvYqz4GwmnjA7mmxVpsbblUSVVcWN4dL2VXX9f+0XX77fYyTKNWiKW4FuKn2UvcmWm6MdGH0hMKA==
-X-Received: by 2002:adf:9144:: with SMTP id j62mr2300204wrj.168.1576104243820;
-        Wed, 11 Dec 2019 14:44:03 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:48f7:48fb:71cb:f13a])
-        by smtp.gmail.com with ESMTPSA id s16sm3798809wrn.78.2019.12.11.14.44.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 14:44:03 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rui.zhang@intel.com
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
-        linux-kernel@vger.kernel.org, martin.kepplinger@puri.sm
-Subject: [PATCH V5 3/3] thermal/drivers/cpu_cooling: Rename to cpufreq_cooling
-Date:   Wed, 11 Dec 2019 23:43:47 +0100
-Message-Id: <20191211224347.1001-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211224347.1001-1-daniel.lezcano@linaro.org>
-References: <20191211224347.1001-1-daniel.lezcano@linaro.org>
+        Wed, 11 Dec 2019 17:46:23 -0500
+Received: from dread.disaster.area (pa49-195-139-249.pa.nsw.optusnet.com.au [49.195.139.249])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2394B82045C;
+        Thu, 12 Dec 2019 09:46:18 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ifAkL-0005w2-3b; Thu, 12 Dec 2019 09:46:17 +1100
+Date:   Thu, 12 Dec 2019 09:46:17 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
+ kthread
+Message-ID: <20191211224617.GE19256@dread.disaster.area>
+References: <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211173829.GB21797@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=KoypXv6BqLCQNZUs2nCMWg==:117 a=KoypXv6BqLCQNZUs2nCMWg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=pxVhFHJ0LMsA:10
+        a=7-415B0cAAAA:8 a=DKMTVZrBpn61F86xKIIA:9 a=7pSkhifIAIoKH1Ap:21
+        a=Iepqc9itoRpRa7oB:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=1c-WWmYQErFem0j6iXEC:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As we introduced the idle injection cooling device called
-cpuidle_cooling, let's be consistent and rename the cpu_cooling to
-cpufreq_cooling as this one mitigates with OPPs changes.
+On Wed, Dec 11, 2019 at 11:08:29PM +0530, Srikar Dronamraju wrote:
+> A running task can wake-up a per CPU bound kthread on the same CPU.
+> If the current running task doesn't yield the CPU before the next load
+> balance operation, the scheduler would detect load imbalance and try to
+> balance the load. However this load balance would fail as the waiting
+> task is CPU bound, while the running task cannot be moved by the regular
+> load balancer. Finally the active load balancer would kick in and move
+> the task to a different CPU/Core. Moving the task to a different
+> CPU/core can lead to loss in cache affinity leading to poor performance.
+> 
+> This is more prone to happen if the current running task is CPU
+> intensive and the sched_wake_up_granularity is set to larger value.
+> When the sched_wake_up_granularity was relatively small, it was observed
+> that the bound thread would complete before the load balancer would have
+> chosen to move the cache hot task to a different CPU.
+> 
+> To deal with this situation, the current running task would yield to a
+> per CPU bound kthread, provided kthread is not CPU intensive.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-  V4:
-    - Added Acked-by and Reviewed-by
-  V3:
-    - Fix missing name conversion (Viresh Kumar)
----
- Documentation/driver-api/thermal/exynos_thermal.rst  | 2 +-
- MAINTAINERS                                          | 2 +-
- drivers/thermal/Makefile                             | 2 +-
- drivers/thermal/clock_cooling.c                      | 2 +-
- drivers/thermal/{cpu_cooling.c => cpufreq_cooling.c} | 6 +++---
- include/linux/clock_cooling.h                        | 2 +-
- 6 files changed, 8 insertions(+), 8 deletions(-)
- rename drivers/thermal/{cpu_cooling.c => cpufreq_cooling.c} (99%)
+So a question for you here: when does the workqueue worker pre-empt
+the currently running task? Is it immediately? Or when a time-slice
+of the currently running task runs out?
 
-diff --git a/Documentation/driver-api/thermal/exynos_thermal.rst b/Documentation/driver-api/thermal/exynos_thermal.rst
-index 5bd556566c70..d4e4a5b75805 100644
---- a/Documentation/driver-api/thermal/exynos_thermal.rst
-+++ b/Documentation/driver-api/thermal/exynos_thermal.rst
-@@ -67,7 +67,7 @@ TMU driver description:
- The exynos thermal driver is structured as::
- 
- 					Kernel Core thermal framework
--				(thermal_core.c, step_wise.c, cpu_cooling.c)
-+				(thermal_core.c, step_wise.c, cpufreq_cooling.c)
- 								^
- 								|
- 								|
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d92e9eb14131..0d658a628296 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16337,7 +16337,7 @@ L:	linux-pm@vger.kernel.org
- S:	Supported
- F:	Documentation/driver-api/thermal/cpu-cooling-api.rst
- F:	Documentation/driver-api/thermal/cpu-idle-cooling.rst
--F:	drivers/thermal/cpu_cooling.c
-+F:	drivers/thermal/cpufreq_cooling.c
- F:	drivers/thermal/cpuidle_cooling.c
- F:	include/linux/cpu_cooling.h
- 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 6929e6fad1ac..d502a597a717 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -19,7 +19,7 @@ thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
- thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
- 
- # cpufreq cooling
--thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpu_cooling.o
-+thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpufreq_cooling.o
- thermal_sys-$(CONFIG_CPU_IDLE_THERMAL)	+= cpuidle_cooling.o
- 
- # clock cooling
-diff --git a/drivers/thermal/clock_cooling.c b/drivers/thermal/clock_cooling.c
-index 3ad3256c48fd..7cb3ae4b44ee 100644
---- a/drivers/thermal/clock_cooling.c
-+++ b/drivers/thermal/clock_cooling.c
-@@ -7,7 +7,7 @@
-  *  Copyright (C) 2013	Texas Instruments Inc.
-  *  Contact:  Eduardo Valentin <eduardo.valentin@ti.com>
-  *
-- *  Highly based on cpu_cooling.c.
-+ *  Highly based on cpufreq_cooling.c.
-  *  Copyright (C) 2012	Samsung Electronics Co., Ltd(http://www.samsung.com)
-  *  Copyright (C) 2012  Amit Daniel <amit.kachhap@linaro.org>
-  */
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpufreq_cooling.c
-similarity index 99%
-rename from drivers/thermal/cpu_cooling.c
-rename to drivers/thermal/cpufreq_cooling.c
-index 52569b27b426..1dcba6bcaf7b 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *  linux/drivers/thermal/cpu_cooling.c
-+ *  linux/drivers/thermal/cpufreq_cooling.c
-  *
-  *  Copyright (C) 2012	Samsung Electronics Co., Ltd(http://www.samsung.com)
-  *
-@@ -620,7 +620,7 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
- 	struct thermal_cooling_device *cdev = NULL;
- 
- 	if (!np) {
--		pr_err("cpu_cooling: OF node not available for cpu%d\n",
-+		pr_err("cpufreq_cooling: OF node not available for cpu%d\n",
- 		       policy->cpu);
- 		return NULL;
- 	}
-@@ -630,7 +630,7 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
- 
- 		cdev = __cpufreq_cooling_register(np, policy, em);
- 		if (IS_ERR(cdev)) {
--			pr_err("cpu_cooling: cpu%d failed to register as cooling device: %ld\n",
-+			pr_err("cpufreq_cooling: cpu%d failed to register as cooling device: %ld\n",
- 			       policy->cpu, PTR_ERR(cdev));
- 			cdev = NULL;
- 		}
-diff --git a/include/linux/clock_cooling.h b/include/linux/clock_cooling.h
-index b5cebf766e02..4b0a69863656 100644
---- a/include/linux/clock_cooling.h
-+++ b/include/linux/clock_cooling.h
-@@ -7,7 +7,7 @@
-  *  Copyright (C) 2013	Texas Instruments Inc.
-  *  Contact:  Eduardo Valentin <eduardo.valentin@ti.com>
-  *
-- *  Highly based on cpu_cooling.c.
-+ *  Highly based on cpufreq_cooling.c.
-  *  Copyright (C) 2012	Samsung Electronics Co., Ltd(http://www.samsung.com)
-  *  Copyright (C) 2012  Amit Daniel <amit.kachhap@linaro.org>
-  */
+We don't want queued work immediately pre-empting the task that
+queued the work - the queued work is *deferred* work that should be
+run _soon_ but we want the currently running task to finish what it
+is doing first if possible. i.e. these are not synchronous wakeups,
+and so we shouldn't schedule kworker threads as though they are sync
+wakeups. That will affect batch processing effciency and reduce
+throughput because it will greatly increase the number of
+unnecessary context switches during IO completion processing....
+
+> /pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+> 
+> (With sched_wake_up_granularity set to 15ms)
+> 
+> Performance counter stats for 'system wide' (5 runs):
+> event					    v5.4 				v5.4 + patch(v3)
+> probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                     4  ( +- 20.48% )
+> sched:sched_waking                     441,535  ( +-  0.17% )               914,630  ( +-  0.18% )
+> sched:sched_wakeup                     441,533  ( +-  0.17% )               914,630  ( +-  0.18% )
+> sched:sched_wakeup_new                   2,436  ( +-  8.08% )                   545  ( +-  4.02% )
+> sched:sched_switch                     797,007  ( +-  0.26% )             1,490,261  ( +-  0.10% )
+> sched:sched_migrate_task                20,998  ( +-  1.04% )                 2,492  ( +- 11.56% )
+
+As we see here. We've doubled the number of context switches
+(increased by 700,000) just to avoid 17,000 incorrect load balancer
+task migrations.
+
+That seems like we now make 700,000 incorrect decisions instead of
+just 20,000. The difference is that the consequence of making these
+many incorrect pre-emption decisions is vastly less than the
+consequence of making the wrong migration decision.
+
+It seems to me that we should be checking this is_per_cpu_kthread()
+state for tasks queued on the runqueue during active load balancing,
+rather than at wakeup time.  i.e. in these cases we don't migrate
+the running task, we just let it run out it's timeslice out and the
+local per-cpu kthreads then run appropriately.
+
+AFAICT this would have the same effect of avoiding unnecessary task
+migrations in this workload, but without causing a global change to
+the way workqueue kworkers are scheduled that has the potential to
+cause regressions in other workqueue intensive workloads....
+
+Cheers,
+
+Dave.
 -- 
-2.17.1
-
+Dave Chinner
+david@fromorbit.com
