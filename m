@@ -2,167 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A5CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D848DC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58DDF208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA281214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576049997;
-	bh=XR1h17ndN9DPmRktj8hD3dqaimt+fyE6DE+BeemSGsM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ekc2sJtokApxDvis4b64/OgEu4oboYa7G5d8me86o2VUZ/YCVPOahoQBRL2oQdWtB
-	 QAzTeRhNtid0qTnq0DXIVyQzwWGzdOlterO8lrC3EjYswvJHYtp3nLlXfSJWZoGh96
-	 p9qJUZVQvG/7rnFZXW+hL+xMbaH8lXuUYGawZzao=
+	s=default; t=1576050142;
+	bh=hjwHRYg8sPYAGDfSGrnlcMrFRv1F4fdjjCVCcQ5+a1M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MvHRnsKdT70DkvLKTgvHZrQILHb8XrS4k7x3p+vdmqqGTOC4631ayLK5d+cu7qrBu
+	 H3OgI8Bb2h6/O6F8MoGPRO8Z+WmczGPxHwRXRzo91BtMSe6sJboRg8QFDcTFXaWPZP
+	 kWDWdxiubIlg/ncfKD6KvJlW4C/4iPLcFlRSgzvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbfLKHj4 (ORCPT
+        id S1727983AbfLKHmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:39:56 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:17081 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfLKHj4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:39:56 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id xBB7dDR3022506;
-        Wed, 11 Dec 2019 16:39:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com xBB7dDR3022506
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1576049954;
-        bh=l8+Ln+RuifKBW/SrlAVL5xQ74EcUovKtu9zNI0gHngc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eWqSG3g1T8eqyALzmsPUhkRNZCG6VFecW178bWzSJs+Bd5uRbMl7C7PoLTw1yf0SP
-         U7X6ezM2sV5QkE01BjDCrw1zX4yIYTEUBngzlIJbQsrwk719CN1PjPCMet1jgezxKh
-         2fHR0vLij6Vs5GSX7GfWI22UkQ2fRB2DsQZfjyaEAhEWWhmlFwF0h+Ux1rhUndsNb2
-         Sc5HZgSP13Ia+QLvs2LA/5VTYqzxZ6BnwQqwy3z3KEGvlHdTvB7Yi4EDcCEOv7xeOz
-         PV/8P3W1xb1iVSCesCCrxcG7OZqYpvJwb2HueLRuGZwjvxNU7CvNiACN1/QTpLQCTM
-         Lr+Zdkb9Vtmnw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-usb@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Cc:     Ulf Magnusson <ulfalizer@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Johan Hovold <johan@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: move choice ... endchoice to legacy/Kconfig
-Date:   Wed, 11 Dec 2019 16:38:57 +0900
-Message-Id: <20191211073857.16780-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 11 Dec 2019 02:42:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLKHmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:42:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 881EB208C3;
+        Wed, 11 Dec 2019 07:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576050141;
+        bh=hjwHRYg8sPYAGDfSGrnlcMrFRv1F4fdjjCVCcQ5+a1M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YpRaJ89jUMVRa6IpaYcn6qin1ZSI494HkfhCJYBls/yNzHmpiJLg3eXHWeFjPbnY9
+         OJSUt1Jtbeb0q26EcErkVu4DdetqYR8EyYmWfXug6VBVUCwtCPmiAG6d5Yr8S+MjaZ
+         qTBEnr/Bc6Y7eCmruD2bDi8IpyP/w+/ELamaV/hU=
+Date:   Wed, 11 Dec 2019 08:42:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     devel@driverdev.osuosl.org, Sumit Pundir <pundirsumit11@gmail.com>,
+        linux-kernel@vger.kernel.org, David Daney <ddaney.cavm@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Laura Lazzati <laura.lazzati.15@gmail.com>
+Subject: Re: [PATCH 2/2] staging: octeon-usb: delete the octeon usb host
+ controller driver
+Message-ID: <20191211074218.GB398293@kroah.com>
+References: <20191210091509.3546251-1-gregkh@linuxfoundation.org>
+ <20191210091509.3546251-2-gregkh@linuxfoundation.org>
+ <20191210193153.GB18225@darkstar.musicnaut.iki.fi>
+ <20191210201957.GB4070187@kroah.com>
+ <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210212744.GD18225@darkstar.musicnaut.iki.fi>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/usb/gadget/Kconfig includes drivers/usb/gadget/legacy/Kconfig
-inside the 'choice' block. The current Kconfig allows this, but I'd
-like to discourage this usage.
+On Tue, Dec 10, 2019 at 11:27:44PM +0200, Aaro Koskinen wrote:
+> On Tue, Dec 10, 2019 at 09:19:57PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 10, 2019 at 09:31:54PM +0200, Aaro Koskinen wrote:
+> > > Hi,
+> > > 
+> > > On Tue, Dec 10, 2019 at 10:15:09AM +0100, Greg Kroah-Hartman wrote:
+> > > > This driver was merged back in 2013 and shows no progress toward every
+> > > > being merged into the "correct" part of the kernel.
+> > > 
+> > > Do you mean all the patches since 2013 were "no progress"? Thanks.
+> > 
+> > I have not seen any proposals to get it out of staging at all.  If the
+> > only thing left really is just those two simple TODO lines, then why has
+> > it taken 6 years to do that?
+> 
+> Do you mean you did not see the below thread when I asked for help;
+> it was a kind of propsal, no? Also things take time when you are just a
+> hobbyist reverse engineering undocumented hardware that you also run in
+> production. Yes, I'm slow, but the starting point wasn't also a very good.
+> 
+> https://marc.info/?t=155839354700002&r=1&w=2
 
-People tend to mess up the structure without noticing that entire
-drivers/usb/gadget/legacy/Kconfig is placed in the choice context.
-In fact, legacy/Kconfig mixes up bool and tristate in the choice,
-and creates nested choice, etc.
+I have the short-term memory of a squirrel, remember I get 1000 emails a
+day to deal with.
 
-This commit does not change the behavior, but it will help people
-notice how badly this Kconfig file is written.
+That thread was from back in May, the instructions on what was needed to
+be done is quite simple, so there should not have been a multi-month
+delay from then until now.  What happened?
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> I don't mind you deleting the driver, and if you think that "no progress"
+> is true then I'm very sorry for all those commits/noise.
 
- drivers/usb/gadget/Kconfig        | 28 ----------------------------
- drivers/usb/gadget/legacy/Kconfig | 28 ++++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+), 28 deletions(-)
+Don't be sorry, you have fixed it up to make it ready to be merged
+properly.  But yes, there is no progress being made now, so it should
+either be dropped or merged properly.
 
-diff --git a/drivers/usb/gadget/Kconfig b/drivers/usb/gadget/Kconfig
-index 02ff850278b1..c6db0a0a340c 100644
---- a/drivers/usb/gadget/Kconfig
-+++ b/drivers/usb/gadget/Kconfig
-@@ -483,34 +483,6 @@ config USB_CONFIGFS_F_TCM
- 	  Both protocols can work on USB2.0 and USB3.0.
- 	  UAS utilizes the USB 3.0 feature called streams support.
- 
--choice
--	tristate "USB Gadget precomposed configurations"
--	default USB_ETH
--	optional
--	help
--	  A Linux "Gadget Driver" talks to the USB Peripheral Controller
--	  driver through the abstract "gadget" API.  Some other operating
--	  systems call these "client" drivers, of which "class drivers"
--	  are a subset (implementing a USB device class specification).
--	  A gadget driver implements one or more USB functions using
--	  the peripheral hardware.
--
--	  Gadget drivers are hardware-neutral, or "platform independent",
--	  except that they sometimes must understand quirks or limitations
--	  of the particular controllers they work with.  For example, when
--	  a controller doesn't support alternate configurations or provide
--	  enough of the right types of endpoints, the gadget driver might
--	  not be able work with that controller, or might need to implement
--	  a less common variant of a device class protocol.
--
--	  The available choices each represent a single precomposed USB
--	  gadget configuration. In the device model, each option contains
--	  both the device instantiation as a child for a USB gadget
--	  controller, and the relevant drivers for each function declared
--	  by the device.
--
- source "drivers/usb/gadget/legacy/Kconfig"
- 
--endchoice
--
- endif # USB_GADGET
-diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
-index 119a4e47681f..6e7e1a9202e6 100644
---- a/drivers/usb/gadget/legacy/Kconfig
-+++ b/drivers/usb/gadget/legacy/Kconfig
-@@ -14,6 +14,32 @@
- # both kinds of controller can also support "USB On-the-Go" (CONFIG_USB_OTG).
- #
- 
-+choice
-+	tristate "USB Gadget precomposed configurations"
-+	default USB_ETH
-+	optional
-+	help
-+	  A Linux "Gadget Driver" talks to the USB Peripheral Controller
-+	  driver through the abstract "gadget" API.  Some other operating
-+	  systems call these "client" drivers, of which "class drivers"
-+	  are a subset (implementing a USB device class specification).
-+	  A gadget driver implements one or more USB functions using
-+	  the peripheral hardware.
-+
-+	  Gadget drivers are hardware-neutral, or "platform independent",
-+	  except that they sometimes must understand quirks or limitations
-+	  of the particular controllers they work with.  For example, when
-+	  a controller doesn't support alternate configurations or provide
-+	  enough of the right types of endpoints, the gadget driver might
-+	  not be able work with that controller, or might need to implement
-+	  a less common variant of a device class protocol.
-+
-+	  The available choices each represent a single precomposed USB
-+	  gadget configuration. In the device model, each option contains
-+	  both the device instantiation as a child for a USB gadget
-+	  controller, and the relevant drivers for each function declared
-+	  by the device.
-+
- config USB_ZERO
- 	tristate "Gadget Zero (DEVELOPMENT)"
- 	select USB_LIBCOMPOSITE
-@@ -489,3 +515,5 @@ config USB_G_WEBCAM
- 
- 	  Say "y" to link the driver statically, or "m" to build a
- 	  dynamically linked module called "g_webcam".
-+
-+endchoice
--- 
-2.17.1
+If you don't have the time now to do it, that's fine, the revert to get
+the code back just takes one single git command when you, or someone
+else, can get the chance to do it.
 
+Don't take it personally, this is about to happen to almost all of the
+staging drivers that have been languishing around :)
+
+thanks,
+
+greg k-h
