@@ -2,113 +2,117 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C992C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BA4C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCC3214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Za9dk0f3"
+	by mail.kernel.org (Postfix) with ESMTP id 75D12214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:46:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfLKXil (ORCPT
+        id S1727024AbfLKXqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:38:41 -0500
-Received: from mail-wr1-f51.google.com ([209.85.221.51]:44095 "EHLO
-        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726404AbfLKXil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:38:41 -0500
-Received: by mail-wr1-f51.google.com with SMTP id q10so552833wrm.11;
-        Wed, 11 Dec 2019 15:38:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:user-agent
-         :content-transfer-encoding;
-        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
-        b=Za9dk0f3+8Oo2BcaPZmBbpc29b3C6CmCFARBm9fTHh/QLUWgUu5TSJr9ppy8bkCdrc
-         H/Zs90vGg4yF2K3w5woCtLhBCGBREAC1ocKIG3+pB+wiIO4NxrOHH3iI6/38Dd0vbjMg
-         qFTUiuois9HPXxl9PR6eLbt6Lk8Bi9eEli3Rdl8mq/mzwsvpdHLVpxgdV4O5587xza97
-         ydALyXp3GgqPyRbvcu8+UuPLpE8ZG9qw5YFuoj3sesJJk3j3EoMXB6+mSPzTfzmY0ZcY
-         7KFxamKx4iTGmrzz8dSXEFpas10CjMjE6bX/g7Nlz2sMXrNJOXZOt+Ujtfcfm/v1JW6k
-         3Qcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :user-agent:content-transfer-encoding;
-        bh=9MD2iuL/4WQUUIETBvkMoKCxMANv9+K7ltNUru8sZLQ=;
-        b=YIWRT95AhiLawdzUfw770XytlmAnSohh0CUwSFg9pO/StPdGQHIzMVYAA56H3u8LHq
-         SIRAjePrT1aL8NoiY6qAQZrHLzCIssZcOVxg0WgKlnT1lXzxy3D2/9mraD5pQVXRq5ZC
-         +NYHpI6acu3oKGIk3yvO4/KaeFh7iNaW3A2pPMbobxS5OWyuyKuj1CJSELcHiGQMVZHT
-         FW8WYMVaW81W4BqjVxPLBtqLUHdx83Y2xtA6o92sqo75jmPJhWoVinF11BOJX91NJi9R
-         bNbNKlyQXI/qCuMBFLUMtU93wLiHw83nq/Qjd4WXcbmpNNhSHzelTaoY8QtU+EO9mQUh
-         gqjg==
-X-Gm-Message-State: APjAAAXrvcaw4LEChn6QSWhzl5ODWkm6D1VHWATOhWwSqrBZGozRYo/a
-        YL4JFmjXCCbDs/vLX/g2S2A=
-X-Google-Smtp-Source: APXvYqyt9+nph0QrBPM/FnhfUGZMJLtmYaY8jJjnZzNW2cdfqWXBK8OyEytjvDss5jLs0ZDLutaJ+A==
-X-Received: by 2002:a5d:68cf:: with SMTP id p15mr2640601wrw.31.1576107518523;
-        Wed, 11 Dec 2019 15:38:38 -0800 (PST)
-Received: from localhost ([5.59.90.131])
-        by smtp.gmail.com with ESMTPSA id w20sm3995604wmk.34.2019.12.11.15.38.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 15:38:37 -0800 (PST)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "\"Rafael J. Wysocki\"" <rafael.j.wysocki@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?iso-8859-1?Q?=22Stefan_M=E4tje=22?= <stefan.maetje@esd.eu>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [REGRESSION] PCI v5.5-rc1 breaks google kevin
-Date:   Thu, 12 Dec 2019 00:38:35 +0100
+        Wed, 11 Dec 2019 18:46:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:52186 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726404AbfLKXqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:46:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0CC51FB;
+        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 661923F52E;
+        Wed, 11 Dec 2019 15:46:29 -0800 (PST)
+Date:   Wed, 11 Dec 2019 23:46:27 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>,
+        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        gustavo.pimentel@synopsys.com, robh@kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
+Message-ID: <20191211234627.GC24359@e119886-lin.cambridge.arm.com>
+References: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
+ <20191211142022.GA26342@google.com>
 MIME-Version: 1.0
-Message-ID: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211142022.GA26342@google.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-since v5.5-rc1 the google kevin chromebook does not boot.
-Git bisect reports=20
-5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled() unnecessary locking
-as the first bad commit.
+On Wed, Dec 11, 2019 at 08:20:22AM -0600, Bjorn Helgaas wrote:
+> On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
+> > 
+> > On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
+> > > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
+> > > > Add support to PCIe RC controller on Intel Gateway SoCs.
+> > > > PCIe controller is based of Synopsys DesignWare PCIe core.
+> > > > 
+> > > > Intel PCIe driver requires Upconfigure support, Fast Training
+> > > > Sequence and link speed configurations. So adding the respective
+> > > > helper functions in the PCIe DesignWare framework.
+> > > > It also programs hardware autonomous speed during speed
+> > > > configuration so defining it in pci_regs.h.
+> > > > 
+> > > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
+> > > > as Synopsys DesignWare framework depends on the
+> > > > PCI_MSI_IRQ_DOMAIN.
+> > > > 
+> > > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> 
+> > > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
+> > > > +{
+> > > > +	u32 old;
+> > > > +
+> > > > +	old = readl(base + ofs);
+> > > > +	val = (old & ~mask) | (val & mask);
+> > > > +
+> > > > +	if (val != old)
+> > > > +		writel(val, base + ofs);
+> > > I assume this is never used on registers where the "old & ~mask" part
+> > > contains RW1C bits?  If there are RW1C bits in that part, this will
+> > > corrupt them.
+> > There is no impact because RW1C bits of respective registers are 0s at the
+> > time of this function call.
+> 
+> Sounds ... dangerous, but I'll take your word for it.
+> 
+> > I see, this patch series is merged in the maintainer tree.
+> > Should i need to submit as a separate patch on top of maintainer tree or
+> > submit the new version of whole patch series?
+> > Please let me know the best practice.
+> 
+> Sorry, I didn't realize this had already been merged to Lorenzo's
+> tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
+> Andrew and Lorenzo want to handle this.  None of these are important,
+> so you could just ignore these comments.
+> 
+> What I personally would do is rebase the branch, e.g.,
+> lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
+> Andrew and Lorenzo whether they want to do anything.
 
-In order to revert it from v5.5-rc1 i had to also revert some dependencies:
-5e0c21c75e8c08375a69710527e4a921b897cb7e
-aff5d0552da4055da3faa27ee4252e48bb1f5821
-35efea32b26f9aacc99bf07e0d2cdfba2028b099
-687aaf386aeb551130f31705ce40d1341047a936
-72ea91afbfb08619696ccde610ee4d0d29cf4a1d
-87e90283c94c76ee11d379ab5a0973382bbd0baf
-After reverting all of this, still no luck.
-So, either the results of git bisect are not to be trusted, or
-there are more bad commits.
+Hi Dilip,
 
-By "does not boot" i mean that the display fails to start and
-the display is the only output device, so debugging is quite difficult.
+Thanks for taking on this additional feedback.
 
-v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
-# CONFIG_PCI is not set
+I'd be happy for you to send an additional patch ontop of your v11 (head of
+lpieralisi/pci/dwc) and we'll squash it in.
 
-Regards,
-  Vicente.
+Thanks,
 
+Andrew Murray
+
+> 
+> Bjorn
