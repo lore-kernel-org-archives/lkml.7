@@ -2,158 +2,200 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C3FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5235C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B792073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0312073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GvtQh8mN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BHEbvjoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfLKT1k (ORCPT
+        id S1729230AbfLKT1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:27:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31176 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726487AbfLKT1j (ORCPT
+        Wed, 11 Dec 2019 14:27:50 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:55652 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729007AbfLKT1u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:27:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576092457;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=XNQw4Y2kapgDmnu+g3AZai6iWwGe85veYjXrJTQwlTI=;
-        b=GvtQh8mNpltHP3TXW6PYcGPaMHFxKLu8xKdz4OXeKRaOxpYpysaa8mnMbDSQz+Nxk9pN9J
-        2eJ9GDwV3YNLAWiwC7WIouKnRgB/cAJY5ssTfpc3AnZRgZ1ANnjqmj1b2cIrsSeotN1zh9
-        EZClzUdviVW1aeue9q7oN9Vn7dyV5O4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-3YyjY2YlNUeqATZ2pRD2_Q-1; Wed, 11 Dec 2019 14:27:34 -0500
-X-MC-Unique: 3YyjY2YlNUeqATZ2pRD2_Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF46B80258A;
-        Wed, 11 Dec 2019 19:27:31 +0000 (UTC)
-Received: from [10.36.116.75] (ovpn-116-75.ams2.redhat.com [10.36.116.75])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 064776293B;
-        Wed, 11 Dec 2019 19:27:25 +0000 (UTC)
-Subject: Re: [PATCH V2 1/3] dcache: add a new enum type for
- 'dentry_d_lock_class'
-From:   David Hildenbrand <david@redhat.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        "yukuai (C)" <yukuai3@huawei.com>, gregkh@linuxfoundation.org,
-        rafael@kernel.org, rostedt@goodmis.org, oleg@redhat.com,
-        mchehab+samsung@kernel.org, corbet@lwn.net, tytso@mit.edu,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, zhengbin13@huawei.com,
-        yi.zhang@huawei.com, chenxiang66@hisilicon.com, xiexiuqi@huawei.com
-References: <20191130020225.20239-1-yukuai3@huawei.com>
- <20191130020225.20239-2-yukuai3@huawei.com>
- <20191130034339.GI20752@bombadil.infradead.org>
- <e2e7c9f1-7152-1d74-c434-c2c4d57d0422@huawei.com>
- <20191130193615.GJ20752@bombadil.infradead.org>
- <20191208191142.GU4203@ZenIV.linux.org.uk>
- <c8a66d9d-63b6-58db-23b5-148122d606ca@redhat.com>
- <20191211184630.GD4203@ZenIV.linux.org.uk>
- <fdefd516-c469-7874-31cf-bc60596e777c@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <739889bb-60c6-e528-c4d5-21acafa30987@redhat.com>
-Date:   Wed, 11 Dec 2019 20:27:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <fdefd516-c469-7874-31cf-bc60596e777c@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 14:27:50 -0500
+Received: by mail-pg1-f201.google.com with SMTP id v30so13173741pga.22
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:27:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=KFmQdAdZh8/B/wh1g4c+i5ALsP3kFx6ncDBf/RCXchM=;
+        b=BHEbvjoHWqZ7Nv64QnvdKu9CN/PsQfHYxZZQz1Q10KydrF+m2IHzcnK5CrZKkXxx4b
+         2YMOz+hd3HzxKnkbWedNtKO00vtCc2M3iMLn8LoGBw3qqR4py04EUe+8nahF6KzgWO/b
+         vx1yhOmUkc/tCU9SZaP784yXIevMeiNK8sTRWzHqze2L7IbBFAHJC4itwqTKgrxGtnjj
+         YeOhn/aOPE4f5oqAfM8DBWqmaHF/yW9Y7gmPjj650DnJ/PPd/Wng33I4+uBaDrD616/p
+         ZRtT+uj/OzuuvRgRQ2d0fDYsZ2aGXgohBEYAYMIdTYa6aIe9iYQrbTB4SE+EyIfKIqoL
+         sEbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=KFmQdAdZh8/B/wh1g4c+i5ALsP3kFx6ncDBf/RCXchM=;
+        b=LQlpRgOHw9M3bJzoGVHbzUwwdApbJDiYS83kVWMQqyBtCAr/pyFiOSBixaCQ/uHx6O
+         R/xcnRO4kAlLJh9FGIHWXsXxCrplYByvukZjSLmQoPRGR751ezxtZS8T2G91kMJdvq36
+         mX5JU2/ppt5OMYIKlKOA2tt05bc4N5T13AZJiTFAAmvTqTVp6Gxcv9sBUvCjQpincp1P
+         4EdMYnxS1KW9X+ZNXmvlBvuJ74mD/gfurf48vKZ8jGG0FMZRYDhkyp0SBLhqtVk5ChX/
+         KkEP5AHuan+2XVYlNBq2UjnsoRMjtkSx13JFoza/y0l21fzcC1cRUG13xA98oEnRK7MS
+         +0Mw==
+X-Gm-Message-State: APjAAAVlNF1ri1IspPvz6zv2vz4fffP43DenP42ZIL2ac8NnSPzSNvpH
+        unqXGBjmGenokV1ZK38GpLKx9x4tKweEBEQaIYcakw==
+X-Google-Smtp-Source: APXvYqycyWWqOB+1R/dWpmqnOlhdQUifRBeUd7lNrtDIGomABUXQd06geDk/YSSdxQdhxW6XmQloW5ZXtQ6ql5pkVCc82w==
+X-Received: by 2002:a63:f60:: with SMTP id 32mr5943939pgp.206.1576092468990;
+ Wed, 11 Dec 2019 11:27:48 -0800 (PST)
+Date:   Wed, 11 Dec 2019 11:27:35 -0800
+Message-Id: <20191211192742.95699-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
+Subject: [PATCH v1 0/7] uml: add unspecified HAS_IOMEM dependencies
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Alistar Popple <alistair@popple.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jeremy Kerr <jk@ozlabs.org>, Joel Stanley <joel@jms.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Moses Christopher <moseschristopherb@gmail.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidgow@google.com, Brendan Higgins <brendanhiggins@google.com>,
+        devel@driverdev.osuosl.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-crypto@vger.kernel.org,
+        linux-fsi@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-mtd@lists.infradead.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.12.19 20:18, David Hildenbrand wrote:
-> On 11.12.19 19:46, Al Viro wrote:
->> On Wed, Dec 11, 2019 at 04:55:56PM +0100, David Hildenbrand wrote:
->>
->> [snip]
->>
->>> The patch in linux-next
->>>
->>> commit 653f0d05be0948e7610bb786e6570bb6c48a4e75 (HEAD, refs/bisect/ba=
-d)
->>
->> ... is no longer there.  commit a3d1e7eb5abe3aa1095bc75d1a6760d3809bd6=
-72
->> is; could you check if it fixes your reproducer?
->>
->=20
-> desktop: ~/git/linux memory_holes $ git fetch next
-> desktop: ~/git/linux memory_holes $ git show
-> a3d1e7eb5abe3aa1095bc75d1a6760d3809bd672
-> fatal: bad object a3d1e7eb5abe3aa1095bc75d1a6760d3809bd672
->=20
-> I'll go hunt for that commit :) ... guess it will show up in -next soon=
-.
->=20
+# TL;DR
 
-Found it on vfs.git - seems to do its job in my setup (booting Fedora 31
-with custom kernel in QEMU).
+This patchset adds a missing HAS_IOMEM dependency to several drivers in
+an attempt to get allyesconfig closer to working for ARCH=um.
 
---=20
-Thanks,
+# What am I trying to do?
 
-David / dhildenb
+This patchset is part of my attempt to get `make ARCH=um allyesconfig`
+to produce a config that will build *and* boot to init, so that I can
+use it as a mechanism to run tests[1].
+
+This patchset is attempting to deal with
+
+CONFIG_PINCTRL_EQUILIBRIUM=y
+CONFIG_MTD_NAND_CADENCE=y
+CONFIG_FSI_MASTER_ASPEED=y
+CONFIG_CRYPTO_DEV_SAFEXCEL=y
+CONFIG_XIL_AXIS_FIFO=y
+CONFIG_CRYPTO_DEV_AMLOGIC_GXL=y
+CONFIG_XILINX_AXI_EMAC=y
+
+which are selected by `make ARCH=um allyesconfig`, but prevent it from
+building.
+
+# How far away are we from an allyesconfig UML kernel?
+
+I have identified 33 Kconfigs that are selected by allyesconfig, but
+will either not build on UML, or prevent it from booting. They are:
+
+CONFIG_STATIC_LINK=y
+CONFIG_UML_NET_PCAP=y
+CONFIG_NET_PTP_CLASSIFY=y
+CONFIG_IP_VS=y
+CONFIG_BRIDGE_EBT_BROUTE=y
+CONFIG_BRIDGE_EBT_T_FILTER=y
+CONFIG_BRIDGE_EBT_T_NAT=y
+CONFIG_MTD_NAND_CADENCE=y
+CONFIG_MTD_NAND_NANDSIM=y
+CONFIG_BLK_DEV_NULL_BLK=y
+CONFIG_BLK_DEV_RAM=y
+CONFIG_SCSI_DEBUG=y
+CONFIG_NET_VENDOR_XILINX=y
+CONFIG_NULL_TTY=y
+CONFIG_PTP_1588_CLOCK=y
+CONFIG_PINCTRL_EQUILIBRIUM=y
+CONFIG_DMABUF_SELFTESTS=y
+CONFIG_COMEDI=y
+CONFIG_XIL_AXIS_FIFO=y
+CONFIG_EXFAT_FS=y
+CONFIG_STM_DUMMY=y
+CONFIG_FSI_MASTER_ASPEED=y
+CONFIG_JFS_FS=y
+CONFIG_UBIFS_FS=y
+CONFIG_CRAMFS=y
+CONFIG_CRYPTO_DEV_SAFEXCEL=y
+CONFIG_CRYPTO_DEV_AMLOGIC_GXL=y
+CONFIG_KCOV=y
+CONFIG_LKDTM=y
+CONFIG_REED_SOLOMON_TEST=y
+CONFIG_TEST_RHASHTABLE=y
+CONFIG_TEST_MEMINIT=y
+CONFIG_NETWORK_PHY_TIMESTAMPING=y
+
+CONFIG_STATIC_LINK=y and CONFIG_UML_NET_PCAP=y already have fixes on
+their way.
+
+I also have a patchset that just got accepted to fix
+CONFIG_EXFAT_FS=y[2].
+
+So with this patchset and these other three fixes mentioned here, we
+will be about a third of the way there. There is only one more broken
+config that prevents UML from building, CONFIG_LKDTM=y. After this there
+will still be 22 broken configs which will prevent the UML allyesconfig
+kernel from reaching the end of init; nevertheless, this is a good
+milestone where, once reached, we can stop some of this bleeding by
+adding a build test.
+
+# Why won't allyesconfig break again after this series of fixes?
+
+As I mentioned above, I am using UML for testing the kernel, and I am
+currently working on getting my tests to run on KernelCI. As part of our
+testing procedure for KernelCI, we are planning on building a UML kernel
+using allyesconfig and running our tests on it. Thus, we will find out
+very quickly once someone breaks allyesconfig again once we get this all
+working.
+
+Brendan Higgins (7):
+  pinctrl: equilibrium: add unspecified HAS_IOMEM dependency
+  mtd: rawnand: add unspecified HAS_IOMEM dependency
+  net: axienet: add unspecified HAS_IOMEM dependency
+  crypto: inside-secure: add unspecified HAS_IOMEM dependency
+  crypto: amlogic: add unspecified HAS_IOMEM dependency
+  staging: axis-fifo: add unspecified HAS_IOMEM dependency
+  fsi: aspeed: add unspecified HAS_IOMEM dependency
+
+ drivers/crypto/Kconfig              | 2 +-
+ drivers/crypto/amlogic/Kconfig      | 1 +
+ drivers/fsi/Kconfig                 | 1 +
+ drivers/mtd/nand/raw/Kconfig        | 2 +-
+ drivers/net/ethernet/xilinx/Kconfig | 1 +
+ drivers/pinctrl/Kconfig             | 1 +
+ drivers/staging/axis-fifo/Kconfig   | 2 +-
+ 7 files changed, 7 insertions(+), 3 deletions(-)
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=205223
+[2] https://patchwork.kernel.org/patch/11273771/
+
+-- 
+2.24.0.525.g8f36a354ae-goog
 
