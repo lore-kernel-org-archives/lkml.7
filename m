@@ -2,122 +2,210 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3123DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABFFC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F102173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2147A21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fhG9zQfY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYVSQx64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbfLKOE4 (ORCPT
+        id S1729986AbfLKOFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:04:56 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48164 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729784AbfLKOEx (ORCPT
+        Wed, 11 Dec 2019 09:05:00 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:43228 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbfLKOE6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:04:53 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4oTd034781;
-        Wed, 11 Dec 2019 08:04:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576073090;
-        bh=xyvVBLiJTFMvhAFyHR5rfI4R9SdbhMSl11RXn373Pi4=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fhG9zQfYIE9/UJf7FA1L4kB+64DllDZLFPQNt9RvusezGZUF5ncYNepCk9T2176DQ
-         x9ibbGWT5I0pCcqNt/aKfuhWODnLm6lObbeAQOHUHem3r1/I3A8vz4Ccm3dLeYea8f
-         9jQDbWb9ednP0eSCktd3Dzqcx76/BMAI82/OCwDA=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE4oI2026822
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 08:04:50 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 08:04:50 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 08:04:50 -0600
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE4m6g088450;
-        Wed, 11 Dec 2019 08:04:50 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
-        <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 2/3] ARM: dts: dra7: add vpe clkctrl node
-Date:   Wed, 11 Dec 2019 08:08:09 -0600
-Message-ID: <20191211140810.10657-3-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211140810.10657-1-bparrot@ti.com>
-References: <20191211140810.10657-1-bparrot@ti.com>
+        Wed, 11 Dec 2019 09:04:58 -0500
+Received: by mail-pj1-f66.google.com with SMTP id g4so8973815pjs.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:04:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UuYwx4FSzyLc9U1xa0BZGom1pgq8tugsRTYhO5cDG3M=;
+        b=PYVSQx64S9qCKQW5/VoLb1Dfu5FCANe/WwCYgMrLw68aBbp1xG/lcwq7mn5cQHYTsI
+         MDAPb6c9L1Yz82iophl6y5FwYZEeoko/Dcw4tAxaC0D0tegsbw512X92+8iauX9yg6PV
+         t/d1EK920x08nLMdgl6I6pmxJNQKV0mmNqUay1Du8fdV4Ul8RkT+VVWXoH8O9b8fyDHJ
+         jX2AjHFDB4KWcLfQSQXiKXC/SV1mWvpNqAdmSqwf1Mo51UoN96SKiUFhWG2ZE3vyDJBT
+         psDGGXUVxVYFO7VRRuDb1kB/Czx9bjjaF6sNyOGk7nc+vDsXqUJt6GIsnvjhJKZLoADC
+         xsyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UuYwx4FSzyLc9U1xa0BZGom1pgq8tugsRTYhO5cDG3M=;
+        b=gxIVsbBycOEDhXWX4ovZO8mFojoNRhUiYDXUu8rEomh+yNdhDG/Kqi+VCLleN+AKlt
+         ZR4N4cBSC+Dh7n2O+16QCKnPtFsCnWfpzzhOtBUqNgaLA/tCitg5ANW41A2el64gZvZZ
+         lMQcjiRAeTd0xSVm3EbXvAH024WuExyKqpqgOkZgj6bW0gCUW0nHoIPbz8cNvFK69zEZ
+         MkL8E2VrcAShUAo5NkDs9nsilVIcTuHV6A0nuAOKJzXtlrEla9ixmkZm+8xg5Y605yEJ
+         VHCuy3Eg8U9oGFu4+ff00D5+bdCMW8BXvRT60x0YQJphO/8GHzgAn1i6iThZRD4Arlyt
+         08yA==
+X-Gm-Message-State: APjAAAVlxAkAlw1wI+8lWw86dJVmE+6PUeU/USH7X/+GASSDNgyiu5lJ
+        5MtpPQu/exkIgqYygOj1m4E=
+X-Google-Smtp-Source: APXvYqyOYK6C8UMov6vErx0/6/xfChBgejaGNR6iloblC4SH/KvL/ZwlKkh475bl99B63WdJu+zxIA==
+X-Received: by 2002:a17:902:8216:: with SMTP id x22mr3374184pln.334.1576073097671;
+        Wed, 11 Dec 2019 06:04:57 -0800 (PST)
+Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
+        by smtp.gmail.com with ESMTPSA id o12sm3489656pfg.152.2019.12.11.06.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 06:04:56 -0800 (PST)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] ARM: dts: vf610-zii-scu4-aib: Use generic names for DT nodes
+Date:   Wed, 11 Dec 2019 06:04:43 -0800
+Message-Id: <20191211140444.7076-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clkctrl nodes for VPE module.
+The devicetree specification recommends using generic node names.
 
-Note that because of the current dts node name dependency for mapping to
-clock domain, we must still use "vpe-clkctrl@" naming instead of generic
-"clock@" naming for the node. And because of this, it's probably best to
-apply the dts node addition together along with the other clock changes.
+Some ZII dts files already follow such recommendation, but some don't,
+so use generic node names for consistency among the ZII dts files.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Cory Tusar <cory.tusar@zii.aero>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 93e1eb83bed9..d1c2406ec71c 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1591,10 +1591,10 @@
+Changes since [v1]:
+
+    - Rebased on top of 12/05 linux-next
+
+    - Added "ARM: dts: vf610-zii-scu4-aib: Add node for switch
+      watchdog" to this series, which was previously accidental and
+      implicit prerequisite for this patch
+
+[v1] lore.kernel.org/lkml/20190824002747.14610-1-andrew.smirnov@gmail.com
+
+ arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+index d7caf618f980..a02c7ea3b92d 100644
+--- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
++++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+@@ -407,7 +407,7 @@
+ 	pinctrl-0 = <&pinctrl_dspi1>;
+ 	status = "okay";
  
- 	rtc_cm: rtc-cm@700 {
- 		compatible = "ti,omap4-cm";
--		reg = <0x700 0x100>;
-+		reg = <0x700 0x60>;
+-	spi-flash@0 {
++	flash@0 {
  		#address-cells = <1>;
  		#size-cells = <1>;
--		ranges = <0 0x700 0x100>;
-+		ranges = <0 0x700 0x60>;
- 
- 		rtc_clkctrl: rtc-clkctrl@20 {
- 			compatible = "ti,clkctrl";
-@@ -1603,6 +1603,20 @@
+ 		compatible = "jedec,spi-nor";
+@@ -420,7 +420,7 @@
  		};
  	};
  
-+	vpe_cm: vpe-cm@760 {
-+		compatible = "ti,omap4-cm";
-+		reg = <0x760 0xc>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x760 0xc>;
-+
-+		vpe_clkctrl: vpe-clkctrl@0 {
-+			compatible = "ti,clkctrl";
-+			reg = <0x0 0xc>;
-+			#clock-cells = <2>;
-+		};
-+	};
-+
- };
+-	spi-flash@1 {
++	flash@1 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "jedec,spi-nor";
+@@ -509,7 +509,7 @@
+ 		#gpio-cells = <2>;
+ 	};
  
- &cm_core {
+-	lm75@48 {
++	temp-sensor@48 {
+ 		compatible = "national,lm75";
+ 		reg = <0x48>;
+ 	};
+@@ -524,7 +524,7 @@
+ 		reg = <0x52>;
+ 	};
+ 
+-	ds1682@6b {
++	elapsed-time-recorder@6b {
+ 		compatible = "dallas,ds1682";
+ 		reg = <0x6b>;
+ 	};
+@@ -536,7 +536,7 @@
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
+ 
+-	adt7411@4a {
++	adc@4a {
+ 		compatible = "adi,adt7411";
+ 		reg = <0x4a>;
+ 	};
+@@ -548,7 +548,7 @@
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
+ 
+-	gpio9: sx1503q@20 {
++	gpio9: io-expander@20 {
+ 		compatible = "semtech,sx1503q";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&pinctrl_sx1503_20>;
+@@ -559,12 +559,12 @@
+ 		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+ 
+-	lm75@4e {
++	temp-sensor@4e {
+ 		compatible = "national,lm75";
+ 		reg = <0x4e>;
+ 	};
+ 
+-	lm75@4f {
++	temp-sensor@4f {
+ 		compatible = "national,lm75";
+ 		reg = <0x4f>;
+ 	};
+@@ -576,17 +576,17 @@
+ 		reg = <0x23>;
+ 	};
+ 
+-	adt7411@4a {
++	adc@4a {
+ 		compatible = "adi,adt7411";
+ 		reg = <0x4a>;
+ 	};
+ 
+-	at24c08@54 {
++	eeprom@54 {
+ 		compatible = "atmel,24c08";
+ 		reg = <0x54>;
+ 	};
+ 
+-	tca9548@70 {
++	i2c-mux@70 {
+ 		compatible = "nxp,pca9548";
+ 		pinctrl-names = "default";
+ 		#address-cells = <1>;
+@@ -625,7 +625,7 @@
+ 		};
+ 	};
+ 
+-	tca9548@71 {
++	i2c-mux@71 {
+ 		compatible = "nxp,pca9548";
+ 		pinctrl-names = "default";
+ 		reg = <0x71>;
 -- 
-2.17.1
+2.21.0
 
