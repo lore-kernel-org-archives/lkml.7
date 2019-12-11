@@ -2,146 +2,278 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8145C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5157C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3E3206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0A812073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="EV/+ve2G"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mQ5chb8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbfLKKvV (ORCPT
+        id S1728512AbfLKKwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:51:21 -0500
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:10417 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbfLKKvU (ORCPT
+        Wed, 11 Dec 2019 05:52:50 -0500
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:22471 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbfLKKwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:51:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576061480;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=J+PK3N2DJUzzO10QyyTksvnTB34xRI+UojvMhxm4WZ0=;
-  b=EV/+ve2G/8QJeYLA7LaomTwiOj0IYAtOGAIBKGFg071X5xbVUgYBmx65
-   shKvnZN+iup4/W8j7uTjraGKQJehgzifHUL6c7yisjlto71lW160pWKvI
-   ExPZfqrvgrj63CzcCZG28I4DFpfQB6l3hGPiBcyUHezj44ZcoWIDXTvIG
-   A=;
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: UaTPJrU6Egt4MzstMZP2BNtNuKuboOoXdnOUwOxPyxOAurYNp5lQ953Z2Mu2RNKwSKe73nbzFX
- lmMrDjwxQ39Fpbotfj0c5eI/3u7Z15FTP0oJIu6fNh/T7r/IExQqEBAn/Y1QBC8k9Cn71eqjfu
- 6YfqGztP9OeKbVnz+E3HbbZwXhwW64CuY5eujohC6K69HYCCe7EdPaQx0A0Q9xMInzohlyKGuD
- d4R+vLHwYGZbKR76cXYf3UFbIKZvb2u/q5EM4F4s23eBIRej4lYIjTk3c2euOUYeo1TFPs+q3D
- 0eU=
-X-SBRS: 2.7
-X-MesageID: 9925700
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
-   d="scan'208";a="9925700"
-Date:   Wed, 11 Dec 2019 11:51:12 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     <sjpark@amazon.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pdurrant@amazon.com>, <xen-devel@lists.xenproject.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH v5 1/2] xenbus/backend: Add memory pressure handler
- callback
-Message-ID: <20191211105112.GK980@Air-de-Roger>
-References: <20191210101635.GD980@Air-de-Roger>
- <20191211035058.11479-1-sj38.park@gmail.com>
-MIME-Version: 1.0
+        Wed, 11 Dec 2019 05:52:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576061569; x=1607597569;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=tKTCV8zsPOF8wTXhXSHaG6JQ8Pv27HRkM2/blZeasrk=;
+  b=mQ5chb8sOBvvxbMCZPjwNhw5FkpiN/IATvwyNmGOEEM3Ly2D0UnUhvvE
+   4lgOXHJjJmb/xX22MXbr9Ug62WlXdOPTPJy5bJmSeot6VMvWVB1YNYBgg
+   aNKeNEJ16lsPN4P9hv8M5mINWlaBCpyAsCvXIW7v5/mVQ1M+WWv7A81GV
+   c=;
+IronPort-SDR: G3ZuTYQMWz/pizVnxKE6lqrBU5Ss1htIumjS+vqBhz3mycmQkJSo1HyI3Y3Pg3n8sQgZ55NJbw
+ rhQR34RpoCNg==
+X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
+   d="scan'208";a="8076040"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 11 Dec 2019 10:52:47 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 6304BA06B2;
+        Wed, 11 Dec 2019 10:52:46 +0000 (UTC)
+Received: from EX13D32EUC002.ant.amazon.com (10.43.164.94) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 10:52:45 +0000
+Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
+ EX13D32EUC002.ant.amazon.com (10.43.164.94) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 11 Dec 2019 10:52:45 +0000
+Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
+ EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
+ Wed, 11 Dec 2019 10:52:45 +0000
+From:   "Durrant, Paul" <pdurrant@amazon.com>
+To:     =?iso-8859-1?Q?Roger_Pau_Monn=E9?= <roger.pau@citrix.com>
+CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+Subject: RE: [PATCH v2 4/4] xen-blkback: support dynamic unbind/bind
+Thread-Topic: [PATCH v2 4/4] xen-blkback: support dynamic unbind/bind
+Thread-Index: AQHVr02/5BDvv90j7UOwWq+aSG/tNqe0wbIAgAABJIA=
+Date:   Wed, 11 Dec 2019 10:52:44 +0000
+Message-ID: <93f85e6b45eb4286b34ae12ea726038c@EX13D32EUC003.ant.amazon.com>
+References: <20191210113347.3404-1-pdurrant@amazon.com>
+ <20191210113347.3404-5-pdurrant@amazon.com>
+ <20191211104550.GJ980@Air-de-Roger>
+In-Reply-To: <20191211104550.GJ980@Air-de-Roger>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.166.120]
 Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191211035058.11479-1-sj38.park@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:50:58AM +0100, SeongJae Park wrote:
-> On Tue, 10 Dec 2019 11:16:35 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
-> > > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> > > index 869c816d5f8c..cdb075e4182f 100644
-> > > --- a/include/xen/xenbus.h
-> > > +++ b/include/xen/xenbus.h
-> > > @@ -104,6 +104,7 @@ struct xenbus_driver {
-> > >  	struct device_driver driver;
-> > >  	int (*read_otherend_details)(struct xenbus_device *dev);
-> > >  	int (*is_ready)(struct xenbus_device *dev);
-> > > +	unsigned (*reclaim)(struct xenbus_device *dev);
-> > 
-> > ... hence I wonder why it's returning an unsigned when it's just
-> > ignored.
-> > 
-> > IMO it should return an int to signal errors, and the return should be
-> > ignored.
-> 
-> I first thought similarly and set the callback to return something.  However,
-> as this callback is called to simply notify the memory pressure and ask the
-> driver to free its memory as many as possible, I couldn't easily imagine what
-> kind of errors that need to be handled by its caller can occur in the callback,
-> especially because current blkback's callback implementation has no such error.
-> So, if you and others agree, I would like to simply set the return type to
-> 'void' for now and defer the error handling to a future change.
+> -----Original Message-----
+> From: Roger Pau Monn=E9 <roger.pau@citrix.com>
+> Sent: 11 December 2019 10:46
+> To: Durrant, Paul <pdurrant@amazon.com>
+> Cc: xen-devel@lists.xenproject.org; linux-kernel@vger.kernel.org; Konrad
+> Rzeszutek Wilk <konrad.wilk@oracle.com>; Jens Axboe <axboe@kernel.dk>;
+> Boris Ostrovsky <boris.ostrovsky@oracle.com>; Juergen Gross
+> <jgross@suse.com>; Stefano Stabellini <sstabellini@kernel.org>
+> Subject: Re: [PATCH v2 4/4] xen-blkback: support dynamic unbind/bind
+>=20
+> On Tue, Dec 10, 2019 at 11:33:47AM +0000, Paul Durrant wrote:
+> > By simply re-attaching to shared rings during connect_ring() rather tha=
+n
+> > assuming they are freshly allocated (i.e assuming the counters are zero=
+)
+> > it is possible for vbd instances to be unbound and re-bound from and to
+> > (respectively) a running guest.
+> >
+> > This has been tested by running:
+> >
+> > while true;
+> >   do fio --name=3Drandwrite --ioengine=3Dlibaio --iodepth=3D16 \
+> >   --rw=3Drandwrite --bs=3D4k --direct=3D1 --size=3D1G --verify=3Dcrc32;
+> >   done
+> >
+> > in a PV guest whilst running:
+> >
+> > while true;
+> >   do echo vbd-$DOMID-$VBD >unbind;
+> >   echo unbound;
+> >   sleep 5;
+>=20
+> Is there anyway to know when the unbind has finished? AFAICT
+> xen_blkif_disconnect will return EBUSY if there are in flight
+> requests, and the disconnect won't be completed until those requests
+> are finished.
 
-Yes, I also wondered the same, but seeing you returned an integer I
-assumed there was interest in returning some kind of value. If there's
-nothing to return let's just make it void.
+Yes, the device sysfs node will disappear when remove() completes.
 
-> > 
-> > Also, I think it would preferable for this function to take an extra
-> > parameter to describe the resource the driver should attempt to free
-> > (ie: memory or interrupts for example). I'm however not able to find
-> > any existing Linux type to describe such resources.
-> 
-> Yes, such extention would be the right direction.  However, because there is no
-> existing Linux type to describe the type of resources to reclaim as you also
-> mentioned, there could be many different opinions about its implementation
-> detail.  In my opinion, it could be also possible to simply add another
-> callback for another resource type.  That said, because currently we have an
-> use case and an implementation for the memory pressure only, I would like to
-> let it as is for now and defer the extension as a future work, if you and
-> others have no objection.
+>=20
+> >   echo vbd-$DOMID-$VBD >bind;
+> >   echo bound;
+> >   sleep 3;
+> >   done
+> >
+> > in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind an=
+d
+> > re-bind its system disk image.
+> >
+> > This is a highly useful feature for a backend module as it allows it to
+> be
+> > unloaded and re-loaded (i.e. updated) without requiring domUs to be
+> halted.
+> > This was also tested by running:
+> >
+> > while true;
+> >   do echo vbd-$DOMID-$VBD >unbind;
+> >   echo unbound;
+> >   sleep 5;
+> >   rmmod xen-blkback;
+> >   echo unloaded;
+> >   sleep 1;
+> >   modprobe xen-blkback;
+> >   echo bound;
+> >   cd $(pwd);
+> >   sleep 3;
+> >   done
+> >
+> > in dom0 whilst running the same loop as above in the (single) PV guest.
+> >
+> > Some (less stressful) testing has also been done using a Windows HVM
+> guest
+> > with the latest 9.0 PV drivers installed.
+> >
+> > Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+> > ---
+> > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+> > Cc: "Roger Pau Monn=E9" <roger.pau@citrix.com>
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> > Cc: Juergen Gross <jgross@suse.com>
+> > Cc: Stefano Stabellini <sstabellini@kernel.org>
+> >
+> > v2:
+> >  - Apply a sanity check to the value of rsp_prod and fail the re-attach
+> >    if it is implausible
+> >  - Set allow_rebind to prevent ring from being closed on unbind
+> >  - Update test workload from dd to fio (with verification)
+> > ---
+> >  drivers/block/xen-blkback/xenbus.c | 59 +++++++++++++++++++++---------
+> >  1 file changed, 41 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-
+> blkback/xenbus.c
+> > index e8c5c54e1d26..13d09630b237 100644
+> > --- a/drivers/block/xen-blkback/xenbus.c
+> > +++ b/drivers/block/xen-blkback/xenbus.c
+> > @@ -181,6 +181,8 @@ static int xen_blkif_map(struct xen_blkif_ring
+> *ring, grant_ref_t *gref,
+> >  {
+> >  	int err;
+> >  	struct xen_blkif *blkif =3D ring->blkif;
+> > +	struct blkif_common_sring *sring_common;
+> > +	RING_IDX rsp_prod, req_prod;
+> >
+> >  	/* Already connected through? */
+> >  	if (ring->irq)
+> > @@ -191,46 +193,66 @@ static int xen_blkif_map(struct xen_blkif_ring
+> *ring, grant_ref_t *gref,
+> >  	if (err < 0)
+> >  		return err;
+> >
+> > +	sring_common =3D (struct blkif_common_sring *)ring->blk_ring;
+> > +	rsp_prod =3D READ_ONCE(sring_common->rsp_prod);
+> > +	req_prod =3D READ_ONCE(sring_common->req_prod);
+> > +
+> >  	switch (blkif->blk_protocol) {
+> >  	case BLKIF_PROTOCOL_NATIVE:
+> >  	{
+> > -		struct blkif_sring *sring;
+> > -		sring =3D (struct blkif_sring *)ring->blk_ring;
+> > -		BACK_RING_INIT(&ring->blk_rings.native, sring,
+> > -			       XEN_PAGE_SIZE * nr_grefs);
+> > +		struct blkif_sring *sring_native =3D
+> > +			(struct blkif_sring *)ring->blk_ring;
+>=20
+> I think you can constify both sring_native and sring_common (and the
+> other instances below).
 
-Ack, can I please ask the callback to be named reclaim_memory or some
-such then?
+Yes, I can do that. I don't think the macros would mind.
 
-Thanks, Roger.
+>=20
+> > +		unsigned int size =3D __RING_SIZE(sring_native,
+> > +						XEN_PAGE_SIZE * nr_grefs);
+> > +
+> > +		BACK_RING_ATTACH(&ring->blk_rings.native, sring_native,
+> > +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
+> > +		err =3D (req_prod - rsp_prod > size) ? -EIO : 0;
+> >  		break;
+> >  	}
+> >  	case BLKIF_PROTOCOL_X86_32:
+> >  	{
+> > -		struct blkif_x86_32_sring *sring_x86_32;
+> > -		sring_x86_32 =3D (struct blkif_x86_32_sring *)ring->blk_ring;
+> > -		BACK_RING_INIT(&ring->blk_rings.x86_32, sring_x86_32,
+> > -			       XEN_PAGE_SIZE * nr_grefs);
+> > +		struct blkif_x86_32_sring *sring_x86_32 =3D
+> > +			(struct blkif_x86_32_sring *)ring->blk_ring;
+> > +		unsigned int size =3D __RING_SIZE(sring_x86_32,
+> > +						XEN_PAGE_SIZE * nr_grefs);
+> > +
+> > +		BACK_RING_ATTACH(&ring->blk_rings.x86_32, sring_x86_32,
+> > +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
+> > +		err =3D (req_prod - rsp_prod > size) ? -EIO : 0;
+> >  		break;
+> >  	}
+> >  	case BLKIF_PROTOCOL_X86_64:
+> >  	{
+> > -		struct blkif_x86_64_sring *sring_x86_64;
+> > -		sring_x86_64 =3D (struct blkif_x86_64_sring *)ring->blk_ring;
+> > -		BACK_RING_INIT(&ring->blk_rings.x86_64, sring_x86_64,
+> > -			       XEN_PAGE_SIZE * nr_grefs);
+> > +		struct blkif_x86_64_sring *sring_x86_64 =3D
+> > +			(struct blkif_x86_64_sring *)ring->blk_ring;
+> > +		unsigned int size =3D __RING_SIZE(sring_x86_64,
+> > +						XEN_PAGE_SIZE * nr_grefs);
+> > +
+> > +		BACK_RING_ATTACH(&ring->blk_rings.x86_64, sring_x86_64,
+> > +				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
+> > +		err =3D (req_prod - rsp_prod > size) ? -EIO : 0;
+>=20
+> This is repeated for all ring types, might be worth to pull it out of
+> the switch...
+>=20
+
+I did wonder about that... I'll do in v3.
+
+> >  		break;
+> >  	}
+> >  	default:
+> >  		BUG();
+> >  	}
+> > +	if (err < 0)
+> > +		goto fail;
+>=20
+> ...and placed here instead?
+
+Indeed.
+
+  Cheers,
+    Paul
+
+>=20
+> Thanks, Roger.
