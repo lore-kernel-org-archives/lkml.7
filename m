@@ -2,118 +2,202 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA34CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B773C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C915D20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFCC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="UMp7LFUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbfLKNkS (ORCPT
+        id S1729679AbfLKNkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:40:18 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:58301 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729438AbfLKNkR (ORCPT
+        Wed, 11 Dec 2019 08:40:23 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31774 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729438AbfLKNkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:40:17 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mdv2u-1i7M5t0wNC-00b4PK; Wed, 11 Dec 2019 14:39:55 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Emese Revfy <re.emese@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] gcc-plugins: make it possible to disable CONFIG_GCC_PLUGINS again
-Date:   Wed, 11 Dec 2019 14:39:28 +0100
-Message-Id: <20191211133951.401933-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 11 Dec 2019 08:40:21 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBDb2YD005490;
+        Wed, 11 Dec 2019 14:40:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yAqm9sZp35cLmzHCOHCPDTCRBjuP7SiwSxl28sXlrQg=;
+ b=UMp7LFUIJcMpL/ztTzkeuNKPIoW5d2MdO7D/MLpo+4fZDT9Cmc1SpOSuw/HEaQMgQKJo
+ EK+l8gh7NZ4ruBUdTHv11v+53EQwTcTh10rqgrckblxKuuNoQh8P0BaRMyVjb9drkOUj
+ 6OAx/XUm9yn8OQkniTn9nqFn7A3ljOC04dz5GZtlxxG9nJvTtgb8u1JcYS0xgm+sm7HN
+ 9q6AN822uTyn3MkRPFVHWWINqeq4T9JmDeZeuYeZ7sbng+4n50HqbhZlmi5Q2MvAD/LV
+ W7VhrIXpwcVGfzIxguHIrjZpiiFyZOAkMEVxJJYn+O800N1tH5NgZn0DX8wcUljM+H0a pQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wrbrfjcgn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 11 Dec 2019 14:40:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3F3E5100038;
+        Wed, 11 Dec 2019 14:40:08 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2C32A2B5440;
+        Wed, 11 Dec 2019 14:40:08 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.47) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 14:40:07 +0100
+From:   Ludovic Barre <ludovic.Barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH V2] mmc: mmci: add threaded irq to abort DPSM of non-functional state
+Date:   Wed, 11 Dec 2019 14:39:34 +0100
+Message-ID: <20191211133934.16932-1-ludovic.Barre@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:+nmB7TYbeF+BbF1KYAsTCC10nXeyaJq0hfe0KpydKA2p+Otku3i
- /HMw47ZC370YdiwwA2iFeJ1n00wEOhd8ZpyGd2d3d+tUHhdNkk6xOI55m8KfR/Af1xXnmRk
- uJnl8uAvfeWWu1lir93AVBa49mZdCBu9xhylvPGJSH6gET5l2DxsXTwEEyoV3FhgWLLMkRJ
- uL1tGBQBgb0YkP3ZeMw2A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mDV/RTPIJ3w=:eKif/Og3P8/X7Fw17BCTtN
- Cl9jKu9p2v6izmw011BOHn6/K9GY07jxXMShZ4olfc2Gd6YCEdAMwkoa1mmX9jb0XkejA0sNp
- tzEsDim8f70Eknt3szdPZb6SoX3WB2szAS7ogNjfsjntgPMInAjYdknD9LRLuId8OXdTIsJOy
- h+a+VO3MILFVzFShouk4fs5XKrfFLbVi4UEcEtyFij9kYdEIwICWunPbC5SqNB+sHBByyqvUZ
- Gf06xWAzHiUFfAi7ZHzAWcjqmSzoOlwu0hXAHHAFJIghq6vTEVNgqH2DXvTbMGWJxwz+M+rP6
- NDwdSQLNbQaBJMRkQhGxO/IgNQDsGW9wZ/Oh201qXioUXKeOj2IdK5BxFOwXpPpWFrV72USuU
- 9hz2NM8+9SH4hkVItgVH6FwI/eWKDYdX13Nwh7K069l2ICBOtm+VHXlqMFyW6sju0fhxDwdXr
- EiznRvbD6dHKCyYaHdiqOlZeoAZaJfTOwHbiHi3hSruRGThx4nVgP7TY7VDOZI1mow0BoFHyO
- cCRJWwijAd73s4x1X7wD+pFusfq7fAi79J01dpXjWm0Z0xijOhtBkiBDp6IYh9SKhKopL4vLu
- u0LFX9ZYybNbddOwMcdeASQidktoVbgRIu5TU4R+RSWO2sZfCJ/n+7SbotKctVrsXGAif2atb
- RJkSI4jo7pzA/bRKxxuO4L1eZP1nBvbTnPjGmopnp3LYJpwu7Jsh14Xc01g/a2sU4LZYcS187
- /CslxGcFpLtXbOSYJAq/EX7UeKtipQigCXtVfk9pdUOhAxCfdjR9HVShXZ1dZKNcXsu7QHikh
- FqoWuJXtSO4tZnP+SxE1pdoQ72G2KXpfLKvssLLWFro5jBV0CBTMJxKfUQgf0bXSta0TxDiw2
- Qz9OmB190C+pXgfsJ+4Q==
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that randconfig builds with gcc no longer produce a lot of
-ccache hits, unlike with clang, and traced this back to plugins
-now being enabled unconditionally if they are supported.
+From: Ludovic Barre <ludovic.barre@st.com>
 
-I am now working around this by adding
+If datatimeout occurs on R1B request, the Data Path State Machine stays
+in busy and is non-functional. Only a reset aborts the DPSM.
 
-   export CCACHE_COMPILERCHECK=/usr/bin/size -A %compiler%
+Like a reset must be outside of critical section, this patch adds
+threaded irq function to release state machine. In this case,
+the mmc_request_done is called at the end of threaded irq and
+skipped into irq handler.
 
-to my top-level Makefile. This changes the heuristic that ccache uses
-to determine whether the plugins are the same after a 'make clean'.
-
-However, it also seems that being able to just turn off the plugins is
-generally useful, at least for build testing it adds noticeable overhead
-but does not find a lot of bugs additional bugs, and may be easier for
-ccache users than my workaround.
-
-Fixes: 9f671e58159a ("security: Create "kernel hardening" config area")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- scripts/gcc-plugins/Kconfig | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+change V2:
+ -check IRQ_WAKE_THREAD only in mmci_cmd_irq error part,
+  to avoid this test in mmci_request_end.
 
-diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-index d33de0b9f4f5..e3569543bdac 100644
---- a/scripts/gcc-plugins/Kconfig
-+++ b/scripts/gcc-plugins/Kconfig
-@@ -14,8 +14,8 @@ config HAVE_GCC_PLUGINS
- 	  An arch should select this symbol if it supports building with
- 	  GCC plugins.
+---
+ drivers/mmc/host/mmci.c | 46 +++++++++++++++++++++++++++++++++++------
+ drivers/mmc/host/mmci.h |  1 +
+ 2 files changed, 41 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 40e72c30ea84..2b91757e3e84 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1321,6 +1321,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 	} else if (host->variant->busy_timeout && busy_resp &&
+ 		   status & MCI_DATATIMEOUT) {
+ 		cmd->error = -ETIMEDOUT;
++		host->irq_action = IRQ_WAKE_THREAD;
+ 	} else {
+ 		cmd->resp[0] = readl(base + MMCIRESPONSE0);
+ 		cmd->resp[1] = readl(base + MMCIRESPONSE1);
+@@ -1339,7 +1340,10 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+ 				return;
+ 			}
+ 		}
+-		mmci_request_end(host, host->mrq);
++
++		if (host->irq_action != IRQ_WAKE_THREAD)
++			mmci_request_end(host, host->mrq);
++
+ 	} else if (sbc) {
+ 		mmci_start_command(host, host->mrq->cmd, 0);
+ 	} else if (!host->variant->datactrl_first &&
+@@ -1532,9 +1536,9 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+ {
+ 	struct mmci_host *host = dev_id;
+ 	u32 status;
+-	int ret = 0;
  
--config GCC_PLUGINS
--	bool
-+menuconfig GCC_PLUGINS
-+	bool "GCC plugins"
- 	depends on HAVE_GCC_PLUGINS
- 	depends on PLUGIN_HOSTCC != ""
- 	default y
-@@ -25,8 +25,7 @@ config GCC_PLUGINS
+ 	spin_lock(&host->lock);
++	host->irq_action = IRQ_HANDLED;
  
- 	  See Documentation/core-api/gcc-plugins.rst for details.
+ 	do {
+ 		status = readl(host->base + MMCISTATUS);
+@@ -1574,12 +1578,41 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
+ 		if (host->variant->busy_detect_flag)
+ 			status &= ~host->variant->busy_detect_flag;
  
--menu "GCC plugins"
--	depends on GCC_PLUGINS
-+if GCC_PLUGINS
+-		ret = 1;
+ 	} while (status);
  
- config GCC_PLUGIN_CYC_COMPLEXITY
- 	bool "Compute the cyclomatic complexity of a function" if EXPERT
-@@ -113,4 +112,4 @@ config GCC_PLUGIN_ARM_SSP_PER_TASK
- 	bool
- 	depends on GCC_PLUGINS && ARM
+ 	spin_unlock(&host->lock);
  
--endmenu
-+endif
+-	return IRQ_RETVAL(ret);
++	return host->irq_action;
++}
++
++/*
++ * mmci_irq_threaded is call if the mmci host need to release state machines
++ * before to terminate the request.
++ * If datatimeout occurs on R1B request, the Data Path State Machine stays
++ * in busy and is non-functional. Only a reset can to abort the DPSM.
++ */
++static irqreturn_t mmci_irq_threaded(int irq, void *dev_id)
++{
++	struct mmci_host *host = dev_id;
++	unsigned long flags;
++
++	if (host->rst) {
++		reset_control_assert(host->rst);
++		udelay(2);
++		reset_control_deassert(host->rst);
++	}
++
++	spin_lock_irqsave(&host->lock, flags);
++	writel(host->clk_reg, host->base + MMCICLOCK);
++	writel(host->pwr_reg, host->base + MMCIPOWER);
++	writel(MCI_IRQENABLE | host->variant->start_err,
++	       host->base + MMCIMASK0);
++
++	host->irq_action = IRQ_HANDLED;
++	mmci_request_end(host, host->mrq);
++	spin_unlock_irqrestore(&host->lock, flags);
++
++	return host->irq_action;
+ }
+ 
+ static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+@@ -2071,8 +2104,9 @@ static int mmci_probe(struct amba_device *dev,
+ 			goto clk_disable;
+ 	}
+ 
+-	ret = devm_request_irq(&dev->dev, dev->irq[0], mmci_irq, IRQF_SHARED,
+-			DRIVER_NAME " (cmd)", host);
++	ret = devm_request_threaded_irq(&dev->dev, dev->irq[0], mmci_irq,
++					mmci_irq_threaded, IRQF_SHARED,
++					DRIVER_NAME " (cmd)", host);
+ 	if (ret)
+ 		goto clk_disable;
+ 
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 158e1231aa23..5e63c0596364 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -412,6 +412,7 @@ struct mmci_host {
+ 
+ 	struct timer_list	timer;
+ 	unsigned int		oldstat;
++	u32			irq_action;
+ 
+ 	/* pio stuff */
+ 	struct sg_mapping_iter	sg_miter;
 -- 
-2.20.0
+2.17.1
 
