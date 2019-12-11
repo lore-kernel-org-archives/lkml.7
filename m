@@ -4,50 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BBDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAEBE22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B2024671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077893;
-	bh=YEsL8fnV5oRLJ3Z306dsBmpxsyykbyKz9/Cdu3UFYAE=;
+	s=default; t=1576077896;
+	bh=ff0QTGzeYj8UTsK1lZeu7l1UwpxXfyO2RNO2yWWQ4W8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wKzfI9AVdLlt6/RsB4MeQxLOkusB+B3oz0nQ1Ms6/rWpGi8TYpDPBgsuZSiMTO31
-	 efpErXnFh54u0ZP1DsYsciSZg5NrU2A7D6zdplaA5lXq5WIuPODRfMPzxnvc9DJ8d1
-	 ho2NEGsmufNyyV2OK8qZiuZf3dJkrTRhD/8QsZQM=
+	b=Drkw0mCr0zbE4NFMtBi1/iol2PLQe7rjlvvmApTiVILfV+PKUwMs0K/l3lgj3pYry
+	 fdqsMcNHQG0zL4Aq2qyTzLSWGd5wN5cfFvRq8SoR6K+2wIZSOJrMFGwiaHTm5wIIkc
+	 ut8kPOL50XxTIdfS6Eon1U++L1o6KYBmHwquUzDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732912AbfLKPYw (ORCPT
+        id S1732920AbfLKPYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:24:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732609AbfLKPYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:49 -0500
+        id S1732906AbfLKPYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325522077B;
-        Wed, 11 Dec 2019 15:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40892208C3;
+        Wed, 11 Dec 2019 15:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077888;
-        bh=YEsL8fnV5oRLJ3Z306dsBmpxsyykbyKz9/Cdu3UFYAE=;
+        s=default; t=1576077891;
+        bh=ff0QTGzeYj8UTsK1lZeu7l1UwpxXfyO2RNO2yWWQ4W8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xNboXs8FYkKHWX9Uv9zdKFTprORkc2GiJMg91GchptDFeF7EtMwllHmi8+TOhZ7xl
-         0AOHk6Vo/yO2rSvUqpf3QIlWHqVIeHzMEiYjGgUUDZBDOYvL0z5mCRmULIJi5eew5t
-         OH00Jo4+k7C9wFIAvVTWWf323opaMhYI9oLlVWcM=
+        b=2OwYYKsY+ulFoCYYv5yi6rPl4KetTKUWb6tJVqXcKAWX0qcwUYchhBgXvtCUm5Cwv
+         fBNGufbyCGl3T+88g453oUsuiasy97+yPbfJdv0hBpGNaKcqTsX3p72sPYHM2xyn02
+         d7jc+u5ANTorVInVVklaXuvypQjiZE0in9cKYLuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, emamd001@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 209/243] Input: Fix memory leak in psxpad_spi_probe
-Date:   Wed, 11 Dec 2019 16:06:11 +0100
-Message-Id: <20191211150353.383586114@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Joerg Roedel <jroedel@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 210/243] x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
+Date:   Wed, 11 Dec 2019 16:06:12 +0100
+Message-Id: <20191211150353.514527388@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,32 +67,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-In the implementation of psxpad_spi_probe() the allocated memory for
-pdev is leaked if psxpad_spi_init_ff() or input_register_polled_device()
-fail. The solution is using device managed allocation, like the one used
-for pad. Perform the allocation using
-devm_input_allocate_polled_device().
+commit 9a62d20027da3164a22244d9f022c0c987261687 upstream.
 
-Fixes: 8be193c7b1f4 ("Input: add support for PlayStation 1/2 joypads connected via SPI")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
+ranges: before such vmap ranges are reused we make sure that they are
+unmapped from every task's page tables.
+
+This is really easy on pagetable setups where the kernel page tables
+are shared between all tasks - this is the case on 32-bit kernels
+with SHARED_KERNEL_PMD = 1.
+
+But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
+over the pgd_list and clearing all pmd entries in the pgds that
+are cleared in the init_mm.pgd, which is the reference pagetable
+that the vmalloc() code uses.
+
+In that context the current practice of vmalloc_sync_all() iterating
+until FIX_ADDR_TOP is buggy:
+
+        for (address = VMALLOC_START & PMD_MASK;
+             address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
+             address += PMD_SIZE) {
+                struct page *page;
+
+Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
+address ranges:
+
+	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
+
+This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
+that don't clear their pmds, but it's lethal for the LDT range,
+which relies on having different mappings in different processes,
+and 'synchronizing' them in the vmalloc sense corrupts those
+pagetable entries (clearing them).
+
+This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
+off and makes this the dominant mapping mode on 32-bit.
+
+To make LDT working again vmalloc_sync_all() must only iterate over
+the volatile parts of the kernel address range that are identical
+between all processes.
+
+So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
+to make sure the VMALLOC areas are synchronized and the LDT
+mapping is not falsely overwritten.
+
+The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
+but this is not really a proplem since their PMDs get established
+during bootup and never change.
+
+This change fixes the ldt_gdt selftest in my setup.
+
+[ mingo: Fixed up the changelog to explain the logic and modified the
+         copying to only happen up until VMALLOC_END. ]
+
+Reported-by: Borislav Petkov <bp@suse.de>
+Tested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: <stable@vger.kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: hpa@zytor.com
+Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
+Link: https://lkml.kernel.org/r/20191126111119.GA110513@gmail.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/joystick/psxpad-spi.c |    2 +-
+ arch/x86/mm/fault.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/input/joystick/psxpad-spi.c
-+++ b/drivers/input/joystick/psxpad-spi.c
-@@ -292,7 +292,7 @@ static int psxpad_spi_probe(struct spi_d
- 	if (!pad)
- 		return -ENOMEM;
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -281,7 +281,7 @@ void vmalloc_sync_all(void)
+ 		return;
  
--	pdev = input_allocate_polled_device();
-+	pdev = devm_input_allocate_polled_device(&spi->dev);
- 	if (!pdev) {
- 		dev_err(&spi->dev, "failed to allocate input device\n");
- 		return -ENOMEM;
+ 	for (address = VMALLOC_START & PMD_MASK;
+-	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
++	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
+ 	     address += PMD_SIZE) {
+ 		struct page *page;
+ 
 
 
