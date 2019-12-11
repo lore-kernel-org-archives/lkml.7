@@ -2,138 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B30C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47935C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201B12077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2E02077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="S4xuxJNJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DlIrY07n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfLKW0o (ORCPT
+        id S1726872AbfLKW2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:26:44 -0500
-Received: from mail-bn8nam11on2092.outbound.protection.outlook.com ([40.107.236.92]:22112
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726494AbfLKW0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 17:26:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TYUgx8+tj2dw2OMDX3jYHY0GMkugw/X/jV2N1BjsSnIaEZ4HYClVBx/qJiyd+imwOqDIlO+yByAQnMSBg1O7Z0zDFKZqeDXS4glikNjo4PcEzf3Dd2eY1u4lHnKgXNmh0EhXYhuH/2QVrCnCq8u1dR46yRJlAW8Dy7pbQtE+DVncL4/nFsywGQpb+Z0DTmtNWHDWuckBYFh8oKpIQfvXGSBbd9IXjYuqgBZHRD7IHLE1Zz7nHoJ8agOfwfAbLltrmHMG3LGG0gs37OXKvpD0cCwEDQ228hSNxjEtm//E11aDZ5mrDzihJDW4yhosEcfamnITqwOvPpDvCDZo0Uhhrw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XM2amkkYojjLcRzL9usR7m+QR9CHtChNKLPqy3C4kLs=;
- b=lG7+8KfJ3d2R/9pwsuerqeguEm8lkHdhD1M2Y4uPwWHkS9VcWhfnSr8SYPVCJP3j9IzG9oChgwBQDW/Kzet2rOhtLittgn7MQOMkVGkWQY4EzZoTLpsyYBU1NzA3C17kf3rXYZZprYk5XTKHZ2Qyldl7oNq8me3AQ+b6W/x6ERa+2m1iAx/hX8r5C7Lj31AV7Pw9mY/MP99iBni11Al1vfEM748wlqwMreew0xi0eflOHk8L4VZE4RWhSkJVCUixUuVP/1wO6BpOH09SVO0Cn2Eaon7FRoUBkpPVdQrQuplVmHDVUNVUVpHDCUs5Bdjf7miyqJshASLeCCbpDiEBNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XM2amkkYojjLcRzL9usR7m+QR9CHtChNKLPqy3C4kLs=;
- b=S4xuxJNJv6TdYNxVrRAXkXVQjXBJVQtgRltKfKppK5DgA3GYapox7Cq8XRFUNFB3u/Jfm5TYXiBU9jCf/M8+kI+77e9ALSTaz5OUy2DW8MCZZhH/9/3NuNQroY2xgFO5Oe1QcfPJE0EIS/fdMBA56ImYqQ9WPFSgCvxMsuO/u6I=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=lkmlhyz@microsoft.com; 
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com (52.132.132.158) by
- DM5PR2101MB1128.namprd21.prod.outlook.com (52.132.133.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.2; Wed, 11 Dec 2019 22:26:39 +0000
-Received: from DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::38a4:3ae9:3c5d:9b3a]) by DM5PR2101MB0901.namprd21.prod.outlook.com
- ([fe80::38a4:3ae9:3c5d:9b3a%8]) with mapi id 15.20.2538.000; Wed, 11 Dec 2019
- 22:26:39 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2,net] hv_netvsc: Fix tx_table init in rndis_set_subchannel()
-Date:   Wed, 11 Dec 2019 14:26:27 -0800
-Message-Id: <1576103187-2681-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR17CA0096.namprd17.prod.outlook.com
- (2603:10b6:300:c2::34) To DM5PR2101MB0901.namprd21.prod.outlook.com
- (2603:10b6:4:a7::30)
+        Wed, 11 Dec 2019 17:28:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36546 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbfLKW2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 17:28:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x184so24290pfb.3;
+        Wed, 11 Dec 2019 14:28:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TUyXHjX3PYUM9nKm/LBHXohlHydzz+X5MYoM1R3UKnk=;
+        b=DlIrY07nZUpFfOZumiYwfvGQsjWziSLuLYYk0u7cfTR9mrbgjKyuMd5nIFIc64yhuW
+         GcRRxJf3NkABfPegZhceytl5qOyYrvDrDV/aBhiBTXeS6v6u5sPY5TSPRvjkx4q2Oi/i
+         eRaSMr5jcGPDX0kq73qvnAtMLsMwSEKlDbSv3QNbkWh1AR8bEHgwnOfa/wJWqxHMKgxL
+         VjL6DCJjVRR0f4QNVAPMTJm1iKH2z8oJiCjGd3nRZZqQ5jMtHsW4qIrqkRn4TgU/fmGT
+         FBZOqHzbhmqPfZxERKkpoIek+rADA3KSeICpHN+4g4y4asHuvsgyuTPi6ZyGijl9aQZK
+         a6yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TUyXHjX3PYUM9nKm/LBHXohlHydzz+X5MYoM1R3UKnk=;
+        b=F7IWVq9hxeX//191JcDXDsMNVyiiHjOwnvkUdEtDwuSk7iWQBk0DLdR3PJZtxWYg74
+         +WHpUwBWDReMO25RZCW/G1JBAZsOl/L+3cLoJX2YQyZMQ1eEPOGWfJDDweIMoJO5Z9MT
+         XjF3fxa/KXe5hUAQRm9lAw0RWN9HNHL8XU8bIfV3GBSmlu9Sz5TSmx8IHgReWAnEvBI0
+         dIu27//atlAcqDIYXuiFCDPMib+HSXvegeZ0Xw7m3q9nal4Dg8mXdWN15dzz9Ltu2YUW
+         7PLzy49aZUcGOFb7e86DwDYkNWwHbDYVzBJ+uAyyEYocbmn5tcTmG1uv+NO0lI0w8CCd
+         MLEg==
+X-Gm-Message-State: APjAAAWlKqlwhSkNb+T2cH+0vb8ae1Pe2byrLQLeM2/EIQlq7NasTc/a
+        vRqTumFwAgf824+yl7I1ZTo=
+X-Google-Smtp-Source: APXvYqxwKjD3h+li5pd06Ogk9jgvc7NsUBZEri5ZUl/uWZW2mQ2IR6/uARTmg9E9Edg/X5XISeramg==
+X-Received: by 2002:a63:d00f:: with SMTP id z15mr6780305pgf.143.1576103312802;
+        Wed, 11 Dec 2019 14:28:32 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z23sm3844841pgj.43.2019.12.11.14.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 14:28:32 -0800 (PST)
+Date:   Wed, 11 Dec 2019 14:28:29 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
+ API
+Message-ID: <20191211222829.GV50317@dtor-ws>
+References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
+ <20191128185630.GK82109@yoga>
+ <20191202014237.GR248138@dtor-ws>
+ <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
+ <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
+ <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR17CA0096.namprd17.prod.outlook.com (2603:10b6:300:c2::34) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Wed, 11 Dec 2019 22:26:38 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e8ecffa3-134d-49ce-4a7d-08d77e8930fe
-X-MS-TrafficTypeDiagnostic: DM5PR2101MB1128:|DM5PR2101MB1128:|DM5PR2101MB1128:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <DM5PR2101MB112846D670B0545E0A11E47FAC5A0@DM5PR2101MB1128.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 024847EE92
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(346002)(136003)(396003)(376002)(189003)(199004)(66476007)(66946007)(66556008)(10290500003)(2616005)(956004)(6666004)(478600001)(2906002)(316002)(36756003)(4326008)(8936002)(26005)(5660300002)(186003)(6486002)(6506007)(81166006)(81156014)(8676002)(6512007)(52116002)(16526019);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1128;H:DM5PR2101MB0901.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Sso8D02MJ+n0YkoVP+ugju+KKbR+uXfSnOqxTWZ4LKqjbQbrzeB4skOOeLyaAot45Sb/iw/IjyA5sQdRE90TLN0qGmgyCVqWlLWNPgBIgO+mEmcOeOJxX4zMZPzQH5BrbD63DxQ92vzTpSdsbpqcwcgzRjSPJl3QHA2WaWwXP57VZ5B8g2SIr7obiOeSLCgsbYGHZykhmghMJPJz+qv1rgCL3clz3ys/LLTUWJq0E/Vntsh5brmqk5UO1mctBo+nuyMDGwyDbVpyrjfL8DO/rDjSchEeyBF3X3F4YecCxkPH+uDX7F7D/dUzDveIKFA3bPWKp3FIP5wDYCihJPMSS8J6YnO/FWeBg1g4zCSsVq1j2jt8DrpjYbOXyKiSOihMqMrXJnV/HOX1jVotiEWIdlzh4XbbGgCHQQ7WBkiYSBVHo5iMBbfq+kSEZ8FDtexD
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8ecffa3-134d-49ce-4a7d-08d77e8930fe
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 22:26:39.5654
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mcdgJg5bXS+nxX+SoYo1YhL3AGQbcAMJ4H1H0ioCU/WkccWDK+MZjVSnHas0TnFb2+Ks7CnnwmEhMh/kZJPQow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Host can provide send indirection table messages anytime after RSS is
-enabled by calling rndis_filter_set_rss_param(). So the host provided
-table values may be overwritten by the initialization in
-rndis_set_subchannel().
+On Wed, Dec 11, 2019 at 05:17:28PM +0100, Marc Gonzalez wrote:
+> But I need to ask: what is the rationale for the devm_add_action API?
 
-To prevent this problem, move the tx_table initialization before calling
-rndis_filter_set_rss_param().
+For one-off and maybe complex unwind actions in drivers that wish to use
+devm API (as mixing devm and manual release is verboten). Also is often
+used when some core subsystem does not provide enough devm APIs.
 
-Fixes: a6fb6aa3cfa9 ("hv_netvsc: Set tx_table to equal weight after subchannels open")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Thanks.
 
----
- drivers/net/hyperv/rndis_filter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index 206b4e7..05bc5ec8 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1171,6 +1171,9 @@ int rndis_set_subchannel(struct net_device *ndev,
- 	wait_event(nvdev->subchan_open,
- 		   atomic_read(&nvdev->open_chn) == nvdev->num_chn);
- 
-+	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
-+		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
-+
- 	/* ignore failures from setting rss parameters, still have channels */
- 	if (dev_info)
- 		rndis_filter_set_rss_param(rdev, dev_info->rss_key);
-@@ -1180,9 +1183,6 @@ int rndis_set_subchannel(struct net_device *ndev,
- 	netif_set_real_num_tx_queues(ndev, nvdev->num_chn);
- 	netif_set_real_num_rx_queues(ndev, nvdev->num_chn);
- 
--	for (i = 0; i < VRSS_SEND_TAB_SIZE; i++)
--		ndev_ctx->tx_table[i] = i % nvdev->num_chn;
--
- 	return 0;
- }
- 
 -- 
-1.8.3.1
-
+Dmitry
