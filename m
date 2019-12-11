@@ -2,52 +2,50 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3200AC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DE6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18972173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CFF24679
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078070;
-	bh=QIEmayY7XBaf2l1724/9bB94MXsBZk48XyzvQo26dVY=;
+	s=default; t=1576078076;
+	bh=G7JepEM2QDEiA0pj+v43Jd666qPxnvyF6+bV6zdHBBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVRIMOylse57gxY6qTQA0KtT4Whft8dUw35Ql63vNCZSGePXuOUgOvcWVRHqccNx5
-	 HnBGX3quQmaewMs/LC2BRCidONGcCbtADH3wk8bHWT1r2NVaVAC4G5mELouRNsBrWm
-	 DRe4catUiu/L5egBGK6KId7iW7ldYjUSZIYt5UIU=
+	b=jQVJExD5TXjjOlWsNUZPg+56/KzrRR3xJTnfooJPfqFvWzP1qkWJrP1BABTR71fLK
+	 1pgHvpFbVUozUBx25IWc6AnAzxG0yjvMUicMtGmXfWS1x4g/+AiJYRUe8nRim4M5yR
+	 jXtZqlQgdE5QK4LVPh/1wb+gcauJbh/8VlJCNP4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbfLKP1t (ORCPT
+        id S2387502AbfLKP1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732990AbfLKP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:30 -0500
+        id S1733128AbfLKP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 728A32465B;
-        Wed, 11 Dec 2019 15:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D085524679;
+        Wed, 11 Dec 2019 15:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078049;
-        bh=QIEmayY7XBaf2l1724/9bB94MXsBZk48XyzvQo26dVY=;
+        s=default; t=1576078054;
+        bh=G7JepEM2QDEiA0pj+v43Jd666qPxnvyF6+bV6zdHBBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbmI0YFhUdyZSmKP7PdBhiBIt5ZnvzLGe+a4R0r3/1a6/KPgR/ksFTk3jLL7AKMVw
-         kU/FlTur4hgkTFun0yZNB3yugoHB42ZCIihIQbhX2qNye/EahjAdNhQgY0CIOo3LGb
-         8JqRseNJcDHftbTNNc/hhhrc1eUgznk57WxffL+A=
+        b=IOKTrKkE6KReGZ6sIxPTbxHzXmv8ordE4aMAkKbI2Vs/61VJnc6gUbNO1T2ww3oNQ
+         YRxA4VG5WIytD27RXAAqKrzEi0wGglu6/HV0ihL5Ad2oe0djxvksb34IhTUHh/Uzz2
+         ZE9fDrnEEglJ87GKYLNshmnTqJCnT2LpDo/gsnWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 42/79] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
-Date:   Wed, 11 Dec 2019 10:26:06 -0500
-Message-Id: <20191211152643.23056-42-sashal@kernel.org>
+Cc:     Jinke Fan <fanjinke@hygon.cn>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 47/79] HID: quirks: Add quirk for HP MSU1465 PIXART OEM mouse
+Date:   Wed, 11 Dec 2019 10:26:11 -0500
+Message-Id: <20191211152643.23056-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,48 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Jinke Fan <fanjinke@hygon.cn>
 
-[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
+[ Upstream commit f1a0094cbbe97a5f8aca7bdc64bfe43ac9dc6879 ]
 
-The newer ibm,drc-info property is a condensed description of the old
-ibm,drc-* properties (ie. names, types, indexes, and power-domains).
-When matching a drc-index to a drc-name we need to verify that the
-index is within the start and last drc-index range and map it to a
-drc-name using the drc-name-prefix and logical index.
+The PixArt OEM mouse disconnets/reconnects every minute on
+Linux. All contents of dmesg are repetitive:
 
-Fix the mapping by checking that the index is within the range of the
-current drc-info entry, and build the name from the drc-name-prefix
-concatenated with the starting drc-name-suffix value and the sequential
-index obtained by subtracting ibm,my-drc-index from this entries
-drc-start-index.
+[ 1465.810014] usb 1-2.2: USB disconnect, device number 20
+[ 1467.431509] usb 1-2.2: new low-speed USB device number 21 using xhci_hcd
+[ 1467.654982] usb 1-2.2: New USB device found, idVendor=03f0,idProduct=1f4a, bcdDevice= 1.00
+[ 1467.654985] usb 1-2.2: New USB device strings: Mfr=1, Product=2,SerialNumber=0
+[ 1467.654987] usb 1-2.2: Product: HP USB Optical Mouse
+[ 1467.654988] usb 1-2.2: Manufacturer: PixArt
+[ 1467.699722] input: PixArt HP USB Optical Mouse as /devices/pci0000:00/0000:00:07.1/0000:05:00.3/usb1/1-2/1-2.2/1-2.2:1.0/0003:03F0:1F4A.0012/input/input19
+[ 1467.700124] hid-generic 0003:03F0:1F4A.0012: input,hidraw0: USB HID v1.11 Mouse [PixArt HP USB Optical Mouse] on usb-0000:05:00.3-2.2/input0
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
+So add HID_QUIRK_ALWAYS_POLL for this one as well.
+Test the patch, the mouse is no longer disconnected and there are no
+duplicate logs in dmesg.
+
+Reference:
+https://github.com/sriemer/fix-linux-mouse
+
+Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index 7d74fe875225e..a306cad704705 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 		/* Should now know end of current entry */
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 02c263a4c0836..1949d6fca53e5 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -563,6 +563,7 @@
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A	0x094a
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941	0x0941
+ #define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641	0x0641
++#define USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a	0x1f4a
  
- 		/* Found it */
--		if (my_index <= drc.last_drc_index) {
-+		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
-+			int index = my_index - drc.drc_index_start;
- 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--				my_index);
-+				drc.drc_name_suffix_start + index);
- 			break;
- 		}
- 	}
+ #define USB_VENDOR_ID_HUION		0x256c
+ #define USB_DEVICE_ID_HUION_TABLET	0x006e
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index a407fd2399ff4..57d6fe9ed4163 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -96,6 +96,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_094A), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0941), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_0641), HID_QUIRK_ALWAYS_POLL },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_HP, USB_PRODUCT_ID_HP_PIXART_OEM_USB_OPTICAL_MOUSE_1f4a), HID_QUIRK_ALWAYS_POLL },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_IDEACOM, USB_DEVICE_ID_IDEACOM_IDC6680), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_INNOMEDIA, USB_DEVICE_ID_INNEX_GENESIS_ATARI), HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M610X), HID_QUIRK_MULTI_INPUT },
 -- 
 2.20.1
 
