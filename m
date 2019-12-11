@@ -2,52 +2,54 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2125C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 375552073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6A62073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077754;
-	bh=Qpgqb5KvDYOCNjH4+L/VVnzPHJ1CyAFeSY01MUeSrw4=;
+	s=default; t=1576077756;
+	bh=ClgqZHzhsPuOhhKHmA7iAkuNWjv/c05qXLW7ILvQ8LE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T2mF635UxzQwQvpTrXAFf5msWmKUCZZAf6GTL0SqGmiZ6ZCITClHxKWyDevXn/xP0
-	 a1zdTaI4AWrtJ2Gg6MYH5QfsiKzXoFYKqlzbZiFh+pV0Q1HZGovNuXGnGTrBBHtqLP
-	 I0BXNKchAqAy/PLR4JBxYM1cQFCYNtPq8xOcg3Js=
+	b=0v6ntd97A5YjqxxTCAMmagjraSrljpqN7GirY8I13+gCtwZEd3D9QBi4EMFmgCpjN
+	 xdE1S25r61d+BSrkIDHCpc6g8n/bCxZyzXOofIP2Q0mc2PC3Tb0RHpgtva3F5wxytq
+	 1ECzRcfEpXZifr93UizdYSKkkBwTkX9CK9JgELZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfLKPWc (ORCPT
+        id S1732618AbfLKPWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53218 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732273AbfLKPW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:29 -0500
+        id S1732177AbfLKPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4217E2073D;
-        Wed, 11 Dec 2019 15:22:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569E9214AF;
+        Wed, 11 Dec 2019 15:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077747;
-        bh=Qpgqb5KvDYOCNjH4+L/VVnzPHJ1CyAFeSY01MUeSrw4=;
+        s=default; t=1576077752;
+        bh=ClgqZHzhsPuOhhKHmA7iAkuNWjv/c05qXLW7ILvQ8LE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ppa+x0UEhwZDkgZAu6frC0l2ZueFt0szEGhDsk0Haq+l2QuzIeOShbtZ+Q4asOWMa
-         QdVm1rzsBSgD07XhjOI9WOWsx+0VecCdsdLvD3y4Qk1f+WYhn4apvC2tj2RHR0u1BB
-         I+qybhToP3VHBYSJ/c6ebsGsy06XVPQuCakvm4Po=
+        b=ntFZF0Lj5Q03D8ohrp7nOjKxv2l+BcqwXlaKCtD4e9gConwX6jaFvWX56fRtU/mhf
+         xhdvbFjn/N9zZqTu43VHdEQ0qCRQraReZ3OERBf0FTETrB/HaJC0zSzPjOynSa3sEk
+         cfHwKcx3XyT+iW3NPcuEYBt9jjQU4K/DoB2ZyDXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/243] sparc: Fix JIT fused branch convergance.
-Date:   Wed, 11 Dec 2019 16:04:30 +0100
-Message-Id: <20191211150346.421950243@linuxfoundation.org>
+Subject: [PATCH 4.19 158/243] modpost: skip ELF local symbols during section mismatch check
+Date:   Wed, 11 Dec 2019 16:05:20 +0100
+Message-Id: <20191211150349.832644988@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,171 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+From: Paul Walmsley <paul.walmsley@sifive.com>
 
-[ Upstream commit c44768a33da81b4a0986e79bbf0588f1a0651dec ]
+[ Upstream commit a4d26f1a0958bb1c2b60c6f1e67c6f5d43e2647b ]
 
-On T4 and later sparc64 cpus we can use the fused compare and branch
-instruction.
+During development of a serial console driver with a gcc 8.2.0
+toolchain for RISC-V, the following modpost warning appeared:
 
-However, it can only be used if the branch destination is in the range
-of a signed 10-bit immediate offset.  This amounts to 1024
-instructions forwards or backwards.
+----
+WARNING: vmlinux.o(.data+0x19b10): Section mismatch in reference from the variable .LANCHOR1 to the function .init.text:sifive_serial_console_setup()
+The variable .LANCHOR1 references
+the function __init sifive_serial_console_setup()
+If the reference is valid then annotate the
+variable with __init* or __refdata (see linux/init.h) or name the variable:
+*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+----
 
-After the commit referenced in the Fixes: tag, the largest possible
-size program seen by the JIT explodes by a significant factor.
+".LANCHOR1" is an ELF local symbol, automatically created by gcc's section
+anchor generation code:
 
-As a result of this convergance takes many more passes since the
-expanded "BPF_LDX | BPF_MSH | BPF_B" code sequence, for example,
-contains several embedded branch on condition instructions.
+https://gcc.gnu.org/onlinedocs/gccint/Anchored-Addresses.html
 
-On each pass, as suddenly new fused compare and branch instances
-become valid, this makes thousands more in range for the next pass.
-And so on and so forth.
+https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/varasm.c;h=cd9591a45617464946dcf9a126dde277d9de9804;hb=9fb89fa845c1b2e0a18d85ada0b077c84508ab78#l7473
 
-This is most greatly exemplified by "BPF_MAXINSNS: exec all MSH" which
-takes 35 passes to converge, and shrinks the image by about 64K.
+This was verified by compiling the kernel with -fno-section-anchors
+and observing that the ".LANCHOR1" ELF local symbol disappeared, and
+modpost no longer warned about the section mismatch.  The serial
+driver code idiom triggering the warning is standard Linux serial
+driver practice that has a specific whitelist inclusion in modpost.c.
 
-To decrease the cost of this number of convergance passes, do the
-convergance pass before we have the program image allocated, just like
-other JITs (such as x86) do.
+I'm neither a modpost nor an ELF expert, but naively, it doesn't seem
+useful for modpost to report section mismatch warnings caused by ELF
+local symbols by default.  Local symbols have compiler-generated
+names, and thus bypass modpost's whitelisting algorithm, which relies
+on the presence of a non-autogenerated symbol name.  This increases
+the likelihood that false positive warnings will be generated (as in
+the above case).
 
-Fixes: e0cea7ce988c ("bpf: implement ld_abs/ld_ind in native bpf")
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Thus, disable section mismatch reporting on ELF local symbols.  The
+rationale here is similar to that of commit 2e3a10a1551d ("ARM: avoid
+ARM binutils leaking ELF local symbols") and of similar code already
+present in modpost.c:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/mod/modpost.c?h=v4.19-rc4&id=7876320f88802b22d4e2daf7eb027dd14175a0f8#n1256
+
+This third version of the patch implements a suggestion from Masahiro
+Yamada <yamada.masahiro@socionext.com> to restructure the code as an
+additional pattern matching step inside secref_whitelist(), and
+further improves the patch description.
+
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Paul Walmsley <paul@pwsan.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/net/bpf_jit_comp_64.c | 77 ++++++++++++++++++++------------
- 1 file changed, 49 insertions(+), 28 deletions(-)
+ scripts/mod/modpost.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/sparc/net/bpf_jit_comp_64.c b/arch/sparc/net/bpf_jit_comp_64.c
-index 222785af550b4..7217d63596431 100644
---- a/arch/sparc/net/bpf_jit_comp_64.c
-+++ b/arch/sparc/net/bpf_jit_comp_64.c
-@@ -1425,12 +1425,12 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 	struct bpf_prog *tmp, *orig_prog = prog;
- 	struct sparc64_jit_data *jit_data;
- 	struct bpf_binary_header *header;
-+	u32 prev_image_size, image_size;
- 	bool tmp_blinded = false;
- 	bool extra_pass = false;
- 	struct jit_ctx ctx;
--	u32 image_size;
- 	u8 *image_ptr;
--	int pass;
-+	int pass, i;
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index 858cbe56b1006..91a80036c05d5 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -1163,6 +1163,14 @@ static const struct sectioncheck *section_mismatch(
+  *   fromsec = text section
+  *   refsymname = *.constprop.*
+  *
++ * Pattern 6:
++ *   Hide section mismatch warnings for ELF local symbols.  The goal
++ *   is to eliminate false positive modpost warnings caused by
++ *   compiler-generated ELF local symbol names such as ".LANCHOR1".
++ *   Autogenerated symbol names bypass modpost's "Pattern 2"
++ *   whitelisting, which relies on pattern-matching against symbol
++ *   names to work.  (One situation where gcc can autogenerate ELF
++ *   local symbols is when "-fsection-anchors" is used.)
+  **/
+ static int secref_whitelist(const struct sectioncheck *mismatch,
+ 			    const char *fromsec, const char *fromsym,
+@@ -1201,6 +1209,10 @@ static int secref_whitelist(const struct sectioncheck *mismatch,
+ 	    match(fromsym, optim_symbols))
+ 		return 0;
  
- 	if (!prog->jit_requested)
- 		return orig_prog;
-@@ -1461,61 +1461,82 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 		header = jit_data->header;
- 		extra_pass = true;
- 		image_size = sizeof(u32) * ctx.idx;
-+		prev_image_size = image_size;
-+		pass = 1;
- 		goto skip_init_ctx;
- 	}
- 
- 	memset(&ctx, 0, sizeof(ctx));
- 	ctx.prog = prog;
- 
--	ctx.offset = kcalloc(prog->len, sizeof(unsigned int), GFP_KERNEL);
-+	ctx.offset = kmalloc_array(prog->len, sizeof(unsigned int), GFP_KERNEL);
- 	if (ctx.offset == NULL) {
- 		prog = orig_prog;
- 		goto out_off;
- 	}
- 
--	/* Fake pass to detect features used, and get an accurate assessment
--	 * of what the final image size will be.
-+	/* Longest sequence emitted is for bswap32, 12 instructions.  Pre-cook
-+	 * the offset array so that we converge faster.
- 	 */
--	if (build_body(&ctx)) {
--		prog = orig_prog;
--		goto out_off;
--	}
--	build_prologue(&ctx);
--	build_epilogue(&ctx);
-+	for (i = 0; i < prog->len; i++)
-+		ctx.offset[i] = i * (12 * 4);
- 
--	/* Now we know the actual image size. */
--	image_size = sizeof(u32) * ctx.idx;
--	header = bpf_jit_binary_alloc(image_size, &image_ptr,
--				      sizeof(u32), jit_fill_hole);
--	if (header == NULL) {
--		prog = orig_prog;
--		goto out_off;
--	}
--
--	ctx.image = (u32 *)image_ptr;
--skip_init_ctx:
--	for (pass = 1; pass < 3; pass++) {
-+	prev_image_size = ~0U;
-+	for (pass = 1; pass < 40; pass++) {
- 		ctx.idx = 0;
- 
- 		build_prologue(&ctx);
--
- 		if (build_body(&ctx)) {
--			bpf_jit_binary_free(header);
- 			prog = orig_prog;
- 			goto out_off;
- 		}
--
- 		build_epilogue(&ctx);
- 
- 		if (bpf_jit_enable > 1)
--			pr_info("Pass %d: shrink = %d, seen = [%c%c%c%c%c%c]\n", pass,
--				image_size - (ctx.idx * 4),
-+			pr_info("Pass %d: size = %u, seen = [%c%c%c%c%c%c]\n", pass,
-+				ctx.idx * 4,
- 				ctx.tmp_1_used ? '1' : ' ',
- 				ctx.tmp_2_used ? '2' : ' ',
- 				ctx.tmp_3_used ? '3' : ' ',
- 				ctx.saw_frame_pointer ? 'F' : ' ',
- 				ctx.saw_call ? 'C' : ' ',
- 				ctx.saw_tail_call ? 'T' : ' ');
++	/* Check for pattern 6 */
++	if (strstarts(fromsym, ".L"))
++		return 0;
 +
-+		if (ctx.idx * 4 == prev_image_size)
-+			break;
-+		prev_image_size = ctx.idx * 4;
-+		cond_resched();
-+	}
-+
-+	/* Now we know the actual image size. */
-+	image_size = sizeof(u32) * ctx.idx;
-+	header = bpf_jit_binary_alloc(image_size, &image_ptr,
-+				      sizeof(u32), jit_fill_hole);
-+	if (header == NULL) {
-+		prog = orig_prog;
-+		goto out_off;
-+	}
-+
-+	ctx.image = (u32 *)image_ptr;
-+skip_init_ctx:
-+	ctx.idx = 0;
-+
-+	build_prologue(&ctx);
-+
-+	if (build_body(&ctx)) {
-+		bpf_jit_binary_free(header);
-+		prog = orig_prog;
-+		goto out_off;
-+	}
-+
-+	build_epilogue(&ctx);
-+
-+	if (ctx.idx * 4 != prev_image_size) {
-+		pr_err("bpf_jit: Failed to converge, prev_size=%u size=%d\n",
-+		       prev_image_size, ctx.idx * 4);
-+		bpf_jit_binary_free(header);
-+		prog = orig_prog;
-+		goto out_off;
- 	}
+ 	return 1;
+ }
  
- 	if (bpf_jit_enable > 1)
 -- 
 2.20.1
 
