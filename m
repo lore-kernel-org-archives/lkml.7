@@ -2,99 +2,129 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19361C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D409C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4FD921556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C9A20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:23:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="bZgefzwE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yu3O0jeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfLKTWn (ORCPT
+        id S1728337AbfLKTXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:22:43 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45699 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfLKTWm (ORCPT
+        Wed, 11 Dec 2019 14:23:09 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:42942 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfLKTXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:22:42 -0500
-Received: by mail-pl1-f195.google.com with SMTP id w7so1786656plz.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:22:42 -0800 (PST)
+        Wed, 11 Dec 2019 14:23:09 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j22so14271541oij.9;
+        Wed, 11 Dec 2019 11:23:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B/omuTxLtHKj4Gwws5UIGOHbZDI0wtiUpMOSLjh5SOg=;
-        b=bZgefzwEkt66di7eEoIMJi8Eb8O7LjWSQwmfhJVeDwUDKmw0C6bCkAA5kq0eZHIKsy
-         fqPf6/5C8AO+W6y+hXe7JScra3Z8OWGSC7gvGbGW51dybvkxb7Y6rBbELKRH7obCZcWq
-         /8P/13zoFwrN/6ftLXNcGZDfZbzlCa/8ZbjRDFl6UYrDqClHU7SdjrOQlgBwSZMX7nqm
-         riXHtP1QlB9Xgc/Fhh3Di8/z8bEoDlm5gGrpMibEISDrxtczHKbUtlPjcF3oFrCgnyu6
-         Tuxtzpb3m1hnxSu7TR1HAHXtTeT75eNtUal3VPwGOxuxvUSQRGKYnqHDVBVljoVyW88k
-         a5xw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCTr7fmrdCM12DG9npwXco6rWsJDAoPjlBHUqV/P72g=;
+        b=Yu3O0jeojH9Zes6n3MGhRv6Z2hJetFnAU0HFzlmpIeQ8tXn5icPQNhoDBNAfiDjYi+
+         C4qFwFSudaOksvVtGhfIi3a7yjQ7Lvx/FjlpKW4eVFQzsJZa9NPBjLJ7O9RQzMHp8axa
+         K1OqSEFo60qKYj0d1CwGYjFadxgSp1iY0J/HrrGXkgIAlNZkUc6M0beuVU0PeBqT3gCO
+         H3lKCqhvE1EPBRccaubq0e4EUy5Q4W7eSYx8xTUGF209Ee/IXh4KvwRuJUlLohhCVEIh
+         O4ydXScx5up4u3BoBOT6DgCOoQsOswD/dhDFe60lmoq2CVtHZwWYhXokBqVvRRg1VriV
+         TFLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B/omuTxLtHKj4Gwws5UIGOHbZDI0wtiUpMOSLjh5SOg=;
-        b=meHNtFY9N4qAUZlmUqBBiZ30QusgojwixVBL7KXsZifWaT4KdTyHjPKx+qIWzX104x
-         TWV2WE/9YSYnFsoP1XtITo39rqSGgVuPX6bJNv2w1h3/z2J+PAFJTbuPWbXPqxCtz9V7
-         /8kNPW7RAyOtgIXFTVGn/ZnhCxHDFvg9UA655m7KR2YKuQ3LFDTbDFv9ekO4ZJjqo/0+
-         abXhk+nYbyYeSd0V2GFsGOoZ6DzUTEzC6IHzntXcWtyp2QYALLar3phRpDFaQATUDQk/
-         uCd64rE+FpNOf4iZHnCMsy/bXn0ROelCrVJVysRqDFVh/EjMTDpGgMMox8WSteNZPkDC
-         u/HA==
-X-Gm-Message-State: APjAAAWn7DuRQ+3mMPpfyCGShLEa7Cpc2LAXaY9W2I6vID8rBbU2awYj
-        xZTdtdwJhrZt3RLlVtrd4w8KdA==
-X-Google-Smtp-Source: APXvYqyX3BF+YrPnd9mOB8VeUOnacPqiHgPI5cziuwV5GAgotQQt7bXy8qJSwgEE+a7+bmAWTBFgaw==
-X-Received: by 2002:a17:90a:1992:: with SMTP id 18mr5425701pji.46.1576092161690;
-        Wed, 11 Dec 2019 11:22:41 -0800 (PST)
-Received: from debian ([122.164.82.31])
-        by smtp.gmail.com with ESMTPSA id a10sm3948864pgm.81.2019.12.11.11.22.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bCTr7fmrdCM12DG9npwXco6rWsJDAoPjlBHUqV/P72g=;
+        b=N8lGH1kBmkb7z6yWBwL9eXcXdiSlnbjDKDfuVzitz4uSMKkgjVjE8q+/FN0zHvgv8i
+         h50gAHS539MVq2ZUL25UXZBiRJ2gT2lFx4IAEEnlxaqhcC/z8Zi0iCoWpNmG9dq9dD77
+         sIyOTq+UvC0wXr3zKD7vv5Gy7uNPzjcxnH4UmGpID521u+Y1ca7f9l2wtgviIKu52fCD
+         vI75Y71hp5wtkRabPzsAfz1UtbUjuAmZWurC9P2Wmv1InvJmc3J5Zg4lSWO8ezh7lkK1
+         Ne3y+eyBOOcP+FS+KwoPBonxivZlaq6xjtifuJGBjICOkCA0XF9qa9PWyfqcMYovtVPj
+         EOeg==
+X-Gm-Message-State: APjAAAXn+1GPKuwDoCRJ0oJ2/UH6gAv/pXZ6Dfb1QIQQu4cc9p0ylQzI
+        UMSQwsu3HiZtxyu1kLM8aQ0=
+X-Google-Smtp-Source: APXvYqyUDGwkPUj7a4qQgGxJBjJeSklRA8D/d1M6Ib+kCUZaHC8bp/tqkEhAmR7AONWoA/pnQT2REQ==
+X-Received: by 2002:a54:4407:: with SMTP id k7mr4200950oiw.56.1576092188199;
+        Wed, 11 Dec 2019 11:23:08 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id a74sm1112930oii.37.2019.12.11.11.23.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 11:22:40 -0800 (PST)
-Date:   Thu, 12 Dec 2019 00:52:32 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191211192232.GA14178@debian>
-References: <20191211150221.153659747@linuxfoundation.org>
- <20191211161605.GA4849@debian>
- <20191211182852.GA715826@kroah.com>
+        Wed, 11 Dec 2019 11:23:07 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ath11k: Remove unnecessary enum scan_priority
+Date:   Wed, 11 Dec 2019 12:22:52 -0700
+Message-Id: <20191211192252.35024-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211182852.GA715826@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 07:28:52PM +0100, Greg Kroah-Hartman wrote:
-> that's really odd.  How are you building this, from the git tree, or the
-> tarball generated?
-git tree
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+Clang warns:
 
+drivers/net/wireless/ath/ath11k/wmi.c:1827:23: warning: implicit
+conversion from enumeration type 'enum wmi_scan_priority' to different
+enumeration type 'enum scan_priority' [-Wenum-conversion]
+        arg->scan_priority = WMI_SCAN_PRIORITY_LOW;
+                           ~ ^~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
 
-> And I still see that file in the 5.3 tree, what do you mean it was
-> deleted?
+wmi_scan_priority and scan_priority have the same values but the wmi one
+has WMI prefixed to the names. Since that enum is already being used,
+get rid of scan_priority and switch its one use to wmi_scan_priority to
+fix this warning.
 
-may be during "git checkout linux-5.3.y" or may be i did "git pull" inside that branch
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Link: https://github.com/ClangBuiltLinux/linux/issues/808
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/wireless/ath/ath11k/wmi.h | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-that was a git status which showed "D" at the start of a few lines
-and one of that lines showed that file.
-i also checked that path locally and found it was not there
+diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
+index 4a518d406bc5..756101656391 100644
+--- a/drivers/net/wireless/ath/ath11k/wmi.h
++++ b/drivers/net/wireless/ath/ath11k/wmi.h
+@@ -2896,15 +2896,6 @@ struct wmi_bcn_offload_ctrl_cmd {
+ 	u32 bcn_ctrl_op;
+ } __packed;
+ 
+-enum scan_priority {
+-	SCAN_PRIORITY_VERY_LOW,
+-	SCAN_PRIORITY_LOW,
+-	SCAN_PRIORITY_MEDIUM,
+-	SCAN_PRIORITY_HIGH,
+-	SCAN_PRIORITY_VERY_HIGH,
+-	SCAN_PRIORITY_COUNT,
+-};
+-
+ enum scan_dwelltime_adaptive_mode {
+ 	SCAN_DWELL_MODE_DEFAULT = 0,
+ 	SCAN_DWELL_MODE_CONSERVATIVE = 1,
+@@ -3056,7 +3047,7 @@ struct scan_req_params {
+ 	u32 scan_req_id;
+ 	u32 vdev_id;
+ 	u32 pdev_id;
+-	enum scan_priority scan_priority;
++	enum wmi_scan_priority scan_priority;
+ 	union {
+ 		struct {
+ 			u32 scan_ev_started:1,
+-- 
+2.24.0
 
---
-software engineer
-rajagiri school of engineering and technology
