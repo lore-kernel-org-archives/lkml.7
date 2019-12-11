@@ -2,133 +2,124 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B53C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3E0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33AD208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5384D208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080466;
-	bh=3RG25Jhwv4mFVx1aiqHTFVdZ7SyFBzyp0xOFY9JoQbM=;
+	s=default; t=1576080469;
+	bh=IEDH//bhdQztlOqOo+cfwWB4wM8CT2ZDR64ODrpGXpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XbF1s+C0W4nCAOuQNHX+JirG9fpmiP9Z+VzkYOMpectjG8E3FncEHVAs2nSVcAU/y
-	 vjLDY/jRs5wxBSpdylE9K5iAnDEp/i2yrWCTKWhffNQAMb2kHj/Y0yEQExCv+PB2E7
-	 qqrmMrQv/4lTBnOLYHFC/oCox8G6B8SsTKj+oCNQ=
+	b=0yrcBigk19JKNs1V5jLrXteZetVL8cn/FVXr0mFoxs6qQULPkPMGr0h3brScP7Nea
+	 rYSb0J/h29TOWHdP1axOBfkX6f7k6xn8hRL05MQ+o5dz3jdGAo7yWTz2P6hTiFWZ+E
+	 R7hI5xeOoB089qHVnQ8vjdF6YBHOiwKW5rjL3/r0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387992AbfLKQHp (ORCPT
+        id S1731115AbfLKPMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:07:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33988 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbfLKPMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731012AbfLKPMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:06 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B88842465A;
-        Wed, 11 Dec 2019 15:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F5C724658;
+        Wed, 11 Dec 2019 15:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077145;
-        bh=3RG25Jhwv4mFVx1aiqHTFVdZ7SyFBzyp0xOFY9JoQbM=;
+        s=default; t=1576077126;
+        bh=IEDH//bhdQztlOqOo+cfwWB4wM8CT2ZDR64ODrpGXpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5+/Q9xRkkZvYmwKVtkPVA0d0cO44UpJYh62qpsBNj+6kfrMEUQsZqSCUxoGu7H5T
-         W+AFVIZMQ2CGi1yHXzLx7DhvQJG5Vl9xeCYULB/sGXna9Q/9zRbxc41la8cIithAGt
-         edqbqMN3qxrTw7u7VIJrRfpD9u0335KEc+6cE7wE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        pei.p.jia@intel.com, Thomas Gleixner <tglx@linutronix.de>,
-        x86-ml <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 033/105] x86/resctrl: Fix potential lockdep warning
-Date:   Wed, 11 Dec 2019 16:05:22 +0100
-Message-Id: <20191211150232.774206480@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=ASfCZsr8aNmgPSL1M+6kupNFfLQJvSZgKsM//pdyMqHr1sDp/5vZb7GauO0pEltxE
+         7H1gJwjf/cng57mgJFVyGVCowkZrx8HoMgglqGjQmgPom2nTTxVg+RAByr3/PNkkeL
+         V0vRDMZlBUgiZtzbv9e9MOQCM6l7v2sryYUu260k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 014/134] iommu: rockchip: Free domain on .domain_free
+Date:   Wed, 11 Dec 2019 10:09:50 -0500
+Message-Id: <20191211151150.19073-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Ezequiel Garcia <ezequiel@collabora.com>
 
-[ Upstream commit c8eafe1495303bfd0eedaa8156b1ee9082ee9642 ]
+[ Upstream commit 42bb97b80f2e3bf592e3e99d109b67309aa1b30e ]
 
-rdtgroup_cpus_write() and mkdir_rdt_prepare() call
-rdtgroup_kn_lock_live() -> kernfs_to_rdtgroup() to get 'rdtgrp', and
-then call the rdt_last_cmd_{clear,puts,...}() functions which will check
-if rdtgroup_mutex is held/requires its caller to hold rdtgroup_mutex.
+IOMMU domain resource life is well-defined, managed
+by .domain_alloc and .domain_free.
 
-But if 'rdtgrp' returned from kernfs_to_rdtgroup() is NULL,
-rdtgroup_mutex is not held and calling rdt_last_cmd_{clear,puts,...}()
-will result in a self-incurred, potential lockdep warning.
+Therefore, domain-specific resources shouldn't be tied to
+the device life, but instead to its domain.
 
-Remove the rdt_last_cmd_{clear,puts,...}() calls in these two paths.
-Just returning error should be sufficient to report to the user that the
-entry doesn't exist any more.
-
- [ bp: Massage. ]
-
-Fixes: 94457b36e8a5 ("x86/intel_rdt: Add diagnostics when writing the cpus file")
-Fixes: cfd0f34e4cd5 ("x86/intel_rdt: Add diagnostics when making directories")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: pei.p.jia@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1573079796-11713-1-git-send-email-xiaochen.shen@intel.com
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/iommu/rockchip-iommu.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index a46dee8e78db4..2e3b06d6bbc6d 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -461,10 +461,8 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
- 	}
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index 4dcbf68dfda43..0df091934361b 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -980,13 +980,13 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
+ 	if (!dma_dev)
+ 		return NULL;
  
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
--	rdt_last_cmd_clear();
- 	if (!rdtgrp) {
- 		ret = -ENOENT;
--		rdt_last_cmd_puts("Directory was removed\n");
- 		goto unlock;
- 	}
+-	rk_domain = devm_kzalloc(dma_dev, sizeof(*rk_domain), GFP_KERNEL);
++	rk_domain = kzalloc(sizeof(*rk_domain), GFP_KERNEL);
+ 	if (!rk_domain)
+ 		return NULL;
  
-@@ -2648,10 +2646,8 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 	int ret;
+ 	if (type == IOMMU_DOMAIN_DMA &&
+ 	    iommu_get_dma_cookie(&rk_domain->domain))
+-		return NULL;
++		goto err_free_domain;
  
- 	prdtgrp = rdtgroup_kn_lock_live(prgrp_kn);
--	rdt_last_cmd_clear();
- 	if (!prdtgrp) {
- 		ret = -ENODEV;
--		rdt_last_cmd_puts("Directory was removed\n");
- 		goto out_unlock;
- 	}
+ 	/*
+ 	 * rk32xx iommus use a 2 level pagetable.
+@@ -1021,6 +1021,8 @@ err_free_dt:
+ err_put_cookie:
+ 	if (type == IOMMU_DOMAIN_DMA)
+ 		iommu_put_dma_cookie(&rk_domain->domain);
++err_free_domain:
++	kfree(rk_domain);
  
+ 	return NULL;
+ }
+@@ -1049,6 +1051,7 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
+ 
+ 	if (domain->type == IOMMU_DOMAIN_DMA)
+ 		iommu_put_dma_cookie(&rk_domain->domain);
++	kfree(rk_domain);
+ }
+ 
+ static int rk_iommu_add_device(struct device *dev)
 -- 
 2.20.1
-
-
 
