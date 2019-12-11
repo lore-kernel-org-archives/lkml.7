@@ -2,111 +2,237 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4199C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7F1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E46B2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDCD2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CJ3seZm3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqrpbJAs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbfLKSGG (ORCPT
+        id S1730918AbfLKSGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:06:06 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:34095 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730281AbfLKSGG (ORCPT
+        Wed, 11 Dec 2019 13:06:41 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44740 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730328AbfLKSGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:06:06 -0500
-Received: by mail-yb1-f195.google.com with SMTP id k17so9392996ybp.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:06:05 -0800 (PST)
+        Wed, 11 Dec 2019 13:06:41 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q10so25090585wrm.11;
+        Wed, 11 Dec 2019 10:06:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mzph4oRYSdP4XB6lnmsVX28t3uDJtwjo66piREwlnZo=;
-        b=CJ3seZm3TNcFL0JuYlD82O0DXLlJhLI2L0gi5h5SiNm2+s8CUp6Q8oweDq3/j38gpI
-         8tF1VvFdOXPaLMnJlwyE0+6HFdWAWF3tnAGlg7ZHd/VKihXM1V08GEOVE30822XMdn3I
-         dbFmsuJVyT64fcZSYlUTIXoNE3Huf8Nv9z5HDdOerv35oorKROPYxJ+V3Q1miJ1+bUCK
-         xDSHV6xMMTNN9n4Yt8cm5Ci7Dz+BgSTPbiECkALqzUHeRtihEJGe57bCcsf5nIeATGo8
-         7S4ssremZfvXcWA3rmNmKy6q00iTjk02pBPOBq3meSfS8dDy5el9GO388Xt/a0c6macK
-         Ab1g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SidTrYsF0vWB9wvv03an41xEYqYJUhf3JHqdapOEIwk=;
+        b=hqrpbJAshp6Vc1bnVOnnvi+Jiio3YbUCKcaEYm12C7LDxOFDZh9gyAAYy3Bm4wJzJx
+         tgNc7NoXw8xMfmTLkdwK+8ZZxZjSYI/qpsennvljI04Niik+rOFlZEOP/4F4xwk8SBfq
+         TQ92ayALVM9nAuHC7ioiw6Od8FmXzOgA/ueCLq0oZnFaxRzbmZ/dpvPyHisIrOGFfbxw
+         JWWPYR2JFQKFOXmrHX6zKCFiRUBmfMqqfpoP1WGsqcD6+SRmb93bjjROidWRZLFPHVoQ
+         jYdZMnqKR2V8QAr5SInQL5I1tKyOfDNvnC2DILWMNpeWQ2ckRt+XHpiSWDrHUv5HaVko
+         gFBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mzph4oRYSdP4XB6lnmsVX28t3uDJtwjo66piREwlnZo=;
-        b=D9mWxSyQv+l2iiU6C8cIDD7DhIaVqN0Y/A8/lI+SfFeZRFufdR1YgCfXaNsLpGa9Tm
-         IFjXXS/f9qlbzAEarjBtPeHfkU6X1RfOMj4U0vPeW0xpCt/bn305a6Rv6wcYpqRvipib
-         atoMmxLZZIHv8uAdwbgKTHicJ7+3Fkb+tWyo6brHDX8FYiSMuO8kArEsicPMFiMQWOq6
-         Zbg8gDeBQpqxhF7c5yOsfhtSCWfEWsUjwArYkSW0p60F/tK9R4iPdP8MYlLokhu3GYd/
-         QPp/bF76UGrkHAyfyYFxp0CYkCjXWQ4EWPoEEcklHcRXPvIbqY8sR1FRVmtoEIige7Ld
-         WdtA==
-X-Gm-Message-State: APjAAAVvFTiF99dTlVkf/eXPE+ihDVRQ63UmvkmUBeSMjPlFb5wg+nud
-        WxCd3sCIcmlV7DEJnsBnCp5KmxT/mUlkdOE4gGXQeg==
-X-Google-Smtp-Source: APXvYqyO2/s0U2KFrlOdyOXWx12vh5Q2gWo9cY+d2QONSuipAFzpcXSOZnRUQukVA1QPy8HGFOxXm4YZ6Tzhcq5W7Bg=
-X-Received: by 2002:a25:5008:: with SMTP id e8mr940654ybb.277.1576087564293;
- Wed, 11 Dec 2019 10:06:04 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SidTrYsF0vWB9wvv03an41xEYqYJUhf3JHqdapOEIwk=;
+        b=SZadH1MrYpAnwECFBVyAzzPtbD04k5eAKIFKE6Yxd49GgqmqK9ZqVI8W66Xhb0lSZD
+         +FUKcpmEtYpxMtTNbsDgFD/38wcb+ZOyZWZmGylpLtYwCNLndYwhGxvud1/BZ9E2gYsY
+         660/r8nTWfAWFZFkR+O0s9lfzkwRviXAGljpCpXEz/+DMtGx19SSDEzcNQSOUE4xbPN2
+         e5A6qwEXW53ilZp9945BEKGemWIW7JRY67Hlzodv+MVu494rybVrWXhu8bpKLy3mXWLs
+         TRarDhuyQH6Cjb0i8pn1c3Gpwwendt9M+MlEUwEBT//O5c/fif3X4qDvMltK1pVsRc6X
+         4UOw==
+X-Gm-Message-State: APjAAAUhtl1Kghd/O4lvqbvkErywXyuo9JWU1dfWcVgzye+VERX4bGls
+        PeViepSCNVbpcFN9uk5lT2U=
+X-Google-Smtp-Source: APXvYqwInXQyMjDlll+maTwk3Mdn4cFrIs2XzzY+/3v9nc7GiAGi0umtp7fhu5KaF4E/HZUo8wEWAw==
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr1231786wrq.206.1576087597592;
+        Wed, 11 Dec 2019 10:06:37 -0800 (PST)
+Received: from ziggy.stardust ([37.223.145.31])
+        by smtp.gmail.com with ESMTPSA id o19sm2422409wmc.18.2019.12.11.10.06.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 10:06:36 -0800 (PST)
+Subject: Re: [PATCH] [RESEND] arm64: dts: mt8173: Add dynamic power node.
+To:     Michael Kao <michael.kao@mediatek.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, hsinyi@chromium.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Dawei Chien <dawei.chien@mediatek.com>, mn.tsou@mediatek.com
+References: <20191122090610.17015-1-michael.kao@mediatek.com>
+ <4aaf8cee-eaa2-5de4-37f0-094b9bc8da22@linaro.org>
+ <1576052012.1631.13.camel@mtksdccf07>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <8994c4a9-4cf3-5d20-0a89-f1501075d1a7@gmail.com>
+Date:   Wed, 11 Dec 2019 19:06:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191210210735.9077-1-sashal@kernel.org> <20191210210735.9077-238-sashal@kernel.org>
- <CABXOdTdO16V4AtO1t=BwXW2=HAtT6CYoSddmrn5T2qZP9hs0eQ@mail.gmail.com> <20191211175651.GK4516@linux.intel.com>
-In-Reply-To: <20191211175651.GK4516@linux.intel.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Wed, 11 Dec 2019 10:05:52 -0800
-Message-ID: <CABXOdTcsnAVaPo-492tVPtjOYMbNtu2Zvz4GwSBGcDEHAMGw5Q@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 277/350] tpm: Add a flag to indicate TPM power
- is managed by firmware
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "# v4 . 10+" <stable@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andrey Pronin <apronin@chromium.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-integrity@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1576052012.1631.13.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 9:57 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Tue, Dec 10, 2019 at 01:32:15PM -0800, Guenter Roeck wrote:
-> > On Tue, Dec 10, 2019 at 1:12 PM Sasha Levin <sashal@kernel.org> wrote:
-> > >
-> > > From: Stephen Boyd <swboyd@chromium.org>
-> > >
-> > > [ Upstream commit 2e2ee5a2db06c4b81315514b01d06fe5644342e9 ]
-> > >
-> > > On some platforms, the TPM power is managed by firmware and therefore we
-> > > don't need to stop the TPM on suspend when going to a light version of
-> > > suspend such as S0ix ("freeze" suspend state). Add a chip flag,
-> > > TPM_CHIP_FLAG_FIRMWARE_POWER_MANAGED, to indicate this so that certain
-> > > platforms can probe for the usage of this light suspend and avoid
-> > > touching the TPM state across suspend/resume.
-> > >
-> >
-> > Are the patches needed to support CR50 (which need this patch) going
-> > to be applied to v5.4.y as well ? If not, what is the purpose of
-> > applying this patch to v5.4.y ?
-> >
-> > Thanks,
-> > Guenter
->
-> Thanks Guenter. I think not.
->
-Thought so. In that case this patch should be dropped.
 
-Guenter
+
+On 11/12/2019 09:13, Michael Kao wrote:
+> On Thu, 2019-12-05 at 17:00 +0100, Daniel Lezcano wrote:
+>> Hi Michael,
+>>
+>>
+>> On 22/11/2019 10:06, michael.kao@mediatek.com wrote:
+>>> From: "michael.kao" <michael.kao@mediatek.com>
+>>>
+>>> This device node is for calculating dynamic power in mW.
+>>> Since mt8173 has two clusters, there are two dynamic power
+>>> coefficient as well.
+>>
+>> Are you sure about the values? Usually, Big is ~x4 little, here it is ~x2.
+> 
+> Hi Daniel,
+> 
+> I have confirmed again with our IC designer.
+> The dynamic power coefficients are these value is right.
+> Designer comment that it is result from different IC implement.
+
+Applied to v5.5-next/dts64
+
+Thanks!
+Matthias
+
+>>
+>>> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+>>> Signed-off-by: Michael.Kao <michael.kao@mediatek.com>
+>>>
+>>> ---
+>>>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> index 15f1842f6df3..b03ca5a71338 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+>>> @@ -157,6 +157,7 @@
+>>>  			enable-method = "psci";
+>>>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>>>  			#cooling-cells = <2>;
+>>> +			dynamic-power-coefficient = <263>;
+>>>  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
+>>>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>  			clock-names = "cpu", "intermediate";
+>>> @@ -170,6 +171,7 @@
+>>>  			enable-method = "psci";
+>>>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>>>  			#cooling-cells = <2>;
+>>> +			dynamic-power-coefficient = <263>;
+>>>  			clocks = <&infracfg CLK_INFRA_CA53SEL>,
+>>>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>  			clock-names = "cpu", "intermediate";
+>>> @@ -183,6 +185,7 @@
+>>>  			enable-method = "psci";
+>>>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>>>  			#cooling-cells = <2>;
+>>> +			dynamic-power-coefficient = <530>;
+>>>  			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+>>>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>  			clock-names = "cpu", "intermediate";
+>>> @@ -196,6 +199,7 @@
+>>>  			enable-method = "psci";
+>>>  			cpu-idle-states = <&CPU_SLEEP_0>;
+>>>  			#cooling-cells = <2>;
+>>> +			dynamic-power-coefficient = <530>;
+>>>  			clocks = <&infracfg CLK_INFRA_CA72SEL>,
+>>>  				 <&apmixedsys CLK_APMIXED_MAINPLL>;
+>>>  			clock-names = "cpu", "intermediate";
+>>>
+>>
+>>
+> 
