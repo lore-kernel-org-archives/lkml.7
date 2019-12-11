@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF50C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B3C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A44D72465B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9D22077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078580;
-	bh=jsUOy/Ww3zxSFrCUkc87CLEdi6aKuAioDsOPD5sOsdU=;
+	s=default; t=1576078584;
+	bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2vub4n62M1Jf5G/9enOX7eBkuMz9N69gU1w+OOweyc8mkQRZ+LhHjd5xwqutKdVbJ
-	 D+c4p7yOKetG0VCFWykak5Tw4rTPt37lnPeXQNLXkTbL8jtHgIDy3Ly6jSg1Pk8U3G
-	 Y6Y9Ygx8kiOgKC2wHfWNC0IltVmglowPMDFd/AOA=
+	b=lXn4INhTaXR+MO50ZiEvrwTiMUnIQmC/TD6YPXXYFPkP81/R7jXyit7H+yQpv8OH5
+	 mHmgjuOOAMkHXJEQa1Ofs+aC8nYAgli89z0nFC35uB/1Sf3C43XR3wLMz9B2NKh6x6
+	 P3g3mbjFHwN+8tcBOzN3uFBVFtLV9Q+2zGHqzka8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfLKPgT (ORCPT
+        id S2388245AbfLKPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:36:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:35:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388218AbfLKPfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:55 -0500
+        id S1733091AbfLKPfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A28C2173E;
-        Wed, 11 Dec 2019 15:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA34522B48;
+        Wed, 11 Dec 2019 15:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078554;
-        bh=jsUOy/Ww3zxSFrCUkc87CLEdi6aKuAioDsOPD5sOsdU=;
+        s=default; t=1576078544;
+        bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AqsJKIyVaFRHNlbnLJX/M72MIw/ScBEjglQ5STMiWOQjhTS78MixqyOwDLVkRaICe
-         JVmuNjneLS8D0qJ7+2z4okarfaDj5qa9SYsXpl4hDWMPjU0Ri+aAmfIEdwro65FmOT
-         Om6GiWdnjinmfpjr9mXUfO56I1fwG7w8IgnzMXX8=
+        b=oEXtlU0gc69RLA2tQuvFfBp2P8pZWgsXQnHl5XgMivCfNrXtuxbnRCOLlvJ2Tz4lk
+         K3Yl3zRvDHs+sPJ8ML6DfBfycWpvKS8MxU+U+VeOKG6bj1HnKbSq28ecy9A/UT2hYS
+         q90ZSIRBqz22TJ8JhoupRd4FLpIr4MdoqKS0UxJ4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
-Subject: [PATCH AUTOSEL 4.9 41/42] ocfs2: fix passing zero to 'PTR_ERR' warning
-Date:   Wed, 11 Dec 2019 10:35:09 -0500
-Message-Id: <20191211153510.23861-41-sashal@kernel.org>
+Cc:     peter chang <dpf@google.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 32/42] scsi: pm80xx: Fix for SATA device discovery
+Date:   Wed, 11 Dec 2019 10:35:00 -0500
+Message-Id: <20191211153510.23861-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -66,46 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 188c523e1c271d537f3c9f55b6b65bf4476de32f ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-Fix a static code checker warning:
-fs/ocfs2/acl.c:331
-	ocfs2_acl_chmod() warn: passing zero to 'PTR_ERR'
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-Link: http://lkml.kernel.org/r/1dee278b-6c96-eec2-ce76-fe6e07c6e20f@linux.alibaba.com
-Fixes: 5ee0fbd50fd ("ocfs2: revert using ocfs2_acl_chmod to avoid inode cluster lock hang")
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/acl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ocfs2/acl.c b/fs/ocfs2/acl.c
-index ee8dbbae78b6a..6dc714a56c37a 100644
---- a/fs/ocfs2/acl.c
-+++ b/fs/ocfs2/acl.c
-@@ -338,8 +338,8 @@ int ocfs2_acl_chmod(struct inode *inode, struct buffer_head *bh)
- 	down_read(&OCFS2_I(inode)->ip_xattr_sem);
- 	acl = ocfs2_get_acl_nolock(inode, ACL_TYPE_ACCESS, bh);
- 	up_read(&OCFS2_I(inode)->ip_xattr_sem);
--	if (IS_ERR(acl) || !acl)
--		return PTR_ERR(acl);
-+	if (IS_ERR_OR_NULL(acl))
-+		return PTR_ERR_OR_ZERO(acl);
- 	ret = __posix_acl_chmod(&acl, GFP_KERNEL, inode->i_mode);
- 	if (ret)
- 		return ret;
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 9edd61c063a1a..df5f0bc295875 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
