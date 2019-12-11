@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACC12C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B81AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1F12173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72CAB222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfLKG1N (ORCPT
+        id S1728049AbfLKG1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:27:13 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7668 "EHLO huawei.com"
+        Wed, 11 Dec 2019 01:27:12 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40728 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727888AbfLKG0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:26:52 -0500
+        id S1727901AbfLKG0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:26:53 -0500
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6B89661E3BC9A0B102EE;
+        by Forcepoint Email with ESMTP id 9114AA216BE70CAC0B20;
         Wed, 11 Dec 2019 14:26:50 +0800 (CST)
 Received: from huawei.com (10.175.105.18) by DGGEMS407-HUB.china.huawei.com
  (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Dec 2019
- 14:26:39 +0800
+ 14:26:42 +0800
 From:   linmiaohe <linmiaohe@huawei.com>
 To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
         <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
@@ -33,9 +33,9 @@ To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
         <hpa@zytor.com>
 CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH 2/6] KVM: Fix some out-dated function names in comment
-Date:   Wed, 11 Dec 2019 14:26:21 +0800
-Message-ID: <1576045585-8536-3-git-send-email-linmiaohe@huawei.com>
+Subject: [PATCH 6/6] KVM: Fix some writing mistakes
+Date:   Wed, 11 Dec 2019 14:26:25 +0800
+Message-ID: <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
 References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
@@ -50,53 +50,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Miaohe Lin <linmiaohe@huawei.com>
 
-Since commit b1346ab2afbe ("KVM: nVMX: Rename prepare_vmcs02_*_full to
-prepare_vmcs02_*_rare"), prepare_vmcs02_full has been renamed to
-prepare_vmcs02_rare.
-nested_vmx_merge_msr_bitmap is renamed to nested_vmx_prepare_msr_bitmap
-since commit c992384bde84 ("KVM: vmx: speed up MSR bitmap merge").
+Fix some writing mistakes in the comments.
 
 Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- arch/x86/kvm/vmx/vmcs_shadow_fields.h | 2 +-
- arch/x86/kvm/vmx/vmx.c                | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 2 +-
+ virt/kvm/kvm_main.c             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-index 5f3d95c18c39..cad128d1657b 100644
---- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-+++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
-@@ -23,7 +23,7 @@ BUILD_BUG_ON(1)
-  *
-  * When adding or removing fields here, note that shadowed
-  * fields must always be synced by prepare_vmcs02, not just
-- * prepare_vmcs02_full.
-+ * prepare_vmcs02_rare.
-  */
- 
- /*
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 159a28512e4c..efba864ed42d 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -606,7 +606,7 @@ struct kvm_vcpu_arch {
+ 	 * Paging state of an L2 guest (used for nested npt)
+ 	 *
+ 	 * This context will save all necessary information to walk page tables
+-	 * of the an L2 guest. This context is only initialized for page table
++	 * of the L2 guest. This context is only initialized for page table
+ 	 * walking and not for faulting since we never handle l2 page faults on
+ 	 * the host.
+ 	 */
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 51e3b27f90ed..bf24fbb2056c 100644
+index 1be3854f1090..dae712c8785e 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2016,7 +2016,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		 *
- 		 * For nested:
- 		 * The handling of the MSR bitmap for L2 guests is done in
--		 * nested_vmx_merge_msr_bitmap. We should not touch the
-+		 * nested_vmx_prepare_msr_bitmap. We should not touch the
- 		 * vmcs02.msr_bitmap here since it gets completely overwritten
- 		 * in the merging. We update the vmcs01 here for L1 as well
- 		 * since it will end up touching the MSR anyway now.
-@@ -2052,7 +2052,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		 *
- 		 * For nested:
- 		 * The handling of the MSR bitmap for L2 guests is done in
--		 * nested_vmx_merge_msr_bitmap. We should not touch the
-+		 * nested_vmx_prepare_msr_bitmap. We should not touch the
- 		 * vmcs02.msr_bitmap here since it gets completely overwritten
- 		 * in the merging.
- 		 */
+@@ -1922,7 +1922,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ }
+ 
+ /*
+- * Writes msr value into into the appropriate "register".
++ * Writes msr value into the appropriate "register".
+  * Returns 0 on success, non-0 otherwise.
+  * Assumes vcpu_load() was already called.
+  */
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index f0501272268f..1a6d5ebd5c42 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1519,7 +1519,7 @@ static inline int check_user_page_hwpoison(unsigned long addr)
+ /*
+  * The fast path to get the writable pfn which will be stored in @pfn,
+  * true indicates success, otherwise false is returned.  It's also the
+- * only part that runs if we can are in atomic context.
++ * only part that runs if we can in atomic context.
+  */
+ static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
+ 			    bool *writable, kvm_pfn_t *pfn)
 -- 
 2.19.1
 
