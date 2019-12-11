@@ -2,51 +2,52 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E96BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE15DC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0D52073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A46CF2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079295;
-	bh=qi46wH0VA46RLqAO45JyHZqu4fDMoxutCjmxaUR8ReA=;
+	s=default; t=1576079298;
+	bh=LnJIEGbcLgSTexKJUWuJ+bJDSkG4Zo1s3VWUvWYpOC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nEV50mhOBvUrMhRUe/5jXLepbrm/Z16rI0k+Kc1WrQEjqzp59rV/SwlhbdPz+YQ6y
-	 Hc9I0pyrZW+95fNPbvPwwmmrhdL09Zcx8gN2JZNlFDNc+nkjFTRTkvsOB3SgpJiv7g
-	 6H5m78rdo6H8l0FcIwJUoFOnHSvq9KDC7ZJNSzCM=
+	b=ZctDO85Mh0vLwWlr90DJBvDhkhkB2cXwO7LleD2uGhyteQDpnxvr8Vj/Up1C0IwPS
+	 /UZY866yLJQGO0ejErwrJWBMmTp2X+lBYSC+Lj3czOA+k1FXNaC11KPT4StW50huN1
+	 BqPD+pbkZRUs6Cc31ONXbGiH1oeFx21RXY3okvdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387575AbfLKPsN (ORCPT
+        id S1732986AbfLKPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:48:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57372 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:25:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732673AbfLKPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:25:24 -0500
+        id S1732636AbfLKPZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:25:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D54208C3;
-        Wed, 11 Dec 2019 15:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D36D208C3;
+        Wed, 11 Dec 2019 15:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077923;
-        bh=qi46wH0VA46RLqAO45JyHZqu4fDMoxutCjmxaUR8ReA=;
+        s=default; t=1576077912;
+        bh=LnJIEGbcLgSTexKJUWuJ+bJDSkG4Zo1s3VWUvWYpOC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EnzXlLrSF3eIqbKZDp+13UtCBSt+7BECM6+4+ifULY/XtBZ6caJTLtiUz+aYFQIPR
-         Wg3G7YPZqhW0Bojxkn3mx7Mu10Ln5SRZAP2EccotVuETuJPtWxnc9x+sWLbp2GTN+e
-         QwuQ6miDqIcWwY5RKKnk4R4RLHoMDurICFB/tNos=
+        b=Y0WZASJBodsC+1zekh6N4ql99lJG6yW0i+MsP93/KS/TAtQWcYStkTa+08PV9BEwG
+         uEnKbVqMCkEaN/jR/aMmanMFjMGduEVzqrmWiJNecKz+3GCvMgbjoxCZfChY/MeNNm
+         JZynowrO8ebRNGfrvUopTRmBK4BwLaoUEcCtGXS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 221/243] jbd2: Fix possible overflow in jbd2_log_space_left()
-Date:   Wed, 11 Dec 2019 16:06:23 +0100
-Message-Id: <20191211150354.248903005@linuxfoundation.org>
+        stable@vger.kernel.org, Ladislav Michl <ladis@linux-mips.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 191/243] ASoC: max9867: Fix power management
+Date:   Wed, 11 Dec 2019 16:05:53 +0100
+Message-Id: <20191211150352.063951429@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,49 +60,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Ladislav Michl <ladis@linux-mips.org>
 
-commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
+[ Upstream commit 29f58ff06795a923407d011d4721eaf3e8d39acc ]
 
-When number of free space in the journal is very low, the arithmetic in
-jbd2_log_space_left() could underflow resulting in very high number of
-free blocks and thus triggering assertion failure in transaction commit
-code complaining there's not enough space in the journal:
+Implement set_bias_level to drive shutdown bit, so device is
+put to sleep when unused.
 
-J_ASSERT(journal->j_free > 1);
-
-Properly check for the low number of free blocks.
-
-CC: stable@vger.kernel.org
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/jbd2.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/max9867.c | 72 ++++++++++++++++++++++++--------------
+ sound/soc/codecs/max9867.h |  2 +-
+ 2 files changed, 46 insertions(+), 28 deletions(-)
 
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1587,7 +1587,7 @@ static inline int jbd2_space_needed(jour
- static inline unsigned long jbd2_log_space_left(journal_t *journal)
- {
- 	/* Allow for rounding errors */
--	unsigned long free = journal->j_free - 32;
-+	long free = journal->j_free - 32;
- 
- 	if (journal->j_committing_transaction) {
- 		unsigned long committing = atomic_read(&journal->
-@@ -1596,7 +1596,7 @@ static inline unsigned long jbd2_log_spa
- 		/* Transaction + control blocks */
- 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
- 	}
--	return free;
-+	return max_t(long, free, 0);
+diff --git a/sound/soc/codecs/max9867.c b/sound/soc/codecs/max9867.c
+index 4ea3287162ad2..e51143df4702a 100644
+--- a/sound/soc/codecs/max9867.c
++++ b/sound/soc/codecs/max9867.c
+@@ -248,17 +248,6 @@ static int max9867_dai_hw_params(struct snd_pcm_substream *substream,
+ 	return 0;
  }
  
- /*
+-static int max9867_prepare(struct snd_pcm_substream *substream,
+-			 struct snd_soc_dai *dai)
+-{
+-	struct snd_soc_component *component = dai->component;
+-	struct max9867_priv *max9867 = snd_soc_component_get_drvdata(component);
+-
+-	regmap_update_bits(max9867->regmap, MAX9867_PWRMAN,
+-		MAX9867_SHTDOWN_MASK, MAX9867_SHTDOWN_MASK);
+-	return 0;
+-}
+-
+ static int max9867_mute(struct snd_soc_dai *dai, int mute)
+ {
+ 	struct snd_soc_component *component = dai->component;
+@@ -361,7 +350,6 @@ static int max9867_dai_set_fmt(struct snd_soc_dai *codec_dai,
+ static const struct snd_soc_dai_ops max9867_dai_ops = {
+ 	.set_fmt = max9867_dai_set_fmt,
+ 	.set_sysclk	= max9867_set_dai_sysclk,
+-	.prepare	= max9867_prepare,
+ 	.digital_mute	= max9867_mute,
+ 	.hw_params = max9867_dai_hw_params,
+ };
+@@ -392,27 +380,59 @@ static struct snd_soc_dai_driver max9867_dai[] = {
+ 	}
+ };
+ 
+-#ifdef CONFIG_PM_SLEEP
+-static int max9867_suspend(struct device *dev)
++#ifdef CONFIG_PM
++static int max9867_suspend(struct snd_soc_component *component)
+ {
+-	struct max9867_priv *max9867 = dev_get_drvdata(dev);
++	snd_soc_component_force_bias_level(component, SND_SOC_BIAS_OFF);
+ 
+-	/* Drop down to power saving mode when system is suspended */
+-	regmap_update_bits(max9867->regmap, MAX9867_PWRMAN,
+-		MAX9867_SHTDOWN_MASK, ~MAX9867_SHTDOWN_MASK);
+ 	return 0;
+ }
+ 
+-static int max9867_resume(struct device *dev)
++static int max9867_resume(struct snd_soc_component *component)
+ {
+-	struct max9867_priv *max9867 = dev_get_drvdata(dev);
++	snd_soc_component_force_bias_level(component, SND_SOC_BIAS_STANDBY);
+ 
+-	regmap_update_bits(max9867->regmap, MAX9867_PWRMAN,
+-		MAX9867_SHTDOWN_MASK, MAX9867_SHTDOWN_MASK);
+ 	return 0;
+ }
++#else
++#define max9867_suspend	NULL
++#define max9867_resume	NULL
+ #endif
+ 
++static int max9867_set_bias_level(struct snd_soc_component *component,
++				  enum snd_soc_bias_level level)
++{
++	int err;
++	struct max9867_priv *max9867 = snd_soc_component_get_drvdata(component);
++
++	switch (level) {
++	case SND_SOC_BIAS_STANDBY:
++		if (snd_soc_component_get_bias_level(component) == SND_SOC_BIAS_OFF) {
++			err = regcache_sync(max9867->regmap);
++			if (err)
++				return err;
++
++			err = regmap_update_bits(max9867->regmap, MAX9867_PWRMAN,
++						 MAX9867_SHTDOWN, MAX9867_SHTDOWN);
++			if (err)
++				return err;
++		}
++		break;
++	case SND_SOC_BIAS_OFF:
++		err = regmap_update_bits(max9867->regmap, MAX9867_PWRMAN,
++					 MAX9867_SHTDOWN, 0);
++		if (err)
++			return err;
++
++		regcache_mark_dirty(max9867->regmap);
++		break;
++	default:
++		break;
++	}
++
++	return 0;
++}
++
+ static const struct snd_soc_component_driver max9867_component = {
+ 	.controls		= max9867_snd_controls,
+ 	.num_controls		= ARRAY_SIZE(max9867_snd_controls),
+@@ -420,6 +440,9 @@ static const struct snd_soc_component_driver max9867_component = {
+ 	.num_dapm_routes	= ARRAY_SIZE(max9867_audio_map),
+ 	.dapm_widgets		= max9867_dapm_widgets,
+ 	.num_dapm_widgets	= ARRAY_SIZE(max9867_dapm_widgets),
++	.suspend		= max9867_suspend,
++	.resume			= max9867_resume,
++	.set_bias_level		= max9867_set_bias_level,
+ 	.idle_bias_on		= 1,
+ 	.use_pmdown_time	= 1,
+ 	.endianness		= 1,
+@@ -518,15 +541,10 @@ static const struct of_device_id max9867_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, max9867_of_match);
+ 
+-static const struct dev_pm_ops max9867_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(max9867_suspend, max9867_resume)
+-};
+-
+ static struct i2c_driver max9867_i2c_driver = {
+ 	.driver = {
+ 		.name = "max9867",
+ 		.of_match_table = of_match_ptr(max9867_of_match),
+-		.pm = &max9867_pm_ops,
+ 	},
+ 	.probe  = max9867_i2c_probe,
+ 	.id_table = max9867_i2c_id,
+diff --git a/sound/soc/codecs/max9867.h b/sound/soc/codecs/max9867.h
+index 55cd9976ff47d..d9170850c96ea 100644
+--- a/sound/soc/codecs/max9867.h
++++ b/sound/soc/codecs/max9867.h
+@@ -67,7 +67,7 @@
+ #define MAX9867_MICCONFIG    0x15
+ #define MAX9867_MODECONFIG   0x16
+ #define MAX9867_PWRMAN       0x17
+-#define MAX9867_SHTDOWN_MASK (1<<7)
++#define MAX9867_SHTDOWN      0x80
+ #define MAX9867_REVISION     0xff
+ 
+ #define MAX9867_CACHEREGNUM 10
+-- 
+2.20.1
+
 
 
