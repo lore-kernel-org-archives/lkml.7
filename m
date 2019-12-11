@@ -2,109 +2,146 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8C1C2BD09
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E202C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39A4621D7D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHUO4Uku"
+	by mail.kernel.org (Postfix) with ESMTP id 6BF9D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 08:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576053733;
+	bh=12jKiiiaTPJVxoIxfBVZKjvh7sNdAl/aAKNfpHkRhdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vkj7ZZeMcQA0wjVKwJFIGNZxSiIzo56nFaQ4YEqdJPZo6s1bjNJ+Whiu2xtzLBtJb
+	 XtYBMriK05R17RJn1ajovo3WA9jHHVS/rtXFp3QicTDaUJf4AHf9xK+r82BbZBIFG9
+	 iBTa/TzB8YgaUPzVgHInpKQf/Y4fb1MFD1W7zCVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfLKIly (ORCPT
+        id S1728415AbfLKImM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 03:41:54 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34376 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbfLKIlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 03:41:52 -0500
-Received: by mail-pg1-f195.google.com with SMTP id r11so10442185pgf.1;
-        Wed, 11 Dec 2019 00:41:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZX5iKFff+zirWsLntEazM/Rbpxnzs9FOJJrz4dQumzc=;
-        b=MHUO4UkuzYpZA3AHVcHQwjQ3qiK8LGCGbQkoMcg3lJKv3tAaP6BMTBg2Ib/qK37dA+
-         c5L/hXucjHUBEbtVwOTLq2DQQa2FHXO/lLHOBXi2jFqtXNji3CbRH5LR06+kRCcZKoPb
-         GUgDODlN0gIhiXK6mD4bUE3SSJC0TO6NI3a0MtgQO7kizMf3g7EC9QXW6eoQSU5/GdYi
-         hMvTTgzME/upt+wwKZFcGXQBixnooyz3ez9ipRTbX5T0OX43dsafvRPYbeKrg3GKvDHO
-         hL/fLVDdRs1/KxdVK8O537Rzi0mWV21RQX9bTUJiHBNg9/dj1AGb73qQB6PPnUDTGxIC
-         XJig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZX5iKFff+zirWsLntEazM/Rbpxnzs9FOJJrz4dQumzc=;
-        b=bz+6QP7XDAmwqrj795Ui45oAT4JKofupzvXYe7RXCwR1hA1kgb5ynzccA2004WdKnC
-         a6fwfkjaSghW++iMv7S3cz7YFKc34oYqh8KX4UwumoBNoyOSg+AvFvhLj3LEkQ8p8Ccw
-         54o5+95HJkiPZi22NVMaCHHNw4IcfX76MRuucfB/hff2i6YdH2+P9dzUspVTbKcYezGF
-         4gvX2N0Dizy/MZU0NO5KIV7J2BdImoDeNgXLYPAxGbdhkUr7cusgMmowcQAEgdEirgf7
-         CXtvcSWbnax5n+jZ7vvtFj5CvKU16oN68hWNHTYScsoMmMEl9duPq3UdwuTD8tZtASJr
-         E9kw==
-X-Gm-Message-State: APjAAAXtRe0c4Llnal+GOPpBIMSOI8zAOjjtc3ZWUn/E71IgTvbNIEJV
-        I/w0S2B9eISKJqERbTmjkm56xjvN
-X-Google-Smtp-Source: APXvYqzO1zopMC7CKJPCqQkkW+wGdyMfN7a2pPRNe/6FbBn7+WTgfsNCmI+0BrTqx7nTq9HCJuuNtQ==
-X-Received: by 2002:a62:b402:: with SMTP id h2mr2447717pfn.55.1576053711611;
-        Wed, 11 Dec 2019 00:41:51 -0800 (PST)
-Received: from localhost.localdomain ([103.51.73.137])
-        by smtp.gmail.com with ESMTPSA id e16sm1806233pgk.77.2019.12.11.00.41.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 00:41:51 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCHv1 3/3] crypto: amlogic: Add new compatible string for amlogic GXBB SoC
-Date:   Wed, 11 Dec 2019 08:41:12 +0000
-Message-Id: <20191211084112.971-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191211084112.971-1-linux.amoon@gmail.com>
-References: <20191211084112.971-1-linux.amoon@gmail.com>
+        Wed, 11 Dec 2019 03:42:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727253AbfLKImM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 03:42:12 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F74A2173E;
+        Wed, 11 Dec 2019 08:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576053731;
+        bh=12jKiiiaTPJVxoIxfBVZKjvh7sNdAl/aAKNfpHkRhdU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=swKuW/IgImJjrMJnaup1i8Q9gJ5Jrl2bK1s/YXT6H0BhZ5uPbzQkPS+FVn9GyrXUF
+         hv1llrXy4Fy6NinQt6jF+XtCVhSioMGadwM9RoN5LOq3Q4d7PNVW5XTiiAIi6Q2Kyr
+         gflwJBJ6Fzgki1GK+O1TCsA8vh2fvWOkeMswEzV0=
+Date:   Wed, 11 Dec 2019 09:42:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Schafer <schaferjscott@gmail.com>
+Cc:     devel@driverdev.osuosl.org, netdev@vger.kernel.org,
+        GR-Linux-NIC-Dev@marvell.com, linux-kernel@vger.kernel.org,
+        Manish Chopra <manishc@marvell.com>
+Subject: Re: [PATCH] staging: qlge: Fix multiple WARNING and CHECK relating
+ to formatting
+Message-ID: <20191211084206.GA483343@kroah.com>
+References: <20191211014759.4749-1-schaferjscott@gmail.com>
+ <20191211073136.GB397938@kroah.com>
+ <20191211082839.GA13244@karen>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211082839.GA13244@karen>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new compatible string to support the cryto controller
-for Amlogic GXBB SoC.
+On Wed, Dec 11, 2019 at 02:28:39AM -0600, Scott Schafer wrote:
+> On Wed, Dec 11, 2019 at 08:31:36AM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Dec 10, 2019 at 07:47:59PM -0600, Scott Schafer wrote:
+> > > CHECK: Please don't use multiple blank lines
+> > > CHECK: Blank lines aren't necessary before a close brace '}'
+> > > CHECK: Blank lines aren't necessary after an open brace '{'
+> > > WARNING: Missing a blank line after declarations
+> > > CHECK: No space is necessary after a cast
+> > > CHECK: braces {} should be used on all arms of this statement
+> > > CHECK: Unbalanced braces around else statement
+> > > WARNING: please, no space before tabs
+> > > CHECK: spaces preferred around that '/' (ctx:VxV)
+> > > CHECK: spaces preferred around that '+' (ctx:VxV)
+> > > CHECK: spaces preferred around that '%' (ctx:VxV)
+> > > CHECK: spaces preferred around that '|' (ctx:VxV)
+> > > CHECK: spaces preferred around that '*' (ctx:VxV)
+> > > WARNING: Unnecessary space before function pointer arguments
+> > > WARNING: please, no spaces at the start of a line
+> > > WARNING: Block comments use a trailing */ on a separate line
+> > > ERROR: trailing whitespace
+> > > 
+> > > In files qlge.h, qlge_dbg.c, qlge_ethtool.c, qlge_main.c, and qlge_mpi.c
+> > > 
+> > > Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+> > > ---
+> > >  drivers/staging/qlge/qlge.h         |  45 ++++++-------
+> > >  drivers/staging/qlge/qlge_dbg.c     |  41 ++++++-----
+> > >  drivers/staging/qlge/qlge_ethtool.c |  20 ++++--
+> > >  drivers/staging/qlge/qlge_main.c    | 101 ++++++++++++++--------------
+> > >  drivers/staging/qlge/qlge_mpi.c     |  37 +++++-----
+> > >  5 files changed, 125 insertions(+), 119 deletions(-)
+> > 
+> > Hi,
+> > 
+> > This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+> > a patch that has triggered this response.  He used to manually respond
+> > to these common problems, but in order to save his sanity (he kept
+> > writing the same thing over and over, yet to different people), I was
+> > created.  Hopefully you will not take offence and will fix the problem
+> > in your patch and resubmit it so that it can be accepted into the Linux
+> > kernel tree.
+> > 
+> > You are receiving this message because of the following common error(s)
+> > as indicated below:
+> > 
+> > - Your patch did many different things all at once, making it difficult
+> >   to review.  All Linux kernel patches need to only do one thing at a
+> >   time.  If you need to do multiple things (such as clean up all coding
+> >   style issues in a file/driver), do it in a sequence of patches, each
+> >   one doing only one thing.  This will make it easier to review the
+> >   patches to ensure that they are correct, and to help alleviate any
+> >   merge issues that larger patches can cause.
+> > 
+> > If you wish to discuss this problem further, or you have questions about
+> > how to resolve this issue, please feel free to respond to this email and
+> > Greg will reply once he has dug out from the pending patches received
+> > from other developers.
+> > 
+> > thanks,
+> > 
+> > greg k-h's patch email bot
+> 
+> I was wondering how I would go about chaning the patch.
 
-Cc: Corentin Labbe <clabbe@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/crypto/amlogic/amlogic-gxl-core.c | 1 +
- 1 file changed, 1 insertion(+)
+Break it up into "one patch per logical change".
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-index fa05fce1c0de..9859ab023e23 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-@@ -311,6 +311,7 @@ static int meson_crypto_remove(struct platform_device *pdev)
- }
- 
- static const struct of_device_id meson_crypto_of_match_table[] = {
-+	{ .compatible = "amlogic,gxbb-crypto", },
- 	{ .compatible = "amlogic,gxl-crypto", },
- 	{}
- };
--- 
-2.24.0
+See the many other patchsets on this mailing list for examples of how
+this is done.
 
+> I know I should switch to a patchset but how would I go about doing
+> that?
+
+What exactly do you mean by "how"?
+
+> Also where would I place the new patches?
+
+You email them here :)
+
+> Would I, create a new patch series or would I split the patch into new
+> (smaller) patches and reply to this thread?
+
+Just a whole new patch series is good.
+
+thanks,
+
+greg k-h
