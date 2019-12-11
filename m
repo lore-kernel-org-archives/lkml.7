@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CC8C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E7FC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F510208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A032E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076867;
-	bh=lLytQxX7qdL6iU0dEIKBgm6bxyJ3D/XPmqK/cZk5ARA=;
+	s=default; t=1576076870;
+	bh=3m563FRZtB/k4I8XP+18gcNzctJF6R2qy2jQ07wZW0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2NtXaUoQXgjyPTv3kcQ66xI4a/TzZvNxXEitCN85el1S6DMPP0z3Aa7K6l8uVQ1V0
-	 kmO5pTa6q5+SVUMwALxUxUD7OjRJxVXkxqgw3MftjIUbfL1rJg6evG1zx2OsbkVtGa
-	 1R59ZuOKFAjL08lFqGbSKiumCMthFKTJM8FODD7M=
+	b=yMObVSEbvMkS0ofn/Y4JVdTy1ouYztv6h3Uw4tzxU276Jqlkyt9cLW2El4JX4iio+
+	 uCOA0sv1NNcwp+pVtNhGcgpZOU7DFiYvnn4kpfoYF5sHqr8O1DsMULKoikUv3ggDZ5
+	 /U42PSfsFUZXEYVUBx9PEmaLkcYyV+HC7HnzqKoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbfLKPHq (ORCPT
+        id S1730139AbfLKPHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:07:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730076AbfLKPHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:07:44 -0500
+        id S1730076AbfLKPHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:07:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38F7720663;
-        Wed, 11 Dec 2019 15:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6560520663;
+        Wed, 11 Dec 2019 15:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076863;
-        bh=lLytQxX7qdL6iU0dEIKBgm6bxyJ3D/XPmqK/cZk5ARA=;
+        s=default; t=1576076866;
+        bh=3m563FRZtB/k4I8XP+18gcNzctJF6R2qy2jQ07wZW0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2OpVGEDDSlICJ4KZigthYH5XKeatgIZCPOwwsFWA6hV3Sj/mMbN5PpMLivvn8BuZ
-         aR84DlKD9sMSKv7E9E28mH3sV8ceGdzUmfrK/lvv5fivGB+ZdvjA8soZzP7vUupONs
-         OG2WpjdNDhOP33G37XVGPXLMt6aOkUGJCsKhez4c=
+        b=lq0owAKvDQPAE61LUoH8/lNEgrm3rAzap/gTchhpIUYp8O+Q2+sJtn9oTyugY4ey5
+         XSAu7+WwyxVmt8JsaBHWaX3d+O87OTxVyiaA9zV1zhlJMoOFtCS5dN18t7zRY9F+Gs
+         pZUgCsIPF6lEdAv+QKAyGpdSyhbgctiEaYLf9HTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.4 02/92] arm64: tegra: Fix active-low warning for Jetson TX1 regulator
-Date:   Wed, 11 Dec 2019 16:04:53 +0100
-Message-Id: <20191211150222.535121261@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 20/92] io_uring: fix dead-hung for non-iter fixed rw
+Date:   Wed, 11 Dec 2019 16:05:11 +0100
+Message-Id: <20191211150227.929391888@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,44 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jon Hunter <jonathanh@nvidia.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-commit 1e5e929c009559bd7e898ac8e17a5d01037cb057 upstream.
+commit 311ae9e159d81a1ec1cf645daf40b39ae5a0bd84 upstream.
 
-Commit 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-added a regulator for HDMI on the Jetson TX1 platform. This regulator
-has an active high enable, but the GPIO specifier for enabling the
-regulator incorrectly defines it as active-low. This causes the
-following warning to occur on boot ...
+Read/write requests to devices without implemented read/write_iter
+using fixed buffers can cause general protection fault, which totally
+hangs a machine.
 
- WARNING KERN regulator@10 GPIO handle specifies active low - ignored
+io_import_fixed() initialises iov_iter with bvec, but loop_rw_iter()
+accesses it as iovec, dereferencing random address.
 
-The fixed-regulator binding does not use the active-low flag from the
-gpio specifier and purely relies of the presence of the
-'enable-active-high' property to determine if it is active high or low
-(if this property is omitted). Fix this warning by setting the GPIO
-to active-high in the GPIO specifier which aligns with the presense of
-the 'enable-active-high' property.
+kmap() page by page in this case
 
-Fixes: 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/io_uring.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1612,7 +1612,7 @@
- 			regulator-name = "VDD_HDMI_5V0";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&exp1 12 GPIO_ACTIVE_LOW>;
-+			gpio = <&exp1 12 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -1351,9 +1351,19 @@ static ssize_t loop_rw_iter(int rw, stru
+ 		return -EAGAIN;
+ 
+ 	while (iov_iter_count(iter)) {
+-		struct iovec iovec = iov_iter_iovec(iter);
++		struct iovec iovec;
+ 		ssize_t nr;
+ 
++		if (!iov_iter_is_bvec(iter)) {
++			iovec = iov_iter_iovec(iter);
++		} else {
++			/* fixed buffers import bvec */
++			iovec.iov_base = kmap(iter->bvec->bv_page)
++						+ iter->iov_offset;
++			iovec.iov_len = min(iter->count,
++					iter->bvec->bv_len - iter->iov_offset);
++		}
++
+ 		if (rw == READ) {
+ 			nr = file->f_op->read(file, iovec.iov_base,
+ 					      iovec.iov_len, &kiocb->ki_pos);
+@@ -1362,6 +1372,9 @@ static ssize_t loop_rw_iter(int rw, stru
+ 					       iovec.iov_len, &kiocb->ki_pos);
+ 		}
+ 
++		if (iov_iter_is_bvec(iter))
++			kunmap(iter->bvec->bv_page);
++
+ 		if (nr < 0) {
+ 			if (!ret)
+ 				ret = nr;
 
 
