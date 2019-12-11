@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 547C8C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6527C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A91208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD73220836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080678;
-	bh=iyuGJf9G6EmqN8jHkMhWfFG9XlRJQLrcIUlcEYQCP1s=;
+	s=default; t=1576080686;
+	bh=5C/viSkFRj3DF/5+noj7PCPu039K0DAERLDB0HULPn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZfrVLCMa/D8cCiva7hTG2vyS1tWG46FyrUH3CSeYR5BSnQQDCSvEsykZxZ3k/I6E1
-	 1O0OtIok9eY8F19xjVaTn2Zrdy7/F0K7POMWULaMU473WtGL2le8F0NFNDOlfWLv9K
-	 NAOxs6Imut7fJnOKOyf0ejUlZdtCkojjf3MGXwA8=
+	b=kr7BHNpXdXQihx2/clw+ZcUINtDDdEIzJJ1RgF8IKfDa6rmbrg72KFYygGYc+Cowx
+	 1Am8ZrKHSuqmNWdec2wqZLnrto0k23Ys5ZVy5TQITHpUfZb1o/Bp8oIiTwol1lRN0b
+	 +KOAfFG1LakA3IyZwynkTRrJ4pX9sFIARU3hHxP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbfLKPLH (ORCPT
+        id S1730533AbfLKPKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59568 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730549AbfLKPLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:04 -0500
+        id S1730828AbfLKPKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52EE1208C3;
-        Wed, 11 Dec 2019 15:11:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7D42173E;
+        Wed, 11 Dec 2019 15:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077063;
-        bh=iyuGJf9G6EmqN8jHkMhWfFG9XlRJQLrcIUlcEYQCP1s=;
+        s=default; t=1576077050;
+        bh=5C/viSkFRj3DF/5+noj7PCPu039K0DAERLDB0HULPn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=likJcpMjbebq1FTXUJnvhjyi8toiJyHvozbofpbWIP3WbIfjxJ6mYqDXc49/jGsN7
-         O2z3mah4zMXyBSiIdeMrDe+LsseihilvAekBC/GyFwSqFV+92nAaKHqnf2GiMkg4DY
-         4eQ5QNOpSYXdWvAcELy6zTxy0CN4OFDDaEWVwzHM=
+        b=U7OelRrI/5P62bbMI3EdUcQ1mFdHLvpxQAM2GDiTJ/1WX71mosrm1YschuBP5DRg3
+         9hwb/yAnMgYqrgK1whN3UzXubcuXPDzREdAHZCiQFyRbUbGDPd5y1H7P39MVGJce72
+         1T6AjbzA9016rRvzai8QPOL8T6gaFx8JOLPJGvdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 83/92] rfkill: allocate static minor
-Date:   Wed, 11 Dec 2019 16:06:14 +0100
-Message-Id: <20191211150300.973343815@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 5.4 91/92] binder: Prevent repeated use of ->mmap() via NULL mapping
+Date:   Wed, 11 Dec 2019 16:06:22 +0100
+Message-Id: <20191211150303.128921993@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,62 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Jann Horn <jannh@google.com>
 
-commit 8670b2b8b029a6650d133486be9d2ace146fd29a upstream.
+commit a7a74d7ff55a0c657bc46238b050460b9eacea95 upstream.
 
-udev has a feature of creating /dev/<node> device-nodes if it finds
-a devnode:<node> modalias. This allows for auto-loading of modules that
-provide the node. This requires to use a statically allocated minor
-number for misc character devices.
+binder_alloc_mmap_handler() attempts to detect the use of ->mmap() on a
+binder_proc whose binder_alloc has already been initialized by checking
+whether alloc->buffer is non-zero.
 
-However, rfkill uses dynamic minor numbers and prevents auto-loading
-of the module. So allocate the next static misc minor number and use
-it for rfkill.
+Before commit 880211667b20 ("binder: remove kernel vm_area for buffer
+space"), alloc->buffer was a kernel mapping address, which is always
+non-zero, but since that commit, it is a userspace mapping address.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
+A sufficiently privileged user can map /dev/binder at NULL, tricking
+binder_alloc_mmap_handler() into assuming that the binder_proc has not been
+mapped yet. This leads to memory unsafety.
+Luckily, no context on Android has such privileges, and on a typical Linux
+desktop system, you need to be root to do that.
+
+Fix it by using the mapping size instead of the mapping address to
+distinguish the mapped case. A valid VMA can't have size zero.
+
+Fixes: 880211667b20 ("binder: remove kernel vm_area for buffer space")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Link: https://lore.kernel.org/r/20191018205631.248274-2-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 ---
- include/linux/miscdevice.h |    1 +
- net/rfkill/core.c          |    9 +++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/android/binder_alloc.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/include/linux/miscdevice.h
-+++ b/include/linux/miscdevice.h
-@@ -57,6 +57,7 @@
- #define UHID_MINOR		239
- #define USERIO_MINOR		240
- #define VHOST_VSOCK_MINOR	241
-+#define RFKILL_MINOR		242
- #define MISC_DYNAMIC_MINOR	255
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -681,17 +681,17 @@ int binder_alloc_mmap_handler(struct bin
+ 	struct binder_buffer *buffer;
  
- struct device;
---- a/net/rfkill/core.c
-+++ b/net/rfkill/core.c
-@@ -1316,10 +1316,12 @@ static const struct file_operations rfki
- 	.llseek		= no_llseek,
- };
+ 	mutex_lock(&binder_alloc_mmap_lock);
+-	if (alloc->buffer) {
++	if (alloc->buffer_size) {
+ 		ret = -EBUSY;
+ 		failure_string = "already mapped";
+ 		goto err_already_mapped;
+ 	}
++	alloc->buffer_size = min_t(unsigned long, vma->vm_end - vma->vm_start,
++				   SZ_4M);
++	mutex_unlock(&binder_alloc_mmap_lock);
  
-+#define RFKILL_NAME "rfkill"
-+
- static struct miscdevice rfkill_miscdev = {
--	.name	= "rfkill",
- 	.fops	= &rfkill_fops,
--	.minor	= MISC_DYNAMIC_MINOR,
-+	.name	= RFKILL_NAME,
-+	.minor	= RFKILL_MINOR,
- };
+ 	alloc->buffer = (void __user *)vma->vm_start;
+-	mutex_unlock(&binder_alloc_mmap_lock);
  
- static int __init rfkill_init(void)
-@@ -1371,3 +1373,6 @@ static void __exit rfkill_exit(void)
- 	class_unregister(&rfkill_class);
- }
- module_exit(rfkill_exit);
-+
-+MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
-+MODULE_ALIAS("devname:" RFKILL_NAME);
+-	alloc->buffer_size = min_t(unsigned long, vma->vm_end - vma->vm_start,
+-				   SZ_4M);
+ 	alloc->pages = kcalloc(alloc->buffer_size / PAGE_SIZE,
+ 			       sizeof(alloc->pages[0]),
+ 			       GFP_KERNEL);
+@@ -722,8 +722,9 @@ err_alloc_buf_struct_failed:
+ 	kfree(alloc->pages);
+ 	alloc->pages = NULL;
+ err_alloc_pages_failed:
+-	mutex_lock(&binder_alloc_mmap_lock);
+ 	alloc->buffer = NULL;
++	mutex_lock(&binder_alloc_mmap_lock);
++	alloc->buffer_size = 0;
+ err_already_mapped:
+ 	mutex_unlock(&binder_alloc_mmap_lock);
+ 	binder_alloc_debug(BINDER_DEBUG_USER_ERROR,
 
 
