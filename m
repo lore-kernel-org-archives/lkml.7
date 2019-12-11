@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDD0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC74C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81221214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0EE02077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077763;
-	bh=6WqnEtZcpwKMN0AGFQmDNkvleWZEMRKj16Ms18ORuJE=;
+	s=default; t=1576077768;
+	bh=zFJXkK5NTDEYDICxlCGpP4NSUh2oXKu5G1zQkxmwtj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwP86u+tAIY3CDbEGSyHY86B0eoC7+1CahA9ykEYiEi1a4tzzdW37ynN2e0WSqiKV
-	 3zNXeG+VyNXMuRhTTxcQQqgj1x0r2xB4B4lu+9Ifm1c9p3B8yPQsff1FYkRZiXHBKH
-	 2tpuNqnD3VupTkUhRtVLusSAxIy4wUqMebMolQfs=
+	b=kPrDPb7wR7tf1RzYlZOSTeznwWi6tSj+bvVWcy0foko4ATf69YC+wtSoTjB/Cu2Ex
+	 UcE6Pglv4gzQioRxvrdt22MadSWp0q/MlxZpbk1r3XoSwVQsXlEI1A1U8OPIGwNllj
+	 9mOCVv5bkLtfNe06qdXlOMXZ5EObm+/6rCriax5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732633AbfLKPWl (ORCPT
+        id S1732410AbfLKPWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730932AbfLKPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:38 -0500
+        id S1732630AbfLKPWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDCA32073D;
-        Wed, 11 Dec 2019 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82D2C2073D;
+        Wed, 11 Dec 2019 15:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077758;
-        bh=6WqnEtZcpwKMN0AGFQmDNkvleWZEMRKj16Ms18ORuJE=;
+        s=default; t=1576077760;
+        bh=zFJXkK5NTDEYDICxlCGpP4NSUh2oXKu5G1zQkxmwtj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUPB/BFmaj87I02qMYj8qb4d/1ysIcAJgFmQb0QjI+WHDVd6ncsBNfIQs4h+NtCt4
-         GUu9x7azBlDgD7/7zPmwCiLBRr4bkLL4JGqq/T8IjItQDUdhpDGqP5I4CvZQhMrGub
-         +ILG41JVBjIwn34/xIOIliPFZEIOvh6idTvFGg+I=
+        b=mPZhVY6rBV8aFAryEGLEpMCL+d+r0j9PKAswwfMSmKXRqnS4EMjR8b2pKz2U9PkwP
+         Xik2ST5VYkKHB48i9p/FQBSWvoDzvnPPW8CIdzok5mK4FibEX9YyEiZNBwGooxp6HP
+         KdyiRJVMQm7jeFsh3sp/FKcCVLbkf2KPehhYA2kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@bootlin.com>,
+        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        Sergey Yanovich <ynvich@gmail.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 160/243] mtd: fix mtd_oobavail() incoherent returned value
-Date:   Wed, 11 Dec 2019 16:05:22 +0100
-Message-Id: <20191211150349.965520027@linuxfoundation.org>
+Subject: [PATCH 4.19 161/243] ARM: dts: pxa: clean up USB controller nodes
+Date:   Wed, 11 Dec 2019 16:05:23 +0100
+Message-Id: <20191211150350.032424282@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,34 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Daniel Mack <daniel@zonque.org>
 
-[ Upstream commit 4348433d8c0234f44adb6e12112e69343f50f0c5 ]
+[ Upstream commit c40ad24254f1dbd54f2df5f5f524130dc1862122 ]
 
-mtd_oobavail() returns either mtd->oovabail or mtd->oobsize. Both
-values are unsigned 32-bit entities, so there is no reason to pretend
-returning a signed one.
+PXA25xx SoCs don't have a USB controller, so drop the node from the
+common pxa2xx.dtsi base file. Both pxa27x and pxa3xx have a dedicated
+node already anyway.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+While at it, unify the names for the nodes across all pxa platforms.
+
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Reported-by: Sergey Yanovich <ynvich@gmail.com>
+Link: https://patchwork.kernel.org/patch/8375421/
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/mtd/mtd.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/pxa27x.dtsi | 2 +-
+ arch/arm/boot/dts/pxa2xx.dtsi | 7 -------
+ arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
+ 3 files changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index cd0be91bdefa5..035d641e8847c 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -386,7 +386,7 @@ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
- 	return dev_of_node(&mtd->dev);
- }
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 3228ad5fb725f..ccbecad9c5c7c 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -35,7 +35,7 @@
+ 			clocks = <&clks CLK_NONE>;
+ 		};
  
--static inline int mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
-+static inline u32 mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
- {
- 	return ops->mode == MTD_OPS_AUTO_OOB ? mtd->oobavail : mtd->oobsize;
- }
+-		pxa27x_ohci: usb@4c000000 {
++		usb0: usb@4c000000 {
+ 			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
+diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
+index a520b4c14ea9f..0a0e837dc79cb 100644
+--- a/arch/arm/boot/dts/pxa2xx.dtsi
++++ b/arch/arm/boot/dts/pxa2xx.dtsi
+@@ -117,13 +117,6 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb0: ohci@4c000000 {
+-			compatible = "marvell,pxa-ohci";
+-			reg = <0x4c000000 0x10000>;
+-			interrupts = <3>;
+-			status = "disabled";
+-		};
+-
+ 		mmc0: mmc@41100000 {
+ 			compatible = "marvell,pxa-mmc";
+ 			reg = <0x41100000 0x1000>;
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index 3a8f0edc3af99..53009dbd36158 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -204,7 +204,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pxa3xx_ohci: usb@4c000000 {
++		usb0: usb@4c000000 {
+ 			compatible = "marvell,pxa-ohci";
+ 			reg = <0x4c000000 0x10000>;
+ 			interrupts = <3>;
 -- 
 2.20.1
 
