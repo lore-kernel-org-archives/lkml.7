@@ -2,57 +2,56 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789BBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9EBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A69522B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913882465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078570;
-	bh=6ox/KYmu3jjPyzt+7WRXYPOKE+EiNlw1SrM83RmeAaw=;
+	s=default; t=1576078572;
+	bh=/+6g7v4r3IpGywefIv8ZdFwib2PrWscyPGU9R1Zcsw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pt/gwQUWdjz2ZU81U2FCUyIBh+3PnHcRV8UTGuysbgO+6JVE8WXbypJc3eNZvzf1m
-	 +X+VNVUVMgpoWz3cnn+3lniVV/pjZvTHdvgjO7kLRM2QQKejkahCDFkf53FfXwykCx
-	 RKNOwg/5Y9+O8Nh+BdLyu9QVbqdacxrNosr/++fQ=
+	b=URO/BYu2wDX9/WuiYC3DEUE/JwXJ8cCp313kzdCZM9bSo65PwnSk9h/GMiiI9EPV+
+	 ehnHvZHStJtmE4i+uF0KknitBpQLi/OxHsJQpFeDhso2C2ijHM10F3PieRtBdRp7R/
+	 keGWs9VmnjgoPfcT5FimmCa9CUISbCRC6GbqM2cA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388276AbfLKPgC (ORCPT
+        id S2387872AbfLKPgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:36:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45150 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:36:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388226AbfLKPfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:52 -0500
+        id S2387831AbfLKPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57AC32465B;
-        Wed, 11 Dec 2019 15:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D37C24656;
+        Wed, 11 Dec 2019 15:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078551;
-        bh=6ox/KYmu3jjPyzt+7WRXYPOKE+EiNlw1SrM83RmeAaw=;
+        s=default; t=1576078550;
+        bh=/+6g7v4r3IpGywefIv8ZdFwib2PrWscyPGU9R1Zcsw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiP2aknX+vZWINRhYEsUaGKGjKE2IR5bmDYV/9tRjMeAYqBeXqPblYH58uK3Hc/+0
-         +TEGudVS0mwMzZlwkZ4QG6u6UxhTEWBe1yjqI1TSjjwU72msGSK4iy1RR+ln/O2Izw
-         Mt4kupj+lwifdq2WthO3UImQiV3TxHpJbE+oUjYE=
+        b=O55GThCb8BrUm2PHe3V6Y5+gWlkvaYwICoo9/OmEgLhymN0KnaEsM+0e26KSTNTy8
+         sfXtouxpCrs2J5g6gSq4j0DIV4P4OlqsM316b5vXaNRffWeRrB0pDje0k2ETzt8S/l
+         oSDyWifvg9swnW/rRZxSZPVrJUQdS6Ha+59cSQZg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Cc:     =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 38/42] perf regs: Make perf_reg_name() return "unknown" instead of NULL
-Date:   Wed, 11 Dec 2019 10:35:06 -0500
-Message-Id: <20191211153510.23861-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 37/42] cdrom: respect device capabilities during opening action
+Date:   Wed, 11 Dec 2019 10:35:05 -0500
+Message-Id: <20191211153510.23861-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,84 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-[ Upstream commit 5b596e0ff0e1852197d4c82d3314db5e43126bf7 ]
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-To avoid breaking the build on arches where this is not wired up, at
-least all the other features should be made available and when using
-this specific routine, the "unknown" should point the user/developer to
-the need to wire this up on this particular hardware architecture.
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-Detected in a container mipsel debian cross build environment, where it
-shows up as:
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
 
-  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2:
-  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Also on mips64:
-
-  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_user__printf' at util/session.c:1139:3,
-      inlined from 'dump_sample' at util/session.c:1246:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_intr__printf' at util/session.c:1147:3,
-      inlined from 'dump_sample' at util/session.c:1249:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/perf_regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 679d6e4939622..e6324397b295b 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -26,7 +26,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
- 
- static inline const char *perf_reg_name(int id __maybe_unused)
- {
--	return NULL;
-+	return "unknown";
- }
- 
- static inline int perf_reg_value(u64 *valp __maybe_unused,
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index a46f188f679e7..782dbab5ad56a 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -998,6 +998,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
++
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
++
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1164,7 +1170,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2873,6 +2880,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
 -- 
 2.20.1
 
