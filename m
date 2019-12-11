@@ -2,137 +2,189 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7ECCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812C3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4E820836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4D72464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C7dsOwud"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n8KiQmLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfLKOYF (ORCPT
+        id S1729932AbfLKOYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:24:05 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42968 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbfLKOYF (ORCPT
+        Wed, 11 Dec 2019 09:24:08 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34309 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729671AbfLKOYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:24:05 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y19so16803645lfl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:24:03 -0800 (PST)
+        Wed, 11 Dec 2019 09:24:06 -0500
+Received: by mail-pg1-f195.google.com with SMTP id r11so10865732pgf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 06:24:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=wUfcAcnFBe6WtukeJWhqpn8x3QOjL+beAb8698aWAeI=;
-        b=C7dsOwud2dvcj6Y4qsKZ+L9w5Vz6nGmiUuLBaIMXRUyHcglBta8z/eTFJmvfV8w+gj
-         kAq55GqYAlNrzyviUyDmEwQfgReFmugR8Mq+yTl/CnKSXLQOguEgcZU2IgJvVtAUV74d
-         7EpP+8aG5I0MCDU8sMMSCNcaHp27fCNfpRWOY0KU+ghfmC8TFSRdw3LeZk3VwQ1IKxNk
-         h3Z0L0Y6Z3OnD/yyNAWSQynclz3gLGDJV0hJ3/v1CP0YZln/EAEYZg8FcDLNLEdlRMAG
-         w4F9prm7kVgM1uKcCmwrN7AJpxiZZlx3TGkudpq5ILar3NFHsU8bkgEmQqRr6suJ4mv4
-         kKgw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8KnatWRJvggnUcJXHtww4qB6FhD522LG/aumBjl9qUs=;
+        b=n8KiQmLAc8ZK5BVSQV+k0zHdgmk5QcojzmqCuPP/G5EqqLmvGvd/31aA+vmLC/jxZS
+         D9actdnYEsJTGtzyAfpwFJ+EO7OzKmTNsuYhUUA2Sf0aDwNEXRIPCKDHdEL8nYaGDa3W
+         /HE6WWnq5KaY8J5umcqmXMhwV3cL8LV/BnQfGYW4jLPSSpKwMKD+HTht8w0ritIwvQln
+         eT8p9O4f7MbrVxn/QaAa7EdIbzuNyCe4DDWYEtIlH0HUO8AbgYcdpLebuxmyAG3J1Ep8
+         TKAvqkqCy5IG5X3069ZSxgRaOfGYuDc3qiVHKmOccCrWRq/CbYIMEJVQ2W2avARRdHnU
+         RBFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wUfcAcnFBe6WtukeJWhqpn8x3QOjL+beAb8698aWAeI=;
-        b=IpX6VTPWCGBWtvGXzqTL1lXdMNZhwm2Rwnms6kUnxDKDH29VFKvTe/n2wTrXszuXNT
-         Zx+xMDIMAuZLRSXPn+IJNxy8CGT5Wd7UdH5ntdBqFRrU1yvJzbQYr40FZnJMnP8TKJoC
-         5++BQKfffKcwm/N8wI8hWFhfUYQUnuxyFJ/91kB29C1N+p0vg2I50vtjE0g+I9IVDdZm
-         9mZXeKAK4Qq0/lNnINwrNlarmoua2zL5mcYPEmCEy9VSv+1SmW5Y/ez6WJcWhMOpAuci
-         4/MDcEU6tD/JPwk2QbL/2ORJ+0pLoW9e/Yp4X1vLIVBqNmPVq94i2Vj5H9TUZaO8VymU
-         ++jA==
-X-Gm-Message-State: APjAAAWeVUig8j2XohkK1ZiY/mHIrjxMpMQpSvizgBC6i3YmTC9RkzwJ
-        qZzqJ+DUyYvbi6GGI8dCyMu2ttux6YRgHapjSkwdwg==
-X-Google-Smtp-Source: APXvYqwc2TsSGxtAysSfLON5GH+m4pqYIp/+YTd22k75uaW7BnPxJjDSAjhC28yKMszdGrjAbplFPVX26cSCabanRXI=
-X-Received: by 2002:a19:f811:: with SMTP id a17mr2385232lff.182.1576074242515;
- Wed, 11 Dec 2019 06:24:02 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8KnatWRJvggnUcJXHtww4qB6FhD522LG/aumBjl9qUs=;
+        b=gAjmgIZ14DlSk6aGHrRIhPeZ1FOMWbgG8ooYTPD0DaIQ4lxTPhF4eOJoW1vv8PoAOO
+         O7cpKiyDj6CkFc1Rqb7WP/XC800hrzIinr1iO6WvNVk5fG/NTejNeG2Kg0GhxLZBeBkh
+         Zf1mrtzp7g595/Z1eHoHY4dSYDOUwY9prS9Hrlu14GeiMixt4+v3PGVCKoHSnaZmxwP9
+         6tSp3uwHPnpXAmXISV85238qBwIcOypDa75MHqaJF8Fpx+Su23Rhdbr7uO8zDJUNfBIQ
+         6SpUu8Go7kpX+5PXYjoDDTHscOIsWangjpb+IBxDfZ4hmaj4phvCBUprblAAgR08TR6d
+         XUrw==
+X-Gm-Message-State: APjAAAWYbhk5BE16K0WX3elRDEUNTM8cOIua9UbhfXK1u/x4yArcJPw9
+        VQTd8xVUiQlDsyvUa9HxvsenUNYJtPe09+uNDK4SSQ==
+X-Google-Smtp-Source: APXvYqwojB6kioMBHsLADT9ILNBxNH7/MTlgZ1GSprzRXFq+DanmmA7iuwQxb1WHEBhmTIgofpA1k5SqXdkf60aysjo=
+X-Received: by 2002:a63:c804:: with SMTP id z4mr4450211pgg.440.1576074244845;
+ Wed, 11 Dec 2019 06:24:04 -0800 (PST)
 MIME-Version: 1.0
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Wed, 11 Dec 2019 15:23:51 +0100
-Message-ID: <CADYN=9J=hL_tcGv7iAx-LUKEXN2UEvs_=L016-+4F37o_EFkHQ@mail.gmail.com>
-Subject: Internal error: arm64: allmodconfig
-To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     manivannan.sadhasivam@linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
+References: <00000000000031a0af05995eca0b@google.com> <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 11 Dec 2019 15:23:53 +0100
+Message-ID: <CAAeHK+wFBYX8-L-D8w_nep3W=QjYoLAZbc=-0eoWK684wnuayA@mail.gmail.com>
+Subject: Re: Re: KASAN: use-after-free Read in usbvision_v4l2_open
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Dec 10, 2019 at 9:17 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 10 Dec 2019, syzbot wrote:
+>
+> > > On Mon, 9 Dec 2019, syzbot wrote:
+> >
+> > >> Hello,
+> >
+> > >> syzbot found the following crash on:
+> >
+> > >> HEAD commit:    1f22d15c usb: gadget: add raw-gadget interface
+> > >> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > >> console output: https://syzkaller.appspot.com/x/log.txt?x=1296f42ae00000
+> > >> kernel config:
+> > >> https://syzkaller.appspot.com/x/.config?x=8ccee2968018adcb
+> > >> dashboard link:
+> > >> https://syzkaller.appspot.com/bug?extid=c7b0ec009a216143df30
+> > >> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > >> Unfortunately, I don't have any reproducer for this crash yet.
+> >
+> > >> IMPORTANT: if you fix the bug, please add the following tag to the
+> > >> commit:
+> > >> Reported-by: syzbot+c7b0ec009a216143df30@syzkaller.appspotmail.com
+> >
+> > >> ==================================================================
+> > >> BUG: KASAN: use-after-free in __mutex_lock_common
+> > >> kernel/locking/mutex.c:1043 [inline]
+> > >> BUG: KASAN: use-after-free in __mutex_lock+0x124d/0x1360
+> > >> kernel/locking/mutex.c:1106
+> > >> Read of size 8 at addr ffff8881cad4d8b8 by task v4l_id/4526
+> >
+> > >> CPU: 0 PID: 4526 Comm: v4l_id Not tainted 5.4.0-syzkaller #0
+> > >> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > >> Google 01/01/2011
+> > >> Call Trace:
+> > >>    __dump_stack lib/dump_stack.c:77 [inline]
+> > >>    dump_stack+0xef/0x16e lib/dump_stack.c:118
+> > >>    print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+> > >>    __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+> > >>    kasan_report+0xe/0x20 mm/kasan/common.c:638
+> > >>    __mutex_lock_common kernel/locking/mutex.c:1043 [inline]
+> > >>    __mutex_lock+0x124d/0x1360 kernel/locking/mutex.c:1106
+> > >>    usbvision_v4l2_open+0x77/0x340
+> > >> drivers/media/usb/usbvision/usbvision-video.c:314
+> > >>    v4l2_open+0x20f/0x3d0 drivers/media/v4l2-core/v4l2-dev.c:423
+> > >>    chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> > >>    do_dentry_open+0x494/0x1120 fs/open.c:797
+> > >>    do_last fs/namei.c:3412 [inline]
+> > >>    path_openat+0x142b/0x4030 fs/namei.c:3529
+> > >>    do_filp_open+0x1a1/0x280 fs/namei.c:3559
+> > >>    do_sys_open+0x3c0/0x580 fs/open.c:1097
+> > >>    do_syscall_64+0xb7/0x5b0 arch/x86/entry/common.c:294
+> > >>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > > This looks like a race in v4l2_open(): The function drops the
+> > > videodev_lock mutex before calling the video driver's open routine, and
+> > > the device can be unregistered during the short time between.
+> >
+> > > This patch tries to make the race much more likely to happen, for
+> > > testing and verification.
+> >
+> > > Andrey, will syzbot run the same test with this patch, even though it
+> > > says it doesn't have a reproducer?
+> >
+> > > Alan Stern
+> >
+> > > #syz test: https://github.com/google/kasan.git 1f22d15c
+> >
+> > This crash does not have a reproducer. I cannot test it.
+>
+> Let's try the same patch with a different bug report -- one that has a
+> reproducer.  I assume that syzbot gets the bug identity from the
+> email's From: line (which has been updated acoordingly) rather than the
+> Subject: line.
 
-I've got an "Internal error: Oops" when I was running an arm64
-allmodconfig kernel
-from linux-next, tag: next-20191211.
-I disabled CONFIG_DEBUG_TEST_DRIVER_REMOVE and I didn't see this.
+Did you get a response for this test? I see the test attempt on the
+dashboard (the patch failed to build), but I didn't get an email with
+the result.
 
-Have anyone seen this before?
-
-[  197.227295][    T1] ------------[ cut here ]------------
-[  197.229206][    T1] kernel BUG at lib/list_debug.c:53!
-[  197.231775][    T1] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[  197.233776][    T1] Modules linked in:
-[  197.235087][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.5.0-rc1-next-20191211-00015-ge6f2690932be #1
-[  197.238131][    T1] Hardware name: linux,dummy-virt (DT)
-[  197.239892][    T1] pstate: 80400005 (Nzcv daif +PAN -UAO)
-[  197.241788][    T1] pc : __list_del_entry_valid+0xd0/0x138
-[  197.243663][    T1] lr : __list_del_entry_valid+0xd0/0x138
-[  197.245444][    T1] sp : ffff00006a3e7660
-[  197.246845][    T1] x29: ffff00006a3e7660 x28: ffff000065d1bce8
-[  197.248855][    T1] x27: ffff000065d72830 x26: ffffa000144ee900
-[  197.250810][    T1] x25: ffffa00015a76fc2 x24: 0000000000000000
-[  197.252762][    T1] x23: ffff000065d728c8 x22: ffff000065d72878
-[  197.254723][    T1] x21: ffff000065d25618 x20: ffff000065d25618
-[  197.256721][    T1] x19: ffff000065d728f8 x18: 0000000000002660
-[  197.258704][    T1] x17: 0000000000002710 x16: 0000000000001480
-[  197.260716][    T1] x15: 00000000000014bc x14: 20747562202c3866
-[  197.262706][    T1] x13: ffff80000d47ce43 x12: 1fffe0000d47ce42
-[  197.264685][    T1] x11: 1fffe0000d47ce42 x10: ffff80000d47ce42
-[  197.266648][    T1] x9 : ffffa000103d14a4 x8 : 0000000000000001
-[  197.268586][    T1] x7 : ffff80000d47ce43 x6 : 0000000041b58ab3
-[  197.270515][    T1] x5 : ffff00006a3d8040 x4 : 0000000000000000
-[  197.272525][    T1] x3 : ffffa000103d14c0 x2 : 90253b7cba50c200
-[  197.274444][    T1] x1 : 0000000000000000 x0 : 0000000000000054
-[  197.276411][    T1] Call trace:
-[  197.277536][    T1]  __list_del_entry_valid+0xd0/0x138
-[  197.279240][    T1]  __dentry_kill+0x174/0x3e8
-[  197.280741][    T1]  dput+0x880/0x8f8
-[  197.282009][    T1]  simple_recursive_removal+0x1bc/0x3b8
-[  197.283798][    T1]  debugfs_remove+0x80/0x98
-[  197.285301][    T1]  irq_domain_remove+0x48/0x228
-[  197.286889][    T1]  gpiochip_irqchip_remove+0x160/0x308
-[  197.288670][    T1]  gpiochip_remove+0x6c/0x1c0
-[  197.290227][    T1]  devm_gpio_chip_release+0x2c/0x38
-[  197.291940][    T1]  release_nodes+0x530/0x570
-[  197.293507][    T1]  devres_release_all+0x70/0x90
-[  197.295120][    T1]  really_probe+0x51c/0x928
-[  197.296574][    T1]  driver_probe_device+0x16c/0x238
-[  197.298259][    T1]  device_driver_attach+0x94/0xc8
-[  197.299924][    T1]  __driver_attach+0x1e8/0x200
-[  197.301473][    T1]  bus_for_each_dev+0xf8/0x190
-[  197.303029][    T1]  driver_attach+0x3c/0x48
-[  197.304478][    T1]  bus_add_driver+0x20c/0x3d0
-[  197.305966][    T1]  driver_register+0x168/0x200
-[  197.307566][    T1]  amba_driver_register+0xbc/0xc8
-[  197.309216][    T1]  pl061_gpio_init+0x20/0x28
-[  197.310704][    T1]  do_one_initcall+0x4c8/0xae8
-[  197.312250][    T1]  kernel_init_freeable+0x3e8/0x508
-[  197.314019][    T1]  kernel_init+0x1c/0x208
-[  197.315519][    T1]  ret_from_fork+0x10/0x18
-[  197.317088][    T1] Code: aa1403e2 aa1303e1 91088000 97cf4483 (d4210000)
-[  197.319496][    T1] ---[ end trace 73596202c5dd1276 ]---
-[  197.321358][    T1] Kernel panic - not syncing: Fatal exception
-[  197.323402][    T1] Kernel Offset: disabled
-[  197.324892][    T1] CPU features: 0x00002,20002004
-[  197.326550][    T1] Memory Limit: none
-[  197.327957][    T1] ---[ end Kernel panic - not syncing: Fatal exception ]---
-
-
-Cheers,
-Anders
+>
+> #syz test: https://github.com/google/kasan.git 1f22d15c
+>
+> Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
+> +++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+> @@ -1585,6 +1585,7 @@ static void usbvision_disconnect(struct
+>                 wake_up_interruptible(&usbvision->wait_frame);
+>                 wake_up_interruptible(&usbvision->wait_stream);
+>         } else {
+> +               msleep(100);
+>                 usbvision_release(usbvision);
+>         }
+>
+> Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+> ===================================================================
+> --- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
+> +++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
+> @@ -419,9 +419,10 @@ static int v4l2_open(struct inode *inode
+>         video_get(vdev);
+>         mutex_unlock(&videodev_lock);
+>         if (vdev->fops->open) {
+> -               if (video_is_registered(vdev))
+> +               if (video_is_registered(vdev)) {
+> +                       msleep(200);
+>                         ret = vdev->fops->open(filp);
+> -               else
+> +               } else
+>                         ret = -ENODEV;
+>         }
+>
+>
