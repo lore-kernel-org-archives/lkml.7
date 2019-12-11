@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB85C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58056C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFE4208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEF024685
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078129;
-	bh=Dkvv5C2yuzz6i9OHp8E4g3HqdPqGabSxN/nzvOCSarg=;
+	s=default; t=1576078133;
+	bh=pY+YQzGqpx1xXwp9mQ5O1lTfNALdPm0LfjKNW7N+IIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BPwbd5zlfV+pKY0TESJsTMvMJs6UMJZzpaGPTbf3VliVWa/DYNDuRHDoqht1E34tg
-	 OssXgkeRb19bvmDQLE5YCIAq/y7R4c+Ovuy0yjrPG5V+cMrWRl4wCpVD+av5XCeP48
-	 M1jjahH2Vw7HG6spvgflAqJSfP6fzgge2dkj56FY=
+	b=hrsUpbuklxTtxZ0DHCCoQk3TimU7C0YRSHRteQacCKw3+hdSrRMsgVA57N5HkwTha
+	 N0GOsCfA2LnFekePgkpESMZRXBN8SzyNLnY/g5OMeUMAyshzGqeXwdgXB5I22T1K7v
+	 iXrWnasFC1Quvvn3kRXqnN+RHSeOuOS7XGApfQ70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387717AbfLKP2s (ORCPT
+        id S2387736AbfLKP2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387704AbfLKP2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:44 -0500
+        id S2387715AbfLKP2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9F72465B;
-        Wed, 11 Dec 2019 15:28:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C942465B;
+        Wed, 11 Dec 2019 15:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078123;
-        bh=Dkvv5C2yuzz6i9OHp8E4g3HqdPqGabSxN/nzvOCSarg=;
+        s=default; t=1576078127;
+        bh=pY+YQzGqpx1xXwp9mQ5O1lTfNALdPm0LfjKNW7N+IIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IAqb0sbDu+3Kq9kXbSn333sGwubd0qGQutwLTKnvmjTuFsgxyZJY0j0afCVt/lAWI
-         Ps9S8KlXpiQV0GrD1Z3L5StQOo0AkdWhew9wsWGfUlIHUe5GqxArgKb408CZGYYsth
-         Mdnd+1/Hx9SRzCb+VT9D7xBpjYF1KO757MS0vSd0=
+        b=MGTHn3OJKOEPEOMpcAGFEr/PIFGnBGiKv8lQ1kUXu8Xsi7nchUv/oKhplgAusGjio
+         OMXbZVEmkgTm5ne0UNVet0RZ8xmEp1QmyZw45DlDScDzOaeZGUube3DZEf3fsqXFIS
+         eh5a/uklBwgt35O458Zm8GgXVJ3y6zsrL6A2fgzU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 11/58] powerpc/tools: Don't quote $objdump in scripts
-Date:   Wed, 11 Dec 2019 10:27:44 -0500
-Message-Id: <20191211152831.23507-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 15/58] powerpc/book3s64/hash: Add cond_resched to avoid soft lockup warning
+Date:   Wed, 11 Dec 2019 10:27:48 -0500
+Message-Id: <20191211152831.23507-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -58,65 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit e44ff9ea8f4c8a90c82f7b85bd4f5e497c841960 ]
+[ Upstream commit 16f6b67cf03cb43db7104acb2ca877bdc2606c92 ]
 
-Some of our scripts are passed $objdump and then call it as
-"$objdump". This doesn't work if it contains spaces because we're
-using ccache, for example you get errors such as:
+With large memory (8TB and more) hotplug, we can get soft lockup
+warnings as below. These were caused by a long loop without any
+explicit cond_resched which is a problem for !PREEMPT kernels.
 
-  ./arch/powerpc/tools/relocs_check.sh: line 48: ccache ppc64le-objdump: No such file or directory
-  ./arch/powerpc/tools/unrel_branch_check.sh: line 26: ccache ppc64le-objdump: No such file or directory
+Avoid this using cond_resched() while inserting hash page table
+entries. We already do similar cond_resched() in __add_pages(), see
+commit f64ac5e6e306 ("mm, memory_hotplug: add scheduling point to
+__add_pages").
 
-Fix it by not quoting the string when we expand it, allowing the shell
-to do the right thing for us.
+  rcu:     3-....: (24002 ticks this GP) idle=13e/1/0x4000000000000002 softirq=722/722 fqs=12001
+   (t=24003 jiffies g=4285 q=2002)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 3870 Comm: ndctl Not tainted 5.3.0-197.18-default+ #2
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    nmi_cpu_backtrace+0x124/0x130
+    nmi_trigger_cpumask_backtrace+0x1ac/0x1f0
+    arch_trigger_cpumask_backtrace+0x28/0x3c
+    rcu_dump_cpu_stacks+0xf8/0x154
+    rcu_sched_clock_irq+0x878/0xb40
+    update_process_times+0x48/0x90
+    tick_sched_handle.isra.16+0x4c/0x80
+    tick_sched_timer+0x68/0xe0
+    __hrtimer_run_queues+0x180/0x430
+    hrtimer_interrupt+0x110/0x300
+    timer_interrupt+0x108/0x2f0
+    decrementer_common+0x114/0x120
+  --- interrupt: 901 at arch_add_memory+0xc0/0x130
+      LR = arch_add_memory+0x74/0x130
+    memremap_pages+0x494/0x650
+    devm_memremap_pages+0x3c/0xa0
+    pmem_attach_disk+0x188/0x750
+    nvdimm_bus_probe+0xac/0x2c0
+    really_probe+0x148/0x570
+    driver_probe_device+0x19c/0x1d0
+    device_driver_attach+0xcc/0x100
+    bind_store+0x134/0x1c0
+    drv_attr_store+0x44/0x60
+    sysfs_kf_write+0x64/0x90
+    kernfs_fop_write+0x1a0/0x270
+    __vfs_write+0x3c/0x70
+    vfs_write+0xd0/0x260
+    ksys_write+0xdc/0x130
+    system_call+0x5c/0x68
 
-Fixes: a71aa05e1416 ("powerpc: Convert relocs_check to a shell script using grep")
-Fixes: 4ea80652dc75 ("powerpc/64s: Tool to flag direct branches from unrelocated interrupt vectors")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191024004730.32135-1-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/20191001084656.31277-1-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/tools/relocs_check.sh       | 2 +-
- arch/powerpc/tools/unrel_branch_check.sh | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/hash_utils_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/tools/relocs_check.sh b/arch/powerpc/tools/relocs_check.sh
-index ec2d5c835170a..d6c16e7faa387 100755
---- a/arch/powerpc/tools/relocs_check.sh
-+++ b/arch/powerpc/tools/relocs_check.sh
-@@ -23,7 +23,7 @@ objdump="$1"
- vmlinux="$2"
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index cf1d76e036359..387600ecea60a 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -303,6 +303,7 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		if (ret < 0)
+ 			break;
  
- bad_relocs=$(
--"$objdump" -R "$vmlinux" |
-+$objdump -R "$vmlinux" |
- 	# Only look at relocation lines.
- 	grep -E '\<R_' |
- 	# These relocations are okay
-diff --git a/arch/powerpc/tools/unrel_branch_check.sh b/arch/powerpc/tools/unrel_branch_check.sh
-index 1e972df3107ee..77114755dc6f2 100755
---- a/arch/powerpc/tools/unrel_branch_check.sh
-+++ b/arch/powerpc/tools/unrel_branch_check.sh
-@@ -18,14 +18,14 @@ vmlinux="$2"
- #__end_interrupts should be located within the first 64K
- 
- end_intr=0x$(
--"$objdump" -R "$vmlinux" -d --start-address=0xc000000000000000		\
-+$objdump -R "$vmlinux" -d --start-address=0xc000000000000000           \
- 		 --stop-address=0xc000000000010000 |
- grep '\<__end_interrupts>:' |
- awk '{print $1}'
- )
- 
- BRANCHES=$(
--"$objdump" -R "$vmlinux" -D --start-address=0xc000000000000000		\
-+$objdump -R "$vmlinux" -D --start-address=0xc000000000000000           \
- 		--stop-address=${end_intr} |
- grep -e "^c[0-9a-f]*:[[:space:]]*\([0-9a-f][0-9a-f][[:space:]]\)\{4\}[[:space:]]*b" |
- grep -v '\<__start_initialization_multiplatform>' |
++		cond_resched();
+ #ifdef CONFIG_DEBUG_PAGEALLOC
+ 		if (debug_pagealloc_enabled() &&
+ 			(paddr >> PAGE_SHIFT) < linear_map_hash_count)
 -- 
 2.20.1
 
