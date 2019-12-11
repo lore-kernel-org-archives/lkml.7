@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CFCC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ABBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26FD24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C96CF22527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076886;
-	bh=g0jZFLX0yEtJ0KaPzUCHs3PLRu4okm5m+F3MyeYYZog=;
+	s=default; t=1576076888;
+	bh=tbvVXASyep4qZkQz8fvqos3iAOlx2UlpqiDrH02qsu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rr4+mODL7xBpQLaWyNSimJU+ZIsjtHJphjs3W+IP0x+o1NeeqRnZURHGzmzQnoVhf
-	 29RQyChxyrToXADmNOIDeCdt40qRgQYb1+pgchznkXngFP7TvB+c0jYa7nPbP48m3P
-	 ye1MUW7QrIf5YAzzho/OyBGidYQaOpqsMusa/a+8=
+	b=t1F94gZNw0hlp8B3dEar8+TpypKw+o8B0RPw65qJFpATUSVE6qUBTPpFLXm34Z5fy
+	 R4Ggxw2724r79anebs97TJxh8nglr6FxVFOvJ9aXxSPxXO0DIsM3zspv7uyuVboY71
+	 F0jg/YwMgGlp1CHYQplu72KeFJYwjNIa0V5/70oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfLKPIE (ORCPT
+        id S1730249AbfLKPII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55382 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730209AbfLKPIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:02 -0500
+        id S1730209AbfLKPIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C8F2173E;
-        Wed, 11 Dec 2019 15:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83A2822527;
+        Wed, 11 Dec 2019 15:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076881;
-        bh=g0jZFLX0yEtJ0KaPzUCHs3PLRu4okm5m+F3MyeYYZog=;
+        s=default; t=1576076885;
+        bh=tbvVXASyep4qZkQz8fvqos3iAOlx2UlpqiDrH02qsu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e13qp+H361NGk/DEMx1c9XX7DS2r6i8cVsqWlX9OQ1KeLxMuFsUWzRKG1Hcp0zvrH
-         Yg3oaE6Gn99NW5kf8Ox9khGF7MTpnWC5wsdkI6pcQTrkCfGUb4i5AtJQmaVJWzq7MB
-         WQPyGSG21hpXyP9CCSrN7I02mUkhmcxb9ewtQ3TI=
+        b=odN7gTqVPjiEZhy87bgNFV6aUgKXTOPaaMGN6TqbexOcChaiMa6u1quT9EiNyt766
+         sgUOg+siKPBHnMMNRbMvqX6VJUGpqEI+0Dz5hY2oLR716Hi8BPJv3vBlDNdvr14tCD
+         /IVz5CiSHIDIjLeOHNwGxmyLdrIVRQ2VU+6slRUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andres Freund <andres@anarazel.de>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 26/92] io_uring: fix missing kmap() declaration on powerpc
-Date:   Wed, 11 Dec 2019 16:05:17 +0100
-Message-Id: <20191211150231.381410778@linuxfoundation.org>
+Subject: [PATCH 5.4 27/92] io_uring: ensure req->submit is copied when req is deferred
+Date:   Wed, 11 Dec 2019 16:05:18 +0100
+Message-Id: <20191211150231.942529314@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -61,48 +61,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jens Axboe <axboe@kernel.dk>
 
-commit aa4c3967756c6c576a38a23ac511be211462a6b7 upstream.
+There's an issue with deferred requests through drain, where if we do
+need to defer, we're not copying over the sqe_submit state correctly.
+This can result in using uninitialized data when we then later go and
+submit the deferred request, like this check in __io_submit_sqe():
 
-Christophe reports that current master fails building on powerpc with
-this error:
+         if (unlikely(s->index >= ctx->sq_entries))
+                 return -EINVAL;
 
-   CC      fs/io_uring.o
-fs/io_uring.c: In function ‘loop_rw_iter’:
-fs/io_uring.c:1628:21: error: implicit declaration of function ‘kmap’
-[-Werror=implicit-function-declaration]
-     iovec.iov_base = kmap(iter->bvec->bv_page)
-                      ^
-fs/io_uring.c:1628:19: warning: assignment makes pointer from integer
-without a cast [-Wint-conversion]
-     iovec.iov_base = kmap(iter->bvec->bv_page)
-                    ^
-fs/io_uring.c:1643:4: error: implicit declaration of function ‘kunmap’
-[-Werror=implicit-function-declaration]
-     kunmap(iter->bvec->bv_page);
-     ^
+with 's' being uninitialized, we can randomly fail this check. Fix this
+by copying sqe_submit state when we defer a request.
 
-which is caused by a missing highmem.h include. Fix it by including
-it.
+Because it was fixed as part of a cleanup series in mainline, before
+anyone realized we had this issue. That removed the separate states
+of ->index vs ->submit.sqe. That series is not something I was
+comfortable putting into stable, hence the much simpler addition.
+Here's the patch in the series that fixes the same issue:
 
-Fixes: 311ae9e159d8 ("io_uring: fix dead-hung for non-iter fixed rw")
-Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+commit cf6fd4bd559ee61a4454b161863c8de6f30f8dca
+Author: Pavel Begunkov <asml.silence@gmail.com>
+Date:   Mon Nov 25 23:14:39 2019 +0300
+
+    io_uring: inline struct sqe_submit
+
+Reported-by: Andres Freund <andres@anarazel.de>
+Reported-by: Tomáš Chaloupka
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/io_uring.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 --- a/fs/io_uring.c
 +++ b/fs/io_uring.c
-@@ -70,6 +70,7 @@
- #include <linux/nospec.h>
- #include <linux/sizes.h>
- #include <linux/hugetlb.h>
-+#include <linux/highmem.h>
+@@ -2039,7 +2039,7 @@ add:
+ }
  
- #include <uapi/linux/io_uring.h>
+ static int io_req_defer(struct io_ring_ctx *ctx, struct io_kiocb *req,
+-			const struct io_uring_sqe *sqe)
++			struct sqe_submit *s)
+ {
+ 	struct io_uring_sqe *sqe_copy;
  
+@@ -2057,7 +2057,8 @@ static int io_req_defer(struct io_ring_c
+ 		return 0;
+ 	}
+ 
+-	memcpy(sqe_copy, sqe, sizeof(*sqe_copy));
++	memcpy(&req->submit, s, sizeof(*s));
++	memcpy(sqe_copy, s->sqe, sizeof(*sqe_copy));
+ 	req->submit.sqe = sqe_copy;
+ 
+ 	INIT_WORK(&req->work, io_sq_wq_submit_work);
+@@ -2425,7 +2426,7 @@ static int io_queue_sqe(struct io_ring_c
+ {
+ 	int ret;
+ 
+-	ret = io_req_defer(ctx, req, s->sqe);
++	ret = io_req_defer(ctx, req, s);
+ 	if (ret) {
+ 		if (ret != -EIOCBQUEUED) {
+ 			io_free_req(req);
+@@ -2452,7 +2453,7 @@ static int io_queue_link_head(struct io_
+ 	 * list.
+ 	 */
+ 	req->flags |= REQ_F_IO_DRAIN;
+-	ret = io_req_defer(ctx, req, s->sqe);
++	ret = io_req_defer(ctx, req, s);
+ 	if (ret) {
+ 		if (ret != -EIOCBQUEUED) {
+ 			io_free_req(req);
 
 
