@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BDDC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86979C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E7B22527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5290F24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:08:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076893;
-	bh=tr+1e9o/dxv8AaZA9vfOB+7WeDev9gn5MoZi7rZXbX8=;
+	s=default; t=1576076896;
+	bh=jsS+mafvUDdazFn243kdG/M6SPwWy7C9orpXvZRhJUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kzgHBUN8CLAA+lv7gkydKTMpjej7q3f4qayGgKcp6043z+lkFov5fJakLiLfPA4xt
-	 TRfZO33j0FfR6QCm91uxw2uPoHW6tsGxqHZTqflpnnrxHunXOTRoAo1s4nXKDpKE/y
-	 lS/o6S+GI6w9jSQLn14DF8MwwjZlAKOwAgo36BsA=
+	b=XoKDVWq8VsvdZ6334pN9I9Jh/09RPVV2FHJv2DURapcCY5c9MJx/utAQl5el0/2kK
+	 m6DgHRSNp5pSFZH44foM+mF8egD6Jy9wBStYRKnFt9pYIHaWKKqSQKayHJi8Y4tNBx
+	 eskAb68j2m9Y6X6JGBwL38QITWAXCq8Ort7Fajd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfLKPIM (ORCPT
+        id S1730309AbfLKPIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:08:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfLKPIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:08:10 -0500
+        id S1729513AbfLKPIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:08:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E48624654;
-        Wed, 11 Dec 2019 15:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B022173E;
+        Wed, 11 Dec 2019 15:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076890;
-        bh=tr+1e9o/dxv8AaZA9vfOB+7WeDev9gn5MoZi7rZXbX8=;
+        s=default; t=1576076892;
+        bh=jsS+mafvUDdazFn243kdG/M6SPwWy7C9orpXvZRhJUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2ftVIMd5/FYXH7LT5wpeEYccrlXAs6S6sG6R0WRvVohFrnIeQVeB+xxbQY6q2zJm
-         Yin+lqJvP1zUjYv5prPI70nkZeMenRNm0YCNw2RS+o1JdsCHOJKQF3j3encc6cDIA9
-         sImmEFknkvjdfu5D4mO29oYqhSR95lO0ebFpePGU=
+        b=zUJjvpBNROHoVT2G4ZQjlyEcQgBsM24aC2aRTa1Pu1k4y3LgalnyWQZHqKnc8Kakl
+         2otBtPj3J5k+P6eiQgc6+ZBgk3qS6NBY0aob26bMiCl9CHfiaFrboC30kDNIvrxF6A
+         tn1z7apFSWjBamib6EFnaJcEUzx8UXEjAgBzP2WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 29/92] ALSA: hda/realtek - Enable internal speaker of ASUS UX431FLC
-Date:   Wed, 11 Dec 2019 16:05:20 +0100
-Message-Id: <20191211150232.944154973@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 03/92] arm64: tegra: Fix active-low warning for Jetson Xavier regulator
+Date:   Wed, 11 Dec 2019 16:04:54 +0100
+Message-Id: <20191211150222.702353122@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,57 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Jon Hunter <jonathanh@nvidia.com>
 
-commit 436e25505f3458cc92c7f3c985e9cbc198a98209 upstream.
+commit d440538e5f219900a9fc9d96fd10727b4d2b3c48 upstream.
 
-Laptops like ASUS UX431FLC and UX431FL can share the same audio quirks.
-But UX431FLC needs one more step to enable the internal speaker: Pull
-the GPIO from CODEC to initialize the AMP.
+Commit 4fdbfd60a3a2 ("arm64: tegra: Add PCIe slot supply information
+in p2972-0000 platform") added regulators for the PCIe slot on the
+Jetson Xavier platform. One of these regulators has an active-low enable
+and this commit incorrectly added an active-low specifier for the GPIO
+which causes the following warning to occur on boot ...
 
-Fixes: 60083f9e94b2 ("ALSA: hda/realtek - Enable internal speaker & headset mic of ASUS UX431FL")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191125093405.5702-1-jian-hong@endlessm.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+ WARNING KERN regulator@3 GPIO handle specifies active low - ignored
+
+The fixed-regulator binding does not use the active-low flag from the
+gpio specifier and purely relies of the presence of the
+'enable-active-high' property to determine if it is active high or low
+(if this property is omitted). Fix this warning by setting the GPIO
+to active-high in the GPIO specifier. Finally, remove the
+'enable-active-low' as this is not a valid property.
+
+Fixes: 4fdbfd60a3a2 ("arm64: tegra: Add PCIe slot supply information in p2972-0000 platform")
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5892,6 +5892,7 @@ enum {
- 	ALC299_FIXUP_PREDATOR_SPK,
- 	ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC,
- 	ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE,
-+	ALC294_FIXUP_ASUS_INTSPK_GPIO,
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+@@ -309,9 +309,8 @@
+ 			regulator-name = "VDD_12V";
+ 			regulator-min-microvolt = <1200000>;
+ 			regulator-max-microvolt = <1200000>;
+-			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_LOW>;
++			gpio = <&gpio TEGRA194_MAIN_GPIO(A, 1) GPIO_ACTIVE_HIGH>;
+ 			regulator-boot-on;
+-			enable-active-low;
+ 		};
+ 	};
  };
- 
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6982,6 +6983,13 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
- 	},
-+	[ALC294_FIXUP_ASUS_INTSPK_GPIO] = {
-+		.type = HDA_FIXUP_FUNC,
-+		/* The GPIO must be pulled to initialize the AMP */
-+		.v.func = alc_fixup_gpio4,
-+		.chained = true,
-+		.chain_id = ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7141,7 +7149,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x1427, "Asus Zenbook UX31E", ALC269VB_FIXUP_ASUS_ZENBOOK),
- 	SND_PCI_QUIRK(0x1043, 0x1517, "Asus Zenbook UX31A", ALC269VB_FIXUP_ASUS_ZENBOOK_UX31A),
- 	SND_PCI_QUIRK(0x1043, 0x16e3, "ASUS UX50", ALC269_FIXUP_STEREO_DMIC),
--	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_HEADSET_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x17d1, "ASUS UX431FL", ALC294_FIXUP_ASUS_INTSPK_GPIO),
- 	SND_PCI_QUIRK(0x1043, 0x18b1, "Asus MJ401TA", ALC256_FIXUP_ASUS_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x1a13, "Asus G73Jw", ALC269_FIXUP_ASUS_G73JW),
- 	SND_PCI_QUIRK(0x1043, 0x1a30, "ASUS X705UD", ALC256_FIXUP_ASUS_MIC),
 
 
