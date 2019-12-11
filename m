@@ -2,87 +2,153 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A784C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26C32073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="DvI4fA5z"
+	by mail.kernel.org (Postfix) with ESMTP id C55002073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079813;
+	bh=wdzP/g3+B6dEhQG9OGGBppto31zNdyJ9yI4GkDAGj80=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GDJ9hTG+E+Nc9h5yKBXIfrEt1ah0jEVUnKvXZ71slz69U4sVLqen39p423Tf5oD2d
+	 Pq27l18euLT3xom0JCbnDnJ4n2LTbCx73ypeauXy6TV8FWtQs6VDADat3dYQeAANgh
+	 Vw/KKACPCs9uiWeVEFYkDk7M8GOQxYQrW3w7m1tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732621AbfLKP4v (ORCPT
+        id S1732576AbfLKP4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:56:51 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41918 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731954AbfLKP4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:56:47 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so17068828lfp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:56:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6PtV7kQOM1fs/75JzECVBBE8PJ8+B8ZeI1o5Edfap2c=;
-        b=DvI4fA5zD5ykc+F93pbbfLI6LLKMKikKcit2sq9xYSQuoDU/lKpljdt5C1dBpWlow1
-         2VS5QmzVGh3LZ/8NbouOtG6R7+KfoItlSbD25+TSP+gP/Fd9hNRCjOnWkSU3bf/HCY+8
-         ruNKw25vlsTh4eh5vdTwBGiCyZBp5D/hOfKbQcrOE25lM++oLXRHGctYv3kJvmdqLUmx
-         qrWpI4YvsVSsx1UC2HS5kuSPdn1E+eHnfEnGihmzuPENwC8HuFwG3l6beWyTUnWRjc0N
-         WFrS6cTlMlYIuFziVqpWE9ncO/N1DwfPw5yeBYdP5GtK9+BQrMcGBKC/GoGDXM/bpn+B
-         6Myg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6PtV7kQOM1fs/75JzECVBBE8PJ8+B8ZeI1o5Edfap2c=;
-        b=f7AMDz/Rt5GkLG32eGxDjywm5cdaUUHDsdhCdo5JZGUAfn/karbc4He9dhdWG4JxnC
-         JbwZTYlHTkweYvk7b31x2MQsW63yXiDtPWF/k8nAW+Uh9q2YoeFDECrtEA0eIjAvruU3
-         a0clEDdcw2fVGX/JD9sWYvkyQdcvkzOTmHb6LCUuXDsp9YAohPUPhNAf9/AVRKU/I6IU
-         HOtviC2uNYlx5tCvORMSKeW3cWNXA/DnChH6waaexsXeZVko/K1QBLQTK5a094zMkBzP
-         1IMsuWPwvi3N9f0OOI680PHRmi+dKAVnl4wifidTJbGwl+ODb/WDuMJwhvJGILzqRZzu
-         nBGA==
-X-Gm-Message-State: APjAAAXqnBj2cPWljiIuQ1MOlCFI3iHFx5BXb+tIB0gH0GvKD0aJRJo1
-        zoZLgSTXoEu4OsxPuO0oUs4TPZywkgk=
-X-Google-Smtp-Source: APXvYqyCTQ9D8OEwKjVcU/TL5Sz/kKTkuJLt8p3brBJ+wSapFx+p7jIywRyUGvQEAIGDLPikFwgMWw==
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr2622190lfp.133.1576079805797;
-        Wed, 11 Dec 2019 07:56:45 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 207sm1587045ljj.72.2019.12.11.07.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 07:56:45 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A5866101218; Wed, 11 Dec 2019 18:56:45 +0300 (+03)
-Date:   Wed, 11 Dec 2019 18:56:45 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Mircea CIRJALIU - MELIU <mcirjaliu@bitdefender.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>
-Subject: Re: [RFC PATCH v1 4/4] mm/gup: flag to limit follow_page() to
- transhuge pages
-Message-ID: <20191211155645.pkxphc4uo7ir6pbb@box>
-References: <DB7PR02MB3979ECF6271070E49D062EAFBB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
+        Wed, 11 Dec 2019 10:56:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731484AbfLKPPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:15:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E929F20663;
+        Wed, 11 Dec 2019 15:15:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077321;
+        bh=wdzP/g3+B6dEhQG9OGGBppto31zNdyJ9yI4GkDAGj80=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=chQEG/3WqDdnbarOZMVHf8IoegSOYRBkjw79GB13MJ8d0alM1lzlazTwbNlRZHH0N
+         A3OWycQOLWhUZCVBu1DYt4pNJPYBXMBo5qhKYP84EI/dXInDVcGLOM0xmHDAka5pSV
+         cDD4wXlvszrLqGXwf1D08iiV9sMgBJr9dvAbHTjg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH 5.3 101/105] thermal: Fix deadlock in thermal thermal_zone_device_check
+Date:   Wed, 11 Dec 2019 16:06:30 +0100
+Message-Id: <20191211150303.988650326@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7PR02MB3979ECF6271070E49D062EAFBB5A0@DB7PR02MB3979.eurprd02.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:29:19AM +0000, Mircea CIRJALIU - MELIU wrote:
-> Sometimes the user needs to look up a transhuge page mapped at a given address.
+From: Wei Wang <wvw@google.com>
 
-There is no such examples in the current kernel, right?
+commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
 
--- 
- Kirill A. Shutemov
+1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
+device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
+a use-after-free issue. However, cancel_delayed_work_sync could be called
+insides the WQ causing deadlock.
+
+[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
+[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
+[54109.642447] c0   1162 Call trace:
+[54109.642456] c0   1162  __switch_to+0x138/0x158
+[54109.642467] c0   1162  __schedule+0xba4/0x1434
+[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
+[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
+[54109.642511] c0   1162  flush_work+0x348/0x40c
+[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
+[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
+[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
+[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
+[54109.642593] c0   1162  kthread+0x17c/0x1b0
+[54109.642602] c0   1162  ret_from_fork+0x10/0x18
+[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
+[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
+[54109.643077] c0   1162 Call trace:
+[54109.643085] c0   1162  __switch_to+0x138/0x158
+[54109.643095] c0   1162  __schedule+0xba4/0x1434
+[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
+[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
+[54109.643122] c0   1162  flush_work+0x348/0x40c
+[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
+[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
+[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
+[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
+[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
+[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
+[54109.643186] c0   1162  kthread+0x17c/0x1b0
+[54109.643195] c0   1162  ret_from_fork+0x10/0x18
+[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
+[54109.644515] c0   1162 Call trace:
+[54109.644524] c0   1162  __switch_to+0x138/0x158
+[54109.644536] c0   1162  __schedule+0xba4/0x1434
+[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
+[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
+[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
+[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
+[54109.644586] c0   1162  temp_show+0x30/0x78
+[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
+[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
+[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
+[54109.644656] c0   1162  seq_read+0x1f4/0x73c
+[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
+[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
+[54109.644692] c0   1162  vfs_read+0xa4/0x140
+[54109.644701] c0   1162  SyS_read+0xbc/0x144
+[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
+[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+
+Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Wei Wang <wvw@google.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/thermal/thermal_core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -304,7 +304,7 @@ static void thermal_zone_device_set_poll
+ 				 &tz->poll_queue,
+ 				 msecs_to_jiffies(delay));
+ 	else
+-		cancel_delayed_work_sync(&tz->poll_queue);
++		cancel_delayed_work(&tz->poll_queue);
+ }
+ 
+ static void monitor_thermal_zone(struct thermal_zone_device *tz)
+@@ -1404,7 +1404,7 @@ void thermal_zone_device_unregister(stru
+ 
+ 	mutex_unlock(&thermal_list_lock);
+ 
+-	thermal_zone_device_set_polling(tz, 0);
++	cancel_delayed_work_sync(&tz->poll_queue);
+ 
+ 	thermal_set_governor(tz, NULL);
+ 
+
+
