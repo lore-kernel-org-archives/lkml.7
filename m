@@ -2,136 +2,229 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F82C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC531C2BD09
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9787D20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B314D20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:51:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cb2c4Qu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfLKDsA (ORCPT
+        id S1727229AbfLKDvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:48:00 -0500
-Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:13803 "EHLO
-        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfLKDsA (ORCPT
+        Tue, 10 Dec 2019 22:51:14 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36336 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbfLKDvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:48:00 -0500
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 11 Dec 2019 11:47:58 +0800
-Received: from csbcas.internal.ite.com.tw (csbmail1.internal.ite.com.tw [192.168.65.58])
-        by mse.ite.com.tw with ESMTP id xBB3lr6k079450;
-        Wed, 11 Dec 2019 11:47:53 +0800 (GMT-8)
-        (envelope-from allen.chen@ite.com.tw)
-Received: from CSBMAIL1.internal.ite.com.tw (192.168.65.58) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 11 Dec 2019 11:47:52 +0800
-Received: from CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f]) by
- CSBMAIL1.internal.ite.com.tw ([fe80::2cba:f37c:ac09:f33f%22]) with mapi id
- 15.01.1713.004; Wed, 11 Dec 2019 11:47:52 +0800
-From:   <allen.chen@ite.com.tw>
-To:     <jani.nikula@linux.intel.com>
-CC:     <Jau-Chih.Tseng@ite.com.tw>, <maxime.ripard@bootlin.com>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <airlied@linux.ie>, <pihsun@chromium.org>, <sean@poorly.run>
-Subject: RE: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
- timings logic
-Thread-Topic: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
- timings logic
-Thread-Index: AQHVr0p4ZifVjR0QMU2oZureDdE7SKe0TGNQ
-Date:   Wed, 11 Dec 2019 03:47:52 +0000
-Message-ID: <75e96653559c4cf8a3b0f22dd611ef9b@ite.com.tw>
-References: <1574761572-26585-1-git-send-email-allen.chen@ite.com.tw>
- <87r21ce8rp.fsf@intel.com>
-In-Reply-To: <87r21ce8rp.fsf@intel.com>
-Accept-Language: en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.70.14]
-x-tm-snts-smtp: 8E5F65DFF2ADCBDEC829C5E1CBF1DB7DE2C3BCFE0E6EAB230CC4249425D7C13C2000:8
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+        Tue, 10 Dec 2019 22:51:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so8366654pjc.3;
+        Tue, 10 Dec 2019 19:51:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=w9o4gMDR79zJbq+/ILGvB1xN+aaga7BtIGFfI8prB5M=;
+        b=cb2c4Qu1c1VKdo14t+tdEIreffodBdWgrfZOnau+8AaTsPYBHxEDq2ozEzFFz/pEXz
+         1Pz5xgaVxS7aheHrbjvMvC0DfUNyVafnjbnzBHpv7NUksimAVRA4gVCZVj8Ydn64MoVb
+         CSt+5FDPXEO6+HIN1gVgL2lUTUC0OSJJD+IC0nahZy4jbR2rtY9d53t++mdn3OYc1Jj9
+         PAQUqBaUzQA1lWISbOFvz5im/enk1rQV5SA86x8ZF0GMnO3BK7HOp+osbtQhfGOBFXHm
+         gKXy/czYdBvRWV7jv/jpcYv/8/AfbBfxTfHGyhIYxJrKgDDf18qfGpkIS34S2xVClL79
+         X7dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=w9o4gMDR79zJbq+/ILGvB1xN+aaga7BtIGFfI8prB5M=;
+        b=Fa9/NQ616nFX+TBgw/Sf8v1bTWPQ4DWe/H4DVPrnlCWW7n7gCOTvsdCv6U/5ChU3/W
+         nAQl3KE/faPj9UP92wstvUdsxheKDQqsbs2BmlTBNoqrrmk4JOu8hFnX2iILWrrgbdXq
+         K0wBT+e5NuV8N+fDf1k+1glmKKWZeN6wYXo5mtLfkObHHmrxd6mj3lYWwnbuPWUu1B0u
+         8zlUlqc/DA/8lWgFt3GDdqmcqXLHGhn0Tj59NkXhpxijBIKI4xtl5G4jvwQH/zQ6uk4l
+         Ga9QOz0jegBt9DQMVuhrI83L97cPiQUL0ID4emRTCoANrKW7NmzNPLkTE5DWoRJS0cJf
+         KvKw==
+X-Gm-Message-State: APjAAAWawWc4hUaUwA/nhTy27IfGx05Go60ACqxK+oj9AktRTFydz83m
+        opy+Ddga/zYJ53//3NPVABI=
+X-Google-Smtp-Source: APXvYqwV5LToqYXF+yA4cMixtRX1yiBntc+ibWAwq4CQnG/WEECa7yTzQkoSqPhBeU9QcWl0npySrg==
+X-Received: by 2002:a17:902:6909:: with SMTP id j9mr1012338plk.136.1576036272826;
+        Tue, 10 Dec 2019 19:51:12 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id u3sm501061pga.72.2019.12.10.19.51.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 10 Dec 2019 19:51:11 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     roger.pau@citrix.com
+Cc:     sjpark@amazon.com, axboe@kernel.dk, konrad.wilk@oracle.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pdurrant@amazon.com, xen-devel@lists.xenproject.org,
+        SeongJae Park <sjpark@amazon.de>, sj38.park@gmail.com
+Subject: Re: Re: [PATCH v5 1/2] xenbus/backend: Add memory pressure handler callback
+Date:   Wed, 11 Dec 2019 04:50:58 +0100
+Message-Id: <20191211035058.11479-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-X-MAIL: mse.ite.com.tw xBB3lr6k079450
+In-Reply-To: <20191210101635.GD980@Air-de-Roger>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFuaQ0KDQpUaGFua3MgZm9yIHlvdXIgaGVscCBhbmQgSSB3aWxsIGZvbGxvdyB5b3VyIHN1
-Z2dlc3Rpb24gdG8gbW9kaWZ5IHRoZSBwYXRjaC4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCkZyb206IEphbmkgTmlrdWxhIFttYWlsdG86amFuaS5uaWt1bGFAbGludXguaW50ZWwuY29t
-XSANClNlbnQ6IFR1ZXNkYXksIERlY2VtYmVyIDEwLCAyMDE5IDc6MTAgUE0NClRvOiBBbGxlbiBD
-aGVuICizr6xmpnQpDQpDYzogSmF1LUNoaWggVHNlbmcgKLS/rEy0vCk7IE1heGltZSBSaXBhcmQ7
-IEFsbGVuIENoZW4gKLOvrGamdCk7IG9wZW4gbGlzdDsgb3BlbiBsaXN0OkRSTSBEUklWRVJTOyBE
-YXZpZCBBaXJsaWU7IFBpLUhzdW4gU2hpaDsgU2VhbiBQYXVsDQpTdWJqZWN0OiBSZTogW1BBVENI
-XSBkcm0vZWRpZDogZml4dXAgRURJRCAxLjMgYW5kIDEuNCBqdWRnZSByZWR1Y2VkLWJsYW5raW5n
-IHRpbWluZ3MgbG9naWMNCg0KT24gVHVlLCAyNiBOb3YgMjAxOSwgYWxsZW4gPGFsbGVuLmNoZW5A
-aXRlLmNvbS50dz4gd3JvdGU6DQo+IEFjY29yZGluZyB0byBWRVNBIEVOSEFOQ0VEIEVYVEVOREVE
-IERJU1BMQVkgSURFTlRJRklDQVRJT04gREFUQSBTVEFOREFSRA0KPiAoRGVmaW5lcyBFRElEIFN0
-cnVjdHVyZSBWZXJzaW9uIDEsIFJldmlzaW9uIDQpIHBhZ2U6IDM5DQo+IEhvdyB0byBkZXRlcm1p
-bmUgd2hldGhlciB0aGUgbW9uaXRvciBzdXBwb3J0IFJCIHRpbWluZyBvciBub3Q/DQo+IEVESUQg
-MS40DQo+IEZpcnN0OiAgcmVhZCBkZXRhaWxlZCB0aW1pbmcgZGVzY3JpcHRvciBhbmQgbWFrZSBz
-dXJlIGJ5dGUgMCA9IDB4MDAsDQo+IAlieXRlIDEgPSAweDAwLCBieXRlIDIgPSAweDAwIGFuZCBi
-eXRlIDMgPSAweEZEDQo+IFNlY29uZDogcmVhZCBFRElEIGJpdCAwIGluIGZlYXR1cmUgc3VwcG9y
-dCBieXRlIGF0IGFkZHJlc3MgMThoID0gMQ0KPiAJYW5kIGRldGFpbGVkIHRpbWluZyBkZXNjcmlw
-dG9yIGJ5dGUgMTAgPSAweDA0DQo+IFRoaXJkOiAgaWYgRURJRCBiaXQgMCBpbiBmZWF0dXJlIHN1
-cHBvcnQgYnl0ZSA9IDEgJiYNCj4gCWRldGFpbGVkIHRpbWluZyBkZXNjcmlwdG9yIGJ5dGUgMTAg
-PSAweDA0DQo+IAl0aGVuIHdlIGNhbiBjaGVjayBieXRlIDE1LCBpZiBiaXQgNCBpbiBieXRlIDE1
-ID0gMSBpcyBzdXBwb3J0IFJCDQo+ICAgICAgICAgaWYgRURJRCBiaXQgMCBpbiBmZWF0dXJlIHN1
-cHBvcnQgYnl0ZSAhPSAxIHx8DQo+IAlkZXRhaWxlZCB0aW1pbmcgZGVzY3JpcHRvciBieXRlIDEw
-ICE9IDB4MDQsDQo+IAl0aGVuIGJ5dGUgMTUgY2FuIG5vdCBiZSB1c2VkDQo+DQo+IFRoZSBsaW51
-eCBjb2RlIGlzX3JiIGZ1bmN0aW9uIG5vdCBmb2xsb3cgdGhlIFZFU0EncyBydWxlDQo+DQo+IFNp
-Z25lZC1vZmYtYnk6IEFsbGVuIENoZW4gPGFsbGVuLmNoZW5AaXRlLmNvbS50dz4NCj4gUmVwb3J0
-ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZl
-cnMvZ3B1L2RybS9kcm1fZWRpZC5jIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMo
-LSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fZWRpZC5jIGIvZHJpdmVy
-cy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gaW5kZXggZjU5MjZiZi4uZTExZTU4NSAxMDA2NDQNCj4g
-LS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9lZGlkLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L2RybV9lZGlkLmMNCj4gQEAgLTkzLDYgKzkzLDEyIEBAIHN0cnVjdCBkZXRhaWxlZF9tb2RlX2Ns
-b3N1cmUgew0KPiAgCWludCBtb2RlczsNCj4gIH07DQo+ICANCj4gK3N0cnVjdCBlZGlkX3N1cHBv
-cnRfcmJfY2xvc3VyZSB7DQo+ICsJc3RydWN0IGVkaWQgKmVkaWQ7DQo+ICsJYm9vbCB2YWxpZF9z
-dXBwb3J0X3JiOw0KPiArCWJvb2wgc3VwcG9ydF9yYjsNCj4gK307DQo+ICsNCj4gICNkZWZpbmUg
-TEVWRUxfRE1UCTANCj4gICNkZWZpbmUgTEVWRUxfR1RGCTENCj4gICNkZWZpbmUgTEVWRUxfR1RG
-MgkyDQo+IEBAIC0yMDE3LDIzICsyMDIzLDQxIEBAIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICpk
-cm1fbW9kZV9maW5kX2RtdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LA0KPiAgCX0NCj4gIH0NCj4g
-IA0KPiArc3RhdGljIGJvb2wNCj4gK2lzX2Rpc3BsYXlfZGVzY3JpcHRvcihjb25zdCB1OCAqciwg
-dTggdGFnKQ0KPiArew0KPiArCXJldHVybiAoIXJbMF0gJiYgIXJbMV0gJiYgIXJbMl0gJiYgclsz
-XSA9PSB0YWcpID8gdHJ1ZSA6IGZhbHNlOw0KPiArfQ0KPiArDQo+ICBzdGF0aWMgdm9pZA0KPiAg
-aXNfcmIoc3RydWN0IGRldGFpbGVkX3RpbWluZyAqdCwgdm9pZCAqZGF0YSkNCj4gIHsNCj4gIAl1
-OCAqciA9ICh1OCAqKXQ7DQo+IC0JaWYgKHJbM10gPT0gRURJRF9ERVRBSUxfTU9OSVRPUl9SQU5H
-RSkNCj4gLQkJaWYgKHJbMTVdICYgMHgxMCkNCj4gLQkJCSooYm9vbCAqKWRhdGEgPSB0cnVlOw0K
-PiArCXN0cnVjdCBlZGlkX3N1cHBvcnRfcmJfY2xvc3VyZSAqY2xvc3VyZSA9IGRhdGE7DQo+ICsJ
-c3RydWN0IGVkaWQgKmVkaWQgPSBjbG9zdXJlLT5lZGlkOw0KPiArDQo+ICsJaWYgKGlzX2Rpc3Bs
-YXlfZGVzY3JpcHRvcihyLCBFRElEX0RFVEFJTF9NT05JVE9SX1JBTkdFKSkgew0KPiArCQlpZiAo
-ZWRpZC0+ZmVhdHVyZXMgJiBCSVQoMCkgJiYgclsxMF0gPT0gQklUKDIpKSB7DQoNCkknbGwgdHJ5
-IHRvIGV4cGxhaW4gbXkgb3JpZ2luYWwgY29tbWVudCBhZ2Fpbi4NCg0KQ29uc2lkZXIgZWRpZC0+
-ZmVhdHVyZXMgJiBCSVQoMCkuIEl0IHJlbWFpbnMgdW5jaGFuZ2VkIGFjcm9zcyB0aGUNCml0ZXJh
-dGlvbi4gVGhlIGNvZGUgd2lsbCBvbmx5IGNoYW5nZSBhbnl0aGluZyBpZiBlZGlkLT5mZWF0dXJl
-cyAmDQpCSVQoMCkuDQoNCj4gKwkJCWNsb3N1cmUtPnZhbGlkX3N1cHBvcnRfcmIgPSB0cnVlOw0K
-PiArCQkJY2xvc3VyZS0+c3VwcG9ydF9yYiA9IChyWzE1XSAmIDB4MTApID8gdHJ1ZSA6IGZhbHNl
-Ow0KDQpZb3UgY291bGQgY29tYmluZSB0aGVzZSB0byBlLmcuIGEgc2luZ2xlIGludC4NCg0KCWlm
-IChyWzEwXSA9PSBCSVQoMikpIHsNCgkJaW50ICpyZXQgPSBkYXRhOw0KCQkqcmV0ID0gISEoclsx
-NV0gJiAweDEwKTsNCgl9DQoNCj4gKwkJfQ0KPiArCX0NCj4gIH0NCj4gIA0KPiAgLyogRURJRCAx
-LjQgZGVmaW5lcyB0aGlzIGV4cGxpY2l0bHkuICBGb3IgRURJRCAxLjMsIHdlIGd1ZXNzLCBiYWRs
-eS4gKi8NCj4gIHN0YXRpYyBib29sDQo+ICBkcm1fbW9uaXRvcl9zdXBwb3J0c19yYihzdHJ1Y3Qg
-ZWRpZCAqZWRpZCkNCj4gIHsNCj4gKwlzdHJ1Y3QgZWRpZF9zdXBwb3J0X3JiX2Nsb3N1cmUgY2xv
-c3VyZSA9IHsNCj4gKwkJLmVkaWQgPSBlZGlkLA0KPiArCQkudmFsaWRfc3VwcG9ydF9yYiA9IGZh
-bHNlLA0KPiArCQkuc3VwcG9ydF9yYiA9IGZhbHNlLA0KPiArCX07DQo+ICsNCj4gIAlpZiAoZWRp
-ZC0+cmV2aXNpb24gPj0gNCkgew0KPiAtCQlib29sIHJldCA9IGZhbHNlOw0KPiAtCQlkcm1fZm9y
-X2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZyZXQpOw0KPiAtCQlyZXR1
-cm4gcmV0Ow0KPiArCQlkcm1fZm9yX2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNf
-cmIsICZjbG9zdXJlKTsNCj4gKwkJaWYgKGNsb3N1cmUudmFsaWRfc3VwcG9ydF9yYikNCj4gKwkJ
-CXJldHVybiBjbG9zdXJlLnN1cHBvcnRfcmI7DQoNCkhlcmUsIHlvdSdkIGRvOg0KDQogICAgICAg
-IGlmIChlZGlkLT5mZWF0dXJlcyAmIEJJVCgwKSkgew0KICAgICAgICAJaW50IHJldCA9IC0xOw0K
-CQlkcm1fZm9yX2VhY2hfZGV0YWlsZWRfYmxvY2soKHU4ICopZWRpZCwgaXNfcmIsICZyZXQpOw0K
-ICAgICAgICAgICAgICAgIGlmIChyZXQgIT0gLTEpDQogICAgICAgICAgICAgICAgCXJldHVybiBy
-ZXQ7DQoJfQ0KDQoNCj4gIAl9DQo+ICANCj4gIAlyZXR1cm4gKChlZGlkLT5pbnB1dCAmIERSTV9F
-RElEX0lOUFVUX0RJR0lUQUwpICE9IDApOw0KDQotLSANCkphbmkgTmlrdWxhLCBJbnRlbCBPcGVu
-IFNvdXJjZSBHcmFwaGljcyBDZW50ZXINCg==
+On Tue, 10 Dec 2019 11:16:35 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+
+> > Granting pages consumes backend system memory.  In systems configured
+> > with insufficient spare memory for those pages, it can cause a memory
+> > pressure situation.  However, finding the optimal amount of the spare
+> > memory is challenging for large systems having dynamic resource
+> > utilization patterns.  Also, such a static configuration might lack a
+> 
+> s/lack a/lack/
+> 
+> > flexibility.
+> > 
+> > To mitigate such problems, this commit adds a memory reclaim callback to
+> > 'xenbus_driver'.  Using this facility, 'xenbus' would be able to monitor
+> > a memory pressure and request specific devices of specific backend
+> 
+> s/monitor a/monitor/
+> 
+> > drivers which causing the given pressure to voluntarily release its
+> 
+> ...which are causing...
+> 
+> > memory.
+> > 
+> > That said, this commit simply requests every callback registered driver
+> > to release its memory for every domain, rather than issueing the
+> 
+> s/issueing/issuing/
+> 
+> > requests to the drivers and the domain in charge.  Such things will be
+> 
+> I'm afraid I don't understand the "domain in charge" part of this
+> sentence.
+> 
+> > done in a futur.  Also, this commit focuses on memory only.  However, it
+> 
+> ... done in a future change. Also I think the period after only should
+> be removed in order to tie both sentences together.
+> 
+> > would be ablt to be extended for general resources.
+> 
+> s/ablt/able/
+> 
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > ---
+> >  drivers/xen/xenbus/xenbus_probe_backend.c | 31 +++++++++++++++++++++++
+> >  include/xen/xenbus.h                      |  1 +
+> >  2 files changed, 32 insertions(+)
+> > 
+> > diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > index b0bed4faf44c..5a5ba29e39df 100644
+> > --- a/drivers/xen/xenbus/xenbus_probe_backend.c
+> > +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
+> > @@ -248,6 +248,34 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
+> >  	return NOTIFY_DONE;
+> >  }
+> >  
+> > +static int xenbus_backend_reclaim(struct device *dev, void *data)
+> > +{
+> > +	struct xenbus_driver *drv;
+> 
+> Newline and const.
+> 
+> > +	if (!dev->driver)
+> > +		return -ENOENT;
+> > +	drv = to_xenbus_driver(dev->driver);
+> > +	if (drv && drv->reclaim)
+> > +		drv->reclaim(to_xenbus_device(dev));
+> 
+> You seem to completely ignore the return of the reclaim hook...
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +/*
+> > + * Returns 0 always because we are using shrinker to only detect memory
+> > + * pressure.
+> > + */
+> > +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
+> > +				struct shrink_control *sc)
+> > +{
+> > +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
+> > +			xenbus_backend_reclaim);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct shrinker xenbus_backend_shrinker = {
+> > +	.count_objects = xenbus_backend_shrink_count,
+> > +	.seeks = DEFAULT_SEEKS,
+> > +};
+> > +
+> >  static int __init xenbus_probe_backend_init(void)
+> >  {
+> >  	static struct notifier_block xenstore_notifier = {
+> > @@ -264,6 +292,9 @@ static int __init xenbus_probe_backend_init(void)
+> >  
+> >  	register_xenstore_notifier(&xenstore_notifier);
+> >  
+> > +	if (register_shrinker(&xenbus_backend_shrinker))
+> > +		pr_warn("shrinker registration failed\n");
+> > +
+> >  	return 0;
+> >  }
+> >  subsys_initcall(xenbus_probe_backend_init);
+> > diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+> > index 869c816d5f8c..cdb075e4182f 100644
+> > --- a/include/xen/xenbus.h
+> > +++ b/include/xen/xenbus.h
+> > @@ -104,6 +104,7 @@ struct xenbus_driver {
+> >  	struct device_driver driver;
+> >  	int (*read_otherend_details)(struct xenbus_device *dev);
+> >  	int (*is_ready)(struct xenbus_device *dev);
+> > +	unsigned (*reclaim)(struct xenbus_device *dev);
+> 
+> ... hence I wonder why it's returning an unsigned when it's just
+> ignored.
+> 
+> IMO it should return an int to signal errors, and the return should be
+> ignored.
+
+I first thought similarly and set the callback to return something.  However,
+as this callback is called to simply notify the memory pressure and ask the
+driver to free its memory as many as possible, I couldn't easily imagine what
+kind of errors that need to be handled by its caller can occur in the callback,
+especially because current blkback's callback implementation has no such error.
+So, if you and others agree, I would like to simply set the return type to
+'void' for now and defer the error handling to a future change.
+
+> 
+> Also, I think it would preferable for this function to take an extra
+> parameter to describe the resource the driver should attempt to free
+> (ie: memory or interrupts for example). I'm however not able to find
+> any existing Linux type to describe such resources.
+
+Yes, such extention would be the right direction.  However, because there is no
+existing Linux type to describe the type of resources to reclaim as you also
+mentioned, there could be many different opinions about its implementation
+detail.  In my opinion, it could be also possible to simply add another
+callback for another resource type.  That said, because currently we have an
+use case and an implementation for the memory pressure only, I would like to
+let it as is for now and defer the extension as a future work, if you and
+others have no objection.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks, Roger.
+> 
+> 
