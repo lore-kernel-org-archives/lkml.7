@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4328AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D596EC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5C020663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8F1124682
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077254;
-	bh=k9dpj1B8c41icXDmGXJ4tL8WRoMBs6eIybywBy7mBVY=;
+	s=default; t=1576077259;
+	bh=hBzdjXFBXQQPdOminT3mbxPPGol5kLRQkzgP6f9V2LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o3dOK/gdc3DLdFUZn7JNDKv2gi9v0DBTBzqWkjBMaIMLAXNwTKSLRwvbE8saOoAq+
-	 ycvKeNTs0UniFQypA97Fh9K07LO/PxZtOhqs37ZZR2AVqQ8CHbDDN6yZ9iTv7T+mhk
-	 lHUELFfkk3RsyOqPZ1ua8VULBpY4jZgMOdDJFlnc=
+	b=Uu0r6MUPL0rLoGD705qtK8ysFaYn7G3wFLPlFdZfU4oDtLa5e3t/BSEzD5uNJr4X8
+	 xw8tr6WviI3HmG84gkhRZLwsbb7GoxEGwJcCo/kzN5ghqGedqoQYyA3RioLm/mVlfL
+	 SP27Osbc5az4jnUFnNRHtufhOXJMWzyDtZKb/1LQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfLKPOM (ORCPT
+        id S1731152AbfLKPOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730331AbfLKPNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:30 -0500
+        id S1731438AbfLKPNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A12CF208C3;
-        Wed, 11 Dec 2019 15:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42EEC208C3;
+        Wed, 11 Dec 2019 15:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077209;
-        bh=k9dpj1B8c41icXDmGXJ4tL8WRoMBs6eIybywBy7mBVY=;
+        s=default; t=1576077213;
+        bh=hBzdjXFBXQQPdOminT3mbxPPGol5kLRQkzgP6f9V2LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFbTK89bLpnS/iCAF2NPvF/0kJQw+WJCWj/Ueh76608vOEkTz+4S9JjWNxnrarCFU
-         70HETL0VcgaVB1vyU5o8Z/GvqYnsE2wdgUjW3h8JcIEH7bzKP8Ljiu8iGPoQriZavz
-         TaJDX+IZg/bXvzDZ6kPTnTTfJxIUlP04jTAqNdGw=
+        b=mu6eWPjXdOcKq1aNSjusg9uFDPs11FjeqetzBM/srHkawtCOgZ1NOOqcx9VZanmeN
+         8q+V21cYBlw/Y2VCN9ceyAbkuOkVHjFOsIbje5djI/oOp90XltzBABZGlToQY688vV
+         W6Kv2piEIrMBVCtazJokC+6EQ7KvYuiGEg5R9FDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     peter chang <dpf@google.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 091/134] scsi: pm80xx: Fix for SATA device discovery
-Date:   Wed, 11 Dec 2019 10:11:07 -0500
-Message-Id: <20191211151150.19073-91-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 094/134] scsi: NCR5380: Add disconnect_mask module parameter
+Date:   Wed, 11 Dec 2019 10:11:10 -0500
+Message-Id: <20191211151150.19073-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -63,39 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: peter chang <dpf@google.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
+[ Upstream commit 0b7a223552d455bcfba6fb9cfc5eef2b5fce1491 ]
 
-Driver was missing complete() call in mpi_sata_completion which result in
-SATA abort error handling timing out. That causes the device to be left in
-the in_recovery state so subsequent commands sent to the device fail and
-the OS removes access to it.
+Add a module parameter to inhibit disconnect/reselect for individual
+targets. This gains compatibility with Aztec PowerMonster SCSI/SATA
+adapters with buggy firmware. (No fix is available from the vendor.)
 
-Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: peter chang <dpf@google.com>
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Apparently these adapters pass-through the product/vendor of the attached
+SATA device. Since they can't be identified from the response to an INQUIRY
+command, a device blacklist flag won't work.
+
+Cc: Michael Schmitz <schmitzmic@gmail.com>
+Link: https://lore.kernel.org/r/993b17545990f31f9fa5a98202b51102a68e7594.1573875417.git.fthain@telegraphics.com.au
+Reviewed-and-tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/NCR5380.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 73261902d75d5..161bf4760eac7 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -2382,6 +2382,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 			pm8001_printk("task 0x%p done with io_status 0x%x"
- 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
- 			t, status, ts->resp, ts->stat));
-+		if (t->slow_task)
-+			complete(&t->slow_task->completion);
- 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
- 	} else {
- 		spin_unlock_irqrestore(&t->task_state_lock, flags);
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 536426f25e866..d4401c768a0c7 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -129,6 +129,9 @@
+ #define NCR5380_release_dma_irq(x)
+ #endif
+ 
++static unsigned int disconnect_mask = ~0;
++module_param(disconnect_mask, int, 0444);
++
+ static int do_abort(struct Scsi_Host *);
+ static void do_reset(struct Scsi_Host *);
+ static void bus_reset_cleanup(struct Scsi_Host *);
+@@ -954,7 +957,8 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+ 	int err;
+ 	bool ret = true;
+ 	bool can_disconnect = instance->irq != NO_IRQ &&
+-			      cmd->cmnd[0] != REQUEST_SENSE;
++			      cmd->cmnd[0] != REQUEST_SENSE &&
++			      (disconnect_mask & BIT(scmd_id(cmd)));
+ 
+ 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
 -- 
 2.20.1
 
