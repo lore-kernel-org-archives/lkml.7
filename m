@@ -2,142 +2,127 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D50C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BEDC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBEE42073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4122073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cFiH4KIf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIxKfhz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbfLKPxb (ORCPT
+        id S1732589AbfLKPxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:53:31 -0500
-Received: from mail.efficios.com ([167.114.142.138]:42358 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732008AbfLKPTH (ORCPT
+        Wed, 11 Dec 2019 10:53:37 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39782 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731780AbfLKPTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:07 -0500
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 72F5E68774F;
-        Wed, 11 Dec 2019 10:19:05 -0500 (EST)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id WKPvfOPdR2rD; Wed, 11 Dec 2019 10:19:05 -0500 (EST)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 0CCDE68774C;
-        Wed, 11 Dec 2019 10:19:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0CCDE68774C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1576077545;
-        bh=Els775lt7VbhSm6uez8HB9AuwfSHPUeqxVvc2FSjROM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=cFiH4KIf5SmtmlttI/719OAaw5HhviY/mN++Yv4CSa7+yfMW60UxEA3/qxiIY5Y1A
-         Y+cdtg/ZAp1QbbvoVCTQhfvNoW4kOWZAK8yuJSPMPkQbw8dY8S0RuWZz1IOGGB6rEj
-         jC9R2ziP+ftZmh6YFaSBYSVZajd8QMLaiDMS3BH3y6YQR4H3ai3z9ci7jucs/OwJmd
-         GOy25GT8X7IxiDJGnu16+HKvbUJQvdzegYEVDGOIAwvoGrRVOutv2bB/1n74HrzyWC
-         xue0vzmAOv2CpkCYFIzELK320wBqCwD5MBloLBrjGQdj65x4cn6KOyrkkOSdWiUoGN
-         Ohz66cAHcADPA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id yRR1NrW5C_RV; Wed, 11 Dec 2019 10:19:04 -0500 (EST)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id EB0FA687740;
-        Wed, 11 Dec 2019 10:19:04 -0500 (EST)
-Date:   Wed, 11 Dec 2019 10:19:04 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kselftest <linux-kselftest@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <1871753014.2121.1576077544796.JavaMail.zimbra@efficios.com>
-In-Reply-To: <2d53b409-31e0-2245-e163-1ab26f52c841@linuxfoundation.org>
-References: <2d53b409-31e0-2245-e163-1ab26f52c841@linuxfoundation.org>
-Subject: Re: Linux 5.5=rc1 kselftest rseq test build failure
+        Wed, 11 Dec 2019 10:19:00 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d5so5836071wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 07:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qbeJjKW4nbf0Chq8HrmirNCO/t8cTX+VWEBs6JApRCM=;
+        b=sIxKfhz7W+XGG4A+6rFofyi3ZHJBmXvcd0/Lmofb8xlLjnFgZ0CEgeCNzsjg9nLaZm
+         2HJpmBkNxcmbYYlRemzPJyHRp2BtaBvLcbHeA5L3tTBIgIzquuFqTfjhMVTnuEu4yVei
+         iFR5wcNTGEO4KVaGnW3ezQ5vkRDCyqrAE0WiGgo+Yx/5sD316WPFgmqypIV1utZrCclf
+         jwvV6hs/7mEZilmGoyybo9f5s41Mf7FCQdiiBWnIyygYpvCyBqO5rrDLcsJfGQTQ8dZY
+         Rpi1NmEz6cDl/RUWtlIL8Zdon43y26OrmdUdlZFz/LpYffsTTpNz4e9QoACgaFzjJ159
+         NnVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qbeJjKW4nbf0Chq8HrmirNCO/t8cTX+VWEBs6JApRCM=;
+        b=S77GG2cdwE1btWectwSMrh+PNFxq/Gi+3Y86Y6xHLXorSwxcMrWD8/p/77c+iF8CvD
+         ZESW4TxYw58ZsmyrR1+Ho9xetzgUwtigir41EdI6L6FwGFtR6bjwk0ClDWyKVAOsFNB9
+         xkOjvsYXKfeTa8uVoeXb2NNrsQ6slsbW5lwjHOfiA89x3zjuR+UYI+5merQJzANyja3E
+         H116qQN2ilDZUz1HIeTnv5GNhMJzFdYm+SETaJ+v3beaX7rua8s/bnAq6YyLpx3RbpBj
+         ZbdKaHcD6bTbrXDMirgJORf+7pvgqH9eC8FWIKT7pXWpHvfNdp/04Dlk1iEz7SZZz5of
+         QZnQ==
+X-Gm-Message-State: APjAAAWmgYQbAW3RZgEoshdyDcTq7f7DZsvt2PirC5G3S+iao+Gg7Yo0
+        PMs1JtajxblDqZ4eolyl4GmJNA==
+X-Google-Smtp-Source: APXvYqwMPPc+4B4dB6jAQ8b+5nRg9tYQcN/aezgiVC9EtiwmXqwgIMdUoTdUwZTp4c6n3StHD7jnxA==
+X-Received: by 2002:a7b:cb15:: with SMTP id u21mr354499wmj.25.1576077539024;
+        Wed, 11 Dec 2019 07:18:59 -0800 (PST)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id x132sm6891747wmg.0.2019.12.11.07.18.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:18:58 -0800 (PST)
+Date:   Wed, 11 Dec 2019 15:18:56 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Will Deacon <will@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sh: kgdb: Mark expected switch fall-throughs
+Message-ID: <20191211151856.krh7jbrl5vsa7imq@holly.lan>
+References: <87o8wgy3ra.wl-kuninori.morimoto.gx@renesas.com>
+ <87muc0y3q4.wl-kuninori.morimoto.gx@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3890)
-Thread-Topic: Linux 5.5=rc1 kselftest rseq test build failure
-Thread-Index: M//PaePCYQ98sUQtyT/D1GN/cpAq9A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87muc0y3q4.wl-kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Dec 10, 2019, at 7:27 PM, Shuah Khan skhan@linuxfoundation.org wro=
-te:
+On Tue, Dec 10, 2019 at 05:39:00PM +0900, Kuninori Morimoto wrote:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> Mark switch cases where we are expecting to fall through.
+> 
+> This patch fixes the following error:
+> 
+> LINUX/arch/sh/kernel/kgdb.c: In function 'kgdb_arch_handle_exception':
+> LINUX/arch/sh/kernel/kgdb.c:267:6: error: this statement may fall through [-Werror=implicit-fallthrough=]
+> if (kgdb_hex2long(&ptr, &addr))
+> ^
+> LINUX/arch/sh/kernel/kgdb.c:269:2: note: here
+> case 'D':
+> ^~~~
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+>  arch/sh/kernel/kgdb.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/sh/kernel/kgdb.c b/arch/sh/kernel/kgdb.c
+> index 6d61f8c..0d5f3c9 100644
+> --- a/arch/sh/kernel/kgdb.c
+> +++ b/arch/sh/kernel/kgdb.c
+> @@ -266,6 +266,7 @@ int kgdb_arch_handle_exception(int e_vector, int signo, int err_code,
+>  		ptr = &remcomInBuffer[1];
+>  		if (kgdb_hex2long(&ptr, &addr))
+>  			linux_regs->pc = addr;
+> +		/* fallthrough */
 
-> Hi Mathieu,
->=20
-> I am seeing rseq test build failure on Linux 5.5-rc1.
->=20
-> gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=3D./
-> param_test.c -lpthread -lrseq -o ...tools/testing/selftests/rseq/param_te=
-st
-> param_test.c:18:21: error: static declaration of =E2=80=98gettid=E2=80=99=
- follows
-> non-static declaration
->    18 | static inline pid_t gettid(void)
->       |                     ^~~~~~
-> In file included from /usr/include/unistd.h:1170,
->                  from param_test.c:11:
-> /usr/include/x86_64-linux-gnu/bits/unistd_ext.h:34:16: note: previous
-> declaration of =E2=80=98gettid=E2=80=99 was here
->    34 | extern __pid_t gettid (void) __THROW;
->       |                ^~~~~~
-> make: *** [Makefile:28: ...tools/testing/selftests/rseq/param_test] Error=
- 1
->=20
->=20
-> The following obvious change fixes it. However, there could be reason
-> why this was defined here. If you think this is the right fix, I can
-> send the patch. I started seeing this with gcc version 9.2.1 20191008
-
-This issue is caused by introduction of "gettid()" in glibc 2.30. I don't
-think we want to introduce a build dependency on glibc 2.30 for kernel
-selftests. Removing the gettid() symbol as you propose here will break
-build environments with glibc < 2.30.
-
-We could eventually try to figure out whether the glibc headers implement
-gettid() at build time (not sure how), or we could simply rename our own
-"gettid()" to "rseq_gettid()", thus removing the namespace clash with
-glibc.
-
-I can propose a patch renaming gettid() to rseq_gettid() is that approach
-is OK with you.
-
-Thanks,
-
-Mathieu
+Since v5.5-rc1 there is the fallthrough pseudo keyword to document
+these cases:
+https://elixir.bootlin.com/linux/v5.5-rc1/source/Documentation/process/coding-style.rst#L59
 
 
->=20
-> diff --git a/tools/testing/selftests/rseq/param_test.c
-> b/tools/testing/selftests/rseq/param_test.c
-> index eec2663261f2..18a0fa1235a7 100644
-> --- a/tools/testing/selftests/rseq/param_test.c
-> +++ b/tools/testing/selftests/rseq/param_test.c
-> @@ -15,11 +15,6 @@
->  #include <errno.h>
->  #include <stddef.h>
->=20
-> -static inline pid_t gettid(void)
-> -{
-> -       return syscall(__NR_gettid);
-> -}
-> -
->=20
-> thanks,
-> -- Shuah
+Daniel.
 
---=20
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+
+>  	case 'D':
+>  	case 'k':
+>  		atomic_set(&kgdb_cpu_doing_single_step, -1);
+> -- 
+> 2.7.4
+> 
