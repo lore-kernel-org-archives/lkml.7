@@ -2,165 +2,108 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DEFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A25D520409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BED20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JTBZ6Irv"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rPdOmD+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730990AbfLKRS3 (ORCPT
+        id S1730992AbfLKRTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:18:29 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44953 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730318AbfLKRS3 (ORCPT
+        Wed, 11 Dec 2019 12:19:38 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38505 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730318AbfLKRTh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576084707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2nTzNvMQwFVLRqcJ75m4aP3oWlJJo/C7EdSanIk3aBw=;
-        b=JTBZ6IrvjMSO+CUpvs2csCCOqw95RlvK4nZJRbUP7/7nReZohDJyu3Dkm8vqjp8wh3qD7z
-        pDMCpbfj9Ma1Cagnwvev6XLBxGrYiD5WhsmdmUzpjxD0dJxBr6iuAIcFmuOGqZb61hu+QL
-        4Dn7XlWtDU6F+E0h5kZJla1vZQqj3KY=
-Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
- [209.85.219.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-oKNqDKBkOPC5vRmsEuKwRw-1; Wed, 11 Dec 2019 12:18:26 -0500
-X-MC-Unique: oKNqDKBkOPC5vRmsEuKwRw-1
-Received: by mail-yb1-f200.google.com with SMTP id d131so16989391ybb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:18:26 -0800 (PST)
+        Wed, 11 Dec 2019 12:19:37 -0500
+Received: by mail-qk1-f193.google.com with SMTP id k6so20330258qki.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:19:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=KG1B1/XNdtFtj52rr+keQdkSlXVNtixvd3xO9+2XJ3g=;
+        b=rPdOmD+9MCriMKlGpN93RjC2asNR0TjQF5EX6nSzzBHq+kSTO1lDDr7cicx5REQ3pD
+         8KA2llMqbpABZbkxF60kjsQjTbbbrkzVY4smbkHgkWr7VoiEPxnBUS3FwYduw/17QxG3
+         6GXpRv5e3ru8+IL6BhxkZaq4+HGxjs1okYOqaQIFGo6QgjZrKVx9vJzKGpTWDW9zkwHI
+         8uyYpUr0hCuWXLMhTzkMMk9nMVYLJD8SPxV/Imhe2pZb64yY5qsJzCD8iQI3Hx7Wmrgx
+         V1zMmPLQEuhnOhtLfuZQ4Lh63s/P1jeYhrG8hpEF2xLGHZnOFuzj/QPhRo1OQoiz7AHo
+         WzDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2nTzNvMQwFVLRqcJ75m4aP3oWlJJo/C7EdSanIk3aBw=;
-        b=FwEcmLH+7ZYfThACkVtX+9VFNP1caDvkmSWx6d4BYs17eOCvon9aC4uuVNol/JFexl
-         YMcwjsdU4aJFdxSKeP/PNXuNjUbJtprQSHPbb8WwsVASr28kBIqzSn8bTaymHt7T+5EO
-         jywd+s8kzPTxNBtpHHBz1yh81UBMKVVQCKmmvgFF3O/3mKrYusp4yjfx3uHTHr3J+ltT
-         CqEe4dW8sDpBSkyhHoYVngTcNow3AccUztyVKQMvJfx6YCRYvKcPtAat6FTkNMZhnon4
-         Tv10cITdw8cmK9OIMuh2j37pEA8UXRgkWx1p5fBt2DqIOMIf3XegXqOzCQOO5pa455KF
-         vkbg==
-X-Gm-Message-State: APjAAAWpQTZZN8vj+00pL+GzeZ7thx5/CRSRoMb9jqZ40NOXqDC6J1Pq
-        xK46XxjwzaNEe3uxYaIlcXLnXXxDb9o1qELDyvbG2mPhZQT60TtiBB2Lo87F2XB4oTFfwPrpGG/
-        24BSgNoaZIIuzFVfzOay4iaxw
-X-Received: by 2002:a81:a7c9:: with SMTP id e192mr635685ywh.421.1576084705480;
-        Wed, 11 Dec 2019 09:18:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwt+UYeo0zuJ1KMsCLoS6DGAXGbzz8Q9mFTJZamJRJYD6ILLm3YjsLzwVptVerayvJ6H+gEcA==
-X-Received: by 2002:a81:a7c9:: with SMTP id e192mr635653ywh.421.1576084705117;
-        Wed, 11 Dec 2019 09:18:25 -0800 (PST)
-Received: from dev.jcline.org ([136.56.87.133])
-        by smtp.gmail.com with ESMTPSA id a22sm1235547ywh.93.2019.12.11.09.18.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 09:18:24 -0800 (PST)
-Date:   Wed, 11 Dec 2019 12:18:22 -0500
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: s390 depending on cc-options makes it difficult to configure
-Message-ID: <20191211171822.GA36366@dev.jcline.org>
-References: <20191209164155.GA78160@dev.jcline.org>
- <20191210090108.GA22512@unicorn.suse.cz>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=KG1B1/XNdtFtj52rr+keQdkSlXVNtixvd3xO9+2XJ3g=;
+        b=XZ8tktqkqmYkoJopNU7DoyRwQxqv42MO/rTi3RwyDLegkQRhxNO0GqwM7yiYbOBSU3
+         lsFljAScY4YDzIw/HdNIpbVB8Dg+fs9r2BrgSjahLf435tdCU5Qk0O43lima//lj++Uz
+         ABm/TjqBNpjEiYS/EVeGAZmtyKir65Rwz/GnJnBlNxI0ROUWnM7aiOx6cc1pS67isyUu
+         Y8r257FaPA5gRtDhmaGznJ67v6Pgr1hTYETleeFB5ccTkLPJLBumerzxu8Lv8OKPY282
+         LeAKNkS0GUxlVHUPNwU0Gk8VHY+xxWzXYPSZfd2GcNCoU7X+V0oh+suF372sZCDDKrhs
+         AL2Q==
+X-Gm-Message-State: APjAAAVjBmFqihJ587PZIirChztlupvN6hHO83ozJZ3H9fMB7TtbyDQn
+        PuT8I3h6lW+yO4Jmx3PT+3a2Iw==
+X-Google-Smtp-Source: APXvYqziSQ2OU4OXjzdNoNYeczSwDlStzGJAob4piuigMuCkjbj07ZxDhMEWk9MKjPgnwpfe9JISVg==
+X-Received: by 2002:a37:27cc:: with SMTP id n195mr3658562qkn.428.1576084776776;
+        Wed, 11 Dec 2019 09:19:36 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r5sm849819qkf.44.2019.12.11.09.19.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 09:19:36 -0800 (PST)
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210090108.GA22512@unicorn.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v16 13/25] mm: pagewalk: Don't lock PTEs for walk_page_range_novma()
+Date:   Wed, 11 Dec 2019 12:19:35 -0500
+Message-Id: <728FAC8D-AA0C-4326-8990-A3D5D0DA1EE5@lca.pw>
+References: <e0fd5594-fb4e-9ead-e582-544f47cb1f8b@arm.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        =?utf-8?Q?J=C3=A9r=C3=B4me_Glisse?= <jglisse@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, kbuild-all@lists.01.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, James Morse <James.Morse@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <e0fd5594-fb4e-9ead-e582-544f47cb1f8b@arm.com>
+To:     Steven Price <Steven.Price@arm.com>
+X-Mailer: iPhone Mail (17B111)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 10:01:08AM +0100, Michal Kubecek wrote:
-> On Mon, Dec 09, 2019 at 11:41:55AM -0500, Jeremy Cline wrote:
-> > Hi folks,
-> > 
-> > Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
-> > makes it difficult to produce an s390 configuration for Fedora and Red
-> > Hat kernels.
-> > 
-> > The issue is I have the following configurations:
-> > 
-> > CONFIG_MARCH_Z13=y
-> > CONFIG_TUNE_Z14=y
-> > # CONFIG_TUNE_DEFAULT is not set
-> > 
-> > When the configuration is prepared on a non-s390x host without a
-> > compiler with -march=z* it changes CONFIG_TUNE_DEFAULT to y which, as
-> > far as I can tell, leads to a kernel tuned for z13 instead of z14.
-> > Fedora and Red Hat build processes produce complete configurations from
-> > snippets on any available host in the build infrastructure which very
-> > frequently is *not* s390.
-> 
-> We have exactly the same problem. Our developers need to update config
-> files for different architectures and different kernel versions on their
-> machines which are usually x86_64 but that often produces different
-> configs than the real build environment.
-> 
 
-Glad (or sad?) to hear we're not the only ones hitting this.
 
-> This is not an issue for upstream development as one usually updates
-> configs on the same system where the build takes place but it's a big
-> problem for distribution maintainers.
-> 
-> > I did a quick search and couldn't find any other examples of Kconfigs
-> > depending on march or mtune compiler flags and it seems like it'd
-> > generally problematic for people preparing configurations.
-> 
-> There are more issues like this. In general, since 4.17 or 4.18, the
-> resulting config depends on both architecture and compiler version.
-> Earlier, you could simply run "ARCH=... make oldconfig" (or menuconfig)
-> to update configs for all architectures and distribution versions.
-> Today, you need to use the right compiler version (results with e.g.
-> 4.8, 7.4 and 9.2 differ) and architecture.
-> 
+> On Dec 11, 2019, at 10:54 AM, Steven Price <Steven.Price@arm.com> wrote:
+>=20
+> I believe this is a false positive (although the trace here is useless).
+> This patch adds a conditional lock/unlock:
+>=20
+> pte =3D walk->no_vma ? pte_offset_map(pmd, addr) :
+>             pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
+> ...
+> if (!walk->no_vma)
+>    spin_unlock(ptl);
+> pte_unmap(pte);
+>=20
+> I'm not sure how to match sparse happy about that. Is the only option to
+> have two versions of the walk_pte_range() function? One which takes the
+> lock and one which doesn't.
 
-Yeah, that's also troublesome. This is by no means the first problem
-related to the environment at configuration time, but it the most
-bothersome to work around (at least for Fedora kernel configuration).
-
-> At the moment, I'm working around the issue by using chroot environments
-> with target distributions (e.g. openSUSE Tumbleweed) and set of cross
-> compilers for supported architectures but it's far from perfect and even
-> this way, there are problemantic points, e.g. BPFILTER_UMH which depends
-> on gcc being able to not only compile but also link.
-> 
-> IMHO the key problem is that .config mixes configuration with
-> description of build environment. I have an idea of a solution which
-> would consist of
-> 
->   - an option to extract "config" options which describe build
->     environment (i.e. their values are determined by running some
->     command, rather than reading from a file or asking user) into
->     a cache file
->   - an option telling "make *config" to use such cache file for these
->     environment "config" options instead of running the test scripts
->     (and probably issue an error if an environment option is missing)
-> 
-
-I agree that the issue is mixing kernel configuration with build
-environment. I suppose a cache file would work, but it still sounds like
-a difficult process that is working around that fact that folks are
-coupling the configuration step with the build step.
-
-I would advocate that this patch be reverted and an effort made to not
-mix build environment checks into the configuration. I'm much happier
-for the build to fail because the configuration can't be satisfied by
-the environment than I am for the configuration to quietly change or for
-the tools to not allow me to make the configuration in the first place.
-Ideally the tools would warn the user if their environment won't build
-the configuration, but that's a nice-to-have.
-
-- Jeremy
-
+Or just ignore the sparse false positive without complicating the code furth=
+er.=
