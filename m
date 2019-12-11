@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC52C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9E3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506002464B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8485F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077805;
-	bh=QVso4X1jYkWKji8ZpZkq/h5rSTgPo5xduCy1zLlrYt0=;
+	s=default; t=1576077809;
+	bh=Lg1GsrfLGX+N+0KkwfFNefi3f6pvzjRbCqdCVL6ExdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18b7fSIbXmmeMHGv1EeOoGtdDmwYM5xOc7TlLJ2X74wmed+dROFWeH8tD5F2p0Tnt
-	 GJ8nkITUKV95fA2LBfBHfsdQd8YcR96iNwtZD7DHxhA7TKQNFRb+GbYUVaPbcmgIGj
-	 hDXS+kwRDaIgFYOluTi4RBKTqqOirJoI60BLCtWU=
+	b=GDpn6cLTTv4pGoKhZomW8PmSU5QdMEy0EkBUGAtZ8IekmaLN+woO/yMRuy6UVdT5v
+	 NB212SQUXEzsJwPc8quVmszkueAwCFlGQHZmuNWUBW4N8l66OoheRW/wM+25d8NjhN
+	 +CO7vzQaJBQdm3fUNmJ8ic2VA0qezgXNNdAulVbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732713AbfLKPXY (ORCPT
+        id S1732717AbfLKPX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54304 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732294AbfLKPXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:21 -0500
+        id S1732559AbfLKPXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B7D322527;
-        Wed, 11 Dec 2019 15:23:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CEF022527;
+        Wed, 11 Dec 2019 15:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077800;
-        bh=QVso4X1jYkWKji8ZpZkq/h5rSTgPo5xduCy1zLlrYt0=;
+        s=default; t=1576077802;
+        bh=Lg1GsrfLGX+N+0KkwfFNefi3f6pvzjRbCqdCVL6ExdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdyjMQUWZ99LjW/9PC8qI5qD5xLRtsmA35NntG39zdSXz/mXOImjfFoAQX/n58NQJ
-         9V9kqoeTMFNXtPW+ASoW2AaQsTGOPwKe2JNCfPvlcl+YTNX+rVf45Ua1JboxH5gNWt
-         6gCOMOnVctEBegmKVhCOVMM8dOvOV5WCsm3cyz+E=
+        b=fHuED7j17UU0Sh4Oc2f8ReACmbxS756GNElkxk0QrnEdAhGOpo5JlkvryNniZURl5
+         yPh3ufoeXZZIHeWYwBMq5r4Oo2MfKoCF9E4qVxMrq56roXRmsHR6RcwZP3vCnOTc8c
+         xRD5YR8sQdDKkXULS3cmsoUhQrYqFfvYE3G7IHB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Ryan Case <ryandcase@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 175/243] media: uvcvideo: Abstract streaming object lifetime
-Date:   Wed, 11 Dec 2019 16:05:37 +0100
-Message-Id: <20191211150350.987745321@linuxfoundation.org>
+Subject: [PATCH 4.19 176/243] tty: serial: qcom_geni_serial: Fix softlock
+Date:   Wed, 11 Dec 2019 16:05:38 +0100
+Message-Id: <20191211150351.054192812@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,132 +61,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+From: Ryan Case <ryandcase@chromium.org>
 
-[ Upstream commit ece41454c6a5ed8f301ef1c37710ab222e577823 ]
+[ Upstream commit a1fee899e5bed457afc20a6a2ff3915a95cc5942 ]
 
-The streaming object is a key part of handling the UVC device. Although
-not critical, we are currently missing a call to destroy the mutex on
-clean up paths, and we are due to extend the objects complexity in the
-near future.
+Transfers were being divided into device FIFO sized (64 byte max)
+operations which would poll for completion within a spin_lock_irqsave /
+spin_unlock_irqrestore block. This both made things slow by waiting for
+the FIFO to completely drain before adding further data and would also
+result in softlocks on large transmissions.
 
-Facilitate easy management of a stream object by creating a pair of
-functions to handle creating and destroying the allocation. The new
-uvc_stream_delete() function also performs the missing mutex_destroy()
-operation.
+This patch allows larger transfers with continuous FIFO additions as
+space becomes available and removes polling from the interrupt handler.
 
-Previously a failed streaming object allocation would cause
-uvc_parse_streaming() to return -EINVAL, which is inappropriate. If the
-constructor failes, we will instead return -ENOMEM.
-
-While we're here, fix the trivial spelling error in the function banner
-of uvc_delete().
-
-Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Ryan Case <ryandcase@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/usb/uvc/uvc_driver.c | 54 +++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 16 deletions(-)
+ drivers/tty/serial/qcom_geni_serial.c | 56 +++++++++++++++++++--------
+ 1 file changed, 39 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
-index cf4feff2a48c1..063e229ead5ef 100644
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -390,6 +390,39 @@ static struct uvc_streaming *uvc_stream_by_id(struct uvc_device *dev, int id)
- 	return NULL;
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 69b980bb8ac29..b3f7d1a1e97f8 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -113,6 +113,8 @@ struct qcom_geni_serial_port {
+ 	u32 *rx_fifo;
+ 	u32 loopback;
+ 	bool brk;
++
++	unsigned int tx_remaining;
+ };
+ 
+ static const struct uart_ops qcom_geni_console_pops;
+@@ -435,6 +437,7 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
+ 	struct qcom_geni_serial_port *port;
+ 	bool locked = true;
+ 	unsigned long flags;
++	u32 geni_status;
+ 
+ 	WARN_ON(co->index < 0 || co->index >= GENI_UART_CONS_PORTS);
+ 
+@@ -448,6 +451,8 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
+ 	else
+ 		spin_lock_irqsave(&uport->lock, flags);
+ 
++	geni_status = readl_relaxed(uport->membase + SE_GENI_STATUS);
++
+ 	/* Cancel the current write to log the fault */
+ 	if (!locked) {
+ 		geni_se_cancel_m_cmd(&port->se);
+@@ -461,9 +466,19 @@ static void qcom_geni_serial_console_write(struct console *co, const char *s,
+ 		}
+ 		writel_relaxed(M_CMD_CANCEL_EN, uport->membase +
+ 							SE_GENI_M_IRQ_CLEAR);
++	} else if ((geni_status & M_GENI_CMD_ACTIVE) && !port->tx_remaining) {
++		/*
++		 * It seems we can't interrupt existing transfers if all data
++		 * has been sent, in which case we need to look for done first.
++		 */
++		qcom_geni_serial_poll_tx_done(uport);
+ 	}
+ 
+ 	__qcom_geni_serial_console_write(uport, s, count);
++
++	if (port->tx_remaining)
++		qcom_geni_serial_setup_tx(uport, port->tx_remaining);
++
+ 	if (locked)
+ 		spin_unlock_irqrestore(&uport->lock, flags);
+ }
+@@ -694,40 +709,45 @@ static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool drop)
+ 	port->handle_rx(uport, total_bytes, drop);
  }
  
-+/* ------------------------------------------------------------------------
-+ * Streaming Object Management
-+ */
+-static void qcom_geni_serial_handle_tx(struct uart_port *uport)
++static void qcom_geni_serial_handle_tx(struct uart_port *uport, bool done,
++		bool active)
+ {
+ 	struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+ 	struct circ_buf *xmit = &uport->state->xmit;
+ 	size_t avail;
+ 	size_t remaining;
++	size_t pending;
+ 	int i;
+ 	u32 status;
+ 	unsigned int chunk;
+ 	int tail;
+-	u32 irq_en;
+ 
+-	chunk = uart_circ_chars_pending(xmit);
+ 	status = readl_relaxed(uport->membase + SE_GENI_TX_FIFO_STATUS);
+-	/* Both FIFO and framework buffer are drained */
+-	if (!chunk && !status) {
 +
-+static void uvc_stream_delete(struct uvc_streaming *stream)
-+{
-+	mutex_destroy(&stream->mutex);
++	/* Complete the current tx command before taking newly added data */
++	if (active)
++		pending = port->tx_remaining;
++	else
++		pending = uart_circ_chars_pending(xmit);
 +
-+	usb_put_intf(stream->intf);
-+
-+	kfree(stream->format);
-+	kfree(stream->header.bmaControls);
-+	kfree(stream);
-+}
-+
-+static struct uvc_streaming *uvc_stream_new(struct uvc_device *dev,
-+					    struct usb_interface *intf)
-+{
-+	struct uvc_streaming *stream;
-+
-+	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
-+	if (stream == NULL)
-+		return NULL;
-+
-+	mutex_init(&stream->mutex);
-+
-+	stream->dev = dev;
-+	stream->intf = usb_get_intf(intf);
-+	stream->intfnum = intf->cur_altsetting->desc.bInterfaceNumber;
-+
-+	return stream;
-+}
-+
- /* ------------------------------------------------------------------------
-  * Descriptors parsing
-  */
-@@ -682,17 +715,12 @@ static int uvc_parse_streaming(struct uvc_device *dev,
- 		return -EINVAL;
++	/* All data has been transmitted and acknowledged as received */
++	if (!pending && !status && done) {
+ 		qcom_geni_serial_stop_tx(uport);
+ 		goto out_write_wakeup;
  	}
  
--	streaming = kzalloc(sizeof(*streaming), GFP_KERNEL);
-+	streaming = uvc_stream_new(dev, intf);
- 	if (streaming == NULL) {
- 		usb_driver_release_interface(&uvc_driver.driver, intf);
--		return -EINVAL;
-+		return -ENOMEM;
+-	if (!uart_console(uport)) {
+-		irq_en = readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
+-		irq_en &= ~(M_TX_FIFO_WATERMARK_EN);
+-		writel_relaxed(0, uport->membase + SE_GENI_TX_WATERMARK_REG);
+-		writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+-	}
++	avail = port->tx_fifo_depth - (status & TX_FIFO_WC);
++	avail *= port->tx_bytes_pw;
+ 
+-	avail = (port->tx_fifo_depth - port->tx_wm) * port->tx_bytes_pw;
+ 	tail = xmit->tail;
+-	chunk = min3((size_t)chunk, (size_t)(UART_XMIT_SIZE - tail), avail);
++	chunk = min3(avail, pending, (size_t)(UART_XMIT_SIZE - tail));
+ 	if (!chunk)
+ 		goto out_write_wakeup;
+ 
+-	qcom_geni_serial_setup_tx(uport, chunk);
++	if (!port->tx_remaining) {
++		qcom_geni_serial_setup_tx(uport, pending);
++		port->tx_remaining = pending;
++	}
+ 
+ 	remaining = chunk;
+ 	for (i = 0; i < chunk; ) {
+@@ -746,11 +766,10 @@ static void qcom_geni_serial_handle_tx(struct uart_port *uport)
+ 		tail += tx_bytes;
+ 		uport->icount.tx += tx_bytes;
+ 		remaining -= tx_bytes;
++		port->tx_remaining -= tx_bytes;
  	}
  
--	mutex_init(&streaming->mutex);
--	streaming->dev = dev;
--	streaming->intf = usb_get_intf(intf);
--	streaming->intfnum = intf->cur_altsetting->desc.bInterfaceNumber;
--
- 	/* The Pico iMage webcam has its class-specific interface descriptors
- 	 * after the endpoint descriptors.
- 	 */
-@@ -899,10 +927,7 @@ static int uvc_parse_streaming(struct uvc_device *dev,
+ 	xmit->tail = tail & (UART_XMIT_SIZE - 1);
+-	if (uart_console(uport))
+-		qcom_geni_serial_poll_tx_done(uport);
+ out_write_wakeup:
+ 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+ 		uart_write_wakeup(uport);
+@@ -760,6 +779,7 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
+ {
+ 	unsigned int m_irq_status;
+ 	unsigned int s_irq_status;
++	unsigned int geni_status;
+ 	struct uart_port *uport = dev;
+ 	unsigned long flags;
+ 	unsigned int m_irq_en;
+@@ -773,6 +793,7 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
+ 	spin_lock_irqsave(&uport->lock, flags);
+ 	m_irq_status = readl_relaxed(uport->membase + SE_GENI_M_IRQ_STATUS);
+ 	s_irq_status = readl_relaxed(uport->membase + SE_GENI_S_IRQ_STATUS);
++	geni_status = readl_relaxed(uport->membase + SE_GENI_STATUS);
+ 	m_irq_en = readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
+ 	writel_relaxed(m_irq_status, uport->membase + SE_GENI_M_IRQ_CLEAR);
+ 	writel_relaxed(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR);
+@@ -787,7 +808,8 @@ static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
  
- error:
- 	usb_driver_release_interface(&uvc_driver.driver, intf);
--	usb_put_intf(intf);
--	kfree(streaming->format);
--	kfree(streaming->header.bmaControls);
--	kfree(streaming);
-+	uvc_stream_delete(streaming);
- 	return ret;
- }
+ 	if (m_irq_status & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN) &&
+ 	    m_irq_en & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN))
+-		qcom_geni_serial_handle_tx(uport);
++		qcom_geni_serial_handle_tx(uport, m_irq_status & M_CMD_DONE_EN,
++					geni_status & M_GENI_CMD_ACTIVE);
  
-@@ -1818,7 +1843,7 @@ static int uvc_scan_device(struct uvc_device *dev)
-  * is released.
-  *
-  * As this function is called after or during disconnect(), all URBs have
-- * already been canceled by the USB core. There is no need to kill the
-+ * already been cancelled by the USB core. There is no need to kill the
-  * interrupt URB manually.
-  */
- static void uvc_delete(struct kref *kref)
-@@ -1856,10 +1881,7 @@ static void uvc_delete(struct kref *kref)
- 		streaming = list_entry(p, struct uvc_streaming, list);
- 		usb_driver_release_interface(&uvc_driver.driver,
- 			streaming->intf);
--		usb_put_intf(streaming->intf);
--		kfree(streaming->format);
--		kfree(streaming->header.bmaControls);
--		kfree(streaming);
-+		uvc_stream_delete(streaming);
- 	}
- 
- 	kfree(dev);
+ 	if (s_irq_status & S_GP_IRQ_0_EN || s_irq_status & S_GP_IRQ_1_EN) {
+ 		if (s_irq_status & S_GP_IRQ_0_EN)
 -- 
 2.20.1
 
