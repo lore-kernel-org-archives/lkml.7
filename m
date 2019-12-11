@@ -2,252 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC2DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FE3C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E2D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZAt7m5R4"
+	by mail.kernel.org (Postfix) with ESMTP id 8D9C9208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078271;
+	bh=Sqt1QQ5TgmAeKM99E7qB9AJtymygBlvwZg1hB0TiU7c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IK8fA3Dpj2Y32fqkDJm19wBxQUeQ0CsPuu0Yp14G9YU/Aq+uS8kw1f4xEu+N5dxZd
+	 Pd4Tl2KiBFp8iKU22bl1n05UfqEm1vPKzPgBVnZQBNoUMYxYBwFQlZsYXfkgq62JaX
+	 bwl49JWvDz7gG8zcwZnA7X7+53XYvoHaTnOWYkos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387950AbfLKPbE (ORCPT
+        id S2388007AbfLKPbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:31:04 -0500
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:40792 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387473AbfLKPa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:30:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576078259; x=1607614259;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=N22hyGYPk1JoqY1Qt0Vz9EReiYVT9fCIbFq3JobjLc4=;
-  b=ZAt7m5R4wlVOi42u6PT6RReA/pxDSMQGBSBOYV/Cth66ihR6T1xGnkdi
-   8qYYT4Xch5ZHL6UX8PPyLf+0JHdaJHM8KQNnnqwjrzmlGey3l7Do00p3+
-   WWYJ2foddSBgVMqGg49e4yF2tU1sMl8fp4j0Pn/i5+iDhGjphMlIzhZ8t
-   Y=;
-IronPort-SDR: J9/38YbMpalD44EqUzMsZ76zibWP7tf+mT+iXkGgPFEVIRtKljVza3qOgqGg0rbr/3/l0JZmLp
- 5vb/yvqk5YQQ==
-X-IronPort-AV: E=Sophos;i="5.69,301,1571702400"; 
-   d="scan'208";a="12930184"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 11 Dec 2019 15:30:47 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 7A6AFA2173;
-        Wed, 11 Dec 2019 15:30:46 +0000 (UTC)
-Received: from EX13D32EUB002.ant.amazon.com (10.43.166.114) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:14 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D32EUB002.ant.amazon.com (10.43.166.114) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 11 Dec 2019 15:30:13 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Wed, 11 Dec 2019 15:30:10 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>
-Subject: [PATCH v3 4/4] xen-blkback: support dynamic unbind/bind
-Date:   Wed, 11 Dec 2019 15:29:56 +0000
-Message-ID: <20191211152956.5168-5-pdurrant@amazon.com>
+        Wed, 11 Dec 2019 10:31:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36156 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387862AbfLKP3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:22 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43E732467A;
+        Wed, 11 Dec 2019 15:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078161;
+        bh=Sqt1QQ5TgmAeKM99E7qB9AJtymygBlvwZg1hB0TiU7c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dK9jmo//HBK8wrVT8FYjF/93CIIXhmRMpT7UWJGLE5poP9a7HPp9AAQu0ESS3dOmj
+         mFR9b0TWS6Yokvt4OMSu964H+wxhtjEnHH7T8KnyW+v8dNwe2W9M8S9cwQLZV+qWdT
+         9MoZUGD2Xo+1iflM/fJQZgxZ6682VmDfF8jT0DfQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 46/58] apparmor: fix unsigned len comparison with less than zero
+Date:   Wed, 11 Dec 2019 10:28:19 -0500
+Message-Id: <20191211152831.23507-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152956.5168-1-pdurrant@amazon.com>
-References: <20191211152956.5168-1-pdurrant@amazon.com>
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By simply re-attaching to shared rings during connect_ring() rather than
-assuming they are freshly allocated (i.e assuming the counters are zero)
-it is possible for vbd instances to be unbound and re-bound from and to
-(respectively) a running guest.
+From: Colin Ian King <colin.king@canonical.com>
 
-This has been tested by running:
+[ Upstream commit 00e0590dbaec6f1bcaa36a85467d7e3497ced522 ]
 
-while true;
-  do fio --name=randwrite --ioengine=libaio --iodepth=16 \
-  --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
-  done
+The sanity check in macro update_for_len checks to see if len
+is less than zero, however, len is a size_t so it can never be
+less than zero, so this sanity check is a no-op.  Fix this by
+making len a ssize_t so the comparison will work and add ulen
+that is a size_t copy of len so that the min() macro won't
+throw warnings about comparing different types.
 
-in a PV guest whilst running:
-
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  echo vbd-$DOMID-$VBD >bind;
-  echo bound;
-  sleep 3;
-  done
-
-in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
-re-bind its system disk image.
-
-This is a highly useful feature for a backend module as it allows it to be
-unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
-This was also tested by running:
-
-while true;
-  do echo vbd-$DOMID-$VBD >unbind;
-  echo unbound;
-  sleep 5;
-  rmmod xen-blkback;
-  echo unloaded;
-  sleep 1;
-  modprobe xen-blkback;
-  echo bound;
-  cd $(pwd);
-  sleep 3;
-  done
-
-in dom0 whilst running the same loop as above in the (single) PV guest.
-
-Some (less stressful) testing has also been done using a Windows HVM guest
-with the latest 9.0 PV drivers installed.
-
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+Addresses-Coverity: ("Macro compares unsigned to 0")
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Stefano Stabellini <sstabellini@kernel.org>
+ security/apparmor/label.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-v3:
- - Constify sring_common and re-work error handling in xen_blkif_map()
-
-v2:
- - Apply a sanity check to the value of rsp_prod and fail the re-attach
-   if it is implausible
- - Set allow_rebind to prevent ring from being closed on unbind
- - Update test workload from dd to fio (with verification)
----
- drivers/block/xen-blkback/xenbus.c | 56 ++++++++++++++++++++----------
- 1 file changed, 38 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 59d576d27ca7..0d4097bdff3f 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -190,6 +190,9 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
- {
- 	int err;
- 	struct xen_blkif *blkif = ring->blkif;
-+	const struct blkif_common_sring *sring_common;
-+	RING_IDX rsp_prod, req_prod;
-+	unsigned int size;
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index c5b99b954580c..ea63710442ae5 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1463,11 +1463,13 @@ static inline bool use_label_hname(struct aa_ns *ns, struct aa_label *label,
+ /* helper macro for snprint routines */
+ #define update_for_len(total, len, size, str)	\
+ do {					\
++	size_t ulen = len;		\
++					\
+ 	AA_BUG(len < 0);		\
+-	total += len;			\
+-	len = min(len, size);		\
+-	size -= len;			\
+-	str += len;			\
++	total += ulen;			\
++	ulen = min(ulen, size);		\
++	size -= ulen;			\
++	str += ulen;			\
+ } while (0)
  
- 	/* Already connected through? */
- 	if (ring->irq)
-@@ -200,46 +203,62 @@ static int xen_blkif_map(struct xen_blkif_ring *ring, grant_ref_t *gref,
- 	if (err < 0)
- 		return err;
+ /**
+@@ -1602,7 +1604,7 @@ int aa_label_snxprint(char *str, size_t size, struct aa_ns *ns,
+ 	struct aa_ns *prev_ns = NULL;
+ 	struct label_it i;
+ 	int count = 0, total = 0;
+-	size_t len;
++	ssize_t len;
  
-+	sring_common = (struct blkif_common_sring *)ring->blk_ring;
-+	rsp_prod = READ_ONCE(sring_common->rsp_prod);
-+	req_prod = READ_ONCE(sring_common->req_prod);
-+
- 	switch (blkif->blk_protocol) {
- 	case BLKIF_PROTOCOL_NATIVE:
- 	{
--		struct blkif_sring *sring;
--		sring = (struct blkif_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.native, sring,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_sring *sring_native =
-+			(struct blkif_sring *)ring->blk_ring;
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.native, sring_native,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		size = __RING_SIZE(sring_native, XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_32:
- 	{
--		struct blkif_x86_32_sring *sring_x86_32;
--		sring_x86_32 = (struct blkif_x86_32_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_32, sring_x86_32,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_x86_32_sring *sring_x86_32 =
-+			(struct blkif_x86_32_sring *)ring->blk_ring;
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_32, sring_x86_32,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		size = __RING_SIZE(sring_x86_32, XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	case BLKIF_PROTOCOL_X86_64:
- 	{
--		struct blkif_x86_64_sring *sring_x86_64;
--		sring_x86_64 = (struct blkif_x86_64_sring *)ring->blk_ring;
--		BACK_RING_INIT(&ring->blk_rings.x86_64, sring_x86_64,
--			       XEN_PAGE_SIZE * nr_grefs);
-+		struct blkif_x86_64_sring *sring_x86_64 =
-+			(struct blkif_x86_64_sring *)ring->blk_ring;
-+
-+		BACK_RING_ATTACH(&ring->blk_rings.x86_64, sring_x86_64,
-+				 rsp_prod, XEN_PAGE_SIZE * nr_grefs);
-+		size = __RING_SIZE(sring_x86_64, XEN_PAGE_SIZE * nr_grefs);
- 		break;
- 	}
- 	default:
- 		BUG();
- 	}
- 
-+	err = -EIO;
-+	if (req_prod - rsp_prod > size)
-+		goto fail;
-+
- 	err = bind_interdomain_evtchn_to_irqhandler(blkif->domid, evtchn,
- 						    xen_blkif_be_int, 0,
- 						    "blkif-backend", ring);
--	if (err < 0) {
--		xenbus_unmap_ring_vfree(blkif->be->dev, ring->blk_ring);
--		ring->blk_rings.common.sring = NULL;
--		return err;
--	}
-+	if (err < 0)
-+		goto fail;
- 	ring->irq = err;
- 
- 	return 0;
-+
-+fail:
-+	xenbus_unmap_ring_vfree(blkif->be->dev, ring->blk_ring);
-+	ring->blk_rings.common.sring = NULL;
-+	return err;
- }
- 
- static int xen_blkif_disconnect(struct xen_blkif *blkif)
-@@ -1131,7 +1150,8 @@ static struct xenbus_driver xen_blkbk_driver = {
- 	.ids  = xen_blkbk_ids,
- 	.probe = xen_blkbk_probe,
- 	.remove = xen_blkbk_remove,
--	.otherend_changed = frontend_changed
-+	.otherend_changed = frontend_changed,
-+	.allow_rebind = true,
- };
- 
- int xen_blkif_xenbus_init(void)
+ 	AA_BUG(!str && size != 0);
+ 	AA_BUG(!label);
 -- 
 2.20.1
 
