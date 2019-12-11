@@ -2,215 +2,400 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA790C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6ECC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8A2122527
+	by mail.kernel.org (Postfix) with ESMTP id D5AC42467A
 	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 22:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="REHNdmQW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QH6Y79uz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfLKWeY (ORCPT
+        id S1727002AbfLKWe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 17:34:24 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36860 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfLKWeX (ORCPT
+        Wed, 11 Dec 2019 17:34:27 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:49836 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfLKWeX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 17:34:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vGBSifJsetdNrHa2+mZGq0HtV+U08W9ZitlOZKuQo7I=; b=REHNdmQWdBrywQ+956MJ3OXt+
-        VwE+pSXHaKHGBrlg9BgZ3a5D9C0JimC5JLdbAg9oSBBvELMbw9w7FNgigVnTV9GMdz7nP4kIfLZrU
-        jLUNtTr/+J5p2+cIXO3TkKmcezotusUuchSAvMj2rqPV++k1JKwCTB3HStyCXyz+Ft2226OEfa7sA
-        RoOccjjNMWrXVlDcE/WAwvVUxP/ejcmg8lC7PLDDeu9/asES5VJZxk/+HvVwbrC+hbZrhmamr6P3v
-        RcEAM1OAx+JFacogc09bt+6TwNDU2jDeOAD37ep0F4yqcXU9BKrduHqp/mkxbsd2BAxHQ/5CaatP9
-        fxsZv1Vbg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifAYd-0002ln-JZ; Wed, 11 Dec 2019 22:34:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B04D7300565;
-        Wed, 11 Dec 2019 23:32:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4344720120E46; Wed, 11 Dec 2019 23:34:07 +0100 (CET)
-Date:   Wed, 11 Dec 2019 23:34:07 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191211223407.GT2844@hirez.programming.kicks-ass.net>
-References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
- <20191121185303.GB199273@romley-ivt3.sc.intel.com>
- <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
- <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
- <20191122092555.GA4097@hirez.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
- <20191122203105.GE2844@hirez.programming.kicks-ass.net>
- <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
- <20191211175202.GQ2827@hirez.programming.kicks-ass.net>
- <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: by mail-pg1-f202.google.com with SMTP id u14so188610pgq.16
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:34:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=rC4tOR/kyk4ZUKAZPKvyfm3r2gY5Mo2Zi+lINXPmnEk=;
+        b=QH6Y79uzDJFjMEBU4pIPFpxWInfJ6MmN1WVAWvmffKlNMbRS+eOKJaxlgG+iG2kwYj
+         7FsOE7nMHjnA2gbsIcPvnc39QlufrmU4X0jyLD+zCmruy/ItG0BuDLLet28j+K0pgIOn
+         BtR0u+KHflzio54Kp//TN6EasCNzzX8SNpEJeJ8YVMC/irF4zY5TapiahabeCXsYyaOh
+         SvdCvuPkhkLsb3rXlImJz/tDXUXuRR33EzdD81Vhv8XvPWKy3ShxseVxnrFDdFcqwgfJ
+         YadJjFJurnsYcwgwct+9fxtPvnTcfx9m3vNvAZe3gtgoz4JtT1+WRdi9jtEwp0saDjeU
+         64kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=rC4tOR/kyk4ZUKAZPKvyfm3r2gY5Mo2Zi+lINXPmnEk=;
+        b=RWBgEI/k+Y5KGVmZygY7h6eC17DT9hxdh0bIR3E+RMLv3I0HbbUTHKtzsDUhmG4yJX
+         YJMWAW9VQFV0Ygi3bPxX4FFY3u+3PPWXj02XFYSWC0fQrMrr9360ozpUQJNyjkalcchM
+         as0yMKf+sybmXBEX3XL5GJIQ1dHD88LVhCwkceIWG+fYC7k3A4xXsUHsN3QGYIZl2x2r
+         sj0ZxuCKR0PVNi1hnc3y2YuKVyLGFOaT4aA/SaNsmC2XKg+ymRmnDTh4He+lBiIt87rR
+         0oy7hsChvWrz1JUB/q/kUZ1yNBDqcxhg5iHys4R2q356SfEPRlriVkPa6uNXcVFe/oIv
+         OLkg==
+X-Gm-Message-State: APjAAAV/r4fn3U4DP3tdbk+aGrHr3z5dW22xpwwCQ1I89werPolFAiiv
+        UTmOwfF5Ta9QSHwHGfw4ejQ7L/WTtjuM
+X-Google-Smtp-Source: APXvYqyhTi5l47eqFaFESWam56zAf22qT8vlJBx2CG2GmUyBNo1O5XvbDh2mPa3WijP8neWyEC3F6DqQTtiJ
+X-Received: by 2002:a63:5b0e:: with SMTP id p14mr7046671pgb.315.1576103662226;
+ Wed, 11 Dec 2019 14:34:22 -0800 (PST)
+Date:   Wed, 11 Dec 2019 14:33:35 -0800
+In-Reply-To: <20191211223344.165549-1-brianvv@google.com>
+Message-Id: <20191211223344.165549-3-brianvv@google.com>
+Mime-Version: 1.0
+References: <20191211223344.165549-1-brianvv@google.com>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v3 bpf-next 02/11] bpf: add generic support for lookup and
+ lookup_and_delete batch ops
+From:   Brian Vazquez <brianvv@google.com>
+To:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Brian Vazquez <brianvv@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>
+Cc:     Yonghong Song <yhs@fb.com>, Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:12:56AM -0800, Andy Lutomirski wrote:
-> On Wed, Dec 11, 2019 at 9:52 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Nov 22, 2019 at 01:23:30PM -0800, Andy Lutomirski wrote:
-> > > On Fri, Nov 22, 2019 at 12:31 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > >
-> > > > On Fri, Nov 22, 2019 at 05:48:14PM +0000, Luck, Tony wrote:
-> > > > > > When we use byte ops, we must consider the word as 4 independent
-> > > > > > variables. And in that case the later load might observe the lock-byte
-> > > > > > state from 3, because the modification to the lock byte from 4 is in
-> > > > > > CPU2's store-buffer.
-> > > > >
-> > > > > So we absolutely violate this with the optimization for constant arguments
-> > > > > to set_bit(), clear_bit() and change_bit() that are implemented as byte ops.
-> > > > >
-> > > > > So is code that does:
-> > > > >
-> > > > >       set_bit(0, bitmap);
-> > > > >
-> > > > > on one CPU. While another is doing:
-> > > > >
-> > > > >       set_bit(mybit, bitmap);
-> > > > >
-> > > > > on another CPU safe? The first operates on just one byte, the second  on 8 bytes.
-> > > >
-> > > > It is safe if all you care about is the consistency of that one bit.
-> > > >
-> > >
-> > > I'm still lost here.  Can you explain how one could write code that
-> > > observes an issue?  My trusty SDM, Vol 3 8.2.2 says "Locked
-> > > instructions have a total order."
-> >
-> > This is the thing I don't fully believe. Per this thread the bus-lock is
-> > *BAD* and not used for normal LOCK prefixed operations. But without the
-> > bus-lock it becomes very hard to guarantee total order.
-> >
-> > After all, if some CPU doesn't observe a specific variable, it doesn't
-> > care where in the order it fell. So I'm thinking they punted and went
-> > with some partial order that is near enough that it becomes very hard to
-> > tell the difference the moment you actually do observe stuff.
-> 
-> I hope that, if the SDM is indeed wrong, that Intel would fix the SDM.
-> It's definitely not fun to try to understand locking if we don't trust
-> the manual.
+This commit introduces generic support for the bpf_map_lookup_batch and
+bpf_map_lookup_and_delete_batch ops. This implementation can be used by
+almost all the bpf maps since its core implementation is relying on the
+existing map_get_next_key, map_lookup_elem and map_delete_elem
+functions. The bpf syscall subcommands introduced are:
 
-I can try and find a HW person; but getting the SDM updated is
-difficult.
+  BPF_MAP_LOOKUP_BATCH
+  BPF_MAP_LOOKUP_AND_DELETE_BATCH
 
-Anyway, the way I see it, it is a scalability thing. Absolute total
-order is untenable, it cannot be, it would mean that if you have your 16
-socket 20 core system with hyperthreads, and each logical CPU doing a
-LOCK prefix instruction on a separate page, they all 640 need to sit
-down and discuss who goes first.
+The UAPI attribute is:
 
-Some sort of partial order that connects where variables/lines are
-actually shared is needed. Then again, I'm not a HW person, just a poor
-sod trying to understand how this can work.
+  struct { /* struct used by BPF_MAP_*_BATCH commands */
+         __aligned_u64   in_batch;       /* start batch,
+                                          * NULL to start from beginning
+                                          */
+         __aligned_u64   out_batch;      /* output: next start batch */
+         __aligned_u64   keys;
+         __aligned_u64   values;
+         __u32           count;          /* input/output:
+                                          * input: # of key/value
+                                          * elements
+                                          * output: # of filled elements
+                                          */
+         __u32           map_fd;
+         __u64           elem_flags;
+         __u64           flags;
+  } batch;
 
-> > Sure, but we're talking two cpus here.
-> >
-> >         u32 var = 0;
-> >         u8 *ptr = &var;
-> >
-> >         CPU0                    CPU1
-> >
-> >                                 xchg(ptr, 1)
-> >
-> >         xchg((ptr+1, 1);
-> >         r = READ_ONCE(var);
-> >
-> > AFAICT nothing guarantees r == 0x0101. The CPU1 store can be stuck in
-> > CPU1's store-buffer. CPU0's xchg() does not overlap and therefore
-> > doesn't force a snoop or forward.
-> 
-> I think I don't quite understand.  The final value of var had better
-> be 0x0101 or something is severely wrong.  
+in_batch/out_batch are opaque values use to communicate between
+user/kernel space, in_batch/out_batch must be of key_size length.
 
-> But r can be 0x0100 because
-> nothing in this example guarantees that the total order of the locked
-> instructions has CPU 1's instruction first.
+To start iterating from the beginning in_batch must be null,
+count is the # of key/value elements to retrieve. Note that the 'keys'
+buffer must be a buffer of key_size * count size and the 'values' buffer
+must be value_size * count, where value_size must be aligned to 8 bytes
+by userspace if it's dealing with percpu maps. 'count' will contain the
+number of keys/values successfully retrieved. Note that 'count' is an
+input/output variable and it can contain a lower value after a call.
 
-Assuming CPU1 goes first, why would the load from CPU0 see CPU1's
-ptr[0]? It can be in CPU1 store buffer, and TSO allows regular reads to
-ignore (remote) store-buffers.
+If there's no more entries to retrieve, ENOENT will be returned. If error
+is ENOENT, count might be > 0 in case it copied some values but there were
+no more entries to retrieve.
 
-> > From the perspective of the LOCK prefixed instructions CPU0 never
-> > observes the variable @ptr. And therefore doesn't need to provide order.
-> 
-> I suspect that the implementation works on whole cache lines for
-> everything except the actual store buffer entries, which would mean
-> that CPU 0 does think it observed ptr[0].
+Note that if the return code is an error and not -EFAULT,
+count indicates the number of elements successfully processed.
 
-Quite possible, but consider SMT where each thread has its own
-store-buffer. Then the core owns the line, but the value is still not
-visible.
+Suggested-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Brian Vazquez <brianvv@google.com>
+Signed-off-by: Yonghong Song <yhs@fb.com>
+---
+ include/linux/bpf.h      |  11 +++
+ include/uapi/linux/bpf.h |  19 +++++
+ kernel/bpf/syscall.c     | 172 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 202 insertions(+)
 
-I don't know if they want to tie down those semantics.
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 35903f148be59..a16f209255a59 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -43,6 +43,11 @@ struct bpf_map_ops {
+ 	int (*map_get_next_key)(struct bpf_map *map, void *key, void *next_key);
+ 	void (*map_release_uref)(struct bpf_map *map);
+ 	void *(*map_lookup_elem_sys_only)(struct bpf_map *map, void *key);
++	int (*map_lookup_batch)(struct bpf_map *map, const union bpf_attr *attr,
++				union bpf_attr __user *uattr);
++	int (*map_lookup_and_delete_batch)(struct bpf_map *map,
++					   const union bpf_attr *attr,
++					   union bpf_attr __user *uattr);
+ 
+ 	/* funcs callable from userspace and from eBPF programs */
+ 	void *(*map_lookup_elem)(struct bpf_map *map, void *key);
+@@ -838,6 +843,12 @@ void *bpf_map_area_alloc(u64 size, int numa_node);
+ void *bpf_map_area_mmapable_alloc(u64 size, int numa_node);
+ void bpf_map_area_free(void *base);
+ void bpf_map_init_from_attr(struct bpf_map *map, union bpf_attr *attr);
++int  generic_map_lookup_batch(struct bpf_map *map,
++			      const union bpf_attr *attr,
++			      union bpf_attr __user *uattr);
++int  generic_map_lookup_and_delete_batch(struct bpf_map *map,
++					 const union bpf_attr *attr,
++					 union bpf_attr __user *uattr);
+ 
+ extern int sysctl_unprivileged_bpf_disabled;
+ 
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index dbbcf0b02970b..36d3b885ddedd 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -107,6 +107,8 @@ enum bpf_cmd {
+ 	BPF_MAP_LOOKUP_AND_DELETE_ELEM,
+ 	BPF_MAP_FREEZE,
+ 	BPF_BTF_GET_NEXT_ID,
++	BPF_MAP_LOOKUP_BATCH,
++	BPF_MAP_LOOKUP_AND_DELETE_BATCH,
+ };
+ 
+ enum bpf_map_type {
+@@ -403,6 +405,23 @@ union bpf_attr {
+ 		__u64		flags;
+ 	};
+ 
++	struct { /* struct used by BPF_MAP_*_BATCH commands */
++		__aligned_u64	in_batch;	/* start batch,
++						 * NULL to start from beginning
++						 */
++		__aligned_u64	out_batch;	/* output: next start batch */
++		__aligned_u64	keys;
++		__aligned_u64	values;
++		__u32		count;		/* input/output:
++						 * input: # of key/value
++						 * elements
++						 * output: # of filled elements
++						 */
++		__u32		map_fd;
++		__u64		elem_flags;
++		__u64		flags;
++	} batch;
++
+ 	struct { /* anonymous struct used by BPF_PROG_LOAD command */
+ 		__u32		prog_type;	/* one of enum bpf_prog_type */
+ 		__u32		insn_cnt;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 2530266fa6477..708aa89fe2308 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -1206,6 +1206,120 @@ static int map_get_next_key(union bpf_attr *attr)
+ 	return err;
+ }
+ 
++#define MAP_LOOKUP_RETRIES 3
++
++static int __generic_map_lookup_batch(struct bpf_map *map,
++				      const union bpf_attr *attr,
++				      union bpf_attr __user *uattr,
++				      bool do_delete)
++{
++	void __user *ubatch = u64_to_user_ptr(attr->batch.in_batch);
++	void __user *uobatch = u64_to_user_ptr(attr->batch.out_batch);
++	void __user *values = u64_to_user_ptr(attr->batch.values);
++	void __user *keys = u64_to_user_ptr(attr->batch.keys);
++	void *buf, *prev_key, *key, *value;
++	u32 value_size, cp, max_count;
++	bool first_key = false;
++	int err, retry = MAP_LOOKUP_RETRIES;
++
++	if (attr->batch.elem_flags & ~BPF_F_LOCK)
++		return -EINVAL;
++
++	if ((attr->batch.elem_flags & BPF_F_LOCK) &&
++	    !map_value_has_spin_lock(map))
++		return -EINVAL;
++
++	value_size = bpf_map_value_size(map);
++
++	max_count = attr->batch.count;
++	if (!max_count)
++		return 0;
++
++	buf = kmalloc(map->key_size + value_size, GFP_USER | __GFP_NOWARN);
++	if (!buf)
++		return -ENOMEM;
++
++	err = -EFAULT;
++	first_key = false;
++	if (ubatch && copy_from_user(buf, ubatch, map->key_size))
++		goto free_buf;
++	key = buf;
++	value = key + map->key_size;
++	if (!ubatch) {
++		prev_key = NULL;
++		first_key = true;
++	}
++
++	for (cp = 0; cp < max_count;) {
++		if (cp || first_key) {
++			rcu_read_lock();
++			err = map->ops->map_get_next_key(map, prev_key, key);
++			rcu_read_unlock();
++			if (err)
++				break;
++		}
++		err = bpf_map_copy_value(map, key, value,
++					 attr->batch.elem_flags, do_delete);
++
++		if (err == -ENOENT) {
++			if (retry) {
++				retry--;
++				continue;
++			}
++			err = -EINTR;
++			break;
++		}
++
++		if (err)
++			goto free_buf;
++
++		if (copy_to_user(keys + cp * map->key_size, key,
++				 map->key_size)) {
++			err = -EFAULT;
++			goto free_buf;
++		}
++		if (copy_to_user(values + cp * value_size, value, value_size)) {
++			err = -EFAULT;
++			goto free_buf;
++		}
++
++		prev_key = key;
++		retry = MAP_LOOKUP_RETRIES;
++		cp++;
++	}
++
++	if (!err) {
++		rcu_read_lock();
++		err = map->ops->map_get_next_key(map, prev_key, key);
++		rcu_read_unlock();
++	}
++
++	if (err)
++		memset(key, 0, map->key_size);
++
++	if ((copy_to_user(&uattr->batch.count, &cp, sizeof(cp)) ||
++		    (copy_to_user(uobatch, key, map->key_size))))
++		err = -EFAULT;
++
++free_buf:
++	kfree(buf);
++	return err;
++}
++
++int generic_map_lookup_batch(struct bpf_map *map,
++			     const union bpf_attr *attr,
++			     union bpf_attr __user *uattr)
++{
++	return __generic_map_lookup_batch(map, attr, uattr, false);
++}
++
++int generic_map_lookup_and_delete_batch(struct bpf_map *map,
++					const union bpf_attr *attr,
++					union bpf_attr __user *uattr)
++{
++	return __generic_map_lookup_batch(map, attr, uattr, true);
++}
++
+ #define BPF_MAP_LOOKUP_AND_DELETE_ELEM_LAST_FIELD value
+ 
+ static int map_lookup_and_delete_elem(union bpf_attr *attr)
+@@ -3046,6 +3160,57 @@ static int bpf_task_fd_query(const union bpf_attr *attr,
+ 	return err;
+ }
+ 
++#define BPF_MAP_BATCH_LAST_FIELD batch.flags
++
++#define BPF_DO_BATCH(fn)			\
++	do {					\
++		if (!fn) {			\
++			err = -ENOTSUPP;	\
++			goto err_put;		\
++		}				\
++		err = fn(map, attr, uattr);	\
++	} while (0)
++
++static int bpf_map_do_batch(const union bpf_attr *attr,
++			    union bpf_attr __user *uattr,
++			    int cmd)
++{
++	struct bpf_map *map;
++	int err, ufd;
++	struct fd f;
++
++	if (CHECK_ATTR(BPF_MAP_BATCH))
++		return -EINVAL;
++
++	ufd = attr->batch.map_fd;
++	f = fdget(ufd);
++	map = __bpf_map_get(f);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	if ((cmd == BPF_MAP_LOOKUP_BATCH ||
++	     cmd == BPF_MAP_LOOKUP_AND_DELETE_BATCH) &&
++	    !(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
++		err = -EPERM;
++		goto err_put;
++	}
++
++	if (cmd != BPF_MAP_LOOKUP_BATCH &&
++	    !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
++		err = -EPERM;
++		goto err_put;
++	}
++
++	if (cmd == BPF_MAP_LOOKUP_BATCH)
++		BPF_DO_BATCH(map->ops->map_lookup_batch);
++	else
++		BPF_DO_BATCH(map->ops->map_lookup_and_delete_batch);
++
++err_put:
++	fdput(f);
++	return err;
++}
++
+ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
+ {
+ 	union bpf_attr attr = {};
+@@ -3143,6 +3308,13 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
+ 	case BPF_MAP_LOOKUP_AND_DELETE_ELEM:
+ 		err = map_lookup_and_delete_elem(&attr);
+ 		break;
++	case BPF_MAP_LOOKUP_BATCH:
++		err = bpf_map_do_batch(&attr, uattr, BPF_MAP_LOOKUP_BATCH);
++		break;
++	case BPF_MAP_LOOKUP_AND_DELETE_BATCH:
++		err = bpf_map_do_batch(&attr, uattr,
++				       BPF_MAP_LOOKUP_AND_DELETE_BATCH);
++		break;
+ 	default:
+ 		err = -EINVAL;
+ 		break;
+-- 
+2.24.1.735.g03f4e72817-goog
 
-> > Note how the READ_ONCE() is a normal load on CPU0, and per the rules is
-> > only forced to happen after it's own LOCK prefixed instruction, but it
-> > is free to observe ptr[0,2,3] from before, only ptr[1] will be forwarded
-> > from its own store-buffer.
-> >
-> > This is exactly the one reorder TSO allows.
-> 
-> If so, then our optimized smp_mb() has all kinds of problems, no?
-
-Why? All smp_mb() guarantees is order between two memops and it does
-that just fine.
-
-> > Did this clarify, or confuse more?
-> 
-> Probably confuses more.
-
-Lets put it this way, the first approach has many questions and subtle
-points, the second approach must always work without question.
-
-> If you're actual concerned that the SDM is wrong, I think that roping
-> in some architects would be a good idea.
-
-I'll see what I can do, getting them to commit to something is always
-the hard part.
-
-> I still think that making set_bit() do 32-bit or smaller accesses is okay.
-
-Yes, that really should not be a problem. This whole subthread was more
-of a cautionary tale that it is not immediately obviously safe. And like
-I've said before, the bitops interface is across all archs, we must
-consider the weakest behaviour.
-
-Anyway, we considered these things when we did
-clear_bit_unlock_is_negative_byte(), and there is a reason we ended up
-with BIT(7), there is no way to slice up a byte.
