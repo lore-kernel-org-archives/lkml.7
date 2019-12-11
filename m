@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98129C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009A5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F26B208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDF72173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077985;
-	bh=NZwHU/3735iugvdYsyLllWoIe3H0BfykBG6HE1i6ty0=;
+	s=default; t=1576077990;
+	bh=bxchu0qrYflqAmDF3wnDWrczTqaHYpynd2lndRqnIO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGdo2HWl1gTOCibl0YzLQ7Eiv3rd8sMQVLs3wANmGL5XxoOimPpnPoH1Ee3WHScdw
-	 54Xnqjl6aU5Hvb/H8UX0EPxTk2M210Lb4CLZU5P7NwI6OEAFL7FSU//oM5NnMFhPvO
-	 msaknLEX6XEaQu76htM4EruXMyoLzwoZxdDykl8g=
+	b=I2PJVBTzuhKe1mmtZP7szuEKFsX67CCbYIn/5ukTCaYp14E5aZfMURYOHgXpTS43K
+	 rgW8DX3Nxu1jEtzPvVDCVSPAWVsJt8XYZKJssWHukJZCXFFY9WB2tM/vfR1GFmHhdy
+	 d2VyJruKtrCOxoClrmoC9KsarLVdypnXBNx1vCY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbfLKP0Y (ORCPT
+        id S1732991AbfLKP03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59592 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732965AbfLKP0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:21 -0500
+        id S1732983AbfLKP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAB4922527;
-        Wed, 11 Dec 2019 15:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C895E208C3;
+        Wed, 11 Dec 2019 15:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077981;
-        bh=NZwHU/3735iugvdYsyLllWoIe3H0BfykBG6HE1i6ty0=;
+        s=default; t=1576077986;
+        bh=bxchu0qrYflqAmDF3wnDWrczTqaHYpynd2lndRqnIO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iFcDxJvwJlx/qM/LZ2t3zvQgA2l0YiGVYXHBEFtUg2Ez/CbLZ9G5+OgFVdr5BPOZj
-         D03nhydvTqDXSe/0vyO8DKQRXhnwB89OgolSNUnEE2GuQuWyXmne4uoBFLHEqF2Iju
-         AfON8ESlLyam9CYiV30YnFvWSjR4BWPZhiNMtvIg=
+        b=b4YT1Qk7gbUndX5Id9+xBPlhmRYT49nTECXPvUmBO99XmSrNc2+1EjTHTWm0q+apB
+         V0UJpW6DhmrIsH6QzMmFjxTO6oITPWMJChzvmXatCruzjHyq4nus+y7/wJzgMYJtZ8
+         RWjyGD+HhE6bxDBCzO1XRfu8LVmqYm7oo0P+x/zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ayush Sawal <ayush.sawal@chelsio.com>,
-        Atul Gupta <atul.gupta@chelsio.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 231/243] crypto: af_alg - cast ki_complete ternary op to int
-Date:   Wed, 11 Dec 2019 16:06:33 +0100
-Message-Id: <20191211150354.927140672@linuxfoundation.org>
+Subject: [PATCH 4.19 233/243] crypto: ecdh - fix big endian bug in ECC library
+Date:   Wed, 11 Dec 2019 16:06:35 +0100
+Message-Id: <20191211150355.060433734@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,47 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ayush Sawal <ayush.sawal@chelsio.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 64e7f852c47ce99f6c324c46d6a299a5a7ebead9 upstream.
+commit f398243e9fd6a3a059c1ea7b380c40628dbf0c61 upstream.
 
-when libkcapi test is executed  using HW accelerator, cipher operation
-return -74.Since af_alg_async_cb->ki_complete treat err as unsigned int,
-libkcapi receive 429467222 even though it expect -ve value.
+The elliptic curve arithmetic library used by the EC-DH KPP implementation
+assumes big endian byte order, and unconditionally reverses the byte
+and word order of multi-limb quantities. On big endian systems, the byte
+reordering is not necessary, while the word ordering needs to be retained.
 
-Hence its required to cast resultlen to int so that proper
-error is returned to libkcapi.
+So replace the __swab64() invocation with a call to be64_to_cpu() which
+should do the right thing for both little and big endian builds.
 
-AEAD one shot non-aligned test 2(libkcapi test)
-./../bin/kcapi   -x 10   -c "gcm(aes)" -i 7815d4b06ae50c9c56e87bd7
--k ea38ac0c9b9998c80e28fb496a2b88d9 -a
-"853f98a750098bec1aa7497e979e78098155c877879556bb51ddeb6374cbaefc"
--t "c4ce58985b7203094be1d134c1b8ab0b" -q
-"b03692f86d1b8b39baf2abb255197c98"
-
-Fixes: d887c52d6ae4 ("crypto: algif_aead - overhaul memory management")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
-Signed-off-by: Atul Gupta <atul.gupta@chelsio.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Ayush Sawal <ayush.sawal@chelsio.com>
+Fixes: 3c4b23901a0c ("crypto: ecdh - Add ECDH software support")
+Cc: <stable@vger.kernel.org> # v4.9+
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/af_alg.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/ecc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -1058,7 +1058,7 @@ void af_alg_async_cb(struct crypto_async
- 	af_alg_free_resources(areq);
- 	sock_put(sk);
+--- a/crypto/ecc.c
++++ b/crypto/ecc.c
+@@ -906,10 +906,11 @@ static void ecc_point_mult(struct ecc_po
+ static inline void ecc_swap_digits(const u64 *in, u64 *out,
+ 				   unsigned int ndigits)
+ {
++	const __be64 *src = (__force __be64 *)in;
+ 	int i;
  
--	iocb->ki_complete(iocb, err ? err : resultlen, 0);
-+	iocb->ki_complete(iocb, err ? err : (int)resultlen, 0);
+ 	for (i = 0; i < ndigits; i++)
+-		out[i] = __swab64(in[ndigits - 1 - i]);
++		out[i] = be64_to_cpu(src[ndigits - 1 - i]);
  }
- EXPORT_SYMBOL_GPL(af_alg_async_cb);
  
+ static int __ecc_is_key_valid(const struct ecc_curve *curve,
 
 
