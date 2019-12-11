@@ -2,108 +2,105 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C28C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87C7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D208F2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AE82073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:21:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C3TuCfZd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g70pc2ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbfLKQVk (ORCPT
+        id S1730383AbfLKQVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:21:40 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58682 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728912AbfLKQVk (ORCPT
+        Wed, 11 Dec 2019 11:21:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:46738 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728912AbfLKQVl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:21:40 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBGKFu9192781;
-        Wed, 11 Dec 2019 16:21:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2019-08-05; bh=G27KAk8ihnmv3NRbezvk5s4f+TPhwlFY9bBYBGkptkI=;
- b=C3TuCfZdTRu5ekdce+Ah8NfvYt9ss0krj1FEG9EL7YnxnmmxwemUA28+pjyEFgpQLjsK
- 4+Cmx1ijbkz4tYn6/HmUO8SK4u7c2Vm/bjMp5QLyr3dHSl1obvNg/f0iBurhvVv4BCI+
- SqjCWOkTqJtUfYM88zChNxCdQoJDelVGtQFHYOkOiIR2lnz0C4/ZZHOL2ndnjnDNydIW
- G45qcUyvjSLsVxlGoRl+WJWjnem99uypUvST4xZCz+aN0tuQPJLa1dD6mZ+40H2wZ7w0
- I+Y1gOO/touqpVO9pHDpA9BGzdXY0pR88bxe32/Vm/tXJogDxehPd9QzUBH2trAZIGUX OQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2wrw4nahg9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 16:21:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBGF0BS134105;
-        Wed, 11 Dec 2019 16:21:30 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2wtqgc16ug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 16:21:29 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBBGLSN1001046;
-        Wed, 11 Dec 2019 16:21:29 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Dec 2019 08:21:28 -0800
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH] padata: update documentation file path in MAINTAINERS
-Date:   Wed, 11 Dec 2019 11:21:20 -0500
-Message-Id: <20191211162120.1007580-1-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 11 Dec 2019 11:21:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AxXuRP6SlO9EYVZsfKYGZTNvOdQRf3h3gzU4Dl8Nq0c=; b=g70pc2kei6mVg+B+h8YjfbGsg
+        mKZeb9t1jKfZKM8HyZWZkFBrKwtlXP8G4ceGlsVyVyzF9AO00JejYenmo4XxrsHfPrw/FSXvisxwb
+        bRiYSzfAhuRtD8shFf9H0KixFRC5QCTuik++EKIAO9xodk1ljCFZEYfSAZb6bS2dBWrmjAosXs3cQ
+        JoYQU3cmJJn1We/+FfugqqzCOVtaKCZnlJa7NDbLXbRkG2tRTu1twvygzBaq10Y/rldyBVDHHr4RK
+        AMMG5jNnzRd16N026VBWH2/TrzhTMgPf1g8Yr1lMDQjJMaql49Ap7FzgjsZhfXmL4BXjMoTpfXX1r
+        UrGFDzjhA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1if4k7-0006LN-OM; Wed, 11 Dec 2019 16:21:39 +0000
+Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
+To:     dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Btrfs <linux-btrfs@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+References: <20191206135406.563336e7@canb.auug.org.au>
+ <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
+ <20191211134929.GL3929@twin.jikos.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
+Date:   Wed, 11 Dec 2019 08:21:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912110137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912110138
+In-Reply-To: <20191211134929.GL3929@twin.jikos.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's changed since the recent RST conversion.
+[oops, forgot to add Josh and PeterZ]
 
-Fixes: bfcdcef8c8e3 ("padata: update documentation")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 12/11/19 5:49 AM, David Sterba wrote:
+> On Fri, Dec 06, 2019 at 08:17:30AM -0800, Randy Dunlap wrote:
+>> On 12/5/19 6:54 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Please do not add any material for v5.6 to your linux-next included
+>>> trees until after v5.5-rc1 has been released.
+>>>
+>>> Changes since 20191204:
+>>>
+>>
+>> on x86_64:
+>>
+>> fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
+> 
+> Can somebody enlighten me what is one supposed to do to address the
+> warnings? Function names reported in the list contain our ASSERT macro
+> that conditionally calls BUG() that I believe is what could cause the
+> unreachable instructions but I don't see how.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/btrfs/ctree.h#n3113
+> 
+> __cold
+> static inline void assfail(const char *expr, const char *file, int line)
+> {
+> 	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
+> 		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
+> 		BUG();
+> 	}
+> }
+> 
+> #define ASSERT(expr)	\
+> 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8e9925328c6f..fecbfc35897c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12426,7 +12426,7 @@ L:	linux-crypto@vger.kernel.org
- S:	Maintained
- F:	kernel/padata.c
- F:	include/linux/padata.h
--F:	Documentation/padata.txt
-+F:	Documentation/core-api/padata.rst
- 
- PAGE POOL
- M:	Jesper Dangaard Brouer <hawk@kernel.org>
+
 -- 
-2.24.0
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
