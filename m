@@ -2,37 +2,38 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF525C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C95AC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0BE920578
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606D020578
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="aIqzyFzw"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ZhH62Fng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfLKXxZ (ORCPT
+        id S1727265AbfLKXxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:53:25 -0500
-Received: from mout.web.de ([217.72.192.78]:51499 "EHLO mout.web.de"
+        Wed, 11 Dec 2019 18:53:30 -0500
+Received: from mout.web.de ([217.72.192.78]:43621 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726932AbfLKXxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:53:24 -0500
+        id S1726932AbfLKXx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 18:53:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1576108386;
-        bh=SHwEKS5HfPBsQhvwUPeNKlfOw3SLEczu2hmisG7j3I0=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=aIqzyFzwBvAIkbawHJWO72Fzh/mqzDnJ47gjo+yrZ0emK3xg0COqzKQvdofPbG6W1
-         d7UTORKsKVPB8mlcfk9JMtDGKMUW+dFPP6LlKDo6mwJFdQ55GLNRf73sIIj++11RuN
-         PlgBQIehl0VmRhZV/cTxU5lHqFlyVkQsgnPN7mnU=
+        s=dbaedf251592; t=1576108398;
+        bh=K8Vc5xH9CLUyhrYV9Z9NpTgYitA6qCYeXvgl/cznLdk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ZhH62FngPLmTZ+IdrSHvMTvuAiMhumBY/SSyMoqsurhoPfd3fZXaEoxerGDMPlHjc
+         RGGgLowA8MYk0+FXeCMWwDc/e7/etUgg+Rm0lQGOXje99HVfuqJFRZLzVM4cvsk4c5
+         WNIBYFcBe6Huwt27d8GE4Fxc9fUdRatekxMjDJtc=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from localhost.localdomain ([89.204.139.166]) by smtp.web.de
  (mrweb101 [213.165.67.124]) with ESMTPSA (Nemesis) id
- 0LhNjo-1hshso0mnI-00mXj0; Thu, 12 Dec 2019 00:53:06 +0100
+ 0Lvjiy-1heUNt3nx6-017VQ6; Thu, 12 Dec 2019 00:53:18 +0100
 From:   Soeren Moch <smoch@web.de>
 To:     Kalle Valo <kvalo@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>
 Cc:     Soeren Moch <smoch@web.de>, linux-wireless@vger.kernel.org,
@@ -40,75 +41,60 @@ Cc:     Soeren Moch <smoch@web.de>, linux-wireless@vger.kernel.org,
         brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/9] brcmfmac: add support for BCM4359 SDIO chipset
-Date:   Thu, 12 Dec 2019 00:52:44 +0100
-Message-Id: <20191211235253.2539-1-smoch@web.de>
+Subject: [PATCH v2 8/9] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
+Date:   Thu, 12 Dec 2019 00:52:52 +0100
+Message-Id: <20191211235253.2539-9-smoch@web.de>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211235253.2539-1-smoch@web.de>
+References: <20191211235253.2539-1-smoch@web.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:wlune+MBVxnnPbtH/WJuKIHVW5Kt4Bh3x2TSi6jf84eE1oZeOVU
- dmIZckdKvEOp6T4MOEtvJQgRx77JwjPoOcGEySs5ql5yqY1cwslVBk26J6vh1rviiwMAuad
- k1NAwnKUmVgu/TQ6URsFElTL0U9+2DgdvYs6zDvLSawYziqCa9ESz6goH4pbemoW/JI1hWJ
- z0wb2ZsezZhRj/yGPwUfQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5h+qvYh+xgc=:yPWTesPFkaFZunR1Eod+lF
- 2qKdRZ6DCppLTdhLkqMCYqcFmh8UYXKNnRvrmKane6YZKwhFfqgEOFl/wkxwBd6/7wBoIqRGy
- M5W26qWzPxoBqkP1917hy1u72p+UuZdttRBNGM2iV/+xPXJ7XxnSQycad14nt73x6LMKLapY7
- SdsLP60IVD7h6kuu2E4pEXaI1kByLxetc3+DUaVkkYA8grZLbAp7faZZbFKO1TVIzS5aUAxeY
- eFgmLd4U4re5UZLqyd9YgKHj5x5KISZl8Me2v5CB9dvUeYmpHU5/YDkpdDUpThQ4CoeuzS+5g
- UMWMcGM1g7uNZd1t5QtF7nqf40zxtEukWAaPj4v2sUNAja7dryceVeaFddB9THb6/jx8rvDCv
- DWu/9wXZFD877mjmALV3pAWCH793Yf4DBwlSdszpRTiJC8IysS1FIA8NPLfhpD01VKk480Hc6
- M1XB/ydwHTCHMUOZeVHBNQ93h+9XBCkyri+v3ciXp09Z7h42XFiwkqZ874Iva0xa7Qr+o2w4k
- iYOweRTYoSsnKn8CaguvO+qrguwzvSm9ltwA9fyFctTLQv4yBW8WHBxVwPoZBky0qjGWwZDHB
- kACE+SY9SyxUUL+2Lc7SHZB3uenG7XO1A+8U/LGLdvT0O2NTw5J2coJNUONG2KLEwVjaCCy2Q
- +pBQbiKvDiKhUGfv6nUTtkbr9Xn9rfiI5yU7FadQKcnCpKudCGGqFcE4WzkGHLS0+RshMKfhi
- 60qRJZKqUe3/iQzBamiZmg8b4dpXKgil74k/F9tJcNTrLFbMh5sI6lBu0PHP5Pq5mUKR0i/nM
- f2/T/YeZmT9cmtduo6fhV719mFpRLw63HL2VLYsXT1nYkDFKa3aL/UF8gUETQWazXe0SqYEgv
- 1ojGnYZs7WH6VEwQRtDMMcOCxOk+lxKU8EI/TaazwCfDYtUl6W8ecsTta9ZHlNCnyITs2O55O
- C/34cfSS94RetB76ivOVnf/QPCDOHC15FSjuMjHfL4QyjsaQH2ntkqh91NsAb1rM0aiQ8zYzO
- h+n05fHcVMzuByU/O94zRRwLjgHKjvD1PbNT4e5WWazigCvn1NBbA1yOkOkhknZ7QDJR0dNYF
- nYckdKT5YEsrgvE+3Wl5fb9II3K9SLV45+YjpNHQR6/WltwL8ceJ2ZGHXPQO6tmg6Sn7ZOIyD
- Hcu79rZlBnFVFLxRz1X6kWQbSkBool9oS21KSLY1AT637q30RFrPBmZUwe5Bc7+xMnZfPMAlz
- grHTBdSenszURSwg2PPqMcX8zA22rNMMdZ/RAzA==
+X-Provags-ID: V03:K1:L21aj6hQ1G9ozqVXJyR+jL3/TO5bynJLSxDfhNGSe1Rw8oAm7Wh
+ SVbp+ikLF/2EPn0nZmcvm5YIG1HCByn4xEDa6rPlPUysF3CFVxpvW50QQTgeJolHioJK8a+
+ vdtFIORtgibmAbPh71fTBffw+MK2aNpzNorAtB3WPMz41+9VonHT7at7a9EV1JZncEZYKD9
+ RngAU5nMIJf2AKSkXN0KA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YSBqNQLYU1g=:j8cAXIxiWNNd35q6LT3OgX
+ GeM/7AHZpfcEVoLkEe0tdIkPDboYEbx/M6sCY/dFFjl/xi5QWOsUGg5Mtl9vpb3w8V61El126
+ 6ciCK/PWyuYSXsg5t5NKcZNeP6zqNDAu6w6NBnWjC1YPkMSCaMLmXCENzVoxQTm5XiV2KtbKa
+ hlt/w9GlUq9hBprFAIsIQEamSJ6LTXNfbVm21xplliLvq0qQw1wKEoEh9OQMcVdDARFOUvhQw
+ ONmNaMTaTQ0zy3RN1lEKVCHcmykRAnmPKlwRULsUy6b3NG/J04bDlSSp/5311GpYSRI8TCTHp
+ 9WrHbOdmI9sV/Oq6TAapfArLVtA7SySEELnaaA/It6/YyyIzqkm5ah24+1rrvFy5uKx2UdZIg
+ +RC5KFBVqGkUN8gLqZrJgg6xb3gsLJgYPecb0Q9az1mZjoqH90hyUDsofJGDFkJ101FQwYfcx
+ 3G2941vByhX8BLwnpI3Z4NmUqe4kk/JNuV5zzoShWAhKgPQcnxv3HfFq5gozRJGQQslgQlWrJ
+ VEIAv0fvnCWyKkIGuoJhSiqLKScs5BoGqrhpkAcJQ8N8Wt3Q+hLsoEMw0tCXz8FXbp1iScb1c
+ ZAEbXhR/9ekLXIEQJI2wQYahmWk8+l/lN76Nka4NLxxXds4RsHT8hWBbvDKtCSC98KJRdN9VW
+ b2bUPH129AepFZWXvVbDJE9VlTg48F4b2J/bEk3uwgvdoPlMArK2NV+i5p9gYQp8vpH9Bz+ab
+ lVQn7AGzRcroUWIr/SjYVm58CRjtTXR4w1LP5q4jDl0wzZULOMDgH1l9vVgTtjIcDhUO0tGD/
+ FgJwFX6JpW7eyPltGaXd3oxs3wPuNPaeJuRwI/59N9TViAzNpNjuwTQQRxZCvIOTXXw6Ijx+i
+ dIyyAZyTFUTjKJxqCharuCPksb49t5hXGDWd/4H8zhr05gldjjNXJyGFLQiCcGUoTwKtj4WMO
+ 8vjeAgaV1S5ZrCyZ/phs4zowE5RI9e/SK5of3G3rnuO+LnorAm1C9zU0vO+FBh5m96e1AhNN6
+ 8rxHhOolIq5XgOCLE+LY4FGU2LrkWy6N88hYlH+S9wxT+e1YMJ2D8bT7ogEFOrRjnxUrKn6BO
+ 79fvSsbso36Q3YyJtWMP8mQ65M7FlfDE912iCJ2NJkZ4iejDoP6SVcXJAU6HEc7YUCp1cqt3+
+ iJFon6kjMAfrt4C1HCGRy50OtqZYYXkeu5FeVrrvuk9+r8u2vT8v/Oq0aRQLoyg0MESknOIQQ
+ f14pcRgZltqtlGM4+1o8kmNR/eYGRFzOoLYk//Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the BCM4359 chipset with SDIO interface and RSDB support
-to the brcmfmac wireless network driver in patches 1-7.
+RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
+The BCM4359/9 wifi controller in this module is connected to sdio0,
+enable this interface.
 
-Enhance devicetree of the RockPro64 arm64/rockchip board to use an
-AP6359SA based wifi/bt combo module with this chipset in patches 8-9.
+Use the in-band sdio irq instead of the out-of-band wifi_host_wake_l
+signal since the latter is not working reliably on this board (probably
+due to it's PCIe WAKE# connection).
 
-
-Chung-Hsien Hsu (1):
-  brcmfmac: set F2 blocksize and watermark for 4359
-
-Soeren Moch (5):
-  brcmfmac: fix rambase for 4359/9
-  brcmfmac: make errors when setting roaming parameters non-fatal
-  brcmfmac: add support for BCM4359 SDIO chipset
-  arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-  arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
-
-Wright Feng (3):
-  brcmfmac: reset two D11 cores if chip has two D11 cores
-  brcmfmac: add RSDB condition when setting interface combinations
-  brcmfmac: not set mbss in vif if firmware does not support MBSS
-
- .../boot/dts/rockchip/rk3399-rockpro64.dts    | 50 +++++++++++---
- .../broadcom/brcm80211/brcmfmac/bcmsdh.c      |  8 ++-
- .../broadcom/brcm80211/brcmfmac/cfg80211.c    | 68 +++++++++++++++----
- .../broadcom/brcm80211/brcmfmac/chip.c        | 54 ++++++++++++++-
- .../broadcom/brcm80211/brcmfmac/chip.h        |  1 +
- .../broadcom/brcm80211/brcmfmac/pcie.c        |  2 +-
- .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 +++++
- include/linux/mmc/sdio_ids.h                  |  2 +
- 8 files changed, 176 insertions(+), 26 deletions(-)
-
+Signed-off-by: Soeren Moch <smoch@web.de>
 =2D--
-Cc: Kalle Valo <kvalo@codeaurora.org>
+changes in v2:
+- add comment about irq in commit message
+
+Not sure where to place exactly the sdio0 node in the dts because
+existing sd nodes are not sorted alphabetically.
+
 Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: linux-wireless@vger.kernel.org
 Cc: brcm80211-dev-list.pdl@broadcom.com
 Cc: brcm80211-dev-list@cypress.com
@@ -116,7 +102,50 @@ Cc: netdev@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-rockchip@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
+=2D--
+ .../boot/dts/rockchip/rk3399-rockpro64.dts    | 21 ++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm6=
+4/boot/dts/rockchip/rk3399-rockpro64.dts
+index 7f4b2eba31d4..9fa92790d6e0 100644
+=2D-- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+@@ -71,13 +71,6 @@
+ 		clock-names =3D "ext_clock";
+ 		pinctrl-names =3D "default";
+ 		pinctrl-0 =3D <&wifi_enable_h>;
+-
+-		/*
+-		 * On the module itself this is one of these (depending
+-		 * on the actual card populated):
+-		 * - SDIO_RESET_L_WL_REG_ON
+-		 * - PDN (power down when low)
+-		 */
+ 		reset-gpios =3D <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
+ 	};
+
+@@ -650,6 +643,20 @@
+ 	status =3D "okay";
+ };
+
++&sdio0 {
++	bus-width =3D <4>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	disable-wp;
++	keep-power-in-suspend;
++	mmc-pwrseq =3D <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	status =3D "okay";
++};
++
+ &sdmmc {
+ 	bus-width =3D <4>;
+ 	cap-sd-highspeed;
 =2D-
 2.17.1
 
