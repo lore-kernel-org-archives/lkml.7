@@ -2,158 +2,186 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C660FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6EBC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D9E24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C570924671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077270;
-	bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
+	s=default; t=1576077272;
+	bh=xZEIST2/HgaO23PjJOPNxsu/fBMAas1f2zAOn7G+6DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1tlKQkOmFQnJu4TQqwBg3P3uRTAgRuqwoaBbgSGqRfwABfQ9McTAGAjjSaJggeNf
-	 /h4PDrEel3tR79vtw/JN0KK/yOdsNPRhx4vmZHQpLcD62aYWbmhezTZ2aL/KUIr+TJ
-	 D/rbXZx2CJkyyK5nvuPlDhvGpZuqWkNLOrHp6X38=
+	b=rM0KjQRGXppV+yfhj9/Gj2rJzn3lsT7S+WtfbaQyqnNTcMTKzowSg6EfBEiS0CYMC
+	 PvQIwen1i50S8Zm6JJ2uZrCwYfwLZ6s25P+Cu5VNrj2gfEjc1xRlwhQnBsIzKTo6kU
+	 RdQtPqJBLr7y+8ej65PoYV96p/ciR0wZVM+Fk2Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730730AbfLKPO1 (ORCPT
+        id S1730953AbfLKPOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37488 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbfLKPNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:39 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731473AbfLKPNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:40 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD7F924654;
-        Wed, 11 Dec 2019 15:13:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCECD24671;
+        Wed, 11 Dec 2019 15:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077218;
-        bh=cics5kjVSYpYnPvKQuCF/mMDXQpUxK2EhuST2U+tfd8=;
+        s=default; t=1576077219;
+        bh=xZEIST2/HgaO23PjJOPNxsu/fBMAas1f2zAOn7G+6DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyQUmKIEChNWI/nzcaTRaSajjTC6bs99MUxAgH6cWN6XWzY3lriZWmMFnWQrP7bvb
-         RNbrvddKq0dDWo/IJXFtNJZKo6DSTiFcm1mCAzohvbrWHucDtcX7304MB+HS+eUD3l
-         V0k7fZIZwojzWE/Yh5dKJE0tc27t+kXj6gVIsCEQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Joerg Roedel <jroedel@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.3 062/105] x86/mm/32: Sync only to VMALLOC_END in vmalloc_sync_all()
-Date:   Wed, 11 Dec 2019 16:05:51 +0100
-Message-Id: <20191211150246.703073844@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=177v0ndSHPD3bhqUv0cl5y7e8rPw81zSssIaV4TeDrJ30badgNbLG9AAmyYupqsf6
+         8Uq0EJjssbm1jonWq3bhQC8t/bscK3zGyXTGF5c7QbMruS5KD4vAZmIy5Qv9NSXIGd
+         5+0Om9kTdVAgIz6KxQWdZt6NKeRJ4H3OePK53IwE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 5.4 099/134] f2fs: Fix deadlock in f2fs_gc() context during atomic files handling
+Date:   Wed, 11 Dec 2019 10:11:15 -0500
+Message-Id: <20191211151150.19073-99-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Sahitya Tummala <stummala@codeaurora.org>
 
-commit 9a62d20027da3164a22244d9f022c0c987261687 upstream.
+[ Upstream commit 677017d196ba2a4cfff13626b951cc9a206b8c7c ]
 
-The job of vmalloc_sync_all() is to help the lazy freeing of vmalloc()
-ranges: before such vmap ranges are reused we make sure that they are
-unmapped from every task's page tables.
+The FS got stuck in the below stack when the storage is almost
+full/dirty condition (when FG_GC is being done).
 
-This is really easy on pagetable setups where the kernel page tables
-are shared between all tasks - this is the case on 32-bit kernels
-with SHARED_KERNEL_PMD = 1.
+schedule_timeout
+io_schedule_timeout
+congestion_wait
+f2fs_drop_inmem_pages_all
+f2fs_gc
+f2fs_balance_fs
+__write_node_page
+f2fs_fsync_node_pages
+f2fs_do_sync_file
+f2fs_ioctl
 
-But on !SHARED_KERNEL_PMD 32-bit kernels this involves iterating
-over the pgd_list and clearing all pmd entries in the pgds that
-are cleared in the init_mm.pgd, which is the reference pagetable
-that the vmalloc() code uses.
+The root cause for this issue is there is a potential infinite loop
+in f2fs_drop_inmem_pages_all() for the case where gc_failure is true
+and when there an inode whose i_gc_failures[GC_FAILURE_ATOMIC] is
+not set. Fix this by keeping track of the total atomic files
+currently opened and using that to exit from this condition.
 
-In that context the current practice of vmalloc_sync_all() iterating
-until FIX_ADDR_TOP is buggy:
-
-        for (address = VMALLOC_START & PMD_MASK;
-             address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
-             address += PMD_SIZE) {
-                struct page *page;
-
-Because iterating up to FIXADDR_TOP will involve a lot of non-vmalloc
-address ranges:
-
-	VMALLOC -> PKMAP -> LDT -> CPU_ENTRY_AREA -> FIX_ADDR
-
-This is mostly harmless for the FIX_ADDR and CPU_ENTRY_AREA ranges
-that don't clear their pmds, but it's lethal for the LDT range,
-which relies on having different mappings in different processes,
-and 'synchronizing' them in the vmalloc sense corrupts those
-pagetable entries (clearing them).
-
-This got particularly prominent with PTI, which turns SHARED_KERNEL_PMD
-off and makes this the dominant mapping mode on 32-bit.
-
-To make LDT working again vmalloc_sync_all() must only iterate over
-the volatile parts of the kernel address range that are identical
-between all processes.
-
-So the correct check in vmalloc_sync_all() is "address < VMALLOC_END"
-to make sure the VMALLOC areas are synchronized and the LDT
-mapping is not falsely overwritten.
-
-The CPU_ENTRY_AREA and the FIXMAP area are no longer synced either,
-but this is not really a proplem since their PMDs get established
-during bootup and never change.
-
-This change fixes the ldt_gdt selftest in my setup.
-
-[ mingo: Fixed up the changelog to explain the logic and modified the
-         copying to only happen up until VMALLOC_END. ]
-
-Reported-by: Borislav Petkov <bp@suse.de>
-Tested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: hpa@zytor.com
-Fixes: 7757d607c6b3: ("x86/pti: Allow CONFIG_PAGE_TABLE_ISOLATION for x86_32")
-Link: https://lkml.kernel.org/r/20191126111119.GA110513@gmail.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fix-suggested-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/fault.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/f2fs.h    |  1 +
+ fs/f2fs/file.c    |  1 +
+ fs/f2fs/segment.c | 21 +++++++++++++++------
+ 3 files changed, 17 insertions(+), 6 deletions(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -197,7 +197,7 @@ void vmalloc_sync_all(void)
- 		return;
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index f078cd20dab88..9046432b87c2d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1289,6 +1289,7 @@ struct f2fs_sb_info {
+ 	unsigned int gc_mode;			/* current GC state */
+ 	unsigned int next_victim_seg[2];	/* next segment in victim section */
+ 	/* for skip statistic */
++	unsigned int atomic_files;              /* # of opened atomic file */
+ 	unsigned long long skipped_atomic_files[2];	/* FG_GC and BG_GC */
+ 	unsigned long long skipped_gc_rwsem;		/* FG_GC only */
  
- 	for (address = VMALLOC_START & PMD_MASK;
--	     address >= TASK_SIZE_MAX && address < FIXADDR_TOP;
-+	     address >= TASK_SIZE_MAX && address < VMALLOC_END;
- 	     address += PMD_SIZE) {
- 		struct page *page;
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 29bc0a542759a..8ed8e4328bd1a 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1890,6 +1890,7 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (list_empty(&fi->inmem_ilist))
+ 		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
++	sbi->atomic_files++;
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
  
-
+ 	/* add inode in inmem_list first and set atomic_file */
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 8087095814819..7d85784012678 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -288,6 +288,8 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
+ 	struct list_head *head = &sbi->inode_list[ATOMIC_FILE];
+ 	struct inode *inode;
+ 	struct f2fs_inode_info *fi;
++	unsigned int count = sbi->atomic_files;
++	unsigned int looped = 0;
+ next:
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (list_empty(head)) {
+@@ -296,22 +298,26 @@ next:
+ 	}
+ 	fi = list_first_entry(head, struct f2fs_inode_info, inmem_ilist);
+ 	inode = igrab(&fi->vfs_inode);
++	if (inode)
++		list_move_tail(&fi->inmem_ilist, head);
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+ 
+ 	if (inode) {
+ 		if (gc_failure) {
+-			if (fi->i_gc_failures[GC_FAILURE_ATOMIC])
+-				goto drop;
+-			goto skip;
++			if (!fi->i_gc_failures[GC_FAILURE_ATOMIC])
++				goto skip;
+ 		}
+-drop:
+ 		set_inode_flag(inode, FI_ATOMIC_REVOKE_REQUEST);
+ 		f2fs_drop_inmem_pages(inode);
++skip:
+ 		iput(inode);
+ 	}
+-skip:
+ 	congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 	cond_resched();
++	if (gc_failure) {
++		if (++looped >= count)
++			return;
++	}
+ 	goto next;
+ }
+ 
+@@ -327,13 +333,16 @@ void f2fs_drop_inmem_pages(struct inode *inode)
+ 		mutex_unlock(&fi->inmem_lock);
+ 	}
+ 
+-	clear_inode_flag(inode, FI_ATOMIC_FILE);
+ 	fi->i_gc_failures[GC_FAILURE_ATOMIC] = 0;
+ 	stat_dec_atomic_write(inode);
+ 
+ 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
+ 	if (!list_empty(&fi->inmem_ilist))
+ 		list_del_init(&fi->inmem_ilist);
++	if (f2fs_is_atomic_file(inode)) {
++		clear_inode_flag(inode, FI_ATOMIC_FILE);
++		sbi->atomic_files--;
++	}
+ 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
+ }
+ 
+-- 
+2.20.1
 
