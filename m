@@ -2,137 +2,148 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E64C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E100C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A90C6214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33521214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8UZouch"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dd8b1RBJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfLKN7h (ORCPT
+        id S1729749AbfLKOCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:59:37 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34541 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729513AbfLKN7h (ORCPT
+        Wed, 11 Dec 2019 09:02:45 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51464 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729600AbfLKOCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:59:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so24173867wrr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:59:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=STaNEtWndnwuAqqhmXVnDhNs+/7QG3rCPR52EQWWaas=;
-        b=H8UZouchmiK0Y13YNR0SwBb+PKetsAbTms3YnTspLwes/xLjaIGRijl06ZP9T/cWhL
-         eL0jssfAK++uUWsJ+aOMGrdnzq5QH1jQtnzTzB7dj1tfmDziq8+BoZkfyIlaxdyE9CCM
-         GhWR+kt0PNgI+E5NjbSENGvL/yWvUasNFalqQGuFTAFdKkC7vMpxIs0RUu9RsRN0lvuu
-         uH8cbM+Pt3j+q9QsbwWwSwa/iQB592ABHABHAEDd1WH8FCeLFHyQOdCaCqYOEyAhFTlU
-         P/ODSOaB2X7AKgLJo11KL20XSy761EVB73m9jR6fgcPYgmX0mTlkwrTkUagSHh22wNFG
-         qEYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=STaNEtWndnwuAqqhmXVnDhNs+/7QG3rCPR52EQWWaas=;
-        b=C1N4v/fz2eCmDlFHwmgpNneY1V41SRxtf01C3czB9mUuTeMdpgr7OgL4aVWSzvMx7A
-         KGhJOxiSo7DLPb5qaBzFLTy3F/RcPaPnd9EV2fnUCXH2wXMjeoX+V0pHyNCXszXRuQTE
-         sSkFR7TDTid59bNXDFszdDlUhZjOsV16jCmYSgYHKQwUMU1RnPOkxIe1h82XMe4PeD/T
-         kRFkssd3qr1iPjKkNJCAQ+PDm9fEecE0WCQQxKsp0fi+PGgrhZeVUiRzhHOe1X/puWt5
-         IWMCytDaJyNHTRLiggQ/EZJ10PoTr0MxlMGDXWKIQxafQzwTdO+ebVTez/S3eByfKah3
-         hNRQ==
-X-Gm-Message-State: APjAAAWjaYbdfFW05AuLyBru3L2ya0xsw2Etuub7ZzZxZOJTDSusnlyx
-        +06Nr6XCAPRhc6huV5BYIoWYtLVVqKvHBDZJukFlWg==
-X-Google-Smtp-Source: APXvYqxrnY22qG46E2qM1V+u18BpTO3sW9wSH/3ZXlho4UR4T0gYJ7K7pbXJtIkZxgRF9nLpKcVXc1X1jYSASiOVKoA=
-X-Received: by 2002:a5d:46c1:: with SMTP id g1mr3933196wrs.200.1576072774421;
- Wed, 11 Dec 2019 05:59:34 -0800 (PST)
+        Wed, 11 Dec 2019 09:02:44 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2e0r036936;
+        Wed, 11 Dec 2019 08:02:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576072960;
+        bh=uDZinYP+tljKpLKJb4EC544U5/jg1eapDUEu+O+3KtA=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Dd8b1RBJRehco4Q9yMAf3d0FB+QtDQ2Ns73Jd6qoXapRHAYSUH5xtTQmjlGbwhGNn
+         a/RZ7GxfhIZkyYVwcmGe5LeD+eVnnBHSSQRCxtycO0ss7DstcLdbaSjFN1JmAb8Uy7
+         6yLPFjdZ+ZFLDGbBGtmatSNSs4dJcSqQTjY64EsA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBE2eK3124485
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 08:02:40 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 08:02:39 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 08:02:39 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBE2afo007398;
+        Wed, 11 Dec 2019 08:02:39 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>,
+        <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 04/10] ARM: dts: dra7-l4: Add ti-sysc node for CAM
+Date:   Wed, 11 Dec 2019 08:05:52 -0600
+Message-ID: <20191211140558.10407-5-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211140558.10407-1-bparrot@ti.com>
+References: <20191211140558.10407-1-bparrot@ti.com>
 MIME-Version: 1.0
-References: <20191211133951.401933-1-arnd@arndb.de>
-In-Reply-To: <20191211133951.401933-1-arnd@arndb.de>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 11 Dec 2019 14:59:23 +0100
-Message-ID: <CAKv+Gu8yaz8uekq3taUaxWOs95yVB_tRaoKM0N2EBKSzWOhExw@mail.gmail.com>
-Subject: Re: [PATCH] gcc-plugins: make it possible to disable
- CONFIG_GCC_PLUGINS again
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Emese Revfy <re.emese@gmail.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Dec 2019 at 14:40, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I noticed that randconfig builds with gcc no longer produce a lot of
-> ccache hits, unlike with clang, and traced this back to plugins
-> now being enabled unconditionally if they are supported.
->
-> I am now working around this by adding
->
->    export CCACHE_COMPILERCHECK=/usr/bin/size -A %compiler%
->
-> to my top-level Makefile. This changes the heuristic that ccache uses
-> to determine whether the plugins are the same after a 'make clean'.
->
-> However, it also seems that being able to just turn off the plugins is
-> generally useful, at least for build testing it adds noticeable overhead
-> but does not find a lot of bugs additional bugs, and may be easier for
-> ccache users than my workaround.
->
-> Fixes: 9f671e58159a ("security: Create "kernel hardening" config area")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Add CAM nodes as a child of l4 interconnect in order for it to probe
+using ti-sysc.
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ arch/arm/boot/dts/dra7-l4.dtsi | 43 +++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 6 deletions(-)
 
-> ---
->  scripts/gcc-plugins/Kconfig | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/scripts/gcc-plugins/Kconfig b/scripts/gcc-plugins/Kconfig
-> index d33de0b9f4f5..e3569543bdac 100644
-> --- a/scripts/gcc-plugins/Kconfig
-> +++ b/scripts/gcc-plugins/Kconfig
-> @@ -14,8 +14,8 @@ config HAVE_GCC_PLUGINS
->           An arch should select this symbol if it supports building with
->           GCC plugins.
->
-> -config GCC_PLUGINS
-> -       bool
-> +menuconfig GCC_PLUGINS
-> +       bool "GCC plugins"
->         depends on HAVE_GCC_PLUGINS
->         depends on PLUGIN_HOSTCC != ""
->         default y
-> @@ -25,8 +25,7 @@ config GCC_PLUGINS
->
->           See Documentation/core-api/gcc-plugins.rst for details.
->
-> -menu "GCC plugins"
-> -       depends on GCC_PLUGINS
-> +if GCC_PLUGINS
->
->  config GCC_PLUGIN_CYC_COMPLEXITY
->         bool "Compute the cyclomatic complexity of a function" if EXPERT
-> @@ -113,4 +112,4 @@ config GCC_PLUGIN_ARM_SSP_PER_TASK
->         bool
->         depends on GCC_PLUGINS && ARM
->
-> -endmenu
-> +endif
-> --
-> 2.20.0
->
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 8fe428ac12d8..7f76411d2876 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -4166,27 +4166,58 @@
+ 		};
+ 
+ 		target-module@170000 {			/* 0x48970000, ap 21 0a.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x170010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&cam_clkctrl DRA7_CAM_VIP1_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x170000 0x10000>;
++			status = "disabled";
+ 		};
+ 
+ 		target-module@190000 {			/* 0x48990000, ap 23 2e.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x190010 0x4>;
++			reg-names = "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&cam_clkctrl DRA7_CAM_VIP2_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x190000 0x10000>;
++			status = "disabled";
+ 		};
+ 
+ 		target-module@1b0000 {			/* 0x489b0000, ap 25 34.0 */
+-			compatible = "ti,sysc";
+-			status = "disabled";
++			compatible = "ti,sysc-omap4", "ti,sysc";
++			reg = <0x1b0000 0x4>,
++			      <0x1b0010 0x4>;
++			reg-names = "rev", "sysc";
++			ti,sysc-midle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			clocks = <&cam_clkctrl DRA7_CAM_VIP3_CLKCTRL 0>;
++			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0x1b0000 0x10000>;
++			status = "disabled";
+ 		};
+ 
+ 		target-module@1d0010 {			/* 0x489d0000, ap 27 30.0 */
+-- 
+2.17.1
+
