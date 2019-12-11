@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C13C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69D7CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D0622B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332FC22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078998;
-	bh=PDsRs6kK6ApUSOtiuuvVKG/KuGHVGA3A1s0hsvqq5/E=;
+	s=default; t=1576079002;
+	bh=ri0OGVbclPidwpVADEMFyZrWsdGCtciQnFU1OrnLFe0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gDMjVjRpjwp+3SSH7eLvrf691YgufDJu8075H05I2Su8pPcN/GWCCdqFi/yTXNy2d
-	 rixTYyKaSdTZw2cMoeXdbrEHiKBwYsN0sHzEHL6d+Ho5WT/+Fu/YyVHjrRI0xW0jCn
-	 PoGzjsTfTLYoSVuPzS2KV60YuGnPxhB7/FGe/l0o=
+	b=TC3xl4di7x3xyA1sCx62sfY+s9SF0CWEeV3mjnSpww9Wkl/ZiVAFj55q3lKwUnwPV
+	 yBoAkF9xac1aRhyB5silKEogxxNs/K45HilMjys/tLo0bGMoMb85EYcJiQnqIUBHwk
+	 Gb98WMAyU6S6tEpfXxsat+UJaE0feHebe/WBk0KY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387797AbfLKPnO (ORCPT
+        id S2388741AbfLKPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:43:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:35554 "EHLO foss.arm.com"
+        Wed, 11 Dec 2019 10:43:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:35634 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388698AbfLKPnJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:43:09 -0500
+        id S1731277AbfLKPnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:43:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28A7130E;
-        Wed, 11 Dec 2019 07:43:08 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB6A71007;
+        Wed, 11 Dec 2019 07:43:15 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 75FC63F52E;
-        Wed, 11 Dec 2019 07:43:07 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 448323F52E;
+        Wed, 11 Dec 2019 07:43:15 -0800 (PST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>
@@ -54,11 +54,10 @@ Cc:     Paul Elliott <paul.elliott@arm.com>,
         Sudakshina Das <sudi.das@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Mark Brown <broonie@kernel.org>
-Subject: [PATCH v4 08/12] arm64: unify native/compat instruction skipping
-Date:   Wed, 11 Dec 2019 15:42:02 +0000
-Message-Id: <20191211154206.46260-9-broonie@kernel.org>
+Subject: [PATCH v4 11/12] KVM: arm64: BTI: Reset BTYPE when skipping emulated instructions
+Date:   Wed, 11 Dec 2019 15:42:05 +0000
+Message-Id: <20191211154206.46260-12-broonie@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211154206.46260-1-broonie@kernel.org>
 References: <20191211154206.46260-1-broonie@kernel.org>
@@ -71,89 +70,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dave Martin <Dave.Martin@arm.com>
 
-Skipping of an instruction on AArch32 works a bit differently from
-AArch64, mainly due to the different CPSR/PSTATE semantics.
+Since normal execution of any non-branch instruction resets the
+PSTATE BTYPE field to 0, so do the same thing when emulating a
+trapped instruction.
 
-Currently arm64_skip_faulting_instruction() is only suitable for
-AArch64, and arm64_compat_skip_faulting_instruction() handles the IT
-state machine but is local to traps.c.
-
-Since manual instruction skipping implies a trap, it's a relatively
-slow path.
-
-So, make arm64_skip_faulting_instruction() handle both compat and
-native, and get rid of the arm64_compat_skip_faulting_instruction()
-special case.
+Branches don't trap directly, so we should never need to assign a
+non-zero value to BTYPE here.
 
 Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/kvm_emulate.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 84c7a88dd617..de01e5041d4d 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -269,6 +269,8 @@ void arm64_notify_die(const char *str, struct pt_regs *regs,
- 	}
- }
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index 5efe5ca8fecf..05fb1b4e0fa2 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -470,10 +470,12 @@ static inline unsigned long vcpu_data_host_to_guest(struct kvm_vcpu *vcpu,
  
-+static void advance_itstate(struct pt_regs *regs);
-+
- void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
+ static inline void kvm_skip_instr(struct kvm_vcpu *vcpu, bool is_wide_instr)
  {
- 	regs->pc += size;
-@@ -279,6 +281,9 @@ void arm64_skip_faulting_instruction(struct pt_regs *regs, unsigned long size)
- 	 */
- 	if (user_mode(regs))
- 		user_fastforward_single_step(current);
-+
-+	if (regs->pstate & PSR_MODE32_BIT)
-+		advance_itstate(regs);
- }
+-	if (vcpu_mode_is_32bit(vcpu))
++	if (vcpu_mode_is_32bit(vcpu)) {
+ 		kvm_skip_instr32(vcpu, is_wide_instr);
+-	else
++	} else {
+ 		*vcpu_pc(vcpu) += 4;
++		*vcpu_cpsr(vcpu) &= ~PSR_BTYPE_MASK;
++	}
  
- static LIST_HEAD(undef_hook);
-@@ -641,19 +646,12 @@ static void advance_itstate(struct pt_regs *regs)
- 	compat_set_it_state(regs, it);
- }
- 
--static void arm64_compat_skip_faulting_instruction(struct pt_regs *regs,
--						   unsigned int sz)
--{
--	advance_itstate(regs);
--	arm64_skip_faulting_instruction(regs, sz);
--}
--
- static void compat_cntfrq_read_handler(unsigned int esr, struct pt_regs *regs)
- {
- 	int reg = (esr & ESR_ELx_CP15_32_ISS_RT_MASK) >> ESR_ELx_CP15_32_ISS_RT_SHIFT;
- 
- 	pt_regs_write_reg(regs, reg, arch_timer_get_rate());
--	arm64_compat_skip_faulting_instruction(regs, 4);
-+	arm64_skip_faulting_instruction(regs, 4);
- }
- 
- static const struct sys64_hook cp15_32_hooks[] = {
-@@ -673,7 +671,7 @@ static void compat_cntvct_read_handler(unsigned int esr, struct pt_regs *regs)
- 
- 	pt_regs_write_reg(regs, rt, lower_32_bits(val));
- 	pt_regs_write_reg(regs, rt2, upper_32_bits(val));
--	arm64_compat_skip_faulting_instruction(regs, 4);
-+	arm64_skip_faulting_instruction(regs, 4);
- }
- 
- static const struct sys64_hook cp15_64_hooks[] = {
-@@ -694,7 +692,7 @@ void do_cp15instr(unsigned int esr, struct pt_regs *regs)
- 		 * There is no T16 variant of a CP access, so we
- 		 * always advance PC by 4 bytes.
- 		 */
--		arm64_compat_skip_faulting_instruction(regs, 4);
-+		arm64_skip_faulting_instruction(regs, 4);
- 		return;
- 	}
- 
+ 	/* advance the singlestep state machine */
+ 	*vcpu_cpsr(vcpu) &= ~DBG_SPSR_SS;
 -- 
 2.20.1
 
