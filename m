@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87A3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA7C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F3D208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B20208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078104;
-	bh=R7eY9aHdrcCt7uzhurYIB7GJmkTeGmIKSQ3WZRcxiD0=;
+	s=default; t=1576078110;
+	bh=xzQP5HjMUu7bznLZ3SVt38NK5PZlWqiM+5EiK/57q74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7vtMCS6Wp7dasjVkQah6g3MspgZL0AEx6Pdw/QVNLKImE9D9e3cznjzvRsQnvlcE
-	 MotmhrGEBf+VGQe+I2hAnibjOdsBHgMQiyoeTAox9K6qNYL0uDQH21q+M5fLHviQ6K
-	 OclDpdl5ADttX/KVaK8c2R/NDstyoOuq3LoSVIeg=
+	b=NHGon3+IMBH3Mgl4UNxoTlqUI/paWypfpiK91y7raH92vWLOoEVsKLfT1fpnX6sou
+	 lFQbDHzyzVqhEm1eq6fJn1oJvF85OCoqWcuGBz+26VkfQam/aCeYyso/51OgpIP+ro
+	 ZEbazy06g/is5GZ080cHtFqYS3MMgTykApkAF9xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387597AbfLKP2X (ORCPT
+        id S2387633AbfLKP23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33872 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387512AbfLKP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:59 -0500
+        id S2387545AbfLKP2F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A602467A;
-        Wed, 11 Dec 2019 15:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52E352465B;
+        Wed, 11 Dec 2019 15:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078077;
-        bh=R7eY9aHdrcCt7uzhurYIB7GJmkTeGmIKSQ3WZRcxiD0=;
+        s=default; t=1576078085;
+        bh=xzQP5HjMUu7bznLZ3SVt38NK5PZlWqiM+5EiK/57q74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jG4YodmOpIcc9B00/nc0VJmISlUsjA11KjiA7XA4I3QZ4Quw0CYbuCOy44XXPU8nN
-         rVfawpCrhuCtQXet3/meivWsrFlNkDezgonZ+K3CYBxXw2qsvhi9GCkuUV+PGxW3kz
-         jo11BuL+rThxDIQ1X9FuSK4AufZeISKeZR4haM80=
+        b=xteKFDlgVeNwJj121xf5/hXqxGgSOlUXudllKJ44ZHb3e8RtuVxew9kuoiAe1tj+Y
+         1tZqdlYi9L24rILLuY+d+XoFiwTT/1zrJ+W85ZjGaZLR+Yv+/22J+a4oTshMwxQFUe
+         aCIkCRDnmW5MrpQ16ZdBU+kMJmfj3hPAQUKDJH+Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Erhard Furtner <erhard_f@mailbox.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 68/79] of: unittest: fix memory leak in attach_node_and_children
-Date:   Wed, 11 Dec 2019 10:26:32 -0500
-Message-Id: <20191211152643.23056-68-sashal@kernel.org>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 75/79] s390/cpum_sf: Check for SDBT and SDB consistency
+Date:   Wed, 11 Dec 2019 10:26:39 -0500
+Message-Id: <20191211152643.23056-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -61,45 +59,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erhard Furtner <erhard_f@mailbox.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 2aacace6dbbb6b6ce4e177e6c7ea901f389c0472 ]
+[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
 
-In attach_node_and_children memory is allocated for full_name via
-kasprintf. If the condition of the 1st if is not met the function
-returns early without freeing the memory. Add a kfree() to fix that.
+Each SBDT is located at a 4KB page and contains 512 entries.
+Each entry of a SDBT points to a SDB, a 4KB page containing
+sampled data. The last entry is a link to another SDBT page.
 
-This has been detected with kmemleak:
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=205327
+When an event is created the function sequence executed is:
 
-It looks like the leak was introduced by this commit:
-Fixes: 5babefb7f7ab ("of: unittest: allow base devicetree to have symbol metadata")
+  __hw_perf_event_init()
+  +--> allocate_buffers()
+       +--> realloc_sampling_buffers()
+	    +---> alloc_sample_data_block()
 
-Signed-off-by: Erhard Furtner <erhard_f@mailbox.org>
-Reviewed-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Both functions realloc_sampling_buffers() and
+alloc_sample_data_block() allocate pages and the allocation
+can fail. This is handled correctly and all allocated
+pages are freed and error -ENOMEM is returned to the
+top calling function. Finally the event is not created.
+
+Once the event has been created, the amount of initially
+allocated SDBT and SDB can be too low. This is detected
+during measurement interrupt handling, where the amount
+of lost samples is calculated. If the number of lost samples
+is too high considering sampling frequency and already allocated
+SBDs, the number of SDBs is enlarged during the next execution
+of cpumsf_pmu_enable().
+
+If more SBDs need to be allocated, functions
+
+       realloc_sampling_buffers()
+       +---> alloc-sample_data_block()
+
+are called to allocate more pages. Page allocation may fail
+and the returned error is ignored. A SDBT and SDB setup
+already exists.
+
+However the modified SDBTs and SDBs might end up in a situation
+where the first entry of an SDBT does not point to an SDB,
+but another SDBT, basicly an SBDT without payload.
+This can not be handled by the interrupt handler, where an SDBT
+must have at least one entry pointing to an SBD.
+
+Add a check to avoid SDBTs with out payload (SDBs) when enlarging
+the buffer setup.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/of/unittest.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 68f52966bbc04..808571f7f6ef9 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1133,8 +1133,10 @@ static void attach_node_and_children(struct device_node *np)
- 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index df92c2af99b69..5c3fd9032b747 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -193,7 +193,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 				   unsigned long num_sdb, gfp_t gfp_flags)
+ {
+ 	int i, rc;
+-	unsigned long *new, *tail;
++	unsigned long *new, *tail, *tail_prev = NULL;
  
- 	if (!strcmp(full_name, "/__local_fixups__") ||
--	    !strcmp(full_name, "/__fixups__"))
-+	    !strcmp(full_name, "/__fixups__")) {
-+		kfree(full_name);
- 		return;
-+	}
+ 	if (!sfb->sdbt || !sfb->tail)
+ 		return -EINVAL;
+@@ -232,6 +232,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 			sfb->num_sdbt++;
+ 			/* Link current page to tail of chain */
+ 			*tail = (unsigned long)(void *) new + 1;
++			tail_prev = tail;
+ 			tail = new;
+ 		}
  
- 	dup = of_find_node_by_path(full_name);
- 	kfree(full_name);
+@@ -241,10 +242,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
+ 		 * issue, a new realloc call (if required) might succeed.
+ 		 */
+ 		rc = alloc_sample_data_block(tail, gfp_flags);
+-		if (rc)
++		if (rc) {
++			/* Undo last SDBT. An SDBT with no SDB at its first
++			 * entry but with an SDBT entry instead can not be
++			 * handled by the interrupt handler code.
++			 * Avoid this situation.
++			 */
++			if (tail_prev) {
++				sfb->num_sdbt--;
++				free_page((unsigned long) new);
++				tail = tail_prev;
++			}
+ 			break;
++		}
+ 		sfb->num_sdb++;
+ 		tail++;
++		tail_prev = new = NULL;	/* Allocated at least one SBD */
+ 	}
+ 
+ 	/* Link sampling buffer to its origin */
 -- 
 2.20.1
 
