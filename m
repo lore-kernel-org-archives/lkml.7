@@ -2,116 +2,131 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EFAC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BA8C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4002A2467C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FD5D2465C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077132;
-	bh=rjnKi9c9bSp4W5HmEkgKIOW16NgRTdaQnTGDcA+RRW4=;
+	s=default; t=1576077134;
+	bh=VuytPSLb+8F9+jtnOgEB06wArOxY6MKT/sSY+vsFQLM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2F4yBoppQZnBvzSIapaS2pkXPGShLpPIYLB/wwatw5c7QeVUlO7wDiVrIvH8aj21k
-	 CIapECtbhiGZMU2pn2S4lzpXsFXxWh2e/56sqrsccngihvMXxLKqMHMFHK0a/nvCB3
-	 GgqjR8gwJIrpNONdfbaY7gmI80Wb3Go+VFIXKiIs=
+	b=DPmiRH2HT1bSmpiWNThE+LLoM09oJiXn+Nn32TA6DlUBX/cx154K4rACl/n9AC9Lc
+	 9Bk5NEfL0NKx0isOG1Z1n5Ms9f7MRvn89EO8JIQMKlKTuY8CckSDGTI9PLuGyKhGbb
+	 jQNRdCMFqkxChft8IoCwpywGvUSdH9m4ziM36s3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfLKPML (ORCPT
+        id S1731070AbfLKPMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32826 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:12:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731031AbfLKPMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:02 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731028AbfLKPMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E30CC2467F;
+        by mail.kernel.org (Postfix) with ESMTPSA id AA36F24682;
         Wed, 11 Dec 2019 15:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077121;
-        bh=rjnKi9c9bSp4W5HmEkgKIOW16NgRTdaQnTGDcA+RRW4=;
+        bh=VuytPSLb+8F9+jtnOgEB06wArOxY6MKT/sSY+vsFQLM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kK2N/LTxjaBNjmMbOrWFKp44u7rlRa1B7OHk3hbnKHhuCbOKO+h9IoqLAtNid1oNG
-         j13bJ29wpAyEuxYW2eGjSZq91dnYnMzor2+zL8tDHi+WXj5pcuQ/5aDbJhgdc3MthO
-         V51wEEuiWa/iif2n5hsSPAAVDTcUTObdHIwszfBE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vaibhav Jain <vaibhav@linux.ibm.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 010/134] powerpc/papr_scm: Fix an off-by-one check in papr_scm_meta_{get, set}
-Date:   Wed, 11 Dec 2019 10:09:46 -0500
-Message-Id: <20191211151150.19073-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=woLE8CYuVpCYwjYWJyZR27S1ED/xkHi1eZc8RUJkvc2fiyUL8OiQgtMs0oEy/1P+k
+         wO4LwJOkgYztFHKBtmRiLsprKlSt44sjQ7kSf0E60MVVhtztUnfvF/NUdPEVUIfDMM
+         KakSyxsRKchfU3k2CBdfcqG4oVRiqGeG1qi7vO30=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 025/105] NFC: nxp-nci: Fix NULL pointer dereference after I2C communication error
+Date:   Wed, 11 Dec 2019 16:05:14 +0100
+Message-Id: <20191211150229.013991971@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vaibhav Jain <vaibhav@linux.ibm.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 612ee81b9461475b5a5612c2e8d71559dd3c7920 ]
+[ Upstream commit a71a29f50de1ef97ab55c151a1598eb12dde379d ]
 
-A validation check to prevent out of bounds read/write inside
-functions papr_scm_meta_{get,set}() is off-by-one that prevent reads
-and writes to the last byte of the label area.
+I2C communication errors (-EREMOTEIO) during the IRQ handler of nxp-nci
+result in a NULL pointer dereference at the moment:
 
-This bug manifests as a failure to probe a dimm when libnvdimm is
-unable to read the entire config-area as advertised by
-ND_CMD_GET_CONFIG_SIZE. This usually happens when there are large
-number of namespaces created in the region backed by the dimm and the
-label-index spans max possible config-area. An error of the form below
-usually reported in the kernel logs:
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    Oops: 0002 [#1] PREEMPT SMP NOPTI
+    CPU: 1 PID: 355 Comm: irq/137-nxp-nci Not tainted 5.4.0-rc6 #1
+    RIP: 0010:skb_queue_tail+0x25/0x50
+    Call Trace:
+     nci_recv_frame+0x36/0x90 [nci]
+     nxp_nci_i2c_irq_thread_fn+0xd1/0x285 [nxp_nci_i2c]
+     ? preempt_count_add+0x68/0xa0
+     ? irq_forced_thread_fn+0x80/0x80
+     irq_thread_fn+0x20/0x60
+     irq_thread+0xee/0x180
+     ? wake_threads_waitq+0x30/0x30
+     kthread+0xfb/0x130
+     ? irq_thread_check_affinity+0xd0/0xd0
+     ? kthread_park+0x90/0x90
+     ret_from_fork+0x1f/0x40
 
-[  255.293912] nvdimm: probe of nmem0 failed with error -22
+Afterward the kernel must be rebooted to work properly again.
 
-The patch fixes these validation checks there by letting libnvdimm
-access the entire config-area.
+This happens because it attempts to call nci_recv_frame() with skb == NULL.
+However, unlike nxp_nci_fw_recv_frame(), nci_recv_frame() does not have any
+NULL checks for skb, causing the NULL pointer dereference.
 
-Fixes: 53e80bd042773('powerpc/nvdimm: Add support for multibyte read/write for metadata')
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190927062002.3169-1-vaibhav@linux.ibm.com
+Change the code to call only nxp_nci_fw_recv_frame() in case of an error.
+Make sure to log it so it is obvious that a communication error occurred.
+The error above then becomes:
+
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+    nci: __nci_request: wait_for_completion_interruptible_timeout failed 0
+    nxp-nci_i2c i2c-NXP1001:00: NFC: Read failed with error -121
+
+Fixes: 6be88670fc59 ("NFC: nxp-nci_i2c: Add I2C support to NXP NCI driver")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/papr_scm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nfc/nxp-nci/i2c.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-index 61883291defc3..ee07d0718bf1a 100644
---- a/arch/powerpc/platforms/pseries/papr_scm.c
-+++ b/arch/powerpc/platforms/pseries/papr_scm.c
-@@ -152,7 +152,7 @@ static int papr_scm_meta_get(struct papr_scm_priv *p,
- 	int len, read;
- 	int64_t ret;
+diff --git a/drivers/nfc/nxp-nci/i2c.c b/drivers/nfc/nxp-nci/i2c.c
+index 4aeb3861b4095..6c468899f2ffe 100644
+--- a/drivers/nfc/nxp-nci/i2c.c
++++ b/drivers/nfc/nxp-nci/i2c.c
+@@ -225,8 +225,10 @@ static irqreturn_t nxp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
  
--	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
-+	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
- 		return -EINVAL;
- 
- 	for (len = hdr->in_length; len; len -= read) {
-@@ -206,7 +206,7 @@ static int papr_scm_meta_set(struct papr_scm_priv *p,
- 	__be64 data_be;
- 	int64_t ret;
- 
--	if ((hdr->in_offset + hdr->in_length) >= p->metadata_size)
-+	if ((hdr->in_offset + hdr->in_length) > p->metadata_size)
- 		return -EINVAL;
- 
- 	for (len = hdr->in_length; len; len -= wrote) {
+ 	if (r == -EREMOTEIO) {
+ 		phy->hard_fault = r;
+-		skb = NULL;
+-	} else if (r < 0) {
++		if (info->mode == NXP_NCI_MODE_FW)
++			nxp_nci_fw_recv_frame(phy->ndev, NULL);
++	}
++	if (r < 0) {
+ 		nfc_err(&client->dev, "Read failed with error %d\n", r);
+ 		goto exit_irq_handled;
+ 	}
 -- 
 2.20.1
+
+
 
