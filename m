@@ -2,53 +2,51 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DED0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 715D82173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50809208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077859;
-	bh=Kwz4p3q0xjiBMR4tx+Z2hf0uv4OjZCHsCcNDLY1JdEY=;
+	s=default; t=1576077863;
+	bh=nbZ7fQzT29Io1UH8chLzIhDm13EYvBMWrrF8VxGouZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LOehyqtWsOJKTqCnMImpZd5IiUHdwqdZ10fWgzwYMfIwcIB3UReJsqogjvH8TNSru
-	 vMELnBEKyrzQZXvzPpgSaGpOPnyWm6xSdqpVhsTliTMR88o8AUdUqgx8YtQfivfGoM
-	 UkRPO0xEtvEz67GePmBF5yOJZESeTFxOIjo9JEq4=
+	b=yL98JBP6TcF2zlTJ9QlTqui9AjKRgqP3tG8jyUYzik1KRnNp/sP5PpwaY2uPy4uaF
+	 U24IpHmxwrergvrEXNzQLOxTCd98TbeyJJMkVp1jrxWwFQ62SG0iiJYMLwXRxjzu7G
+	 ni+MVI0t3jifHUrEQBBsWYELN+3Lpn6I5h91bKEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfLKPYS (ORCPT
+        id S1732558AbfLKPYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:24:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:24:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732428AbfLKPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:24:12 -0500
+        id S1732824AbfLKPYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88611222C4;
-        Wed, 11 Dec 2019 15:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895A52173E;
+        Wed, 11 Dec 2019 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077852;
-        bh=Kwz4p3q0xjiBMR4tx+Z2hf0uv4OjZCHsCcNDLY1JdEY=;
+        s=default; t=1576077857;
+        bh=nbZ7fQzT29Io1UH8chLzIhDm13EYvBMWrrF8VxGouZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvS18ZiQAwsJSpg4KdERMdhr1hyhGAQCgnKsQV/3Sp66auZVTnCfmEasijRkIDisK
-         IJlscV/+iHouwuSx9m1gNgEHEFqxz6zmSFPpW2ceG8sH2wIcmMVyftpP3wOufn8cCo
-         o/XmYmdtRWiLWVZTGUnWcPdSb0lSbrvgRGiGLqs4=
+        b=bXyUy39DSeaSy+LzqsPqGIh8UfNwe/KtNcGFNPZEDbdU0B9QiWAEkZZv8YnS+w1MS
+         +LCFsw4++I74n/TdAcDKeEbAvwQ1rWe3Gc6sZtYnGQz8jhmpVMIkUYQroea4Bjd8Cp
+         9Eho9Lc5kkHRqtwF5fKA5L9IH++P7jrIpdS6J/pU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 148/243] soc: renesas: r8a77970-sysc: Correct names of A2DP/A2CN power domains
-Date:   Wed, 11 Dec 2019 16:05:10 +0100
-Message-Id: <20191211150349.160913026@linuxfoundation.org>
+        stable@vger.kernel.org, Arijit Banerjee <arijit@rubrik.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 198/243] fuse: verify attributes
+Date:   Wed, 11 Dec 2019 16:06:00 +0100
+Message-Id: <20191211150352.544263323@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,63 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit b5eb730e031acaba2d25e8f522ac5966a70885ae ]
+commit eb59bd17d2fa6e5e84fba61a5ebdea984222e6d5 upstream.
 
-The R-Car Gen3 HardWare Manual Errata for Rev. 0.80 (Feb 28, 2018)
-renamed the A2IR2 and A2IR3 power domains on R-Car V3M to A2DP resp.
-A2CN.
+If a filesystem returns negative inode sizes, future reads on the file were
+causing the cpu to spin on truncate_pagecache.
 
-As these definitions are not yet used from DT, they can just be renamed.
+Create a helper to validate the attributes.  This now does two things:
 
-While at it, fix the indentation of the A3IR definition.
+ - check the file mode
+ - check if the file size fits in i_size without overflowing
 
-Fixes: 833bdb47c826a1a6 ("dt-bindings: power: add R8A77970 SYSC power domain definitions")
-Fixes: bab9b2a74fe9da96 ("soc: renesas: rcar-sysc: add R8A77970 support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Arijit Banerjee <arijit@rubrik.com>
+Fixes: d8a5ba45457e ("[PATCH] FUSE - core")
+Cc: <stable@vger.kernel.org> # v2.6.14
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/soc/renesas/r8a77970-sysc.c       | 4 ++--
- include/dt-bindings/power/r8a77970-sysc.h | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ fs/fuse/dir.c    |   24 +++++++++++++++++-------
+ fs/fuse/fuse_i.h |    2 ++
+ 2 files changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/soc/renesas/r8a77970-sysc.c b/drivers/soc/renesas/r8a77970-sysc.c
-index caf894f193edc..77422baa7a56a 100644
---- a/drivers/soc/renesas/r8a77970-sysc.c
-+++ b/drivers/soc/renesas/r8a77970-sysc.c
-@@ -27,8 +27,8 @@ static const struct rcar_sysc_area r8a77970_areas[] __initconst = {
- 	{ "a3ir",	0x180, 0, R8A77970_PD_A3IR,	R8A77970_PD_ALWAYS_ON },
- 	{ "a2ir0",	0x400, 0, R8A77970_PD_A2IR0,	R8A77970_PD_A3IR },
- 	{ "a2ir1",	0x400, 1, R8A77970_PD_A2IR1,	R8A77970_PD_A3IR },
--	{ "a2ir2",	0x400, 2, R8A77970_PD_A2IR2,	R8A77970_PD_A3IR },
--	{ "a2ir3",	0x400, 3, R8A77970_PD_A2IR3,	R8A77970_PD_A3IR },
-+	{ "a2dp",	0x400, 2, R8A77970_PD_A2DP,	R8A77970_PD_A3IR },
-+	{ "a2cn",	0x400, 3, R8A77970_PD_A2CN,	R8A77970_PD_A3IR },
- 	{ "a2sc0",	0x400, 4, R8A77970_PD_A2SC0,	R8A77970_PD_A3IR },
- 	{ "a2sc1",	0x400, 5, R8A77970_PD_A2SC1,	R8A77970_PD_A3IR },
- };
-diff --git a/include/dt-bindings/power/r8a77970-sysc.h b/include/dt-bindings/power/r8a77970-sysc.h
-index bf54779d16252..9eaf824b15826 100644
---- a/include/dt-bindings/power/r8a77970-sysc.h
-+++ b/include/dt-bindings/power/r8a77970-sysc.h
-@@ -19,10 +19,10 @@
- #define R8A77970_PD_CR7			13
- #define R8A77970_PD_CA53_SCU		21
- #define R8A77970_PD_A2IR0		23
--#define R8A77970_PD_A3IR			24
-+#define R8A77970_PD_A3IR		24
- #define R8A77970_PD_A2IR1		27
--#define R8A77970_PD_A2IR2		28
--#define R8A77970_PD_A2IR3		29
-+#define R8A77970_PD_A2DP		28
-+#define R8A77970_PD_A2CN		29
- #define R8A77970_PD_A2SC0		30
- #define R8A77970_PD_A2SC1		31
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -234,7 +234,8 @@ static int fuse_dentry_revalidate(struct
+ 		kfree(forget);
+ 		if (ret == -ENOMEM)
+ 			goto out;
+-		if (ret || (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
++		if (ret || fuse_invalid_attr(&outarg.attr) ||
++		    (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
+ 			goto invalid;
  
--- 
-2.20.1
-
+ 		forget_all_cached_acls(inode);
+@@ -297,6 +298,12 @@ int fuse_valid_type(int m)
+ 		S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m);
+ }
+ 
++bool fuse_invalid_attr(struct fuse_attr *attr)
++{
++	return !fuse_valid_type(attr->mode) ||
++		attr->size > LLONG_MAX;
++}
++
+ int fuse_lookup_name(struct super_block *sb, u64 nodeid, const struct qstr *name,
+ 		     struct fuse_entry_out *outarg, struct inode **inode)
+ {
+@@ -328,7 +335,7 @@ int fuse_lookup_name(struct super_block
+ 	err = -EIO;
+ 	if (!outarg->nodeid)
+ 		goto out_put_forget;
+-	if (!fuse_valid_type(outarg->attr.mode))
++	if (fuse_invalid_attr(&outarg->attr))
+ 		goto out_put_forget;
+ 
+ 	*inode = fuse_iget(sb, outarg->nodeid, outarg->generation,
+@@ -451,7 +458,8 @@ static int fuse_create_open(struct inode
+ 		goto out_free_ff;
+ 
+ 	err = -EIO;
+-	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid))
++	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid) ||
++	    fuse_invalid_attr(&outentry.attr))
+ 		goto out_free_ff;
+ 
+ 	ff->fh = outopen.fh;
+@@ -558,7 +566,7 @@ static int create_new_entry(struct fuse_
+ 		goto out_put_forget_req;
+ 
+ 	err = -EIO;
+-	if (invalid_nodeid(outarg.nodeid))
++	if (invalid_nodeid(outarg.nodeid) || fuse_invalid_attr(&outarg.attr))
+ 		goto out_put_forget_req;
+ 
+ 	if ((outarg.attr.mode ^ mode) & S_IFMT)
+@@ -918,7 +926,8 @@ static int fuse_do_getattr(struct inode
+ 	args.out.args[0].value = &outarg;
+ 	err = fuse_simple_request(fc, &args);
+ 	if (!err) {
+-		if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
++		if (fuse_invalid_attr(&outarg.attr) ||
++		    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
+ 			make_bad_inode(inode);
+ 			err = -EIO;
+ 		} else {
+@@ -1230,7 +1239,7 @@ static int fuse_direntplus_link(struct f
+ 
+ 	if (invalid_nodeid(o->nodeid))
+ 		return -EIO;
+-	if (!fuse_valid_type(o->attr.mode))
++	if (fuse_invalid_attr(&o->attr))
+ 		return -EIO;
+ 
+ 	fc = get_fuse_conn(dir);
+@@ -1707,7 +1716,8 @@ int fuse_do_setattr(struct dentry *dentr
+ 		goto error;
+ 	}
+ 
+-	if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
++	if (fuse_invalid_attr(&outarg.attr) ||
++	    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
+ 		make_bad_inode(inode);
+ 		err = -EIO;
+ 		goto error;
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -909,6 +909,8 @@ void fuse_ctl_remove_conn(struct fuse_co
+  */
+ int fuse_valid_type(int m);
+ 
++bool fuse_invalid_attr(struct fuse_attr *attr);
++
+ /**
+  * Is current process allowed to perform filesystem operation?
+  */
 
 
