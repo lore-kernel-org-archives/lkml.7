@@ -2,208 +2,90 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0FAC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F3BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED33D2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:08:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0zmGy5n"
+	by mail.kernel.org (Postfix) with ESMTP id 4BEB7214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:13:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbfLKKIB (ORCPT
+        id S1728800AbfLKKNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:08:01 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35737 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728678AbfLKKIA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:08:00 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p17so1960833wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 02:07:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gk81PzAbLI8o98/2oqILv8CnZ7KtzZ7BGCA4s/qRTQo=;
-        b=l0zmGy5nn/XJOskQPekSMLWGfaDGaziwasSrhR/VtnGbL6OmzWoGTFV7oIUqABr97R
-         a8jSQzR6DL6rQ6WZaVNx7dWAnRhEqbV7CLxB2WeckvubXRGpv8pnnB9/tt662tToGI23
-         qOVc2NKUue0s7faGQrdTJOQw6a+uoRftgHaiW1ZJlrmf/dV85oN8GFEDt0qwwXZJ9MhD
-         aW+GoAjR4xKRP+hv0ZWB6X6W6azavprw7nkbC6LIkL2JqJ4z0MuOCQl9+fssxUlIxWgs
-         ggoxo+G1CfP8n8/oRgykuzAI2hDNP5SjNexs1i81PX4GdggpHUiZuW6lCwwx3bcNa6gq
-         HCgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gk81PzAbLI8o98/2oqILv8CnZ7KtzZ7BGCA4s/qRTQo=;
-        b=EB+5My+/XGkdwR2CuDlaScDq3joEw1rurjIm09qHQ5kdPLMv1xurzF5KPj0etHELcT
-         zKEiYX88cf2krBF8eDyP8RdytT9WkJutP/mG5dnAsIDE0WCaSUAiSnmhgz3XAFT00JaI
-         R1OJw/3jUG2MGkh3jnLorITdXy9EN0+VPMOp457UfLycP0iYKmsdF9t8fiBTh06dLsor
-         mVLpBja3j5jAAFaOmHZpNzptoY5UKx/IRAR3fyrJ/0/HYcLoaDUJUk+1hXAuZLSXs9sq
-         eRDLeJlJkKsP6EuZkTyLiQL6G160VguTuiKYrr2vjPKg85lNKteDqMa/XmmtVuxp9I4U
-         evSw==
-X-Gm-Message-State: APjAAAWuoEtHKEwG8X0yZc0BY+PuxGDo8Dt55cjY5YwnVoJZ4Unz1RxA
-        Ze+0RmjOABw5RkVYRF38AX23arp8rWYO2CSUJmqhpg==
-X-Google-Smtp-Source: APXvYqwI6Cs4wMfaSiJabTG1VtEx71hprkRtI8lhwa9L9Yrmea6XD4zJIFcrmydevphRyDbiD5J3g6rP6zX5G7cSERo=
-X-Received: by 2002:a1c:a943:: with SMTP id s64mr2546152wme.148.1576058877140;
- Wed, 11 Dec 2019 02:07:57 -0800 (PST)
+        Wed, 11 Dec 2019 05:13:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:52332 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728480AbfLKKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:13:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AEAF1FB;
+        Wed, 11 Dec 2019 02:13:05 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 521A83F6CF;
+        Wed, 11 Dec 2019 02:13:04 -0800 (PST)
+Date:   Wed, 11 Dec 2019 10:13:02 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 13/15] cpufreq: scmi: Match scmi device by both name and
+ protocol id
+Message-ID: <20191211101302.GD20962@bogus>
+References: <20191210145345.11616-1-sudeep.holla@arm.com>
+ <20191210145345.11616-14-sudeep.holla@arm.com>
+ <20191211023909.7iun7kdk6pjkync6@vireshk-i7>
 MIME-Version: 1.0
-References: <20191210210735.9077-1-sashal@kernel.org> <20191210210735.9077-277-sashal@kernel.org>
-In-Reply-To: <20191210210735.9077-277-sashal@kernel.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 11 Dec 2019 10:07:54 +0000
-Message-ID: <CAKv+Gu-KLGFUEP55iGFp-irspwoG1uc0ZVPW15YDFX9MtXQW2Q@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 316/350] int128: move __uint128_t compiler
- test to Kconfig
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-riscv@lists.infradead.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211023909.7iun7kdk6pjkync6@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 at 22:13, Sasha Levin <sashal@kernel.org> wrote:
+On Wed, Dec 11, 2019 at 08:09:09AM +0530, Viresh Kumar wrote:
+> On 10-12-19, 14:53, Sudeep Holla wrote:
+> > The scmi bus now has support to match the driver with devices not only
+> > based on their protocol id but also based on their device name if one is
+> > available. This was added to cater the need to support multiple devices
+> > and drivers for the same protocol.
+> >
+> > Let us add the name "cpufreq" to scmi_device_id table in the driver so
+> > that in matches only with device with the same name and protocol id
+> > SCMI_PROTOCOL_PERF. This will help to add "devfreq" device/driver.
+> >
+> > Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> > Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> > Cc: linux-pm@vger.kernel.org
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > ---
+> >  drivers/cpufreq/scmi-cpufreq.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+> > index e6182c89df79..61623e2ff149 100644
+> > --- a/drivers/cpufreq/scmi-cpufreq.c
+> > +++ b/drivers/cpufreq/scmi-cpufreq.c
+> > @@ -261,7 +261,7 @@ static void scmi_cpufreq_remove(struct scmi_device *sdev)
+> >  }
+> >
+> >  static const struct scmi_device_id scmi_id_table[] = {
+> > -	{ SCMI_PROTOCOL_PERF },
+> > +	{ SCMI_PROTOCOL_PERF, "cpufreq" },
+> >  	{ },
+> >  };
+> >  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
 >
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> [ Upstream commit c12d3362a74bf0cd9e1d488918d40607b62a3104 ]
->
-> In order to use 128-bit integer arithmetic in C code, the architecture
-> needs to have declared support for it by setting ARCH_SUPPORTS_INT128,
-> and it requires a version of the toolchain that supports this at build
-> time. This is why all existing tests for ARCH_SUPPORTS_INT128 also test
-> whether __SIZEOF_INT128__ is defined, since this is only the case for
-> compilers that can support 128-bit integers.
->
-> Let's fold this additional test into the Kconfig declaration of
-> ARCH_SUPPORTS_INT128 so that we can also use the symbol in Makefiles,
-> e.g., to decide whether a certain object needs to be included in the
-> first place.
->
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Applied. Thanks.
 
-This does not fix a bug so no need to put it in -stable
+This will break the build without patch 1/15, so preferably must go as
+part of the series. Sorry for not missing to specify that detail.
 
-> ---
->  arch/arm64/Kconfig | 2 +-
->  arch/riscv/Kconfig | 2 +-
->  arch/x86/Kconfig   | 2 +-
->  crypto/ecc.c       | 2 +-
->  init/Kconfig       | 4 ++++
->  lib/ubsan.c        | 2 +-
->  lib/ubsan.h        | 2 +-
->  7 files changed, 10 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 3f047afb982c8..54c38c9cab88a 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -67,7 +67,7 @@ config ARM64
->         select ARCH_USE_QUEUED_SPINLOCKS
->         select ARCH_SUPPORTS_MEMORY_FAILURE
->         select ARCH_SUPPORTS_ATOMIC_RMW
-> -       select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
-> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
->         select ARCH_SUPPORTS_NUMA_BALANCING
->         select ARCH_WANT_COMPAT_IPC_PARSE_VERSION if COMPAT
->         select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 8eebbc8860bbd..75a6c91176221 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -164,7 +164,7 @@ config ARCH_RV32I
->  config ARCH_RV64I
->         bool "RV64I"
->         select 64BIT
-> -       select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000
-> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && GCC_VERSION >= 50000
->         select HAVE_FUNCTION_TRACER
->         select HAVE_FUNCTION_GRAPH_TRACER
->         select HAVE_FTRACE_MCOUNT_RECORD
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 8ef85139553f5..f2aed8012e9c0 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -24,7 +24,7 @@ config X86_64
->         depends on 64BIT
->         # Options that are inherently 64-bit kernel only:
->         select ARCH_HAS_GIGANTIC_PAGE
-> -       select ARCH_SUPPORTS_INT128
-> +       select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
->         select ARCH_USE_CMPXCHG_LOCKREF
->         select HAVE_ARCH_SOFT_DIRTY
->         select MODULES_USE_ELF_RELA
-> diff --git a/crypto/ecc.c b/crypto/ecc.c
-> index dfe114bc0c4af..6e6aab6c987c2 100644
-> --- a/crypto/ecc.c
-> +++ b/crypto/ecc.c
-> @@ -336,7 +336,7 @@ static u64 vli_usub(u64 *result, const u64 *left, u64 right,
->  static uint128_t mul_64_64(u64 left, u64 right)
->  {
->         uint128_t result;
-> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
-> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
->         unsigned __int128 m = (unsigned __int128)left * right;
->
->         result.m_low  = m;
-> diff --git a/init/Kconfig b/init/Kconfig
-> index b4daad2bac233..020526f681c03 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -785,6 +785,10 @@ config ARCH_SUPPORTS_NUMA_BALANCING
->  config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
->         bool
->
-> +config CC_HAS_INT128
-> +       def_bool y
-> +       depends on !$(cc-option,-D__SIZEOF_INT128__=0)
-> +
->  #
->  # For architectures that know their GCC __int128 support is sound
->  #
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index 0c4681118fcd2..fc552d524ef77 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -119,7 +119,7 @@ static void val_to_string(char *str, size_t size, struct type_descriptor *type,
->  {
->         if (type_is_int(type)) {
->                 if (type_bit_width(type) == 128) {
-> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
-> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
->                         u_max val = get_unsigned_val(type, value);
->
->                         scnprintf(str, size, "0x%08x%08x%08x%08x",
-> diff --git a/lib/ubsan.h b/lib/ubsan.h
-> index b8fa83864467f..7b56c09473a98 100644
-> --- a/lib/ubsan.h
-> +++ b/lib/ubsan.h
-> @@ -78,7 +78,7 @@ struct invalid_value_data {
->         struct type_descriptor *type;
->  };
->
-> -#if defined(CONFIG_ARCH_SUPPORTS_INT128) && defined(__SIZEOF_INT128__)
-> +#if defined(CONFIG_ARCH_SUPPORTS_INT128)
->  typedef __int128 s_max;
->  typedef unsigned __int128 u_max;
->  #else
-> --
-> 2.20.1
->
+--
+Regards,
+Sudeep
