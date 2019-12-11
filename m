@@ -2,99 +2,99 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765ACC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81A2C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1C7206A5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFADF206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576094697;
+	bh=NZuUJdM0ik9S9s7k/CibbFXcjZt74bFHC1oidw1xJrw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QON7XCnndjB9aX9SyfQqsE+my1Rvi/4JUW1oSKg+v/SipSz5HkZmApOJYJWlnCsCO
+	 2hZCYIP2kVKPM0y53sfL4XDtAzKsIoMednlSyK6R3q4doGg5swlhOkjbdYMeSFtcCP
+	 aGbqF3/OyTWiCWgBypDY2S4UzfZFLmVFxeN970wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLKUCY (ORCPT
+        id S1727303AbfLKUE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:02:24 -0500
-Received: from mga02.intel.com ([134.134.136.20]:39328 "EHLO mga02.intel.com"
+        Wed, 11 Dec 2019 15:04:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbfLKUCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:02:24 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 12:02:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="207815737"
-Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.172])
-  by orsmga008.jf.intel.com with ESMTP; 11 Dec 2019 12:02:23 -0800
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     linux-pm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, charles.d.prestopine@intel.com,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Zhang rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v1] thermal/intel: intel_pch_thermal: Add Comet Lake (CML) platform support
-Date:   Wed, 11 Dec 2019 12:00:43 -0800
-Message-Id: <20191211200043.4985-1-gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726411AbfLKUE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:04:56 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B134A206A5;
+        Wed, 11 Dec 2019 20:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576094696;
+        bh=NZuUJdM0ik9S9s7k/CibbFXcjZt74bFHC1oidw1xJrw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PZ7IZCiiQK3GclU8R/lzkrc6Ez43PC06aTDCGq19n4Bqm6LdrZq5339TJNSliptPo
+         akhBw6QzBhgtsWV4x0CNP0zpCqKgz61z61I8YgKVY2ppEkGLtPZyoXRfVZ0M8y3kBn
+         WUbVTsYJQSWyp/Ug4RVENmovEB7dTjyp6cvQixe0=
+Date:   Wed, 11 Dec 2019 15:04:54 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        stable@kernel.org, Andreas Dilger <adilger@dilger.ca>,
+        linux-ext4@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.4 27/37] ext4: work around deleting a file with
+ i_nlink == 0 safely
+Message-ID: <20191211200454.GF12996@sasha-vm>
+References: <20191211153813.24126-1-sashal@kernel.org>
+ <20191211153813.24126-27-sashal@kernel.org>
+ <20191211161959.GB129186@mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191211161959.GB129186@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Comet Lake to the list of the platforms to support intel_pch_thermal
-driver.
+On Wed, Dec 11, 2019 at 11:19:59AM -0500, Theodore Y. Ts'o wrote:
+>On Wed, Dec 11, 2019 at 10:38:03AM -0500, Sasha Levin wrote:
+>> From: Theodore Ts'o <tytso@mit.edu>
+>>
+>> [ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
+>>
+>> If the file system is corrupted such that a file's i_links_count is
+>> too small, then it's possible that when unlinking that file, i_nlink
+>> will already be zero.  Previously we were working around this kind of
+>> corruption by forcing i_nlink to one; but we were doing this before
+>> trying to delete the directory entry --- and if the file system is
+>> corrupted enough that ext4_delete_entry() fails, then we exit with
+>> i_nlink elevated, and this causes the orphan inode list handling to be
+>> FUBAR'ed, such that when we unmount the file system, the orphan inode
+>> list can get corrupted.
+>>
+>> A better way to fix this is to simply skip trying to call drop_nlink()
+>> if i_nlink is already zero, thus moving the check to the place where
+>> it makes the most sense.
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=205433
+>>
+>> Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
+>> Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+>> Cc: stable@kernel.org
+>> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>
+>I'm confused; this was explicitly cc'ed to stable@kernel.org, so why
+>is your AUTOSEL picking this up?  I would have thought this would get
+>picked up via the normal stable kernel processes.
 
-Cc: Zhang rui <rui.zhang@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/thermal/intel/intel_pch_thermal.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+My mistake, appologies.
 
-diff --git a/drivers/thermal/intel/intel_pch_thermal.c b/drivers/thermal/intel/intel_pch_thermal.c
-index 4f0bb8f502e1..9356f3a7f961 100644
---- a/drivers/thermal/intel/intel_pch_thermal.c
-+++ b/drivers/thermal/intel/intel_pch_thermal.c
-@@ -23,6 +23,7 @@
- #define PCH_THERMAL_DID_SKL_H	0xA131 /* Skylake PCH 100 series */
- #define PCH_THERMAL_DID_CNL	0x9Df9 /* CNL PCH */
- #define PCH_THERMAL_DID_CNL_H	0xA379 /* CNL-H PCH */
-+#define PCH_THERMAL_DID_CML_H	0X06F9 /* CML-H PCH */
- 
- /* Wildcat Point-LP  PCH Thermal registers */
- #define WPT_TEMP	0x0000	/* Temperature */
-@@ -272,6 +273,7 @@ enum board_ids {
- 	board_wpt,
- 	board_skl,
- 	board_cnl,
-+	board_cml,
- };
- 
- static const struct board_info {
-@@ -294,6 +296,10 @@ static const struct board_info {
- 		.name = "pch_cannonlake",
- 		.ops = &pch_dev_ops_wpt,
- 	},
-+	[board_cml] = {
-+		.name = "pch_cometlake",
-+		.ops = &pch_dev_ops_wpt,
-+	}
- };
- 
- static int intel_pch_thermal_probe(struct pci_dev *pdev,
-@@ -398,6 +404,8 @@ static const struct pci_device_id intel_pch_thermal_id[] = {
- 		.driver_data = board_cnl, },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CNL_H),
- 		.driver_data = board_cnl, },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCH_THERMAL_DID_CML_H),
-+		.driver_data = board_cml, },
- 	{ 0, },
- };
- MODULE_DEVICE_TABLE(pci, intel_pch_thermal_id);
 -- 
-2.17.1
-
+Thanks,
+Sasha
