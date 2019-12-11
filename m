@@ -2,137 +2,121 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B71C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFCEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E562A2467B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078114;
-	bh=GfUuw8DLwyBIzcEY8jsOSEHTl1jTlKc9d8XTA1qgxW0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ji7QQtESWDurbAZp/vwdooKRvBy/OL46prElCb/rMe/7bu93nYECtt72SkWf8kcfX
-	 we74mvHmCqvunBVgPMorDeomamQYo0z4zhQq3kZhY/FqRIch0vMWiO5eQpC4N/cQbp
-	 8KRdqTI60pouso9J5l2XbxEAijosIqOukhEVAypA=
+	by mail.kernel.org (Postfix) with ESMTP id AFA1324658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fI7e0oFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbfLKP2c (ORCPT
+        id S2387673AbfLKP2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34116 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733223AbfLKP2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:08 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8F4F24671;
-        Wed, 11 Dec 2019 15:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078087;
-        bh=GfUuw8DLwyBIzcEY8jsOSEHTl1jTlKc9d8XTA1qgxW0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2NRmnCYK/+ush1S65DWlbiEYqa6LMMiCqijdC39n0U23csdl2RYlKCTyFJFtUDbV
-         9CDX6hX/QWI2St0jv6cfLSwrZrC2Or+tuUqSQ7rf1mGaARChIPF53yRrs/gy4c4psW
-         3OUM6fWPKXsV3PkvoVYs1GtXlSYfklYBfdJJeAjw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Baluta <daniel.baluta@nxp.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Richard Zhu <hongxing.zhu@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 77/79] mailbox: imx: Fix Tx doorbell shutdown path
-Date:   Wed, 11 Dec 2019 10:26:41 -0500
-Message-Id: <20191211152643.23056-77-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:28:37 -0500
+Received: from mail.efficios.com ([167.114.142.138]:42708 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387598AbfLKP2Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:24 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 19FBD687A25;
+        Wed, 11 Dec 2019 10:28:23 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id S2y0w6rP8V8C; Wed, 11 Dec 2019 10:28:22 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id BEE16687A22;
+        Wed, 11 Dec 2019 10:28:22 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BEE16687A22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1576078102;
+        bh=C/zOP3f6ebD7H+mSDMI0JNByhqooFL3Swlt0/L2X6Do=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=fI7e0oFhCsMe0HdFoK2xk3T+97tuol9PV00GjT/d1BVAGuRAJ4WqxWhGSjpWN4ENO
+         H5uNFdAO8oDsEHFbKbljUW7NQw9VTP8ZDNO2iaSeD547H4CaMQI2zvZFbXxTB5XOKU
+         KqaTY+DPdnnmZRWvZ0jSWpUixRvc18R6JBiCQZGqUDIKwQ+pKEAFnEeHHAQK9aptGY
+         u56CPBcDKaqs5UjOqIruZcXfICo7SQyuvltN+H4Jp3WMlinmWcslox245IfDa7jQEI
+         TYLbO4NTMWG5Hd0qm+P89+TpYPfAC/SiAaOnBG+JlRVm46DM36EX2NvxMLqyouaglj
+         q99ZH5qSdQPKg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id J6LO01X8haIM; Wed, 11 Dec 2019 10:28:22 -0500 (EST)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 9E8D3687A13;
+        Wed, 11 Dec 2019 10:28:22 -0500 (EST)
+Date:   Wed, 11 Dec 2019 10:28:22 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Message-ID: <211848436.2172.1576078102568.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
+References: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH for 5.4 0/3] Restartable Sequences Fixes
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3890)
+Thread-Topic: Restartable Sequences Fixes
+Thread-Index: a0Atf/Ifhh0gqkseXVi/YvaGwLW1oQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+Hi Thomas,
 
-[ Upstream commit bf159d151a0b844be28882f39e316b5800acaa2b ]
+I thought those rseq fixes posted in September were in the -tip tree, but it
+seems that they never made it to mainline.
 
-Tx doorbell is handled by txdb_tasklet and doesn't
-have an associated IRQ.
+Now Shuah Khan noticed the issue with gettid() compatibility with glibc
+2.30+. This series contained that fix.
 
-Anyhow, imx_mu_shutdown ignores this and tries to
-free an IRQ that wasn't requested for Tx DB resulting
-in the following warning:
+Should I re-post it, or is this series on track to get into mainline
+at some point ?
 
-[    1.967644] Trying to free already-free IRQ 26
-[    1.972108] WARNING: CPU: 2 PID: 157 at kernel/irq/manage.c:1708 __free_irq+0xc0/0x358
-[    1.980024] Modules linked in:
-[    1.983088] CPU: 2 PID: 157 Comm: kworker/2:1 Tainted: G
-[    1.993524] Hardware name: Freescale i.MX8QXP MEK (DT)
-[    1.998668] Workqueue: events deferred_probe_work_func
-[    2.003812] pstate: 60000085 (nZCv daIf -PAN -UAO)
-[    2.008607] pc : __free_irq+0xc0/0x358
-[    2.012364] lr : __free_irq+0xc0/0x358
-[    2.016111] sp : ffff00001179b7e0
-[    2.019422] x29: ffff00001179b7e0 x28: 0000000000000018
-[    2.024736] x27: ffff000011233000 x26: 0000000000000004
-[    2.030053] x25: 000000000000001a x24: ffff80083bec74d4
-[    2.035369] x23: 0000000000000000 x22: ffff80083bec7588
-[    2.040686] x21: ffff80083b1fe8d8 x20: ffff80083bec7400
-[    2.046003] x19: 0000000000000000 x18: ffffffffffffffff
-[    2.051320] x17: 0000000000000000 x16: 0000000000000000
-[    2.056637] x15: ffff0000111296c8 x14: ffff00009179b517
-[    2.061953] x13: ffff00001179b525 x12: ffff000011142000
-[    2.067270] x11: ffff000011129f20 x10: ffff0000105da970
-[    2.072587] x9 : 00000000ffffffd0 x8 : 0000000000000194
-[    2.077903] x7 : 612065657266206f x6 : ffff0000111e7b09
-[    2.083220] x5 : 0000000000000003 x4 : 0000000000000000
-[    2.088537] x3 : 0000000000000000 x2 : 00000000ffffffff
-[    2.093854] x1 : 28b70f0a2b60a500 x0 : 0000000000000000
-[    2.099173] Call trace:
-[    2.101618]  __free_irq+0xc0/0x358
-[    2.105021]  free_irq+0x38/0x98
-[    2.108170]  imx_mu_shutdown+0x90/0xb0
-[    2.111921]  mbox_free_channel.part.2+0x24/0xb8
-[    2.116453]  mbox_free_channel+0x18/0x28
+Thanks,
 
-This bug is present from the beginning of times.
+Mathieu
 
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/mailbox/imx-mailbox.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+----- On Sep 17, 2019, at 2:29 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-index 363d35d5e49dc..2f47023cab2b2 100644
---- a/drivers/mailbox/imx-mailbox.c
-+++ b/drivers/mailbox/imx-mailbox.c
-@@ -214,8 +214,10 @@ static void imx_mu_shutdown(struct mbox_chan *chan)
- 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
- 	struct imx_mu_con_priv *cp = chan->con_priv;
- 
--	if (cp->type == IMX_MU_TYPE_TXDB)
-+	if (cp->type == IMX_MU_TYPE_TXDB) {
- 		tasklet_kill(&cp->txdb_tasklet);
-+		return;
-+	}
- 
- 	imx_mu_xcr_rmw(priv, 0,
- 		   IMX_MU_xCR_TIEn(cp->idx) | IMX_MU_xCR_RIEn(cp->idx));
+> Hi,
+> 
+> Here is a small set of rseq fixes aiming Linux 5.4. Those should be
+> backported to stable kernels >= 4.18.
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> Mathieu Desnoyers (3):
+>  rseq: Fix: Reject unknown flags on rseq unregister
+>  rseq: Fix: Unregister rseq for clone CLONE_VM
+>  rseq/selftests: Fix: Namespace gettid() for compatibility with glibc
+>    2.30
+> 
+> include/linux/sched.h                     |  4 ++--
+> kernel/rseq.c                             |  2 ++
+> tools/testing/selftests/rseq/param_test.c | 18 ++++++++++--------
+> 3 files changed, 14 insertions(+), 10 deletions(-)
+> 
+> --
+> 2.17.1
+
 -- 
-2.20.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
