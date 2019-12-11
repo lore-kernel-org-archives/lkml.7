@@ -2,132 +2,439 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3268C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C21C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E7520663
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Lm5F6nqi"
+	by mail.kernel.org (Postfix) with ESMTP id 49BBE20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576077051;
+	bh=hHswzUoJBI7sw/V2s28kacVYKh5Hk9zVtWzcTVL8L1k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IJUwF0EN5dxVfEwcTIyezxUBz3DuObejcug8gksdAwQbMH7GicPN4312onLrGvVrP
+	 TGokLWtqLnAXHv7+RNiZrYco+VvBQ4r31SC9A5skcclhHcrRVpKycJrxd0ijFqX/Tf
+	 YU4PXM83/Mf/ylohE1qrjuE5kMfe6pXBDEdl1+Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfLKPKo (ORCPT
+        id S1730827AbfLKPKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:44 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15745 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730487AbfLKPKg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:36 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df106e40000>; Wed, 11 Dec 2019 07:10:28 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 11 Dec 2019 07:10:34 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 07:10:34 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 15:10:31 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 11 Dec 2019 15:10:30 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 66AC6447B2; Wed, 11 Dec 2019 17:10:28 +0200 (EET)
-Date:   Wed, 11 Dec 2019 17:10:28 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-CC:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mperttunen@nvidia.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <tglx@linutronix.de>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <allison@lohutok.net>, <pgaikwad@nvidia.com>,
-        <mturquette@baylibre.com>, <horms+renesas@verge.net.au>,
-        <Jisheng.Zhang@synaptics.com>, <krzk@kernel.org>, <arnd@arndb.de>,
-        <spujar@nvidia.com>, <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alexios.zavras@intel.com>, <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
- into PMC driver
-Message-ID: <20191211151028.GZ28289@pdeschrijver-desktop.Nvidia.com>
-References: <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
- <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
- <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
- <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
- <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
- <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
- <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
- <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
- <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
- <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
+        Wed, 11 Dec 2019 10:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730193AbfLKPKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7582173E;
+        Wed, 11 Dec 2019 15:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077045;
+        bh=hHswzUoJBI7sw/V2s28kacVYKh5Hk9zVtWzcTVL8L1k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AYqSnbYKs2cRH0U6+0nqLQqd8cwwmpjcb13aCj7aLbWorledwMS9kaDSw7XDQmySt
+         PjtZWeRIOQ0gCcg19o/+e8OKZY1GzXgCoMOEuslRYWP0W6MHl0HsyN5Zg4Gh+sQiXk
+         cOgJRIYgNQB4GM+NYY6d7XQoyovNi+jBgCnKYFik=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Je Yen Tam <je.yen.tam@ni.com>
+Subject: [PATCH 5.4 89/92] Revert "serial/8250: Add support for NI-Serial PXI/PXIe+485 devices"
+Date:   Wed, 11 Dec 2019 16:06:20 +0100
+Message-Id: <20191211150302.547979951@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
+References: <20191211150221.977775294@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576077028; bh=VvDMrUYT7taYzbMa3m3Y5QwG5+rFZtiGCZ+lwUnZ+H4=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=Lm5F6nqi5lm9oF3AFvMVlJyM+vsVmkKVxMC3aCEATgZO2h7/YDOmlhxTh16jJsYJc
-         RiTDpkOAGndf7f5g1VHhTGp0uN0v291Ea9MpN52Vs9fo5PtJEB6Zx5z61K91j3ytjq
-         mff6ObVy21nYWvLr+C7tSIvriqp0/PQ0hSigNsBE/FlJGH+QmpZXlRv7KroBogN+1w
-         Cz7mjfNTukwY2nltQx3atJPxUyEKwDEJnOP/0N6zXKUqC2iRiQJTV8QETKFJ8qqemu
-         yrIV5TJcqcqdsN6mPTX3i85m8T+/UOb2TOeAfLfE+x5CnmT8RyiTFIDmSn7YykhuIu
-         1ZWP3M73v2MFg==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 08:41:56PM +0300, Dmitry Osipenko wrote:
+From: Je Yen Tam <je.yen.tam@ni.com>
 
-..
+commit 27ed14d0ecb38516b6f3c6fdcd62c25c9454f979 upstream.
 
-> >
-> > PMC clock gate is based on the state of CLKx_ACCEPT_REQ and FORCE_EN
-> > like explained above.
-> >
-> > CLKx_ACCEPT_REQ is 0 default and FORCE_EN acts as gate to enable/disable
-> > EXTPERIPH clock output to PMC CLK_OUT_1/2/3.
-> 
-> [and to enable OSC as well]
-> 
-> > So I believe we need to register as MUX and Gate rather than as a single
-> > clock. Please confirm.
-> 
-> 1. The force-enabling is applied to both OSC and EXTERN sources of
-> PMC_CLK_OUT_x by PMC at once.
-> 
-> 2. Both of PMC's force-enabling and OSC/EXTERN selection is internal to PMC.
-> 
-> Should be better to define it as a single "pmc_clk_out_x". I don't see
-> any good reasons for differentiating PMC's Gate from the MUX, it's a
-> single hardware unit from a point of view of the rest of the system.
-> 
-> Peter, do you have any objections?
+This reverts commit fdc2de87124f5183a98ea7eced1f76dbdba22951 ("serial/8250:
+Add support for NI-Serial PXI/PXIe+485 devices").
 
-The reason to have separate gate and mux clocks, is to preserve compatibility
-with existing users.
-Otherwise the current users would need to figure out if there's a
-single clock or 2 clocks to configure. I don't think adding that code in
-each user is worth it only to have a sligthly nicer modelling of the
-hardware.
+The commit fdc2de87124f ("serial/8250: Add support for NI-Serial
+PXI/PXIe+485 devices") introduced a breakage on NI-Serial PXI(e)-RS485
+devices, RS-232 variants have no issue. The Linux system can enumerate the
+NI-Serial PXI(e)-RS485 devices, but it broke the R/W operation on the
+ports.
 
-Cheers,
+However, the implementation is working on the NI internal Linux RT kernel
+but it does not work in the Linux main tree kernel. This is only affecting
+NI products, specifically the RS-485 variants. Reverting the upstream
+until a proper implementation that can apply to both NI internal Linux
+kernel and Linux mainline kernel is figured out.
 
-Peter.
+Signed-off-by: Je Yen Tam <je.yen.tam@ni.com>
+Fixes: fdc2de87124f ("serial/8250: Add support for NI-Serial PXI/PXIe+485 devices")
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191127075301.9866-1-je.yen.tam@ni.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/8250/8250_pci.c |  292 -------------------------------------
+ 1 file changed, 4 insertions(+), 288 deletions(-)
+
+--- a/drivers/tty/serial/8250/8250_pci.c
++++ b/drivers/tty/serial/8250/8250_pci.c
+@@ -745,16 +745,8 @@ static int pci_ni8430_init(struct pci_de
+ }
+ 
+ /* UART Port Control Register */
+-#define NI16550_PCR_OFFSET	0x0f
+-#define NI16550_PCR_RS422	0x00
+-#define NI16550_PCR_ECHO_RS485	0x01
+-#define NI16550_PCR_DTR_RS485	0x02
+-#define NI16550_PCR_AUTO_RS485	0x03
+-#define NI16550_PCR_WIRE_MODE_MASK	0x03
+-#define NI16550_PCR_TXVR_ENABLE_BIT	BIT(3)
+-#define NI16550_PCR_RS485_TERMINATION_BIT	BIT(6)
+-#define NI16550_ACR_DTR_AUTO_DTR	(0x2 << 3)
+-#define NI16550_ACR_DTR_MANUAL_DTR	(0x0 << 3)
++#define NI8430_PORTCON	0x0f
++#define NI8430_PORTCON_TXVR_ENABLE	(1 << 3)
+ 
+ static int
+ pci_ni8430_setup(struct serial_private *priv,
+@@ -776,117 +768,14 @@ pci_ni8430_setup(struct serial_private *
+ 		return -ENOMEM;
+ 
+ 	/* enable the transceiver */
+-	writeb(readb(p + offset + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
+-	       p + offset + NI16550_PCR_OFFSET);
++	writeb(readb(p + offset + NI8430_PORTCON) | NI8430_PORTCON_TXVR_ENABLE,
++	       p + offset + NI8430_PORTCON);
+ 
+ 	iounmap(p);
+ 
+ 	return setup_port(priv, port, bar, offset, board->reg_shift);
+ }
+ 
+-static int pci_ni8431_config_rs485(struct uart_port *port,
+-	struct serial_rs485 *rs485)
+-{
+-	u8 pcr, acr;
+-	struct uart_8250_port *up;
+-
+-	up = container_of(port, struct uart_8250_port, port);
+-	acr = up->acr;
+-	pcr = port->serial_in(port, NI16550_PCR_OFFSET);
+-	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
+-
+-	if (rs485->flags & SER_RS485_ENABLED) {
+-		/* RS-485 */
+-		if ((rs485->flags & SER_RS485_RX_DURING_TX) &&
+-			(rs485->flags & SER_RS485_RTS_ON_SEND)) {
+-			dev_dbg(port->dev, "Invalid 2-wire mode\n");
+-			return -EINVAL;
+-		}
+-
+-		if (rs485->flags & SER_RS485_RX_DURING_TX) {
+-			/* Echo */
+-			dev_vdbg(port->dev, "2-wire DTR with echo\n");
+-			pcr |= NI16550_PCR_ECHO_RS485;
+-			acr |= NI16550_ACR_DTR_MANUAL_DTR;
+-		} else {
+-			/* Auto or DTR */
+-			if (rs485->flags & SER_RS485_RTS_ON_SEND) {
+-				/* Auto */
+-				dev_vdbg(port->dev, "2-wire Auto\n");
+-				pcr |= NI16550_PCR_AUTO_RS485;
+-				acr |= NI16550_ACR_DTR_AUTO_DTR;
+-			} else {
+-				/* DTR-controlled */
+-				/* No Echo */
+-				dev_vdbg(port->dev, "2-wire DTR no echo\n");
+-				pcr |= NI16550_PCR_DTR_RS485;
+-				acr |= NI16550_ACR_DTR_MANUAL_DTR;
+-			}
+-		}
+-	} else {
+-		/* RS-422 */
+-		dev_vdbg(port->dev, "4-wire\n");
+-		pcr |= NI16550_PCR_RS422;
+-		acr |= NI16550_ACR_DTR_MANUAL_DTR;
+-	}
+-
+-	dev_dbg(port->dev, "write pcr: 0x%08x\n", pcr);
+-	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
+-
+-	up->acr = acr;
+-	port->serial_out(port, UART_SCR, UART_ACR);
+-	port->serial_out(port, UART_ICR, up->acr);
+-
+-	/* Update the cache. */
+-	port->rs485 = *rs485;
+-
+-	return 0;
+-}
+-
+-static int pci_ni8431_setup(struct serial_private *priv,
+-		 const struct pciserial_board *board,
+-		 struct uart_8250_port *uart, int idx)
+-{
+-	u8 pcr, acr;
+-	struct pci_dev *dev = priv->dev;
+-	void __iomem *addr;
+-	unsigned int bar, offset = board->first_offset;
+-
+-	if (idx >= board->num_ports)
+-		return 1;
+-
+-	bar = FL_GET_BASE(board->flags);
+-	offset += idx * board->uart_offset;
+-
+-	addr = pci_ioremap_bar(dev, bar);
+-	if (!addr)
+-		return -ENOMEM;
+-
+-	/* enable the transceiver */
+-	writeb(readb(addr + NI16550_PCR_OFFSET) | NI16550_PCR_TXVR_ENABLE_BIT,
+-		addr + NI16550_PCR_OFFSET);
+-
+-	pcr = readb(addr + NI16550_PCR_OFFSET);
+-	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
+-
+-	/* set wire mode to default RS-422 */
+-	pcr |= NI16550_PCR_RS422;
+-	acr = NI16550_ACR_DTR_MANUAL_DTR;
+-
+-	/* write port configuration to register */
+-	writeb(pcr, addr + NI16550_PCR_OFFSET);
+-
+-	/* access and write to UART acr register */
+-	writeb(UART_ACR, addr + UART_SCR);
+-	writeb(acr, addr + UART_ICR);
+-
+-	uart->port.rs485_config = &pci_ni8431_config_rs485;
+-
+-	iounmap(addr);
+-
+-	return setup_port(priv, uart, bar, offset, board->reg_shift);
+-}
+-
+ static int pci_netmos_9900_setup(struct serial_private *priv,
+ 				const struct pciserial_board *board,
+ 				struct uart_8250_port *port, int idx)
+@@ -2023,15 +1912,6 @@ pci_moxa_setup(struct serial_private *pr
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_COM_8SM	0x10E9
+ #define PCI_DEVICE_ID_ACCESIO_PCIE_ICM_4SM	0x11D8
+ 
+-#define PCIE_DEVICE_ID_NI_PXIE8430_2328	0x74C2
+-#define PCIE_DEVICE_ID_NI_PXIE8430_23216	0x74C1
+-#define PCI_DEVICE_ID_NI_PXI8431_4852	0x7081
+-#define PCI_DEVICE_ID_NI_PXI8431_4854	0x70DE
+-#define PCI_DEVICE_ID_NI_PXI8431_4858	0x70E3
+-#define PCI_DEVICE_ID_NI_PXI8433_4852	0x70E9
+-#define PCI_DEVICE_ID_NI_PXI8433_4854	0x70ED
+-#define PCIE_DEVICE_ID_NI_PXIE8431_4858	0x74C4
+-#define PCIE_DEVICE_ID_NI_PXIE8431_48516	0x74C3
+ 
+ #define	PCI_DEVICE_ID_MOXA_CP102E	0x1024
+ #define	PCI_DEVICE_ID_MOXA_CP102EL	0x1025
+@@ -2269,87 +2149,6 @@ static struct pci_serial_quirk pci_seria
+ 		.setup		= pci_ni8430_setup,
+ 		.exit		= pci_ni8430_exit,
+ 	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCIE_DEVICE_ID_NI_PXIE8430_2328,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8430_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCIE_DEVICE_ID_NI_PXIE8430_23216,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8430_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCI_DEVICE_ID_NI_PXI8431_4852,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCI_DEVICE_ID_NI_PXI8431_4854,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCI_DEVICE_ID_NI_PXI8431_4858,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCI_DEVICE_ID_NI_PXI8433_4852,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCI_DEVICE_ID_NI_PXI8433_4854,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCIE_DEVICE_ID_NI_PXIE8431_4858,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+-	{
+-		.vendor		= PCI_VENDOR_ID_NI,
+-		.device		= PCIE_DEVICE_ID_NI_PXIE8431_48516,
+-		.subvendor	= PCI_ANY_ID,
+-		.subdevice	= PCI_ANY_ID,
+-		.init		= pci_ni8430_init,
+-		.setup		= pci_ni8431_setup,
+-		.exit		= pci_ni8430_exit,
+-	},
+ 	/* Quatech */
+ 	{
+ 		.vendor		= PCI_VENDOR_ID_QUATECH,
+@@ -3106,13 +2905,6 @@ enum pci_board_num_t {
+ 	pbn_ni8430_4,
+ 	pbn_ni8430_8,
+ 	pbn_ni8430_16,
+-	pbn_ni8430_pxie_8,
+-	pbn_ni8430_pxie_16,
+-	pbn_ni8431_2,
+-	pbn_ni8431_4,
+-	pbn_ni8431_8,
+-	pbn_ni8431_pxie_8,
+-	pbn_ni8431_pxie_16,
+ 	pbn_ADDIDATA_PCIe_1_3906250,
+ 	pbn_ADDIDATA_PCIe_2_3906250,
+ 	pbn_ADDIDATA_PCIe_4_3906250,
+@@ -3765,55 +3557,6 @@ static struct pciserial_board pci_boards
+ 		.uart_offset	= 0x10,
+ 		.first_offset	= 0x800,
+ 	},
+-	[pbn_ni8430_pxie_16] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 16,
+-		.base_baud	= 3125000,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8430_pxie_8] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 8,
+-		.base_baud	= 3125000,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8431_8] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 8,
+-		.base_baud	= 3686400,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8431_4] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 4,
+-		.base_baud	= 3686400,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8431_2] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 2,
+-		.base_baud	= 3686400,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8431_pxie_16] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 16,
+-		.base_baud	= 3125000,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+-	[pbn_ni8431_pxie_8] = {
+-		.flags		= FL_BASE0,
+-		.num_ports	= 8,
+-		.base_baud	= 3125000,
+-		.uart_offset	= 0x10,
+-		.first_offset	= 0x800,
+-	},
+ 	/*
+ 	 * ADDI-DATA GmbH PCI-Express communication cards <info@addi-data.com>
+ 	 */
+@@ -5567,33 +5310,6 @@ static const struct pci_device_id serial
+ 	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PCI8432_2324,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+ 		pbn_ni8430_4 },
+-	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_2328,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8430_pxie_8 },
+-	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8430_23216,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8430_pxie_16 },
+-	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4852,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_2 },
+-	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4854,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_4 },
+-	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8431_4858,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_8 },
+-	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_4858,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_pxie_8 },
+-	{	PCI_VENDOR_ID_NI, PCIE_DEVICE_ID_NI_PXIE8431_48516,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_pxie_16 },
+-	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4852,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_2 },
+-	{	PCI_VENDOR_ID_NI, PCI_DEVICE_ID_NI_PXI8433_4854,
+-		PCI_ANY_ID, PCI_ANY_ID, 0, 0,
+-		pbn_ni8431_4 },
+ 
+ 	/*
+ 	 * MOXA
+
+
