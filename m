@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA3BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86449C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138C622527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 527542073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077520;
-	bh=t8mb+WDffRmNpz/JjGsKX0Ma3N6Sa9QDPAxBfLFnx3U=;
+	s=default; t=1576077522;
+	bh=5LheclpOGsgHwvenYPaZGCTGNZTsutQjVMbV3lFliA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hb86jDs4Sw2R89/kFGlpSEWsv+GwO7FRSfSNJsOQabgSkZABAPjsqcs5g8GCMXZqG
-	 vKzqnNIbEq76nYBtWiBCzcJUGpAEcFqLRkEragbi5pM3r/2bcuJCuUrMa1vFi9RJFM
-	 5EEdSwt30NjIJflCqr2aiOPj3hM3eGWgyevXSb/o=
+	b=lijkjEj1Ruczhy6gJkS/YIMVaiqiXrJKnk0DH6+uMLJC0naTx6xU+fOBR/J8j2+Mk
+	 pUS+cE/H6a+9yVGVy2igDb5CCEEu0ZYFx/QGbkjvxhjZhgoTDzOiogIIBFOrFUNFOa
+	 fmqhL1l34ApHlrWoI4HK/N5SrU1AByqsrnvAgUtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbfLKPSi (ORCPT
+        id S1731663AbfLKPSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:18:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46566 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbfLKPSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:30 -0500
+        id S1732127AbfLKPSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3BC9208C3;
-        Wed, 11 Dec 2019 15:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 718462073D;
+        Wed, 11 Dec 2019 15:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077510;
-        bh=t8mb+WDffRmNpz/JjGsKX0Ma3N6Sa9QDPAxBfLFnx3U=;
+        s=default; t=1576077512;
+        bh=5LheclpOGsgHwvenYPaZGCTGNZTsutQjVMbV3lFliA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tBQrXmW2fe0+xW/ch1lrYZX36JLvsRdwugXqF55VFJF648ucrYqSBLN4dc0Orz2TU
-         3MkdV9YZaVdNsjAiOK0WLCUEf/VV1AXxq06WMdULe+f9i33YnUhf26WiR5TEX2WhOr
-         85xU6nXsE1qUQb+64rB7D+XqbUpKZ6v5lLsj6nn0=
+        b=A21pFT+3NthvgJwC/WVZzIi0jS8D2orEseMhF1yjaCszKsxXz4Zo+4Owi7OaCzHav
+         YWQbMHhPkoGyUigZVoQacA5HfDxnn2UJ1hsXqJRQBlyb9TcpD4c0QgjcgIwEfFvVy5
+         xkOwF1AT9AJsuapkCvZhq/leiT2W+6KhAhPbYeWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Katsuhiro Suzuki <katsuhiro@katsuster.net>,
         Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/243] clk: rockchip: fix I2S1 clock gate register for rk3328
-Date:   Wed, 11 Dec 2019 16:03:47 +0100
-Message-Id: <20191211150343.486374103@linuxfoundation.org>
+Subject: [PATCH 4.19 066/243] clk: rockchip: fix ID of 8ch clock of I2S1 for rk3328
+Date:   Wed, 11 Dec 2019 16:03:48 +0100
+Message-Id: <20191211150343.554548784@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,33 +62,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 
-[ Upstream commit 5c73ac2f8b70834a603eb2d92eb0bb464634420b ]
+[ Upstream commit df7b1f2e0a4ae0fceff261e29cde63dafcf2360f ]
 
-This patch fixes definition of I2S1 clock gate register for rk3328.
-Current setting is not related I2S clocks.
-  - bit6 of CRU_CLKGATE_CON0 means clk_ddrmon_en
-  - bit6 of CRU_CLKGATE_CON1 means clk_i2s1_en
+This patch fixes mistakes in HCLK_I2S1_8CH for running I2S1
+successfully.
 
 Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3328.c | 2 +-
+ include/dt-bindings/clock/rk3328-cru.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3328.c b/drivers/clk/rockchip/clk-rk3328.c
-index ecbae8acd05b8..f2f13b603ae9b 100644
---- a/drivers/clk/rockchip/clk-rk3328.c
-+++ b/drivers/clk/rockchip/clk-rk3328.c
-@@ -392,7 +392,7 @@ static struct rockchip_clk_branch rk3328_clk_branches[] __initdata = {
- 			RK3328_CLKGATE_CON(1), 5, GFLAGS,
- 			&rk3328_i2s1_fracmux),
- 	GATE(SCLK_I2S1, "clk_i2s1", "i2s1_pre", CLK_SET_RATE_PARENT,
--			RK3328_CLKGATE_CON(0), 6, GFLAGS),
-+			RK3328_CLKGATE_CON(1), 6, GFLAGS),
- 	COMPOSITE_NODIV(SCLK_I2S1_OUT, "i2s1_out", mux_i2s1out_p, 0,
- 			RK3328_CLKSEL_CON(8), 12, 1, MFLAGS,
- 			RK3328_CLKGATE_CON(1), 7, GFLAGS),
+diff --git a/include/dt-bindings/clock/rk3328-cru.h b/include/dt-bindings/clock/rk3328-cru.h
+index a82a0109faffe..9d5f799469eee 100644
+--- a/include/dt-bindings/clock/rk3328-cru.h
++++ b/include/dt-bindings/clock/rk3328-cru.h
+@@ -178,7 +178,7 @@
+ #define HCLK_TSP		309
+ #define HCLK_GMAC		310
+ #define HCLK_I2S0_8CH		311
+-#define HCLK_I2S1_8CH		313
++#define HCLK_I2S1_8CH		312
+ #define HCLK_I2S2_2CH		313
+ #define HCLK_SPDIF_8CH		314
+ #define HCLK_VOP		315
 -- 
 2.20.1
 
