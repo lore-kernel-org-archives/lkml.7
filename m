@@ -2,144 +2,88 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301EBC2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101D1C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03881214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oNQj8T25"
+	by mail.kernel.org (Postfix) with ESMTP id D9CA120637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576050285;
+	bh=ZuAU5be4qPQdbwFzHFL1JYNpx9aOpGRnNoEqu23egts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ATrIB1sZiUl2Ka11y8cu7FGi4Q7ZQP+T9tVhuQ7Hic7e5MzcnaVgpO7LyIw6jQr/U
+	 QTPsLbpuOvCNdUkvABu8W/wTyuFHtdBaFiXz1ed8aPbYxSsJ/1BHFZHksuSLu+5+D3
+	 JYoL5WEkNnqflompqHD7wceWlY74mOiQoCJPuII8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfLKHoI (ORCPT
+        id S1728185AbfLKHoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:44:08 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34392 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfLKHoI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:44:08 -0500
-Received: by mail-wm1-f68.google.com with SMTP id f4so533004wmj.1
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 23:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=8t/GKPkjCc55Q23WSZ4kx8DWb4EGXXPpMvhgPGlpJnc=;
-        b=oNQj8T25SlXlalDjaeeB+QS8RBx3bJYT7Zh+65iQm+T6kLKoWCaoICEy8MjZ3V/qqq
-         +aUUql1k88gtuazxEmo4f67CEpanwiUSbXUBpUBbezDuzBOY1mxjgSa645xjhtjJheo0
-         8amA5Icav4bSCJwkbuPi2VqsswLEjULOHM/q1GjtoWl9D+PiMqQYXtn1+gbCntJk7Ksb
-         piIgFPSAL3aLk3voSmpIQc9vJhZSoejM+dMYwdOV23Ydp+mLNvInOee4i+ReVF1aMV26
-         oXVbSmIyB3tnLU50Gq++qbH96uLbNxh1j2UkONxF9hjkiZ5v3zL7VFgsa8sKZS1jWhPz
-         PsKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=8t/GKPkjCc55Q23WSZ4kx8DWb4EGXXPpMvhgPGlpJnc=;
-        b=fHkIa///xy0YXLfSzL4lYa8FWCJ6XZVUrINo5FoYaP7DnnWYaEyIASUIyPC+2FkFmX
-         +VdOY3NxYaL02WoUeU4OC62KGxw/oiittq7My171x8qpjy7yFt3JaYcYkNWczugOgLZ1
-         iuhwsYjshyV+l17egSdjepxkHTt5e556e3mFmMtgAarNXvQos4jqvcNmtnyXsusbcZbQ
-         h4gAnTk5ZKBY1TjesWewpoY42Ae6zCox7j3jXye6hdJ7BFyqg0ZaESMTenLCWWtDwKYO
-         OoERzVEDwQ5FmqMMyEE1dl4bTIIYk6WZUH2LwKAIiifQkcCksHoUibiFx6xaUUC/V4US
-         7hEw==
-X-Gm-Message-State: APjAAAVjKAAMDFxLHl5zUi2arujJXloJbbLle5BhDrPJhDA05NeaEjph
-        azF2zsebCOHQlQvsykEL9pkE9A==
-X-Google-Smtp-Source: APXvYqzVwgTlMa03+ubhsFOuv2y8pE2uSEYmITOdpwC2p4zfLOpocy1LE8xPAMNEo7lgP48izjiyIg==
-X-Received: by 2002:a05:600c:204:: with SMTP id 4mr1982085wmi.1.1576050246175;
-        Tue, 10 Dec 2019 23:44:06 -0800 (PST)
-Received: from dell ([2.27.35.147])
-        by smtp.gmail.com with ESMTPSA id i16sm1307003wmb.36.2019.12.10.23.44.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 23:44:05 -0800 (PST)
-Date:   Wed, 11 Dec 2019 07:44:00 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH v3 2/6] mfd: rn5t618: prepare for irq handling
-Message-ID: <20191211074400.GV3468@dell>
-References: <20191129212045.18325-1-andreas@kemnade.info>
- <20191129212045.18325-3-andreas@kemnade.info>
- <20191210091351.GS3468@dell>
- <20191210173146.6b31e599@kemnade.info>
+        Wed, 11 Dec 2019 02:44:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfLKHoo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:44:44 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67AF120637;
+        Wed, 11 Dec 2019 07:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576050283;
+        bh=ZuAU5be4qPQdbwFzHFL1JYNpx9aOpGRnNoEqu23egts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qWjZGzu0wtMXb4AwOWR4UDh7DsnBjggDVmgGJwkcRsvYvK2h+P2z2y/eg9ttqpY3H
+         j0JaW+E/UCj9VmB5doricAVhY7xM9XAR/467JXvfYJuzUSh9ziOk5DNWcYF2Em4ev3
+         GJz1XQfzewUkCRRZl6q0KgqcXDfZeuflmX/F2QaI=
+Date:   Wed, 11 Dec 2019 08:44:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Kusanagi Kouichi <slash@ac.auone-net.jp>
+Subject: Re: [PATCH AUTOSEL 4.9 85/91] debugfs: Fix !DEBUG_FS
+ debugfs_create_automount
+Message-ID: <20191211074441.GC398293@kroah.com>
+References: <20191210223035.14270-1-sashal@kernel.org>
+ <20191210223035.14270-85-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191210173146.6b31e599@kemnade.info>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191210223035.14270-85-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019, Andreas Kemnade wrote:
-
-> accidently send it only to Lee, that was unintended.
+On Tue, Dec 10, 2019 at 05:30:29PM -0500, Sasha Levin wrote:
+> From: Kusanagi Kouichi <slash@ac.auone-net.jp>
 > 
-> On Tue, 10 Dec 2019 09:13:51 +0000
-> Lee Jones <lee.jones@linaro.org> wrote:
+> [ Upstream commit 4250b047039d324e0ff65267c8beb5bad5052a86 ]
 > 
-> > On Fri, 29 Nov 2019, Andreas Kemnade wrote:
-> > 
-> > > rn5t618 currently lacks irq handling. To prepare implementation  
-> > 
-> > "RN5T618"
-> > "IRQ"
-> > 
-> > > in a rn5t618-irq.c, move main file to rn5t618-core.c  
-> > 
-> > Why do you *need* to call it "core"?
-> > 
-> Well, the pattern is that irq stuff is in a separate file
-> for other mfds. And when I want to link things together to a rn5t618.[k]o
-> I think that none objects cannot be called rn5t618.o and so no source
-> file rn5t618.o. Am I wrong here? Of course if things can live in one file
-> this thing is not needed.
+> If DEBUG_FS=n, compile fails with the following error:
+> 
+> kernel/trace/trace.c: In function 'tracing_init_dentry':
+> kernel/trace/trace.c:8658:9: error: passing argument 3 of 'debugfs_create_automount' from incompatible pointer type [-Werror=incompatible-pointer-types]
+>  8658 |         trace_automount, NULL);
+>       |         ^~~~~~~~~~~~~~~
+>       |         |
+>       |         struct vfsmount * (*)(struct dentry *, void *)
+> In file included from kernel/trace/trace.c:24:
+> ./include/linux/debugfs.h:206:25: note: expected 'struct vfsmount * (*)(void *)' but argument is of type 'struct vfsmount * (*)(struct dentry *, void *)'
+>   206 |      struct vfsmount *(*f)(void *),
+>       |      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+> 
+> Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
+> Link: https://lore.kernel.org/r/20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Unless you have a good reason for separating out the code, having it
-all in a single file is preferred.
+This patch is only needed for 5.4 and newer kernels.  No need to
+backport it anywhere, please drop it from all of these trees.
 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > >  drivers/mfd/Makefile                      | 2 ++
-> > >  drivers/mfd/{rn5t618.c => rn5t618-core.c} | 0
-> > >  2 files changed, 2 insertions(+)
-> > >  rename drivers/mfd/{rn5t618.c => rn5t618-core.c} (100%)
-> > > 
-> > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > index c1067ea46204..110ea700231b 100644
-> > > --- a/drivers/mfd/Makefile
-> > > +++ b/drivers/mfd/Makefile
-> > > @@ -216,6 +216,8 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
-> > >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
-> > >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
-> > >  obj-$(CONFIG_MFD_RK808)		+= rk808.o
-> > > +
-> > > +rn5t618-objs			:= rn5t618-core.o
-> > >  obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
-> > >  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
-> > >  obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
-> > > diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618-core.c
-> > > similarity index 100%
-> > > rename from drivers/mfd/rn5t618.c
-> > > rename to drivers/mfd/rn5t618-core.c  
-> > 
+thanks,
 
-
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
