@@ -2,108 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F53C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BED20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rPdOmD+9"
+	by mail.kernel.org (Postfix) with ESMTP id 2F6DA20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576084793;
+	bh=5mOZy9aSvWTDBTgTyHdmoUhFYOB7lePCh8AYYsfh7YE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=FZzauqxgp+rtqHjwXodlO2JD8dFUdmblX9xAwy9yTlg9lNdpv5yo21U/WiFSBr/aw
+	 FgcgMP+doCALBlvvnhOexkh0zSrfx7PTpsfnZVP2EzMjoqXA5uml3kzZMrYByTl3rN
+	 m0msPpG/tX2V4QLuACxV+NwyQc4g3imSooCybXSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbfLKRTi (ORCPT
+        id S1731019AbfLKRTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:19:38 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38505 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730318AbfLKRTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:19:37 -0500
-Received: by mail-qk1-f193.google.com with SMTP id k6so20330258qki.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:19:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=KG1B1/XNdtFtj52rr+keQdkSlXVNtixvd3xO9+2XJ3g=;
-        b=rPdOmD+9MCriMKlGpN93RjC2asNR0TjQF5EX6nSzzBHq+kSTO1lDDr7cicx5REQ3pD
-         8KA2llMqbpABZbkxF60kjsQjTbbbrkzVY4smbkHgkWr7VoiEPxnBUS3FwYduw/17QxG3
-         6GXpRv5e3ru8+IL6BhxkZaq4+HGxjs1okYOqaQIFGo6QgjZrKVx9vJzKGpTWDW9zkwHI
-         8uyYpUr0hCuWXLMhTzkMMk9nMVYLJD8SPxV/Imhe2pZb64yY5qsJzCD8iQI3Hx7Wmrgx
-         V1zMmPLQEuhnOhtLfuZQ4Lh63s/P1jeYhrG8hpEF2xLGHZnOFuzj/QPhRo1OQoiz7AHo
-         WzDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=KG1B1/XNdtFtj52rr+keQdkSlXVNtixvd3xO9+2XJ3g=;
-        b=XZ8tktqkqmYkoJopNU7DoyRwQxqv42MO/rTi3RwyDLegkQRhxNO0GqwM7yiYbOBSU3
-         lsFljAScY4YDzIw/HdNIpbVB8Dg+fs9r2BrgSjahLf435tdCU5Qk0O43lima//lj++Uz
-         ABm/TjqBNpjEiYS/EVeGAZmtyKir65Rwz/GnJnBlNxI0ROUWnM7aiOx6cc1pS67isyUu
-         Y8r257FaPA5gRtDhmaGznJ67v6Pgr1hTYETleeFB5ccTkLPJLBumerzxu8Lv8OKPY282
-         LeAKNkS0GUxlVHUPNwU0Gk8VHY+xxWzXYPSZfd2GcNCoU7X+V0oh+suF372sZCDDKrhs
-         AL2Q==
-X-Gm-Message-State: APjAAAVjBmFqihJ587PZIirChztlupvN6hHO83ozJZ3H9fMB7TtbyDQn
-        PuT8I3h6lW+yO4Jmx3PT+3a2Iw==
-X-Google-Smtp-Source: APXvYqziSQ2OU4OXjzdNoNYeczSwDlStzGJAob4piuigMuCkjbj07ZxDhMEWk9MKjPgnwpfe9JISVg==
-X-Received: by 2002:a37:27cc:: with SMTP id n195mr3658562qkn.428.1576084776776;
-        Wed, 11 Dec 2019 09:19:36 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id r5sm849819qkf.44.2019.12.11.09.19.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 09:19:36 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v16 13/25] mm: pagewalk: Don't lock PTEs for walk_page_range_novma()
-Date:   Wed, 11 Dec 2019 12:19:35 -0500
-Message-Id: <728FAC8D-AA0C-4326-8990-A3D5D0DA1EE5@lca.pw>
-References: <e0fd5594-fb4e-9ead-e582-544f47cb1f8b@arm.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>, x86@kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        =?utf-8?Q?J=C3=A9r=C3=B4me_Glisse?= <jglisse@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, kbuild-all@lists.01.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, James Morse <James.Morse@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-In-Reply-To: <e0fd5594-fb4e-9ead-e582-544f47cb1f8b@arm.com>
-To:     Steven Price <Steven.Price@arm.com>
-X-Mailer: iPhone Mail (17B111)
+        Wed, 11 Dec 2019 12:19:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730318AbfLKRTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:19:51 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21C4020409;
+        Wed, 11 Dec 2019 17:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576084791;
+        bh=5mOZy9aSvWTDBTgTyHdmoUhFYOB7lePCh8AYYsfh7YE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RtWJx34Zl/FZtq9slmr5312KpXPQL1rk9I/EarUJzhOlFkYGZuhzcOG1i5oYEjH2H
+         JoQtSBH4EyOey5qljIW0woKtFhsxpocUnGs79xBWzZyJdSytXnxp/HDvwAmQc0oEkL
+         JGoyrRAeQ0RO2Qe/gaeySjlqUA0rf6YNaMVpHLo4=
+Subject: Re: [PATCH 1/2] kselftest/runner: Print new line in print of timeout
+ log
+To:     Kees Cook <keescook@chromium.org>,
+        SeongJae Park <sjpark@amazon.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sj38.park@gmail.com, SeongJae Park <sjpark@amazon.de>,
+        shuah <shuah@kernel.org>
+References: <20191202114221.827-1-sjpark@amazon.com>
+ <201912071047.E373E19A97@keescook>
+From:   shuah <shuah@kernel.org>
+Message-ID: <cbbe2517-06bc-36c4-8762-a2cd28fa1e4a@kernel.org>
+Date:   Wed, 11 Dec 2019 10:19:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <201912071047.E373E19A97@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/7/19 11:47 AM, Kees Cook wrote:
+> On Mon, Dec 02, 2019 at 12:42:20PM +0100, SeongJae Park wrote:
+>> From: SeongJae Park <sjpark@amazon.de>
+>>
+>> If a timeout failure occurs, kselftest kills the test process and prints
+>> the timeout log.  If the test process has killed while printing a log
+>> that ends with new line, the timeout log can be printed in middle of the
+>> test process output so that it can be seems like a comment, as below:
+>>
+>>      # test_process_log	not ok 3 selftests: timers: nsleep-lat # TIMEOUT
+>>
+>> This commit avoids such problem by printing one more line before the
+>> TIMEOUT failure log.
+>>
+>> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> 
+> Acked-by: Kees Cook <keescook@chromium.org>
+> 
+> Cool, yeah, this looks fine to me. Nice idea!
+> 
+> -Kees
+> 
+>> ---
+>>   tools/testing/selftests/kselftest/runner.sh | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+>> index 84de7bc74f2c..a8d20cbb711c 100644
+>> --- a/tools/testing/selftests/kselftest/runner.sh
+>> +++ b/tools/testing/selftests/kselftest/runner.sh
+>> @@ -79,6 +79,7 @@ run_one()
+>>   		if [ $rc -eq $skip_rc ]; then	\
+>>   			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
+>>   		elif [ $rc -eq $timeout_rc ]; then \
+>> +			echo "#"
+>>   			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
+>>   		else
+>>   			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+>> -- 
+>> 2.17.1
+>>
+> 
 
+Thanks. Applying to fixes for the next 5.5-rc
 
-> On Dec 11, 2019, at 10:54 AM, Steven Price <Steven.Price@arm.com> wrote:
->=20
-> I believe this is a false positive (although the trace here is useless).
-> This patch adds a conditional lock/unlock:
->=20
-> pte =3D walk->no_vma ? pte_offset_map(pmd, addr) :
->             pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
-> ...
-> if (!walk->no_vma)
->    spin_unlock(ptl);
-> pte_unmap(pte);
->=20
-> I'm not sure how to match sparse happy about that. Is the only option to
-> have two versions of the walk_pte_range() function? One which takes the
-> lock and one which doesn't.
-
-Or just ignore the sparse false positive without complicating the code furth=
-er.=
+-- Shuah
