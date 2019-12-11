@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A6EC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0F1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70DAB24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D45524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076958;
-	bh=2G4Bl/xqP/dd7SjrZsEOEoYlNf1aFFYxNs8ztnSFFbA=;
+	s=default; t=1576076961;
+	bh=W0VANgufBlokocbYrRF/dsFVIFjy6aAmV9Ao17Jfg4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=egafM2Url+GVEvRCsttzvPUEKdgkR5lA4+kbUXnEAJXL5pZ3VKl+/rOrg43lxfYnC
-	 ExBlq5zLPx0wGa6PgDVpFR7yJgsklcwxb6efzZbgfEFWGIZyNVpTAxa7Ut9avElODf
-	 z6/wnrfO0EWVfUXF0LIzVLDxewe0Y/G2VM1BM+gc=
+	b=LRjy5SRYjdTSVy3CgyCQ792ia7OrOw+se0wo7ec7PMqrPuSG6SZXWsz89HpizoCfr
+	 pOEL+QIgTStiNPopZM+dE7V7DglBEooFmloct4i5jIc5mwv/Rg0xOnSR3da1rq/i18
+	 4PeVU6+24zwglW+G3qO7tgb/OfwRXFVpyI6Nh0yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbfLKPJR (ORCPT
+        id S1730573AbfLKPJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:09:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729481AbfLKPJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:13 -0500
+        id S1729481AbfLKPJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B562208C3;
-        Wed, 11 Dec 2019 15:09:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1EF92464B;
+        Wed, 11 Dec 2019 15:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076952;
-        bh=2G4Bl/xqP/dd7SjrZsEOEoYlNf1aFFYxNs8ztnSFFbA=;
+        s=default; t=1576076958;
+        bh=W0VANgufBlokocbYrRF/dsFVIFjy6aAmV9Ao17Jfg4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8dim312IJ/kQot/bD5bq2eTinFl6Md2/QwqmJQJs+f2lJJesPwYCFj59TwHlul25
-         n1yatfvlWjzd177/O9Z8a79YfAD4GOMBSW+p2plSJ3GqMx+0/JRrUXLwbH0FIBBArd
-         J3R5TEGSTzEQzwCFXiGoQAD2hsIIpyX70zzDcqJs=
+        b=si1mhh958vUVvVscgQTW5fgwDMKJdgy/8eDMFmqk2ogrjF2iuYB1lE/T8oPlkDsb9
+         +MyXM0T8rVIrhfr+aVunJWzuk2RWxyxqlV4ZGtjG8zYCoqvqvaGm3BbEmeJu2f1lhY
+         oy6aAdVJi0NKBgAID9EfiS6rcnv8qylypSEQf/2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH 5.4 54/92] drm/msm: fix memleak on release
-Date:   Wed, 11 Dec 2019 16:05:45 +0100
-Message-Id: <20191211150245.038759780@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 5.4 56/92] drm/i810: Prevent underflow in ioctl
+Date:   Wed, 11 Dec 2019 16:05:47 +0100
+Message-Id: <20191211150247.145887780@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -61,45 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit a64fc11b9a520c55ca34d82e5ca32274f49b6b15 upstream.
+commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
 
-If a process is interrupted while accessing the "gpu" debugfs file and
-the drm device struct_mutex is contended, release() could return early
-and fail to free related resources.
+The "used" variables here come from the user in the ioctl and it can be
+negative.  It could result in an out of bounds write.
 
-Note that the return value from release() is ignored.
-
-Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
-Cc: stable <stable@vger.kernel.org>     # 4.18
-Cc: Jordan Crouse <jcrouse@codeaurora.org>
-Cc: Rob Clark <robdclark@gmail.com>
-Reviewed-by: Rob Clark <robdclark@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191010131333.23635-2-johan@kernel.org
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/msm_debugfs.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/gpu/drm/i810/i810_dma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/msm/msm_debugfs.c
-+++ b/drivers/gpu/drm/msm/msm_debugfs.c
-@@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode
- 	struct msm_gpu_show_priv *show_priv = m->private;
- 	struct msm_drm_private *priv = show_priv->dev->dev_private;
- 	struct msm_gpu *gpu = priv->gpu;
--	int ret;
--
--	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
--	if (ret)
--		return ret;
+--- a/drivers/gpu/drm/i810/i810_dma.c
++++ b/drivers/gpu/drm/i810/i810_dma.c
+@@ -728,7 +728,7 @@ static void i810_dma_dispatch_vertex(str
+ 	if (nbox > I810_NR_SAREA_CLIPRECTS)
+ 		nbox = I810_NR_SAREA_CLIPRECTS;
  
-+	mutex_lock(&show_priv->dev->struct_mutex);
- 	gpu->funcs->gpu_state_put(show_priv->state);
- 	mutex_unlock(&show_priv->dev->struct_mutex);
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
  
+ 	if (sarea_priv->dirty)
+@@ -1048,7 +1048,7 @@ static void i810_dma_dispatch_mc(struct
+ 	if (u != I810_BUF_CLIENT)
+ 		DRM_DEBUG("MC found buffer that isn't mine!\n");
+ 
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
+ 
+ 	sarea_priv->dirty = 0x7f;
 
 
