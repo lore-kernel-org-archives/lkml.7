@@ -2,182 +2,329 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8756DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1126FC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50011205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CQsS00MB"
+	by mail.kernel.org (Postfix) with ESMTP id D1BFC205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfLKJtG (ORCPT
+        id S1728791AbfLKJtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:49:06 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4235 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfLKJtG (ORCPT
+        Wed, 11 Dec 2019 04:49:25 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37313 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbfLKJtZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:49:06 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df0bb8a0000>; Wed, 11 Dec 2019 01:48:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 11 Dec 2019 01:49:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 01:49:04 -0800
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
- 2019 09:49:04 +0000
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by
- DRHQMAIL107.nvidia.com (10.27.9.16) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Wed, 11 Dec 2019 09:49:03 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 83C0540D1A; Wed, 11 Dec 2019 11:49:01 +0200 (EET)
-Date:   Wed, 11 Dec 2019 11:49:01 +0200
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-CC:     <afaerber@suse.de>, <manivannan.sadhasivam@linaro.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <Eugeniy.Paltsev@synopsys.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>, <agross@kernel.org>,
-        <s.nawrocki@samsung.com>, <tomasz.figa@gmail.com>,
-        <cw00.choi@samsung.com>, <kgene@kernel.org>, <krzk@kernel.org>,
-        <palmer@sifive.com>, <paul.walmsley@sifive.com>,
-        <dinguyen@kernel.org>, <mripard@kernel.org>, <wens@csie.org>,
-        <emilio@elopez.com.ar>, <pgaikwad@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <matthias.bgg@gmail.com>, <rfontana@redhat.com>,
-        <gregkh@linuxfoundation.org>, <t-kristo@ti.com>,
-        <john@phrozen.org>, <tglx@linutronix.de>, <allison@lohutok.net>,
-        <kstewart@linuxfoundation.org>, <swinslow@gmail.com>,
-        <aisheng.dong@nxp.com>, <robh@kernel.org>, <daniel.baluta@nxp.com>,
-        <weiyongjun1@huawei.com>, <wangyan.wang@mediatek.com>,
-        <chunhui.dai@mediatek.com>, <miquel.raynal@bootlin.com>,
-        <heiko@sntech.de>, <jcmvbkbc@gmail.com>, <nsekhar@ti.com>,
-        <geert+renesas@glider.be>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH 06/17] clk: tegra: convert to
- devm_platform_ioremap_resource
-Message-ID: <20191211094901.GY28289@pdeschrijver-desktop.Nvidia.com>
-References: <20191209195749.868-1-tiny.windzz@gmail.com>
- <20191209195749.868-6-tiny.windzz@gmail.com>
+        Wed, 11 Dec 2019 04:49:25 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so16158187lfc.4;
+        Wed, 11 Dec 2019 01:49:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nlrj28tfDHGNUlmzomtO0iIIXWqP2utz4IPvo++pu4Q=;
+        b=e5XyP6DxXthrKR4SwciIsXgerFWhaJShc/8EOY6qJeaxMQkbcbW2pimAWA2QCSru0Y
+         Kxk46aXxoIksT3rl6ow/DuieMMZ+zxUSIQbfLHNWFAt92GIz3qIPklpB9Du0NbF/flJY
+         RYjwa/PhemeeHLjLmJHJOvyj8M0FeqIUmIzZYc6CksrnhB1tW08M8tw6hSimg5mDLXKX
+         ecqGM5bumCDc6gFlHj9FDkDcYmnbxePD0gtDkBnZ82sRvFiZ0IOP+jpMlRR+YIJgnqcZ
+         ZxDTeBz8L8Cy6ojpxLLih8WY2lmzY7jenvusMrZNtLQZLum8d93vC07mG7p/HBJM0WJR
+         1/3Q==
+X-Gm-Message-State: APjAAAVPtyiSX3+ktXatv5v03pmdkMS6OB1ufkDePUzntXGCZv8hAt9b
+        ZqeqCZegXEW98UqYvIL+Sik=
+X-Google-Smtp-Source: APXvYqxURVvK692Y4dgkpN+3WDFT5hv4gHAyGNpr1jKWKOE4C2Ws1WtMymFItD/tqufOokLtAzJmhw==
+X-Received: by 2002:ac2:5196:: with SMTP id u22mr1535074lfi.123.1576057761237;
+        Wed, 11 Dec 2019 01:49:21 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id i16sm816589lfo.87.2019.12.11.01.49.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 01:49:20 -0800 (PST)
+Date:   Wed, 11 Dec 2019 11:49:08 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v6 13/15] gpio: bd71828: Initial support for ROHM BD71828
+ PMIC GPIOs
+Message-ID: <e20e9a86677bdbd7f9ac889004a34731396d7a28.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191209195749.868-6-tiny.windzz@gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576057738; bh=r6KMkLsJhUlJn6kT8Vu8wn2241qWLrLOKRW+auTAdBw=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=CQsS00MBTnuDN86oN6k+Fvv3zdMv2pmyrsfl4LEvz3FuB3pLJ2qjLuKbXqMEmEM0d
-         3UO4ao+0Je37cK7moGSSetlBG/zEYwHpgXtMUzLCjbRbM/q1nyQoCociGvJ8FMY//f
-         I5yk1Rvh55fIvagtjK0kTZEbQLetWYoJzYSba65tCBjG1zBRKM/vVyDLGZUtPRZfh9
-         rOpdnHLKIfbasD3tSumKnS+0iQCX2FPKPZfd1MEHXYD8CbGksQzmQl1cYFL9QoF58M
-         H9srLa33FxJMfbCw2/hrs6LIIjtwd/jibSO5mp6vhKTQdMd5BJh7RliwmQD2yEUcq0
-         5lSXdg0nohQ3g==
+In-Reply-To: <cover.1576054779.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 07:57:38PM +0000, Yangtao Li wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
+ROHM BD71828 PMIC contains 4 pins which can be configured by OTP
+to be used for general purposes. First 3 can be used as outputs
+and 4.th pin can be used as input. Allow them to be controlled
+via GPIO framework.
 
-Acked-by:  Peter De Schrijver <pdeschrijver@nvidia.com>
+The driver assumes all of the pins are configured as GPIOs and
+trusts that the reserved pins in other OTP configurations are
+excluded from control using "gpio-reserved-ranges" device tree
+property (or left untouched by GPIO users).
 
-> Use devm_platform_ioremap_resource() to simplify code.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
->  drivers/clk/tegra/clk-dfll.c | 34 ++++------------------------------
->  1 file changed, 4 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-> index c051d92c2bbf..070a2957e119 100644
-> --- a/drivers/clk/tegra/clk-dfll.c
-> +++ b/drivers/clk/tegra/clk-dfll.c
-> @@ -1935,7 +1935,6 @@ static int dfll_fetch_common_params(struct tegra_dfll *td)
->  int tegra_dfll_register(struct platform_device *pdev,
->                         struct tegra_dfll_soc_data *soc)
->  {
-> -       struct resource *mem;
->         struct tegra_dfll *td;
->         int ret;
-> 
-> @@ -1985,51 +1984,26 @@ int tegra_dfll_register(struct platform_device *pdev,
->                 return ret;
->         }
-> 
-> -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       if (!mem) {
-> -               dev_err(td->dev, "no control register resource\n");
-> -               return -ENODEV;
-> -       }
-> -
-> -       td->base = devm_ioremap(td->dev, mem->start, resource_size(mem));
-> +       td->base = devm_platform_ioremap_resource(pdev, 0);
->         if (!td->base) {
->                 dev_err(td->dev, "couldn't ioremap DFLL control registers\n");
->                 return -ENODEV;
->         }
-> 
-> -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -       if (!mem) {
-> -               dev_err(td->dev, "no i2c_base resource\n");
-> -               return -ENODEV;
-> -       }
-> -
-> -       td->i2c_base = devm_ioremap(td->dev, mem->start, resource_size(mem));
-> +       td->i2c_base = devm_platform_ioremap_resource(pdev, 1);
->         if (!td->i2c_base) {
->                 dev_err(td->dev, "couldn't ioremap i2c_base resource\n");
->                 return -ENODEV;
->         }
-> 
-> -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-> -       if (!mem) {
-> -               dev_err(td->dev, "no i2c_controller_base resource\n");
-> -               return -ENODEV;
-> -       }
-> -
-> -       td->i2c_controller_base = devm_ioremap(td->dev, mem->start,
-> -                                              resource_size(mem));
-> +       td->i2c_controller_base = devm_platform_ioremap_resource(pdev, 2);
->         if (!td->i2c_controller_base) {
->                 dev_err(td->dev,
->                         "couldn't ioremap i2c_controller_base resource\n");
->                 return -ENODEV;
->         }
-> 
-> -       mem = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-> -       if (!mem) {
-> -               dev_err(td->dev, "no lut_base resource\n");
-> -               return -ENODEV;
-> -       }
-> -
-> -       td->lut_base = devm_ioremap(td->dev, mem->start, resource_size(mem));
-> +       td->lut_base = devm_platform_ioremap_resource(pdev, 3);
->         if (!td->lut_base) {
->                 dev_err(td->dev,
->                         "couldn't ioremap lut_base resource\n");
-> --
-> 2.17.1
-> 
+Typical use for 4.th pin (input) is to use it as HALL sensor
+input so that this pin state is toggled when HALL sensor detects
+LID position change (from close to open or open to close). PMIC
+HW implements some extra logic which allows PMIC to power-up the
+system when this pin is toggled. Please see the data sheet for
+details of GPIO options which can be selected by OTP settings.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+
+No changes since v5
+
+ drivers/gpio/Kconfig        |  12 +++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-bd71828.c | 159 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 8adffd42f8cb..68adc1b94dda 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1021,6 +1021,18 @@ config GPIO_BD70528
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called gpio-bd70528.
+ 
++config GPIO_BD71828
++	tristate "ROHM BD71828 GPIO support"
++	depends on MFD_ROHM_BD71828
++	help
++	  Support for GPIOs on ROHM BD71828 PMIC. There are three GPIOs
++	  available on the ROHM PMIC in total. The GPIOs are limited to
++	  outputs only and pins must be configured to GPIO outputs by
++	  OTP. Enable this only if you want to use these pins as outputs.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-bd71828.
++
+ config GPIO_BD9571MWV
+ 	tristate "ROHM BD9571 GPIO support"
+ 	depends on MFD_BD9571MWV
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 34eb8b2b12dd..8629b81b5c17 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -37,6 +37,7 @@ obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
+ obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
+ obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+= gpio-xgs-iproc.o
+ obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
++obj-$(CONFIG_GPIO_BD71828)		+= gpio-bd71828.o
+ obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
+ obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
+ obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-bd71828.c b/drivers/gpio/gpio-bd71828.c
+new file mode 100644
+index 000000000000..04aade9e0a4d
+--- /dev/null
++++ b/drivers/gpio/gpio-bd71828.c
+@@ -0,0 +1,159 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// Copyright (C) 2018 ROHM Semiconductors
++
++#include <linux/gpio/driver.h>
++#include <linux/mfd/rohm-bd71828.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define GPIO_OUT_REG(off) (BD71828_REG_GPIO_CTRL1 + (off))
++#define HALL_GPIO_OFFSET 3
++
++/*
++ * These defines can be removed when
++ * "gpio: Add definition for GPIO direction"
++ * (9208b1e77d6e8e9776f34f46ef4079ecac9c3c25 in GPIO tree) gets merged,
++ */
++#ifndef GPIO_LINE_DIRECTION_IN
++	#define GPIO_LINE_DIRECTION_IN 1
++	#define GPIO_LINE_DIRECTION_OUT 0
++#endif
++
++struct bd71828_gpio {
++	struct rohm_regmap_dev chip;
++	struct gpio_chip gpio;
++};
++
++static void bd71828_gpio_set(struct gpio_chip *chip, unsigned int offset,
++			     int value)
++{
++	int ret;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++	u8 val = (value) ? BD71828_GPIO_OUT_HI : BD71828_GPIO_OUT_LO;
++
++	/*
++	 * The HALL input pin can only be used as input. If this is the pin
++	 * we are dealing with - then we are done
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return;
++
++	ret = regmap_update_bits(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				 BD71828_GPIO_OUT_MASK, val);
++	if (ret)
++		dev_err(bdgpio->chip.dev, "Could not set gpio to %d\n", value);
++}
++
++static int bd71828_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	int ret;
++	unsigned int val;
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		ret = regmap_read(bdgpio->chip.regmap, BD71828_REG_IO_STAT,
++				  &val);
++	else
++		ret = regmap_read(bdgpio->chip.regmap, GPIO_OUT_REG(offset),
++				  &val);
++	if (!ret)
++		ret = (val & BD71828_GPIO_OUT_MASK);
++
++	return ret;
++}
++
++static int bd71828_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
++				   unsigned long config)
++{
++	struct bd71828_gpio *bdgpio = gpiochip_get_data(chip);
++
++	if (offset == HALL_GPIO_OFFSET)
++		return -ENOTSUPP;
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_OPEN_DRAIN);
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		return regmap_update_bits(bdgpio->chip.regmap,
++					  GPIO_OUT_REG(offset),
++					  BD71828_GPIO_DRIVE_MASK,
++					  BD71828_GPIO_PUSH_PULL);
++	default:
++		break;
++	}
++	return -ENOTSUPP;
++}
++
++static int bd71828_get_direction(struct gpio_chip *chip, unsigned int offset)
++{
++	/*
++	 * Pin usage is selected by OTP data. We can't read it runtime. Hence
++	 * we trust that if the pin is not excluded by "gpio-reserved-ranges"
++	 * the OTP configuration is set to OUT. (Other pins but HALL input pin
++	 * on BD71828 can't really be used for general purpose input - input
++	 * states are used for specific cases like regulator control or
++	 * PMIC_ON_REQ.
++	 */
++	if (offset == HALL_GPIO_OFFSET)
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
++}
++
++static int bd71828_probe(struct platform_device *pdev)
++{
++	struct bd71828_gpio *bdgpio;
++	struct rohm_regmap_dev *bd71828;
++
++	bd71828 = dev_get_drvdata(pdev->dev.parent);
++	if (!bd71828) {
++		dev_err(&pdev->dev, "No MFD driver data\n");
++		return -EINVAL;
++	}
++
++	bdgpio = devm_kzalloc(&pdev->dev, sizeof(*bdgpio),
++			      GFP_KERNEL);
++	if (!bdgpio)
++		return -ENOMEM;
++
++	bdgpio->chip.dev = &pdev->dev;
++	bdgpio->gpio.parent = pdev->dev.parent;
++	bdgpio->gpio.label = "bd71828-gpio";
++	bdgpio->gpio.owner = THIS_MODULE;
++	bdgpio->gpio.get_direction = bd71828_get_direction;
++	bdgpio->gpio.set_config = bd71828_gpio_set_config;
++	bdgpio->gpio.can_sleep = true;
++	bdgpio->gpio.get = bd71828_gpio_get;
++	bdgpio->gpio.set = bd71828_gpio_set;
++	bdgpio->gpio.base = -1;
++
++	/*
++	 * See if we need some implementation to mark some PINs as
++	 * not controllable based on DT info or if core can handle
++	 * "gpio-reserved-ranges" and exclude them from control
++	 */
++	bdgpio->gpio.ngpio = 4;
++	bdgpio->gpio.of_node = pdev->dev.parent->of_node;
++	bdgpio->chip.regmap = bd71828->regmap;
++
++	return devm_gpiochip_add_data(&pdev->dev, &bdgpio->gpio,
++				     bdgpio);
++}
++
++static struct platform_driver bd71828_gpio = {
++	.driver = {
++		.name = "bd71828-gpio"
++	},
++	.probe = bd71828_probe,
++};
++
++module_platform_driver(bd71828_gpio);
++
++MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
++MODULE_DESCRIPTION("BD71828 voltage regulator driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:bd71828-gpio");
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
