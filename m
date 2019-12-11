@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED44BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758B5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA88F22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BEF224671
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077439;
-	bh=9QGqXb4b5pFftoJwjGBu23C/P98Vqnn2+qsnULc/v/s=;
+	s=default; t=1576077442;
+	bh=lfFSyBdXDD0UcUCCfLXP7ssA1e4znSyr58XFBC1iaRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPr1nX/7YDxtZj45dvenN35/MCbCPL8jEW7Hw2VFeMuL5Aa2eOMqovKj78zc2Ze8C
-	 fcgrRDqbwJk6osDXKHUPMcamczwYpDDZPO49PiAZnIrlbmfGdvNO04YjsFkudjV+nm
-	 W3eJnGke+EtcWKnGlvQdPL9MMi9492FMX+GMj8CI=
+	b=qnrhftthiriovxOKJHSCUizJmtLWZXqlOBkAgsFPeeWcJ/b4PG+I3DLFlrBx2X8pE
+	 u+qRx2rtzoIxL4NA+DDnl0NJHJMhVH+IPUuAB4vXH5wcuApOLgXfwOTTw7nyMnbJSt
+	 OKii+zDRuVNPFfQsV/9py+Vaq7Lae2La4xlBDPB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfLKPRS (ORCPT
+        id S1732006AbfLKPRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:17:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:17:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbfLKPRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:17:11 -0500
+        id S1730738AbfLKPRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:17:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE9622B48;
-        Wed, 11 Dec 2019 15:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 550D924671;
+        Wed, 11 Dec 2019 15:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077431;
-        bh=9QGqXb4b5pFftoJwjGBu23C/P98Vqnn2+qsnULc/v/s=;
+        s=default; t=1576077438;
+        bh=lfFSyBdXDD0UcUCCfLXP7ssA1e4znSyr58XFBC1iaRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=okuzlJh7VqyQvq/1vlnLL3NhvVA+iU/s0ae7RRTJ0vart2lW3ANuLkGq87flQ6Kza
-         0gBJehYZx9vmnQ+oQjjS08XxbBw9HO2xtOfEZn2gPfLm9YO6rg/Yk+DNLmgybg3SX9
-         tpki36RkRVE7pdP5jZWxAqTnhbpk13lPCxan4RUY=
+        b=xAlWh3q4jLRtP839JLuqf0sgTSmA7wXRyn627O90jSBKod3X/uDwjfcx2mWwZbPMv
+         W8B0CHJwmoWzSKUTYyZbDnoIh1JAAl/FhRjdzAfFvKxiPFx4Hb6Qvqaf+dtJ8E6i9v
+         fov8bNlDU8Vs7PlumrpFX46wi/D1RcZMaWF2vYn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 037/243] clk: sunxi-ng: a64: Fix gate bit of DSI DPHY
-Date:   Wed, 11 Dec 2019 16:03:19 +0100
-Message-Id: <20191211150341.718590923@linuxfoundation.org>
+Subject: [PATCH 4.19 040/243] ARM: dts: exynos: Fix LDO13 min values on Odroid XU3/XU4/HC1
+Date:   Wed, 11 Dec 2019 16:03:22 +0100
+Message-Id: <20191211150341.878081012@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+From: Anand Moon <linux.amoon@gmail.com>
 
-[ Upstream commit ee678706e46d0d185c27cc214ad97828e0643159 ]
+[ Upstream commit 8fe325fa9d065aa54db4914fdaccab2169fd67a8 ]
 
-DSI DPHY gate bit on MIPI DSI clock register is bit 15
-not bit 30.
+>From Odroid XU3/XU4/HC1 schematics the LDO13 regulator for SD2, can be
+set on 1.8V or 2.8V so the minimal value should be fixed to 1.8V.  This
+is necessary to support UHS-I tuning (otherwise card won't be detected
+during boot).
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 2 +-
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 2a60981799216..dec4a130390a3 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -582,7 +582,7 @@ static const char * const dsi_dphy_parents[] = { "pll-video0", "pll-periph0" };
- static const u8 dsi_dphy_table[] = { 0, 2, };
- static SUNXI_CCU_M_WITH_MUX_TABLE_GATE(dsi_dphy_clk, "dsi-dphy",
- 				       dsi_dphy_parents, dsi_dphy_table,
--				       0x168, 0, 4, 8, 2, BIT(31), CLK_SET_RATE_PARENT);
-+				       0x168, 0, 4, 8, 2, BIT(15), CLK_SET_RATE_PARENT);
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 27214e6ebe4f4..d476ba0f07b6b 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -224,7 +224,7 @@
  
- static SUNXI_CCU_M_WITH_GATE(gpu_clk, "gpu", "pll-gpu",
- 			     0x1a0, 0, 3, BIT(31), CLK_SET_RATE_PARENT);
+ 			ldo13_reg: LDO13 {
+ 				regulator-name = "vddq_mmc2";
+-				regulator-min-microvolt = <2800000>;
++				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 			};
+ 
 -- 
 2.20.1
 
