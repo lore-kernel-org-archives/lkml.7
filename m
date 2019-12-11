@@ -2,120 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A5DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD8C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1207206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBC324655
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfLKCOn (ORCPT
+        id S1727595AbfLKCQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:14:43 -0500
-Received: from twhmllg4.macronix.com ([211.75.127.132]:64678 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfLKCOn (ORCPT
+        Tue, 10 Dec 2019 21:16:45 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:10885 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfLKCQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:14:43 -0500
-Received: from twhfm1p2.macronix.com (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id xBB2EbJC009562;
-        Wed, 11 Dec 2019 10:14:37 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id EE442EC2E2E051ECB764;
-        Wed, 11 Dec 2019 10:14:37 +0800 (CST)
-In-Reply-To: <8f2908ec-6e17-dad1-7f2a-ec22647caecb@microchip.com>
-References: <1573808288-19365-1-git-send-email-masonccyang@mxic.com.tw> <8f2908ec-6e17-dad1-7f2a-ec22647caecb@microchip.com>
-To:     <Tudor.Ambarus@microchip.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        juliensu@mxic.com.tw, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com
-Subject: Re: [PATCH 0/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+        Tue, 10 Dec 2019 21:16:44 -0500
+Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
+ 2019 10:17:13 +0800
+Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20191202111253.94872-1-jian.hu@amlogic.com>
+ <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
+From:   Jian Hu <jian.hu@amlogic.com>
+Message-ID: <be7f27d2-5601-0d0c-9c62-7206e7de0411@amlogic.com>
+Date:   Wed, 11 Dec 2019 10:17:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-KeepSent: B2FEF12D:A2B77CBE-482584CD:000C20E3;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFB2FEF12D.A2B77CBE-ON482584CD.000C20E3-482584CD.000C5393@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 11 Dec 2019 10:14:38 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/12/11 AM 10:14:37,
-        Serialize complete at 2019/12/11 AM 10:14:37
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com xBB2EbJC009562
+In-Reply-To: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.39.99]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi jerome
 
-Hi Tudor,
+Thanks for your review
 
+On 2019/12/10 18:17, Jerome Brunet wrote:
 > 
-> Re: [PATCH 0/4] mtd: spi-nor: Add support for Octal 8D-8D-8D mode
+> On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
 > 
-> Hi, Mason,
+>> There are four I2C controllers in A1 series,
+>> Share the same comptible with AXG.The I2C nodes
+>> depend on pinmux and clock controller.
+>>
+>> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+>> ---
+>>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
+>>   1 file changed, 149 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> index eab2ecd36aa8..d0a73d953f5e 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -16,6 +16,13 @@
+>>   	#address-cells = <2>;
+>>   	#size-cells = <2>;
+>>   
+>> +	aliases {
+>> +		i2c0 = &i2c0;
+>> +		i2c1 = &i2c1;
+>> +		i2c2 = &i2c2;
+>> +		i2c3 = &i2c3;
+>> +	};
+>> +
 > 
-> From the discussion you had with Vignesh, I understand that a v2 will 
-follow. A
-> nit below.
+> I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
 > 
-> On 11/15/19 10:58 AM, Mason Yang wrote:
-> > Hello,
-> > 
-> > This is repost of patchset from Boris Brezillon's
-> > [RFC,00/18] mtd: spi-nor: Proposal for 8-8-8 mode support [1].
-> > 
+> Such aliases are usually assigned as needed by each board design:
+> meson-a1-ad401.dts in your case.
 > 
-> [cut]
+You are right, I will set i2c bus alias in dts file.
+> .
 > 
-> > Mason Yang (4):
-> 
-> Did you intentionally overwrite Boris's authorship? If yes, would you 
-please
-> describe what changed from Boris's patch set?
-
-okay, sure.
-I will describe it in v2 patch set.
-
-> 
-> Cheers,
-> ta
-
-thanks for your time & comments.
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
