@@ -2,118 +2,103 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC63C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D06C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAF02077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D3820836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576030662;
+	bh=nsAKjl153J0JJUCjGK9PiMgZyuqUToi/dFZG+kBnD8Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PYqJfG9+B/oE+jt4IKALLxpG6Hk0M5C8lzplto9QIiWHy8eDGxsmmVZCVbhius0kx
+	 RL+TCkQJnd1OC/mG/duSucWG1cTIfPlLCTsdVUZAZZ1h7YQeF6YGHFuDRhked1DYXr
+	 kVmkRvBZ58UN5rr4dJaZhY7eLZo6Sm1k1PMTWeVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfLKCQu convert rfc822-to-8bit (ORCPT
+        id S1727678AbfLKCRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:16:50 -0500
-Received: from mga11.intel.com ([192.55.52.93]:7528 "EHLO mga11.intel.com"
+        Tue, 10 Dec 2019 21:17:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfLKCQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:16:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:16:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="296085838"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga001.jf.intel.com with ESMTP; 10 Dec 2019 18:16:48 -0800
-Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 10 Dec 2019 18:16:36 -0800
-Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
- FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 10 Dec 2019 18:16:36 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
- SHSMSX103.ccr.corp.intel.com ([169.254.4.29]) with mapi id 14.03.0439.000;
- Wed, 11 Dec 2019 10:16:35 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chao Peng <chao.p.peng@linux.intel.com>
-Subject: RE: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to RTIT
- address MSRs
-Thread-Topic: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to
- RTIT address MSRs
-Thread-Index: AQHVr7D+eSLLMngHS0yaamPyTS1Jdae0MG+Q
-Date:   Wed, 11 Dec 2019 02:16:35 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E17384B7F2@SHSMSX104.ccr.corp.intel.com>
-References: <20191210232433.4071-1-sean.j.christopherson@intel.com>
- <20191210232433.4071-2-sean.j.christopherson@intel.com>
-In-Reply-To: <20191210232433.4071-2-sean.j.christopherson@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODc0ODBiZWMtYjg1MS00MDk4LTkxOTktNzI1ZTkzOGQzZDU0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQ2prZko1YW5wU1JMY3MwZUVoVFJHM01seW4rayt1VnJJR1wvalBJVVZHNk1BMnMwQnlkUzlVNlwvQU1OMm5RQVptIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726500AbfLKCRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:17:41 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B743206EC;
+        Wed, 11 Dec 2019 02:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576030660;
+        bh=nsAKjl153J0JJUCjGK9PiMgZyuqUToi/dFZG+kBnD8Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FB4e1hbKhPhj0z40cj0Hmp0JwXqAAWSkrUd6Gu3DIpVTKk9P0tLagZQwdKff4I755
+         HdwmwRM+w1AUJZ1p0iOldxPBwPpgWx65e0HyRMuogibSzFwMcudvXh9e0y/QTzyvnS
+         p+BpHxjJP5i7DLd9syIB+TI0U5bZebie0jVv3s7k=
+Date:   Wed, 11 Dec 2019 10:17:23 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: ls1028a: fix reboot node
+Message-ID: <20191211021722.GA15858@dragon>
+References: <20191123000709.13162-1-michael@walle.cc>
+ <20191209034722.GZ3365@dragon>
+ <67346b48fa7e236ea31e3ecb1a108f28@walle.cc>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <67346b48fa7e236ea31e3ecb1a108f28@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Christopherson, Sean J <sean.j.christopherson@intel.com>
-> Sent: Wednesday, December 11, 2019 7:25 AM
-> To: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Christopherson, Sean J <sean.j.christopherson@intel.com>; Vitaly Kuznetsov <vkuznets@redhat.com>; Wanpeng Li
-> <wanpengli@tencent.com>; Jim Mattson <jmattson@google.com>; Joerg Roedel <joro@8bytes.org>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Chao Peng <chao.p.peng@linux.intel.com>; Kang, Luwei <luwei.kang@intel.com>
-> Subject: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to RTIT address MSRs
+On Mon, Dec 09, 2019 at 10:02:02AM +0100, Michael Walle wrote:
+> Am 2019-12-09 04:47, schrieb Shawn Guo:
+> >On Sat, Nov 23, 2019 at 01:07:09AM +0100, Michael Walle wrote:
+> >>The reboot register isn't located inside the DCFG controller,
+> >>but in its
+> >>own RST controller. Fix it.
+> >>
+> >>Signed-off-by: Michael Walle <michael@walle.cc>
+> >>---
+> >> arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+> >> 1 file changed, 7 insertions(+), 1 deletion(-)
+> >>
+> >>diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>index 72b9a75976a1..dc75534a4754 100644
+> >>--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> >>@@ -102,7 +102,7 @@
+> >>
+> >> 	reboot {
+> >> 		compatible ="syscon-reboot";
+> >>-		regmap = <&dcfg>;
+> >>+		regmap = <&rst>;
+> >> 		offset = <0xb0>;
+> >> 		mask = <0x02>;
+> >> 	};
+> >>@@ -161,6 +161,12 @@
+> >> 			big-endian;
+> >> 		};
+> >>
+> >>+		rst: syscon@1e60000 {
+> >>+			compatible = "fsl,ls1028a-rst", "syscon";
+> >
+> >Compatible "fsl,ls1028a-rst" seems undocumented?
 > 
-> Reject writes to RTIT address MSRs if the data being written is a non-canonical address as the MSRs are subject to canonical checks,
-> e.g.
-> KVM will trigger an unchecked #GP when loading the values to hardware during pt_guest_enter().
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c index 51e3b27f90ed..9aa2006dbe04 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2152,6 +2152,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  			(index >= 2 * intel_pt_validate_cap(vmx->pt_desc.caps,
->  					PT_CAP_num_address_ranges)))
->  			return 1;
-> +		if (is_noncanonical_address(data, vcpu))
-> +			return 1;
+> it is the same with fsl,ls1028a-scfg and fsl,ls1028a-dcfg. So maybe
+> I should just drop the "fsl,ls1028a-rst". What do you think?
 
-Is this for live migrate a VM with 5 level page table to the VM with 4 level page table?
+Drop it or document it.  I'm fine with either way.
 
-Thanks,
-Luwei Kang
-
->  		if (index % 2)
->  			vmx->pt_desc.guest.addr_b[index / 2] = data;
->  		else
-> --
-> 2.24.0
-
+Shawn
