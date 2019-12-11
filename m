@@ -3,127 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CB1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61239C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56EA82073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Fhu8rDts"
+	by mail.kernel.org (Postfix) with ESMTP id 366AD2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:52:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079527;
+	bh=2WtK5+o5+VGs1ikguea/UPfLL2YIwjkHhUqcuAEvgwY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=E9Ns6q7CJfGptfgpBG9w3Cl3gY2Dvkhur38AqnC3vIJ+t2OmaD+otk8i6nMWdmBQi
+	 YvMe7ffA0cpLhuRrTJVHSHIP3amTGIP0viBVmZsdsuPK8ZO+8H4IPRkDc1FDz90ojl
+	 XXRgRERO4v5xt4NNBLF405VLdVAPM8vl6FQIT1Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbfLKPwC (ORCPT
+        id S1732473AbfLKPVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:52:02 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44318 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732274AbfLKPv5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:51:57 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBFpsoN086679;
-        Wed, 11 Dec 2019 09:51:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576079514;
-        bh=S4bP18sWt9PdB574Es/xG9xm4co/SVmYIRkd4NjN7Mc=;
-        h=From:To:CC:Subject:Date;
-        b=Fhu8rDtsj4xPAeq455IHuahaTHo8BxykS+6EH19peSRW6dawz+izwoOmzAcc9TOlh
-         rKjdzZW2NSq1Nse2Ggsc2HCufMA5HHMwff9ZWVieZ2r/1d2U9LBcuhQ+laaWQWKVLx
-         DUxTnahBK654itz3o1v4wr/PZdwugjg3vyXjUCzo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBFps8Y062541
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 09:51:54 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
- Dec 2019 09:51:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 11 Dec 2019 09:51:54 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBFpprs030125;
-        Wed, 11 Dec 2019 09:51:52 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <dannenberg@ti.com>,
-        <linux-omap@vger.kernel.org>
-Subject: [PATCH] spi: spi-ti-qspi: Fix a bug when accessing non default CS
-Date:   Wed, 11 Dec 2019 21:22:16 +0530
-Message-ID: <20191211155216.30212-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Wed, 11 Dec 2019 10:21:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732312AbfLKPV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7B822527;
+        Wed, 11 Dec 2019 15:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077686;
+        bh=2WtK5+o5+VGs1ikguea/UPfLL2YIwjkHhUqcuAEvgwY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qai0+xZBffS9AVj9H0edGnu3ssjzv+yqhLEmknp3zhhjY6WZNL5GF6sL50oetXW+T
+         y8GBDymn2nb7buOeGVnEI5M3IFMQLiSCKVyV28YCGJSoxkAHvnQ07jWecq/PqhHpt3
+         tXv6ASPwcRsvOrVCtM+JVDPoVYFfzhTGtZhnnm6c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 132/243] nfsd: fix a warning in __cld_pipe_upcall()
+Date:   Wed, 11 Dec 2019 16:04:54 +0100
+Message-Id: <20191211150348.040647637@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching ChipSelect from default CS0 to any other CS, driver fails
-to update the bits in system control module register that control which
-CS is mapped for MMIO access. This causes reads to fail when driver
-tries to access QSPI flash on CS1/2/3.
+From: Scott Mayhew <smayhew@redhat.com>
 
-Fix this by updating appropriate bits whenever active CS changes.
+[ Upstream commit b493fd31c0b89d9453917e977002de58bebc3802 ]
 
-Reported-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+__cld_pipe_upcall() emits a "do not call blocking ops when
+!TASK_RUNNING" warning due to the dput() call in rpc_queue_upcall().
+Fix it by using a completion instead of hand coding the wait.
+
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-ti-qspi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4recover.c | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 3cb65371ae3b..66dcb6128539 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -62,6 +62,7 @@ struct ti_qspi {
- 	u32 dc;
- 
- 	bool mmap_enabled;
-+	int current_cs;
+diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+index 9c247fa1e9594..5188f9f70c78c 100644
+--- a/fs/nfsd/nfs4recover.c
++++ b/fs/nfsd/nfs4recover.c
+@@ -662,7 +662,7 @@ struct cld_net {
+ struct cld_upcall {
+ 	struct list_head	 cu_list;
+ 	struct cld_net		*cu_net;
+-	struct task_struct	*cu_task;
++	struct completion	 cu_done;
+ 	struct cld_msg		 cu_msg;
  };
  
- #define QSPI_PID			(0x0)
-@@ -487,6 +488,7 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
- 				   MEM_CS_EN(spi->chip_select));
+@@ -671,23 +671,18 @@ __cld_pipe_upcall(struct rpc_pipe *pipe, struct cld_msg *cmsg)
+ {
+ 	int ret;
+ 	struct rpc_pipe_msg msg;
++	struct cld_upcall *cup = container_of(cmsg, struct cld_upcall, cu_msg);
+ 
+ 	memset(&msg, 0, sizeof(msg));
+ 	msg.data = cmsg;
+ 	msg.len = sizeof(*cmsg);
+ 
+-	/*
+-	 * Set task state before we queue the upcall. That prevents
+-	 * wake_up_process in the downcall from racing with schedule.
+-	 */
+-	set_current_state(TASK_UNINTERRUPTIBLE);
+ 	ret = rpc_queue_upcall(pipe, &msg);
+ 	if (ret < 0) {
+-		set_current_state(TASK_RUNNING);
+ 		goto out;
  	}
- 	qspi->mmap_enabled = true;
-+	qspi->current_cs = spi->chip_select;
+ 
+-	schedule();
++	wait_for_completion(&cup->cu_done);
+ 
+ 	if (msg.errno < 0)
+ 		ret = msg.errno;
+@@ -754,7 +749,7 @@ cld_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
+ 	if (copy_from_user(&cup->cu_msg, src, mlen) != 0)
+ 		return -EFAULT;
+ 
+-	wake_up_process(cup->cu_task);
++	complete(&cup->cu_done);
+ 	return mlen;
  }
  
- static void ti_qspi_disable_memory_map(struct spi_device *spi)
-@@ -498,6 +500,7 @@ static void ti_qspi_disable_memory_map(struct spi_device *spi)
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
- 				   MEM_CS_MASK, 0);
- 	qspi->mmap_enabled = false;
-+	qspi->current_cs = -1;
+@@ -769,7 +764,7 @@ cld_pipe_destroy_msg(struct rpc_pipe_msg *msg)
+ 	if (msg->errno >= 0)
+ 		return;
+ 
+-	wake_up_process(cup->cu_task);
++	complete(&cup->cu_done);
  }
  
- static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
-@@ -543,7 +546,7 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
- 
- 	mutex_lock(&qspi->list_lock);
- 
--	if (!qspi->mmap_enabled)
-+	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select)
- 		ti_qspi_enable_memory_map(mem->spi);
- 	ti_qspi_setup_mmap_read(mem->spi, op->cmd.opcode, op->data.buswidth,
- 				op->addr.nbytes, op->dummy.nbytes);
-@@ -799,6 +802,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
+ static const struct rpc_pipe_ops cld_upcall_ops = {
+@@ -900,7 +895,7 @@ restart_search:
+ 			goto restart_search;
  		}
  	}
- 	qspi->mmap_enabled = false;
-+	qspi->current_cs = -1;
- 
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (!ret)
+-	new->cu_task = current;
++	init_completion(&new->cu_done);
+ 	new->cu_msg.cm_vers = CLD_UPCALL_VERSION;
+ 	put_unaligned(cn->cn_xid++, &new->cu_msg.cm_xid);
+ 	new->cu_net = cn;
 -- 
-2.24.0
+2.20.1
+
+
 
