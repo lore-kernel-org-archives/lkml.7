@@ -2,208 +2,142 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF935C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0802BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D1D721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE5024656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 11:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="Gj91FSbu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLp0q+Aq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbfLKLq7 (ORCPT
+        id S1729107AbfLKLrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 06:46:59 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:53448 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727365AbfLKLq6 (ORCPT
+        Wed, 11 Dec 2019 06:47:23 -0500
+Received: from mail-vk1-f194.google.com ([209.85.221.194]:39898 "EHLO
+        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfLKLrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 06:46:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576064819;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=P2MU3njNrfLJrdt+eLEGCcK2Oa2o5yX8/PbMswCYaNY=;
-  b=Gj91FSbu2p3T7aec5OjUxskshJUpOD44qW5++mOO4/aCuQo4yvK0LVWi
-   RNTAv2X+KvSJgOXKtO/njmW3eZlxjT0xQs1nXCfaryp4u4p48NfeOHQ0B
-   AmRVa13lmu4uJhtB8yYdMH6Ym3U8iSyHvkyZ7iI88qXQtZEMFpKNnz4+u
-   k=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: +HzPxT1PiH2ZjG1A/5a+YfO0CQqZIrbFt+4gfS5zEDuQYbwMbYZYsNOOKCizsr554KZiOjCygs
- lC2iM+TIgx2nXizoG7CSDvtJnMffNrKLFkPiCOxaZV7OnKRWcZraFooL9oay3qh/l9F12vzA22
- GlaJKSzUlO7b0z0fwM1eZc6/6QrTXWc+AsVZnSJvm3l741QORu7LTBzAyuGFDVuzkUPKRb+l50
- OxylbBCvU/JBgcN5Pu/VNJuqpoyKvQ0mgmGJVaIwgzQyYjS7NnTS1r3DryE40Ex1bVlu8ASGoG
- +eA=
-X-SBRS: 2.7
-X-MesageID: 9513342
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
-   d="scan'208";a="9513342"
-Date:   Wed, 11 Dec 2019 12:46:51 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
-        "SeongJae Park" <sjpark@amazon.de>, <pdurrant@amazon.com>,
-        <sjpark@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/3] xenbus/backend: Add memory pressure handler
- callback
-Message-ID: <20191211114651.GN980@Air-de-Roger>
-References: <20191211042428.5961-1-sjpark@amazon.de>
- <20191211042657.6037-1-sjpark@amazon.de>
+        Wed, 11 Dec 2019 06:47:23 -0500
+Received: by mail-vk1-f194.google.com with SMTP id x199so6695013vke.6
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 03:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KPw4BWkTUh66N/l+oHgRw2epWlItk5ePmLSBKI5Tyjc=;
+        b=fLp0q+Aq+pCU0RkbRVrb2N2a9Cbry6BHuCOylVJULtiPiEObiSOxp/zavD8nzE+zj5
+         lKyW0NHDPZ0wyI2Z9BVSwsGC29TKNdK8TOKRQdV2ICMjyhsvO2bGHVWapjhh/k6lyHgp
+         4AL6rw3TQQnY6t3Zl8z9oJ4GdUKiSRVij2DWsfvZDXfk7GomIsw45hb55Y9zE9UTW+j6
+         TOwDPrUo/s0V38hskklMtX9r46NWjQHRUmSZm7NxUXfwLOvEIoz/6AufILKs6XIXdsm8
+         PKYRhpob37eGDMbF3pU5G4FSkNKnqZvW1/9POYZoYBcKlRQxtekSjqiGzYeL7s4sc/WE
+         VR1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KPw4BWkTUh66N/l+oHgRw2epWlItk5ePmLSBKI5Tyjc=;
+        b=sMh+4jJv6jBeZf1bLC90w1UhVmCgcy7lKT3om2LqlvgLAkv4VGwpubh6YNRDSLgfL/
+         0aXXrYGkykdg2aGijPcxr9Ol4pLtEm+iIG39kF6CWQj8r9vh4VXlc7pgLeRZh/uJWBBo
+         somaLt8J3gruhRMblOFAyC12AHmYhNApteljb5+MtteQ9xkRKP5Rt9ywsGiXuw9e3aiO
+         b2nZMgJYmg6b8HE4YT4VdAKgy3LAtk+v64TltwtsjeTstwCC0Tq9t5x9oQ9nI2yxLNKQ
+         WR6MrMeDo8h9nHTQXfPCHcuSqSFTPBVDkWlTdF/5fij0sqBPYv72Zcl5R5yr+YE5Gj7Y
+         Ypkw==
+X-Gm-Message-State: APjAAAWl5GKYyHevTDIzYFiR/xDfFg/7nD3s65ngokaIlXinmvNdCC0u
+        BXgLo3rjStWShTGAeEvb6dlxwUCGETmzUGMDs9A+yQ==
+X-Google-Smtp-Source: APXvYqy2WV0o0WTeidYaegKNg5xN9HKD7exGZ7ITgPnsyD2ep/rt00HnH9Ugu3XPBwH9a3J2kYJwc5f02NtnzlPD5SU=
+X-Received: by 2002:a1f:3fcd:: with SMTP id m196mr2975528vka.28.1576064841951;
+ Wed, 11 Dec 2019 03:47:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191211042657.6037-1-sjpark@amazon.de>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+References: <1575966995-13757-1-git-send-email-kevin3.tang@gmail.com>
+ <1575966995-13757-5-git-send-email-kevin3.tang@gmail.com> <CACvgo50Hgbb8ywX2RgFqkitxwBG64EhP9g1TSxgLkQf-6L6soA@mail.gmail.com>
+ <CAFPSGXZMmfeBxkNhuNR59bX26_69_y5C13P7qY-UawVDa7Q3Jw@mail.gmail.com>
+In-Reply-To: <CAFPSGXZMmfeBxkNhuNR59bX26_69_y5C13P7qY-UawVDa7Q3Jw@mail.gmail.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Wed, 11 Dec 2019 11:46:06 +0000
+Message-ID: <CACvgo50wCKq76Wj0xjJcuWxz5gvaOSbj1Hz8-Vi6eOSGH106yg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/8] drm/sprd: add Unisoc's drm display controller driver
+To:     tang pengchuan <kevin3.tang@gmail.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:26:57AM +0000, SeongJae Park wrote:
-> Granting pages consumes backend system memory.  In systems configured
-> with insufficient spare memory for those pages, it can cause a memory
-> pressure situation.  However, finding the optimal amount of the spare
-                                                              ^ s/the//
-> memory is challenging for large systems having dynamic resource
-> utilization patterns.  Also, such a static configuration might lack
-> flexibility.
-> 
-> To mitigate such problems, this commit adds a memory reclaim callback to
-> 'xenbus_driver'.  If a memory pressure is detected, 'xenbus' requests
-                       ^ s/a//
-> every backend driver to volunarily release its memory.
-> 
-> Note that it would be able to improve the callback facility for more
-                        ^ possible
-> sophisticated handlings of general pressures.  For example, it would be
-                ^ handling of resource starvation.
-> possible to monitor the memory consumption of each device and issue the
-> release requests to only devices which causing the pressure.  Also, the
-> callback could be extended to handle not only memory, but general
-> resources.  Nevertheless, this version of the implementation defers such
-> sophisticated goals as a future work.
-> 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> ---
->  drivers/xen/xenbus/xenbus_probe_backend.c | 32 +++++++++++++++++++++++
->  include/xen/xenbus.h                      |  1 +
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_probe_backend.c b/drivers/xen/xenbus/xenbus_probe_backend.c
-> index b0bed4faf44c..aedbe2198de5 100644
-> --- a/drivers/xen/xenbus/xenbus_probe_backend.c
-> +++ b/drivers/xen/xenbus/xenbus_probe_backend.c
-> @@ -248,6 +248,35 @@ static int backend_probe_and_watch(struct notifier_block *notifier,
->  	return NOTIFY_DONE;
->  }
->  
-> +static int xenbus_backend_reclaim(struct device *dev, void *data)
+On Wed, 11 Dec 2019 at 09:18, tang pengchuan <kevin3.tang@gmail.com> wrote:
+>
+> Hi
+>
+> Emil Velikov <emil.l.velikov@gmail.com> =E4=BA=8E2019=E5=B9=B412=E6=9C=88=
+11=E6=97=A5=E5=91=A8=E4=B8=89 =E4=B8=8A=E5=8D=881:14=E5=86=99=E9=81=93=EF=
+=BC=9A
+>>
+>> Hi Kevin,
+>>
+>> On Tue, 10 Dec 2019 at 08:41, Kevin Tang <kevin3.tang@gmail.com> wrote:
+>> >
+>> > From: Kevin Tang <kevin.tang@unisoc.com>
+>> >
+>> > Adds DPU(Display Processor Unit) support for the Unisoc's display subs=
+ystem.
+>> > It's support multi planes, scaler, rotation, PQ(Picture Quality) and m=
+ore.
+>> >
+>> > Cc: Orson Zhai <orsonzhai@gmail.com>
+>> > Cc: Baolin Wang <baolin.wang@linaro.org>
+>> > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+>> > Signed-off-by: Kevin Tang <kevin.tang@unisoc.com>
+>> > ---
+>> >  drivers/gpu/drm/sprd/Makefile       |    6 +-
+>> >  drivers/gpu/drm/sprd/disp_lib.c     |  290 +++++++
+>> >  drivers/gpu/drm/sprd/disp_lib.h     |   40 +
+>> >  drivers/gpu/drm/sprd/dpu/Makefile   |    8 +
+>> >  drivers/gpu/drm/sprd/dpu/dpu_r2p0.c | 1464 ++++++++++++++++++++++++++=
++++++++++
+>> >  drivers/gpu/drm/sprd/sprd_dpu.c     | 1152 ++++++++++++++++++++++++++=
++
+>> >  drivers/gpu/drm/sprd/sprd_dpu.h     |  217 ++++++
+>> >  7 files changed, 3176 insertions(+), 1 deletion(-)
+>>
+>> As we can see from the diff stat this patch is huge. So it would be fair=
+ly hard
+>> to provide meaningful review as-is.
+>>
+>> One can combine my earlier suggestion (to keep modeset/atomic out of 2/8=
+), with
+>> the following split:
+>>  - 4/8 add basic atomic modeset support - one format, one rotation 0, no=
+ extra
+>>  attributes
+>>  - 5/8 add extra formats
+>>  - 6/8 add extra rotation support
+>>  - ... add custom attributes
+>
+> Ok, i will split this patch, upstream modeset and atomic at first. clock,=
+ gloabl, enhance, extra
+> attributes  and so on will be upload later.
 
-No need for the xenbus_ prefix since it's a static function, ie:
-backend_reclaim_memory should be fine IMO.
+Amazing thank you. Please apply the similar logic and split patch 6/8
+- that patch is twice larger than this one.
 
-> +{
-> +	struct xenbus_driver *drv;
+Some small general requests - please use plain text emails (see [1])
+and trim unrelated fragments when replying.
+Otherwise it is very easy to miss the comment that you and others have made=
+.
 
-I've asked for this variable to be constified in v5, is it not
-possible to make it const?
+HTH
+Emil
 
-> +
-> +	if (!dev->driver)
-> +		return 0;
-> +	drv = to_xenbus_driver(dev->driver);
-> +	if (drv && drv->reclaim)
-> +		drv->reclaim(to_xenbus_device(dev));
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Returns 0 always because we are using shrinker to only detect memory
-> + * pressure.
-> + */
-> +static unsigned long xenbus_backend_shrink_count(struct shrinker *shrinker,
-> +				struct shrink_control *sc)
-> +{
-> +	bus_for_each_dev(&xenbus_backend.bus, NULL, NULL,
-> +			xenbus_backend_reclaim);
-> +	return 0;
-> +}
-> +
-> +static struct shrinker xenbus_backend_shrinker = {
-
-I would drop the xenbus prefix, and I think it's not possible to
-constify this due to register_shrinker expecting a non-const
-parameter?
-
-> +	.count_objects = xenbus_backend_shrink_count,
-> +	.seeks = DEFAULT_SEEKS,
-> +};
-> +
->  static int __init xenbus_probe_backend_init(void)
->  {
->  	static struct notifier_block xenstore_notifier = {
-> @@ -264,6 +293,9 @@ static int __init xenbus_probe_backend_init(void)
->  
->  	register_xenstore_notifier(&xenstore_notifier);
->  
-> +	if (register_shrinker(&xenbus_backend_shrinker))
-> +		pr_warn("shrinker registration failed\n");
-
-Can you add a xenbus prefix to the error message? Or else it's hard to
-know which subsystem is complaining when you see such message on the
-log. ie: "xenbus: shrinker ..."
-
-> +
->  	return 0;
->  }
->  subsys_initcall(xenbus_probe_backend_init);
-> diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
-> index 869c816d5f8c..196260017666 100644
-> --- a/include/xen/xenbus.h
-> +++ b/include/xen/xenbus.h
-> @@ -104,6 +104,7 @@ struct xenbus_driver {
->  	struct device_driver driver;
->  	int (*read_otherend_details)(struct xenbus_device *dev);
->  	int (*is_ready)(struct xenbus_device *dev);
-> +	void (*reclaim)(struct xenbus_device *dev);
-
-reclaim_memory (if Juergen agrees).
-
-Thanks, Roger.
+[1] https://www.lifewire.com/how-to-send-a-message-in-plain-text-from-gmail=
+-1171963
