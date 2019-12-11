@@ -2,153 +2,114 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8F9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9508C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55002073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA992073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079813;
-	bh=wdzP/g3+B6dEhQG9OGGBppto31zNdyJ9yI4GkDAGj80=;
+	s=default; t=1576079816;
+	bh=nqhmLgTvDrwYf+dN7astYkWp9WvFzdgSm3SH0Mprv9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDJ9hTG+E+Nc9h5yKBXIfrEt1ah0jEVUnKvXZ71slz69U4sVLqen39p423Tf5oD2d
-	 Pq27l18euLT3xom0JCbnDnJ4n2LTbCx73ypeauXy6TV8FWtQs6VDADat3dYQeAANgh
-	 Vw/KKACPCs9uiWeVEFYkDk7M8GOQxYQrW3w7m1tM=
+	b=BiGYynQdTeU+lp6jcOv6Itp7DK+2+1nksDiUXoSbTROW1s3iS+rbuViN/mrojvyZh
+	 IDf/SC+VHQrJJbETXuoo5I1wEbEazIsjCW3R7oBCDJ7IZWlb90dLVf9cwrC00PEv+2
+	 cjIQJdU9n/9Jv5sm3E7vKrA7gbpVCPtqW+4CLPkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732576AbfLKP4t (ORCPT
+        id S1731753AbfLKPPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:56:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:15:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731484AbfLKPPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:15:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731121AbfLKPOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:18 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E929F20663;
-        Wed, 11 Dec 2019 15:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 884DB24658;
+        Wed, 11 Dec 2019 15:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077321;
-        bh=wdzP/g3+B6dEhQG9OGGBppto31zNdyJ9yI4GkDAGj80=;
+        s=default; t=1576077257;
+        bh=nqhmLgTvDrwYf+dN7astYkWp9WvFzdgSm3SH0Mprv9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=chQEG/3WqDdnbarOZMVHf8IoegSOYRBkjw79GB13MJ8d0alM1lzlazTwbNlRZHH0N
-         A3OWycQOLWhUZCVBu1DYt4pNJPYBXMBo5qhKYP84EI/dXInDVcGLOM0xmHDAka5pSV
-         cDD4wXlvszrLqGXwf1D08iiV9sMgBJr9dvAbHTjg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Subject: [PATCH 5.3 101/105] thermal: Fix deadlock in thermal thermal_zone_device_check
-Date:   Wed, 11 Dec 2019 16:06:30 +0100
-Message-Id: <20191211150303.988650326@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=h39cdc81oeJDvV394IwbXN+Mg6GxE1mstkjtd2pU545y8U+IfgvxyUsBZBUXtTqXu
+         pyvQhLpxCoWGoYqeQTZ1s4gpoUIrtOILBvzCv3Zli0/sSyS12+KLxobrKF2ZayD9to
+         O92cXmdQDYhvugDZixbn4EEC8mZVNKz3PWjpoG0E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Chris Down <chris@chrisdown.name>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 133/134] kernel: sysctl: make drop_caches write-only
+Date:   Wed, 11 Dec 2019 10:11:49 -0500
+Message-Id: <20191211151150.19073-133-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Wang <wvw@google.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-commit 163b00cde7cf2206e248789d2780121ad5e6a70b upstream.
+[ Upstream commit 204cb79ad42f015312a5bbd7012d09c93d9b46fb ]
 
-1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone
-device") changed cancel_delayed_work to cancel_delayed_work_sync to avoid
-a use-after-free issue. However, cancel_delayed_work_sync could be called
-insides the WQ causing deadlock.
+Currently, the drop_caches proc file and sysctl read back the last value
+written, suggesting this is somehow a stateful setting instead of a
+one-time command.  Make it write-only, like e.g.  compact_memory.
 
-[54109.642398] c0   1162 kworker/u17:1   D    0 11030      2 0x00000000
-[54109.642437] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.642447] c0   1162 Call trace:
-[54109.642456] c0   1162  __switch_to+0x138/0x158
-[54109.642467] c0   1162  __schedule+0xba4/0x1434
-[54109.642480] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.642492] c0   1162  wait_for_common+0x138/0x2e8
-[54109.642511] c0   1162  flush_work+0x348/0x40c
-[54109.642522] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.642544] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.642553] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.642563] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.642574] c0   1162  process_one_work+0x3cc/0x69c
-[54109.642583] c0   1162  worker_thread+0x49c/0x7c0
-[54109.642593] c0   1162  kthread+0x17c/0x1b0
-[54109.642602] c0   1162  ret_from_fork+0x10/0x18
-[54109.643051] c0   1162 kworker/u17:2   D    0 16245      2 0x00000000
-[54109.643067] c0   1162 Workqueue: thermal_passive_wq thermal_zone_device_check
-[54109.643077] c0   1162 Call trace:
-[54109.643085] c0   1162  __switch_to+0x138/0x158
-[54109.643095] c0   1162  __schedule+0xba4/0x1434
-[54109.643104] c0   1162  schedule_timeout+0xa0/0xb28
-[54109.643114] c0   1162  wait_for_common+0x138/0x2e8
-[54109.643122] c0   1162  flush_work+0x348/0x40c
-[54109.643131] c0   1162  __cancel_work_timer+0x180/0x218
-[54109.643141] c0   1162  handle_thermal_trip+0x2c4/0x5a4
-[54109.643150] c0   1162  thermal_zone_device_update+0x1b4/0x25c
-[54109.643159] c0   1162  thermal_zone_device_check+0x18/0x24
-[54109.643167] c0   1162  process_one_work+0x3cc/0x69c
-[54109.643177] c0   1162  worker_thread+0x49c/0x7c0
-[54109.643186] c0   1162  kthread+0x17c/0x1b0
-[54109.643195] c0   1162  ret_from_fork+0x10/0x18
-[54109.644500] c0   1162 cat             D    0  7766      1 0x00000001
-[54109.644515] c0   1162 Call trace:
-[54109.644524] c0   1162  __switch_to+0x138/0x158
-[54109.644536] c0   1162  __schedule+0xba4/0x1434
-[54109.644546] c0   1162  schedule_preempt_disabled+0x80/0xb0
-[54109.644555] c0   1162  __mutex_lock+0x3a8/0x7f0
-[54109.644563] c0   1162  __mutex_lock_slowpath+0x14/0x20
-[54109.644575] c0   1162  thermal_zone_get_temp+0x84/0x360
-[54109.644586] c0   1162  temp_show+0x30/0x78
-[54109.644609] c0   1162  dev_attr_show+0x5c/0xf0
-[54109.644628] c0   1162  sysfs_kf_seq_show+0xcc/0x1a4
-[54109.644636] c0   1162  kernfs_seq_show+0x48/0x88
-[54109.644656] c0   1162  seq_read+0x1f4/0x73c
-[54109.644664] c0   1162  kernfs_fop_read+0x84/0x318
-[54109.644683] c0   1162  __vfs_read+0x50/0x1bc
-[54109.644692] c0   1162  vfs_read+0xa4/0x140
-[54109.644701] c0   1162  SyS_read+0xbc/0x144
-[54109.644708] c0   1162  el0_svc_naked+0x34/0x38
-[54109.845800] c0   1162 D 720.000s 1->7766->7766 cat [panic]
+While mitigating a VM problem at scale in our fleet, there was confusion
+about whether writing to this file will permanently switch the kernel into
+a non-caching mode.  This influences the decision making in a tense
+situation, where tens of people are trying to fix tens of thousands of
+affected machines: Do we need a rollback strategy?  What are the
+performance implications of operating in a non-caching state for several
+days?  It also caused confusion when the kernel team said we may need to
+write the file several times to make sure it's effective ("But it already
+reads back 3?").
 
-Fixes: 1851799e1d29 ("thermal: Fix use-after-free when unregistering thermal zone device")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wei Wang <wvw@google.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: http://lkml.kernel.org/r/20191031221602.9375-1-hannes@cmpxchg.org
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Acked-by: Chris Down <chris@chrisdown.name>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Alexey Dobriyan <adobriyan@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/thermal_core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -304,7 +304,7 @@ static void thermal_zone_device_set_poll
- 				 &tz->poll_queue,
- 				 msecs_to_jiffies(delay));
- 	else
--		cancel_delayed_work_sync(&tz->poll_queue);
-+		cancel_delayed_work(&tz->poll_queue);
- }
- 
- static void monitor_thermal_zone(struct thermal_zone_device *tz)
-@@ -1404,7 +1404,7 @@ void thermal_zone_device_unregister(stru
- 
- 	mutex_unlock(&thermal_list_lock);
- 
--	thermal_zone_device_set_polling(tz, 0);
-+	cancel_delayed_work_sync(&tz->poll_queue);
- 
- 	thermal_set_governor(tz, NULL);
- 
-
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b6f2f35d0bcf5..70665934d53e2 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1466,7 +1466,7 @@ static struct ctl_table vm_table[] = {
+ 		.procname	= "drop_caches",
+ 		.data		= &sysctl_drop_caches,
+ 		.maxlen		= sizeof(int),
+-		.mode		= 0644,
++		.mode		= 0200,
+ 		.proc_handler	= drop_caches_sysctl_handler,
+ 		.extra1		= SYSCTL_ONE,
+ 		.extra2		= &four,
+-- 
+2.20.1
 
