@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A48D9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934F9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A247205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64ACF206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080752;
-	bh=ATBWun4wWF0hfWPoCuDAJUpd6PpKWorGF7fWEHv5zi8=;
+	s=default; t=1576080757;
+	bh=QZ0cs6rH6n1Q7qsmq1TmRkgiIWevSyuM7/uNSv/U0Bs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udsB1T9gxu0SaFSUnWIX7QDfnNwcwV7a6QiLAXEDt7kjDQVokA5hyrCoo8bRauKKX
-	 OK3UI2koAJNeuVq5Gnzi3+eA8H0jz+AEeAO1eY9QsiK6ZOHAy4+POvVljCYgTplJ1I
-	 y2oWZA075yx+LDuuysEeGnEBwDgFHzo2pW7Kl5cI=
+	b=K47RLQ+RfRPJnfp0abBefngnAEVR4Db9bk46epoQRTB+wuTR3yQSGTDsQxn6GnQSq
+	 5BQYOu6yZSetKm7blfn9xLqI1YsB4guh4OMtPVUJ0PIXpLuYAvvViKHgXdE0BjlRx2
+	 rqjefXxmraYHzRLNDf1Mv+IVzR708uyBcxxLip3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfLKPJa (ORCPT
+        id S1731450AbfLKQMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57408 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:12:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbfLKPJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:25 -0500
+        id S1730595AbfLKPJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFAAE24658;
-        Wed, 11 Dec 2019 15:09:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A84D92173E;
+        Wed, 11 Dec 2019 15:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076964;
-        bh=ATBWun4wWF0hfWPoCuDAJUpd6PpKWorGF7fWEHv5zi8=;
+        s=default; t=1576076969;
+        bh=QZ0cs6rH6n1Q7qsmq1TmRkgiIWevSyuM7/uNSv/U0Bs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYGsdJg4JM0LQeLp595HCLSVUt7oZzX/AfTJERpfshakCAFRk306v9Wh7dAc43bTe
-         +S1VQ7NCFQvN7wGes7L291WitMmDuqlGZJ1Qkvf+b/WPjk1TpJjxuddwFxgX7Gt7If
-         zM7Lb7IStYFsnEJDKa9h4ariRYvwRx7xnv6aV538=
+        b=AdeDd2y8u2UwVlGd91+1KxrhIFqygg/ninhi+TeYrYbU3YhTFUbJkGkKQiKFPvq65
+         VlDuuj7nO9SmbQR2jlsJpMBSAcAdwqnXWfZf+abji3h5K2Or9y3M9c3t5fZzfmFku5
+         jCxk2XaLxbGk54DyViwtnRN4lSYljZT60CY+KbUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 58/92] arm64: dts: exynos: Revert "Remove unneeded address space mapping for soc node"
-Date:   Wed, 11 Dec 2019 16:05:49 +0100
-Message-Id: <20191211150247.546562289@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Greg Kurz <groug@kaod.org>, Lijun Pan <ljp@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 5.4 59/92] KVM: PPC: Book3S HV: XIVE: Free previous EQ page when setting up a new one
+Date:   Wed, 11 Dec 2019 16:05:50 +0100
+Message-Id: <20191211150248.297201833@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,81 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Greg Kurz <groug@kaod.org>
 
-commit bed903167ae5b5532eda5d7db26de451bd232da5 upstream.
+commit 31a88c82b466d2f31a44e21c479f45b4732ccfd0 upstream.
 
-Commit ef72171b3621 ("arm64: dts: exynos: Remove unneeded address space
-mapping for soc node") changed the address and size cells in root node from
-2 to 1, but /memory nodes for the affected boards were not updated. This
-went unnoticed on Exynos5433-based TM2(e) boards, because they use u-boot,
-which updates /memory node to the correct values. On the other hand, the
-mentioned commit broke boot on Exynos7-based Espresso board, which
-bootloader doesn't touch /memory node at all.
+The EQ page is allocated by the guest and then passed to the hypervisor
+with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
+before handing it over to the HW. This reference is dropped either when
+the guest issues the H_INT_RESET hcall or when the KVM device is released.
+But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times,
+either to reset the EQ (vCPU hot unplug) or to set a new EQ (guest reboot).
+In both cases the existing EQ page reference is leaked because we simply
+overwrite it in the XIVE queue structure without calling put_page().
 
-This patch reverts commit ef72171b3621 ("arm64: dts: exynos: Remove
-unneeded address space mapping for soc node"), so Exynos5433 and Exynos7
-SoCs again matches other ARM64 platforms with 64bit mappings in root
-node.
+This is especially visible when the guest memory is backed with huge pages:
+start a VM up to the guest userspace, either reboot it or unplug a vCPU,
+quit QEMU. The leak is observed by comparing the value of HugePages_Free in
+/proc/meminfo before and after the VM is run.
 
-Reported-by: Alim Akhtar <alim.akhtar@samsung.com>
-Fixes: ef72171b3621 ("arm64: dts: exynos: Remove unneeded address space mapping for soc node")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: <stable@vger.kernel.org> # 5.3.x: 72ddcf6aa224 arm64: dts: exynos: Move GPU under /soc node for Exynos5433
-Cc: <stable@vger.kernel.org> # 5.3.x: ede87c3a2bdb arm64: dts: exynos: Move GPU under /soc node for Exynos7
-Cc: <stable@vger.kernel.org> # 4.18.x
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Ideally we'd want the XIVE code to handle the EQ page de-allocation at the
+platform level. This isn't the case right now because the various XIVE
+drivers have different allocation needs. It could maybe worth introducing
+hooks for this purpose instead of exposing XIVE internals to the drivers,
+but this is certainly a huge work to be done later.
+
+In the meantime, for easier backport, fix both vCPU unplug and guest reboot
+leaks by introducing a wrapper around xive_native_configure_queue() that
+does the necessary cleanup.
+
+Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org # v5.2
+Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Tested-by: Lijun Pan <ljp@linux.ibm.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi |    6 +++---
- arch/arm64/boot/dts/exynos/exynos7.dtsi    |    6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kvm/book3s_xive_native.c |   31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -18,8 +18,8 @@
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -50,6 +50,24 @@ static void kvmppc_xive_native_cleanup_q
+ 	}
+ }
  
- / {
- 	compatible = "samsung,exynos5433";
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++static int kvmppc_xive_native_configure_queue(u32 vp_id, struct xive_q *q,
++					      u8 prio, __be32 *qpage,
++					      u32 order, bool can_escalate)
++{
++	int rc;
++	__be32 *qpage_prev = q->qpage;
++
++	rc = xive_native_configure_queue(vp_id, q, prio, qpage, order,
++					 can_escalate);
++	if (rc)
++		return rc;
++
++	if (qpage_prev)
++		put_page(virt_to_page(qpage_prev));
++
++	return rc;
++}
++
+ void kvmppc_xive_native_cleanup_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvmppc_xive_vcpu *xc = vcpu->arch.xive_vcpu;
+@@ -582,19 +600,14 @@ static int kvmppc_xive_native_set_queue_
+ 		q->guest_qaddr  = 0;
+ 		q->guest_qshift = 0;
  
- 	interrupt-parent = <&gic>;
+-		rc = xive_native_configure_queue(xc->vp_id, q, priority,
+-						 NULL, 0, true);
++		rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
++							NULL, 0, true);
+ 		if (rc) {
+ 			pr_err("Failed to reset queue %d for VCPU %d: %d\n",
+ 			       priority, xc->server_num, rc);
+ 			return rc;
+ 		}
  
-@@ -311,7 +311,7 @@
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		ranges;
-+		ranges = <0x0 0x0 0x0 0x18000000>;
+-		if (q->qpage) {
+-			put_page(virt_to_page(q->qpage));
+-			q->qpage = NULL;
+-		}
+-
+ 		return 0;
+ 	}
  
- 		chipid@10000000 {
- 			compatible = "samsung,exynos4210-chipid";
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -12,8 +12,8 @@
- / {
- 	compatible = "samsung,exynos7";
- 	interrupt-parent = <&gic>;
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
- 
- 	aliases {
- 		pinctrl0 = &pinctrl_alive;
-@@ -98,7 +98,7 @@
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		ranges;
-+		ranges = <0 0 0 0x18000000>;
- 
- 		chipid@10000000 {
- 			compatible = "samsung,exynos4210-chipid";
+@@ -653,8 +666,8 @@ static int kvmppc_xive_native_set_queue_
+ 	  * OPAL level because the use of END ESBs is not supported by
+ 	  * Linux.
+ 	  */
+-	rc = xive_native_configure_queue(xc->vp_id, q, priority,
+-					 (__be32 *) qaddr, kvm_eq.qshift, true);
++	rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
++					(__be32 *) qaddr, kvm_eq.qshift, true);
+ 	if (rc) {
+ 		pr_err("Failed to configure queue %d for VCPU %d: %d\n",
+ 		       priority, xc->server_num, rc);
 
 
