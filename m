@@ -2,193 +2,69 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BECC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC90C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23DEB206D5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924122073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 01:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576027876;
+	bh=wnOl6p1K/SUEQXiY8Gpr2seeZ+i631yAH+xs0grtRy0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=kryCfUZ3+SzSE7VvGBJvcPYYiSzAaXp9RX49C3svZ7KVOoSjRnN/j7MuqG55jmfvA
+	 F00UwPPNje1fWPAchxzBSEgnqwRR7Cp5BYaVCIkGD+SBE28bfjZoxyM2WFScBMgGts
+	 qoEBfcBHNosMQotTVkDabxCySpVPro3SN1TNQPl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfLKBas (ORCPT
+        id S1727378AbfLKBbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 20:30:48 -0500
-Received: from mga04.intel.com ([192.55.52.120]:50253 "EHLO mga04.intel.com"
+        Tue, 10 Dec 2019 20:31:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726364AbfLKBas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 20:30:48 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 17:30:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="220333095"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Dec 2019 17:30:45 -0800
-Date:   Wed, 11 Dec 2019 09:32:07 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 3/7] KVM: VMX: Pass through CET related MSRs
-Message-ID: <20191211013207.GA12845@local-michael-cet-test>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-4-weijiang.yang@intel.com>
- <20191210211821.GL15758@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210211821.GL15758@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        id S1727302AbfLKBbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 20:31:15 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90C61206D5;
+        Wed, 11 Dec 2019 01:31:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576027875;
+        bh=wnOl6p1K/SUEQXiY8Gpr2seeZ+i631yAH+xs0grtRy0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0PE2HvuI9LIwtOeysXUN1ImbZRJLb/XthDWqd7Fg+5tFfEnUZ5OwJQmAXJFJvLVyl
+         gNqkavvXjrKRMzn98OZgTHmr5M7KYttwI86S5Vc6NrKn6NKm1d6RYBL95gAzwyByiG
+         y3R52W39slW/aKnJDxwbm7FvsvpkxmbtHYFRCMT8=
+Date:   Tue, 10 Dec 2019 17:31:14 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Daniel Axtens <dja@axtens.net>, kasan-dev@googlegroups.com,
+        linux-mm@kvack.org, aryabinin@virtuozzo.com, glider@google.com,
+        linux-kernel@vger.kernel.org, dvyukov@google.com,
+        daniel@iogearbox.net, cai@lca.pw
+Subject: Re: [PATCH 1/3] mm: add apply_to_existing_pages helper
+Message-Id: <20191210173114.31a6f3e868f94173de76f5cb@linux-foundation.org>
+In-Reply-To: <20191209073458.GA3852@infradead.org>
+References: <20191205140407.1874-1-dja@axtens.net>
+        <20191206163853.cdeb5dc80a8622fb6323a8d2@linux-foundation.org>
+        <20191209073458.GA3852@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 01:18:21PM -0800, Sean Christopherson wrote:
-> On Fri, Nov 01, 2019 at 04:52:18PM +0800, Yang Weijiang wrote:
-> > CET MSRs pass through Guest directly to enhance performance.
-> > CET runtime control settings are stored in MSR_IA32_{U,S}_CET,
-> > Shadow Stack Pointer(SSP) are stored in MSR_IA32_PL{0,1,2,3}_SSP,
-> > SSP table base address is stored in MSR_IA32_INT_SSP_TAB,
-> > these MSRs are defined in kernel and re-used here.
-> > 
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index dd387a785c1e..4166c4fcad1e 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -371,13 +371,13 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
-> >  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
-> >  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
-> >  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> > -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B);
-> > +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | F(SHSTK);
-> >  
-> >  	/* cpuid 7.0.edx*/
-> >  	const u32 kvm_cpuid_7_0_edx_x86_features =
-> >  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
-> >  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> > -		F(MD_CLEAR);
-> > +		F(MD_CLEAR) | F(IBT);
-> 
-> Advertising CET to userspace/guest needs to be done at the end of the
-> series, or at least after CR4.CET is no longer reserved, e.g. KVM_SET_SREGS
-> will fail and the guest will get a #GP when trying to set CR4.CET.
-> 
-> I'm pretty sure I've said this at least twice in previous versions of
-> this series...
+On Sun, 8 Dec 2019 23:34:58 -0800 Christoph Hellwig <hch@infradead.org> wrote:
 
-Thanks Sean for picking these up!
-The reason is, starting from this patch, I'm using guest_cpuid_has(CET)
-to check the availability of guest CET CPUID, so logically I would like to let
-the readers understand CET related CPUID word is
-defined as above. But no problem, I can move these definitions to a
-latter patch as the patchset only meaningful as a whole. 
-> 
-> >  
-> >  	/* cpuid 7.1.eax */
-> >  	const u32 kvm_cpuid_7_1_eax_x86_features =
-> > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> > index d78a61408243..1d77b880084d 100644
-> > --- a/arch/x86/kvm/cpuid.h
-> > +++ b/arch/x86/kvm/cpuid.h
-> > @@ -27,6 +27,8 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
-> >  
-> > +static void vmx_pass_cet_msrs(struct kvm_vcpu *vcpu)
-> 
-> "pass" isn't accurate, this function also does the opposite.  Maybe 
-> vmx_update_intercept_for_cet_msr()?  Or reuse the PT naming and go with
-> cet_update_intercept_for_msr()?
->
-Sure, will change it.
+> Or a flags argument with descriptive flags to the existing function?
+> These magic bool arguments don't scale..
 
-> > +{
-> > +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > +	unsigned long *msr_bitmap = vmx->vmcs01.msr_bitmap;
-> > +
-> > +	/*
-> > +	 * U_CET is required for USER CET, per CET spec., meanwhile U_CET and
-> > +	 * PL3_SPP are a bundle for USER CET xsaves.
-> > +	 */
-> > +	if (guest_cet_allowed(vcpu, X86_FEATURE_SHSTK, XFEATURE_MASK_CET_USER) ||
-> > +	    guest_cet_allowed(vcpu, X86_FEATURE_IBT, XFEATURE_MASK_CET_USER)) {
-> 
-> IMO, the guest_cet_allowed() wrappers do more harm than good, e.g. I find
-> this easier to understand because it doesn't require digging into a random
-> helper.
-> 
-> 	if ((kvm_supported_xss() & XFEATURE_MASK_CET_USER) &&
-> 	    (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> 	     guest_cpuid_has(vcpu, X86_FEATURE_IBT)))
-> 
-Hmm, sounds like it's an unnecessary wrapper, will remove it, thanks!
+True.  But it's easy enough to do s/bool create/enum mode/ in the
+future should the need arise.  For now, the code is clearer.
 
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW);
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW);
-> > +	} else {
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_U_CET, MSR_TYPE_RW, true);
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL3_SSP, MSR_TYPE_RW, true);
-> > +	}
-> > +	/*
-> > +	 * S_CET is required for KERNEL CET, meanwhile PL0_SSP ... PL2_SSP are a bundle
-> > +	 * for CET KERNEL xsaves.
-> > +	 */
-> > +	if (guest_cet_allowed(vcpu, X86_FEATURE_SHSTK, XFEATURE_MASK_CET_KERNEL) ||
-> > +	    guest_cet_allowed(vcpu, X86_FEATURE_IBT, XFEATURE_MASK_CET_KERNEL)) {
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW);
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW);
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW);
-> > +		vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW);
-> > +
-> > +		/* SSP_TAB only available for KERNEL SHSTK.*/
-> > +		if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> > +			vmx_disable_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-> > +						      MSR_TYPE_RW);
-> > +		else
-> > +			vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB,
-> > +						  MSR_TYPE_RW, true);
-> > +	} else {
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_S_CET, MSR_TYPE_RW, true);
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL0_SSP, MSR_TYPE_RW, true);
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL1_SSP, MSR_TYPE_RW, true);
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_PL2_SSP, MSR_TYPE_RW, true);
-> > +		vmx_set_intercept_for_msr(msr_bitmap, MSR_IA32_INT_SSP_TAB, MSR_TYPE_RW, true);
-> > +	}
-> > +}
-> > +
-> >  static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> >  {
-> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > @@ -7025,6 +7087,9 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
-> >  	if (boot_cpu_has(X86_FEATURE_INTEL_PT) &&
-> >  			guest_cpuid_has(vcpu, X86_FEATURE_INTEL_PT))
-> >  		update_intel_pt_cfg(vcpu);
-> > +
-> > +	if (!is_guest_mode(vcpu))
-> > +		vmx_pass_cet_msrs(vcpu);
-> 
-> Hmm, this looks insufficent, e.g. deliberately toggling CET from on->off
-> while in guest mode would put KVM in a weird state as the msr bitmap for
-> L1 would still allow L1 to access the CET MSRs.
-Not sure I understand correctly, guest_cpu_has(CET) implies the check of
-host CET status, if CET is off in host, CET MSRs won't exposed to L1
-guest.
-> 
-> Allowing KVM_SET_CPUID{2} while running a nested guest seems bogus, can we
-> kill that path entirely with -EINVAL?
-> 
-Do you mean prevent L1 using KVM_SET_CPUID{2} to expose CET feature bits to
-L2?
-
-> >  }
-> >  
-> >  static void vmx_set_supported_cpuid(u32 func, struct kvm_cpuid_entry2 *entry)
-> > -- 
-> > 2.17.2
-> > 
