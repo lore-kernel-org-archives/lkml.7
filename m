@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AB6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0400721556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB9B1222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 12:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WrnTBGto"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aglqWHi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfLKMbs (ORCPT
+        id S1729262AbfLKMbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 07:31:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51196 "EHLO
+        Wed, 11 Dec 2019 07:31:47 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51198 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729345AbfLKMbo (ORCPT
+        with ESMTP id S1729406AbfLKMbo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 07:31:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -28,25 +28,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
         Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Kmci9S6AR0FYTskb+05odp4dpXOL68/q4robJqM04t0=; b=WrnTBGtoDFlccGkA5QZK9j0uWw
-        57DBHjQs0S/lsu1PhmhB9IFpejHbtD9kJq7MeSq8LN4BazpDPoWGfZgdkZid6plViTf+3YXazhJfu
-        VZOZo2nvohUmKhR9bOufnk25W2mgUeXw5Tfo7KFJfoRIwMOfddpM5oPxw6nA9kwv6owTz/y4qRZ8E
-        tnbT0r8MQDL8luI0zqxoflw/kl3Q0PeOEXULKaQURxxxtYHg7wZqt2vrofd2zT0vljXj+RbcexQWz
-        1nYzsUwh7KcGVspUYsRZVZh2ms+UsnKRtgHlhQtz2bdo4U9wjvzXJrCMPmQtQw1R8ZzLhOaPooP6D
-        nt7poLqQ==;
+        bh=3R2DK7HvOJXWBjGxheTnCh1+oyh0A3xwV1bV88LUreM=; b=aglqWHi18wn3lAH9Lx5D/B4kie
+        lJrNLFF2pxctrEMnYBHJIEBPv58Uj2A/vOKGdU8ZDPpr8FRStCEj0aezmWfn31MarEVKYHnc5yWex
+        o4z0fl0klPQ5ega9cW16Tu2P2HCSxYvHoFGZ/aWVIoOt9c2cHZ/FcPuq3kEZvabVEq+Eq+I6OrTPN
+        dtIJQP6gNNjFP/E6MFesMAcqOR3T40Ryem7Xr9dYn2tgznxlX8JgvxiQghvD3NSRLSueGnFntUOfM
+        DcFRhZWamjcLkkYGEgDd2rlXeZIGbLC0EEw5Fjo3t1fgIYGg3VCHsMJ6tJw05K20y5rLuhDQqO5CI
+        wITu+cqA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1if193-0001Pj-2S; Wed, 11 Dec 2019 12:31:09 +0000
+        id 1if192-0001Pf-Bl; Wed, 11 Dec 2019 12:31:08 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F0A57306CBC;
-        Wed, 11 Dec 2019 13:29:43 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 026FB307093;
+        Wed, 11 Dec 2019 13:29:44 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 4BA3120137CBA; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
-Message-Id: <20191211122956.399804770@infradead.org>
+        id 605A920137CBF; Wed, 11 Dec 2019 13:31:02 +0100 (CET)
+Message-Id: <20191211122956.629995180@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 11 Dec 2019 13:07:26 +0100
+Date:   Wed, 11 Dec 2019 13:07:30 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Will Deacon <will@kernel.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
@@ -64,9 +64,8 @@ Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
         Tony Luck <tony.luck@intel.com>,
         Richard Henderson <rth@twiddle.net>,
         Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Burton <paul.burton@mips.com>
-Subject: [PATCH 13/17] mips/tlb: Fix __p*_free_tlb()
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH 17/17] riscv/tlb: Fix __p*_free_tlb()
 References: <20191211120713.360281197@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -84,126 +83,37 @@ following order:
 
 to ensure it is safe against concurrent accesses.
 
-MIPS has (thanks to Paul Burton for setting me straight):
+Since RISC-V has page based PMDs, no software walkers and IPI based
+TLB invalidation, it can use the simple tlb_remove_page() based
+freeer.
 
- - HAVE_FAST_GUP, which means we need to consider software
-   walkers (many MIPS also have software TLB-fill, which is a similar
-   software walker).
-
- - non-page, page directories, which requires a custom table free.
-
- - Mostly IPI-based TLB invalidate, but it wouldn't be MIPS if it
-   didn't also have broadcast TLB invalidate (I6500, GINVT).
-
-This means that in generic MIPS needs HAVE_RCU_TABLE_FREE.
-
-Cc: Paul Burton <paul.burton@mips.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/mips/Kconfig               |    1 +
- arch/mips/include/asm/pgalloc.h |   13 ++++++-------
- arch/mips/mm/pgtable.c          |   34 ++++++++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+), 7 deletions(-)
+ arch/riscv/include/asm/pgalloc.h |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -57,6 +57,7 @@ config MIPS
- 	select HAVE_DYNAMIC_FTRACE
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FAST_GUP
-+	select MMU_GATHER_RCU_TABLE_FREE
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
---- a/arch/mips/include/asm/pgalloc.h
-+++ b/arch/mips/include/asm/pgalloc.h
-@@ -41,6 +41,9 @@ static inline void pud_populate(struct m
- }
- #endif
- 
-+extern void __tlb_remove_table(void *table);
-+extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int idx);
-+
- /*
-  * Initialize a new pgd / pmd table with invalid pointers.
-  */
-@@ -52,11 +55,7 @@ static inline void pgd_free(struct mm_st
- 	free_pages((unsigned long)pgd, PGD_ORDER);
+--- a/arch/riscv/include/asm/pgalloc.h
++++ b/arch/riscv/include/asm/pgalloc.h
+@@ -73,14 +73,15 @@ static inline void pmd_free(struct mm_st
+ 	free_page((unsigned long)pmd);
  }
  
--#define __pte_free_tlb(tlb,pte,address)			\
--do {							\
--	pgtable_pte_page_dtor(pte);			\
--	tlb_remove_page((tlb), pte);			\
--} while (0)
-+#define __pte_free_tlb(tlb,pte,address)	pgtable_free_tlb((tlb), (pte), 0)
+-#define __pmd_free_tlb(tlb, pmd, addr)  pmd_free((tlb)->mm, pmd)
++#define __pmd_free_tlb(tlb, pmd, addr)	\
++	tlb_remove_table((tlb), virt_to_page(pmd))
  
- #ifndef __PAGETABLE_PMD_FOLDED
+ #endif /* __PAGETABLE_PMD_FOLDED */
  
-@@ -75,7 +74,7 @@ static inline void pmd_free(struct mm_st
- 	free_pages((unsigned long)pmd, PMD_ORDER);
- }
+-#define __pte_free_tlb(tlb, pte, buf)   \
+-do {                                    \
+-	pgtable_pte_page_dtor(pte);     \
+-	tlb_remove_page((tlb), pte);    \
++#define __pte_free_tlb(tlb, pte, buf)	\
++do {					\
++	pgtable_pte_page_dtor(pte);	\
++	tlb_remove_table((tlb), (pte));	\
+ } while (0)
+ #endif /* CONFIG_MMU */
  
--#define __pmd_free_tlb(tlb, x, addr)	pmd_free((tlb)->mm, x)
-+#define __pmd_free_tlb(tlb, x, addr)	pgtable_free_tlb((tlb), (x), 1)
- 
- #endif
- 
-@@ -101,7 +100,7 @@ static inline void p4d_populate(struct m
- 	set_p4d(p4d, __p4d((unsigned long)pud));
- }
- 
--#define __pud_free_tlb(tlb, x, addr)	pud_free((tlb)->mm, x)
-+#define __pud_free_tlb(tlb, x, addr)	pgtable_free_tlb((tlb), (x), 2)
- 
- #endif /* __PAGETABLE_PUD_FOLDED */
- 
---- a/arch/mips/mm/pgtable.c
-+++ b/arch/mips/mm/pgtable.c
-@@ -7,6 +7,7 @@
- #include <linux/mm.h>
- #include <linux/string.h>
- #include <asm/pgalloc.h>
-+#include <asm-generic/tlb.h>
- 
- pgd_t *pgd_alloc(struct mm_struct *mm)
- {
-@@ -23,3 +24,36 @@ pgd_t *pgd_alloc(struct mm_struct *mm)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(pgd_alloc);
-+
-+#define TLB_IDX_MASK	0x3
-+
-+void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int idx)
-+{
-+	unsigned long pgf = (unsigned long)table;
-+	BUG_ON(idx > TLB_IDX_MASK);
-+	BUG_ON(pgf & TLB_IDX_MASK);
-+	pgf |= idx;
-+	tlb_remove_table(tlb, (void *)pgf);
-+}
-+
-+void __tlb_remove_table(void *table)
-+{
-+	void *dir = (void *)((unsigned long)table & ~TLB_IDX_MASK);
-+	int idx = (unsigned long)table & TLB_IDX_MASK;
-+
-+	switch (idx) {
-+#ifndef __PAGETABLE_PUD_FOLDED
-+	case 2: /* PUD */
-+		pud_free(NULL, dir);
-+		break;
-+#endif
-+#ifndef __PAGETABLE_PMD_FOLDED
-+	case 1: /* PMD */
-+		pmd_free(NULL, dir);
-+		break;
-+#endif
-+	case 0: /* PTE */
-+		pte_free(NULL, dir);
-+		break;
-+	}
-+}
 
 
