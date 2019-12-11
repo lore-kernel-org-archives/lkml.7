@@ -2,130 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 183FBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1C8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBB82077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C55214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080303;
-	bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+	s=default; t=1576080310;
+	bh=qzz8hoLUA2ByqBcCK1pZMfBl6ixxXnlSmDmXv8/JiI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BD667RH24Ou7zujurQGfpwerm/xzswzOefJ2863iuHQ34DOXAH9vYsT0CRBqUMO84
-	 EpRq5SGIWhJr1+nuDzIJpmC+JN9Lwgj3lCkhMUsDknFlj4MjR0J/TjXolJBK+Py/bw
-	 RnsdiX4IGCpY1RCO7V5gYfvSBr0b+ONYWIqzX+Ok=
+	b=f9xP87XsCgA+DYP76VutmI5kDxQ7G7NoD7u51LGEmVS9oPQMOYVjOwIDWtNzMe/6+
+	 TKOBMmULUBAEftQEAHGnxVHActhi1iQzV6/QQ9o1KiuHPQJup4XEToyD+aIFVsKgB+
+	 RH5EAMMMP22el4FW6IesBmFi+1U8/lkZzxqMlxbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388878AbfLKQFC (ORCPT
+        id S2388879AbfLKQFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35564 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:05:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730429AbfLKPM5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:57 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729985AbfLKPMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D4692467D;
-        Wed, 11 Dec 2019 15:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1F3A24671;
+        Wed, 11 Dec 2019 15:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077176;
-        bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+        s=default; t=1576077174;
+        bh=qzz8hoLUA2ByqBcCK1pZMfBl6ixxXnlSmDmXv8/JiI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFEYRj8RxbU1sKEEgPuDcs0/drDd/uO7o2nZh8flGXnoR09hukvZBlCyALN3z/ThW
-         dH4lSfD3IfSpT8BRYitil0O1YPhi4fz5g757K/CdhviS1sFu6z8BgzpBMCgk89c0Cp
-         uTY0NY3eKr5jbxToAwQfVK2wQpQKt0KYBk6Pnjms=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 5.3 010/105] serial: pl011: Fix DMA ->flush_buffer()
-Date:   Wed, 11 Dec 2019 16:04:59 +0100
-Message-Id: <20191211150223.556547365@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=WbE8Ap8PPtHt25CEKwR/TTZ9+gjdNkCePsJjl9lTaLla55WtdhXVyClIc1MeYYMrX
+         bYySOTyMFCJBPUPjFR77cATXUT3CuMkjvcHM6vBi8QHDDvi8m6UU8CaKxIMGnqR9cJ
+         ugGOY3b5/I6ydbuieUB3B7v7Su5ajLVMSXpb8emE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jan Stancek <jstancek@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 059/134] iomap: fix return value of iomap_dio_bio_actor on 32bit systems
+Date:   Wed, 11 Dec 2019 10:10:35 -0500
+Message-Id: <20191211151150.19073-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Jan Stancek <jstancek@redhat.com>
 
-commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
+[ Upstream commit e9f930ac88a8936ccc2d021110c98810cf5aa810 ]
 
-PL011's ->flush_buffer() implementation releases and reacquires the port
-lock.  Due to a race condition here, data can end up being added to the
-circular buffer but neither being discarded nor being sent out.  This
-leads to, for example, tcdrain(2) waiting indefinitely.
+Naresh reported LTP diotest4 failing for 32bit x86 and arm -next
+kernels on ext4. Same problem exists in 5.4-rc7 on xfs.
 
-Process A                       Process B
+The failure comes down to:
+  openat(AT_FDCWD, "testdata-4.5918", O_RDWR|O_DIRECT) = 4
+  mmap2(NULL, 4096, PROT_READ, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0xb7f7b000
+  read(4, 0xb7f7b000, 4096)              = 0 // expects -EFAULT
 
-uart_flush_buffer()
- - acquire lock
- - circ_clear
- - pl011_flush_buffer()
- -- release lock
- -- dmaengine_terminate_all()
+Problem is conversion at iomap_dio_bio_actor() return. Ternary
+operator has a return type and an attempt is made to convert each
+of operands to the type of the other. In this case "ret" (int)
+is converted to type of "copied" (unsigned long). Both have size
+of 4 bytes:
+    size_t copied = 0;
+    int ret = -14;
+    long long actor_ret = copied ? copied : ret;
 
-                                uart_write()
-                                - acquire lock
-                                - add chars to circ buffer
-                                - start_tx()
-                                -- start DMA
-                                - release lock
+    On x86_64: actor_ret == -14;
+    On x86   : actor_ret == 4294967282
 
- -- acquire lock
- -- turn off DMA
- -- release lock
+Replace ternary operator with 2 return statements to avoid this
+unwanted conversion.
 
-                                // Data in circ buffer but DMA is off
-
-According to the comment in the code, the releasing of the lock around
-dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
-callback.  However, since the time this code was written, the DMA engine
-API documentation seems to have been clarified to say that
-dmaengine_terminate_all() (in the identically implemented but
-differently named dmaengine_terminate_async() variant) does not wait for
-any running complete callback to be completed and can even be called
-from a complete callback.  So there is no possibility of deadlock if the
-DMA engine driver implements this API correctly.
-
-So we should be able to just remove this release and reacquire of the
-lock to prevent the aforementioned race condition.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 4721a6010990 ("iomap: dio data corruption and spurious errors when pipes fill")
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/amba-pl011.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/iomap/direct-io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
- 	if (!uap->using_tx_dma)
- 		return;
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index 1fc28c2da2790..7c58f51d7da74 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -318,7 +318,9 @@ zero_tail:
+ 		if (pad)
+ 			iomap_dio_zero(dio, iomap, pos, fs_block_size - pad);
+ 	}
+-	return copied ? copied : ret;
++	if (copied)
++		return copied;
++	return ret;
+ }
  
--	/* Avoid deadlock with the DMA engine callback */
--	spin_unlock(&uap->port.lock);
--	dmaengine_terminate_all(uap->dmatx.chan);
--	spin_lock(&uap->port.lock);
-+	dmaengine_terminate_async(uap->dmatx.chan);
-+
- 	if (uap->dmatx.queued) {
- 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
- 			     DMA_TO_DEVICE);
-
+ static loff_t
+-- 
+2.20.1
 
