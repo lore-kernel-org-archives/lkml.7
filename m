@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83619C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7749C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FDF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDB7208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:19:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mv4AwMap"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F9nIloV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfLKGTu (ORCPT
+        id S1727883AbfLKGTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:19:50 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:32987 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfLKGTt (ORCPT
+        Wed, 11 Dec 2019 01:19:54 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36942 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfLKGTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:19:49 -0500
-Received: by mail-pl1-f196.google.com with SMTP id c13so1004463pls.0
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 22:19:49 -0800 (PST)
+        Wed, 11 Dec 2019 01:19:54 -0500
+Received: by mail-pg1-f195.google.com with SMTP id q127so10251050pga.4
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 22:19:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=76R4CRjTberWs1+4We73KltAUaIdDXYhjKx430Z9EEM=;
-        b=mv4AwMap++Smhq2iifMvvVvhgzHcZelWKrbMDVs21ulI3vfAibQVcdmzrR2dFyjfH5
-         kSL3LCm0Lp3JEQlbVN2rPWAyc62ozrQh6OTrD9KY+swDxS0kAlxfxzLs5Bp0741/KhT+
-         ejG+JYh6yPJv9VTShDwUqWfFdtoZke6C9mAME=
+        bh=5SzZg/Any9b15PYJNx4TC/3Ha5cPQwIvnngJiL/O6D4=;
+        b=F9nIloV3mkfv1BWp4npou4P6BtwgDkiffAbTsdiUkTmBcHM/KBFN58cVt+AMC4V8xS
+         EAtttKKXOtsz9hji7eGv+2L61RmSt+L/GOvR0AmDuMjRiqHdL24NpwSqf5AKFEBLj9mL
+         j/glY6I+kVN+ezQ23A2VtUe6jlGtYhFQjGA+U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=76R4CRjTberWs1+4We73KltAUaIdDXYhjKx430Z9EEM=;
-        b=YJBgnISn6LfPuaP97bC5vrLsRZ3vgFcgMbVQKOpfiVyP7OEX0AqOLhiQ7B/xRackfk
-         H06Guh3GtxlY/H6CQq3Xu0lgY5q7s+lmKj1UuAy0gfNw5wlRHiGeSm6gx7RAGhWZnsvZ
-         Rn0E7G/FEanvg70aP0Dy6SiqRpFB880Hwzmr5ppoW7/6hHRCF6KLDaXTxwyrVOPuu2wq
-         7RMRrLhKaQUwQ29DyaP9ofMaU4vFvjgt3QhgU0Snq8JpzaL7UbYl6Cc0hEbVObXT15GM
-         N6M2SKH66WFjFMElKctfXDWqF9oHphH6kPriQCFLax/sTb6QMd3uZKKKxjcxS0pmN59V
-         8lKg==
-X-Gm-Message-State: APjAAAWg+rHcrGD5Lg7OtlUise0iSlAX47V9MXDAa0vnE5gbRzFOddxt
-        xj8tq4bIPiPBJLHjoFkzUQ3C5A==
-X-Google-Smtp-Source: APXvYqyQdZvJdA+Oih6UHvuV2zvAvDFmSpdCjC6sQtg13Gw0FfJ3GCCrMT68SF0qZhKyn9kNmSXMeg==
-X-Received: by 2002:a17:902:5a85:: with SMTP id r5mr1533808pli.222.1576045188561;
-        Tue, 10 Dec 2019 22:19:48 -0800 (PST)
+        bh=5SzZg/Any9b15PYJNx4TC/3Ha5cPQwIvnngJiL/O6D4=;
+        b=mjhV3K9TdPgX2eWBEeSXkFrBuWwATrfqfkDpu1ZEGtpXPkZ5Hk6Vu+VglGkrQ8pnto
+         KKG8qkxy+pRMQqFVrObidhxNWX6r8LdS/XuLfpEikXp5d2pUAONzfqyX5ByoLCzt52Cg
+         TmsnswFt6IDv477fw8K8+FMDXf/4f/80FV2CgXSAei4kkIAnyXlxCMTftQFjmfABwAe7
+         m0wKDKg+M2FWERO+oanVkLexLIsy3EWGcG1R/1m1gp2HA884e1fsawIB53i6YDor3qdg
+         6ByQN0wxs2focdnc0li2e4yYQEkD19h4sGbFZw4HJ046Izi3Bv2UUo5kQ5zTbTgeuolL
+         DfiA==
+X-Gm-Message-State: APjAAAWcCpQ06gdeftVmJHx0Vuqpj8wf9T29MV3aWkGtVfg6mSBSs/65
+        C93PMglVwrjObHrUu7eChjeuDw==
+X-Google-Smtp-Source: APXvYqwq5ql9gkBVGJtQCkgVSEUeNJ/97XFaS3CTKAxAX61qj+67JfQL5hpgXLD4RlP2wt4YbE8eUQ==
+X-Received: by 2002:a63:220b:: with SMTP id i11mr2311164pgi.50.1576045193287;
+        Tue, 10 Dec 2019 22:19:53 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id h5sm1225579pfk.30.2019.12.10.22.19.45
+        by smtp.gmail.com with ESMTPSA id h5sm1225579pfk.30.2019.12.10.22.19.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Dec 2019 22:19:48 -0800 (PST)
+        Tue, 10 Dec 2019 22:19:52 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     dri-devel@lists.freedesktop.org
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
@@ -69,9 +69,9 @@ Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Matthias Brugger <mbrugger@suse.com>,
         Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH RESEND 2/4] drm: bridge: anx7688: Add anx7688 bridge driver support.
-Date:   Wed, 11 Dec 2019 14:19:09 +0800
-Message-Id: <20191211061911.238393-3-hsinyi@chromium.org>
+Subject: [PATCH RESEND 3/4] dt-bindings: drm/bridge: Add GPIO display mux binding
+Date:   Wed, 11 Dec 2019 14:19:10 +0800
+Message-Id: <20191211061911.238393-4-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
 In-Reply-To: <20191211061911.238393-1-hsinyi@chromium.org>
 References: <20191211061911.238393-1-hsinyi@chromium.org>
@@ -84,261 +84,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nicolas Boichat <drinkcat@chromium.org>
 
-ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
-that has an internal microcontroller.
-
-The only reason a Linux kernel driver is necessary is to reject
-resolutions that require more bandwidth than what is available on
-the DP side. DP bandwidth and lane count are reported by the bridge
-via 2 registers on I2C.
+Add bindings for Generic GPIO mux driver.
 
 Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- drivers/gpu/drm/bridge/Kconfig            |   9 +
- drivers/gpu/drm/bridge/Makefile           |   1 +
- drivers/gpu/drm/bridge/analogix-anx7688.c | 202 ++++++++++++++++++++++
- 3 files changed, 212 insertions(+)
- create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
+Change from RFC to v1:
+- txt to yaml
+---
+ .../bindings/display/bridge/gpio-mux.yaml     | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 34362976cd6f..1f3fc6bec842 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -16,6 +16,15 @@ config DRM_PANEL_BRIDGE
- menu "Display Interface Bridges"
- 	depends on DRM && DRM_BRIDGE
- 
-+config DRM_ANALOGIX_ANX7688
-+	tristate "Analogix ANX7688 bridge"
-+	select DRM_KMS_HELPER
-+	select REGMAP_I2C
-+	---help---
-+	  ANX7688 is a transmitter to support DisplayPort over USB-C for
-+	  smartphone and tablets.
-+	  This driver only supports the HDMI to DP component of the chip.
-+
- config DRM_ANALOGIX_ANX78XX
- 	tristate "Analogix ANX78XX bridge"
- 	select DRM_KMS_HELPER
-diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-index 4934fcf5a6f8..7a1e0ec032e6 100644
---- a/drivers/gpu/drm/bridge/Makefile
-+++ b/drivers/gpu/drm/bridge/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
- obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
- obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
- obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
+diff --git a/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
 new file mode 100644
-index 000000000000..baaed48d6201
+index 000000000000..cef098749066
 --- /dev/null
-+++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
-@@ -0,0 +1,202 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * ANX7688 HDMI->DP bridge driver
-+ *
-+ * Copyright 2016 Google LLC
-+ */
++++ b/Documentation/devicetree/bindings/display/bridge/gpio-mux.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/gpio-mux.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <drm/drm_bridge.h>
++title: Generic display mux (1 input, 2 outputs)
 +
-+/* Register addresses */
-+#define VENDOR_ID_REG 0x00
-+#define DEVICE_ID_REG 0x02
++maintainers:
++  - Nicolas Boichat <drinkcat@chromium.org>
 +
-+#define FW_VERSION_REG 0x80
++description: |
++  This bindings describes a simple display (e.g. HDMI) mux, that has 1
++  input, and 2 outputs. The mux status is controlled by hardware, and
++  its status is read back using a GPIO.
 +
-+#define DP_BANDWIDTH_REG 0x85
-+#define DP_LANE_COUNT_REG 0x86
++properties:
++  compatible:
++    const: gpio-display-mux
 +
-+#define VENDOR_ID 0x1f29
-+#define DEVICE_ID 0x7688
++  detect-gpios:
++    maxItems: 1
++    description: GPIO that indicates the active output
 +
-+/* First supported firmware version (0.85) */
-+#define MINIMUM_FW_VERSION 0x0085
++  ports:
++    type: object
 +
-+struct anx7688 {
-+	struct drm_bridge bridge;
-+	struct i2c_client *client;
-+	struct regmap *regmap;
++    properties:
++      port@0:
++        type: object
++        description: |
++          Video port for input.
 +
-+	bool filter;
-+};
++      port@1:
++        type: object
++        description: |
++          2 video ports for output.
++          The reg value in the endpoints matches the GPIO status: when
++          GPIO is asserted, endpoint with reg value <1> is selected.
 +
-+static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
-+{
-+	return container_of(bridge, struct anx7688, bridge);
-+}
++    required:
++      - port@0
++      - port@1
 +
-+static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
-+				      const struct drm_display_mode *mode,
-+				      struct drm_display_mode *adjusted_mode)
-+{
-+	struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
-+	u8 regs[2];
-+	u8 dpbw, lanecount;
-+	int totalbw, requiredbw;
-+	int ret;
++required:
++  - compatible
++  - detect-gpios
++  - ports
 +
-+	if (!anx7688->filter)
-+		return true;
++examples:
++  - |
++    hdmi_mux: hdmi_mux {
++      compatible = "gpio-display-mux";
++      status = "okay";
++      detect-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&hdmi_mux_pins>;
++      ddc-i2c-bus = <&hdmiddc0>;
 +
-+	/* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
-+	ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
-+	if (ret < 0) {
-+		dev_err(&anx7688->client->dev,
-+			"Failed to read bandwidth/lane count\n");
-+		return false;
-+	}
-+	dpbw = regs[0];
-+	lanecount = regs[1];
++      ports {
++        #address-cells = <1>;
++        #size-cells = <0>;
 +
-+	/* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
-+	if (dpbw > 0x19 || lanecount > 2) {
-+		dev_err(&anx7688->client->dev,
-+			"Invalid bandwidth/lane count (%02x/%d)\n",
-+			dpbw, lanecount);
-+		return false;
-+	}
++        port@0 { /* input */
++          reg = <0>;
 +
-+	/* Compute available bandwidth (kHz) */
-+	totalbw = dpbw * lanecount * 270000 * 8 / 10;
++          hdmi_mux_in: endpoint {
++            remote-endpoint = <&hdmi0_out>;
++          };
++        };
 +
-+	/* Required bandwidth (8 bpc, kHz) */
-+	requiredbw = mode->clock * 8 * 3;
++        port@1 { /* output */
++          reg = <1>;
 +
-+	dev_dbg(&anx7688->client->dev,
-+		"DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
-+		totalbw, dpbw, lanecount, requiredbw);
++          #address-cells = <1>;
++          #size-cells = <0>;
 +
-+	if (totalbw == 0) {
-+		dev_warn(&anx7688->client->dev,
-+			 "Bandwidth/lane count are 0, not rejecting modes\n");
-+		return true;
-+	}
++          hdmi_mux_out_anx: endpoint@0 {
++            reg = <0>;
++            remote-endpoint = <&anx7688_in>;
++          };
 +
-+	return totalbw >= requiredbw;
-+}
-+
-+static const struct drm_bridge_funcs anx7688_bridge_funcs = {
-+	.mode_fixup	= anx7688_bridge_mode_fixup,
-+};
-+
-+static const struct regmap_config anx7688_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int anx7688_i2c_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct anx7688 *anx7688;
-+	struct device *dev = &client->dev;
-+	int ret;
-+	u8 buffer[4];
-+	u16 vendor, device, fwversion;
-+
-+	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
-+	if (!anx7688)
-+		return -ENOMEM;
-+
-+#if IS_ENABLED(CONFIG_OF)
-+	anx7688->bridge.of_node = client->dev.of_node;
-+#endif
-+
-+	anx7688->client = client;
-+	i2c_set_clientdata(client, anx7688);
-+
-+	anx7688->regmap =
-+		devm_regmap_init_i2c(client, &anx7688_regmap_config);
-+
-+	/* Read both vendor and device id (4 bytes). */
-+	ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
-+	if (ret) {
-+		dev_err(dev, "Failed to read chip vendor/device id\n");
-+		return ret;
-+	}
-+
-+	vendor = (u16)buffer[1] << 8 | buffer[0];
-+	device = (u16)buffer[3] << 8 | buffer[2];
-+	if (vendor != VENDOR_ID || device != DEVICE_ID) {
-+		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
-+			vendor, device);
-+		return -ENODEV;
-+	}
-+
-+	ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
-+	if (ret) {
-+		dev_err(&client->dev, "Failed to read firmware version\n");
-+		return ret;
-+	}
-+
-+	fwversion = (u16)buffer[0] << 8 | buffer[1];
-+	dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
-+		 buffer[0], buffer[1]);
-+
-+	/* FW version >= 0.85 supports bandwidth/lane count registers */
-+	if (fwversion >= MINIMUM_FW_VERSION) {
-+		anx7688->filter = true;
-+	} else {
-+		/* Warn, but not fail, for backwards compatibility. */
-+		dev_warn(dev,
-+			 "Old ANX7688 FW version (%02x.%02x), not filtering\n",
-+			 buffer[0], buffer[1]);
-+	}
-+
-+	anx7688->bridge.funcs = &anx7688_bridge_funcs;
-+	drm_bridge_add(&anx7688->bridge);
-+
-+	return 0;
-+}
-+
-+static int anx7688_i2c_remove(struct i2c_client *client)
-+{
-+	struct anx7688 *anx7688 = i2c_get_clientdata(client);
-+
-+	drm_bridge_remove(&anx7688->bridge);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id anx7688_id[] = {
-+	{ "anx7688", 0 },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, anx7688_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id anx7688_match_table[] = {
-+	{ .compatible = "analogix,anx7688", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, anx7688_match_table);
-+#endif
-+
-+static struct i2c_driver anx7688_driver = {
-+	.driver = {
-+		   .name = "anx7688",
-+		   .of_match_table = of_match_ptr(anx7688_match_table),
-+		  },
-+	.probe = anx7688_i2c_probe,
-+	.remove = anx7688_i2c_remove,
-+	.id_table = anx7688_id,
-+};
-+
-+module_i2c_driver(anx7688_driver);
-+
-+MODULE_DESCRIPTION("ANX7688 SlimPort Transmitter driver");
-+MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
-+MODULE_LICENSE("GPL v2");
++          hdmi_mux_out_hdmi: endpoint@1 {
++            reg = <1>;
++            remote-endpoint = <&hdmi_connector_in>;
++          };
++        };
++      };
++    };
 -- 
 2.24.0.525.g8f36a354ae-goog
 
