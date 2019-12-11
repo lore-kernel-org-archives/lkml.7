@@ -2,119 +2,97 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5794EC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78611C2D0C5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E158205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F11F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:08:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UoeO61fd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="S60wH1RH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfLKJFf (ORCPT
+        id S1728397AbfLKJIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:05:35 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29561 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725973AbfLKJFe (ORCPT
+        Wed, 11 Dec 2019 04:08:00 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33697 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727851AbfLKJH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:05:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576055133;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PenXlg+BC3zbnqNl3XULuIWWyu7R9w15XW00KbpnuWU=;
-        b=UoeO61fdvoqPK+NfieeiO8B2OsRV+JH5SoBKeBXg6eF/pkYTxCmGgLPCnAqAoYeiwXbwIV
-        n+pmx1Tl68JUG2MR2DH19a3qfjaEKkisEfPhRhEvZ50eNtuCdnTWPmJkQetCOvmRkX2rNR
-        d51C5sl3eL9sNz/6w6PIP5UsmaJ6knA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-v_vkADSEPJCXfLIlpawvCg-1; Wed, 11 Dec 2019 04:05:32 -0500
-Received: by mail-wm1-f69.google.com with SMTP id t4so876188wmf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:05:31 -0800 (PST)
+        Wed, 11 Dec 2019 04:07:59 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d71so11067601qkc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 01:07:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+1+2OzonF8JaI5zb2TCQGTWjY1hWFqWalCfMdztL7bw=;
+        b=S60wH1RHuXQ8mOnPL0RhPKzQIGXltV0Cv9h00AH+VYro56n5frUBSr4jG3994daVvT
+         V+vThx0M+M5TKEPRP7rKgYkWR9SLOxLfctebgbS4/teJyPdNqlqYK9Sqae4OYe3pOZfj
+         RbOKuXYBl+rwcuW9scJiI3DZUILjSRdRChb2cUjEMEG/J6gALdSSdCrSN73Zs+Oaq7Ld
+         ncsVZLJRCCbXDi37Bkc0aQABg2eiqLVtoela5xrLAMI6eSLhlktSHK/xO5UF2xLQLYer
+         yMxhiSsTvhVSoG04ZT4mwPZHx/2a+Y7mdi6v2EwwgKDOC/A2904us+0B2fJX/ZY9l4Bm
+         hO1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PenXlg+BC3zbnqNl3XULuIWWyu7R9w15XW00KbpnuWU=;
-        b=F+uVz2VOzTO6JjMJwUCwWtAmUqAmcf62nf2j2b13M6K5d84tcL14vkhb3rDfyXQkm3
-         YzAc8lWToJZcGyP4LF2lW8opIkX2FRXaJhRaqRKyhiVtoe6Aq0YUNGU2YmMgMbFTf6gY
-         pH+YCXytDP27BHVY5uwNVczQosxAI3SWq8CpkesksNiHvvw6AzeKG31ZjpjR4Qc+6IMX
-         PHAs6k2pG0UcRP7l/uRXN8uo+PZuwHSelP0dvaB1Zt4TqlEc+SVgwvYO6XfB5Ibw9usW
-         /o92t98iFVx5aPqo0ysqQwnF2RKIq/lvHZ5biBkccO0bwFs15/fiIsJ326dVyl0VQBIH
-         w1Lw==
-X-Gm-Message-State: APjAAAWqg4l+jvN444GRy6t4/5aJNIE26rMuRItRhCdkjRLhTpgxmugC
-        DqIi14Icw1fEcFBl2/sfBzIpnG1rixJE4WrLof6bsrjvtFeo0kNaFX6TosRlZ2G5cRoiJ54rPTe
-        tKzozFgKy+/LSwO7h48WFyNuF
-X-Received: by 2002:a1c:9e58:: with SMTP id h85mr2336500wme.77.1576055130956;
-        Wed, 11 Dec 2019 01:05:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzJswQMpAiJ3AaINMEQKXGXjrGFZxuu0EXkQGiD96eH1Lvt/2POIUge3oCgHe+0Q+Koq339fA==
-X-Received: by 2002:a1c:9e58:: with SMTP id h85mr2336471wme.77.1576055130639;
-        Wed, 11 Dec 2019 01:05:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id u18sm1479960wrt.26.2019.12.11.01.05.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 01:05:29 -0800 (PST)
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-To:     "Michael S. Tsirkin" <mst@redhat.com>, Peter Xu <peterx@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <1355422f-ab62-9dc3-2b48-71a6e221786b@redhat.com>
- <a3e83e6b-4bfa-3a6b-4b43-5dd451e03254@redhat.com>
- <20191210081958-mutt-send-email-mst@kernel.org>
- <8843d1c8-1c87-e789-9930-77e052bf72f9@redhat.com>
- <20191210160211.GE3352@xz-x1> <20191210164908-mutt-send-email-mst@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <1597a424-9f62-824b-5308-c9622127d658@redhat.com>
-Date:   Wed, 11 Dec 2019 10:05:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+1+2OzonF8JaI5zb2TCQGTWjY1hWFqWalCfMdztL7bw=;
+        b=WbDUtU6ErNzjUKVaZIGCw0XoIXg3UmiMSGI5Hil9Qq6iWL4i4UNui/9Ch444mR0Tm7
+         GAjIlEg4DUNjNhIrX5quX+3E2Ht3tmvZMFQHJJDx5ppd4ZzJurDDBQxTzhLvgOPlT1H8
+         pKr3pxR302WRsc32o+fkN43HkqImpV6DQ6VmkyTZRChLCrICISj+E0zPFI3N8gG94fbN
+         h6XYQWCSNwf/0VQsp2RnEF3YuKo8folBm5/CatlEMXV0LpFTx2pl2vDb5Ufog+r8Uhf2
+         Z0KKqBOgtOpHM1OJnBmqJqQROuV+sr//QX0ruQeIYdb6ElxHRh7eJrCznFZed6ybnBqk
+         N9MA==
+X-Gm-Message-State: APjAAAV2TzF2PrL1kGDNV00712YkhKTA7ixUktqGSYl6H4e3bprdHgJv
+        hLZAB3cV7t1jvRRcqIRPxz/RqMTexsykW5uA+QTAGQ==
+X-Google-Smtp-Source: APXvYqxo51nvYaIkggIMq8ITtXp9gbKNulM8Wmtc5DRGjuFLLqvLJhg/1ssY8su+0/x7Vipo/ClbnBGeVsB5uoQ3mKs=
+X-Received: by 2002:a37:6255:: with SMTP id w82mr1919216qkb.330.1576055278589;
+ Wed, 11 Dec 2019 01:07:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210164908-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-X-MC-Unique: v_vkADSEPJCXfLIlpawvCg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+References: <20191210202842.2546758-1-arnd@arndb.de> <f6a514d1-44cb-4577-af07-fd2f3fefc974@www.fastmail.com>
+In-Reply-To: <f6a514d1-44cb-4577-af07-fd2f3fefc974@www.fastmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 11 Dec 2019 10:07:47 +0100
+Message-ID: <CAMpxmJUD8A1qtmZmOxAq3XojFG5LHu_DS94LC7orinz_O9zY=A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aspeed: avoid return type warning
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Hongwei Zhang <hongweiz@ami.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/12/19 22:53, Michael S. Tsirkin wrote:
-> On Tue, Dec 10, 2019 at 11:02:11AM -0500, Peter Xu wrote:
->> On Tue, Dec 10, 2019 at 02:31:54PM +0100, Paolo Bonzini wrote:
->>> On 10/12/19 14:25, Michael S. Tsirkin wrote:
->>>>> There is no new infrastructure to track the dirty pages---it's just a
->>>>> different way to pass them to userspace.
->>>> Did you guys consider using one of the virtio ring formats?
->>>> Maybe reusing vhost code?
->>>
->>> There are no used/available entries here, it's unidirectional
->>> (kernel->user).
->>
->> Agreed.  Vring could be an overkill IMHO (the whole dirty_ring.c is
->> 100+ LOC only).
-> 
-> I guess you don't do polling/ event suppression and other tricks that
-> virtio came up with for speed then?
+wt., 10 gru 2019 o 23:10 Andrew Jeffery <andrew@aj.id.au> napisa=C5=82(a):
+>
+>
+>
+> On Wed, 11 Dec 2019, at 06:58, Arnd Bergmann wrote:
+> > gcc has a hard time tracking whether BUG_ON(1) ends
+> > execution or not:
+> >
+> > drivers/gpio/gpio-aspeed-sgpio.c: In function 'bank_reg':
+> > drivers/gpio/gpio-aspeed-sgpio.c:112:1: error: control reaches end of
+> > non-void function [-Werror=3Dreturn-type]
+> >
+> > Use the simpler BUG() that gcc knows cannot continue.
+> >
+> > Fixes: f8b410e3695a ("gpio: aspeed-sgpio: Rename and add Kconfig/Makefi=
+le")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
-There are no interrupts either, so no need for event suppression.  You
-have vmexits when the ring gets full (and that needs to be synchronous),
-but apart from that the migration thread will poll the rings once when
-it needs to send more pages.
+Applied for fixes.
 
-Paolo
-
+Bartosz
