@@ -2,98 +2,80 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B13BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E287CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2352722527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576087787;
-	bh=4cSg5ovzSGHo0KMc3anPHBEou2tBO8A2zNetChjRs8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SDOooTbBTxJB4XJdo8QMc3wGRBqTrbiWarbPCEEUFRJjJlEk0sxj3Y2cznfNyiEvh
-	 AIQxDrnB6JQMw28pPvknzDrrXWfD0AG3Mn9hHvsRNPtIEWso1vypMVy2QJpEyPO6Mi
-	 aSxatgDoo8FVTmNNqswjH6PFo6X9Xf7780EKIzP4=
+	by mail.kernel.org (Postfix) with ESMTP id B487D206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbfLKSJp (ORCPT
+        id S1731132AbfLKSJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:09:45 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42477 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731046AbfLKSJn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:09:43 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e10so20184899edv.9;
-        Wed, 11 Dec 2019 10:09:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ILp2Lf5P15MYbkV7ek1FJDOE0NtqRWE6/NU2Ipca/04=;
-        b=uVTl6HIOGVQ8MZQ1GLPSbu4MARErsCM7KoITJ7LRkp50tXD2e4hHj7k5u++WuKNtJo
-         FEhlYyN3G1MCCpK8W+p3zZh4tqQ3ET+fkWzoVoEtk8fXARmrLiGDHt7QSc59utV/KILE
-         TrlAFmW/XrRUWwn6jzfwRc6ELr/grQ5OKtB1EvqN6T3CEQhuudXW8McMbZ0Qk7EjuczJ
-         ejeoW9gPB8kB5xDL+pux0b61tAymTktJLyGXfO8ztEM75iciPV5LWTnYDxYaBl9YSBn1
-         j/pjcPk4Ds/k+ttKV4SQtHdF6zhB56Ir2jkzQGvcveEtdOGfxWSzSBQ+ZxLO074sepU4
-         xAkw==
-X-Gm-Message-State: APjAAAUi8ZDtxRbo8ezFcDnJzRxzUCvgpmo30wAnU83gqLvMqtIXR93C
-        LwttezGz4MDyfrAXasDthWM=
-X-Google-Smtp-Source: APXvYqxbSc/1pMrFp7jj1xrbhKuiKUxJi3QB/0yA0bRIjtn2bO+hRfiUZUax+luAzlnxU6ZmzIqDVQ==
-X-Received: by 2002:a05:6402:1350:: with SMTP id y16mr4911656edw.176.1576087781772;
-        Wed, 11 Dec 2019 10:09:41 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id o30sm64065edc.61.2019.12.11.10.09.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 11 Dec 2019 10:09:41 -0800 (PST)
-Date:   Wed, 11 Dec 2019 19:09:38 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Lukasz Luba <l.luba@partner.samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: exynos_defconfig: Bring back explicitly wanted
- options
-Message-ID: <20191211180938.GA6690@kozik-lap>
-References: <CGME20191205200017epcas5p446f5f29988e34d939601287a7517fdfe@epcas5p4.samsung.com>
- <20191205200006.5164-1-krzk@kernel.org>
- <08916577-3218-ecd4-a8e2-ab4fbff5332b@samsung.com>
+        Wed, 11 Dec 2019 13:09:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:41970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731103AbfLKSJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 13:09:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F5C031B;
+        Wed, 11 Dec 2019 10:09:57 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A3C63F6CF;
+        Wed, 11 Dec 2019 10:09:57 -0800 (PST)
+Subject: Re: [PATCH 11/15] firmware: arm_scmi: Match scmi device by both name
+ and protocol id
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20191210145345.11616-1-sudeep.holla@arm.com>
+ <20191210145345.11616-12-sudeep.holla@arm.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <75b53cc5-1052-de65-dbd6-a2e32c7bed21@arm.com>
+Date:   Wed, 11 Dec 2019 18:09:56 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191210145345.11616-12-sudeep.holla@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <08916577-3218-ecd4-a8e2-ab4fbff5332b@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 09:01:07AM +0100, Marek Szyprowski wrote:
-> Hi Krzyszotof,
+On 10/12/2019 14:53, Sudeep Holla wrote:
+> The scmi bus now has support to match the driver with devices not only
+> based on their protocol id but also based on their device name if one is
+> available. This was added to cater the need to support multiple devices
+> and drivers for the same protocol.
 > 
-> On 05.12.2019 21:00, Krzysztof Kozlowski wrote:
-> > Few options KALLSYMS_ALL, SCSI, PM_DEVFREQ and mutex/spinlock debugging
-> > were removed with savedefconfig because they were selected by other
-> > options.  However these are user-visible options and they might not be
-> > selected in the future.  Exactly this happened with commit 0e4a459f56c3
-> > ("tracing: Remove unnecessary DEBUG_FS dependency") removing the
-> > dependency between DEBUG_FS and TRACING.
-> >
-> > To avoid losing these options in the future, explicitly mention them in
-> > defconfig.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Let us add the name "genpd" to scmi_device_id table in the driver so
+> that in matches only with device with the same name and protocol id
+> SCMI_PROTOCOL_POWER.
 > 
-> I will not mind adding:
-> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
 
-Applied.
-
-Best regards,
-Krzysztof
+>  drivers/firmware/arm_scmi/scmi_pm_domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> index 87f737e01473..bafbfe358f97 100644
+> --- a/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> +++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+> @@ -112,7 +112,7 @@ static int scmi_pm_domain_probe(struct scmi_device *sdev)
+>  }
+> 
+>  static const struct scmi_device_id scmi_id_table[] = {
+> -	{ SCMI_PROTOCOL_POWER },
+> +	{ SCMI_PROTOCOL_POWER, "genpd" },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+> --
+> 2.17.1
+> 
 
