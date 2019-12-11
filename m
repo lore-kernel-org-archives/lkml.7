@@ -2,148 +2,132 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108BCC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62BF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFC0214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:04:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuVvxgh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfLKNEO (ORCPT
+        id S1729384AbfLKNEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:04:14 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729132AbfLKNEN (ORCPT
+        Wed, 11 Dec 2019 08:04:33 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43109 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728446AbfLKNEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:04:13 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBCrBdY097491
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:04:12 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wt2kug2w9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:04:12 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 11 Dec 2019 13:04:09 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Dec 2019 13:04:05 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBBD44ls23265648
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 13:04:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 615E04203F;
-        Wed, 11 Dec 2019 13:04:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F7AA42047;
-        Wed, 11 Dec 2019 13:04:03 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.221.15])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Dec 2019 13:04:03 +0000 (GMT)
-Subject: Re: [PATCH v1 1/2] IMA: Define workqueue for early boot "key"
- measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Wed, 11 Dec 2019 08:04:02 -0500
-In-Reply-To: <1576028407.4579.77.camel@linux.ibm.com>
-References: <20191206012936.2814-1-nramas@linux.microsoft.com>
-         <20191206012936.2814-2-nramas@linux.microsoft.com>
-         <1576028407.4579.77.camel@linux.ibm.com>
+        Wed, 11 Dec 2019 08:04:33 -0500
+Received: by mail-lj1-f193.google.com with SMTP id a13so23954860ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:04:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=YGyDJ+9hlQ8oih8SvLA1JbGE0Ua/Vbyqj4pDMpx5+Ck=;
+        b=MuVvxgh8WzA7ufU4Tkxd1fH+nT06jK9wLq1I2QUVel9elBFO35SmCa8D9+ZjAL+x7k
+         GUmAZiG2bwzkCyuDYp6BPrH2ii9uZQ32BByYq8fQ5q9Aj67fJBjU0zIm56NbNWaE34rh
+         9Bh5QnfNqxxRHOhaGMTk0kWHWNgOP4LVHm8fCSoTgcUp5x4pMRtRAab+hu0yeTvJ+yOD
+         Pm7RqmFpL1HbMRuLDdpnV9bevV7CVQxluGwQOTrkLxbh18JuUvv3HYfRA5rayytjxS58
+         YUpTRyFrcE/ce+PR1HLLBG/Ua+iUTLcSyXc12Xol4Q9VJyHpoc3nNOdKIeLyqXZrpdcI
+         ctqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=YGyDJ+9hlQ8oih8SvLA1JbGE0Ua/Vbyqj4pDMpx5+Ck=;
+        b=WA5IMd6dMlDgLUCKwmCG0dVjW9wtgJ/yphOWgAAWQFRI0DI/anAn30XwvSZbNn4cNM
+         SPXMdAtxcKtxXyxtIO4Faomm4q9SAxYpcCylVT7nDbfsDezHQnZiReyfJjoqhZYrMu8P
+         S+PKc8AmJfPZvHg61CvxF5KUwUfQ6miIseLfniqEQO2q4XxbmwiwZ38gxwkjbvIKuF+D
+         SGP+u+w2z1jsNHyYhInXV1O3wGUugfIcdLO6FWOV12tbXM/X8LSdSFCmzkOIwrlpqTcR
+         cU2TAC2Wc808sEfxT0E73uDhsdMzb2SbID7rd+xedyYz93UhodzzOtBBJJnsx4juO1V/
+         i4Ng==
+X-Gm-Message-State: APjAAAWo0PMNyjOTa5rvF5CwJcTjwWT/G0mJY6pt0zlYP3IQKdg9/jmm
+        0+5qqZd3kUeJXajRA5EATa1Or8XOsAa6H7LyOWJbiancOkm9BA==
+X-Google-Smtp-Source: APXvYqy9SyCT0b4saAV+EzPmyr6c456zkPQ5FFMAsD6zEx+MLbO2MBEbQ+conOxVcpAocNSEN/vNT9zVLI+jVSSb5c8=
+X-Received: by 2002:a05:651c:104:: with SMTP id a4mr2030813ljb.104.1576069470327;
+ Wed, 11 Dec 2019 05:04:30 -0800 (PST)
+MIME-Version: 1.0
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Wed, 11 Dec 2019 21:04:17 +0800
+Message-ID: <CAFH1YnM_2xud4V7sAZAMWPpWP0CBHxuddAKjxHJsj9U9WfH2ww@mail.gmail.com>
+Subject: [PATCH] x86/boot/KASLR: Fix unused variable warning
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@suse.de, x86@kernel.org,
+        fanc.fnst@cn.fujitsu.com, ardb@kernel.org,
+        dave.hansen@linux.intel.com, dan.j.williams@intel.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121113-0008-0000-0000-0000033FCCAE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121113-0009-0000-0000-00004A5F02D5
-Message-Id: <1576069442.4579.131.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-11_03:2019-12-11,2019-12-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 spamscore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 clxscore=1015 phishscore=0 bulkscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1912110110
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-12-10 at 20:40 -0500, Mimi Zohar wrote:
-> > +void ima_process_queued_keys_for_measurement(void)
-> > +{
-> > +	struct ima_measure_key_entry *entry, *tmp;
-> > +	LIST_HEAD(temp_ima_measure_keys);
-> > +
-> > +	if (ima_process_keys_for_measurement)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * Any queued keys will be processed now. From here on
-> > +	 * keys should be processed right away.
-> > +	 */
-> > +	ima_process_keys_for_measurement = true;
-> 
-> This function and the ima_queue_key_for_measurement() are not
-> exported, so don't require kernel-doc style comments, but at least
-> this comment should not be here.  It could be included as part of the
-> function description at the head of the function.
+This patch fixes below warning by moving variable 'i':
+arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable =E2=80=98i=
+=E2=80=99
+[-Wunused-variable]
 
-Sorry, one more comment.  Appending "_for_measurement" or inserting
-"_measure_" makes these function names unnecessarily long.  This
-information can be included in the function descriptions.
+Also use true/false instead of 1/0 for boolean return.
 
-Mimi
+Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the
+kernel in immovable memory only")
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+---
+ arch/x86/boot/compressed/kaslr.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/ka=
+slr.c
+index d7408af55738..fff24a55bfd5 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -695,7 +695,6 @@ static bool process_mem_region(struct mem_vector *regio=
+n,
+        unsigned long long minimum,
+        unsigned long long image_size)
+ {
+- int i;
+  /*
+  * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
+  * use @region directly.
+@@ -705,12 +704,13 @@ static bool process_mem_region(struct mem_vector *reg=
+ion,
 
-> 
-> Remember we don't add code comments needlessly.  Refer to section "8)
-> Commenting" in Documentation/process/coding-style.rst.
-> 
-> > +
-> > +	/*
-> > +	 * To avoid holding the mutex when processing queued keys,
-> > +	 * transfer the queued keys with the mutex held to a temp list,
-> > +	 * release the mutex, and then process the queued keys from
-> > +	 * the temp list.
-> > +	 *
-> > +	 * Since ima_process_keys_for_measurement is set to true above,
-> > +	 * any new key will be processed immediately and not be queued.
-> > +	 */
-> > +	INIT_LIST_HEAD(&temp_ima_measure_keys);
-> > +
-> > +	mutex_lock(&ima_measure_keys_mutex);
-> > +
-> > +	list_for_each_entry_safe(entry, tmp, &ima_measure_keys, list)
-> > +		list_move_tail(&entry->list, &temp_ima_measure_keys);
-> > +
-> > +	mutex_unlock(&ima_measure_keys_mutex);
-> > +
-> > +	list_for_each_entry_safe(entry, tmp, &temp_ima_measure_keys, list) {
-> > +		process_buffer_measurement(entry->payload, entry->payload_len,
-> > +					   entry->keyring_name, KEY_CHECK, 0,
-> > +					   entry->keyring_name);
-> > +		list_del(&entry->list);
-> > +		ima_free_measure_key_entry(entry);
-> > +	}
-> > +}
-> > +
-> >  /**
-> >   * ima_post_key_create_or_update - measure asymmetric keys
-> >   * @keyring: keyring to which the key is linked to
-> 
+  if (slot_area_index =3D=3D MAX_SLOT_AREA) {
+  debug_putstr("Aborted e820/efi memmap scan (slot_areas full)!\n");
+- return 1;
++ return true;
+  }
+- return 0;
++ return false;
+  }
 
+ #if defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
++ int i;
+  /*
+  * If immovable memory found, filter the intersection between
+  * immovable memory and @region.
+@@ -734,11 +734,11 @@ static bool process_mem_region(struct mem_vector *reg=
+ion,
+
+  if (slot_area_index =3D=3D MAX_SLOT_AREA) {
+  debug_putstr("Aborted e820/efi memmap scan when walking immovable
+regions(slot_areas full)!\n");
+- return 1;
++ return true;
+  }
+  }
+ #endif
+- return 0;
++ return false;
+ }
+
+ #ifdef CONFIG_EFI
+--=20
+2.23.0
