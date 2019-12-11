@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C745C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CEC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDC4206C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0A2206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="in/Egki0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KGKPCHz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731256AbfLKSQ0 (ORCPT
+        id S1731473AbfLKSQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:16:26 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:39341 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731213AbfLKSPa (ORCPT
+        Wed, 11 Dec 2019 13:16:32 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:34203 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731185AbfLKSPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:30 -0500
-Received: by mail-yb1-f194.google.com with SMTP id o22so9390008ybg.6;
-        Wed, 11 Dec 2019 10:15:29 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:25 -0500
+Received: by mail-yw1-f67.google.com with SMTP id b186so2419458ywc.1;
+        Wed, 11 Dec 2019 10:15:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=iiFVpSnEWoAI5R62qeTqc9Vgw7AEh710Lxji7svUNEA=;
-        b=in/Egki09JlpoeSxqCOxyS54KCobNG3vpIsGPsVFTREmPwAUi/ZeSpFrx6P8fQQobC
-         Vv3qTbbrCqyyYWFJmz8IZ0xm5V4NKkxX0Z0U24YGnT5pXcVAx8byU32QxsF4z4+EZGDS
-         tRJKVGq7+LGTVLWZoTXuSOno05pO7N9HzZytOgcQYxDgnZuMPGAOeA6dqcSz6vkqvhYu
-         uCxXxJ6RdpV5IviI/8AP8DDiMUQ0ZE6oFLsmrPlTyGAAhtNO6I5EONPK7By5+MD2X8d0
-         EHNhrVd+WZFuP3XYNHjvw5FV3jSR0DRdJ2+2ejC1r+wbuXeyEkSemdhrG26n5KobtTCa
-         zvQQ==
+        bh=AltD7NJ0HtBITKXh/Q98jUiSNgIROsA0NlBEZ+kMmy0=;
+        b=KGKPCHz8bCGVGi8gtpGiJVmaMmvc6YAWgorKsOHn7gW03R04TaJ9cCZvarLBSHXwvP
+         cQ2ToUrDjCvWOLs0QXN25mLahqf+n3UeoY6pQkYSvY+GY/SMjPpaKc68Do0zAlPGULou
+         DeVigjPSLKGnvxo1WZy9ZzRo3GuEEH8T+kC8QXH54+pB33vitgf4UFN+gvQ6IbkAckMs
+         6be+awe846PXtkZYFTJieQhV8rZfBNYVr8/5UedkIQZK+O7sBt5Q2TaOGRM+JmgjdSBN
+         KDK2s/SN7oWotx1pFlzg2zbi5kTzLINTfboHpe9L9LSLlWG8ne9Nk1NhXIIF5+NlpTVX
+         8hAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=iiFVpSnEWoAI5R62qeTqc9Vgw7AEh710Lxji7svUNEA=;
-        b=bfiIJPm7Tzo/55R76c6EWU2AZTuq6MvYrnTk/apVKNG8d+OANNYOxivIjZmAX+1DyB
-         yOV3hG9VQ4MIQBcAayD38mRK0I80ItrDTQpDZL3bd1ScecH8UGB+DPSgJ2udN8xOv4ej
-         RHMEx/EAj1C3W0rohux6/kbveFWvPFlN5NN20TokUUimplbjSX58HQ7/tZ629z+Jzyv6
-         n25o5p4xSA9a5Shq0bqPvnE/tulehi3TCMwuVcELSWTEyS9tRIFdDVzai+AvE5W0eqUB
-         BPq1mQjZ2iryBmsaRYLKsFPl+FN04Ii7PY6ptiR8jM1m4orazzIt6SHBx59/lLKTkTLo
-         oKdg==
-X-Gm-Message-State: APjAAAV378sYn8HK+UEVCKuUJHc/5yLQYQib/Y4otdxCuvZoDlvkmOM4
-        qJXjdKH5B+Fl2LeqcbyIxCW9BMcHo7Ideg==
-X-Google-Smtp-Source: APXvYqz8ZTuisla3xX6/1VncT2Rdnup9D6H8Y6fHzqh3RCHeCkjUNoIJSopgI4hyhYFEN9JsTPWTDg==
-X-Received: by 2002:a25:3753:: with SMTP id e80mr955164yba.123.1576088128934;
-        Wed, 11 Dec 2019 10:15:28 -0800 (PST)
+        bh=AltD7NJ0HtBITKXh/Q98jUiSNgIROsA0NlBEZ+kMmy0=;
+        b=DsugeSO1EwT295mJyvPBeJ5anNPHW5sw8DWQhQxk+MUs6NZmO15eqH0QQrGXeBuawb
+         ADpCSbpUavMuK5Mc5v0ZH3SKV+AJ3vQz0L/KWOdS1mizPBkYHyKkqJD8Vw2WV/4po0hC
+         8QY9la23VhIjwfuPuqwNKyjkZ+07Vd5xDvvxkrRPSRmtVFgcH8YGytks0/cRRFzJbgU/
+         ulsFu1m4pTI3N9El+chGfEHP3QPO3/v7sKSFgDS1O7wVrnM8r6Gor4t2geyqd+OFWsrk
+         TgjN9zCK5i7hC7EdCSDVcQ+2wPBbTv1wEOFItKi2mN3Q1l+oJ34Qt6qBBzrJIa6bRRjD
+         tAqg==
+X-Gm-Message-State: APjAAAWYdJgt5OQz26cxh3mfUCcUkehkkElm/SNLdwSneayrT7pIvn5v
+        TylID5YtzkrjSLDErwg2ew/BhOt935OkBg==
+X-Google-Smtp-Source: APXvYqx0upN00DK83okn8lbD1jrmyl6jEtD9VuYn6RnO7G5sOkOZNKEPXbMMsWvtE1gxb/3oOR/GqA==
+X-Received: by 2002:a0d:ca50:: with SMTP id m77mr910883ywd.4.1576088124175;
+        Wed, 11 Dec 2019 10:15:24 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id l39sm1361379ywk.36.2019.12.11.10.15.28
+        by smtp.gmail.com with ESMTPSA id e204sm1290134ywe.92.2019.12.11.10.15.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:28 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:23 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 16/23] staging: qlge: Fix WARNING: Block comments use a trailing */ on a separate line
-Date:   Wed, 11 Dec 2019 12:12:45 -0600
-Message-Id: <8343f9fae11abdd131898a0e6dad5653f7d65cdb.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 13/23] staging: qlge: Fix CHECK: spaces preferred around that (ctx:VxV)
+Date:   Wed, 11 Dec 2019 12:12:42 -0600
+Message-Id: <a6f197d39478dc6955834412e20b4aed7c7141a2.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,71 +76,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: Block comments use a trailing */ on a separate line in
-qlge_main.c and qlge_mpi.c
+Fix CHECK: spaces preferred around that (ctx:VxV) in qlge.h and
+qlge_main.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge_main.c |  3 ++-
- drivers/staging/qlge/qlge_mpi.c  | 10 ++++++----
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/staging/qlge/qlge.h      |  6 +++---
+ drivers/staging/qlge/qlge_main.c | 18 +++++++++---------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
+index 63642cb9e624..9ab4c7ce7714 100644
+--- a/drivers/staging/qlge/qlge.h
++++ b/drivers/staging/qlge/qlge.h
+@@ -59,7 +59,7 @@
+ #define MAX_CQ 128
+ #define DFLT_COALESCE_WAIT 100	/* 100 usec wait for coalescing */
+ #define MAX_INTER_FRAME_WAIT 10	/* 10 usec max interframe-wait for coalescing */
+-#define DFLT_INTER_FRAME_WAIT (MAX_INTER_FRAME_WAIT/2)
++#define DFLT_INTER_FRAME_WAIT (MAX_INTER_FRAME_WAIT / 2)
+ #define UDELAY_COUNT 3
+ #define UDELAY_DELAY 100
+ 
+@@ -1366,7 +1366,7 @@ struct tx_ring_desc {
+ 	struct tx_ring_desc *next;
+ };
+ 
+-#define QL_TXQ_IDX(qdev, skb) (smp_processor_id()%(qdev->tx_ring_count))
++#define QL_TXQ_IDX(qdev, skb) (smp_processor_id() % (qdev->tx_ring_count))
+ 
+ struct tx_ring {
+ 	/*
+@@ -1790,7 +1790,7 @@ struct ql_reg_dump {
+ 
+ 	/* segment 34 */
+ 	struct mpi_coredump_segment_header ets_seg_hdr;
+-	u32 ets[8+2];
++	u32 ets[8 + 2];
+ };
+ 
+ struct ql_mpi_coredump {
 diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 024c77518af3..90509fd1d95c 100644
+index 4dc4edbb2de5..38d217ae4002 100644
 --- a/drivers/staging/qlge/qlge_main.c
 +++ b/drivers/staging/qlge/qlge_main.c
-@@ -3255,7 +3255,8 @@ static void ql_set_irq_mask(struct ql_adapter *qdev, struct intr_context *ctx)
- 		 */
- 		ctx->irq_mask = (1 << qdev->rx_ring[vect].cq_id);
- 		/* Add the TX ring(s) serviced by this vector
--		 * to the mask. */
-+		 * to the mask.
-+		 */
- 		for (j = 0; j < tx_rings_per_vector; j++) {
- 			ctx->irq_mask |=
- 			(1 << qdev->rx_ring[qdev->rss_ring_count +
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index 4cff0907625b..15c97c935618 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -391,7 +391,8 @@ static void ql_init_fw_done(struct ql_adapter *qdev, struct mbox_params *mbcp)
-  *  This can get called iteratively from the mpi_work thread
-  *  when events arrive via an interrupt.
-  *  It also gets called when a mailbox command is polling for
-- *  it's completion. */
-+ *  it's completion.
-+ */
- static int ql_mpi_handler(struct ql_adapter *qdev, struct mbox_params *mbcp)
- {
- 	int status;
-@@ -521,7 +522,7 @@ static int ql_mpi_handler(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 	 * changed when a mailbox command is waiting
- 	 * for a response and an AEN arrives and
- 	 * is handled.
--	 * */
-+	 */
- 	mbcp->out_count = orig_count;
- 	return status;
+@@ -706,7 +706,7 @@ static int ql_get_8000_flash_params(struct ql_adapter *qdev)
+ 
+ 	size = sizeof(struct flash_params_8000) / sizeof(u32);
+ 	for (i = 0; i < size; i++, p++) {
+-		status = ql_read_flash_word(qdev, i+offset, p);
++		status = ql_read_flash_word(qdev, i + offset, p);
+ 		if (status) {
+ 			netif_err(qdev, ifup, qdev->ndev,
+ 				  "Error reading flash.\n");
+@@ -769,7 +769,7 @@ static int ql_get_8012_flash_params(struct ql_adapter *qdev)
+ 		return -ETIMEDOUT;
+ 
+ 	for (i = 0; i < size; i++, p++) {
+-		status = ql_read_flash_word(qdev, i+offset, p);
++		status = ql_read_flash_word(qdev, i + offset, p);
+ 		if (status) {
+ 			netif_err(qdev, ifup, qdev->ndev,
+ 				  "Error reading flash.\n");
+@@ -1544,7 +1544,7 @@ static void ql_process_mac_rx_page(struct ql_adapter *qdev,
+ 			struct iphdr *iph =
+ 				(struct iphdr *)((u8 *)addr + hlen);
+ 			if (!(iph->frag_off &
+-				htons(IP_MF|IP_OFFSET))) {
++				htons(IP_MF | IP_OFFSET))) {
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 				netif_printk(qdev, rx_status, KERN_DEBUG,
+ 					     qdev->ndev,
+@@ -1651,7 +1651,7 @@ static void ql_process_mac_rx_skb(struct ql_adapter *qdev,
+ 			struct iphdr *iph = (struct iphdr *)skb->data;
+ 
+ 			if (!(iph->frag_off &
+-				htons(IP_MF|IP_OFFSET))) {
++				htons(IP_MF | IP_OFFSET))) {
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 				netif_printk(qdev, rx_status, KERN_DEBUG,
+ 					     qdev->ndev,
+@@ -1940,7 +1940,7 @@ static void ql_process_mac_split_rx_intr(struct ql_adapter *qdev,
+ 			struct iphdr *iph = (struct iphdr *)skb->data;
+ 
+ 			if (!(iph->frag_off &
+-				htons(IP_MF|IP_OFFSET))) {
++				htons(IP_MF | IP_OFFSET))) {
+ 				skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 				netif_printk(qdev, rx_status, KERN_DEBUG, qdev->ndev,
+ 					     "TCP checksum done!\n");
+@@ -4560,7 +4560,7 @@ static void ql_timer(struct timer_list *t)
+ 		return;
+ 	}
+ 
+-	mod_timer(&qdev->timer, jiffies + (5*HZ));
++	mod_timer(&qdev->timer, jiffies + (5 * HZ));
  }
-@@ -556,7 +557,8 @@ static int ql_mailbox_command(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 	 * here because some AEN might arrive while
- 	 * we're waiting for the mailbox command to
- 	 * complete. If more than 5 seconds expire we can
--	 * assume something is wrong. */
-+	 * assume something is wrong.
-+	 */
- 	count = jiffies + HZ * MAILBOX_TIMEOUT;
- 	do {
- 		/* Wait for the interrupt to come in. */
-@@ -1180,7 +1182,7 @@ void ql_mpi_idc_work(struct work_struct *work)
- 		/* Signal the resulting link up AEN
- 		 * that the frame routing and mac addr
- 		 * needs to be set.
--		 * */
-+		 */
- 		set_bit(QL_CAM_RT_SET, &qdev->flags);
- 		/* Do ACK if required */
- 		if (timeout) {
+ 
+ static int qlge_probe(struct pci_dev *pdev,
+@@ -4632,7 +4632,7 @@ static int qlge_probe(struct pci_dev *pdev,
+ 	 * the bus goes dead
+ 	 */
+ 	timer_setup(&qdev->timer, ql_timer, TIMER_DEFERRABLE);
+-	mod_timer(&qdev->timer, jiffies + (5*HZ));
++	mod_timer(&qdev->timer, jiffies + (5 * HZ));
+ 	ql_link_off(qdev);
+ 	ql_display_dev_info(ndev);
+ 	atomic_set(&qdev->lb_count, 0);
+@@ -4766,7 +4766,7 @@ static void qlge_io_resume(struct pci_dev *pdev)
+ 		netif_err(qdev, ifup, qdev->ndev,
+ 			  "Device was not running prior to EEH.\n");
+ 	}
+-	mod_timer(&qdev->timer, jiffies + (5*HZ));
++	mod_timer(&qdev->timer, jiffies + (5 * HZ));
+ 	netif_device_attach(ndev);
+ }
+ 
+@@ -4828,7 +4828,7 @@ static int qlge_resume(struct pci_dev *pdev)
+ 			return err;
+ 	}
+ 
+-	mod_timer(&qdev->timer, jiffies + (5*HZ));
++	mod_timer(&qdev->timer, jiffies + (5 * HZ));
+ 	netif_device_attach(ndev);
+ 
+ 	return 0;
 -- 
 2.20.1
 
