@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D346FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6E2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA54E2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C986222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:10:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077036;
-	bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
+	s=default; t=1576077041;
+	bh=yNEKqnYFfGAB5VCK7Vas/fD9z/qwhU9RBGBWkm0MGc4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZJxR8VnVLOriSuQQC7wnj1C7QoJ8LlxQgkPGwQLkOOnPLhdLZjlZSJqzQFlvCwy2g
-	 uuJfhmp/0pM6pbYH87OVzHbmiOo6eXLrgnu/m3AajAwIOWrhSSCTOt82ro1p4L8D0I
-	 zR4lfgPziYdglbkCLFt/cHHRIM3T8EzhWHtiE1Ag=
+	b=HOyS4T1SQd9Owh5HC0oscxlEcXigoayX1MnaUeL77/cLGQEach14G39n8Mi6vF+bG
+	 VyxcgkDqggNHA5GLwnzEGdv/URHaeyq8d4y9djkqNHp5cuxIh+rQMcDvDObfuucz5c
+	 UjsvC/Q2ZZyxj/SM1WEutUmfEHuosijL/Wrn1g60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfLKPKe (ORCPT
+        id S1730787AbfLKPKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:10:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58796 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:10:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbfLKPK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:10:29 -0500
+        id S1730742AbfLKPKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:10:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17BF2173E;
-        Wed, 11 Dec 2019 15:10:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24EB92465A;
+        Wed, 11 Dec 2019 15:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077029;
-        bh=Ub5ExGE3yROl1e8ccWTvteE7ijPy+bCAT24O0VvYNd8=;
+        s=default; t=1576077031;
+        bh=yNEKqnYFfGAB5VCK7Vas/fD9z/qwhU9RBGBWkm0MGc4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfMCSvAqku5Z3UmPn4rPIHRgtyesEl9BRnf4w4MqKONpg1WiBjQZrngSnmkfEua3j
-         NEZKlc8h2Ri+bJpCdusvchTxJaAJRe6ph0lGFfBKAQGyu0LufvOAcMn+AhdqV2EjVA
-         uiVikq4Uv4PvZ7NUwQYdcN8ke1G71pwAhUJLjg1E=
+        b=qlwPnirUse6CJShR5USW1ZNidFcwluPf+4lfoPbYUKB5G4QG2+oOwducn+CxxbUs4
+         F3Aiq7XlE6ZPyWMyJeCGdQlRr2kcOWUIFLpUIzfwjcKmToqTtPe6il0tMGkctS2TzU
+         nszwZe2rkSD0M8JDeO1h+XhaXpJ7DzMW8dYxekWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pavel Shilovsky <pshilov@microsoft.com>,
-        Aurelien Aptel <aaptel@suse.com>,
         Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.4 46/92] CIFS: Fix NULL-pointer dereference in smb2_push_mandatory_locks
-Date:   Wed, 11 Dec 2019 16:05:37 +0100
-Message-Id: <20191211150242.347836993@linuxfoundation.org>
+Subject: [PATCH 5.4 47/92] CIFS: Fix SMB2 oplock break processing
+Date:   Wed, 11 Dec 2019 16:05:38 +0100
+Message-Id: <20191211150242.515175605@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -62,70 +61,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 6f582b273ec23332074d970a7fb25bef835df71f upstream.
+commit fa9c2362497fbd64788063288dc4e74daf977ebb upstream.
 
-Currently when the client creates a cifsFileInfo structure for
-a newly opened file, it allocates a list of byte-range locks
-with a pointer to the new cfile and attaches this list to the
-inode's lock list. The latter happens before initializing all
-other fields, e.g. cfile->tlink. Thus a partially initialized
-cifsFileInfo structure becomes available to other threads that
-walk through the inode's lock list. One example of such a thread
-may be an oplock break worker thread that tries to push all
-cached byte-range locks. This causes NULL-pointer dereference
-in smb2_push_mandatory_locks() when accessing cfile->tlink:
+Even when mounting modern protocol version the server may be
+configured without supporting SMB2.1 leases and the client
+uses SMB2 oplock to optimize IO performance through local caching.
 
-[598428.945633] BUG: kernel NULL pointer dereference, address: 0000000000000038
-...
-[598428.945749] Workqueue: cifsoplockd cifs_oplock_break [cifs]
-[598428.945793] RIP: 0010:smb2_push_mandatory_locks+0xd6/0x5a0 [cifs]
-...
-[598428.945834] Call Trace:
-[598428.945870]  ? cifs_revalidate_mapping+0x45/0x90 [cifs]
-[598428.945901]  cifs_oplock_break+0x13d/0x450 [cifs]
-[598428.945909]  process_one_work+0x1db/0x380
-[598428.945914]  worker_thread+0x4d/0x400
-[598428.945921]  kthread+0x104/0x140
-[598428.945925]  ? process_one_work+0x380/0x380
-[598428.945931]  ? kthread_park+0x80/0x80
-[598428.945937]  ret_from_fork+0x35/0x40
+However there is a problem in oplock break handling that leads
+to missing a break notification on the client who has a file
+opened. It latter causes big latencies to other clients that
+are trying to open the same file.
 
-Fix this by reordering initialization steps of the cifsFileInfo
-structure: initialize all the fields first and then add the new
-byte-range lock list to the inode's lock list.
+The problem reproduces when there are multiple shares from the
+same server mounted on the client. The processing code tries to
+match persistent and volatile file ids from the break notification
+with an open file but it skips all share besides the first one.
+Fix this by looking up in all shares belonging to the server that
+issued the oplock break.
 
 Cc: Stable <stable@vger.kernel.org>
 Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/file.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/cifs/smb2misc.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -313,9 +313,6 @@ cifs_new_fileinfo(struct cifs_fid *fid,
- 	INIT_LIST_HEAD(&fdlocks->locks);
- 	fdlocks->cfile = cfile;
- 	cfile->llist = fdlocks;
--	cifs_down_write(&cinode->lock_sem);
--	list_add(&fdlocks->llist, &cinode->llist);
--	up_write(&cinode->lock_sem);
- 
- 	cfile->count = 1;
- 	cfile->pid = current->tgid;
-@@ -339,6 +336,10 @@ cifs_new_fileinfo(struct cifs_fid *fid,
- 		oplock = 0;
- 	}
- 
-+	cifs_down_write(&cinode->lock_sem);
-+	list_add(&fdlocks->llist, &cinode->llist);
-+	up_write(&cinode->lock_sem);
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -673,10 +673,10 @@ smb2_is_valid_oplock_break(char *buffer,
+ 	spin_lock(&cifs_tcp_ses_lock);
+ 	list_for_each(tmp, &server->smb_ses_list) {
+ 		ses = list_entry(tmp, struct cifs_ses, smb_ses_list);
 +
- 	spin_lock(&tcon->open_file_lock);
- 	if (fid->pending_open->oplock != CIFS_OPLOCK_NO_CHANGE && oplock)
- 		oplock = fid->pending_open->oplock;
+ 		list_for_each(tmp1, &ses->tcon_list) {
+ 			tcon = list_entry(tmp1, struct cifs_tcon, tcon_list);
+ 
+-			cifs_stats_inc(&tcon->stats.cifs_stats.num_oplock_brks);
+ 			spin_lock(&tcon->open_file_lock);
+ 			list_for_each(tmp2, &tcon->openFileList) {
+ 				cfile = list_entry(tmp2, struct cifsFileInfo,
+@@ -688,6 +688,8 @@ smb2_is_valid_oplock_break(char *buffer,
+ 					continue;
+ 
+ 				cifs_dbg(FYI, "file id match, oplock break\n");
++				cifs_stats_inc(
++				    &tcon->stats.cifs_stats.num_oplock_brks);
+ 				cinode = CIFS_I(d_inode(cfile->dentry));
+ 				spin_lock(&cfile->file_info_lock);
+ 				if (!CIFS_CACHE_WRITE(cinode) &&
+@@ -720,9 +722,6 @@ smb2_is_valid_oplock_break(char *buffer,
+ 				return true;
+ 			}
+ 			spin_unlock(&tcon->open_file_lock);
+-			spin_unlock(&cifs_tcp_ses_lock);
+-			cifs_dbg(FYI, "No matching file for oplock break\n");
+-			return true;
+ 		}
+ 	}
+ 	spin_unlock(&cifs_tcp_ses_lock);
 
 
