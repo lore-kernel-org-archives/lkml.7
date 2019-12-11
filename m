@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BABC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C6AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442BD2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4505F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079588;
-	bh=bbylV87ISiyzUqa66aTLnN5hnkrRKN68Zlx6JHsytXM=;
+	s=default; t=1576079591;
+	bh=Jr7OP2ExagPThx4x6gxb2VIob/AQyrcBJ5/rYVQqNVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWsaemi+ILLtLp/my9zxIPNGJLV7vN7QlGvIfh3ZJpYbCKEncR5qcInronhQHCvk+
-	 29qk7iDSlw6vbn1841NrtecCr/yGnQYhaTMKxsexXMWg/XCkc1yGEbPYTryoW/mi9d
-	 6GplKGLFfkBOEr10TUtSnmjYI2OP8HxC3ttL+DSw=
+	b=Ko7ulqJOo9JykKy8jwSCLGX+jtxjtLBnogawnTpH1Z44demYw7OzFTqlCkZut2uKr
+	 IrSFOUm6v4Q9HVQC5NlyFUhyDHuL3bzCJf1+7HA/jqWSrn8xfV4/3M1/pzzE79SWd7
+	 Ng+15Z1u6FojJ9u8i/FQrK6WrUjxIuNFmXJL0wdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfLKPTj (ORCPT
+        id S1732225AbfLKPTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:19:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48432 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732235AbfLKPTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:35 -0500
+        id S1732218AbfLKPT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:19:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0032022527;
-        Wed, 11 Dec 2019 15:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7009F2073D;
+        Wed, 11 Dec 2019 15:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077574;
-        bh=bbylV87ISiyzUqa66aTLnN5hnkrRKN68Zlx6JHsytXM=;
+        s=default; t=1576077566;
+        bh=Jr7OP2ExagPThx4x6gxb2VIob/AQyrcBJ5/rYVQqNVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hw97IeEfsyc5C5B6Uv3UzYr2fSo4BcXIMlH8uRNiwQMzpjnu8Pf0kYtE2DGFA9QgR
-         mc37pHzWsEygZHml7y/ksZZVoe72vMee5PknktlOOFPPO08r9Qv+bZc6drwn2wuOqn
-         SbAkpi4xQSdsWJU7DBY1nef3hdjzcgjRY9W6EMzM=
+        b=kFBaG3WpQ/Z/wH7t+x+gQ5aZuYEXYRRZgrxmlKB8zQSktFGq0C3XzhBcQ6X2nYC1u
+         IXZTycgvjtmf0DGvYon+s/PF/feZUv9VgO+NXkBB7RdNh9E+0JoTEAuFOxXnY2/WqG
+         2YurgXqrDm4akcRI3kH+XfY9Md0gcOP9bKqwoTj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hansverk@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 090/243] iwlwifi: fix cfg structs for 22000 with different RF modules
-Date:   Wed, 11 Dec 2019 16:04:12 +0100
-Message-Id: <20191211150345.191327127@linuxfoundation.org>
+Subject: [PATCH 4.19 087/243] media: coda: fix memory corruption in case more than 32 instances are opened
+Date:   Wed, 11 Dec 2019 16:04:09 +0100
+Message-Id: <20191211150344.985875952@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,88 +61,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit b1bbc1a636505ebdd6336ff781e417123226d4f7 ]
+[ Upstream commit 649cfc2bdfeeb98ff7d8fdff0af3f8fb9c8da50f ]
 
-We have to choose different configuration and different firmwares
-depending on the external RF module that is installed.  Since the
-external module is not represented in the PCI IDs, we need to change
-the configuration at runtime, after checking the RF ID of the module
-installed.  We have a bit of a mess in the code that does this,
-because it applies cfg's according to the RF ID only, ignoring the
-integrated module that is in use.
+The ffz() return value is undefined if the instance mask does not
+contain any zeros. If it returned 32, the following set_bit would
+corrupt the debugfs_root pointer.
+Switch to IDA for context index allocation. This also removes the
+artificial 32 instance limit for all except CodaDx6.
 
-Fix that for some devices by adding correct configurations for them
-and not ignoring the integrated module's type when making the
-decision.
-
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Hans Verkuil <hansverk@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/wireless/intel/iwlwifi/cfg/22000.c    |  1 -
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c |  2 +-
- .../net/wireless/intel/iwlwifi/pcie/trans.c   | 22 +++++++++++++++++--
- 3 files changed, 21 insertions(+), 4 deletions(-)
+ drivers/media/platform/coda/coda-common.c | 26 +++++++++--------------
+ drivers/media/platform/coda/coda.h        |  3 ++-
+ 2 files changed, 12 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-index a0de61aa0feff..d7335fabd9294 100644
---- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-+++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
-@@ -321,7 +321,6 @@ MODULE_FIRMWARE(IWL_22000_HR_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_JF_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_A_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_B_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
--MODULE_FIRMWARE(IWL_22000_QU_B_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_B_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_JF_B0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
- MODULE_FIRMWARE(IWL_22000_HR_A0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index 0982bd99b1c3c..844a1009484f6 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -888,7 +888,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
- 	{IWL_PCI_DEVICE(0x34F0, 0x0040, iwl22000_2ax_cfg_hr)},
- 	{IWL_PCI_DEVICE(0x34F0, 0x0070, iwl22000_2ax_cfg_hr)},
- 	{IWL_PCI_DEVICE(0x34F0, 0x0078, iwl22000_2ax_cfg_hr)},
--	{IWL_PCI_DEVICE(0x34F0, 0x0310, iwl22000_2ac_cfg_jf)},
-+	{IWL_PCI_DEVICE(0x34F0, 0x0310, iwl22000_2ax_cfg_hr)},
- 	{IWL_PCI_DEVICE(0x40C0, 0x0000, iwl22560_2ax_cfg_su_cdb)},
- 	{IWL_PCI_DEVICE(0x40C0, 0x0010, iwl22560_2ax_cfg_su_cdb)},
- 	{IWL_PCI_DEVICE(0x40c0, 0x0090, iwl22560_2ax_cfg_su_cdb)},
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index f89d43bc7d4bd..4f5571123f70a 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3415,8 +3415,26 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- #if IS_ENABLED(CONFIG_IWLMVM)
- 	trans->hw_rf_id = iwl_read32(trans, CSR_HW_RF_ID);
+diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
+index 4b0220f40b425..fccc771d23a51 100644
+--- a/drivers/media/platform/coda/coda-common.c
++++ b/drivers/media/platform/coda/coda-common.c
+@@ -17,6 +17,7 @@
+ #include <linux/firmware.h>
+ #include <linux/gcd.h>
+ #include <linux/genalloc.h>
++#include <linux/idr.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+@@ -2101,17 +2102,6 @@ int coda_decoder_queue_init(void *priv, struct vb2_queue *src_vq,
+ 	return coda_queue_init(priv, dst_vq);
+ }
  
--	if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
--	    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR)) {
-+	if (cfg == &iwl22000_2ax_cfg_hr) {
-+		if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		    CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR)) {
-+			trans->cfg = &iwl22000_2ax_cfg_hr;
-+		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+			   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_JF)) {
-+			trans->cfg = &iwl22000_2ax_cfg_jf;
-+		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+			   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HRCDB)) {
-+			IWL_ERR(trans, "RF ID HRCDB is not supported\n");
-+			ret = -EINVAL;
-+			goto out_no_pci;
-+		} else {
-+			IWL_ERR(trans, "Unrecognized RF ID 0x%08x\n",
-+				CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id));
-+			ret = -EINVAL;
-+			goto out_no_pci;
-+		}
-+	} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
-+		   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR)) {
- 		u32 hw_status;
+-static int coda_next_free_instance(struct coda_dev *dev)
+-{
+-	int idx = ffz(dev->instance_mask);
+-
+-	if ((idx < 0) ||
+-	    (dev->devtype->product == CODA_DX6 && idx > CODADX6_MAX_INSTANCES))
+-		return -EBUSY;
+-
+-	return idx;
+-}
+-
+ /*
+  * File operations
+  */
+@@ -2120,7 +2110,8 @@ static int coda_open(struct file *file)
+ {
+ 	struct video_device *vdev = video_devdata(file);
+ 	struct coda_dev *dev = video_get_drvdata(vdev);
+-	struct coda_ctx *ctx = NULL;
++	struct coda_ctx *ctx;
++	unsigned int max = ~0;
+ 	char *name;
+ 	int ret;
+ 	int idx;
+@@ -2129,12 +2120,13 @@ static int coda_open(struct file *file)
+ 	if (!ctx)
+ 		return -ENOMEM;
  
- 		hw_status = iwl_read_prph(trans, UMAG_GEN_HW_STATUS);
+-	idx = coda_next_free_instance(dev);
++	if (dev->devtype->product == CODA_DX6)
++		max = CODADX6_MAX_INSTANCES - 1;
++	idx = ida_alloc_max(&dev->ida, max, GFP_KERNEL);
+ 	if (idx < 0) {
+ 		ret = idx;
+ 		goto err_coda_max;
+ 	}
+-	set_bit(idx, &dev->instance_mask);
+ 
+ 	name = kasprintf(GFP_KERNEL, "context%d", idx);
+ 	if (!name) {
+@@ -2243,8 +2235,8 @@ err_clk_per:
+ err_pm_get:
+ 	v4l2_fh_del(&ctx->fh);
+ 	v4l2_fh_exit(&ctx->fh);
+-	clear_bit(ctx->idx, &dev->instance_mask);
+ err_coda_name_init:
++	ida_free(&dev->ida, ctx->idx);
+ err_coda_max:
+ 	kfree(ctx);
+ 	return ret;
+@@ -2286,7 +2278,7 @@ static int coda_release(struct file *file)
+ 	pm_runtime_put_sync(&dev->plat_dev->dev);
+ 	v4l2_fh_del(&ctx->fh);
+ 	v4l2_fh_exit(&ctx->fh);
+-	clear_bit(ctx->idx, &dev->instance_mask);
++	ida_free(&dev->ida, ctx->idx);
+ 	if (ctx->ops->release)
+ 		ctx->ops->release(ctx);
+ 	debugfs_remove_recursive(ctx->debugfs_entry);
+@@ -2747,6 +2739,7 @@ static int coda_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&dev->dev_mutex);
+ 	mutex_init(&dev->coda_mutex);
++	ida_init(&dev->ida);
+ 
+ 	dev->debugfs_root = debugfs_create_dir("coda", NULL);
+ 	if (!dev->debugfs_root)
+@@ -2834,6 +2827,7 @@ static int coda_remove(struct platform_device *pdev)
+ 	coda_free_aux_buf(dev, &dev->tempbuf);
+ 	coda_free_aux_buf(dev, &dev->workbuf);
+ 	debugfs_remove_recursive(dev->debugfs_root);
++	ida_destroy(&dev->ida);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/media/platform/coda/coda.h b/drivers/media/platform/coda/coda.h
+index 2469ca1dc5985..8df02c32781ee 100644
+--- a/drivers/media/platform/coda/coda.h
++++ b/drivers/media/platform/coda/coda.h
+@@ -16,6 +16,7 @@
+ #define __CODA_H__
+ 
+ #include <linux/debugfs.h>
++#include <linux/idr.h>
+ #include <linux/irqreturn.h>
+ #include <linux/mutex.h>
+ #include <linux/kfifo.h>
+@@ -95,7 +96,7 @@ struct coda_dev {
+ 	struct workqueue_struct	*workqueue;
+ 	struct v4l2_m2m_dev	*m2m_dev;
+ 	struct list_head	instances;
+-	unsigned long		instance_mask;
++	struct ida		ida;
+ 	struct dentry		*debugfs_root;
+ };
+ 
 -- 
 2.20.1
 
