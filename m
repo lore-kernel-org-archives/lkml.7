@@ -2,215 +2,78 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFAEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274BE21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:37:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iNUzbB/5"
+	by mail.kernel.org (Postfix) with ESMTP id 11D592077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 03:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576035638;
+	bh=7cmhNFa72+Abpr2QRYiJWiDvx2VS9NXXsn7cwvtgUAo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YzDWUN8HDKiiosPnseVeJhWr9vYc341F4IQNigI99wHEw9QJffnXbBrxPlxC5zQ8F
+	 onLeMs6Bxd6uD6mocL/VgcTsYtWf6F0nZdJWiyo1wZBvyc2yTWrCQQEJl3N8ak7l/M
+	 KHfhnuVoLXpzlr06KDmj61l/18ggcHA9maUCXNXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfLKDhg (ORCPT
+        id S1727208AbfLKDkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 22:37:36 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35772 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbfLKDhf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 22:37:35 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k196so12022231oib.2
-        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 19:37:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hKg6CtmhRxPWbTqHVDFqtJdh68B7oJMOxK58C2vi9N8=;
-        b=iNUzbB/5ZyunOXZp5DcomNLJDeahuk6g7IY6VuRLyRHeh2QM6XEki1XWdTp+Cd3PMQ
-         fRyrjIC7JrtZILRdswUDUinWmMEioVaGqU7bSAM2iWRp86GaNLu+lKPoBLVKkksTqgeW
-         QqkyH6RhgyP2qq8JMFcWcgSy8WiN213s+MBH0AYXl8xvOA6j4aMw9fsPXWNjRskd9PSd
-         f5/nBfuyA6z5Jnk02HLUjQDGKMz2HyantBRL8GF1HanGTsU4NP/0P03j68TpMLKo2F41
-         DtafWdcAg4t4Bnrzat9zJ0zmg/k+wNam/fzjp8fFOfjvWt7iJ3QHdL3+KX/zm7F9EFg9
-         3MKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hKg6CtmhRxPWbTqHVDFqtJdh68B7oJMOxK58C2vi9N8=;
-        b=J912nolqpZi3U3uI5Hpxntc8zd6oVJZQ9S3OJRUC5brV/OeoJT4FOuKUznViIZ7RnH
-         Sl53Ggvtwta5EU1noiLhqfyIjeeVSTvpqpfaYHCuILH8+d8mwQqu2WJ2emIDzZW66lEf
-         IyJcp+mgGAxgBGoEO7mJyvZ9GWtrzpD3Z9Ca4TMSMQvfijsUoxJ9xLHibZVLKzzD0vY6
-         PZLEl0q3QlYqcTc83ol2Gm+l9+L3tQ4+SszWBTJMaieisCmI1ye9yZo3hiNOhVa5Ei8p
-         /YHY20mKGB1NyF4PbS4be268auDBIFTw94YPpPsBfgXzBo/4pLBah3XGwifYnzftrDYn
-         yggQ==
-X-Gm-Message-State: APjAAAXd59awTpldP9WmPI3X81+lD472aSTKDMzZeUfLuu5Eek4CYopQ
-        jnE5twVjWo5JNk79zTJ4ngEPFOrw9N3AJKKMuX3npg==
-X-Google-Smtp-Source: APXvYqyuye/rOVhTdrOk0mj5xLYR20XK/mN+wO9DEAnn/wew7e1KaSZQdtqZT8bdwpFXWrz5zbo34m58+Ut2ulUFCVo=
-X-Received: by 2002:aca:4850:: with SMTP id v77mr1121953oia.70.1576035454356;
- Tue, 10 Dec 2019 19:37:34 -0800 (PST)
+        Tue, 10 Dec 2019 22:40:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37956 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbfLKDkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 22:40:36 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 120C7206EC;
+        Wed, 11 Dec 2019 03:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576035635;
+        bh=7cmhNFa72+Abpr2QRYiJWiDvx2VS9NXXsn7cwvtgUAo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jZ8kiR42kraUQ4UyigWOsa4wQ/GI7/5G/OLOd4Y0lFhgAY84c67OgdxABygl9D5Up
+         QhAMMCMIjCq929l2JNxhnrdthWzPmS5iNNYJfiC/AbUVl+9XwrchF0SLiRe616CctO
+         BlRCt5rG2LX3RHzeGfnidgJcf1O/3pye48WTpOOE=
+Date:   Wed, 11 Dec 2019 11:40:25 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     linux@armlinux.org.uk, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, tglx@linutronix.de,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2] ARM: imx: Enable ARM_ERRATA_814220 for i.MX6UL and
+ i.MX7D
+Message-ID: <20191211034024.GI15858@dragon>
+References: <1576032816-23373-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-References: <20191202070348.32148-1-tao3.xu@intel.com> <CAJZ5v0hqjR5EdrxcdkLUpxseFiizqNjtA3nYdDtZiSt85JiywQ@mail.gmail.com>
- <6dbcdaff-feae-68b9-006d-dd8aec032553@intel.com> <CAJZ5v0jYb7XQC7u0rmxF-XVMAsEoOfmD11-FYDvMrZuOuzgyiA@mail.gmail.com>
- <0e4219c3-943a-e416-e5eb-723bed8c9383@intel.com> <CAJZ5v0h6_7AoYW5Syk=BUR656eW11A3GjA7uvmTA6ayByOaqBg@mail.gmail.com>
- <82e7361e-256e-002c-6b30-601cec1fad07@intel.com> <0f8084fd-86a9-081c-e32a-20c756c9daf6@intel.com>
-In-Reply-To: <0f8084fd-86a9-081c-e32a-20c756c9daf6@intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 10 Dec 2019 19:37:23 -0800
-Message-ID: <CAPcyv4gq690oQgjD53qF_v7YPT2shR0pw5ubtXbOcYMQfH1wxg@mail.gmail.com>
-Subject: Re: [PATCH] ACPI/HMAT: Fix the parsing of Cache Associativity and
- Write Policy
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576032816-23373-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 7:05 PM Tao Xu <tao3.xu@intel.com> wrote:
->
->
-> On 12/10/19 9:18 PM, Tao Xu wrote:
-> > On 12/10/2019 4:27 PM, Rafael J. Wysocki wrote:
-> >> On Tue, Dec 10, 2019 at 9:19 AM Tao Xu <tao3.xu@intel.com> wrote:
-> >>>
-> >>> On 12/10/2019 4:06 PM, Rafael J. Wysocki wrote:
-> >>>> On Tue, Dec 10, 2019 at 2:04 AM Tao Xu <tao3.xu@intel.com> wrote:
-> >>>>>
-> >>>>> On 12/9/2019 6:01 PM, Rafael J. Wysocki wrote:
-> >>>>>> On Mon, Dec 2, 2019 at 8:03 AM Tao Xu <tao3.xu@intel.com> wrote:
-> >>>>>>>
-> >>>>>>> In chapter 5.2.27.5, Table 5-147: Field "Cache Attributes" of
-> >>>>>>> ACPI 6.3 spec: 0 is "None", 1 is "Direct Mapped", 2 is "Complex
-> >>>>>>> Cache
-> >>>>>>> Indexing" for Cache Associativity; 0 is "None", 1 is "Write Back",
-> >>>>>>> 2 is "Write Through" for Write Policy.
-> >>>>>>
-> >>>>>> Well, I'm not sure what the connection between the above statement,
-> >>>>>> which is correct AFAICS, and the changes made by the patch is.
-> >>>>>>
-> >>>>>> Is that the *_OTHER symbol names are confusing or something deeper?
-> >>>>>>
-> >>>>>
-> >>>>> Because in include/acpi/actbl1.h:
-> >>>>>
-> >>>>> #define ACPI_HMAT_CA_NONE                     (0)
-> >>>>>
-> >>>>> ACPI_HMAT_CA_NONE is 0, but in include/linux/node.h:
-> >>>>>
-> >>>>>       enum cache_indexing {
-> >>>>>              NODE_CACHE_DIRECT_MAP,
-> >>>>>              NODE_CACHE_INDEXED,
-> >>>>>              NODE_CACHE_OTHER,
-> >>>>>       };
-> >>>>> NODE_CACHE_OTHER is 2, and for otner enum:
-> >>>>>
-> >>>>>             case ACPI_HMAT_CA_DIRECT_MAPPED:
-> >>>>>                     tcache->cache_attrs.indexing =
-> >>>>> NODE_CACHE_DIRECT_MAP;
-> >>>>>                     break;
-> >>>>>             case ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING:
-> >>>>>                     tcache->cache_attrs.indexing = NODE_CACHE_INDEXED;
-> >>>>>                     break;
-> >>>>> in include/acpi/actbl1.h:
-> >>>>>
-> >>>>>     #define ACPI_HMAT_CA_DIRECT_MAPPED            (1)
-> >>>>>     #define ACPI_HMAT_CA_COMPLEX_CACHE_INDEXING   (2)
-> >>>>>
-> >>>>> but in include/linux/node.h:
-> >>>>>
-> >>>>> NODE_CACHE_DIRECT_MAP is 0, NODE_CACHE_INDEXED is 1. This is
-> >>>>> incorrect.
-> >>>>
-> >>>> Why is it incorrect?
-> >>>
-> >>> Sorry I paste the wrong pre-define.
-> >>>
-> >>> This is the incorrect line:
-> >>>
-> >>> case ACPI_HMAT_CA_DIRECT_MAPPED:
-> >>> tcache->cache_attrs.indexing = NODE_CACHE_DIRECT_MAP;
-> >>>
-> >>> ACPI_HMAT_CA_DIRECT_MAPPED is 1, NODE_CACHE_DIRECT_MAP is 0. That means
-> >>> if HMAT table input 1 for cache_attrs.indexing, kernel store 0 in
-> >>> cache_attrs.indexing. But in ACPI 6.3, 0 means "None". So for the whole
-> >>> switch codes:
-> >>
-> >> This is a mapping between the ACPI-defined values and the generic ones
-> >> defined in the kernel.  There is not rule I know of by which they must
-> >> be the same numbers.  Or is there such a rule which I'm missing?
-> >>
-> >> As long as cache_attrs.indexing is used consistently going forward,
-> >> the difference between the ACPI-defined numbers and its values
-> >> shouldn't matter, should it?
-> >>
-> > Yes, it will not influence the ACPI HMAT tables. Only influence is the
-> > sysfs, as in
-> > https://www.kernel.org/doc/html/latest/admin-guide/mm/numaperf.html:
-> >
-> > # tree sys/devices/system/node/node0/memory_side_cache/
-> > /sys/devices/system/node/node0/memory_side_cache/
-> > |-- index1
-> > |   |-- indexing
-> > |   |-- line_size
-> > |   |-- size
-> > |   `-- write_policy
-> >
-> > indexing is parsed in this file, so it can be read by user-space.
-> > Although now there is no user-space tool use this information to do some
-> > thing. But I am wondering if it is used in the future, someone use it to
-> > show the memory side cache information to user or use it to do
-> > performance turning.
->
-> I finish a test using emulated ACPI HMAT from QEMU
-> (branch:hmat https://github.com/taoxu916/qemu.git)
->
-> And I get the kernel log and sysfs output:
-> [    0.954288] HMAT: Cache: Domain:0 Size:20480 Attrs:00081111 SMBIOS
-> Handles:0
-> [    0.954835] HMAT: Cache: Domain:1 Size:15360 Attrs:00081111 SMBIOS
-> Handles:0
->
-> /sys/devices/system/node/node0/memory_side_cache/index1 # cat indexing
-> 0
-> /sys/devices/system/node/node0/memory_side_cache/index1 # cat write_policy
-> 0
->
-> Note that 'Attrs' is printed using %x, so we can get:
-> (attrs & ACPI_HMAT_CACHE_ASSOCIATIVITY) >> 8 = 1,
-> (attrs & ACPI_HMAT_WRITE_POLICY) >> 12       = 1
->
-> but we get 0 in sysfs, so if user or software read this information and
-> read the ACPI 6.3 spec, will think there is 'none' for Cache
-> Associativity or Write Policy.
+On Wed, Dec 11, 2019 at 10:53:36AM +0800, Anson Huang wrote:
+> ARM_ERRATA_814220 has below description:
+> 
+> The v7 ARM states that all cache and branch predictor maintenance
+> operations that do not specify an address execute, relative to
+> each other, in program order.
+> However, because of this erratum, an L2 set/way cache maintenance
+> operation can overtake an L1 set/way cache maintenance operation.
+> This ERRATA only affected the Cortex-A7 and present in r0p2, r0p3,
+> r0p4, r0p5.
+> 
+> i.MX6UL and i.MX7D have Cortex-A7 r0p5 inside, need to enable
+> ARM_ERRATA_814220 for proper workaround.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-The sysfs interface is not meant to reflect the ACPI values. This
-sysfs information may be populated by another platform firmware
-(non-ACPI). I would have preferred that these files use text values
-rather than numbers. However, at least the ABI documentation gives the
-expected translation:
-
-What:           /sys/devices/system/node/nodeX/memory_side_cache/indexY/indexing
-Date:           December 2018
-Contact:        Keith Busch <keith.busch@intel.com>
-Description:
-                The caches associativity indexing: 0 for direct mapped,
-                non-zero if indexed.
-
-What:
-/sys/devices/system/node/nodeX/memory_side_cache/indexY/write_policy
-Date:           December 2018
-Contact:        Keith Busch <keith.busch@intel.com>
-Description:
-                The cache write policy: 0 for write-back, 1 for write-through,
-                other or unknown.
+Applied, thanks.
