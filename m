@@ -2,180 +2,80 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F6DC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B3BC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEDD20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:27:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2KBVcOs"
+	by mail.kernel.org (Postfix) with ESMTP id 0795121556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:29:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576074546;
+	bh=N8PbFLkORFvjWt9sLI4T9YHFqVWqnofZgm531GGx/5U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yBQtl44wnj88R4FdgkL6UjeAmFE+IVILlWHnW7yWxI7N+YgKoBYNdSW3Qz15YdUpR
+	 jD8GGJgtogytSoJMbJThkmxT0tkfSI7IvFP62tK2iAlq0Nij2uffz61wTz1qH3g5+j
+	 RR4GbktvfN53KlBvg5AD4/wE5jfLsOA6Byfl16Ac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfLKO12 (ORCPT
+        id S1729921AbfLKO3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:27:28 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37179 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729841AbfLKO12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:27:28 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so22835194ioc.4;
-        Wed, 11 Dec 2019 06:27:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Faypt5jJbaNtCoHXofsWRZ8YINuZgK4fs840LJrVspY=;
-        b=Z2KBVcOsCkR47+VmQPOkiHjj7vFKRPOwy8osTvnKM5r/Tg62TU0sG4hmG5auAO9PZe
-         mT3KzbzHQZKrbW7H1sBHn51ECGZQXzKZ6DswDgLHURVFuKGX0g7bBcZnzTtUZYNkvZ8x
-         QXSt91qZVnoaJYMbx7l7ka77oIwQHZygkf3v1c3dyplmmWAEnvf4xeHjhaFvYq3UI38b
-         gCSLKK8Kg220Qm1z/EFRy0ZgQ6rwpu+IfjUWOhxaOFdVBfZoQ01vbMst+Vb0yFXnLBjW
-         eJQx6reBYP4mBhH+XKM3CdRjGPxu05kHF2l4cRFsA5M47SwLRxr36WDyLnhB+dhQb7vU
-         aIXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Faypt5jJbaNtCoHXofsWRZ8YINuZgK4fs840LJrVspY=;
-        b=TGMl6gLfTKBFr8HVUqjAj6f+W2dL7d0BEYhFyATDIXWcutugEFjTxpxFrR0zIN0qcG
-         +/tzFX4Lsn9eP47nlfsBofjrg/Gl025I3qTYeLLcZgdIMPekFA7T+GWxlWB7PQnX+o+U
-         czLMzM0jUSKnmi7opYRSWZtv30YZguWFb9Z7HQar5hs8GLwSwTBXwsMWXqTRT7xsJX6P
-         dNGJmjpBenK/V2a/dxc9HdAeRGcVMgtZUf/EY0fkg2P32hPiLsILuyX0u9tKpKcU+A+p
-         yPk/ditykfuMHnImhkYUOfqBwdnRXJd0NwCJ/rV2XLbmkox3HGOhavycjJevrT57m6lc
-         AEig==
-X-Gm-Message-State: APjAAAXsIQwty6Hem9W7qwHYV60ma0ZTnyQmzZ36ZSMFxDEmVsq0rxlF
-        TKrMPf7Lqa7VQjn7X923NDGQPDcQgeAhyhLTyss=
-X-Google-Smtp-Source: APXvYqx25zJakF+83vcjU/NrLZyb4Iyh7/msBEZNeWy88VfcZLcy4mMeUD6cBebcI8aP42hW4L9Hbh1Z30BrvhjsLXQ=
-X-Received: by 2002:a6b:c9ca:: with SMTP id z193mr2766932iof.276.1576074446612;
- Wed, 11 Dec 2019 06:27:26 -0800 (PST)
+        Wed, 11 Dec 2019 09:29:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729829AbfLKO3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:29:04 -0500
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D453C22B48;
+        Wed, 11 Dec 2019 14:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576074544;
+        bh=N8PbFLkORFvjWt9sLI4T9YHFqVWqnofZgm531GGx/5U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q/vHswAa4Py9NtwngVg0E+ERq9UCWTuf40G9x6bs+Qa5YGvhxP55rO15r5AqfsuJH
+         2PvUT0gv7XO2QvD7ipJK2H4nU7mf3DJp9SrEHCBzWSXZwqBuNCxqIQxvScy7g0tdX2
+         uRUotylziv8axWluuyh6XFmtVzD4iB5hUXX4EybQ=
+Received: by mail-qv1-f47.google.com with SMTP id t7so5794868qve.4;
+        Wed, 11 Dec 2019 06:29:03 -0800 (PST)
+X-Gm-Message-State: APjAAAXL/qxRrMyG04jhHBrDv0zePHRADHuijmGWIs3jpvOsEZHm9L8N
+        NcKV1XC2V2EdA04ZkmIwzTH224nJyTmAGy+U+w==
+X-Google-Smtp-Source: APXvYqyslXHQeTlnxyWBHE+KQno4F7yO5jXM3IgMVqdVyPdAJw+emUIKIy0nf6WbxEaL8liKiMq7CxtC86P/ZYmk4FI=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr3244655qvo.20.1576074542962;
+ Wed, 11 Dec 2019 06:29:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20191130225153.30111-1-aford173@gmail.com> <e8e429dd-4508-9835-fd01-825d2de8871e@kontron.de>
- <CAHCN7xLkV1WC=9ACj1Mi8+uE8kRCEjCEe+Y36pXwkNeNrgrNVg@mail.gmail.com>
- <VI1PR0402MB34857B8C5560B912B34674AB985B0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <d82428e3-326b-db80-2e40-4ef1bdbca060@kontron.de>
-In-Reply-To: <d82428e3-326b-db80-2e40-4ef1bdbca060@kontron.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 11 Dec 2019 08:27:16 -0600
-Message-ID: <CAHCN7xKUSQQeGt984L9FXmXw7XFMqUvR+9RFqn-zv9q-zQdSSg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] crypto: caam: Change the i.MX8MQ check support all
- i.MX8M variants
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
+References: <20191209233305.18619-1-michael@walle.cc>
+In-Reply-To: <20191209233305.18619-1-michael@walle.cc>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 11 Dec 2019 08:28:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJB5oeUmtzV0jT0f-Rh22Cf3OzMVpfZvRa6xOEhx3e2cA@mail.gmail.com>
+Message-ID: <CAL_JsqJB5oeUmtzV0jT0f-Rh22Cf3OzMVpfZvRa6xOEhx3e2cA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: document the fsl-sai driver
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 8:23 AM Schrempf Frieder
-<frieder.schrempf@kontron.de> wrote:
+On Mon, Dec 9, 2019 at 5:33 PM Michael Walle <michael@walle.cc> wrote:
 >
-> On 10.12.19 08:56, Horia Geanta wrote:
-> > On 12/6/2019 9:55 PM, Adam Ford wrote:
-> >> On Wed, Dec 4, 2019 at 5:38 AM Schrempf Frieder
-> >> <frieder.schrempf@kontron.de> wrote:
-> >>>
-> >>> Hi Adam,
-> >>>
-> >>> On 30.11.19 23:51, Adam Ford wrote:
-> >>>> The i.MX8M Mini uses the same crypto engine as the i.MX8MQ, but
-> >>>> the driver is restricting the check to just the i.MX8MQ.
-> >>>>
-> >>>> This patch lets the driver support all i.MX8M Variants if enabled.
-> >>>>
-> >>>> Signed-off-by: Adam Ford <aford173@gmail.com>
-> >>>
-> >>> What about the following lines in run_descriptor_deco0()? Does this
-> >>> condition also apply to i.MX8MM?
-> >>
-> >> I think that's a question for NXP.  I am not seeing that in the NXP
-> >> Linux Release, and I don't have an 8MQ to compare.
-> >>
-> > IIRC the i.MX BSP releases use the JRI for initializing the RNG,
-> > and not the DECO register interface.
-> >
-> >> I was able to get the driver working on the i.MXMM with the patch.
-> >>
-> > You are probably using a newer U-boot, which includes
-> > commit dfaec76029f2 ("crypto/fsl: instantiate all rng state handles")
-> >
-> >> NXP  Team,
-> >>
-> >> Do you have any opinions on this?
-> >>
-> > Since current U-boot initializes both RNG state handles, practically
-> > instantiate_rng() is a no-op.
-> >
-> > A simple experiment is to "lie" about the state_handle_mask, to exercise
-> > the DECO acquire code (or, as mentioned above, to run with an older U-boot):
-> >
-> > @@ -268,12 +272,19 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
-> >          struct caam_ctrl __iomem *ctrl;
-> >          u32 *desc, status = 0, rdsta_val;
-> >          int ret = 0, sh_idx;
-> > +       static int force_init = 1;
-> >
-> >          ctrl = (struct caam_ctrl __iomem *)ctrlpriv->ctrl;
-> >          desc = kmalloc(CAAM_CMD_SZ * 7, GFP_KERNEL);
-> >          if (!desc)
-> >                  return -ENOMEM;
-> >
-> > +       if (force_init && (state_handle_mask == 0x3)) {
-> > +               dev_err(ctrldev, "Forcing reinit of RNG state handle 0!\n");
-> > +               force_init = 0;
-> > +               state_handle_mask = 0x2;
-> > +       }
-> > +
-> >          for (sh_idx = 0; sh_idx < RNG4_MAX_HANDLES; sh_idx++) {
-> >                  /*
-> >                   * If the corresponding bit is set, this state handle
-> >
-> > In this case boot log confirms the DECO cannot be acquired:
-> > [    2.137101] caam 30900000.crypto: Forcing reinit of RNG state handle 0!
-> > [    2.172293] caam 30900000.crypto: failed to acquire DECO 0
-> > [    2.177786] caam 30900000.crypto: failed to instantiate RNG
-> >
-> > To sum up, writing to DECORSR is mandatory.
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> changes since v1:
+>  - dual license gpl-2.0-only and bsd-2-clause
+>  - add "additionalProperties: false"
+>  - wrap example in soc {} node with correct #address-cells and #size-cells
 >
-> Thanks Horia for providing the details.
+>  .../bindings/clock/fsl,sai-clock.yaml         | 55 +++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/fsl,sai-clock.yaml
 
-I appreciate it too.
-
->
-> Adam, can you update your patch to enable the code in
-> run_descriptor_deco0() for i.MX8MM?
-
-I will work on that.  I have been trying to get the mainline U-Boot to
-start correctly, because I wanted to see if/how this interacted. I'll
-try to get a V2 pushed today.
-
->
-> If I understand this correctly, this is necessary to have the RNG
-> initialize correctly no matter what version of U-Boot is used.
-
-That makes sense based on Horia's feedback.  With the holidays this
-month, my spare time and weekends have been full.
-
-adam
->
-> Thanks,
-> Frieder
+Reviewed-by: Rob Herring <robh@kernel.org>
