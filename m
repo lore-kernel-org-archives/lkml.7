@@ -2,98 +2,118 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAD8C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC63C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBC324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EAF02077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfLKCQp (ORCPT
+        id S1727648AbfLKCQu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:16:45 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:10885 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfLKCQo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:16:44 -0500
-Received: from [10.28.39.99] (10.28.39.99) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 11 Dec
- 2019 10:17:13 +0800
-Subject: Re: [PATCH] arm64: dts: meson-a1: add I2C nodes
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        <linux-amlogic@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20191202111253.94872-1-jian.hu@amlogic.com>
- <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-From:   Jian Hu <jian.hu@amlogic.com>
-Message-ID: <be7f27d2-5601-0d0c-9c62-7206e7de0411@amlogic.com>
-Date:   Wed, 11 Dec 2019 10:17:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <1j8snkh4cz.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+        Tue, 10 Dec 2019 21:16:50 -0500
+Received: from mga11.intel.com ([192.55.52.93]:7528 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfLKCQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:16:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:16:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="296085838"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga001.jf.intel.com with ESMTP; 10 Dec 2019 18:16:48 -0800
+Received: from fmsmsx153.amr.corp.intel.com (10.18.125.6) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 10 Dec 2019 18:16:36 -0800
+Received: from shsmsx103.ccr.corp.intel.com (10.239.4.69) by
+ FMSMSX153.amr.corp.intel.com (10.18.125.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 10 Dec 2019 18:16:36 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.90]) by
+ SHSMSX103.ccr.corp.intel.com ([169.254.4.29]) with mapi id 14.03.0439.000;
+ Wed, 11 Dec 2019 10:16:35 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+CC:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chao Peng <chao.p.peng@linux.intel.com>
+Subject: RE: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to RTIT
+ address MSRs
+Thread-Topic: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to
+ RTIT address MSRs
+Thread-Index: AQHVr7D+eSLLMngHS0yaamPyTS1Jdae0MG+Q
+Date:   Wed, 11 Dec 2019 02:16:35 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E17384B7F2@SHSMSX104.ccr.corp.intel.com>
+References: <20191210232433.4071-1-sean.j.christopherson@intel.com>
+ <20191210232433.4071-2-sean.j.christopherson@intel.com>
+In-Reply-To: <20191210232433.4071-2-sean.j.christopherson@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.39.99]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODc0ODBiZWMtYjg1MS00MDk4LTkxOTktNzI1ZTkzOGQzZDU0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQ2prZko1YW5wU1JMY3MwZUVoVFJHM01seW4rayt1VnJJR1wvalBJVVZHNk1BMnMwQnlkUzlVNlwvQU1OMm5RQVptIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi jerome
 
-Thanks for your review
 
-On 2019/12/10 18:17, Jerome Brunet wrote:
+> -----Original Message-----
+> From: Christopherson, Sean J <sean.j.christopherson@intel.com>
+> Sent: Wednesday, December 11, 2019 7:25 AM
+> To: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Christopherson, Sean J <sean.j.christopherson@intel.com>; Vitaly Kuznetsov <vkuznets@redhat.com>; Wanpeng Li
+> <wanpengli@tencent.com>; Jim Mattson <jmattson@google.com>; Joerg Roedel <joro@8bytes.org>; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Chao Peng <chao.p.peng@linux.intel.com>; Kang, Luwei <luwei.kang@intel.com>
+> Subject: [PATCH 1/2] KVM: VMX: Add non-canonical check on writes to RTIT address MSRs
 > 
-> On Mon 02 Dec 2019 at 12:12, Jian Hu <jian.hu@amlogic.com> wrote:
+> Reject writes to RTIT address MSRs if the data being written is a non-canonical address as the MSRs are subject to canonical checks,
+> e.g.
+> KVM will trigger an unchecked #GP when loading the values to hardware during pt_guest_enter().
 > 
->> There are four I2C controllers in A1 series,
->> Share the same comptible with AXG.The I2C nodes
->> depend on pinmux and clock controller.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> ---
->>   arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 149 ++++++++++++++++++++++
->>   1 file changed, 149 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> index eab2ecd36aa8..d0a73d953f5e 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->> @@ -16,6 +16,13 @@
->>   	#address-cells = <2>;
->>   	#size-cells = <2>;
->>   
->> +	aliases {
->> +		i2c0 = &i2c0;
->> +		i2c1 = &i2c1;
->> +		i2c2 = &i2c2;
->> +		i2c3 = &i2c3;
->> +	};
->> +
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I wonder if assigning i2c bus alias in the SoC dtsi is such a good idea.
-> 
-> Such aliases are usually assigned as needed by each board design:
-> meson-a1-ad401.dts in your case.
-> 
-You are right, I will set i2c bus alias in dts file.
-> .
-> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c index 51e3b27f90ed..9aa2006dbe04 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -2152,6 +2152,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  			(index >= 2 * intel_pt_validate_cap(vmx->pt_desc.caps,
+>  					PT_CAP_num_address_ranges)))
+>  			return 1;
+> +		if (is_noncanonical_address(data, vcpu))
+> +			return 1;
+
+Is this for live migrate a VM with 5 level page table to the VM with 4 level page table?
+
+Thanks,
+Luwei Kang
+
+>  		if (index % 2)
+>  			vmx->pt_desc.guest.addr_b[index / 2] = data;
+>  		else
+> --
+> 2.24.0
+
