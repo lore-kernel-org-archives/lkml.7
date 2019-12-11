@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28DFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7263BC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CDD2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481FE2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077927;
-	bh=rOdz90QaNrmcTU1JSwFDpea1oaCw02rQheFZW9Px3q8=;
+	s=default; t=1576077929;
+	bh=Y5KUrfrcBxamiaLk4IFoCFyAIrttpwKkhqEjJTVEZX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pn+3/BBYkl+i4FxDG43jVKWIJHA+eflRB0E9e23ialSJ6GmFLpY+QuPQ3m0FZfnQ5
-	 FkDcVbYAriSnh8or8OvmPX5w9Hj3Oh6dsgwtcnSQ6f6YD/AwpAyBW3n9wPvKIzVn7a
-	 KCjPQ4vp1zo7m3ylZOBAUAet0ERBQObYERkVT+Ck=
+	b=KMum29gqi/gCbRjyJZ5e2UkzzAsre3VT892SnoPApM+FboSNP5OHV0BpG4oi/4xEW
+	 IwpuKTsvYWdyzlIYt1nRerbUC35XUMf7zd8UWQksnNjQSoF846A7un5KpRW2PLqbBv
+	 OtXGTKw7gpO84Gk8zk2DmxvZvuY/3oUBHsz0lnj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733003AbfLKPZ0 (ORCPT
+        id S1733009AbfLKPZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:25:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57284 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:25:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732662AbfLKPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:25:21 -0500
+        id S1733001AbfLKPZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:25:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6168D208C3;
-        Wed, 11 Dec 2019 15:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D19208C3;
+        Wed, 11 Dec 2019 15:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077920;
-        bh=rOdz90QaNrmcTU1JSwFDpea1oaCw02rQheFZW9Px3q8=;
+        s=default; t=1576077925;
+        bh=Y5KUrfrcBxamiaLk4IFoCFyAIrttpwKkhqEjJTVEZX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1JXms+b8NzeIcKBeso/hOfpETaCPEqX7Z1suq0XOcByYA3XJ9PPc2aVnaehrdY+5b
-         x7Fb7XWxNuOZLA/+9Ldivwpl3daHQGOLIwisAEehHbUWMYdX05MeJjWcxqvAM08tJo
-         GBwuEEl2AGHStfCOAj8DAThZXxn+UprkilApJ/bI=
+        b=pPKQGzm9Pw/49KPJrTPjS4aL6B1+88jIgksj1v4ZZSaODHkQZ6QhU9dsHCiu2m10M
+         QvSK/oGGd1HV8KtECMuVnBWVznpfzq5IijK65PELihKrZFs6Bxv9vLUgp5vLW2adHE
+         1oQygiQShnAUrRjmxuFgL9UJU3xNzz0qWRwapN3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4.19 220/243] kernfs: fix ino wrap-around detection
-Date:   Wed, 11 Dec 2019 16:06:22 +0100
-Message-Id: <20191211150354.181459010@linuxfoundation.org>
+        stable@vger.kernel.org, Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Johan Hovold <johan@kernel.org>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 4.19 222/243] drm/msm: fix memleak on release
+Date:   Wed, 11 Dec 2019 16:06:24 +0100
+Message-Id: <20191211150354.316779022@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -59,63 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit e23f568aa63f64cd6b355094224cc9356c0f696b upstream.
+commit a64fc11b9a520c55ca34d82e5ca32274f49b6b15 upstream.
 
-When the 32bit ino wraps around, kernfs increments the generation
-number to distinguish reused ino instances.  The wrap-around detection
-tests whether the allocated ino is lower than what the cursor but the
-cursor is pointing to the next ino to allocate so the condition never
-triggers.
+If a process is interrupted while accessing the "gpu" debugfs file and
+the drm device struct_mutex is contended, release() could return early
+and fail to free related resources.
 
-Fix it by remembering the last ino and comparing against that.
+Note that the return value from release() is ignored.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 4a3ef68acacf ("kernfs: implement i_generation")
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org # v4.14+
+Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+Cc: stable <stable@vger.kernel.org>     # 4.18
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Rob Clark <robdclark@gmail.com>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191010131333.23635-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/kernfs/dir.c        |    5 ++---
- include/linux/kernfs.h |    1 +
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/msm/msm_debugfs.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -624,7 +624,6 @@ static struct kernfs_node *__kernfs_new_
- {
- 	struct kernfs_node *kn;
- 	u32 gen;
--	int cursor;
- 	int ret;
+--- a/drivers/gpu/drm/msm/msm_debugfs.c
++++ b/drivers/gpu/drm/msm/msm_debugfs.c
+@@ -53,12 +53,8 @@ static int msm_gpu_release(struct inode
+ 	struct msm_gpu_show_priv *show_priv = m->private;
+ 	struct msm_drm_private *priv = show_priv->dev->dev_private;
+ 	struct msm_gpu *gpu = priv->gpu;
+-	int ret;
+-
+-	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+-	if (ret)
+-		return ret;
  
- 	name = kstrdup_const(name, GFP_KERNEL);
-@@ -637,11 +636,11 @@ static struct kernfs_node *__kernfs_new_
- 
- 	idr_preload(GFP_KERNEL);
- 	spin_lock(&kernfs_idr_lock);
--	cursor = idr_get_cursor(&root->ino_idr);
- 	ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
--	if (ret >= 0 && ret < cursor)
-+	if (ret >= 0 && ret < root->last_ino)
- 		root->next_generation++;
- 	gen = root->next_generation;
-+	root->last_ino = ret;
- 	spin_unlock(&kernfs_idr_lock);
- 	idr_preload_end();
- 	if (ret < 0)
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -186,6 +186,7 @@ struct kernfs_root {
- 
- 	/* private fields, do not use outside kernfs proper */
- 	struct idr		ino_idr;
-+	u32			last_ino;
- 	u32			next_generation;
- 	struct kernfs_syscall_ops *syscall_ops;
++	mutex_lock(&show_priv->dev->struct_mutex);
+ 	gpu->funcs->gpu_state_put(show_priv->state);
+ 	mutex_unlock(&show_priv->dev->struct_mutex);
  
 
 
