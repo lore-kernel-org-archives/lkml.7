@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB50C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9C8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12CF720836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D4A20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079915;
-	bh=QZ0cs6rH6n1Q7qsmq1TmRkgiIWevSyuM7/uNSv/U0Bs=;
+	s=default; t=1576079921;
+	bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmnMCvrvF+K6VVWQO2t5hoPL8/kkYA//CbZV6Iv2fxBNfBBZ/YoZEmp5UMcZskOO5
-	 J3kRUaifOmyb9s7hsU7E+MEqzozN4cjsCYJTbf3zzGvCAv2OpSfYW/Ojd9NbqE/dSn
-	 1PHLhuEyYVw3+4A57gmrnxmCqJv19GAWCdeVxf4o=
+	b=B0fI+8dlFdnlYZdO6tA+DA0niODTXT/X10ATgOsBXdx7yMNXUp01svTlrbwBtLWL+
+	 Brm9pQzTM6DpBLvKuR6q3w7lO3aA18jEyazgKi34v+bPBIWrWmAz2TK/grzPZi4sfE
+	 LkiOmMj6+jYOclvP1E9f81C/t6JY3Vhl9xhOwD4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbfLKP6e (ORCPT
+        id S1732256AbfLKP6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:58:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39636 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:58:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730883AbfLKPOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:21 -0500
+        id S1730925AbfLKPOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0471E24654;
-        Wed, 11 Dec 2019 15:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E1D24691;
+        Wed, 11 Dec 2019 15:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077260;
-        bh=QZ0cs6rH6n1Q7qsmq1TmRkgiIWevSyuM7/uNSv/U0Bs=;
+        s=default; t=1576077255;
+        bh=pVBuCuaPElvOO28i5x9YeOhkvZD/mwC1UK4HUXmlsAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UDxN7ZUqFzBmETaiY8/fjm5B1f3YkVBpG7T1k68iin3FYP7bCMuFlOEhJ3IazxosQ
-         yqqMsNZTXERdexZ+49+6AJRZS9FXYTtSctsaFwUWDMVNSqhH797LmXlJN7r8Jeew8c
-         yuhAXXpJnWRrXYvcihayyhDsFe84odeYP4h2cR48=
+        b=twbLLzCDWIMYbq4nrY+NHUX7w4TdRtnEF9gAje4rOPsxBlksv731xoZ0Xz4PZM6WH
+         HsUvhBRC6Imp89YPvNP0k7wb6YEOiYnttEM2VtCjqLuznvEfGdKKvS/r2a25QzcJ6R
+         9LfKofL14xmNsb3Q92I5AolkfHtONeqIjuNwOYIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Greg Kurz <groug@kaod.org>, Lijun Pan <ljp@linux.ibm.com>,
-        Paul Mackerras <paulus@ozlabs.org>
-Subject: [PATCH 5.3 076/105] KVM: PPC: Book3S HV: XIVE: Free previous EQ page when setting up a new one
-Date:   Wed, 11 Dec 2019 16:06:05 +0100
-Message-Id: <20191211150255.164740236@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: [PATCH 5.3 074/105] drm/i810: Prevent underflow in ioctl
+Date:   Wed, 11 Dec 2019 16:06:03 +0100
+Message-Id: <20191211150253.249313601@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
 References: <20191211150221.153659747@linuxfoundation.org>
@@ -62,106 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kurz <groug@kaod.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 31a88c82b466d2f31a44e21c479f45b4732ccfd0 upstream.
+commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
 
-The EQ page is allocated by the guest and then passed to the hypervisor
-with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
-before handing it over to the HW. This reference is dropped either when
-the guest issues the H_INT_RESET hcall or when the KVM device is released.
-But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times,
-either to reset the EQ (vCPU hot unplug) or to set a new EQ (guest reboot).
-In both cases the existing EQ page reference is leaked because we simply
-overwrite it in the XIVE queue structure without calling put_page().
+The "used" variables here come from the user in the ioctl and it can be
+negative.  It could result in an out of bounds write.
 
-This is especially visible when the guest memory is backed with huge pages:
-start a VM up to the guest userspace, either reboot it or unplug a vCPU,
-quit QEMU. The leak is observed by comparing the value of HugePages_Free in
-/proc/meminfo before and after the VM is run.
-
-Ideally we'd want the XIVE code to handle the EQ page de-allocation at the
-platform level. This isn't the case right now because the various XIVE
-drivers have different allocation needs. It could maybe worth introducing
-hooks for this purpose instead of exposing XIVE internals to the drivers,
-but this is certainly a huge work to be done later.
-
-In the meantime, for easier backport, fix both vCPU unplug and guest reboot
-leaks by introducing a wrapper around xive_native_configure_queue() that
-does the necessary cleanup.
-
-Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org # v5.2
-Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
-Signed-off-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Greg Kurz <groug@kaod.org>
-Tested-by: Lijun Pan <ljp@linux.ibm.com>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_xive_native.c |   31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/i810/i810_dma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -50,6 +50,24 @@ static void kvmppc_xive_native_cleanup_q
- 	}
- }
+--- a/drivers/gpu/drm/i810/i810_dma.c
++++ b/drivers/gpu/drm/i810/i810_dma.c
+@@ -721,7 +721,7 @@ static void i810_dma_dispatch_vertex(str
+ 	if (nbox > I810_NR_SAREA_CLIPRECTS)
+ 		nbox = I810_NR_SAREA_CLIPRECTS;
  
-+static int kvmppc_xive_native_configure_queue(u32 vp_id, struct xive_q *q,
-+					      u8 prio, __be32 *qpage,
-+					      u32 order, bool can_escalate)
-+{
-+	int rc;
-+	__be32 *qpage_prev = q->qpage;
-+
-+	rc = xive_native_configure_queue(vp_id, q, prio, qpage, order,
-+					 can_escalate);
-+	if (rc)
-+		return rc;
-+
-+	if (qpage_prev)
-+		put_page(virt_to_page(qpage_prev));
-+
-+	return rc;
-+}
-+
- void kvmppc_xive_native_cleanup_vcpu(struct kvm_vcpu *vcpu)
- {
- 	struct kvmppc_xive_vcpu *xc = vcpu->arch.xive_vcpu;
-@@ -582,19 +600,14 @@ static int kvmppc_xive_native_set_queue_
- 		q->guest_qaddr  = 0;
- 		q->guest_qshift = 0;
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
  
--		rc = xive_native_configure_queue(xc->vp_id, q, priority,
--						 NULL, 0, true);
-+		rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
-+							NULL, 0, true);
- 		if (rc) {
- 			pr_err("Failed to reset queue %d for VCPU %d: %d\n",
- 			       priority, xc->server_num, rc);
- 			return rc;
- 		}
+ 	if (sarea_priv->dirty)
+@@ -1041,7 +1041,7 @@ static void i810_dma_dispatch_mc(struct
+ 	if (u != I810_BUF_CLIENT)
+ 		DRM_DEBUG("MC found buffer that isn't mine!\n");
  
--		if (q->qpage) {
--			put_page(virt_to_page(q->qpage));
--			q->qpage = NULL;
--		}
--
- 		return 0;
- 	}
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
  
-@@ -653,8 +666,8 @@ static int kvmppc_xive_native_set_queue_
- 	  * OPAL level because the use of END ESBs is not supported by
- 	  * Linux.
- 	  */
--	rc = xive_native_configure_queue(xc->vp_id, q, priority,
--					 (__be32 *) qaddr, kvm_eq.qshift, true);
-+	rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
-+					(__be32 *) qaddr, kvm_eq.qshift, true);
- 	if (rc) {
- 		pr_err("Failed to configure queue %d for VCPU %d: %d\n",
- 		       priority, xc->server_num, rc);
+ 	sarea_priv->dirty = 0x7f;
 
 
