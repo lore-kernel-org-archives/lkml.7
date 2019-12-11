@@ -2,100 +2,122 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A71C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069B122B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AE92077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078514;
+	bh=MZsrq9kkQXCkYz6GWktLYGpue3EYTn3MVXewmYPrJN0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z+AOk/zLicosD54nu3LX8I1ZdeL8lykTobvb6QHMOWYnG9Mu7egtqM1lYfI2k5USy
+	 4UNBWXvJsBCVes8ZP3CU6RzMQgm++1iVAcjU7n1l4/D+f3WoC1Xp2X2Rovd3/tn09Q
+	 PDQoOIajC5SqfZXarwucHCwwibrnhqXca14I0kao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbfLKPfH (ORCPT
+        id S2388045AbfLKPfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:34436 "EHLO foss.arm.com"
+        Wed, 11 Dec 2019 10:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387538AbfLKP2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 133C630E;
-        Wed, 11 Dec 2019 07:28:04 -0800 (PST)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 487413F52E;
-        Wed, 11 Dec 2019 07:28:03 -0800 (PST)
-Date:   Wed, 11 Dec 2019 15:28:01 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 15/15] reset: reset-scmi: Match scmi device by both name
- and protocol id
-Message-ID: <20191211152801.GB28474@bogus>
-References: <20191210145345.11616-1-sudeep.holla@arm.com>
- <20191210145345.11616-16-sudeep.holla@arm.com>
- <9d8fd7d89e035c41a3be7d5a5fa2e370b32910f1.camel@pengutronix.de>
+        id S1733014AbfLKP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:59 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B7BC2467F;
+        Wed, 11 Dec 2019 15:27:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078078;
+        bh=MZsrq9kkQXCkYz6GWktLYGpue3EYTn3MVXewmYPrJN0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1rJBjVU0GA3qi2QFmch5HLgefkvHKSFGacAeype7nANfzSlKmbDlPS1tuw7yxwD/d
+         LKTMImWoNgB03QAkmtbxyZv4xl0E14w6SOz0nEwfhgHkotq5uYB0f7kGtQFyki1U1M
+         AAhrT8D1obqB1Q0vupTsM/VVEyCygtW/Mb3EH5o4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Diego=20Elio=20Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        linux-scsi@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 69/79] cdrom: respect device capabilities during opening action
+Date:   Wed, 11 Dec 2019 10:26:33 -0500
+Message-Id: <20191211152643.23056-69-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d8fd7d89e035c41a3be7d5a5fa2e370b32910f1.camel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:51:41AM +0100, Philipp Zabel wrote:
-> Hi Sudeep,
->
-> On Tue, 2019-12-10 at 14:53 +0000, Sudeep Holla wrote:
-> > The scmi bus now has support to match the driver with devices not only
-> > based on their protocol id but also based on their device name if one is
-> > available. This was added to cater the need to support multiple devices
-> > and drivers for the same protocol.
-> >
-> > Let us add the name "reset" to scmi_device_id table in the driver so
-> > that in matches only with device with the same name and protocol id
-> > SCMI_PROTOCOL_RESET.
-> >
-> > Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> > ---
-> >  drivers/reset/reset-scmi.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/reset/reset-scmi.c b/drivers/reset/reset-scmi.c
-> > index b46df80ec6c3..8d3a858e3b19 100644
-> > --- a/drivers/reset/reset-scmi.c
-> > +++ b/drivers/reset/reset-scmi.c
-> > @@ -108,7 +108,7 @@ static int scmi_reset_probe(struct scmi_device *sdev)
-> >  }
-> >
-> >  static const struct scmi_device_id scmi_id_table[] = {
-> > -	{ SCMI_PROTOCOL_RESET },
-> > +	{ SCMI_PROTOCOL_RESET, "reset" },
-> >  	{ },
-> >  };
-> >  MODULE_DEVICE_TABLE(scmi, scmi_id_table);
-> > --
-> > 2.17.1
->
-> I can't speak to the correctness of this approach, but in case the rest
-> of the series passes review, this patch is
->
+From: Diego Elio Pettenò <flameeyes@flameeyes.com>
 
-I understand that and completely depends on the review of the patches
-implementing it.
+[ Upstream commit 366ba7c71ef77c08d06b18ad61b26e2df7352338 ]
 
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
->
-> to be merged together with the other patches.
->
+Reading the TOC only works if the device can play audio, otherwise
+these commands fail (and possibly bring the device to an unhealthy
+state.)
 
-Thanks.
+Similarly, cdrom_mmc3_profile() should only be called if the device
+supports generic packet commands.
 
---
-Regards,
-Sudeep
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-scsi@vger.kernel.org
+Signed-off-by: Diego Elio Pettenò <flameeyes@flameeyes.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/cdrom/cdrom.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 933268b8d6a54..d3947388a3ef3 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -996,6 +996,12 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	tracks->xa = 0;
+ 	tracks->error = 0;
+ 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
++
++	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
++		tracks->error = CDS_NO_INFO;
++		return;
++	}
++
+ 	/* Grab the TOC header so we can see how many tracks there are */
+ 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
+ 	if (ret) {
+@@ -1162,7 +1168,8 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
+ 		ret = open_for_data(cdi);
+ 		if (ret)
+ 			goto err;
+-		cdrom_mmc3_profile(cdi);
++		if (CDROM_CAN(CDC_GENERIC_PACKET))
++			cdrom_mmc3_profile(cdi);
+ 		if (mode & FMODE_WRITE) {
+ 			ret = -EROFS;
+ 			if (cdrom_open_write(cdi))
+@@ -2882,6 +2889,9 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
+ 	   it doesn't give enough information or fails. then we return
+ 	   the toc contents. */
+ use_toc:
++	if (!CDROM_CAN(CDC_PLAY_AUDIO))
++		return -ENOSYS;
++
+ 	toc.cdte_format = CDROM_MSF;
+ 	toc.cdte_track = CDROM_LEADOUT;
+ 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))
+-- 
+2.20.1
+
