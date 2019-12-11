@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79855C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFCBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4000F2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A904F2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079434;
-	bh=vOkcwzGxcrqH8Avf80bvLOHtmYPdbSJE+fQOgD6vOyg=;
+	s=default; t=1576079436;
+	bh=pfK74v3YmtA8H49th10aE3QUou3ru2WOeyG21yIhRK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oYa1LT46tZhzOTNuMCs609CQMJiYlIHkLOOw20c19a3iIJZVlUDAbFqroYuV7sLe6
-	 cYNbaELJ0QTWsA/rnYELPlcjgiC6HbXYwW2RkeE1hrxq6+U4SWu5yadZoW51b7pua/
-	 QmBeuH/8PDVD4wwwMCVE6nmtmV3FHsWSQpfQOc70=
+	b=siKjaHjb1rl3XG6NEGE8+1BHM4qhuu7Y5qFMM8410XZqRtk6vWh5u6TfnyAbfDW7/
+	 cIixSDzy7VDtAfufSGv1TIOWvEJXDANgxopwr4cBUcBLopivtotVYMVfzdyqIs4nUq
+	 uyaOEBK7uFi0RyQaxBWtPR+s3LvyIjikOK5y+fSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733174AbfLKPuc (ORCPT
+        id S1732498AbfLKPXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54006 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732184AbfLKPXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:09 -0500
+        id S1732311AbfLKPW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF7F2073D;
-        Wed, 11 Dec 2019 15:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D8BA2073D;
+        Wed, 11 Dec 2019 15:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077789;
-        bh=vOkcwzGxcrqH8Avf80bvLOHtmYPdbSJE+fQOgD6vOyg=;
+        s=default; t=1576077776;
+        bh=pfK74v3YmtA8H49th10aE3QUou3ru2WOeyG21yIhRK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvBbD6ILA8UyClExdGpBy6Adzx7lhPIHAits3hBpmUfsFBYsh0sc1VgvvJvRhr/f8
-         vj9QzqEqVfzVtQxWDj+Ca20oyuKoW6DCI9pD8GHNvFcDw/RGb7cVtKw9AG/vEk29H3
-         Z0FzHS4HmsBzlVLdat73cgALGaZoyQ5zLsrYr0SA=
+        b=1N245TRkyTHPinFymACc36oM4Gni2waSXu+OSVAu5jOdrVIFGuJ0Rg7wh4Cn6cjr/
+         IB9H72GoMZT5b7GC+L+/hi8s6SPiyuBH9rcoD9vLFjeBJDnOdhU2ciK7TCfoHHoAC0
+         tRRVwgzQXwBEqcrJLYNSDHcg7nU78QOCCJiM0k6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Takeshi Kihara <takeshi.kihara.df@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org, David Teigland <teigland@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 171/243] clk: renesas: r8a77990: Correct parent clock of DU
-Date:   Wed, 11 Dec 2019 16:05:33 +0100
-Message-Id: <20191211150350.722636762@linuxfoundation.org>
+Subject: [PATCH 4.19 167/243] dlm: fix invalid cluster name warning
+Date:   Wed, 11 Dec 2019 16:05:29 +0100
+Message-Id: <20191211150350.457147152@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -63,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+From: David Teigland <teigland@redhat.com>
 
-[ Upstream commit 7cf3a216a2b3a672cad3e498c186c9333bdff90a ]
+[ Upstream commit 3595c559326d0b660bb088a88e22e0ca630a0e35 ]
 
-According to the R-Car Gen3 Hardware Manual Rev 1.00, the parent clock
-of the DU module clocks on R-Car E3 is S1D1.
+The warning added in commit 3b0e761ba83
+  "dlm: print log message when cluster name is not set"
 
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Fixes: 3570a2af473789c5 ("clk: renesas: cpg-mssr: Add support for R-Car E3")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+did not account for the fact that lockspaces created
+from userland do not supply a cluster name, so bogus
+warnings are printed every time a userland lockspace
+is created.
+
+Signed-off-by: David Teigland <teigland@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/renesas/r8a77990-cpg-mssr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/dlm/user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/renesas/r8a77990-cpg-mssr.c b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-index 9e14f1486fbb9..81569767025cc 100644
---- a/drivers/clk/renesas/r8a77990-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a77990-cpg-mssr.c
-@@ -175,8 +175,8 @@ static const struct mssr_mod_clk r8a77990_mod_clks[] __initconst = {
- 	DEF_MOD("ehci0",		 703,	R8A77990_CLK_S3D4),
- 	DEF_MOD("hsusb",		 704,	R8A77990_CLK_S3D4),
- 	DEF_MOD("csi40",		 716,	R8A77990_CLK_CSI0),
--	DEF_MOD("du1",			 723,	R8A77990_CLK_S2D1),
--	DEF_MOD("du0",			 724,	R8A77990_CLK_S2D1),
-+	DEF_MOD("du1",			 723,	R8A77990_CLK_S1D1),
-+	DEF_MOD("du0",			 724,	R8A77990_CLK_S1D1),
- 	DEF_MOD("lvds",			 727,	R8A77990_CLK_S2D1),
+diff --git a/fs/dlm/user.c b/fs/dlm/user.c
+index 13f29409600bb..3c84c62dadb7b 100644
+--- a/fs/dlm/user.c
++++ b/fs/dlm/user.c
+@@ -25,6 +25,7 @@
+ #include "lvb_table.h"
+ #include "user.h"
+ #include "ast.h"
++#include "config.h"
  
- 	DEF_MOD("vin5",			 806,	R8A77990_CLK_S1D2),
+ static const char name_prefix[] = "dlm";
+ static const struct file_operations device_fops;
+@@ -404,7 +405,7 @@ static int device_create_lockspace(struct dlm_lspace_params *params)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
+-	error = dlm_new_lockspace(params->name, NULL, params->flags,
++	error = dlm_new_lockspace(params->name, dlm_config.ci_cluster_name, params->flags,
+ 				  DLM_USER_LVB_LEN, NULL, NULL, NULL,
+ 				  &lockspace);
+ 	if (error)
 -- 
 2.20.1
 
