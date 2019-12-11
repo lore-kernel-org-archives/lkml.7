@@ -2,89 +2,103 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C9EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8194C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A82D2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:25:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R8tBwyGh"
+	by mail.kernel.org (Postfix) with ESMTP id 8840D2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfLKXZV (ORCPT
+        id S1727118AbfLKX0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:25:21 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:54020 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726589AbfLKXZU (ORCPT
+        Wed, 11 Dec 2019 18:26:37 -0500
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:42314 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLKX0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:25:20 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBMxSSK116104;
-        Wed, 11 Dec 2019 23:24:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=B65H/agzDcjgNC5hqDt4i9zRG5ZTYsjrllkhNt7z4Nw=;
- b=R8tBwyGhmO2rEaYvX2LYP6AYc4XsuJErBUT652JfkN+lYcI4ORyC+RdluFwDPG3vCy8N
- u4SAVOBXoSEOkmJgDUpdC01hq0dLjoe7ygw3QoHS33CdBwT/0c0/h79ioOe8ZOj9MEE6
- /rOotgpP8rYsuykjTOfeiqIK2EL/Poj+5TA+692Xbrg5JlU1k3hnX97iGYAAUxfv8UTH
- 9QQQKlaMFwLToMCjXxMVktslwJ1vq5tgLrIJtGFDqJI/XJdSnYl7qETV5z+63IHkk9b7
- 0Obt+GcNW4ZYEztzTrtI30kCpgubreb4llzEecyWh+cD7ngUoqhISvfU1NrPWbk9Av/Z jA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wr4qrqpc3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 23:24:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBBMxEZ4078792;
-        Wed, 11 Dec 2019 23:24:58 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2wu3k0298f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 23:24:58 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBBNOuee008494;
-        Wed, 11 Dec 2019 23:24:56 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 11 Dec 2019 15:24:56 -0800
-Date:   Wed, 11 Dec 2019 18:25:04 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: Re: [RFC 3/4] workqueue: reap dead pool workqueue on queuing work
-Message-ID: <20191211232504.ih7ms7pwymzeaiym@ca-dmjordan1.us.oracle.com>
-References: <20191211104601.16468-1-hdanton@sina.com>
- <20191211112229.22652-1-hdanton@sina.com>
+        Wed, 11 Dec 2019 18:26:37 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id xBBNQGx9023348; Thu, 12 Dec 2019 08:26:16 +0900
+X-Iguazu-Qid: 34tMdwKSzMOQZNctuq
+X-Iguazu-QSIG: v=2; s=0; t=1576106776; q=34tMdwKSzMOQZNctuq; m=kiQa5XRS9qAOPHWASNRbe18DoY7epzfGCCQxMfHhxyc=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1510) id xBBNQE0K001920;
+        Thu, 12 Dec 2019 08:26:15 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id xBBNQEC0000183;
+        Thu, 12 Dec 2019 08:26:14 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id xBBNQEUg014415;
+        Thu, 12 Dec 2019 08:26:14 +0900
+Date:   Thu, 12 Dec 2019 08:26:13 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 070/243] xfs: extent shifting doesnt fully
+ invalidate page cache
+X-TSB-HOP: ON
+Message-ID: <20191211232613.pxegji52vf4gd3eh@toshiba.co.jp>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150343.827226097@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211112229.22652-1-hdanton@sina.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=987
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912110181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912110181
+In-Reply-To: <20191211150343.827226097@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 07:22:29PM +0800, Hillf Danton wrote:
-> Release rcu lock to reap dead pool workqueue.
+On Wed, Dec 11, 2019 at 04:03:52PM +0100, Greg Kroah-Hartman wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> [ Upstream commit 7f9f71be84bcab368e58020a42f6d0dd97adf0ce ]
+> 
+> The extent shifting code uses a flush and invalidate mechainsm prior
+> to shifting extents around. This is similar to what
+> xfs_free_file_space() does, but it doesn't take into account things
+> like page cache vs block size differences, and it will fail if there
+> is a page that it currently busy.
+> 
+> xfs_flush_unmap_range() handles all of these cases, so just convert
+> xfs_prepare_shift() to us that mechanism rather than having it's own
+> special sauce.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-What's to be gained by reaping the pwq (and possibly worker pool and wq) before
-__queue_work() retries?  It'll just happen after the queueing finishes.
+
+This commit also required following commit:
+
+commit 1749d1ea89bdf3181328b7d846e609d5a0e53e50
+Author: Brian Foster <bfoster@redhat.com>
+Date:   Fri Apr 26 07:30:24 2019 -0700
+
+    xfs: add missing error check in xfs_prepare_shift()
+
+    xfs_prepare_shift() fails to check the error return from
+    xfs_flush_unmap_range(). If the latter fails, that could lead to an
+    insert/collapse range operation over a delalloc range, which is not
+    supported.
+
+    Add an error check and return appropriately. This is reproduced
+    rarely by generic/475.
+
+    Fixes: 7f9f71be84bc ("xfs: extent shifting doesn't fully invalidate page cache")
+    Signed-off-by: Brian Foster <bfoster@redhat.com>
+    Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+    Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+    Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+    Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+Best regards,
+  Nobuhirio
