@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D03B3C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F09FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9D22077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FE92077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078584;
-	bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
+	s=default; t=1576078588;
+	bh=IG9kGKLljauydAeaT7R+w9w3rEQaS3pDBysxhkF6U/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lXn4INhTaXR+MO50ZiEvrwTiMUnIQmC/TD6YPXXYFPkP81/R7jXyit7H+yQpv8OH5
-	 mHmgjuOOAMkHXJEQa1Ofs+aC8nYAgli89z0nFC35uB/1Sf3C43XR3wLMz9B2NKh6x6
-	 P3g3mbjFHwN+8tcBOzN3uFBVFtLV9Q+2zGHqzka8=
+	b=cPwCygQp5DrdMIgchFOSUijjCifWk86RZmijdvemlHJklhzJEA6fmTQ9WrSPU96aF
+	 dlx/FJlnS8P10GMM9DglMwiSo3RHU+fuOOg1sZAYQFUltgAmMPRg6+1L4e5T/P7192
+	 uWFSVAgOp1GmYwMFQGP63KNZsW6Qz37aMD9jU6+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388245AbfLKPfx (ORCPT
+        id S2387893AbfLKPg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44948 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:36:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733091AbfLKPfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:45 -0500
+        id S2387694AbfLKPfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA34522B48;
-        Wed, 11 Dec 2019 15:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75EF824658;
+        Wed, 11 Dec 2019 15:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078544;
-        bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
+        s=default; t=1576078552;
+        bh=IG9kGKLljauydAeaT7R+w9w3rEQaS3pDBysxhkF6U/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEXtlU0gc69RLA2tQuvFfBp2P8pZWgsXQnHl5XgMivCfNrXtuxbnRCOLlvJ2Tz4lk
-         K3Yl3zRvDHs+sPJ8ML6DfBfycWpvKS8MxU+U+VeOKG6bj1HnKbSq28ecy9A/UT2hYS
-         q90ZSIRBqz22TJ8JhoupRd4FLpIr4MdoqKS0UxJ4=
+        b=UF42BdtbS1pePRehXJOwk+2QEAUoI+bMlC/uX9d1p/IWqBlfPiM0/SGxAGwXaTR27
+         UhxaYqUmTBuk2nEE/bYKdK13GY+5DVmKzWCCM5cQYqBmmnbwbUvTyEdlTOCwjyJ3Sq
+         SKJQoBSyybNtVcJfC/EV/RCtgwfWRfuow+5xVJdA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     peter chang <dpf@google.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Deepak Ukey <deepak.ukey@microchip.com>,
-        Viswas G <Viswas.G@microchip.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 32/42] scsi: pm80xx: Fix for SATA device discovery
-Date:   Wed, 11 Dec 2019 10:35:00 -0500
-Message-Id: <20191211153510.23861-32-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 39/42] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+Date:   Wed, 11 Dec 2019 10:35:07 -0500
+Message-Id: <20191211153510.23861-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -63,39 +59,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: peter chang <dpf@google.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
+[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
 
-Driver was missing complete() call in mpi_sata_completion which result in
-SATA abort error handling timing out. That causes the device to be left in
-the in_recovery state so subsequent commands sent to the device fail and
-the OS removes access to it.
+The DTC v1.5.1 added references to (U)INT32_MAX.
 
-Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Signed-off-by: peter chang <dpf@google.com>
-Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
-Signed-off-by: Viswas G <Viswas.G@microchip.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This is no problem for user-space programs since <stdint.h> defines
+(U)INT32_MAX along with (u)int32_t.
+
+For the kernel space, libfdt_env.h needs to be adjusted before we
+pull in the changes.
+
+In the kernel, we usually use s/u32 instead of (u)int32_t for the
+fixed-width types.
+
+Accordingly, we already have S/U32_MAX for their max values.
+So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+
+Instead, add them to the in-kernel libfdt_env.h to compile the
+latest libfdt.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 3 +++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 9edd61c063a1a..df5f0bc295875 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
- 			pm8001_printk("task 0x%p done with io_status 0x%x"
- 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
- 			t, status, ts->resp, ts->stat));
-+		if (t->slow_task)
-+			complete(&t->slow_task->completion);
- 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
- 	} else {
- 		spin_unlock_irqrestore(&t->task_state_lock, flags);
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 005bf4ff1b4cb..f3ddd4f599e3e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -1,11 +1,13 @@
+ #ifndef _ARM_LIBFDT_ENV_H
+ #define _ARM_LIBFDT_ENV_H
+ 
++#include <linux/limits.h>
+ #include <linux/types.h>
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
+ 
+-#define INT_MAX			((int)(~0U>>1))
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
+ 
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 0b3db6322c793..5f2cb1c53e151 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <string.h>
+ 
+ #define INT_MAX			((int)(~0U>>1))
++#define UINT32_MAX		((u32)~0U)
++#define INT32_MAX		((s32)(UINT32_MAX >> 1))
+ 
+ #include "of.h"
+ 
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index 8850e243c9406..bd0a55821177a 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -6,6 +6,9 @@
+ 
+ #include <asm/byteorder.h>
+ 
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
 -- 
 2.20.1
 
