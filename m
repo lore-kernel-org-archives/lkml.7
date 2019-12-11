@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0533CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574C2C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD89A2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEA62073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080337;
-	bh=Mq3SGusfebHCfJl9Dcu8BiE07V5/LWMYiVw7kO22oiU=;
+	s=default; t=1576080339;
+	bh=z63DRufKh+HaVrDTfZRb6x5UHAIAw5yQ6olP9JxInJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jXcFQmeBQ0woUCQGOKMOdIP50bLk4jBmXnxYHPNtgbByEeE8iv7Q9UUXY2azEH8j3
-	 eHgVRzWYyPi9EG8dXN/SWytAmjdf5gLrd0S1mnkYPh1IRsFMY96ACa3Q/tqwhkYsNH
-	 4hXcTpkkpOEZA0/1ObExRPEeYjGHA/mB2OqLGBeM=
+	b=oGuHeEpfR9a8davT2g7txlaRXyPf3+G6byMoLtEYcPUeLMQbDw+zOW32By7NIlGIT
+	 NskjBuffBsl83yDLYP4ZdTv7xkpRHmirkmsWeic32hTm7H/uWSD1R7Dopmuh4gz2Op
+	 mEFPzpLl2l0D0uQREIZcCm9oNUG2a3HjkzVJzIzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388894AbfLKQFg (ORCPT
+        id S1730856AbfLKPMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:05:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731231AbfLKPMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731131AbfLKPM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895E424680;
-        Wed, 11 Dec 2019 15:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAFE92465E;
+        Wed, 11 Dec 2019 15:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077168;
-        bh=Mq3SGusfebHCfJl9Dcu8BiE07V5/LWMYiVw7kO22oiU=;
+        s=default; t=1576077147;
+        bh=z63DRufKh+HaVrDTfZRb6x5UHAIAw5yQ6olP9JxInJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYn2jmZGrt3esF5ECOasaICEbfqwMEd8uUdwNiSJ6IAwyG4pSv7T+G6IDXorjWj99
-         49jMn3W1vOWDns/B0QokUC085YtxFd7MU4DmV9HOaFagfsKkFXnthiv/2pF8g4TKrK
-         +hc754F9E6rYJ1sABCHIKKziEgtoAj7oWFCJg69U=
+        b=GyuUH5uZuZcPgRHmyjAjWChBuxNxz+Nu7x24uH4sFi1/P2lpm5L0qkzJYdwHSu/k2
+         AG+v69wgMmAkStvQBLd0jxMC8srJiJgK3yFT09CPDyrsvgYe/mMREb5m4Ns4Tt9QxN
+         9nPDR8BGU+t02s2Rzk0bO5ddI8M1FSQwqlElA8QA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 053/134] irqchip: ingenic: Error out if IRQ domain creation failed
-Date:   Wed, 11 Dec 2019 10:10:29 -0500
-Message-Id: <20191211151150.19073-53-sashal@kernel.org>
+Cc:     Martin Schiller <ms@dev.tdt.de>, Pavel Machek <pavel@ucw.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-leds@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 034/134] leds: trigger: netdev: fix handling on interface rename
+Date:   Wed, 11 Dec 2019 10:10:10 -0500
+Message-Id: <20191211151150.19073-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -58,57 +58,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Martin Schiller <ms@dev.tdt.de>
 
-[ Upstream commit 52ecc87642f273a599c9913b29fd179c13de457b ]
+[ Upstream commit 5f820ed52371b4f5d8c43c93f03408d0dbc01e5b ]
 
-If we cannot create the IRQ domain, the driver should fail to probe
-instead of succeeding with just a warning message.
+The NETDEV_CHANGENAME code is not "unneeded" like it is stated in commit
+4cb6560514fa ("leds: trigger: netdev: fix refcnt leak on interface
+rename").
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
+The event was accidentally misinterpreted equivalent to
+NETDEV_UNREGISTER, but should be equivalent to NETDEV_REGISTER.
+
+This was the case in the original code from the openwrt project.
+
+Otherwise, you are unable to set netdev led triggers for (non-existent)
+netdevices, which has to be renamed. This is the case, for example, for
+ppp interfaces in openwrt.
+
+Fixes: 06f502f57d0d ("leds: trigger: Introduce a NETDEV trigger")
+Fixes: 4cb6560514fa ("leds: trigger: netdev: fix refcnt leak on interface rename")
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/leds/trigger/ledtrig-netdev.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index f126255b3260c..dda512dfe2c17 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -108,6 +108,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		goto out_unmap_irq;
- 	}
+diff --git a/drivers/leds/trigger/ledtrig-netdev.c b/drivers/leds/trigger/ledtrig-netdev.c
+index 136f86a1627d1..d5e774d830215 100644
+--- a/drivers/leds/trigger/ledtrig-netdev.c
++++ b/drivers/leds/trigger/ledtrig-netdev.c
+@@ -302,10 +302,12 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 		container_of(nb, struct led_netdev_data, notifier);
  
-+	domain = irq_domain_add_legacy(node, num_chips * 32,
-+				       JZ4740_IRQ_BASE, 0,
-+				       &irq_domain_simple_ops, NULL);
-+	if (!domain) {
-+		err = -ENOMEM;
-+		goto out_unmap_base;
-+	}
-+
- 	for (i = 0; i < num_chips; i++) {
- 		/* Mask all irqs */
- 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
-@@ -134,14 +142,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 				       IRQ_NOPROBE | IRQ_LEVEL);
- 	}
+ 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
+-	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
++	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
++	    && evt != NETDEV_CHANGENAME)
+ 		return NOTIFY_DONE;
  
--	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
--				       &irq_domain_simple_ops, NULL);
--	if (!domain)
--		pr_warn("unable to register IRQ domain\n");
--
- 	setup_irq(parent_irq, &intc_cascade_action);
- 	return 0;
+ 	if (!(dev == trigger_data->net_dev ||
++	      (evt == NETDEV_CHANGENAME && !strcmp(dev->name, trigger_data->device_name)) ||
+ 	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
+ 		return NOTIFY_DONE;
  
-+out_unmap_base:
-+	iounmap(intc->base);
- out_unmap_irq:
- 	irq_dispose_mapping(parent_irq);
- out_free:
+@@ -315,6 +317,7 @@ static int netdev_trig_notify(struct notifier_block *nb,
+ 
+ 	clear_bit(NETDEV_LED_MODE_LINKUP, &trigger_data->mode);
+ 	switch (evt) {
++	case NETDEV_CHANGENAME:
+ 	case NETDEV_REGISTER:
+ 		if (trigger_data->net_dev)
+ 			dev_put(trigger_data->net_dev);
 -- 
 2.20.1
 
