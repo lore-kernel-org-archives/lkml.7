@@ -2,91 +2,116 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F8CC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF9AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB98214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WbANH9bY"
+	by mail.kernel.org (Postfix) with ESMTP id EA67321556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:20:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576074026;
+	bh=2112vcRvffbbbfNLim0Vo0faBMt99YUI8qgiqHAGLqk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0OTjlJXh0+/Jxs9Z/XuwbTjybhYDT1oJnOAbRxdl/l79g6SLhS0dbNCyceptMlwzx
+	 eUUBcNBHiQYadPg++yWH12cvYA25aq/etP/ROz0dB9+CWzzrzBu0OFuCGFDukSdtqF
+	 zEH3zWUn1aAbxvCFToz2RspefVLkMDHndK1Wz3oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfLKOSF (ORCPT
+        id S1729821AbfLKOUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:18:05 -0500
-Received: from mailgw02.mediatek.com ([216.200.240.185]:34817 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729671AbfLKOSF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:18:05 -0500
-X-Greylist: delayed 307 seconds by postgrey-1.27 at vger.kernel.org; Wed, 11 Dec 2019 09:18:05 EST
-X-UUID: 8624b81f66794d988dc55291a6f9872d-20191211
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Axc6RlNHq3r5/GnAxxkyvJrrLbwxm4JZnBh/iubqg2g=;
-        b=WbANH9bYzqKU4Qs01Ukn8js+r5f8MbEjNt2YUOmrd+4dH1EUWHoeSRT23noh7xATcAUgWLA0dOpeNHH3ePSVC9qHWwXaczN1czCLKJrJyVlH2UuxGNiz7jkRrogCHYsyPgVjOVqQDdx5NbI5YWP9MN2xMuxagFE77qgsR4MXu6g=;
-X-UUID: 8624b81f66794d988dc55291a6f9872d-20191211
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw02.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 118975065; Wed, 11 Dec 2019 06:12:55 -0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 11 Dec 2019 06:11:45 -0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 11 Dec 2019 22:10:42 +0800
-Message-ID: <1576073444.23763.11.camel@mtksdccf07>
-Subject: Re: [PATCH net-next 3/6] dt-bindings: net: dsa: add new MT7531
- binding to support MT7531
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>
-Date:   Wed, 11 Dec 2019 22:10:44 +0800
-In-Reply-To: <20191210162010.GB27714@lunn.ch>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
-         <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
-         <20191210162010.GB27714@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 11 Dec 2019 09:20:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbfLKOUY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:20:24 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF6D214AF;
+        Wed, 11 Dec 2019 14:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576074024;
+        bh=2112vcRvffbbbfNLim0Vo0faBMt99YUI8qgiqHAGLqk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nu8bvQlOLmTPRsrn+c+H1hyBH50QH6IXCOetMbMqKW5Y7S5UXeh13ojI5cLmBF6wt
+         cSgcERk+vhQAE5dvLKeKLAt7lHT+zKNjsG/Cizxwdod0woiuW52sQ4dBNq1BjavF1y
+         +6fvpZq9547S28MAHy9ZyEhc1aKFDFu2Ma/pXsfM=
+Date:   Wed, 11 Dec 2019 08:20:22 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        gustavo.pimentel@synopsys.com, andrew.murray@arm.com,
+        robh@kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v10 2/3] PCI: dwc: intel: PCIe RC controller driver
+Message-ID: <20191211142022.GA26342@google.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f5f0eec-465e-9c21-35ac-b6906119ed5e@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpPbiBXZWQsIDIwMTktMTItMTEgYXQgMDA6MjAgKzA4MDAsIEFuZHJldyBM
-dW5uIHdyb3RlOg0KPiA+ICtFeGFtcGxlIDQ6DQo+ID4gKw0KPiA+ICsmZXRoIHsNCj4gPiArCWdt
-YWMwOiBtYWNAMCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxldGgtbWFjIjsNCj4g
-PiArCQlyZWcgPSA8MD47DQo+ID4gKwkJcGh5LW1vZGUgPSAiMjUwMGJhc2UteCI7DQo+ID4gKw0K
-PiA+ICsJCWZpeGVkLWxpbmsgew0KPiA+ICsJCQlzcGVlZCA9IDwxMDAwPjsNCj4gPiArCQkJZnVs
-bC1kdXBsZXg7DQo+ID4gKwkJCXBhdXNlOw0KPiA+ICsJCX07DQo+ID4gKwl9Ow0KPiANCj4gMjUw
-MEJhc2UtWCwgYnV0IGZpeGVkIGxpbmsgc3BlZWQgMTAwMD8NCmZpeGVkLWxpbmsgc3BlZWQgc2hv
-dWxkIGJlIDI1MDAuIEkgd2lsbCB1cGRhdGUgaXQuDQo+IA0KPiA+ICsJCQkJcG9ydEA2IHsNCj4g
-PiArCQkJCQlyZWcgPSA8Nj47DQo+ID4gKwkJCQkJbGFiZWwgPSAiY3B1IjsNCj4gPiArCQkJCQll
-dGhlcm5ldCA9IDwmZ21hYzA+Ow0KPiA+ICsJCQkJCXBoeS1tb2RlID0gIjI1MDBiYXNlLXgiOw0K
-PiA+ICsNCj4gPiArCQkJCQlmaXhlZC1saW5rIHsNCj4gPiArCQkJCQkJc3BlZWQgPSA8MTAwMD47
-DQo+ID4gKwkJCQkJCWZ1bGwtZHVwbGV4Ow0KPiA+ICsJCQkJCQlwYXVzZTsNCj4gPiArCQkJCQl9
-Ow0KPiANCj4gU2FtZSBoZXJlIQ0KSSB3aWxsIHVwZGF0ZSBpdCBvciByZW1vdmUgZml4ZWQtbGlu
-ayBibG9jayBhcyB0aGUgZGlzY3Vzc2lvbiBpbiBkdHMNCnRocmVhZC4NCj4gDQo+ICAgICAgQW5k
-cmV3DQoNCnJlZ2FyZHMgTGFuZGVuDQo=
+On Wed, Dec 11, 2019 at 05:59:58PM +0800, Dilip Kota wrote:
+> 
+> On 12/11/2019 7:49 AM, Bjorn Helgaas wrote:
+> > On Fri, Dec 06, 2019 at 03:27:49PM +0800, Dilip Kota wrote:
+> > > Add support to PCIe RC controller on Intel Gateway SoCs.
+> > > PCIe controller is based of Synopsys DesignWare PCIe core.
+> > > 
+> > > Intel PCIe driver requires Upconfigure support, Fast Training
+> > > Sequence and link speed configurations. So adding the respective
+> > > helper functions in the PCIe DesignWare framework.
+> > > It also programs hardware autonomous speed during speed
+> > > configuration so defining it in pci_regs.h.
+> > > 
+> > > Also, mark Intel PCIe driver depends on MSI IRQ Domain
+> > > as Synopsys DesignWare framework depends on the
+> > > PCI_MSI_IRQ_DOMAIN.
+> > > 
+> > > Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > > Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
+> > > +static void pcie_update_bits(void __iomem *base, u32 ofs, u32 mask, u32 val)
+> > > +{
+> > > +	u32 old;
+> > > +
+> > > +	old = readl(base + ofs);
+> > > +	val = (old & ~mask) | (val & mask);
+> > > +
+> > > +	if (val != old)
+> > > +		writel(val, base + ofs);
+> > I assume this is never used on registers where the "old & ~mask" part
+> > contains RW1C bits?  If there are RW1C bits in that part, this will
+> > corrupt them.
+> There is no impact because RW1C bits of respective registers are 0s at the
+> time of this function call.
+
+Sounds ... dangerous, but I'll take your word for it.
+
+> I see, this patch series is merged in the maintainer tree.
+> Should i need to submit as a separate patch on top of maintainer tree or
+> submit the new version of whole patch series?
+> Please let me know the best practice.
+
+Sorry, I didn't realize this had already been merged to Lorenzo's
+tree.  But it's not upstream (in Linus' tree) yet.  I don't know how
+Andrew and Lorenzo want to handle this.  None of these are important,
+so you could just ignore these comments.
+
+What I personally would do is rebase the branch, e.g.,
+lpieralisi/pci/dwc, and apply an incremental patch.  But it's up to
+Andrew and Lorenzo whether they want to do anything.
+
+Bjorn
