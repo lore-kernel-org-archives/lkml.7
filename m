@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A92B6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0171C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756CC208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36CA24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077824;
-	bh=WVbx/xSLrJRM55gfBGknfSkubQWDH97aP25vQ5Xw9bo=;
+	s=default; t=1576077828;
+	bh=1W/yuzsqPKUXIgw8tbPznp5CX6Nft+yes7pZOcKigjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ReTm9hPvslaG+c4sjMPKUKgpvgBe1tUKIGSF5dxW6s4bPnNUsw0VsfijQxJ5GLfNv
-	 fC5GyvuWulaYIQPywKSr9Jx/2LaiqfbQKehz+RXRZqiVkf+h+3zYdxVvULX2P+uHKU
-	 rTnYyWfi/c4cUsaIDMDBpXl2oaqPxsYz6XaQdWKc=
+	b=aB/vKL4BRy2DfdxhTODt4huUWTuPghFG28hFq+1at6xIaNTbytLMKiIbeUep4eUBI
+	 RwcAI9V1eXwDjkMtDChEEIva0a8qsrovVj7OAxhcMIdjMjUs53JTcj1VzW5Z+b1zX5
+	 idS3z6J5SV4uJCl5azmpH4ueiuS7KIBr8AJWD3gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732751AbfLKPXn (ORCPT
+        id S1732431AbfLKPXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:23:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54666 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:23:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731907AbfLKPXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:23:36 -0500
+        id S1730499AbfLKPXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:23:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D7B2464B;
-        Wed, 11 Dec 2019 15:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B0B2073D;
+        Wed, 11 Dec 2019 15:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077815;
-        bh=WVbx/xSLrJRM55gfBGknfSkubQWDH97aP25vQ5Xw9bo=;
+        s=default; t=1576077820;
+        bh=1W/yuzsqPKUXIgw8tbPznp5CX6Nft+yes7pZOcKigjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V1z/21yfFwO4pxQvPqALE27H2tsfQYCjL8QpraSifHeZLRM/PxbBcl7fkQSn3irN3
-         gyfQTIhWNVqzQkh29b355kdASSSAFo/XbJ1JbmMZGFxbEHGWezhFeRdJoAJ9RRjlKw
-         LLEfhCwEMor9a0U5NYqfE+E+LfwN/ifgmd56bxt4=
+        b=i7xQM8HZsIxBkJH9/uqTKIHoJZ0Kj+DV7YO/SLExFiZOOXbz2Jrtfu1ffaDOeGkah
+         zdJVucH4VjxvrMJQFnMmb/eeuolUCC/4l6uapenhzUPyzEdYKiw0Ju5q6YfglQzeU2
+         qaPluNC4jYFui6Ke0CjzLLW4zSwgXy/SjlSZ8SIE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
+        stable@vger.kernel.org,
+        Jakub Audykowicz <jakub.audykowicz@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/243] firmware: qcom: scm: fix compilation error when disabled
-Date:   Wed, 11 Dec 2019 16:05:42 +0100
-Message-Id: <20191211150351.322476729@linuxfoundation.org>
+Subject: [PATCH 4.19 182/243] sctp: frag_point sanity check
+Date:   Wed, 11 Dec 2019 16:05:44 +0100
+Message-Id: <20191211150351.455453924@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,35 +63,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Jakub Audykowicz <jakub.audykowicz@gmail.com>
 
-[ Upstream commit 16ad9501b1f2edebe24f8cf3c09da0695871986b ]
+[ Upstream commit afd0a8006e98b1890908f81746c94ca5dae29d7c ]
 
-This fixes the case when CONFIG_QCOM_SCM is not enabled, and linux/errno.h
-has not been included previously.
+If for some reason an association's fragmentation point is zero,
+sctp_datamsg_from_user will try to endlessly try to divide a message
+into zero-sized chunks. This eventually causes kernel panic due to
+running out of memory.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Although this situation is quite unlikely, it has occurred before as
+reported. I propose to add this simple last-ditch sanity check due to
+the severity of the potential consequences.
+
+Signed-off-by: Jakub Audykowicz <jakub.audykowicz@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/qcom_scm.h | 3 +++
- 1 file changed, 3 insertions(+)
+ include/net/sctp/sctp.h | 5 +++++
+ net/sctp/chunk.c        | 6 ++++++
+ net/sctp/socket.c       | 3 +--
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index 5d65521260b3d..116b81ac442ad 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -65,6 +65,9 @@ extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
- extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
- extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
- #else
+diff --git a/include/net/sctp/sctp.h b/include/net/sctp/sctp.h
+index ab9242e51d9e0..2abbc15824af9 100644
+--- a/include/net/sctp/sctp.h
++++ b/include/net/sctp/sctp.h
+@@ -620,4 +620,9 @@ static inline bool sctp_transport_pmtu_check(struct sctp_transport *t)
+ 	return false;
+ }
+ 
++static inline __u32 sctp_min_frag_point(struct sctp_sock *sp, __u16 datasize)
++{
++	return sctp_mtu_payload(sp, SCTP_DEFAULT_MINSEGMENT, datasize);
++}
 +
-+#include <linux/errno.h>
-+
- static inline
- int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- {
+ #endif /* __net_sctp_h__ */
+diff --git a/net/sctp/chunk.c b/net/sctp/chunk.c
+index ce8087846f059..d2048de86e7c2 100644
+--- a/net/sctp/chunk.c
++++ b/net/sctp/chunk.c
+@@ -191,6 +191,12 @@ struct sctp_datamsg *sctp_datamsg_from_user(struct sctp_association *asoc,
+ 	 * the packet
+ 	 */
+ 	max_data = asoc->frag_point;
++	if (unlikely(!max_data)) {
++		max_data = sctp_min_frag_point(sctp_sk(asoc->base.sk),
++					       sctp_datachk_len(&asoc->stream));
++		pr_warn_ratelimited("%s: asoc:%p frag_point is zero, forcing max_data to default minimum (%Zu)",
++				    __func__, asoc, max_data);
++	}
+ 
+ 	/* If the the peer requested that we authenticate DATA chunks
+ 	 * we need to account for bundling of the AUTH chunks along with
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index e7a11cd7633f5..95f9068b85497 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -3328,8 +3328,7 @@ static int sctp_setsockopt_maxseg(struct sock *sk, char __user *optval, unsigned
+ 		__u16 datasize = asoc ? sctp_datachk_len(&asoc->stream) :
+ 				 sizeof(struct sctp_data_chunk);
+ 
+-		min_len = sctp_mtu_payload(sp, SCTP_DEFAULT_MINSEGMENT,
+-					   datasize);
++		min_len = sctp_min_frag_point(sp, datasize);
+ 		max_len = SCTP_MAX_CHUNK_LEN - datasize;
+ 
+ 		if (val < min_len || val > max_len)
 -- 
 2.20.1
 
