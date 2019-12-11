@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3D9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA6DC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25912077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43EFD2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:15:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DaxkaBWz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQOBOLyJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfLKSPd (ORCPT
+        id S1731316AbfLKSPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:15:33 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:33677 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731249AbfLKSP2 (ORCPT
+        Wed, 11 Dec 2019 13:15:38 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40844 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731281AbfLKSPf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:28 -0500
-Received: by mail-yb1-f194.google.com with SMTP id o63so9412409ybc.0;
-        Wed, 11 Dec 2019 10:15:28 -0800 (PST)
+        Wed, 11 Dec 2019 13:15:35 -0500
+Received: by mail-yb1-f193.google.com with SMTP id n196so668575ybg.7;
+        Wed, 11 Dec 2019 10:15:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4awfmVKPws5vxP93HnYWNI+fZRnhVZj4z7QMlkLCxoc=;
-        b=DaxkaBWzP/miLV6xViB100JHzouBPUUAx3i+z9hL9GJAU5P5azAY5pzUDbMNu+Cehd
-         AU84mesIjytm+s1sJA1SB7DK6GN7F3gZbxQbJqvawyMErooS6aCe1CNiGjBwynyutjBW
-         wz2UJX69cdLQUQGEYRuaxFy+T8YVq1DbpcfSVo/qtHrhZSCIhLLBI0Vmtw5F+hF09HTQ
-         Cx14URfY/KOxLqyJC67HoZIjoFeidI2cu9G+cFVtmb3xxFqUV8tS8hRKyZ+5UJpVIl7X
-         FbNi/P1rTcsBx+jxFYR7ftTIt56L63JuPQDLpdnF2vHbr/2er2qoJ+5+sYF9R5niGGeb
-         K9HA==
+        bh=QVBn4iyxCFtZQ6l2ifso8EO7BmmbJ8gqwzlkKDMZ+b0=;
+        b=pQOBOLyJAOXdkAByxSpa45JZ8gIhUVoN88CzHwopEOntTivioJ271CvnarkR4INXqv
+         ZDsSAVKlcB4fJIeJ5m1XLFDjI928mGOk9GCUEEI6FFNf+lOfu6fBfKb+Q9RvyjKlpUEI
+         4ILsI66IDvBv8a8lcEjde5LzqkczsoI7AVDbCzaljPAUuWaDjAnVDmP5iEnmWrAH4EeI
+         8t/Zi52AvcxBdLRuCsAeP/B5mLfjJv4Y4BWa2Asn2M1qx7dLalVQYpFaF5pJdgOM7Pn2
+         0S2d6/1sYWYyNDxUZn4WG9+riUJ7tgpsNzOVFgnkJIC5nbnHhaRs9iFkdS/DZ+G/4+XC
+         ez8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4awfmVKPws5vxP93HnYWNI+fZRnhVZj4z7QMlkLCxoc=;
-        b=Au4naWedgzWyKbX13rFwbi+qg0rteNJranGZsGMNj6GhBxwfBiRb1hGEJTS7RB8yD9
-         1a5yYRURwUasQzeLiqtl8Ugwyq0jV59e8YGuiaQrEUfFHY6nUnHedsDkSRClzt7Dp+7j
-         NtOFQgM5wnxhsocWFuS8M2bJgia0PR1Xw4TDqjdrztLDJFLqP1kjwDghuS72f5QIND/g
-         3pQtjOkd72dgXiJcX3n+Ye9ttHYeE6uQdGdNd9ZF8Zird2G8Iy+R6cLwhYGGy+w2Tj5t
-         FI6p1GS9zo1Gvy0rfBS1gpjyFeWFznNmhFpYsOaqqeRnMuc4vKwcdPqG5owrunrD1Kyo
-         z3TA==
-X-Gm-Message-State: APjAAAVjzxQkoCKgi37ypf0URnvk69vt8LpjAb2c/sN6kcwBsq91e0EH
-        pmQ3vJ0uO2lFxdFe9ux5DkIJtLaJVjtWgg==
-X-Google-Smtp-Source: APXvYqwB8EyYkZ5Vifm/xgiLEtGAKGndz9AKxvYQpmI2B23qc99C6RAXG9eweb+X3uRymoNYiZ5xbQ==
-X-Received: by 2002:a5b:451:: with SMTP id s17mr1014875ybp.8.1576088127402;
-        Wed, 11 Dec 2019 10:15:27 -0800 (PST)
+        bh=QVBn4iyxCFtZQ6l2ifso8EO7BmmbJ8gqwzlkKDMZ+b0=;
+        b=kVSRHiVZEWtN8EGQb/o45nq75Q/oom0cdPYOUR3gj9tmdFahwNe0jFhL9Fl1LDcTbB
+         EdZTqvJvvSgAoZNIe1L9R6bUWDZok4jre43PumhqVRJA/TYfzdLp1ICEOcLC7IbESVDl
+         lRXb3fKZDSXoan80zRtB5rsvxrXurGASF2xi6MD5220x2BaOSr/iEuqQdXa4VU3PlOur
+         N6nh6FPY7p1pkZg8F57FSc6qIHixd4SLlYx88FqRENJ2ExaQcIRJZF5oEXDbSZ07BlSr
+         6NGzzaLwjDmkSQRsVRLgTVNsA8HLqCryAD+YGapjwxNSZlOibKdV0TmOkYFqU9Z4h5gN
+         DHXw==
+X-Gm-Message-State: APjAAAVpEY52xw5MdCDK6BvbX+IA0/tSLKK0sP0bx/O4gk7HnrjgIq4k
+        bqeEf+wdhmKYg5i1lWruHy/kx4cftuyuRQ==
+X-Google-Smtp-Source: APXvYqzkgGwAWatyCrigitcbfKFcDI/TWYvwjodqhO70wwtdpa4DhxupOzAq7gSDAsprih7nCdhQAA==
+X-Received: by 2002:a25:dd5:: with SMTP id 204mr999122ybn.452.1576088133641;
+        Wed, 11 Dec 2019 10:15:33 -0800 (PST)
 Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id d186sm1340039ywe.0.2019.12.11.10.15.26
+        by smtp.gmail.com with ESMTPSA id d13sm1278930ywj.91.2019.12.11.10.15.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:27 -0800 (PST)
+        Wed, 11 Dec 2019 10:15:33 -0800 (PST)
 From:   Scott Schafer <schaferjscott@gmail.com>
 To:     gregkh@linuxfoundation.org
 Cc:     Scott Schafer <schaferjscott@gmail.com>,
         Manish Chopra <manishc@marvell.com>,
         GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/23] staging: qlge: Fix WARNING: please, no spaces at the start of a line
-Date:   Wed, 11 Dec 2019 12:12:44 -0600
-Message-Id: <8fe7607b122493540f7c746d654b4a87afb9bd77.1576086080.git.schaferjscott@gmail.com>
+Subject: [PATCH v2 19/23] staging: qlge: Fix WARNING: msleep < 20ms can sleep for up to 20ms
+Date:   Wed, 11 Dec 2019 12:12:48 -0600
+Message-Id: <d71c273e9966f3afb5b24ef9787b44e402241dcb.1576086080.git.schaferjscott@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
 References: <cover.1576086080.git.schaferjscott@gmail.com>
@@ -76,40 +76,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: please, no spaces at the start of a line in qlge_main.c
+Fix WARNING: msleep < 20ms can sleep for up to 20ms by changing msleep
+to usleep_range() in qlge_dbg.c, qlge_ethtool.c, and  qlge_main.c
 
 Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 ---
- drivers/staging/qlge/qlge_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/staging/qlge/qlge_dbg.c     | 2 +-
+ drivers/staging/qlge/qlge_ethtool.c | 2 +-
+ drivers/staging/qlge/qlge_main.c    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
+index 0f1e1b62662d..ba801de02109 100644
+--- a/drivers/staging/qlge/qlge_dbg.c
++++ b/drivers/staging/qlge/qlge_dbg.c
+@@ -1340,7 +1340,7 @@ void ql_mpi_core_to_log(struct work_struct *work)
+ 		       tmp[i + 5],
+ 		       tmp[i + 6],
+ 		       tmp[i + 7]);
+-		msleep(5);
++		usleep_range(5000, 6000);
+ 	}
+ }
+ 
+diff --git a/drivers/staging/qlge/qlge_ethtool.c b/drivers/staging/qlge/qlge_ethtool.c
+index b9e1e154d646..abed932c3694 100644
+--- a/drivers/staging/qlge/qlge_ethtool.c
++++ b/drivers/staging/qlge/qlge_ethtool.c
+@@ -555,7 +555,7 @@ static int ql_run_loopback_test(struct ql_adapter *qdev)
+ 		atomic_inc(&qdev->lb_count);
+ 	}
+ 	/* Give queue time to settle before testing results. */
+-	msleep(2);
++	usleep_range(2000, 3000);
+ 	ql_clean_lb_rx_ring(&qdev->rx_ring[0], 128);
+ 	return atomic_read(&qdev->lb_count) ? -EIO : 0;
+ }
 diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 38d217ae4002..024c77518af3 100644
+index c6e26a757268..e18aa335c899 100644
 --- a/drivers/staging/qlge/qlge_main.c
 +++ b/drivers/staging/qlge/qlge_main.c
-@@ -52,16 +52,16 @@ MODULE_LICENSE("GPL");
- MODULE_VERSION(DRV_VERSION);
+@@ -3924,7 +3924,7 @@ static int qlge_close(struct net_device *ndev)
+ 	 * (Rarely happens, but possible.)
+ 	 */
+ 	while (!test_bit(QL_ADAPTER_UP, &qdev->flags))
+-		msleep(1);
++		usleep_range(1000, 2000);
  
- static const u32 default_msg =
--    NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
-+	NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
- /* NETIF_MSG_TIMER |	*/
--    NETIF_MSG_IFDOWN |
--    NETIF_MSG_IFUP |
--    NETIF_MSG_RX_ERR |
--    NETIF_MSG_TX_ERR |
-+	NETIF_MSG_IFDOWN |
-+	NETIF_MSG_IFUP |
-+	NETIF_MSG_RX_ERR |
-+	NETIF_MSG_TX_ERR |
- /*  NETIF_MSG_TX_QUEUED | */
- /*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
- /* NETIF_MSG_PKTDATA | */
--    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
-+	NETIF_MSG_HW | NETIF_MSG_WOL | 0;
- 
- static int debug = -1;	/* defaults above */
- module_param(debug, int, 0664);
+ 	/* Make sure refill_work doesn't re-enable napi */
+ 	for (i = 0; i < qdev->rss_ring_count; i++)
 -- 
 2.20.1
 
