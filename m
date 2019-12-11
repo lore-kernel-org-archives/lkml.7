@@ -2,102 +2,92 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B81AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F11CC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CAB222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E3A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 06:30:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NJJMbsFR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfLKG1M (ORCPT
+        id S1727803AbfLKGaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 01:27:12 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40728 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727901AbfLKG0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 01:26:53 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9114AA216BE70CAC0B20;
-        Wed, 11 Dec 2019 14:26:50 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 11 Dec 2019
- 14:26:42 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH 6/6] KVM: Fix some writing mistakes
-Date:   Wed, 11 Dec 2019 14:26:25 +0800
-Message-ID: <1576045585-8536-7-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
-References: <1576045585-8536-1-git-send-email-linmiaohe@huawei.com>
+        Wed, 11 Dec 2019 01:30:06 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38351 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726975AbfLKGaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 01:30:06 -0500
+Received: by mail-io1-f66.google.com with SMTP id v3so4449398ioj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 22:30:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bjERGv8zTPuKf+pd9e6agOntPUIPd6jhQ0FGJz7CMgw=;
+        b=NJJMbsFRPqUSiXKRNyslavyTZBVvLMkMWPJR6Au7F1tE2NF+fbsDSKU2c96fuV9ygm
+         M1p/3jIpo47aXw0KfkH6ByA2Vb8VGq1XRgkhSeyz4tDIG+4relXxE3I1ykCaiEKYobwC
+         yuKn1VXzlzzavtyW4FH3DFJv4xAgJgdLI0Bbg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bjERGv8zTPuKf+pd9e6agOntPUIPd6jhQ0FGJz7CMgw=;
+        b=s1vis0x2TMNYavwA/IicrmYS04036qGrnztwBke79cwUHf0fJkvPM2V2fRkGJ1j1XC
+         NsNqRgucU4f2mfuap+Z3b9sCmpaohWc15wpZumqyTXGM+EQhNa469d0IzKMs8nHKPS/U
+         Kl4C47pyvveAI1N1wCdUJJH5vCr/1jr6ZBUih/DMUwtMEEurgtTN/vJqSjM/vruVuXfY
+         8Ah9T0HnXin8rLDs3una2/umHO6QYwe2+xA8JEZ8ingL299au64deW1FU7ir1YLDNOtd
+         pQzZ/TobeRMXLtRYt0wDpllQ3kDfpMWErUQgNM7vXVANiemDRXU6CSj7dkbvYQMarvlq
+         KFgA==
+X-Gm-Message-State: APjAAAUlW+Tbu8auYq2iWAZTW1D9s1rf5DL5FJvuj+GIUbE8eQlmsuuF
+        SwBFRLyd1ZDwRdbfIoZfMvcKFGHUPDypfqGD9bhx/g==
+X-Google-Smtp-Source: APXvYqziiJrdEfCxDd7Xh67HAmqfkwdZiCfCsNrEzylOml6uSgFt7MnVlus0HfeCyNXza6xVZQgTAVqAfh3+XsQJMow=
+X-Received: by 2002:a5e:c204:: with SMTP id v4mr1483055iop.106.1576045805107;
+ Tue, 10 Dec 2019 22:30:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+References: <20191209145016.227784-1-hsinyi@chromium.org> <20191209145016.227784-2-hsinyi@chromium.org>
+ <20191209145326.GC12841@pendragon.ideasonboard.com>
+In-Reply-To: <20191209145326.GC12841@pendragon.ideasonboard.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 11 Dec 2019 14:29:39 +0800
+Message-ID: <CAJMQK-iwSaTXSPBFbK_N_1NcD+qfJJwwzso-j44H3VjKwv9myg@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/4] dt-bindings: drm/bridge: analogix-anx7688: Add
+ ANX7688 transmitter binding
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Archit Taneja <architt@codeaurora.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Mon, Dec 9, 2019 at 10:53 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+Hi Laurent,
 
-Fix some writing mistakes in the comments.
+> How about converting this to yaml bindings already ? It's fairly simple
+> and gives you DT validation.
+>
+Added in https://lore.kernel.org/lkml/20191211061911.238393-1-hsinyi@chromium.org/T/#m183b3822bf60101666436b0244b27275c6765d20
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/include/asm/kvm_host.h | 2 +-
- arch/x86/kvm/vmx/vmx.c          | 2 +-
- virt/kvm/kvm_main.c             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 159a28512e4c..efba864ed42d 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -606,7 +606,7 @@ struct kvm_vcpu_arch {
- 	 * Paging state of an L2 guest (used for nested npt)
- 	 *
- 	 * This context will save all necessary information to walk page tables
--	 * of the an L2 guest. This context is only initialized for page table
-+	 * of the L2 guest. This context is only initialized for page table
- 	 * walking and not for faulting since we never handle l2 page faults on
- 	 * the host.
- 	 */
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1be3854f1090..dae712c8785e 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1922,7 +1922,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- }
- 
- /*
-- * Writes msr value into into the appropriate "register".
-+ * Writes msr value into the appropriate "register".
-  * Returns 0 on success, non-0 otherwise.
-  * Assumes vcpu_load() was already called.
-  */
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index f0501272268f..1a6d5ebd5c42 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1519,7 +1519,7 @@ static inline int check_user_page_hwpoison(unsigned long addr)
- /*
-  * The fast path to get the writable pfn which will be stored in @pfn,
-  * true indicates success, otherwise false is returned.  It's also the
-- * only part that runs if we can are in atomic context.
-+ * only part that runs if we can in atomic context.
-  */
- static bool hva_to_pfn_fast(unsigned long addr, bool write_fault,
- 			    bool *writable, kvm_pfn_t *pfn)
--- 
-2.19.1
-
+Thanks
