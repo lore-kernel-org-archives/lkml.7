@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E167C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97C4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FCF2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AA121556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078687;
-	bh=fW7kFxv3HidorxygJ1mFCfCniAqwY8GjxNIzsLGC5+w=;
+	s=default; t=1576078690;
+	bh=fEqdX+7S7tkDo7Pq70+Qc8Hu7erKpC+qHRMyteevV7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTm3eIaqphlsNMQcC1ekGsf7MCRfchtxEErYFnMf9UNcl2p0oz6C6/tushkDwhnQp
-	 4DqTlDkosDjanobah0lPCk7DMJSpx7tdxUO7tzAYMYQMOhC7dOlP7/cfOjKMmeDkKK
-	 XtdLk3p4ur5aAtaDdXnlTUlg5Qr2Q8V+mxETx5nU=
+	b=OquYlw7tj85MaIKy9Up+fh67eAvKhBpR7DPVX8r61Ho/Lhl8J3+SwPL2M4AcD8KYU
+	 7P7EzqgXpPDkspQku9EMTnePHLZ7VH5ymVjAkV8wA0pY6ufoaCRrxlZ5yyu0lN+2dY
+	 fwPI/H9XXYNnEko1ugkvc1mvaCoZK0/WWpb2jmAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfLKPfU (ORCPT
+        id S2388241AbfLKPiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44028 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388055AbfLKPfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:15 -0500
+        id S2388117AbfLKPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C05924687;
-        Wed, 11 Dec 2019 15:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A899F2173E;
+        Wed, 11 Dec 2019 15:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078515;
-        bh=fW7kFxv3HidorxygJ1mFCfCniAqwY8GjxNIzsLGC5+w=;
+        s=default; t=1576078520;
+        bh=fEqdX+7S7tkDo7Pq70+Qc8Hu7erKpC+qHRMyteevV7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4SuOr0jIMDov1Hv/noXx2GMTc5WmuZS2e137sFpAErQiHb0tond9t1FZ4WMmA9zG
-         rifu9UiYmmOgpm5ok3o0H74YYd303hSkWpTZjmPnS3KCillbIFS8kcYgV3cXRCQGyE
-         2FNhcNp5la7GXta6gHBgsqn2BgU8arEd0hv7RnF8=
+        b=ZsL0gyIy5sS/PKABW9Kx+5OtrBnNbKTpN93BCCsoODR11d8HmY1E0yyFZ4XLb8H7F
+         cVyRILI85DdF/LEjw6VfXkaRxu9dM8dXN2j19Kt/w4GiAK+HX+8Lv/0FlX0f+9r4il
+         LxbZ33Tt9ELNQtexKJM/H50mB6NOo3dvTsOD+Zuo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/42] iommu/tegra-smmu: Fix page tables in > 4 GiB memory
-Date:   Wed, 11 Dec 2019 10:34:32 -0500
-Message-Id: <20191211153510.23861-4-sashal@kernel.org>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.9 09/42] powerpc/pseries: Don't fail hash page table insert for bolted mapping
+Date:   Wed, 11 Dec 2019 10:34:37 -0500
+Message-Id: <20191211153510.23861-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -60,76 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 96d3ab802e4930a29a33934373157d6dff1b2c7e ]
+[ Upstream commit 75838a3290cd4ebbd1f567f310ba04b6ef017ce4 ]
 
-Page tables that reside in physical memory beyond the 4 GiB boundary are
-currently not working properly. The reason is that when the physical
-address for page directory entries is read, it gets truncated at 32 bits
-and can cause crashes when passing that address to the DMA API.
+If the hypervisor returned H_PTEG_FULL for H_ENTER hcall, retry a hash page table
+insert by removing a random entry from the group.
 
-Fix this by first casting the PDE value to a dma_addr_t and then using
-the page frame number mask for the SMMU instance to mask out the invalid
-bits, which are typically used for mapping attributes, etc.
+After some runtime, it is very well possible to find all the 8 hash page table
+entry slot in the hpte group used for mapping. Don't fail a bolted entry insert
+in that case. With Storage class memory a user can find this error easily since
+a namespace enable/disable is equivalent to memory add/remove.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+This results in failures as reported below:
+
+$ ndctl create-namespace -r region1 -t pmem -m devdax -a 65536 -s 100M
+libndctl: ndctl_dax_enable: dax1.3: failed to enable
+  Error: namespace1.2: failed to enable
+
+failed to create namespace: No such device or address
+
+In kernel log we find the details as below:
+
+Unable to create mapping for hot added memory 0xc000042006000000..0xc00004200d000000: -1
+dax_pmem: probe of dax1.3 failed with error -14
+
+This indicates that we failed to create a bolted hash table entry for direct-map
+address backing the namespace.
+
+We also observe failures such that not all namespaces will be enabled with
+ndctl enable-namespace all command.
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191024093542.29777-2-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/tegra-smmu.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/powerpc/mm/hash_utils_64.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index c4eb293b15242..04cec050e42bf 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -153,9 +153,9 @@ static bool smmu_dma_addr_valid(struct tegra_smmu *smmu, dma_addr_t addr)
- 	return (addr & smmu->pfn_mask) == addr;
- }
- 
--static dma_addr_t smmu_pde_to_dma(u32 pde)
-+static dma_addr_t smmu_pde_to_dma(struct tegra_smmu *smmu, u32 pde)
- {
--	return pde << 12;
-+	return (dma_addr_t)(pde & smmu->pfn_mask) << 12;
- }
- 
- static void smmu_flush_ptc_all(struct tegra_smmu *smmu)
-@@ -540,6 +540,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 				  dma_addr_t *dmap)
- {
- 	unsigned int pd_index = iova_pd_index(iova);
-+	struct tegra_smmu *smmu = as->smmu;
- 	struct page *pt_page;
- 	u32 *pd;
- 
-@@ -548,7 +549,7 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- 		return NULL;
- 
- 	pd = page_address(as->pd);
--	*dmap = smmu_pde_to_dma(pd[pd_index]);
-+	*dmap = smmu_pde_to_dma(smmu, pd[pd_index]);
- 
- 	return tegra_smmu_pte_offset(pt_page, iova);
- }
-@@ -590,7 +591,7 @@ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
- 	} else {
- 		u32 *pd = page_address(as->pd);
- 
--		*dmap = smmu_pde_to_dma(pd[pde]);
-+		*dmap = smmu_pde_to_dma(smmu, pd[pde]);
- 	}
- 
- 	return tegra_smmu_pte_offset(as->pts[pde], iova);
-@@ -615,7 +616,7 @@ static void tegra_smmu_pte_put_use(struct tegra_smmu_as *as, unsigned long iova)
- 	if (--as->count[pde] == 0) {
- 		struct tegra_smmu *smmu = as->smmu;
- 		u32 *pd = page_address(as->pd);
--		dma_addr_t pte_dma = smmu_pde_to_dma(pd[pde]);
-+		dma_addr_t pte_dma = smmu_pde_to_dma(smmu, pd[pde]);
- 
- 		tegra_smmu_set_pde(as, iova, 0);
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index bd666287c5eda..de1d8cdd29915 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -289,7 +289,14 @@ int htab_bolt_mapping(unsigned long vstart, unsigned long vend,
+ 		ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
+ 					       HPTE_V_BOLTED, psize, psize,
+ 					       ssize);
+-
++		if (ret == -1) {
++			/* Try to remove a non bolted entry */
++			ret = mmu_hash_ops.hpte_remove(hpteg);
++			if (ret != -1)
++				ret = mmu_hash_ops.hpte_insert(hpteg, vpn, paddr, tprot,
++							       HPTE_V_BOLTED, psize, psize,
++							       ssize);
++		}
+ 		if (ret < 0)
+ 			break;
  
 -- 
 2.20.1
