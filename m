@@ -2,115 +2,60 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FFC00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DCBC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59252222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:40:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THkd5/sM"
+	by mail.kernel.org (Postfix) with ESMTP id B20F820637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfLKRke (ORCPT
+        id S1730232AbfLKRmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:40:34 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35823 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729512AbfLKRke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:40:34 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j6so25053238lja.2;
-        Wed, 11 Dec 2019 09:40:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xHNe/Yqfgpy3S9fO7I4bSqFvrI1vIc8c/PjlGfBZDQY=;
-        b=THkd5/sMvoWbf9UyKW0AbrpgZ9BE2d8hfLaEQB+I14Diub31RDnCRsU20R7KCaXjpN
-         UAOjbsbXLS5vCddmaHoUJXrN2NXPFIOsu7sBYiXc5Ib3PcPxoq+eQ5IPSKL+zvygoQte
-         mWKTxvhHznQClUeeCFwH7xslKJFHyMsjgun4OTRAbOwJzBOG/9KpZDARYsCr1UvAJup4
-         QleZw4JLBqlyj0GQjnavq3BU5r+sY0l20p8NurV+r0kAiJ54MxkOxKf11viGT4N96R3n
-         18BPyJ0wxWuoIi23dXYXExCYxqSRVoIbhxVxLM+9N3vUfNTiF0fFpGygn6qeJUHbvf79
-         EzEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xHNe/Yqfgpy3S9fO7I4bSqFvrI1vIc8c/PjlGfBZDQY=;
-        b=MKRPwwt0Z6FaWdhealTGgLGpbWKnOQ8ZgtYtIOVrfC2H+IuY+pnmeSE/kCvGDNxuFe
-         oisbiWQW6t8CIdaCXvUktZfdQH/yf9tOE0LYeWBYYkAEuHJKHt1woozebXTj2vhg1WcG
-         MIqDudR6+qcQyBulX9lCwOP33oMBC+/0oBH9yDZBW7XnIh/7U6izx8imzOb7THkOh2VP
-         6Sr4HinJxUlaTmbMhGqVSGBQ2sQG0Nj5EyAXAvnFcyrsIujTLKyeLH9YJ+o8+PIgyoPe
-         XElbEZzeR4zEyavxNtvQMv+i0YPBuv5orlAZIlgIzhYYg0x7sDOv2eN2rlOf8wktb0X3
-         aKyg==
-X-Gm-Message-State: APjAAAXREzyCDw+POTaRZslkZAT5kjIFzehXUe9JgSuNC6MGQwEZ8lBg
-        iRe8Z6nCqGiNf3XB1XYH6dzLlDcWfOff5LQekfNHsp3u
-X-Google-Smtp-Source: APXvYqwXYcdWREeEGLWMl6g/WmqXcAKn/eRGAxh1th5CLy4FEjntZLJeZTgM4oiKx6bx8e6DUwt8aWT9Opg0rNNrWZk=
-X-Received: by 2002:a05:651c:152:: with SMTP id c18mr2972027ljd.146.1576086031635;
- Wed, 11 Dec 2019 09:40:31 -0800 (PST)
+        Wed, 11 Dec 2019 12:42:46 -0500
+Received: from mga17.intel.com ([192.55.52.151]:45827 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729599AbfLKRmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:42:46 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 09:42:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,302,1571727600"; 
+   d="scan'208";a="210841023"
+Received: from cmclough-mobl.ger.corp.intel.com (HELO localhost) ([10.251.85.152])
+  by fmsmga008.fm.intel.com with ESMTP; 11 Dec 2019 09:42:42 -0800
+Date:   Wed, 11 Dec 2019 19:42:40 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
+        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
+        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
+Subject: Re: [PATCH] tpm: selftest: add test covering async mode
+Message-ID: <20191211174222.GF4516@linux.intel.com>
+References: <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
+ <157600469924.5042.14784541627191833405.stgit@tstruk-mobl1>
 MIME-Version: 1.0
-References: <20191211163310.4788-1-sj38.park@gmail.com> <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
-In-Reply-To: <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Wed, 11 Dec 2019 18:40:05 +0100
-Message-ID: <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Fix nits in the kunit
-To:     shuah <shuah@kernel.org>
-Cc:     SeongJae Park <sjpark@amazon.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157600469924.5042.14784541627191833405.stgit@tstruk-mobl1>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 6:22 PM shuah <shuah@kernel.org> wrote:
->
-> On 12/11/19 9:33 AM, SeongJae Park wrote:
-> > May I ask some comments?
-> >
-> >
-> > Thanks,
-> > SeongJae Park
-> >
->
-> + Brendan
->
-> > On Thu, 5 Dec 2019 10:34:34 +0100 SeongJae Park <sjpark@amazon.com> wrote:
-> >
-> >>
-> >> This patchset contains trivial fixes for the kunit documentations and
-> >> the wrapper python scripts.
-> >>
-> >> This patchset is based on 'kselftest/test' branch of linux-kselftest[1]
-> >> and depends on Heidi's patch[2].  A complete tree is available at my repo:
-> >> https://github.com/sjp38/linux/tree/kunit_fix/20191205_v5
-> >>
-> >> Changes from v4
-> >> (https://lore.kernel.org/linux-doc/1575490683-13015-1-git-send-email-sj38.park@gmail.com/):
-> >>   - Rebased on Heidi Fahim's patch[2]
-> >>   - Fix failing kunit_tool_test test
-> >>   - Add 'build_dir' option test in 'kunit_tool_test.py'
-> >>
->
-> Please include Brendana Higgins on kunit patches.
+On Tue, Dec 10, 2019 at 11:04:59AM -0800, Tadeusz Struk wrote:
+> Add a test that sends a tpm cmd in an asyn mode.
+> Currently there is a gap in test coverage with regards
+> to this functionality.
+> 
+> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
 
-Not sure how I could forgot adding him.  I will never forget from next time.
+Please include this with a bug fix to same patch set.
 
-
-Thanks,
-SeongJae Park
-
->
-> thanks,
-> -- Shuah
+/Jarkko
