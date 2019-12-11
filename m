@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFA1C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F74AC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549B024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55488208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077124;
-	bh=IEnGbHhjufnM9qjTz5KDmsgsmuFWeWtUss7UjrnQLrA=;
+	s=default; t=1576077127;
+	bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=szme2sV35P/o/OtwaG7zozAUDOTN1KtHtnMdMznuOIJn3CpUiwbaXO+7W8gym4Pmv
-	 NjPqdHjbIzri2JeReiDOYClmDzccRHQLrNFepAj54ydl30PGvYaN9mUqAcA43v7iO5
-	 yuk//vI7VCphX5R3Lw5q/NnijAd3Gv+esZTV8JWI=
+	b=sFpKDY2l1c4MNB66OlDzsgl+hHoHnwG1SMB88ita+2DYDdIY23xRKvcP5mBKm0JTP
+	 CJRlHN1Y+ReyEHa4zdEk3E+6Wyi85L0QVVHe+HbGMAW6b/4jTM73nn0PUYuYTwg0+l
+	 DOauxDDYZP2w0PeU8mdAHOGrARG6Vtkps++pPiGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbfLKPMD (ORCPT
+        id S1731045AbfLKPMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:12:03 -0500
+        Wed, 11 Dec 2019 10:12:05 -0500
 Received: from mail.kernel.org ([198.145.29.99]:60832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730036AbfLKPL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:56 -0500
+        id S1731012AbfLKPL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9C024658;
-        Wed, 11 Dec 2019 15:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A86AB2173E;
+        Wed, 11 Dec 2019 15:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077115;
-        bh=IEnGbHhjufnM9qjTz5KDmsgsmuFWeWtUss7UjrnQLrA=;
+        s=default; t=1576077117;
+        bh=XebHkKGdyvyJe9x4eWTtKYtITQBxEm2abSNYs2wk4TQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9JenNQy/YMaEcF2I6+IZvWU5BdDvJ0e6szuW/575cGz853cTzo0okGunxqA+1CPe
-         2JtsyAh2tRGmtP007nwbGqg86pXV1t1JkFR5LSzrJZItNQwaqCXB1RjXh0bJygM7L1
-         CxezlxRKkt4TSGH2mOAeX/RGUxFkcNNUdK4X3VLE=
+        b=JcAB0e/CbI8YBwYoehpJzcMMFVSJPlxthIpWlIb3ITPx+a2Tq5j2G4L/Vb03IY/BK
+         uOeT37i8wuZBPoLb2EPNMu5evyRJ1QuYPSv/ts5OuXA5fVOivSCB/funX9BkxPu/Vq
+         XCWSglvn6f+fJtDDx57aIGAQp1a4N4eM+StGtKt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 004/134] scsi: lpfc: Fix locking on mailbox command completion
-Date:   Wed, 11 Dec 2019 10:09:40 -0500
-Message-Id: <20191211151150.19073-4-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 006/134] gpio: mxc: Only get the second IRQ when there is more than one IRQ
+Date:   Wed, 11 Dec 2019 10:09:42 -0500
+Message-Id: <20191211151150.19073-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,66 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 07b8582430370097238b589f4e24da7613ca6dd3 ]
+[ Upstream commit c8f3d144004dd3f471ffd414690d15a005e4acd6 ]
 
-Symptoms were seen of the driver not having valid data for mailbox
-commands. After debugging, the following sequence was found:
+On some of i.MX SoCs like i.MX8QXP, there is ONLY one IRQ for each
+GPIO bank, so it is better to check the IRQ count before getting
+second IRQ to avoid below error message during probe:
 
-The driver maintains a port-wide pointer of the mailbox command that is
-currently in execution. Once finished, the port-wide pointer is cleared
-(done in lpfc_sli4_mq_release()). The next mailbox command issued will set
-the next pointer and so on.
+[    1.070908] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+[    1.077420] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+[    1.083766] gpio-mxc 5d0a0000.gpio: IRQ index 1 not found
+[    1.090122] gpio-mxc 5d0b0000.gpio: IRQ index 1 not found
+[    1.096470] gpio-mxc 5d0c0000.gpio: IRQ index 1 not found
+[    1.102804] gpio-mxc 5d0d0000.gpio: IRQ index 1 not found
+[    1.109144] gpio-mxc 5d0e0000.gpio: IRQ index 1 not found
+[    1.115475] gpio-mxc 5d0f0000.gpio: IRQ index 1 not found
 
-The mailbox response data is only copied if there is a valid port-wide
-pointer.
-
-In the failing case, it was seen that a new mailbox command was being
-attempted in parallel with the completion.  The parallel path was seeing
-the mailbox no long in use (flag check under lock) and thus set the port
-pointer.  The completion path had cleared the active flag under lock, but
-had not touched the port pointer.  The port pointer is cleared after the
-lock is released. In this case, the completion path cleared the just-set
-value by the parallel path.
-
-Fix by making the calls that clear mbox state/port pointer while under
-lock.  Also slightly cleaned up the error path.
-
-Link: https://lore.kernel.org/r/20190922035906.10977-8-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-mxc.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 614f78dddafe0..e5413d52e49a2 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -13158,13 +13158,19 @@ send_current_mbox:
- 	phba->sli.sli_flag &= ~LPFC_SLI_MBOX_ACTIVE;
- 	/* Setting active mailbox pointer need to be in sync to flag clear */
- 	phba->sli.mbox_active = NULL;
-+	if (bf_get(lpfc_trailer_consumed, mcqe))
-+		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
- 	spin_unlock_irqrestore(&phba->hbalock, iflags);
- 	/* Wake up worker thread to post the next pending mailbox command */
- 	lpfc_worker_wake_up(phba);
-+	return workposted;
-+
- out_no_mqe_complete:
-+	spin_lock_irqsave(&phba->hbalock, iflags);
- 	if (bf_get(lpfc_trailer_consumed, mcqe))
- 		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
--	return workposted;
-+	spin_unlock_irqrestore(&phba->hbalock, iflags);
-+	return false;
- }
+diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
+index 7907a87558662..c77d474185f31 100644
+--- a/drivers/gpio/gpio-mxc.c
++++ b/drivers/gpio/gpio-mxc.c
+@@ -411,6 +411,7 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct mxc_gpio_port *port;
++	int irq_count;
+ 	int irq_base;
+ 	int err;
  
- /**
+@@ -426,9 +427,15 @@ static int mxc_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(port->base))
+ 		return PTR_ERR(port->base);
+ 
+-	port->irq_high = platform_get_irq(pdev, 1);
+-	if (port->irq_high < 0)
+-		port->irq_high = 0;
++	irq_count = platform_irq_count(pdev);
++	if (irq_count < 0)
++		return irq_count;
++
++	if (irq_count > 1) {
++		port->irq_high = platform_get_irq(pdev, 1);
++		if (port->irq_high < 0)
++			port->irq_high = 0;
++	}
+ 
+ 	port->irq = platform_get_irq(pdev, 0);
+ 	if (port->irq < 0)
 -- 
 2.20.1
 
