@@ -2,180 +2,149 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E750C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8A5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0302208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C3A214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:47:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Wn15tCuq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="lzubIgKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfLKOq4 (ORCPT
+        id S1730048AbfLKOq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:46:56 -0500
-Received: from mail-dm6nam11on2073.outbound.protection.outlook.com ([40.107.223.73]:6248
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729278AbfLKOqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:46:51 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J+rcO7bTCQIKPxX8gERUX6cz/7MAtwWtVRZAKLxGKmhjpR38ttm3K4ZWs84Y7zP97RzkuEDNmclPhu67Rn0Rc3nep4fXNdHcigItpTl5w9DjMx2KW5E7lPlB6kxZrKZkX55juC25jkLLgIvr3Mou3wDZwwjlq9NDwoIUdBaep7r3WR6HrpLwIQ1B8TQ7w+Ls++SV5c6sIB7TjKivrAVW98Wq6AL8Z6xjlyJPgH3ZPAbuWacdu1+kd2KhYBI58z+oyHcGye5X47g8N58TPtHP+yRPmWE0p3eDDCghHOL9j3yfQ1fcVg40iTa/QX33X9uraF+GxNNF4oW5bSh3egxp2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hdv3xy29Ew/4mwo89L0xX6a2q6ZWQwmDFj9NDkwLk3c=;
- b=loLVyd+Qlz046zjbDxbbFP5vKYP4IP1yQZL+o7BwlnfyGdiuD9Gncn2CX/SVgFDcLneB1W5DRGM9J2mu80qZN2r2NHGIxtMmsZuo5x5C0FERLxCcAKfSeCEBlOtPTgvY3CMsUw05+JgpmGsNdd/Pav2c67QHZK9/h2wKn6vdBm2pcmK3ktTeRMZnvcP7SFaQlvnSNeKpc60uPhoAr82wcUZ63AxX7NMY1fTeXiY3zAl5bx2rdbwzA27cH9iJGi2MkD2K018sSNKHiljI6N7PdMV5FvEuMxqup6In2J2l0viAgLSFZmmVC61cXjfckZeSkJzwaUUKNVp1b63gAA5Rig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Hdv3xy29Ew/4mwo89L0xX6a2q6ZWQwmDFj9NDkwLk3c=;
- b=Wn15tCuqROGkjSZ09yo2fGdby/PJ6tS9LDCeI5h6Oj+qHRoGjYG+FAQbJLafPSrcrEqpzkT7J6JI6535RU4jMaJuC05ewLUfsNsj3coqVFzeY/FuBCfKEseWatIv+zbqrr/4lVEbXeGO0/KhcqMp3tFk+fY/elbtyTF3tchFWSc=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6039.namprd02.prod.outlook.com (10.255.156.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Wed, 11 Dec 2019 14:46:07 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::5d66:1c32:4c41:b087]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::5d66:1c32:4c41:b087%3]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
- 14:46:07 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        Michal Simek <michals@xilinx.com>,
-        "nick.graumann@gmail.com" <nick.graumann@gmail.com>,
-        "andrea.merello@gmail.com" <andrea.merello@gmail.com>,
-        Appana Durga Kedareswara Rao <appanad@xilinx.com>,
-        "mcgrof@kernel.org" <mcgrof@kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>
-Subject: RE: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
- dma_terminate_all
-Thread-Topic: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
- dma_terminate_all
-Thread-Index: AQHVo1uM5nn5YHd560C/NFUjbNUe6Key97yAgAIaTxA=
-Date:   Wed, 11 Dec 2019 14:46:06 +0000
-Message-ID: <CH2PR02MB70009D78EA8C487BFFA54964C75A0@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <1574664121-13451-1-git-send-email-radhey.shyam.pandey@xilinx.com>
- <20191210060113.GP82508@vkoul-mobl>
-In-Reply-To: <20191210060113.GP82508@vkoul-mobl>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ef0dec40-0481-4d15-5cd0-08d77e48daea
-x-ms-traffictypediagnostic: CH2PR02MB6039:|CH2PR02MB6039:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB60398A17E15599DA0D2CCBA1C75A0@CH2PR02MB6039.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3513;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(13464003)(199004)(189003)(53546011)(6506007)(26005)(33656002)(7696005)(52536014)(186003)(71200400001)(5660300002)(54906003)(66476007)(4326008)(64756008)(66946007)(76116006)(6916009)(8676002)(9686003)(478600001)(86362001)(316002)(107886003)(81166006)(66556008)(8936002)(2906002)(81156014)(55016002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6039;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PUn7PqYLM3gQYoFo5910B6QAXDsjEa8Y11OSjEEgiiVEua5rbGsUxlrR7/KiV3+WDYfs0qtWPb8bOvzBROAqU1yzazf3JkBplxuhiN4+bjg8iYQnr7f7GlCcat88R/ZEhH5fpjpNlMMpTHrpWvgNbM8gZARUYiwPDCnvKyiyqHp61Ywp2cXgIjoukTsRV2GoqRdBmCXS+67pXH3v9S/d1vy7h7tR6/tQ2WB0i+lSb97IRxE3hcCuwnqmnuMdvyk4xnHPeOu5teKLI656qnp+e6H0kcS+FLKH0JuCc0AfwWTwNZKkGLGz1eYP7MZgULvH1rSBXN3POy9WAFhtbWhA0q0EUx4ts9xsK5gdB2R4Jv18N7LwFlT4IPXcwRZTkb66DphpsG5AtuYp5HfPGnPQriznE/25AVAfrAv3zrUEmFcqGvmeD+z97tM8Nvylhlh1Jl/57h8V551Xerc2ymx9OqThjNLokSObCz2q2kQs2XF7ic/U0uU5a+45emoHvjq4
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef0dec40-0481-4d15-5cd0-08d77e48daea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 14:46:06.9820
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: C/y7fQpR/hiFMEAHvZue0wZq0viLsZsFdSRQSo6+6vqeIwqOvEafgGsAnvQDbV8hVNJTAcWegITq5NwGaSOk1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6039
+        Wed, 11 Dec 2019 09:46:59 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:55239 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729481AbfLKOqx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 09:46:53 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191211144650euoutp02947c0ff4532acb91e3c22e69975f7e0a~fWGr0dYU71029810298euoutp02K
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 14:46:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191211144650euoutp02947c0ff4532acb91e3c22e69975f7e0a~fWGr0dYU71029810298euoutp02K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576075611;
+        bh=G6e9bRQSJqszd1aQwd52ZOX8/ksTctU4pV8j86XTo3M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lzubIgKwZfy4HAX7lB01PSkFt3fBJBiHmnLe3JGi/tZ+mb/P15Ppr007AHVIkS1cp
+         Ot6qG+dQYkjnLK/hM7Z6bo6DupRQXsNSk2UMyotVaW4i6a0Dc+mhI/sMIbfcy0+r2m
+         yu8Opi5w15lTTHPwDYsqqm+fGrKSN0JaL0ynn1zY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191211144650eucas1p231d382044738e0fdbc83b784f98e5e90~fWGrO-Lbn0790307903eucas1p2r;
+        Wed, 11 Dec 2019 14:46:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id E2.2F.61286.A5101FD5; Wed, 11
+        Dec 2019 14:46:50 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191211144649eucas1p2ec8ca5bec84c179a5cbf01a285e82837~fWGq4tLeb1014710147eucas1p2Q;
+        Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191211144649eusmtrp29e7ed2584f7d5ea7a929a28493ec9685~fWGq39SQt0169801698eusmtrp27;
+        Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-90-5df1015aeb85
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F0.AA.07950.95101FD5; Wed, 11
+        Dec 2019 14:46:49 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191211144649eusmtip1a62ee86c383fc63f9046d4477260ebca~fWGqQL9vk0730007300eusmtip1M;
+        Wed, 11 Dec 2019 14:46:49 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH v2 3/4] ARM: dts: sun8i: a83t: Correct USB3503 GPIOs
+ polarity
+Date:   Wed, 11 Dec 2019 15:46:37 +0100
+Message-Id: <20191211144638.24676-4-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191211144638.24676-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSe0iTURzl7nu6WnxN04uFwsrAMG0ZdOkhGf3xZUQSQWBZLf1Qcz7YnGZB
+        Pps5LCsMx9Cs+ShfUzfRNPONo0TnHIhUSj6oFDTNwhdofn5W/51z7jm/87uXS2PSVsKdjopN
+        4FSxCqWMFOMNPcu2gyFgPvSQZVGK+idWcVSnryFQb9ssjrJaC3GUUVxDIputlkLmiSECOZoL
+        SOTIsAOkt7WKkLHsPoaqu0colJ7pj7TZZQSymLIotNxpE51i2OLFUYytHa8k2CbDCMWaK7JJ
+        9vNQC8m2FVZRrKUkhc1834azj+orALtg9ggWh4hPhHPKqERO5RdwQxw5aj0anyu+PbFUJ0oF
+        jbQOONGQOQJLJmdIHRDTUuY1gCuDU4RAfgHYMZ+1RRYANOZN4DpAb0ZmC6IF/RWAL0ufE/yo
+        zcQ3gw+PSUYOdTO6zbEuTBWAqw/1OE8wph+DhRl2nHc5Mxdg2nou4DHOeMG5dzkUjyXMSWiZ
+        6iOFBT1hZW07xjc7MQEwryOZnwOZIQp+mlsXCZ4zUN/RjQnYGU5b6ykB74HrTUUiIZAB4Fh/
+        NSWQHAAd6XoguI7DLqud4BswxhvWNPsJciAsyjcB4co74PDMTl7GNuDThnxMkCXwgVYquPdD
+        g9X0r7ZjYHDLwsKulUDhsZ4AmJ3bQz4Gnob/XS8AqABunEYdE8Gp5bFckq9aEaPWxEb4hsXF
+        mMHGr+pds/58A34P3uwEDA1k2yUvGn+ESglFojo5phNAGpO5SKza2VCpJFyRfIdTxV1XaZSc
+        uhPspnGZm8TfOBUqZSIUCVw0x8Vzqr+nItrJPRW0OLy+6OpU5UtZml05gefaz3tFhd9rV/bd
+        4rZly6+FtCQFN0xPpVl0dhMVdyU6p8GDFDdflmPDziZrguR0igHZggKi9irvFq9ptcSAd+nV
+        yn2y3kWtj8/bobGR/DhPx2GN60eTa9iHS0bVd/ev5vKzzvHPLk4GHXOxh4/7jOhkuDpSIT+A
+        qdSKP5F+hSVRAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPIsWRmVeSWpSXmKPExsVy+t/xu7qRjB9jDVast7I49/g3i8XGGetZ
+        LU7vf8di0b5vLotF8+L1bBbnz29gt9j0+BqrxeVdc9gsLjdfZLSYcX4fk8WiZa3MFmuP3GW3
+        aGoxtmjrXMZqsXldO7vFz0PnmRwEPBZ/v8fsseHRalaPnbPusntsWtXJ5nHn2h42j/1z17B7
+        bF5S79Fycj+LR9+WVYwenzfJBXBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
+        mSrp29mkpOZklqUW6dsl6GXcO25e0M9V8fjHRqYGxu0cXYwcHBICJhLv5mR3MXJxCAksZZS4
+        NOMeWxcjJ1BcRuLktAZWCFtY4s+1LjaIok+MEt9+rGACSbAJGEp0vYVIiAhsYJQ48/4JC0iC
+        WeAas8SyzdIgtrCAr8T+PUsZQWwWAVWJD3t72EFsXgFbic0vz0Jtk5dYveEAM8hFnAJ2ElMO
+        VoKEhYBK7k06xDaBkW8BI8MqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwMjZduznlh2MXe+C
+        DzEKcDAq8fAu2P4+Vog1say4MvcQowQHs5II7/G2d7FCvCmJlVWpRfnxRaU5qcWHGE2BbprI
+        LCWanA+M6rySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxzfysY
+        lifYiR1q/Nn/p7Vduba9WTjLy0qsb3v+Cp5DmZKOS9c+Kny95GOA9830KOEb554cfGTKIX5+
+        aWu14c5ztl/3/bpqOVtb1WLn6t7E4vJtqx7el3/HkdnCMvWcmdKOtyXN0w5uz7bS3GJqsCNQ
+        2pXl02P3lv7Cv5fvT20+e/DTYtmgGfuVWIozEg21mIuKEwHzY67vsgIAAA==
+X-CMS-MailID: 20191211144649eucas1p2ec8ca5bec84c179a5cbf01a285e82837
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191211144649eucas1p2ec8ca5bec84c179a5cbf01a285e82837
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191211144649eucas1p2ec8ca5bec84c179a5cbf01a285e82837
+References: <20191211144638.24676-1-m.szyprowski@samsung.com>
+        <CGME20191211144649eucas1p2ec8ca5bec84c179a5cbf01a285e82837@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: Tuesday, December 10, 2019 11:31 AM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>
-> Cc: dan.j.williams@intel.com; Michal Simek <michals@xilinx.com>;
-> nick.graumann@gmail.com; andrea.merello@gmail.com; Appana Durga
-> Kedareswara Rao <appanad@xilinx.com>; mcgrof@kernel.org;
-> dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org; git
-> <git@xilinx.com>
-> Subject: Re: [PATCH] dmaengine: xilinx_dma: Reset DMA channel in
-> dma_terminate_all
->=20
-> On 25-11-19, 12:12, Radhey Shyam Pandey wrote:
-> > Reset DMA channel after stop to ensure that pending transfers and
-> > FIFOs in the datapath are flushed or completed. It fixes intermittent
-> > data verification failure reported by xilinx dma test client.
-> >
-> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> > ---
-> >  drivers/dma/xilinx/xilinx_dma.c | 17 +++++++++--------
-> >  1 file changed, 9 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/dma/xilinx/xilinx_dma.c
-> > b/drivers/dma/xilinx/xilinx_dma.c index a9c5d5c..6f1539c 100644
-> > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > @@ -2404,16 +2404,17 @@ static int xilinx_dma_terminate_all(struct
-> dma_chan *dchan)
-> >  	u32 reg;
-> >  	int err;
-> >
-> > -	if (chan->cyclic)
-> > -		xilinx_dma_chan_reset(chan);
->=20
-> So reset is required for non cyclic cases as well now?
+Current USB3503 driver ignores GPIO polarity and always operates as if the
+GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
+USB3503 chip applications to match the chip specification and common
+convention for naming the pins. The only pin, which has to be ACTIVE_LOW
+is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
+to fix the USB3503 driver to properly use generic GPIO bindings and read
+polarity from DT.
 
-Yes. In absence of reset in non-cyclic case, when dmatest client
-driver is stressed and loaded/unloaded multiple times we see dma=20
-data comparison failures. Possibly IP is prefetching/holding the
-previous state and reset ensures a clean state on each iteration.
->=20
-> > -
-> > -	err =3D chan->stop_transfer(chan);
-> > -	if (err) {
-> > -		dev_err(chan->dev, "Cannot stop channel %p: %x\n",
-> > -			chan, dma_ctrl_read(chan,
-> XILINX_DMA_REG_DMASR));
-> > -		chan->err =3D true;
-> > +	if (!chan->cyclic) {
-> > +		err =3D chan->stop_transfer(chan);
->=20
-> no stop for cyclic now..?
-After reset stop is not needed, so for the cyclic mode we only do reset.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->=20
-> > +		if (err) {
-> > +			dev_err(chan->dev, "Cannot stop channel %p: %x\n",
-> > +				chan, dma_ctrl_read(chan,
-> > +				XILINX_DMA_REG_DMASR));
-> > +			chan->err =3D true;
-> > +		}
-> >  	}
-> >
-> > +	xilinx_dma_chan_reset(chan);
-> >  	/* Remove and free all of the descriptors in the lists */
-> >  	xilinx_dma_free_descriptors(chan);
-> >  	chan->idle =3D true;
-> > --
-> > 2.7.4
->=20
-> --
-> ~Vinod
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index fb928503ad45..d9be511f054f 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -101,7 +101,7 @@
+ 		initial-mode = <1>; /* initialize in HUB mode */
+ 		disabled-ports = <1>;
+ 		intn-gpios = <&pio 7 5 GPIO_ACTIVE_HIGH>; /* PH5 */
+-		reset-gpios = <&pio 4 16 GPIO_ACTIVE_HIGH>; /* PE16 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
+ 		connect-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* PE17 */
+ 		refclk-frequency = <19200000>;
+ 	};
+-- 
+2.17.1
+
