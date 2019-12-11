@@ -2,129 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F82C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E442C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894EF24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A1F2467D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077232;
-	bh=7RziOHfJeJsaaiPT85Sftb0DFf3AWIRTO8IXVor0O+E=;
+	s=default; t=1576077235;
+	bh=DNRLEQwGx0SZ8K49kFtmbV0zzL7Hid2GPvjtmHZSL5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p6sN5t0GGYrTap8Bt94jBwwZRxkNUWE1UbWS/7sHltY6g7WHTHMUPjrjY9Mtqinac
-	 w1gUxpt4W6dxi08OvYd1tDgEpjsKBMU4KBzPhasY/CPCVtrcnJWnYiT62y8XeRS5HY
-	 pOP7/ByvEHhIk1y9EL5mrdog/GSjIg8T2UZZmI9Q=
+	b=Vc3fk/TxPpYmglTe69QLc1LVEJngsgepVnemnb4z2FvCIpyjYKWy2RqtXRG8z4qg4
+	 0JtveJiSnK0FOK8a0knzzi4ogfQ5x6kP7uhlN4054D0vMcLyJ0HR5Gu+3Ov6k6mMZz
+	 ifXglraIXtHz0BxNq+Rpkr228mCwhU8y8S44vjH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbfLKPNt (ORCPT
+        id S1731520AbfLKPNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731400AbfLKPNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:22 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731406AbfLKPNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D566F2467D;
-        Wed, 11 Dec 2019 15:13:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43170208C3;
+        Wed, 11 Dec 2019 15:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077201;
-        bh=7RziOHfJeJsaaiPT85Sftb0DFf3AWIRTO8IXVor0O+E=;
+        s=default; t=1576077202;
+        bh=DNRLEQwGx0SZ8K49kFtmbV0zzL7Hid2GPvjtmHZSL5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ok0nBNmOxTh7hbpEum4hrkCbFcct66D4jI55DzHJraIPBbrKt3B8ssqKR3mZI8Npo
-         FQEZiKILDr7RSKk5ArnC3nqSV85M2KIMmVkjaXxcQBpM4NNT8lpDF9voQz01SZBcmN
-         V9AohPg/csBifP0QOZhQNB7NtNbP/oPOpng4ZrVY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 084/134] watchdog: imx7ulp: Fix reboot hang
-Date:   Wed, 11 Dec 2019 10:11:00 -0500
-Message-Id: <20191211151150.19073-84-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=vYz6F2nNoPvpCbx5dGMx8KDZMEzAPwJMgloCG+GnnxZGDXupxF6Y1IpfbCowuS9Jo
+         1tAMYWp94of7+gV5D/cVEq3VMB/91Y4jeZ3rPKdRlbpkiucz1XivWw13FDPSqhzUgz
+         /fide2C6PxHMQh4Ela+NeIFNCzlXq5aWmLroToKw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 5.3 056/105] Input: synaptics-rmi4 - re-enable IRQs in f34v7_do_reflash
+Date:   Wed, 11 Dec 2019 16:05:45 +0100
+Message-Id: <20191211150243.200809101@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 
-[ Upstream commit 6083ab7b2f3f25022e2e8f4c42f14a8521f47873 ]
+commit 86bcd3a12999447faad60ec59c2d64d18d8e61ac upstream.
 
-The following hang is observed when a 'reboot' command is issued:
+F34 is a bit special as it reinitializes the device and related driver
+structs during the firmware update. This clears the fn_irq_mask which
+will then prevent F34 from receiving further interrupts, leading to
+timeouts during the firmware update. Make sure to reinitialize the
+IRQ enables at the appropriate times.
 
-# reboot
-# Stopping network: OK
-Stopping klogd: OK
-Stopping syslogd: OK
-umount: devtmpfs busy - remounted read-only
-[    8.612079] EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
-The system is going down NOW!
-Sent SIGTERM to all processes
-Sent SIGKILL to all processes
-Requesting system reboot
-[   10.694753] reboot: Restarting system
-[   11.699008] Reboot failed -- System halted
+The issue is in F34 code, but the commit in the fixes tag exposed the
+issue, as before this commit things would work by accident.
 
-Fix this problem by adding a .restart ops member.
+Fixes: 363c53875aef (Input: synaptics-rmi4 - avoid processing unknown IRQs)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Link: https://lore.kernel.org/r/20191129133514.23224-1-l.stach@pengutronix.de
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 41b630f41bf7 ("watchdog: Add i.MX7ULP watchdog support")
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20191029174037.25381-1-festevam@gmail.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx7ulp_wdt.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/input/rmi4/rmi_f34v7.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/watchdog/imx7ulp_wdt.c b/drivers/watchdog/imx7ulp_wdt.c
-index 5ce51026989a4..ba5d535a6db2e 100644
---- a/drivers/watchdog/imx7ulp_wdt.c
-+++ b/drivers/watchdog/imx7ulp_wdt.c
-@@ -106,12 +106,28 @@ static int imx7ulp_wdt_set_timeout(struct watchdog_device *wdog,
- 	return 0;
- }
+--- a/drivers/input/rmi4/rmi_f34v7.c
++++ b/drivers/input/rmi4/rmi_f34v7.c
+@@ -1189,6 +1189,9 @@ int rmi_f34v7_do_reflash(struct f34_data
+ {
+ 	int ret;
  
-+static int imx7ulp_wdt_restart(struct watchdog_device *wdog,
-+			       unsigned long action, void *data)
-+{
-+	struct imx7ulp_wdt_device *wdt = watchdog_get_drvdata(wdog);
++	f34->fn->rmi_dev->driver->set_irq_bits(f34->fn->rmi_dev,
++					       f34->fn->irq_mask);
 +
-+	imx7ulp_wdt_enable(wdt->base, true);
-+	imx7ulp_wdt_set_timeout(&wdt->wdd, 1);
-+
-+	/* wait for wdog to fire */
-+	while (true)
-+		;
-+
-+	return NOTIFY_DONE;
-+}
-+
- static const struct watchdog_ops imx7ulp_wdt_ops = {
- 	.owner = THIS_MODULE,
- 	.start = imx7ulp_wdt_start,
- 	.stop  = imx7ulp_wdt_stop,
- 	.ping  = imx7ulp_wdt_ping,
- 	.set_timeout = imx7ulp_wdt_set_timeout,
-+	.restart = imx7ulp_wdt_restart,
- };
+ 	rmi_f34v7_read_queries_bl_version(f34);
  
- static const struct watchdog_info imx7ulp_wdt_info = {
--- 
-2.20.1
+ 	f34->v7.image = fw->data;
+
 
