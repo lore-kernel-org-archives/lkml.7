@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46115C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F6BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C3A2465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D32521556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078727;
-	bh=SF7wNV/EfSTReGBg/eIM1pPu5/iujUyildCuZ3lkGnE=;
+	s=default; t=1576078730;
+	bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpNbYajq09jJlcTulIOd5k2KpVtyGidL/hN3QUoEqJfHSk5VVjHPVK8hvlFOdkqgM
-	 qPIAAoOU+1+g68uRSQtHuV0O8HOY7d1vA5YXfcXtNKu8NAkaDpSkJpKMayuuorDKY/
-	 Sm/xoi3nBLnxBuUnnV5RxVNfv6NwrWzlXm05q+oY=
+	b=jKWTP/DbNgihWgi+ORFpqK/QdgfTO+ubeV93RqkL5RztCONiQ3SmwW5vYL+RJeol9
+	 kvjBqjDudr6ztXoXjYeQPXEur+GJcAaHpoSi12NibJqHXPp+QvI9FGVWtZSHvSO4U/
+	 ZL2sUjwJH6tlV3ZtxTaKJlDKXUdRM86J5esNK63k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbfLKPiq (ORCPT
+        id S2388189AbfLKPis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:38:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49246 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:38:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388467AbfLKPij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:39 -0500
+        id S2388230AbfLKPio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DEF32464B;
-        Wed, 11 Dec 2019 15:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA0AC2464B;
+        Wed, 11 Dec 2019 15:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078719;
-        bh=SF7wNV/EfSTReGBg/eIM1pPu5/iujUyildCuZ3lkGnE=;
+        s=default; t=1576078723;
+        bh=hem3ebfjLNtne7dQ8qxpZB4aD9lv/NFaA3OZLHfUMIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrReEai7mD9pVnogtTmDBqz398M8FXmp36XwLTlv3zgQ/p0yUIUJbNNMLbUHdCVMP
-         EpRkbIHXJALNr5G7IfRoof0TdynaKDmWWSdiZjR9NrR+bVGIlQJGYmGZwZCRQr3Mzj
-         k1F9+CdfFUfRn8gzc0+Ruj0Kc156RfQBuMEOBuKo=
+        b=Uq1GNHCDKY738d9llwp3no4jw87fT604gqQcga5P6n7/t7PfUp34BrCkb3QxgsfgR
+         TYp9S5TZT48/lu8djdWvtKA0+65ZlHc6BN9nG5H4cQnWDftHaJ7m+Z3daOygs45O2b
+         HlDh+MZxo9Ze6S5STcVAGDFlrZYnUDLgxgNMscuc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 24/37] clk: pxa: fix one of the pxa RTC clocks
-Date:   Wed, 11 Dec 2019 10:38:00 -0500
-Message-Id: <20191211153813.24126-24-sashal@kernel.org>
+Cc:     peter chang <dpf@google.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>,
+        Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, pmchba@pmcs.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 28/37] scsi: pm80xx: Fix for SATA device discovery
+Date:   Wed, 11 Dec 2019 10:38:04 -0500
+Message-Id: <20191211153813.24126-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
 References: <20191211153813.24126-1-sashal@kernel.org>
@@ -59,37 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Jarzmik <robert.jarzmik@free.fr>
+From: peter chang <dpf@google.com>
 
-[ Upstream commit 46acbcb4849b2ca2e6e975e7c8130c1d61c8fd0c ]
+[ Upstream commit ce21c63ee995b7a8b7b81245f2cee521f8c3c220 ]
 
-The pxa27x platforms have a single IP with 2 drivers, sa1100-rtc and
-rtc-pxa drivers.
+Driver was missing complete() call in mpi_sata_completion which result in
+SATA abort error handling timing out. That causes the device to be left in
+the in_recovery state so subsequent commands sent to the device fail and
+the OS removes access to it.
 
-A previous patch fixed the sa1100-rtc case, but the pxa-rtc wasn't
-fixed. This patch completes the previous one.
-
-Fixes: 8b6d10345e16 ("clk: pxa: add missing pxa27x clocks for Irda and sa1100-rtc")
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
-Link: https://lkml.kernel.org/r/20191026194420.11918-1-robert.jarzmik@free.fr
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Link: https://lore.kernel.org/r/20191114100910.6153-2-deepak.ukey@microchip.com
+Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
+Signed-off-by: peter chang <dpf@google.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/pxa/clk-pxa27x.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/pm8001/pm80xx_hwi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/pxa/clk-pxa27x.c b/drivers/clk/pxa/clk-pxa27x.c
-index 5b82d30baf9f3..bf47737b66722 100644
---- a/drivers/clk/pxa/clk-pxa27x.c
-+++ b/drivers/clk/pxa/clk-pxa27x.c
-@@ -362,6 +362,7 @@ struct dummy_clk {
- };
- static struct dummy_clk dummy_clks[] __initdata = {
- 	DUMMY_CLK(NULL, "pxa27x-gpio", "osc_32_768khz"),
-+	DUMMY_CLK(NULL, "pxa-rtc", "osc_32_768khz"),
- 	DUMMY_CLK(NULL, "sa1100-rtc", "osc_32_768khz"),
- 	DUMMY_CLK("UARTCLK", "pxa2xx-ir", "STUART"),
- };
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 9edd61c063a1a..df5f0bc295875 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -2368,6 +2368,8 @@ mpi_sata_completion(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 			pm8001_printk("task 0x%p done with io_status 0x%x"
+ 			" resp 0x%x stat 0x%x but aborted by upper layer!\n",
+ 			t, status, ts->resp, ts->stat));
++		if (t->slow_task)
++			complete(&t->slow_task->completion);
+ 		pm8001_ccb_task_free(pm8001_ha, t, ccb, tag);
+ 	} else {
+ 		spin_unlock_irqrestore(&t->task_state_lock, flags);
 -- 
 2.20.1
 
