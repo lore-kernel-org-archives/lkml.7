@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B221FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDD0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88FDC208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81221214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077759;
-	bh=Z5AqVrIC8GjWQ/SiK2JLzDiahAB4oiEWSlkGKafYMJM=;
+	s=default; t=1576077763;
+	bh=6WqnEtZcpwKMN0AGFQmDNkvleWZEMRKj16Ms18ORuJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lD6RThhtxDDYurptkUZTu/yvSvbzEjb1qg2l3iXxfXqVzmB0sL+uG8/RPbaQXoDl4
-	 2ZHIwoS3EXUYMxYF9465drDlSt7+iWSUKo8AaQ6eR2RHGkOQ9h1o3wihbrGi/4743s
-	 hshi6/NU/1nrVImK0cEjst7ky/sFGW4lBA40HomM=
+	b=MwP86u+tAIY3CDbEGSyHY86B0eoC7+1CahA9ykEYiEi1a4tzzdW37ynN2e0WSqiKV
+	 3zNXeG+VyNXMuRhTTxcQQqgj1x0r2xB4B4lu+9Ifm1c9p3B8yPQsff1FYkRZiXHBKH
+	 2tpuNqnD3VupTkUhRtVLusSAxIy4wUqMebMolQfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732158AbfLKPWi (ORCPT
+        id S1732633AbfLKPWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732615AbfLKPWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:36 -0500
+        id S1730932AbfLKPWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4FC2073D;
-        Wed, 11 Dec 2019 15:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDCA32073D;
+        Wed, 11 Dec 2019 15:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077755;
-        bh=Z5AqVrIC8GjWQ/SiK2JLzDiahAB4oiEWSlkGKafYMJM=;
+        s=default; t=1576077758;
+        bh=6WqnEtZcpwKMN0AGFQmDNkvleWZEMRKj16Ms18ORuJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDU8+U3GoVuWK2wSiTZhbvqehhnj2avQLSNBRYdp12anOCjDcm1iArSbQkyl/YB42
-         dVnuUDqbRnS8yjIy4tHLYOc9ybrkgJLVZgb8sxNAHc8ZNneD/yl0a42Gi4oXmV2vn6
-         Aaw44Y93WA/+HdhWUrpxCUbNLTHEouHmOj5j/BxM=
+        b=OUPB/BFmaj87I02qMYj8qb4d/1ysIcAJgFmQb0QjI+WHDVd6ncsBNfIQs4h+NtCt4
+         GUu9x7azBlDgD7/7zPmwCiLBRr4bkLL4JGqq/T8IjItQDUdhpDGqP5I4CvZQhMrGub
+         +ILG41JVBjIwn34/xIOIliPFZEIOvh6idTvFGg+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 159/243] kbuild: fix single target build for external module
-Date:   Wed, 11 Dec 2019 16:05:21 +0100
-Message-Id: <20191211150349.899539555@linuxfoundation.org>
+Subject: [PATCH 4.19 160/243] mtd: fix mtd_oobavail() incoherent returned value
+Date:   Wed, 11 Dec 2019 16:05:22 +0100
+Message-Id: <20191211150349.965520027@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -60,83 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit e07db28eea38ed4e332b3a89f3995c86b713cb5b ]
+[ Upstream commit 4348433d8c0234f44adb6e12112e69343f50f0c5 ]
 
-Building a single target in an external module fails due to missing
-.tmp_versions directory.
+mtd_oobavail() returns either mtd->oovabail or mtd->oobsize. Both
+values are unsigned 32-bit entities, so there is no reason to pretend
+returning a signed one.
 
-For example,
-
-  $ make -C /lib/modules/$(uname -r)/build M=$PWD foo.o
-
-will fail in the following way:
-
-  CC [M]  /home/masahiro/foo/foo.o
-/bin/sh: 1: cannot create /home/masahiro/foo/.tmp_versions/foo.mod: Directory nonexistent
-
-This is because $(cmd_crmodverdir) is executed only before building
-/, %/, %.ko single targets of external modules. Create .tmp_versions
-in the 'prepare' target.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ include/linux/mtd/mtd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Makefile b/Makefile
-index f9ebb74e8e43f..471acfc74998b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1507,9 +1507,6 @@ else # KBUILD_EXTMOD
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index cd0be91bdefa5..035d641e8847c 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -386,7 +386,7 @@ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+ 	return dev_of_node(&mtd->dev);
+ }
  
- # We are always building modules
- KBUILD_MODULES := 1
--PHONY += crmodverdir
--crmodverdir:
--	$(cmd_crmodverdir)
- 
- PHONY += $(objtree)/Module.symvers
- $(objtree)/Module.symvers:
-@@ -1521,7 +1518,7 @@ $(objtree)/Module.symvers:
- 
- module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
- PHONY += $(module-dirs) modules
--$(module-dirs): crmodverdir $(objtree)/Module.symvers
-+$(module-dirs): prepare $(objtree)/Module.symvers
- 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
- 
- modules: $(module-dirs)
-@@ -1562,7 +1559,8 @@ help:
- 
- # Dummies...
- PHONY += prepare scripts
--prepare: ;
-+prepare:
-+	$(cmd_crmodverdir)
- scripts: ;
- endif # KBUILD_EXTMOD
- 
-@@ -1689,17 +1687,14 @@ endif
- 
- # Modules
- /: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
- 	$(build)=$(build-dir)
- # Make sure the latest headers are built for Documentation
- Documentation/ samples/: headers_install
- %/: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
- 	$(build)=$(build-dir)
- %.ko: prepare scripts FORCE
--	$(cmd_crmodverdir)
- 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
- 	$(build)=$(build-dir) $(@:.ko=.o)
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+-static inline int mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
++static inline u32 mtd_oobavail(struct mtd_info *mtd, struct mtd_oob_ops *ops)
+ {
+ 	return ops->mode == MTD_OPS_AUTO_OOB ? mtd->oobavail : mtd->oobsize;
+ }
 -- 
 2.20.1
 
