@@ -2,238 +2,115 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E2FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804FFC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D83020637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59252222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THkd5/sM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbfLKRim (ORCPT
+        id S1730331AbfLKRke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:38:42 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63298 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729260AbfLKRil (ORCPT
+        Wed, 11 Dec 2019 12:40:34 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35823 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729512AbfLKRke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:38:41 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBHbXjd097507
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:38:40 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wu4t688rh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:38:39 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Wed, 11 Dec 2019 17:38:38 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Dec 2019 17:38:33 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBBHcWhP63242242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Dec 2019 17:38:32 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ACD9011C04A;
-        Wed, 11 Dec 2019 17:38:32 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 029AA11C050;
-        Wed, 11 Dec 2019 17:38:30 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Wed, 11 Dec 2019 17:38:29 +0000 (GMT)
-Date:   Wed, 11 Dec 2019 23:08:29 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Dave Chinner <david@fromorbit.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
+        Wed, 11 Dec 2019 12:40:34 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j6so25053238lja.2;
+        Wed, 11 Dec 2019 09:40:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xHNe/Yqfgpy3S9fO7I4bSqFvrI1vIc8c/PjlGfBZDQY=;
+        b=THkd5/sMvoWbf9UyKW0AbrpgZ9BE2d8hfLaEQB+I14Diub31RDnCRsU20R7KCaXjpN
+         UAOjbsbXLS5vCddmaHoUJXrN2NXPFIOsu7sBYiXc5Ib3PcPxoq+eQ5IPSKL+zvygoQte
+         mWKTxvhHznQClUeeCFwH7xslKJFHyMsjgun4OTRAbOwJzBOG/9KpZDARYsCr1UvAJup4
+         QleZw4JLBqlyj0GQjnavq3BU5r+sY0l20p8NurV+r0kAiJ54MxkOxKf11viGT4N96R3n
+         18BPyJ0wxWuoIi23dXYXExCYxqSRVoIbhxVxLM+9N3vUfNTiF0fFpGygn6qeJUHbvf79
+         EzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xHNe/Yqfgpy3S9fO7I4bSqFvrI1vIc8c/PjlGfBZDQY=;
+        b=MKRPwwt0Z6FaWdhealTGgLGpbWKnOQ8ZgtYtIOVrfC2H+IuY+pnmeSE/kCvGDNxuFe
+         oisbiWQW6t8CIdaCXvUktZfdQH/yf9tOE0LYeWBYYkAEuHJKHt1woozebXTj2vhg1WcG
+         MIqDudR6+qcQyBulX9lCwOP33oMBC+/0oBH9yDZBW7XnIh/7U6izx8imzOb7THkOh2VP
+         6Sr4HinJxUlaTmbMhGqVSGBQ2sQG0Nj5EyAXAvnFcyrsIujTLKyeLH9YJ+o8+PIgyoPe
+         XElbEZzeR4zEyavxNtvQMv+i0YPBuv5orlAZIlgIzhYYg0x7sDOv2eN2rlOf8wktb0X3
+         aKyg==
+X-Gm-Message-State: APjAAAXREzyCDw+POTaRZslkZAT5kjIFzehXUe9JgSuNC6MGQwEZ8lBg
+        iRe8Z6nCqGiNf3XB1XYH6dzLlDcWfOff5LQekfNHsp3u
+X-Google-Smtp-Source: APXvYqwXYcdWREeEGLWMl6g/WmqXcAKn/eRGAxh1th5CLy4FEjntZLJeZTgM4oiKx6bx8e6DUwt8aWT9Opg0rNNrWZk=
+X-Received: by 2002:a05:651c:152:: with SMTP id c18mr2972027ljd.146.1576086031635;
+ Wed, 11 Dec 2019 09:40:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20191210172307.GD9139@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19121117-0028-0000-0000-000003C79DF3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121117-0029-0000-0000-0000248AD41E
-Message-Id: <20191211173829.GB21797@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-11_05:2019-12-11,2019-12-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 spamscore=0 clxscore=1015 suspectscore=2
- mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912110147
+References: <20191211163310.4788-1-sj38.park@gmail.com> <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
+In-Reply-To: <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
+From:   SeongJae Park <sj38.park@gmail.com>
+Date:   Wed, 11 Dec 2019 18:40:05 +0100
+Message-ID: <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/6] Fix nits in the kunit
+To:     shuah <shuah@kernel.org>
+Cc:     SeongJae Park <sjpark@amazon.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A running task can wake-up a per CPU bound kthread on the same CPU.
-If the current running task doesn't yield the CPU before the next load
-balance operation, the scheduler would detect load imbalance and try to
-balance the load. However this load balance would fail as the waiting
-task is CPU bound, while the running task cannot be moved by the regular
-load balancer. Finally the active load balancer would kick in and move
-the task to a different CPU/Core. Moving the task to a different
-CPU/core can lead to loss in cache affinity leading to poor performance.
+On Wed, Dec 11, 2019 at 6:22 PM shuah <shuah@kernel.org> wrote:
+>
+> On 12/11/19 9:33 AM, SeongJae Park wrote:
+> > May I ask some comments?
+> >
+> >
+> > Thanks,
+> > SeongJae Park
+> >
+>
+> + Brendan
+>
+> > On Thu, 5 Dec 2019 10:34:34 +0100 SeongJae Park <sjpark@amazon.com> wrote:
+> >
+> >>
+> >> This patchset contains trivial fixes for the kunit documentations and
+> >> the wrapper python scripts.
+> >>
+> >> This patchset is based on 'kselftest/test' branch of linux-kselftest[1]
+> >> and depends on Heidi's patch[2].  A complete tree is available at my repo:
+> >> https://github.com/sjp38/linux/tree/kunit_fix/20191205_v5
+> >>
+> >> Changes from v4
+> >> (https://lore.kernel.org/linux-doc/1575490683-13015-1-git-send-email-sj38.park@gmail.com/):
+> >>   - Rebased on Heidi Fahim's patch[2]
+> >>   - Fix failing kunit_tool_test test
+> >>   - Add 'build_dir' option test in 'kunit_tool_test.py'
+> >>
+>
+> Please include Brendana Higgins on kunit patches.
 
-This is more prone to happen if the current running task is CPU
-intensive and the sched_wake_up_granularity is set to larger value.
-When the sched_wake_up_granularity was relatively small, it was observed
-that the bound thread would complete before the load balancer would have
-chosen to move the cache hot task to a different CPU.
+Not sure how I could forgot adding him.  I will never forget from next time.
 
-To deal with this situation, the current running task would yield to a
-per CPU bound kthread, provided kthread is not CPU intensive.
 
-/pboffline/hwcct_prg_old/lib/fsperf -t overwrite --noclean -f 5g -b 4k /pboffline
+Thanks,
+SeongJae Park
 
-(With sched_wake_up_granularity set to 15ms)
-
-Performance counter stats for 'system wide' (5 runs):
-event					    v5.4 				v5.4 + patch(v3)
-probe:active_load_balance_cpu_stop       1,919  ( +-  2.89% )                     4  ( +- 20.48% )
-sched:sched_waking                     441,535  ( +-  0.17% )               914,630  ( +-  0.18% )
-sched:sched_wakeup                     441,533  ( +-  0.17% )               914,630  ( +-  0.18% )
-sched:sched_wakeup_new                   2,436  ( +-  8.08% )                   545  ( +-  4.02% )
-sched:sched_switch                     797,007  ( +-  0.26% )             1,490,261  ( +-  0.10% )
-sched:sched_migrate_task                20,998  ( +-  1.04% )                 2,492  ( +- 11.56% )
-sched:sched_process_free                 2,436  ( +-  7.90% )                   526  ( +-  3.65% )
-sched:sched_process_exit                 2,451  ( +-  7.85% )                   546  ( +-  4.06% )
-sched:sched_wait_task                        7  ( +- 21.20% )                     1  ( +- 40.82% )
-sched:sched_process_wait                 3,951  ( +-  9.14% )                   854  ( +-  5.33% )
-sched:sched_process_fork                 2,435  ( +-  8.09% )                   545  ( +-  3.96% )
-sched:sched_process_exec                 1,023  ( +- 12.21% )                   205  ( +-  5.13% )
-sched:sched_wake_idle_without_ipi      187,794  ( +-  1.14% )               353,579  ( +-  0.42% )
-
-Elasped time in seconds          289.43 +- 1.42 ( +-  0.49% )      72.7318 +- 0.0545 ( +-  0.07% )
-
-Throughput results
-
-v5.4
-Trigger time:................... 0.842679 s   (Throughput:     6075.86 MB/s)
-Asynchronous submit time:.......   1.0184 s   (Throughput:     5027.49 MB/s)
-Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
-I/O time:.......................   263.17 s   (Throughput:      19.455 MB/s)
-Ratio trigger time to I/O time:.0.00320202
-
-v5.4 + patch(v3)
-Trigger time:................... 0.852413 s   (Throughput:     6006.47 MB/s)
-Asynchronous submit time:....... 0.773043 s   (Throughput:     6623.17 MB/s)
-Synchronous submit time:........        0 s   (Throughput:           0 MB/s)
-I/O time:.......................   44.341 s   (Throughput:     115.468 MB/s)
-Ratio trigger time to I/O time:. 0.019224
-
-(With sched_wake_up_granularity set to 4ms)
-
-Performance counter stats for 'system wide' (5 runs):
-event					      v5.4 				    v5.4 + patch(v3)
-probe:active_load_balance_cpu_stop               6  ( +-  6.03% )                      5  ( +- 15.04% )
-sched:sched_waking                         899,880  ( +-  0.38% )                912,625  ( +-  0.41% )
-sched:sched_wakeup                         899,878  ( +-  0.38% )                912,624  ( +-  0.41% )
-sched:sched_wakeup_new                         622  ( +- 11.95% )                    550  ( +-  3.85% )
-sched:sched_switch                       1,458,214  ( +-  0.40% )              1,489,032  ( +-  0.41% )
-sched:sched_migrate_task                     3,120  ( +- 10.00% )                  2,524  ( +-  5.54% )
-sched:sched_process_free                       608  ( +- 12.18% )                    528  ( +-  3.89% )
-sched:sched_process_exit                       623  ( +- 11.91% )                    550  ( +-  3.79% )
-sched:sched_wait_task                            1  ( +- 31.18% )                      1  ( +- 66.67% )
-sched:sched_process_wait                       998  ( +- 13.22% )                    867  ( +-  4.41% )
-sched:sched_process_fork                       622  ( +- 11.95% )                    550  ( +-  3.88% )
-sched:sched_process_exec                       242  ( +- 13.81% )                    208  ( +-  4.57% )
-sched:sched_wake_idle_without_ipi          349,165  ( +-  0.35% )                352,443  ( +-  0.21% )
-
-Elasped time in seconds           72.8560 +- 0.0768 ( +-  0.11% )        72.5523 +- 0.0725 ( +-  0.10% )
-
-Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
----
-Changelog:
-v1 : http://lore.kernel.org/lkml/20191209165122.GA27229@linux.vnet.ibm.com
-v2 : http://lore.kernel.org/lkml/20191210054330.GF27253@linux.vnet.ibm.com
-v3 : http://lore.kernel.org/lkml/20191210172307.GD9139@linux.vnet.ibm.com
-v1->v2: Pass the the right params to try_to_wake_up as correctly pointed out
-	by Dave Chinner
-v2->v3: Suggestions from Peter Zijlstra including using vtime over
-	context switch and detect per-cpu-kthread in try_to_wake_up
-v3->v4: Fixed a compilation failed under !CONFIG_SMP reported by
-	kbuild test robot <lkp@intel.com> as is_per_cpu_kthread is only
-	defined for CONFIG_SMP.
-
- kernel/sched/core.c  | 5 +++++
- kernel/sched/fair.c  | 2 +-
- kernel/sched/sched.h | 3 ++-
- 3 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 44123b4d14e8..2636002e4a0d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2542,6 +2542,11 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		goto out;
- 	}
- 
-+#ifdef CONFIG_SMP
-+	if (is_per_cpu_kthread(p))
-+		wake_flags |= WF_KTHREAD;
-+#endif
-+
- 	/*
- 	 * If we are going to wake up a thread waiting for CONDITION we
- 	 * need to ensure that CONDITION=1 done by the caller can not be
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 69a81a5709ff..8fe40f83804d 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6716,7 +6716,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
- 	find_matching_se(&se, &pse);
- 	update_curr(cfs_rq_of(se));
- 	BUG_ON(!pse);
--	if (wakeup_preempt_entity(se, pse) == 1) {
-+	if (wakeup_preempt_entity(se, pse) >= !(wake_flags & WF_KTHREAD)) {
- 		/*
- 		 * Bias pick_next to pick the sched entity that is
- 		 * triggering this preemption.
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c8870c5bd7df..fcd1ed5af9a3 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1643,7 +1643,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
-  */
- #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
- #define WF_FORK			0x02		/* Child wakeup after fork */
--#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
-+#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
-+#define WF_KTHREAD		0x08		/* Per CPU Kthread */
- 
- /*
-  * To aid in avoiding the subversion of "niceness" due to uneven distribution
--- 
-2.18.1
-
+>
+> thanks,
+> -- Shuah
