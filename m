@@ -2,161 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4362C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9389C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9243F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E9F921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 10:05:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OAQ8RhQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfLKKE5 (ORCPT
+        id S1728750AbfLKKFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 05:04:57 -0500
-Received: from smtp.h3c.com ([60.191.123.56]:50804 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbfLKKE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 05:04:57 -0500
-Received: from DAG2EX09-IDC.srv.huawei-3com.com ([10.8.0.72])
-        by h3cspam01-ex.h3c.com with ESMTPS id xBBA3w0v017487
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 18:03:58 +0800 (GMT-8)
-        (envelope-from li.kai4@h3c.com)
-Received: from DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) by
- DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 11 Dec 2019 18:04:01 +0800
-Received: from BJHUB01-EX.srv.huawei-3com.com (10.63.20.169) by
- DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1713.5
- via Frontend Transport; Wed, 11 Dec 2019 18:04:01 +0800
-Received: from RDVDI-L14391V.h3c.huawei-3com.com (10.125.108.72) by
- rndsmtp.h3c.com (10.63.20.174) with Microsoft SMTP Server id 14.3.408.0; Wed,
- 11 Dec 2019 18:03:48 +0800
-From:   Kai Li <li.kai4@h3c.com>
-To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
-        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
-CC:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
-        Kai Li <li.kai4@h3c.com>
-Subject: [PATCH] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
-Date:   Wed, 11 Dec 2019 18:03:38 +0800
-Message-ID: <20191211100338.510-1-li.kai4@h3c.com>
-X-Mailer: git-send-email 2.24.0.windows.2
+        Wed, 11 Dec 2019 05:05:23 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34200 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727829AbfLKKFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 05:05:23 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so22039700iof.1;
+        Wed, 11 Dec 2019 02:05:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6+pzCvZCcIDCxscL/F2NTKLDHzaJQZFzo8UlrqTqymo=;
+        b=OAQ8RhQT+BNhH5WtADE/JwpRUFq8FjSxLcLoHKg9BhA8CFuwWyRros3rT6ka5Ur4/+
+         Ihml7KGm0Y4m4/XXTvPsq3lLnCdfzvm/y7ogVvxBUW63YsQggBu6Q/EsnrOv87po8LQT
+         L1HTnnb7mESRAokBz9AV7RYDJ6bK+6uF9ajOBWDuq1AJsH+VEBdspzP8QU60fwLDZAY+
+         aY+AiCuPlGavc2xAsguOm+mFP3bHPyVOqUlCj2eLmHgV/NGaeX4DsEFFV1cDvGguJI6I
+         nDiSxVAaccq0FEnyYb7K0GSCJo9e/i7jtr2TX8RHlzK5X6nw5ifr1rVNHJWD+2ooxIr+
+         WZKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6+pzCvZCcIDCxscL/F2NTKLDHzaJQZFzo8UlrqTqymo=;
+        b=CF+jeYuTg8LvEez+yCRVr6axGZ3wCXFXY+oI6LYqNIIf2MTlY3ZLL0xv6v6AMHnXce
+         DMY4p2So/D2wG4kFUY6Vzx8qlCC9t3dCRo76e0r2GcWpqwpEmKQ1o7GLPwLyA5WslvKM
+         8PVGDyqDQ/XFnPIPVTnNBOHlVT6ayQewyvnjahyOka8v0uuDzTY2mxrroOEZ2OTjxEkD
+         i80x8uzXv9YPA/4cpobfUy1WvsyOxzQfIeoazFW6CaR1ehvarm36M5yFp6sKItoMdfdk
+         vguwSHk5TwFT9jF3Rze+kKjZYtorw3Lbdfs6K2A/X71bpxVoj0Ayl/hj6nqVgnDFvQR7
+         y3HA==
+X-Gm-Message-State: APjAAAVrKWyQRHeh/j+jfk75KA1fnnTjHHP62LSx3/miq7a8b6OfIWQk
+        2lZ6WI9WQbeM2RJU56smSOMhTOhVvvDC7eLvTQdGbQ==
+X-Google-Smtp-Source: APXvYqzQQF2cztKd3cNyU8ZNYeCQxBqzhYSOLa4dn2jZiKW/BvdhA1lQKaPvEUrsQi7tB6c3eXGWxmzJ+mHnVwC7J58=
+X-Received: by 2002:a02:a309:: with SMTP id q9mr2222824jai.141.1576058722472;
+ Wed, 11 Dec 2019 02:05:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.125.108.72]
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com xBBA3w0v017487
+References: <20191211084112.971-1-linux.amoon@gmail.com> <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+ <20191211092741.totwucrkversjbav@gondor.apana.org.au>
+In-Reply-To: <20191211092741.totwucrkversjbav@gondor.apana.org.au>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 11 Dec 2019 15:35:11 +0530
+Message-ID: <CANAwSgSNKa2HgYZPhrFdsA4mwOgvaiBSzay_-eo-n80KqwXHLA@mail.gmail.com>
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If journal is dirty when mount, it will be replayed but jbd2 sb
-log tail cannot be updated to mark a new start because
-journal->j_flag has already been set with JBD2_ABORT first
-in journal_init_common. When a new transaction is committed, it
-will be recored in block 1 first(journal->j_tail is set to 1 in
-journal_reset).
+Hi Herbert,
 
-If emergency restart happens again before journal super block is
-updated unfortunately, the new recorded trans will not be replayed
-in the next mount.
+On Wed, 11 Dec 2019 at 14:57, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Wed, Dec 11, 2019 at 09:53:56AM +0100, Neil Armstrong wrote:
+> >
+> > On 11/12/2019 09:41, Anand Moon wrote:
+> > > [sudo] password for alarm:
+> > > [  903.867059] tcrypt:
+> > > [  903.867059] testing speed of async ecb(aes) (ecb(aes-arm64)) encryption
+> >
+> > Wow, I'm surprised it works on GXBB, Amlogic completely removed HW crypto for GXBB in all their
+> > vendor BSPs, in Linux, U-Boot and ATF chain.
+> >
+> > Could you run more tests to be sure it's really functional ?
+>
+> Well as you can see from the tcrypt output, it's actually using
+> aes-arm64 which is certainly not the amlogic driver.  Presumably
+> the amlogic driver failed to load/register.
+>
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 
-This exception happens when this lun is used by only one node. If it
-is used by multi-nodes, other node will replay its journal and its
-journal sb block will be updated after recovery.
+Yes I think so you are correct.no Hardware Accelerated crypto on GXBB.
+Failed to load the module.
 
-To fix this problem, use jbd2_journal_flush to mark journal as empty as
-ocfs2_replay_journal has done.
-
-The following jbd2 journal can be generated by touching a new file after
-journal is replayed, and seq 15 is the first valid commit, but first seq
-is 13 in journal super block.
-logdump:
-Block 0: Journal Superblock
-Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
-Blocksize: 4096   Total Blocks: 32768   First Block: 1
-First Commit ID: 13   Start Log Blknum: 1
-Error: 0
-Feature Compat: 0
-Feature Incompat: 2 block64
-Feature RO compat: 0
-Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
-FS Share Cnt: 1   Dynamic Superblk Blknum: 0
-Per Txn Block Limit    Journal: 0    Data: 0
-
-Block 1: Journal Commit Block
-Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
-
-Block 2: Journal Descriptor
-Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
-No. Blocknum        Flags
- 0. 587             none
-UUID: 00000000000000000000000000000000
- 1. 8257792         JBD2_FLAG_SAME_UUID
- 2. 619             JBD2_FLAG_SAME_UUID
- 3. 24772864        JBD2_FLAG_SAME_UUID
- 4. 8257802         JBD2_FLAG_SAME_UUID
- 5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
-...
-Block 7: Inode
-Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
-FS Generation: 2839773110 (0xa9437fb6)
-CRC32: 00000000   ECC: 0000
-Type: Regular   Attr: 0x0   Flags: Valid
-Dynamic Features: (0x1) InlineData
-User: 0 (root)   Group: 0 (root)   Size: 7
-Links: 1   Clusters: 0
-ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
-mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-dtime: 0x0 -- Thu Jan  1 08:00:00 1970
-...
-Block 9: Journal Commit Block
-Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
-
-The following is jouranl recovery log when recovering the upper jbd2
-journal when mount again.
-syslog:
-[ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
-[ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
-[ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
-[ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
-[ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
-
-Due to first commit seq 13 recorded in journal super is not consistent
-with the value recorded in block 1(seq is 14), journal recovery will be
-terminated before seq 15 even though it is an unbroken commit, inode
-8257802 is a new file and it will be lost.
-
-Signed-off-by: Kai Li <li.kai4@h3c.com>
----
- fs/ocfs2/journal.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-index 1afe57f425a0..b8b9d26fa731 100644
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
- 
- 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
- 
-+	if (replayed) {
-+		/* wipe the journal */
-+		jbd2_journal_lock_updates(journal->j_journal);
-+		status = jbd2_journal_flush(journal->j_journal);
-+		jbd2_journal_unlock_updates(journal->j_journal);
-+		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
-+	}
-+
- 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
- 	if (status < 0) {
- 		mlog_errno(status);
--- 
-2.24.0.windows.2
-
+-Anand
