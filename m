@@ -2,136 +2,95 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CE0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8222B20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3357420637
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:38:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="j3MRlnLT"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DGwWSWUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfLKRhO (ORCPT
+        id S1730183AbfLKRiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:37:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:56382 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727334AbfLKRhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:37:14 -0500
-Received: from zn.tnic (p200300EC2F094900329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:4900:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 17A371EC0591;
-        Wed, 11 Dec 2019 18:37:13 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576085833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=/fQSVH4e2kOh1ufr5QULeFyUccGwjWVFvNcXOqos5bc=;
-        b=j3MRlnLTHkMRuZ7QpudWgF6/T2UqokFtYoPNG1Yr0vcl1cqrwaFFEOLLDsNTjKXHlPyDjl
-        /jMUop/434oLwmjhI+9f8A5KEov4WxhHidW2RpmlC1NnHXoHJ+iN8wMXGjCRkXFIIgHyfG
-        Y80o5U8gGTn+LK4dKb3lkvYKayZF+7E=
-Date:   Wed, 11 Dec 2019 18:37:12 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jann Horn <jannh@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v6 4/4] x86/kasan: Print original address on #GP
-Message-ID: <20191211173711.GF14821@zn.tnic>
-References: <20191209143120.60100-1-jannh@google.com>
- <20191209143120.60100-4-jannh@google.com>
+        Wed, 11 Dec 2019 12:38:05 -0500
+Received: from mailgw01.mediatek.com ([216.200.240.184]:48911 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729912AbfLKRiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 12:38:04 -0500
+X-UUID: d81845a974bf4976925fb686cac3625e-20191211
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1G2ecBdsGiCmLvqUgkfBXFA90ZxkA0MFjUV6DWvTWiU=;
+        b=DGwWSWUpOHud9U+BecPSZboTGtDN5+pl0bibZT0pvigmxn/OxFgM2hdKQfzgIkbgTdICIdqDJodzNWyLbb3MUsUQJzA1hUZANcIGQIyoAkkYPoxuQVyRuVeRASpaIEHiICrbSoDTpFRARrOSbLzqielxESeWNnEEA9JkI2/ij5M=;
+X-UUID: d81845a974bf4976925fb686cac3625e-20191211
+Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 217714657; Wed, 11 Dec 2019 09:38:01 -0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 11 Dec 2019 09:36:52 -0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 01:35:41 +0800
+Message-ID: <1576085745.23763.53.camel@mtksdccf07>
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of
+ MT7531 switch
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>
+Date:   Thu, 12 Dec 2019 01:35:45 +0800
+In-Reply-To: <20191210163557.GC27714@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+         <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+         <20191210163557.GC27714@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191209143120.60100-4-jannh@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 03:31:20PM +0100, Jann Horn wrote:
->  arch/x86/kernel/traps.c     | 12 ++++++++++-
->  arch/x86/mm/kasan_init_64.c | 21 -------------------
->  include/linux/kasan.h       |  6 ++++++
->  mm/kasan/report.c           | 40 +++++++++++++++++++++++++++++++++++++
->  4 files changed, 57 insertions(+), 22 deletions(-)
+SGkgQW5kcmV3LA0KDQpPbiBXZWQsIDIwMTktMTItMTEgYXQgMDA6MzUgKzA4MDAsIEFuZHJldyBM
+dW5uIHdyb3RlOg0KPiBPbiBUdWUsIERlYyAxMCwgMjAxOSBhdCAwNDoxNDo0MFBNICswODAwLCBM
+YW5kZW4gQ2hhbyB3cm90ZToNCj4gPiBBZGQgbmV3IHN1cHBvcnQgZm9yIE1UNzUzMToNCj4gPiAN
+Cj4gPiBNVDc1MzEgaXMgdGhlIG5leHQgZ2VuZXJhdGlvbiBvZiBNVDc1MzAuIEl0IGlzIGFsc28g
+YSA3LXBvcnRzIHN3aXRjaCB3aXRoDQo+ID4gNSBnaWdhIGVtYmVkZGVkIHBoeXMsIDIgY3B1IHBv
+cnRzLCBhbmQgdGhlIHNhbWUgTUFDIGxvZ2ljIG9mIE1UNzUzMC4gQ3B1DQo+ID4gcG9ydCA2IG9u
+bHkgc3VwcG9ydHMgSFNHTUlJIGludGVyZmFjZS4gQ3B1IHBvcnQgNSBzdXBwb3J0cyBlaXRoZXIg
+UkdNSUkNCj4gPiBvciBIU0dNSUkgaW4gZGlmZmVyZW50IEhXIHNrdS4NCj4gDQo+IEhpIExhbmRl
+bg0KPiANCj4gTG9va2luZyBhdCB0aGUgY29kZSwgeW91IHNlZW0gdG8gdHJlYXQgSFNHTUlJIGFz
+IDI1MDBCYXNlLVguIElzIHRoaXMNCj4gY29ycmVjdD8gT3IgaXMgaXQgU0dNSUkgb3ZlciBjbG9j
+a2VkIHRvIDIuNUdicHM/DQpBZnRlciByZS1yZWFkIE1UNzYyMiB0cmVhZFswXSBhZ2FpbiwgYW5k
+IGFjY29yZGluZyB0byB0aGUgY29uZmlndXJhYmxlDQpwYXJ0IG9mIHRoaXMgSVAsIGl0IGlzIGNs
+b3NlciB0byAyNTAwQmFzZS1YIGRlZmluaXRpb246DQpgYFBIWV9JTlRFUkZBQ0VfTU9ERV8yNTAw
+QkFTRVhgYA0KICAgIFRoaXMgZGVmaW5lcyBhIHZhcmlhbnQgb2YgMTAwMEJBU0UtWCB3aGljaCBp
+cyBjbG9ja2VkIDIuNSB0aW1lcw0KZmFzdGVyLCB0aGFuIHRoZSA4MDIuMyBzdGFuZGFyZCBnaXZp
+bmcgYSBmaXhlZCBiaXQgcmF0ZSBvZiAzLjEyNUdiYXVkLg0KDQpJZiBIU0dNSUkgbWVhbnMgU0dN
+SUkgb3ZlciBjbG9ja2VkIHRvIDIuNUdicHMsIHRoZSBpbnRyb2R1Y3Rpb24gbmVlZHMgdG8NCmJl
+IGNoYW5nZWQgdG8gInN1cHBvcnQgU0dNSUkvMTAwMEJhc2UtWC8yNTAwQmFzZS14Ii4NCg0KWzBd
+Og0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTA1NzUyNy8NCj4gDQo+IAkg
+QW5kcmV3DQoNClJlZ2FyZHMgTGFuZGVuDQo=
 
-I need a KASAN person ACK here, I'd guess.
-
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index c8b4ae6aed5b..7813592b4fb3 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -37,6 +37,7 @@
->  #include <linux/mm.h>
->  #include <linux/smp.h>
->  #include <linux/io.h>
-> +#include <linux/kasan.h>
->  #include <asm/stacktrace.h>
->  #include <asm/processor.h>
->  #include <asm/debugreg.h>
-> @@ -589,6 +590,8 @@ do_general_protection(struct pt_regs *regs, long error_code)
->  	if (!user_mode(regs)) {
->  		enum kernel_gp_hint hint = GP_NO_HINT;
->  		unsigned long gp_addr;
-> +		unsigned long flags;
-> +		int sig;
->  
->  		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
->  			return;
-> @@ -621,7 +624,14 @@ do_general_protection(struct pt_regs *regs, long error_code)
->  				 "maybe for address",
->  				 gp_addr);
->  
-> -		die(desc, regs, error_code);
-> +		flags = oops_begin();
-> +		sig = SIGSEGV;
-> +		__die_header(desc, regs, error_code);
-> +		if (hint == GP_NON_CANONICAL)
-> +			kasan_non_canonical_hook(gp_addr);
-> +		if (__die_body(desc, regs, error_code))
-> +			sig = 0;
-> +		oops_end(flags, regs, sig);
-
-Instead of opencoding it like this, can we add a
-
-	die_addr(desc, regs, error_code, gp_addr);
-
-to arch/x86/kernel/dumpstack.c and call it from here:
-
-	if (hint != GP_NON_CANONICAL)
-		gp_addr = 0;
-
-	die_addr(desc, regs, error_code, gp_addr);
-
-This way you won't need to pass down to die_addr() the hint too - you
-code into gp_addr whether it was non-canonical or not.
-
-The
-
-+       if (addr < KASAN_SHADOW_OFFSET)
-+               return;
-
-check in kasan_non_canonical_hook() would then catch it when addr == 0.
-
-Hmmm?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
