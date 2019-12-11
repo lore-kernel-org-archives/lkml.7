@@ -2,150 +2,190 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF9C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA160C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094B720836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7491F21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080382;
-	bh=KS6VUkeiLZVUdxVjXvdPqHK0GZE6p9leWn2xQwg0U8A=;
+	s=default; t=1576080383;
+	bh=5N0dXIqX9zR+hBefD4dbBOvC2I2jlqrej+/vbe9xcgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FO5v5qxWh3KsrtfHIeuyB38iNvC0RJVzJ6lJHcGGOIQoSzSXJrTcL0UmQAFCYnJPI
-	 HO7mdutQQX1yyoAjxete8rpQNZ1utTA9xK6+xt1XSbSHOYbHG1ouwDQ9GOAKK7Bo8w
-	 4WJkla6beBs2apUjVA7dx81LL+W/y5VfMTW2Jy6U=
+	b=eS9vmCoPzWEWE6n4KH/dwT5qnFjzr7xdkoZWi7hTWzmt7YoOtNvBMIZ1CAXfv13XG
+	 6Ay//27+X7AaDskB1fgryLN+mckwWX5sj+R7FIMZ1l+ZFVYFaOJV+ecBxIUCecDMIn
+	 eXrFSCb5WpghLB0aXcOEy4S0szmhJdpXDs80evNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbfLKQGU (ORCPT
+        id S2388910AbfLKQGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34846 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:06:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfLKPMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731207AbfLKPMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:12:42 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E9C24658;
+        by mail.kernel.org (Postfix) with ESMTPSA id D4DAE24656;
         Wed, 11 Dec 2019 15:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077161;
-        bh=KS6VUkeiLZVUdxVjXvdPqHK0GZE6p9leWn2xQwg0U8A=;
+        bh=5N0dXIqX9zR+hBefD4dbBOvC2I2jlqrej+/vbe9xcgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0GJiFAYbpabvHyb5ZoWTaFOAglsFgtNL2M9Hux5G+BB2g/O6L9D6+jqYgn2cIowDr
-         gCxwvqibcU3bZshjqT3Lcd7fnQZNeY8rFrNxJQPTQhHARLwHvEuAgueaZzM1y3OqGb
-         y/Ip9f6F/4A14H+zFSpI1qj9zWJv3xydmAi6g8Rw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chao Yu <yuchao0@huawei.com>, Eric Biggers <ebiggers@kernel.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.4 047/134] f2fs: fix to update dir's i_pino during cross_rename
-Date:   Wed, 11 Dec 2019 10:10:23 -0500
-Message-Id: <20191211151150.19073-47-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=BQvsLoRbGNTmdkoe+zBEvY3ZOFgIn2IHIsTTIOQxu74JTPTCTBc1Nszxnmbq7fnGa
+         2ltbxQMlwkUL3CVhf7fxfSKWyQzwhhua3pkA4zIBVsMuTYHYe9c4Cz3SFrCZ7dbV9S
+         qd0N7UBH4nLzDmIOtk9oHhTIwhEnBT0xTvjZ/OPM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 038/105] ravb: implement MTU change while device is up
+Date:   Wed, 11 Dec 2019 16:05:27 +0100
+Message-Id: <20191211150236.134238492@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Ulrich Hecht <uli+renesas@fpond.eu>
 
-[ Upstream commit 2a60637f06ac94869b2e630eaf837110d39bf291 ]
+[ Upstream commit 15fb35fa9ff456b81159033eba6397fcee85e671 ]
 
-As Eric reported:
+Pre-allocates buffers sufficient for the maximum supported MTU (2026) in
+order to eliminate the possibility of resource exhaustion when changing the
+MTU while the device is up.
 
-RENAME_EXCHANGE support was just added to fsstress in xfstests:
-
-	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
-	Author: kaixuxia <xiakaixu1987@gmail.com>
-	Date:   Thu Oct 31 14:41:48 2019 +0800
-
-	    fsstress: add EXCHANGE renameat2 support
-
-This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
-I'm not sure what the problem is, but it still happens even with all the
-fs-verity stuff in the test commented out, so that the test just runs fsstress.
-
-generic/579 23s ... 	[10:02:25]
-[    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-(see /results/f2fs/results-default/generic/579.full for details)
- [10:02:47]
-Ran: generic/579
-Failures: generic/579
-Failed 1 of 1 tests
-Xunit report: /results/f2fs/results-default/result.xml
-
-Here's the contents of 579.full:
-
-_check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-*** fsck.f2fs output ***
-[ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
-
-The root cause is that we forgot to update directory's i_pino during
-cross_rename, fix it.
-
-Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Ulrich Hecht <uli+renesas@fpond.eu>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/namei.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/renesas/ravb.h      |  3 ++-
+ drivers/net/ethernet/renesas/ravb_main.c | 26 +++++++++++++-----------
+ 2 files changed, 16 insertions(+), 13 deletions(-)
 
-diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-index 4faf06e8bf899..a1c507b0b4ac4 100644
---- a/fs/f2fs/namei.c
-+++ b/fs/f2fs/namei.c
-@@ -981,7 +981,8 @@ static int f2fs_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	if (!old_dir_entry || whiteout)
- 		file_lost_pino(old_inode);
- 	else
--		F2FS_I(old_inode)->i_pino = new_dir->i_ino;
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
+index ac9195add8116..7090229398227 100644
+--- a/drivers/net/ethernet/renesas/ravb.h
++++ b/drivers/net/ethernet/renesas/ravb.h
+@@ -960,6 +960,8 @@ enum RAVB_QUEUE {
+ #define NUM_RX_QUEUE	2
+ #define NUM_TX_QUEUE	2
  
- 	old_inode->i_ctime = current_time(old_inode);
-@@ -1141,7 +1142,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(old_dir, old_entry, old_page, new_inode);
++#define RX_BUF_SZ	(2048 - ETH_FCS_LEN + sizeof(__sum16))
++
+ /* TX descriptors per packet */
+ #define NUM_TX_DESC_GEN2	2
+ #define NUM_TX_DESC_GEN3	1
+@@ -1023,7 +1025,6 @@ struct ravb_private {
+ 	u32 dirty_rx[NUM_RX_QUEUE];	/* Producer ring indices */
+ 	u32 cur_tx[NUM_TX_QUEUE];
+ 	u32 dirty_tx[NUM_TX_QUEUE];
+-	u32 rx_buf_sz;			/* Based on MTU+slack. */
+ 	struct napi_struct napi[NUM_RX_QUEUE];
+ 	struct work_struct work;
+ 	/* MII transceiver section. */
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 6cacd5e893aca..393644833cd57 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -230,7 +230,7 @@ static void ravb_ring_free(struct net_device *ndev, int q)
+ 					       le32_to_cpu(desc->dptr)))
+ 				dma_unmap_single(ndev->dev.parent,
+ 						 le32_to_cpu(desc->dptr),
+-						 priv->rx_buf_sz,
++						 RX_BUF_SZ,
+ 						 DMA_FROM_DEVICE);
+ 		}
+ 		ring_size = sizeof(struct ravb_ex_rx_desc) *
+@@ -293,9 +293,9 @@ static void ravb_ring_format(struct net_device *ndev, int q)
+ 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
+ 		/* RX descriptor */
+ 		rx_desc = &priv->rx_ring[q][i];
+-		rx_desc->ds_cc = cpu_to_le16(priv->rx_buf_sz);
++		rx_desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
+ 		dma_addr = dma_map_single(ndev->dev.parent, priv->rx_skb[q][i]->data,
+-					  priv->rx_buf_sz,
++					  RX_BUF_SZ,
+ 					  DMA_FROM_DEVICE);
+ 		/* We just set the data size to 0 for a failed mapping which
+ 		 * should prevent DMA from happening...
+@@ -342,9 +342,6 @@ static int ravb_ring_init(struct net_device *ndev, int q)
+ 	int ring_size;
+ 	int i;
  
- 	down_write(&F2FS_I(old_inode)->i_sem);
--	file_lost_pino(old_inode);
-+	if (!old_dir_entry)
-+		file_lost_pino(old_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(old_inode, new_dir->i_ino);
- 	up_write(&F2FS_I(old_inode)->i_sem);
+-	priv->rx_buf_sz = (ndev->mtu <= 1492 ? PKT_BUF_SZ : ndev->mtu) +
+-		ETH_HLEN + VLAN_HLEN + sizeof(__sum16);
+-
+ 	/* Allocate RX and TX skb rings */
+ 	priv->rx_skb[q] = kcalloc(priv->num_rx_ring[q],
+ 				  sizeof(*priv->rx_skb[q]), GFP_KERNEL);
+@@ -354,7 +351,7 @@ static int ravb_ring_init(struct net_device *ndev, int q)
+ 		goto error;
  
- 	old_dir->i_ctime = current_time(old_dir);
-@@ -1156,7 +1161,11 @@ static int f2fs_cross_rename(struct inode *old_dir, struct dentry *old_dentry,
- 	f2fs_set_link(new_dir, new_entry, new_page, old_inode);
+ 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
+-		skb = netdev_alloc_skb(ndev, priv->rx_buf_sz + RAVB_ALIGN - 1);
++		skb = netdev_alloc_skb(ndev, RX_BUF_SZ + RAVB_ALIGN - 1);
+ 		if (!skb)
+ 			goto error;
+ 		ravb_set_buffer_align(skb);
+@@ -590,7 +587,7 @@ static bool ravb_rx(struct net_device *ndev, int *quota, int q)
+ 			skb = priv->rx_skb[q][entry];
+ 			priv->rx_skb[q][entry] = NULL;
+ 			dma_unmap_single(ndev->dev.parent, le32_to_cpu(desc->dptr),
+-					 priv->rx_buf_sz,
++					 RX_BUF_SZ,
+ 					 DMA_FROM_DEVICE);
+ 			get_ts &= (q == RAVB_NC) ?
+ 					RAVB_RXTSTAMP_TYPE_V2_L2_EVENT :
+@@ -623,11 +620,11 @@ static bool ravb_rx(struct net_device *ndev, int *quota, int q)
+ 	for (; priv->cur_rx[q] - priv->dirty_rx[q] > 0; priv->dirty_rx[q]++) {
+ 		entry = priv->dirty_rx[q] % priv->num_rx_ring[q];
+ 		desc = &priv->rx_ring[q][entry];
+-		desc->ds_cc = cpu_to_le16(priv->rx_buf_sz);
++		desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
  
- 	down_write(&F2FS_I(new_inode)->i_sem);
--	file_lost_pino(new_inode);
-+	if (!new_dir_entry)
-+		file_lost_pino(new_inode);
-+	else
-+		/* adjust dir's i_pino to pass fsck check */
-+		f2fs_i_pino_write(new_inode, old_dir->i_ino);
- 	up_write(&F2FS_I(new_inode)->i_sem);
+ 		if (!priv->rx_skb[q][entry]) {
+ 			skb = netdev_alloc_skb(ndev,
+-					       priv->rx_buf_sz +
++					       RX_BUF_SZ +
+ 					       RAVB_ALIGN - 1);
+ 			if (!skb)
+ 				break;	/* Better luck next round. */
+@@ -1814,10 +1811,15 @@ static int ravb_do_ioctl(struct net_device *ndev, struct ifreq *req, int cmd)
  
- 	new_dir->i_ctime = current_time(new_dir);
+ static int ravb_change_mtu(struct net_device *ndev, int new_mtu)
+ {
+-	if (netif_running(ndev))
+-		return -EBUSY;
++	struct ravb_private *priv = netdev_priv(ndev);
+ 
+ 	ndev->mtu = new_mtu;
++
++	if (netif_running(ndev)) {
++		synchronize_irq(priv->emac_irq);
++		ravb_emac_init(ndev);
++	}
++
+ 	netdev_update_features(ndev);
+ 
+ 	return 0;
 -- 
 2.20.1
+
+
 
