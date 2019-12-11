@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6F6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF57C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3E22465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 928F924684
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077663;
-	bh=77xwrJu3iw/lj0VEKXGjYKTaKrhvkfdALuPcALj+K2M=;
+	s=default; t=1576077664;
+	bh=Akr5z4nXc7Wq89WJ0i/DW8zdQvzfWbQSOGyngKtx9zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjIH1DRs4gR39SUjDxRri1upJjMTzJH1nzkI9iKvTfsetkGcUhJKXsrK6xWBb9GW6
-	 XzibITwAwHeL/4j1aYSEt51Tg9HFzoGQiL2nYFyyLsy9CpSo557kMJqpf2wyyNnrsp
-	 4icl5GRgg9DiXi/f2TpjdYhn3dsZwVwsvgdkLCGA=
+	b=ZKLuZM3rO5aoGlsrHAo6HtbefR8vSThfvYLNNrwzjidlPCQG+IkilFbRj/FcwxO6x
+	 uEDBHB/dwq3ArlzT3jdQhfdfwQBgurfIPWABX/wKkOdvIrKJ73VQsTiUIzLZsrcPCv
+	 7SSX0yhG3mebQhUWz6M3GlTWpVkwPFaXnRFITyVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfLKPVC (ORCPT
+        id S1732284AbfLKPVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:21:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50776 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732401AbfLKPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:20:58 -0500
+        id S1731850AbfLKPVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:21:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E5022B48;
-        Wed, 11 Dec 2019 15:20:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191FD2467A;
+        Wed, 11 Dec 2019 15:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077658;
-        bh=77xwrJu3iw/lj0VEKXGjYKTaKrhvkfdALuPcALj+K2M=;
+        s=default; t=1576077660;
+        bh=Akr5z4nXc7Wq89WJ0i/DW8zdQvzfWbQSOGyngKtx9zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFZ4vr2QyHfE10I5+Z/kDed8enZC8bdsk44E5LIQeb2UrHb8IDgV+xr59utuCb5Br
-         6UjgMK/ZRJ2EgeOh2gIlqM5pmR6ILFmmA+rPLTNh400Mn09IY1y9QShmkNT5RTOoq8
-         RyLho3tvbn3EafDcavDCWIythsl8km+RZssmegW4=
+        b=wq0/Yt4hhxvRdNOJTqO2iKXVNsXJZ8sTha127JQWj1EORaCAdviQ2/AKTXua9IrAV
+         iKAJcyfXuXMc0QzfXH7JTTSgCYXUqtnP8RrcO4BlpZkCFsMg2m67o+OmG88hU1jfAl
+         QV2HTfZfAJiffDrmEDZEwfYOyjJjVWcU1Qhj2+I8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
         Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 122/243] ARM: dts: sun4i: Fix gpio-keys warning
-Date:   Wed, 11 Dec 2019 16:04:44 +0100
-Message-Id: <20191211150347.368304042@linuxfoundation.org>
+Subject: [PATCH 4.19 123/243] ARM: dts: sun4i: Fix HDMI output DTC warning
+Date:   Wed, 11 Dec 2019 16:04:45 +0100
+Message-Id: <20191211150347.434243635@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,45 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-[ Upstream commit c9b543404c5e1fd51a7ac375294519be5064bf80 ]
+[ Upstream commit 123b796d3fac60d69a3737d81901ab483c4efd6e ]
 
-Fix the 'unnecessary #address-cells/#size-cells without "ranges" or child
-"reg" property' DTC warning for the gpio-keys DT node on A10 boards.
+Our HDMI output endpoint on the A10 DTSI has a warning under DTC: "graph
+node has single child node 'endpoint', #address-cells/#size-cells are not
+necessary". Fix this by removing those properties.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts | 2 --
- arch/arm/boot/dts/sun4i-a10-pcduino.dts      | 2 --
- 2 files changed, 4 deletions(-)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-index 221acd10f6c84..2f0d966f39ad8 100644
---- a/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts
-@@ -63,8 +63,6 @@
- 		compatible = "gpio-keys-polled";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&key_pins_inet9f>;
--		#address-cells = <1>;
--		#size-cells = <0>;
- 		poll-interval = <20>;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 3d62a89507207..5d46bb0139fad 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -530,8 +530,6 @@
+ 				};
  
- 		left-joystick-left {
-diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-index b97a0f2f20b97..d82a604f3d9c7 100644
---- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
-@@ -76,8 +76,6 @@
- 
- 	gpio-keys {
- 		compatible = "gpio-keys";
--		#address-cells = <1>;
--		#size-cells = <0>;
- 
- 		back {
- 			label = "Key Back";
+ 				hdmi_out: port@1 {
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+ 					reg = <1>;
+ 				};
+ 			};
 -- 
 2.20.1
 
