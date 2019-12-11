@@ -2,108 +2,156 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE1AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 122F3C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6FB24680
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD7024685
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077213;
-	bh=RubREijqb6fCvtlTS2NxAPSuHQOr0yCZ5UPXyRoih4M=;
+	s=default; t=1576077217;
+	bh=sThiPnci4T/GbAaieAjV2/NYiH/63xnXFMXZsH0FKeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h357aIE1puZdgfP7TV6m2izBegjmJDC9OKQU/WuGMyC+8aFoiw6o2bhaAyqzqoZK7
-	 gweyUKtUad0O6xFzBBWCxBL143BQYJZyzfEoBL4/ekFAbsJrF6vqTEvZao3XVK5BoL
-	 NqfjlXJUPhY0i63YMM0oVLfUcLuBuHL8EOSsN1CQ=
+	b=pzmgp3/aYC+D5uAdGS2ox8BOmAQUdkrLyteIOurStemDuPHWMjbnJY5zJ2e5CwYFR
+	 rj7S5O9GF8CXdGna2RjI5f4LET6nMGU1MqsFdZmxV8E+r/WNohfMtoQr6z7LZcw5Gk
+	 O3SmwMVwcYCTxluP7AebLgwCB26gpTs5BuVlIYjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfLKPNb (ORCPT
+        id S1731460AbfLKPNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36492 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730936AbfLKPNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:17 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731387AbfLKPNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5B622467F;
-        Wed, 11 Dec 2019 15:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 653B724680;
+        Wed, 11 Dec 2019 15:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077196;
-        bh=RubREijqb6fCvtlTS2NxAPSuHQOr0yCZ5UPXyRoih4M=;
+        s=default; t=1576077197;
+        bh=sThiPnci4T/GbAaieAjV2/NYiH/63xnXFMXZsH0FKeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XvWBmsHpl76JDe+5yxMwbiL86aVCieaqGMiz7a6jixLpoI09QTW+esQxWq936TzWG
-         IQgrpv279vaQkp9lxvjXVWNJIqwQCzmBLRkUqMY3L3hWKy6GrhXQuW8hSmOxHo+0hs
-         q+2sHHqWwIh7ncz2p6uhJ4KoKHOdhRP3L9oWwyUU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Ma <aaron.ma@canonical.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 079/134] HID: i2c-hid: fix no irq after reset on raydium 3118
-Date:   Wed, 11 Dec 2019 10:10:55 -0500
-Message-Id: <20191211151150.19073-79-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        b=k4sMYHp7P0r44rpgps5C3EcaXNGIIGr6pFKX4J2Gzog35LTGczs6MpiircHOSPHxv
+         7tSMpqtufBUIMk9Opg4VLDcHvepiiS9iaeXurgR13CY+zJ3OU2RrgMi4p8xsLdG3A+
+         VKdBP7eKEnJO6yMKGlzuuqHWPyj70/7YPlfiFZl0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Pobega <mpobega@neverware.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 054/105] ALSA: hda: Modify stream stripe mask only when needed
+Date:   Wed, 11 Dec 2019 16:05:43 +0100
+Message-Id: <20191211150242.706861940@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Ma <aaron.ma@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 0c8432236dea20a95f68fa17989ea3f8af0186a5 ]
+commit e38e486d66e2a3b902768fd71c32dbf10f77e1cb upstream.
 
-On some ThinkPad L390 some raydium 3118 touchscreen devices
-doesn't response any data after reset, but some does.
+The recent commit in HD-audio stream management for changing the
+stripe control seems causing a regression on some platforms.  The
+stripe control is currently used only by HDMI codec, and applying the
+stripe mask unconditionally may lead to scratchy and static noises as
+seen on some MacBooks.
 
-Add this ID to no irq quirk,
-then don't wait for any response alike on these touchscreens.
-All kinds of raydium 3118 devices work fine.
+For addressing the regression, this patch changes the stream
+management code to apply the stripe mask conditionally only when the
+codec driver requested.
 
-BugLink: https://bugs.launchpad.net/bugs/1849721
+Fixes: 9b6f7e7a296e ("ALSA: hda: program stripe bits for controller")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204477
+Tested-by: Michael Pobega <mpobega@neverware.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191202074947.1617-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h              | 1 +
- drivers/hid/i2c-hid/i2c-hid-core.c | 2 ++
- 2 files changed, 3 insertions(+)
+ include/sound/hdaudio.h    |    1 +
+ sound/hda/hdac_stream.c    |   19 ++++++++++++-------
+ sound/pci/hda/patch_hdmi.c |    5 +++++
+ 3 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 00904537e17c4..6273e7178e785 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -960,6 +960,7 @@
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -504,6 +504,7 @@ struct hdac_stream {
+ 	bool prepared:1;
+ 	bool no_period_wakeup:1;
+ 	bool locked:1;
++	bool stripe:1;			/* apply stripe control */
  
- #define I2C_VENDOR_ID_RAYDIUM		0x2386
- #define I2C_PRODUCT_ID_RAYDIUM_4B33	0x4b33
-+#define I2C_PRODUCT_ID_RAYDIUM_3118	0x3118
+ 	/* timestamp */
+ 	unsigned long start_wallclk;	/* start + minimum wallclk */
+--- a/sound/hda/hdac_stream.c
++++ b/sound/hda/hdac_stream.c
+@@ -96,12 +96,14 @@ void snd_hdac_stream_start(struct hdac_s
+ 			      1 << azx_dev->index,
+ 			      1 << azx_dev->index);
+ 	/* set stripe control */
+-	if (azx_dev->substream)
+-		stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
+-	else
+-		stripe_ctl = 0;
+-	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
+-				stripe_ctl);
++	if (azx_dev->stripe) {
++		if (azx_dev->substream)
++			stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
++		else
++			stripe_ctl = 0;
++		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
++					stripe_ctl);
++	}
+ 	/* set DMA start and interrupt mask */
+ 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
+ 				0, SD_CTL_DMA_START | SD_INT_MASK);
+@@ -118,7 +120,10 @@ void snd_hdac_stream_clear(struct hdac_s
+ 	snd_hdac_stream_updateb(azx_dev, SD_CTL,
+ 				SD_CTL_DMA_START | SD_INT_MASK, 0);
+ 	snd_hdac_stream_writeb(azx_dev, SD_STS, SD_INT_MASK); /* to be sure */
+-	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
++	if (azx_dev->stripe) {
++		snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK, 0);
++		azx_dev->stripe = 0;
++	}
+ 	azx_dev->running = false;
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_stream_clear);
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -31,6 +31,7 @@
+ #include <sound/hda_codec.h>
+ #include "hda_local.h"
+ #include "hda_jack.h"
++#include "hda_controller.h"
  
- #define USB_VENDOR_ID_RAZER            0x1532
- #define USB_DEVICE_ID_RAZER_BLADE_14   0x011D
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 04c088131e044..7608ee053114c 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -170,6 +170,8 @@ static const struct i2c_hid_quirks {
- 		I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
- 	{ I2C_VENDOR_ID_HANTICK, I2C_PRODUCT_ID_HANTICK_5288,
- 		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
-+	{ I2C_VENDOR_ID_RAYDIUM, I2C_PRODUCT_ID_RAYDIUM_3118,
-+		I2C_HID_QUIRK_NO_IRQ_AFTER_RESET },
- 	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
- 		 I2C_HID_QUIRK_BOGUS_IRQ },
- 	{ 0, 0 }
--- 
-2.20.1
+ static bool static_hdmi_pcm;
+ module_param(static_hdmi_pcm, bool, 0644);
+@@ -1226,6 +1227,10 @@ static int hdmi_pcm_open(struct hda_pcm_
+ 	per_pin->cvt_nid = per_cvt->cvt_nid;
+ 	hinfo->nid = per_cvt->cvt_nid;
+ 
++	/* flip stripe flag for the assigned stream if supported */
++	if (get_wcaps(codec, per_cvt->cvt_nid) & AC_WCAP_STRIPE)
++		azx_stream(get_azx_dev(substream))->stripe = 1;
++
+ 	snd_hda_set_dev_select(codec, per_pin->pin_nid, per_pin->dev_id);
+ 	snd_hda_codec_write_cache(codec, per_pin->pin_nid, 0,
+ 			    AC_VERB_SET_CONNECT_SEL,
+
 
