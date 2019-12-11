@@ -2,110 +2,108 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A09C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC44C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B6A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53D6C20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 21:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gLEnbhS3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZxFZj/4l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfLKVgD (ORCPT
+        id S1726714AbfLKVgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 16:36:03 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:46167 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfLKVgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 16:36:02 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Y9GQ51xvz9sPh;
-        Thu, 12 Dec 2019 08:35:58 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576100159;
-        bh=lE4ga3un2BmYAqGPl0pdVuTEBxEYuZnWQG6fmK6yUt8=;
-        h=Date:From:Cc:Subject:From;
-        b=gLEnbhS3fWjQZ6y03RjsHld97n7nZPGsQFLQYWhnuMlU+RVzKR0l8AmyzD+vrU6X5
-         7kcAgYqnpR7o8MjQUK7ohnYvCHYJFxBry2cvWE5TKDu/c7IkVxX7EthlUaP5CIqS48
-         ieQ3+KMHEorQKZ4Ubx6+raTLYjhC7jEo1X3PUEID0eVW2uhaZndV/SQvzlTfmUEF30
-         Ns3A49abYyqGj/1R2Z1vJfM3RTInMeVvBo9zKMUL/nLtQLYb1gcqXHc4hhVRPbK64m
-         y6ET6Uq8+TYEerns5fei0h4+EmUsif0fqDx7yelwu+jAbbS+mv6pt5iI+rw5xLoBSw
-         NSNWVEmHIOtOQ==
-Date:   Thu, 12 Dec 2019 08:35:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: linux-next: build failure after merge of the imx-mxs tree
-Message-ID: <20191212083556.1b98ece7@canb.auug.org.au>
+        Wed, 11 Dec 2019 16:36:13 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2061 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfLKVgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 16:36:12 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df161360000>; Wed, 11 Dec 2019 13:35:50 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 11 Dec 2019 13:36:12 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 13:36:12 -0800
+Received: from [10.26.11.206] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 11 Dec
+ 2019 21:36:09 +0000
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <7b43a504-160f-e793-99b2-bcb79d331b6a@nvidia.com>
+Date:   Wed, 11 Dec 2019 21:36:06 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/0D4KnxzN1+oUJb2C=QBLHC/";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576100150; bh=/3FQWkYa0+XD1qH/A1nkOCyAs7XrzEM0EwtOn847qTQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZxFZj/4lkaoLhsrAJHAtmxQG46riPqebeK63yT2Olp5VQkyG+s3XC1dJEFYDxdoKR
+         09uuGGyno4aefJnOkgT8iK76qk3w7bUkGsw7+zzKfn+9Qk8G4xsVT/gg2M6/GQk581
+         GSh6sSKth8rEMXAZGcEWbqUr/dkgaRAI2vo/EdZrCZ609N1eCATIZ6xORTbUV8F1bl
+         uUSivIPoBfjh1Ok301xyyYHnwEuXr1YDCAnJIjGEEpXfMenYq2wsgmZJhBtY+GdS3Z
+         ZWVuTtYJEZ6ssEPm+6bKjQBKHdcz56dXLd0qOfdKt1g5UCO7N9hbkV/SZMx32aTGxn
+         Pk5wsBPIsYjtw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/0D4KnxzN1+oUJb2C=QBLHC/
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On 11/12/2019 15:02, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.89 release.
+> There are 243 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+> Pseudo-Shortlog of commits:
 
-After merging the imx-mxs tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+...
 
-Error: arch/arm/boot/dts/imx6ull-colibri.dtsi:536.4-5 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.lib:285: arch/arm/boot/dts/imx6ull-colibri-w=
-ifi-eval-v3.dtb] Error 1
-Error: arch/arm/boot/dts/imx6ull-colibri.dtsi:536.4-5 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.lib:285: arch/arm/boot/dts/imx6ull-colibri-e=
-val-v3.dtb] Error 1
-arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi:422.28-424.7: Warning (graph_endpoi=
-nt): /soc/aips-bus@2100000/i2c@21a0000/edp-bridge@68/ports/port@2/endpoint:=
- graph connection to node '/panel/port/endpoint' is not bidirectional
-arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi:422.28-424.7: Warning (graph_endpoi=
-nt): /soc/aips-bus@2100000/i2c@21a0000/edp-bridge@68/ports/port@2/endpoint:=
- graph connection to node '/panel/port/endpoint' is not bidirectional
+> Linus Walleij <linus.walleij@linaro.org>
+>     gpio: OF: Parse MMC-specific CD and WP properties
 
-Caused by commit
+The above change is causing intermittent failures on Tegra30 eMMC.
+Reverting this change on top of the 4.19.89-rc1 fixes the problem.
 
-  e7ebb215cb78 ("ARM: dts: colibri-imx6ull: correct wrong pinmuxing and add=
- comments")
+Cheers
+Jon
 
-The warning was (probably) introduced by commit
-
-  e79295edf1df ("ARM: dts: imx6: RDU2: link eDP bridge to panel")
-
-I have used the imx-mxs tree from next-20191211 for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/0D4KnxzN1+oUJb2C=QBLHC/
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xYTwACgkQAVBC80lX
-0GxxeQf+MVSQ3KvS5tgYNta+1Bt5soEbKEhL5nshnsu8KF13EaWoK95Nogdf1Vwk
-6kik5S5D5LBDRhrROQzcg7Fy3AOj/THWZf45KTjxxTxZMSG2CEbb+itpjE1q40+G
-UNiRwaE6adG56s9WR/SuznvaTYCVTYRhUCy0lFojQ/6dMYaKt+9wsUlYc/aWCp0G
-Dg6aBIF0Jd/fJLW4LzyxT+EYKOlZyBkeZf7dkztCYV4x4T8EX+OZrAPxivNLxAkO
-fdzasixi5vBkKchoPJlru/zO8AB7tTnxHFRz3vLYoDU9jRsXVpXbCnvscMMM9Lql
-ZiCrzTevcMhh1iwAccz+gELpyr1bFA==
-=S+nk
------END PGP SIGNATURE-----
-
---Sig_/0D4KnxzN1+oUJb2C=QBLHC/--
+-- 
+nvpublic
