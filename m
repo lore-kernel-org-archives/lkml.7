@@ -2,151 +2,198 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049F6C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613D1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC00024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078486;
-	bh=uZAUNFQpI19k2rXVAjGZ6c4lCim3P/oUyyJTugBtZsg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oo351ZE+GyiCSU+EIHlc/EevXKSwbh78cjFz3Lag42KKBvJ2iUSuaS2fw44nk9fTR
-	 TjIkqJjsiUXEAPsP6hJqSyQNGxz6eeolDTVES6DqZWy0EF7nT4eDEsUBRfNLeB/MxA
-	 UC5vWUkTnSOCz4vBzvfzJ5jX1PAIVCoBqElOIT0s=
+	by mail.kernel.org (Postfix) with ESMTP id 2A77324656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saTYAymW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbfLKPep (ORCPT
+        id S2387965AbfLKPeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:34:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387561AbfLKP2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:11 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA1824687;
-        Wed, 11 Dec 2019 15:28:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078090;
-        bh=uZAUNFQpI19k2rXVAjGZ6c4lCim3P/oUyyJTugBtZsg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p4YK55nTBBtSAO6zNRoY0vz71HbCiEphM7GIH3Rfju5zYSS1PV2BBIMwM1HV4XxJF
-         G4cSwWBvEJ9K1lBp2dKTaXNLV5gD3+i8onekh1usyVR62PRHe2BL6sBHLvy23TnAU2
-         Wb2OcruEUyrLQzQ/Q0ft3skOtYIiW4b1g1Tpdteo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 79/79] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-Date:   Wed, 11 Dec 2019 10:26:43 -0500
-Message-Id: <20191211152643.23056-79-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
-References: <20191211152643.23056-1-sashal@kernel.org>
+        Wed, 11 Dec 2019 10:34:50 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37240 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387561AbfLKPer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:34:47 -0500
+Received: by mail-pg1-f193.google.com with SMTP id q127so10944456pga.4;
+        Wed, 11 Dec 2019 07:34:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HVbcFREEaAqSDDWDOprFJiM+U7AawLPMDqSvqgEPZVM=;
+        b=saTYAymWtQJVo2xDI5CVVPD7OFscZvr3OmDkn9R98p/K2QPfrErbyRBfLSWuDw82Je
+         o5ei0YTQ5fgmkh7BZCrXIsR8OBZyO/sfNZyPb/2FHmifAkGNyAGukafSKofRjuTXMFXl
+         WMQxGPuD9wxK4yLU1VhNzWYYmxihNPVzCRYgjRidEsjCXlEHWzI7tLoB4bV+Tg3p4Myq
+         VXt9uBaV6jd+hJ6IiKy+pcyDX7aXRViVdLgvrrtrP2D7MFxBpcCNbOct/mx5x6fZqNzY
+         wB9Y8YH11zoDDTXPnrVGiEROE/KKqb2trAGgVZw0dOKu3YAS5kWfyPCL9O/gC/FZ67Mj
+         Od8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HVbcFREEaAqSDDWDOprFJiM+U7AawLPMDqSvqgEPZVM=;
+        b=bYAetMkQEIiFZIm3qnffBXcd6lIlL9J+d3IgIYIvwk3iFFmlv6oL6Xef1QRJ8h/xYX
+         BS5uk3rmX+n6N4zUJ/WF4i36CNeNLI7fc+oPNjOYrO55/WiXoqGgPhojY8bcSIS8MwaY
+         D0xT9omgE62Ud+OZ2s5zVaa2n8S1F67lp2doKCSb9Ejv5925cM93w6MZmhKyXNI0K+3C
+         miyyY4u4sxrPSKqGcVKHH5s+WtaeXJRrWZJDKN9ggsLlmZ2iDnqMheTxnUM/vR3CteLt
+         bNWz0wRPvIwaupjz/CBrDdRHag6wWQeYZqDDkHc9vO/6U8NHpal14A7ThErWqXfdcJ90
+         yMCQ==
+X-Gm-Message-State: APjAAAXONB2Wd6FQyap/8Kga4+tUPU3aML+AsSWGjPvAoXWT9epAtMWA
+        u7F4U+Q3lhoLS/zSGYv6vAwREvrkN4min5dBMto=
+X-Google-Smtp-Source: APXvYqzJ499NHPqVSLLyDUscDbmBddDHmzhr28AkkyOZGKxqfxHIirybt8amARCuiU4PKcyZgP8Qc63k0WPAFrMp7QU=
+X-Received: by 2002:a62:1944:: with SMTP id 65mr4526218pfz.151.1576078486945;
+ Wed, 11 Dec 2019 07:34:46 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 11 Dec 2019 17:34:37 +0200
+Message-ID: <CAHp75VcsfbkG7n6FHkpnPN0sG_PdKg_iKS7VGfATxuPVYU5jcQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] add header file for kelvin to/from Celsius
+ conversion helpers
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
+        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
+        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+On Wed, Dec 11, 2019 at 4:38 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
+>
+> There are several helper macros to convert kelvin to/from Celsius in
+> <linux/thermal.h> for thermal drivers.  These are useful for any other
+> drivers or subsystems, but it's odd to include <linux/thermal.h> just for
+> the helpers.
+>
+> This adds a new <linux/units.h> that provides the equivalent inline
+> functions for any drivers or subsystems, and switches all the users of
+> conversion helpers in <linux/thermal.h> to use <linux/units.h>
+> helpers.
+>
 
-[ Upstream commit 3c1c24d91ffd536de0a64688a9df7f49e58fadbc ]
+Thank you for an update.
 
-A while ago Andy noticed
-(http://lkml.kernel.org/r/CALCETrWY+5ynDct7eU_nDUqx=okQvjm=Y5wJvA4ahBja=CQXGw@mail.gmail.com)
-that UFFD_FEATURE_EVENT_FORK used by an unprivileged user may have
-security implications.
+For non-commented patches
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-As the first step of the solution the following patch limits the availably
-of UFFD_FEATURE_EVENT_FORK only for those having CAP_SYS_PTRACE.
+> * v3
+> - rename new header name from <linux/temperature.h> to <linux/units.h>
+> - add milli_kelvin_to_millicelsius() and millicelsius_to_milli_kelvin() and
+>   use them for implementing other helpers
+> - add MILLIDEGREE_PER_DEGREE and MILLIDEGREE_PER_DECIDEGREE and replace
+>   the hardcoded constants
+> - add kelvin_to_celsius() and celsius_to_kelvin() in <linux/units.h>
+> - add Reviewed-by tags
+> - switch iwlegacy driver to use <linux/units.h> helpers
+> - switch iwlwifi driver to use <linux/units.h> helpers
+> - remove unused TO_MCELSIUS macro in armada thermal driver
+> - switch qcom-vadc-common module to use <linux/units.h> helpers
+>
+> * v2
+> - add deci_kelvin_to_millicelsius_with_offset() in linux/temperature.h
+> - stop including linux/temperature.h from linux/thermal.h
+> - include <linux/temperature.h> explicitly from thermal drivers
+> - fix s/temprature/temperature/ typo in commit log
+> - use deci_kelvin_to_millicelsius_with_offset() in ACPI thermal zone driver
+> - don't mix up another fix (format string for cellsius value)
+> - add Acked-by and Reviewed-by tags
+>
+> Akinobu Mita (12):
+>   add helpers for kelvin to/from Celsius conversion
+>   ACPI: thermal: switch to use <linux/units.h> helpers
+>   platform/x86: asus-wmi: switch to use <linux/units.h> helpers
+>   platform/x86: intel_menlow: switch to use <linux/units.h> helpers
+>   thermal: int340x: switch to use <linux/units.h> helpers
+>   thermal: intel_pch: switch to use <linux/units.h> helpers
+>   nvme: hwmon: switch to use <linux/units.h> helpers
+>   thermal: remove kelvin to/from Celsius conversion helpers from
+>     <linux/thermal.h>
+>   wireless: iwlegacy: use <linux/units.h> helpers
+>   wireless: iwlwifi: use <linux/units.h> helpers
+>   thermal: armada: remove unused TO_MCELSIUS macro
+>   iio: adc: qcom-vadc-common: use <linux/units.h> helpers
+>
+>  drivers/acpi/thermal.c                             | 36 +++++-----
+>  drivers/iio/adc/qcom-vadc-common.c                 |  6 +-
+>  drivers/iio/adc/qcom-vadc-common.h                 |  1 -
+>  drivers/net/wireless/intel/iwlegacy/4965-mac.c     |  3 +-
+>  drivers/net/wireless/intel/iwlegacy/4965.c         | 11 +--
+>  drivers/net/wireless/intel/iwlegacy/common.h       |  3 -
+>  drivers/net/wireless/intel/iwlwifi/dvm/dev.h       |  5 --
+>  drivers/net/wireless/intel/iwlwifi/dvm/devices.c   |  6 +-
+>  drivers/nvme/host/hwmon.c                          | 13 ++--
+>  drivers/platform/x86/asus-wmi.c                    |  7 +-
+>  drivers/platform/x86/intel_menlow.c                |  9 ++-
+>  drivers/thermal/armada_thermal.c                   |  2 -
+>  .../intel/int340x_thermal/int340x_thermal_zone.c   |  7 +-
+>  drivers/thermal/intel/intel_pch_thermal.c          |  3 +-
+>  include/linux/thermal.h                            | 11 ---
+>  include/linux/units.h                              | 84 ++++++++++++++++++++++
+>  16 files changed, 139 insertions(+), 68 deletions(-)
+>  create mode 100644 include/linux/units.h
+>
+> Cc: Sujith Thomas <sujith.thomas@intel.com>
+> Cc: Darren Hart <dvhart@infradead.org>
+> Cc: Andy Shevchenko <andy@infradead.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: Keith Busch <kbusch@kernel.org>
+> Cc: Jens Axboe <axboe@fb.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Sagi Grimberg <sagi@grimberg.me>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: Stanislaw Gruszka <sgruszka@redhat.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+> Cc: Luca Coelho <luciano.coelho@intel.com>
+> Cc: Intel Linux Wireless <linuxwifi@intel.com>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: Hartmut Knaack <knaack.h@gmx.de>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> --
+> 2.7.4
+>
 
-The usage of CAP_SYS_PTRACE ensures compatibility with CRIU.
 
-Yet, if there are other users of non-cooperative userfaultfd that run
-without CAP_SYS_PTRACE, they would be broken :(
-
-Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-descriptor table from the read() implementation of uffd, which may have
-security implications for unprivileged use of the userfaultfd.
-
-Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-CAP_SYS_PTRACE.
-
-Link: http://lkml.kernel.org/r/1572967777-8812-2-git-send-email-rppt@linux.ibm.com
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Nick Kralevich <nnk@google.com>
-Cc: Nosh Minwalla <nosh@google.com>
-Cc: Pavel Emelyanov <ovzxemul@gmail.com>
-Cc: Tim Murray <timmurray@google.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/userfaultfd.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 9c2955f67f708..d269d1139f7ff 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1833,13 +1833,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
- 		goto out;
- 	features = uffdio_api.features;
--	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
--		memset(&uffdio_api, 0, sizeof(uffdio_api));
--		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
--			goto out;
--		ret = -EINVAL;
--		goto out;
--	}
-+	ret = -EINVAL;
-+	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
-+		goto err_out;
-+	ret = -EPERM;
-+	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
-+		goto err_out;
- 	/* report all available features and ioctls to userland */
- 	uffdio_api.features = UFFD_API_FEATURES;
- 	uffdio_api.ioctls = UFFD_API_IOCTLS;
-@@ -1852,6 +1851,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	ret = 0;
- out:
- 	return ret;
-+err_out:
-+	memset(&uffdio_api, 0, sizeof(uffdio_api));
-+	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
-+		ret = -EFAULT;
-+	goto out;
- }
- 
- static long userfaultfd_ioctl(struct file *file, unsigned cmd,
 -- 
-2.20.1
-
+With Best Regards,
+Andy Shevchenko
