@@ -2,129 +2,181 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D89C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4EC00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B91420836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0959A222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 14:38:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzSx4/i2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729963AbfLKOg3 (ORCPT
+        id S1729925AbfLKOit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 09:36:29 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:56884 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbfLKOg3 (ORCPT
+        Wed, 11 Dec 2019 09:38:49 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:45847 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfLKOit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 09:36:29 -0500
-Received: from sntmail14r.snt-is.com (unknown [10.203.32.184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 51D1D6285B9;
-        Wed, 11 Dec 2019 15:36:25 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail14r.snt-is.com
- (10.203.32.184) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 11 Dec
- 2019 15:36:24 +0100
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 11 Dec 2019 15:36:24 +0100
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Adam Ford <aford173@gmail.com>, Horia Geanta <horia.geanta@nxp.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        Fabio Estevam <festevam@gmail.com>,
-        "Sascha Hauer" <s.hauer@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mm: Add Crypto CAAM support
-Thread-Topic: [PATCH 2/2] arm64: dts: imx8mm: Add Crypto CAAM support
-Thread-Index: AQHVp9OTS5mnZfHbzke4GpMb7fpZMqeyADMAgAMAHAA=
-Date:   Wed, 11 Dec 2019 14:36:24 +0000
-Message-ID: <fd146818-98c9-7092-5d49-a985db5900c7@kontron.de>
-References: <20191130225153.30111-1-aford173@gmail.com>
- <20191130225153.30111-2-aford173@gmail.com>
- <VI1PR0402MB348586BEDA9BE13CEB10C75698580@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <CAHCN7x+roEAmteNLT9KkLxPvL6AFFHMUW=J_cLcSdE50kODZQQ@mail.gmail.com>
-In-Reply-To: <CAHCN7x+roEAmteNLT9KkLxPvL6AFFHMUW=J_cLcSdE50kODZQQ@mail.gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ACEAAA732C76144993E26E2C6A1682CB@snt-world.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 51D1D6285B9.A01DE
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: aford173@gmail.com, aymen.sghaier@nxp.com,
-        davem@davemloft.net, devicetree@vger.kernel.org, festevam@gmail.com,
-        herbert@gondor.apana.org.au, horia.geanta@nxp.com,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
+        Wed, 11 Dec 2019 09:38:49 -0500
+Received: by mail-pj1-f68.google.com with SMTP id r11so9002704pjp.12;
+        Wed, 11 Dec 2019 06:38:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5BPDmN/kK4qF1FFBcFUC5NrEjFOAwbeaBcO9T8TsnoI=;
+        b=TzSx4/i24RD3Dd71O89+B4fIq62OZ0UUbisqw9pRgyfOm6sUDMjMhyYszrxOBIjwT4
+         37vUbBF8dWFFXKS+lRjeSxxMBNOcfYT4rQNinX79d19OHoarteMsTt/0CPgLWSe53zUY
+         vMHpInIAOOfF8hLhjxAMAdtA2xrdHKzHZ9BTeukIb5Pv5vuC+Rgkj6L2H3joKWh7cXWK
+         LzgxV73ohhGvP7di7NCaWQBtfYXXkI6EJ46I/fHfYIEw7BmTXtJtK0h04kOi1Ta0bWbh
+         WXtoO+s9g2EzdiAOc3ODQ/0fgcf3A7+UzpFNYara7eRAe6vUcLv8LXM5ug3xjjL6cBTE
+         18Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5BPDmN/kK4qF1FFBcFUC5NrEjFOAwbeaBcO9T8TsnoI=;
+        b=E9m+JNYEvnXtGYU72WPd790H/nhJJ86/RCDgCwYmdHRloax1ArmZjr0Irma3PWkifO
+         onGXQdKIRyeISu1dwIUHi9DHht8Ms41O9Oe7FGpErqFhMQyiKsO4ecJQ5m/0cipbsy3S
+         VhE2cnFltSrAboLqhuGEsHAQU4vBMs6Q2FSdFCFKONb65HfCI2BivfKuPXloMm1N1AFT
+         rzKQ1viQZ11tN/uOIJmUqiSc1xMqWBBwuGmi0wr9FeR4T2jl4eNkHmE38kmlCm1QEda8
+         Fl2+fuiFOZpdibq+6myiKYCVPSlZtp6UvXLkrpTexUX4jH7fQNulxlQ/IhKe3dr8b9XE
+         wVyQ==
+X-Gm-Message-State: APjAAAVF6jnuX3ZoDKmcB26h4cU7u+ldQmGsbclV1DvW/GrfsGqTbuPY
+        4isDvPkVucRkJk6m0WQikuL4Ink5VUU=
+X-Google-Smtp-Source: APXvYqxuBwnuR3LZbqfQuvFGH0wM9ioq0vUjfYErg4Lo+js0qm5mN9zlNsQwib7u5AlkkyMPa7zmWQ==
+X-Received: by 2002:a17:90a:94cc:: with SMTP id j12mr3766553pjw.3.1576075127838;
+        Wed, 11 Dec 2019 06:38:47 -0800 (PST)
+Received: from localhost.localdomain ([240f:34:212d:1:368e:e048:68f1:84e7])
+        by smtp.gmail.com with ESMTPSA id q11sm3444239pff.111.2019.12.11.06.38.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 11 Dec 2019 06:38:46 -0800 (PST)
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+To:     linux-nvme@lists.infradead.org, linux-hwmon@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
+        Sujith Thomas <sujith.thomas@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: [PATCH v3 00/12] add header file for kelvin to/from Celsius conversion helpers
+Date:   Wed, 11 Dec 2019 23:38:07 +0900
+Message-Id: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWRhbSwNCg0KT24gMDkuMTIuMTkgMTc6NDcsIEFkYW0gRm9yZCB3cm90ZToNCj4gT24gTW9u
-LCBEZWMgOSwgMjAxOSBhdCAxMDoyMyBBTSBIb3JpYSBHZWFudGEgPGhvcmlhLmdlYW50YUBueHAu
-Y29tPiB3cm90ZToNCj4+DQo+PiBPbiAxMi8xLzIwMTkgMTI6NTIgQU0sIEFkYW0gRm9yZCB3cm90
-ZToNCj4+PiBUaGUgaS5NWDhNIE1pbmkgc3VwcG9ydHMgdGhlIHNhbWUgY3J5cHRvIGVuZ2luZSBh
-cyB3aGF0IGlzIGluDQo+Pj4gdGhlIGkuTVg4TVEsIGJ1dCBpdCBpcyBub3QgY3VycmVudGx5IHBy
-ZXNlbnQgaW4gdGhlIGRldmljZSB0cmVlLA0KPj4+IGJlY2F1c2UgaXQgbWF5IGJlIHJlc3JpY3Rl
-ZCBieSBzZWN1cml0eSBmZWF0dXJlcy4NCj4+Pg0KPj4gV2hhdCBleGFjdGx5IGFyZSB5b3UgcmVm
-ZXJyaW5nIHRvPw0KPiANCj4gSSBkb24ndCBrbm93IHRoaXMgaGFyZHdhcmUgdmVyeSB3ZWxsLCBi
-dXQgb24gYSBkaWZmZXJlbnQgcGxhdGZvcm0sIHdlDQo+IG5lZWRlZCB0byBtYWtlIHRoZSBjcnlw
-dG8gZW5naW5lcyBhcyBkaXNhYmxlZCBpZiB0aGV5IHdlcmUgYmVpbmcNCj4gYWNjZXNzZWQgdGhy
-b3VnaCBzZWN1cmUgb3BlcmF0aW9ucyB3aGljaCBtYWRlIGl0IHVuYXZhaWxhYmxlIHRvIExpbnV4
-DQo+IHdpdGhvdXQgdXNpbmcgc29tZSBzcGVjaWFsIGJhcnJpZXJzLiBJIGRpZG4ndCBoYXZlIHRo
-ZSBzcGVjaWFsDQo+IGhhcmR3YXJlIG9uIHRoZSBvdGhlciBwbGF0Zm9ybSB0aGF0IHJlcXVpcmVk
-IGl0IHRoYXQgd2F5LCBzbyBJIGNhbid0DQo+IHJlYWxseSBleHBsYWluIGl0IHdlbGwuICBJIGtu
-b3cgb24gdGhvc2Ugc3BlY2lhbCBjYXNlcywgYmVjYXVzZSBzb21lDQo+IHBlb3BsZSB3ZXJlIGFj
-Y2Vzc2luZyB0aGVzZSByZWdpc3RlcnMgdGhyb3VnaCBvdGhlciBtZWFucywgdGhlIGRldmljZXMN
-Cj4gaGFkIHRvIGJlIG1hcmtlZCBhcyAnZGlzYWJsZWQnIHNvIHRvIGF2b2lkIGJyZWFraW5nIHNv
-bWV0aGluZy4gIFNpbmNlDQo+IEkgd2Fzbid0IHN1cmUgaWYgdGhpcyB3YXMgbGVmdCBvdXQgb2Yg
-dGhlIGkuTVg4TSBNaW5pIG9uIHB1cnBvc2UsIEkNCj4gbGV0IHRoaXMgZGlzYWJsZWQganVzdCBp
-biBjYXNlIHRoaXMgaGFyZHdhcmUgcGxhdGZvcm0gd2FzIGFsc28NCj4gYWZmZWN0ZWQgaW4gYSBz
-aW1pbGFyIGFuZCBwZW9wbGUgd2FudGluZyB0byB1c2UgaXQgY291bGQgbWFyayBpdCBhcw0KPiAn
-b2theScNCg0KSSBkb24ndCBrbm93IGVub3VnaCBhYm91dCB0aGlzIHRvIHVuZGVyc3RhbmQgdGhl
-IHByb2JsZW0geW91J3JlIA0KZGVzY3JpYmluZy4gSXQgc2VlbXMgbGlrZSBtb3N0IFNvQ3MgaGF2
-ZSB0aGUgQ0FBTSBlbmFibGVkIGJ5IGRlZmF1bHQgaW4gDQp0aGUgZGV2aWNldHJlZS4gT24gZmly
-c3QgZ2xhbmNlIEkgY291bGQgb25seSBmaW5kIGZzbC1seDIxNjBhLmR0c2kgdGhhdCANCmhhcyBp
-dCBkaXNhYmxlZC4NCg0KPiANCj4gYWRhbQ0KPiANCj4+DQo+Pj4gVGhpcyBwYXRjaCBwbGFjZXMg
-aW4gaW50byB0aGUgZGV2aWNlIHRyZWUgYW5kIG1hcmtzIGl0IGFzIGRpc2FibGVkLA0KPj4+IGJ1
-dCBhbnlvbmUgbm90IHJlc3RyaWN0aW5nIHRoZSBDQUFNIHdpdGggc2VjdXJlIG1vZGUgZnVuY3Rp
-b25zDQo+Pj4gY2FuIG1hcmsgaXQgYXMgZW5hYmxlZC4NCj4+Pg0KPj4gRXZlbiBpZiAtIGR1ZSB0
-byBleHBvcnQgY29udHJvbCByZWd1bGF0aW9ucyAtIENBQU0gaXMgInRyaW1tZWQgZG93biIsDQo+
-PiBpdCBsb3NlcyBvbmx5IHRoZSBlbmNyeXB0aW9uIGNhcGFiaWxpdGllcyAoaGFzaGluZyBldGMu
-IHN0aWxsIHdvcmtpbmcpLg0KDQpJIGRvbid0IGtub3cgbXVjaCBhYm91dCB0aGlzLCBidXQgYXMg
-SG9yaWEgc2FpZCB0aGUgQ0FBTSBtaWdodCBoYXZlIA0KbGltaXRlZCBjYXBhYmlsaXRpZXMgaW4g
-c29tZSBjYXNlcyBidXQgd291bGQgc3RpbGwgd29yay4NCg0KVGhlcmVmb3JlIEkgdGhpbmsgdGhl
-IENBQU0gc2hvdWxkIGJlIGVuYWJsZWQgYnkgZGVmYXVsdCBhcyBpdCBhbHJlYWR5IGlzIA0KZG9u
-ZSBmb3IgbW9zdCBvdGhlciBTb0NzLg0KDQpSZWdhcmRzLA0KRnJpZWRlcg0KDQo+Pg0KPj4gQWdh
-aW4sIHBsZWFzZSBjbGFyaWZ5IHdoYXQgeW91IG1lYW4gYnkgInNlY3VyZSBtb2RlIGZ1bmN0aW9u
-cyIsDQo+PiAic2VjdXJpdHkgZmVhdHVyZXMiIGV0Yy4NCj4+DQo+PiBIb3JpYQ0KPiANCj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
-b3JnDQo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbA0KPiA=
+There are several helper macros to convert kelvin to/from Celsius in
+<linux/thermal.h> for thermal drivers.  These are useful for any other
+drivers or subsystems, but it's odd to include <linux/thermal.h> just for
+the helpers.
+
+This adds a new <linux/units.h> that provides the equivalent inline
+functions for any drivers or subsystems, and switches all the users of
+conversion helpers in <linux/thermal.h> to use <linux/units.h>
+helpers.
+
+* v3
+- rename new header name from <linux/temperature.h> to <linux/units.h>
+- add milli_kelvin_to_millicelsius() and millicelsius_to_milli_kelvin() and
+  use them for implementing other helpers
+- add MILLIDEGREE_PER_DEGREE and MILLIDEGREE_PER_DECIDEGREE and replace
+  the hardcoded constants
+- add kelvin_to_celsius() and celsius_to_kelvin() in <linux/units.h>
+- add Reviewed-by tags
+- switch iwlegacy driver to use <linux/units.h> helpers
+- switch iwlwifi driver to use <linux/units.h> helpers
+- remove unused TO_MCELSIUS macro in armada thermal driver
+- switch qcom-vadc-common module to use <linux/units.h> helpers
+
+* v2
+- add deci_kelvin_to_millicelsius_with_offset() in linux/temperature.h
+- stop including linux/temperature.h from linux/thermal.h
+- include <linux/temperature.h> explicitly from thermal drivers
+- fix s/temprature/temperature/ typo in commit log
+- use deci_kelvin_to_millicelsius_with_offset() in ACPI thermal zone driver
+- don't mix up another fix (format string for cellsius value)
+- add Acked-by and Reviewed-by tags
+
+Akinobu Mita (12):
+  add helpers for kelvin to/from Celsius conversion
+  ACPI: thermal: switch to use <linux/units.h> helpers
+  platform/x86: asus-wmi: switch to use <linux/units.h> helpers
+  platform/x86: intel_menlow: switch to use <linux/units.h> helpers
+  thermal: int340x: switch to use <linux/units.h> helpers
+  thermal: intel_pch: switch to use <linux/units.h> helpers
+  nvme: hwmon: switch to use <linux/units.h> helpers
+  thermal: remove kelvin to/from Celsius conversion helpers from
+    <linux/thermal.h>
+  wireless: iwlegacy: use <linux/units.h> helpers
+  wireless: iwlwifi: use <linux/units.h> helpers
+  thermal: armada: remove unused TO_MCELSIUS macro
+  iio: adc: qcom-vadc-common: use <linux/units.h> helpers
+
+ drivers/acpi/thermal.c                             | 36 +++++-----
+ drivers/iio/adc/qcom-vadc-common.c                 |  6 +-
+ drivers/iio/adc/qcom-vadc-common.h                 |  1 -
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c     |  3 +-
+ drivers/net/wireless/intel/iwlegacy/4965.c         | 11 +--
+ drivers/net/wireless/intel/iwlegacy/common.h       |  3 -
+ drivers/net/wireless/intel/iwlwifi/dvm/dev.h       |  5 --
+ drivers/net/wireless/intel/iwlwifi/dvm/devices.c   |  6 +-
+ drivers/nvme/host/hwmon.c                          | 13 ++--
+ drivers/platform/x86/asus-wmi.c                    |  7 +-
+ drivers/platform/x86/intel_menlow.c                |  9 ++-
+ drivers/thermal/armada_thermal.c                   |  2 -
+ .../intel/int340x_thermal/int340x_thermal_zone.c   |  7 +-
+ drivers/thermal/intel/intel_pch_thermal.c          |  3 +-
+ include/linux/thermal.h                            | 11 ---
+ include/linux/units.h                              | 84 ++++++++++++++++++++++
+ 16 files changed, 139 insertions(+), 68 deletions(-)
+ create mode 100644 include/linux/units.h
+
+Cc: Sujith Thomas <sujith.thomas@intel.com>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Andy Shevchenko <andy@infradead.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@verdurent.com>
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Keith Busch <kbusch@kernel.org>
+Cc: Jens Axboe <axboe@fb.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: Stanislaw Gruszka <sgruszka@redhat.com>
+Cc: Johannes Berg <johannes.berg@intel.com>
+Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Cc: Luca Coelho <luciano.coelho@intel.com>
+Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+-- 
+2.7.4
+
