@@ -2,104 +2,143 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAA7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1841C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136862073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080206;
-	bh=3iC+18TvAnQn3O8cFqW+/Dl+rOgTPGJCJH7ffZJuQTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ACPAQXd/CMAVQHfICMHElcnLXvkqa4mDCe8J/pRiCGjH3iVXUul1br6ZYoJCXLs4W
-	 2ZOPDeujY+1E4bLSfjnz0nRwuJTJEEmdAa9tLm+QI8UibsYJgpbrI8iT773wO//YbP
-	 wApwsCr9PpIZL1wei8qW5Q3csGIk6OD790OrxOy4=
+	by mail.kernel.org (Postfix) with ESMTP id 91A702073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Jubjc+TY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388807AbfLKQDZ (ORCPT
+        id S1731909AbfLKQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:03:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:03:30 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:37834 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730850AbfLKPND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0DFA24688;
-        Wed, 11 Dec 2019 15:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077182;
-        bh=3iC+18TvAnQn3O8cFqW+/Dl+rOgTPGJCJH7ffZJuQTI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M++Vv1mKMgVzeReukqpPa16Efa2bd/R0+80NHAqH5jLCp+A1UMXbiW8Ra6kjWGtQp
-         PmLFJhOdodOwncUrX3rU8DO/wk9yGtSEjAFtM3CsA0GtPG6m4UL4s3ovvo8roV4B4p
-         kfOjzQlGna1/IapB9ZU4587nu9cp29kDiceS4s7g=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 066/134] PCI: rpaphp: Don't rely on firmware feature to imply drc-info support
-Date:   Wed, 11 Dec 2019 10:10:42 -0500
-Message-Id: <20191211151150.19073-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        id S1730957AbfLKQDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:03:24 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Y1td2hxmzW9;
+        Wed, 11 Dec 2019 17:03:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1576080201; bh=Ikv5AJJhaGvKrnyC7mUPeJgkvCtgUEaTu7zd0aqxlLs=;
+        h=Date:In-Reply-To:References:From:Subject:To:Cc:From;
+        b=Jubjc+TYmgIGzoOJa8ZjH7Tph9hGlFcnMmu3I4CN8muzcVDBbuidTBk4IfBDSlI48
+         gEA3UJvTvi1aX2iu4Qyo/cBrlic5YPja3g+Ot43vrB7wJr76xz+HxVJRTQ/9lB1ulo
+         rRfbFrsHkyY2lTnnJ9x233mMMHh/k1z9f+72hEe481UlGW7ueX6KwzYlhotJ9V4uG/
+         RNo+j4JLZmMJrIa89Q6ImPvYuA5NOjsf2XgVaasM+eK2JdtuqaRzdTZ/HXsPzFbCd4
+         8l8RfqusnrxgYtpOmUPeU/YmpLGZQGFb23F//3Yo6HsZscf6dW6+Kjf2FdxeZFfDbx
+         1lb7zBqYaGgvA==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Wed, 11 Dec 2019 17:03:21 +0100
+Message-Id: <82f3e18f260a3f372944401d12f8f92bd64bc9d2.1576079249.git.mirq-linux@rere.qmqm.pl>
+In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH v2 1/9] input: elants: document some registers and values
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+To:     linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+Add information found in downstream kernels, to make the code less
+magic.
 
-[ Upstream commit 52e2b0f16574afd082cff0f0e8567b2d9f68c033 ]
-
-In the event that the partition is migrated to a platform with older
-firmware that doesn't support the ibm,drc-info property the device
-tree is modified to remove the ibm,drc-info property and replace it
-with the older style ibm,drc-* properties for types, names, indexes,
-and power-domains. One of the requirements of the drc-info firmware
-feature is that the client is able to handle both the new property,
-and old style properties at runtime. Therefore we can't rely on the
-firmware feature alone to dictate which property is currently
-present in the device tree.
-
-Fix this short coming by checking explicitly for the ibm,drc-info
-property, and falling back to the older ibm,drc-* properties if it
-doesn't exist.
-
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-6-git-send-email-tyreld@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index e3502644a45c3..e18e9a0e959c8 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -275,7 +275,7 @@ int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
- 		return -EINVAL;
- 	}
+diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+index d4ad24ea54c8..887888c53996 100644
+--- a/drivers/input/touchscreen/elants_i2c.c
++++ b/drivers/input/touchscreen/elants_i2c.c
+@@ -77,7 +77,11 @@
  
--	if (firmware_has_feature(FW_FEATURE_DRC_INFO))
-+	if (of_find_property(dn->parent, "ibm,drc-info", NULL))
- 		return rpaphp_check_drc_props_v2(dn, drc_name, drc_type,
- 						*my_index);
- 	else
+ #define HEADER_REPORT_10_FINGER	0x62
+ 
+-/* Header (4 bytes) plus 3 fill 10-finger packets */
++/* Power state */
++#define PWR_STATE_DEEP_SLEEP	0
++#define PWR_STATE_NORMAL	1
++
++/* Header (4 bytes) plus 3 full 10-finger packets */
+ #define MAX_PACKET_SIZE		169
+ 
+ #define BOOT_TIME_DELAY_MS	50
+@@ -87,10 +91,21 @@
+ #define E_ELAN_INFO_BC_VER	0x10
+ #define E_ELAN_INFO_TEST_VER	0xE0
+ #define E_ELAN_INFO_FW_ID	0xF0
++#define E_POWER_MODE		0x40
++#define E_POWER_STATE		0x50
++#define E_INFO_X_RES		0x60
++#define E_INFO_Y_RES		0x63
+ #define E_INFO_OSR		0xD6
+ #define E_INFO_PHY_SCAN		0xD7
+ #define E_INFO_PHY_DRIVER	0xD8
+ 
++/* FW write command, 0x54 0x?? 0x0, 0x01 */
++#define E_POWER_MODE_BATTERY	0x40
++#define E_POWER_MODE_AC		0x41
++#define E_POWER_MODE_USB	0x42
++#define E_POWER_STATE_SLEEP	0x50
++#define E_POWER_STATE_RESUME	0x58
++
+ #define MAX_RETRIES		3
+ #define MAX_FW_UPDATE_RETRIES	30
+ 
+@@ -231,8 +246,8 @@ static int elants_i2c_calibrate(struct elants_data *ts)
+ {
+ 	struct i2c_client *client = ts->client;
+ 	int ret, error;
+-	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
+-	static const u8 rek[] = { 0x54, 0x29, 0x00, 0x01 };
++	static const u8 w_flashkey[] = { CMD_HEADER_WRITE, 0xC0, 0xE1, 0x5A };
++	static const u8 rek[] = { CMD_HEADER_WRITE, 0x29, 0x00, 0x01 };
+ 	static const u8 rek_resp[] = { CMD_HEADER_REK, 0x66, 0x66, 0x66 };
+ 
+ 	disable_irq(client->irq);
+@@ -1295,7 +1310,9 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct elants_data *ts = i2c_get_clientdata(client);
+-	const u8 set_sleep_cmd[] = { 0x54, 0x50, 0x00, 0x01 };
++	const u8 set_sleep_cmd[] = {
++		CMD_HEADER_WRITE, E_POWER_STATE_SLEEP, 0x00, 0x01
++	};
+ 	int retry_cnt;
+ 	int error;
+ 
+@@ -1332,7 +1349,9 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct elants_data *ts = i2c_get_clientdata(client);
+-	const u8 set_active_cmd[] = { 0x54, 0x58, 0x00, 0x01 };
++	const u8 set_active_cmd[] = {
++		CMD_HEADER_WRITE, E_POWER_STATE_RESUME, 0x00, 0x01
++	};
+ 	int retry_cnt;
+ 	int error;
+ 
 -- 
 2.20.1
 
