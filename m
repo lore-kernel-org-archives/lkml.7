@@ -2,53 +2,54 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23260C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F41E3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98A82465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C18772077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077966;
-	bh=aWlTSsAz5pIPz3sdH4Px6OlGakCFM7rgFREkQ+ye7i4=;
+	s=default; t=1576077969;
+	bh=i5BGrY1ElwEElS/X7wKf37aj7r/syxINuT+nIDrQYPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5xxav6qOSBrD/OOW7YSYJBRm1Qrsh7cMAJpbZRRqSGS5PGfkoCaZ1D35GEp+y5v5
-	 kvYMyiudhkVV/ViMh3hudDeNqXBnXKNSWsof3UWku4nIbf7jrH5WCiXCUcGA8BMLN1
-	 MVMz+lz00TfNg5dtnql2rliapEzUxdAnt6G/natc=
+	b=uDKjNNKQnLUezI4Jq05lYi8zNXCX61i8G2QxCg3cAIi1XK/Hjr3e2BR35ePVO1PI9
+	 sa8o2zkgpGTI/XpXRqdGX9MG/ky5pagnJ8O4r7xN6QJqMrngBSsp6QsR1LIN6usNgo
+	 Ig85M6JB3hGbHOAjhN28OQ70djX2uFOiXJsP+zJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732312AbfLKP0F (ORCPT
+        id S1732871AbfLKP0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58730 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733057AbfLKPZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:25:58 -0500
+        id S1733057AbfLKP0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44AC2222C4;
-        Wed, 11 Dec 2019 15:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0231222C4;
+        Wed, 11 Dec 2019 15:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077957;
-        bh=aWlTSsAz5pIPz3sdH4Px6OlGakCFM7rgFREkQ+ye7i4=;
+        s=default; t=1576077965;
+        bh=i5BGrY1ElwEElS/X7wKf37aj7r/syxINuT+nIDrQYPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PSwqYL7deNA2iRv4nBPjSdFZJuuIykoiPWGL2IIE5gszYRg06OLml8MBhQi5AiXuH
-         DdNcpSSlTtGr3bIMgqCCYGQEjEdUxmLkzW6vY583s6GoJZJ+Tc14lSooR/9a3UN0NJ
-         Ha525ULlt7uU6mOJ8oToAMEBhUjGJc8z8d9e8bjQ=
+        b=daaeIyrITpVgQJue3l/TMsfVcbTbrmWHY4c0ZVUICXkMNwJujD4ZX84qFj2/X68m0
+         zcI6WYwHWqGejY4cwcK7KnKGIsoMp1Fp5h49Wy2rsQcgKMHdPCCFeSYb5OhWhXTDMv
+         y2MWPXuQHdQR6mEisHeFiM8OcW6HxP8O7JkMJrHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@gmx.us>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 188/243] mlx4: Use snprintf instead of complicated strcpy
-Date:   Wed, 11 Dec 2019 16:05:50 +0100
-Message-Id: <20191211150351.864220155@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com,
+        Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.19 239/243] iomap: Fix pipe page leakage during splicing
+Date:   Wed, 11 Dec 2019 16:06:41 +0100
+Message-Id: <20191211150355.471454825@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,53 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@gmx.us>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 0fbc9b8b4ea3f688a5da141a64f97aa33ad02ae9 ]
+commit 419e9c38aa075ed0cd3c13d47e15954b686bcdb6 upstream.
 
-This fixes a compilation warning in sysfs.c
+When splicing using iomap_dio_rw() to a pipe, we may leak pipe pages
+because bio_iov_iter_get_pages() records that the pipe will have full
+extent worth of data however if file size is not block size aligned
+iomap_dio_rw() returns less than what bio_iov_iter_get_pages() set up
+and splice code gets confused leaking a pipe page with the file tail.
 
-drivers/infiniband/hw/mlx4/sysfs.c:360:2: warning: 'strncpy' output may be
-truncated copying 8 bytes from a string of length 31
-[-Wstringop-truncation]
+Handle the situation similarly to the old direct IO implementation and
+revert iter to actually returned read amount which makes iter consistent
+with value returned from iomap_dio_rw() and thus the splice code is
+happy.
 
-By eliminating the temporary stack buffer.
+Fixes: ff6a9292e6f6 ("iomap: implement direct I/O")
+CC: stable@vger.kernel.org
+Reported-by: syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Qian Cai <cai@gmx.us>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx4/sysfs.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ fs/iomap.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/mlx4/sysfs.c b/drivers/infiniband/hw/mlx4/sysfs.c
-index e219093d27645..d2da28d613f2c 100644
---- a/drivers/infiniband/hw/mlx4/sysfs.c
-+++ b/drivers/infiniband/hw/mlx4/sysfs.c
-@@ -353,16 +353,12 @@ err:
+--- a/fs/iomap.c
++++ b/fs/iomap.c
+@@ -1913,8 +1913,15 @@ iomap_dio_rw(struct kiocb *iocb, struct
+ 		}
+ 		pos += ret;
  
- static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
- {
--	char base_name[9];
--
--	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n */
--	strlcpy(name, pci_name(dev->dev->persist->pdev), max);
--	strncpy(base_name, name, 8); /*till xxxx:yy:*/
--	base_name[8] = '\0';
--	/* with no ARI only 3 last bits are used so when the fn is higher than 8
-+	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n
-+	 * with no ARI only 3 last bits are used so when the fn is higher than 8
- 	 * need to add it to the dev num, so count in the last number will be
- 	 * modulo 8 */
--	sprintf(name, "%s%.2d.%d", base_name, (i/8), (i%8));
-+	snprintf(name, max, "%.8s%.2d.%d", pci_name(dev->dev->persist->pdev),
-+		 i / 8, i % 8);
- }
+-		if (iov_iter_rw(iter) == READ && pos >= dio->i_size)
++		if (iov_iter_rw(iter) == READ && pos >= dio->i_size) {
++			/*
++			 * We only report that we've read data up to i_size.
++			 * Revert iter to a state corresponding to that as
++			 * some callers (such as splice code) rely on it.
++			 */
++			iov_iter_revert(iter, pos - dio->i_size);
+ 			break;
++		}
+ 	} while ((count = iov_iter_count(iter)) > 0);
+ 	blk_finish_plug(&plug);
  
- struct mlx4_port {
--- 
-2.20.1
-
 
 
