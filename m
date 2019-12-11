@@ -2,90 +2,77 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAA5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D13C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9BF21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576092367;
-	bh=ogOM2KoOKE3GWBSMbQW90cGC/wifD+Cza71yanM54lk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=DA8VKXneo9GU55/FdWOQ9YViAbCV+/6eox5D/k3Fck0R2gSOQ1oLaIi3xJLsdbRFh
-	 SvsxoRnV90Qt1Nq+LDadWMQSMXvJkSXg2qug+cD/foV3+kw9SZq5H64ntg6Ic3u1Hi
-	 kRDqU6EiMHQFhDTuqtCU48h0hNVRrlTT7L/B3QKc=
+	by mail.kernel.org (Postfix) with ESMTP id 2EAFD21556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0/wx5BRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfLKT0G (ORCPT
+        id S1728928AbfLKT1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:26:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59830 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 14:27:15 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:48686 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726487AbfLKT0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:26:05 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9F8F20836;
-        Wed, 11 Dec 2019 19:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576092365;
-        bh=ogOM2KoOKE3GWBSMbQW90cGC/wifD+Cza71yanM54lk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YdJvLdJmTdyrazqy5/ba/amy0ASA9/7joFIdlcr6k/Vna8On6CaBhnzsbv7R9ySiv
-         6qCnMkjB1bWCiQTf1nHpm9dwzHlqRskdaxtLYFraSizqj2SgJGBajTJLYZJh0Lr7hL
-         iq7nuFZEZ55pBHotx18SoWGS/3aUIzRfEQ7XbOMs=
-Message-ID: <1576092363.2833.20.camel@kernel.org>
-Subject: Re: ftrace histogram sorting broken on BE architecures
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sven Schnelle <svens@stackframe.org>,
-        linux-trace-devel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 11 Dec 2019 13:26:03 -0600
-In-Reply-To: <20191211120051.711582ee@gandalf.local.home>
-References: <20191211123316.GD12147@stackframe.org>
-         <20191211103557.7bed6928@gandalf.local.home>
-         <20191211110959.2baeb70f@gandalf.local.home>
-         <1576082238.2833.8.camel@kernel.org>
-         <20191211120051.711582ee@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726487AbfLKT1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 14:27:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=fhhzlnh0YMGIMRykWTm4rFFLUMRsYVi5NX6Vsu+Wz9k=; b=0/wx5BRx38jwBupSBL9HPDq+Op
+        4XueCGjMApYHbc+xiDtJoqQ9UauFW2OCaMQQGSjhWNbdSGh6A4tqk4HR+ycvlZpZSvkY4VN929aDZ
+        lsooxXG98r2sDAlaF2LQAar50cl7CsEAieCTcLjrUlq7BEeM+cJDRDyJM75MDOFUa3QA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1if7dX-0006xS-2G; Wed, 11 Dec 2019 20:27:03 +0100
+Date:   Wed, 11 Dec 2019 20:27:03 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>
+Subject: Re: [PATCH net-next 4/6] net: dsa: mt7530: Add the support of MT7531
+ switch
+Message-ID: <20191211192703.GC30053@lunn.ch>
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6d608dd024edc90b09ba4fe35417b693847f973c.1575914275.git.landen.chao@mediatek.com>
+ <20191210164438.GD27714@lunn.ch>
+ <1576088280.23763.73.camel@mtksdccf07>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1576088280.23763.73.camel@mtksdccf07>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+> Do you also hint at using the same number of parameters for
+> mt7531_ind_c22_phy_read() and mt7531_ind_c45_phy_read()?
 
-On Wed, 2019-12-11 at 12:00 -0500, Steven Rostedt wrote:
-> On Wed, 11 Dec 2019 10:37:18 -0600
-> Tom Zanussi <zanussi@kernel.org> wrote:
-> 
-> > > Tom,
-> > > 
-> > > Correct me if I'm wrong, from what I can tell, all sums and keys
-> > > are
-> > > u64 unless they are a string. Thus, I believe this patch should
-> > > not
-> > > have any issues.  
-> > 
-> > The sums are u64, but the keys may not be.  I'll take a look and
-> > see,
-> 
-> Are they? I see in create_key_field:
-> 
-> 	key_size = ALIGN(key_size, sizeof(u64));
-> 
-> Which to me seems that we'll have nothing smaller than sizeof(u64).
-> 
+That is up to you. It just seems like your MDIO bus can do both C22
+and C45. And somebody might connect an external C45 PHY, so you might
+as well support it.
 
-Yeah, that makes them effectively u64 in this case, so I'd agree.
-
-Tom
-
+   Andrew
