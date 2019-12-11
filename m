@@ -2,181 +2,135 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880A3C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04230C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD3F24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEDE72465B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077279;
-	bh=34+cUa3MGnMCqTQUnF3QD+tWh95FD6XBhUFLhlsOcnQ=;
+	s=default; t=1576077281;
+	bh=+yk9mYXVKl5XA7S+vRIKSBQqHBlADY3o4I5YiwvkXdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yFNwdLuquCKky0IyRxdyap/nqNnQ6gAuiqXgQWtefauRXAlzC/T9Fq+mJQWYzDRT3
-	 aTNSPGFnR+JzynhgLkOrmrftjvTIZ1gO4tx5U1bUdgH1H4LbtfuBbyf+m2EWqEB7uz
-	 yfQZfnalEnO+3Tiq6xOpNX5d+E33+hoBZ8valdAU=
+	b=uixhda6lyF1ztRvX7v0zkBsk2xrx/pXFjfcf6zOMm6iaNsWgerUXkuD3YMy75TziF
+	 dWtNA1AUsWbbR/5Yf9/6UDI8fgw16dD/tMdMpX9cJc4Sl+0Cz0zv4WQfZ4qBzP8Zjb
+	 WZnZy8V2imGvY/ipmg4sBJUiB7tB/2bz6UiC3TlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbfLKPOh (ORCPT
+        id S1731652AbfLKPOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:14:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:14:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730448AbfLKPNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:44 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731495AbfLKPNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:45 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FF32465C;
-        Wed, 11 Dec 2019 15:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 688E22467D;
+        Wed, 11 Dec 2019 15:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077223;
-        bh=34+cUa3MGnMCqTQUnF3QD+tWh95FD6XBhUFLhlsOcnQ=;
+        s=default; t=1576077224;
+        bh=+yk9mYXVKl5XA7S+vRIKSBQqHBlADY3o4I5YiwvkXdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h89My+4L9ZLVxs/M7LD77g2LZfPn0dfqlN1+L/XovrI1q68sjF271fH9Z+wSgl6Pp
-         31H3py0Va+XPcDCG8Ak/e9UsjGV9WlcSGkjR1GoPS2ylWVk7KtZDJLzYHTmvpLE46M
-         BIL3EO8bDZlpH4ZWM2n3caz8YXzjAHCqR9r19XJc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arijit Banerjee <arijit@rubrik.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.3 046/105] fuse: verify attributes
-Date:   Wed, 11 Dec 2019 16:05:35 +0100
-Message-Id: <20191211150240.151473315@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=dvuPtkVWSpiUGCUuqIkb6OUYW3JkfIjaYXba7qxyBoTuhd1jtkTUS3pRjLBgYII9Z
+         F51jTOhwllDLTFjWXdO+AoXxsITjlacpjqQOxRkmUAttYRiEmgaNVh4oLqAVys1R54
+         0f6iDPfLfslMoBMUbHJ+PeXVbwq2Vvzkao9g6ohQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        "David E . Box" <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 103/134] platform/x86: intel_pmc_core: Add Comet Lake (CML) platform support to intel_pmc_core driver
+Date:   Wed, 11 Dec 2019 10:11:19 -0500
+Message-Id: <20191211151150.19073-103-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-commit eb59bd17d2fa6e5e84fba61a5ebdea984222e6d5 upstream.
+[ Upstream commit 5406327d43edd9a171bd260f49c752d148727eaf ]
 
-If a filesystem returns negative inode sizes, future reads on the file were
-causing the cpu to spin on truncate_pagecache.
+Add Comet Lake to the list of the platforms that intel_pmc_core driver
+supports for pmc_core device.
 
-Create a helper to validate the attributes.  This now does two things:
+Just like Ice Lake, Comet Lake can also reuse all the Cannon Lake PCH
+IPs. No additional effort is needed to enable but to simply reuse them.
 
- - check the file mode
- - check if the file size fits in i_size without overflowing
-
-Reported-by: Arijit Banerjee <arijit@rubrik.com>
-Fixes: d8a5ba45457e ("[PATCH] FUSE - core")
-Cc: <stable@vger.kernel.org> # v2.6.14
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fuse/dir.c     |   22 ++++++++++++++++------
- fs/fuse/fuse_i.h  |    2 ++
- fs/fuse/readdir.c |    2 +-
- 3 files changed, 19 insertions(+), 7 deletions(-)
+ drivers/platform/x86/intel_pmc_core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -214,7 +214,8 @@ static int fuse_dentry_revalidate(struct
- 		kfree(forget);
- 		if (ret == -ENOMEM)
- 			goto out;
--		if (ret || (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
-+		if (ret || fuse_invalid_attr(&outarg.attr) ||
-+		    (outarg.attr.mode ^ inode->i_mode) & S_IFMT)
- 			goto invalid;
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 6b6edc30f8359..571b4754477c5 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -160,6 +160,7 @@ static const struct pmc_reg_map spt_reg_map = {
  
- 		forget_all_cached_acls(inode);
-@@ -272,6 +273,12 @@ int fuse_valid_type(int m)
- 		S_ISBLK(m) || S_ISFIFO(m) || S_ISSOCK(m);
- }
+ /* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+ static const struct pmc_bit_map cnp_pfear_map[] = {
++	/* Reserved for Cannon Lake but valid for Comet Lake */
+ 	{"PMC",                 BIT(0)},
+ 	{"OPI-DMI",             BIT(1)},
+ 	{"SPI/eSPI",            BIT(2)},
+@@ -185,7 +186,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SDX",                 BIT(4)},
+ 	{"SPE",                 BIT(5)},
+ 	{"Fuse",                BIT(6)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+ 	{"SBR8",		BIT(7)},
  
-+bool fuse_invalid_attr(struct fuse_attr *attr)
-+{
-+	return !fuse_valid_type(attr->mode) ||
-+		attr->size > LLONG_MAX;
-+}
-+
- int fuse_lookup_name(struct super_block *sb, u64 nodeid, const struct qstr *name,
- 		     struct fuse_entry_out *outarg, struct inode **inode)
- {
-@@ -303,7 +310,7 @@ int fuse_lookup_name(struct super_block
- 	err = -EIO;
- 	if (!outarg->nodeid)
- 		goto out_put_forget;
--	if (!fuse_valid_type(outarg->attr.mode))
-+	if (fuse_invalid_attr(&outarg->attr))
- 		goto out_put_forget;
+ 	{"CSME_FSC",            BIT(0)},
+@@ -229,7 +230,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"HDA_PGD4",            BIT(2)},
+ 	{"HDA_PGD5",            BIT(3)},
+ 	{"HDA_PGD6",            BIT(4)},
+-	/* Reserved for Cannon Lake but valid for Ice Lake */
++	/* Reserved for Cannon Lake but valid for Ice Lake and Comet Lake */
+ 	{"PSF6",		BIT(5)},
+ 	{"PSF7",		BIT(6)},
+ 	{"PSF8",		BIT(7)},
+@@ -813,6 +814,8 @@ static const struct x86_cpu_id intel_pmc_core_ids[] = {
+ 	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
+ 	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
++	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
+ 	{}
+ };
  
- 	*inode = fuse_iget(sb, outarg->nodeid, outarg->generation,
-@@ -427,7 +434,8 @@ static int fuse_create_open(struct inode
- 		goto out_free_ff;
- 
- 	err = -EIO;
--	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid))
-+	if (!S_ISREG(outentry.attr.mode) || invalid_nodeid(outentry.nodeid) ||
-+	    fuse_invalid_attr(&outentry.attr))
- 		goto out_free_ff;
- 
- 	ff->fh = outopen.fh;
-@@ -535,7 +543,7 @@ static int create_new_entry(struct fuse_
- 		goto out_put_forget_req;
- 
- 	err = -EIO;
--	if (invalid_nodeid(outarg.nodeid))
-+	if (invalid_nodeid(outarg.nodeid) || fuse_invalid_attr(&outarg.attr))
- 		goto out_put_forget_req;
- 
- 	if ((outarg.attr.mode ^ mode) & S_IFMT)
-@@ -895,7 +903,8 @@ static int fuse_do_getattr(struct inode
- 	args.out.args[0].value = &outarg;
- 	err = fuse_simple_request(fc, &args);
- 	if (!err) {
--		if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
-+		if (fuse_invalid_attr(&outarg.attr) ||
-+		    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
- 			make_bad_inode(inode);
- 			err = -EIO;
- 		} else {
-@@ -1518,7 +1527,8 @@ int fuse_do_setattr(struct dentry *dentr
- 		goto error;
- 	}
- 
--	if ((inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
-+	if (fuse_invalid_attr(&outarg.attr) ||
-+	    (inode->i_mode ^ outarg.attr.mode) & S_IFMT) {
- 		make_bad_inode(inode);
- 		err = -EIO;
- 		goto error;
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -1008,6 +1008,8 @@ void fuse_ctl_remove_conn(struct fuse_co
-  */
- int fuse_valid_type(int m);
- 
-+bool fuse_invalid_attr(struct fuse_attr *attr);
-+
- /**
-  * Is current process allowed to perform filesystem operation?
-  */
---- a/fs/fuse/readdir.c
-+++ b/fs/fuse/readdir.c
-@@ -184,7 +184,7 @@ static int fuse_direntplus_link(struct f
- 
- 	if (invalid_nodeid(o->nodeid))
- 		return -EIO;
--	if (!fuse_valid_type(o->attr.mode))
-+	if (fuse_invalid_attr(&o->attr))
- 		return -EIO;
- 
- 	fc = get_fuse_conn(dir);
-
+-- 
+2.20.1
 
