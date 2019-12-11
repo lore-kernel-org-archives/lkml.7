@@ -2,160 +2,119 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036C4C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9F6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CACAA2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079643;
-	bh=Gaw9+FhkITEH1xQoprcNUFZopSw4zsuzQkRpNB2caFQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ejVLrl/zUlNKyOB4NgeJZgrfpLeGeauhUhl009hswAO6GN2wwHZMju6V6WUPeu93S
-	 9HnNHOgGLGIbGJOP84yvwWggADJIMu+aQtFIjTDJA1mjoyTCRilrs726pX2nCD/k+M
-	 2asHz1Nf2C1RhaaxQyfLbFfYNW05qc0/ORslsBX0=
+	by mail.kernel.org (Postfix) with ESMTP id AE3E120836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732573AbfLKPyD (ORCPT
+        id S1732936AbfLKPyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:54:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46412 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:54:06 -0500
+Received: from mail.monom.org ([188.138.9.77]:55848 "EHLO mail.monom.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLKPS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 134FE208C3;
-        Wed, 11 Dec 2019 15:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077505;
-        bh=Gaw9+FhkITEH1xQoprcNUFZopSw4zsuzQkRpNB2caFQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HLOrbVDAgW8j5V58o17nB6pb2WbN+bNjTZQPRWr78pvHZbf8EZhnLZz7FKwpiHHum
-         rUXoal0tQtK0OFy2OYFNoC0BCI26N5gICxAw2G1XgekwhT3IQtTWutsA17KJHg97QB
-         +w29OKbznsjwCDlPydhD5M2SxoU6z6D5fwEkW/0s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        James Hughes <james.hughes@raspberrypi.org>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/243] firmware: raspberrypi: Fix firmware calls with large buffers
-Date:   Wed, 11 Dec 2019 16:03:45 +0100
-Message-Id: <20191211150343.353095927@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730284AbfLKPyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:54:05 -0500
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id EB052500796;
+        Wed, 11 Dec 2019 16:54:02 +0100 (CET)
+Received: from [192.168.154.174] (b9168f78.cgn.dg-w.de [185.22.143.120])
+        by mail.monom.org (Postfix) with ESMTPSA id 76B80500243;
+        Wed, 11 Dec 2019 16:54:02 +0100 (CET)
+Subject: Re: Patch "mm, vmstat: make quiet_vmstat lighter" has been added to
+ the 4.4-stable tree
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        cl@linux.com, mgalbraith@suse.de, mhocko@suse.com,
+        torvalds@linux-foundation.org, umgwanakikbuti@gmail.com,
+        stable-commits@vger.kernel.org,
+        "Wangkefeng (Maro)" <wangkefeng.wang@huawei.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>
+References: <156442332854185@kroah.com>
+ <e4bd396a-1a10-1387-aa3f-4d61d31ab7b6@huawei.com>
+ <20191211144614.GA637714@kroah.com>
+From:   Daniel Wagner <wagi@monom.org>
+Message-ID: <40460b0c-7fb0-a19d-3684-cb020e226a3f@monom.org>
+Date:   Wed, 11 Dec 2019 16:54:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211144614.GA637714@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Hughes <james.hughes@raspberrypi.org>
+Hi,
 
-[ Upstream commit 91c6ada69f396e663acb2b713e8acb8a9463557d ]
+On 2019-12-11 15:46, Greg KH wrote:
+> On Wed, Dec 11, 2019 at 10:32:49PM +0800, zhangyi (F) wrote:
+>> We find a performance degradation under lmbench af_unix[1] test case after
+>> mergeing this patch on my x86 qemu 4.4 machine. The test result is basically
+>> stable for each teses.
+>>
+>> Host machine: CPU: Intel(R) Xeon(R) CPU E5-2690 v3
+>>                CPU(s): 48
+>>                MEM: 193047 MB
+>>
+>> Guest machine:  CPU: QEMU Virtual CPU version 2.5+
+>>                  CPU(s): 8
+>>                  MEM: 26065 MB
+>>
+>>    Before this patch:
+>>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
+>>    AF_UNIX sock stream latency: 133.7073 microseconds
+>>
+>>    After this patch:
+>>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
+>>    AF_UNIX sock stream latency: 156.4722 microseconds
+>>
+>> If we set task to a constant cpu, the degradation does not appear.
+>>
+>>    Before this patch:
+>>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
+>>    AF_UNIX sock stream latency: 17.9296 microseconds
+>>
+>>    After this patch:
+>>    [root@localhost ~]# lmbench-3.0-a9/bin/x86_64-linux-gnu/lat_unix -P 1
+>>    AF_UNIX sock stream latency: 17.7500 microseconds
+>>
+>> We also test it on the aarch64 hi1215 machine with 8 cpu cores.
+>>
+>>    Before this patch:
+>>    [root@localhost ~]# ./lat_unix -P 1
+>>    AF_UNIX sock stream latency: 30.7 microseconds
+>>
+>>    After this patch:
+>>    [root@localhost ~]# ./lat_unix -P 1
+>>    AF_UNIX sock stream latency: 37.5 microseconds
+>>
+>> Accessories included my reproduce config for x86 qemu. Any thoughts?
+> 
+> This fixes a bug, as reported by Daniel Wagner.  So it's probably better
+> to have a stable system instead of a broken one, right?  :)
+> 
+> Daniel can provide more information if needed.
 
-Commit a1547e0bca51 ("firmware: raspberrypi: Remove VLA usage")
-moved away from VLA's to a fixed maximum size for mailbox data.
-However, some mailbox calls use larger data buffers
-than the maximum allowed in that change. This fix therefor
-moves from using fixed buffers to kmalloc to ensure all sizes
-are catered for.
+IIRC, this patch got necessary because  bdf3c006b9a2 ("vmstat: make 
+vmstat_updater deferrable again and shut down on idle") was added to 
+stable. Without it v4.4-rt is not working at all.
 
-There is some documentation, which is somewhat out of date,
-on the mailbox calls here :
-https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
+ > What about when you run your tests on a 4.9 or newer kernel that
+ > already has this integrated?
 
-Fixes: a1547e0bca51 ("firmware: raspberrypi: Remove VLA usage")
+That said, I was going through all changes in vmstat.c upstream and we 
+backported almost all changes to v4.4 at that point. So if this is a 
+really giving you a performance hit, I suspect you would see it upstream 
+as well.
 
-Signed-off-by: James Hughes <james.hughes@raspberrypi.org>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/firmware/raspberrypi.c | 35 +++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index a200a21746119..44eb99807e337 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -14,6 +14,7 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/slab.h>
- #include <soc/bcm2835/raspberrypi-firmware.h>
- 
- #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-@@ -21,8 +22,6 @@
- #define MBOX_DATA28(msg)		((msg) & ~0xf)
- #define MBOX_CHAN_PROPERTY		8
- 
--#define MAX_RPI_FW_PROP_BUF_SIZE	32
--
- static struct platform_device *rpi_hwmon;
- 
- struct rpi_firmware {
-@@ -144,28 +143,30 @@ EXPORT_SYMBOL_GPL(rpi_firmware_property_list);
- int rpi_firmware_property(struct rpi_firmware *fw,
- 			  u32 tag, void *tag_data, size_t buf_size)
- {
--	/* Single tags are very small (generally 8 bytes), so the
--	 * stack should be safe.
--	 */
--	u8 data[sizeof(struct rpi_firmware_property_tag_header) +
--		MAX_RPI_FW_PROP_BUF_SIZE];
--	struct rpi_firmware_property_tag_header *header =
--		(struct rpi_firmware_property_tag_header *)data;
-+	struct rpi_firmware_property_tag_header *header;
- 	int ret;
- 
--	if (WARN_ON(buf_size > sizeof(data) - sizeof(*header)))
--		return -EINVAL;
-+	/* Some mailboxes can use over 1k bytes. Rather than checking
-+	 * size and using stack or kmalloc depending on requirements,
-+	 * just use kmalloc. Mailboxes don't get called enough to worry
-+	 * too much about the time taken in the allocation.
-+	 */
-+	void *data = kmalloc(sizeof(*header) + buf_size, GFP_KERNEL);
- 
-+	if (!data)
-+		return -ENOMEM;
-+
-+	header = data;
- 	header->tag = tag;
- 	header->buf_size = buf_size;
- 	header->req_resp_size = 0;
--	memcpy(data + sizeof(struct rpi_firmware_property_tag_header),
--	       tag_data, buf_size);
-+	memcpy(data + sizeof(*header), tag_data, buf_size);
-+
-+	ret = rpi_firmware_property_list(fw, data, buf_size + sizeof(*header));
-+
-+	memcpy(tag_data, data + sizeof(*header), buf_size);
- 
--	ret = rpi_firmware_property_list(fw, &data, buf_size + sizeof(*header));
--	memcpy(tag_data,
--	       data + sizeof(struct rpi_firmware_property_tag_header),
--	       buf_size);
-+	kfree(data);
- 
- 	return ret;
- }
--- 
-2.20.1
-
-
-
+Thanks,
+Daniel
