@@ -2,88 +2,128 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C2C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25227C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E82C2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0002073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+IhQdX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbfLKPtS (ORCPT
+        id S1733072AbfLKPtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:49:18 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51652 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388678AbfLKPtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:49:14 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3E48CAFA9;
-        Wed, 11 Dec 2019 15:49:12 +0000 (UTC)
-Subject: Re: [PATCH v1] xen-pciback: optionally allow interrupt enable flag
- writes
-To:     =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
-        <marmarek@invisiblethingslab.com>
-Cc:     xen-devel@lists.xenproject.org,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Simon Gaiser <simon@invisiblethingslab.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191203054222.7966-1-marmarek@invisiblethingslab.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <17bf38dc-a606-bb92-50a8-9bd8f269acc2@suse.com>
-Date:   Wed, 11 Dec 2019 16:49:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 11 Dec 2019 10:49:25 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40856 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732393AbfLKPsd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:48:33 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c14so24544040wrn.7;
+        Wed, 11 Dec 2019 07:48:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IGE1EZUwmuYxZ2Mr6HgxG/3CVQcz/FGb9rzGPe/Zmdw=;
+        b=K+IhQdX61p0DNtryFjvI+O95fa02XCaX+fJS84QR58V9gaWJRhRI9ixClf2eV6teDl
+         bkJRGQtmGKWOhr97rTwTPQ4EJhJjeKurhIVIUacxn1w2p7X61WykKpWbS4GJ5n7lK6I8
+         p5TpUwBxe3yjKHtbYGmnlo0Rxu8dN8v7fnnWYVoRjwsPPuP/rQnTgP1FVZ17DLSx9mWy
+         raZ16oh3Qu3idCPSlSqdLWo+TSuXqVlisK55iB4lqeOoEf74BjPJ3feoBT36oa35jMWM
+         L26CFs389pitsobSshnEcVXzhUTUaMrqZmp0JnTh4X3o//5mzkc5qqCuEnr72ru7FH+v
+         jPwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IGE1EZUwmuYxZ2Mr6HgxG/3CVQcz/FGb9rzGPe/Zmdw=;
+        b=NzB+cBFq7svBrMJQB25xXvBBoV9R/lYJig+F6ZVAoGfosBXq6GhssO/JDer9dhrhWD
+         6i1qeIVYsbXlvFVXvUSXGTnhwX5m/mg3T95X+/RWciMSv8SXqZTc/poA14GwZ2eRq/ag
+         Wxa7TydIGGd6nP7qsIL9Gh4BcCpKUbl44/xWC7fCHipd3VGhomuhrHfhOGXR7TE4HMHu
+         WM4+rz3UWD5HNrubADQ5ksKeWsBZOpsGkpWwVDijl+7A60OV4wK6ZHjV/F4khHDIPG04
+         SV11SqG2XgG4Ta1z8+cGOC55oNQsQ8vY42WQL8ByjXjQj+ZBFQB21qp/fwdFvkYIyUJC
+         5fAA==
+X-Gm-Message-State: APjAAAUtW8Tmb4S0RwXrxd4SHMQx1eVDWPBYAoqiuAONoM2MDtaK7KAj
+        bH8L33sg8dssCVIS4s1wl8Q=
+X-Google-Smtp-Source: APXvYqxtnLcKlpVW5V/2bsbKm53q/msqRT+C1dVoFjS8gzd0jI835avZh2s7fMaA3YMf0+DkjJ1BJA==
+X-Received: by 2002:a5d:49c3:: with SMTP id t3mr462740wrs.113.1576079312153;
+        Wed, 11 Dec 2019 07:48:32 -0800 (PST)
+Received: from localhost.localdomain (dslb-002-204-142-082.002.204.pools.vodafone-ip.de. [2.204.142.82])
+        by smtp.gmail.com with ESMTPSA id n16sm2677388wro.88.2019.12.11.07.48.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 07:48:31 -0800 (PST)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     pkshih@realtek.com
+Cc:     kvalo@codeaurora.org, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/6] rtlwifi: rtl8192ce: use generic rtl_query_rxpwrpercentage
+Date:   Wed, 11 Dec 2019 16:47:50 +0100
+Message-Id: <20191211154755.15012-2-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191211154755.15012-1-straube.linux@gmail.com>
+References: <20191211154755.15012-1-straube.linux@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191203054222.7966-1-marmarek@invisiblethingslab.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.12.2019 06:41, Marek Marczykowski-Górecki  wrote:
-> QEMU running in a stubdom needs to be able to set INTX_DISABLE, and the
-> MSI(-X) enable flags in the PCI config space. This adds an attribute
-> 'allow_interrupt_control' which when set for a PCI device allows writes
-> to this flag(s). The toolstack will need to set this for stubdoms.
-> When enabled, guest (stubdomain) will be allowed to set relevant enable
-> flags, but only one at a time - i.e. it refuses to enable more than one
-> of INTx, MSI, MSI-X at a time.
-> 
-> This functionality is needed only for config space access done by device
-> model (stubdomain) serving a HVM with the actual PCI device. It is not
-> necessary and unsafe to enable direct access to those bits for PV domain
-> with the device attached. For PV domains, there are separate protocol
-> messages (XEN_PCI_OP_{enable,disable}_{msi,msix}) for this purpose.
-> Those ops in addition to setting enable bits, also configure MSI(-X) in
-> dom0 kernel - which is undesirable for PCI passthrough to HVM guests.
-> 
-> This should not introduce any new security issues since a malicious
-> guest (or stubdom) can already generate MSIs through other ways, see
-> [1] page 8.
+Function _rtl92c_query_rxpwrpercentage is identical to the generic
+version rtl_query_rxpwrpercentage. Remove _rtl92c_query_rxpwrpercentage
+and use the generic function.
 
-True, albeit this doesn't cover INTX_DISABLE.
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ .../net/wireless/realtek/rtlwifi/rtl8192ce/trx.c   | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-> Additionally, when qemu runs in dom0, it already have direct
-> access to those bits.
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
+index fc9a3aae047f..dec66b3ac365 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
+@@ -23,16 +23,6 @@ static u8 _rtl92ce_map_hwqueue_to_fwqueue(struct sk_buff *skb, u8 hw_queue)
+ 	return skb->priority;
+ }
+ 
+-static u8 _rtl92c_query_rxpwrpercentage(s8 antpower)
+-{
+-	if ((antpower <= -100) || (antpower >= 20))
+-		return 0;
+-	else if (antpower >= 0)
+-		return 100;
+-	else
+-		return 100 + antpower;
+-}
+-
+ static long _rtl92ce_signal_scale_mapping(struct ieee80211_hw *hw,
+ 		long currsig)
+ {
+@@ -194,7 +184,7 @@ static void _rtl92ce_query_rxphystatus(struct ieee80211_hw *hw,
+ 			rx_pwr[i] =
+ 			    ((p_drvinfo->gain_trsw[i] & 0x3f) * 2) - 110;
+ 			/* Translate DBM to percentage. */
+-			rssi = _rtl92c_query_rxpwrpercentage(rx_pwr[i]);
++			rssi = rtl_query_rxpwrpercentage(rx_pwr[i]);
+ 			total_rssi += rssi;
+ 			/* Get Rx snr value in DB */
+ 			rtlpriv->stats.rx_snr_db[i] =
+@@ -209,7 +199,7 @@ static void _rtl92ce_query_rxphystatus(struct ieee80211_hw *hw,
+ 		 * hardware (for rate adaptive)
+ 		 */
+ 		rx_pwr_all = ((p_drvinfo->pwdb_all >> 1) & 0x7f) - 110;
+-		pwdb_all = _rtl92c_query_rxpwrpercentage(rx_pwr_all);
++		pwdb_all = rtl_query_rxpwrpercentage(rx_pwr_all);
+ 		pstats->rx_pwdb_all = pwdb_all;
+ 		pstats->rxpower = rx_pwr_all;
+ 		pstats->recvsignalpower = rx_pwr_all;
+-- 
+2.24.0
 
-True again, but any bug here (as in: too wide exposure) is a qemu
-bug (possibly security issue). The statement also isn't really
-correct for de-privileged qemu, I think (but I also think PCI
-pass-through doesn't work in that mode at all yet).
-
-On the whole this looks to be an acceptable approach to me. But
-I'm not the maintainer, so my opinion may not count much. Some
-issues with the implementation itself were already pointed out.
-
-Jan
