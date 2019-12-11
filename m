@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67716C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1B5C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325532073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBBB2073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080191;
-	bh=nj7LlROC8TI5OK1/cknxOFNUCZdg690AQh9eYAuhSvU=;
+	s=default; t=1576080193;
+	bh=B1UXAB/bYlO/FlMXnBATFCOrk8JDbFA9GLvu61ZPP70=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LqfNTukt1y//S+JTKexOlLddHL7TBtf+dDWmb78Ej+EBGEn1l6vZXoOldim+z4ZEd
-	 U1/y24FZezg1bPz6uBu+Lh642QodLgGZ1xQjbKPovIbGBh8wJ7dw7vThLlswQKQUnR
-	 9uyAL+084kN4NuG3UOBbApynxtOeTsNfYW0QOHZo=
+	b=f79i9MNwexaKA5LJRMEVLcsHkfegx3cGS+LWHTCLAEujD7TUHZAIBtEDmGTfZLNbY
+	 Xk7G2FQWL/2RZcKdghFxgDrKC9gW64Tkz5FSLFzF17JP/K3GvqFFlmIpH5nzzv6Rwe
+	 cJjD6Vgjv3WhepniyEZphP9QtnbS/kOz/QsBUA+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbfLKQDJ (ORCPT
+        id S1731323AbfLKPNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:03:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:13:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbfLKPNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:05 -0500
+        id S1730864AbfLKPMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC4252467E;
-        Wed, 11 Dec 2019 15:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B0E24658;
+        Wed, 11 Dec 2019 15:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077184;
-        bh=nj7LlROC8TI5OK1/cknxOFNUCZdg690AQh9eYAuhSvU=;
+        s=default; t=1576077170;
+        bh=B1UXAB/bYlO/FlMXnBATFCOrk8JDbFA9GLvu61ZPP70=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vZiEzAWCMArPlkfIh4EJzo8bTcWZlDi/eXKkh/ow2sJ2LNBCJCvvVgDXrukMLs/Q+
-         OPlHr14VchMjvSH1Lydc31U3qk889UPqw+BtG0BrrwW6MWDzIjf2hOuy7kkb6XgLBK
-         8ySuipKrNq4RGdJL6Kz6mbWANtsvrDxmUGFEGTy8=
+        b=U0HUswer/HvHYZ4FOZVKofLysiCMZV/EatgzhSyijh5UvHgOjVs+4+8pHaQde+gZg
+         IiX+Ff5Ba1So3yA7acA29AE23oWXrz6DIaWAeDW85lqgkrSkyj6ifWNCbDjEA9pvW7
+         ij3wKAnCDqBf7NECeEhEQoB2hk9TuyqXs36mFee8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 068/134] PCI: rpaphp: Correctly match ibm, my-drc-index to drc-name when using drc-info
-Date:   Wed, 11 Dec 2019 10:10:44 -0500
-Message-Id: <20191211151150.19073-68-sashal@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Barry Song <Baohua.Song@csr.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 055/134] mfd: mfd-core: Honour Device Tree's request to disable a child-device
+Date:   Wed, 11 Dec 2019 10:10:31 -0500
+Message-Id: <20191211151150.19073-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -60,48 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyrel Datwyler <tyreld@linux.ibm.com>
+From: Lee Jones <lee.jones@linaro.org>
 
-[ Upstream commit 4f9f2d3d7a434b7f882b72550194c9278f4a3925 ]
+[ Upstream commit 6b5c350648b857047b47acf74a57087ad27d6183 ]
 
-The newer ibm,drc-info property is a condensed description of the old
-ibm,drc-* properties (ie. names, types, indexes, and power-domains).
-When matching a drc-index to a drc-name we need to verify that the
-index is within the start and last drc-index range and map it to a
-drc-name using the drc-name-prefix and logical index.
+Until now, MFD has assumed all child devices passed to it (via
+mfd_cells) are to be registered. It does not take into account
+requests from Device Tree and the like to disable child devices
+on a per-platform basis.
 
-Fix the mapping by checking that the index is within the range of the
-current drc-info entry, and build the name from the drc-name-prefix
-concatenated with the starting drc-name-suffix value and the sequential
-index obtained by subtracting ibm,my-drc-index from this entries
-drc-start-index.
+Well now it does.
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1573449697-5448-10-git-send-email-tyreld@linux.ibm.com
+Link: https://www.spinics.net/lists/arm-kernel/msg366309.html
+Link: https://lkml.org/lkml/2019/8/22/1350
+
+Reported-by: Barry Song <Baohua.Song@csr.com>
+Reported-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/rpaphp_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/mfd/mfd-core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-index abb10b3c0b70f..32eab1776cfea 100644
---- a/drivers/pci/hotplug/rpaphp_core.c
-+++ b/drivers/pci/hotplug/rpaphp_core.c
-@@ -248,9 +248,10 @@ static int rpaphp_check_drc_props_v2(struct device_node *dn, char *drc_name,
- 		/* Should now know end of current entry */
- 
- 		/* Found it */
--		if (my_index <= drc.last_drc_index) {
-+		if (my_index >= drc.drc_index_start && my_index <= drc.last_drc_index) {
-+			int index = my_index - drc.drc_index_start;
- 			sprintf(cell_drc_name, "%s%d", drc.drc_name_prefix,
--				my_index);
-+				drc.drc_name_suffix_start + index);
- 			break;
- 		}
- 	}
+diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+index 23276a80e3b48..b0afefdc9eac8 100644
+--- a/drivers/mfd/mfd-core.c
++++ b/drivers/mfd/mfd-core.c
+@@ -174,6 +174,11 @@ static int mfd_add_device(struct device *parent, int id,
+ 	if (parent->of_node && cell->of_compatible) {
+ 		for_each_child_of_node(parent->of_node, np) {
+ 			if (of_device_is_compatible(np, cell->of_compatible)) {
++				if (!of_device_is_available(np)) {
++					/* Ignore disabled devices error free */
++					ret = 0;
++					goto fail_alias;
++				}
+ 				pdev->dev.of_node = np;
+ 				pdev->dev.fwnode = &np->fwnode;
+ 				break;
 -- 
 2.20.1
 
