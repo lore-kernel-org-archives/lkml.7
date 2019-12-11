@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC2DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBA1C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178442465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2387B24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077610;
-	bh=V3+W7ZWCbX77NaZBAeU295+GDlSRMBaIq1zVLZZiujw=;
+	s=default; t=1576077613;
+	bh=xZjEc4Xr/AqWgZBND/PK/05kelS3CIMjzvTBe38DF6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NqfjLIngQUH0O2umWYaeF6NjU6WWdBlhvqECUg9XTgMeOK/1PWReJhXEwOFpbl5jl
-	 TZHig/K+NTKtIYyiyz0meLUGQ07yEn5dkg1uZwQ8KHlTh4qyVUPjMNoM+jHq41ktLm
-	 sTHje2L5zkQ66Mb5lpsDZOYjzMjOx/SunuBX90d4=
+	b=KouQyxvIZoCgfTAWW7hoiTu9J6Q67kSjhk88idAQJzMZ+6jRCbpMLpOV/5REwaPsn
+	 LhZN/PilBBR/O5ffiobEfoTSeUNgHltEzBjqfacTLzbiictDfM6WGcgndos4UzcpUD
+	 mA9MJzTEiaJ1tddFfIA2YfeMh2djlopzFyXic1GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731919AbfLKPUI (ORCPT
+        id S1732315AbfLKPUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:20:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48970 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:20:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732149AbfLKPT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:19:59 -0500
+        id S1732297AbfLKPUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:20:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4844224658;
-        Wed, 11 Dec 2019 15:19:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8CB24654;
+        Wed, 11 Dec 2019 15:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077598;
-        bh=V3+W7ZWCbX77NaZBAeU295+GDlSRMBaIq1zVLZZiujw=;
+        s=default; t=1576077604;
+        bh=xZjEc4Xr/AqWgZBND/PK/05kelS3CIMjzvTBe38DF6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=poHivdjGMroeZXwEfls2jXF5YcLXikHd5x2JEK7BG9vaQqAI1ujXtieLR8LXyXTkY
-         ogwnAJGJFhZ1YNHWRPQ9yQbZ9G2kR1cCq4fetkY3FNDnhVfOZoJPQxL8LaTfd7NI35
-         laEoVMmuVjhMovQ8uhsSJp6K11F9r7qpzSPLcP3I=
+        b=2XHqMuUnkGlDht0eUZRZ07sPNs6pAGEKHMmbCfpIZzYfuGfJ0y3ePqLh82JxrYQzZ
+         h9zhbMdd92rq86t+5jeDnMjgEumE5i6djzFZliXrI7zEgvxkQpxZvFbyU9FO1cnlRO
+         qvxvvUk2dy5Kf9yXdXsvMtchLVtmfRzrjj8MqaZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Breno Leitao <leitao@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 098/243] selftests/powerpc: Skip test instead of failing
-Date:   Wed, 11 Dec 2019 16:04:20 +0100
-Message-Id: <20191211150345.730535239@linuxfoundation.org>
+Subject: [PATCH 4.19 100/243] usb: dwc3: dont log probe deferrals; but do log other error codes
+Date:   Wed, 11 Dec 2019 16:04:22 +0100
+Message-Id: <20191211150345.869230770@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -62,50 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Breno Leitao <leitao@debian.org>
+From: Brian Norris <briannorris@chromium.org>
 
-[ Upstream commit eafcd8e3fbad4f426a40ed2b6a8c697c3a4ef36a ]
+[ Upstream commit 408d3ba006af57380fa48858b39f72fde6405031 ]
 
-Current core-pkey selftest fails if the test runs without privileges to
-write into the core pattern file (/proc/sys/kernel/core_pattern). This
-causes the test to fail and give the impression that the subsystem being
-tested is broken, when, in fact, the test is being executed without the
-proper privileges. This is the current error:
+It's not very useful to repeat a bunch of probe deferral errors. And
+it's also not very useful to log "failed" without telling the error
+code.
 
-	test: core_pkey
-	tags: git_version:v4.19-3-g9e3363be9bce-dirty
-	Error writing to core_pattern file: Permission denied
-	failure: core_pkey
-
-This patch simply skips this test if it runs without the proper privileges,
-avoiding this undesired failure.
-
-CC: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-CC: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/ptrace/core-pkey.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/usb/dwc3/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/core-pkey.c b/tools/testing/selftests/powerpc/ptrace/core-pkey.c
-index e23e2e199eb4e..d5c64fee032dc 100644
---- a/tools/testing/selftests/powerpc/ptrace/core-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/core-pkey.c
-@@ -352,10 +352,7 @@ static int write_core_pattern(const char *core_pattern)
- 	FILE *f;
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index aca7e7fa5e47d..f52fcbc5c9718 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1481,7 +1481,8 @@ static int dwc3_probe(struct platform_device *pdev)
  
- 	f = fopen(core_pattern_file, "w");
--	if (!f) {
--		perror("Error writing to core_pattern file");
--		return TEST_FAIL;
--	}
-+	SKIP_IF_MSG(!f, "Try with root privileges");
+ 	ret = dwc3_core_init(dwc);
+ 	if (ret) {
+-		dev_err(dev, "failed to initialize core\n");
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to initialize core: %d\n", ret);
+ 		goto err4;
+ 	}
  
- 	ret = fwrite(core_pattern, 1, len, f);
- 	fclose(f);
 -- 
 2.20.1
 
