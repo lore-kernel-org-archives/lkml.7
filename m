@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24D8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6E2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 871FB2073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911FE2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078945;
-	bh=MjdZ+Si+IyCzLycAPuoWRfPaAcvQ0FOabRUeFZvgcVI=;
+	s=default; t=1576078948;
+	bh=UNiTk+f8fE9Yz8lhsQdrFBLP5bg3jUY8qkUscn+BsVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnuEw7Foic/Rto4H6WvFzzc4k9BCLmMT9LSHnQmx3MQw+yBr7w+XvVoIk4bvo+2lQ
-	 uDZeVDC5I3k1VO7xdj9ykOOnDkA1resDhvW2M5Ob9i+BSzDxATulbO4FefuEjk3//Y
-	 u++QuOXO2wSxvKB+ytMYbMR9NaodAewUgAwWzb8s=
+	b=VISAdi72AVsJHP9L0DgxA5WBMV6eh0Xvk0Ttumu8rndNvB0KkGPg/jP5cIRuZPjAQ
+	 KeqPrn1w3H7VqXz2+fn6c0J2Woge80PLp8BbVFowl/NOk6BgA3cUND0Xo1jM52+VaK
+	 rcRDI8Y8nq8GxWWQc6hqFYxm92n3pI0ABXdEjHXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388399AbfLKPmY (ORCPT
+        id S2387456AbfLKP1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:42:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33530 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:27:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387460AbfLKP1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:44 -0500
+        id S1733063AbfLKP1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A99124654;
-        Wed, 11 Dec 2019 15:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21EB224671;
+        Wed, 11 Dec 2019 15:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078064;
-        bh=MjdZ+Si+IyCzLycAPuoWRfPaAcvQ0FOabRUeFZvgcVI=;
+        s=default; t=1576078042;
+        bh=UNiTk+f8fE9Yz8lhsQdrFBLP5bg3jUY8qkUscn+BsVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XN5qIAbr1HxcziihpbIZPswYXnAnAuzNjVjV6XRVjpBNCabMxshSDZElrQjH2mlhI
-         PJ1GN4qeeMU9HE8Dg4fbBYiM/J/d8piqZlHVMH7u1t4/d8Hn8WeFSo3eRhK663q3tR
-         X6tQLLttbsu7KCErCUgxv4LSgyangnJOHy7iBCNM=
+        b=byX56x9yKEvGMaPN82OMwHr52hwGn3bwCJqFi4JBE1rPoupLDp4p3clHcZZ6tgRbx
+         BytbWSDZu/+pIkltDbkZ+B7aTdDZsmHwo7jLIQ+o0tgJK8f6WRy5d2sW/PDkq7Tztw
+         ypw0VwrmTrH1pAgtMI65mGXEfUyJuF80MOn6n6vA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Theodore Ts'o <tytso@mit.edu>, stable@kernel.org,
-        Andreas Dilger <adilger@dilger.ca>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 56/79] ext4: work around deleting a file with i_nlink == 0 safely
-Date:   Wed, 11 Dec 2019 10:26:20 -0500
-Message-Id: <20191211152643.23056-56-sashal@kernel.org>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 36/79] scsi: zorro_esp: Limit DMA transfers to 65536 bytes (except on Fastlane)
+Date:   Wed, 11 Dec 2019 10:26:00 -0500
+Message-Id: <20191211152643.23056-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -59,63 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o <tytso@mit.edu>
+From: Kars de Jong <jongk@linux-m68k.org>
 
-[ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
+[ Upstream commit 02f7e9f351a9de95577eafdc3bd413ed1c3b589f ]
 
-If the file system is corrupted such that a file's i_links_count is
-too small, then it's possible that when unlinking that file, i_nlink
-will already be zero.  Previously we were working around this kind of
-corruption by forcing i_nlink to one; but we were doing this before
-trying to delete the directory entry --- and if the file system is
-corrupted enough that ext4_delete_entry() fails, then we exit with
-i_nlink elevated, and this causes the orphan inode list handling to be
-FUBAR'ed, such that when we unmount the file system, the orphan inode
-list can get corrupted.
+When using this driver on a Blizzard 1260, there were failures whenever DMA
+transfers from the SCSI bus to memory of 65535 bytes were followed by a DMA
+transfer of 1 byte. This caused the byte at offset 65535 to be overwritten
+with 0xff. The Blizzard hardware can't handle single byte DMA transfers.
 
-A better way to fix this is to simply skip trying to call drop_nlink()
-if i_nlink is already zero, thus moving the check to the place where
-it makes the most sense.
+Besides this issue, limiting the DMA length to something that is not a
+multiple of the page size is very inefficient on most file systems.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=205433
+It seems this limit was chosen because the DMA transfer counter of the ESP
+by default is 16 bits wide, thus limiting the length to 65535 bytes.
+However, the value 0 means 65536 bytes, which is handled by the ESP and the
+Blizzard just fine. It is also the default maximum used by esp_scsi when
+drivers don't provide their own dma_length_limit() function.
 
-Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Cc: stable@kernel.org
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+The limit of 65536 bytes can be used by all boards except the Fastlane. The
+old driver used a limit of 65532 bytes (0xfffc), which is reintroduced in
+this patch.
+
+Fixes: b7ded0e8b0d1 ("scsi: zorro_esp: Limit DMA transfers to 65535 bytes")
+Link: https://lore.kernel.org/r/20191112175523.23145-1-jongk@linux-m68k.org
+Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+Reviewed-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/scsi/zorro_esp.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index badbb8b4f0f17..f56d6f1950b98 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -3056,18 +3056,17 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
- 	if (IS_DIRSYNC(dir))
- 		ext4_handle_sync(handle);
+diff --git a/drivers/scsi/zorro_esp.c b/drivers/scsi/zorro_esp.c
+index be79127db5946..6a5b547eae590 100644
+--- a/drivers/scsi/zorro_esp.c
++++ b/drivers/scsi/zorro_esp.c
+@@ -245,7 +245,14 @@ static int fastlane_esp_irq_pending(struct esp *esp)
+ static u32 zorro_esp_dma_length_limit(struct esp *esp, u32 dma_addr,
+ 					u32 dma_len)
+ {
+-	return dma_len > 0xFFFF ? 0xFFFF : dma_len;
++	return dma_len > (1U << 16) ? (1U << 16) : dma_len;
++}
++
++static u32 fastlane_esp_dma_length_limit(struct esp *esp, u32 dma_addr,
++					u32 dma_len)
++{
++	/* The old driver used 0xfffc as limit, so do that here too */
++	return dma_len > 0xfffc ? 0xfffc : dma_len;
+ }
  
--	if (inode->i_nlink == 0) {
--		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
--				   dentry->d_name.len, dentry->d_name.name);
--		set_nlink(inode, 1);
--	}
- 	retval = ext4_delete_entry(handle, dir, de, bh);
- 	if (retval)
- 		goto end_unlink;
- 	dir->i_ctime = dir->i_mtime = current_time(dir);
- 	ext4_update_dx_flag(dir);
- 	ext4_mark_inode_dirty(handle, dir);
--	drop_nlink(inode);
-+	if (inode->i_nlink == 0)
-+		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
-+				   dentry->d_name.len, dentry->d_name.name);
-+	else
-+		drop_nlink(inode);
- 	if (!inode->i_nlink)
- 		ext4_orphan_add(handle, inode);
- 	inode->i_ctime = current_time(inode);
+ static void zorro_esp_reset_dma(struct esp *esp)
+@@ -818,7 +825,7 @@ static const struct esp_driver_ops fastlane_esp_ops = {
+ 	.unmap_single		= zorro_esp_unmap_single,
+ 	.unmap_sg		= zorro_esp_unmap_sg,
+ 	.irq_pending		= fastlane_esp_irq_pending,
+-	.dma_length_limit	= zorro_esp_dma_length_limit,
++	.dma_length_limit	= fastlane_esp_dma_length_limit,
+ 	.reset_dma		= zorro_esp_reset_dma,
+ 	.dma_drain		= zorro_esp_dma_drain,
+ 	.dma_invalidate		= fastlane_esp_dma_invalidate,
 -- 
 2.20.1
 
