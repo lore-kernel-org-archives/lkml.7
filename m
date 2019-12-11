@@ -2,121 +2,124 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFCEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2C9C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA1324658
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="fI7e0oFh"
+	by mail.kernel.org (Postfix) with ESMTP id F20302467F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078124;
+	bh=4cKaTXllXDJgxcQIlNZ+xCeVLSVMXM3O+L+I7zd4eO0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cZYOSa2ZSMB6Zu6o0ZoNDmhuhba0o4rsY6W5W1ygGCEUgT+j70Mrj87X9WKNOEtCg
+	 jNmMDEVGcz4SFao3MgESpjagiqSkEZHe+OJru5JJyEGsXAV29DyDB/DUmVze8Yfw1L
+	 Mn9O9bteGNwE9zAf/wRCzVW7CSNosWQdMHVcJY60=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387673AbfLKP2h (ORCPT
+        id S1733007AbfLKP2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:37 -0500
-Received: from mail.efficios.com ([167.114.142.138]:42708 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387598AbfLKP2Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:24 -0500
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 19FBD687A25;
-        Wed, 11 Dec 2019 10:28:23 -0500 (EST)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id S2y0w6rP8V8C; Wed, 11 Dec 2019 10:28:22 -0500 (EST)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id BEE16687A22;
-        Wed, 11 Dec 2019 10:28:22 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com BEE16687A22
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1576078102;
-        bh=C/zOP3f6ebD7H+mSDMI0JNByhqooFL3Swlt0/L2X6Do=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=fI7e0oFhCsMe0HdFoK2xk3T+97tuol9PV00GjT/d1BVAGuRAJ4WqxWhGSjpWN4ENO
-         H5uNFdAO8oDsEHFbKbljUW7NQw9VTP8ZDNO2iaSeD547H4CaMQI2zvZFbXxTB5XOKU
-         KqaTY+DPdnnmZRWvZ0jSWpUixRvc18R6JBiCQZGqUDIKwQ+pKEAFnEeHHAQK9aptGY
-         u56CPBcDKaqs5UjOqIruZcXfICo7SQyuvltN+H4Jp3WMlinmWcslox245IfDa7jQEI
-         TYLbO4NTMWG5Hd0qm+P89+TpYPfAC/SiAaOnBG+JlRVm46DM36EX2NvxMLqyouaglj
-         q99ZH5qSdQPKg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id J6LO01X8haIM; Wed, 11 Dec 2019 10:28:22 -0500 (EST)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 9E8D3687A13;
-        Wed, 11 Dec 2019 10:28:22 -0500 (EST)
-Date:   Wed, 11 Dec 2019 10:28:22 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
-        linux-api <linux-api@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Message-ID: <211848436.2172.1576078102568.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
-References: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH for 5.4 0/3] Restartable Sequences Fixes
+        Wed, 11 Dec 2019 10:28:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387657AbfLKP2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:36 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26E324682;
+        Wed, 11 Dec 2019 15:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078115;
+        bh=4cKaTXllXDJgxcQIlNZ+xCeVLSVMXM3O+L+I7zd4eO0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JVmDtqW/aNMyJmzyQy9VGYfC2x5GsoR6fn3ZW8IQiBPdawCy1ZkJvrmoPS3T9755p
+         fDFTCP8LSLmSCV7yx/y9eDqPV9hMKB9eCiJWuguMbsgrHENtYkHzVFmtOFwCNyUAaN
+         odWYTHBlawUYNuNmKDRqOkCo/O2jXWjQ55Gxe+EQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/58] scsi: lpfc: Fix locking on mailbox command completion
+Date:   Wed, 11 Dec 2019 10:27:36 -0500
+Message-Id: <20191211152831.23507-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
+References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3888 (ZimbraWebClient - FF70 (Linux)/8.8.15_GA_3890)
-Thread-Topic: Restartable Sequences Fixes
-Thread-Index: a0Atf/Ifhh0gqkseXVi/YvaGwLW1oQ==
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+From: James Smart <jsmart2021@gmail.com>
 
-I thought those rseq fixes posted in September were in the -tip tree, but it
-seems that they never made it to mainline.
+[ Upstream commit 07b8582430370097238b589f4e24da7613ca6dd3 ]
 
-Now Shuah Khan noticed the issue with gettid() compatibility with glibc
-2.30+. This series contained that fix.
+Symptoms were seen of the driver not having valid data for mailbox
+commands. After debugging, the following sequence was found:
 
-Should I re-post it, or is this series on track to get into mainline
-at some point ?
+The driver maintains a port-wide pointer of the mailbox command that is
+currently in execution. Once finished, the port-wide pointer is cleared
+(done in lpfc_sli4_mq_release()). The next mailbox command issued will set
+the next pointer and so on.
 
-Thanks,
+The mailbox response data is only copied if there is a valid port-wide
+pointer.
 
-Mathieu
+In the failing case, it was seen that a new mailbox command was being
+attempted in parallel with the completion.  The parallel path was seeing
+the mailbox no long in use (flag check under lock) and thus set the port
+pointer.  The completion path had cleared the active flag under lock, but
+had not touched the port pointer.  The port pointer is cleared after the
+lock is released. In this case, the completion path cleared the just-set
+value by the parallel path.
 
------ On Sep 17, 2019, at 2:29 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+Fix by making the calls that clear mbox state/port pointer while under
+lock.  Also slightly cleaned up the error path.
 
-> Hi,
-> 
-> Here is a small set of rseq fixes aiming Linux 5.4. Those should be
-> backported to stable kernels >= 4.18.
-> 
-> Thanks,
-> 
-> Mathieu
-> 
-> Mathieu Desnoyers (3):
->  rseq: Fix: Reject unknown flags on rseq unregister
->  rseq: Fix: Unregister rseq for clone CLONE_VM
->  rseq/selftests: Fix: Namespace gettid() for compatibility with glibc
->    2.30
-> 
-> include/linux/sched.h                     |  4 ++--
-> kernel/rseq.c                             |  2 ++
-> tools/testing/selftests/rseq/param_test.c | 18 ++++++++++--------
-> 3 files changed, 14 insertions(+), 10 deletions(-)
-> 
-> --
-> 2.17.1
+Link: https://lore.kernel.org/r/20190922035906.10977-8-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/lpfc/lpfc_sli.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 62bea4ffdc25a..5603c08f96843 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -12697,13 +12697,19 @@ send_current_mbox:
+ 	phba->sli.sli_flag &= ~LPFC_SLI_MBOX_ACTIVE;
+ 	/* Setting active mailbox pointer need to be in sync to flag clear */
+ 	phba->sli.mbox_active = NULL;
++	if (bf_get(lpfc_trailer_consumed, mcqe))
++		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
+ 	spin_unlock_irqrestore(&phba->hbalock, iflags);
+ 	/* Wake up worker thread to post the next pending mailbox command */
+ 	lpfc_worker_wake_up(phba);
++	return workposted;
++
+ out_no_mqe_complete:
++	spin_lock_irqsave(&phba->hbalock, iflags);
+ 	if (bf_get(lpfc_trailer_consumed, mcqe))
+ 		lpfc_sli4_mq_release(phba->sli4_hba.mbx_wq);
+-	return workposted;
++	spin_unlock_irqrestore(&phba->hbalock, iflags);
++	return false;
+ }
+ 
+ /**
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.20.1
+
