@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A5C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21BB6C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0F820836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DC9208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080060;
-	bh=YFuVTScmJU6o/1BYOAAD7AxOAukaR8cN59h+eMekWFM=;
+	s=default; t=1576080064;
+	bh=R2bQYxT867EMxSiy+f1NjHXzP8kZ8zz+PvUi3MCw55Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnP5S2g4rZ8SA/XxInJknmqVdvYeWaPWCL6BLMjF691K3BVBtDpBjJXGiOKbBH8gi
-	 O1JZbGHk27UdSDMIBfiFeYkwQAISGt7Q0Xk0Z/7qVWFK/N3LuPoXs8mtEsdJu1v0dh
-	 v1Sx5D0cmSvz8m/EvV4V/7vizv1OB5UMycUmmWgc=
+	b=nZowGhwY8hc9WnuMACOO52kwUN+NCK1EnsQmTqT75rDR40ooCXVwKN1wxfE3+Ai80
+	 vstzZs0mCZi9yvFRo0gq4MIu/XrooqUc/DSUGQo0zM0WlPFoU4UJ2A7S9raUzWWYVC
+	 NVAUfFshVFLscNQzbct0j2uhNHHPG6TIzWfvpyAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbfLKPNj (ORCPT
+        id S1731092AbfLKQBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:01:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730406AbfLKPNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:19 -0500
+        id S1731387AbfLKPNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:38 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDEE12467D;
-        Wed, 11 Dec 2019 15:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04DAE24680;
+        Wed, 11 Dec 2019 15:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077198;
-        bh=YFuVTScmJU6o/1BYOAAD7AxOAukaR8cN59h+eMekWFM=;
+        s=default; t=1576077217;
+        bh=R2bQYxT867EMxSiy+f1NjHXzP8kZ8zz+PvUi3MCw55Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EnGU03F5hPsW2vN2hRQqcBMB+ie1TBAILFwu81lW28iR32w9M6YrYnHcHq3/94W+e
-         gN0fIaUKa5npAW6bfOJKtZmzV36PW0BgriiVhhlo88xaPpY4jkYT0RpOQJSc6o41MD
-         I/q9iEBJFQo2eQaeIqx5L/hf8AGGBeLnJMyLBGbU=
+        b=sNgEhIXN11e2uoZ7bl2kq4QizCVQ6RlPAkw4Ix0CYRxKFJuUijQ4KdSnrHFPK8pB4
+         ANlPjv7MhpVOClqpzpP9U+AC0ZpYwaYUz2yqaLKRAI5U71ouMnyywR4k+e1of0Bz/S
+         9Yhk8VXt6HS5EWmQSxrajhwlgoIK83dsJabYuDr0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>, Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
-Subject: [PATCH AUTOSEL 5.4 081/134] libnvdimm/btt: fix variable 'rc' set but not used
-Date:   Wed, 11 Dec 2019 10:10:57 -0500
-Message-Id: <20191211151150.19073-81-sashal@kernel.org>
+Cc:     Anatol Pomazau <anatol@google.com>,
+        Frank Mayhar <fmayhar@google.com>,
+        Bharath Ravi <rbharath@google.com>,
+        Khazhimsel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 097/134] scsi: iscsi: Don't send data to unbound connection
+Date:   Wed, 11 Dec 2019 10:11:13 -0500
+Message-Id: <20191211151150.19073-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -59,48 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Anatol Pomazau <anatol@google.com>
 
-[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
+[ Upstream commit 238191d65d7217982d69e21c1d623616da34b281 ]
 
-drivers/nvdimm/btt.c: In function 'btt_read_pg':
-drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
-[-Wunused-but-set-variable]
-    int rc;
-        ^~
+If a faulty initiator fails to bind the socket to the iSCSI connection
+before emitting a command, for instance, a subsequent send_pdu, it will
+crash the kernel due to a null pointer dereference in sock_sendmsg(), as
+shown in the log below.  This patch makes sure the bind succeeded before
+trying to use the socket.
 
-Add a ratelimited message in case a storm of errors is encountered.
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 7 Comm: kworker/u8:0 Not tainted 5.4.0-rc2.iscsi+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   24.158246] Workqueue: iscsi_q_0 iscsi_xmitworker
+[   24.158883] RIP: 0010:apparmor_socket_sendmsg+0x5/0x20
+[...]
+[   24.161739] RSP: 0018:ffffab6440043ca0 EFLAGS: 00010282
+[   24.162400] RAX: ffffffff891c1c00 RBX: ffffffff89d53968 RCX: 0000000000000001
+[   24.163253] RDX: 0000000000000030 RSI: ffffab6440043d00 RDI: 0000000000000000
+[   24.164104] RBP: 0000000000000030 R08: 0000000000000030 R09: 0000000000000030
+[   24.165166] R10: ffffffff893e66a0 R11: 0000000000000018 R12: ffffab6440043d00
+[   24.166038] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9d5575a62e90
+[   24.166919] FS:  0000000000000000(0000) GS:ffff9d557db80000(0000) knlGS:0000000000000000
+[   24.167890] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.168587] CR2: 0000000000000018 CR3: 000000007a838000 CR4: 00000000000006e0
+[   24.169451] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   24.170320] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   24.171214] Call Trace:
+[   24.171537]  security_socket_sendmsg+0x3a/0x50
+[   24.172079]  sock_sendmsg+0x16/0x60
+[   24.172506]  iscsi_sw_tcp_xmit_segment+0x77/0x120
+[   24.173076]  iscsi_sw_tcp_pdu_xmit+0x58/0x170
+[   24.173604]  ? iscsi_dbg_trace+0x63/0x80
+[   24.174087]  iscsi_tcp_task_xmit+0x101/0x280
+[   24.174666]  iscsi_xmit_task+0x83/0x110
+[   24.175206]  iscsi_xmitworker+0x57/0x380
+[   24.175757]  ? __schedule+0x2a2/0x700
+[   24.176273]  process_one_work+0x1b5/0x360
+[   24.176837]  worker_thread+0x50/0x3c0
+[   24.177353]  kthread+0xf9/0x130
+[   24.177799]  ? process_one_work+0x360/0x360
+[   24.178401]  ? kthread_park+0x90/0x90
+[   24.178915]  ret_from_fork+0x35/0x40
+[   24.179421] Modules linked in:
+[   24.179856] CR2: 0000000000000018
+[   24.180327] ---[ end trace b4b7674b6df5f480 ]---
 
-Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Anatol Pomazau <anatol@google.com>
+Co-developed-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Co-developed-by: Bharath Ravi <rbharath@google.com>
+Signed-off-by: Bharath Ravi <rbharath@google.com>
+Co-developed-by: Khazhimsel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhimsel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/scsi/iscsi_tcp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
-index 3e9f45aec8d18..5129543a04739 100644
---- a/drivers/nvdimm/btt.c
-+++ b/drivers/nvdimm/btt.c
-@@ -1261,11 +1261,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 7bedbe8777049..0bc63a7ab41c8 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -369,8 +369,16 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
+ {
+ 	struct iscsi_conn *conn = task->conn;
+ 	unsigned int noreclaim_flag;
++	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
++	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+ 	int rc = 0;
  
- 		ret = btt_data_read(arena, page, off, postmap, cur_len);
- 		if (ret) {
--			int rc;
--
- 			/* Media error - set the e_flag */
--			rc = btt_map_write(arena, premap, postmap, 0, 1,
--				NVDIMM_IO_ATOMIC);
-+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
-+				dev_warn_ratelimited(to_dev(arena),
-+					"Error persistently tracking bad blocks at %#x\n",
-+					premap);
- 			goto out_rtt;
- 		}
++	if (!tcp_sw_conn->sock) {
++		iscsi_conn_printk(KERN_ERR, conn,
++				  "Transport not bound to socket!\n");
++		return -EINVAL;
++	}
++
+ 	noreclaim_flag = memalloc_noreclaim_save();
  
+ 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
 -- 
 2.20.1
 
