@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9293C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4F0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B636D22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3376E2464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078555;
-	bh=VKrwJsQCUBo9OLMWbHAIE4Wb9a2Fdb3qcuc2ODxMWcA=;
+	s=default; t=1576078559;
+	bh=3UTsXWYTwr0WDjJWIDF4QPCzRnacI3WZXxJ9t3FEQZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tkNozS8H5xYwKxkNFikR1gGOePsi1kJ/kF+cEOlA21+lAOEAhH9QMaG90uWFoHtIh
-	 ucdxw+rIp9P+3x9LGvJyoLP9MT/FVjH66rAPuoVyhF2azw03j+1qX30Ks306JHiUBh
-	 QixIGAdJkRN8KSFCns80hWvCReVKnWcspTWpXT48=
+	b=E5vQdPDXrsPFOJj+0dQhaO/Rz+VnWs2Ll/o3eEZyhd69uVGUsCE/bh6j7R7SokoEe
+	 dH8XM6WlzLXyH41HQEmXpKnxaTcufn8WAs4lO1JOa3t7k7i0Dn+LF5mZB1NFEVLf6s
+	 X41wVNm72b9Ep8sHOHJ/nVnJJ3fHImKVYno/tZek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388254AbfLKPfz (ORCPT
+        id S2388263AbfLKPf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:35:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44982 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:35:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388218AbfLKPfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:46 -0500
+        id S2388227AbfLKPft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:35:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 213432077B;
-        Wed, 11 Dec 2019 15:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A8D824658;
+        Wed, 11 Dec 2019 15:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078545;
-        bh=VKrwJsQCUBo9OLMWbHAIE4Wb9a2Fdb3qcuc2ODxMWcA=;
+        s=default; t=1576078549;
+        bh=3UTsXWYTwr0WDjJWIDF4QPCzRnacI3WZXxJ9t3FEQZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OxB5b9QVh/f8ONYfUqCJ7r4SSfqYga4irGv2pY/M3JGl6Jl5kCg8KHnygfBzZO4ex
-         HNvbQfoBSshz5qKFarQVHTImp6MqzrjRCaDo88C9zYn1NC/Rwep/NXlWuvr7v/ngEp
-         pmOZEPrvT808+W2VAJc1064dkjwldHXP2NzKVUJM=
+        b=fZtUj0zEslifBON6tgM2gexX2oK0SznDHcQDy/KPsxGrmHMXq4/cHjVvdGdao0LxF
+         4pqETGiIhtRf8zGesujD/XRsuA2ccKLixNp3olL2BCrMyiNNK9iRB7Fo+A/Bv36vXH
+         5LhFBysWq3OfA8trJCbynnlp1YMoqYzqgkZCb09I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Maurizio Lombardi <mlombard@redhat.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 33/42] scsi: scsi_debug: num_tgts must be >= 0
-Date:   Wed, 11 Dec 2019 10:35:01 -0500
-Message-Id: <20191211153510.23861-33-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 36/42] scripts/kallsyms: fix definitely-lost memory leak
+Date:   Wed, 11 Dec 2019 10:35:04 -0500
+Message-Id: <20191211153510.23861-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
 References: <20191211153510.23861-1-sashal@kernel.org>
@@ -60,38 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maurizio Lombardi <mlombard@redhat.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit aa5334c4f3014940f11bf876e919c956abef4089 ]
+[ Upstream commit 21915eca088dc271c970e8351290e83d938114ac ]
 
-Passing the parameter "num_tgts=-1" will start an infinite loop that
-exhausts the system memory
+build_initial_tok_table() overwrites unused sym_entry to shrink the
+table size. Before the entry is overwritten, table[i].sym must be freed
+since it is malloc'ed data.
 
-Link: https://lore.kernel.org/r/20191115163727.24626-1-mlombard@redhat.com
-Signed-off-by: Maurizio Lombardi <mlombard@redhat.com>
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+This fixes the 'definitely lost' report from valgrind. I ran valgrind
+against x86_64_defconfig of v5.4-rc8 kernel, and here is the summary:
+
+[Before the fix]
+
+  LEAK SUMMARY:
+     definitely lost: 53,184 bytes in 2,874 blocks
+
+[After the fix]
+
+  LEAK SUMMARY:
+     definitely lost: 0 bytes in 0 blocks
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ scripts/kallsyms.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 2b0e61557317f..d7118d3767c35 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -4953,6 +4953,11 @@ static int __init scsi_debug_init(void)
- 		return -EINVAL;
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 2c8b8c662da59..6402b0d362914 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -498,6 +498,8 @@ static void build_initial_tok_table(void)
+ 				table[pos] = table[i];
+ 			learn_symbol(table[pos].sym, table[pos].len);
+ 			pos++;
++		} else {
++			free(table[i].sym);
+ 		}
  	}
- 
-+	if (sdebug_num_tgts < 0) {
-+		pr_err("num_tgts must be >= 0\n");
-+		return -EINVAL;
-+	}
-+
- 	if (sdebug_guard > 1) {
- 		pr_err("guard must be 0 or 1\n");
- 		return -EINVAL;
+ 	table_cnt = pos;
 -- 
 2.20.1
 
