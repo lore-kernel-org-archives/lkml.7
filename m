@@ -2,83 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87672C2D0C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F69CC2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546EC214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C49A2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 07:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576050765;
-	bh=LBIqLK2WI1wJ48nl0OtgepNbLnIiVSjGWVS9d/AMdkI=;
+	s=default; t=1576050768;
+	bh=yWpjNHnkidZj4XaFsdjcIZ5feaM3cE6pCFefziQeG0I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=trcIv4lQFE8niVstPsHqsF1vLYdEq33HcznyhW6Q/Fg5CXBBWvB6y76a8Pi4ZmEsL
-	 tMit5GE4yIjN4fetm5pY6+Fct/MQ8Sv4TDP9kf99jpIWHNGbhsUKaUEg187+qj++7p
-	 U8cck7us/RETKU48jYMu6ZypVq3PmYXhqmvddpOc=
+	b=M5zdq+QLOyc81NxDdrIiMKnIPA1Z1HQH7NECOGQef57hV2ro6HrQUPrhDtDrl8+rU
+	 FESVu1hrNmcFr+mOnL90PClFEwFpyLmFj35NPBwDaPiHsy9pX8aW3m/MZa87AlVsqo
+	 4T1kxVE+wKyo9oKoKKBBhDMtpeIP569d1IcyxQaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfLKHwo (ORCPT
+        id S1728298AbfLKHwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 02:52:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55862 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 02:52:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfLKHwo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 02:52:44 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726230AbfLKHwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 02:52:45 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 161C4214AF;
+        by mail.kernel.org (Postfix) with ESMTPSA id C1ECC2077B;
         Wed, 11 Dec 2019 07:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576050763;
-        bh=LBIqLK2WI1wJ48nl0OtgepNbLnIiVSjGWVS9d/AMdkI=;
+        s=default; t=1576050765;
+        bh=yWpjNHnkidZj4XaFsdjcIZ5feaM3cE6pCFefziQeG0I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kIDywd3xBb/97BHqNRljkjz3SraoayzZG068eYJ0XfnRd+u5zPQ3Qx9kR03f1FBcS
-         RySU0MCh3xFryON8XsPQsodbhk2hu+cjerzM7MFxFB9XVJ79/HyBzJp/vvgJmBc7da
-         cyHOUGs9TDUWK18PiYJ641r07a0JxWl8KaVcoWZ4=
-Date:   Wed, 11 Dec 2019 08:52:41 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 103/177] rfkill: allocate static minor
-Message-ID: <20191211075241.GM398293@kroah.com>
-References: <20191210213221.11921-1-sashal@kernel.org>
- <20191210213221.11921-103-sashal@kernel.org>
+        b=aUZnEGVh5u/iue73k01w3n3v5Q9rLhXNFvIyOJ/roliTtfKaGRZrG8lOYjNmx2CUU
+         8z+36AV72iM9C80RlQRAoAceH8b4viEOu0iNCWRRF0M3Sj68LVW4qvO3ZaOaqVK05z
+         9dfdON/89bttS1TGysLwHmGomURmPj1jMOsYlLZw=
+Date:   Wed, 11 Dec 2019 15:52:36 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] arm64: dts: ls1028a: fix reboot node
+Message-ID: <20191211075235.GR15858@dragon>
+References: <20191209184644.14057-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210213221.11921-103-sashal@kernel.org>
+In-Reply-To: <20191209184644.14057-1-michael@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:31:07PM -0500, Sasha Levin wrote:
-> From: Marcel Holtmann <marcel@holtmann.org>
+On Mon, Dec 09, 2019 at 07:46:44PM +0100, Michael Walle wrote:
+> The reboot register isn't located inside the DCFG controller, but in its
+> own RST controller. Fix it.
 > 
-> [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
-> 
-> udev has a feature of creating /dev/<node> device-nodes if it finds
-> a devnode:<node> modalias. This allows for auto-loading of modules that
-> provide the node. This requires to use a statically allocated minor
-> number for misc character devices.
-> 
-> However, rfkill uses dynamic minor numbers and prevents auto-loading
-> of the module. So allocate the next static misc minor number and use
-> it for rfkill.
-> 
-> Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-> Link: https://lore.kernel.org/r/20191024174042.19851-1-marcel@holtmann.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 > ---
->  include/linux/miscdevice.h | 1 +
->  net/rfkill/core.c          | 9 +++++++--
->  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> changes since v1:
+>  - add fixes tag
+>  - remove "ls1028a-rst" compatible string, because there is no actual
+>    driver for it. It just use the syscon driver.
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 8b28fda2ca20..7825550b7cef 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -88,7 +88,7 @@
+>  
+>  	reboot {
+>  		compatible ="syscon-reboot";
+> -		regmap = <&dcfg>;
+> +		regmap = <&rst>;
+>  		offset = <0xb0>;
+>  		mask = <0x02>;
+>  	};
+> @@ -178,6 +178,12 @@
+>  			little-endian;
+>  		};
+>  
+> +		rst: syscon@1e60000 {
+> +			compatible = "syscon";
+> +			reg = <0x0 0x1e60000 0x0 0x10000>;
+> +			little-endian;
+> +		};
+> +
+>  		scfg: syscon@1fc0000 {
 
-Not needed here :)
+Hmm, what is your base?  It doesn't apply to my branch.
+
+Shawn
+
+>  			compatible = "fsl,ls1028a-scfg", "syscon";
+>  			reg = <0x0 0x1fc0000 0x0 0x10000>;
+> -- 
+> 2.20.1
+> 
