@@ -2,190 +2,110 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA160C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CD2C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7491F21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B31320836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080383;
-	bh=5N0dXIqX9zR+hBefD4dbBOvC2I2jlqrej+/vbe9xcgY=;
+	s=default; t=1576080389;
+	bh=yIYASKeplFhWxKQ5n3/bqsdIR4dQIZXYzR3I0t1xTIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eS9vmCoPzWEWE6n4KH/dwT5qnFjzr7xdkoZWi7hTWzmt7YoOtNvBMIZ1CAXfv13XG
-	 6Ay//27+X7AaDskB1fgryLN+mckwWX5sj+R7FIMZ1l+ZFVYFaOJV+ecBxIUCecDMIn
-	 eXrFSCb5WpghLB0aXcOEy4S0szmhJdpXDs80evNE=
+	b=BOgrftKXQVqbcBAYpNIQC9OsgAwOHqKIiHQbZ41gqcnVpT9UQlrgfVhrVGBQcsAUf
+	 5vzi/u0Y8BNwJh1TTPvA9mXWJ97omBwQvVPn/BWKLHllFUqbsFQDy72hrhiZnFXy9i
+	 GRSzPfrH9Kt93lcvhLGezzdgQVHXNaR28il4TkUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388910AbfLKQGS (ORCPT
+        id S1732036AbfLKQG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:06:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34804 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:06:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731207AbfLKPMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731201AbfLKPMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:12:41 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4DAE24656;
-        Wed, 11 Dec 2019 15:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0A7B208C3;
+        Wed, 11 Dec 2019 15:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077161;
-        bh=5N0dXIqX9zR+hBefD4dbBOvC2I2jlqrej+/vbe9xcgY=;
+        s=default; t=1576077160;
+        bh=yIYASKeplFhWxKQ5n3/bqsdIR4dQIZXYzR3I0t1xTIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQvsLoRbGNTmdkoe+zBEvY3ZOFgIn2IHIsTTIOQxu74JTPTCTBc1Nszxnmbq7fnGa
-         2ltbxQMlwkUL3CVhf7fxfSKWyQzwhhua3pkA4zIBVsMuTYHYe9c4Cz3SFrCZ7dbV9S
-         qd0N7UBH4nLzDmIOtk9oHhTIwhEnBT0xTvjZ/OPM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ulrich Hecht <uli+renesas@fpond.eu>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 038/105] ravb: implement MTU change while device is up
-Date:   Wed, 11 Dec 2019 16:05:27 +0100
-Message-Id: <20191211150236.134238492@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=U+3eZqNNUe34MC4vXOGKm/XZ2TmGMEsChTlAsfPjoJ36CAVDxznwJKg+0g0HkzhV7
+         HN+oRO3IbjmJEbYUWyFrXeDvEnzdR8nSOXbUFLbgM32/3aSAF+Du3MJGCB27CwTGeO
+         9k4Ueo2/QidutpxvfyfufedpBPeB+JK2raqhymlA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 046/134] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
+Date:   Wed, 11 Dec 2019 10:10:22 -0500
+Message-Id: <20191211151150.19073-46-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulrich Hecht <uli+renesas@fpond.eu>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 15fb35fa9ff456b81159033eba6397fcee85e671 ]
+[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
 
-Pre-allocates buffers sufficient for the maximum supported MTU (2026) in
-order to eliminate the possibility of resource exhaustion when changing the
-MTU while the device is up.
+If the driver receives a login that is later then LOGO'd by the remote port
+(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
+will logout the node and unregister the rpi that is being used for the
+node.  As part of the unreg, the node's rpi value is replaced by the
+LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
+offline walks the nodes and ensures they are logged out, which possibly
+entails unreg'ing their rpi values.  This path does not validate the node's
+rpi value, thus doesn't detect that it has been unreg'd already.  The
+replaced rpi value is then used when accessing the rpi bitmask array which
+tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
+index for the bitmask, it may fault the system.
 
-Signed-off-by: Ulrich Hecht <uli+renesas@fpond.eu>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Revise the rpi release code to detect when the rpi value is the replaced
+RPI_ALLOC_ERROR value and ignore further release steps.
+
+Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb.h      |  3 ++-
- drivers/net/ethernet/renesas/ravb_main.c | 26 +++++++++++++-----------
- 2 files changed, 16 insertions(+), 13 deletions(-)
+ drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/renesas/ravb.h b/drivers/net/ethernet/renesas/ravb.h
-index ac9195add8116..7090229398227 100644
---- a/drivers/net/ethernet/renesas/ravb.h
-+++ b/drivers/net/ethernet/renesas/ravb.h
-@@ -960,6 +960,8 @@ enum RAVB_QUEUE {
- #define NUM_RX_QUEUE	2
- #define NUM_TX_QUEUE	2
- 
-+#define RX_BUF_SZ	(2048 - ETH_FCS_LEN + sizeof(__sum16))
-+
- /* TX descriptors per packet */
- #define NUM_TX_DESC_GEN2	2
- #define NUM_TX_DESC_GEN3	1
-@@ -1023,7 +1025,6 @@ struct ravb_private {
- 	u32 dirty_rx[NUM_RX_QUEUE];	/* Producer ring indices */
- 	u32 cur_tx[NUM_TX_QUEUE];
- 	u32 dirty_tx[NUM_TX_QUEUE];
--	u32 rx_buf_sz;			/* Based on MTU+slack. */
- 	struct napi_struct napi[NUM_RX_QUEUE];
- 	struct work_struct work;
- 	/* MII transceiver section. */
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 6cacd5e893aca..393644833cd57 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -230,7 +230,7 @@ static void ravb_ring_free(struct net_device *ndev, int q)
- 					       le32_to_cpu(desc->dptr)))
- 				dma_unmap_single(ndev->dev.parent,
- 						 le32_to_cpu(desc->dptr),
--						 priv->rx_buf_sz,
-+						 RX_BUF_SZ,
- 						 DMA_FROM_DEVICE);
- 		}
- 		ring_size = sizeof(struct ravb_ex_rx_desc) *
-@@ -293,9 +293,9 @@ static void ravb_ring_format(struct net_device *ndev, int q)
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
- 		/* RX descriptor */
- 		rx_desc = &priv->rx_ring[q][i];
--		rx_desc->ds_cc = cpu_to_le16(priv->rx_buf_sz);
-+		rx_desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
- 		dma_addr = dma_map_single(ndev->dev.parent, priv->rx_skb[q][i]->data,
--					  priv->rx_buf_sz,
-+					  RX_BUF_SZ,
- 					  DMA_FROM_DEVICE);
- 		/* We just set the data size to 0 for a failed mapping which
- 		 * should prevent DMA from happening...
-@@ -342,9 +342,6 @@ static int ravb_ring_init(struct net_device *ndev, int q)
- 	int ring_size;
- 	int i;
- 
--	priv->rx_buf_sz = (ndev->mtu <= 1492 ? PKT_BUF_SZ : ndev->mtu) +
--		ETH_HLEN + VLAN_HLEN + sizeof(__sum16);
--
- 	/* Allocate RX and TX skb rings */
- 	priv->rx_skb[q] = kcalloc(priv->num_rx_ring[q],
- 				  sizeof(*priv->rx_skb[q]), GFP_KERNEL);
-@@ -354,7 +351,7 @@ static int ravb_ring_init(struct net_device *ndev, int q)
- 		goto error;
- 
- 	for (i = 0; i < priv->num_rx_ring[q]; i++) {
--		skb = netdev_alloc_skb(ndev, priv->rx_buf_sz + RAVB_ALIGN - 1);
-+		skb = netdev_alloc_skb(ndev, RX_BUF_SZ + RAVB_ALIGN - 1);
- 		if (!skb)
- 			goto error;
- 		ravb_set_buffer_align(skb);
-@@ -590,7 +587,7 @@ static bool ravb_rx(struct net_device *ndev, int *quota, int q)
- 			skb = priv->rx_skb[q][entry];
- 			priv->rx_skb[q][entry] = NULL;
- 			dma_unmap_single(ndev->dev.parent, le32_to_cpu(desc->dptr),
--					 priv->rx_buf_sz,
-+					 RX_BUF_SZ,
- 					 DMA_FROM_DEVICE);
- 			get_ts &= (q == RAVB_NC) ?
- 					RAVB_RXTSTAMP_TYPE_V2_L2_EVENT :
-@@ -623,11 +620,11 @@ static bool ravb_rx(struct net_device *ndev, int *quota, int q)
- 	for (; priv->cur_rx[q] - priv->dirty_rx[q] > 0; priv->dirty_rx[q]++) {
- 		entry = priv->dirty_rx[q] % priv->num_rx_ring[q];
- 		desc = &priv->rx_ring[q][entry];
--		desc->ds_cc = cpu_to_le16(priv->rx_buf_sz);
-+		desc->ds_cc = cpu_to_le16(RX_BUF_SZ);
- 
- 		if (!priv->rx_skb[q][entry]) {
- 			skb = netdev_alloc_skb(ndev,
--					       priv->rx_buf_sz +
-+					       RX_BUF_SZ +
- 					       RAVB_ALIGN - 1);
- 			if (!skb)
- 				break;	/* Better luck next round. */
-@@ -1814,10 +1811,15 @@ static int ravb_do_ioctl(struct net_device *ndev, struct ifreq *req, int cmd)
- 
- static int ravb_change_mtu(struct net_device *ndev, int new_mtu)
+diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+index 995a2b56a35ee..cf95249985bc4 100644
+--- a/drivers/scsi/lpfc/lpfc_sli.c
++++ b/drivers/scsi/lpfc/lpfc_sli.c
+@@ -18184,6 +18184,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
+ static void
+ __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
  {
--	if (netif_running(ndev))
--		return -EBUSY;
-+	struct ravb_private *priv = netdev_priv(ndev);
- 
- 	ndev->mtu = new_mtu;
++	/*
++	 * if the rpi value indicates a prior unreg has already
++	 * been done, skip the unreg.
++	 */
++	if (rpi == LPFC_RPI_ALLOC_ERROR)
++		return;
 +
-+	if (netif_running(ndev)) {
-+		synchronize_irq(priv->emac_irq);
-+		ravb_emac_init(ndev);
-+	}
-+
- 	netdev_update_features(ndev);
- 
- 	return 0;
+ 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
+ 		phba->sli4_hba.rpi_count--;
+ 		phba->sli4_hba.max_cfg_param.rpi_used--;
 -- 
 2.20.1
-
-
 
