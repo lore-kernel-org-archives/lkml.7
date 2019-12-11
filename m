@@ -2,152 +2,98 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B5AC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5970FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFBF22077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CDA62073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="IoAWPC1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfLKQ1F (ORCPT
+        id S1730338AbfLKQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:27:05 -0500
-Received: from mga06.intel.com ([134.134.136.31]:1043 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbfLKQ1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:27:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 08:27:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
-   d="scan'208";a="413559207"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 11 Dec 2019 08:27:02 -0800
-Date:   Wed, 11 Dec 2019 08:27:02 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 7/7] KVM: X86: Add user-space access interface for CET
- MSRs
-Message-ID: <20191211162702.GE5044@linux.intel.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-8-weijiang.yang@intel.com>
- <20191210215859.GO15758@linux.intel.com>
- <20191211021951.GE12845@local-michael-cet-test>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211021951.GE12845@local-michael-cet-test>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 11 Dec 2019 11:29:17 -0500
+Received: from mail.efficios.com ([167.114.142.138]:44278 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbfLKQ3R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:29:17 -0500
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 7D1126870C0;
+        Wed, 11 Dec 2019 11:29:15 -0500 (EST)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id rlsQb9jQZnGm; Wed, 11 Dec 2019 11:29:15 -0500 (EST)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 10CBA6870BC;
+        Wed, 11 Dec 2019 11:29:15 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 10CBA6870BC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1576081755;
+        bh=lBvIWIPHZ3YYrU1rCMc/kDLcFqhy36D/EpjRZfMbX8Y=;
+        h=From:To:Date:Message-Id;
+        b=IoAWPC1NqxrbaZgMiI8+KTp5tL/43ni5An7sh4CqxOYbH6IqgrJ2JRq7g/vZhU8l+
+         Rs60fQBUERzgI5in+bebqxq6Ka3bcrQ/qpSBHB9suyT7BI14RSdz884txh0XT5E9Kx
+         zzrXVTKroJs3ddaqxlLyAzq+2dIwAnPcXzZKoqqKBndMg2S61u0/jypTP656twhkGA
+         EEoCaR+/9m/WaAUg49/7xwmegjoHHYxH6DdE50yE1S4XaekRR8zOVqmeOa0sKPUWIj
+         mT9Y6CgU0RYejNf8DV+utFd1RrWe+Bs9hARMCvVTvEN57RJr3FjT4OMGcp25cbP6d9
+         82EWMjTXrmwUA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 3Iw4GOMzpDrp; Wed, 11 Dec 2019 11:29:14 -0500 (EST)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id C07F86870B6;
+        Wed, 11 Dec 2019 11:29:14 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH for 5.5 1/1] rseq/selftests: Turn off timeout setting
+Date:   Wed, 11 Dec 2019 11:28:57 -0500
+Message-Id: <20191211162857.11354-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:19:51AM +0800, Yang Weijiang wrote:
-> On Tue, Dec 10, 2019 at 01:58:59PM -0800, Sean Christopherson wrote:
-> > On Fri, Nov 01, 2019 at 04:52:22PM +0800, Yang Weijiang wrote:
-> > > There're two different places storing Guest CET states, states
-> > > managed with XSAVES/XRSTORS, as restored/saved
-> > > in previous patch, can be read/write directly from/to the MSRs.
-> > > For those stored in VMCS fields, they're access via vmcs_read/
-> > > vmcs_write.
-> > > 
-> > >  
-> > > +#define CET_MSR_RSVD_BITS_1    0x3
-> > > +#define CET_MSR_RSVD_BITS_2   (0xF << 6)
-> > > +
-> > > +static bool cet_msr_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > > +{
-> > > +	u32 index = msr->index;
-> > > +	u64 data = msr->data;
-> > > +	u32 high_word = data >> 32;
-> > > +
-> > > +	if ((index == MSR_IA32_U_CET || index == MSR_IA32_S_CET) &&
-> > > +	    (data & CET_MSR_RSVD_BITS_2))
-> > > +		return false;
-> > > +
-> > > +	if (is_64_bit_mode(vcpu)) {
-> > > +		if (is_noncanonical_address(data & PAGE_MASK, vcpu))
-> > 
-> > I don't think this is correct.  MSRs that contain an address usually only
-> > fault on a non-canonical value and do the non-canonical check regardless
-> > of mode.  E.g. VM-Enter's consistency checks on SYSENTER_E{I,S}P only care
-> > about a canonical address and are not dependent on mode, and SYSENTER
-> > itself states that bits 63:32 are ignored in 32-bit mode.  I assume the
-> > same is true here.
-> The spec. reads like this:  Must be machine canonical when written on parts
-> that support 64 bit mode. On parts that do not support 64 bit mode, the bits
-> 63:32 are reserved and must be 0.
+As the rseq selftests can run for a long period of time, disable the
+timeout that the general selftests have.
 
-Yes, that agrees with me.  The key word is "support", i.e. "on parts that
-support 64 bit mode" means "on parts with CPUID.0x80000001.EDX.LM=1."
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+---
+ tools/testing/selftests/rseq/settings | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 tools/testing/selftests/rseq/settings
 
-The reason the architecture works this way is that unless hardware clears
-the MSRs on transition from 64->32, bits 63:32 need to be ignored on the
-way out instead of being validated on the way in, e.g. software writes a
-64-bit value to the MSR and then transitions to 32-bit mode.  Clearing the
-MSRs would be painful, slow and error prone, so it's easier for hardware
-to simply ignore bits 63:32 in 32-bit mode.
+diff --git a/tools/testing/selftests/rseq/settings b/tools/testing/selftests/rseq/settings
+new file mode 100644
+index 000000000000..e7b9417537fb
+--- /dev/null
++++ b/tools/testing/selftests/rseq/settings
+@@ -0,0 +1 @@
++timeout=0
+-- 
+2.17.1
 
-> > If that is indeed the case, what about adding these to the common canonical
-> > check in __kvm_set_msr()?  That'd cut down on the boilerplate here and
-> > might make it easier to audit KVM's canonical checks.
-> > 
-> > > +			return false;
-> > > +		else if ((index == MSR_IA32_PL0_SSP ||
-> > > +			  index == MSR_IA32_PL1_SSP ||
-> > > +			  index == MSR_IA32_PL2_SSP ||
-> > > +			  index == MSR_IA32_PL3_SSP) &&
-> > > +			  (data & CET_MSR_RSVD_BITS_1))
-> > > +			return false;
-> > > +	} else {
-> > > +		if (msr->index == MSR_IA32_INT_SSP_TAB)
-> > > +			return false;
-> > > +		else if ((index == MSR_IA32_U_CET ||
-> > > +			  index == MSR_IA32_S_CET ||
-> > > +			  index == MSR_IA32_PL0_SSP ||
-> > > +			  index == MSR_IA32_PL1_SSP ||
-> > > +			  index == MSR_IA32_PL2_SSP ||
-> > > +			  index == MSR_IA32_PL3_SSP) &&
-> > > +			  (high_word & ~0ul))
-> > > +			return false;
-> > > +	}
-> > > +
-> > > +	return true;
-> > > +}
-> > 
-> > This helper seems like overkill, e.g. it's filled with index-specific
-> > checks, but is called from code that has already switched on the index.
-> > Open coding the individual checks is likely more readable and would require
-> > less code, especially if the canonical checks are cleaned up.
-> >
-> I'm afraid if the checks are not wrapped in a helper, there're many
-> repeat checking-code, that's why I'm using a wrapper.
-
-But you're adding almost as much, if not more, code to re-split the checks
-in this helper.
-
-> > > +
-> > > +static bool cet_msr_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > > +{
-> > > +	u64 kvm_xss;
-> > > +	u32 index = msr->index;
-> > > +
-> > > +	if (is_guest_mode(vcpu))
-> > > +		return false;
-> > 
-> > I may have missed this in an earlier discussion, does CET not support
-> > nesting?
-> >
-> I don't want to make CET avaible to nested guest at time being, first to
-> make it available to L1 guest first. So I need to avoid exposing any CET
-> CPUID/MSRs to a nested guest.
