@@ -2,109 +2,135 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D95C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65521C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEECF20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080534;
-	bh=Nzzp9hIMZ7NzxvxCDwnBAX1leUi0Wk+JreeDjHwiWRA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mza7gZD85J5vEL9XROycTVDcvtQqjZyLP1ht6/pinxhbTQPzKY31N+Di9qdq5mij5
-	 uM+Js7Rxh5WswZvBAF7ZKKYXlEQnBwufZLHN7DimtwYngMOhHpteQtZA9ynjPdxsg9
-	 ynzFcThYfaEaC880GJQE+P1UTB/AQhEwvQlUGmts=
+	by mail.kernel.org (Postfix) with ESMTP id 381E520836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="wcCk/jTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731522AbfLKQIx (ORCPT
+        id S2388936AbfLKQI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:08:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbfLKPMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 272252465A;
-        Wed, 11 Dec 2019 15:12:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077131;
-        bh=Nzzp9hIMZ7NzxvxCDwnBAX1leUi0Wk+JreeDjHwiWRA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KO4Xvi7DvTlYGREUVB5Slvr7Ls63iUdKE6Yx980dYhRFvyM55XwODAku9ETJzrciw
-         7qQyl40UDQ/21Tulo3+lcELAaSxHUDd0oUExn5zvtw6EHgqofGmtYsBqE0n+CoC+Gb
-         3AKxM2EktGx99oCA6Nse+8ZGR7Mrx6zMVzXUTgbQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 028/105] Input: cyttsp4_core - fix use after free bug
-Date:   Wed, 11 Dec 2019 16:05:17 +0100
-Message-Id: <20191211150229.738315143@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 11 Dec 2019 11:08:59 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39938 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731164AbfLKQIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:08:55 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so4674832lfo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7tqplQQb9CHWGQTUQAovBElvDHnJZMbpYf+CcpC4kqQ=;
+        b=wcCk/jTnkASJR6Sp/LYKO/aXJ7GWZ8rt2oRypmgmWabEkCBK/cKu2NrwVq/17FV8tI
+         t8yWfb8AWXbvEC/SrExJq/b1iu5pzWFwfpyvs6DaxjS4mHCuqftAMSTM+KRfYHSxUwjv
+         rGQaDG8b8/7PtjZd8u88TM+BiNgMFo7S/W8OZINIzpJJ4eRtGG5eCE6PmW8CmIaH5F8d
+         XqRYgOE582W9iKhrrr8OR5UcKjnMscE3yjhUAou7rAYKCERvfVpsIBRG+djXzSoJgKlG
+         eketxGshmv8KyDlmzBI1mFELQnNUOH9w8fYc2ITrvlY7hd9sLE55fL+XxkmcymfpWGaF
+         /jhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7tqplQQb9CHWGQTUQAovBElvDHnJZMbpYf+CcpC4kqQ=;
+        b=MC0XANGILo+zFsQoc2FvdPiV7GIId53PUq1fLJ2KOLE37wCMIf/c5x2d6NDlLInRRq
+         vuXwJ7VBig3ObHdONW6hEjwoufgXFEwzlXKrSNqEb2cnqNomD1II//gYlNfrTJxRLhHT
+         L35mdeHOSoDkg6H+RtCU3OBGUUXSglWK68Rt25wu0+28yeQdHxD0YfWLluu4ID+RD+DH
+         Jd0RokOMp76d3WSTyKaquW8SssnfJjXn2itCuADnfTLzKgjDd8w1c5uSeRzN6voS6wyi
+         DUp6OupSYyRhWVuAUcPpAjcTpgtmYIuyMykYdqSV9aVkGKE9idBVnvhOSKhGI29JUoZG
+         RHIA==
+X-Gm-Message-State: APjAAAV3AIpObQb4BqBvAi3r5H8thsWV7ZYZOLbEEJkv+z34ptQSqT3Q
+        TqQ85/tw/omq7riWQHKI3OW4hw==
+X-Google-Smtp-Source: APXvYqw6vroN4zWGsiE3et8xvPmJr20vyWmpeLQ82KdA0bF4KoKWTmc/RVLOq511WAvgGFLqkk/0uA==
+X-Received: by 2002:ac2:5ec3:: with SMTP id d3mr2706348lfq.176.1576080533659;
+        Wed, 11 Dec 2019 08:08:53 -0800 (PST)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:8d8:12fe:a87e:d4b8:621e:2b62])
+        by smtp.gmail.com with ESMTPSA id h24sm1407649ljl.80.2019.12.11.08.08.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 08:08:52 -0800 (PST)
+Subject: Re: [PATCH RFC 0/2] Add Renesas RPC-IF support
+To:     Chris Brandt <Chris.Brandt@renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <03a630e2-280f-98b7-a9c8-6533716720e5@cogentembedded.com>
+Date:   Wed, 11 Dec 2019 19:08:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <TY1PR01MB156234F5B44BB43D3DCA98128A5A0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pan Bian <bianpan2016@163.com>
+HEllo
 
-[ Upstream commit 79aae6acbef16f720a7949f8fc6ac69816c79d62 ]
+On 12/11/2019 05:33 PM, Chris Brandt wrote:
 
-The device md->input is used after it is released. Setting the device
-data to NULL is unnecessary as the device is never used again. Instead,
-md->input should be assigned NULL to avoid accessing the freed memory
-accidently. Besides, checking md->si against NULL is superfluous as it
-points to a variable address, which cannot be NULL.
+>> Here's a set of 2 patches against Linus' repo. Renesas Reduced Pin Count
+>> Interface (RPC-IF) allows a SPI flash or HyperFlash connected to the SoC to
+>> be accessed via the external address space read mode or the manual mode.
+> 
+> Looking at this driver, all it is are APIs. Meaning another driver is 
+> needed to sit in between the MTD layer and this HW driver layer.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Link: https://lore.kernel.org/r/1572936379-6423-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/input/touchscreen/cyttsp4_core.c | 7 -------
- 1 file changed, 7 deletions(-)
+   Between the hardware and SPI, and between the hardware and HyperFlash
+infrastructure. There's a lot of the common hardware code common between
+these 2 driver areas.
 
-diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
-index 4b22d49a0f49a..6bcffc930384a 100644
---- a/drivers/input/touchscreen/cyttsp4_core.c
-+++ b/drivers/input/touchscreen/cyttsp4_core.c
-@@ -1990,11 +1990,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
- 
- 	/* get sysinfo */
- 	md->si = &cd->sysinfo;
--	if (!md->si) {
--		dev_err(dev, "%s: Fail get sysinfo pointer from core p=%p\n",
--			__func__, md->si);
--		goto error_get_sysinfo;
--	}
- 
- 	rc = cyttsp4_setup_input_device(cd);
- 	if (rc)
-@@ -2004,8 +1999,6 @@ static int cyttsp4_mt_probe(struct cyttsp4 *cd)
- 
- error_init_input:
- 	input_free_device(md->input);
--error_get_sysinfo:
--	input_set_drvdata(md->input, NULL);
- error_alloc_failed:
- 	dev_err(dev, "%s failed.\n", __func__);
- 	return rc;
--- 
-2.20.1
+> In the driver that I did, if the "RPC" HW is going to be used to control
+> a SPI Flash device, it registered a spi controller and then the MTD 
+> layer could access the device just like any other SPI controller driver. No
+> additional drivers are needed.
 
+   We're already been thru that with Mason's patch -- I don't want the code
+duplicated between 2 drivers.
 
+> Looking at the hyperbus driver that is in drivers/mtd/hyperbus/, it 
+> seems that if the "RPC" HW is going to be used to control HyperFlash, then 
 
+   Sure. But the code controlling RPC hardware is largely the same b/w 2 cases.
+
+> all you would need to do is register a hyperbus controller using 
+> hyperbus_register_device(). Then the MTD layer could read/write the flash using 
+> normal MTD CFI interface.
+
+   That's what I do (the current realization makes too many assumptions about
+the HF hardware (both direct read and write). 
+
+> Why do you think you need another layer in between the HW driver and the
+> MTD layer?
+
+   Because we don't want any duplicated code. Also, think about DT -- it
+describes the hardware, not the driver configuration.
+
+> Is your goal to make a multi-layered system where the HW jumps back and forth
+> in between operating modes at runtime? I'm not sure of the use case for all of
+> this.
+
+   My goal is to prevent the code duplication (and keep DT sane too).
+
+> Chris
+
+MBR, Sergei
