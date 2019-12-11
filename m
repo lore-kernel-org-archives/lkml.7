@@ -2,155 +2,388 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9745C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A30FC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF095214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:19:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLGm3S2d"
+	by mail.kernel.org (Postfix) with ESMTP id 445ED222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:23:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576106629;
+	bh=7v2iBzVMgVQtbcTWCQgCDcnk8F7OuhUCybkSbrXWIT8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QnGVh/M8hsAgmdMlgR4xPRpDqrBeSg1cLpTXQHMFc3bTI/dPJyJvb3QV/2YFNMSAa
+	 XhyMSvanyKTCcnRDZPIeiuKfs4h+UgjDzLcGZ4MzlRnSPSDS1dmF0NlXasoU1nCawG
+	 6+1FgmY+v/p9GHu7W4H2Rnv0nFeWvrZ7ywzD0z54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfLKXTG (ORCPT
+        id S1726986AbfLKXXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:19:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50131 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726589AbfLKXTF (ORCPT
+        Wed, 11 Dec 2019 18:23:48 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39089 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfLKXXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:19:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576106344;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=7dJcxVu7RPHrA9N3SIaEzHtFnUyKVlhYarW5FtIpICo=;
-        b=QLGm3S2d/zGO8enXkDQ9au3D2Jr54v9o6xpBb6zsqL11Cp3rHEN+zvbuo9iExnQf7CSPAA
-        vpvMtVlvEPKMRAK+7SKJybwClh+WZ2FMGP1Z9BfIba77lRNBAuLL3PUcGDVJOmk8jE5txU
-        1GE/KI3MpJl9MRpuv5pY6EkIkZrovus=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-q9ROnZ_cNXOGc3XKgyn4yA-1; Wed, 11 Dec 2019 18:19:01 -0500
-X-MC-Unique: q9ROnZ_cNXOGc3XKgyn4yA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEF6318B5FA1;
-        Wed, 11 Dec 2019 23:18:59 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-36.phx2.redhat.com [10.3.116.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE09E1891F;
-        Wed, 11 Dec 2019 23:18:23 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Bundy <christianbundy@fraction.io>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable@vger.kernel.org, linux-intergrity@vger.kernel.org
-Subject: [PATCH] tpm_tis: reserve chip for duration of tpm_tis_core_init
-Date:   Wed, 11 Dec 2019 16:17:58 -0700
-Message-Id: <20191211231758.22263-1-jsnitsel@redhat.com>
+        Wed, 11 Dec 2019 18:23:48 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a67so323812oib.6;
+        Wed, 11 Dec 2019 15:23:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Iya/yHlTMSrcXfTq+BjAO6UDDaWYcqAV3TDa5ziamNg=;
+        b=Z/msPW5vkB2FjihFdxvN2P2J1L9Hd+QeqcQ7eIfImCFQj8LWpP9YrM2rC/UHnyOgyf
+         tBejFggYnrjz1LYqQ4p2i8hIoeS/6+t0RPhJLNjwuzxdav7rfBxWCGN8rTHYX15tGe4Y
+         2UOuQJw7uw8NUYsHRdgTeG+FGkYSI3UD5j5z6dEz+7Ih12GtyH2lDypQDhnqFIg8GaLb
+         L/Q4oTIH3/ZAuD3dknSjqFahnZnRkduBWa4L9rg5EnjGq4r17DsL8krnhTyYaaBiDUeJ
+         qPldUHLkuDZuh6Ol6mlC9JSl1v22nIUN1OetRnlbg2Klo89DnAFSbS0ewSJi6E8Z/IXU
+         8BFQ==
+X-Gm-Message-State: APjAAAX7Zeg2Coc/lezo9cUcqlgo/8TZAt/oF78LWUdY5J8ZkXAJEwfN
+        OFVpUnOiyyKCZj2QyBbuHTEBoco=
+X-Google-Smtp-Source: APXvYqzADawi4Gb9Sc437zGVtg1VAXFv53DVCnI79dEXPkQyHhU2NtPjukwydNaaC86dORJ9fhsfCg==
+X-Received: by 2002:aca:36c5:: with SMTP id d188mr4693821oia.54.1576106626502;
+        Wed, 11 Dec 2019 15:23:46 -0800 (PST)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id s83sm1356533oif.33.2019.12.11.15.23.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 15:23:46 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [PATCH] of: Rework and simplify phandle cache to use a fixed size
+Date:   Wed, 11 Dec 2019 17:23:45 -0600
+Message-Id: <20191211232345.24810-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-issuing commands to the tpm during initialization, just reserve the
-chip after wait_startup, and release it when we are ready to call
-tpm_chip_register.
+The phandle cache was added to speed up of_find_node_by_phandle() by
+avoiding walking the whole DT to find a matching phandle. The
+implementation has several shortcomings:
 
-Cc: Christian Bundy <christianbundy@fraction.io>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org
-Cc: linux-intergrity@vger.kernel.org
-Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit=
-()")
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+  - The cache is designed to work on a linear set of phandle values.
+    This is true for dtc generated DTs, but not for other cases such as
+    Power.
+  - The cache isn't enabled until of_core_init() and a typical system
+    may see hundreds of calls to of_find_node_by_phandle() before that
+    point.
+  - The cache is freed and re-allocated when the number of phandles
+    changes.
+  - It takes a raw spinlock around a memory allocation which breaks on
+    RT.
+
+Change the implementation to a fixed size and use hash_32() as the
+cache index. This greatly simplifies the implementation. It avoids
+the need for any re-alloc of the cache and taking a reference on nodes
+in the cache. We only have a single source of removing cache entries
+which is of_detach_node().
+
+Using hash_32() removes any assumption on phandle values improving
+the hit rate for non-linear phandle values. The effect on linear values
+using hash_32() is about a 10% collision. The chances of thrashing on
+colliding values seems to be low.
+
+To compare performance, I used a RK3399 board which is a pretty typical
+system. I found that just measuring boot time as done previously is
+noisy and may be impacted by other things. Also bringing up secondary
+cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
+With no caching, calls to of_find_node_by_phandle() take about 20124 us
+for 1248 calls. There's an additional 288 calls before time keeping is
+up. Using the average time per hit/miss with the cache, we can calculate
+these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
+and 13319 us with no cache or an uninitialized cache.
+
+Comparing the 3 implementations the time spent in
+of_find_node_by_phandle() is:
+
+no cache:        20124 us (+ 13319 us)
+128 entry cache:  5134 us (+ 690 us)
+current cache:     819 us (+ 13319 us)
+
+We could move the allocation of the cache earlier to improve the
+current cache, but that just further complicates the situation as it
+needs to be after slab is up, so we can't do it when unflattening (which
+uses memblock).
+
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/char/tpm/tpm_tis_core.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/of/base.c       | 133 ++++++++--------------------------------
+ drivers/of/dynamic.c    |   2 +-
+ drivers/of/of_private.h |   4 +-
+ drivers/of/overlay.c    |  10 ---
+ 4 files changed, 28 insertions(+), 121 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
-ore.c
-index 8af2cee1a762..308756d278b3 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -978,13 +978,13 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
-=20
- 	if (wait_startup(chip, 0) !=3D 0) {
- 		rc =3D -ENODEV;
--		goto out_err;
-+		goto out_start;
- 	}
-=20
- 	/* Take control of the TPM's interrupt hardware and shut it off */
- 	rc =3D tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
- 	if (rc < 0)
--		goto out_err;
-+		goto out_start;
-=20
- 	intmask |=3D TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
- 		   TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
-@@ -993,9 +993,8 @@ int tpm_tis_core_init(struct device *dev, struct tpm_=
-tis_data *priv, int irq,
-=20
- 	rc =3D tpm_chip_start(chip);
- 	if (rc)
--		goto out_err;
-+		goto out_start;
- 	rc =3D tpm2_probe(chip);
--	tpm_chip_stop(chip);
- 	if (rc)
- 		goto out_err;
-=20
-@@ -1059,7 +1058,6 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
- 			goto out_err;
- 		}
-=20
--		tpm_chip_start(chip);
- 		chip->flags |=3D TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
-@@ -1070,18 +1068,17 @@ int tpm_tis_core_init(struct device *dev, struct =
-tpm_tis_data *priv, int irq,
- 		} else {
- 			tpm_tis_probe_irq(chip, intmask);
- 		}
--		tpm_chip_stop(chip);
- 	}
-+	tpm_chip_stop(chip);
-=20
- 	rc =3D tpm_chip_register(chip);
- 	if (rc)
--		goto out_err;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index db7fbc0c0893..f7da162f126d 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -135,115 +135,38 @@ int __weak of_node_to_nid(struct device_node *np)
+ }
+ #endif
+ 
+-/*
+- * Assumptions behind phandle_cache implementation:
+- *   - phandle property values are in a contiguous range of 1..n
+- *
+- * If the assumptions do not hold, then
+- *   - the phandle lookup overhead reduction provided by the cache
+- *     will likely be less
+- */
++#define OF_PHANDLE_CACHE_BITS	7
++#define OF_PHANDLE_CACHE_SZ	BIT(OF_PHANDLE_CACHE_BITS)
+ 
+-static struct device_node **phandle_cache;
+-static u32 phandle_cache_mask;
++static struct device_node *phandle_cache[OF_PHANDLE_CACHE_SZ];
+ 
+-/*
+- * Caller must hold devtree_lock.
+- */
+-static void __of_free_phandle_cache(void)
++static u32 of_phandle_cache_hash(phandle handle)
+ {
+-	u32 cache_entries = phandle_cache_mask + 1;
+-	u32 k;
 -
--	if (chip->ops->clk_enable !=3D NULL)
--		chip->ops->clk_enable(chip, false);
-+		goto out_start;
-=20
- 	return 0;
- out_err:
-+	tpm_chip_stop(chip);
-+out_start:
- 	if ((chip->ops !=3D NULL) && (chip->ops->clk_enable !=3D NULL))
- 		chip->ops->clk_enable(chip, false);
-=20
---=20
-2.24.0
+-	if (!phandle_cache)
+-		return;
+-
+-	for (k = 0; k < cache_entries; k++)
+-		of_node_put(phandle_cache[k]);
+-
+-	kfree(phandle_cache);
+-	phandle_cache = NULL;
++	return hash_32(handle, OF_PHANDLE_CACHE_BITS);
+ }
+ 
+-int of_free_phandle_cache(void)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-
+-	__of_free_phandle_cache();
+-
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-
+-	return 0;
+-}
+-#if !defined(CONFIG_MODULES)
+-late_initcall_sync(of_free_phandle_cache);
+-#endif
+-
+ /*
+  * Caller must hold devtree_lock.
+  */
+-void __of_free_phandle_cache_entry(phandle handle)
++void __of_phandle_cache_inv_entry(phandle handle)
+ {
+-	phandle masked_handle;
++	u32 handle_hash;
+ 	struct device_node *np;
+ 
+ 	if (!handle)
+ 		return;
+ 
+-	masked_handle = handle & phandle_cache_mask;
++	handle_hash = of_phandle_cache_hash(handle);
+ 
+-	if (phandle_cache) {
+-		np = phandle_cache[masked_handle];
+-		if (np && handle == np->phandle) {
+-			of_node_put(np);
+-			phandle_cache[masked_handle] = NULL;
+-		}
+-	}
+-}
+-
+-void of_populate_phandle_cache(void)
+-{
+-	unsigned long flags;
+-	u32 cache_entries;
+-	struct device_node *np;
+-	u32 phandles = 0;
+-
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-
+-	__of_free_phandle_cache();
+-
+-	for_each_of_allnodes(np)
+-		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+-			phandles++;
+-
+-	if (!phandles)
+-		goto out;
+-
+-	cache_entries = roundup_pow_of_two(phandles);
+-	phandle_cache_mask = cache_entries - 1;
+-
+-	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+-				GFP_ATOMIC);
+-	if (!phandle_cache)
+-		goto out;
+-
+-	for_each_of_allnodes(np)
+-		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
+-			of_node_get(np);
+-			phandle_cache[np->phandle & phandle_cache_mask] = np;
+-		}
+-
+-out:
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	np = phandle_cache[handle_hash];
++	if (np && handle == np->phandle)
++		phandle_cache[handle_hash] = NULL;
+ }
+ 
+ void __init of_core_init(void)
+ {
+ 	struct device_node *np;
+ 
+-	of_populate_phandle_cache();
+ 
+ 	/* Create the kset, and register existing nodes */
+ 	mutex_lock(&of_mutex);
+@@ -253,8 +176,11 @@ void __init of_core_init(void)
+ 		pr_err("failed to register existing nodes\n");
+ 		return;
+ 	}
+-	for_each_of_allnodes(np)
++	for_each_of_allnodes(np) {
+ 		__of_attach_node_sysfs(np);
++		if (np->phandle && !phandle_cache[of_phandle_cache_hash(np->phandle)])
++			phandle_cache[of_phandle_cache_hash(np->phandle)] = np;
++	}
+ 	mutex_unlock(&of_mutex);
+ 
+ 	/* Symlink in /proc as required by userspace ABI */
+@@ -1235,36 +1161,29 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ {
+ 	struct device_node *np = NULL;
+ 	unsigned long flags;
+-	phandle masked_handle;
++	u32 handle_hash;
+ 
+ 	if (!handle)
+ 		return NULL;
+ 
++	handle_hash = of_phandle_cache_hash(handle);
++
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 
+-	masked_handle = handle & phandle_cache_mask;
+-
+-	if (phandle_cache) {
+-		if (phandle_cache[masked_handle] &&
+-		    handle == phandle_cache[masked_handle]->phandle)
+-			np = phandle_cache[masked_handle];
+-		if (np && of_node_check_flag(np, OF_DETACHED)) {
+-			WARN_ON(1); /* did not uncache np on node removal */
+-			of_node_put(np);
+-			phandle_cache[masked_handle] = NULL;
+-			np = NULL;
+-		}
++	if (phandle_cache[handle_hash] &&
++	    handle == phandle_cache[handle_hash]->phandle)
++		np = phandle_cache[handle_hash];
++	if (np && of_node_check_flag(np, OF_DETACHED)) {
++		WARN_ON(1); /* did not uncache np on node removal */
++		phandle_cache[handle_hash] = NULL;
++		np = NULL;
+ 	}
+ 
+ 	if (!np) {
+ 		for_each_of_allnodes(np)
+ 			if (np->phandle == handle &&
+ 			    !of_node_check_flag(np, OF_DETACHED)) {
+-				if (phandle_cache) {
+-					/* will put when removed from cache */
+-					of_node_get(np);
+-					phandle_cache[masked_handle] = np;
+-				}
++				phandle_cache[handle_hash] = np;
+ 				break;
+ 			}
+ 	}
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 49b16f76d78e..08fd823edac9 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -276,7 +276,7 @@ void __of_detach_node(struct device_node *np)
+ 	of_node_set_flag(np, OF_DETACHED);
+ 
+ 	/* race with of_find_node_by_phandle() prevented by devtree_lock */
+-	__of_free_phandle_cache_entry(np->phandle);
++	__of_phandle_cache_inv_entry(np->phandle);
+ }
+ 
+ /**
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 66294d29942a..582844c158ae 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -85,14 +85,12 @@ int of_resolve_phandles(struct device_node *tree);
+ #endif
+ 
+ #if defined(CONFIG_OF_DYNAMIC)
+-void __of_free_phandle_cache_entry(phandle handle);
++void __of_phandle_cache_inv_entry(phandle handle);
+ #endif
+ 
+ #if defined(CONFIG_OF_OVERLAY)
+ void of_overlay_mutex_lock(void);
+ void of_overlay_mutex_unlock(void);
+-int of_free_phandle_cache(void);
+-void of_populate_phandle_cache(void);
+ #else
+ static inline void of_overlay_mutex_lock(void) {};
+ static inline void of_overlay_mutex_unlock(void) {};
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 9617b7df7c4d..97fe92c1f1d2 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -974,8 +974,6 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
+ 		goto err_free_overlay_changeset;
+ 	}
+ 
+-	of_populate_phandle_cache();
+-
+ 	ret = __of_changeset_apply_notify(&ovcs->cset);
+ 	if (ret)
+ 		pr_err("overlay apply changeset entry notify error %d\n", ret);
+@@ -1218,17 +1216,9 @@ int of_overlay_remove(int *ovcs_id)
+ 
+ 	list_del(&ovcs->ovcs_list);
+ 
+-	/*
+-	 * Disable phandle cache.  Avoids race condition that would arise
+-	 * from removing cache entry when the associated node is deleted.
+-	 */
+-	of_free_phandle_cache();
+-
+ 	ret_apply = 0;
+ 	ret = __of_changeset_revert_entries(&ovcs->cset, &ret_apply);
+ 
+-	of_populate_phandle_cache();
+-
+ 	if (ret) {
+ 		if (ret_apply)
+ 			devicetree_state_flags |= DTSF_REVERT_FAIL;
+-- 
+2.20.1
 
