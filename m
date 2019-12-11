@@ -2,106 +2,93 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF7C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443B1C2D0BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC9F20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:49:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576032542;
-	bh=yqkl8TN0O59NwfZP2OD2c0ghY0r4F9Diq35NeQInRfE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dUP3fWqzheynlTE8lYLxy/cShWc+HqErCPN1+L6c+pbM90Ez7+0OPeIgza+siBRoz
-	 8AzOUAFQIbr948HCAZCt43UJva5HTXYB/4pTgmM9p+tLXXY/qIFIhIemOFk1o5u68y
-	 zxvqu24ZGcVZXR115CX/3PYHxEhNnFzAfNAMdJ94=
+	by mail.kernel.org (Postfix) with ESMTP id 181942077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 02:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbfLKCtB (ORCPT
+        id S1727753AbfLKCuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 10 Dec 2019 21:49:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
+        Tue, 10 Dec 2019 21:50:19 -0500
+Received: from mga06.intel.com ([134.134.136.31]:12510 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbfLKCtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 10 Dec 2019 21:49:00 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0DF7205ED;
-        Wed, 11 Dec 2019 02:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576032540;
-        bh=yqkl8TN0O59NwfZP2OD2c0ghY0r4F9Diq35NeQInRfE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N6Mbhyj+zaSmcMmFEcvuAbn1RXZr+9mfbi1gq5t+KWhaDMkXHPd4QmJPAy6aAUcrj
-         2rSpBj0soqrTUIN01JzV7gVd2iu0r43RuzzHf62jss0Iw3umpotijYsugx3sPQ+ltC
-         4KFA6yIXyUlcDslwsYyBzYXbhBt4f/wF3+Zd9F6U=
-Date:   Tue, 10 Dec 2019 18:48:58 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
-        linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] fs: introduce is_dot_or_dotdot helper for cleanup
-Message-ID: <20191211024858.GB732@sol.localdomain>
-References: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576030801-8609-1-git-send-email-yangtiezhu@loongson.cn>
+        id S1726619AbfLKCuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 10 Dec 2019 21:50:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Dec 2019 18:50:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,301,1571727600"; 
+   d="scan'208";a="220346267"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Dec 2019 18:50:16 -0800
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, peter.harliman.liem@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v7 0/2] phy: intel-lgm-emmc: Add support for eMMC PHY
+Date:   Wed, 11 Dec 2019 10:50:09 +0800
+Message-Id: <20191211025011.12156-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:20:01AM +0800, Tiezhu Yang wrote:
-> diff --git a/include/linux/namei.h b/include/linux/namei.h
-> index 7fe7b87..0fd9315 100644
-> --- a/include/linux/namei.h
-> +++ b/include/linux/namei.h
-> @@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
->  	return error == -ESTALE && !(flags & LOOKUP_REVAL);
->  }
->  
-> +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-> +{
-> +	if (unlikely(name[0] == '.')) {
-> +		if (len == 1 || (len == 2 && name[1] == '.'))
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  #endif /* _LINUX_NAMEI_H */
+Add eMMC-PHY support for Intel LGM SoC
 
-I had suggested adding a len >= 1 check to handle the empty name case correctly.
-What I had in mind was
+changes in v7:
+ Rebased to maintainer kernel tree phy-tag-5.5
 
-static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
-{
-	if (len >= 1 && unlikely(name[0] == '.')) {
-		if (len < 2 || (len == 2 && name[1] == '.'))
-			return true;
-	}
+changes in v6:
+   - cobined comaptible strings
+   - added as contiguous and can be a single entry for reg properties
+changes in v5:
+   - earlier Review-by tag given by Rob
+   - rework done with syscon parent node.
 
-	return false;
-}
+ changes in v4:
+   - As per Rob's review: validate 5.2 and 5.3
+   - drop unrelated items.
 
-As is, you're proposing that it always dereference the first byte even when
-len=0, which seems like a bad idea for a shared helper function.  Did you check
-whether it's okay for all the existing callers?  fscrypt_fname_disk_to_usr() is
-called from 6 places, did you check all of them?
+ changes in v3:
+   - resolve 'make dt_binding_check' warnings
 
-How about keeping the existing optimized code for the hot path in fs/namei.c
-(i.e. not using the helper function), while having the helper function do the
-extra check to handle len=0 correctly?
+ changes in v2:
+   As per Rob Herring review comments, the following updates
+  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+  - filename is the compatible string plus .yaml
+  - LGM: Lightning Mountain
+  - update maintainer
+  - add intel,syscon under property list
+  - keep one example instead of two
 
-- Eric
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: intel-emmc-phy: Add YAML schema for LGM eMMC PHY
+  phy: intel-lgm-emmc: Add support for eMMC PHY
+
+ .../bindings/phy/intel,lgm-emmc-phy.yaml           |  62 +++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/intel/Kconfig                          |   9 +
+ drivers/phy/intel/Makefile                         |   2 +
+ drivers/phy/intel/phy-intel-emmc.c                 | 283 +++++++++++++++++++++
+ 6 files changed, 358 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+ create mode 100644 drivers/phy/intel/Kconfig
+ create mode 100644 drivers/phy/intel/Makefile
+ create mode 100644 drivers/phy/intel/phy-intel-emmc.c
+
+-- 
+2.11.0
+
