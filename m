@@ -2,263 +2,133 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7163DC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C63C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323DB2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD462073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OvJifS9/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="puJXdRiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730444AbfLKQ3b (ORCPT
+        id S1730532AbfLKQ3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:29:31 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:32801 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729377AbfLKQ3b (ORCPT
+        Wed, 11 Dec 2019 11:29:51 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38053 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730220AbfLKQ3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:29:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576081768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fjHPK8JEPFBs1EYFKmzchbOHjalPkcJFICCdbspA0Is=;
-        b=OvJifS9/O9/ytKV6/C/iN8v7hl1SzkyYjF8J2haaMI3bWs5VwcKYwhNJTLqU9ZrgA5FBHu
-        E2AXi6jEpdt9tmosngUw0+rjU+EkhbdQaXnxSr1Fi2InRUZT9/BDAuMY9OG1+1H6U91Mzp
-        gZgmGl/aY0mxXRTptJJvrkLQkvlCHVs=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-NdTD4yFiPJGdpSBVnCKB7g-1; Wed, 11 Dec 2019 11:29:27 -0500
-X-MC-Unique: NdTD4yFiPJGdpSBVnCKB7g-1
-Received: by mail-qk1-f199.google.com with SMTP id a6so14910040qkl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 08:29:27 -0800 (PST)
+        Wed, 11 Dec 2019 11:29:50 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so17203889lfm.5;
+        Wed, 11 Dec 2019 08:29:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hq/yIjv7dQcNk4D9jg8omNMlgridafkSg7EuVHqVUI8=;
+        b=puJXdRiIUhKttkBGG+0J8GK5DdigxQWS5y0oM1oC5+9CF74TrqpG88ZsLsEjmjZ2yY
+         2KscLXYRz80Y5GDrqhrTmem4sDxVPHlCErAW46n3MGVZyzHOEmoOQub6B2xwtJX1VeaB
+         gthpfk21jB5jAI13Wzt9UcBG9N59XPbngstn3EcpBKy930/aV9EgotJRRYln5cY57BwJ
+         SsHMAdqGKgmpN2z1zNj/PtS5f5DNePcRkkziFCU8KCBv6osSOg9D93JY3CZJXESYzuEL
+         7OS5a/TS2Ig3SSxV9tx/S7CdUKqF2jubT6TP3rOvTHq0FUb9UFHNF3Lpk6zAj2SXbCJr
+         PwoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fjHPK8JEPFBs1EYFKmzchbOHjalPkcJFICCdbspA0Is=;
-        b=j4V5i/QJAUrOP4ihI0AZyn53BfaeXnVye3lcf/sLYlEOdfg8SEdyWqDpe8ZdxHpKF/
-         a0i4yGkvn7K5InoqoyFpRzzc5JTE5HFF60QJkOOm/PMoz+wCREZFobPPsK0WPPAZGaAH
-         zgqiWDZ0Zhdts1OKrhjJdijfyoxo7lQdZK8BAwdUFhcs7QKKkGZrd2xoavCRNTS0srH3
-         c0TVZfPoU1k+A1luW2kpyvzb/fPeHJUBxbY/ZTCr1Evh2w3Kj8r1qrbRve/4tyJI66dv
-         9i94EL7xBWlQrI40Wp6WY/tbaZl1wox6VTMohVUBF4un/GMOAdzZtQNire12EmI55udi
-         Q04g==
-X-Gm-Message-State: APjAAAWAwO7lHUf/YpKWA4yiq5JPKVsJSIiPPz/bKGqHrIZGu8UI53Uo
-        SA594FrOBKGFproOnC0czcGz2LCT06kk59kChNjXKHKt6Dr6KKa1k25V+CGXIy5qHU0/N6KxVp9
-        nragP71N3q/Rnu111w2RUWxO7
-X-Received: by 2002:ad4:4dc3:: with SMTP id cw3mr3859715qvb.130.1576081767237;
-        Wed, 11 Dec 2019 08:29:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzs/nC3KBBr4GvPRFt/0NZq4RcwrMSGEDrh3F6FSZyuV/K585i/pJUZUtc8AfTbNXAbMhO3tw==
-X-Received: by 2002:ad4:4dc3:: with SMTP id cw3mr3859680qvb.130.1576081766883;
-        Wed, 11 Dec 2019 08:29:26 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id q34sm1072239qtc.33.2019.12.11.08.29.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 08:29:26 -0800 (PST)
-Date:   Wed, 11 Dec 2019 11:29:25 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] smp: Allow smp_call_function_single_async() to insert
- locked csd
-Message-ID: <20191211162925.GD48697@xz-x1>
-References: <20191204204823.1503-1-peterx@redhat.com>
- <20191211154058.GO2827@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hq/yIjv7dQcNk4D9jg8omNMlgridafkSg7EuVHqVUI8=;
+        b=r+R8jsc9KOA4vHKPj8GRFsDeJy8KOVofswHU+oqsTBwyah+N/sjKlqSd7bJgAKSpnL
+         0M18geg8yKmTIYGzXfhVKXXQ6Vrp71HI/5cCbxg3b3jemj9nGy6NO30kJIKE+eMKG3y8
+         +S/ktpeQHmOCnZxKsLo/rLk/3heAs7vWt6UpZ20cuwV4dmRVtDJ55ShgcVwHozE7s5L4
+         kAVbmV1gSYSrSUNcInoTEXwTw8NwxwDsZP4EA564G7UAtiaVk5KLV34kU8KwUONpqup/
+         MbruoIxK7m6c06N5m82U6NVH1Khhy3OHdRUD2cOSvxPLUrah6SPEK9jkv2Z6AiF5VLPj
+         Xxww==
+X-Gm-Message-State: APjAAAWe/sdvMdgkK//QMGRL8TAG2WVqDCUSZoOemZ+AsBTuHRVa60Sk
+        eMLMdnn+IsbEsT7MpCxQY6hxJcMY
+X-Google-Smtp-Source: APXvYqyKKItBY/TV7QIeWXK15sGg4bEGTqPgEOhYsCHm66OSwEDfAD/6aejDpGg7n4OGpXSQo9JS7g==
+X-Received: by 2002:a19:4a:: with SMTP id 71mr2802487lfa.50.1576081788085;
+        Wed, 11 Dec 2019 08:29:48 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i13sm1438903ljg.89.2019.12.11.08.29.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 08:29:47 -0800 (PST)
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191210014011.21987-1-digetx@gmail.com>
+ <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+ <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com>
+ <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com>
+Date:   Wed, 11 Dec 2019 19:29:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191211154058.GO2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:40:58PM +0100, Peter Zijlstra wrote:
-> On Wed, Dec 04, 2019 at 03:48:23PM -0500, Peter Xu wrote:
-> > Previously we will raise an warning if we want to insert a csd object
-> > which is with the LOCK flag set, and if it happens we'll also wait for
-> > the lock to be released.  However, this operation does not match
-> > perfectly with how the function is named - the name with "_async"
-> > suffix hints that this function should not block, while we will.
-> > 
-> > This patch changed this behavior by simply return -EBUSY instead of
-> > waiting, at the meantime we allow this operation to happen without
-> > warning the user to change this into a feature when the caller wants
-> > to "insert a csd object, if it's there, just wait for that one".
-> > 
-> > This is pretty safe because in flush_smp_call_function_queue() for
-> > async csd objects (where csd->flags&SYNC is zero) we'll first do the
-> > unlock then we call the csd->func().  So if we see the csd->flags&LOCK
-> > is true in smp_call_function_single_async(), then it's guaranteed that
-> > csd->func() will be called after this smp_call_function_single_async()
-> > returns -EBUSY.
-> > 
-> > Update the comment of the function too to refect this.
-> > 
-> > CC: Marcelo Tosatti <mtosatti@redhat.com>
-> > CC: Thomas Gleixner <tglx@linutronix.de>
-> > CC: Nadav Amit <namit@vmware.com>
-> > CC: Josh Poimboeuf <jpoimboe@redhat.com>
-> > CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > CC: Peter Zijlstra <peterz@infradead.org>
-> > CC: linux-kernel@vger.kernel.org
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> > ---
-> > 
-> > The story starts from a test where we've encountered the WARN_ON() on
-> > a customized kernel and the csd_wait() took merely forever to
-> > complete (so we've got a WARN_ON plusing a hang host).  The current
-> > solution (which is downstream-only for now) is that from the caller's
-> > side we use a boolean to store whether the csd is executed, we do:
-> > 
-> >   if (atomic_cmpxchg(&in_progress, 0, 1))
-> >     smp_call_function_single_async(..);
-> > 
-> > While at the end of csd->func() we clear the bit.  However imho that's
-> > mostly what csd->flags&LOCK is doing.  So I'm thinking maybe it would
-> > worth it to raise this patch for upstream too so that it might help
-> > other users of smp_call_function_single_async() when they need the
-> > same semantic (and, I do think we shouldn't wait in _async()s...)
+11.12.2019 19:10, Ulf Hansson пишет:
+> On Wed, 11 Dec 2019 at 16:46, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Hello Ulf,
+>>
+>> 11.12.2019 11:11, Ulf Hansson пишет:
+>>> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>
+>>>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+>>>> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+>>>> In a result high-speed mode isn't enabled for the WiFi card and this
+>>>> results in a malfunctioning SDIO communication.
+>>>
+>>> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR_SPEED?
+>>
+>> Yes, the SDIO_SPEED_SHS bit is set.
+>>
+>>>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+>>>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>>>>
+>>>> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+>>>> the problem, let's do the same in upstream.
+>>>>
+>>>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+>>>> which overrides card's info for the TI wl1251 WiFi.
+>>>
+>>> This is a temporary solution and should be replaced by doing the DT
+>>> parsing during
+>>>
+>>> So, yes, let's see if we can use a card quirk instead. That's the first option.
+>>>
+>>> A second option is simply to parse the DT subnode for a new DT
+>>> property during mmc_sdio_init_card(). Along the lines of what we do
+>>> for the broken-hpi DT binding for eMMC.
+>>
+>> Let's try the first option. My understanding is that the problem affects
+>> only the specific model of the WiFi chip and it's not a board-specific
+>> problem. I'll add Broadcom driver people to CC for the next version of
+>> the patch, maybe they'll have something to say.
 > 
-> hrtick_start() seems to employ something similar.
-
-True.  More "statistics" below.
-
+> Okay, sounds reasonable. By looking at your latest attempt for a fix,
+> I have two minor nitpicks, otherwise it looks good.
 > 
-> > Signed-off-by: Peter Xu <peterx@redhat.com>
-> 
-> duplicate tag :-)
+> The nitpicks:
+> I suggest to rename MMC_QUIRK_HIGH_SPEED_CARD to MMC_QUIRK_HIGH_SPEED
+> and mmc_card_need_high_speed_toggle() to mmc_card_quirk_hs().
 
-Oops, I'll remove that when I repost (of course, if at least any of
-you would still like me to repost :).
-
-> 
-> > ---
-> >  kernel/smp.c | 14 +++++++++++---
-> >  1 file changed, 11 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/kernel/smp.c b/kernel/smp.c
-> > index 7dbcb402c2fc..dd31e8228218 100644
-> > --- a/kernel/smp.c
-> > +++ b/kernel/smp.c
-> > @@ -329,6 +329,11 @@ EXPORT_SYMBOL(smp_call_function_single);
-> >   * (ie: embedded in an object) and is responsible for synchronizing it
-> >   * such that the IPIs performed on the @csd are strictly serialized.
-> >   *
-> > + * If the function is called with one csd which has not yet been
-> > + * processed by previous call to smp_call_function_single_async(), the
-> > + * function will return immediately with -EBUSY showing that the csd
-> > + * object is still in progress.
-> > + *
-> >   * NOTE: Be careful, there is unfortunately no current debugging facility to
-> >   * validate the correctness of this serialization.
-> >   */
-> > @@ -338,14 +343,17 @@ int smp_call_function_single_async(int cpu, call_single_data_t *csd)
-> >  
-> >  	preempt_disable();
-> >  
-> > -	/* We could deadlock if we have to wait here with interrupts disabled! */
-> > -	if (WARN_ON_ONCE(csd->flags & CSD_FLAG_LOCK))
-> > -		csd_lock_wait(csd);
-> > +	if (csd->flags & CSD_FLAG_LOCK) {
-> > +		err = -EBUSY;
-> > +		goto out;
-> > +	}
-> >  
-> >  	csd->flags = CSD_FLAG_LOCK;
-> >  	smp_wmb();
-> >  
-> >  	err = generic_exec_single(cpu, csd, csd->func, csd->info);
-> > +
-> > +out:
-> >  	preempt_enable();
-> >  
-> >  	return err;
-> 
-> Yes.. I think this will work.
-> 
-> I worry though; usage such as in __blk_mq_complete_request() /
-> raise_blk_irq(), which explicitly clears csd.flags before calling it
-> seems more dangerous than usual.
-> 
-> liquidio_napi_drv_callback() does that same.
-
-This is also true.
-
-Here's the statistics I mentioned:
-
-=================================================
-
-(1) Implemented the same counter mechanism on the caller's:
-
-*** arch/mips/kernel/smp.c:
-tick_broadcast[713]            smp_call_function_single_async(cpu, csd);
-*** drivers/cpuidle/coupled.c:
-cpuidle_coupled_poke[336]      smp_call_function_single_async(cpu, csd);
-*** kernel/sched/core.c:
-hrtick_start[298]              smp_call_function_single_async(cpu_of(rq), &rq->hrtick_csd);
-
-(2) Cleared the csd flags before calls:
-
-*** arch/s390/pci/pci_irq.c:
-zpci_handle_fallback_irq[185]  smp_call_function_single_async(cpu, &cpu_data->csd);
-*** block/blk-mq.c:
-__blk_mq_complete_request[622] smp_call_function_single_async(ctx->cpu, &rq->csd);
-*** block/blk-softirq.c:
-raise_blk_irq[70]              smp_call_function_single_async(cpu, data);
-*** drivers/net/ethernet/cavium/liquidio/lio_core.c:
-liquidio_napi_drv_callback[735] smp_call_function_single_async(droq->cpu_id, csd);
-
-(3) Others:
-
-*** arch/mips/kernel/process.c:
-raise_backtrace[713]           smp_call_function_single_async(cpu, csd);
-*** arch/x86/kernel/cpuid.c:
-cpuid_read[85]                 err = smp_call_function_single_async(cpu, &csd);
-*** arch/x86/lib/msr-smp.c:
-rdmsr_safe_on_cpu[182]         err = smp_call_function_single_async(cpu, &csd);
-*** include/linux/smp.h:
-bool[60]                       int smp_call_function_single_async(int cpu, call_single_data_t *csd);
-*** kernel/debug/debug_core.c:
-kgdb_roundup_cpus[272]         ret = smp_call_function_single_async(cpu, csd);
-*** net/core/dev.c:
-net_rps_send_ipi[5818]         smp_call_function_single_async(remsd->cpu, &remsd->csd);
-
-=================================================
-
-For (1): These probably justify more on that we might want a patch
-         like this to avoid reimplementing it everywhere.
-
-For (2): If I read it right, smp_call_function_single_async() is the
-         only place where we take a call_single_data_t structure
-         rather than the (smp_call_func_t, void *) tuple.  I could
-         miss something important, but otherwise I think it would be
-         good to use the tuple for smp_call_function_single_async() as
-         well, then we move call_single_data_t out of global header
-         but move into smp.c to avoid callers from toucing it (which
-         could be error-prone).  In other words, IMHO it would be good
-         to have all these callers fixed.
-
-For (3): I didn't dig, but I think some of them (or future users)
-         could still suffer from the same issue on retriggering the
-         WARN_ON... 
-
-Thoughts?
-
-Thanks,
-
--- 
-Peter Xu
-
+I'll take it into account, thanks.
