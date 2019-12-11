@@ -2,128 +2,101 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25227C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A65FC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0002073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+IhQdX6"
+	by mail.kernel.org (Postfix) with ESMTP id BEFCC208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576079374;
+	bh=keoRuJZDtPV9Cj0nbieyCEu76X/Jj26sIem2+X/AXJs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=L/jfMpW4BuOxLPoVCZMPZcLwcA7DfVisrEd1EeabINLM52a0PWDMdNgfre1o1anOD
+	 0hLnZa2UEbrTTVKXEgQA4TFTvaK/mvHjxdoWffjbu3FncTZP7GqEayBA7ozQQxmQ5r
+	 3PCDbZmvQCuZALH7BMbAefl5q96NjaCgGpC+9PFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733072AbfLKPtZ (ORCPT
+        id S1732882AbfLKPYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:49:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40856 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732393AbfLKPsd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:48:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c14so24544040wrn.7;
-        Wed, 11 Dec 2019 07:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IGE1EZUwmuYxZ2Mr6HgxG/3CVQcz/FGb9rzGPe/Zmdw=;
-        b=K+IhQdX61p0DNtryFjvI+O95fa02XCaX+fJS84QR58V9gaWJRhRI9ixClf2eV6teDl
-         bkJRGQtmGKWOhr97rTwTPQ4EJhJjeKurhIVIUacxn1w2p7X61WykKpWbS4GJ5n7lK6I8
-         p5TpUwBxe3yjKHtbYGmnlo0Rxu8dN8v7fnnWYVoRjwsPPuP/rQnTgP1FVZ17DLSx9mWy
-         raZ16oh3Qu3idCPSlSqdLWo+TSuXqVlisK55iB4lqeOoEf74BjPJ3feoBT36oa35jMWM
-         L26CFs389pitsobSshnEcVXzhUTUaMrqZmp0JnTh4X3o//5mzkc5qqCuEnr72ru7FH+v
-         jPwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IGE1EZUwmuYxZ2Mr6HgxG/3CVQcz/FGb9rzGPe/Zmdw=;
-        b=NzB+cBFq7svBrMJQB25xXvBBoV9R/lYJig+F6ZVAoGfosBXq6GhssO/JDer9dhrhWD
-         6i1qeIVYsbXlvFVXvUSXGTnhwX5m/mg3T95X+/RWciMSv8SXqZTc/poA14GwZ2eRq/ag
-         Wxa7TydIGGd6nP7qsIL9Gh4BcCpKUbl44/xWC7fCHipd3VGhomuhrHfhOGXR7TE4HMHu
-         WM4+rz3UWD5HNrubADQ5ksKeWsBZOpsGkpWwVDijl+7A60OV4wK6ZHjV/F4khHDIPG04
-         SV11SqG2XgG4Ta1z8+cGOC55oNQsQ8vY42WQL8ByjXjQj+ZBFQB21qp/fwdFvkYIyUJC
-         5fAA==
-X-Gm-Message-State: APjAAAUtW8Tmb4S0RwXrxd4SHMQx1eVDWPBYAoqiuAONoM2MDtaK7KAj
-        bH8L33sg8dssCVIS4s1wl8Q=
-X-Google-Smtp-Source: APXvYqxtnLcKlpVW5V/2bsbKm53q/msqRT+C1dVoFjS8gzd0jI835avZh2s7fMaA3YMf0+DkjJ1BJA==
-X-Received: by 2002:a5d:49c3:: with SMTP id t3mr462740wrs.113.1576079312153;
-        Wed, 11 Dec 2019 07:48:32 -0800 (PST)
-Received: from localhost.localdomain (dslb-002-204-142-082.002.204.pools.vodafone-ip.de. [2.204.142.82])
-        by smtp.gmail.com with ESMTPSA id n16sm2677388wro.88.2019.12.11.07.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 07:48:31 -0800 (PST)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     pkshih@realtek.com
-Cc:     kvalo@codeaurora.org, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 1/6] rtlwifi: rtl8192ce: use generic rtl_query_rxpwrpercentage
-Date:   Wed, 11 Dec 2019 16:47:50 +0100
-Message-Id: <20191211154755.15012-2-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191211154755.15012-1-straube.linux@gmail.com>
-References: <20191211154755.15012-1-straube.linux@gmail.com>
+        Wed, 11 Dec 2019 10:24:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732870AbfLKPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:24:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 840052465A;
+        Wed, 11 Dec 2019 15:24:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077881;
+        bh=keoRuJZDtPV9Cj0nbieyCEu76X/Jj26sIem2+X/AXJs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uzpvCTx9LjCoBNQ0A8rnw22qpWzrpLyeEkQ3DtVzKFXM3QjbgfXKuOKStha1LkzMg
+         Xjefbq4ZTLqqHL9u+rX5sFsBRwLq7jZcwc/UNU+yP22L40pGdkPqbUx1dxnvhRq2MZ
+         cx6lIk/I/lI2qLCk+amAgALdyNmMqMHAB+UBXFwg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 207/243] Input: goodix - add upside-down quirk for Teclast X89 tablet
+Date:   Wed, 11 Dec 2019 16:06:09 +0100
+Message-Id: <20191211150353.155465383@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function _rtl92c_query_rxpwrpercentage is identical to the generic
-version rtl_query_rxpwrpercentage. Remove _rtl92c_query_rxpwrpercentage
-and use the generic function.
+From: Hans de Goede <hdegoede@redhat.com>
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+commit df5b5e555b356662a5e4a23c6774fdfce8547d54 upstream.
+
+The touchscreen on the Teclast X89 is mounted upside down in relation to
+the display orientation (the touchscreen itself is mounted upright, but the
+display is mounted upside-down). Add a quirk for this so that we send
+coordinates which match the display orientation.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Bastien Nocera <hadess@hadess.net>
+Link: https://lore.kernel.org/r/20191202085636.6650-1-hdegoede@redhat.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../net/wireless/realtek/rtlwifi/rtl8192ce/trx.c   | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ drivers/input/touchscreen/goodix.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-index fc9a3aae047f..dec66b3ac365 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-@@ -23,16 +23,6 @@ static u8 _rtl92ce_map_hwqueue_to_fwqueue(struct sk_buff *skb, u8 hw_queue)
- 	return skb->priority;
- }
- 
--static u8 _rtl92c_query_rxpwrpercentage(s8 antpower)
--{
--	if ((antpower <= -100) || (antpower >= 20))
--		return 0;
--	else if (antpower >= 0)
--		return 100;
--	else
--		return 100 + antpower;
--}
--
- static long _rtl92ce_signal_scale_mapping(struct ieee80211_hw *hw,
- 		long currsig)
- {
-@@ -194,7 +184,7 @@ static void _rtl92ce_query_rxphystatus(struct ieee80211_hw *hw,
- 			rx_pwr[i] =
- 			    ((p_drvinfo->gain_trsw[i] & 0x3f) * 2) - 110;
- 			/* Translate DBM to percentage. */
--			rssi = _rtl92c_query_rxpwrpercentage(rx_pwr[i]);
-+			rssi = rtl_query_rxpwrpercentage(rx_pwr[i]);
- 			total_rssi += rssi;
- 			/* Get Rx snr value in DB */
- 			rtlpriv->stats.rx_snr_db[i] =
-@@ -209,7 +199,7 @@ static void _rtl92ce_query_rxphystatus(struct ieee80211_hw *hw,
- 		 * hardware (for rate adaptive)
- 		 */
- 		rx_pwr_all = ((p_drvinfo->pwdb_all >> 1) & 0x7f) - 110;
--		pwdb_all = _rtl92c_query_rxpwrpercentage(rx_pwr_all);
-+		pwdb_all = rtl_query_rxpwrpercentage(rx_pwr_all);
- 		pstats->rx_pwdb_all = pwdb_all;
- 		pstats->rxpower = rx_pwr_all;
- 		pstats->recvsignalpower = rx_pwr_all;
--- 
-2.24.0
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -128,6 +128,15 @@ static const unsigned long goodix_irq_fl
+ static const struct dmi_system_id rotated_screen[] = {
+ #if defined(CONFIG_DMI) && defined(CONFIG_X86)
+ 	{
++		.ident = "Teclast X89",
++		.matches = {
++			/* tPAD is too generic, also match on bios date */
++			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
++			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
++			DMI_MATCH(DMI_BIOS_DATE, "12/19/2014"),
++		},
++	},
++	{
+ 		.ident = "WinBook TW100",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "WinBook"),
+
 
