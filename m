@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1118C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66398C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94645222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEDE2464B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076853;
-	bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+	s=default; t=1576076858;
+	bh=aPdqcuoYB/AxfN1Ijbok5sCn7AQwGNsV+TPJFrNmQa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UP72eM/SqLvcfNK8W9CPBrvWHmLCp7AgjZ2l8QEW+nP9jdKGijdmrSfEpdTVtZnFz
-	 ltWA12yKyE4lnqbBlnDhXjmUbkmGvTF2XbB+i7SBxV1kocLHLDnjyEOtF3Y5cpEqka
-	 LUu2qNoVYC58JfgJC1FNFpTMAUZqWhRJ7ZlX6JiA=
+	b=pweOWjJMSbHkLTTst9hEABNWV1sS6A+ToC0XerZuikb4tE6e30cUCwprmP6qpEpeE
+	 /98qeiA4tXzZ27wzFvGR+B2mj6svVFvUKXowJS+BdmcqQ7esLakC5x+fU/rNlsmAXt
+	 ia+dGxdm+dEcuSiSpEtYdF2WnM+oLbij/RXJPr9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbfLKPHc (ORCPT
+        id S1730055AbfLKPHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:07:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54580 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:07:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbfLKPH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:07:29 -0500
+        id S1730010AbfLKPHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:07:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8648320663;
-        Wed, 11 Dec 2019 15:07:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08F69222C4;
+        Wed, 11 Dec 2019 15:07:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076848;
-        bh=pQakcmBqFDRLENctK9bfXEUWLJiw418Ya1RuBaWljTQ=;
+        s=default; t=1576076855;
+        bh=aPdqcuoYB/AxfN1Ijbok5sCn7AQwGNsV+TPJFrNmQa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZlALQH7DcptGfsmLHOoNW5xNfaT03U85iw+Swets9M8vP/edZN/qOkP5pnlHZvpe
-         1CFvQ010aE/BFdJQeDX0PA72MjM9YFq6oTtLdPdt2yG/fYK58OJJTTziSvgyrOqmEN
-         gkoeoZrnhSLvJKpQ/GPiolKykp0J8HW7w3p8MTlc=
+        b=NU99usv2kkyYI/OCZIcze7zoxJEkK154ShCAJogrNcBeT7bXw2aQfbnhcqDsO7lx1
+         kv7N7bzh2u1FN7K8fHl2HphGa74Z++fjVJpJtDTH6oGzvGQ3+cCDqsJEL2ZGiTKiL2
+         RSPKcBA7YM6rtTQ50Aa5hCoS41O//e7BTRw3EkH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>
-Subject: [PATCH 5.4 14/92] serial: pl011: Fix DMA ->flush_buffer()
-Date:   Wed, 11 Dec 2019 16:05:05 +0100
-Message-Id: <20191211150225.289829149@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 17/92] serial: 8250_dw: Avoid double error messaging when IRQ absent
+Date:   Wed, 11 Dec 2019 16:05:08 +0100
+Message-Id: <20191211150226.742908160@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -59,73 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit f6a196477184b99a31d16366a8e826558aa11f6d upstream.
+commit 05faa64e73924556ba281911db24643e438fe7ba upstream.
 
-PL011's ->flush_buffer() implementation releases and reacquires the port
-lock.  Due to a race condition here, data can end up being added to the
-circular buffer but neither being discarded nor being sent out.  This
-leads to, for example, tcdrain(2) waiting indefinitely.
+Since the commit 7723f4c5ecdb ("driver core: platform: Add an error message
+to platform_get_irq*()") platform_get_irq() started issuing an error message.
+Thus, there is no need to have the same in the driver
 
-Process A                       Process B
-
-uart_flush_buffer()
- - acquire lock
- - circ_clear
- - pl011_flush_buffer()
- -- release lock
- -- dmaengine_terminate_all()
-
-                                uart_write()
-                                - acquire lock
-                                - add chars to circ buffer
-                                - start_tx()
-                                -- start DMA
-                                - release lock
-
- -- acquire lock
- -- turn off DMA
- -- release lock
-
-                                // Data in circ buffer but DMA is off
-
-According to the comment in the code, the releasing of the lock around
-dmaengine_terminate_all() is to avoid a deadlock with the DMA engine
-callback.  However, since the time this code was written, the DMA engine
-API documentation seems to have been clarified to say that
-dmaengine_terminate_all() (in the identically implemented but
-differently named dmaengine_terminate_async() variant) does not wait for
-any running complete callback to be completed and can even be called
-from a complete callback.  So there is no possibility of deadlock if the
-DMA engine driver implements this API correctly.
-
-So we should be able to just remove this release and reacquire of the
-lock to prevent the aforementioned race condition.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Fixes: 7723f4c5ecdb ("driver core: platform: Add an error message to platform_get_irq*()")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191118092547.32135-1-vincent.whitchurch@axis.com
+Link: https://lore.kernel.org/r/20191023103558.51862-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/amba-pl011.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/tty/serial/8250/8250_dw.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -813,10 +813,8 @@ __acquires(&uap->port.lock)
- 	if (!uap->using_tx_dma)
- 		return;
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -386,10 +386,10 @@ static int dw8250_probe(struct platform_
+ {
+ 	struct uart_8250_port uart = {}, *up = &uart;
+ 	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	int irq = platform_get_irq(pdev, 0);
+ 	struct uart_port *p = &up->port;
+ 	struct device *dev = &pdev->dev;
+ 	struct dw8250_data *data;
++	int irq;
+ 	int err;
+ 	u32 val;
  
--	/* Avoid deadlock with the DMA engine callback */
--	spin_unlock(&uap->port.lock);
--	dmaengine_terminate_all(uap->dmatx.chan);
--	spin_lock(&uap->port.lock);
-+	dmaengine_terminate_async(uap->dmatx.chan);
-+
- 	if (uap->dmatx.queued) {
- 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
- 			     DMA_TO_DEVICE);
+@@ -398,11 +398,9 @@ static int dw8250_probe(struct platform_
+ 		return -EINVAL;
+ 	}
+ 
+-	if (irq < 0) {
+-		if (irq != -EPROBE_DEFER)
+-			dev_err(dev, "cannot get irq\n");
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
+ 		return irq;
+-	}
+ 
+ 	spin_lock_init(&p->lock);
+ 	p->mapbase	= regs->start;
 
 
