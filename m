@@ -2,109 +2,80 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56176C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEB8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E1A5208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080601;
-	bh=5C/O1Y703mdhztcjxnZWuVL7WWvHetvvVRi+sDBEqzo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svWO/VP2YHrUoTiwbM/A0GrtE9MHyLRzsCo6LWX1+AzCKkOrRxvN/rBelAAOeBw0m
-	 HLGy2/CVTvGbBbW8ARuCpFwYawmAlDkSQoeaX0C3lF70mU1GJf/Gip77glJZSGJ6Dh
-	 gbLTSf09MuZ6BHZ51JDvK4PjqLhhSEnSpYh+1J78=
+	by mail.kernel.org (Postfix) with ESMTP id 35BD920836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:10:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfLKQJ7 (ORCPT
+        id S2388845AbfLKQKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:09:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32854 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:10:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731038AbfLKPMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:12:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1731038AbfLKQKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 11:10:02 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0906B222C4;
-        Wed, 11 Dec 2019 15:12:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077122;
-        bh=5C/O1Y703mdhztcjxnZWuVL7WWvHetvvVRi+sDBEqzo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bleo0jiUuV0BqDC9nLBQbczrKREJJMl+OAML+hKAC6hTq1kCXFYkdY5fBXLn1105o
-         XpW/d8fgMDQuVv2cZfYLXgV6LOYP2SXnA7PcQPu4cci1E2h7m6jI7Sg6q9mSvMWlCk
-         YG91ZaZIWYTOJMmw6SrlkUDm7Bl0HMZM40CUsZQY=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 011/134] tools/power/x86/intel-speed-select: Remove warning for unused result
-Date:   Wed, 11 Dec 2019 10:09:47 -0500
-Message-Id: <20191211151150.19073-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
-References: <20191211151150.19073-1-sashal@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E7D20836;
+        Wed, 11 Dec 2019 16:10:00 +0000 (UTC)
+Date:   Wed, 11 Dec 2019 11:09:59 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sven Schnelle <svens@stackframe.org>
+Cc:     linux-trace-devel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: ftrace histogram sorting broken on BE architecures
+Message-ID: <20191211110959.2baeb70f@gandalf.local.home>
+In-Reply-To: <20191211103557.7bed6928@gandalf.local.home>
+References: <20191211123316.GD12147@stackframe.org>
+        <20191211103557.7bed6928@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On Wed, 11 Dec 2019 10:35:57 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-[ Upstream commit abd120e3bdf3dd72ba1ed9ac077a861e0e3dc43a ]
+> > Any thoughts on how to fix this? I'm not sure whether i fully understand the
+> > ftrace maps... ;-)  
+> 
+> Your analysis makes sense. I'll take a deeper look at it.
 
-Fix warning for:
-isst-config.c: In function ‘set_cpu_online_offline’:
-isst-config.c:221:3: warning: ignoring return value of ‘write’,
-declared with attribute warn_unused_result [-Wunused-result]
-   write(fd, "1\n", 2);
+Sven,
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/power/x86/intel-speed-select/isst-config.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Does this patch fix it for you?
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 2a9890c8395a4..21fcfe621d3aa 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -169,7 +169,7 @@ int get_topo_max_cpus(void)
- static void set_cpu_online_offline(int cpu, int state)
- {
- 	char buffer[128];
--	int fd;
-+	int fd, ret;
- 
- 	snprintf(buffer, sizeof(buffer),
- 		 "/sys/devices/system/cpu/cpu%d/online", cpu);
-@@ -179,9 +179,12 @@ static void set_cpu_online_offline(int cpu, int state)
- 		err(-1, "%s open failed", buffer);
- 
- 	if (state)
--		write(fd, "1\n", 2);
-+		ret = write(fd, "1\n", 2);
- 	else
--		write(fd, "0\n", 2);
-+		ret = write(fd, "0\n", 2);
-+
-+	if (ret == -1)
-+		perror("Online/Offline: Operation failed\n");
- 
- 	close(fd);
+Tom,
+
+Correct me if I'm wrong, from what I can tell, all sums and keys are
+u64 unless they are a string. Thus, I believe this patch should not
+have any issues.
+
+-- Steve
+
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index 9a1c22310323..9e31bfc818ff 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -148,8 +148,8 @@ static int tracing_map_cmp_atomic64(void *val_a, void *val_b)
+ #define DEFINE_TRACING_MAP_CMP_FN(type)					\
+ static int tracing_map_cmp_##type(void *val_a, void *val_b)		\
+ {									\
+-	type a = *(type *)val_a;					\
+-	type b = *(type *)val_b;					\
++	type a = (type)(*(u64 *)val_a);					\
++	type b = (type)(*(u64 *)val_b);					\
+ 									\
+ 	return (a > b) ? 1 : ((a < b) ? -1 : 0);			\
  }
--- 
-2.20.1
-
