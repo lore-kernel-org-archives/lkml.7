@@ -2,84 +2,83 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B34C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E483C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07DB422B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576090801;
-	bh=hqq+Okvmhd0TylWeXh60gyJ3vSjlTdLelZ7PE8Ug21k=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=d21LRl67miZao6u9Lu4GOEq9E6vpDykYJnobA72c8/MDqivFYpH1csP0FxZ1d7yLK
-	 BVShZMDuC5L93LAgUmiFtroGi9SWUkWHLxFK4MR3kEx34FYW4gXlNxi07QgUCJEPZo
-	 t//Z4uwKwWJtc5Dm0XyMhIFR1oPUK/Upfn01C5p8=
+	by mail.kernel.org (Postfix) with ESMTP id 025E120836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:01:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Otd7YrSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbfLKS77 (ORCPT
+        id S1727487AbfLKTBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfLKS77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:59:59 -0500
-Received: from ziggy.de (unknown [37.223.145.31])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B1E021556;
-        Wed, 11 Dec 2019 18:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576090798;
-        bh=hqq+Okvmhd0TylWeXh60gyJ3vSjlTdLelZ7PE8Ug21k=;
-        h=From:To:Cc:Subject:Date:From;
-        b=b1YmR+VDIE7YYArcIxAzAR0HGn13WHEBHaF490Eb7/vrsXP6IW/G/PqEYwnUc+Nwm
-         J5bKaUosGKX6uhBNPo7PAYKaMmvQ1xSTfliaLcS2uIshpig3f45gqEimnSWr4gj1ax
-         OPXAhGspktCmVPbgjEKxDa/P5qp3jZl+z4TBRTIA=
-From:   matthias.bgg@kernel.org
-To:     bibby.hsieh@mediatek.com, matthias.bgg@kernel.org
-Cc:     linux-mediatek@lists.infradead.org,
-        Matthias Brugger <mbrugger@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] soc: mediatek: cmdq: delete not used define
-Date:   Wed, 11 Dec 2019 19:59:50 +0100
-Message-Id: <20191211185950.31358-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Wed, 11 Dec 2019 14:01:15 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:34956 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfLKTBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 14:01:14 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBBJ1Bge008259;
+        Wed, 11 Dec 2019 13:01:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1576090871;
+        bh=ZZRsEDLJgiL7dsl+Me+f97CR+seGCdEyMFX9lxZVsFc=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=Otd7YrSG90PX5bjJ7Bza3iaxf6d2ZJx+EowZgH6wI4oJ58TK3zQo50DKpU9HIc/XG
+         nXNHl40toDkadMF369eyVtZUOsxyXYrMjLiRlNID1AIf9kM282wu4vG0A3PG4yz8Xg
+         sbxfI8Nx2lbc+azGeZN8UDQ0piSTlufxuflE6eb4=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBBJ1BAY055375
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 11 Dec 2019 13:01:11 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 11
+ Dec 2019 13:01:10 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 11 Dec 2019 13:01:11 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBBJ1AqA107366;
+        Wed, 11 Dec 2019 13:01:10 -0600
+Date:   Wed, 11 Dec 2019 13:00:36 -0600
+From:   Bin Liu <b-liu@ti.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <od@zcrc.me>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 5/7] usb: musb: jz4740: Silence error if code is
+ -EPROBE_DEFER
+Message-ID: <20191211190036.GG16429@iaqt7>
+Mail-Followup-To: Bin Liu <b-liu@ti.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>, od@zcrc.me,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191210171110.62141-1-paul@crapouillou.net>
+ <20191210171110.62141-5-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191210171110.62141-5-paul@crapouillou.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <mbrugger@suse.com>
+On Tue, Dec 10, 2019 at 06:11:08PM +0100, Paul Cercueil wrote:
+> Avoid printing any error message if the error code is -EPROBE_DEFER.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 
-Define CMDQ_EOC_CMD was actually never used. Delete it.
+Queued for next v5.5 -rc. Thanks.
 
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-
----
-
- drivers/soc/mediatek/mtk-cmdq-helper.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index 3c82de5f9417..1127c19c4e91 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -12,8 +12,6 @@
- #define CMDQ_ARG_A_WRITE_MASK	0xffff
- #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
- #define CMDQ_EOC_IRQ_EN		BIT(0)
--#define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
--				<< 32 | CMDQ_EOC_IRQ_EN)
- 
- static void cmdq_client_timeout(struct timer_list *t)
- {
--- 
-2.24.0
-
+-Bin.
