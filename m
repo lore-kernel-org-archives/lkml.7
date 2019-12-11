@@ -2,158 +2,84 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ABCC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660FBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634C7214D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="gXCCmURF"
+	by mail.kernel.org (Postfix) with ESMTP id 43019214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 13:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfLKNzp (ORCPT
+        id S1729675AbfLKNz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 08:55:45 -0500
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:34948 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbfLKNzp (ORCPT
+        Wed, 11 Dec 2019 08:55:59 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:45259 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfLKNz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 08:55:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576072544;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=m6R/VVoQ+gbtGku3qSSn8lR/7efTsyljc6KkleafnFc=;
-  b=gXCCmURFNgUXUl1t8lYwEKOMJy03AqyqJ+JUkD3gekgjB45+1eom6T26
-   SsRw5Q+PIb5Ect47BgTH0Ye/Tp6V4OpRcKO89TPsvpvqWq6Kpt0IOov08
-   XBhF9KJ3/IpjpF336b0J9PNmWF2vx+3SySf56Vc8e5M+s4T9K1ZjT5TH3
-   c=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: Re26XLu4wVkXUyQDl8HBVkOhLeyFLmQmgQTYX/F9xkWTCyCe72gIZikKm6tF3tt6LGPzXB7BMB
- OZrpVZVwrxPp+9dIKp8TmrhWU15IKf+Rxd8GXKNkzkbmmCaTtwW02zr+1AlI7hpua044e9Fk3J
- K0YNEqd4y/MEPLJgiCtuz501SpJJQm2a5pEorJKjlJJFmJs0CHTGcyq7C5/ig0Ie0XfWATCVpJ
- vy/KvmibcHM5BzacenYFyom3Vv5LKDcRs02GwOHtVkttOwWEUp5BuchIQTaYAmxDTT1B/X9YMH
- eaY=
-X-SBRS: 2.7
-X-MesageID: 9529409
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,301,1571716800"; 
-   d="scan'208";a="9529409"
-Date:   Wed, 11 Dec 2019 14:55:23 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     "Durrant, Paul" <pdurrant@amazon.com>,
-        Juergen Gross <jgross@suse.com>
-CC:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] xen-blkback: prevent premature module unload
-Message-ID: <20191211135523.GP980@Air-de-Roger>
-References: <20191210145305.6605-1-pdurrant@amazon.com>
- <20191211112754.GM980@Air-de-Roger>
- <14a01d62046c48ee9b2486917370b5f5@EX13D32EUC003.ant.amazon.com>
+        Wed, 11 Dec 2019 08:55:58 -0500
+Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Md6ZB-1i6Wvn3d47-00aFjS for <linux-kernel@vger.kernel.org>; Wed, 11 Dec
+ 2019 14:55:57 +0100
+Received: by mail-qk1-f173.google.com with SMTP id d71so11713286qkc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 05:55:56 -0800 (PST)
+X-Gm-Message-State: APjAAAUuOFK1t2HOUhkNkriQn9ta52MJfHTSbbEhT1fnCzjE68uqyuXw
+        UCCLUEbPsbPh2wdM4JjJSXGcMtFc00KgJpVSshw=
+X-Google-Smtp-Source: APXvYqwkj0Y4telhppR+31EJzP7jTUrHkTicjXfvcF9Du+7uGaWNouHVD8hkPwz30lcWbjG9P0TUbZveEDCO79FmoTk=
+X-Received: by 2002:a37:4e4e:: with SMTP id c75mr2897643qkb.3.1576072555791;
+ Wed, 11 Dec 2019 05:55:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <14a01d62046c48ee9b2486917370b5f5@EX13D32EUC003.ant.amazon.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+References: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
+In-Reply-To: <1576037311-6052-1-git-send-email-orson.zhai@unisoc.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 11 Dec 2019 14:55:39 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
+Message-ID: <CAK8P3a0244jKrEop2rHVyJZ57h4A9+mqb-5g-wLUSfR2G1svwg@mail.gmail.com>
+Subject: Re: [PATCH v3] mfd: syscon: Add arguments support for syscon reference
+To:     Orson Zhai <orson.zhai@unisoc.com>
+Cc:     Rob Herring <robh@kernel.org>, Lee Jones <lee.jones@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        baolin.wang@unisoc.com, kevin.tang@unisoc.com,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        liangcai.fan@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:z+tgDU1td1bvn/8N9qw0Vs2R48lNvgdZS7SscmRfo5/3bYZHor4
+ pbnVLcbf6I0YSVcw7JafbopyV6PFHMkKHBFuPV7tJm1/U2+l/004gkBIaliY3blyisQSo0U
+ UipJAD+K2c2q0Djk4WkZCRg8n9sAbFY2mHbdlZ37chPUYoK4wGDbjBXj4fRWepTTWc7LTH/
+ EFG1xNo8GkBtz1CtJt8tg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nHFyenSwp6U=:TIJpytRAAzXljDNffvMUFC
+ HSpovx8Y9BVaPxYHhPS9WP69MedJknD8i/lkTmUHiDr1L6D50EnfxS1mgF1NYxBlZ0ClGwSSS
+ Ne0QcS+aJIlTvGKn9hnd8jx0oof2psj7u+EW+8+Uk+tIcr12pQyOpgazsQDEdEhwpXPtTaSml
+ k6MbS+91fz4Vs+3Ofny8Yq3cEYY8KCa8Uu7qUpDs8Sb+4sTp0VW8bpviz89/vE0ZWSWxq0D96
+ VRGYKPq4NMo0AQHpRx+NLvE6ksr8at5nB4WCCCNnV4h2KU13XGY1/aTXSGLvIM2NG5UOmVzi/
+ 7jUDkZmS4PKtPJUuI2C/LuZvjLE+Gyv8yAqnqRK/ZiBze4MmSnIASa6S03Bra9OthjKxwhPAh
+ roTWmuexpBIM31Z8/LEq5d+ckK+Ld337KdaxU2kasRmZ1GT0hHS4EkJDsGGSB+nScvZxVPdAE
+ rycIaa9vdWO7/uTIYI8yMz9u5tfXik96nswU9j2knV6r1p480OmkIj7V0HOuOrv6eF3f9WfBn
+ sAyZ4dYigDj8xpWvS1hIGI6lNdinP4npwHLBPC72aHvixmpK+LbH4W0StocyGQzp9RJCImWHg
+ 6qii+6AYVangDjXCM+yWWUNYeS1xyBATpKfe4QO1qQOdFlT6d2jmd4C/1tlP3a1d/e6vz8XeN
+ y6aL7gK3fbnUVTLU8xRVtlvXM88VI++jEQHQ4UGs5uQZCk6QlWZkJXnZBVRBVOJJFlloK5u8F
+ IXsiME85xdq8pwnAQiVb13fTKpGVLYLUHWgXWG668d/ApMLBoAh9ycHdFwDO/wPBGJe7Z4RfK
+ XmAPaSddxp3tmaSEVFuHAOf0UeINxTprmpo9lAIVXnOB3KNVSgx8B+uKChMhTHKx3sEuyckw2
+ I9z5mqFoxZp4Yk/xIw8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:27:42PM +0000, Durrant, Paul wrote:
-> > -----Original Message-----
-> > From: Roger Pau Monné <roger.pau@citrix.com>
-> > Sent: 11 December 2019 11:29
-> > To: Durrant, Paul <pdurrant@amazon.com>
-> > Cc: xen-devel@lists.xenproject.org; linux-block@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>;
-> > Jens Axboe <axboe@kernel.dk>
-> > Subject: Re: [PATCH] xen-blkback: prevent premature module unload
-> > 
-> > On Tue, Dec 10, 2019 at 02:53:05PM +0000, Paul Durrant wrote:
-> > > Objects allocated by xen_blkif_alloc come from the 'blkif_cache' kmem
-> > > cache. This cache is destoyed when xen-blkif is unloaded so it is
-> > > necessary to wait for the deferred free routine used for such objects to
-> > > complete. This necessity was missed in commit 14855954f636 "xen-blkback:
-> > > allow module to be cleanly unloaded". This patch fixes the problem by
-> > > taking/releasing extra module references in xen_blkif_alloc/free()
-> > > respectively.
-> > >
-> > > Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> > 
-> > Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-> > 
-> > One nit below.
-> > 
-> > > ---
-> > > Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-> > > Cc: "Roger Pau Monné" <roger.pau@citrix.com>
-> > > Cc: Jens Axboe <axboe@kernel.dk>
-> > > ---
-> > >  drivers/block/xen-blkback/xenbus.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-
-> > blkback/xenbus.c
-> > > index e8c5c54e1d26..59d576d27ca7 100644
-> > > --- a/drivers/block/xen-blkback/xenbus.c
-> > > +++ b/drivers/block/xen-blkback/xenbus.c
-> > > @@ -171,6 +171,15 @@ static struct xen_blkif *xen_blkif_alloc(domid_t
-> > domid)
-> > >  	blkif->domid = domid;
-> > >  	atomic_set(&blkif->refcnt, 1);
-> > >  	init_completion(&blkif->drain_complete);
-> > > +
-> > > +	/*
-> > > +	 * Because freeing back to the cache may be deferred, it is not
-> > > +	 * safe to unload the module (and hence destroy the cache) until
-> > > +	 * this has completed. To prevent premature unloading, take an
-> > > +	 * extra module reference here and release only when the object
-> > > +	 * has been free back to the cache.
-> >                     ^ freed
-> 
-> Oh yes. Can this be done on commit, or would you like me to send a v2?
+On Wed, Dec 11, 2019 at 5:09 AM Orson Zhai <orson.zhai@unisoc.com> wrote:
+>
+> There are a lot of similar global registers being used across multiple SoCs
+> from Unisoc. But most of these registers are assigned with different offset
+> for different SoCs. It is hard to handle all of them in an all-in-one
+> kernel image.
+>
+> Add a helper function to get regmap with arguments where we could put some
+> extra information such as the offset value.
+>
+> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> Tested-by: Baolin Wang <baolin.wang@unisoc.com>
 
-Adjusting on commit would be fine for me, but it's up to Juergen since
-he is the one that will pick this up. IIRC the module unload patches
-didn't go through the block subsystem.
-
-Thanks, Roger.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
