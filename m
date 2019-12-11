@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE10C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86415C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D622465C
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9252465C
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576076973;
-	bh=6rSHqQOKRJDP5GDgm2zXS+ZfuDLtPuPcrmNNgsXGsn8=;
+	s=default; t=1576076975;
+	bh=+cME4i6w/HOFktWu1TlD6KxQeCzpussbdm5Do3MnTqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRWFuiQR0ONagVPVf+lpBxuiqd/wxztwD08VvtfmV7JOO83UehOvO7+3TuAhNfDgc
-	 LWk0+u4+wqZl+JpXYY9CaxlCK/KdkEu9sVsdoEI47VlXBLWRKbscbHwBw6yRdWt9IA
-	 nrainHcwdT9QI+opl6R3q+nf2UAzEP2n9KkDqYUM=
+	b=cYF1N3e8H4cR3Ddu3lHqK3QlGI8xvo0x66/t43NmXaxwS9KFvlr02kJbG12j+Flp9
+	 Lc2mF+QSpFpVACl0fuIklyN9VMtJKaQWT6BHpnPMMqmU26J6VfMGTGRGpzwtbER4Jq
+	 1VSRlJUVnVH4+s1MVkUu52VH78xsM0yYsi5tX7HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfLKPJc (ORCPT
+        id S1730620AbfLKPJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:09:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57454 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:09:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729469AbfLKPJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:09:27 -0500
+        id S1730065AbfLKPJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:09:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CCB2173E;
-        Wed, 11 Dec 2019 15:09:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4C824656;
+        Wed, 11 Dec 2019 15:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576076966;
-        bh=6rSHqQOKRJDP5GDgm2zXS+ZfuDLtPuPcrmNNgsXGsn8=;
+        s=default; t=1576076971;
+        bh=+cME4i6w/HOFktWu1TlD6KxQeCzpussbdm5Do3MnTqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vnsy1gCllHvh9AZ8euBbrfTQUWoirv2zDaVkFCD+xZePtezJyuYOrp+/DOlkGAnA8
-         VGV2PXn07WfFdGT1D2cuCuKaj/zyYGbbvtWSHWPc9axWPg5qbMRg6jHeSZg+iqmRE+
-         NR0lD5g0fdBrmV9+3xsuiXDciKtIZ1k5gROIz/Gg=
+        b=U2Y40fXB/fV1mI8ybxaPctGPEHXVngRH6bjZfp6XHCEtYYiM3vX5ZC+BbZpXaok0l
+         AWPEoaz1MytPoSwHkTou2Y+qa+0nlVcEyJtRTkzrN/NrI6sB6uIWPYGG6/ZOz8XKW3
+         SiTEAkcN1aSYico0I2KZEScA7CEubHE4I+QxVnOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: [PATCH 5.4 41/92] coresight: etm4x: Fix input validation for sysfs.
-Date:   Wed, 11 Dec 2019 16:05:32 +0100
-Message-Id: <20191211150240.186092611@linuxfoundation.org>
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        Paul Mackerras <paulus@ozlabs.org>
+Subject: [PATCH 5.4 60/92] KVM: PPC: Book3S HV: XIVE: Fix potential page leak on error path
+Date:   Wed, 11 Dec 2019 16:05:51 +0100
+Message-Id: <20191211150249.277334111@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
 References: <20191211150221.977775294@linuxfoundation.org>
@@ -60,90 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Leach <mike.leach@linaro.org>
+From: Greg Kurz <groug@kaod.org>
 
-commit 2fe6899e36aa174abefd017887f9cfe0cb60c43a upstream.
+commit 30486e72093ea2e594f44876b7a445c219449bce upstream.
 
-A number of issues are fixed relating to sysfs input validation:-
+We need to check the host page size is big enough to accomodate the
+EQ. Let's do this before taking a reference on the EQ page to avoid
+a potential leak if the check fails.
 
-1) bb_ctrl_store() - incorrect compare of bit select field to absolute
-value. Reworked per ETMv4 specification.
-2) seq_event_store() - incorrect mask value - register has two
-event values.
-3) cyc_threshold_store() - must mask with max before checking min
-otherwise wrapped values can set illegal value below min.
-4) res_ctrl_store() - update to mask off all res0 bits.
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Mike Leach <mike.leach@linaro.org>
-Fixes: a77de2637c9eb ("coresight: etm4x: moving sysFS entries to a dedicated file")
-Cc: stable <stable@vger.kernel.org> # 4.9+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20191104181251.26732-6-mathieu.poirier@linaro.org
+Cc: stable@vger.kernel.org # v5.2
+Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
+Signed-off-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/coresight/coresight-etm4x-sysfs.c |   21 ++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ arch/powerpc/kvm/book3s_xive_native.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
-@@ -652,10 +652,13 @@ static ssize_t cyc_threshold_store(struc
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -637,12 +637,6 @@ static int kvmppc_xive_native_set_queue_
  
- 	if (kstrtoul(buf, 16, &val))
+ 	srcu_idx = srcu_read_lock(&kvm->srcu);
+ 	gfn = gpa_to_gfn(kvm_eq.qaddr);
+-	page = gfn_to_page(kvm, gfn);
+-	if (is_error_page(page)) {
+-		srcu_read_unlock(&kvm->srcu, srcu_idx);
+-		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
+-		return -EINVAL;
+-	}
+ 
+ 	page_size = kvm_host_page_size(kvm, gfn);
+ 	if (1ull << kvm_eq.qshift > page_size) {
+@@ -651,6 +645,13 @@ static int kvmppc_xive_native_set_queue_
  		return -EINVAL;
+ 	}
+ 
++	page = gfn_to_page(kvm, gfn);
++	if (is_error_page(page)) {
++		srcu_read_unlock(&kvm->srcu, srcu_idx);
++		pr_err("Couldn't get queue page %llx!\n", kvm_eq.qaddr);
++		return -EINVAL;
++	}
 +
-+	/* mask off max threshold before checking min value */
-+	val &= ETM_CYC_THRESHOLD_MASK;
- 	if (val < drvdata->ccitmin)
- 		return -EINVAL;
+ 	qaddr = page_to_virt(page) + (kvm_eq.qaddr & ~PAGE_MASK);
+ 	srcu_read_unlock(&kvm->srcu, srcu_idx);
  
--	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
-+	config->ccctlr = val;
- 	return size;
- }
- static DEVICE_ATTR_RW(cyc_threshold);
-@@ -686,14 +689,16 @@ static ssize_t bb_ctrl_store(struct devi
- 		return -EINVAL;
- 	if (!drvdata->nr_addr_cmp)
- 		return -EINVAL;
-+
- 	/*
--	 * Bit[7:0] selects which address range comparator is used for
--	 * branch broadcast control.
-+	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
-+	 * individual range comparators. If include then at least 1
-+	 * range must be selected.
- 	 */
--	if (BMVAL(val, 0, 7) > drvdata->nr_addr_cmp)
-+	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
- 		return -EINVAL;
- 
--	config->bb_ctrl = val;
-+	config->bb_ctrl = val & GENMASK(8, 0);
- 	return size;
- }
- static DEVICE_ATTR_RW(bb_ctrl);
-@@ -1324,8 +1329,8 @@ static ssize_t seq_event_store(struct de
- 
- 	spin_lock(&drvdata->spinlock);
- 	idx = config->seq_idx;
--	/* RST, bits[7:0] */
--	config->seq_ctrl[idx] = val & 0xFF;
-+	/* Seq control has two masks B[15:8] F[7:0] */
-+	config->seq_ctrl[idx] = val & 0xFFFF;
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
-@@ -1580,7 +1585,7 @@ static ssize_t res_ctrl_store(struct dev
- 	if (idx % 2 != 0)
- 		/* PAIRINV, bit[21] */
- 		val &= ~BIT(21);
--	config->res_ctrl[idx] = val;
-+	config->res_ctrl[idx] = val & GENMASK(21, 0);
- 	spin_unlock(&drvdata->spinlock);
- 	return size;
- }
 
 
