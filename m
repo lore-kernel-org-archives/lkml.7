@@ -2,139 +2,105 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FA5C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A5C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B115720836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0F820836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:01:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576080060;
+	bh=YFuVTScmJU6o/1BYOAAD7AxOAukaR8cN59h+eMekWFM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OnP5S2g4rZ8SA/XxInJknmqVdvYeWaPWCL6BLMjF691K3BVBtDpBjJXGiOKbBH8gi
+	 O1JZbGHk27UdSDMIBfiFeYkwQAISGt7Q0Xk0Z/7qVWFK/N3LuPoXs8mtEsdJu1v0dh
+	 v1Sx5D0cmSvz8m/EvV4V/7vizv1OB5UMycUmmWgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731697AbfLKQAx (ORCPT
+        id S1731472AbfLKPNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:00:53 -0500
-Received: from hall.aurel32.net ([195.154.113.88]:41108 "EHLO hall.aurel32.net"
+        Wed, 11 Dec 2019 10:13:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731491AbfLKQAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 11:00:45 -0500
-Received: from aurel32 by hall.aurel32.net with local (Exim 4.92)
-        (envelope-from <aurelien@aurel32.net>)
-        id 1if4Pk-0008An-F6; Wed, 11 Dec 2019 17:00:36 +0100
-Date:   Wed, 11 Dec 2019 17:00:36 +0100
-From:   Aurelien Jarno <aurelien@aurel32.net>
-To:     Justin Forbes <jmforbes@linuxtx.org>
-Cc:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" 
-        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        debian-kernel@lists.debian.org
-Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with
- recent binutils
-Message-ID: <20191211160036.GV2974@aurel32.net>
-Mail-Followup-To: Justin Forbes <jmforbes@linuxtx.org>,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:BPF (Safe dynamic programs and tools)" <netdev@vger.kernel.org>,
-        Yonghong Song <yhs@fb.com>,
-        "open list:BPF (Safe dynamic programs and tools)" <bpf@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, Martin KaFai Lau <kafai@fb.com>,
-        debian-kernel@lists.debian.org
-References: <20191201195728.4161537-1-aurelien@aurel32.net>
- <87zhgbe0ix.fsf@mpe.ellerman.id.au>
- <20191202093752.GA1535@localhost.localdomain>
- <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com>
- <20191210222553.GA4580@calabresa>
- <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
+        id S1730406AbfLKPNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:19 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDEE12467D;
+        Wed, 11 Dec 2019 15:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077198;
+        bh=YFuVTScmJU6o/1BYOAAD7AxOAukaR8cN59h+eMekWFM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EnGU03F5hPsW2vN2hRQqcBMB+ie1TBAILFwu81lW28iR32w9M6YrYnHcHq3/94W+e
+         gN0fIaUKa5npAW6bfOJKtZmzV36PW0BgriiVhhlo88xaPpY4jkYT0RpOQJSc6o41MD
+         I/q9iEBJFQo2eQaeIqx5L/hf8AGGBeLnJMyLBGbU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qian Cai <cai@lca.pw>, Vishal Verma <vishal.l.verma@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvdimm@lists.01.org
+Subject: [PATCH AUTOSEL 5.4 081/134] libnvdimm/btt: fix variable 'rc' set but not used
+Date:   Wed, 11 Dec 2019 10:10:57 -0500
+Message-Id: <20191211151150.19073-81-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-11 09:33, Justin Forbes wrote:
-> On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
-> <cascardo@canonical.com> wrote:
-> >
-> > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
-> > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
-> > > >
-> > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
-> > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
-> > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
-> > > > > > field when dumping the symbols of an object file. For example:
-> > > > > >
-> > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
-> > > > > >
-> > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
-> > > > > > be computed correctly and causes the checkabi target to fail.
-> > > > > >
-> > > > > > Fix that by looking for the symbol name in the last field instead of the
-> > > > > > 8th one. This way it should also cope with future extra fields.
-> > > > > >
-> > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-> > > > > > ---
-> > > > > >  tools/lib/bpf/Makefile | 4 ++--
-> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > Thanks for fixing that, it's been on my very long list of test failures
-> > > > > for a while.
-> > > > >
-> > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
-> > > >
-> > > > Looks good & also continues to work on x86. Applied, thanks!
-> > >
-> > > This actually seems to break horribly on PPC64le with binutils 2.33.1
-> > > resulting in:
-> > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
-> > > match with num of versioned symbols in libbpf.so (184). Please make
-> > > sure all LIBBPF_API symbols are versioned in libbpf.map.
-> > >
-> > > This is the only arch that fails, with x86/arm/aarch64/s390 all
-> > > building fine.  Reverting this patch allows successful build across
-> > > all arches.
-> > >
-> > > Justin
-> >
-> > Well, I ended up debugging this same issue and had the same fix as Jarno's when
-> > I noticed his fix was already applied.
-> >
-> > I just installed a system with the latest binutils, 2.33.1, and it still breaks
-> > without such fix. Can you tell what is the output of the following command on
-> > your system?
-> >
-> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
-> >
-> 
-> readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
-> -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
-> !/UND/ {print $0}'
->    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1 libbpf_num_possible_cpus [<localentry>: 8]
->    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free [<localentry>: 8]
+From: Qian Cai <cai@lca.pw>
 
-It seems that in your case the localentry part is added after the symbol
-name. That doesn't match what is done in upstream binutils:
+[ Upstream commit 4e24e37d5313edca8b4ab86f240c046c731e28d6 ]
 
-https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=binutils/readelf.c;hb=refs/heads/master#l11485
+drivers/nvdimm/btt.c: In function 'btt_read_pg':
+drivers/nvdimm/btt.c:1264:8: warning: variable 'rc' set but not used
+[-Wunused-but-set-variable]
+    int rc;
+        ^~
 
-Which version of binutils are you using? It looks like your version has
-been modified to workaround this exact issue.
+Add a ratelimited message in case a storm of errors is encountered.
 
+Fixes: d9b83c756953 ("libnvdimm, btt: rework error clearing")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Link: https://lore.kernel.org/r/1572530719-32161-1-git-send-email-cai@lca.pw
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/nvdimm/btt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/nvdimm/btt.c b/drivers/nvdimm/btt.c
+index 3e9f45aec8d18..5129543a04739 100644
+--- a/drivers/nvdimm/btt.c
++++ b/drivers/nvdimm/btt.c
+@@ -1261,11 +1261,11 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
+ 
+ 		ret = btt_data_read(arena, page, off, postmap, cur_len);
+ 		if (ret) {
+-			int rc;
+-
+ 			/* Media error - set the e_flag */
+-			rc = btt_map_write(arena, premap, postmap, 0, 1,
+-				NVDIMM_IO_ATOMIC);
++			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
++				dev_warn_ratelimited(to_dev(arena),
++					"Error persistently tracking bad blocks at %#x\n",
++					premap);
+ 			goto out_rtt;
+ 		}
+ 
 -- 
-Aurelien Jarno                          GPG: 4096R/1DDD8C9B
-aurelien@aurel32.net                 http://www.aurel32.net
+2.20.1
+
