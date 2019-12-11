@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A867C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24D8C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7E722527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871FB2073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078938;
-	bh=V5VW/BJI2DIgFPgZfp2GrIv0w5byFbwK++BfbOvXEdU=;
+	s=default; t=1576078945;
+	bh=MjdZ+Si+IyCzLycAPuoWRfPaAcvQ0FOabRUeFZvgcVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hi75C8ymSREQUB008VuMBuzf7zqymmMoUJjRZ5/EBXLKrA5C/G056rbYhOoCNSBrd
-	 2ZLjPS6Qjw3lvRSrIAwmhvnu284ciB5MHXbkintnTksN2DzVSW7Tet0QUcrbRSS9R7
-	 /3zWjcb/nvG1fmtIDzvN2+MZs6Uj+7cP0OeqzbbM=
+	b=TnuEw7Foic/Rto4H6WvFzzc4k9BCLmMT9LSHnQmx3MQw+yBr7w+XvVoIk4bvo+2lQ
+	 uDZeVDC5I3k1VO7xdj9ykOOnDkA1resDhvW2M5Ob9i+BSzDxATulbO4FefuEjk3//Y
+	 u++QuOXO2wSxvKB+ytMYbMR9NaodAewUgAwWzb8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfLKPmR (ORCPT
+        id S2388399AbfLKPmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:42:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33592 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:42:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387475AbfLKP1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:47 -0500
+        id S2387460AbfLKP1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B85BC24654;
-        Wed, 11 Dec 2019 15:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A99124654;
+        Wed, 11 Dec 2019 15:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078066;
-        bh=V5VW/BJI2DIgFPgZfp2GrIv0w5byFbwK++BfbOvXEdU=;
+        s=default; t=1576078064;
+        bh=MjdZ+Si+IyCzLycAPuoWRfPaAcvQ0FOabRUeFZvgcVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yt3quFED6ZQE2MueqEbEMf88W2r9t5r2ygx2UxV1fitvwebMRBQeXoBkSHF2u93dm
-         oK6wVnBGVX8GWAxpIg2Kew9tnqMx5Bq8TGsJLgb4zrMe1Ck4I5MjCQqtJXCqFPjHCE
-         LJ08b3YpedGO+ljuMC3ANEWkIwAj7at0XP+wD5M8=
+        b=XN5qIAbr1HxcziihpbIZPswYXnAnAuzNjVjV6XRVjpBNCabMxshSDZElrQjH2mlhI
+         PJ1GN4qeeMU9HE8Dg4fbBYiM/J/d8piqZlHVMH7u1t4/d8Hn8WeFSo3eRhK663q3tR
+         X6tQLLttbsu7KCErCUgxv4LSgyangnJOHy7iBCNM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Subhash Jadavani <subhashj@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bean Huo <beanhuo@micron.com>, Can Guo <cang@codeaurora.org>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 58/79] scsi: ufs: Fix error handing during hibern8 enter
-Date:   Wed, 11 Dec 2019 10:26:22 -0500
-Message-Id: <20191211152643.23056-58-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, stable@kernel.org,
+        Andreas Dilger <adilger@dilger.ca>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 56/79] ext4: work around deleting a file with i_nlink == 0 safely
+Date:   Wed, 11 Dec 2019 10:26:20 -0500
+Message-Id: <20191211152643.23056-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,81 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Subhash Jadavani <subhashj@codeaurora.org>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 6d303e4b19d694cdbebf76bcdb51ada664ee953d ]
+[ Upstream commit c7df4a1ecb8579838ec8c56b2bb6a6716e974f37 ]
 
-During clock gating (ufshcd_gate_work()), we first put the link hibern8 by
-calling ufshcd_uic_hibern8_enter() and if ufshcd_uic_hibern8_enter()
-returns success (0) then we gate all the clocks.  Now let’s zoom in to what
-ufshcd_uic_hibern8_enter() does internally: It calls
-__ufshcd_uic_hibern8_enter() and if failure is encountered, link recovery
-shall put the link back to the highest HS gear and returns success (0) to
-ufshcd_uic_hibern8_enter() which is the issue as link is still in active
-state due to recovery!  Now ufshcd_uic_hibern8_enter() returns success to
-ufshcd_gate_work() and hence it goes ahead with gating the UFS clock while
-link is still in active state hence I believe controller would raise UIC
-error interrupts. But when we service the interrupt, clocks might have
-already been disabled!
+If the file system is corrupted such that a file's i_links_count is
+too small, then it's possible that when unlinking that file, i_nlink
+will already be zero.  Previously we were working around this kind of
+corruption by forcing i_nlink to one; but we were doing this before
+trying to delete the directory entry --- and if the file system is
+corrupted enough that ext4_delete_entry() fails, then we exit with
+i_nlink elevated, and this causes the orphan inode list handling to be
+FUBAR'ed, such that when we unmount the file system, the orphan inode
+list can get corrupted.
 
-This change fixes for this by returning failure from
-__ufshcd_uic_hibern8_enter() if recovery succeeds as link is still not in
-hibern8, upon receiving the error ufshcd_hibern8_enter() would initiate
-retry to put the link state back into hibern8.
+A better way to fix this is to simply skip trying to call drop_nlink()
+if i_nlink is already zero, thus moving the check to the place where
+it makes the most sense.
 
-Link: https://lore.kernel.org/r/1573798172-20534-8-git-send-email-cang@codeaurora.org
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+https://bugzilla.kernel.org/show_bug.cgi?id=205433
+
+Link: https://lore.kernel.org/r/20191112032903.8828-1-tytso@mit.edu
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ fs/ext4/namei.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7510d8328d4dd..3601e770da162 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -3875,15 +3875,24 @@ static int __ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 			     ktime_to_us(ktime_sub(ktime_get(), start)), ret);
+diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
+index badbb8b4f0f17..f56d6f1950b98 100644
+--- a/fs/ext4/namei.c
++++ b/fs/ext4/namei.c
+@@ -3056,18 +3056,17 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
+ 	if (IS_DIRSYNC(dir))
+ 		ext4_handle_sync(handle);
  
- 	if (ret) {
-+		int err;
-+
- 		dev_err(hba->dev, "%s: hibern8 enter failed. ret = %d\n",
- 			__func__, ret);
- 
- 		/*
--		 * If link recovery fails then return error so that caller
--		 * don't retry the hibern8 enter again.
-+		 * If link recovery fails then return error code returned from
-+		 * ufshcd_link_recovery().
-+		 * If link recovery succeeds then return -EAGAIN to attempt
-+		 * hibern8 enter retry again.
- 		 */
--		if (ufshcd_link_recovery(hba))
--			ret = -ENOLINK;
-+		err = ufshcd_link_recovery(hba);
-+		if (err) {
-+			dev_err(hba->dev, "%s: link recovery failed", __func__);
-+			ret = err;
-+		} else {
-+			ret = -EAGAIN;
-+		}
- 	} else
- 		ufshcd_vops_hibern8_notify(hba, UIC_CMD_DME_HIBER_ENTER,
- 								POST_CHANGE);
-@@ -3897,7 +3906,7 @@ static int ufshcd_uic_hibern8_enter(struct ufs_hba *hba)
- 
- 	for (retries = UIC_HIBERN8_ENTER_RETRIES; retries > 0; retries--) {
- 		ret = __ufshcd_uic_hibern8_enter(hba);
--		if (!ret || ret == -ENOLINK)
-+		if (!ret)
- 			goto out;
- 	}
- out:
+-	if (inode->i_nlink == 0) {
+-		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
+-				   dentry->d_name.len, dentry->d_name.name);
+-		set_nlink(inode, 1);
+-	}
+ 	retval = ext4_delete_entry(handle, dir, de, bh);
+ 	if (retval)
+ 		goto end_unlink;
+ 	dir->i_ctime = dir->i_mtime = current_time(dir);
+ 	ext4_update_dx_flag(dir);
+ 	ext4_mark_inode_dirty(handle, dir);
+-	drop_nlink(inode);
++	if (inode->i_nlink == 0)
++		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
++				   dentry->d_name.len, dentry->d_name.name);
++	else
++		drop_nlink(inode);
+ 	if (!inode->i_nlink)
+ 		ext4_orphan_add(handle, inode);
+ 	inode->i_ctime = current_time(inode);
 -- 
 2.20.1
 
