@@ -2,120 +2,127 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50DBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FEDC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C8F208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00728208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079971;
-	bh=Ha7dnqnrqOkOuSjrc0UfdUtJMrE/DtnEIbdDGy/SvBo=;
+	s=default; t=1576079975;
+	bh=DuiprRsIOBez5iBZiFbIaAK/2cU1tXqeLTv5CQvxk00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cr99ZegWGBbfwKa6DhPZWLekJNX3MyswE1HQwBxxdcQl2NGbjsY/rkxaWCGGqmNZ6
-	 rXGRadi9x8uj2ZnGwpFygkYmq5teblxdF/QdWnVFJoiftNSlMXNRav/YkpFVJkHiJa
-	 2yhsOyX9rnhal2z8QBVVznHZkomgf0e+zM2l94/E=
+	b=sWQTE7npwCtq3S/3jye5bCUycLRpjRa0KiI0eHPFKMkoE80ZKVObVbIyv8JaDYrDo
+	 Vbg5pgFZXCUoo53qnp0ypA77Wyb7ouk6J1ui0VFH/wPrxUa5MLcZpmBLijVkvYgAsl
+	 VBd8idvxxEVeTfmB2wC+wyw7XYAUFocfXcpAEY3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731989AbfLKP7a (ORCPT
+        id S1732666AbfLKP7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:59:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbfLKPOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731566AbfLKPOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:14:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F050520663;
+        by mail.kernel.org (Postfix) with ESMTPSA id 021B32467E;
         Wed, 11 Dec 2019 15:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1576077242;
-        bh=Ha7dnqnrqOkOuSjrc0UfdUtJMrE/DtnEIbdDGy/SvBo=;
+        bh=DuiprRsIOBez5iBZiFbIaAK/2cU1tXqeLTv5CQvxk00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jaWiyXHhqzM9LhWkI7AdJnd81YjuP9U3J4l3/ZlQ5jBGmC70Y3DrpuEISLQoiXXSu
-         DdT1c2CnvVOnf0senUeTibeh+Vcq/wUWzwPIZXgGHP3JPdEaMKQzLQR2vjZTPYXIs/
-         3jvhjLlwsIN+9vLuGxhxuL57ek28ZUArNnpcSV60=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 5.3 070/105] kernfs: fix ino wrap-around detection
-Date:   Wed, 11 Dec 2019 16:05:59 +0100
-Message-Id: <20191211150250.877112320@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-References: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=CCcrWfYh0hgiGtWgppwtYPb8aWjmFgd7ltRm5ZHgg9jpBAOTkgbrn9kPuCX4i3XA0
+         tIb+lqb6KRCNv805LPYD2KXyLM2FxYXkWK0gdnj1oGIGyDI0ny12axxIUADiOqAMP3
+         bMJBYiE3eh2tS+9lmd6tpoEepEe8ccgDHUuGb7MA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 120/134] perf script: Fix invalid LBR/binary mismatch error
+Date:   Wed, 11 Dec 2019 10:11:36 -0500
+Message-Id: <20191211151150.19073-120-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit e23f568aa63f64cd6b355094224cc9356c0f696b upstream.
+[ Upstream commit 5172672da02e483d9b3c4d814c3482d0c8ffb1a6 ]
 
-When the 32bit ino wraps around, kernfs increments the generation
-number to distinguish reused ino instances.  The wrap-around detection
-tests whether the allocated ino is lower than what the cursor but the
-cursor is pointing to the next ino to allocate so the condition never
-triggers.
+The 'len' returned by grab_bb() includes an extra MAXINSN bytes to allow
+for the last instruction, so the the final 'offs' will not be 'len'.
+Fix the error condition logic accordingly.
 
-Fix it by remembering the last ino and comparing against that.
+Before:
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Fixes: 4a3ef68acacf ("kernfs: implement i_generation")
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ perf record -e '{intel_pt//,cpu/mem_inst_retired.all_loads,aux-sample-size=8192/pp}:u' grep -rqs jhgjhg /boot
+  [ perf record: Woken up 19 times to write data ]
+  [ perf record: Captured and wrote 2.274 MB perf.data ]
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+        bmexec+2485:
+        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+        00005641d5806bd6                        add %rdi, %rax
+        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+        00005641d5806bdd                        cmp %rax, %r14
+        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+        mismatch of LBR data and executable
+        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
 
+After:
+
+  $ perf script -F +brstackinsn --xed --itrace=i1usl100 | head
+            grep 13759 [002]  8091.310257:       1862                                        instructions:uH:      5641d58069eb bmexec+0x86b (/bin/grep)
+        bmexec+2485:
+        00005641d5806b35                        jnz 0x5641d5806bd0              # MISPRED
+        00005641d5806bd0                        movzxb  (%r13,%rdx,1), %eax
+        00005641d5806bd6                        add %rdi, %rax
+        00005641d5806bd9                        movzxb  -0x1(%rax), %edx
+        00005641d5806bdd                        cmp %rax, %r14
+        00005641d5806be0                        jnb 0x5641d58069c0              # MISPRED
+        00005641d58069c0                        movzxb  (%r13,%rdx,1), %edi
+        00005641d58069c6                        add %rax, %rdi
+
+Fixes: e98df280bc2a ("perf script brstackinsn: Fix recovery from LBR/binary mismatch")
+Reported-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20191127095631.15663-1-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/kernfs/dir.c        |    5 ++---
- include/linux/kernfs.h |    1 +
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -621,7 +621,6 @@ static struct kernfs_node *__kernfs_new_
- {
- 	struct kernfs_node *kn;
- 	u32 gen;
--	int cursor;
- 	int ret;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 67be8d31afab6..6dba8b728d232 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1084,7 +1084,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				insn++;
+ 			}
+ 		}
+-		if (off != (unsigned)len)
++		if (off != end - start)
+ 			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 	}
  
- 	name = kstrdup_const(name, GFP_KERNEL);
-@@ -634,11 +633,11 @@ static struct kernfs_node *__kernfs_new_
- 
- 	idr_preload(GFP_KERNEL);
- 	spin_lock(&kernfs_idr_lock);
--	cursor = idr_get_cursor(&root->ino_idr);
- 	ret = idr_alloc_cyclic(&root->ino_idr, kn, 1, 0, GFP_ATOMIC);
--	if (ret >= 0 && ret < cursor)
-+	if (ret >= 0 && ret < root->last_ino)
- 		root->next_generation++;
- 	gen = root->next_generation;
-+	root->last_ino = ret;
- 	spin_unlock(&kernfs_idr_lock);
- 	idr_preload_end();
- 	if (ret < 0)
---- a/include/linux/kernfs.h
-+++ b/include/linux/kernfs.h
-@@ -187,6 +187,7 @@ struct kernfs_root {
- 
- 	/* private fields, do not use outside kernfs proper */
- 	struct idr		ino_idr;
-+	u32			last_ino;
- 	u32			next_generation;
- 	struct kernfs_syscall_ops *syscall_ops;
- 
-
+-- 
+2.20.1
 
