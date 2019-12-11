@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB938C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB386C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA2F2073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0432073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079628;
-	bh=M+PwNQzuveidtj1eQr2mJ7oxxe8QVAPPPn7zHYICVf4=;
+	s=default; t=1576079633;
+	bh=oi0NwHz/0+UXCaZM5CXMYdplOMcRs9ZrS4m8zdYsDv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jFZ7d5MnW5tjXsrcbsen8cvY6CDC2J2UdnLiUFxkMp1BtvQpKHnKUgMZuinrGxfoj
-	 dcesYIadEpVLyzKC+cO3KbQ/ofazdS+Fz3GRHMeH8AH8oe7gUNNBwJG5F82V2sPcE2
-	 QehI96RW3WNbH8xO9KvWlaUcQ43LhtOEV/sRI/Sk=
+	b=nLybLwLlvLfMZ4cEwrG6bRP9RoJHYGDKOSEqn0eseyBmHTy7GHHnRBcDv/ExcAHQb
+	 xkxj0+J8V4YPSkarHSuEe/ABqaq1RNcJh7EnkIiUd0Q5/EJxpM4HVliAX4GddGgZIY
+	 41KAfYt9RfmI5TnDEiLVJvPPxn2n94B6qpOCtuD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732462AbfLKPxr (ORCPT
+        id S1731391AbfLKPSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47012 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:18:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732156AbfLKPSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:18:47 -0500
+        id S1731859AbfLKPS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:18:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF859208C3;
-        Wed, 11 Dec 2019 15:18:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A7E422527;
+        Wed, 11 Dec 2019 15:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077526;
-        bh=M+PwNQzuveidtj1eQr2mJ7oxxe8QVAPPPn7zHYICVf4=;
+        s=default; t=1576077508;
+        bh=oi0NwHz/0+UXCaZM5CXMYdplOMcRs9ZrS4m8zdYsDv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=No1X3xm0cdRPmeqr9ofu6ZHrZy9JNky6B9mekYmGi5MKqbn9bJcXUyY6pdttQIE4o
-         8PsMyuLf6MBZNQLp3bSVammFHVJDnM+JuTOqi6CYu5n2gTnvQiZ4/Y4jk322BrLPhC
-         VWsPC5ZKo1R6VKkayneIxIwY3KEfC14e1Q2XvW3E=
+        b=YG8pZxX478TdQet0bxu6/vhNQeQjJd7J2einetm+YtO68+/tKut9A0WqVOKZ1DLGa
+         dip1NQ1JPYj5JzAMA0FpLcYdu7FxVxoJDxsxRhdM+l7INhgMGA7HkzGTJxSSVDpBWK
+         YrLtCCaVzBjYJ6SUPZ9NU7rLX5a/N4Rq4QEIvBws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+        stable@vger.kernel.org, Janne Huttunen <janne.huttunen@nokia.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/243] ARC: IOC: panic if kernel was started with previously enabled IOC
-Date:   Wed, 11 Dec 2019 16:03:17 +0100
-Message-Id: <20191211150341.613335129@linuxfoundation.org>
+Subject: [PATCH 4.19 064/243] mm/vmstat.c: fix NUMA statistics updates
+Date:   Wed, 11 Dec 2019 16:03:46 +0100
+Message-Id: <20191211150343.419011891@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,92 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Janne Huttunen <janne.huttunen@nokia.com>
 
-[ Upstream commit 3624379d90ad2b65f9dbb30d7f7ce5498d2fe322 ]
+[ Upstream commit 13c9aaf7fa01cc7600c61981609feadeef3354ec ]
 
-If IOC was already enabled (due to bootloader) it technically needs to
-be reconfigured with aperture base,size corresponding to Linux memory map
-which will certainly be different than uboot's. But disabling and
-reenabling IOC when DMA might be potentially active is tricky business.
-To avoid random memory issues later, just panic here and ask user to
-upgrade bootloader to one which doesn't enable IOC
+Scan through the whole array to see if an update is needed.  While we're
+at it, use sizeof() to be safe against any possible type changes in the
+future.
 
-This was actually seen as issue on some of the HSDK board with a version
-of uboot which enabled IOC. There were random issues later with starting
-of X or peripherals etc.
+The bug here is that we wouldn't sync per-cpu counters into global ones
+if there was an update of numa_stats for higher cpus.  Highly
+theoretical one though because it is much more probable that zone_stats
+are updated so we would refresh anyway.  So I wouldn't bother to mark
+this for stable, yet something nice to fix.
 
-Also while I'm at it, replace hardcoded bits in ARC_REG_IO_COH_PARTIAL
-and ARC_REG_IO_COH_ENABLE registers by definitions.
-
-Inspired by: https://lkml.org/lkml/2018/1/19/557
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+[mhocko@suse.com: changelog enhancement]
+Link: http://lkml.kernel.org/r/1541601517-17282-1-git-send-email-janne.huttunen@nokia.com
+Fixes: 1d90ca897cb0 ("mm: update NUMA counter threshold size")
+Signed-off-by: Janne Huttunen <janne.huttunen@nokia.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/cache.h |  2 ++
- arch/arc/mm/cache.c          | 20 +++++++++++++++++---
- 2 files changed, 19 insertions(+), 3 deletions(-)
+ mm/vmstat.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arc/include/asm/cache.h b/arch/arc/include/asm/cache.h
-index db681cf4959c8..2ad77fb43639c 100644
---- a/arch/arc/include/asm/cache.h
-+++ b/arch/arc/include/asm/cache.h
-@@ -124,7 +124,9 @@ extern unsigned long perip_base, perip_end;
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index a2b2ea786c9b2..ce81b0a7d0186 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1826,12 +1826,13 @@ static bool need_update(int cpu)
  
- /* IO coherency related Auxiliary registers */
- #define ARC_REG_IO_COH_ENABLE	0x500
-+#define ARC_IO_COH_ENABLE_BIT	BIT(0)
- #define ARC_REG_IO_COH_PARTIAL	0x501
-+#define ARC_IO_COH_PARTIAL_BIT	BIT(0)
- #define ARC_REG_IO_COH_AP0_BASE	0x508
- #define ARC_REG_IO_COH_AP0_SIZE	0x509
- 
-diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
-index f2701c13a66b2..cf9619d4efb4f 100644
---- a/arch/arc/mm/cache.c
-+++ b/arch/arc/mm/cache.c
-@@ -1144,6 +1144,20 @@ noinline void __init arc_ioc_setup(void)
- {
- 	unsigned int ioc_base, mem_sz;
- 
-+	/*
-+	 * If IOC was already enabled (due to bootloader) it technically needs to
-+	 * be reconfigured with aperture base,size corresponding to Linux memory map
-+	 * which will certainly be different than uboot's. But disabling and
-+	 * reenabling IOC when DMA might be potentially active is tricky business.
-+	 * To avoid random memory issues later, just panic here and ask user to
-+	 * upgrade bootloader to one which doesn't enable IOC
-+	 */
-+	if (read_aux_reg(ARC_REG_IO_COH_ENABLE) & ARC_IO_COH_ENABLE_BIT)
-+		panic("IOC already enabled, please upgrade bootloader!\n");
-+
-+	if (!ioc_enable)
-+		return;
-+
- 	/*
- 	 * As for today we don't support both IOC and ZONE_HIGHMEM enabled
- 	 * simultaneously. This happens because as of today IOC aperture covers
-@@ -1187,8 +1201,8 @@ noinline void __init arc_ioc_setup(void)
- 		panic("IOC Aperture start must be aligned to the size of the aperture");
- 
- 	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, ioc_base >> 12);
--	write_aux_reg(ARC_REG_IO_COH_PARTIAL, 1);
--	write_aux_reg(ARC_REG_IO_COH_ENABLE, 1);
-+	write_aux_reg(ARC_REG_IO_COH_PARTIAL, ARC_IO_COH_PARTIAL_BIT);
-+	write_aux_reg(ARC_REG_IO_COH_ENABLE, ARC_IO_COH_ENABLE_BIT);
- 
- 	/* Re-enable L1 dcache */
- 	__dc_enable();
-@@ -1265,7 +1279,7 @@ void __init arc_cache_init_master(void)
- 	if (is_isa_arcv2() && l2_line_sz && !slc_enable)
- 		arc_slc_disable();
- 
--	if (is_isa_arcv2() && ioc_enable)
-+	if (is_isa_arcv2() && ioc_exists)
- 		arc_ioc_setup();
- 
- 	if (is_isa_arcv2() && l2_line_sz && slc_enable) {
+ 		/*
+ 		 * The fast way of checking if there are any vmstat diffs.
+-		 * This works because the diffs are byte sized items.
+ 		 */
+-		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS))
++		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS *
++			       sizeof(p->vm_stat_diff[0])))
+ 			return true;
+ #ifdef CONFIG_NUMA
+-		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS))
++		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS *
++			       sizeof(p->vm_numa_stat_diff[0])))
+ 			return true;
+ #endif
+ 	}
 -- 
 2.20.1
 
