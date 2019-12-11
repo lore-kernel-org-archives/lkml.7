@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C218C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B86C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687A22073D
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0B32073D
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080133;
-	bh=ViHz5u/uWxAOrJktt1S26vphXYtLoGqBe2iwBCprXmk=;
+	s=default; t=1576080137;
+	bh=5cWhv1VAcQjnQincJWWlUSETMjjQA6tkt1veoBF/8Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UrIGFIZCZT6KmVtWk3qm9POz5Wk1J6ehFux6TMn8z7mGxY92JarsSU23nvxo2Y8mV
-	 XCXbCZ92SLatSBPkugOqamLdtrV9wEdyye2HeQPhatlV77ge5+lbw8+wTj8haBpu4s
-	 Ea3AtiOzUnAKdF5pJO+nuv0X763oAa1HBDMakuyQ=
+	b=uKx5UeQfwd9kcHOmyzuG2DxINciYA8/x61jafVFcZTgcxAGTLJNUnqDIm++jz2/3z
+	 gdSz3oF+fxC9fNlmBUSLe9vMq/qUgEhBiPjHnyX0w/C3g0oHHnBrVxluy0Khs3ExfN
+	 2Ca0WB8OHk4gChL7ngP0XS/nbLgH+kPfGqsJfyp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732476AbfLKQCM (ORCPT
+        id S2388564AbfLKQCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:02:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:02:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730718AbfLKPNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730926AbfLKPNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:13:15 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B98DD208C3;
-        Wed, 11 Dec 2019 15:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D0042467E;
+        Wed, 11 Dec 2019 15:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077195;
-        bh=ViHz5u/uWxAOrJktt1S26vphXYtLoGqBe2iwBCprXmk=;
+        s=default; t=1576077194;
+        bh=5cWhv1VAcQjnQincJWWlUSETMjjQA6tkt1veoBF/8Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMmUr6uuHX81ebmL47D4A0pqfLMTDzLNF164li1pay9osVOK+CO4DIIucfrji0ah0
-         jBsWH/JTPxScloN/WJZTCIrCmuc+6A4oz251/FzuZLxrSkzIAnXmKjTvGTdgPzacUd
-         9T1eB6SXBx9C9hQYBZ9rHRsuWU8Qs7vOyEKhCSnY=
+        b=AnWIcgXB7yeYGkvMP6GuYYQ93ofv0yBEDW6Pdh+T6LWX806Tl0OXYnFAFtw30Xiur
+         IEyTP3fcdRiaaIBSkwIFoaJbKyCRqjUe609rmRMFAJvc6MrUtGK6H4zJU+nAuaT8Lb
+         X2w0qDR7fWHsm2wm13+BARk9JCmnjxuty8OYcdtQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans de Goede <hdegoede@redhat.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 078/134] HID: logitech-hidpp: Silence intermittent get_battery_capacity errors
-Date:   Wed, 11 Dec 2019 10:10:54 -0500
-Message-Id: <20191211151150.19073-78-sashal@kernel.org>
+Cc:     yangerkun <yangerkun@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 077/134] ext4: fix a bug in ext4_wait_for_tail_page_commit
+Date:   Wed, 11 Dec 2019 10:10:53 -0500
+Message-Id: <20191211151150.19073-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -58,44 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit 61005d65b6c7dcf61c19516e6ebe5acc02d2cdda ]
+[ Upstream commit 565333a1554d704789e74205989305c811fd9c7a ]
 
-My Logitech M185 (PID:4038) 2.4 GHz wireless HID++ mouse is causing
-intermittent errors like these in the log:
+No need to wait for any commit once the page is fully truncated.
+Besides, it may confuse e.g. concurrent ext4_writepage() with the page
+still be dirty (will be cleared by truncate_pagecache() in
+ext4_setattr()) but buffers has been freed; and then trigger a bug
+show as below:
 
-[11091.034857] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[12388.031260] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[16613.718543] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
-[23529.938728] logitech-hidpp-device 0003:046D:4038.0006: hidpp20_batterylevel_get_battery_capacity: received protocol error 0x09
+[   26.057508] ------------[ cut here ]------------
+[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
+...
+[   26.088130] Call trace:
+[   26.088695]  ext4_writepage+0x914/0xb28
+[   26.089541]  writeout.isra.4+0x1b4/0x2b8
+[   26.090409]  move_to_new_page+0x3b0/0x568
+[   26.091338]  __unmap_and_move+0x648/0x988
+[   26.092241]  unmap_and_move+0x48c/0xbb8
+[   26.093096]  migrate_pages+0x220/0xb28
+[   26.093945]  kernel_mbind+0x828/0xa18
+[   26.094791]  __arm64_sys_mbind+0xc8/0x138
+[   26.095716]  el0_svc_common+0x190/0x490
+[   26.096571]  el0_svc_handler+0x60/0xd0
+[   26.097423]  el0_svc+0x8/0xc
 
-We are already silencing error-code 0x09 (HIDPP_ERROR_RESOURCE_ERROR)
-errors in other places, lets do the same in
-hidpp20_batterylevel_get_battery_capacity to remove these harmless,
-but scary looking errors from the dmesg output.
+Run the procedure (generate by syzkaller) parallel with ext3.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+void main()
+{
+	int fd, fd1, ret;
+	void *addr;
+	size_t length = 4096;
+	int flags;
+	off_t offset = 0;
+	char *str = "12345";
+
+	fd = open("a", O_RDWR | O_CREAT);
+	assert(fd >= 0);
+
+	/* Truncate to 4k */
+	ret = ftruncate(fd, length);
+	assert(ret == 0);
+
+	/* Journal data mode */
+	flags = 0xc00f;
+	ret = ioctl(fd, _IOW('f', 2, long), &flags);
+	assert(ret == 0);
+
+	/* Truncate to 0 */
+	fd1 = open("a", O_TRUNC | O_NOATIME);
+	assert(fd1 >= 0);
+
+	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
+					MAP_SHARED, fd, offset);
+	assert(addr != (void *)-1);
+
+	memcpy(addr, str, 5);
+	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
+}
+
+And the bug will be triggered once we seen the below order.
+
+reproduce1                         reproduce2
+
+...                            |   ...
+truncate to 4k                 |
+change to journal data mode    |
+                               |   memcpy(set page dirty)
+truncate to 0:                 |
+ext4_setattr:                  |
+...                            |
+ext4_wait_for_tail_page_commit |
+                               |   mbind(trigger bug)
+truncate_pagecache(clean dirty)|   ...
+...                            |
+
+mbind will call ext4_writepage() since the page still be dirty, and then
+report the bug since the buffers has been free. Fix it by return
+directly once offset equals to 0 which means the page has been fully
+truncated.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-logitech-hidpp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/inode.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index 8e91e2f06cb4f..cd9193078525b 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1102,6 +1102,9 @@ static int hidpp20_batterylevel_get_battery_capacity(struct hidpp_device *hidpp,
- 	ret = hidpp_send_fap_command_sync(hidpp, feature_index,
- 					  CMD_BATTERY_LEVEL_STATUS_GET_BATTERY_LEVEL_STATUS,
- 					  NULL, 0, &response);
-+	/* Ignore these intermittent errors */
-+	if (ret == HIDPP_ERROR_RESOURCE_ERROR)
-+		return -EIO;
- 	if (ret > 0) {
- 		hid_err(hidpp->hid_dev, "%s: received protocol error 0x%02x\n",
- 			__func__, ret);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 02313f10e8897..8b7c704b0de5e 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5462,11 +5462,15 @@ static void ext4_wait_for_tail_page_commit(struct inode *inode)
+ 
+ 	offset = inode->i_size & (PAGE_SIZE - 1);
+ 	/*
+-	 * All buffers in the last page remain valid? Then there's nothing to
+-	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
+-	 * blocksize case
++	 * If the page is fully truncated, we don't need to wait for any commit
++	 * (and we even should not as __ext4_journalled_invalidatepage() may
++	 * strip all buffers from the page but keep the page dirty which can then
++	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
++	 * buffers). Also we don't need to wait for any commit if all buffers in
++	 * the page remain valid. This is most beneficial for the common case of
++	 * blocksize == PAGESIZE.
+ 	 */
+-	if (offset > PAGE_SIZE - i_blocksize(inode))
++	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
+ 		return;
+ 	while (1) {
+ 		page = find_lock_page(inode->i_mapping,
 -- 
 2.20.1
 
