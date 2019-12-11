@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6929C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EECCC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F612073B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40E92073B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:43:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576079025;
-	bh=ZBos1J9OQFgPA5I/g81+Wf/VkXLzniPpEScE/pGKg0c=;
+	s=default; t=1576079027;
+	bh=4rLshc+2X4VuB2q5Rjf5Cy7U/0ytyFE7Vin/lm1Xuz4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OwLR/Fl5/4SosEUVS6PQLt8cFGblF3CTsUeAJqK8azY9roixziJafk0McgPegcBJX
-	 9lzYrk4ynAktefBaIMRbQQ3L2/9hi9yB5iCAmOoTji1CAnGqbxPjZK/y60LnAXK+RD
-	 qBY50lOkCjBGSuFHaylaU2ttPQZuWDQ+QDPgtR4U=
+	b=ruHLKhn7Z5oZW9PxsKua563MMGcVeD3aw8Q9dJdH1yvBHOzHEbCBsoPfgcLGiqmTs
+	 CiwGrLI5HkZnnX4HB5NM/OCfQ95Rbw8gMYCnsdFjlQdWnTgnireityNi6bTCUJiRI1
+	 rjlE839LveDkjeytgsqpisyNpC5NSgKGxcl41sek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733106AbfLKP1g (ORCPT
+        id S2388532AbfLKPnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:43:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733291AbfLKP1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:17 -0500
+        id S1732809AbfLKP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9911724679;
-        Wed, 11 Dec 2019 15:27:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2ADD24654;
+        Wed, 11 Dec 2019 15:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078037;
-        bh=ZBos1J9OQFgPA5I/g81+Wf/VkXLzniPpEScE/pGKg0c=;
+        s=default; t=1576078055;
+        bh=4rLshc+2X4VuB2q5Rjf5Cy7U/0ytyFE7Vin/lm1Xuz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDC0pxC5h4Hax49+zqI77Jk3cT5t9ixDVYj2xxF+9CVOZVzVGwErjsWr8+UUxvZ8e
-         o0mcspxPd6oG/5dtIZU39ELln9O3oINjxCxL+b53tojqgHK73fG4Z1CFgk+7ykWx1w
-         urjv0X1kvClA4LBLT0KqtYAodyrdlwAjIrxLvRgg=
+        b=RSz0jm6ycSLl1blG6M8ThT5Rv1XT5CCw4soAD8ZtHSXXd3LA7mTZFg46hmL50DNpX
+         yooZU72w+GFqeCDFoSjAdTsKybqe11NVI2wdisHAoMZeBmccjpWTEzW2JSLLLQBuUo
+         yQ+RcYGzq1zw8Wq1C89kb0pwe3gczRByoOtZwz3c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-mips@linux-mips.org
-Subject: [PATCH AUTOSEL 4.19 31/79] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date:   Wed, 11 Dec 2019 10:25:55 -0500
-Message-Id: <20191211152643.23056-31-sashal@kernel.org>
+Cc:     yangerkun <yangerkun@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 48/79] ext4: fix a bug in ext4_wait_for_tail_page_commit
+Date:   Wed, 11 Dec 2019 10:26:12 -0500
+Message-Id: <20191211152643.23056-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -59,36 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit 27eebb60357ed5aa6659442f92907c0f7368d6ae ]
+[ Upstream commit 565333a1554d704789e74205989305c811fd9c7a ]
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+No need to wait for any commit once the page is fully truncated.
+Besides, it may confuse e.g. concurrent ext4_writepage() with the page
+still be dirty (will be cleared by truncate_pagecache() in
+ext4_setattr()) but buffers has been freed; and then trigger a bug
+show as below:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+[   26.057508] ------------[ cut here ]------------
+[   26.058531] kernel BUG at fs/ext4/inode.c:2134!
+...
+[   26.088130] Call trace:
+[   26.088695]  ext4_writepage+0x914/0xb28
+[   26.089541]  writeout.isra.4+0x1b4/0x2b8
+[   26.090409]  move_to_new_page+0x3b0/0x568
+[   26.091338]  __unmap_and_move+0x648/0x988
+[   26.092241]  unmap_and_move+0x48c/0xbb8
+[   26.093096]  migrate_pages+0x220/0xb28
+[   26.093945]  kernel_mbind+0x828/0xa18
+[   26.094791]  __arm64_sys_mbind+0xc8/0x138
+[   26.095716]  el0_svc_common+0x190/0x490
+[   26.096571]  el0_svc_handler+0x60/0xd0
+[   26.097423]  el0_svc+0x8/0xc
+
+Run the procedure (generate by syzkaller) parallel with ext3.
+
+void main()
+{
+	int fd, fd1, ret;
+	void *addr;
+	size_t length = 4096;
+	int flags;
+	off_t offset = 0;
+	char *str = "12345";
+
+	fd = open("a", O_RDWR | O_CREAT);
+	assert(fd >= 0);
+
+	/* Truncate to 4k */
+	ret = ftruncate(fd, length);
+	assert(ret == 0);
+
+	/* Journal data mode */
+	flags = 0xc00f;
+	ret = ioctl(fd, _IOW('f', 2, long), &flags);
+	assert(ret == 0);
+
+	/* Truncate to 0 */
+	fd1 = open("a", O_TRUNC | O_NOATIME);
+	assert(fd1 >= 0);
+
+	addr = mmap(NULL, length, PROT_WRITE | PROT_READ,
+					MAP_SHARED, fd, offset);
+	assert(addr != (void *)-1);
+
+	memcpy(addr, str, 5);
+	mbind(addr, length, 0, 0, 0, MPOL_MF_MOVE);
+}
+
+And the bug will be triggered once we seen the below order.
+
+reproduce1                         reproduce2
+
+...                            |   ...
+truncate to 4k                 |
+change to journal data mode    |
+                               |   memcpy(set page dirty)
+truncate to 0:                 |
+ext4_setattr:                  |
+...                            |
+ext4_wait_for_tail_page_commit |
+                               |   mbind(trigger bug)
+truncate_pagecache(clean dirty)|   ...
+...                            |
+
+mbind will call ext4_writepage() since the page still be dirty, and then
+report the bug since the buffers has been free. Fix it by return
+directly once offset equals to 0 which means the page has been fully
+truncated.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Link: https://lore.kernel.org/r/20190919063508.1045-1-yangerkun@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ext4/inode.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 0f6e30e9009da..f53dfc5aa7c56 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -284,6 +284,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 8eaf7a581be65..915c070cb20b5 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -5462,11 +5462,15 @@ static void ext4_wait_for_tail_page_commit(struct inode *inode)
  
+ 	offset = inode->i_size & (PAGE_SIZE - 1);
+ 	/*
+-	 * All buffers in the last page remain valid? Then there's nothing to
+-	 * do. We do the check mainly to optimize the common PAGE_SIZE ==
+-	 * blocksize case
++	 * If the page is fully truncated, we don't need to wait for any commit
++	 * (and we even should not as __ext4_journalled_invalidatepage() may
++	 * strip all buffers from the page but keep the page dirty which can then
++	 * confuse e.g. concurrent ext4_writepage() seeing dirty page without
++	 * buffers). Also we don't need to wait for any commit if all buffers in
++	 * the page remain valid. This is most beneficial for the common case of
++	 * blocksize == PAGESIZE.
+ 	 */
+-	if (offset > PAGE_SIZE - i_blocksize(inode))
++	if (!offset || offset > (PAGE_SIZE - i_blocksize(inode)))
+ 		return;
+ 	while (1) {
+ 		page = find_lock_page(inode->i_mapping,
 -- 
 2.20.1
 
