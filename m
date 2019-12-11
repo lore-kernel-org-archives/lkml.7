@@ -2,84 +2,189 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460B6C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C89EC2D0C7
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE9A42054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:27:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="KLDm1GD3"
+	by mail.kernel.org (Postfix) with ESMTP id 4FACD214D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576056464;
+	bh=SZ1p/tzZLWoJYG4p1TVzXfIjEFfvpydrnQwQH7XA/Ns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MbxIv2lyg0dwexBN335gA9a8jTXMWBqrz0MybSbrTnRjIwsr3TmS2QPa1HEhYSiup
+	 RUysJ7xlsViEGZWSKBHRvzMWw5C7uDnlEMecg2CyuIIQypuQdqpZyp7Tt2TU/lbUgo
+	 wmSSm1BvdXtLMRsgVvwpkmR0japxKC3kYI5nTUJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbfLKJ1i (ORCPT
+        id S1728565AbfLKJ1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:27:38 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:34217 "EHLO frisell.zx2c4.com"
+        Wed, 11 Dec 2019 04:27:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727493AbfLKJ1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:27:37 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id d86f8824;
-        Wed, 11 Dec 2019 08:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
-        :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=mail; bh=//5qwTghPPq3ufYyCtI8PBz0K
-        x8=; b=KLDm1GD3JIdDKDUXiPHEPQcvixQk9WfLbj2Y+DiR5sK4oiLOptHs3gK9c
-        xxhVl98rnkkql6T71wweePWc5DypqU3KeNK+hrJvpNZNyvulHos+jUOS1nI9pvtB
-        TGX6lUvHihaJCuuEuAoAV/kQCIN57mH62mLRMJQuv13c2jsU61YslYnFsCevKTRF
-        8azP/hREllsyrzApWwJC7pGgNCWtJwd3SpVBdxGTGt6cLLGxSi6TsW8W3SoHCDcz
-        IRjnFj/aaubEa44LmAiZShluxipse3l8f48NOhnK1X6FvFucxoAxBytByWNLiyNF
-        uxt8OGP347CxHqhHlKaWGrgkxMr9Q==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 6aaa56e1 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Wed, 11 Dec 2019 08:31:56 +0000 (UTC)
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        sfr@canb.auug.org.au, "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH 1/2] crypto: arm/curve25519 - add arch-specific key generation function
-Date:   Wed, 11 Dec 2019 10:26:39 +0100
-Message-Id: <20191211092640.107621-1-Jason@zx2c4.com>
-In-Reply-To: <20191211102455.7b55218e@canb.auug.org.au>
-References: <20191211102455.7b55218e@canb.auug.org.au>
+        id S1727493AbfLKJ1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:27:41 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 980B02077B;
+        Wed, 11 Dec 2019 09:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576056461;
+        bh=SZ1p/tzZLWoJYG4p1TVzXfIjEFfvpydrnQwQH7XA/Ns=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qy272YD3jaqY+ufj34lhxLHZ+CX9q85jsIbpIaKoftxopt6VxLGEygmwrnpv1Sn2F
+         wfCRvm7K9UUx6R0hMmOcDQd+DjQn+QNgK6uItyZ6S0m23OaaTz6Bl5rf+QpK2i5v3b
+         GOVDh9oEzTzeq4m3w3gObUaROfP0XwSQSKYeQfuU=
+Date:   Wed, 11 Dec 2019 10:27:38 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jack Ping CHNG <jack.ping.chng@intel.com>
+Cc:     devel@driverdev.osuosl.org, cheol.yong.kim@intel.com,
+        andriy.shevchenko@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Amireddy Mallikarjuna reddy 
+        <mallikarjunax.reddy@linux.intel.com>, davem@davemloft.net
+Subject: Re: [PATCH v2] staging: intel-gwdpa: gswip: Introduce Gigabit
+ Ethernet Switch (GSWIP) device driver
+Message-ID: <20191211092738.GA505511@kroah.com>
+References: <5f85180573a3fb20238d6a340cdd990f140ed6f0.1576054234.git.jack.ping.chng@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f85180573a3fb20238d6a340cdd990f140ed6f0.1576054234.git.jack.ping.chng@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Somehow this was forgotten when Zinc was being split into oddly shaped
-pieces, resulting in linker errors. The x86_64 glue has a specific key
-generation implementation, but the Arm one does not. However, it can
-still receive the NEON speedups by calling the ordinary DH function
-using the base point.
+On Wed, Dec 11, 2019 at 04:57:28PM +0800, Jack Ping CHNG wrote:
+> This driver enables the Intel's LGM SoC GSWIP block.
+> GSWIP is a core module tailored for L2/L3/L4+ data plane and QoS functions.
+> It allows CPUs and other accelerators connected to the SoC datapath
+> to enqueue and dequeue packets through DMAs.
+> Most configuration values are stored in tables such as
+> Parsing and Classification Engine tables, Buffer Manager tables and
+> Pseudo MAC tables.
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
- arch/arm/crypto/curve25519-glue.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Odd line wrapping :(
 
-diff --git a/arch/arm/crypto/curve25519-glue.c b/arch/arm/crypto/curve25519-glue.c
-index f3f42cf3b893..776ae07e0469 100644
---- a/arch/arm/crypto/curve25519-glue.c
-+++ b/arch/arm/crypto/curve25519-glue.c
-@@ -38,6 +38,13 @@ void curve25519_arch(u8 out[CURVE25519_KEY_SIZE],
- }
- EXPORT_SYMBOL(curve25519_arch);
- 
-+void curve25519_base_arch(u8 pub[CURVE25519_KEY_SIZE],
-+			  const u8 secret[CURVE25519_KEY_SIZE])
-+{
-+	return curve25519_arch(pub, secret, curve25519_base_point);
-+}
-+EXPORT_SYMBOL(curve25519_base_arch);
-+
- static int curve25519_set_secret(struct crypto_kpp *tfm, const void *buf,
- 				 unsigned int len)
- {
--- 
-2.24.0
+> Signed-off-by: Jack Ping CHNG <jack.ping.chng@intel.com>
+> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
+> ---
+> Changes on v2:
+> - Renamed intel-dpa to intel-gwdpa
+> - Added intel-gwdpa.txt(Intel Gateway Datapath Architecture)
+> - Added TODO (upstream plan)
 
+I don't see a real plan here.
+
+>  drivers/staging/intel-gwdpa/TODO               |  52 ++
+
+Good, a TODO file!  Let's look at it:
+
+> --- /dev/null
+> +++ b/drivers/staging/intel-gwdpa/TODO
+> @@ -0,0 +1,52 @@
+> +Intel gateway datapath architecture framework (gwdpa)
+> +=====================================================
+> +
+> +Drivers for gwdpa
+> +-----------------
+> +1. drivers/staging/intel-gwdpa/gswip
+> +        patch: switch driver (GSWIP)
+> +
+> +2. drivers/staging/intel-gwdpa/cqm
+> +        patch: queue manager (CQM)
+> +
+> +3. drivers/staging/intel-gwdpa/pp
+> +        patch: packet processor (pp)
+> +
+> +4. drivers/staging/intel-gwdpa/dpm
+> +        patch: datapath manager (DPM)
+> +        dependencies: GSWIP, CQM, PP
+> +
+> +5. driver/net/ethernet/intel
+> +        patch: ethernet driver
+> +        dependencies: DPM
+> +
+> +6. drivers/staging/intel-gwdpa/dcdp
+> +        patch: direct connect datapath (DCDP)
+> +        dependencies: DPM
+> +
+> +7.1 drivers/net/wireless
+> +7.2 drivers/net/wan
+> +        patch: wireless driver and DSL driver
+> +        dependencies: DCDP
+
+I don't understand any of the above at all.  What does it mean?  Why is
+it here?
+
+If I can't understand it, how can someone new to the kernel know what
+this is for?
+
+> +Upstream plan
+> +--------------
+> +
+> +      GSWIP  CQM  PP  DPM     DCDP
+> +        |     |    |   |        |
+> +        |     |    |   |        |
+> +        V     V    V   V        V
+> +        -------------------------------------( drivers/staging/intel-gwdpa/* )
+> +                            |  (move to soc folder)
+> +                            V
+> +                    -------------------------( drivers/soc/intel/gwdpa-*/* )
+> +
+> +                            Eth driver  Wireless/
+> +                                |       WAN driver
+> +                                |         |
+> +                                V         V
+> +                             ----------------( drivers/net/ethernet/intel )
+> +                                             ( drivers/net/wireless )
+> +                                             ( drivers/net/wan)
+> +
+> +* Each driver will have a TODO list.
+
+Again, what kind of plan is this?  It's just a "these files need to be
+moved to this location" plan?
+
+Why not do that today?
+
+What is keeping this code from being accepted in the "correct" place
+today?  And why do you want it in staging?  You know it takes even more
+work to do things here, right?  Are you ready to sign up for that work
+(hint, you didn't add your names to the MAINTAINER file, so I worry
+about that...)
+
+> diff --git a/drivers/staging/intel-gwdpa/gswip/TODO b/drivers/staging/intel-gwdpa/gswip/TODO
+> new file mode 100644
+> index 000000000000..fa46170c8260
+> --- /dev/null
+> +++ b/drivers/staging/intel-gwdpa/gswip/TODO
+> @@ -0,0 +1,4 @@
+> +- Add debugfs for core and mac.
+
+Why is this a requirement for upstream support?  No code functionality
+should ever depend on debugfs for working properly, it's just there for
+debugging at random times.
+
+> +- Expand APIs for PCE, BM and PMAC tables to support
+> +  QoS, OMCI.
+
+What does this mean?
+
+> +- Add ops for core.
+
+What does this mean?
+
+Please provide much better descriptions here of exactly what needs to be
+done, that explains why this code needs to go in this part of the kernel
+now instead of the "real" part.
+
+As it is, I can not take this patch now.
+
+thanks,
+
+greg k-h
