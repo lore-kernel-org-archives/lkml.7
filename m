@@ -2,89 +2,132 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615CBC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A9BC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370BB2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8C921556
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 09:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfLKJ7A (ORCPT
+        id S1728612AbfLKJ7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 04:59:00 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52587 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbfLKJ67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 04:58:59 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1ieyll-0002rK-EC; Wed, 11 Dec 2019 10:58:57 +0100
-Message-ID: <60952c5ac36510ff5be0733b15352828e0f2e41f.camel@pengutronix.de>
-Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        linux-spi@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Date:   Wed, 11 Dec 2019 10:58:53 +0100
-In-Reply-To: <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
-References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
-         <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 11 Dec 2019 04:59:48 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:29350 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728027AbfLKJ7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 04:59:48 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xBB9xb32031689;
+        Wed, 11 Dec 2019 10:59:37 +0100
+Date:   Wed, 11 Dec 2019 10:59:37 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        dan.carpenter@oracle.com, will@kernel.org, ebiederm@xmission.com,
+        linux-arch@vger.kernel.org, security@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] execve: warn if process starts with executable stack
+Message-ID: <20191211095937.GB31670@1wt.eu>
+References: <20191208171918.GC19716@avx2>
+ <20191210174726.101e434df59b6aec8a53cca1@linux-foundation.org>
+ <20191211072225.GB3700@avx2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211072225.GB3700@avx2>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
+On Wed, Dec 11, 2019 at 10:22:25AM +0300, Alexey Dobriyan wrote:
+> On Tue, Dec 10, 2019 at 05:47:26PM -0800, Andrew Morton wrote:
+> > On Sun, 8 Dec 2019 20:19:18 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> > 
+> > > There were few episodes of silent downgrade to an executable stack over
+> > > years:
+> > > 
+> > > 1) linking innocent looking assembly file will silently add executable
+> > >    stack if proper linker options is not given as well:
+> > > 
+> > > 	$ cat f.S
+> > > 	.intel_syntax noprefix
+> > > 	.text
+> > > 	.globl f
+> > > 	f:
+> > > 	        ret
+> > > 
+> > > 	$ cat main.c
+> > > 	void f(void);
+> > > 	int main(void)
+> > > 	{
+> > > 	        f();
+> > > 	        return 0;
+> > > 	}
+> > > 
+> > > 	$ gcc main.c f.S
+> > > 	$ readelf -l ./a.out
+> > > 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
+> > >                          0x0000000000000000 0x0000000000000000  RWE    0x10
+> > > 			 					 ^^^
+> > > 
+> > > 2) converting C99 nested function into a closure
+> > > https://nullprogram.com/blog/2019/11/15/
+> > > 
+> > > 	void intsort2(int *base, size_t nmemb, _Bool invert)
+> > > 	{
+> > > 	    int cmp(const void *a, const void *b)
+> > > 	    {
+> > > 	        int r = *(int *)a - *(int *)b;
+> > > 	        return invert ? -r : r;
+> > > 	    }
+> > > 	    qsort(base, nmemb, sizeof(*base), cmp);
+> > > 	}
+> > > 
+> > > will silently require stack trampolines while non-closure version will not.
+> > > 
+> > > Without doubt this behaviour is documented somewhere, add a warning so that
+> > > developers and users can at least notice. After so many years of x86_64 having
+> > > proper executable stack support it should not cause too many problems.
+> > 
+> > hm, OK, let's give it a trial run.
+> > 
+> > > --- a/fs/exec.c
+> > > +++ b/fs/exec.c
+> > > @@ -761,6 +761,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
+> > >  		goto out_unlock;
+> > >  	BUG_ON(prev != vma);
+> > >  
+> > > +	if (unlikely(vm_flags & VM_EXEC)) {
+> > > +		pr_warn_once("process '%pD4' started with executable stack\n",
+> > > +			     bprm->file);
+> > > +	}
+> > > +
+> > >  	/* Move stack pages down in memory. */
+> > >  	if (stack_shift) {
+> > >  		ret = shift_arg_pages(vma, stack_shift);
+> > 
+> > What are poor users supposed to do if this message comes out? 
+> > Hopefully google the message and end up at this thread.  What do you
+> > want to tell them?
+> 
+> Me? Nothing :-) They hopefully should file tickets against distros and ISV,
+> post egregious examples to oss-security.
+> 
+> Like they already do against this warning!
+> > ACPI: [Firmware Bug]: BIOS _OSI(Linux) query ignored
 
-On Tue, 2019-12-10 at 22:39 +0300, Sergei Shtylyov wrote:
-[...]
-> --- /dev/null
-> +++ linux/drivers/memory/renesas-rpc-if.c
-> @@ -0,0 +1,590 @@
-[...]
-> +int rpcif_io_xfer(struct rpcif *rpc)
-> +{
-[...]
-> +	default:
-> +		regmap_write(rpc->regmap, RPCIF_SMENR, rpc->enable);
-> +		regmap_write(rpc->regmap, RPCIF_SMCR,
-> +			     rpc->smcr | RPCIF_SMCR_SPIE);
-> +		ret = wait_msg_xfer_end(rpc);
-> +		if (ret)
-> +			goto err_out;
-> +	}
-> +
-> +exit:
-> +	pm_runtime_put(rpc->dev);
-> +	return ret;
-> +
-> +err_out:
-> +	ret = reset_control_reset(rpc->rstc);
+Alexey, Andrew is right. Your message gives no instruction and users are
+already flooded with messages they got used to ignore. A warning is made
+to catch attention so it should give instructions. It can either say
+"this application relies on insecure capabilities and might not work
+anymore in the future, you should report this to its author", or "report
+this to kernel developers if you think this warning is inappropriate".
+Otherwise it will just go to /dev/null with all warning about bad blocks
+on USB sticks and CPU core throttling under high temperature.
 
-If wait_msg_xfer_end() returned an error, but the reset succeeds, this
-will cause rpcif_io_xfer() to report success as well. I suspect you do
-not want to overwrite ret at this point.
-
-> +	rpcif_hw_init(rpc, rpc->bus_size == 2);
-> +	goto exit;
-> +}
-> +EXPORT_SYMBOL(rpcif_io_xfer);
-
-regards
-Philipp
-
+Willy
