@@ -5,110 +5,95 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87905C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5602173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C63D72077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:34:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7yOoaL4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF8au3HQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbfLKUcX (ORCPT
+        id S1727598AbfLKUe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:32:23 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:45791 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbfLKUcA (ORCPT
+        Wed, 11 Dec 2019 15:34:27 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55329 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726242AbfLKUe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:32:00 -0500
-Received: by mail-pj1-f66.google.com with SMTP id r11so24632pjp.12;
-        Wed, 11 Dec 2019 12:32:00 -0800 (PST)
+        Wed, 11 Dec 2019 15:34:27 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q9so8681593wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:34:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=b7yOoaL4G/ALvz/vNUlr2OeqNIasR8tlfumfduHUCFAHMOnxwtwF3SoUwldWsEaQ4R
-         LvW812GkycQioVyIoAeViSehBhLN1Q1fYMklkMS1CLAqfAfhQa7oJFT7DMvMrZaKAb7j
-         NmDSJEeyjRRMw6m2gmWMK31DqM0KmM1u85/KojBSQKtdXCVhFcQZgfC3jqKuJ9EC8KLf
-         eG1TR6a96w3YAz3FtgejTRo7Cs4j71tlDnUpbI3criKCOOGkRDoPZfN/+hysMy4D7IAw
-         CMLHltGp9hLhs0O75keqJ074R+i9CYm6esB68cymsYt+Q3mKtu4NS5r/EJ7VPoC6ETh0
-         o+og==
+        h=from:to:cc:subject:date:message-id;
+        bh=ay3f3rT2lIE/YLLclQUtZpfeBy9nlJ24/EEgRhfGiC0=;
+        b=PF8au3HQR1eqluFaFL53LckQ0Bb8b63nBLP6nikHTHqJDuxe+HOW4KYt4zwoujaqN7
+         4w2WsVnVazgnTClmMmFzNVeTUZjybaGKYCKUnNxQ6EZ3cVn6z2Wx022vhVpZWYhb20kr
+         bemICY4xER1Fu4E7h5VldEUJT7GM6KwZG2sk5PmVmzk4FeKh0omelxjLQDQizS8eH+zW
+         t1qdAHk2ucKD8l9QFqah8j30a5uH6fTtFMQsJIh0GCpDc2ZGPCL/xlCjMfXeVoC6b9Zx
+         2BKcBDKVNAk+aPF8Ob+45EiTqTCoYM+ceBHhmlmA9aygTeTbg6j4XrsyRuX/WoU+v+sG
+         XXEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/SGLTAdZJn5EJy2JzHgzjK5/AJ+qkCVgDvB3ahQxnHQ=;
-        b=XrV+3/Vjv1pkCrXwkh7VBg+albzzbjnqI07I7IjDCW55euM8UceZz+CuYtItB7+cG2
-         vPlaNjxZqHfF04DR24FOAKsumcFHef1vZtqk/UuevC5u5mXkXG6gZU7GXdXZ/6wEMQZP
-         4zNpCV+/mYJq4NNNqGaAtGfpHIUvkDq87Wg3rXA1ZpGSvBUVUSksv6tc1d3NBCm+v3GF
-         Y52LPgtYGPJhDDMvHvp6YjAD/FvCNFKyJA1RWZTT9Wk2W342WS22x8ITHZ2aqnIX4S9z
-         kDG31OlU0t0LX16uibTJYkqzgKhkxbbGbq5Vs9koqSepCoIaETq1YpPPZuy/HfPBIZGt
-         7Tfw==
-X-Gm-Message-State: APjAAAUdPsOvitz4tJnF654uN9BRwEgDT8175wjEizA7GOxaRMM5NYC/
-        y/T1Ipltx+njiVNv1baGXOg=
-X-Google-Smtp-Source: APXvYqx/G7SPF+0fLJkFR2jINi/QVILifYW6VvhXLrfs0TC+JDl93K7sIkMmJpc9bSFgNrKj/zRX8g==
-X-Received: by 2002:a17:90a:7bc3:: with SMTP id d3mr5804634pjl.86.1576096319788;
-        Wed, 11 Dec 2019 12:31:59 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id a19sm917570pju.11.2019.12.11.12.31.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 12:31:59 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM STB AVS TMON
-        DRIVER), Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-pm@vger.kernel.org (open list:BROADCOM STB AVS TMON DRIVER),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/6] dt-bindings: thermal: Define BCM7216 thermal sensor compatible
-Date:   Wed, 11 Dec 2019 12:31:40 -0800
-Message-Id: <20191211203143.2952-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191211203143.2952-1-f.fainelli@gmail.com>
-References: <20191211203143.2952-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ay3f3rT2lIE/YLLclQUtZpfeBy9nlJ24/EEgRhfGiC0=;
+        b=eK8Dr7+OoDZe/y8ym8SQS6vWbb6mSjrokV2vqs1FC0jZzo7QI9UvxftecNyQoa+WGo
+         0mHl2xHd21gK5roTVbDHNOiR/rtVadBCC6Iycj199E96m7KFs/soJ+tgjv+gVrlSvfuM
+         CfPZQNd2yE1hL2QUq72SwYSXkI0nxXMFj0oJew/C53EvKMwrBUev9ncHaxnjnGT78LRS
+         tIM0coBz2qDCJ0u3AxXE0PFVG4GyNsCKZu5X2mE/kgHo0sA5LU2iMwzQFZ+4yk0WHQu/
+         LootEoC37oZmWSqzvizh1vOLvw7L7BgSldv3i4wB2Jt/nNmgpB1iTCLzgqMwtnUlFkd+
+         neKw==
+X-Gm-Message-State: APjAAAWC4U9HY61S8d/HBbvwSkHFjQte8vdX9bUscK9uxjIPosQoAToN
+        TMrq9tkGvMSTVDP1ebI5ZxQ=
+X-Google-Smtp-Source: APXvYqzhm9FQTbLSQdyxkyTBzlLdW76xtMpj86Wjh0eyAQfZbUY8wn2OHCfgKaSsdbWAdCAMLy04HQ==
+X-Received: by 2002:a7b:ca4e:: with SMTP id m14mr1816757wml.120.1576096465412;
+        Wed, 11 Dec 2019 12:34:25 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z6sm3661709wrw.36.2019.12.11.12.34.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 12:34:24 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm: rockchip: rk3066_hdmi: set edid fifo address
+Date:   Wed, 11 Dec 2019 21:34:17 +0100
+Message-Id: <20191211203417.19448-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM7216 is a 16nm process STB chip, which requires a different
-compatible string to differentiate different temperature formulas.
+From: Nickey Yang <nickey.yang@rock-chips.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fix edid reading error when edid's block > 2.
+
+Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- .../devicetree/bindings/thermal/brcm,avs-tmon.txt         | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-index 43a9ed545944..74a9ef09db8b 100644
---- a/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-+++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-@@ -3,9 +3,13 @@
- Thermal management core, provided by the AVS TMON hardware block.
+diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+index cdb401f42..945126948 100644
+--- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
++++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
+@@ -640,6 +640,9 @@ static int rk3066_hdmi_i2c_write(struct rk3066_hdmi *hdmi, struct i2c_msg *msgs)
+ 	if (msgs->addr == DDC_ADDR)
+ 		hdmi->i2c->ddc_addr = msgs->buf[0];
  
- Required properties:
--- compatible: must be "brcm,avs-tmon" and/or "brcm,avs-tmon-bcm7445"
-+- compatible: must be one of:
-+	"brcm,avs-tmon-bcm7216"
-+	"brcm,avs-tmon-bcm7445"
-+	"brcm,avs-tmon"
- - reg: address range for the AVS TMON registers
--- interrupts: temperature monitor interrupt, for high/low threshold triggers
-+- interrupts: temperature monitor interrupt, for high/low threshold triggers,
-+	      required except for "brcm,avs-tmon-bcm7216"
- - interrupt-names: should be "tmon"
++	/* Set edid fifo first address. */
++	hdmi_writeb(hdmi, HDMI_EDID_FIFO_ADDR, 0x00);
++
+ 	/* Set edid word address 0x00/0x80. */
+ 	hdmi_writeb(hdmi, HDMI_EDID_WORD_ADDR, hdmi->i2c->ddc_addr);
  
- Example:
 -- 
-2.17.1
+2.11.0
 
