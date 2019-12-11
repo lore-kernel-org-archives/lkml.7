@@ -4,54 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF1DFC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F93C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8456E20836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B550C20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576080039;
-	bh=JBmAVkhcp71r07TrM4idsZy9hXaAMVHGdeXcNZUvKro=;
+	s=default; t=1576080042;
+	bh=8zBpuO12cXO1RswKC2eHP1PylRrkm7I8FK3/Ol9du+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfaVAyH4sAV3dWRYywN0NrE0h9u2rRdFItkwBHIePEh3qdO1LBUFRmqx30Npg9OiM
-	 ulPb1lzQRUV9WOt6fjp65HCQKZGEAsDmaSkV5cCazselJDM8RwxzKan3JX680H9mm0
-	 w2Gv71rYOQkyR+4Xem3B5P/E+ZW8p0YVSstFqPIw=
+	b=wMe0sOHoUYn7geyuBNnw+Rt2DHbiGEmtKfPN8yFxYws33ildxa8C03j0BJ2Ifm7fA
+	 MVWXsEI3GnDg7jM8oF0x3cELcObCRfQvY6p04rCjqX7MNEi1AcK37/RNuTCpzLGzVQ
+	 Hn3ELeby9DiK6ygoOQ50rXMWwsHQcEVfVQyEPs/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbfLKPNn (ORCPT
+        id S1733192AbfLKQAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:13:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36636 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 11:00:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbfLKPNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:13:20 -0500
+        id S1731491AbfLKPNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:13:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB9F52468A;
-        Wed, 11 Dec 2019 15:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD0FA22B48;
+        Wed, 11 Dec 2019 15:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077199;
-        bh=JBmAVkhcp71r07TrM4idsZy9hXaAMVHGdeXcNZUvKro=;
+        s=default; t=1576077223;
+        bh=8zBpuO12cXO1RswKC2eHP1PylRrkm7I8FK3/Ol9du+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjDMPozJ6pUXzMDRy0Mv2fDQij8vW+gJVci64/nwbywQbWT+3FTgXPrtT5ZMhvTc0
-         3I3Pa4eAYXI06WBAYTQam6KksipFiFE5rg3Cs0fLJzHfEaWsiVXZlvAuHyGLlXQGWY
-         LI3wDrp1RdWTxAKe5sgq5dZfN/B4zcn7UAtq5jDM=
+        b=bAv92Awg4cnD9QVFQYQuamn8ZKsVeXLJfzCEOclD373kPrpHtsN31zctQx9BXN1B5
+         Fp4xXHeZABY0myq16KHDHMXpD3cDkdeVRlN9voOA+m/27J8a0vDvRv+ocLiwXhCHvZ
+         iOD+uehO9hPlb2/x6O+gNCT5TBtOTWI4IE76o6LI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 082/134] HID: Improve Windows Precision Touchpad detection.
-Date:   Wed, 11 Dec 2019 10:10:58 -0500
-Message-Id: <20191211151150.19073-82-sashal@kernel.org>
+Cc:     Gayatri Kammela <gayatri.kammela@intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kan Liang <kan.liang@intel.com>,
+        "David E . Box" <david.e.box@intel.com>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 102/134] platform/x86: intel_pmc_core: Fix the SoC naming inconsistency
+Date:   Wed, 11 Dec 2019 10:11:18 -0500
+Message-Id: <20191211151150.19073-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,63 +67,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Blaž Hrastnik <blaz@mxxn.io>
+From: Gayatri Kammela <gayatri.kammela@intel.com>
 
-[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
+[ Upstream commit 43e82d8aa92503d264309fb648b251b2d85caf1a ]
 
-Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
-data used to verify the touchpad as a Windows Precision Touchpad.
+Intel's SoCs follow a naming convention which spells out the SoC name as
+two words instead of one word (E.g: Cannon Lake vs Cannonlake). Thus fix
+the naming inconsistency across the intel_pmc_core driver, so future
+SoCs can follow the naming consistency as below.
 
-   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
-    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
-    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
-    0x75, 0x08,              //    REPORT_SIZE (8)
-    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
-    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
+Cometlake -> Comet Lake
+Tigerlake -> Tiger Lake
+Elkhartlake -> Elkhart Lake
 
-However, some devices, namely Microsoft's Surface line of products
-instead implement a "segmented device certification report" (usage 0xC6)
-which returns the same report, but in smaller chunks.
-
-    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
-    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
-    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
-    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
-    0x75, 0x08,              //     REPORT_SIZE (8)
-    0x95, 0x01,              //     REPORT_COUNT (1)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-    0x09, 0xC7,              //     USAGE (Vendor Usage)
-    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
-    0x95, 0x20,              //     REPORT_COUNT (32)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-
-By expanding Win8 touchpad detection to also look for the segmented
-report, all Surface touchpads are now properly recognized by
-hid-multitouch.
-
-Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Mario Limonciello <mario.limonciello@dell.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kan Liang <kan.liang@intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/platform/x86/intel_pmc_core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 2fa3587d974f4..e0b241bd3070c 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -781,6 +781,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
- 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
- 	    parser->global.report_size == 8)
- 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
-+
-+	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
-+	    parser->global.report_size == 8)
-+		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
- }
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 94a008efb09b8..6b6edc30f8359 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -158,7 +158,7 @@ static const struct pmc_reg_map spt_reg_map = {
+ 	.pm_vric1_offset = SPT_PMC_VRIC1_OFFSET,
+ };
  
- static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+-/* Cannonlake: PGD PFET Enable Ack Status Register(s) bitmap */
++/* Cannon Lake: PGD PFET Enable Ack Status Register(s) bitmap */
+ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"PMC",                 BIT(0)},
+ 	{"OPI-DMI",             BIT(1)},
+@@ -185,7 +185,7 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"SDX",                 BIT(4)},
+ 	{"SPE",                 BIT(5)},
+ 	{"Fuse",                BIT(6)},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
+ 	{"SBR8",		BIT(7)},
+ 
+ 	{"CSME_FSC",            BIT(0)},
+@@ -229,12 +229,12 @@ static const struct pmc_bit_map cnp_pfear_map[] = {
+ 	{"HDA_PGD4",            BIT(2)},
+ 	{"HDA_PGD5",            BIT(3)},
+ 	{"HDA_PGD6",            BIT(4)},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
+ 	{"PSF6",		BIT(5)},
+ 	{"PSF7",		BIT(6)},
+ 	{"PSF8",		BIT(7)},
+ 
+-	/* Icelake generation onwards only */
++	/* Ice Lake generation onwards only */
+ 	{"RES_65",		BIT(0)},
+ 	{"RES_66",		BIT(1)},
+ 	{"RES_67",		BIT(2)},
+@@ -324,7 +324,7 @@ static const struct pmc_bit_map cnp_ltr_show_map[] = {
+ 	{"ISH",			CNP_PMC_LTR_ISH},
+ 	{"UFSX2",		CNP_PMC_LTR_UFSX2},
+ 	{"EMMC",		CNP_PMC_LTR_EMMC},
+-	/* Reserved for Cannonlake but valid for Icelake */
++	/* Reserved for Cannon Lake but valid for Ice Lake */
+ 	{"WIGIG",		ICL_PMC_LTR_WIGIG},
+ 	/* Below two cannot be used for LTR_IGNORE */
+ 	{"CURRENT_PLATFORM",	CNP_PMC_LTR_CUR_PLT},
+@@ -871,8 +871,8 @@ static int pmc_core_probe(struct platform_device *pdev)
+ 	pmcdev->map = (struct pmc_reg_map *)cpu_id->driver_data;
+ 
+ 	/*
+-	 * Coffeelake has CPU ID of Kabylake and Cannonlake PCH. So here
+-	 * Sunrisepoint PCH regmap can't be used. Use Cannonlake PCH regmap
++	 * Coffee Lake has CPU ID of Kaby Lake and Cannon Lake PCH. So here
++	 * Sunrisepoint PCH regmap can't be used. Use Cannon Lake PCH regmap
+ 	 * in this case.
+ 	 */
+ 	if (pmcdev->map == &spt_reg_map && !pci_dev_present(pmc_pci_ids))
 -- 
 2.20.1
 
