@@ -2,98 +2,87 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040B0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E18C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63D72077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:34:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PF8au3HQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9E9D5206A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:36:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfLKUe1 (ORCPT
+        id S1727573AbfLKUgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:34:27 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55329 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfLKUe1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:34:27 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so8681593wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:34:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ay3f3rT2lIE/YLLclQUtZpfeBy9nlJ24/EEgRhfGiC0=;
-        b=PF8au3HQR1eqluFaFL53LckQ0Bb8b63nBLP6nikHTHqJDuxe+HOW4KYt4zwoujaqN7
-         4w2WsVnVazgnTClmMmFzNVeTUZjybaGKYCKUnNxQ6EZ3cVn6z2Wx022vhVpZWYhb20kr
-         bemICY4xER1Fu4E7h5VldEUJT7GM6KwZG2sk5PmVmzk4FeKh0omelxjLQDQizS8eH+zW
-         t1qdAHk2ucKD8l9QFqah8j30a5uH6fTtFMQsJIh0GCpDc2ZGPCL/xlCjMfXeVoC6b9Zx
-         2BKcBDKVNAk+aPF8Ob+45EiTqTCoYM+ceBHhmlmA9aygTeTbg6j4XrsyRuX/WoU+v+sG
-         XXEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ay3f3rT2lIE/YLLclQUtZpfeBy9nlJ24/EEgRhfGiC0=;
-        b=eK8Dr7+OoDZe/y8ym8SQS6vWbb6mSjrokV2vqs1FC0jZzo7QI9UvxftecNyQoa+WGo
-         0mHl2xHd21gK5roTVbDHNOiR/rtVadBCC6Iycj199E96m7KFs/soJ+tgjv+gVrlSvfuM
-         CfPZQNd2yE1hL2QUq72SwYSXkI0nxXMFj0oJew/C53EvKMwrBUev9ncHaxnjnGT78LRS
-         tIM0coBz2qDCJ0u3AxXE0PFVG4GyNsCKZu5X2mE/kgHo0sA5LU2iMwzQFZ+4yk0WHQu/
-         LootEoC37oZmWSqzvizh1vOLvw7L7BgSldv3i4wB2Jt/nNmgpB1iTCLzgqMwtnUlFkd+
-         neKw==
-X-Gm-Message-State: APjAAAWC4U9HY61S8d/HBbvwSkHFjQte8vdX9bUscK9uxjIPosQoAToN
-        TMrq9tkGvMSTVDP1ebI5ZxQ=
-X-Google-Smtp-Source: APXvYqzhm9FQTbLSQdyxkyTBzlLdW76xtMpj86Wjh0eyAQfZbUY8wn2OHCfgKaSsdbWAdCAMLy04HQ==
-X-Received: by 2002:a7b:ca4e:: with SMTP id m14mr1816757wml.120.1576096465412;
-        Wed, 11 Dec 2019 12:34:25 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id z6sm3661709wrw.36.2019.12.11.12.34.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 11 Dec 2019 12:34:24 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm: rockchip: rk3066_hdmi: set edid fifo address
-Date:   Wed, 11 Dec 2019 21:34:17 +0100
-Message-Id: <20191211203417.19448-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 11 Dec 2019 15:36:49 -0500
+Received: from mga01.intel.com ([192.55.52.88]:40267 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbfLKUgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 15:36:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 12:36:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
+   d="scan'208";a="210845460"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Dec 2019 12:36:48 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 7EAA2300FF1; Wed, 11 Dec 2019 12:36:48 -0800 (PST)
+Date:   Wed, 11 Dec 2019 12:36:48 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        elena.reshetova@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
+ Perf users groups
+Message-ID: <20191211203648.GA862919@tassilo.jf.intel.com>
+References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+ <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com>
+ <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
+ <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+ <ab206ef5-466e-7bce-3e5f-53da110bddb2@linux.intel.com>
+ <16e9e399-2ebf-261f-eee5-cf9ace2a82b9@schaufler-ca.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16e9e399-2ebf-261f-eee5-cf9ace2a82b9@schaufler-ca.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nickey Yang <nickey.yang@rock-chips.com>
+> > In this circumstances CAP_SYS_PERFMON looks like smart balanced advancement that
+> > trade-offs between perf_events subsystem extensions, required level of control
+> > and configurability of perf_events, existing users adoption effort, and it brings
+> > security hardening benefits of decreasing attack surface for the existing users
+> > and use cases.
+> 
+> I'm not 100% opposed to CAP_SYS_PERFMON. I am 100% opposed to new capabilities
+> that have a single use. Surely there are other CAP_SYS_ADMIN users that [cs]ould
+> be converted to CAP_SYS_PERFMON as well. If there is a class of system performance
+> privileged operations, say a dozen or so, you may have a viable argument.
 
-Fix edid reading error when edid's block > 2.
+perf events is not a single use. It has a bazillion of sub functionalities,
+including hardware tracing, software tracing, pmu counters, software counters,
+uncore counters, break points and various other stuff in its PMU drivers.
 
-Signed-off-by: Nickey Yang <nickey.yang@rock-chips.com>
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- drivers/gpu/drm/rockchip/rk3066_hdmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+See it more as a whole quite heterogenous driver subsystem.
 
-diff --git a/drivers/gpu/drm/rockchip/rk3066_hdmi.c b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-index cdb401f42..945126948 100644
---- a/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/rk3066_hdmi.c
-@@ -640,6 +640,9 @@ static int rk3066_hdmi_i2c_write(struct rk3066_hdmi *hdmi, struct i2c_msg *msgs)
- 	if (msgs->addr == DDC_ADDR)
- 		hdmi->i2c->ddc_addr = msgs->buf[0];
- 
-+	/* Set edid fifo first address. */
-+	hdmi_writeb(hdmi, HDMI_EDID_FIFO_ADDR, 0x00);
-+
- 	/* Set edid word address 0x00/0x80. */
- 	hdmi_writeb(hdmi, HDMI_EDID_WORD_ADDR, hdmi->i2c->ddc_addr);
- 
--- 
-2.11.0
+I guess CAP_SYS_PERFMON is not a good name because perf is much more
+than just Perfmon. Perhaps call it CAP_SYS_PERF_EVENTS
 
+-Andi
