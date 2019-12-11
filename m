@@ -2,198 +2,139 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613D1C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC62AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A77324656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saTYAymW"
+	by mail.kernel.org (Postfix) with ESMTP id BF80222B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576078500;
+	bh=nOm+tV4ZUwxfkY1cs2BzzyQcL1QNwQg1T6MXmVbtODE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wFo9nmPCbPCQqVJ1MYc6EXDvB6zOqf/TlcirI/xdALY50zIYxN17/0/rhfzTxL1l3
+	 q4NW6QM1JrWgyvvm+geDlSW2wLbQhNrg4KH1llGUyUee7QXtVb0YBNWmhSS18eFN8a
+	 K8kPwekvhfx0ZGOiybPwCVOtCCfE+Zim+cFF8AUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbfLKPeu (ORCPT
+        id S2388039AbfLKPe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:34:50 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37240 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387561AbfLKPer (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:34:47 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q127so10944456pga.4;
-        Wed, 11 Dec 2019 07:34:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HVbcFREEaAqSDDWDOprFJiM+U7AawLPMDqSvqgEPZVM=;
-        b=saTYAymWtQJVo2xDI5CVVPD7OFscZvr3OmDkn9R98p/K2QPfrErbyRBfLSWuDw82Je
-         o5ei0YTQ5fgmkh7BZCrXIsR8OBZyO/sfNZyPb/2FHmifAkGNyAGukafSKofRjuTXMFXl
-         WMQxGPuD9wxK4yLU1VhNzWYYmxihNPVzCRYgjRidEsjCXlEHWzI7tLoB4bV+Tg3p4Myq
-         VXt9uBaV6jd+hJ6IiKy+pcyDX7aXRViVdLgvrrtrP2D7MFxBpcCNbOct/mx5x6fZqNzY
-         wB9Y8YH11zoDDTXPnrVGiEROE/KKqb2trAGgVZw0dOKu3YAS5kWfyPCL9O/gC/FZ67Mj
-         Od8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HVbcFREEaAqSDDWDOprFJiM+U7AawLPMDqSvqgEPZVM=;
-        b=bYAetMkQEIiFZIm3qnffBXcd6lIlL9J+d3IgIYIvwk3iFFmlv6oL6Xef1QRJ8h/xYX
-         BS5uk3rmX+n6N4zUJ/WF4i36CNeNLI7fc+oPNjOYrO55/WiXoqGgPhojY8bcSIS8MwaY
-         D0xT9omgE62Ud+OZ2s5zVaa2n8S1F67lp2doKCSb9Ejv5925cM93w6MZmhKyXNI0K+3C
-         miyyY4u4sxrPSKqGcVKHH5s+WtaeXJRrWZJDKN9ggsLlmZ2iDnqMheTxnUM/vR3CteLt
-         bNWz0wRPvIwaupjz/CBrDdRHag6wWQeYZqDDkHc9vO/6U8NHpal14A7ThErWqXfdcJ90
-         yMCQ==
-X-Gm-Message-State: APjAAAXONB2Wd6FQyap/8Kga4+tUPU3aML+AsSWGjPvAoXWT9epAtMWA
-        u7F4U+Q3lhoLS/zSGYv6vAwREvrkN4min5dBMto=
-X-Google-Smtp-Source: APXvYqzJ499NHPqVSLLyDUscDbmBddDHmzhr28AkkyOZGKxqfxHIirybt8amARCuiU4PKcyZgP8Qc63k0WPAFrMp7QU=
-X-Received: by 2002:a62:1944:: with SMTP id 65mr4526218pfz.151.1576078486945;
- Wed, 11 Dec 2019 07:34:46 -0800 (PST)
+        Wed, 11 Dec 2019 10:34:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34050 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732913AbfLKP2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42330222C4;
+        Wed, 11 Dec 2019 15:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576078084;
+        bh=nOm+tV4ZUwxfkY1cs2BzzyQcL1QNwQg1T6MXmVbtODE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pENIiWEFF7s0zb+vXLey5+M7hJV/axRsEbOP32w2LngFIjclW8ImWWysAJhR0YQWP
+         HZv1cXDwZkl8P7TMCMA6de5D47IeHx6ChI4vN2B5Cr6YjBZ9fdQFdtjMFApHajehXC
+         oYXYTUgIrXQoBWj6zss2og1BViY5SyGLVh/lQMR4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 74/79] libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h
+Date:   Wed, 11 Dec 2019 10:26:38 -0500
+Message-Id: <20191211152643.23056-74-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
+References: <20191211152643.23056-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1576075099-3441-1-git-send-email-akinobu.mita@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 11 Dec 2019 17:34:37 +0200
-Message-ID: <CAHp75VcsfbkG7n6FHkpnPN0sG_PdKg_iKS7VGfATxuPVYU5jcQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/12] add header file for kelvin to/from Celsius
- conversion helpers
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Linux NVMe Mailinglist <linux-nvme@lists.infradead.org>,
-        linux-hwmon@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>,
-        "open list:TI WILINK WIRELES..." <linux-wireless@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sujith Thomas <sujith.thomas@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:38 PM Akinobu Mita <akinobu.mita@gmail.com> wrote:
->
-> There are several helper macros to convert kelvin to/from Celsius in
-> <linux/thermal.h> for thermal drivers.  These are useful for any other
-> drivers or subsystems, but it's odd to include <linux/thermal.h> just for
-> the helpers.
->
-> This adds a new <linux/units.h> that provides the equivalent inline
-> functions for any drivers or subsystems, and switches all the users of
-> conversion helpers in <linux/thermal.h> to use <linux/units.h>
-> helpers.
->
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Thank you for an update.
+[ Upstream commit a8de1304b7df30e3a14f2a8b9709bb4ff31a0385 ]
 
-For non-commented patches
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+The DTC v1.5.1 added references to (U)INT32_MAX.
 
-> * v3
-> - rename new header name from <linux/temperature.h> to <linux/units.h>
-> - add milli_kelvin_to_millicelsius() and millicelsius_to_milli_kelvin() and
->   use them for implementing other helpers
-> - add MILLIDEGREE_PER_DEGREE and MILLIDEGREE_PER_DECIDEGREE and replace
->   the hardcoded constants
-> - add kelvin_to_celsius() and celsius_to_kelvin() in <linux/units.h>
-> - add Reviewed-by tags
-> - switch iwlegacy driver to use <linux/units.h> helpers
-> - switch iwlwifi driver to use <linux/units.h> helpers
-> - remove unused TO_MCELSIUS macro in armada thermal driver
-> - switch qcom-vadc-common module to use <linux/units.h> helpers
->
-> * v2
-> - add deci_kelvin_to_millicelsius_with_offset() in linux/temperature.h
-> - stop including linux/temperature.h from linux/thermal.h
-> - include <linux/temperature.h> explicitly from thermal drivers
-> - fix s/temprature/temperature/ typo in commit log
-> - use deci_kelvin_to_millicelsius_with_offset() in ACPI thermal zone driver
-> - don't mix up another fix (format string for cellsius value)
-> - add Acked-by and Reviewed-by tags
->
-> Akinobu Mita (12):
->   add helpers for kelvin to/from Celsius conversion
->   ACPI: thermal: switch to use <linux/units.h> helpers
->   platform/x86: asus-wmi: switch to use <linux/units.h> helpers
->   platform/x86: intel_menlow: switch to use <linux/units.h> helpers
->   thermal: int340x: switch to use <linux/units.h> helpers
->   thermal: intel_pch: switch to use <linux/units.h> helpers
->   nvme: hwmon: switch to use <linux/units.h> helpers
->   thermal: remove kelvin to/from Celsius conversion helpers from
->     <linux/thermal.h>
->   wireless: iwlegacy: use <linux/units.h> helpers
->   wireless: iwlwifi: use <linux/units.h> helpers
->   thermal: armada: remove unused TO_MCELSIUS macro
->   iio: adc: qcom-vadc-common: use <linux/units.h> helpers
->
->  drivers/acpi/thermal.c                             | 36 +++++-----
->  drivers/iio/adc/qcom-vadc-common.c                 |  6 +-
->  drivers/iio/adc/qcom-vadc-common.h                 |  1 -
->  drivers/net/wireless/intel/iwlegacy/4965-mac.c     |  3 +-
->  drivers/net/wireless/intel/iwlegacy/4965.c         | 11 +--
->  drivers/net/wireless/intel/iwlegacy/common.h       |  3 -
->  drivers/net/wireless/intel/iwlwifi/dvm/dev.h       |  5 --
->  drivers/net/wireless/intel/iwlwifi/dvm/devices.c   |  6 +-
->  drivers/nvme/host/hwmon.c                          | 13 ++--
->  drivers/platform/x86/asus-wmi.c                    |  7 +-
->  drivers/platform/x86/intel_menlow.c                |  9 ++-
->  drivers/thermal/armada_thermal.c                   |  2 -
->  .../intel/int340x_thermal/int340x_thermal_zone.c   |  7 +-
->  drivers/thermal/intel/intel_pch_thermal.c          |  3 +-
->  include/linux/thermal.h                            | 11 ---
->  include/linux/units.h                              | 84 ++++++++++++++++++++++
->  16 files changed, 139 insertions(+), 68 deletions(-)
->  create mode 100644 include/linux/units.h
->
-> Cc: Sujith Thomas <sujith.thomas@intel.com>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Cc: Andy Shevchenko <andy@infradead.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@verdurent.com>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Keith Busch <kbusch@kernel.org>
-> Cc: Jens Axboe <axboe@fb.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Sagi Grimberg <sagi@grimberg.me>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: Stanislaw Gruszka <sgruszka@redhat.com>
-> Cc: Johannes Berg <johannes.berg@intel.com>
-> Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-> Cc: Luca Coelho <luciano.coelho@intel.com>
-> Cc: Intel Linux Wireless <linuxwifi@intel.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: Hartmut Knaack <knaack.h@gmx.de>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>
-> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-> --
-> 2.7.4
->
+This is no problem for user-space programs since <stdint.h> defines
+(U)INT32_MAX along with (u)int32_t.
 
+For the kernel space, libfdt_env.h needs to be adjusted before we
+pull in the changes.
 
+In the kernel, we usually use s/u32 instead of (u)int32_t for the
+fixed-width types.
+
+Accordingly, we already have S/U32_MAX for their max values.
+So, we should not add (U)INT32_MAX to <linux/limits.h> any more.
+
+Instead, add them to the in-kernel libfdt_env.h to compile the
+latest libfdt.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/compressed/libfdt_env.h | 4 +++-
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 3 +++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index b36c0289a308e..6a0f1f524466e 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -2,11 +2,13 @@
+ #ifndef _ARM_LIBFDT_ENV_H
+ #define _ARM_LIBFDT_ENV_H
+ 
++#include <linux/limits.h>
+ #include <linux/types.h>
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
+ 
+-#define INT_MAX			((int)(~0U>>1))
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
+ 
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 2abc8e83b95e9..9757d4f6331e7 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <string.h>
+ 
+ #define INT_MAX			((int)(~0U>>1))
++#define UINT32_MAX		((u32)~0U)
++#define INT32_MAX		((s32)(UINT32_MAX >> 1))
+ 
+ #include "of.h"
+ 
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index edb0f0c309044..1adf54aad2df1 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -7,6 +7,9 @@
+ 
+ #include <asm/byteorder.h>
+ 
++#define INT32_MAX	S32_MAX
++#define UINT32_MAX	U32_MAX
++
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
