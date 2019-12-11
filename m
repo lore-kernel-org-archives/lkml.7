@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5483BC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08570C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2827D24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C921124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078369;
-	bh=DwHgBaGQm+Eee8sSNHVvcjHdoYw8XkP65HCi5+x8xYo=;
+	s=default; t=1576078373;
+	bh=IveGYPqIBGxxO9HI6PWVQ5k5rY4SGIjnoNOe06r8UVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYdvtZfu4loN3Df7GCCmU22rRBD6Eg0AsFTa0ycVEsN3lPjJ5+YfZHl65qN7ukg6A
-	 8wVHNtUMu5CeKXMd/tOARKzrGJ4wYGCEWKvUrBvVpXySasURdymUSOOvFaRNqHDnGY
-	 iAduH82JFelTcNmDsdwHsJhBLI2v972EIm//zxqk=
+	b=PnsShz92yd18Z+SkSYHZJL83WjW5c4YVKF7dNmHXr+RTKKOWEIH+6f+xEXuxbVXmi
+	 DnCuCUiRtKdTSoKYUEjNXrl/aVBCWuys9e6DY8skBy22Pv2nCEelcU1zFiYowOAeOX
+	 nFvEB0sq62vNW2PEj9ovWBhb3nHdBwc4R5rhTwvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbfLKPcs (ORCPT
+        id S2387724AbfLKP2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:32:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387732AbfLKP2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:28:52 -0500
+        id S2387709AbfLKP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:28:45 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22FAC2467F;
-        Wed, 11 Dec 2019 15:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E43352467D;
+        Wed, 11 Dec 2019 15:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078131;
-        bh=DwHgBaGQm+Eee8sSNHVvcjHdoYw8XkP65HCi5+x8xYo=;
+        s=default; t=1576078124;
+        bh=IveGYPqIBGxxO9HI6PWVQ5k5rY4SGIjnoNOe06r8UVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eRqcHdcebQAyUGZ/zwYup0wuYVhkr+zhIwvfodsBCqYxgeAaA87ZGQYzFJSTIkYgb
-         ykEtZMsBPlN/pknwWsYFuv57GJU8cWqC1eufcZAvyJg2nSR8YmkgDi36hAANpRiS62
-         dbgQbmSkX1e+gelIdLO+51yKoeZYcshUR++tIf4g=
+        b=T0JpO51Q/RcS5akT7kdo3pbya0q1kMqNDus9XMwLPzaOOHwDJcVe7GeNFPctjw4a9
+         jvDpHhcW8g64RmbLXSz7ibWjOryF2kO/5FPYWqFdsoZjN+sSLZcC75OXCUERKUXERD
+         BklBP5XygVn+0sP6vm17ururQoZrVlv0PrMkBnX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Smart <jsmart2021@gmail.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/58] scsi: lpfc: Fix duplicate unreg_rpi error in port offline flow
-Date:   Wed, 11 Dec 2019 10:27:52 -0500
-Message-Id: <20191211152831.23507-19-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 12/58] dma-debug: add a schedule point in debug_dma_dump_mappings()
+Date:   Wed, 11 Dec 2019 10:27:45 -0500
+Message-Id: <20191211152831.23507-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
@@ -60,52 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 7cfd5639d99bec0d27af089d0c8c114330e43a72 ]
+[ Upstream commit 9ff6aa027dbb98755f0265695354f2dd07c0d1ce ]
 
-If the driver receives a login that is later then LOGO'd by the remote port
-(aka ndlp), the driver, upon the completion of the LOGO ACC transmission,
-will logout the node and unregister the rpi that is being used for the
-node.  As part of the unreg, the node's rpi value is replaced by the
-LPFC_RPI_ALLOC_ERROR value.  If the port is subsequently offlined, the
-offline walks the nodes and ensures they are logged out, which possibly
-entails unreg'ing their rpi values.  This path does not validate the node's
-rpi value, thus doesn't detect that it has been unreg'd already.  The
-replaced rpi value is then used when accessing the rpi bitmask array which
-tracks active rpi values.  As the LPFC_RPI_ALLOC_ERROR value is not a valid
-index for the bitmask, it may fault the system.
+debug_dma_dump_mappings() can take a lot of cpu cycles :
 
-Revise the rpi release code to detect when the rpi value is the replaced
-RPI_ALLOC_ERROR value and ignore further release steps.
+lpk43:/# time wc -l /sys/kernel/debug/dma-api/dump
+163435 /sys/kernel/debug/dma-api/dump
 
-Link: https://lore.kernel.org/r/20191105005708.7399-2-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+real	0m0.463s
+user	0m0.003s
+sys	0m0.459s
+
+Let's add a cond_resched() to avoid holding cpu for too long.
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Corentin Labbe <clabbe@baylibre.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_sli.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ lib/dma-debug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 5603c08f96843..07895ca2db30e 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -17500,6 +17500,13 @@ lpfc_sli4_alloc_rpi(struct lpfc_hba *phba)
- static void
- __lpfc_sli4_free_rpi(struct lpfc_hba *phba, int rpi)
- {
-+	/*
-+	 * if the rpi value indicates a prior unreg has already
-+	 * been done, skip the unreg.
-+	 */
-+	if (rpi == LPFC_RPI_ALLOC_ERROR)
-+		return;
-+
- 	if (test_and_clear_bit(rpi, phba->sli4_hba.rpi_bmask)) {
- 		phba->sli4_hba.rpi_count--;
- 		phba->sli4_hba.max_cfg_param.rpi_used--;
+diff --git a/lib/dma-debug.c b/lib/dma-debug.c
+index ea4cc3dde4f1b..61e7240947f54 100644
+--- a/lib/dma-debug.c
++++ b/lib/dma-debug.c
+@@ -437,6 +437,7 @@ void debug_dma_dump_mappings(struct device *dev)
+ 		}
+ 
+ 		spin_unlock_irqrestore(&bucket->lock, flags);
++		cond_resched();
+ 	}
+ }
+ EXPORT_SYMBOL(debug_dma_dump_mappings);
 -- 
 2.20.1
 
