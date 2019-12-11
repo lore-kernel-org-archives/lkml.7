@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2D1C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6931C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC1A21556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EB62054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 20:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jxEdKEYt"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTNM2Yjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbfLKUsm (ORCPT
+        id S1727264AbfLKUss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 15:48:42 -0500
-Received: from mail-qv1-f73.google.com ([209.85.219.73]:50392 "EHLO
-        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbfLKUsl (ORCPT
+        Wed, 11 Dec 2019 15:48:48 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:42850 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfLKUsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 15:48:41 -0500
-Received: by mail-qv1-f73.google.com with SMTP id m9so5556qvx.17
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:48:41 -0800 (PST)
+        Wed, 11 Dec 2019 15:48:46 -0500
+Received: by mail-pl1-f202.google.com with SMTP id b3so45903plr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 12:48:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=xrwWZr7+yzERFLJE/Z3uSFj6cr0eIdhI9uswQFoegFk=;
-        b=jxEdKEYtgfZbjl/vkHg9Kg0KK+voQHEZ6fX8otH6OE0Lwrd/nBAOBuJn5BCMqpY0T2
-         uJV1WGHgri9bp47i8kJ9fmrOGDK/vAzeqD7TM11RD/UnLXEc30Qoe3dnOB2nJz20Bbhf
-         33A8ZrId+JQRPAzKq9MgBEGpJOpu5GGdTLqSX1ZLDvlA+245HmH7zc0ZJ8OhhtgKZNTj
-         JIeuxNUzbuMb5xNWkSnA4mqHF6SU1bpaW8rlyl4dZ3Z5ymSV7QB8Jc5OwClDBwV6LRbz
-         4ERfYgNY3I7QMk6yJ3AkGovrZfBIU7X9n0PPx3tLpGXv7UtbYosNxyIFIn9uL7AZowwu
-         UTeA==
+        bh=V8+gZI//oIJHuoz/ZeRsxsnZlGzWnWp3v3uXjbH3p+g=;
+        b=WTNM2YjpCbOyYnBe9GT6fAZ1ArYu0wM3PiT+MJmFZGX6j+F8TohfOS2bKnExtHAhss
+         Z0wWHPuiV3y0OHS+dzvFjIkhQBtl1jgYtgD+DMaDO64qu8xjHXWzYMz4u9laBgReuh1q
+         6FiksdGos2cOH213T7Ezyyj/rlbw0DhKdpcWx+xlBMbrt4dvbrBiorj/i5uN+T2lyNe+
+         YgNVLqGfUYzq9yAyJZGTVdfcAlLrxXJlQekcwwL1MiTS8UNXE3NTCW+DhItBkqUXhFkV
+         U5RE/C/rX/Y87x45223li/KA2CtK5BJnjzm3QQ0yxHr6zlrue4tb4lQc0XP1sRmWZtNW
+         nwfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=xrwWZr7+yzERFLJE/Z3uSFj6cr0eIdhI9uswQFoegFk=;
-        b=slHXlHWxJs8ogNxf3/9+lqDogClygZNU/021CSwL4kFTouQNvIgkOP8SFH2g5WgEgp
-         caFxsH+2JpKFgQvs1VwGljrRDUhY/neavaSqfaj7kiqvEC5PMrtH7X0emebVnUlZAC9R
-         wYbWmjoFENVNoWSjrlAxZYmAXMUhUii7AovAYg1KAOPwbqmJiOcYCWCtW729Xar2lsoC
-         6c5r8hjQGBe/cDOOrkMNVjR6N7JcW6Efd+YUuPvgMSGS6WIeOQXxKoiRSJqErYLzEg77
-         Eh+3QYyBYAxDOsK2tc2fYtLieM3hABpeIJXv9mGv9oORkC2lbpxsXs3pOyw+xbSn1kBz
-         BNEA==
-X-Gm-Message-State: APjAAAWLXUkYh/6fgBBuuolbOwEt6ggjuPtuWFiDlV4IANdn6ye3GDw+
-        AwcuLEIkjtVIFjNI+7UwQAfB3+LgoKSH
-X-Google-Smtp-Source: APXvYqx8uEo2IEqmN5Sh6hvDJC10bKAoPxZmbscTg7BYMNdwPv/+mGXNI+Ahl6O/HftZUPZhDUbBNq7vBOZ9
-X-Received: by 2002:aed:3f32:: with SMTP id p47mr409813qtf.374.1576097320529;
- Wed, 11 Dec 2019 12:48:40 -0800 (PST)
-Date:   Wed, 11 Dec 2019 12:47:44 -0800
+        bh=V8+gZI//oIJHuoz/ZeRsxsnZlGzWnWp3v3uXjbH3p+g=;
+        b=PBh4+wD3VxobUJuR9+rG/xClJChnTo40ytgWAIe8130aecjqkm/bw9/cr2fIAm2QMN
+         D1DaTzIpIkk9G4hnZje4s0u65qB+s1K+BGTX8I5HM/K+AbxZ+IKTTW9a5mGq3cNNhTZB
+         HStss5q8Z7RtWFg4YJ8sIW98J0swSVmMDcd0IIf5qYaoyXe7YGPmRcT/BBgqcW2NqsCZ
+         aT+qZHWgjRv4gScp81WQPASwI7ar/fxAPJGftuaHMoo0th2ih166u6JaKUr7DhGnT5pd
+         MiTRfWIzA7HqVT+3pmNM5gQKD99NaarnR6epIhbR9mRyh3xahIDUcWC9nqKAxFxFu5m2
+         +QSQ==
+X-Gm-Message-State: APjAAAWnIBkYiDLMwwh5VMC84KK892DMVEL1+z+cGnxUST9jwqjzs7Bz
+        HHpGjlHDn7nTqBE8P+ka3Ud3Bw2ypDzv
+X-Google-Smtp-Source: APXvYqxM2bhaZfdgEAP320RojcgymxqaM2uW7VBYzwsTTen8mf2FPyZN6CH3k6mxVBkkuLCmC/7U7+ulQ3cX
+X-Received: by 2002:a63:e608:: with SMTP id g8mr6182692pgh.448.1576097325332;
+ Wed, 11 Dec 2019 12:48:45 -0800 (PST)
+Date:   Wed, 11 Dec 2019 12:47:45 -0800
 In-Reply-To: <20191211204753.242298-1-pomonis@google.com>
-Message-Id: <20191211204753.242298-5-pomonis@google.com>
+Message-Id: <20191211204753.242298-6-pomonis@google.com>
 Mime-Version: 1.0
 References: <20191211204753.242298-1-pomonis@google.com>
 X-Mailer: git-send-email 2.24.0.525.g8f36a354ae-goog
-Subject: [PATCH v2 04/13] KVM: x86: Protect ioapic_read_indirect() from
+Subject: [PATCH v2 05/13] KVM: x86: Protect ioapic_write_indirect() from
  Spectre-v1/L1TF attacks
 From:   Marios Pomonis <pomonis@google.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>, rkrcmar@redhat.com,
@@ -79,53 +79,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes a Spectre-v1/L1TF vulnerability in ioapic_read_indirect().
+This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
 This function contains index computations based on the
 (attacker-controlled) IOREGSEL register.
 
-Fixes: commit a2c118bfab8b ("KVM: Fix bounds checking in ioapic indirect register reads (CVE-2013-1798)")
+This patch depends on patch
+"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
+
+Fixes: commit 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
 
 Signed-off-by: Nick Finco <nifi@google.com>
 Signed-off-by: Marios Pomonis <pomonis@google.com>
 Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
 ---
- arch/x86/kvm/ioapic.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/x86/kvm/ioapic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index 9fd2dd89a1c5..0c672eefaabe 100644
+index 0c672eefaabe..8aa58727045e 100644
 --- a/arch/x86/kvm/ioapic.c
 +++ b/arch/x86/kvm/ioapic.c
-@@ -36,6 +36,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/nospec.h>
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/current.h>
-@@ -68,13 +69,14 @@ static unsigned long ioapic_read_indirect(struct kvm_ioapic *ioapic,
- 	default:
- 		{
- 			u32 redir_index = (ioapic->ioregsel - 0x10) >> 1;
--			u64 redir_content;
-+			u64 redir_content = ~0ULL;
+@@ -294,6 +294,7 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
  
--			if (redir_index < IOAPIC_NUM_PINS)
--				redir_content =
--					ioapic->redirtbl[redir_index].bits;
--			else
--				redir_content = ~0ULL;
-+			if (redir_index < IOAPIC_NUM_PINS) {
-+				u32 index = array_index_nospec(
-+					redir_index, IOAPIC_NUM_PINS);
-+
-+				redir_content = ioapic->redirtbl[index].bits;
-+			}
- 
- 			result = (ioapic->ioregsel & 0x1) ?
- 			    (redir_content >> 32) & 0xffffffff :
+ 		if (index >= IOAPIC_NUM_PINS)
+ 			return;
++		index = array_index_nospec(index, IOAPIC_NUM_PINS);
+ 		e = &ioapic->redirtbl[index];
+ 		mask_before = e->fields.mask;
+ 		/* Preserve read-only fields */
 -- 
 2.24.0.525.g8f36a354ae-goog
 
