@@ -2,101 +2,113 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88790C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D78C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDB322527
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 492DC22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078006;
-	bh=R3PzLCaQxu/5uzwlhPBNV+2f/XzqMhM97bQjyE6C6FA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qAcJvatp36azmpN0wrqOw4VtDT+UzXsaQZH8qX4CY4UdlPTtiY+TfdxO7/Q6DWJR4
-	 YU3rCk/xND9BAK2/I4gxijUMJgyOa1iOJh5fvyvSMdJ94wbD+H7F+eSzxZw0dmrXZg
-	 na18Pa4zhtlcYuRMnfFxAQVemSG7ZBhSfP4lQ3uY=
+	s=default; t=1576078010;
+	bh=OSFAwokhjVj4dINBlboHHTQOSgmlkV+Ovz0AurH0rXU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F/GqSt7Ovd9P6i201i2DqB4j5mgbLjonvSawOhH4ycrd9Q1mLjyWj+XGIBeibiBd2
+	 xkbks0V/V+8gD22+VwGsWTJy+7d+SGxUBmTtSOa5GLqXoI49V7JUffKfNeoradjMIG
+	 ZDTqRs/uK1aaxUAIouy4/uy3zhcqFj9uV8DELmag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733016AbfLKP0i (ORCPT
+        id S1733173AbfLKP0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:26:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:26:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732849AbfLKP0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730318AbfLKP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:26:46 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5715E2173E;
-        Wed, 11 Dec 2019 15:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF40822B48;
+        Wed, 11 Dec 2019 15:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077994;
-        bh=R3PzLCaQxu/5uzwlhPBNV+2f/XzqMhM97bQjyE6C6FA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dU+l8kdY9wYOtZiQrzCrrlFHcm0p7nYAbFf/nNPHU0tzpoEZtkdOLVO5D/Z4+Va9V
-         2IEli08ZiDn29HdyxxIUj1pWneoU7fDaZKqhAWKZV+mhO0lYn1aWp6aXJR+d9Iaz8E
-         vynPmb5REI503hn5xKMzMu3m4F7EfBKoHvpEDGA0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sharvari Harisangam <sharvari@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Brian Norris <briannorris@google.com>
-Subject: [PATCH 4.19 236/243] mwifiex: update set_mac_address logic
-Date:   Wed, 11 Dec 2019 16:06:38 +0100
-Message-Id: <20191211150355.265549381@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
-References: <20191211150339.185439726@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1576078005;
+        bh=OSFAwokhjVj4dINBlboHHTQOSgmlkV+Ovz0AurH0rXU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=k7V7ZbpoyX42slyLqO6GVgf++h2gfXIJK6s+5e7kDkDFUPEnr8EjDtocQZueY5yyP
+         liNW9vGli1dImkE3CUSwV+KmbHq4Rqv5P00w4ICnx/rqJoQ2TcHWYc/3bFNA91HOkq
+         E6KO77lWbU1Q6lUu4CorTiCwbo2cN2wHX3F2qDwI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     James Smart <jsmart2021@gmail.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 01/79] scsi: lpfc: Fix discovery failures when target device connectivity bounces
+Date:   Wed, 11 Dec 2019 10:25:25 -0500
+Message-Id: <20191211152643.23056-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharvari Harisangam <sharvari@marvell.com>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 7afb94da3cd8a28ed7ae268143117bf1ac8a3371 upstream.
+[ Upstream commit 3f97aed6117c7677eb16756c4ec8b86000fd5822 ]
 
-In set_mac_address, driver check for interfaces with same bss_type
-For first STA entry, this would return 3 interfaces since all priv's have
-bss_type as 0 due to kzalloc. Thus mac address gets changed for STA
-unexpected. This patch adds check for first STA and avoids mac address
-change. This patch also adds mac_address change for p2p based on bss_num
-type.
+An issue was seen discovering all SCSI Luns when a target device undergoes
+link bounce.
 
-Signed-off-by: Sharvari Harisangam <sharvari@marvell.com>
-Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Brian Norris <briannorris@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The driver currently does not qualify the FC4 support on the target.
+Therefore it will send a SCSI PRLI and an NVMe PRLI. The expectation is
+that the target will reject the PRLI if it is not supported. If a PRLI
+times out, the driver will retry. The driver will not proceed with the
+device until both SCSI and NVMe PRLIs are resolved.  In the failure case,
+the device is FCP only and does not respond to the NVMe PRLI, thus
+initiating the wait/retry loop in the driver.  During that time, a RSCN is
+received (device bounced) causing the driver to issue a GID_FT.  The GID_FT
+response comes back before the PRLI mess is resolved and it prematurely
+cancels the PRLI retry logic and leaves the device in a STE_PRLI_ISSUE
+state. Discovery with the target never completes or resets.
 
+Fix by resetting the node state back to STE_NPR_NODE when GID_FT completes,
+thereby restarting the discovery process for the node.
+
+Link: https://lore.kernel.org/r/20190922035906.10977-10-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/main.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/marvell/mwifiex/main.c
-+++ b/drivers/net/wireless/marvell/mwifiex/main.c
-@@ -960,10 +960,10 @@ int mwifiex_set_mac_address(struct mwifi
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index b36b3da323a0a..5d657178c2b98 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -5231,9 +5231,14 @@ lpfc_setup_disc_node(struct lpfc_vport *vport, uint32_t did)
+ 			/* If we've already received a PLOGI from this NPort
+ 			 * we don't need to try to discover it again.
+ 			 */
+-			if (ndlp->nlp_flag & NLP_RCV_PLOGI)
++			if (ndlp->nlp_flag & NLP_RCV_PLOGI &&
++			    !(ndlp->nlp_type &
++			     (NLP_FCP_TARGET | NLP_NVME_TARGET)))
+ 				return NULL;
  
- 		mac_addr = old_mac_addr;
- 
--		if (priv->bss_type == MWIFIEX_BSS_TYPE_P2P)
-+		if (priv->bss_type == MWIFIEX_BSS_TYPE_P2P) {
- 			mac_addr |= BIT_ULL(MWIFIEX_MAC_LOCAL_ADMIN_BIT);
--
--		if (mwifiex_get_intf_num(priv->adapter, priv->bss_type) > 1) {
-+			mac_addr += priv->bss_num;
-+		} else if (priv->adapter->priv[0] != priv) {
- 			/* Set mac address based on bss_type/bss_num */
- 			mac_addr ^= BIT_ULL(priv->bss_type + 8);
- 			mac_addr += priv->bss_num;
-
++			ndlp->nlp_prev_state = ndlp->nlp_state;
++			lpfc_nlp_set_state(vport, ndlp, NLP_STE_NPR_NODE);
++
+ 			spin_lock_irq(shost->host_lock);
+ 			ndlp->nlp_flag |= NLP_NPR_2B_DISC;
+ 			spin_unlock_irq(shost->host_lock);
+-- 
+2.20.1
 
