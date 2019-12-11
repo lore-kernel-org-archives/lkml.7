@@ -2,182 +2,257 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EEBC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A21C3F68F
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0583220836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FEF20836
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 19:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/1GyM9K"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i6IDwqTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfLKTEM (ORCPT
+        id S1727574AbfLKTFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 14:04:12 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37911 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726877AbfLKTEL (ORCPT
+        Wed, 11 Dec 2019 14:05:13 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34270 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbfLKTFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 14:04:11 -0500
-Received: by mail-il1-f194.google.com with SMTP id f5so1932920ilq.5
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:04:11 -0800 (PST)
+        Wed, 11 Dec 2019 14:05:12 -0500
+Received: by mail-ua1-f67.google.com with SMTP id w20so9317829uap.1
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 11:05:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=f1nlOc2n0b1t3obc3rKWIj5ixOjOEEj0+iZqrVipp9o=;
-        b=D/1GyM9K41JOlRCD7lN5eU3vWpokEaPbOKAJ6/7sgnF2lgivSxP9Z7lmUx2lOjkZcu
-         8jzg7Oh1qQ+jx1kIuLADi92d6wgC/Ho+yXkpv+EOzB02v3tA1EbfQSiP3ZC8yFJ1nXkc
-         K6xhywDMCxsFgD/SftI9531KFjj999GO2h/5sdvutSW9i2eEXlrdUJHkZL7V65YPp6cL
-         MypyIKnKw7hoh+0/isjG3MchY1pyX3aFaDRwhD720csf7KtAvEFeRmjs8lb6TDJoD19V
-         PjuQdELCfa1r1/aD8M91Op+GfPLwqzlONrX3ZWrJmbL8+bAdX20m5V90dGsLIOSirdTi
-         MJVw==
+        bh=bgwto0849vMQ7XPiGsQwkYbhhuHqEESP0KyWWvx0k5c=;
+        b=i6IDwqTT1G2UbIHB4p9A/sk27uE1NJxIXwM8Lsf3yVCGeH020K+BNe3CC1ztwrj/f1
+         RbNh9k2Rl5BqkM+6T6XuPqo1Vk+jcT7is2+tBHwQFlKFzte+kzsFuz3HzX0cv/F7uu+1
+         yRqUCXBAoiozR+caAdBZ1tkLvokM/KzWG7z+jyqEpyulo1lTU0IoQpkmhI3CoYuYnZZh
+         pA4BldO1RR/i/YsFtjxWEXpnoTzRbG8FixE28g3okRi+4fq3wf0ZZEoDf8KubCwUxaRN
+         JfVW2+bul/KSqFNc38TxrwpYo2t3KOOOCiNduJORnG58ICUTRGaKv85Ib93S258hcxun
+         +4Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=f1nlOc2n0b1t3obc3rKWIj5ixOjOEEj0+iZqrVipp9o=;
-        b=sn3sJ0QfvhOJLCRKUVxwjseGOc/9arigDyWU6+LCcpcwr0Cq+gnZm1+f0B8H2PBLzf
-         qbyaAHFPWD24/glgtAf4Ab6g7cWoUKhtTtZdeo/hIOAdfF+T6afN9mWmcME9EHQWat3r
-         DUS18vTYRkzGkBD486mU6AwiJVNuWaN+Z/SkQFky6z61nTZUt0mCfarf2w4J/E7TcQkv
-         dbYqKfX5M3r3v6pv9LJddoB5zRxiS6HJa5dW1EtSrU6WnhxGkqzEG9qgC+A0C+lhd4dv
-         Y60s/Foda6c0186uaXhfg8ae/FLUgrXZKW2Los/HEMYNO+cF0b+2FwmStn6e3A1TM0ov
-         LUTQ==
-X-Gm-Message-State: APjAAAVKUk7vSSuT4eLjwAnfh12IK0StdzeX5TnxV0uE5mva0dQz9aTt
-        bGatURd4amP4EpjSfqJ2NQ+wWnIW1R5L2msO2nY=
-X-Google-Smtp-Source: APXvYqxPNqI/M/Od5Srqmugr+fhahB2I9e8NKlqPiAdGKQBh8UdtL9bsnU5VG3zxSSFDPjHZfJ8AxYuPb8Qe6AeW2VA=
-X-Received: by 2002:a92:84ce:: with SMTP id y75mr4470966ilk.93.1576091050492;
- Wed, 11 Dec 2019 11:04:10 -0800 (PST)
+        bh=bgwto0849vMQ7XPiGsQwkYbhhuHqEESP0KyWWvx0k5c=;
+        b=DzlDPwoqwxQRPJfAukhV8Y7klB7GHG+2fXITBwuVck0OoxikWjdosW0aBquSXQJSId
+         OP0GZnX6waLwi6Gi0g3Biz+8ftT8I1Q2ldFC7bf3M8zio4u6ZHQ0PpWEweKnvxd224YA
+         Q1ninxkfR2+VT7Pc1oQ+v2aCV3Xfr67xQA386qPiKiGM/6RyzP99ocsQcfhoyvIVfaYr
+         QOSeT8ZT1/r+TYwT5J/hY/Z1By8q++G0nHuEVCnJGQfGAmZzCkMwJEaaw0/uDjWGmVqP
+         M4KAdYcwowiqfB3hfNO8fNV3fRJ9ofCMqu4p6rG8UNK/D2VjVlo4lqXa2kc9hlGU6R6T
+         HmLg==
+X-Gm-Message-State: APjAAAXN56AFCMWsLXdiEvK1S4IVthHV5UhnmKbKiIca683+DvvZNHWZ
+        +LcrHx9GoovgNZZp2SSqp4MSC/1f5ZbLPyz1UAvg1Q==
+X-Google-Smtp-Source: APXvYqyW67dYgtnGzlxOu7XpE4KbdsNWBkdHNhcwlxjBEvm3nI+aEURnGOWzP1mh8NhsTGWP4fkgakObudXYfpZsAqU=
+X-Received: by 2002:ab0:4483:: with SMTP id n3mr4675807uan.63.1576091110883;
+ Wed, 11 Dec 2019 11:05:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211084216.25405-1-kraxel@redhat.com> <20191211084216.25405-4-kraxel@redhat.com>
-In-Reply-To: <20191211084216.25405-4-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 11 Dec 2019 11:03:59 -0800
-Message-ID: <CAPaKu7Tv2tGOW+Ns9yRQ0t9-Bk43wtV5KEh72fZuvPaX7Dy_gQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] virtio-gpu: use damage info for display updates.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        Gurchetan Singh <gurchetansingh@chromium.org>
+References: <283f09a5-33bd-eac3-bdfd-83d775045bf9@linux.intel.com>
+ <1e836f34-eda3-542d-f7ce-9a3e87ac5e2e@schaufler-ca.com> <d0c6f000-4757-02d8-b114-a35cbb9566ed@linux.intel.com>
+ <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+In-Reply-To: <a81248c5-971a-9d3f-6df4-e6335384fe7f@schaufler-ca.com>
+From:   Stephane Eranian <eranian@google.com>
+Date:   Wed, 11 Dec 2019 11:04:59 -0800
+Message-ID: <CABPqkBRx8oU=eY9YKy4AcuMMGfhxCxtczzLABxA5wnRuUKa7Tg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Introduce CAP_SYS_PERFMON capability for secure
+ Perf users groups
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>, elena.reshetova@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 12:42 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Thu, Dec 5, 2019 at 9:35 AM Casey Schaufler <casey@schaufler-ca.com> wrote:
 >
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_plane.c | 41 +++++++++++++++-----------
->  1 file changed, 24 insertions(+), 17 deletions(-)
+> On 12/5/2019 9:05 AM, Alexey Budankov wrote:
+> > Hello Casey,
+> >
+> > On 05.12.2019 19:49, Casey Schaufler wrote:
+> >> On 12/5/2019 8:15 AM, Alexey Budankov wrote:
+> >>> Currently access to perf_events functionality [1] beyond the scope permitted
+> >>> by perf_event_paranoid [1] kernel setting is allowed to a privileged process
+> >>> [2] with CAP_SYS_ADMIN capability enabled in the process effective set [3].
+> >>>
+> >>> This patch set introduces CAP_SYS_PERFMON capability devoted to secure performance
+> >>> monitoring activity so that CAP_SYS_PERFMON would assist CAP_SYS_ADMIN in its
+> >>> governing role for perf_events based performance monitoring of a system.
+> >>>
+> >>> CAP_SYS_PERFMON aims to harden system security and integrity when monitoring
+> >>> performance using perf_events subsystem by processes and Perf privileged users
+> >>> [2], thus decreasing attack surface that is available to CAP_SYS_ADMIN
+> >>> privileged processes [3].
+> >> Are there use cases where you would need CAP_SYS_PERFMON where you
+> >> would not also need CAP_SYS_ADMIN? If you separate a new capability
+> > Actually, there are. Perf tool that has record, stat and top modes could run with
+> > CAP_SYS_PERFMON capability as mentioned below and provide system wide performance
+> > data. Currently for that to work the tool needs to be granted with CAP_SYS_ADMIN.
 >
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> index 2e0d14e005db..1a0fbbb91ec7 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-> @@ -24,6 +24,7 @@
->   */
->
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_damage_helper.h>
->  #include <drm/drm_fourcc.h>
->  #include <drm/drm_plane_helper.h>
->
-> @@ -103,22 +104,26 @@ static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
->  }
->
->  static void virtio_gpu_update_dumb_bo(struct virtio_gpu_device *vgdev,
-> -                                     struct virtio_gpu_object *bo,
-> -                                     struct drm_plane_state *state)
-> +                                     struct drm_plane_state *state,
-> +                                     struct drm_rect *rect)
->  {
-> +       struct virtio_gpu_object *bo =
-> +               gem_to_virtio_gpu_obj(state->fb->obj[0]);
->         struct virtio_gpu_object_array *objs;
-> +       uint32_t w = rect->x2 - rect->x1;
-> +       uint32_t h = rect->y2 - rect->y1;
-> +       uint32_t x = rect->x1 + (state->src_x >> 16);
-> +       uint32_t y = rect->y1 + (state->src_y >> 16);
-> +       uint32_t off = x * state->fb->format->cpp[0] +
-> +               y * state->fb->pitches[0];
->
->         objs = virtio_gpu_array_alloc(1);
->         if (!objs)
->                 return;
->         virtio_gpu_array_add_obj(objs, &bo->base.base);
-> -       virtio_gpu_cmd_transfer_to_host_2d
-> -               (vgdev, 0,
-> -                state->src_w >> 16,
-> -                state->src_h >> 16,
-> -                state->src_x >> 16,
-> -                state->src_y >> 16,
-> -                objs, NULL);
-> +
-> +       virtio_gpu_cmd_transfer_to_host_2d(vgdev, off, w, h, x, y,
-> +                                          objs, NULL);
->  }
->
->  static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
-> @@ -127,8 +132,8 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
->         struct drm_device *dev = plane->dev;
->         struct virtio_gpu_device *vgdev = dev->dev_private;
->         struct virtio_gpu_output *output = NULL;
-> -       struct virtio_gpu_framebuffer *vgfb;
->         struct virtio_gpu_object *bo;
-> +       struct drm_rect rect;
->
->         if (plane->state->crtc)
->                 output = drm_crtc_to_virtio_gpu_output(plane->state->crtc);
-> @@ -146,12 +151,14 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
->                 return;
->         }
->
-> +       if (!drm_atomic_helper_damage_merged(old_state, plane->state, &rect))
-> +               return;
-> +
->         virtio_gpu_disable_notify(vgdev);
->
-> -       vgfb = to_virtio_gpu_framebuffer(plane->state->fb);
-> -       bo = gem_to_virtio_gpu_obj(vgfb->base.obj[0]);
-> +       bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
->         if (bo->dumb)
-> -               virtio_gpu_update_dumb_bo(vgdev, bo, plane->state);
-> +               virtio_gpu_update_dumb_bo(vgdev, plane->state, &rect);
->
->         if (plane->state->fb != old_state->fb) {
->                 DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
-> @@ -171,10 +178,10 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
->         }
->
->         virtio_gpu_cmd_resource_flush(vgdev, bo->hw_res_handle,
-> -                                     plane->state->src_x >> 16,
-> -                                     plane->state->src_y >> 16,
-> -                                     plane->state->src_w >> 16,
-> -                                     plane->state->src_h >> 16);
-> +                                     (plane->state->src_x >> 16) + rect.x1,
-> +                                     (plane->state->src_y >> 16) + rect.y1,
-Digging into drm_atomic_helper_damage_merged, it seems rect uses
-absolute values and is not relative to src_{x,y}.
+> The question isn't whether the tool could use the capability, it's whether
+> the tool would also need CAP_SYS_ADMIN to be useful. Are there existing
+> tools that could stop using CAP_SYS_ADMIN in favor of CAP_SYS_PERFMON?
 
-> +                                     rect.x2 - rect.x1,
-> +                                     rect.y2 - rect.y1);
+The answer is yes. I have recently been alerted to a problem with
+paranoid=2 and the
+popular rr debugger (https://rr-project.org/). This debugger uses
+several perf_events
+features, including profiling of PMU events and tracepoints
+(context-switches). With
+paranoid=2, it does not work anymore. We would need a privilege between regular
+user and admin to make it work again. Note that context switches
+tracepoint is only
+applied to self (not system-wide).
+
+
+> My bet is that any tool that does performance monitoring is going to need
+> CAP_SYS_ADMIN for other reasons.
 >
->         virtio_gpu_enable_notify(vgdev);
->  }
-> --
-> 2.18.1
+> >
+> >> from CAP_SYS_ADMIN but always have to use CAP_SYS_ADMIN in conjunction
+> >> with the new capability it is all rather pointless.
+> >>
+> >> The scope you've defined for this CAP_SYS_PERFMON is very small.
+> >> Is there a larger set of privilege checks that might be applicable
+> >> for it?
+> > CAP_SYS_PERFMON could be applied broadly, though, this patch set enables record
+> > and stat mode use cases for system wide performance monitoring in kernel and
+> > user modes.
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> The granularity of capabilities is something we have to watch
+> very carefully. Sure, CAP_SYS_ADMIN covers a lot of things, but
+> if we broke it up "properly" we'd have hundreds of capabilities.
+> If you want control that finely we have SELinux.
+>
+> >
+> > Thanks,
+> > Alexey
+> >
+> >>
+> >>
+> >>> CAP_SYS_PERFMON aims to take over CAP_SYS_ADMIN credentials related to
+> >>> performance monitoring functionality of perf_events and balance amount of
+> >>> CAP_SYS_ADMIN credentials in accordance with the recommendations provided in
+> >>> the man page for CAP_SYS_ADMIN [3]: "Note: this capability is overloaded;
+> >>> see Notes to kernel developers, below."
+> >>>
+> >>> For backward compatibility reasons performance monitoring functionality of
+> >>> perf_events subsystem remains available under CAP_SYS_ADMIN but its usage for
+> >>> secure performance monitoring use cases is discouraged with respect to the
+> >>> introduced CAP_SYS_PERFMON capability.
+> >>>
+> >>> In the suggested implementation CAP_SYS_PERFMON enables Perf privileged users
+> >>> [2] to conduct secure performance monitoring using perf_events in the scope
+> >>> of available online CPUs when executing code in kernel and user modes.
+> >>>
+> >>> Possible alternative solution to this capabilities balancing, system security
+> >>> hardening task could be to use the existing CAP_SYS_PTRACE capability to govern
+> >>> perf_events' performance monitoring functionality, since process debugging is
+> >>> similar to performance monitoring with respect to providing insights into
+> >>> process memory and execution details. However CAP_SYS_PTRACE still provides
+> >>> users with more credentials than are required for secure performance monitoring
+> >>> using perf_events subsystem and this excess is avoided by using the dedicated
+> >>> CAP_SYS_PERFMON capability.
+> >>>
+> >>> libcap library utilities [4], [5] and Perf tool can be used to apply
+> >>> CAP_SYS_PERFMON capability for secure performance monitoring beyond the scope
+> >>> permitted by system wide perf_event_paranoid kernel setting and below are the
+> >>> steps to evaluate the advancement suggested by the patch set:
+> >>>
+> >>>   - patch, build and boot the kernel
+> >>>   - patch, build Perf tool e.g. to /home/user/perf
+> >>>   ...
+> >>>   # git clone git://git.kernel.org/pub/scm/libs/libcap/libcap.git libcap
+> >>>   # pushd libcap
+> >>>   # patch libcap/include/uapi/linux/capabilities.h with [PATCH 1/3]
+> >>>   # make
+> >>>   # pushd progs
+> >>>   # ./setcap "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+> >>>   # ./setcap -v "cap_sys_perfmon,cap_sys_ptrace,cap_syslog=ep" /home/user/perf
+> >>>   /home/user/perf: OK
+> >>>   # ./getcap /home/user/perf
+> >>>   /home/user/perf = cap_sys_ptrace,cap_syslog,cap_sys_perfmon+ep
+> >>>   # echo 2 > /proc/sys/kernel/perf_event_paranoid
+> >>>   # cat /proc/sys/kernel/perf_event_paranoid
+> >>>   2
+> >>>   ...
+> >>>   $ /home/user/perf top
+> >>>     ... works as expected ...
+> >>>   $ cat /proc/`pidof perf`/status
+> >>>   Name:     perf
+> >>>   Umask:    0002
+> >>>   State:    S (sleeping)
+> >>>   Tgid:     2958
+> >>>   Ngid:     0
+> >>>   Pid:      2958
+> >>>   PPid:     9847
+> >>>   TracerPid:        0
+> >>>   Uid:      500     500     500     500
+> >>>   Gid:      500     500     500     500
+> >>>   FDSize:   256
+> >>>   ...
+> >>>   CapInh:   0000000000000000
+> >>>   CapPrm:   0000004400080000
+> >>>   CapEff:   0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+> >>>                                      cap_sys_perfmon,cap_sys_ptrace,cap_syslog
+> >>>   CapBnd:   0000007fffffffff
+> >>>   CapAmb:   0000000000000000
+> >>>   NoNewPrivs:       0
+> >>>   Seccomp:  0
+> >>>   Speculation_Store_Bypass: thread vulnerable
+> >>>   Cpus_allowed:     ff
+> >>>   Cpus_allowed_list:        0-7
+> >>>   ...
+> >>>
+> >>> Usage of cap_sys_perfmon effectively avoids unused credentials excess:
+> >>> - with cap_sys_admin:
+> >>>   CapEff:   0000007fffffffff => 01111111 11111111 11111111 11111111 11111111
+> >>> - with cap_sys_perfmon:
+> >>>   CapEff:   0000004400080000 => 01000100 00000000 00001000 00000000 00000000
+> >>>                                     38   34               19
+> >>>                            sys_perfmon   syslog           sys_ptrace
+> >>>
+> >>> The patch set is for tip perf/core repository:
+> >>>   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip perf/core
+> >>>   tip sha1: ceb9e77324fa661b1001a0ae66f061b5fcb4e4e6
+> >>>
+> >>> [1] http://man7.org/linux/man-pages/man2/perf_event_open.2.html
+> >>> [2] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> >>> [3] http://man7.org/linux/man-pages/man7/capabilities.7.html
+> >>> [4] http://man7.org/linux/man-pages/man8/setcap.8.html
+> >>> [5] https://git.kernel.org/pub/scm/libs/libcap/libcap.git
+> >>> [6] https://sites.google.com/site/fullycapable/, posix_1003.1e-990310.pdf
+> >>>
+> >>> ---
+> >>> Alexey Budankov (3):
+> >>>   capabilities: introduce CAP_SYS_PERFMON to kernel and user space
+> >>>   perf/core: apply CAP_SYS_PERFMON to CPUs and kernel monitoring
+> >>>   perf tool: extend Perf tool with CAP_SYS_PERFMON support
+> >>>
+> >>>  include/linux/perf_event.h          |  6 ++++--
+> >>>  include/uapi/linux/capability.h     | 10 +++++++++-
+> >>>  security/selinux/include/classmap.h |  4 ++--
+> >>>  tools/perf/design.txt               |  3 ++-
+> >>>  tools/perf/util/cap.h               |  4 ++++
+> >>>  tools/perf/util/evsel.c             | 10 +++++-----
+> >>>  tools/perf/util/util.c              | 15 +++++++++++++--
+> >>>  7 files changed, 39 insertions(+), 13 deletions(-)
+> >>>
+> >>
+>
