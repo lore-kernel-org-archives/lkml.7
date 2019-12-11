@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B57C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D49C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB6621556
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D851022527
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078924;
-	bh=zaE6RCXBQnl5FkCZ5vpGQAygE6wYrRNwLwPYZNFgWVo=;
+	s=default; t=1576078928;
+	bh=3IyTP+HgmOf3ouQI07HLcTP/5j+L5uTqAAGuWiefhM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ju5L3WpFRwIxz/B9iiv1WuhcNQYnp6ESVqFuC5RzM/ux05uT7mdSfK+L7kN2DPAev
-	 vR8hJHZy7FZyg3k30a9i24hMKl4foNujcQRf1NTFKEMcd7y/00GdY9qCvwAXhcGoH2
-	 amDJ/IfdKoBAUM9qT1P/N6LeMmSbKajR33K5CRA8=
+	b=hFF12alP2m1iN2gCuEBKtdNcRUH2RxabjTVE9lWdvmQi9RXh1fzUabfm4AQzsX0jh
+	 TSQ4lVFHSF97CgqD7IRuRETcjngV+GZk0jzHNkgGUcY71c/jCntOKp2eaFYrDvG/Ju
+	 gQW69gVB8uqT+ZswtHk4UZuv00wPZaE8i9F94OAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfLKP1x (ORCPT
+        id S2388375AbfLKPmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:27:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:42:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387429AbfLKP1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:31 -0500
+        id S1733037AbfLKP1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:51 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8216A2465A;
-        Wed, 11 Dec 2019 15:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 208F524654;
+        Wed, 11 Dec 2019 15:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078050;
-        bh=zaE6RCXBQnl5FkCZ5vpGQAygE6wYrRNwLwPYZNFgWVo=;
+        s=default; t=1576078070;
+        bh=3IyTP+HgmOf3ouQI07HLcTP/5j+L5uTqAAGuWiefhM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eddn95N4at5anxm9tPOompexnbJjwV2mttv30a2FG+cBnJuq43Qxz11W7FLQiNlPB
-         p7Sru22ZtY41L/8LahuTzfhGchmQoQ3Bey9sElp4K0gqwmHy4WIlw9bgGc7C6fWQtS
-         LXJSeCf8KPU2VU/h+0rWUclSTRZh3bKFEk5tKuQs=
+        b=DOc0jvUrbngswqwbx2QutCn5VwMnFEqRZ34MDUEToF6Uo1Y07uqaAn4g3K/v2m/rU
+         e021n5VaMQHh/Eg22G5Q6uFmhDX25lmE3aIXhbJPDBig9K324tE+Qpf9MsPSh7eemB
+         n5jQvPIy+wW0UZyqRH29uvITnpNNWPxx0Fl0CDPA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>,
-        "Mauro S . M . Rodrigues" <maurosr@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.19 43/79] powerpc/security: Fix wrong message when RFI Flush is disable
-Date:   Wed, 11 Dec 2019 10:26:07 -0500
-Message-Id: <20191211152643.23056-43-sashal@kernel.org>
+Cc:     Anatol Pomazau <anatol@google.com>,
+        Frank Mayhar <fmayhar@google.com>,
+        Bharath Ravi <rbharath@google.com>,
+        Khazhimsel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 61/79] scsi: iscsi: Don't send data to unbound connection
+Date:   Wed, 11 Dec 2019 10:26:25 -0500
+Message-Id: <20191211152643.23056-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,93 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo L. F. Walbon" <gwalbon@linux.ibm.com>
+From: Anatol Pomazau <anatol@google.com>
 
-[ Upstream commit 4e706af3cd8e1d0503c25332b30cad33c97ed442 ]
+[ Upstream commit 238191d65d7217982d69e21c1d623616da34b281 ]
 
-The issue was showing "Mitigation" message via sysfs whatever the
-state of "RFI Flush", but it should show "Vulnerable" when it is
-disabled.
+If a faulty initiator fails to bind the socket to the iSCSI connection
+before emitting a command, for instance, a subsequent send_pdu, it will
+crash the kernel due to a null pointer dereference in sock_sendmsg(), as
+shown in the log below.  This patch makes sure the bind succeeded before
+trying to use the socket.
 
-If you have "L1D private" feature enabled and not "RFI Flush" you are
-vulnerable to meltdown attacks.
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 7 Comm: kworker/u8:0 Not tainted 5.4.0-rc2.iscsi+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   24.158246] Workqueue: iscsi_q_0 iscsi_xmitworker
+[   24.158883] RIP: 0010:apparmor_socket_sendmsg+0x5/0x20
+[...]
+[   24.161739] RSP: 0018:ffffab6440043ca0 EFLAGS: 00010282
+[   24.162400] RAX: ffffffff891c1c00 RBX: ffffffff89d53968 RCX: 0000000000000001
+[   24.163253] RDX: 0000000000000030 RSI: ffffab6440043d00 RDI: 0000000000000000
+[   24.164104] RBP: 0000000000000030 R08: 0000000000000030 R09: 0000000000000030
+[   24.165166] R10: ffffffff893e66a0 R11: 0000000000000018 R12: ffffab6440043d00
+[   24.166038] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9d5575a62e90
+[   24.166919] FS:  0000000000000000(0000) GS:ffff9d557db80000(0000) knlGS:0000000000000000
+[   24.167890] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.168587] CR2: 0000000000000018 CR3: 000000007a838000 CR4: 00000000000006e0
+[   24.169451] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   24.170320] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   24.171214] Call Trace:
+[   24.171537]  security_socket_sendmsg+0x3a/0x50
+[   24.172079]  sock_sendmsg+0x16/0x60
+[   24.172506]  iscsi_sw_tcp_xmit_segment+0x77/0x120
+[   24.173076]  iscsi_sw_tcp_pdu_xmit+0x58/0x170
+[   24.173604]  ? iscsi_dbg_trace+0x63/0x80
+[   24.174087]  iscsi_tcp_task_xmit+0x101/0x280
+[   24.174666]  iscsi_xmit_task+0x83/0x110
+[   24.175206]  iscsi_xmitworker+0x57/0x380
+[   24.175757]  ? __schedule+0x2a2/0x700
+[   24.176273]  process_one_work+0x1b5/0x360
+[   24.176837]  worker_thread+0x50/0x3c0
+[   24.177353]  kthread+0xf9/0x130
+[   24.177799]  ? process_one_work+0x360/0x360
+[   24.178401]  ? kthread_park+0x90/0x90
+[   24.178915]  ret_from_fork+0x35/0x40
+[   24.179421] Modules linked in:
+[   24.179856] CR2: 0000000000000018
+[   24.180327] ---[ end trace b4b7674b6df5f480 ]---
 
-"RFI Flush" is the key feature to mitigate the meltdown whatever the
-"L1D private" state.
-
-SEC_FTR_L1D_THREAD_PRIV is a feature for Power9 only.
-
-So the message should be as the truth table shows:
-
-  CPU | L1D private | RFI Flush |                sysfs
-  ----|-------------|-----------|-------------------------------------
-   P9 |    False    |   False   | Vulnerable
-   P9 |    False    |   True    | Mitigation: RFI Flush
-   P9 |    True     |   False   | Vulnerable: L1D private per thread
-   P9 |    True     |   True    | Mitigation: RFI Flush, L1D private per thread
-   P8 |    False    |   False   | Vulnerable
-   P8 |    False    |   True    | Mitigation: RFI Flush
-
-Output before this fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: L1D private per thread
-
-Output after fix:
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Mitigation: RFI Flush, L1D private per thread
-  # echo 0 > /sys/kernel/debug/powerpc/rfi_flush
-  # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-  Vulnerable: L1D private per thread
-
-Signed-off-by: Gustavo L. F. Walbon <gwalbon@linux.ibm.com>
-Signed-off-by: Mauro S. M. Rodrigues <maurosr@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20190502210907.42375-1-gwalbon@linux.ibm.com
+Signed-off-by: Anatol Pomazau <anatol@google.com>
+Co-developed-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Co-developed-by: Bharath Ravi <rbharath@google.com>
+Signed-off-by: Bharath Ravi <rbharath@google.com>
+Co-developed-by: Khazhimsel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhimsel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/security.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/scsi/iscsi_tcp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index a4354c4f6bc50..6a3dde9587ccb 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -134,26 +134,22 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 23354f206533b..55181d28291e7 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -374,8 +374,16 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
+ {
+ 	struct iscsi_conn *conn = task->conn;
+ 	unsigned int noreclaim_flag;
++	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
++	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+ 	int rc = 0;
  
- 	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
- 
--	if (rfi_flush || thread_priv) {
-+	if (rfi_flush) {
- 		struct seq_buf s;
- 		seq_buf_init(&s, buf, PAGE_SIZE - 1);
- 
--		seq_buf_printf(&s, "Mitigation: ");
--
--		if (rfi_flush)
--			seq_buf_printf(&s, "RFI Flush");
--
--		if (rfi_flush && thread_priv)
--			seq_buf_printf(&s, ", ");
--
-+		seq_buf_printf(&s, "Mitigation: RFI Flush");
- 		if (thread_priv)
--			seq_buf_printf(&s, "L1D private per thread");
-+			seq_buf_printf(&s, ", L1D private per thread");
- 
- 		seq_buf_printf(&s, "\n");
- 
- 		return s.len;
- 	}
- 
-+	if (thread_priv)
-+		return sprintf(buf, "Vulnerable: L1D private per thread\n");
++	if (!tcp_sw_conn->sock) {
++		iscsi_conn_printk(KERN_ERR, conn,
++				  "Transport not bound to socket!\n");
++		return -EINVAL;
++	}
 +
- 	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
- 	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
- 		return sprintf(buf, "Not affected\n");
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 
+ 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
 -- 
 2.20.1
 
