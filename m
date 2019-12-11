@@ -2,289 +2,182 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D3FC43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 516B0C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F073205C9
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RA4FRcBR";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="FEU2W5di"
+	by mail.kernel.org (Postfix) with ESMTP id 1EE15205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 16:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576080825;
+	bh=6u8Qv73v69MRsB1NuoBHJaQD04MLYCnDoAh6PP09yfs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l1q+8QD/NE27z8+p/ahDgmQ2RrXIM5FWhgs15/BV8WgKzGXsmxNAEDpyZYnSFpciD
+	 edH46IM94WLYkjwtKm26/VlQ/DTHNomzPNyThK5Akhnvu/69ZmfBUIRJr7tPNuAQuc
+	 OIBs0/kK7vdrM2YRcsHoHefS8OLqjQE2t2q1+ydM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbfLKQNj (ORCPT
+        id S1730035AbfLKPHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 11:13:39 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:39930 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730099AbfLKPHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:07:45 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Wed, 11 Dec 2019 10:07:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729970AbfLKPHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:07:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8C7BF42D5C;
-        Wed, 11 Dec 2019 15:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1576076863; bh=XOQ+ktaJ70Lbvjm8ZSdbFcM/eJs38SI6qBlet25K+4g=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=RA4FRcBRdWAahm843PM5d2NkHUPsNU0RKS5Ot2bYy+bMhYb11UDmG7TVL8DFms2Dn
-         DFBc3K333xHo/kkJLlC2Kyon498lbNeAFO9Kjgo3/ZUE5CTdH3ybkMtjWdoQz9v/aK
-         lQWR4SIfvuxfZSVmbDLjr+fjgViOq+ULKzlni9VonFINbj4tOPzCz7c80vNr4bjd0M
-         +jV70Ke3aRl6XR4LBr04ts90YduYBIgt+ALSJrFOOKwRaxBXWLHO55ho79KLaPeRhw
-         j6hKbT+xVzKrFQIuW6YvQqWx4sCqKxHUv/oxAqllw2NO4UJzEJB2IjroN9q6vdqJBZ
-         oWMyU89TiUbjg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 8AA0FA007F;
-        Wed, 11 Dec 2019 15:07:42 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.13.188.44) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 11 Dec 2019 07:07:38 -0800
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.13.188.44) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 11 Dec 2019 07:07:38 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E10MC2sOikg+rNAGxH74LPcRi89LFTnYAxrAeTCLb4jBgQ/Ju+PVXzjpIbFQpq9BYNYsL/TgMhahUEGnjWLMCLJ2FIsnwvJBjVdodzyGj2AmnkSFT0CsFHs30o7L97yBrX4x8trZmUctOtrUoBQ1RwULkYxlSu+VxduMgZv/ktZjuGJcIbb4mf1BJJqshg7b7YCFj6CNPGbqqzZB55ganfxVd7wkbdv5NYnFuTBEINEmZHhjnUja2D8I+Cj65nh3+x1m+i5n3mIgYjvCmzhm52oh3JJhNVjVDe2E5KcYsO7o2d/xNcUuIqYuMGcTNIhgeOzqIcW5wt+OCXDYzDqTjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XOQ+ktaJ70Lbvjm8ZSdbFcM/eJs38SI6qBlet25K+4g=;
- b=KOxtf7DiOZUoM6D2LCmqODX5t9wCXZBxWTFZ4pdbFSMjS+di9wHpkJ/4g6Oy2reUtgt4PWEvkCMs9mrU4BPgCIlRLvC7s/IhcObCFlbrCZesW9fx8vjppoEESiDmiX1H6VOA94tEwnWHwWypQwaVnIADq3kuLCx4fQRzMpWQ+p3G/nd+bwjoNC0CaIm7QfBjyIE8vc6aYxbXaCQ+8m4MX467tSHZOcDNV8QOaXZzhvoyjFzhvxAv+jYWamnWHfTQU9AkoaXCPa3k4eVt6XC0jdlSSnPp5Q0P3WWNK63YItdo5B4b+S3wo+Mr8M5anTHhHPv1ipsVTCRmn05oWL1hQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XOQ+ktaJ70Lbvjm8ZSdbFcM/eJs38SI6qBlet25K+4g=;
- b=FEU2W5diXrfcBK88Al8Z1LjNDudhn8azZCRH6Pz6DZN1Xq+qB2J6X8A/LG/Uwn4kZYrp+Xxbc+dHvMMa2S6N8Zx5Ms21lTBOUC6BNfKAXFVrJ1mzg9O2k1BKyoIJnvDeMJkiRa06B41qyHaVm2JGXQ2LqjV++m7pXveIqAMLyZs=
-Received: from CH2PR12MB4216.namprd12.prod.outlook.com (20.180.6.151) by
- CH2PR12MB4231.namprd12.prod.outlook.com (20.180.17.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.16; Wed, 11 Dec 2019 15:07:36 +0000
-Received: from CH2PR12MB4216.namprd12.prod.outlook.com
- ([fe80::81fc:ad3e:6315:c6ff]) by CH2PR12MB4216.namprd12.prod.outlook.com
- ([fe80::81fc:ad3e:6315:c6ff%7]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
- 15:07:36 +0000
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mark Brown <broonie@kernel.org>
-Subject: RE: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
-Thread-Topic: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
-Thread-Index: AQHVr2/iKIpGMGLN70aN99S9k54hW6ezpfQAgAAC6ICAABq2AIABGOsQ
-Date:   Wed, 11 Dec 2019 15:07:36 +0000
-Message-ID: <CH2PR12MB4216CE03448AF3B39C23D3BCAE5A0@CH2PR12MB4216.namprd12.prod.outlook.com>
-References: <cover.1575977795.git.vitor.soares@synopsys.com>
- <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
- <CAK8P3a1cwoTbT3zsa-tfApwewDT1-ksHZs6_vkBYpKbgptsfjw@mail.gmail.com>
- <CH2PR12MB4216E04995E421F04B7662DEAE5B0@CH2PR12MB4216.namprd12.prod.outlook.com>
- <CAK8P3a00wfUbGU1a9nS1dtDsUo1GR1V1WqRwa+DmUKVStvicTw@mail.gmail.com>
-In-Reply-To: <CAK8P3a00wfUbGU1a9nS1dtDsUo1GR1V1WqRwa+DmUKVStvicTw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
- =?utf-8?B?bk5jYzI5aGNtVnpYR0Z3Y0dSaGRHRmNjbTloYldsdVoxd3dPV1E0TkRsaU5p?=
- =?utf-8?B?MHpNbVF6TFRSaE5EQXRPRFZsWlMwMllqZzBZbUV5T1dVek5XSmNiWE5uYzF4?=
- =?utf-8?B?dGMyY3RaalE1TnpneVlqTXRNV015TnkweE1XVmhMVGd5TnpNdFlqZ3dPR05t?=
- =?utf-8?B?TlRsa04yWmpYR0Z0WlMxMFpYTjBYR1kwT1RjNE1tSTBMVEZqTWpjdE1URmxZ?=
- =?utf-8?B?UzA0TWpjekxXSTRNRGhqWmpVNVpEZG1ZMkp2WkhrdWRIaDBJaUJ6ZWowaU16?=
- =?utf-8?B?TTVNQ0lnZEQwaU1UTXlNakExTlRBME5UUTVNRFEzTURVNUlpQm9QU0pFVUdj?=
- =?utf-8?B?NWFVeFpTbkZGVEdKa1luVlNOR1kzYzBNMU4wSTVNalE5SWlCcFpEMGlJaUJp?=
- =?utf-8?B?YkQwaU1DSWdZbTg5SWpFaUlHTnBQU0pqUVVGQlFVVlNTRlV4VWxOU1ZVWk9R?=
- =?utf-8?B?MmRWUVVGQ1VVcEJRVUZVVXk4ck0wNU1SRlpCVTJwaFFXOUhiRFF2T1dwTFRt?=
- =?utf-8?B?OURaMkZZYWk4eVRVOUJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlNFRkJRVUZEYTBOQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UlVGQlVVRkNRVUZCUVd0NFYyOXNVVUZCUVVGQlFVRkJRVUZCUVVGQlFVbzBR?=
- =?utf-8?B?VUZCUW0xQlIydEJZbWRDYUVGSE5FRlpkMEpzUVVZNFFXTkJRbk5CUjBWQllt?=
- =?utf-8?B?ZENkVUZIYTBGaVowSnVRVVk0UVdSM1FtaEJTRkZCV2xGQ2VVRkhNRUZaVVVK?=
- =?utf-8?B?NVFVZHpRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdk?=
- =?utf-8?B?QlFVRkJRVUZ1WjBGQlFVZFpRV0ozUWpGQlJ6UkJXa0ZDZVVGSWEwRllkMEoz?=
- =?utf-8?B?UVVkRlFXTm5RakJCUnpSQldsRkNlVUZJVFVGWWQwSnVRVWRaUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVTkJRVUZCUVVGRFpVRkJRVUZhWjBKMlFVaFZRV0puUW10QlNF?=
- =?utf-8?B?bEJaVkZDWmtGSVFVRlpVVUo1UVVoUlFXSm5RbXhCU0VsQlkzZENaa0ZJVFVG?=
- =?utf-8?B?WlVVSjBRVWhOUVdSUlFuVkJSMk5CV0hkQ2FrRkhPRUZpWjBKdFFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRa0ZCUVVGQlFVRkJRVUZKUVVGQlFVRkJTalJCUVVGQ2JVRkhPRUZr?=
- =?utf-8?B?VVVKMVFVZFJRV05uUWpWQlJqaEJZMEZDYUVGSVNVRmtRVUoxUVVkVlFXTm5R?=
- =?utf-8?B?bnBCUmpoQlkzZENhRUZITUVGamQwSXhRVWMwUVZwM1FtWkJTRWxCV2xGQ2Vr?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVWQlFVRkJRVUZCUVVGQlowRkJRVUZCUVc1blFV?=
- =?utf-8?B?RkJSMWxCWW5kQ01VRkhORUZhUVVKNVFVaHJRVmgzUW5kQlIwVkJZMmRDTUVG?=
- =?utf-8?B?SE5FRmFVVUo1UVVoTlFWaDNRbnBCUnpCQllWRkNha0ZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRlJRVUZCUVVGQlFVRkJRMEZC?=
- =?utf-8?B?UVVGQlFVTmxRVUZCUVZwblFuWkJTRlZCWW1kQ2EwRklTVUZsVVVKbVFVaEJR?=
- =?utf-8?B?VmxSUW5sQlNGRkJZbWRDYkVGSVNVRmpkMEptUVVoTlFXUkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZDUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVsQlFVRkJRVUZLTkVGQlFVSnRRVWM0UVdSUlFuVkJSMUZCWTJk?=
- =?utf-8?B?Q05VRkdPRUZqUVVKb1FVaEpRV1JCUW5WQlIxVkJZMmRDZWtGR09FRmtRVUo2?=
- =?utf-8?B?UVVjd1FWbDNRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlJVRkJRVUZCUVVGQlFVRm5RVUZCUVVGQmJtZEJRVUZIV1VGaWQwSXhR?=
- =?utf-8?B?VWMwUVZwQlFubEJTR3RCV0hkQ2QwRkhSVUZqWjBJd1FVYzBRVnBSUW5sQlNF?=
- =?utf-8?B?MUJXSGRDTVVGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVkZCUVVGQlFVRkJRVUZEUVVGQlFVRkJRMlZCUVVG?=
- =?utf-8?B?QlduZENNRUZJVFVGWWQwSjNRVWhKUVdKM1FtdEJTRlZCV1hkQ01FRkdPRUZr?=
- =?utf-8?B?UVVKNVFVZEZRV0ZSUW5WQlIydEJZbWRDYmtGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVKQlFVRkJRVUZCUVVGQlNVRkJR?=
- =?utf-8?B?VUZCUVVvMFFVRkJRbnBCUjBWQllrRkNiRUZJVFVGWWQwSm9RVWROUVZsM1Fu?=
- =?utf-8?B?WkJTRlZCWW1kQ01FRkdPRUZqUVVKelFVZEZRV0puUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkZRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRV2RCUVVGQlFVRnVaMEZCUVVoTlFWbFJRbk5CUjFWQlkzZENaa0ZJ?=
- =?utf-8?B?UlVGa1VVSjJRVWhSUVZwUlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCVVVGQlFVRkJRVUZCUVVOQlFVRkJRVUZEWlVGQlFVRmpkMEoxUVVoQlFX?=
- =?utf-8?B?TjNRbVpCUjNkQllWRkNha0ZIVlVGaVowSjZRVWRWUVZoM1FqQkJSMVZCWTJk?=
- =?utf-8?B?Q2RFRkdPRUZOVVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFrRkJRVUZCUVVGQlFVRkpRVUZCUVVGQlNqUkJRVUZD?=
- =?utf-8?B?ZWtGSE5FRmpRVUo2UVVZNFFXSkJRbkJCUjAxQldsRkNkVUZJVFVGYVVVSm1R?=
- =?utf-8?B?VWhSUVZwUlFubEJSekJCV0hkQ2VrRklVVUZrVVVKclFVZFZRV0puUWpCQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVVZCUVVGQlFVRkJRVUZCWjBGQlFV?=
- =?utf-8?B?RkJRVzVuUVVGQlNGbEJXbmRDWmtGSGMwRmFVVUkxUVVoalFXSjNRbmxCUjFG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
- =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
- =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
- =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGUlFVRkJRVUZC?=
- =?utf-8?B?UVVGQlEwRkJRVUZCUVVFOUlpOCtQQzl0WlhSaFBnPT0=?=
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=soares@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb18abab-f3da-421c-ec35-08d77e4bdb9a
-x-ms-traffictypediagnostic: CH2PR12MB4231:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR12MB4231FF121AC9527F4C025885AE5A0@CH2PR12MB4231.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 024847EE92
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(346002)(366004)(39860400002)(189003)(199004)(66946007)(64756008)(8936002)(66556008)(53546011)(81166006)(66476007)(76116006)(26005)(6916009)(8676002)(66446008)(54906003)(33656002)(81156014)(55016002)(52536014)(71200400001)(4326008)(478600001)(966005)(316002)(6506007)(5660300002)(186003)(86362001)(2906002)(9686003)(7696005)(42413003)(32563001);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR12MB4231;H:CH2PR12MB4216.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 58kCB7Ua+uad2unZBn+6R/pO6T+/EkT2aA7VyF3zZgGDdaQchx02PT0P1uVCHLzbK7ljMQoWK/fKYJ11nX8DVfAITwboNEmeLj0ZMmLzTQUj1qlHuWgPJ4By6/A9ytMwsqgoqDp5IorKPdQ0miHQeqrsSALv4b3C9mNPJA674iNd4X0+p0dRyk7m25JDylElriN3Jo2EoxJlxrAI3gvMVYRatKBzQzhaeODk4BaUSsayCZ1tGT7yRt4+UP/wudz1ZRCddffCAVatF6fWYwwBjkxoal5QF+W7zgdDJLoZuGvr1ZN7g5YbJaW36KUETQtcCULSxV0n8fj+vn4KXuZ3pa7EVHX+3ZO+FTvt7WI/WjCitQwpO5gSrmxfTYG23Nu6WBl9X2OCKrC/8jwVmpggUsauFz3qi/TZhfZl4icN+9Ly97SzHm2bLVQR91x5N/QJjp3XgoAL4kNB4rXyu3wHVASwByaHyU94WTkFhz3FFu1t4PAi2AT8lYuiaYcQ0hIa7xsVelA7aZjMoNvMNUwdFzUML+0FIWV9inyo9uRBto6E8ZI7rMRFCeXC6M+y0yKT
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        by mail.kernel.org (Postfix) with ESMTPSA id 095F7208C3;
+        Wed, 11 Dec 2019 15:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576076850;
+        bh=6u8Qv73v69MRsB1NuoBHJaQD04MLYCnDoAh6PP09yfs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q3nLmQFCbRApSFu2RFUUf8kV9jZ2oKe9gsFL6Z6ueF3B+lVbNy5eurQvXvLroi1cC
+         Xcw2pFS0q3CdREL7wiNgbwW8cw9c5T0M8FH1Ka9wpLPBIlHq85LpqnpALgBoh0Hndc
+         UQzAN+m44Sgb1RPtGwwf0kooj1uVakw73tdLcM60=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Subject: [PATCH 5.4 15/92] serial: serial_core: Perform NULL checks for break_ctl ops
+Date:   Wed, 11 Dec 2019 16:05:06 +0100
+Message-Id: <20191211150225.739461664@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
+References: <20191211150221.977775294@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb18abab-f3da-421c-ec35-08d77e4bdb9a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Dec 2019 15:07:36.7428
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KsgfIQ2pn6mWXIFcMW0h+e/PttFFE5I7fF35P+N+HUmtbRzxf6UIpG8zx/jWTx3O4E6Fm4mCo/Vu+t3d2f3bQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4231
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXJuZCwNCg0KRnJvbTogQXJuZCBCZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4NCkRhdGU6IFR1
-ZSwgRGVjIDEwLCAyMDE5IGF0IDE5OjM3OjE0DQoNCj4gT24gVHVlLCBEZWMgMTAsIDIwMTkgYXQg
-ODoxNSBQTSBWaXRvciBTb2FyZXMgPFZpdG9yLlNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3RlOg0K
-PiA+IEZyb206IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+ID4gRGF0ZTogVHVlLCBE
-ZWMgMTAsIDIwMTkgYXQgMTc6NTE6MTQNCj4gPg0KPiA+ID4gT24gVHVlLCBEZWMgMTAsIDIwMTkg
-YXQgNDozNyBQTSBWaXRvciBTb2FyZXMgPFZpdG9yLlNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3Rl
-Og0KPiA+ID4gPg0KPiA+ID4gPiArLyogSU9DVEwgY29tbWFuZHMgKi8NCj4gPiA+ID4gKyNkZWZp
-bmUgSTNDX0RFVl9JT0NfTUFHSUMgICAgICAweDA3DQo+ID4gPiA+ICsNCj4gPiA+ID4gK3N0cnVj
-dCBpM2NfaW9jX3ByaXZfeGZlciB7DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IGkzY19wcml2X3hm
-ZXIgX191c2VyICp4ZmVyczsgICAgIC8qIHBvaW50ZXJzIHRvIGkzY19wcml2X3hmZXIgKi8NCj4g
-PiA+ID4gKyAgICAgICBfX3UzMiBueGZlcnM7ICAgICAgICAgICAgICAgICAgICAgICAgICAgLyog
-bnVtYmVyIG9mIGkzY19wcml2X3hmZXIgKi8NCj4gPiA+ID4gK307DQo+ID4gPiA+ICsNCj4gPiA+
-ID4gKyNkZWZpbmUgSTNDX0lPQ19QUklWX1hGRVIgICAgICBcDQo+ID4gPiA+ICsgICAgICAgX0lP
-VyhJM0NfREVWX0lPQ19NQUdJQywgMzAsIHN0cnVjdCBpM2NfaW9jX3ByaXZfeGZlcikNCj4gPiA+
-ID4gKw0KPiA+ID4gPiArI2RlZmluZSAgSTNDX0lPQ19QUklWX1hGRVJfTUFYX01TR1MgICAgNDIN
-Cj4gPiA+DQo+ID4gPiBUaGlzIGlzIG5vdCBhIGdyZWF0IGRhdGEgc3RydWN0dXJlIGZvciBVQVBJ
-LCBwbGVhc2Ugc2VlDQo+ID4gPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIv
-dXJsP3U9aHR0cHMtM0FfX2dpdC5rZXJuZWwub3JnX3B1Yl9zY21fbGludXhfa2VybmVsX2dpdF9h
-cm5kX3BsYXlncm91bmQuZ2l0X3RyZWVfRG9jdW1lbnRhdGlvbl9jb3JlLTJEYXBpX2lvY3RsLnJz
-dC0zRmgtM0Rjb21wYXQtMkRpb2N0bC0yRGVuZGdhbWUtMjZpZC0zRDkyNzMyNGI3OTAwZWU5Yjg3
-NzY5MWE4YjIzN2UyNzJmYWJiMjFiZjUmZD1Ed0lCYVEmYz1EUEw2X1hfNkprWEZ4N0FYV3FCMHRn
-JnI9cVZ1VTY0dTl4NzdZMEtkMFBoREtfbHB4RmdnNlBLOVBhdGVId2piX0RZMCZtPTVROVdqSzBv
-OTNOUjdEUTlOTTZTbzZtZmRncE5uWm5TYVA4cU1wZ2FDN0Umcz1MenpqclVRQUc4Zng1amtWeUs3
-M2RCRHJhaE5BdmswOUN4eGx4M0tPaVhJJmU9DQo+ID4gPg0KPiA+ID4gZm9yIHNvbWUgYmFja2dy
-b3VuZC4gSSdtIHBsYW5uaW5nIHRvIHN1Ym1pdCB0aGF0IGRvY3VtZW50YXRpb24gZm9yDQo+ID4g
-PiBtYWlubGluZSBpbnRlZ3JhdGlvbiBzb29uLg0KPiA+ID4NCj4gPiA+ICAgICAgQXJuZA0KPiA+
-DQo+ID4gVGhhbmtzIGZvciBzaGFyaW5nIHRoZSBkb2N1bWVudC4NCj4gPg0KPiA+IE15IHVuZGVy
-c3RhbmRpbmcgaXMgdGhhdCBJIHNob3VsZCB1c2UgYSBkYXRhIHN0cnVjdHVyZSBsaWtlIHRoZSBz
-dHJ1Y3QNCj4gPiBzcGlfaW9jX3RyYW5zZmVyLCB3aXRoIHRoaXMgSSBtYXkgYWxzbyB1c2UgdGhl
-IHNhbWUgaW9jdGwgY29tbWFuZA0KPiA+IGRlZmluaXRpb24uIEFtIEkgcmlnaHQ/DQo+IA0KPiBZ
-ZXMsIHRoYXQgd291bGQgYmUgYW4gZXhhbXBsZSBvZiBhIHN0cnVjdHVyZSB0aGF0IGZvbGxvd3Mg
-dGhlIGJlc3QNCj4gcHJhY3RpY2VzIGZyb20gbXkgZG9jdW1lbnQuIEl0IGlzIHN0aWxsIHJhdGhl
-ciBjb21wbGV4LCBzbyBpZiB5b3UNCj4gY2FuIG1ha2UgaXQgYW55IHNpbXBsZXIsIHRoYXQgd291
-bGQgYmUgaWRlYWwuDQoNCkkgd2lsbCB0cnkgdG8gZG8gdGhhdC4NCg0KPiANCj4gPiBJbiB0aGUg
-ZG9jdW1lbnRhdGlvbiB5b3UgYWxzbyByZWZlciB0aGUgY29tcGFjdF9pb2N0bCgpIGFuZCBJdCBp
-cyBub3QNCj4gPiBjbGVhciB0byBtZSBpZiB0aGUgY29tcGFjdF9pb2N0bCgpIGlzIG1hbmRhdG9y
-eSBpbiB0aGlzIGNhc2UuIFNob3VsZCBJDQo+ID4gaW1wbGVtZW50IGl0IGFzIHdlbGw/DQo+IA0K
-PiBJZiB0aGUgc3RydWN0dXJlIGlzIGRlZmluZWQgbGlrZSB0aGF0LCB5b3UganVzdCBuZWVkIHRv
-IHNldA0KPiAiLmNvbXBhdF9pb2N0bD1jb21wYXRfcHRyX2lvY3RsLCIgaW4gdGhlIGZpbGVfb3Bl
-cmF0aW9ucyBzdHJ1Y3R1cmUNCj4gYW5kIGl0IHdpbGwgd29yaywgYnV0IHlvdSBjYW5ub3Qgc2tp
-cCB0aGF0IHN0ZXAuDQoNClRoYW5rcywgbm93IEkga25vdyB0aGF0IGlzIG1hbmRhdG9yeSDwn5iK
-Lg0KDQo+IA0KPiBBcyB5b3VyIGludGVyZmFjZSBpcyBiYXNpY2FsbHkganVzdCByZWFkL3dyaXRl
-IGJhc2VkLCBJIHdvbmRlcg0KPiBpZiB0aGVyZSBpcyBhIHdheSB0byBjb21wbGV0ZWx5IGF2b2lk
-IHRoZSBpb2N0bCBhbmQgaW5zdGVhZA0KPiB1c2UgaW9fc3VibWl0KCkgYXMgdGhlIHByaW1hcnkg
-aW50ZXJmYWNlLg0KPiANCj4gICAgICAgQXJuZA0KDQpJIGNvbmZlc3MgdGhhdCBJIHdhc24ndCBm
-YW1pbGlhciB3aXRoIGlvX3N1Ym1pdCgpIHVudGlsIG5vdyBhbmQgd2VudCANCnN0cmFpZ2h0d2F5
-IGZvciB0aGUgaW9jdGwoKSBhcHByb2FjaC4NClNvIGZhciwgbXkgdW5kZXJzdGFuZGluZyBpcyB0
-aGF0IGlvX3N1Ym1pdCgpIHdpbGwgY2FsbCAud3JpdGUgb3IgLnJlYWQgb2YgDQppM2NkZXYgbW9k
-dWxlIGRlcGVuZGluZyBvbiB0aGUgaW9jYiBjb21tYW5kLiBpZiBzbywgd2Ugd29uJ3QgYmUgYWJs
-ZSB0byANCmRvIGEgcmVwZWF0ZWQgc3RhcnQgYmV0d2VlbiBhIG11bHRpcGxlIGlvY2IgaW4gdGhl
-IHNhbWUgbGlzdCwgcmlnaHQ/DQoNCkFwYXJ0IGZyb20gdGhpcyBwcml2YXRlIHJlYWQvd3JpdGUg
-bmVlZCwgYW5vdGhlciByZXF1aXJlbWVudCB0aGF0IGxlYWRzIA0KbWUgdG8gdXNlIHRoZSBpb2N0
-bCgpIHdhczoNCi0gV2hlbiB3ZSBzdXBwb3J0IEhEUiBjb21tYW5kIGluIGkzYyBzdWJzeXN0ZW0g
-d2UgY2FuIGV4cGFuZCB0aGUgaW9jdGwoKSANCmNvbW1hbmQgdG8gc3VwcG9ydCBpdC4NCi0gRm9y
-IG5vdywgZGV2aWNlIEFQSSBkb2Vzbid0IGV4cG9zZSBDQ0MgY29tbWFuZHMgYnV0IHNvbWUgb2Yg
-dGhlbSBhcmUgDQp1c2VkIGZvciBhIHByaXZhdGUgY29udHJhY3QgYmV0d2VlbiBtYXN0ZXIgYW5k
-IGRldmljZSBhbmQgd2UgbGlrZWx5IG5lZWQgDQp0aGF0IHN1cHBvcnQgaW4gdGhlIGZ1dHVyZSBh
-cyB3ZWxsLg0KDQpUaGFua3MsDQpCZXN0IHJlZ2FyZHMsDQpWaXRvciBTb2FyZXMNCg0K
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+
+commit 7d73170e1c282576419f8b50a771f1fcd2b81a94 upstream.
+
+Doing fuzz test on sbsa uart device, causes a kernel crash
+due to NULL pointer dereference:
+
+------------[ cut here ]------------
+Unable to handle kernel paging request at virtual address fffffffffffffffc
+pgd = ffffffe331723000
+[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+Internal error: Oops: 96000005 [#1] PREEMPT SMP
+Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+PC is at uart_break_ctl+0x44/0x84
+LR is at uart_break_ctl+0x34/0x84
+pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+sp : ffffffe32bda7cc0
+x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+x27: ffffff8393402000 x26: 0000000000000000
+x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+x23: 0000000000005425 x22: 00000000ffffffff
+x21: ffffffe33ed73c98 x20: 0000000000000000
+x19: ffffffe33ed94168 x18: 0000000000000004
+x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+x15: 0000000000000010 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000020 x10: 0000007ffdac1708
+x9 : 0000000000000078 x8 : 000000000000001d
+x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+x3 : ffffff83938d5018 x2 : 0000000000000080
+x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+virtual start addr offset is 38ac00000
+module base offset is 2cd4cf1000
+linear region base offset is : 0
+Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+Call trace:
+Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+7aa0:                                   0000000000001000 0000007fffffffff
+7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+7be0: 0000000000000000 0000000000000000
+[<ffffff8393196098>] uart_break_ctl+0x44/0x84
+[<ffffff8393177718>] send_break+0xa0/0x114
+[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+---[ end trace 8606094f1960c5e0 ]---
+Kernel panic - not syncing: Fatal exception
+
+Fix this problem by adding NULL checks prior to calling break_ctl ops.
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/serial_core.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1111,7 +1111,7 @@ static int uart_break_ctl(struct tty_str
+ 	if (!uport)
+ 		goto out;
+ 
+-	if (uport->type != PORT_UNKNOWN)
++	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
+ 		uport->ops->break_ctl(uport, break_state);
+ 	ret = 0;
+ out:
+
+
