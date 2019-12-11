@@ -2,239 +2,336 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B54C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C396C00454
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296DD2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="MhspcRSZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2A9452173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 17:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576085184;
+	bh=6+GsgB2+SJxEeJX9z8+Ra3hd+E/oCT3XWF+00Tcl28Q=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=Ey3LJZJnNAlsOEEFdxzSX/yzF63ZsfdO2g7lKv2dVD7A0TQjgSM5sUvEtHMhe3xVw
+	 8Ewd9xddMZAPrrJjmJefjmI0TdKT47TOeHg4p1A/NgJiS/IVI2IUp+FzOcC466qruV
+	 c9bS8POQt5W1R65RqN6+HiG9vIP0feL/3jKs6n8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfLKRYf (ORCPT
+        id S1731003AbfLKR0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 12:24:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45742 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730927AbfLKRYe (ORCPT
+        Wed, 11 Dec 2019 12:26:23 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:54289 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726368AbfLKR0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 12:24:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so10670447pgk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 09:24:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kXZ4aqS0uFPSyTpXVREqajZ2V8XvicWtvP1bC/iBXA0=;
-        b=MhspcRSZVu7valP3RyaPPWgFdz8/QMgQeVJJ2pRuqjM7KuaSUhImmxUXvLqJHULlV9
-         hcfZ3gSd7/E+yG4sAL30QUImCTx2MrAbZB5x3T1/zYZlYdi3uOS2SZOrfVAmPVTArZzx
-         kb2Gq4rOUSInPffbEAu3bKqeEIF0dV6jcfPGzPlUknSA+ChqI9BtHhaLc//8vVaz1Gyh
-         7xX1GkzwHG0rcacg3f00JYEcLj2vuF+5l1dQh80lRRhtztXlYOlLlNzcjpoBbM4jKPZs
-         HyyFsfq6/ykX/17GbAXQbd2ymutX5vArM710aRCUuqVYUQ7VpidmybLDGo/ZpmWy+zxQ
-         FNdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kXZ4aqS0uFPSyTpXVREqajZ2V8XvicWtvP1bC/iBXA0=;
-        b=Q+b24kSurSCX0JYAAHjBzbSESnDQKCOaY6++z3fnYxpExewSif0aSAoF5BSWTonPjp
-         vQSUG7QaOMabusyMB70EyUE9jPVNtYsMCirrlMkEFggho13D78BkORFUaMcJ7hgxbk/n
-         OHcnJWWWhQ7rlluZNdJEHsko9LkJOo0LhIsDvgdVFcP3MvQZEv04tnuP16r4RF1o8Wdb
-         4dA3R1+P/5vuMEnRjkP8M6tmx9LdrydJziHBWfzGFLWhO5A/JZrilOOedjZ8GOP99/uo
-         yAa5gCdVo98Cx1JNibTKRTnb1we4Oj4m7B7F1LfYqqk8nLRwYEIXm+IqYgwnLIL632Xu
-         LBAw==
-X-Gm-Message-State: APjAAAU6x7Dy31LWNwt0QNHcVNKPKPI7EnRlsawuSFVmfh6nA4IbNTMa
-        o8k7znrlROhXJ/pEMIrqtaWCJA==
-X-Google-Smtp-Source: APXvYqxoegsHd9PZCcnPqYySFzujS1nwe5vh9qArbS2aDuHtyfBlEKZ7XXcuQbUWiakctxMNds096g==
-X-Received: by 2002:a62:446:: with SMTP id 67mr4738128pfe.109.1576085073816;
-        Wed, 11 Dec 2019 09:24:33 -0800 (PST)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id a14sm3619810pfn.22.2019.12.11.09.24.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 09:24:33 -0800 (PST)
-Date:   Wed, 11 Dec 2019 09:24:32 -0800
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-Message-ID: <20191211172432.GC3105713@mini-arch>
-References: <20191210011438.4182911-1-andriin@fb.com>
- <20191210011438.4182911-12-andriin@fb.com>
- <20191209175745.2d96a1f0@cakuba.netronome.com>
- <CAEf4Bzaow7w+TGyiF67pXn42TumxFZb7Q4BOQPPGfRJdyeY-ig@mail.gmail.com>
- <20191210100536.7a57d5e1@cakuba.netronome.com>
- <20191210214407.GA3105713@mini-arch>
- <CAEf4BzbSwoeKVnyJU7EoP86exNj3Eku5_+8MbEieZKt2MqrhbQ@mail.gmail.com>
- <20191210225900.GB3105713@mini-arch>
- <CAEf4BzYtqywKn4yGQ+vq2sKod4XE03HYWWBfUiNvg=BXhgFdWg@mail.gmail.com>
+        Wed, 11 Dec 2019 12:26:22 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1if5kg-0007zE-BR; Wed, 11 Dec 2019 18:26:18 +0100
+To:     Qianggui Song <qianggui.song@amlogic.com>
+Subject: Re: [PATCH 2/4] irqchip/meson-gpio: rework meson irqchip driver to  support meson-A1 SoCs
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzYtqywKn4yGQ+vq2sKod4XE03HYWWBfUiNvg=BXhgFdWg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 11 Dec 2019 17:26:18 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>
+In-Reply-To: <2551e382-d373-dad8-7294-80f2a15c0ad4@amlogic.com>
+References: <20191206121714.14579-1-qianggui.song@amlogic.com>
+ <20191206121714.14579-3-qianggui.song@amlogic.com>
+ <542e3e819e584d6e433d2c4276c3b379@www.loen.fr>
+ <2551e382-d373-dad8-7294-80f2a15c0ad4@amlogic.com>
+Message-ID: <0cbbb895b50a838fd1dfa9e59528367d@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: qianggui.song@amlogic.com, tglx@linutronix.de, jason@lakedaemon.net, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, jianxin.pan@amlogic.com, xingyu.chen@amlogic.com, hanjie.lin@amlogic.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/10, Andrii Nakryiko wrote:
-> On Tue, Dec 10, 2019 at 2:59 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> >
-> > On 12/10, Andrii Nakryiko wrote:
-> > > On Tue, Dec 10, 2019 at 1:44 PM Stanislav Fomichev <sdf@fomichev.me> wrote:
-> > > >
-> > > > On 12/10, Jakub Kicinski wrote:
-> > > > > On Tue, 10 Dec 2019 09:11:31 -0800, Andrii Nakryiko wrote:
-> > > > > > On Mon, Dec 9, 2019 at 5:57 PM Jakub Kicinski wrote:
-> > > > > > > On Mon, 9 Dec 2019 17:14:34 -0800, Andrii Nakryiko wrote:
-> > > > > > > > struct <object-name> {
-> > > > > > > >       /* used by libbpf's skeleton API */
-> > > > > > > >       struct bpf_object_skeleton *skeleton;
-> > > > > > > >       /* bpf_object for libbpf APIs */
-> > > > > > > >       struct bpf_object *obj;
-> > > > > > > >       struct {
-> > > > > > > >               /* for every defined map in BPF object: */
-> > > > > > > >               struct bpf_map *<map-name>;
-> > > > > > > >       } maps;
-> > > > > > > >       struct {
-> > > > > > > >               /* for every program in BPF object: */
-> > > > > > > >               struct bpf_program *<program-name>;
-> > > > > > > >       } progs;
-> > > > > > > >       struct {
-> > > > > > > >               /* for every program in BPF object: */
-> > > > > > > >               struct bpf_link *<program-name>;
-> > > > > > > >       } links;
-> > > > > > > >       /* for every present global data section: */
-> > > > > > > >       struct <object-name>__<one of bss, data, or rodata> {
-> > > > > > > >               /* memory layout of corresponding data section,
-> > > > > > > >                * with every defined variable represented as a struct field
-> > > > > > > >                * with exactly the same type, but without const/volatile
-> > > > > > > >                * modifiers, e.g.:
-> > > > > > > >                */
-> > > > > > > >                int *my_var_1;
-> > > > > > > >                ...
-> > > > > > > >       } *<one of bss, data, or rodata>;
-> > > > > > > > };
-> > > > > > >
-> > > > > > > I think I understand how this is useful, but perhaps the problem here
-> > > > > > > is that we're using C for everything, and simple programs for which
-> > > > > > > loading the ELF is majority of the code would be better of being
-> > > > > > > written in a dynamic language like python?  Would it perhaps be a
-> > > > > > > better idea to work on some high-level language bindings than spend
-> > > > > > > time writing code gens and working around limitations of C?
-> > > > > >
-> > > > > > None of this work prevents Python bindings and other improvements, is
-> > > > > > it? Patches, as always, are greatly appreciated ;)
-> > > > >
-> > > > > This "do it yourself" shit is not really funny :/
-> > > > >
-> > > > > I'll stop providing feedback on BPF patches if you guy keep saying
-> > > > > that :/ Maybe that's what you want.
-> > > > >
-> > > > > > This skeleton stuff is not just to save code, but in general to
-> > > > > > simplify and streamline working with BPF program from userspace side.
-> > > > > > Fortunately or not, but there are a lot of real-world applications
-> > > > > > written in C and C++ that could benefit from this, so this is still
-> > > > > > immensely useful. selftests/bpf themselves benefit a lot from this
-> > > > > > work, see few of the last patches in this series.
-> > > > >
-> > > > > Maybe those applications are written in C and C++ _because_ there
-> > > > > are no bindings for high level languages. I just wish BPF programming
-> > > > > was less weird and adding some funky codegen is not getting us closer
-> > > > > to that goal.
-> > > > >
-> > > > > In my experience code gen is nothing more than a hack to work around
-> > > > > bad APIs, but experiences differ so that's not a solid argument.
-> > > > *nod*
-> > > >
-> > > > We have a nice set of C++ wrappers around libbpf internally, so we can do
-> > > > something like BpfMap<key type, value type> and get a much better interface
-> > > > with type checking. Maybe we should focus on higher level languages instead?
-> > > > We are open to open-sourcing our C++ bits if you want to collaborate.
-> > >
-> > > Python/C++ bindings and API wrappers are an orthogonal concerns here.
-> > > I personally think it would be great to have both Python and C++
-> > > specific API that uses libbpf under the cover. The only debatable
-> > > thing is the logistics: where the source code lives, how it's kept in
-> > > sync with libbpf, how we avoid crippling libbpf itself because
-> > > something is hard or inconvenient to adapt w/ Python, etc.
-> >
-> > [..]
-> > > The problem I'm trying to solve here is not really C-specific. I don't
-> > > think you can solve it without code generation for C++. How do you
-> > > "generate" BPF program-specific layout of .data, .bss, .rodata, etc
-> > > data sections in such a way, where it's type safe (to the degree that
-> > > language allows that, of course) and is not "stringly-based" API? This
-> > > skeleton stuff provides a natural, convenient and type-safe way to
-> > > work with global data from userspace pretty much at the same level of
-> > > performance and convenience, as from BPF side. How can you achieve
-> > > that w/ C++ without code generation? As for Python, sure you can do
-> > > dynamic lookups based on just the name of property/method, but amount
-> > > of overheads is not acceptable for all applications (and Python itself
-> > > is not acceptable for those applications). In addition to that, C is
-> > > the best way for other less popular languages (e.g., Rust) to leverage
-> > > libbpf without investing lots of effort in re-implementing libbpf in
-> > > Rust.
-> > I'd say that a libbpf API similar to dlopen/dlsym is a more
-> > straightforward thing to do. Have a way to "open" a section and
-> > a way to find a symbol in it. Yes, it's a string-based API,
-> > but there is nothing wrong with it. IMO, this is easier to
-> > use/understand and I suppose Python/C++ wrappers are trivial.
-> 
-> Without digging through libbpf source code (or actually, look at code,
-> but don't run any test program), what's the name of the map
-> corresponding to .bss section, if object file is
-> some_bpf_object_file.o? If you got it right (congrats, btw, it took me
-> multiple attempts to memorize the pattern), how much time did you
-> spend looking it up? Now compare it to `skel->maps.bss`. Further, if
-> you use anonymous structs for your global vars, good luck maintaining
-> two copies of that: one for BPF side and one for userspace.
-As your average author of BPF programs I don't really care
-which section my symbol ends up into. Just give me an api
-to mmap all "global" sections (or a call per section which does all the
-naming magic inside) and lookup symbol by name; I can cast it to a proper
-type and set it.
+On 2019-12-10 02:08, Qianggui Song wrote:
+> Hi, Marc
+>      Thank you for your review
+>
+> On 2019/12/6 21:13, Marc Zyngier wrote:
+>> On 2019-12-06 12:17, Qianggui Song wrote:
+>>> Since Meson-A1 Socs register layout of gpio interrupt controller 
+>>> have
+>>> difference with previous chips, registers to decide irq line and
+>>> offset
+>>> of trigger method are all changed, the current driver should be
+>>> modified.
+>>>
+>>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>>> ---
+>>>  drivers/irqchip/irq-meson-gpio.c | 79
+>>> ++++++++++++++++++++++++--------
+>>>  1 file changed, 60 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-meson-gpio.c
+>>> b/drivers/irqchip/irq-meson-gpio.c
+>>> index 829084b568fa..1824ffc30de2 100644
+>>> --- a/drivers/irqchip/irq-meson-gpio.c
+>>> +++ b/drivers/irqchip/irq-meson-gpio.c
+>>> @@ -30,44 +30,74 @@
+>>>   * stuck at 0. Bits 8 to 15 are responsive and have the expected
+>>>   * effect.
+>>>   */
+>>> -#define REG_EDGE_POL_EDGE(x)	BIT(x)
+>>> -#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
+>>> -#define REG_BOTH_EDGE(x)	BIT(8 + (x))
+>>> -#define REG_EDGE_POL_MASK(x)    (	\
+>>> -		REG_EDGE_POL_EDGE(x) |	\
+>>> -		REG_EDGE_POL_LOW(x)  |	\
+>>> -		REG_BOTH_EDGE(x))
+>>> +#define REG_EDGE_POL_EDGE(params,
+>>> x)	BIT((params)->edge_single_offset + (x))
+>>> +#define REG_EDGE_POL_LOW(params, x)	BIT((params)->pol_low_offset +
+>>> (x))
+>>> +#define REG_BOTH_EDGE(params, x)	BIT((params)->edge_both_offset +
+>>> (x))
+>>> +#define REG_EDGE_POL_MASK(params, x)    (	\
+>>> +		REG_EDGE_POL_EDGE(params, x) |	\
+>>> +		REG_EDGE_POL_LOW(params, x)  |	\
+>>> +		REG_BOTH_EDGE(params, x))
+>>>  #define REG_PIN_SEL_SHIFT(x)	(((x) % 4) * 8)
+>>>  #define REG_FILTER_SEL_SHIFT(x)	((x) * 4)
+>>>
+>>> +#define INIT_MESON8_COMMON_DATA					\
+>>> +	.edge_single_offset = 0,				\
+>>> +	.pol_low_offset = 16,					\
+>>> +	.pin_sel_mask = 0xff,					\
+>>> +	.ops = {						\
+>>> +		.gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,	\
+>>> +	},
+>>
+>> Please place the #defines that operate on the various data 
+>> structures
+>> *after* the definition of the structures. It would greatly help
+>> reading the changes.
+>>
+> OK, will place it below the definition of struct 
+> meson_gpio_irq_params
+> in the next patch.
+>>> +
+>>> +struct meson_gpio_irq_controller;
+>>> +static void meson8_gpio_irq_sel_pin(struct 
+>>> meson_gpio_irq_controller
+>>> *ctl,
+>>> +				    unsigned int channel, unsigned long hwirq);
+>>> +struct irq_ctl_ops {
+>>> +	void (*gpio_irq_sel_pin)(struct meson_gpio_irq_controller *ctl,
+>>> +					 unsigned int channel,
+>>> +					 unsigned long hwirq);
+>>> +	void (*gpio_irq_init)(struct meson_gpio_irq_controller *ctl);
+>>> +};
+>>> +
+>>>  struct meson_gpio_irq_params {
+>>>  	unsigned int nr_hwirq;
+>>>  	bool support_edge_both;
+>>> +	unsigned int edge_both_offset;
+>>> +	unsigned int edge_single_offset;
+>>> +	unsigned int pol_low_offset;
+>>> +	unsigned int pin_sel_mask;
+>>> +	struct irq_ctl_ops ops;
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params meson8_params = {
+>>>  	.nr_hwirq = 134,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params meson8b_params = {
+>>>  	.nr_hwirq = 119,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params gxbb_params = {
+>>>  	.nr_hwirq = 133,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params gxl_params = {
+>>>  	.nr_hwirq = 110,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params axg_params = {
+>>>  	.nr_hwirq = 100,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>>
+>>>  static const struct meson_gpio_irq_params sm1_params = {
+>>>  	.nr_hwirq = 100,
+>>>  	.support_edge_both = true,
+>>> +	.edge_both_offset = 8,
+>>> +	INIT_MESON8_COMMON_DATA
+>>>  };
+>>
+>> OK, this isn't great. The least you could do is to make
+>> your initializer parametric, so that it takes the nr_hwirq as
+>> a parameter.
+>>
+>> Then, any additional member that overrides common behaviour
+>> should come after the main initializer.
+>>
+>> Also, do you need 'support_edge_both'? Isn't a non-zero
+>> 'edge_both_offset' enough to detect the feature?
+>>
+>
+> Sorry, but I am not very clear that "make your initializer 
+> parametric,
+> so that it takes the nr_hwirq as a parameter". Is that
+> initializer(initial function in .ops ? ) as a parameter of struct
+> meson_gpio_irq_params ? If nr_hwirq as a parameter of init function 
+> of
+> .ops then will make lot of init function for each platform.
+>
+> How about move .ops from  macro like below:
+> #define INIT_MESON8_COMMON_DATA					\
+> 	.edge_single_offset = 0,				\
+> 	.pol_low_offset = 16,					\
+> 	.pin_sel_mask = 0xff,
+>
+> static const struct meson_gpio_irq_params sm1_params = {
+>  	.nr_hwirq = 100,//main initializer
+> 	.ops = {
+>               .gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,
+>                /*in below to assign support_edge_both
+>                 * edge_both_offset
+>                 * call after main initializer to additional
+>                 * member
+>                 */
+>               .gpio_irq_init = meson_sm1_irq_init,
+> 	},
+>   	INIT_MESON8_COMMON_DATA// m8 to sm1 are the same.
+> };
 
-RE anonymous structs: maybe don't use them if you want to share the data
-between bpf and userspace?
+No, what I'm suggesting is something like this:
 
-> I never said there is anything wrong with current straightforward
-> libbpf API, but I also never said it's the easiest and most
-> user-friendly way to work with BPF either. So we'll have both
-> code-generated interface and existing API. Furthermore, they are
-> interoperable (you can pass skel->maps.whatever to any of the existing
-> libbpf APIs, same for progs, links, obj itself). But there isn't much
-> that can beat performance and usability of code-generated .data, .bss,
-> .rodata (and now .extern) layout.
-I haven't looked closely enough, but is there a libbpf api to get
-an offset of a variable? Suppose I have the following in bpf.c:
+diff --git a/drivers/irqchip/irq-meson-gpio.c 
+b/drivers/irqchip/irq-meson-gpio.c
+index 8478100706a6..27a3207a944d 100644
+--- a/drivers/irqchip/irq-meson-gpio.c
++++ b/drivers/irqchip/irq-meson-gpio.c
+@@ -43,24 +43,27 @@
+  /* Below is used for Meson-A1 series like chips*/
+  #define REG_PIN_A1_SEL	0x04
 
-	int a;
-	int b;
+-#define INIT_MESON8_COMMON_DATA					\
+-	.edge_single_offset = 0,				\
+-	.pol_low_offset = 16,					\
+-	.pin_sel_mask = 0xff,					\
+-	.ops = {						\
+-		.gpio_irq_sel_pin = meson8_gpio_irq_sel_pin,	\
+-	},
+-
+-#define INIT_MESON_A1_COMMON_DATA				\
+-	.support_edge_both = true,				\
+-	.edge_both_offset = 16,					\
+-	.edge_single_offset = 8,				\
+-	.pol_low_offset = 0,					\
+-	.pin_sel_mask = 0x7f,					\
+-	.ops = {						\
+-		.gpio_irq_sel_pin = meson_a1_gpio_irq_sel_pin,	\
+-		.gpio_irq_init = meson_a1_gpio_irq_init,	\
+-	},
++#define INIT_MESON_COMMON(irqs, init, sel)		\
++	.nr_hwirq = irqs,				\
++	.ops = {					\
++		.gpio_irq_sel_pin = sel,		\
++		.gpio_irq_init = init,			\
++	}
++
++#define INIT_MESON8_COMMON_DATA(irqs)			\
++	INIT_MESON_COMMON(irqs, NULL,			\
++			  meson8_gpio_irq_sel_pin),	\
++	.pol_low_offset = 16,				\
++	.pin_sel_mask = 0xff,
++
++#define INIT_MESON_A1_COMMON_DATA(irqs)			\
++	INIT_MESON_COMMON(irqs, meson_a1_gpio_irq_init,	\
++			  meson_a1_gpio_irq_sel_pin),	\
++	.support_edge_both = true,			\
++	.edge_both_offset = 16,				\
++	.edge_single_offset = 8,			\
++	.pol_low_offset = 0,				\
++	.pin_sel_mask = 0x7f,
 
-Can I get an offset of 'b' in the .bss without manually parsing BTF?
+  struct meson_gpio_irq_controller;
+  static void meson8_gpio_irq_sel_pin(struct meson_gpio_irq_controller 
+*ctl,
+@@ -89,40 +92,33 @@ struct meson_gpio_irq_params {
+  };
 
-TBH, I don't buy the performance argument for these global maps.
-When you did the mmap patchset for the array, you said it yourself
-that it's about convenience and not performance.
+  static const struct meson_gpio_irq_params meson8_params = {
+-	.nr_hwirq = 134,
+-	INIT_MESON8_COMMON_DATA
++	INIT_MESON8_COMMON_DATA(134),
+  };
 
-> > As for type-safety: it's C, forget about it :-)
-> 
-> C is weakly, but still typed language. There are types and they are
-> helpful. Yes, you can disregard them and re-interpret values as
-> anything, but that's beside the point.
-My point was that there is a certain mental model when working
-with this type of external symbols which feels "natural" for C
-(dlopen/dlsym).
+  static const struct meson_gpio_irq_params meson8b_params = {
+-	.nr_hwirq = 119,
+-	INIT_MESON8_COMMON_DATA
++	INIT_MESON8_COMMON_DATA(119),
+  };
 
-But I agree with you, that as long as code-gen is optional
-and there is an alternative api in libbpf, we should be good.
+  static const struct meson_gpio_irq_params gxbb_params = {
+-	.nr_hwirq = 133,
+-	INIT_MESON8_COMMON_DATA
++	INIT_MESON8_COMMON_DATA(133),
+  };
+
+  static const struct meson_gpio_irq_params gxl_params = {
+-	.nr_hwirq = 110,
+-	INIT_MESON8_COMMON_DATA
++	INIT_MESON8_COMMON_DATA(110),
+  };
+
+  static const struct meson_gpio_irq_params axg_params = {
+-	.nr_hwirq = 100,
+-	INIT_MESON8_COMMON_DATA
++	INIT_MESON8_COMMON_DATA(100),
+  };
+
+  static const struct meson_gpio_irq_params sm1_params = {
+-	.nr_hwirq = 100,
++	INIT_MESON8_COMMON_DATA(100),
+  	.support_edge_both = true,
+  	.edge_both_offset = 8,
+-	INIT_MESON8_COMMON_DATA
+  };
+
+  static const struct meson_gpio_irq_params a1_params = {
+-	.nr_hwirq = 62,
+-	INIT_MESON_A1_COMMON_DATA
++	INIT_MESON_A1_COMMON_DATA(62),
+  };
+
+  static const struct of_device_id meson_irq_gpio_matches[] = {
+
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
