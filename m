@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B51C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5B3C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC5432077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F2D2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078473;
-	bh=/u13mj4dQXc8/OvMb5WuTa4PoenXQs6Y8XQYTXC0M2c=;
+	s=default; t=1576078476;
+	bh=8mtBwPBN3NtL3DgrPx4KHMNZWOYFzJum+MD9APM3m5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufZwdAl9/e+J73mAeX08SUTSc5g7suuHPSi8jODw0P/F3QvJ5444BLYHVWsO/LzHp
-	 Kr8fKOJHc9nIhoJe8d1QB6ZCpxVMN8imgWfEMysSq0ZBZMygjKYZZeBROKBkGtiBgz
-	 KskYN0A6l16mzioPITjKC5ArIKZ97EVzQxaVtgR8=
+	b=RfJwavXsBa4jnooiOMEY6hwcbKM3Zitq4RhgVb7u0cgzr33lPBMXzWcg7XaFmJUJq
+	 98dOoY6JBXoGxcHmm64FvLzFrAxxX01QDR1c34kbQafS0voDpS8XLT+1ys/N+7WjBV
+	 Ro4N4Qfba+3LnQDFpJwBul+K3jybe/HXDBaCOnJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbfLKP2T (ORCPT
+        id S1731390AbfLKP2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:28:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33828 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:28:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387509AbfLKP15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:27:57 -0500
+        id S2387491AbfLKP1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:27:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C31632465B;
-        Wed, 11 Dec 2019 15:27:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE2CA2465B;
+        Wed, 11 Dec 2019 15:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078076;
-        bh=/u13mj4dQXc8/OvMb5WuTa4PoenXQs6Y8XQYTXC0M2c=;
+        s=default; t=1576078073;
+        bh=8mtBwPBN3NtL3DgrPx4KHMNZWOYFzJum+MD9APM3m5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTXkhJe9yhAiJ+BQqNIT17zyvW6aCgSVkBs182PzoWFZWf1NYHtAIitZha7IoZo2r
-         DRZSybdmugKuTzNp/eoH/0dNFgLq8lodibnm4y7BcNfvSYofA2ukminRoqPdMRiE1N
-         F8KvmolJIVTYiYT4FHys0N0KjApV7YOvPdmLqZSw=
+        b=g7C8YSim/gWdGO/LsxResYqRSHvXJSf4YEnhzNsmns5wsLkals9U400wIBvMZPtd5
+         qUwmhcvJy0AkLlyRqaO7faTf5HA1d419Zu+UpRIHcx8iZVWYjba5oEtYAlBP1rKkng
+         pCQMs256CfAPS2tTwJtYme9LkEaq2idPRKfGQ9DA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chengguang Xu <cgxu519@mykernel.net>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        John Johansen <john.johansen@canonical.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 4.19 67/79] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Wed, 11 Dec 2019 10:26:31 -0500
-Message-Id: <20191211152643.23056-67-sashal@kernel.org>
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 64/79] apparmor: fix unsigned len comparison with less than zero
+Date:   Wed, 11 Dec 2019 10:26:28 -0500
+Message-Id: <20191211152643.23056-64-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152643.23056-1-sashal@kernel.org>
 References: <20191211152643.23056-1-sashal@kernel.org>
@@ -60,89 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
+[ Upstream commit 00e0590dbaec6f1bcaa36a85467d7e3497ced522 ]
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+The sanity check in macro update_for_len checks to see if len
+is less than zero, however, len is a size_t so it can never be
+less than zero, so this sanity check is a no-op.  Fix this by
+making len a ssize_t so the comparison will work and add ulen
+that is a size_t copy of len so that the min() macro won't
+throw warnings about comparing different types.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
-
-[root@hades f2fs]# repquota -P -a
-*** Report for project quotas on device /dev/nvme0n1p8
-Block grace time: 7days; Inode grace time: 7days
-Block limits File limits
-Project used soft hard grace used soft hard grace
-----------------------------------------------------------------------
-0 -- 4 0 0 1 0 0
-123 +- 10248 20480 10240 2 0 0
-
-The result of df command as below:
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 20M 11M 10M 51% /mnt/f2fs
-
-Even though it looks like there is another 10M free space to use,
-if we write new data to diretory test(inherit project id),
-the write will fail with errno(-EDQUOT).
-
-After this patch, the df result looks like below.
-
-[root@hades f2fs]# df -h /mnt/f2fs/test
-Filesystem Size Used Avail Use% Mounted on
-/dev/nvme0n1p8 10M 10M 0 100% /mnt/f2fs
-
-Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Addresses-Coverity: ("Macro compares unsigned to 0")
+Fixes: f1bd904175e8 ("apparmor: add the base fns() for domain labels")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: John Johansen <john.johansen@canonical.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ security/apparmor/label.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 7a9cc64f5ca37..662c7de58b990 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
+diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+index ba11bdf9043aa..2469549842d24 100644
+--- a/security/apparmor/label.c
++++ b/security/apparmor/label.c
+@@ -1462,11 +1462,13 @@ static inline bool use_label_hname(struct aa_ns *ns, struct aa_label *label,
+ /* helper macro for snprint routines */
+ #define update_for_len(total, len, size, str)	\
+ do {					\
++	size_t ulen = len;		\
++					\
+ 	AA_BUG(len < 0);		\
+-	total += len;			\
+-	len = min(len, size);		\
+-	size -= len;			\
+-	str += len;			\
++	total += ulen;			\
++	ulen = min(ulen, size);		\
++	size -= ulen;			\
++	str += ulen;			\
+ } while (0)
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -1159,9 +1163,13 @@ static int f2fs_statfs_project(struct super_block *sb,
- 			 (buf->f_blocks - curblock) : 0;
- 	}
+ /**
+@@ -1601,7 +1603,7 @@ int aa_label_snxprint(char *str, size_t size, struct aa_ns *ns,
+ 	struct aa_ns *prev_ns = NULL;
+ 	struct label_it i;
+ 	int count = 0, total = 0;
+-	size_t len;
++	ssize_t len;
  
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
-+
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
+ 	AA_BUG(!str && size != 0);
+ 	AA_BUG(!label);
 -- 
 2.20.1
 
