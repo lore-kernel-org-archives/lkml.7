@@ -2,336 +2,133 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F4C00454
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EFBC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D4C2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4780206C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 18:17:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SZxlyakL"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="g44yxhTp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbfLKSRR (ORCPT
+        id S1731320AbfLKSRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 13:17:17 -0500
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:46570 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730723AbfLKSPL (ORCPT
+        Wed, 11 Dec 2019 13:17:39 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38251 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbfLKSRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 13:15:11 -0500
-Received: by mail-yb1-f194.google.com with SMTP id v15so9365300ybp.13;
-        Wed, 11 Dec 2019 10:15:10 -0800 (PST)
+        Wed, 11 Dec 2019 13:17:38 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so8045656wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 10:17:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MtEWtxJnG7S8oz7nqSCzQW+Oc5y9HSkM4LHKA9BlAd8=;
-        b=SZxlyakLoDY64LbkteZAkrFCGlvhLBaVPZfUZ+M9Fe9j5N698Xl9DqRqRCJRUHLEQN
-         czZwVke0hN27h6340KG/b9Id/Pp3pFC24M8irkT0Zugc4Oa8Ymazu7OHAWu6tLINGn5L
-         AzXW8yX31PjQAUoBZZZVLHcE6XEFjORx4Eh65E3+B/KuNQrQ4VW2GwCDulkLvxQpw2Sr
-         +ZLM6LE4f4DYRAmNOLwWpL+7HIiA6d0Mo13nAB6cd5aDZUy2SX+xFtQOowlERujQlQ7O
-         rFFTf8MvlO9tbKXPf6VzxZlO7pm+FYphBdikJScelpphCZ9FQVXgg8hwu+HReCXrg2/y
-         bUCg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gdbdOJGDr6s2TB3vkGkLojy6hKiZ0+eS72V/GX35qQM=;
+        b=g44yxhTp8JdnuxE9OcIrpnMwYX/4KkBpg/3xgew18mzg4Xaqb7jyrdjlRCxZRniDTM
+         i8C0/tzDKBo7wRNB/6DaNihgzh2GJ0IFWEJHOTseCRdDOwFl/UEb9aznheriv/ZzzhH8
+         0EPPEOZmsFEbFt5ZeiRyUmi7eaOj4GSrbaVNgqaipJp4WfJ4RBOSSWVBs1Uy2SS0bi4h
+         KpgGZYQCUQdXw3gb2TvgFU027R8KuKh40IeQbYrhfbU50FstnGdaUC2zaTa/mSMdbR15
+         QKWEB3uvbYV2YeUEKO6GHbtov+vhkhmA2Nwfi5sgH3JRjarkHI1DZt0+GaWb/IBdrM0T
+         AKwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MtEWtxJnG7S8oz7nqSCzQW+Oc5y9HSkM4LHKA9BlAd8=;
-        b=SF4EUwCRsUsT0IYmwgM3ufyGVSQEccZZ1o9WPBua6dlTgk7pWH3vtffhA2fiuKxX62
-         yqal1tdNsp0xtZiuBxMlav+ULsSAzkcKswKhuj/dUoj9xx8zRUrVZx7UFmatgkGKhR0K
-         TH/LXC2EB2SeCIvalInVd6VrJaumx1y2mU4qbV8gQJeF08cZNZ0E4fgYk3+84+0c2h3k
-         Wr5u/7LVuZmuYFIbF5xuA2Cn8jVKJrw3dgyHxWzAuWsAENfgsE/gvpHp6PG8rHUxixwI
-         nAYA+TK9srB2Kyd8M3bXb05+6epone5qf3Nii/Zz3DWuJwGBLuHQiLXfI0IR/deBsy8q
-         3OwA==
-X-Gm-Message-State: APjAAAWqTSZIyrI4Mf2xffnK83MxsjyZJVQVptQfUehWU6hFnLtPeYQd
-        0HVM8wB4v4isDj7U5bnSs/SRs1irVCKJqg==
-X-Google-Smtp-Source: APXvYqyYaAEmhRuIXfPi49uSmKIeH9mBg1AY9/NWnhxB/gguuu66pVmg5Q/T3RA6Dg5SiHBEm41YSg==
-X-Received: by 2002:a25:d1d0:: with SMTP id i199mr921717ybg.131.1576088110103;
-        Wed, 11 Dec 2019 10:15:10 -0800 (PST)
-Received: from karen ([2604:2d80:d68a:cf00:a4bc:8e08:1748:387f])
-        by smtp.gmail.com with ESMTPSA id p62sm1262686ywb.98.2019.12.11.10.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 10:15:09 -0800 (PST)
-From:   Scott Schafer <schaferjscott@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Scott Schafer <schaferjscott@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/23] staging: qlge: Fix WARNING: Missing a blank line after declarations
-Date:   Wed, 11 Dec 2019 12:12:33 -0600
-Message-Id: <815a27ebb89b7a08e616fddbe0583eabd3c4401b.1576086080.git.schaferjscott@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1576086080.git.schaferjscott@gmail.com>
-References: <cover.1576086080.git.schaferjscott@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gdbdOJGDr6s2TB3vkGkLojy6hKiZ0+eS72V/GX35qQM=;
+        b=BQ2asSWVZDFDjFct4tjZz/FHLxbaF21jdChv2BEov9qstlO9QaJaMlA8mmbPuodp5p
+         KCEJredJJ1eQz4iKeao0o0jZ82qztDXb1iwu/wLdl0isJCEHU9yBHiG/BXASPw/vnfFL
+         6tzJDcFa5jUsVqTB/W2qPJscDgHXrpN2cDPj085i4fWv8zJBLM40VPlumT65i6SyJwSK
+         Jb4V5NwTBQbkoa2scIH2ds0vyXEdoTC1p504VVLX5WWj1CB2Kg5ygGLR25IjJm15U0cK
+         xMBLM9KEccBvVnHTqCINWNNt4mTkqMHm5REBLFmG5rjaSHiIrSdvVpObas8zVCN4VG7B
+         e6BQ==
+X-Gm-Message-State: APjAAAUjmyFrYyEVNOOqmP5ZALjvPdIahn5c7em77sAkXk3RoZsB8/fC
+        jip1yxzeiq0maB2Gw5hdxHagO+VavB4UvbRUfE2O2A==
+X-Google-Smtp-Source: APXvYqziD3eVTLC2Yu/hIEeHVWWceML2RIHpK3CmqYNaiptFEscdd0Np5Zqo+EY0L9JVk59rH8xnwSL0WzgLNv2sMmc=
+X-Received: by 2002:a1c:2083:: with SMTP id g125mr1260281wmg.89.1576088256672;
+ Wed, 11 Dec 2019 10:17:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191211170632.GD14821@zn.tnic> <BC48F4AD-8330-4ED6-8BE8-254C835506A5@amacapital.net>
+ <20191211172945.GE14821@zn.tnic>
+In-Reply-To: <20191211172945.GE14821@zn.tnic>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Wed, 11 Dec 2019 10:17:25 -0800
+Message-ID: <CALCETrXuJMBawUy3DTQfE4qLb822d9491er9-hd971BtBsPFNw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] x86/traps: Print address on #GP
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix WARNING: Missing a blank line after declarations in the following
-files:
-qlge.h
-qlge_dbg.c
-qlge_main.c
-qlge_mpi.c
+On Wed, Dec 11, 2019 at 9:29 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Wed, Dec 11, 2019 at 09:22:30AM -0800, Andy Lutomirski wrote:
+> > Could we spare a few extra bytes to make this more readable?  I can nev=
+er keep track of which number is the oops count, which is the cpu, and whic=
+h is the error code.  How about:
+> >
+> > OOPS 1: general protection blah blah blah (CPU 0)
+> >
+> > and put in the next couple lines =E2=80=9C#GP(0)=E2=80=9D.
+>
+> Well, right now it is:
+>
+> [    2.470492] general protection fault, probably for non-canonical addre=
+ss 0xdfff000000000001: 0000 [#1] PREEMPT SMP
+> [    2.471615] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1+ #6
+>
+> and the CPU is on the second line, the error code is before the number -
+> [#1] - in that case.
+>
+> If we pull the number in front, we can do:
+>
+> [    2.470492] [#1] general protection fault, probably for non-canonical =
+address 0xdfff000000000001: 0000 PREEMPT SMP
+> [    2.471615] [#1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc1+ =
+#6
+>
+> and this way you know that the error code is there, after the first
+> line's description.
 
-Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
----
- drivers/staging/qlge/qlge.h      |  2 +-
- drivers/staging/qlge/qlge_dbg.c  | 10 +++++-----
- drivers/staging/qlge/qlge_main.c | 26 +++++++++++++-------------
- drivers/staging/qlge/qlge_mpi.c  | 12 ++++++------
- 4 files changed, 25 insertions(+), 25 deletions(-)
+Hmm, I like that.
 
-diff --git a/drivers/staging/qlge/qlge.h b/drivers/staging/qlge/qlge.h
-index 89502a8300f6..d45c53a053c2 100644
---- a/drivers/staging/qlge/qlge.h
-+++ b/drivers/staging/qlge/qlge.h
-@@ -2227,7 +2227,7 @@ static inline void ql_write_db_reg_relaxed(u32 val, void __iomem *addr)
- static inline u32 ql_read_sh_reg(__le32  *addr)
- {
- 	u32 reg;
--	
-+
- 	reg =  le32_to_cpu(*addr);
- 	rmb();
- 	return reg;
-diff --git a/drivers/staging/qlge/qlge_dbg.c b/drivers/staging/qlge/qlge_dbg.c
-index cbca38c602bc..71fce1f850c7 100644
---- a/drivers/staging/qlge/qlge_dbg.c
-+++ b/drivers/staging/qlge/qlge_dbg.c
-@@ -499,7 +499,7 @@ static int ql_get_mpi_regs(struct ql_adapter *qdev, u32 *buf,
- 			   u32 offset, u32 count)
- {
- 	int i, status = 0;
--	
-+
- 	for (i = 0; i < count; i++, buf++) {
- 		status = ql_read_mpi_reg(qdev, offset + i, buf);
- 		if (status)
-@@ -1353,7 +1353,7 @@ static void ql_dump_intr_states(struct ql_adapter *qdev)
- {
- 	int i;
- 	u32 value;
--	
-+
- 	for (i = 0; i < qdev->intr_count; i++) {
- 		ql_write32(qdev, INTR_EN, qdev->intr_context[i].intr_read_mask);
- 		value = ql_read32(qdev, INTR_EN);
-@@ -1439,7 +1439,7 @@ void ql_dump_routing_entries(struct ql_adapter *qdev)
- {
- 	int i;
- 	u32 value;
--	
-+
- 	i = ql_sem_spinlock(qdev, SEM_RT_IDX_MASK);
- 	if (i)
- 		return;
-@@ -1590,7 +1590,7 @@ void ql_dump_stat(struct ql_adapter *qdev)
- void ql_dump_qdev(struct ql_adapter *qdev)
- {
- 	int i;
--	
-+
- 	DUMP_QDEV_FIELD(qdev, "%lx", flags);
- 	DUMP_QDEV_FIELD(qdev, "%p", vlgrp);
- 	DUMP_QDEV_FIELD(qdev, "%p", pdev);
-@@ -1676,7 +1676,7 @@ void ql_dump_tx_ring(struct tx_ring *tx_ring)
- void ql_dump_ricb(struct ricb *ricb)
- {
- 	int i;
--	
-+
- 	pr_err("===================== Dumping ricb ===============\n");
- 	pr_err("Dumping ricb stuff...\n");
- 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 80c0fb4746d5..34786e2c0247 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -143,7 +143,7 @@ static int ql_sem_trylock(struct ql_adapter *qdev, u32 sem_mask)
- int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
- {
- 	unsigned int wait_count = 30;
--	
-+
- 	do {
- 		if (!ql_sem_trylock(qdev, sem_mask))
- 			return 0;
-@@ -1211,7 +1211,7 @@ static void ql_unmap_send(struct ql_adapter *qdev,
- 			  struct tx_ring_desc *tx_ring_desc, int mapped)
- {
- 	int i;
--	
-+
- 	for (i = 0; i < mapped; i++) {
- 		if (i == 0 || (i == 7 && mapped > 7)) {
- 			/*
-@@ -1292,7 +1292,7 @@ static int ql_map_send(struct ql_adapter *qdev,
- 	 */
- 	for (frag_idx = 0; frag_idx < frag_cnt; frag_idx++, map_idx++) {
- 		skb_frag_t *frag = &skb_shinfo(skb)->frags[frag_idx];
--		
-+
- 		tbd++;
- 		if (frag_idx == 6 && frag_cnt > 7) {
- 			/* Let's tack on an sglist.
-@@ -1652,7 +1652,7 @@ static void ql_process_mac_rx_skb(struct ql_adapter *qdev,
- 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
- 			/* Unfragmented ipv4 UDP frame. */
- 			struct iphdr *iph = (struct iphdr *) skb->data;
--			
-+
- 			if (!(iph->frag_off &
- 				htons(IP_MF|IP_OFFSET))) {
- 				skb->ip_summed = CHECKSUM_UNNECESSARY;
-@@ -1822,7 +1822,7 @@ static struct sk_buff *ql_build_rx_skb(struct ql_adapter *qdev,
- 		 *          eventually be in trouble.
- 		 */
- 		int size, i = 0;
--		
-+
- 		sbq_desc = qlge_get_curr_buf(&rx_ring->sbq);
- 		pci_unmap_single(qdev->pdev, sbq_desc->dma_addr,
- 				 SMALL_BUF_MAP_SIZE, PCI_DMA_FROMDEVICE);
-@@ -1941,7 +1941,7 @@ static void ql_process_mac_split_rx_intr(struct ql_adapter *qdev,
- 				(ib_mac_rsp->flags3 & IB_MAC_IOCB_RSP_V4)) {
- 		/* Unfragmented ipv4 UDP frame. */
- 			struct iphdr *iph = (struct iphdr *) skb->data;
--			
-+
- 			if (!(iph->frag_off &
- 				htons(IP_MF|IP_OFFSET))) {
- 				skb->ip_summed = CHECKSUM_UNNECESSARY;
-@@ -2397,7 +2397,7 @@ static void qlge_restore_vlan(struct ql_adapter *qdev)
- static irqreturn_t qlge_msix_rx_isr(int irq, void *dev_id)
- {
- 	struct rx_ring *rx_ring = dev_id;
--	
-+
- 	napi_schedule(&rx_ring->napi);
- 	return IRQ_HANDLED;
- }
-@@ -2504,7 +2504,7 @@ static int ql_tso(struct sk_buff *skb, struct ob_mac_tso_iocb_req *mac_iocb_ptr)
- 		mac_iocb_ptr->flags2 |= OB_MAC_TSO_IOCB_LSO;
- 		if (likely(l3_proto == htons(ETH_P_IP))) {
- 			struct iphdr *iph = ip_hdr(skb);
--			
-+
- 			iph->check = 0;
- 			mac_iocb_ptr->flags1 |= OB_MAC_TSO_IOCB_IP4;
- 			tcp_hdr(skb)->check = ~csum_tcpudp_magic(iph->saddr,
-@@ -2529,7 +2529,7 @@ static void ql_hw_csum_setup(struct sk_buff *skb,
- 	int len;
- 	struct iphdr *iph = ip_hdr(skb);
- 	__sum16 *check;
--	
-+
- 	mac_iocb_ptr->opcode = OPCODE_OB_MAC_TSO_IOCB;
- 	mac_iocb_ptr->frame_len = cpu_to_le32((u32) skb->len);
- 	mac_iocb_ptr->net_trans_offset =
-@@ -4274,7 +4274,7 @@ static int qlge_set_mac_address(struct net_device *ndev, void *p)
- static void qlge_tx_timeout(struct net_device *ndev)
- {
- 	struct ql_adapter *qdev = netdev_priv(ndev);
--	
-+
- 	ql_queue_asic_error(qdev);
- }
- 
-@@ -4283,7 +4283,7 @@ static void ql_asic_reset_work(struct work_struct *work)
- 	struct ql_adapter *qdev =
- 	    container_of(work, struct ql_adapter, asic_reset_work.work);
- 	int status;
--	
-+
- 	rtnl_lock();
- 	status = ql_adapter_down(qdev);
- 	if (status)
-@@ -4355,7 +4355,7 @@ static int ql_get_alt_pcie_func(struct ql_adapter *qdev)
- static int ql_get_board_info(struct ql_adapter *qdev)
- {
- 	int status;
--	
-+
- 	qdev->func =
- 	    (ql_read32(qdev, STS) & STS_FUNC_ID_MASK) >> STS_FUNC_ID_SHIFT;
- 	if (qdev->func > 3)
-@@ -4664,7 +4664,7 @@ static void qlge_remove(struct pci_dev *pdev)
- {
- 	struct net_device *ndev = pci_get_drvdata(pdev);
- 	struct ql_adapter *qdev = netdev_priv(ndev);
--	
-+
- 	del_timer_sync(&qdev->timer);
- 	ql_cancel_all_work_sync(qdev);
- 	unregister_netdev(ndev);
-diff --git a/drivers/staging/qlge/qlge_mpi.c b/drivers/staging/qlge/qlge_mpi.c
-index ecd72f4fcdd5..22ebd6cb8525 100644
---- a/drivers/staging/qlge/qlge_mpi.c
-+++ b/drivers/staging/qlge/qlge_mpi.c
-@@ -91,7 +91,7 @@ int ql_write_mpi_reg(struct ql_adapter *qdev, u32 reg, u32 data)
- int ql_soft_reset_mpi_risc(struct ql_adapter *qdev)
- {
- 	int status;
--	
-+
- 	status = ql_write_mpi_reg(qdev, 0x00001010, 1);
- 	return status;
- }
-@@ -238,7 +238,7 @@ static int ql_idc_cmplt_aen(struct ql_adapter *qdev)
- {
- 	int status;
- 	struct mbox_params *mbcp = &qdev->idc_mbc;
--	
-+
- 	mbcp->out_count = 4;
- 	status = ql_get_mb_sts(qdev, mbcp);
- 	if (status) {
-@@ -257,7 +257,7 @@ static int ql_idc_cmplt_aen(struct ql_adapter *qdev)
- static void ql_link_up(struct ql_adapter *qdev, struct mbox_params *mbcp)
- {
- 	int status;
--	
-+
- 	mbcp->out_count = 2;
- 
- 	status = ql_get_mb_sts(qdev, mbcp);
-@@ -356,7 +356,7 @@ static int ql_aen_lost(struct ql_adapter *qdev, struct mbox_params *mbcp)
- 		netif_err(qdev, drv, qdev->ndev, "Lost AEN broken!\n");
- 	else {
- 		int i;
--		
-+
- 		netif_err(qdev, drv, qdev->ndev, "Lost AEN detected.\n");
- 		for (i = 0; i < mbcp->out_count; i++)
- 			netif_err(qdev, drv, qdev->ndev, "mbox_out[%d] = 0x%.08x.\n",
-@@ -916,7 +916,7 @@ static int ql_idc_wait(struct ql_adapter *qdev)
- 	int status = -ETIMEDOUT;
- 	long wait_time = 1 * HZ;
- 	struct mbox_params *mbcp = &qdev->idc_mbc;
--	
-+
- 	do {
- 		/* Wait here for the command to complete
- 		 * via the IDC process.
-@@ -1101,7 +1101,7 @@ int ql_wait_fifo_empty(struct ql_adapter *qdev)
- static int ql_set_port_cfg(struct ql_adapter *qdev)
- {
- 	int status;
--	
-+
- 	status = ql_mb_set_port_cfg(qdev);
- 	if (status)
- 		return status;
--- 
-2.20.1
+>
+> I guess we can do:
+>
+> [    2.470492] [#1] general protection fault, probably for non-canonical =
+address 0xdfff000000000001 Error Code: 0000 PREEMPT SMP
+>
+> to make it even more explicit...
 
+I like this too.
+
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
+
+--=20
+Andy Lutomirski
+AMA Capital Management, LLC
