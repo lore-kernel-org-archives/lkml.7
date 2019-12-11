@@ -2,188 +2,130 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67520C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505E0C2D0C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F2A208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BCF4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 05:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="o+/ASf+S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P0fDarWX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfLKFZC (ORCPT
+        id S1726908AbfLKFfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 00:25:02 -0500
-Received: from mail-eopbgr760040.outbound.protection.outlook.com ([40.107.76.40]:2326
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725973AbfLKFZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 00:25:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=npaeydtLWPECzF0Lz8wQQ21Qt8pnGzGmfzcRRee+nfiTVZmt9JB20zdYf7/yMIgdqtsOS4gbpluszPdPPE7kM1d/ndD5ozsGyAndJcEZ1+c04w8ujXhTsolZg0TK50qLw5ErNpXKS0UgB32RT/Au7YYm8QfkYM5wXwp4ZiP1RXRw3hdAYqBEea9q78cYCAXghATWhisDC9hkK0OGju+WS89r/WvAvJrLC5xOML31bhNDTwPgO1Cuaixyg18rR5IbbVi7h6wEkro1IBFutrOohxXWlW7mzRhb0i69CkjSIX57jb+HCLICtr6fvOXxhLgrAyb7B21039sdY9Ecl/TzoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O9nVuvmEHgKw9QnSUut2Jb27U2Nhe+2pVKZYgEO3c8s=;
- b=Kn66H4wq6joQz/j3QkAgeuyJ5sEP4kLUHuj7KG40OPTi4QCr+InBB3daJQUnkmzk3IF4oWboD4nrLVVkpjOIimkQqyyf1N7OIBt25uIJyYXSoASLxKCSSeGwxoALwCVV6Sx27JZEb3AD2J9Z/im+goXS8M1HIWCw+mHZTf8O+BIdGfPBtgWXTYfAE7FNnafZQXbqqPGFkd2irHX1vzcblHjUQi9GSyyySMVPNF5sDuqwaxZUbalrnB2dAqgEup+GTaPnDSZ0QbY0+N0GOu6ZCYX/R3gt3xL6AVkjLeDZHlGK9cDkI6fhKCbfpXLVMFWdkLEEd0dSe01A/evzLu1IaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 11 Dec 2019 00:35:09 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34425 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfLKFfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 00:35:09 -0500
+Received: by mail-pl1-f196.google.com with SMTP id x17so955766pln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 10 Dec 2019 21:35:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O9nVuvmEHgKw9QnSUut2Jb27U2Nhe+2pVKZYgEO3c8s=;
- b=o+/ASf+S9bCraexFt04M5ULVPsZDjAX12Ng2ygVqSCtW431yWGpcwang9aueRRnw8qFwAnyQSHz+467If6FeqKNaQVgjTOYw56NHSA4xDQgvMbxF0AAWoDLoVrMurIFG25dQErI6G8PvSnU7O+zi70CegYMvk6kn6o+YWVEU848=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-Received: from MN2PR12MB3870.namprd12.prod.outlook.com (10.255.237.93) by
- MN2PR12MB3214.namprd12.prod.outlook.com (20.179.83.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.13; Wed, 11 Dec 2019 05:24:55 +0000
-Received: from MN2PR12MB3870.namprd12.prod.outlook.com
- ([fe80::354e:13c8:116b:1261]) by MN2PR12MB3870.namprd12.prod.outlook.com
- ([fe80::354e:13c8:116b:1261%7]) with mapi id 15.20.2516.018; Wed, 11 Dec 2019
- 05:24:55 +0000
-From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH] x86/fpu: Warn only when CPU-provided sizes less than
- struct declaration
-To:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jon.grimm@amd.com,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-References: <1575363688-36727-1-git-send-email-suravee.suthikulpanit@amd.com>
- <b63e2111-b0c6-a716-3d99-88f91ad64e1d@intel.com>
- <68bdd6f0-a229-433a-9234-303a3b02b092@amd.com>
- <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
-Message-ID: <7a8fe748-2c57-295a-e6ed-8969c41462aa@amd.com>
-Date:   Wed, 11 Dec 2019 12:24:42 +0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-In-Reply-To: <4b20cff5-6e16-3599-4fc1-4f51d7c18d1d@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: KU1PR03CA0017.apcprd03.prod.outlook.com
- (2603:1096:802:18::29) To MN2PR12MB3870.namprd12.prod.outlook.com
- (2603:10b6:208:166::29)
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2OO7/mhUSy6qobOmjDi9q9vof+DP3uQZkiBVuacLKKk=;
+        b=P0fDarWXXzotrsEuyawGcdziLBTOsrIYSry5uGgXRfzDcHHAkK+viauFdTpnQ4yve8
+         1xgWmcCiSjeQDpwG24LIJ4yhJS3Kg2pFn1yTG/QrccPysq4l+cLFFd/agHx/9Z728n37
+         iYskg5KWq81OaEPY5Ji0YbDdIO3IZ1pGTTaVth6r2xNC9dhcbf7y07X70s9rFMCN33/v
+         IYjvIe1K3xt10Bv3LW2HnVpj3zkqDbnNpDi373F715xMbuxTQNGWFlkqyasSKU/mJvHo
+         OSWrQ9VkbMxXS8kEOGlMHtxWdsAuJtIxSFxp5BW0NgnvFhACqFcQ3Uw6xnEBG6uq+gPw
+         PWEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2OO7/mhUSy6qobOmjDi9q9vof+DP3uQZkiBVuacLKKk=;
+        b=gs4lNz48Yjh2JDoszxTEU1XxdMEk88HSDulq+Wygv7WU3BHYWj3VjubGI0yHEIqtPy
+         wv3AWVYYTmXBqfvEkPZf26d9jPnpz4uHLAjeKOOmM3Grd+0wdynXYcF7pHQhOEGbzOce
+         aBm92/2EQlI2Sf12m5WZECrwuueRJWA+n64BTY99zBD8Qu2IOy6h8bCPWg3JADOD6yVI
+         uGXw45O+4gqvNOUmGcHIbuoBZdDSTo9aOQNUuTSTuj1NTznT3oQUj3JqUliGbytd/10a
+         uSoBv3Co+ITk/x44zt1XsPLyR4lQ3ARtGQsbVZFwnC+Pt680TQCCPVxog3cZ6u+qOITt
+         KjnQ==
+X-Gm-Message-State: APjAAAUYWQWlSG0hOAHDNx6+LJz1HxwMPnx2+eWd5N8xAQlTLgdSjANp
+        SXokHhtmABq3XyCLD5ua744=
+X-Google-Smtp-Source: APXvYqzs5IaM4QXj9sDAUMc2e5r8pCcEJ1XckzsWRuzDpDHC5KaA+/JP+VjHheuXLslNWhkU8rHkWg==
+X-Received: by 2002:a17:902:c509:: with SMTP id o9mr1358256plx.112.1576042508773;
+        Tue, 10 Dec 2019 21:35:08 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id n188sm876052pga.84.2019.12.10.21.35.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 21:35:07 -0800 (PST)
+Date:   Wed, 11 Dec 2019 14:35:05 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
+ multiple matches
+Message-ID: <20191211053505.GO88619@google.com>
+References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
+ <20191210080154.GJ88619@google.com>
+ <98df321d16adb67c5579ac4b67d845fc0c2c97df.camel@kernel.crashing.org>
+ <20191211020149.GN88619@google.com>
+ <38b543cb91e936d7bd9f8885e585dd55032d83a4.camel@kernel.crashing.org>
 MIME-Version: 1.0
-X-Originating-IP: [165.204.80.7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 10211dec-e980-4942-70eb-08d77dfa74e1
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3214:|MN2PR12MB3214:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB32142A876C8C728753F0922EF35A0@MN2PR12MB3214.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1060;
-X-Forefront-PRVS: 024847EE92
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(366004)(376002)(346002)(39860400002)(199004)(189003)(53546011)(31686004)(31696002)(6512007)(186003)(26005)(6506007)(54906003)(81156014)(316002)(2906002)(6486002)(66946007)(5660300002)(36756003)(66556008)(66476007)(81166006)(4326008)(6666004)(44832011)(2616005)(8936002)(478600001)(86362001)(8676002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3214;H:MN2PR12MB3870.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: TCLqPPZ8ddVfClCW7h/I0t9OB1cGbregWRSoVS6ujAhIsTbhFZhfGpbKyWpbOtyMur7ueZOR1/JNTZRCg/qPzFUFDVdd+GZy1wg5IgDP3qrYAluvfRQad32wyk4W3Y0Whu8CDTc1peBs9z5vyaq1JnB0Cwra1KodPSse4leuflYyKYxcxu6Fx+bW8guYCdgGmAyLoOuZ7Rd0hc7wVfD6iHkygRDsko3J3mHhoLypkp6ME+4VODNxfoyU8HlDUPHj77aiJaj9yUQXhTTQq6X+HSfU62jbpnlwEeWwS0VQOuRt1SRpE4YMIyIzqDoj/osEnp7ivPncFNrQDEEhePMHo+RyXBI95GQLRTh1NqciJEYUnjEbVY62efolrddvY6BfdnzdgCxwhREZFeag1HwGGyJGwoAfXVTq1KBYQiBruvv9/r1FNrCtwLE6vbeLJkct
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10211dec-e980-4942-70eb-08d77dfa74e1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2019 05:24:55.4670
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nx7xSxgHkwKC+XpgSq4uqXS1Ewq0ok6hyiDLTMbG2O7ma2X+uNouG1/f5TYaWbxD5UUDC98Jtkcm+rax0wy1bw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3214
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38b543cb91e936d7bd9f8885e585dd55032d83a4.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dave
+On (19/12/11 15:02), Benjamin Herrenschmidt wrote:
+> On Wed, 2019-12-11 at 11:01 +0900, Sergey Senozhatsky wrote:
+> > On (19/12/11 09:26), Benjamin Herrenschmidt wrote:
+> > 
+[..]
+> > If we could perform simple alias matching, without ->setup() call, and
+> > exact matching (strcmp()), and then, if newcon would match two entries,
+> > we would pick up the last matching entry and configure newcon only once.
+> > 
+> > This changes the order, tho.
+> 
+> Walking the array backwards might just be what we want actually for the
+> case at hand, but of course if some platforms or driver call
+> add_preferred_console *after* the command line parsing, then it will
+> break those.
 
-On 12/6/19 10:28 PM, Dave Hansen wrote:
-> On 12/6/19 12:14 AM, Suravee Suthikulpanit wrote:
->> On 12/4/19 12:27 AM, Dave Hansen wrote:
->>> On 12/3/19 1:01 AM, Suravee Suthikulpanit wrote:
->>>> The current XCHECK_SZ macro warns if the XFEATURE size reported
->>>> by CPUID does not match the size of kernel structure. However, depending
->>>> on the hardware implementation, CPUID can report the XSAVE state size
->>>> larger than the size of C structures defined for each of the XSAVE state
->>>> due to padding.
->>>
->>> We have existing architecture for padding.  See xfeature_is_aligned(),
->>> for instance.  Are you saying that there are implementations out there
->>> that do padding which is not otherwise enumerated and that they do it
->>> within the size of the enumerated stat
->> Yes, the implementation includes the padding size within the size of
->> the enumerated state. This results in the reported size larger than
->> the amount needed by the feature.
+Reverse loop sounds like a nice idea. But yes I guess this can break
+things.
 
-Actually, please allow me clarify my understanding for this part.
+> Simple alias matching would require re-working all the match()
+> callbacks. That said I think it was a mistake to begin with to have
+> them include setup(). Those should have remained separate.
 
-When you referred to "the existing architecture for padding", IIUC,
-that's the XSAVE state size, offset, and alignment of each extended
-feature reported by the CPUID Fn 0Dh E[A|B|C]X. By "padding", do you
-mean the additional area included as part of alignment?
+Agreed. strcmp(alias) and strcmp(exact name) are the same things.
+The latter does "match" and setup() as separate steps, but the former
+does both at once.
 
-> I don't think we've ever had XSAVE state that differed in size between
-> implementations.  This kind of thing ensures that we can't have any
-> statically-defined inspection into the XSAVE state.
+> What about a compromise here:
 >
-> It also increases the amount of blind trust that we have in the CPU
-> implementations.  However, those warnings were specifically added at
-> Ingo's behest (IIRC) to reduce our blind trust in the CPU.
-> 
+> Instead of walking the array and testing for preferred_console as we do
+> so, we first test the array entry pointed to by preferred_console
+> (doing both match & setup as today) and if that doesn't work, fallback
+> to our existing mechanism ?
 
-I am not quite sure what you meant by "statically-defined inspection" and
-"blind trust".
+This may do the trick.
+And perform preferred_console fast-path configuration only if
+`has_preferred' is false.
 
->>>> Such case should be safe and should not need to generate warning
->>>> message.
->>>
->>> I've seen these error messages trip before, but only on pre-production
->>> processors with goofy microcode.  I'd be really suspicious that this is
->>> just papering over a processor issue.  Or, that perhaps the compacted
->>> form works but the standard form is broken somehow.
->>
->> I have verified with the HW folks and the have confirmed that this is
->> to be expected.
-> 
->  From a review perspective, I'd really appreciate being able to have a
-> concrete discussion about exactly which state this is and exactly how
-> much padding we are talking about and *why* the existing padding
-> architecture can't be used.  I'd also want guarantees about this state
-> not getting used for any real state, *ever*.
+> > Well, it still looks to me that what you want is to "ignore alias
+> > match and prefer exact match".
+>
+> We don't want to ignore the alias match. But we do want to prefer the
+> exact match. We still want to keep the fallback to the alias match.
 
-Here is the warning message:
+Yeah, "prefer" is the key word here.
 
-     ------------[ cut here ]------------
-     XFEATURE_PKRU: struct is 8 bytes, cpu state 32 bytes
-     WARNING: CPU: 0 PID: 0 at arch/x86/kernel/fpu/xstate.c:558 fpu__init_system_xstate+0x2b5/0x8ea
-     .......
-
-In this case, the feature is PKRU (feature enum 9), and CPUID 0Dh instruction reports
-eax:0x20 (size), ebx:0x340 (offset), ecx:0(aligned). The warning is due to the 32-byte size
-is more than the 8 bytes required for struct pkru_state.
-
-What I have been told (by HW folks) is that the hardware reports 32 bytes for PKRU feature
-to account for additional padding (24 bytes) required to maintain offset for the XSAVE data
-in compact form where:
-
-     offset of the next component = offset of current component +
-                                    size of current component
-
-In this case, the hardware adds the padding needed before the offset of the subsequent
-feature into the PKRU xsave state size.
-
-Please correct me if I am wrong, but I believe this is similar to the case
-mentioned in the commit ef78f2a4bf84 ('x86/fpu: Check CPU-provided sizes against struct declarations'),
-where it mentions inconsistency b/w the MPX 'bndcsr' state and the C structures.
-
-However, my point is that it should not need to warn if the xsave size is greater than
-the size of the C structure.
-
-Thanks,
-Suravee
+	-ss
