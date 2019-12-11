@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC74C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DE4C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0EE02077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4294B2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077768;
-	bh=zFJXkK5NTDEYDICxlCGpP4NSUh2oXKu5G1zQkxmwtj4=;
+	s=default; t=1576077776;
+	bh=S/M8CtlQbwpUthGYfY/88gTEmA4TU9Iazq+kr6gyotU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kPrDPb7wR7tf1RzYlZOSTeznwWi6tSj+bvVWcy0foko4ATf69YC+wtSoTjB/Cu2Ex
-	 UcE6Pglv4gzQioRxvrdt22MadSWp0q/MlxZpbk1r3XoSwVQsXlEI1A1U8OPIGwNllj
-	 9mOCVv5bkLtfNe06qdXlOMXZ5EObm+/6rCriax5s=
+	b=kNoski4W2GIdi6vnzf7pmeuezx44+qFBQBsfgGi9DysWZveUkHQs34iY1od+YOs37
+	 hucaKpWLmbsfEXpQj9OqDwJZVXb+lUrQ5U0E8gmP4yO/fDG9M6wF18nlxhoEA/yg2E
+	 laVqjz7ZXhjHB4K5jToBkyc/PUJ0VN0L9mvO8j+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732410AbfLKPWs (ORCPT
+        id S1732653AbfLKPWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:22:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53496 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:22:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732630AbfLKPWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:22:41 -0500
+        id S1732450AbfLKPWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:22:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D2C2073D;
-        Wed, 11 Dec 2019 15:22:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F6302073D;
+        Wed, 11 Dec 2019 15:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077760;
-        bh=zFJXkK5NTDEYDICxlCGpP4NSUh2oXKu5G1zQkxmwtj4=;
+        s=default; t=1576077771;
+        bh=S/M8CtlQbwpUthGYfY/88gTEmA4TU9Iazq+kr6gyotU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mPZhVY6rBV8aFAryEGLEpMCL+d+r0j9PKAswwfMSmKXRqnS4EMjR8b2pKz2U9PkwP
-         Xik2ST5VYkKHB48i9p/FQBSWvoDzvnPPW8CIdzok5mK4FibEX9YyEiZNBwGooxp6HP
-         KdyiRJVMQm7jeFsh3sp/FKcCVLbkf2KPehhYA2kY=
+        b=XJTKe0HUbQcnsvt9T3hcygiKLdPVbyhgueM0u1PmLyoeGP9AeGDek+YQmx/FZOTaA
+         GZzc3jEHv/nMYS7505T1u3MLMuNyHygLyOhH5wwbf0d0m7rIwyxoqAejRw20HuFQ9r
+         2Bt7BhUQpllOy+XEAaXXcL6+1zfUJsokmGd7xEnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
-        Sergey Yanovich <ynvich@gmail.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 161/243] ARM: dts: pxa: clean up USB controller nodes
-Date:   Wed, 11 Dec 2019 16:05:23 +0100
-Message-Id: <20191211150350.032424282@linuxfoundation.org>
+Subject: [PATCH 4.19 165/243] media: cxd2880-spi: fix probe when dvb_attach fails
+Date:   Wed, 11 Dec 2019 16:05:27 +0100
+Message-Id: <20191211150350.308111175@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 References: <20191211150339.185439726@linuxfoundation.org>
@@ -61,71 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Mack <daniel@zonque.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-[ Upstream commit c40ad24254f1dbd54f2df5f5f524130dc1862122 ]
+[ Upstream commit 458ffce1cb46e46e3cec48b625ed142250475708 ]
 
-PXA25xx SoCs don't have a USB controller, so drop the node from the
-common pxa2xx.dtsi base file. Both pxa27x and pxa3xx have a dedicated
-node already anyway.
+When dvb_attach fails, probe returns 0, and remove crashes afterwards.
+This patch sets the return value to -ENODEV when attach fails.
 
-While at it, unify the names for the nodes across all pxa platforms.
+Fixes: bd24fcddf6b8 ("media: cxd2880-spi: Add support for CXD2880 SPI interface")
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Reported-by: Sergey Yanovich <ynvich@gmail.com>
-Link: https://patchwork.kernel.org/patch/8375421/
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Yasunari Takiguchi <Yasunari.Takiguchi@sony.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- arch/arm/boot/dts/pxa2xx.dtsi | 7 -------
- arch/arm/boot/dts/pxa3xx.dtsi | 2 +-
- 3 files changed, 2 insertions(+), 9 deletions(-)
+ drivers/media/spi/cxd2880-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 3228ad5fb725f..ccbecad9c5c7c 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -35,7 +35,7 @@
- 			clocks = <&clks CLK_NONE>;
- 		};
+diff --git a/drivers/media/spi/cxd2880-spi.c b/drivers/media/spi/cxd2880-spi.c
+index 11ce5101e19f6..c43730977f53c 100644
+--- a/drivers/media/spi/cxd2880-spi.c
++++ b/drivers/media/spi/cxd2880-spi.c
+@@ -536,6 +536,7 @@ cxd2880_spi_probe(struct spi_device *spi)
  
--		pxa27x_ohci: usb@4c000000 {
-+		usb0: usb@4c000000 {
- 			compatible = "marvell,pxa-ohci";
- 			reg = <0x4c000000 0x10000>;
- 			interrupts = <3>;
-diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
-index a520b4c14ea9f..0a0e837dc79cb 100644
---- a/arch/arm/boot/dts/pxa2xx.dtsi
-+++ b/arch/arm/boot/dts/pxa2xx.dtsi
-@@ -117,13 +117,6 @@
- 			status = "disabled";
- 		};
+ 	if (!dvb_attach(cxd2880_attach, &dvb_spi->dvb_fe, &config)) {
+ 		pr_err("cxd2880_attach failed\n");
++		ret = -ENODEV;
+ 		goto fail_attach;
+ 	}
  
--		usb0: ohci@4c000000 {
--			compatible = "marvell,pxa-ohci";
--			reg = <0x4c000000 0x10000>;
--			interrupts = <3>;
--			status = "disabled";
--		};
--
- 		mmc0: mmc@41100000 {
- 			compatible = "marvell,pxa-mmc";
- 			reg = <0x41100000 0x1000>;
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index 3a8f0edc3af99..53009dbd36158 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -204,7 +204,7 @@
- 			status = "disabled";
- 		};
- 
--		pxa3xx_ohci: usb@4c000000 {
-+		usb0: usb@4c000000 {
- 			compatible = "marvell,pxa-ohci";
- 			reg = <0x4c000000 0x10000>;
- 			interrupts = <3>;
 -- 
 2.20.1
 
