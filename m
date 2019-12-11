@@ -7,51 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81988C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38199C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511552173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1592173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576078281;
-	bh=sJvmRdAt1N9HWCPH5RzjW/GXIjHU1B7NwBJXeFAKNk0=;
+	s=default; t=1576078285;
+	bh=Lkrzwv+VZslM1yWUjMBa5AXa8JAkyt/5dNNht3t48e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nazj2HTrbSIMH/jP8impu19Bjtzu4Kv8nP8u9yVEc2fm0/p9+70ZbDEE1rQm+C6wn
-	 cOB90+aFUpg0VQEI1WvO2j2sBXbwXee0i+Nx8QSftdgGXvcWdlJlHibc5M5g36s2I0
-	 k7Bb+vbhTeo2uERQJBRc2DFqMjygL+L07cl56C3Y=
+	b=alpzyq6xjt+oiO2bmbqtGnqMBpLmSJsvduq5AwJkxMTMXcink95L6nQDpbzycwzxI
+	 lm1sMmVVxWu7XAmPDj/t2G4vKQFqYPnPzuSDQU5TIfZ6kB2yxOhQFQnPE3xhjH2rWU
+	 ZmZi+YLOlsZrEUfbExueekfN7r5RBlNhsRSpCT44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387849AbfLKP3S (ORCPT
+        id S2388018AbfLKPbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:29:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35724 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:31:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387811AbfLKP3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:29:10 -0500
+        id S1733272AbfLKP3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:29:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F48A24654;
-        Wed, 11 Dec 2019 15:29:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F917222C4;
+        Wed, 11 Dec 2019 15:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078150;
-        bh=sJvmRdAt1N9HWCPH5RzjW/GXIjHU1B7NwBJXeFAKNk0=;
+        s=default; t=1576078158;
+        bh=Lkrzwv+VZslM1yWUjMBa5AXa8JAkyt/5dNNht3t48e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHeUfnPWRd9ryOv3UxJPbEf4N07wHPeSj6cOwokpKkigHUMlEA4HrCsFsYcBvzvrr
-         DvY1cvPzw8DhCAYsdYm71vyT6FZHf/NfhWCjKHufcfTi+OfE7Icad2nylUdosiI7/y
-         TtcpD6mNWNLNexGeBrLliy584HEQZgnPaxdwqtOE=
+        b=1NRSmZq3J6YFXc7OW+TeBvMjv4HpdoKCAjrmevA9WsENqI4ryMaSqiEgcN+PXj1L4
+         4SiKBEZwa/zP0tehG87ZV0M58p9+/0vodlXfrTtuXkdqeh55s9ezuU9uxxCDzDEmgT
+         S6IWOAm9XjDh9D7c1dP7oGUx10sGFQtaGwblBzaQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 36/58] HID: Improve Windows Precision Touchpad detection.
-Date:   Wed, 11 Dec 2019 10:28:09 -0500
-Message-Id: <20191211152831.23507-36-sashal@kernel.org>
+Cc:     Anatol Pomazau <anatol@google.com>,
+        Frank Mayhar <fmayhar@google.com>,
+        Bharath Ravi <rbharath@google.com>,
+        Khazhimsel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 43/58] scsi: iscsi: Don't send data to unbound connection
+Date:   Wed, 11 Dec 2019 10:28:16 -0500
+Message-Id: <20191211152831.23507-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211152831.23507-1-sashal@kernel.org>
 References: <20191211152831.23507-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,63 +65,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Blaž Hrastnik <blaz@mxxn.io>
+From: Anatol Pomazau <anatol@google.com>
 
-[ Upstream commit 2dbc6f113acd74c66b04bf49fb027efd830b1c5a ]
+[ Upstream commit 238191d65d7217982d69e21c1d623616da34b281 ]
 
-Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
-data used to verify the touchpad as a Windows Precision Touchpad.
+If a faulty initiator fails to bind the socket to the iSCSI connection
+before emitting a command, for instance, a subsequent send_pdu, it will
+crash the kernel due to a null pointer dereference in sock_sendmsg(), as
+shown in the log below.  This patch makes sure the bind succeeded before
+trying to use the socket.
 
-   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
-    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
-    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
-    0x75, 0x08,              //    REPORT_SIZE (8)
-    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
-    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: 0000 [#1] SMP PTI
+CPU: 3 PID: 7 Comm: kworker/u8:0 Not tainted 5.4.0-rc2.iscsi+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+[   24.158246] Workqueue: iscsi_q_0 iscsi_xmitworker
+[   24.158883] RIP: 0010:apparmor_socket_sendmsg+0x5/0x20
+[...]
+[   24.161739] RSP: 0018:ffffab6440043ca0 EFLAGS: 00010282
+[   24.162400] RAX: ffffffff891c1c00 RBX: ffffffff89d53968 RCX: 0000000000000001
+[   24.163253] RDX: 0000000000000030 RSI: ffffab6440043d00 RDI: 0000000000000000
+[   24.164104] RBP: 0000000000000030 R08: 0000000000000030 R09: 0000000000000030
+[   24.165166] R10: ffffffff893e66a0 R11: 0000000000000018 R12: ffffab6440043d00
+[   24.166038] R13: 0000000000000000 R14: 0000000000000000 R15: ffff9d5575a62e90
+[   24.166919] FS:  0000000000000000(0000) GS:ffff9d557db80000(0000) knlGS:0000000000000000
+[   24.167890] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   24.168587] CR2: 0000000000000018 CR3: 000000007a838000 CR4: 00000000000006e0
+[   24.169451] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   24.170320] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   24.171214] Call Trace:
+[   24.171537]  security_socket_sendmsg+0x3a/0x50
+[   24.172079]  sock_sendmsg+0x16/0x60
+[   24.172506]  iscsi_sw_tcp_xmit_segment+0x77/0x120
+[   24.173076]  iscsi_sw_tcp_pdu_xmit+0x58/0x170
+[   24.173604]  ? iscsi_dbg_trace+0x63/0x80
+[   24.174087]  iscsi_tcp_task_xmit+0x101/0x280
+[   24.174666]  iscsi_xmit_task+0x83/0x110
+[   24.175206]  iscsi_xmitworker+0x57/0x380
+[   24.175757]  ? __schedule+0x2a2/0x700
+[   24.176273]  process_one_work+0x1b5/0x360
+[   24.176837]  worker_thread+0x50/0x3c0
+[   24.177353]  kthread+0xf9/0x130
+[   24.177799]  ? process_one_work+0x360/0x360
+[   24.178401]  ? kthread_park+0x90/0x90
+[   24.178915]  ret_from_fork+0x35/0x40
+[   24.179421] Modules linked in:
+[   24.179856] CR2: 0000000000000018
+[   24.180327] ---[ end trace b4b7674b6df5f480 ]---
 
-However, some devices, namely Microsoft's Surface line of products
-instead implement a "segmented device certification report" (usage 0xC6)
-which returns the same report, but in smaller chunks.
-
-    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
-    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
-    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
-    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
-    0x75, 0x08,              //     REPORT_SIZE (8)
-    0x95, 0x01,              //     REPORT_COUNT (1)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-    0x09, 0xC7,              //     USAGE (Vendor Usage)
-    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
-    0x95, 0x20,              //     REPORT_COUNT (32)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-
-By expanding Win8 touchpad detection to also look for the segmented
-report, all Surface touchpads are now properly recognized by
-hid-multitouch.
-
-Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Anatol Pomazau <anatol@google.com>
+Co-developed-by: Frank Mayhar <fmayhar@google.com>
+Signed-off-by: Frank Mayhar <fmayhar@google.com>
+Co-developed-by: Bharath Ravi <rbharath@google.com>
+Signed-off-by: Bharath Ravi <rbharath@google.com>
+Co-developed-by: Khazhimsel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhimsel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/iscsi_tcp.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 0c547bf841f40..6a04b56d161b4 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -760,6 +760,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
- 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
- 	    parser->global.report_size == 8)
- 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
-+
-+	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
-+	    parser->global.report_size == 8)
-+		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
- }
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 045207b5560eb..7e3a77d3c6f01 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -372,8 +372,16 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
+ {
+ 	struct iscsi_conn *conn = task->conn;
+ 	unsigned int noreclaim_flag;
++	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
++	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+ 	int rc = 0;
  
- static void hid_scan_collection(struct hid_parser *parser, unsigned type)
++	if (!tcp_sw_conn->sock) {
++		iscsi_conn_printk(KERN_ERR, conn,
++				  "Transport not bound to socket!\n");
++		return -EINVAL;
++	}
++
+ 	noreclaim_flag = memalloc_noreclaim_save();
+ 
+ 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
 -- 
 2.20.1
 
