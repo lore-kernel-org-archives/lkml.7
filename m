@@ -2,118 +2,120 @@ Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26364C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A58C43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F064A222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAGXRwf7"
+	by mail.kernel.org (Postfix) with ESMTP id A988D222C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576077977;
+	bh=0cOWgBEJE46qjR9ep9p3bmW4dApd6hg4u3c71hbanV4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=stfEnBUVj6evFWU2UFgH0EZTnftFrtjBQKRX6Tj+fEC5qYWRkgZHUXOZHQ2hy0GMp
+	 op8MmkXmJKhMM/httlXA9A6n0TTS5IOd9X+DZQpbTMHDMvI5ZxvSBQwhPUSb5fm7yw
+	 6KuAjltxSRBof4wyLwfwd3HtXynlFYzpsb2F6Z6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbfLKP0N (ORCPT
+        id S1733095AbfLKP0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 11 Dec 2019 10:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733086AbfLKP0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 11 Dec 2019 10:26:13 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34136 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732924AbfLKP0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:26:07 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so17042572lfc.1;
-        Wed, 11 Dec 2019 07:26:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UXbv7AZalf0SJthB9VxmQOQHQNQr5NxpvNmi8Mus0cU=;
-        b=DAGXRwf7NY3dt7nxqCSZ6a856Lz3XGnVqcq9yPxYkzkNSNs/YT4VHK/A8h1hpbcQcC
-         SlxjNIxenKolltunkOAS3xBBU4tnB5vOgy/h1HJuz5j2lGa9HdYtNyleNXBWs8d/BUVP
-         uJ11i+JTvE3Imwu6qulmRFQdk4dZDVDbEowWc3riwi/4gSGmuuASd9zKQ1+RqNwqKC8l
-         pKDsVvxajmupA7JXYB0wKAtCpCki/lnHxkVT7X4qKqlkwzOp1Z5WyDPF4SIz3NQVRniz
-         4YKV5fnuHx9KIpMPvX8JB8Pgu9iY5MYaLSlVIYbsYC9VPjbxqMobUw5CfaNsu0zb1jPd
-         G0qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UXbv7AZalf0SJthB9VxmQOQHQNQr5NxpvNmi8Mus0cU=;
-        b=oeJF9gSncR98Aepw7K51rIh3kqLtxHHlfgVorIuwuTID5sbejOtBZgRAS3Vvj92IPG
-         I3ckupn9ys57wbBPtH4OgOo0DFSGGdPoE7uiiIlB+uS03aTuLnfi93FdRch633Pdi6BF
-         SYigTRo4VNtQOx4p4wOYSKmjKE1ka+V1O0XVojVrL1Hg/76FiYZm/G5BiHCq2Uu5sFoJ
-         vhPQL1gC/Sztktbz2TFmVS8HBbb9fZVvEaY29EHaf5dTpis+igOfZBpMVPRPs5PHSdTq
-         ZgyanSxcOYgteBuBFWhv4/2ke4bUUcQyvFMrdcGWd5fdbD1HqEM1vK/A7xXB9M2H5OZp
-         v/Sg==
-X-Gm-Message-State: APjAAAVaACuXQKraxYwC7OfZ64hhvR3rduAhkVTgBA0aRPLDILiYIdlR
-        f04jDltlNqxc1JH0nwETBzZeVfRg
-X-Google-Smtp-Source: APXvYqyYm/SNIE22ortuNQPRjduIvM/kAFQbigUzlR+6z5UFuwd16Xk59CtfmpwCARAUWDExiJMeyQ==
-X-Received: by 2002:ac2:4199:: with SMTP id z25mr2597142lfh.102.1576077964140;
-        Wed, 11 Dec 2019 07:26:04 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id t81sm1335053lff.25.2019.12.11.07.26.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 07:26:03 -0800 (PST)
-Subject: Re: [PATCH 3/6] input: elants: support common touchscreen DT
- properties
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-input@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <cover.1575936961.git.mirq-linux@rere.qmqm.pl>
- <7e650a6ef98e3178d6829c3c2c83f21437070d84.1575936961.git.mirq-linux@rere.qmqm.pl>
- <17bb20b8-a62c-828f-d329-cd3aa89c1c06@gmail.com>
- <20191210023818.GB15246@qmqm.qmqm.pl>
- <2c9cd83c-518f-2f22-c3e7-ac629a181b8d@gmail.com>
- <20191211032813.GA17731@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <21532a63-6706-c082-5ab1-cf083bd3af47@gmail.com>
-Date:   Wed, 11 Dec 2019 18:26:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C50702077B;
+        Wed, 11 Dec 2019 15:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077973;
+        bh=0cOWgBEJE46qjR9ep9p3bmW4dApd6hg4u3c71hbanV4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XrDgccvuNzSyBmJAHoreAjkDRAlrV5e7oC4sjT9TJPJRXt9nbarpalV3BxAln9bnl
+         W8rCca3R22fgcuHKt9UbnAYFMemfK/00tP79tUCgHcmQi9L2zeXUUjeBsr9GB7oWdL
+         HUkpmhMk5cW+D67ZXxEvzI04aWLAaCiblE5XlBJw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 4.19 242/243] binder: Fix race between mmap() and binder_alloc_print_pages()
+Date:   Wed, 11 Dec 2019 16:06:44 +0100
+Message-Id: <20191211150355.674743562@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20191211032813.GA17731@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.12.2019 06:28, Michał Mirosław пишет:
-> On Tue, Dec 10, 2019 at 06:21:02PM +0300, Dmitry Osipenko wrote:
->> 10.12.2019 05:38, Michał Mirosław пишет:
->>> On Tue, Dec 10, 2019 at 04:03:18AM +0300, Dmitry Osipenko wrote:
->>>> 10.12.2019 03:19, Michał Mirosław пишет:
->>>>> Support common DT properties like axis inversions to complement
->>>>> information obtained from device's firmware.a
->>> [...]
->>>>> @@ -1251,13 +1250,15 @@ static int elants_i2c_probe(struct i2c_client *client,
->>>>>  	ts->input->name = "Elan Touchscreen";
->>>>>  	ts->input->id.bustype = BUS_I2C;
->>>>>  
->>>>> +	touchscreen_parse_properties(ts->input, true, &ts->prop);
->>>>
->>>> Shouldn't this function be invoked after setting the max x/y sizes with
->>>> the hardware values? That's what all other drivers do and then you won't
->>>> need to set the ts->prop.max_x/y above in the code.
->>>
->>> This is done later in the series - this patch only adds axis inversion
->>> support and ignores DT-provided sizes.
->>
->> What is the reason of splitting it into two patches?
->>
->> Perhaps I'm still missing something, but why something a bit more simple
->> like this wouldn't yield exactly the same result:
-> [...]
-> 
-> Originally I thought to skip probing the hardware when all info is
-> already provided in devicetree. This didn't happen, though. I'll take
-> your patch then, with a slight adjustment in "prop"'s position... And
-> the rest of them, so as to not duplicate the work. :-)
+From: Jann Horn <jannh@google.com>
 
-Okay
+commit 8eb52a1ee37aafd9b796713aa0b3ab9cbc455be3 upstream.
+
+binder_alloc_print_pages() iterates over
+alloc->pages[0..alloc->buffer_size-1] under alloc->mutex.
+binder_alloc_mmap_handler() writes alloc->pages and alloc->buffer_size
+without holding that lock, and even writes them before the last bailout
+point.
+
+Unfortunately we can't take the alloc->mutex in the ->mmap() handler
+because mmap_sem can be taken while alloc->mutex is held.
+So instead, we have to locklessly check whether the binder_alloc has been
+fully initialized with binder_alloc_get_vma(), like in
+binder_alloc_new_buf_locked().
+
+Fixes: 8ef4665aa129 ("android: binder: Add page usage in binder stats")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Link: https://lore.kernel.org/r/20191018205631.248274-1-jannh@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/android/binder_alloc.c |   22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
+
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -880,14 +880,20 @@ void binder_alloc_print_pages(struct seq
+ 	int free = 0;
+ 
+ 	mutex_lock(&alloc->mutex);
+-	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
+-		page = &alloc->pages[i];
+-		if (!page->page_ptr)
+-			free++;
+-		else if (list_empty(&page->lru))
+-			active++;
+-		else
+-			lru++;
++	/*
++	 * Make sure the binder_alloc is fully initialized, otherwise we might
++	 * read inconsistent state.
++	 */
++	if (binder_alloc_get_vma(alloc) != NULL) {
++		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
++			page = &alloc->pages[i];
++			if (!page->page_ptr)
++				free++;
++			else if (list_empty(&page->lru))
++				active++;
++			else
++				lru++;
++		}
+ 	}
+ 	mutex_unlock(&alloc->mutex);
+ 	seq_printf(m, "  pages: %d:%d:%d\n", active, lru, free);
+
+
