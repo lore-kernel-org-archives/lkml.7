@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587D0C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A262AC43603
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC11222C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B242467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 15:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576077079;
-	bh=GWTL2yCipBHtU2kHyv7cXIR/GTd1lMozRfTVMML8/ao=;
+	s=default; t=1576077082;
+	bh=1zkA7yqeQ2Mxa55z37h26z1TWshV0LM+nelUIVNp/Uc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXQQh7nWCg6UW1lnavYgRlEYhWx41reD16f/Y/YJ7QzYIQvAsDUF/BBSZ8C9WGERd
-	 SvWWKnWPOWiFMGWT7UbQBAUwLJPtXEyBDPIJ77UFTaFsybLUW7PWmKq+jDAYlZy592
-	 A9tI46wu8A+2hZ1va6UNd2N9hrZPawQdz5SYI9ic=
+	b=VA+d+TWLDv5duDm/dUK9jVv0wBfmJ44K+VEQ1dDA2RqXGpneebtyViEKGDmGVwWYx
+	 IguMYL6d35NlPWdoSsK85gmVxBKPPH9dSWrtPICwKkyfJLoolFgM6UUl4VH7Itj/yI
+	 J6F4ZPiFgT2DaHNIdwvUAnfMQIN+Mlda+Eu3OSbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730911AbfLKPLS (ORCPT
+        id S1730915AbfLKPLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 10:11:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59820 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 10:11:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbfLKPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:11:17 -0500
+        id S1729797AbfLKPLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:11:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EC7D2465A;
-        Wed, 11 Dec 2019 15:11:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 566C12465A;
+        Wed, 11 Dec 2019 15:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077076;
-        bh=GWTL2yCipBHtU2kHyv7cXIR/GTd1lMozRfTVMML8/ao=;
+        s=default; t=1576077079;
+        bh=1zkA7yqeQ2Mxa55z37h26z1TWshV0LM+nelUIVNp/Uc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SG2ckwBFc3UPlFNrhX8ga+Tr8TE0VMlnMBZmQ0WgxTfcRIiiP18vwlYNrkJZAZYgD
-         Ps1nSOPbW8vFGT9Z789McnBhognrJbngZKisxxXNYo2KCzz93PAoaYHU21EHBTiW+W
-         +0JbdP25qew/r3zzIfO0UyAR/aTaA1L6IQ5lXwWo=
+        b=q268eQD+YwKYzym9llRmHJU5Gr54qldRpJYXqRRfYyxe8fHWzjgbUlyg6Al3MVJUB
+         SrfG5VswZnJvhD/CujdwLyzXFeY9N7hLzwoaUArhUyKgJN/RJuntYOhvlpnWlNmEDL
+         Ao1A0EbFXIoO2kOs3MvdDaJedRZFdDNz2X9CINss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 78/92] spi: atmel: Fix CS high support
-Date:   Wed, 11 Dec 2019 16:06:09 +0100
-Message-Id: <20191211150258.847345643@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 001/105] rsi: release skb if rsi_prepare_beacon fails
+Date:   Wed, 11 Dec 2019 16:04:50 +0100
+Message-Id: <20191211150221.978611813@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
-References: <20191211150221.977775294@linuxfoundation.org>
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+References: <20191211150221.153659747@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,50 +62,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 7cbb16b2122c09f2ae393a1542fed628505b9da6 upstream.
+commit d563131ef23cbc756026f839a82598c8445bc45f upstream.
 
-Until a few years ago, this driver was only used with CS GPIO. The
-only exception is CS0 on AT91RM9200 which has to use internal CS. A
-limitation of the internal CS is that they don't support CS High.
+In rsi_send_beacon, if rsi_prepare_beacon fails the allocated skb should
+be released.
 
-So by using the CS GPIO the CS high configuration was available except
-for the particular case CS0 on RM9200.
-
-When the support for the internal chip-select was added, the check of
-the CS high support was not updated. Due to this the driver accepts
-this configuration for all the SPI controller v2 (used by all SoCs
-excepting the AT91RM9200) whereas the hardware doesn't support it for
-infernal CS.
-
-This patch fixes the test to match the hardware capabilities.
-
-Fixes: 4820303480a1 ("spi: atmel: add support for the internal chip-select of the spi controller")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191017141846.7523-3-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/spi/spi-atmel.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_mgmt.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1183,10 +1183,8 @@ static int atmel_spi_setup(struct spi_de
- 	as = spi_master_get_devdata(spi->master);
- 
- 	/* see notes above re chipselect */
--	if (!atmel_spi_is_v2(as)
--			&& spi->chip_select == 0
--			&& (spi->mode & SPI_CS_HIGH)) {
--		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-+	if (!as->use_cs_gpios && (spi->mode & SPI_CS_HIGH)) {
-+		dev_warn(&spi->dev, "setup: non GPIO CS can't be active-high\n");
+--- a/drivers/net/wireless/rsi/rsi_91x_mgmt.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mgmt.c
+@@ -1756,6 +1756,7 @@ static int rsi_send_beacon(struct rsi_co
+ 		skb_pull(skb, (64 - dword_align_bytes));
+ 	if (rsi_prepare_beacon(common, skb)) {
+ 		rsi_dbg(ERR_ZONE, "Failed to prepare beacon\n");
++		dev_kfree_skb(skb);
  		return -EINVAL;
  	}
- 
+ 	skb_queue_tail(&common->tx_queue[MGMT_BEACON_Q], skb);
 
 
