@@ -2,89 +2,129 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DD7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B8BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64FB214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF60E21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfLLSPb (ORCPT
+        id S1730325AbfLLSRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:15:31 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:52850 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730246AbfLLSPa (ORCPT
+        Thu, 12 Dec 2019 13:17:08 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:59697 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730145AbfLLSRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:15:30 -0500
-Received: (qmail 3202 invoked by uid 2102); 12 Dec 2019 13:15:29 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Dec 2019 13:15:29 -0500
-Date:   Thu, 12 Dec 2019 13:15:29 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH RFC 1/2] kcov: collect coverage from interrupts
-In-Reply-To: <95e7a12ac909e7de584133772efc7ef982a16bbb.1576170740.git.andreyknvl@google.com>
-Message-ID: <Pine.LNX.4.44L0.1912121313030.1352-100000@iolanthe.rowland.org>
+        Thu, 12 Dec 2019 13:17:08 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1ifT1L-0005CM-2Q; Thu, 12 Dec 2019 18:17:03 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Yintian Tao <yttao@amd.com>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amd/powerplay: fix various dereferences of a pointer before it is null checked
+Date:   Thu, 12 Dec 2019 18:16:57 +0000
+Message-Id: <20191212181657.101381-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, Andrey Konovalov wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> This change extends kcov remote coverage support to allow collecting
-> coverage from interrupts in addition to kernel background threads.
-> 
-> To collect coverage from code that is executed in interrupt context, a
-> part of that code has to be annotated with kcov_remote_start/stop() in a
-> similar way as how it is done for global kernel background threads. Then
-> the handle used for the annotations has to be passed to the
-> KCOV_REMOTE_ENABLE ioctl.
-> 
-> Internally this patch adjusts the __sanitizer_cov_trace_pc() compiler
-> inserted callback to not bail out when called from interrupt context.
-> kcov_remote_start/stop() are updated to save/restore the current per
-> task kcov state in a per-cpu area (in case the interrupt came when the
-> kernel was already collecting coverage in task context). Coverage from
-> interrupts is collected into pre-allocated per-cpu areas, whose size is
-> controlled by the new CONFIG_KCOV_IRQ_AREA_SIZE.
-> 
-> This patch also cleans up some of kcov debug messages.
-> 
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+There are several occurrances of the pointer hwmgr being dereferenced
+before it is null checked.  Fix these by performing the dereference
+of hwmgr after it has been null checked.
 
-> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-> index 4c9d1e49d5ed..faf84ada71a5 100644
-> --- a/drivers/usb/gadget/udc/dummy_hcd.c
-> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-> @@ -38,6 +38,7 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/hcd.h>
->  #include <linux/scatterlist.h>
-> +#include <linux/kcov.h>
->  
->  #include <asm/byteorder.h>
->  #include <linux/io.h>
+Addresses-Coverity: ("Dereference before null check")
+Fixes: 8497d2bcdee1 ("drm/amd/powerplay: enable pp one vf mode for vega10")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/powerplay/amd_powerplay.c |  6 +++---
+ drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c   | 15 +++------------
+ 2 files changed, 6 insertions(+), 15 deletions(-)
 
-That's the only change to this driver.  As such, it doesn't appear to 
-be needed, judging by the patch description.
-
-Alan Stern
+diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+index 5087d6bdba60..322c2015d3a0 100644
+--- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
++++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
+@@ -275,12 +275,12 @@ static int pp_dpm_load_fw(void *handle)
+ {
+ 	struct pp_hwmgr *hwmgr = handle;
+ 
+-	if (!hwmgr->not_vf)
+-		return 0;
+-
+ 	if (!hwmgr || !hwmgr->smumgr_funcs || !hwmgr->smumgr_funcs->start_smu)
+ 		return -EINVAL;
+ 
++	if (!hwmgr->not_vf)
++		return 0;
++
+ 	if (hwmgr->smumgr_funcs->start_smu(hwmgr)) {
+ 		pr_err("fw load failed\n");
+ 		return -EINVAL;
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
+index e2b82c902948..f48fdc7f0382 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
+@@ -282,10 +282,7 @@ int hwmgr_hw_init(struct pp_hwmgr *hwmgr)
+ 
+ int hwmgr_hw_fini(struct pp_hwmgr *hwmgr)
+ {
+-	if (!hwmgr->not_vf)
+-		return 0;
+-
+-	if (!hwmgr || !hwmgr->pm_en)
++	if (!hwmgr || !hwmgr->pm_en || !hwmgr->not_vf)
+ 		return 0;
+ 
+ 	phm_stop_thermal_controller(hwmgr);
+@@ -305,10 +302,7 @@ int hwmgr_suspend(struct pp_hwmgr *hwmgr)
+ {
+ 	int ret = 0;
+ 
+-	if (!hwmgr->not_vf)
+-		return 0;
+-
+-	if (!hwmgr || !hwmgr->pm_en)
++	if (!hwmgr || !hwmgr->pm_en || !hwmgr->not_vf)
+ 		return 0;
+ 
+ 	phm_disable_smc_firmware_ctf(hwmgr);
+@@ -327,13 +321,10 @@ int hwmgr_resume(struct pp_hwmgr *hwmgr)
+ {
+ 	int ret = 0;
+ 
+-	if (!hwmgr->not_vf)
+-		return 0;
+-
+ 	if (!hwmgr)
+ 		return -EINVAL;
+ 
+-	if (!hwmgr->pm_en)
++	if (!hwmgr->not_vf || !hwmgr->pm_en)
+ 		return 0;
+ 
+ 	ret = phm_setup_asic(hwmgr);
+-- 
+2.24.0
 
