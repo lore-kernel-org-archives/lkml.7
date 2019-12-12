@@ -2,153 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D87C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343A8C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7492173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C4D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:21:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DwhqQs+h"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="RCNqhh0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfLLHTv (ORCPT
+        id S1728107AbfLLHVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:19:51 -0500
-Received: from mail-eopbgr130070.outbound.protection.outlook.com ([40.107.13.70]:17923
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728043AbfLLHTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:19:51 -0500
+        Thu, 12 Dec 2019 02:21:33 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:12300 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728043AbfLLHVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 02:21:32 -0500
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC7KBlw010985;
+        Thu, 12 Dec 2019 02:21:22 -0500
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2wraevybcg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 12 Dec 2019 02:21:22 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RRHotmC4zMtgJMsxsJ9ANRiJ85JPJD5SP6bN6m8Rk1nU8SSlNVIVaOphasEjv4aANJHASJ7Rdwrpm2ZPcH5qCG5QaKdUFVvT3xFDc+7yK122RQZvOHRUp4/PTjr7FeLd7UPTOPOFzywll2tpY6NVdiGBODZPv/ac+Lh1T99rnB8hJLjz/+QAAIuNUnehhXR6b/pPxAFNxhwma+Y024hIjdwMLj4BVRu2XjljC02pCWbSSgkWlx9tb/J+wglxVDluU8cE+MMluBDogaHkg/oY8Ahw1clbfrTYyTsJTnw/iAB2FgP3oSDOLkxC6p57PegPCxUoI+Ddla6SIddfoktD3Q==
+ b=eIf77/CoK/xLKziPxYuQO5VaX9DkSeNnA5+yYHVaEgFZHHAJ/boxBBwR8x00LN4sHVj0kfsCzm0mDAGca/JCtoxPzPEb38ZA2VJj3R98wm5CMHtTmBOWjJFA27OjXBATlwFuC8qwIaTrt1Ut8Aot3A+Pu2hGUCHVH/Xp2GZHxCdXadUKflVcb60J0IGBTAVHljI5JaV22+4o/uHRW95iKmnbXmDA7lq7KCCVoiqJ+yp6ywQ1yCNySzTCQqjc7TS1Espfb4HneEH1kW3Pw02YsjbGfyPcRxCFDwkf/jJ5iADJWjceCSMTx+t51/lYo0Jx7Ajn+UewNXabQRh7CmHEQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9aBIVTacYsMdaN01HP8pPUXzfZlkCetyBhNdjp4vPU=;
- b=W9kYU+GChoy6/3xz0tCFsW47vcv9XU/GaF8eGCTO8DdC6VnyCBKZgswpGVajHTbV0SFw+wHqHwGyGNhFyDNrLIUoArO+YlGs7t8ymXAKOaAngFF0NXZDMOCkSLOMHCFnQAwYPvhyOSMQQ/RYaTEKmEIpeg8xbhwYQBm85rk/aio+6jvPazFWHSob2jztvJIG8DvHW0eCb+da8sZOthZ5Y3GRUJaquQzPeWM+2oyq1xV206lGEjG4yrTH2H/Map53uZNb+deiYo/50hxTc9437jvycpJuWF1Ruvxyt74yaFieDHxr/KWoGAHtMvUNhBwT8m74crlbJqsEEc8nsOgAzw==
+ bh=+a83Rt1MQbC2yUj/eEBM7qcQvMa9aBBYlY5cZgjkUgA=;
+ b=erQxciEHJtFbDaKeNrEfcZ+MxbK5mhD9IjJ6fCSISqCTVyvEYnpWc6bSJBtllthEPTKyGEcr49C2lnqegocs51G63mEeGd9JSauLetHeU5Zx9E8DfV6Cwc/aP/3ttcBpMlp5bUsV6YVCSq2lUj8RubyAerWD1fjfeQRWKxeUweWhCGAHkkDM4DjYogMNpa6N9pnoLLR/JJTab1VnaNhrCRMrM0uDXNXAhNNbjyqFj8+SJafhKzuyilocOiYMUBMM873Io/qrbUjWTtSz6CIs2cARqbsUoQzzG6qmjCAz/Pc28tAL3SixAoI1Cq4IYQBtV2i7eBtg1/ChcGpKGotlbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9aBIVTacYsMdaN01HP8pPUXzfZlkCetyBhNdjp4vPU=;
- b=DwhqQs+hJKBGLSC5wnLRbdnbkVB3w9vfZiAC0ZbhmTC+NXEExvspkvtl4UzfTNdtOk1bN7z/yoJG9Ud2pTrMRzhTP3bY+9RyTKEAbAc8LLqi6IKaBEm8c7OS2MA2sHvFVbmQpv+2Q0lHbjq+SzK0Zcsf87zkEVEhA5GRFxHLe/4=
-Received: from VI1PR04MB4062.eurprd04.prod.outlook.com (52.133.12.32) by
- VI1PR04MB3023.eurprd04.prod.outlook.com (10.170.228.29) with Microsoft SMTP
+ bh=+a83Rt1MQbC2yUj/eEBM7qcQvMa9aBBYlY5cZgjkUgA=;
+ b=RCNqhh0Slj0/g8ekKIsbruHe6y6SoSGftiWjubIqvdBTUSTIwxepNSyfYgHBr8cmg077BvJNNdENYlo3bjIzTEppTcleaMb1w2mJZu0dsIeBXAJdQbi3LRvJfxk1TmoJ9H03TIPN3yq2TREQzPG3dBHLVsD5n+xQCOK7UxcwhzU=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5159.namprd03.prod.outlook.com (20.180.4.74) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.17; Thu, 12 Dec 2019 07:19:47 +0000
-Received: from VI1PR04MB4062.eurprd04.prod.outlook.com
- ([fe80::20fe:3e38:4eec:ea03]) by VI1PR04MB4062.eurprd04.prod.outlook.com
- ([fe80::20fe:3e38:4eec:ea03%7]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
- 07:19:46 +0000
-From:   Alison Wang <alison.wang@nxp.com>
-To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "igor.opaniuk@toradex.com" <igor.opaniuk@toradex.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Alison Wang <alison.wang@nxp.com>
-Subject: [PATCH] ASoC: sgtl5000: Revert "ASoC: sgtl5000: Fix of unmute outputs
- on probe"
-Thread-Topic: [PATCH] ASoC: sgtl5000: Revert "ASoC: sgtl5000: Fix of unmute
- outputs on probe"
-Thread-Index: AQHVsLyIRDFbzLs7vEuxsFkXl6DgTA==
-Date:   Thu, 12 Dec 2019 07:19:46 +0000
-Message-ID: <20191212071847.45561-1-alison.wang@nxp.com>
-Accept-Language: zh-CN, en-US
+ 15.20.2538.16; Thu, 12 Dec 2019 07:21:21 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::38e7:c7c5:75cc:682c%5]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
+ 07:21:21 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "arnd@arndb.de" <arnd@arndb.de>
+Subject: Re: [PATCH V2] tpm_tis_spi: use new `delay` structure for SPI
+ transfer delays
+Thread-Topic: [PATCH V2] tpm_tis_spi: use new `delay` structure for SPI
+ transfer delays
+Thread-Index: AQHVrybztrExPq4jw0qMgCAKYpL1lKe1NO8AgADmqIA=
+Date:   Thu, 12 Dec 2019 07:21:20 +0000
+Message-ID: <6920bc5e8bc932dd85fa8e14755d2e6999512f25.camel@analog.com>
+References: <20191204080049.32701-1-alexandru.ardelean@analog.com>
+         <20191210065619.7395-1-alexandru.ardelean@analog.com>
+         <20191211173700.GE4516@linux.intel.com>
+In-Reply-To: <20191211173700.GE4516@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0149.apcprd02.prod.outlook.com
- (2603:1096:202:16::33) To VI1PR04MB4062.eurprd04.prod.outlook.com
- (2603:10a6:803:40::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=alison.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
+x-originating-ip: [137.71.226.54]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 46bd6296-15a6-41a9-8d44-08d77ed3aae0
-x-ms-traffictypediagnostic: VI1PR04MB3023:|VI1PR04MB3023:|VI1PR04MB3023:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR04MB302364BC9B193283C54078F2F4550@VI1PR04MB3023.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:356;
+x-ms-office365-filtering-correlation-id: 1235caa4-8554-49b0-cf5d-08d77ed3e388
+x-ms-traffictypediagnostic: CH2PR03MB5159:
+x-microsoft-antispam-prvs: <CH2PR03MB5159FCBDB6F12EEB569CEF7AF9550@CH2PR03MB5159.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
 x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(39860400002)(376002)(396003)(199004)(189003)(52116002)(66446008)(5660300002)(316002)(110136005)(6506007)(2906002)(4326008)(86362001)(66946007)(36756003)(66476007)(66556008)(64756008)(186003)(44832011)(26005)(2616005)(8676002)(6512007)(8936002)(71200400001)(6486002)(81156014)(81166006)(1076003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB3023;H:VI1PR04MB4062.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(189003)(2616005)(8936002)(186003)(36756003)(6486002)(4001150100001)(478600001)(4326008)(5660300002)(81166006)(81156014)(86362001)(8676002)(26005)(71200400001)(6512007)(6506007)(66946007)(66476007)(6916009)(54906003)(66446008)(66556008)(2906002)(76116006)(316002)(64756008)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5159;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9cGBAOtMIlMP3R1QkZ0ifqKRsj6xXzP/apxaHTZRbJ3Ks2QEVRg0nk6cjqSFyc8l9Q3LtTjMTMAG7C90HCtZWUAwfpo/m/I+Ts7yYdNwS+QGBgmJoeRazMGzh8gr2KfGxOGAQQYy81zW8kmYuPS3Qfj4axnA/lPkEAbFLAdh0pyCOAFqoCwL5KhfHJ1bcIL5zrjNXtlz5zV8mzshctiz/9Ywnwqbdmlix4aTxz9e4vF1WaB8+RrZHcM6Z2iebf7T58Yq9uH2c3lqaRAiMbuaZsPzDWtLzRJ+aG5/nv96l8B+wGQ8SB1EheqtSssT3qqKtE1I6laMV+V0xX+XSTawzZ13+VctQ5rRj7DxG3g+LOHsyriICc+POffJFZVQ3k3SDl3PywNQbCFKOvBkFTX+75ibZ+QTKnRYDwIia5MBRMWGUnGumxeaULYtwikCG6yf
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: VUPxJsFbjQq6G9SbNHCNG/ZmOQivZghNDjo6y14k5MSB24b3+tlUbCjpGmY6ap3QXtJfV0NoggGKAZpsda/JYX/FaTfFNZOmkyqzepxY1uwh3hfaTRQOTlvLkKp5ogBTyx1GlBZsM64UU5BatNRdl2ekxEU2lSa1U8RQ8n/QfUc4Feyflf5L160r9SRxepc7qB+L2IVv2uKZtqdnM8iFcbR2nADa+SOaq2h6HaCskG2proKOU7+hnyTXGLZmVuwBsYkrcKb9bClmcJSQvMlmhtg9WmBN72kN72+NIbA5toInV42RtNGlGLr+uLAd0C9Y4LXy9FecZQ+FDuSJWfNoXdq3DRlR4MLFUxvgm/bWDEog3N+fO7e9H/cp6t9J+42n3wN9Iledg8UacwO0vayET0FydEcqjzRdmi6BUpWobTqJMKjExtG0DVvJ4Rqj/ABWejYypTZFBn6blsd24r/rf+HZwaLKCFjywHiIkhNCsFXHgMDF5ZDokFV3nfr8xQAh
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5116B30964A1C4409EF43075D3C3AB70@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 46bd6296-15a6-41a9-8d44-08d77ed3aae0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 07:19:46.8605
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1235caa4-8554-49b0-cf5d-08d77ed3e388
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 07:21:21.0326
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LrQJ1DkNLq44XWw5XOIIB1S04BmfJul4822A9+JmH39SSv/l0UyjyaR/L6wmxe4/RN/IgQvNsGNv70FVX6NZ0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3023
+X-MS-Exchange-CrossTenant-userprincipalname: bfxHORTQjAWYO29/Y+Oi7UGivGETUP1AxZqTGZ/qBW0dpN4jRbLIBrV6MND7cPN2U32KdCaJueKWj0TDETk/ACHZ8DCx1NX60eWs1zRpBNU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5159
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_01:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ suspectscore=0 adultscore=0 clxscore=1015 impostorscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912120049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 631bc8f0134ae9620d86a96b8c5f9445d91a2dca.
-
-In commit 631bc8f0134a, snd_soc_component_update_bits is used instead of
-snd_soc_component_write. Although EN_HP_ZCD and EN_ADC_ZCD are enabled
-in ANA_CTRL register, MUTE_LO, MUTE_HP and MUTE_ADC bits are remained as
-the default value. It causes LO, HP and ADC are all muted after driver
-probe.
-
-The patch is to revert this commit, snd_soc_component_write is still
-used and MUTE_LO, MUTE_HP and MUTE_ADC are set as zero (unmuted).
-
-Signed-off-by: Alison Wang <alison.wang@nxp.com>
----
- sound/soc/codecs/sgtl5000.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index aa1f963..0b35fca 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1458,7 +1458,6 @@ static int sgtl5000_probe(struct snd_soc_component *c=
-omponent)
- 	int ret;
- 	u16 reg;
- 	struct sgtl5000_priv *sgtl5000 =3D snd_soc_component_get_drvdata(componen=
-t);
--	unsigned int zcd_mask =3D SGTL5000_HP_ZCD_EN | SGTL5000_ADC_ZCD_EN;
-=20
- 	/* power up sgtl5000 */
- 	ret =3D sgtl5000_set_power_regs(component);
-@@ -1486,8 +1485,9 @@ static int sgtl5000_probe(struct snd_soc_component *c=
-omponent)
- 	       0x1f);
- 	snd_soc_component_write(component, SGTL5000_CHIP_PAD_STRENGTH, reg);
-=20
--	snd_soc_component_update_bits(component, SGTL5000_CHIP_ANA_CTRL,
--		zcd_mask, zcd_mask);
-+	snd_soc_component_write(component, SGTL5000_CHIP_ANA_CTRL,
-+			SGTL5000_HP_ZCD_EN |
-+			SGTL5000_ADC_ZCD_EN);
-=20
- 	snd_soc_component_update_bits(component, SGTL5000_CHIP_MIC_CTRL,
- 			SGTL5000_BIAS_R_MASK,
---=20
-2.9.5
-
+T24gV2VkLCAyMDE5LTEyLTExIGF0IDE5OjM3ICswMjAwLCBKYXJra28gU2Fra2luZW4gd3JvdGU6
+DQo+IFtFeHRlcm5hbF0NCj4gDQo+IE9uIFR1ZSwgRGVjIDEwLCAyMDE5IGF0IDA4OjU2OjE5QU0g
+KzAyMDAsIEFsZXhhbmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiBJbiBhIHJlY2VudCBjaGFuZ2Ug
+dG8gdGhlIFNQSSBzdWJzeXN0ZW0gWzFdLCBhIG5ldyBgZGVsYXlgIHN0cnVjdCB3YXMNCj4gPiBh
+ZGRlZA0KPiA+IHRvIHJlcGxhY2UgdGhlIGBkZWxheV91c2Vjc2AuIFRoaXMgY2hhbmdlIHJlcGxh
+Y2VzIHRoZSBjdXJyZW50DQo+ID4gYGRlbGF5X3VzZWNzYA0KPiA+IHdpdGggYGRlbGF5YCBmb3Ig
+dGhpcyBkcml2ZXIuDQo+ID4gDQo+ID4gVGhlIGBzcGlfdHJhbnNmZXJfZGVsYXlfZXhlYygpYCBm
+dW5jdGlvbiBbaW4gdGhlIFNQSSBmcmFtZXdvcmtdIG1ha2VzDQo+ID4gc3VyZQ0KPiA+IHRoYXQg
+Ym90aCBgZGVsYXlfdXNlY3NgICYgYGRlbGF5YCBhcmUgdXNlZCAoaW4gdGhpcyBvcmRlciB0byBw
+cmVzZXJ2ZQ0KPiA+IGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5KS4NCj4gPiANCj4gPiBbMV0gY29t
+bWl0IGJlYmNmZDI3MmRmNjQ4NSAoInNwaTogaW50cm9kdWNlIGBkZWxheWAgZmllbGQgZm9yDQo+
+ID4gYHNwaV90cmFuc2ZlcmAgKyBzcGlfdHJhbnNmZXJfZGVsYXlfZXhlYygpIikNCj4gDQo+IE5v
+dCBzdXJlIHdoeSB5b3UgdXNlIGAgYW5kIG5vdCAnPw0KDQpUaGF0J3MgYSBoYWJpdCBmcm9tIEdp
+dGh1YidzIE1hcmtkb3duLg0KV2Uga2VlcCBvdXIga2VybmVsIHJlcG8gb24gR2l0aHViIGFuZCBN
+YXJrZG93biBmb3JtYXRzIGB0ZXh0YCBpbnRvIGENCmNlcnRhaW4gZm9ybS4NCldoZW4gSSBvcGVu
+IGEgUFIsIHRoZSBQUiB0ZXh0IGlzIGZvcm1hdHRlZCB0byBoaWdobGlnaHQgY2VydGFpbiBlbGVt
+ZW50cw0KW3RoYXQgSSB3YW50IGhpZ2hsaWdodGVkXS4NCkkgZGlkIG5vdCBnZXQgYW55IGNvbW1l
+bnRzIG9uIGl0IHNvIGZhci4NCg0KSSBjYW4gY2hhbmdlIGl0IGlmIHlvdSB3YW50Lg0KDQpBcyBh
+IHNlY29uZGFyeSBub3RlOiBNYXJrZG93biBzZWVtcyB0byBiZSB1c2VkIG9uIEdpdGxhYiBhbmQg
+Qml0YnVja2V0DQoNClRoYW5rcw0KQWxleA0KDQo+IA0KPiAvSmFya2tvDQo=
