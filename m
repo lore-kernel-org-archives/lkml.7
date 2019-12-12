@@ -6,106 +6,136 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E330C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6050D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56ABA214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbfLLVHX (ORCPT
+        id S1731001AbfLLVH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:07:23 -0500
-Received: from mga06.intel.com ([134.134.136.31]:6822 "EHLO mga06.intel.com"
+        Thu, 12 Dec 2019 16:07:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:60840 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730742AbfLLVHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:07:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 13:07:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
-   d="scan'208";a="364097914"
-Received: from tstruk-mobl1.jf.intel.com (HELO [10.7.196.67]) ([10.7.196.67])
-  by orsmga004.jf.intel.com with ESMTP; 12 Dec 2019 13:07:22 -0800
-Subject: Re: [PATCH =v2 3/3] tpm: selftest: cleanup after unseal with wrong
- auth/policy test
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        jarkko.sakkinen@linux.intel.com
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
-        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
-References: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
- <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1>
- <1576180263.10287.4.camel@HansenPartnership.com>
- <c3bffb8c-d454-1f53-7f7e-8b65884ffaf6@intel.com>
- <1576184085.10287.13.camel@HansenPartnership.com>
-From:   Tadeusz Struk <tadeusz.struk@intel.com>
-Autocrypt: addr=tadeusz.struk@intel.com; keydata=
- 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
-Message-ID: <bb256d5a-5c8c-d5ec-5ad2-ddfaf1c83217@intel.com>
-Date:   Thu, 12 Dec 2019 13:07:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1730742AbfLLVH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:07:28 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BD2A328;
+        Thu, 12 Dec 2019 13:07:27 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87EB43F718;
+        Thu, 12 Dec 2019 13:07:26 -0800 (PST)
+Date:   Thu, 12 Dec 2019 21:07:24 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <20191212210723.GJ24359@e119886-lin.cambridge.arm.com>
+References: <20191209160638.141431-1-andre.przywara@arm.com>
+ <20191210144115.GA94877@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1576184085.10287.13.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210144115.GA94877@google.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 12:54 PM, James Bottomley wrote:
-> Not in the modern kernel resource manager world: anyone who is in the
-> tpm group can access the tpmrm device and we haven't added a dangerous
-> command filter like we promised we would, so unless they have actually
-> set lockout or platform authorization, they'll find they can execute it
+On Tue, Dec 10, 2019 at 08:41:15AM -0600, Bjorn Helgaas wrote:
+> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+> > From: Deepak Pandey <Deepak.Pandey@arm.com>
+> > 
+> > The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> > prominently config space accesses to not existing BDFs being answered
+> > with a bus abort, resulting in an SError.
+> 
+> Can we tease this apart a little more?  Linux doesn't program all the
+> bits that control error signaling, so even on hardware that works
+> perfectly, much of this behavior is determined by what firmware did.
+> I wonder if Linux could be more careful about this.
+> 
+> "Bus abort" is not a term used in PCIe.  IIUC, a config read to a
+> device that doesn't exist should terminate with an Unsupported Request
+> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+> 
+> The UR should be an uncorrectable non-fatal error (Table 6-5), and
+> Figures 6-2 and 6-3 show how it should be handled and when it should
+> be signaled as a system error.  In case you don't have a copy of the
+> spec, I extracted those two figures and put them at [1].
+> 
+> Can you collect "lspci -vvxxx" output to see if we can correlate it
+> with those figures and the behavior you see?
+> 
+> [1] https://drive.google.com/file/d/1ihhdQvr0a7ZEJG-3gPddw1Tq7cTFAsah/view?usp=sharing
+> 
+> > To mitigate this, the firmware scans the bus before boot (catching the
+> > SErrors) and creates a table with valid BDFs, which acts as a filter for
+> > Linux' config space accesses.
+> > 
+> > Add code consulting the table as an ACPI PCIe quirk, also register the
+> > corresponding device tree based description of the host controller.
+> > Also fix the other two minor issues on the way, namely not being fully
+> > ECAM compliant and config space accesses being restricted to 32-bit
+> > accesses only.
+> 
+> As I'm sure you've noticed, controllers that support only 32-bit
+> config writes are not spec compliant and devices may not work
+> correctly.  The comment in pci_generic_config_write32() explains why.
+> 
+> You may not trip over this problem frequently, but I wouldn't call it
+> a "minor" issue because when you *do* trip over it, you have no
+> indication that a register was corrupted.
+> 
+> Even ECAM compliance is not really minor -- if this controller were
+> fully compliant with the spec, you would need ZERO Linux changes to
+> support it.  Every quirk like this means additional maintenance
+> burden, and it's not just a one-time thing.  It means old kernels that
+> *should* "just work" on your system will not work unless somebody
+> backports the quirk.
 
-The default for the tpm2_* tools with '-T device' switch is to talk to
-/dev/tpm0.
+With regards to URs resulting in unwanted aborts or similar - this seems
+to be a very common theme amongst ARM PCI controller drivers. For example
+both ARM32 imx6 and ARM32 keystone have fault handlers to handle an abort
+and fabricate a 0xffffffff read value.
 
-If one would try to run it, by mistake, it would fail with:
+The ARM32 rcar driver, whilst it doesn't appear to produce an abort, does
+read the PCI_STATUS register after making a config read to determine if
+any aborts have happened - in which case it reports
+PCIBIOS_DEVICE_NOT_FOUND.
 
-$ tpm2_clear -T device
-ERROR:tcti:src/tss2-tcti/tcti-device.c:439:Tss2_Tcti_Device_Init()
-Failed to open device file /dev/tpm0: Permission denied
+And as recently reported [1], the rockchip driver also appears to produce
+aborts.
 
-To point it to /dev/tpmrm0 it would need to be:
-$ tpm2_clear -T device:/dev/tpmrm0
+I suspect that this ARM64 controller driver won't be the last either. Thus
+any solution here may form the basis of copy-cat solutions for subsequent
+controllers.
 
--- 
-Tadeusz
+From my understanding of the issues, the ARM64 serrors are imprecise and
+as a result there isn't a sensible way of using them to determine that a
+read is a UR. So where there are no other solutions to suppress the
+generation of an abort by the controller, the only solutions that seem to
+exist are 1) pre-scan the devices in firmware and only talk to those devices
+in Linux - a safe option but limiting - perhaps with side effects for CRS
+and 2) the approach rcar takes in using the PCI_STATUS register - though
+you'd end up having to mask the serror (PSTATE.A) for a limited period of
+time - a risky option (you'll miss real serrors) - but with no side effects.
+
+(I don't know if option 2 is feasible in this case by the way).
+
+[1] https://lore.kernel.org/linux-pci/2a381384-9d47-a7e2-679c-780950cd862d@rock-chips.com/2-0001-WFT-PCI-rockchip-play-game-with-unsupported-request-.patch
+
+Thanks,
+
+Andrew Murray
+
+> 
+> > This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+> > and to access *any* devices (there are no platform devices except UART).
