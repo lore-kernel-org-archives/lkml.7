@@ -2,119 +2,82 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC8CC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C538C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0122922B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210752077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jW6qL+4I"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="r0mYpAn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbfLLBfu (ORCPT
+        id S1727608AbfLLBge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:35:50 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35071 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfLLBfu (ORCPT
+        Wed, 11 Dec 2019 20:36:34 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:63871 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727536AbfLLBgd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:35:50 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so279712pgk.2;
-        Wed, 11 Dec 2019 17:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=znCe39Owfk1VXhozOlUo6vxKkddw4NBtn45wfJK96z0=;
-        b=jW6qL+4ILoTg4t3OzSI3WHrW0oqCXiRsmJ7gaLZ0giHJ5cotlWNFXFMYpF7M4+hOnR
-         Ab+sembKor1W+psbh2HCfAcME+BBqDgApocn60SQKjtBymlKUEr89OUfKjoethO+p/zw
-         zpkyIvMpDvHnPSfhmisQfdY7Xr3xsKWDxtif+OeXI5W62Gm08TNWENYpoUonSF0iR7rO
-         crUjH5+5zLSFRCxUvsU3Q05c6hEX5/jtALj5TaTWLzYZNg55uH8xC/Xv8nclVW5HIEO6
-         kzqQF7fbBrTvzHbQpuMINQxlUcvrhU/wd8E6VTB3EQ/1cuLXZoMqhJRCfZDrRxPtLd6H
-         dH9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=znCe39Owfk1VXhozOlUo6vxKkddw4NBtn45wfJK96z0=;
-        b=gdfg/BoZXwtSEyCbE4IvFO+u3ic8bRNSzvzyzf7m+hh6F5bbaDDDe+9qeyFUgU9afj
-         VHcfKQ6ID9aNW+MpYaZIKCYnWokuB0eLgN6Umz767Blj+8ZB3YStobDgyNYImVjNHJ5b
-         T7FxqHE7o8BR5LEpqIJmaztreObwWEUOFFpg6mkQZLxtMEsiYsDVwBGtSFszU/aOy54T
-         DDqqtpMZFjFvWsNqLgPtL5/dQ2yifK9y1zLrE1FvDtlE4cIbC/xMp/ne71XHhFdg6pwp
-         nKm+Wc5Z+85u53bzxeIdKjyfZCgzMweu4ksltAkHgCDwXu8oHMldxQC6+wS4Hqs6btvf
-         bosA==
-X-Gm-Message-State: APjAAAVOHS0qDQ9719AKTv7Rb8EktqKDSxd/vBJQNUtBlM/JZaBnAOe6
-        j8JGwbENSZmtQuqilMCw8nw=
-X-Google-Smtp-Source: APXvYqwmvOirvSuQ3HmC5UtijHoPuiSMrq4OVmDe2Pt4j1ceZwwDhwL0pTEu3D7UZsvT/UsnYMztHw==
-X-Received: by 2002:a63:1b54:: with SMTP id b20mr7587104pgm.312.1576114549630;
-        Wed, 11 Dec 2019 17:35:49 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i2sm4219838pgi.94.2019.12.11.17.35.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 17:35:48 -0800 (PST)
-Subject: Re: [PATCH 1/2] watchdog: mtx-1: Drop au1000.h header inclusion
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>,
-        Denis Efremov <efremov@linux.com>
-References: <20191211210204.31579-1-f.fainelli@gmail.com>
- <20191211210204.31579-2-f.fainelli@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <21b7be75-db61-3b14-c57c-04af0b78b347@roeck-us.net>
-Date:   Wed, 11 Dec 2019 17:35:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 11 Dec 2019 20:36:33 -0500
+X-UUID: 915dbb02af824e83b9b447db489d569a-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=9dmLvvMzX2gtv8uuQt32TCADineHY3exyLfiwrU7QvA=;
+        b=r0mYpAn8n4j5Tsfn+1X5YIWD7uJrUvNqAEg877U4Aok5QyETXICHfYEJCJ4b14wlutXfQ0Y+T1L1CK4AuASETy4a8q29ld/ii3i0e6bs1YZMvI40AKYvpXOsJyxHOdQ9w9gyVqLE7MVkiDXPEIJubSS+bS7ylN5FZ5eBO04tXMw=;
+X-UUID: 915dbb02af824e83b9b447db489d569a-20191212
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2140265179; Thu, 12 Dec 2019 09:36:29 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 09:36:28 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Dec
+ 2019 09:36:24 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 09:36:24 +0800
+Message-ID: <1576114588.11280.1.camel@mtksdaap41>
+Subject: Re: [PATCH] soc: mediatek: cmdq: delete not used define
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     <matthias.bgg@kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Thu, 12 Dec 2019 09:36:28 +0800
+In-Reply-To: <20191211185950.31358-1-matthias.bgg@kernel.org>
+References: <20191211185950.31358-1-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20191211210204.31579-2-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 1:02 PM, Florian Fainelli wrote:
-> Including au1000.h from the machine specific header directory prevents
-> this driver from being built on any other platforms (MIPS included).
-> Since we do not use any definitions, drop it.
-> 
-> Reported-by: Denis Efremov <efremov@linux.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   drivers/watchdog/mtx-1_wdt.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
-> index 25a92857b217..aeca22f7450e 100644
-> --- a/drivers/watchdog/mtx-1_wdt.c
-> +++ b/drivers/watchdog/mtx-1_wdt.c
-> @@ -41,8 +41,6 @@
->   #include <linux/uaccess.h>
->   #include <linux/gpio/consumer.h>
->   
-> -#include <asm/mach-au1x00/au1000.h>
-> -
->   #define MTX1_WDT_INTERVAL	(5 * HZ)
->   
->   static int ticks = 100 * HZ;
-> 
+T24gV2VkLCAyMDE5LTEyLTExIGF0IDE5OjU5ICswMTAwLCBtYXR0aGlhcy5iZ2dAa2VybmVsLm9y
+ZyB3cm90ZToNCj4gRnJvbTogTWF0dGhpYXMgQnJ1Z2dlciA8bWJydWdnZXJAc3VzZS5jb20+DQo+
+IA0KPiBEZWZpbmUgQ01EUV9FT0NfQ01EIHdhcyBhY3R1YWxseSBuZXZlciB1c2VkLiBEZWxldGUg
+aXQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYnJ1Z2dlckBzdXNl
+LmNvbT4NCg0KVGhhbmtzLiA6RA0KDQpSZXZpZXdlZC1ieTogQmliYnkgSHNpZWggPGJpYmJ5Lmhz
+aWVoQG1lZGlhdGVrLmNvbT4NCg0KPiANCj4gLS0tDQo+IA0KPiAgZHJpdmVycy9zb2MvbWVkaWF0
+ZWsvbXRrLWNtZHEtaGVscGVyLmMgfCAyIC0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlv
+bnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1o
+ZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4
+IDNjODJkZTVmOTQxNy4uMTEyN2MxOWM0ZTkxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9t
+ZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9t
+dGstY21kcS1oZWxwZXIuYw0KPiBAQCAtMTIsOCArMTIsNiBAQA0KPiAgI2RlZmluZSBDTURRX0FS
+R19BX1dSSVRFX01BU0sJMHhmZmZmDQo+ICAjZGVmaW5lIENNRFFfV1JJVEVfRU5BQkxFX01BU0sJ
+QklUKDApDQo+ICAjZGVmaW5lIENNRFFfRU9DX0lSUV9FTgkJQklUKDApDQo+IC0jZGVmaW5lIENN
+RFFfRU9DX0NNRAkJKCh1NjQpKChDTURRX0NPREVfRU9DIDw8IENNRFFfT1BfQ09ERV9TSElGVCkp
+IFwNCj4gLQkJCQk8PCAzMiB8IENNRFFfRU9DX0lSUV9FTikNCj4gIA0KPiAgc3RhdGljIHZvaWQg
+Y21kcV9jbGllbnRfdGltZW91dChzdHJ1Y3QgdGltZXJfbGlzdCAqdCkNCj4gIHsNCg0K
 
-Given that this is nothing but yet another gpio watchdog driver, I'd
-personally rather have it merged with gpio_wdt.c. On a higher level,
-cleaning up old-style watchdog drivers, without converting them to
-using the watchdog core, is a waste of time.
-
-Wim, should we make it a policy to reject patches into old-style drivers
-unless they fix a real bug ? It is getting a pain to have to review those
-patches.
-
-Thanks,
-Guenter
