@@ -2,116 +2,112 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E79C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8009EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F11882073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:33:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufuXmQiy"
+	by mail.kernel.org (Postfix) with ESMTP id 5F86021556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfLLSds (ORCPT
+        id S1730454AbfLLSem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:33:48 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:47048 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730291AbfLLSds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:33:48 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g18so2938987otj.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:33:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2JEzjDTXigw8nTAlF070YiTxXmoqt0fiFaSaJYbD0m0=;
-        b=ufuXmQiynKIhlryP/nAuUMz1QU6Dn2EbSsneTbWxFV91i8ZR8GVxkgzVfIhq68Om8y
-         hZaMhuc6jD81PgDVsrdWfixKWiTEuKjXPE/5CHJaZUWxSV7jkCMMGPXZf4hIFze5QZkO
-         Fe3pjnG9MZcRSiXX4h03BqXwfQg5esIhN7SCPPU15/RLVn6EdXc6q2IYbirqdEBqqtoV
-         1X9u1y1J9sUpVlXTASC3w8oWerK5SQ+bzRCcq3/3Y5XHac6VuhEuHceHyOxTc4prEj7a
-         WAjtXFAQLlSYUigoSI+ks/o15KvvRt2eFWxG1vFmFAoGlg7coj4s4E6cU8GcoMDRCYBm
-         fl3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2JEzjDTXigw8nTAlF070YiTxXmoqt0fiFaSaJYbD0m0=;
-        b=PzhIWBf/+wh4xPbYgfjLBu44VvMQ4UYE0J8sFU1FTqgcVQyPoAZy3ovPXDLS75Q3jH
-         /DPVQwlm3EKFj/KevC/QCNKm9QaSy/AYRpITYfSZVmwCJ8IrtZpMpR3eckJlALKWaQdB
-         /iu68BAPrqgHMMb7SeCB+iLvtgUu2CGr3IQ6MgjdlwwI1lGC0IALsKiAdCgm08vEgKbR
-         CrEvexR+L4v2rBOJGHTWXMB4msvxzMxiXaaGa+8CpFJl7R1/w/N1yireLzDlhSSNPeYb
-         zhmye5huydhLraXE30WOJEAbI8vLCJri6tAqNCho3BBdtMV30C1pekSm4EHAH7u9OZ4J
-         QN6w==
-X-Gm-Message-State: APjAAAUY7WnAmbZ7/LYYLBEjFslGjQw3WFBZXiKHQvdaLJU2oShiQx4g
-        fzM/1Q/1Wwu6RKyKIrkbklUzoBOftgpb8A/lxq059A==
-X-Google-Smtp-Source: APXvYqweGtmWP/9RDwqqztjyBmVQhQCTFC0RrVREpzH+hWNkdDn380L8OObmNOa7PFyEM3JGNhguvUUT5fLg37ssxCk=
-X-Received: by 2002:a05:6830:1097:: with SMTP id y23mr9499165oto.332.1576175627329;
- Thu, 12 Dec 2019 10:33:47 -0800 (PST)
+        Thu, 12 Dec 2019 13:34:42 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13397 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730291AbfLLSel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:34:41 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:27:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="239043222"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2019 10:27:21 -0800
+Date:   Thu, 12 Dec 2019 10:27:21 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
+ VMX_FEATURES_*
+Message-ID: <20191212182721.GI3163@linux.intel.com>
+References: <20191128014016.4389-12-sean.j.christopherson@intel.com>
+ <20191212122646.GE4991@zn.tnic>
+ <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
+ <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
+ <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
+ <20191212174357.GE3163@linux.intel.com>
+ <52dd758d-a590-52a6-4248-22d6852b75cd@redhat.com>
+ <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
+ <CALMp9eRAYj=dKDtnPymkUA_OOMv+9a4WdPNt4hdpFtBgzwNA9w@mail.gmail.com>
+ <EA5BE610-6E9C-4357-AD62-5678C7E81043@oracle.com>
 MIME-Version: 1.0
-References: <20191203172641.66642-1-john.stultz@linaro.org>
- <20191203172641.66642-2-john.stultz@linaro.org> <b3e979ab-0c95-4e16-6399-9bed09e08a7b@ti.com>
-In-Reply-To: <b3e979ab-0c95-4e16-6399-9bed09e08a7b@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 12 Dec 2019 10:33:36 -0800
-Message-ID: <CALAqxLV5XwrJU2psx_ALFK1q9ZTaLTGRD9dgQhGQ5v=ojfyE+w@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v16 1/5] dma-buf: Add dma-buf heaps framework
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <EA5BE610-6E9C-4357-AD62-5678C7E81043@oracle.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 8:52 AM Andrew F. Davis <afd@ti.com> wrote:
-> On 12/3/19 12:26 PM, John Stultz wrote:
-> > +#define DMA_HEAP_IOC_MAGIC           'H'
-> > +
-> > +/**
-> > + * DOC: DMA_HEAP_IOC_ALLOC - allocate memory from pool
-> > + *
-> > + * Takes a dma_heap_allocation_data struct and returns it with the fd field
-> > + * populated with the dmabuf handle of the allocation.
-> > + */
-> > +#define DMA_HEAP_IOC_ALLOC   _IOWR(DMA_HEAP_IOC_MAGIC, 0x0,\
-> > +                                   struct dma_heap_allocation_data)
-> > +
->
-> <subsytem>_IOC_
->
-> Seems more common for the internal numberings and such, what the user
-> calls is more often (espesially in DRM and DMA_BUF):
->
-> <subsytem>_IOCTL_<function>
->
-> This is really just another naming nit but becouse this one really *is*
-> ABI then getting our prefrence right is a must, up to you here.
+On Thu, Dec 12, 2019 at 08:04:19PM +0200, Liran Alon wrote:
+> 
+> 
+> > On 12 Dec 2019, at 19:57, Jim Mattson <jmattson@google.com> wrote:
+> > 
+> > On Thu, Dec 12, 2019 at 9:53 AM Liran Alon <liran.alon@oracle.com> wrote:
+> > 
+> >> Why should CPU VMX features be treated differently than standard CPUID deduced features?
+> > 
+> > Do we have the right Intel people on the recipient list to answer this
+> > question? Presumably, Intel felt that this information should be
+> > available in supervisor mode only.
+> > 
+> > Sean?
+> 
+> Good question. Probably because it just makes sense that Ring3 will never need to use
+> this info as all VMX instructions are privileged. i.e. Can only be executed in Ring0.
 
-So yea, Sumit has already pulled these into drm-misc-next, so this
-feedback is just a few days too late.
+I highly doubt ring0 vs. ring3 was a motivating factor.  I suspect the MSR
+interface is primarily driven by VMX's allowed-0 vs. allowed-1 behavior,
+which would be awkward to encode in CPUID.  Reporting via MSR also likely
+provided more flexibility for updating/fixing CPU behavior, e.g. patching
+the RDMSR hook is likely far easier than patching CPUID.
 
-But it's not a bad suggestion, so if you want to submit a tack-on
-patch to drm-misc-next I suspect we can, try to pull it in.
+Even if the architects intended the information to be supervisor-only,
+that's just their opinion, no?
 
-thanks
--john
+> De-facto in KVM we have discovered this assumption to be problematic BTW,
+> as KVM created an interface to query VMX MSRs values to properly define the requested
+> vCPU model. :P (See kvm_get_msr_feature())
