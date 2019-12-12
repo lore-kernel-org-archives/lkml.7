@@ -2,189 +2,82 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C69C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8094FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFCF21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:46:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Og9r+73s"
+	by mail.kernel.org (Postfix) with ESMTP id 56FDC21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfLLOqd (ORCPT
+        id S1729798AbfLLOqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:46:33 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59752 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbfLLOqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:46:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hkHDB3phcH0HfS+SYlRQH6XDGLuoaLVy41b9XR3p43Q=; b=Og9r+73slsywdB0UTKFtoWlqY
-        5tH6AeleUmHyad03r1ijWZDvinNFcpKVrgl92ti5xMKUrF0ircAXO+9E2PRwju+ewUAQMwO/tbF5a
-        LR4vjjIArUhVKQDL7qkN4Kn2ZbV6LOeqPlZCNjm2anwx9isZmLSQqNnWn2fk3MmNg+PjfaTDo3/5Q
-        TIpKeJRnwakwsChaRG0LzJLeUjLS+aDKDds9Ifg8ONuAxmD00ehC7dd3KFDNMP8ujWLnYzL8Rvvyn
-        N82AHe1puRQfXT6AIizxnooy9afqoZfupFT/yvDK9MzyDx2tMittVI6/fGdS2A5FGU+YYeHTAsEvU
-        pWae21DPg==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:47872)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ifPjP-0007Hs-GT; Thu, 12 Dec 2019 14:46:19 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ifPjM-0006tX-JX; Thu, 12 Dec 2019 14:46:16 +0000
-Date:   Thu, 12 Dec 2019 14:46:16 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-Message-ID: <20191212144616.GJ25745@shell.armlinux.org.uk>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga>
- <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
- <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
- <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
- <20191211222829.GV50317@dtor-ws>
- <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
- <20191212141747.GI25745@shell.armlinux.org.uk>
- <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
+        Thu, 12 Dec 2019 09:46:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:49290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729453AbfLLOqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:46:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33238DA7;
+        Thu, 12 Dec 2019 06:46:37 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F09C13F6CF;
+        Thu, 12 Dec 2019 06:46:35 -0800 (PST)
+Date:   Thu, 12 Dec 2019 14:46:33 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
+Message-ID: <20191212144633.GE46910@lakrids.cambridge.arm.com>
+References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:41:20PM +0100, Marc Gonzalez wrote:
-> On 12/12/2019 15:17, Russell King - ARM Linux admin wrote:
-> 
-> > On Thu, Dec 12, 2019 at 02:53:40PM +0100, Marc Gonzalez wrote:
-> >
-> >> On 11/12/2019 23:28, Dmitry Torokhov wrote:
-> >>
-> >>> On Wed, Dec 11, 2019 at 05:17:28PM +0100, Marc Gonzalez wrote:
-> >>>
-> >>>> What is the rationale for the devm_add_action API?
-> >>>
-> >>> For one-off and maybe complex unwind actions in drivers that wish to use
-> >>> devm API (as mixing devm and manual release is verboten). Also is often
-> >>> used when some core subsystem does not provide enough devm APIs.
-> >>
-> >> Thanks for the insight, Dmitry. Thanks to Robin too.
-> >>
-> >> This is what I understand so far:
-> >>
-> >> devm_add_action() is nice because it hides/factorizes the complexity
-> >> of the devres API, but it incurs a small storage overhead of one
-> >> pointer per call, which makes it unfit for frequently used actions,
-> >> such as clk_get.
-> >>
-> >> Is that correct?
-> >>
-> >> My question is: why not design the API without the small overhead?
-> >>
-> >> Proof of concept below:
-> >>
-> >>
-> >> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> >> index 0bbb328bd17f..76392dd6273b 100644
-> >> --- a/drivers/base/devres.c
-> >> +++ b/drivers/base/devres.c
-> >> @@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(devres_release_group);
-> >>  
-> >> +void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
-> >> +{
-> >> +	void *data = devres_alloc(func, size, GFP_KERNEL);
-> >> +
-> >> +	if (data) {
-> >> +		memcpy(data, arg, size);
-> >> +		devres_add(dev, data);
-> >> +	} else
-> >> +		func(dev, arg);
-> >> +
-> >> +	return data;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(devm_add);
-> >> +
-> >>  /*
-> >>   * Custom devres actions allow inserting a simple function call
-> >>   * into the teadown sequence.
-> >> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
-> >> index be160764911b..8db671823126 100644
-> >> --- a/drivers/clk/clk-devres.c
-> >> +++ b/drivers/clk/clk-devres.c
-> >> @@ -4,6 +4,11 @@
-> >>  #include <linux/export.h>
-> >>  #include <linux/gfp.h>
-> >>  
-> >> +static void __clk_put(struct device *dev, void *data)
-> >> +{
-> >> +	clk_put(*(struct clk **)data);
-> >> +}
-> >> +
-> >>  static void devm_clk_release(struct device *dev, void *res)
-> >>  {
-> >>  	clk_put(*(struct clk **)res);
-> >> @@ -11,19 +16,11 @@ static void devm_clk_release(struct device *dev, void *res)
-> >>  
-> >>  struct clk *devm_clk_get(struct device *dev, const char *id)
-> >>  {
-> >> -	struct clk **ptr, *clk;
-> >> -
-> >> -	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
-> >> -	if (!ptr)
-> >> -		return ERR_PTR(-ENOMEM);
-> >> +	struct clk *clk = clk_get(dev, id);
-> >>  
-> >> -	clk = clk_get(dev, id);
-> >> -	if (!IS_ERR(clk)) {
-> >> -		*ptr = clk;
-> >> -		devres_add(dev, ptr);
-> >> -	} else {
-> >> -		devres_free(ptr);
-> >> -	}
-> >> +	if (!IS_ERR(clk))
-> >> +		if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
-> >> +			clk = ERR_PTR(-ENOMEM);
-> > 
-> > You leak clk here.
-> 
-> I don't think so ;-)
-> 
-> If devm_add() returns NULL, then we have called __clk_put(dev, &clk);
+On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
+> +#define ID_ISAR6_JSCVT_SHIFT		0
+> +#define ID_ISAR6_DP_SHIFT		4
+> +#define ID_ISAR6_FHM_SHIFT		8
+> +#define ID_ISAR6_SB_SHIFT		12
+> +#define ID_ISAR6_SPECRES_SHIFT		16
+> +#define ID_ISAR6_BF16_SHIFT		20
+> +#define ID_ISAR6_I8MM_SHIFT		24
 
-Okay.
+> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
+>  	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
+>  	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
+>  	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
 
-However, please don't call this __clk_put().  git grep __clk_put will
-tell you why.  Thanks.
+> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Using ftr_generic_32bits exposes the lowest-common-denominator for all
+4-bit fields in the register, and I don't think that's the right thing
+to do here, because:
+
+* We have no idea what ID_ISAR6 bits [31:28] may mean in future.
+
+* AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
+  ARMv8.0-PredInv extension) operate on the local PE and are not
+  broadcast. To make those work as a guest expects, the host will need
+  to do additional things (e.g. to preserve that illusion when a vCPU is
+  migrated from one pCPU to another and back).
+
+Given that, think we should add an explicit ftr_id_isar6 which only
+exposes the fields that we're certain are safe to expose to a guest
+(i.e. without SPECRES).
+
+Thanks,
+Mark.
