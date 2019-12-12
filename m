@@ -2,63 +2,137 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6111CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45484C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC4E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2641A214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfLLLFX (ORCPT
+        id S1728944AbfLLLFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:05:23 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46575 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728613AbfLLLFW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:05:22 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ifMHT-000766-AO; Thu, 12 Dec 2019 11:05:15 +0000
-Date:   Thu, 12 Dec 2019 12:05:14 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>, qiwuchen55@gmail.com
-Cc:     qiwuchen55@gmail.com, peterz@infradead.org, mingo@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH] kernel/exit: do panic earlier to get coredump if global
- init task exit
-Message-ID: <20191212110513.qf2sapgggnp46voc@wittgenstein>
-References: <1576131255-3433-1-git-send-email-qiwuchen55@gmail.com>
- <20191212095127.GA5460@redhat.com>
- <20191212100838.GB5460@redhat.com>
+        Thu, 12 Dec 2019 06:05:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:42710 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728613AbfLLLFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 06:05:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3911328;
+        Thu, 12 Dec 2019 03:05:36 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4693E3F718;
+        Thu, 12 Dec 2019 03:05:35 -0800 (PST)
+Date:   Thu, 12 Dec 2019 11:05:31 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
+Message-ID: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
+In-Reply-To: <20191211201725.GA30513@google.com>
+References: <20191211201725.GA30513@google.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191212100838.GB5460@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:08:38AM +0100, Oleg Nesterov wrote:
-> can't you use is_global_init() && group_dead ?
+On 11/12/2019 20:17, Bjorn Helgaas wrote:
 
-Seems reasonable.
-Looks like we can move
-group_dead = atomic_dec_and_test(&tsk->signal->live);
-further up...
+Hi Bjorn,
 
-(Ideally I'd like to have a test for this to ensure that this lets you
-capture a global init coredump but that might be tricky. But since you've
-seem to have run into this case maybe you even have something that could
-be turned into a test? (Similar to how we already have a purely opt-in
-test for pstore.))
+> On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
+>> On Tue, 10 Dec 2019 08:41:15 -0600
+>> Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
+>>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
+>>>>
+>>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
+>>>> prominently config space accesses to not existing BDFs being answered
+>>>> with a bus abort, resulting in an SError.  
+>>>
+>>> Can we tease this apart a little more?  Linux doesn't program all the
+>>> bits that control error signaling, so even on hardware that works
+>>> perfectly, much of this behavior is determined by what firmware did.
+>>> I wonder if Linux could be more careful about this.
+>>>
+>>> "Bus abort" is not a term used in PCIe.
+>>
+>> Yes, sorry, that was my sloppy term, also aiming more at the CPU
+>> side of the bus, between the cores and the RC.
+>>
+>>>  IIUC, a config read to a
+>>> device that doesn't exist should terminate with an Unsupported Request
+>>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
+>>
+>> Yes, that's what Lorenzo mentioned as well.
+>>
+>>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
+>>> Figures 6-2 and 6-3 show how it should be handled and when it should
+>>> be signaled as a system error.  In case you don't have a copy of the
+>>> spec, I extracted those two figures and put them at [1].
+>>
+>> Thanks for that.
+>> So in the last few months we tossed several ideas around how to
+>> work-around this without kernel intervention, all of them turned out
+>> to be not working. There are indeed registers in the RC that
+>> influence error reporting to the CPU side, but even if we could
+>> suppress (or catch) the SError, we can't recover and fixup the read
+>> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
+>> understood this, there are gates missing which are supposed to
+>> translate this specific UR into a valid "all-1s" response.
+> 
+> But the commit log says firmware scanned the bus (catching the
+> SErrors).  Shouldn't Linux be able to catch them the same way?
 
-Christian
+Not really. The scanning is done by the SCP management processor, which is a Cortex-M class core on the same bus. So it's a simple, single core running very early after power-on, when the actual AP cores are still off. The SError handler is set to just increase a value, then to return. This value is then checked before and after a config space access for a given
+BDF: https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
+
+On the AP cores that run Linux later on this is quite different: The SError is asynchronous, imprecise (inexact) and has no syndrome information. That means we can't attribute this anymore to the faulting instruction, we don't even know if it happened due to this config space access. The CPU might have executed later instructions already, so the state is broken at this point. SError basically means: the system is screwed up.
+Because this is quite common for SErrors, we don't even allow to register SError handlers in arm64 Linux.
+
+So even if we could somehow handle this is in Linux, it would be a much greater and intrusive hack, so I'd rather stick with this version.
+ 
+> The "all-1s" response directly from hardware is typical of most
+> platforms, but I don't think it's strictly required by the PCIe spec
+> and I don't think it's absolutely essential even to Linux.  If you can
+> catch the SErrors, isn't there a way for software to fabricate that
+> all-1s data and continue after the read?
+
+That was an idea we had as well, but due to the points mentioned above this is not possible.
+
+>>> Even ECAM compliance is not really minor -- if this controller were
+>>> fully compliant with the spec, you would need ZERO Linux changes to
+>>> support it.  Every quirk like this means additional maintenance
+>>> burden, and it's not just a one-time thing.  It means old kernels that
+>>> *should* "just work" on your system will not work unless somebody
+>>> backports the quirk.
+>>
+>> I am well aware of that, and we had quite some discussions
+>> internally, with quite some opposition.  ...
+> 
+> The main point is that *future* silicon should be designed to avoid
+> this issue.  I hope at least that part was not controversial.
+
+Yes, the design goal was to be completely standards (SBSA, ACPI, ECAM) compliant, it was just the usual "things happen" that wasn't spotted in time.
+
+> If we want to take advantage of the generic PCI code supplied by
+> Linux, we have to expect that the hardware will play by the rules of
+> PCI.
+
+You don't need to convince me ;-), but I think the lesson has been learned.
+
+Cheers,
+Andre.
