@@ -2,133 +2,313 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10A2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6362054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C180F20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iEeO/v79"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="qT7Zojmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbfLLPj4 (ORCPT
+        id S1729383AbfLLPoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:39:56 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40794 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729013AbfLLPj4 (ORCPT
+        Thu, 12 Dec 2019 10:44:00 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:44777 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729152AbfLLPoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:39:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=G47iDtqZyRDhlydRc9ZL4ifY0Wp4GVV7OS64tBYKfUY=; b=iEeO/v796xvS0nRqxU8XuN58z
-        iWu9iLJoJ/sPV021GQb+DbZJ4ioNlyRmQltS1Ih8dNMazPv4orJ75xnDI51sTBApevrD9hW2MSCl6
-        JSlSOZ4wcF9T2FlarB410JhvMGausp8Ih/Y6UDzLZPlFJs3hZwvAerISq89U20tJKnREQI7TK61O1
-        ydL78Slk+H1obZu3UMz7iO+xt/iOE6hgtimXoeDV1UJYn01WxRVQo0EqmEl7QtyL+0tKZaZ+mKP3W
-        CMZGiwTR2aBkXk2SRcFGkQwOKON66CmeUc9eZXTUlM/ujzJFG4neyiqRHOcdaC/frRUBVy0VpkEJq
-        2fh8wDl1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifQZC-0003A1-42; Thu, 12 Dec 2019 15:39:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 644F8300F29;
-        Thu, 12 Dec 2019 16:38:27 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE0322B195D80; Thu, 12 Dec 2019 16:39:47 +0100 (CET)
-Date:   Thu, 12 Dec 2019 16:39:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v8] perf: Sharing PMU counters across compatible events
-Message-ID: <20191212153947.GY2844@hirez.programming.kicks-ass.net>
-References: <20191207002447.2976319-1-songliubraving@fb.com>
+        Thu, 12 Dec 2019 10:44:00 -0500
+Received: from [IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65]
+ ([IPv6:2001:983:e9a7:1:1c4a:480a:7ba1:9c65])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id fQd9isXxzTsDefQdBifhxF; Thu, 12 Dec 2019 16:43:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1576165437; bh=OSw/M6TgePD4YLhaBwHNn0JZhYVMH5krGERy7feLERA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=qT7ZojmqOoGwN8zcCo0LD/gar/rmzIbZnjiVfEFUkB0Wn4ZhanJRg94zHXZXVP9R1
+         5Mwfbig9MLzFsVSA2VEfowa52iYmky0tmtjs6obOAeYTfUQ8mNAaQ35vhPIQSxLWDa
+         f5U92+mE8afGbElyHJ6Ao9zFXvBRdgMx00yeGGmziiY7inljFn9SW8oZUzbhdNpakc
+         vggv4S+dvZ2admJySiEzTS1wyrQBQ4UBjZZUEOmmUN/pOcXp6cmk9WLE9blpH8bn33
+         wV/Oe2Jz+CXHfTYKdUA6qvWqIE4+gQgrpL5jEih+7lBYXTIkTYeTktFz2Kehz54B+R
+         ZBRL2u3EAIuIA==
+Subject: Re: [PATCH v5 6/8] media: v4l2-core: fix v4l2_buffer handling for
+ time64 ABI
+To:     Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     y2038@lists.linaro.org, linux-kernel@vger.kernel.org
+References: <20191126161824.337724-1-arnd@arndb.de>
+ <20191126161824.337724-7-arnd@arndb.de>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <09c664fd-87fb-4fac-f104-9afbe7d33aa2@xs4all.nl>
+Date:   Thu, 12 Dec 2019 16:43:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191207002447.2976319-1-songliubraving@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191126161824.337724-7-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJ2AzgJqv16z9DboK2QW5rAGF2dLbVeERIgFzMaxKOdvDsuGMHW4p322anA93nQxK4HsaSlOv6/dqVz8xiZR2MVjJpCB11aVgzqq6gWlh7Noq2s6HekY
+ 16APQcvSHyS4iwe0XpnjzVQvG5wHC8zQ1GWCYBT71fE3zxgh9RfB2sSfaYcof96YI0kk1diqgefqHNLOkMnx/vbf4VBqbQ/x/E8As6ll1OeXA9FcDy2u/2Uz
+ jdZq9lEjghmoauSknt2y592ADOb59gbM104HK4Vp/4RK0i+S9CAhyFA+DutSPgDbJBiOUv2+rv7ZDP0qs6M1cgLlowYa0FwMPzMum0YdpIEwH9lqPJ4VJUtx
+ PDcFmjTJFMBXc/FogF93uvw20IoH6G1NUETJpAC9Z+wJ/dY8p94=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 04:24:47PM -0800, Song Liu wrote:
-
-> @@ -2174,6 +2410,14 @@ __perf_remove_from_context(struct perf_event *event,
->  		update_cgrp_time_from_cpuctx(cpuctx);
+On 11/26/19 5:18 PM, Arnd Bergmann wrote:
+> The v4l2_buffer structure contains a 'struct timeval' member that is
+> defined by the user space C library, creating an ABI incompatibility
+> when that gets updated to a 64-bit time_t.
+> 
+> As in v4l2_event, handle this with a special case in video_put_user()
+> and video_get_user() to replace the memcpy there.
+> 
+> Since the structure also contains a pointer, there are now two
+> native versions (on 32-bit systems) as well as two compat versions
+> (on 64-bit systems), which unfortunately complicates the compat
+> handler quite a bit.
+> 
+> Duplicating the existing handlers for the new types is a safe
+> conversion for now, but unfortunately this may turn into a
+> maintenance burden later. A larger-scale rework of the
+> compat code might be a better alternative, but is out of scope
+> of the y2038 work.
+> 
+> Sparc64 needs a special case because of their special suseconds_t
+> definition.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/media/v4l2-core/v4l2-ioctl.c | 73 ++++++++++++++++++++++++++--
+>  include/media/v4l2-ioctl.h           | 30 ++++++++++++
+>  include/uapi/linux/videodev2.h       | 23 +++++++++
+>  3 files changed, 122 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+> index 96aafb659783..4d611a847462 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -474,10 +474,10 @@ static void v4l_print_buffer(const void *arg, bool write_only)
+>  	const struct v4l2_plane *plane;
+>  	int i;
+>  
+> -	pr_cont("%02ld:%02d:%02d.%08ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
+> -			p->timestamp.tv_sec / 3600,
+> -			(int)(p->timestamp.tv_sec / 60) % 60,
+> -			(int)(p->timestamp.tv_sec % 60),
+> +	pr_cont("%02d:%02d:%02d.%09ld index=%d, type=%s, request_fd=%d, flags=0x%08x, field=%s, sequence=%d, memory=%s",
+> +			(int)p->timestamp.tv_sec / 3600,
+> +			((int)p->timestamp.tv_sec / 60) % 60,
+> +			((int)p->timestamp.tv_sec % 60),
+>  			(long)p->timestamp.tv_usec,
+>  			p->index,
+>  			prt_names(p->type, v4l2_type_names), p->request_fd,
+> @@ -3029,6 +3029,14 @@ static unsigned int video_translate_cmd(unsigned int cmd)
+>  #ifdef CONFIG_COMPAT_32BIT_TIME
+>  	case VIDIOC_DQEVENT_TIME32:
+>  		return VIDIOC_DQEVENT;
+> +	case VIDIOC_QUERYBUF_TIME32:
+> +		return VIDIOC_QUERYBUF;
+> +	case VIDIOC_QBUF_TIME32:
+> +		return VIDIOC_QBUF;
+> +	case VIDIOC_DQBUF_TIME32:
+> +		return VIDIOC_DQBUF;
+> +	case VIDIOC_PREPARE_BUF_TIME32:
+> +		return VIDIOC_PREPARE_BUF;
+>  #endif
 >  	}
 >  
-> +	if (event->dup_master == event) {
-> +		if (ctx->is_active)
-> +			ctx_resched(cpuctx, cpuctx->task_ctx,
-> +				    get_event_type(event), NULL, event);
-> +		else
-> +			perf_event_remove_dup(event, ctx);
-> +	}
-> +
->  	event_sched_out(event, cpuctx, ctx);
->  	if (flags & DETACH_GROUP)
->  		perf_group_detach(event);
-> @@ -2241,6 +2485,14 @@ static void __perf_event_disable(struct perf_event *event,
->  		update_cgrp_time_from_event(event);
+> @@ -3047,6 +3055,39 @@ static int video_get_user(void __user *arg, void *parg, unsigned int cmd,
 >  	}
 >  
-> +	if (event->dup_master == event) {
-> +		if (ctx->is_active)
-> +			ctx_resched(cpuctx, cpuctx->task_ctx,
-> +				    get_event_type(event), NULL, event);
-> +		else
-> +			perf_event_remove_dup(event, ctx);
-> +	}
-> +
->  	if (event == event->group_leader)
->  		group_sched_out(event, cpuctx, ctx);
->  	else
+>  	switch (cmd) {
+> +#ifdef COMPAT_32BIT_TIME
 
-> @@ -2544,7 +2793,9 @@ static void perf_event_sched_in(struct perf_cpu_context *cpuctx,
+COMPAT_32BIT_TIME -> CONFIG_COMPAT_32BIT_TIME
+
+> +	case VIDIOC_QUERYBUF_TIME32:
+> +	case VIDIOC_QBUF_TIME32:
+> +	case VIDIOC_DQBUF_TIME32:
+> +	case VIDIOC_PREPARE_BUF_TIME32: {
+> +		struct v4l2_buffer_time32 vb32;
+> +		struct v4l2_buffer *vb = parg;
+> +
+> +		if (copy_from_user(&vb32, arg, sizeof(vb32)))
+> +			return -EFAULT;
+> +
+> +		*vb = (struct v4l2_buffer) {
+> +			.index		= vb32.index,
+> +			.type		= vb32.type,
+> +			.bytesused	= vb32.bytesused,
+> +			.flags		= vb32.flags,
+> +			.field		= vb32.field,
+> +			.timestamp.tv_sec	= vb32.timestamp.tv_sec,
+> +			.timestamp.tv_usec	= vb32.timestamp.tv_usec,
+> +			.timecode	= vb32.timecode,
+
+You forgot to copy sequence.
+
+> +			.memory		= vb32.memory,
+> +			.m.userptr	= vb32.m.usercopy,
+
+usercopy -> userptr
+
+> +			.length		= vb32.length,
+> +			.request_fd	= vb32.request_fd,
+> +		};
+> +
+> +		if (cmd == VIDIOC_QUERYBUF_TIME32)
+> +			memset(&vb->length, 0, sizeof(*vb) -
+> +			       offsetof(struct v4l2_buffer, length));
+
+It's from the field AFTER vb->length that this needs to be zeroed. It's best to
+use the CLEAR_AFTER_FIELD macro here.
+
+> +
+> +		break;
+> +	}
+> +#endif
+>  	default:
+>  		/*
+>  		 * In some cases, only a few fields are used as input,
+> @@ -3100,6 +3141,30 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+>  			return -EFAULT;
+>  		break;
+>  	}
+> +	case VIDIOC_QUERYBUF_TIME32:
+> +	case VIDIOC_QBUF_TIME32:
+> +	case VIDIOC_DQBUF_TIME32:
+> +	case VIDIOC_PREPARE_BUF_TIME32: {
+> +		struct v4l2_buffer *vb = parg;
+> +		struct v4l2_buffer_time32 vb32 = {
+> +			.index		= vb->index,
+> +			.type		= vb->type,
+> +			.bytesused	= vb->bytesused,
+> +			.flags		= vb->flags,
+> +			.field		= vb->field,
+> +			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+> +			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+> +			.timecode	= vb->timecode,
+
+You forgot to copy sequence.
+
+> +			.memory		= vb->memory,
+> +			.m.userptr	= vb->m.userptr,
+> +			.length		= vb->length,
+> +			.request_fd	= vb->request_fd,
+> +		};
+> +
+> +		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+> +			return -EFAULT;
+> +		break;
+> +	}
+>  #endif
+>  	default:
+>  		/*  Copy results into user buffer  */
+> diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
+> index 05c1ec93a911..86878fba332b 100644
+> --- a/include/media/v4l2-ioctl.h
+> +++ b/include/media/v4l2-ioctl.h
+> @@ -749,4 +749,34 @@ struct v4l2_event_time32 {
+>  
+>  #define	VIDIOC_DQEVENT_TIME32	 _IOR('V', 89, struct v4l2_event_time32)
+>  
+> +struct v4l2_buffer_time32 {
+> +	__u32			index;
+> +	__u32			type;
+> +	__u32			bytesused;
+> +	__u32			flags;
+> +	__u32			field;
+> +	struct old_timeval32	timestamp;
+> +	struct v4l2_timecode	timecode;
+> +	__u32			sequence;
+> +
+> +	/* memory location */
+> +	__u32			memory;
+> +	union {
+> +		__u32           offset;
+> +		unsigned long   userptr;
+> +		struct v4l2_plane *planes;
+> +		__s32		fd;
+> +	} m;
+> +	__u32			length;
+> +	__u32			reserved2;
+> +	union {
+> +		__s32		request_fd;
+> +		__u32		reserved;
+> +	};
+> +};
+> +#define VIDIOC_QUERYBUF_TIME32	_IOWR('V',  9, struct v4l2_buffer_time32)
+> +#define VIDIOC_QBUF_TIME32	_IOWR('V', 15, struct v4l2_buffer_time32)
+> +#define VIDIOC_DQBUF_TIME32	_IOWR('V', 17, struct v4l2_buffer_time32)
+> +#define VIDIOC_PREPARE_BUF_TIME32 _IOWR('V', 93, struct v4l2_buffer_time32)
+> +
+>  #endif /* _V4L2_IOCTL_H */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index caf156d45842..5f9357dcb060 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -912,6 +912,25 @@ struct v4l2_jpegcompression {
+>  /*
+>   *	M E M O R Y - M A P P I N G   B U F F E R S
 >   */
->  static void ctx_resched(struct perf_cpu_context *cpuctx,
->  			struct perf_event_context *task_ctx,
-> -			enum event_type_t event_type)
-> +			enum event_type_t event_type,
-> +			struct perf_event *event_add_dup,
-> +			struct perf_event *event_del_dup)
->  {
->  	enum event_type_t ctx_event_type;
->  	bool cpu_event = !!(event_type & EVENT_CPU);
-> @@ -2574,6 +2825,18 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
->  	else if (ctx_event_type & EVENT_PINNED)
->  		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
+> +
+> +#ifdef __KERNEL__
+> +/*
+> + * This corresponds to the user space version of timeval
+> + * for 64-bit time_t. sparc64 is different from everyone
+> + * else, using the microseconds in the wrong half of the
+> + * second 64-bit word.
+> + */
+> +struct __kernel_v4l2_timeval {
+> +	long long	tv_sec;
+> +#if defined(__sparc__) && defined(__arch64__)
+> +	int		tv_usec;
+> +	int		__pad;
+> +#else
+> +	long long	tv_usec;
+> +#endif
+> +};
+> +#endif
+> +
+>  struct v4l2_requestbuffers {
+>  	__u32			count;
+>  	__u32			type;		/* enum v4l2_buf_type */
+> @@ -997,7 +1016,11 @@ struct v4l2_buffer {
+>  	__u32			bytesused;
+>  	__u32			flags;
+>  	__u32			field;
+> +#ifdef __KERNEL__
+> +	struct __kernel_v4l2_timeval timestamp;
+> +#else
+>  	struct timeval		timestamp;
+> +#endif
+>  	struct v4l2_timecode	timecode;
+>  	__u32			sequence;
 >  
-> +	if (event_add_dup) {
-> +		if (event_add_dup->ctx->is_active)
-> +			ctx_sched_out(event_add_dup->ctx, cpuctx, EVENT_ALL);
-> +		perf_event_setup_dup(event_add_dup, event_add_dup->ctx);
-> +	}
-> +
-> +	if (event_del_dup) {
-> +		if (event_del_dup->ctx->is_active)
-> +			ctx_sched_out(event_del_dup->ctx, cpuctx, EVENT_ALL);
-> +		perf_event_remove_dup(event_del_dup, event_del_dup->ctx);
-> +	}
-> +
->  	perf_event_sched_in(cpuctx, task_ctx, current);
->  	perf_pmu_enable(cpuctx->ctx.pmu);
->  }
+> 
 
-Yuck!
+With these changes this patch series passed both the 64 and 32 bit compliance
+tests (in fact, all the issues mentioned above were found with these compliance
+tests).
 
-Why do you do a full reschedule when you take out a master?
+I am unable to test with musl since v4l2-ctl and v4l2-compliance are C++ programs,
+and there doesn't appear to be an easy way to compile a C++ program with musl.
+
+If you happen to have a test environment where you can compile C++ with musl,
+then let me know and I can give instructions on how to run the compliance tests.
+
+If you can't test that, then I can merge this regardless, and hope for the best
+once the Y2038 fixes end up in glibc. But ideally I'd like to have this tested.
+
+Regards,
+
+	Hans
