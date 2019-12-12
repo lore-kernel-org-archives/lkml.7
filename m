@@ -2,101 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD9C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF914C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16CF206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="btmETCZP"
+	by mail.kernel.org (Postfix) with ESMTP id 89A8C2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfLLMKs (ORCPT
+        id S1729147AbfLLMLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:10:48 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10474 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728996AbfLLMKs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:10:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576152647; x=1607688647;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=IjCFRzWON9rJgnZo0jNdRDXJF1z083Lh5WgdDsRG8k8=;
-  b=btmETCZPHZUlhp68TFLjDqEtrF997U2KpvcYeHUpbnvgM7p5kGdKIYCN
-   MgD5gRbJ6Jx8abvYUPC/LPfuCzS1NW9R58zA828Xr4wuY1AAvmutKRoQj
-   yH6fJHWEGwa9svH+Yj7Gh8OgsEtHDogJW6c751wQkVxchwqQ9kAeOlgPE
-   o=;
-IronPort-SDR: wnwSLi2X93c+EWQX+sZvq/5Ca9tiKM8HI59BmLIYxpS8tAY1odPp1C9IHUPizrKvHVVythAMyn
- xCnJbhKFVBtQ==
-X-IronPort-AV: E=Sophos;i="5.69,305,1571702400"; 
-   d="scan'208";a="14500165"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Dec 2019 12:10:34 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id E600CA2184;
-        Thu, 12 Dec 2019 12:10:29 +0000 (UTC)
-Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 12:10:29 +0000
-Received: from 8c85908914bf.ant.amazon.com (10.43.160.109) by
- EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 12:10:23 +0000
-Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
-To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Max Hirsch <max.hirsch@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danit Goldberg <danitg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dag Moxnes <dag.moxnes@oracle.com>,
-        Myungho Jung <mhjungk@gmail.com>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191211111628.2955-1-max.hirsch@gmail.com>
- <20191211162654.GD6622@ziepe.ca> <20191212084907.GU67461@unreal>
-From:   Gal Pressman <galpress@amazon.com>
-Message-ID: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
-Date:   Thu, 12 Dec 2019 14:10:12 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Thu, 12 Dec 2019 07:11:05 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39316 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729118AbfLLMLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:11:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D8E85BA38;
+        Thu, 12 Dec 2019 12:11:02 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 64035DA82A; Thu, 12 Dec 2019 13:11:03 +0100 (CET)
+Date:   Thu, 12 Dec 2019 13:11:03 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 299/350] btrfs: don't prematurely free work
+ in end_workqueue_fn()
+Message-ID: <20191212121103.GR3929@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Omar Sandoval <osandov@fb.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-260-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191212084907.GU67461@unreal>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.160.109]
-X-ClientProxiedBy: EX13D27UWB004.ant.amazon.com (10.43.161.101) To
- EX13D19EUB003.ant.amazon.com (10.43.166.69)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210210735.9077-260-sashal@kernel.org>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 10:49, Leon Romanovsky wrote:
-> On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
->> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
->>> When running checkpatch on cma.c the following error was found:
->>
->> I think checkpatch will complain about your patch, did you run it?
+On Tue, Dec 10, 2019 at 04:06:44PM -0500, Sasha Levin wrote:
+> From: Omar Sandoval <osandov@fb.com>
 > 
-> Jason, Doug
+> [ Upstream commit 9be490f1e15c34193b1aae17da58e14dd9f55a95 ]
 > 
-> I would like to ask to refrain from accepting checkpatch.pl patches
-> which are not part of other large submission. Such standalone cleanups
-> do more harm than actual benefit from them for old and more or less
-> stable code (e.g. RDMA-CM).
+> Currently, end_workqueue_fn() frees the end_io_wq entry (which embeds
+> the work item) and then calls bio_endio(). This is another potential
+> instance of the bug in "btrfs: don't prematurely free work in
+> run_ordered_work()".
+> 
+> In particular, the endio call may depend on other work items. For
+> example, btrfs_end_dio_bio() can call btrfs_subio_endio_read() ->
+> __btrfs_correct_data_nocsum() -> dio_read_error() ->
+> submit_dio_repair_bio(), which submits a bio that is also completed
+> through a end_workqueue_fn() work item. However,
+> __btrfs_correct_data_nocsum() waits for the newly submitted bio to
+> complete, thus it depends on another work item.
+> 
+> This example currently usually works because we use different workqueue
+> helper functions for BTRFS_WQ_ENDIO_DATA and BTRFS_WQ_ENDIO_DIO_REPAIR.
+> However, it may deadlock with stacked filesystems and is fragile
+> overall. The proper fix is to free the work item at the very end of the
+> work function, so let's do that.
+> 
+> Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+> Signed-off-by: Omar Sandoval <osandov@fb.com>
+> Reviewed-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: David Sterba <dsterba@suse.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Sounds like a great approach to prevent new developers from contributing code.
-You have to start somewhere and checkpatch patches are a good entry point for
-such developers, discouraging them will only hurt us in the long term.
+The were more patches in the series, all contain "don't prematurely free
+work in" and were part of a rework of async work processing. They're
+fixing a very uncommon usecase, so if there's desire to backport them
+the whole series needs to go in.
 
-Linus had an interesting post on the subject:
-https://lkml.org/lkml/2004/12/20/255
+In the autosel list, there are only 2 and without the important fix.
+
+c495dcd6fbe1 btrfs: don't prematurely free work in run_ordered_work()
+9be490f1e15c btrfs: don't prematurely free work in end_workqueue_fn()
+e732fe95e4ca btrfs: don't prematurely free work in reada_start_machine_worker()
+57d4f0b86327 btrfs: don't prematurely free work in scrub_missing_raid56_worker()
+
+a0cac0ec961f btrfs: get rid of unique workqueue helper functions
+- this is only a cleanup that removes code obsoleted by the fixes above,
+  probably out of scope of stable
+
+I have intentionally not tagged the patches for stable, the usecase is
+is specific to one user (FB), the known reproducer is only their
+workload and the fixes are in their kernel already.
+
+So if there's desire to add the patches to stable trees, then it has to
+be the whole series, but I don't see a strong reason for it.
