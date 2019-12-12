@@ -2,138 +2,165 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4970BC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C061BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AED21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAE922527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfLLOlP (ORCPT
+        id S1729709AbfLLOlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:41:15 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42474 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729287AbfLLOlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:41:15 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so2193021otd.9;
-        Thu, 12 Dec 2019 06:41:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1MpAVnQXIv8ku6mOOgsViBA0ZgH1Jr6htBIpVf8hv44=;
-        b=TmfxLvpiE1YGEOvfsMj4j2KSVOGGvMe7y6y21tDR2a5R2kqs7cP27dib0KhgjIlbZa
-         8oAR3gFeXU1le1bcPyK3oWXBUdoxeh8D/i8gDDQxIibE460qAUivtlVigN90XrxHDH2Q
-         e5iwpDQAEJY9FY6XihbJLgMVP0jfkVPamLRPB8X82N7D6mGJ6Qm1QdfpVGa50pQ8ji/t
-         zi9mniyBKVwnP4PN1yG2VrRD5F1ccYbqKYJQS1vKMA7P/uIXamK8rpqpq8fJ/APnj204
-         Krx+X6XHj8VUNU5/DyWfoWmk6NusQiREyuvIo64GwkH5mkr6iOr/ZhvzvI3tUsjrjl+v
-         bC6Q==
-X-Gm-Message-State: APjAAAWA1tR13HxMItYcRQzOCDOmNn24QhBNWNXsf8Q7pX5ccdwOfQhk
-        4Y70Xyq4cH1gZTqIfd70Kwhoe7xN9jsyg1CGA5U=
-X-Google-Smtp-Source: APXvYqxjBHOhA2FAx/R9INxJKIh2DYhKaOmC+96fdWuPR9sXbpqz4T1747pPnd9kezYbXhCT9EEkcIi2C43a+mOB/ac=
-X-Received: by 2002:a9d:2073:: with SMTP id n106mr8392139ota.145.1576161674382;
- Thu, 12 Dec 2019 06:41:14 -0800 (PST)
+        Thu, 12 Dec 2019 09:41:22 -0500
+Received: from ns.iliad.fr ([212.27.33.1]:59576 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729273AbfLLOlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:41:22 -0500
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id BBA22200E9;
+        Thu, 12 Dec 2019 15:41:20 +0100 (CET)
+Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id A1FA5200E6;
+        Thu, 12 Dec 2019 15:41:20 +0100 (CET)
+Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
+ API
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
+ <20191128185630.GK82109@yoga> <20191202014237.GR248138@dtor-ws>
+ <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
+ <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
+ <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
+ <20191211222829.GV50317@dtor-ws>
+ <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
+ <20191212141747.GI25745@shell.armlinux.org.uk>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
+Date:   Thu, 12 Dec 2019 15:41:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191116005240.15722-1-robh@kernel.org> <20191116005240.15722-3-robh@kernel.org>
-In-Reply-To: <20191116005240.15722-3-robh@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Dec 2019 15:41:03 +0100
-Message-ID: <CAMuHMdX20LvK2o1cZJ8q83Q08JQzH6L07gmqBm0V0xSc5GHk4A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: Convert generic host binding to DT schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        David Daney <david.daney@cavium.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191212141747.GI25745@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Dec 12 15:41:20 2019 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On 12/12/2019 15:17, Russell King - ARM Linux admin wrote:
 
-On Sat, Nov 16, 2019 at 1:53 AM Rob Herring <robh@kernel.org> wrote:
-> Convert the generic PCI host binding to DT schema. The derivative Juno,
-> PLDA XpressRICH3-AXI, and Designware ECAM bindings all just vary in
-> their compatible strings. The simplest way to convert those to
-> schema is just add them into the common generic PCI host schema.
+> On Thu, Dec 12, 2019 at 02:53:40PM +0100, Marc Gonzalez wrote:
 >
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Andrew Murray <andrew.murray@arm.com>
-> Cc: Zhou Wang <wangzhou1@hisilicon.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: David Daney <david.daney@cavium.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+>> On 11/12/2019 23:28, Dmitry Torokhov wrote:
+>>
+>>> On Wed, Dec 11, 2019 at 05:17:28PM +0100, Marc Gonzalez wrote:
+>>>
+>>>> What is the rationale for the devm_add_action API?
+>>>
+>>> For one-off and maybe complex unwind actions in drivers that wish to use
+>>> devm API (as mixing devm and manual release is verboten). Also is often
+>>> used when some core subsystem does not provide enough devm APIs.
+>>
+>> Thanks for the insight, Dmitry. Thanks to Robin too.
+>>
+>> This is what I understand so far:
+>>
+>> devm_add_action() is nice because it hides/factorizes the complexity
+>> of the devres API, but it incurs a small storage overhead of one
+>> pointer per call, which makes it unfit for frequently used actions,
+>> such as clk_get.
+>>
+>> Is that correct?
+>>
+>> My question is: why not design the API without the small overhead?
+>>
+>> Proof of concept below:
+>>
+>>
+>> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+>> index 0bbb328bd17f..76392dd6273b 100644
+>> --- a/drivers/base/devres.c
+>> +++ b/drivers/base/devres.c
+>> @@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
+>>  }
+>>  EXPORT_SYMBOL_GPL(devres_release_group);
+>>  
+>> +void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
+>> +{
+>> +	void *data = devres_alloc(func, size, GFP_KERNEL);
+>> +
+>> +	if (data) {
+>> +		memcpy(data, arg, size);
+>> +		devres_add(dev, data);
+>> +	} else
+>> +		func(dev, arg);
+>> +
+>> +	return data;
+>> +}
+>> +EXPORT_SYMBOL_GPL(devm_add);
+>> +
+>>  /*
+>>   * Custom devres actions allow inserting a simple function call
+>>   * into the teadown sequence.
+>> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
+>> index be160764911b..8db671823126 100644
+>> --- a/drivers/clk/clk-devres.c
+>> +++ b/drivers/clk/clk-devres.c
+>> @@ -4,6 +4,11 @@
+>>  #include <linux/export.h>
+>>  #include <linux/gfp.h>
+>>  
+>> +static void __clk_put(struct device *dev, void *data)
+>> +{
+>> +	clk_put(*(struct clk **)data);
+>> +}
+>> +
+>>  static void devm_clk_release(struct device *dev, void *res)
+>>  {
+>>  	clk_put(*(struct clk **)res);
+>> @@ -11,19 +16,11 @@ static void devm_clk_release(struct device *dev, void *res)
+>>  
+>>  struct clk *devm_clk_get(struct device *dev, const char *id)
+>>  {
+>> -	struct clk **ptr, *clk;
+>> -
+>> -	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
+>> -	if (!ptr)
+>> -		return ERR_PTR(-ENOMEM);
+>> +	struct clk *clk = clk_get(dev, id);
+>>  
+>> -	clk = clk_get(dev, id);
+>> -	if (!IS_ERR(clk)) {
+>> -		*ptr = clk;
+>> -		devres_add(dev, ptr);
+>> -	} else {
+>> -		devres_free(ptr);
+>> -	}
+>> +	if (!IS_ERR(clk))
+>> +		if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
+>> +			clk = ERR_PTR(-ENOMEM);
+> 
+> You leak clk here.
 
-> index 515b2f9542e5..000000000000
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie-ecam.txt
-> +++ /dev/null
+I don't think so ;-)
 
-> -Example:
-> -
-> -    pcie1: pcie@7f000000 {
-> -        compatible = "socionext,synquacer-pcie-ecam", "snps,dw-pcie-ecam";
-> -        device_type = "pci";
-> -        reg = <0x0 0x7f000000 0x0 0xf00000>;
-> -        bus-range = <0x0 0xe>;
-> -        #address-cells = <3>;
-> -        #size-cells = <2>;
-> -        ranges = <0x1000000 0x00 0x00010000 0x00 0x7ff00000 0x0 0x00010000>,
-> -                 <0x2000000 0x00 0x70000000 0x00 0x70000000 0x0 0x0f000000>,
-> -                 <0x3000000 0x3f 0x00000000 0x3f 0x00000000 0x1 0x00000000>;
-> -
-> -        #interrupt-cells = <0x1>;
-> -        interrupt-map-mask = <0x0 0x0 0x0 0x0>;
+If devm_add() returns NULL, then we have called __clk_put(dev, &clk);
 
-An all-zeroes interrupt-map-mask seems to be very common on embedded
-SoCs, where all devices are mapped to a single interrupt.
-
-However, schemas/pci/pci-bus.yaml says:
-
-  interrupt-map-mask:
-    items:
-      - description: PCI high address cell
-        minimum: 0
-        maximum: 0xf800
-      - description: PCI mid address cell
-        const: 0
-      - description: PCI low address cell
-        const: 0
-      - description: PCI IRQ cell
-        minimum: 1
-        maximum: 7
-
-and thus complains about an all-zeroes mask, e.g.
-
-    arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml:
-pcie@fe000000: interrupt-map-mask:0:3: 0 is less than the minimum of 1
-
-> -        interrupt-map = <0x0 0x0 0x0 0x0 &gic 0x0 0x0 0x0 182 0x4>;
-> -        msi-map = <0x0 &its 0x0 0x10000>;
-> -        dma-coherent;
-> -    };
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards.
