@@ -2,120 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB04DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A431C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB752214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:29:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SYROU9ET"
+	by mail.kernel.org (Postfix) with ESMTP id 15898214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfLLX35 (ORCPT
+        id S1731233AbfLLXdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:29:57 -0500
-Received: from mout.gmx.net ([212.227.15.19]:42837 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfLLX35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:29:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576193386;
-        bh=gtNiGOMaG+hrEDMSnjfH4TheHPrFaKjLS4DfvxSWQJ4=;
-        h=X-UI-Sender-Class:From:To:CC:In-reply-to:Subject:Reply-to:
-         References:Date;
-        b=SYROU9ETIvP5wm/aUkZXv30zCbFjChykztWSkke0CbCHwhC53OxPu1rkVmkikl+qi
-         hih6PfRlB4qoDBhJmywBm2O1F51TtXsvyN7cvTJ5Bc3jbeq7sOf50M+8W9Wi4KdlYU
-         hKqhurSuymWjvsSn1nwL7CMw0cyd/IpLAjX7HFbY=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from corona.crabdance.com ([173.228.106.20]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1N3se2-1hfmIb1iwi-00zjUB; Fri, 13 Dec 2019 00:29:46 +0100
-Received: by corona.crabdance.com (Postfix, from userid 1001)
-        id E09FC6E85603; Thu, 12 Dec 2019 15:28:59 -0800 (PST)
-From:   Stefan Schaeckeler <schaecsn@gmx.net>
-To:     amit.kucheria@verdurent.com
-CC:     heiko@sntech.de, linux-pm@vger.kernel.org,
-        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
-        edubezval@gmail.com, linux-rockchip@lists.infradead.org,
-        rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
-In-reply-to: <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
-        (message from Amit Kucheria on Thu, 12 Dec 2019 13:58:52 +0530)
-Subject: Re: [RESEND PATCH] thermal: rockchip: enable hwmon
-Reply-to: schaecsn@gmx.net
-Content-Type: text/plain
-References: <20191212061702.BFE2D6E85603@corona.crabdance.com> <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
-Message-Id: <20191212232859.E09FC6E85603@corona.crabdance.com>
-Date:   Thu, 12 Dec 2019 15:28:59 -0800 (PST)
-X-Provags-ID: V03:K1:DwsCsXOuYOhJw8V89QklRZ9osgYgHSIQVBXq4pgiRwhkFFmltBi
- 3kcHnOCi6FRrCnoXmJm90yFyU6q+EVM3zS/paOZUwCbEjkicKJDTl5vaAIgAP+dE0J7/f13
- TI34F5ggu2CqpTP5XDijGLe2GuipTAa5rtvO4v9gt5QK1hGJHu3pZlAzlPrN6TKfVizJ/Qk
- vSBkzo1D2fH+o/uW3R1dw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:B/jaoG6pxyc=:m7iFg/yWoVMNeBlPMGdFNd
- PY6SNewXxM1s6K5Arb8uvuHEQdAP18gNudbqORo5F23TWR/WJUxzA1UtNu3AII2JRXnco1yP9
- 34E6Cnm1PP53ryOE+uq9HjbrpfehMMscaG3MZBNMcc3Zgn4Rc18fRsL0hsO+u9XL3fe23yKPJ
- OZZYBvMynzgA3u5ysEcRwA1vn+2hG0dszBEIt4cpfY7+4hDY+90iNpVbakRPsbyZzRpTGNWoU
- 6p0WD3BrfWNXLocPrjW9RhCzWYIQPprmNYmQVuVkygvF6If4z7EREYIvVgZ/CJoCxpqAp4WZ7
- Ox6lH2ZuCxJJMLctljuOsNdsYy3sG6hw61KDw95Qr6Ls45uoo67LD0WGXX0oC+5shUeWS4TYu
- 9xmPTJG4koOIMz/3EZb7W8D9tdqmtwS6ciXJ2vPyLEUTA7TvPqITm4XBGHFsQRnKnvZP3MX4J
- JCXVRtf0xCZcSjtiYScV271xpHQSB4vXpresTWxFQz5KcfDt0CxsMPnNzKw5F0WKkg5C7Oikp
- CZtwRerVP3yiYk3Gg6LasW4esN+RGOSMbA4m+UE2Ywr3fghXsw+oSq8KlRk964qrl+1FnESta
- HajOPrIF+/KNsyIXh+PCM5v2DczQcrQ6zQ1uciBHmqO5oZjPT6er2HCYpiOoMxGXoJxaOdt/C
- sdLuC5tK6PSfZgVTdZDu0WJrshGUnGlUpRYdqdIG76bKFFd0kHFVJYfoP5TW3IF6h2DXwBTrv
- qKZf74Qv0jYdYI52FcCW1fqhcRs77Dp6c7+vmK1yrbRfPkzFWmajQ+4/7qY5geIMgf1lAg/11
- 3nVXSxdV0CBKiFTHI2fexaxrM7FFym7dcx/4yYFRbq4AIzmuBn9x0a5EHn5Gob5N08nhJRY+2
- nU4ZvtXJ9bS0wD7w6dEzdUMoIQrYBraeg3quxdz0Uy1kVR+uznUXu9X4hpjKd5QOvNCrX1l2t
- TxKRoc8STqNtg53tX5ZbckBNykUlx3ys7hB4MFwBhJymQ6tRuvq14HTve65dhAjozMZ/EVX3F
- DPww8RJdp91u9nJGV68FU10GcQlq4uFG5lqYTkFCPonxAVMu5MD0RYvHb/bj9AU8vwadn2h9h
- pL87dBWLNCJOeeJz50kSTPAD9zvDj2J0lei3KhX4GLeLCzjcPQGmonkOMrfGAZw6nLpDzfvPC
- GFQwe7yvcIdSSF3XammtNlbqWI7GBvu9JKcHXHpCMw33JgV0IuYVhs0DlEFx2slndXIJ3VoDr
- 4Xxp4DHhycRuYKL89sd0EIbC6e8RzRIE1VqN8Ct1D7sTpr83r5BivjKLwxBI=
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Dec 2019 18:33:10 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45844 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbfLLXdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 18:33:10 -0500
+Received: by mail-io1-f71.google.com with SMTP id m18so421008ioj.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:33:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=az5DuF1alBK/2C/X8kBxQrX+6pJZmNF6wl9c7tpV3lo=;
+        b=mE3YPi47mjO0UVgN1//xOD8+BxlDIRiJjiq9ArzYBND51eW/feKr0vtHjIZoWimDyp
+         7QyBS2xz1iBxEie0vLKyZEyxUomCBFyqNZbdqn3Z0tlGh592rDq/64xsy7S4jtmNDOTz
+         QNiky0JBoIdFPr5ziz6kaJpo7v+OhYa7J6TsCzNP2n5nzPY9Q03/R+5N9aRttpO+b/Ig
+         fgbmNBPQ2i0pEuSF1MmfGDwaPamfZQqbfeI2PIWg8BI8C+5DSr5n3MlCFZb0ZHC7FCq+
+         pk/hwvURI73l80CCkdEkAB/NsBD9EGQZ3QpqLTF2dyOxJy4vBLxkESMjePk17Q0LKBqh
+         kgfg==
+X-Gm-Message-State: APjAAAXwafnMaHqfUDQImsMtg3Wm7HupRQZJG/z5CAdbE4O8v3zEnyTi
+        qFyLr7kDRKltSR2oO/gU2WjBBZribzj36HH6jxdci0Ro69hx
+X-Google-Smtp-Source: APXvYqxGIhpUq2Ta2me1n35TUp99Om4bxMFVM6Z6vlAx3gNI2Gir2nRgvbWbgIQZNvn9/aduwA/ZHCQXiLujH6NoAjRsBqhCGjr6
+MIME-Version: 1.0
+X-Received: by 2002:a92:d610:: with SMTP id w16mr10414196ilm.283.1576193590003;
+ Thu, 12 Dec 2019 15:33:10 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:33:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000790ac05998a2ba3@google.com>
+Subject: KCSAN: data-race in timer_clear_idle / trigger_dyntick_cpu.isra.0 (2)
+From:   syzbot <syzbot+62407dedb3b93892c631@syzkaller.appspotmail.com>
+To:     elver@google.com, john.stultz@linaro.org,
+        linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Amit,
+Hello,
 
-> On Thu, Dec 12, 2019 at 11:47 AM Stefan Schaeckeler <schaecsn@gmx.net> w=
-rote:
-> >
-> > By default, of-based thermal drivers do not enable hwmon.
-> > Explicitly enable hwmon for both, the soc and gpu temperature
-> > sensor.
->
-> Is there any reason you need to expose this in hwmon?
+syzbot found the following crash on:
 
-Why hwmon:
+HEAD commit:    ef798c30 x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=14e7ae61e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8077a73bd604a9d4
+dashboard link: https://syzkaller.appspot.com/bug?extid=62407dedb3b93892c631
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-The soc embedds temperature sensors and hwmon is the standard way to expos=
-e
-sensors.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Sensors exposed by hwmon are automagically found by userland clients. User=
-s
-want to run sensors(1) and expect them to show up.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+62407dedb3b93892c631@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KCSAN: data-race in timer_clear_idle / trigger_dyntick_cpu.isra.0
+
+read to 0xffff88812be1b6e4 of 1 bytes by interrupt on cpu 1:
+  trigger_dyntick_cpu.isra.0+0x75/0x100 kernel/time/timer.c:577
+  internal_add_timer kernel/time/timer.c:596 [inline]
+  add_timer_on+0x186/0x2d0 kernel/time/timer.c:1174
+  clocksource_watchdog+0x63f/0x760 kernel/time/clocksource.c:297
+  call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
+  __do_softirq+0x115/0x33f kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0xbb/0xe0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
+  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
+  default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+  do_idle+0x1af/0x280 kernel/sched/idle.c:263
+  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+  start_secondary+0x168/0x1b0 arch/x86/kernel/smpboot.c:264
+  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+write to 0xffff88812be1b6e4 of 1 bytes by task 0 on cpu 0:
+  timer_clear_idle+0x42/0x50 kernel/time/timer.c:1675
+  tick_nohz_next_event+0x15d/0x370 kernel/time/tick-sched.c:708
+  __tick_nohz_idle_stop_tick kernel/time/tick-sched.c:943 [inline]
+  tick_nohz_idle_stop_tick+0x3c2/0x670 kernel/time/tick-sched.c:973
+  cpuidle_idle_call kernel/sched/idle.c:151 [inline]
+  do_idle+0x1a5/0x280 kernel/sched/idle.c:263
+  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
+  rest_init+0xec/0xf6 init/main.c:452
+  arch_call_rest_init+0x17/0x37
+  start_kernel+0x838/0x85e init/main.c:786
+  x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
+  x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
+  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
 
 
-Why in rockchip_thermal.c:
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-drivers/thermal/ provides a high-level hwmon api in thermal_hwmon.[hc] whi=
-ch is
-used by at least these thermal drivers: rcar_gen3_thermal.c, rcar_thermal.=
-c,
-st/stm_thermal.c, and broadcom/bcm2835_thermal.c. I want to hook up
-rockchip_thermal.c exactly the same way.
-
-Apparently, other architectures hook up the cpu temperature sensors to hwm=
-on
-elsewhere. Most seem to do this in hwmon/, e.g. hwmon/coretemp.c. These dr=
-ivers
-are written from scratch. Utilizing thermal_hwmon.[ch] for chips which hav=
-e
-already drivers in drivers/thermal/ seems to be more elegant.
-
- Stefan
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
