@@ -2,142 +2,111 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABA7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5111EC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBD4208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27D6D208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576114143;
+	bh=cYxSv5bGUoIGqXO0c0d/IoNkTeKfqRsQsyJuL/YrLxs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bXarzjWhC5xzFAzT2Ma8rHVyb3h34BYuW5KDuCk6inSVICWJBi5/pXzIqT924jn0n
+	 RFJdoKorMEDWECNazDyDKZzB0GK7kUqH3ePgsoYtlkkiHworCPra9T7U6PnE99MV2p
+	 UfxH0bYjQZKjK5Dx5N4d8C8ixTOm/E4ukXq4OMmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbfLLBZK (ORCPT
+        id S1727461AbfLLB3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:25:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:54662 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfLLBZJ (ORCPT
+        Wed, 11 Dec 2019 20:29:02 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38773 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfLLB3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:25:09 -0500
-Received: by mail-io1-f71.google.com with SMTP id h10so415515iov.21
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:25:09 -0800 (PST)
+        Wed, 11 Dec 2019 20:29:01 -0500
+Received: by mail-lj1-f196.google.com with SMTP id k8so326930ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:29:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ngCvhdELOgIQ69MigGwbslj0BoCyrEIfDMRe9lAU84c=;
+        b=cwlWLXDtChisQx3BOxoqKRoI8l2aIzApJkZH0knnGXeRBkYyrjatj3Iqvq+pEYo8vz
+         YB1Q6eIQ7M8Kp9xDL8IMabELBNs7kQEMnQVpm9+RvgFUWRjKay6CY/YEtmqENuN8NEJe
+         SpgsA+0oAnSTBgoiasPVoSFTQm5OXTTIsNyTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=wx+687xKmnQ7vBPOxCs43VQhwsuLoEQ9LmrYpeYG+3s=;
-        b=RrJXZVLyA/8aAc7+eqz5Mk/wZYc7uu3TH+gW3q2PRA3e97DYOMCU34wA2MR1XSsnox
-         t0BtHotTPkJmRTC9NWBvln9JAOOw+0tOC+S5dFlFXNyIZ31KkBtl4Y2m9J7iqelyzMJ4
-         g9apKUSibow+cAl69n5vdRhFXZ5NsQSCFOxr5KzpdUnfYbN8YRR/mh0Ok3TqTx5p+QV0
-         lqsY2BTnRyy7WmC1ujRzdeJDZ2UzHXBzJNicaTFrrw7cTlqrenrzPt0NxHLQUtmC8PbS
-         rGDv9X/Gz4sj538SY+DEc0zQpo4FdHSBLvrvO3pa0bHssXMjQo9giStQRdOUvSVTY9mp
-         8NzQ==
-X-Gm-Message-State: APjAAAXGMRMtSeg1ANxCM+oMX9fx3yv1KHea0TwJyWT4bxa3yCJ63lCm
-        8bj2XN6C4IGrZzr2DOBcry0FH3SBNxFgTZi7pfj2O9adNZeY
-X-Google-Smtp-Source: APXvYqzBLnfETCadqrIfJE9g7OT1TFxiJndTWcNxhFw5GJ/NlpqpCbua9DRWxZ0FxBF5Qbv5ctBWNZqZWE7zm9wTqjS7tc8ttGcG
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ngCvhdELOgIQ69MigGwbslj0BoCyrEIfDMRe9lAU84c=;
+        b=uTB4EzdKeWZ5dlAmiZQgxuBCvwAqAG6ZB5TUyJAtvNVBGeXGjAiJemq7V/2eR9F6NM
+         U9EUJIPixYVbwK3rXA5e1C5EgQDd0cBFWFxrJ/TYIB0mGXj/gyBU6oCErovNCfhHnyh1
+         kOSsipdc5TFuZCu1La2dCHMsPo/tE8KONxesudv3D3qkoxr0jICH1twOqq5f9Z/OWa36
+         KL6QOCtuIhfNGm3V13Fw6HT/6/kmVwf1H3RJ12tN1BTbvoj626H/OFy28fMGbKSLYfMh
+         T44Dw3FkOQ6AlJRpwKs2FQn7/BLT1rU/BddDEHaNKmHm0CtBb/fmjk2nEHiV8Cf5Y6w2
+         /z8Q==
+X-Gm-Message-State: APjAAAU+EP6aucx9AmuCBBvslGYncP4nZb0gb7j2SaTXdqZWPY27rIsO
+        0Z5VTZCwx+ETu/qs4HWMQPNMr3/SMec=
+X-Google-Smtp-Source: APXvYqy9R35PGK4ApW5ijXE0pZjtkt3MeCmI3lZWzaL1EZjZ2w5TTpsDeBqf8s+mpy0SPvazicR8KQ==
+X-Received: by 2002:a2e:8544:: with SMTP id u4mr4060216ljj.191.1576114138416;
+        Wed, 11 Dec 2019 17:28:58 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id s88sm2135277lje.64.2019.12.11.17.28.56
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 17:28:57 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id e28so309997ljo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:28:56 -0800 (PST)
+X-Received: by 2002:a05:651c:239:: with SMTP id z25mr4218712ljn.48.1576114136551;
+ Wed, 11 Dec 2019 17:28:56 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:2810:: with SMTP id l16mr5875511ilf.57.1576113908946;
- Wed, 11 Dec 2019 17:25:08 -0800 (PST)
-Date:   Wed, 11 Dec 2019 17:25:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ab22f20599779d25@google.com>
-Subject: memory leak in reiserfs_fill_super
-From:   syzbot <syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com>
-To:     deepa.kernel@gmail.com, jack@suse.cz, jeffm@suse.com,
-        jlayton@kernel.org, linux-kernel@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
+ <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
+ <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
+ <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
+ <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com> <9417.1576097731@warthog.procyon.org.uk>
+In-Reply-To: <9417.1576097731@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 11 Dec 2019 17:28:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgVpV-O4zeO+xOMcOUyKZi+1kg+6Kmi-P7SUx-ydZm5Og@mail.gmail.com>
+Message-ID: <CAHk-=wgVpV-O4zeO+xOMcOUyKZi+1kg+6Kmi-P7SUx-ydZm5Og@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+To:     David Howells <dhowells@redhat.com>
+Cc:     David Sterba <dsterba@suse.cz>, Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Dec 11, 2019 at 12:55 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Is it worth reverting:
+>
+>         commit f94df9890e98f2090c6a8d70c795134863b70201
+>         Add wake_up_interruptible_sync_poll_locked()
+>
+> since you changed the code that was calling that new function and so it's no
+> longer called?
 
-syzbot found the following crash on:
+You are sure you won't want that for the notification queue cases? I
+guess they'll never want to "sync" part..
 
-HEAD commit:    6794862a Merge tag 'for-5.5-rc1-kconfig-tag' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1158c12ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bbf3a35184a3ed64
-dashboard link: https://syzkaller.appspot.com/bug?extid=1c6756baf4b16b94d2a6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165a64fae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12083661e00000
+Looking at the regular pipe read/write code, maybe we'll want to try
+it again - do the wakeup while we already have the spinlock, rather
+than later. But I have this suspicion that that might just then push
+things into mutex contention, so who knows..
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1c6756baf4b16b94d2a6@syzkaller.appspotmail.com
+Regardless, it's not going to happen for 5.5, so I guess we could
+revert it and if we ever end up trying it again we can resurrect it.
 
-BUG: memory leak
-unreferenced object 0xffff88811ff310c0 (size 32):
-   comm "syz-executor671", pid 7128, jiffies 4294943335 (age 13.580s)
-   hex dump (first 32 bytes):
-     2e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     01 00 00 00 01 00 00 00 18 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000004089eb3d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000004089eb3d>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<000000004089eb3d>] slab_alloc mm/slab.c:3320 [inline]
-     [<000000004089eb3d>] __do_kmalloc mm/slab.c:3654 [inline]
-     [<000000004089eb3d>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-     [<000000008421832f>] kstrdup+0x3a/0x70 mm/util.c:60
-     [<0000000043bf75e5>] reiserfs_fill_super+0x500/0x1120  
-fs/reiserfs/super.c:1946
-     [<000000009cbc0e69>] mount_bdev+0x1ce/0x210 fs/super.c:1415
-     [<00000000934dd7f3>] get_super_block+0x35/0x40 fs/reiserfs/super.c:2604
-     [<00000000cf77f9c8>] legacy_get_tree+0x27/0x80 fs/fs_context.c:647
-     [<000000000d70f443>] vfs_get_tree+0x2d/0xe0 fs/super.c:1545
-     [<00000000be5ed892>] do_new_mount fs/namespace.c:2822 [inline]
-     [<00000000be5ed892>] do_mount+0x97c/0xc80 fs/namespace.c:3142
-     [<00000000f546ac03>] ksys_mount+0xab/0x120 fs/namespace.c:3351
-     [<000000005818601f>] __do_sys_mount fs/namespace.c:3365 [inline]
-     [<000000005818601f>] __se_sys_mount fs/namespace.c:3362 [inline]
-     [<000000005818601f>] __x64_sys_mount+0x26/0x30 fs/namespace.c:3362
-     [<00000000a358ffb7>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000cb1c9cc8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881232e08e0 (size 32):
-   comm "syz-executor671", pid 7135, jiffies 4294943878 (age 8.150s)
-   hex dump (first 32 bytes):
-     2e 00 63 75 72 69 74 79 2e 73 65 6c 69 6e 75 78  ..curity.selinux
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-   backtrace:
-     [<000000004089eb3d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000004089eb3d>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<000000004089eb3d>] slab_alloc mm/slab.c:3320 [inline]
-     [<000000004089eb3d>] __do_kmalloc mm/slab.c:3654 [inline]
-     [<000000004089eb3d>] __kmalloc_track_caller+0x165/0x300 mm/slab.c:3671
-     [<000000008421832f>] kstrdup+0x3a/0x70 mm/util.c:60
-     [<0000000043bf75e5>] reiserfs_fill_super+0x500/0x1120  
-fs/reiserfs/super.c:1946
-     [<000000009cbc0e69>] mount_bdev+0x1ce/0x210 fs/super.c:1415
-     [<00000000934dd7f3>] get_super_block+0x35/0x40 fs/reiserfs/super.c:2604
-     [<00000000cf77f9c8>] legacy_get_tree+0x27/0x80 fs/fs_context.c:647
-     [<000000000d70f443>] vfs_get_tree+0x2d/0xe0 fs/super.c:1545
-     [<00000000be5ed892>] do_new_mount fs/namespace.c:2822 [inline]
-     [<00000000be5ed892>] do_mount+0x97c/0xc80 fs/namespace.c:3142
-     [<00000000f546ac03>] ksys_mount+0xab/0x120 fs/namespace.c:3351
-     [<000000005818601f>] __do_sys_mount fs/namespace.c:3365 [inline]
-     [<000000005818601f>] __se_sys_mount fs/namespace.c:3362 [inline]
-     [<000000005818601f>] __x64_sys_mount+0x26/0x30 fs/namespace.c:3362
-     [<00000000a358ffb7>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<00000000cb1c9cc8>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+              Linus
