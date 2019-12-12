@@ -2,116 +2,110 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C56C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F5AC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6207206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:04:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bcQhnECL"
+	by mail.kernel.org (Postfix) with ESMTP id 6050D214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbfLLVEe (ORCPT
+        id S1730979AbfLLVHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:04:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29126 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730919AbfLLVEe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:04:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576184673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=01NNIM8ig03VvR+04+Um5NpONpr5COaZWoXIKz7Tp0M=;
-        b=bcQhnECLNIQ5tYwK9olS305GXsm2E2EpM3/sebsCcCQg2+qFkpAACiCto6J+2gUkiODZ0c
-        EyB5uDurqZCL/oMTQwtoeOKaith3uYslirMvf3PXpKAsnSM/yVnR/VPCqqlft2/sXSwcmC
-        YZ8xkHxFXDzNoxA0TuZKjT2dlTjXPS0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-CDYG4b1SPSy8fX6ul2NrFw-1; Thu, 12 Dec 2019 16:04:32 -0500
-X-MC-Unique: CDYG4b1SPSy8fX6ul2NrFw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 809438DA469;
-        Thu, 12 Dec 2019 21:04:30 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C705110013A1;
-        Thu, 12 Dec 2019 21:04:29 +0000 (UTC)
-Subject: Re: [PATCH v2] mm/hugetlb: defer free_huge_page() to a workqueue
-From:   Waiman Long <longman@redhat.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>, aneesh.kumar@linux.ibm.com
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
- <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
- <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <20191212063050.ufrpij6s6jkv7g7j@linux-p48b>
- <20191212190427.ouyohviijf5inhur@linux-p48b>
- <d6b9743c-776c-d740-73af-a600f15b910a@oracle.com>
- <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
-Organization: Red Hat
-Message-ID: <3bdddd47-c93e-6549-d36f-8eb8e8d9be12@redhat.com>
-Date:   Thu, 12 Dec 2019 16:04:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 12 Dec 2019 16:07:23 -0500
+Received: from mga06.intel.com ([134.134.136.31]:6822 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730742AbfLLVHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:07:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 13:07:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
+   d="scan'208";a="364097914"
+Received: from tstruk-mobl1.jf.intel.com (HELO [10.7.196.67]) ([10.7.196.67])
+  by orsmga004.jf.intel.com with ESMTP; 12 Dec 2019 13:07:22 -0800
+Subject: Re: [PATCH =v2 3/3] tpm: selftest: cleanup after unseal with wrong
+ auth/policy test
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        jarkko.sakkinen@linux.intel.com
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
+        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
+        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
+References: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
+ <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1>
+ <1576180263.10287.4.camel@HansenPartnership.com>
+ <c3bffb8c-d454-1f53-7f7e-8b65884ffaf6@intel.com>
+ <1576184085.10287.13.camel@HansenPartnership.com>
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+Autocrypt: addr=tadeusz.struk@intel.com; keydata=
+ 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
+Message-ID: <bb256d5a-5c8c-d5ec-5ad2-ddfaf1c83217@intel.com>
+Date:   Thu, 12 Dec 2019 13:07:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <79d3a7e1-384b-b759-cd84-56253fb9ed40@redhat.com>
+In-Reply-To: <1576184085.10287.13.camel@HansenPartnership.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 3:52 PM, Waiman Long wrote:
-> On 12/12/19 2:22 PM, Mike Kravetz wrote:
->> On 12/12/19 11:04 AM, Davidlohr Bueso wrote:
->>> There have been deadlock reports[1, 2] where put_page is called
->>> from softirq context and this causes trouble with the hugetlb_lock,
->>> as well as potentially the subpool lock.
->>>
->>> For such an unlikely scenario, lets not add irq dancing overhead
->>> to the lock+unlock operations, which could incur in expensive
->>> instruction dependencies, particularly when considering hard-irq
->>> safety. For example PUSHF+POPF on x86.
->>>
->>> Instead, just use a workqueue and do the free_huge_page() in regular
->>> task context.
->>>
->>> [1] https://lore.kernel.org/lkml/20191211194615.18502-1-longman@redhat.com/
->>> [2] https://lore.kernel.org/lkml/20180905112341.21355-1-aneesh.kumar@linux.ibm.com/
->>>
->>> Reported-by: Waiman Long <longman@redhat.com>
->>> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
->> Thank you Davidlohr.
->>
->> The patch does seem fairly simple and straight forward.  I need to brush up
->> on my workqueue knowledge to provide a full review.
->>
->> Longman,
->> Do you have a test to reproduce the issue?  If so, can you try running with
->> this patch.
-> Yes, I do have a test that can reproduce the issue. I will run it with
-> the patch and report the status tomorrow.
+On 12/12/19 12:54 PM, James Bottomley wrote:
+> Not in the modern kernel resource manager world: anyone who is in the
+> tpm group can access the tpmrm device and we haven't added a dangerous
+> command filter like we promised we would, so unless they have actually
+> set lockout or platform authorization, they'll find they can execute it
 
-I don't think Davidlohr's patch is ready for prime time yet. So I will
-wait until a better version is available.
+The default for the tpm2_* tools with '-T device' switch is to talk to
+/dev/tpm0.
 
-Cheers,
-Longman
+If one would try to run it, by mistake, it would fail with:
 
+$ tpm2_clear -T device
+ERROR:tcti:src/tss2-tcti/tcti-device.c:439:Tss2_Tcti_Device_Init()
+Failed to open device file /dev/tpm0: Permission denied
+
+To point it to /dev/tpmrm0 it would need to be:
+$ tpm2_clear -T device:/dev/tpmrm0
+
+-- 
+Tadeusz
