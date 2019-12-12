@@ -2,109 +2,133 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B097C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC6AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51E621655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BA021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0lQ3L5i"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YZZqbiP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfLLLRd (ORCPT
+        id S1728992AbfLLLSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:17:33 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40288 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbfLLLRc (ORCPT
+        Thu, 12 Dec 2019 06:18:10 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43472 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728676AbfLLLSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:17:32 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k25so985384pgt.7;
-        Thu, 12 Dec 2019 03:17:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GwuLqIZzMSkOgjShx1lhBWPcILFbSLlfNnhrbVgefE8=;
-        b=T0lQ3L5iAI1ysbK3n+jcnIhZs625Cviqe02IiaQKf5uDK2UOmBrtepr051nyFSZMce
-         KLMa23/5U6kq5UB89aVOZeHr3DPcVsW3CvHjRCRbl9uSKUmLLzsej6873kdDe0fHWO9/
-         lKhY1TL8AQgHCw9Mut/ySlPxG0L8L6LY2Z2ulDixwq8BCngQe5kCdd7ywZjJCD4xMn+E
-         G8nWmuzPd50TgpjabmwZIJynLdiW+pdb0p9PXdqeFGbXaLlj0dDK39HATzi7/SniuPQU
-         S6UIOKSFiPLcD9zULwzy1B44JH35PQjyaJvLQvLdcdQ7bXVzu1+rXHzrmXtHW1fJOEsB
-         5vXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GwuLqIZzMSkOgjShx1lhBWPcILFbSLlfNnhrbVgefE8=;
-        b=AxcipjPoZnucCCUyTjIMyOnYnreYxC5vtVyuL//GyNMRz4c15ziS7RvnkQE/o2VXKH
-         JSdNGrcQTZG30HxtUucqWl9khZHbKHrGceMiPgtrydSrLN1a1ugZ0t3QrS5HuGBwDsox
-         37o1Qs1wAH1f1DrmVU/cE0r3H0PrxSiAblzWO0ZH76aHAQOnjta/SncQnFEizx3ET9X/
-         12/e1IDMZ3JMr2gBrOMn7UYnc2tVuG29a7zsC4evT9G+NKeCKofMSAwEniiTh6sgnh0J
-         r1sBW9EYdqgf6EiSQAnAXnh7fzVDqtry7KVAY1JGqRrEMMGuJoBngV/MaSajwnFV0PF3
-         1JHg==
-X-Gm-Message-State: APjAAAVwlRxNkirpvOs5SgeRdeVu4CGiCFrSH0EXNQzFGbIYfeKhM3Dt
-        d7XHsJ89rJgrgFyV3KaXqp7qQV2/mu0=
-X-Google-Smtp-Source: APXvYqySpp0KjfkLQ1L1Nlzel5FRtxQVjK6BM+YDEy/cozoJZkSWBwdQwFSnHk63JVYsxyH5gaN6fg==
-X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr9255362pfi.131.1576149452097;
-        Thu, 12 Dec 2019 03:17:32 -0800 (PST)
-Received: from [10.231.110.95] ([125.29.25.186])
-        by smtp.gmail.com with ESMTPSA id y38sm6535280pgk.33.2019.12.12.03.17.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 03:17:31 -0800 (PST)
-Subject: Re: [PATCH] of: refcount leak when phandle_cache entry replaced
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1575965693-30395-1-git-send-email-frowand.list@gmail.com>
- <20191211201856.GA21857@bogus>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
-Date:   Thu, 12 Dec 2019 05:17:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 06:18:09 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBEGZb069194;
+        Thu, 12 Dec 2019 11:18:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=d4MdoY6N+v+K3WPQHuafJC/CqPbOGWJY82uCtk/epbY=;
+ b=YZZqbiP7glUoytwVEbmZ+tpCWrnpcD5BmvreEfTXEZz16bIO7rISD3UPynyygcCX2LZD
+ AmbFQWB2GH+EygqkPgzOYT2hCepocbADv6DZICU1Sd1VE847zPe7eK47b8uV/0mRZize
+ /TwtMs5d810ZWlfTt3AL4g4FeUj2xt3XSVqJuA8Xipy87Z3kE8WWnum7Cqz8zvIcyahW
+ R4je6hsF7SY9XAOL6LsI4bnNJGP38TtRrrTtFeGQ1dXIdsMtzrHe9oizT2c5V0MPWBwC
+ ttnS3eVoO+zQ0cJHshHzIHrqy9Vj2YThs9f/1GeWvkmyRMM8ar0d2JQWgzy3WD91L2qw oA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wr41qjbvm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:18:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBHCjD070987;
+        Thu, 12 Dec 2019 11:18:02 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wu2fw5qqh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:17:48 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCBD15M032746;
+        Thu, 12 Dec 2019 11:13:01 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 03:13:00 -0800
+Date:   Thu, 12 Dec 2019 14:12:46 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Scott Schafer <schaferjscott@gmail.com>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
+        Manish Chopra <manishc@marvell.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH v2 20/23] staging: qlge: Fix CHECK: usleep_range is
+ preferred over udelay
+Message-ID: <20191212111245.GE2070@kadam>
+References: <cover.1576086080.git.schaferjscott@gmail.com>
+ <a3f14b13d76102cd4e536152e09517a69ddbe9f9.1576086080.git.schaferjscott@gmail.com>
+ <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
+ <20191212110057.GA7934@karen>
 MIME-Version: 1.0
-In-Reply-To: <20191211201856.GA21857@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212110057.GA7934@karen>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120084
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 2:18 PM, Rob Herring wrote:
-> On Tue, 10 Dec 2019 02:14:53 -0600, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> of_find_node_by_phandle() does not do an of_node_put() of the existing
->> node in a phandle cache entry when that node is replaced by a new node.
->>
->> Reported-by: Rob Herring <robh+dt@kernel.org>
->> Fixes: b8a9ac1a5b99 ("of: of_node_get()/of_node_put() nodes held in phandle cache")
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>
->> Checkpatch will warn about a line over 80 characters.  Let me know
->> if that bothers you.
->>
->>  drivers/of/base.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
+On Thu, Dec 12, 2019 at 05:00:57AM -0600, Scott Schafer wrote:
+> On Thu, Dec 12, 2019 at 01:45:57PM +0300, Sergei Shtylyov wrote:
+> > Hello!
+> > 
+> > On 11.12.2019 21:12, Scott Schafer wrote:
+> > 
+> > > chage udelay() to usleep_range()
+> > 
+> >    Change?
+> > 
+> > > Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+> > > ---
+> > >   drivers/staging/qlge/qlge_main.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> > > index e18aa335c899..9427386e4a1e 100644
+> > > --- a/drivers/staging/qlge/qlge_main.c
+> > > +++ b/drivers/staging/qlge/qlge_main.c
+> > > @@ -147,7 +147,7 @@ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+> > >   	do {
+> > >   		if (!ql_sem_trylock(qdev, sem_mask))
+> > >   			return 0;
+> > > -		udelay(100);
+> > > +		usleep_range(100, 200);
+> > 
+> >    I hope you're not in atomic context...
+> > 
+> > >   	} while (--wait_count);
+> > >   	return -ETIMEDOUT;
+> > >   }
+> > 
+> > MBR, Sergei
 > 
-> Applied, thanks.
-> 
-> Rob
-> 
+> Im not quite what you mean by "I hope you're not in atomic context",
+> could you please explain why you said this? 
 
-If the rework patch of the cache that you posted shortly after accepting
-my patch, then my patch becomes not needed and is just extra noise in the
-history.  Once your patch finishes review (I am assuming it probably
-will), then my patch should be reverted.
+You can't sleep from certain IRQs or when you are holding certain locks
+(spin_locks and rwlocks).  The we have preempt_disable() then you can't
+sleep.
 
--Frank
+regards,
+dan carpenter
+
