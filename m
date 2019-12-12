@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9723C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A603C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC32205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA7D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9g16o0t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJEuZsdm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfLLC1a (ORCPT
+        id S1727860AbfLLC1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:27:30 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46316 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbfLLC12 (ORCPT
+        Wed, 11 Dec 2019 21:27:36 -0500
+Received: from mail-pj1-f49.google.com ([209.85.216.49]:36267 "EHLO
+        mail-pj1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727804AbfLLC1b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:27:28 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so307659pgb.13;
-        Wed, 11 Dec 2019 18:27:27 -0800 (PST)
+        Wed, 11 Dec 2019 21:27:31 -0500
+Received: by mail-pj1-f49.google.com with SMTP id n96so365760pjc.3;
+        Wed, 11 Dec 2019 18:27:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=CeHZmew+4fucmWx3flByYCHmWF3GN8c4eetw7jkXQA0=;
-        b=q9g16o0tKc4t6Sf2qGrABEj2tsjyKw2fWr+zPrjkHOoFkt61yA6UumGtek0BqZ+6XC
-         DN2/GPk7hySLkwmkmn9tdGbND5/+B7kdtl94GOfjUwIjqw7dTm7vVVRG1zsUZZb61rMR
-         x9J+pWcIwyJ9cR8GlWeOBYZveVeKleVGi+gIHvBM1iyuS/jN6vB68ms2sdpbsaeZoi1p
-         VMiw3lq6052q+Bbo+XJcm4s21WSnOrUg1M3GB06dQqP0OERgvcGpfx/3WKLPSv3f7b74
-         apbRtTOEsfJCk9gYhhGD0HzVSuGdXswX9Spn8LAZbisQGt3xtzNDYL5s5O22jtXKLjsO
-         JbAQ==
+        bh=Q9POWu9QQdjXlCxWsG8nhRyoRqIP2kXxcG0Qf/wCB4g=;
+        b=FJEuZsdm7LU6Kc4mRJBTldlXcUWbi0J3FW0GL9IJjqw+Wnq/8dEun0vCvWz4vl3iab
+         Fqq/sT9sQ37rX9j/JAClwVomNhzsmdL18W2jAgd+Rg6WWxpdAdw6UowLajZw37yYINwa
+         tRGvDS6pvwvTU32QKheCTmuEowhOTLrU/PM5BnJP/FEEZ4lvHnOOgUyAhWS5NO9rzjqE
+         ngkpugKR6Fygg0bMM7IKY4m6f2tSB1oAJ1MxffpkJUvZM/6X8ccNrDkXqQDsiwAqX4Ez
+         6Fa3zQIKWYUj4cdi+flr5uFZ+1ywX3u5nGBb/+9pyfM4bg5lsM+Q52vIomQlrUuxKi6F
+         RavQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=CeHZmew+4fucmWx3flByYCHmWF3GN8c4eetw7jkXQA0=;
-        b=OPMSrJGqPDLCISQJKPMycjGM0f4Lw29IdGFnr2/KhSHvHCG0bvqS1R3jpDLSLL2hqH
-         npCsJTeSR7B8stF+3raLdtd3mVKHiVf0Jiu6wi4yZxJ99sLtIQgPxn8WUvQufumRaNXa
-         TuLtAThuDfggOEm36I3xPiYx1tVX1zwOIOmrHgUrIJ9GnCvxIqP+WIfT1jnVj5B8Tm2E
-         CyCbpc6O0yYWbPKMyg9WA/Gxy07BFz21u3tBHs+CJh+0KwBSYu4+X1oMAfEEScYOSuoK
-         SOZfOaVUCg+fU+9ERowdDr5np6Y2lr1fe0fe0k0NsdnlFxMFuDhS6KjyjQjUpOGmt30B
-         A7hg==
-X-Gm-Message-State: APjAAAU7lzLzdP8bs9Kbz5L0RlaTcyesugPRejeF8tTaEYRl/yjPDVTD
-        Mp1z3eQs25Us2UYY8bR808U=
-X-Google-Smtp-Source: APXvYqxJCYQEx6W1kxgsuysVD7Wm5ZbigplWxVjd2E+9qLsnn/jK30+3uJ6y7AMTk5VZfPqthfyURQ==
-X-Received: by 2002:a63:a4b:: with SMTP id z11mr7526272pgk.97.1576117647259;
-        Wed, 11 Dec 2019 18:27:27 -0800 (PST)
+        bh=Q9POWu9QQdjXlCxWsG8nhRyoRqIP2kXxcG0Qf/wCB4g=;
+        b=fGRws0n7g0BFZr7zHiEKQUriyLzkBbkFt66FQIc/WJCXkoEsdpulNOtNuVLYZhdsBz
+         imxJM4zK15u1sQmNAME5J87aikjI4xmbC2Nv9RtCar0RGrkpI9ZQx2I0e4Yur4VGu9xx
+         ZgQs8M463eEeDzQD3HkTm1TptEQDzHikhGInbjFqHPPnuwHfZsgCmc9xvthEoCb9gqfA
+         QMInf/jbmaFokGoehfnKXwpvks4Fr4RZq9RW/GNe6sSaR4GYsgSmEzXjSTN4nSNrYkW0
+         +UZsBfPq5cZjfKhGpvybrM8UsdP4lkTKKNn/bkv13Ye6wka9Y6MkmHJWnXQTqtMuHgEk
+         UNlg==
+X-Gm-Message-State: APjAAAU9Bslon9fm2Uc4+gFSVyULCgHjPod51JsG11gNQOaopAUkjCrt
+        8Vf1Mq4MAE9WOfVuwDEEqRQ=
+X-Google-Smtp-Source: APXvYqxFh2T30aiJVZrwFJ4fg7UgrXfuNRbuhdW/gGfmdLi9B8wfIypK0Lxnv4bPvyGHXFEGZPL/Rw==
+X-Received: by 2002:a17:902:848a:: with SMTP id c10mr6348557plo.209.1576117650497;
+        Wed, 11 Dec 2019 18:27:30 -0800 (PST)
 Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id d22sm4245173pgg.52.2019.12.11.18.27.25
+        by smtp.gmail.com with ESMTPSA id d22sm4245173pgg.52.2019.12.11.18.27.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 18:27:26 -0800 (PST)
+        Wed, 11 Dec 2019 18:27:29 -0800 (PST)
 From:   SeongJae Park <sj38.park@gmail.com>
 X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
 To:     brendanhiggins@google.com, shuah@kernel.org
@@ -63,9 +63,9 @@ Cc:     sjpark@amazon.com, corbet@lwn.net, kunit-dev@googlegroups.com,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, sj38.park@gmail.com,
         sjpark@amazon.de
-Subject: [PATCH v6 4/6] kunit: Place 'test.log' under the 'build_dir'
-Date:   Thu, 12 Dec 2019 02:27:09 +0000
-Message-Id: <20191212022711.10062-5-sjpark@amazon.de>
+Subject: [PATCH v6 6/6] kunit/kunit_tool_test: Test '--build_dir' option run
+Date:   Thu, 12 Dec 2019 02:27:11 +0000
+Message-Id: <20191212022711.10062-7-sjpark@amazon.de>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191212022711.10062-1-sjpark@amazon.de>
 References: <20191212022711.10062-1-sjpark@amazon.de>
@@ -74,63 +74,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'kunit' writes the 'test.log' under the kernel source directory even
-though a 'build_dir' option is given.  As users who use the option might
-expect the outputs to be placed under the specified directory, this
-commit modifies the logic to write the log file under the 'build_dir'.
+This commit adds kunit tool test for the '--build_dir' option.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 Tested-by: Brendan Higgins <brendanhiggins@google.com>
 ---
- tools/testing/kunit/kunit.py           | 2 +-
- tools/testing/kunit/kunit_kernel.py    | 4 ++--
- tools/testing/kunit/kunit_tool_test.py | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/kunit/kunit_tool_test.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-index 5b222418eacd..e4250c4b06fb 100755
---- a/tools/testing/kunit/kunit.py
-+++ b/tools/testing/kunit/kunit.py
-@@ -105,7 +105,7 @@ def main(argv, linux=None):
- 	run_parser.add_argument('--build_dir',
- 				help='As in the make command, it specifies the build '
- 				'directory.',
--				type=str, default=None, metavar='build_dir')
-+				type=str, default='', metavar='build_dir')
- 
- 	run_parser.add_argument('--defconfig',
- 				help='Uses a default kunitconfig.',
-diff --git a/tools/testing/kunit/kunit_kernel.py b/tools/testing/kunit/kunit_kernel.py
-index c04a12e2f711..a10c0c787bc1 100644
---- a/tools/testing/kunit/kunit_kernel.py
-+++ b/tools/testing/kunit/kunit_kernel.py
-@@ -140,10 +140,10 @@ class LinuxSourceTree(object):
- 			return False
- 		return True
- 
--	def run_kernel(self, args=[], timeout=None, build_dir=None):
-+	def run_kernel(self, args=[], timeout=None, build_dir=''):
- 		args.extend(['mem=256M'])
- 		process = self._ops.linux_bin(args, timeout, build_dir)
--		with open('test.log', 'w') as f:
-+		with open(os.path.join(build_dir, 'test.log'), 'w') as f:
- 			for line in process.stdout:
- 				f.write(line.rstrip().decode('ascii') + '\n')
- 				yield line.rstrip().decode('ascii')
 diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
-index a2a8ea6beae3..22f16e66b3c1 100755
+index 22f16e66b3c1..cba97756ac4a 100755
 --- a/tools/testing/kunit/kunit_tool_test.py
 +++ b/tools/testing/kunit/kunit_tool_test.py
-@@ -199,7 +199,7 @@ class KUnitMainTest(unittest.TestCase):
- 		timeout = 3453
- 		kunit.main(['run', '--timeout', str(timeout)], self.linux_source_mock)
+@@ -174,6 +174,7 @@ class KUnitMainTest(unittest.TestCase):
+ 		kunit.main(['run'], self.linux_source_mock)
  		assert self.linux_source_mock.build_reconfig.call_count == 1
--		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=None, timeout=timeout)
-+		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
+ 		assert self.linux_source_mock.run_kernel.call_count == 1
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=300)
  		self.print_mock.assert_any_call(StrContains('Testing complete.'))
  
+ 	def test_run_passes_args_fail(self):
+@@ -202,5 +203,12 @@ class KUnitMainTest(unittest.TestCase):
+ 		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir='', timeout=timeout)
+ 		self.print_mock.assert_any_call(StrContains('Testing complete.'))
+ 
++	def test_run_builddir(self):
++		build_dir = '.kunit'
++		kunit.main(['run', '--build_dir', build_dir], self.linux_source_mock)
++		assert self.linux_source_mock.build_reconfig.call_count == 1
++		self.linux_source_mock.run_kernel.assert_called_once_with(build_dir=build_dir, timeout=300)
++		self.print_mock.assert_any_call(StrContains('Testing complete.'))
++
  if __name__ == '__main__':
+ 	unittest.main()
 -- 
 2.17.1
 
