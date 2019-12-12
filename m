@@ -2,94 +2,253 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8D1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29C7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D998E22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9/eaQKx"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDF722527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbfLLSYq (ORCPT
+        id S1730499AbfLLSYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:24:46 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38446 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730210AbfLLSYn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:43 -0500
-Received: by mail-pl1-f196.google.com with SMTP id a17so953323pls.5;
-        Thu, 12 Dec 2019 10:24:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+yXUnT7p17Ie0K+wMnq//C2QNUFuiX6CATyd3WqyTQY=;
-        b=Z9/eaQKxArfp/r0C9iMfIBVx7VDXiNMOsHq4T5u9QhTytVEsYA01P5NW6u4cgZ8nUo
-         8lhZKkd2HeAHNdR0/o6zIyr7NOK17CZABLKstv0X+HtR90ZtfBJKuPHxfveMBtGpEKm+
-         g9JOtBlM+1JwVV5vQa5dzrk8zYtYAB1Td2V5PYsVHHsuK6bcfUDCt+CCEhQRz47s+B8A
-         vsctpViBYGbqrzODYzbMOPwamdS3CWcyw1nFdrA4Uwsvnzmmm00jbGn5tLVEl3gpNErj
-         2n2C0kNL3m4YX/f7Ap/ydMxjGwUtR0CbGRP9esNJ9oHqRcJRYmY67iC/jJJ6Ro1t1Kri
-         TxjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+yXUnT7p17Ie0K+wMnq//C2QNUFuiX6CATyd3WqyTQY=;
-        b=dMg+sIV0i3wHCTER89BveY+qHQZAS0SXdQlQasFNZM3q/Po5cjnozGFuO1HZD7J0p3
-         iJ6tKireluCg0TKxCwL9kd3ziWWyAUvfu4nE37LubVvT+Wx7xRHHmuiVOy/5ebBEAjWp
-         JiAaKQZ3w+51xI+umIkTViYR4Di9pVhC2jRKsZawxbHL7i/0tjtAwgrAjeA2vdPqS1Zk
-         gEwAKCNa7l5nfpkc9u01d5t5M5HqIphHXhpDo+VKmsPFGHPRfPxhmVh5FMNRB2yF72Do
-         tDxnOVUAuOelWJY34lSxM+LWUDr/XY0qj2A14kV0UZzOV4xzBIVZXpKV+UCpA3AU24Ul
-         bAiw==
-X-Gm-Message-State: APjAAAWeLY+dE6sqBev88bqMJiQprCUNO7tL0Olwpu+xNtYI25qY5bKb
-        5v54HzlrjB1q95vW3Ta+sf8=
-X-Google-Smtp-Source: APXvYqwEsunvsFHpXGOUpqwbXvlzeDyE/MDghAFSJYV9eLT+2v8BegkezBbGkbmqxqa1wWGI3hy65Q==
-X-Received: by 2002:a17:902:9302:: with SMTP id bc2mr11199629plb.148.1576175082872;
-        Thu, 12 Dec 2019 10:24:42 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c68sm8030267pfc.156.2019.12.12.10.24.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 10:24:42 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:24:41 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191212182441.GB26863@roeck-us.net>
-References: <20191211150221.153659747@linuxfoundation.org>
+        Thu, 12 Dec 2019 13:24:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:59647 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730210AbfLLSYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="211161356"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 12 Dec 2019 10:24:45 -0800
+Subject: [PATCH RFC v2 06/14] dmaengine: add dma request submit and
+ completion path support
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+Date:   Thu, 12 Dec 2019 11:24:45 -0700
+Message-ID: <157617508579.42350.5174393499273822619.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.16 release.
-> There are 105 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> Anything received after that time might be too late.
-> 
+There are several issues with the existing dmaengine submission APIs.
+1. A new function pointer is introduced every time a new operation is
+   added.
+2. The whole submission path requires locking and requires multiple API
+   calls with prep+submit+start engine.
 
-For v5.3.15-116-g9f27b7f4a193:
+A new DMA register function for request based DMA devices is added,
+dma_async_request_device_register(). This allows the checking of parts for
+dma requests that are setup.
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 394 pass: 394 fail: 0
+A new submission API call that can start an I/O immediately in a single
+call and will be lockless is being introduced. A helper function that
+submits and wait is also added for consumers such as dmatest that will wait
+on the completion of the I/O. And a helper function is added that completes
+the I/O by either calling complete() or envoking the callback depending on
+the setup for submission.
 
-Guenter
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/dmaengine.c   |   59 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/dmaengine.h |   67 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 3c74402f1c34..5b053624f9e3 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -1050,6 +1050,37 @@ static int __dma_async_device_register(struct dma_device *device)
+ 	return 0;
+ }
+ 
++/**
++ * dma_async_request_device_register - registers DMA devices found that
++ *					support DMA requests.
++ * @device: &dma_device
++ */
++int dma_async_request_device_register(struct dma_device *device)
++{
++	int rc;
++
++	if (!device)
++		return -ENODEV;
++
++	/* validate device routines */
++	if (!device->dev) {
++		pr_err("DMA device must have dev\n");
++		return -EIO;
++	}
++
++	if (!device->device_submit_request) {
++		dev_err(device->dev, "Device has no op defined\n");
++		return -EIO;
++	}
++
++	rc = __dma_async_device_register(device);
++	if (rc != 0)
++		return rc;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dma_async_request_device_register);
++
+ /**
+  * dma_async_device_register - registers DMA devices found
+  * @device: &dma_device
+@@ -1232,6 +1263,34 @@ int dmaenginem_async_device_register(struct dma_device *device)
+ }
+ EXPORT_SYMBOL(dmaenginem_async_device_register);
+ 
++/**
++ * dmaenginem_async_request_device_register - registers DMA devices
++ *					support DMA requests found
++ * @device: &dma_device
++ *
++ * The operation is managed and will be undone on driver detach.
++ */
++int dmaenginem_async_request_device_register(struct dma_device *device)
++{
++	void *p;
++	int ret;
++
++	p = devres_alloc(dmam_device_release, sizeof(void *), GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	ret = dma_async_request_device_register(device);
++	if (!ret) {
++		*(struct dma_device **)p = device;
++		devres_add(device->dev, p);
++	} else {
++		devres_free(p);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(dmaenginem_async_request_device_register);
++
+ struct dmaengine_unmap_pool {
+ 	struct kmem_cache *cache;
+ 	const char *name;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 7bc8c3f8283f..220d241d71ed 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -461,6 +461,7 @@ enum dmaengine_tx_result {
+ 	DMA_TRANS_NOERROR = 0,		/* SUCCESS */
+ 	DMA_TRANS_READ_FAILED,		/* Source DMA read failed */
+ 	DMA_TRANS_WRITE_FAILED,		/* Destination DMA write failed */
++	DMA_TRANS_ERROR,		/* General error not rd/wr */
+ 	DMA_TRANS_ABORTED,		/* Op never submitted / aborted */
+ };
+ 
+@@ -831,6 +832,10 @@ struct dma_device {
+ 					    dma_cookie_t cookie,
+ 					    struct dma_tx_state *txstate);
+ 	void (*device_issue_pending)(struct dma_chan *chan);
++
++	/* function calls for request API */
++	int (*device_submit_request)(struct dma_chan *chan,
++				     struct dma_request *req);
+ };
+ 
+ static inline int dmaengine_slave_config(struct dma_chan *chan,
+@@ -1390,6 +1395,66 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
+ }
+ #endif
+ 
++/* dmaengine_submit_request - helper routine for caller to submit
++ *				a DMA request.
++ * @chan: dma channel context
++ * @req: dma request context
++ */
++static inline int dmaengine_submit_request(struct dma_chan *chan,
++					   struct dma_request *req)
++{
++	struct dma_device *ddev;
++
++	if (!chan)
++		return -EINVAL;
++
++	ddev = chan->device;
++	if (!ddev->device_submit_request)
++		return -EINVAL;
++
++	return ddev->device_submit_request(chan, req);
++}
++
++/* dmaengine_submit_request_and_wait - helper routine for caller to submit
++ *					a DMA request and wait until
++ *					completion or timeout.
++ * @chan: dma channel context
++ * @req: dma request context
++ * @timeout: time in jiffies to wait for completion timeout. A timeout of 0
++ *		equals to wait indefinitely.
++ */
++static inline int dmaengine_submit_request_and_wait(struct dma_chan *chan,
++						    struct dma_request *req,
++						    int timeout)
++{
++	int rc;
++	DECLARE_COMPLETION_ONSTACK(done);
++
++	req->rq_private = &done;
++	rc = dmaengine_submit_request(chan, req);
++	if (rc < 0)
++		return rc;
++
++	if (timeout)
++		return wait_for_completion_timeout(&done, timeout);
++
++	wait_for_completion(&done);
++	return 0;
++}
++
++/* dmaengine_request_complete - helper function to complete dma request.
++ *				If callback exists will envoke callback.
++ *
++ * @req - dma request context
++ */
++static inline void dmaengine_request_complete(struct dma_request *req)
++{
++	if (req->rq_private)
++		complete(req->rq_private);
++	else if (req->callback)
++		req->callback(req->callback_param, &req->result);
++}
++
+ #ifdef CONFIG_DMA_ENGINE_REQUEST
+ struct dma_request *dma_chan_alloc_request(struct dma_chan *chan);
+ void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq);
+@@ -1454,7 +1519,9 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
+ /* --- DMA device --- */
+ 
+ int dma_async_device_register(struct dma_device *device);
++int dma_async_request_device_register(struct dma_device *device);
+ int dmaenginem_async_device_register(struct dma_device *device);
++int dmaenginem_async_request_device_register(struct dma_device *device);
+ void dma_async_device_unregister(struct dma_device *device);
+ int dma_async_device_channel_register(struct dma_device *device,
+ 				      struct dma_chan *chan);
+
