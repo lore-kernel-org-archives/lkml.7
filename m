@@ -6,194 +6,120 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B34C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D03F7C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99C12067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7296206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pkqrboVt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m4/Wr2qv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfLLPIC (ORCPT
+        id S1729062AbfLLPI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:08:02 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41565 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728815AbfLLPIC (ORCPT
+        Thu, 12 Dec 2019 10:08:57 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:38639 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728666AbfLLPI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:08:02 -0500
-Received: by mail-vs1-f67.google.com with SMTP id f8so1767551vsq.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:08:01 -0800 (PST)
+        Thu, 12 Dec 2019 10:08:57 -0500
+Received: by mail-ua1-f65.google.com with SMTP id z17so1023337uac.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:08:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zbYuLohJ6uz9IV3uB+nuAd8APjXTFVTSFGSirgS84Fw=;
-        b=pkqrboVtNyI5GfSeksmn9z5PnU5TgHPwW8EtQ28nj33hzudbVH9SuoYaMsPTPRIgK5
-         Eqp/3oIW6uUE4++T9Mj7TzjbQVgb7UC+hw4/pxWH8PYZ5u0kbc6O8eVmn//rz5aTQjKV
-         LvnklEtIK4gpufnMuZelStusOrqeQFUhrVcDtUa2c5qB/zC2el+WhNR1eOvWGcC9SION
-         Hk0ue7RAmyWIELLCOGkDVdtEF4DVFtZUBK5v2mxCV3MXD6tPUmvejYAdc7Q4wp3f42D3
-         a3nwTSWD+upAi+wOj1E3pl5atpf7VUwWRmypPWUiCHH8mQFqEOqg/0K5HZcYFxqA92a2
-         4XyA==
+         :cc;
+        bh=BBZPqQLjRrXMYmR1TRaqMyhH4qY4XtbQYO8hjLWbaCQ=;
+        b=m4/Wr2qvLIWwO/nnv/MWFlzrVTYqwIuP//VHOprM0TS4aqnouLBYYbuKXDfZOW4zy6
+         WwGNt6wKboMPLkZ2E8/NZCbgzjnehCPCJew6MkeU98jvV4zfh3C9C65H7kzchE6IfEc3
+         cPsLn0wlOvRbdjWraOtHB9YHqPNxincix8AEtn1vTYqcZFNx++w0YhKkj22b+wEn8D58
+         KihdxGOOV7uAKzwjHIWmulnscOi9cX+DuB+DkH8CWtEvucWc13p3AmI36VLn7BCMFG22
+         2TmNAFLJ76Xm9ie4xkbBYzaNembFUKkM0K5MrWfnOhPIfPCMMWLF/Aei/G4b6ruqQ5om
+         6DNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zbYuLohJ6uz9IV3uB+nuAd8APjXTFVTSFGSirgS84Fw=;
-        b=KY3jO7GbsdvheFD103eao24mRlj3lG0y2QhRl0FkDX3aLSBik2D6a4SmJx7BLsAmlJ
-         AIWuxovNcuDeBUJbAyagoWSnBMIFj2DNGcndaoU1564eUixs7GdYpqNYvwVkKIGd68O8
-         bjxeEr21izokGsmOnrZGKHeBLGAK+PQzzq2TX7SbwkpNHSKGVOfiS+qlodhneoKZwI54
-         wlTZ9t0xee/rlnQad7KJokZ4nF6o/j17a8n9+xWEnpsDaZHjxWedwIwpKpTV6tNIvwna
-         NkfJV75uvrrh77Nh4nfWMMWN70FVByPwrVpanCftRRbnN/ogePm4sF87atVPPwNqD7Qd
-         FKpg==
-X-Gm-Message-State: APjAAAUZOUYz+urlWlsne3OQJHGvPqTiAdn3ir8GBKeSqWIck6GXJ2dX
-        QuZeu0pBuWnpbIt0WiVmtKoeY8bd1fsfLi5AQgKShQ==
-X-Google-Smtp-Source: APXvYqw8Cxw8goN18pz+XIVG0ArSx5rkSvWM5IzHtNml4ttcHm9tifgGxLAx++YkwezG41U68dvM6EO/SuWVRkgPtZ0=
-X-Received: by 2002:a67:b649:: with SMTP id e9mr7320111vsm.34.1576163280703;
- Thu, 12 Dec 2019 07:08:00 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=BBZPqQLjRrXMYmR1TRaqMyhH4qY4XtbQYO8hjLWbaCQ=;
+        b=h8q8Bczto0FWXj1jdNp+/CBzxm1Y9yD2X+omKkJaxZJT7vhyBdTWXX3pH2IF3stOTR
+         oL9mxVoV7ZsroaDeQTYr/hHW62Cio/JK26I+4Fa3EBe85XlApmq89tudanHPksPHC/E+
+         2q3uRMIA+FjtdhzAv3oH2yIbLL+S/kEciieuZAY53hlYga0xdaJK5H8aZW3H91POdchZ
+         u6DN6spEqgx5i2hEsRTdnXWf0Ucate05Up3tV3hZ3T+MJ1L8akfI/b6qYMz68jJOsgh4
+         aC89BHOyU5ni0DHVNA+ngYZo8cM1dq5OgNFwcgT+rNw8degJleOnsgZ4xtN+O6BCpFQ4
+         MvYw==
+X-Gm-Message-State: APjAAAWZsMWa1mtyxr6Xt0uPZCzBysgXzflnBrwix0zG8hbHfmyxp09A
+        lY/nd9zvk4hYqwxFiMjdWjmJx5lLVuwmUW9J2fNlfg==
+X-Google-Smtp-Source: APXvYqylzTcuVtIdKTe2ptVzi2MZfkuPeOlp+Ab7T3CJfNA/27r7rEWO5mUtRTY83LtjQy3Do512L/IYNuh6OowCLas=
+X-Received: by 2002:ab0:2716:: with SMTP id s22mr8672177uao.20.1576163336218;
+ Thu, 12 Dec 2019 07:08:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191210014011.21987-1-digetx@gmail.com> <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
- <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com> <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
- <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com> <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
-In-Reply-To: <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 12 Dec 2019 16:07:24 +0100
-Message-ID: <CAPDyKFq26Wcd9f3VJ1afxv9TVDJQu4wi+yLS-4Pi1bYnFLyWsg@mail.gmail.com>
-Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de> <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de> <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+In-Reply-To: <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 16:08:44 +0100
+Message-ID: <CACRpkda4PFA=99u33xsXzQND1FaP=8GXGRQULngcd5a=zFepXg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 15:23, Dmitry Osipenko <digetx@gmail.com> wrote:
->
-> 11.12.2019 19:29, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > 11.12.2019 19:10, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >> On Wed, 11 Dec 2019 at 16:46, Dmitry Osipenko <digetx@gmail.com> wrote=
-:
-> >>>
-> >>> Hello Ulf,
-> >>>
-> >>> 11.12.2019 11:11, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>>> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wro=
-te:
-> >>>>>
-> >>>>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are a=
-ffected
-> >>>>> by a problem where WiFi chip reports CCCR v1.10, while it should v1=
-.20.
-> >>>>> In a result high-speed mode isn't enabled for the WiFi card and thi=
-s
-> >>>>> results in a malfunctioning SDIO communication.
-> >>>>
-> >>>> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR=
-_SPEED?
-> >>>
-> >>> Yes, the SDIO_SPEED_SHS bit is set.
-> >>>
-> >>>>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 fai=
-led: -84
-> >>>>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send =
-NAK
-> >>>>>
-> >>>>> Downstream kernels are overriding card's CCCR info in SDHCI driver =
-to fix
-> >>>>> the problem, let's do the same in upstream.
-> >>>>>
-> >>>>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC dr=
-iver,
-> >>>>> which overrides card's info for the TI wl1251 WiFi.
-> >>>>
-> >>>> This is a temporary solution and should be replaced by doing the DT
-> >>>> parsing during
-> >>>>
-> >>>> So, yes, let's see if we can use a card quirk instead. That's the fi=
-rst option.
-> >>>>
-> >>>> A second option is simply to parse the DT subnode for a new DT
-> >>>> property during mmc_sdio_init_card(). Along the lines of what we do
-> >>>> for the broken-hpi DT binding for eMMC.
-> >>>
-> >>> Let's try the first option. My understanding is that the problem affe=
-cts
-> >>> only the specific model of the WiFi chip and it's not a board-specifi=
-c
-> >>> problem. I'll add Broadcom driver people to CC for the next version o=
-f
-> >>> the patch, maybe they'll have something to say.
-> >>
-> >> Okay, sounds reasonable. By looking at your latest attempt for a fix,
-> >> I have two minor nitpicks, otherwise it looks good.
-> >>
-> >> The nitpicks:
-> >> I suggest to rename MMC_QUIRK_HIGH_SPEED_CARD to MMC_QUIRK_HIGH_SPEED
-> >> and mmc_card_need_high_speed_toggle() to mmc_card_quirk_hs().
-> >
-> > I'll take it into account, thanks.
->
-> Looks like I managed to figure out what's really going on:
->
->   1. The BCM4329 doc clearly states that High Speed is supported, see
-> page 49 (Section 11: WLAN Interfaces, SDIO v1.2)
->
-> https://www.cypress.com/file/298626/download
->
->   2. I googled for performance results of the BCM4329 SDIO WiFi and came
-> to a conclusion that ~40 Mbit/s is a realistic maximum of the WiFi-data
-> throughput for NVIDIA Tegra20 boards due to antenna configuration
-> limitations and whatever.
+On Wed, Dec 11, 2019 at 6:09 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Okay.
+> I discussed it with a colleague again and he mentioned that pinctrl
+> should be named pinctrl instead it should be named padctrl.
 
->
->   3. The Tegra's SDHCI clock is pre-configured to 48MHz at the time of
-> kernel's boot-up.
->
->   4. IIUC, the maximum clock rate for the legacy SD signaling mode is
-> ~25MHz and that is more than enough for a 4-lane SDIO data-bus that
-> allows up to 100 Mbit/s for the WiFi which is capped to 40 Mbit/s anyways=
-.
+Quoting Documentation/driver-api/pinctl.rst:
 
-Yes, I see.
+(...)
+Definition of PIN:
 
->
->   5. Apparently MMC core doesn't limit the clock rate for the Normal
-> Speed cards.
+- PINS are equal to pads, fingers, balls or whatever packaging input or
+  output line you want to control and these are denoted by unsigned integers
+  in the range 0..maxpin.
+(...)
 
-It should, else it's a bug (I would be really surprised if that's the
-case, but who knows).
+> We don't
+> reconfigure the pad to a other function it is still a device general
+> purpose input pad. The hw-signal flow goes always trough the gpio block
+> so one argument more for my solution. Also we don't configure the "pad"
+> to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
+> function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
+> Instead we tell the regulator to use _this_ GPIO e.g. for voltage
+> selection so we go the other way around. My last argument why pinctrl
+> isn't the correct place is that the GPIO1 can be used for
+> regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
+> have different states which is invalid IMHO.
 
->
->
-> So, I added "max-frequency =3D <25000000>;" to the SDHCI node of the
-> board's device-tree and ta-da! WiFi works absolutely fine without the
-> quirk! Thus the SDIO card quirk isn't really needed and I'm dropping it
-> for now.
->
-> Ulf, do you know if it's a bug or a feature of the MMC core that it
-> doesn't limit clock rate for the Normal Speed cards?
+Yeah it is just one of these cases where the silicon designer pulled
+a line of polysilicone over to the regulator enable signal and put a
+switch on it and say "so you can also enable the regulator
+with a signal from here", it can be used in parallel with anything
+else, which is especially messy.
 
-It should limit the speed, else it's a bug. Can you perhaps check what
-the requested clock rate is via some debug prints in the host ops
-->set_ios()? And also what the real rate becomes after dividers.
+Special cases require special handling, since the electronic design
+of this thing is a bit Rube Goldberg.
 
-If it's not a bug in the core, I suspect that there may be generic
-problem dealing with initialization frequencies for sdhci-tegra.
-
-For example, mmc_rescan_try_freq() tries to initialize the SDIO card
-at 400KHz, then 300, then 200 then 100 (in that order, and note
-*KHz*). When a frequency is successful, initialization continues and
-later on the clock rate should be increased to 25MHz, for legacy speed
-mode.
-
-Kind regards
-Uffe
+Yours,
+Linus Walleij
