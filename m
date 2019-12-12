@@ -2,96 +2,250 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16022C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A671EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FF0227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3BC21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="zZDTXj50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfLLOh5 (ORCPT
+        id S1729812AbfLLOia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:37:57 -0500
-Received: from mga12.intel.com ([192.55.52.136]:59461 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729758AbfLLOh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:37:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 06:37:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="220707571"
-Received: from unknown (HELO pbossart-mac02.local) ([10.254.97.107])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 06:37:55 -0800
-Subject: Re: [alsa-devel] [PATCH v5 00/11] soundwire: update ASoC interfaces
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <20191212014507.28050-1-pierre-louis.bossart@linux.intel.com>
- <20191212034926.GK2536@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <b60388fe-10a6-3a19-a575-243ed12bc611@linux.intel.com>
-Date:   Thu, 12 Dec 2019 08:37:56 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.0
+        Thu, 12 Dec 2019 09:38:30 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50624 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729743AbfLLOia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:38:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so2640485wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IRa2P15JWd6yJ1hNkD7pnHDIq7rswcnHahGMVU4CTFI=;
+        b=zZDTXj50NJUYtsoJMVI4UBnkdOFa/BR1tjfzRVP2m/vjyLczlalfh9zilxZiXOJchN
+         S7FiGfMBixLntjrFudYTUMd+wH1WVS4IIIa6x6trOnG70K3pxITkpuUm50udmAK8EFem
+         +uq2d5RP2FbE6f3pCaevkLQ+ZFnLDsQnT3MY/aFcRglYeTmuQO1Q5K6+jKgJhFOIvzap
+         cesJOxuJExEp+W9/JQQDDzd3EHhI2FWkrhZ8kThLsgEPYagfpHb9HMAvVkDeroHbOYPD
+         HzaaJS5Qmcm3ZW+IyNUdQZcG86gcN6ocJQxmoumdvbUWgIUzRFYIahPhmq2G56Cg8b7F
+         JzSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=IRa2P15JWd6yJ1hNkD7pnHDIq7rswcnHahGMVU4CTFI=;
+        b=l7u1eviKMzoe/qAkG/qpuMIZIkbTTXdJ4PUIWAhIWOrqwx73lS+p6JvAm9r0YM4Fk4
+         t/dRBkdK8b/BVmB5YxzJYAE9z95QWJgQZo7XWbLH9IsqSQzqUnJRbF7ZAmqYBs4B9jP6
+         vfOk1JmEVxphil/s6dW/imEXMHtjoUBcQTJ7oR3EJKqG7NPL3ekfNVkXavQcMm9vO78K
+         PKztMDiEPQPOD4dHZ+60npqpzuQNEjhRB2aQ7/XCmWKM4d+i7KjKfL8KIIQi4e6uBKJ9
+         c4Y9tFjQzakOzBDSYnk6s/TxR5SFj8wnSJti5m1kQ5CcHOsES9mkblzxC8e4PzGrvuU1
+         1fxg==
+X-Gm-Message-State: APjAAAUL7630wjb25D7P3R+SCPfs/apyOiLGLaiNEA3h3iOUpdj281L+
+        ewpeW44AZ7q8pRtfaZ3dlb0/MLl2ubThXg==
+X-Google-Smtp-Source: APXvYqziK1VPELmI60zIYS1D+M1NyY1LFCBCZDlsW/ln/D5k+VAz/+wP+s++KRHeq9efGtLkL1EslQ==
+X-Received: by 2002:a1c:9d8b:: with SMTP id g133mr6774930wme.27.1576161502689;
+        Thu, 12 Dec 2019 06:38:22 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id x6sm6781798wmi.44.2019.12.12.06.38.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Dec 2019 06:38:22 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Zumeng Chen <zumeng.chen@windriver.com>,
+        Quanyang Wang <quanyang.wang@windriver.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2] ARM: dts: zynq: enablement of coresight topology
+Date:   Thu, 12 Dec 2019 15:38:20 +0100
+Message-Id: <882627bc1ecd622355fb72b742b4e3c013d0b1ca.1576161496.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <20191212034926.GK2536@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 9:49 PM, Vinod Koul wrote:
-> On 11-12-19, 19:44, Pierre-Louis Bossart wrote:
->> We need new fields in existing structures to
->> a) deal with race conditions on codec probe/enumeration
->> b) allow for multi-step ACPI scan/probe/startup on Intel plaforms
->> c) deal with MSI issues using a single handler/threads for all audio
->> interrupts
->> d) deal with access to registers shared across multiple links on Intel
->> platforms
->>
->> These structures for a) will be used by the SOF driver as well as
->> codec drivers. The b) c) and d) cases are only for the Intel-specific
->> implementation.
->>
->> To avoid conflicts between ASoC and Soundwire trees, these 11 patches
->> are provided out-of-order, before the functionality enabled in these
->> header files is added in follow-up patch series which can be applied
->> separately in the ASoC and Soundwire trees. As discussed earlier,
->> Vinod would need to provide an immutable tag for Mark Brown, and the
->> integration on the ASoC side of SOF changes and new codecs drivers can
->> proceed in parallel with SoundWire core changes.
->>
->> I had multiple offline discussions with Vinod/Mark/Takashi on how to
->> proceed withe volume of SoundWire changes. Now that v5.5-rc1 is out we
->> should go ahead with these interface changes.
->>
->> The next patchset "[PATCH v3 00/15] soundwire: intel: implement new
->> ASoC interfaces​" can still be reviewed but will not apply as is due to
->> a one-line conflict. An update will be provided when Vinod applies
->> this series to avoid noise on mailing lists.
->>
->> An update for the series "[PATCH v3 00/22] soundwire: code hardening
->> and suspend-resume support" is ready but will be provided when both
->> the interfaces changes and the implementation changes are merged.
-> 
-> Applied, thanks
-> 
-> I will send the tag tomorrow after it is in next
+From: Zumeng Chen <zumeng.chen@windriver.com>
 
-Thanks Vinod, I will repost the following series tonight.
+This patch is to build the coresight topology structure of zynq-7000
+series according to the docs of coresight and userguide of zynq-7000.
+
+Signed-off-by: Zumeng Chen <zumeng.chen@windriver.com>
+Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+
+Changes in v2:
+- Remove slava-mode from replicator in-ports
+- Remove ITM completely
+
+ arch/arm/boot/dts/zynq-7000.dtsi | 135 +++++++++++++++++++++++++++++++
+ 1 file changed, 135 insertions(+)
+
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index ca6425ad794c..db3899b07992 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -59,6 +59,39 @@ regulator_vccpint: fixedregulator {
+ 		regulator-always-on;
+ 	};
+ 
++	replicator {
++		compatible = "arm,coresight-static-replicator";
++		clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++		clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++
++		out-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* replicator output ports */
++			port@0 {
++				reg = <0>;
++				replicator_out_port0: endpoint {
++					remote-endpoint = <&tpiu_in_port>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				replicator_out_port1: endpoint {
++					remote-endpoint = <&etb_in_port>;
++				};
++			};
++		};
++		in-ports {
++			/* replicator input port */
++			port {
++				replicator_in_port0: endpoint {
++					remote-endpoint = <&funnel_out_port>;
++				};
++			};
++		};
++	};
++
+ 	amba: amba {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -365,5 +398,107 @@ watchdog0: watchdog@f8005000 {
+ 			reg = <0xf8005000 0x1000>;
+ 			timeout-sec = <10>;
+ 		};
++
++		etb@f8801000 {
++			compatible = "arm,coresight-etb10", "arm,primecell";
++			reg = <0xf8801000 0x1000>;
++			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++			in-ports {
++				port {
++					etb_in_port: endpoint {
++						remote-endpoint = <&replicator_out_port1>;
++					};
++				};
++			};
++		};
++
++		tpiu@f8803000 {
++			compatible = "arm,coresight-tpiu", "arm,primecell";
++			reg = <0xf8803000 0x1000>;
++			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++			in-ports {
++				port {
++					tpiu_in_port: endpoint {
++						remote-endpoint = <&replicator_out_port0>;
++					};
++				};
++			};
++		};
++
++		funnel@f8804000 {
++			compatible = "arm,coresight-static-funnel", "arm,primecell";
++			reg = <0xf8804000 0x1000>;
++			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++
++			/* funnel output ports */
++			out-ports {
++				port {
++					funnel_out_port: endpoint {
++						remote-endpoint =
++							<&replicator_in_port0>;
++					};
++				};
++			};
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* funnel input ports */
++				port@0 {
++					reg = <0>;
++					funnel0_in_port0: endpoint {
++						remote-endpoint = <&ptm0_out_port>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					funnel0_in_port1: endpoint {
++						remote-endpoint = <&ptm1_out_port>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++					funnel0_in_port2: endpoint {
++					};
++				};
++				/* The other input ports are not connect to anything */
++			};
++		};
++
++		ptm@f889c000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0xf889c000 0x1000>;
++			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++			cpu = <&cpu0>;
++			out-ports {
++				port {
++					ptm0_out_port: endpoint {
++						remote-endpoint = <&funnel0_in_port0>;
++					};
++				};
++			};
++		};
++
++		ptm@f889d000 {
++			compatible = "arm,coresight-etm3x", "arm,primecell";
++			reg = <0xf889d000 0x1000>;
++			clocks = <&clkc 27>, <&clkc 46>, <&clkc 47>;
++			clock-names = "apb_pclk", "dbg_trc", "dbg_apb";
++			cpu = <&cpu1>;
++			out-ports {
++				port {
++					ptm1_out_port: endpoint {
++						remote-endpoint = <&funnel0_in_port1>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+-- 
+2.24.0
 
