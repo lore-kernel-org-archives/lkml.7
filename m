@@ -2,114 +2,91 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF6BC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9294C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0EA21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BFBD206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:06:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576152369;
+	bh=KLMJMceSbJb8378Wbjl3iu7hDddV1SSNAhyLkwTl4YU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wZxawM7mclseXe3oVV9QUqfSe2Wu5fedniPSL7e7Cbf/m0jkZxqXKZWwEQ1k//qyS
+	 WbRoeFFfh58u2P/VGLcW6A7x5a/uIEtiDxFrB9BtnCpM79w3yOI3SC5msbiGwmZW0H
+	 PuWVr/r78zeezuAOzIV9k4jF7aWyc4Ss7BbHbwV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfLLMEJ (ORCPT
+        id S1729122AbfLLMGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:04:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36612 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726492AbfLLMEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:04:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B36E2AFAA;
-        Thu, 12 Dec 2019 12:04:06 +0000 (UTC)
-Subject: Re: [PATCH v3 4/4] xen-blkback: support dynamic unbind/bind
-To:     =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Paul Durrant <pdurrant@amazon.com>
-Cc:     xen-devel@lists.xenproject.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20191211152956.5168-1-pdurrant@amazon.com>
- <20191211152956.5168-5-pdurrant@amazon.com>
- <20191212114616.GC11756@Air-de-Roger>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <48e2da7d-2bf5-9f2a-0675-366ae8d3ce77@suse.com>
-Date:   Thu, 12 Dec 2019 13:04:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 07:06:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:44422 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbfLLMGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:06:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A3F81FB;
+        Thu, 12 Dec 2019 04:06:07 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0726D3F718;
+        Thu, 12 Dec 2019 04:06:06 -0800 (PST)
+Date:   Thu, 12 Dec 2019 12:06:05 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeff Chang <richtek.jeff.chang@gmail.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        matthias.bgg@gmail.com, alsa-devel@alsa-project.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        jeff_chang@richtek.com
+Subject: Re: [PATCH] ASoC: Add MediaTek MT6660 Speaker Amp Driver
+Message-ID: <20191212120605.GA4310@sirena.org.uk>
+References: <1576148934-27701-1-git-send-email-richtek.jeff.chang@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212114616.GC11756@Air-de-Roger>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
+In-Reply-To: <1576148934-27701-1-git-send-email-richtek.jeff.chang@gmail.com>
+X-Cookie: We have DIFFERENT amounts of HAIR --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.12.19 12:46, Roger Pau Monné wrote:
-> On Wed, Dec 11, 2019 at 03:29:56PM +0000, Paul Durrant wrote:
->> By simply re-attaching to shared rings during connect_ring() rather than
->> assuming they are freshly allocated (i.e assuming the counters are zero)
->> it is possible for vbd instances to be unbound and re-bound from and to
->> (respectively) a running guest.
->>
->> This has been tested by running:
->>
->> while true;
->>    do fio --name=randwrite --ioengine=libaio --iodepth=16 \
->>    --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
->>    done
->>
->> in a PV guest whilst running:
->>
->> while true;
->>    do echo vbd-$DOMID-$VBD >unbind;
->>    echo unbound;
->>    sleep 5;
->>    echo vbd-$DOMID-$VBD >bind;
->>    echo bound;
->>    sleep 3;
->>    done
->>
->> in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
->> re-bind its system disk image.
->>
->> This is a highly useful feature for a backend module as it allows it to be
->> unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
->> This was also tested by running:
->>
->> while true;
->>    do echo vbd-$DOMID-$VBD >unbind;
->>    echo unbound;
->>    sleep 5;
->>    rmmod xen-blkback;
->>    echo unloaded;
->>    sleep 1;
->>    modprobe xen-blkback;
->>    echo bound;
->>    cd $(pwd);
->>    sleep 3;
->>    done
->>
->> in dom0 whilst running the same loop as above in the (single) PV guest.
->>
->> Some (less stressful) testing has also been done using a Windows HVM guest
->> with the latest 9.0 PV drivers installed.
->>
->> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
-> 
-> Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-> 
-> Thanks!
-> 
-> Juergen: I guess you will also pick this series and merge it from the
-> Xen tree instead of the block one?
 
-Yes.
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Dec 12, 2019 at 07:08:54PM +0800, Jeff Chang wrote:
+>     The MT6660 is a boosted BTL class-D amplifier with V/I sensing.
+>     A built-in DC-DC step-up converter is used to provide efficient
+>     power for class-D amplifier with multi-level class-G operation.
+>     The digital audio interface supports I2S, left-justified,
+>     right-justified, TDM and DSP A/B format for audio in with a data
+>     out used for chip information like voltage sense and current
+>     sense, which are able to be monitored via DATAO through proper
+> ---
+>  sound/soc/codecs/Kconfig  |   14 +
 
-Juergen
+You've not provided a Signed-off-by so I can't do anything with this,
+please see submitting-patches.rst for an explanation of what that is or
+why it's important.
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yLSoACgkQJNaLcl1U
+h9CfvQf+OwqaS6opHAx708EXSW3weHgQ0koD3aM3Ti2vyAWlAztKo1uyctXylitF
+tyVzUCsBptcVFwwkhCYncnk/VzS3vz0NvWg9D7yNrfCE8Vc9IIhuqk9g4V10PmyU
+KALFmhFVlK+J68pBpdln63KeqmBcuAO9EkNq7B3D28SVXZkb1Q35nIQFRmCOXsd2
+zmmlFzZzSBV8L6RLLPcXHmfFfiOhsebyzgz/eE4e+l2diJAH1khhnko9JX5EaDq9
+WGdnsm4QUiEOk1Vgg6c7PLRheaeupPapijBxIRualBZSNewoaKveKxcPoGZrZaC0
+i4WjYS7UJY6DqBHdh5yG31iOcgvjJw==
+=KCrs
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
