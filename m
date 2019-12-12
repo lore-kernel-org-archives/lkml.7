@@ -2,342 +2,167 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC22C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02071C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BCB21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C75102067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:34:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwMxC2Kj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OguXM/3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfLLOe0 (ORCPT
+        id S1729765AbfLLOel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:34:26 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35555 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729603AbfLLOeY (ORCPT
+        Thu, 12 Dec 2019 09:34:41 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33494 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729724AbfLLOel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:34:24 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j6so2558622lja.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:34:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M01hRpD11CkkOeauBIVCjuItQ11kCezb4GIbMatT12c=;
-        b=jwMxC2KjvVPAJJabNt2EixKGKNXDmT6INs3XC3sgyHNqZBtPmTN4Tm+tz0Ys8mMnlI
-         6iXQrpWyX159Jei4YMB2xTsoD/xSMAZVmG2upOB4pQq9PG0NPT5ZVkVMoeHIMv0ALiLq
-         ZqRfteFEjzauejojoUL4jnojtYaFCLrtZMLNlqiFNufQeb9yeU6XifAljnjLUYBpIRZ3
-         hCe6KvmaOnpA8ZxohByGH/M3WUG0NmNop6Ept8tGjmI9oYU7NethV3yAqH8g+ORjoocp
-         eKj+9MPSdmcu1QAjGxi/pYJmZ5pU1BKMgd/Xx5nJs25JpNgA5IejqQ41Bj0K/IkFut/G
-         XvtA==
+        Thu, 12 Dec 2019 09:34:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576161279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8L0wh57USWeg4kwDbaH2LaCzisTmsJPLc/9WAOqxji8=;
+        b=OguXM/3J8LGWIicHGD40uEHW5+9RlEj7anvHDGN5dszY5qvpRfCTf4DVdyWZ6JLmG4maxY
+        s50+p22i/xY/WilnnIePcY+kiEpfMA7dRKTrSP4AAmwlNwz5OwHiQdiFYNmYYuneT90qPg
+        BLwyjtAOrCrTHOmQ3R5tFDh7cuRmyQM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-208-N-tHyj3oOHuolITknj_asw-1; Thu, 12 Dec 2019 09:34:38 -0500
+X-MC-Unique: N-tHyj3oOHuolITknj_asw-1
+Received: by mail-wm1-f71.google.com with SMTP id l11so1734031wmi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:34:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M01hRpD11CkkOeauBIVCjuItQ11kCezb4GIbMatT12c=;
-        b=qbjOTjycTuXjl6+ymltZ+r49U8D2vCbFD8980NxYUlLpkxyiwX8TlCz+A2l8bpXyR9
-         EiCqCtq3vsBhy2aB6iA6NeO8q+aPtp0UTBSZ9ScFJvanGfOfqx4V1ulXWfmbATaib2VB
-         sTOfFbGiLV8EFYnEZEOE5vmITq04dqZckYiC7v9WjJXm+LSBtOaxCkbpN8jgbtDMqyDz
-         HJshStxulPZVugTGtHuMZr71C1uTUV9qlGj8gYBznREMdxSA460GG7kxpQiWRsc8PYJ8
-         Df19Qm9AIWVJZ10iGvGuP2gg2cSTUMoXo/u0gnL5AIWdgi6wYt9oX4f3Ks6aCLtfYzSx
-         0U5w==
-X-Gm-Message-State: APjAAAUWn02ywLUyzd3Lu5aXxkBkHRqy4Kk5XO4AWacsXdgEOoHcDlAm
-        3xmBB/WpDr4GEiJOwB35i/ktt0YiGTrPBUCm96TiwA==
-X-Google-Smtp-Source: APXvYqwxi4IxwAztLPEIoaBKmWi+PA6mLW1szFcIPlhkAwR494Ll690WDLTixRbkmknZWP+z6eu4/b3mbO4S/MBcekg=
-X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6202874ljk.77.1576161261524;
- Thu, 12 Dec 2019 06:34:21 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8L0wh57USWeg4kwDbaH2LaCzisTmsJPLc/9WAOqxji8=;
+        b=BQOAdG9Shg+XDTGF3VHRf2Pqbh/m5LJMcUZUrl8lPYwUcVl2ewlG4rUYOLRm8vC8FX
+         Fq0DUWs5RMR0aysCloYMfQbXji1wVAKHZ3yNQ1xtXaiwYNlPICGws+cGAYNqy5BzwgGR
+         qoK1pw2aj+B73EkX1n8Rk6Tfw3slWrqz/FrQE6xVtiWlxGkFmws7ILXijJEG5ffQlLCk
+         pqoijHIAlWI9d7A67fWsDnA8UJvmrvoMaapcb2LWdt2QQmYjNV1I9KtR0FTWmQfYYV55
+         W7/7fX72kPuo+vF02OBvmpoHWd/wTLAPvz7itPIRq6XQJTr6KAOKlFluu5Fhbk9ANiB/
+         m2mw==
+X-Gm-Message-State: APjAAAWmWGYmcZbv3UhUym7KkMp5okdkiZ+ZAE07kYS+N0maKu1GxnXA
+        ihu92lWuwUORBlpSzBlrRFTBA2Eryvx5kJKo4mEVd30o5a2Qk7QgicD9wMCfiiEvDwqKsLdmnYM
+        dfllJIdsM5j1YuLisVw24esWe
+X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr7132901wme.151.1576161276516;
+        Thu, 12 Dec 2019 06:34:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwkMCbj3Al3W02aKWsSaIJItyyUbz24oMkL+40mFm8mAw2FfNeYRrpFtQxw5vg9q9Dyq+2PYg==
+X-Received: by 2002:a1c:a9c6:: with SMTP id s189mr7132870wme.151.1576161276268;
+        Thu, 12 Dec 2019 06:34:36 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id y20sm6009145wmi.25.2019.12.12.06.34.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 06:34:35 -0800 (PST)
+Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
+ to pwm_pmic_backlight
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20191119151818.67531-1-hdegoede@redhat.com>
+ <20191119151818.67531-3-hdegoede@redhat.com> <20191210085111.GQ3468@dell>
+ <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
+ <20191212084546.GA3468@dell>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
+Date:   Thu, 12 Dec 2019 15:34:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-6-geert+renesas@glider.be>
-In-Reply-To: <20191127084253.16356-6-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 15:34:09 +0100
-Message-ID: <CACRpkdaW7nmpE99FAvBDBTmkTZOTQ5WdM=JbMzBTLk7cbLRXPw@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] gpio: Add GPIO Aggregator/Repeater driver
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191212084546.GA3468@dell>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert!
+Hi,
 
-Thanks for this interesting patch!
+On 12-12-2019 09:45, Lee Jones wrote:
+> On Wed, 11 Dec 2019, Hans de Goede wrote:
+> 
+>> Hi Lee,
+>>
+>> On 10-12-2019 09:51, Lee Jones wrote:
+>>> On Tue, 19 Nov 2019, Hans de Goede wrote:
+>>>
+>>>> At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
+>>>> different PWM controllers for controlling the LCD's backlight brightness.
+>>>>
+>>>> Either the one integrated into the PMIC or the one integrated into the
+>>>> SoC (the 1st LPSS PWM controller).
+>>>>
+>>>> So far in the LPSS code on BYT we have skipped registering the LPSS PWM
+>>>> controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
+>>>> present, assuming that in this case the PMIC PWM controller will be used.
+>>>>
+>>>> On CHT we have been relying on only 1 of the 2 PWM controllers being
+>>>> enabled in the DSDT at the same time; and always registered the lookup.
+>>>>
+>>>> So far this has been working, but the correct way to determine which PWM
+>>>> controller needs to be used is by checking a bit in the VBT table and
+>>>> recently I've learned about 2 different BYT devices:
+>>>> Point of View MOBII TAB-P800W
+>>>> Acer Switch 10 SW5-012
+>>>>
+>>>> Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
+>>>> PWM controller (and the VBT correctly indicates this), so here our old
+>>>> heuristics fail.
+>>>>
+>>>> Since only the i915 driver has access to the VBT, this commit renames
+>>>> the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
+>>>> controller to "pwm_pmic_backlight" so that the i915 driver can do a
+>>>> pwm_get() for the right controller depending on the VBT bit, instead of
+>>>> the i915 driver relying on a "pwm_backlight" lookup getting registered
+>>>> which magically points to the right controller.
+>>>>
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>> ---
+>>>>    drivers/mfd/intel_soc_pmic_core.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> For my own reference:
+>>>     Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+>>
+>> As mentioned in the cover-letter, to avoid breaking bi-sectability
+>> as well as to avoid breaking the intel-gfx CI we need to merge this series
+>> in one go through one tree. Specifically through the drm-intel tree.
+>> Is that ok with you ?
+>>
+>> If this is ok with you, then you do not have to do anything, I will just push
+>> the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
+>> does not see much changes so I do not expect this to lead to any conflicts.
+> 
+> It's fine, so long as a minimal immutable pull-request is provided.
+> Whether it's pulled or not will depend on a number of factors, but it
+> needs to be an option.
 
-On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+The way the drm subsys works that is not really a readily available
+option. The struct definition which this patch changes a single line in
+has not been touched since 2015-06-26 so I really doubt we will get a
+conflict from this.
 
-> GPIO controllers are exported to userspace using /dev/gpiochip*
-> character devices.  Access control to these devices is provided by
-> standard UNIX file system permissions, on an all-or-nothing basis:
-> either a GPIO controller is accessible for a user, or it is not.
-> Currently no mechanism exists to control access to individual GPIOs.
->
-> Hence add a GPIO driver to aggregate existing GPIOs, and expose them as
-> a new gpiochip.
->
-> This supports the following use cases:
->   1. Aggregating GPIOs using Sysfs
->      This is useful for implementing access control, and assigning a set
->      of GPIOs to a specific user or virtual machine.
->
->   2. GPIO Repeater in Device Tree
->      This supports modelling e.g. GPIO inverters in DT.
->
->   3. Generic GPIO Driver
->      This provides userspace access to a simple GPIO-operated device
->      described in DT, cfr. e.g. spidev for SPI-operated devices.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Regards,
 
-Overall I like how this is developing!
+Hans
 
-> +config GPIO_AGGREGATOR
-> +       tristate "GPIO Aggregator/Repeater"
-> +       help
-> +         Say yes here to enable the GPIO Aggregator and repeater, which
-> +         provides a way to aggregate and/or repeat existing GPIOs into a new
-> +         GPIO device.
-
-Should it say a "new virtual GPIO chip"?
-
-> +         This can serve the following purposes:
-> +           1. Assign a collection of GPIOs to a user, or export them to a
-> +              virtual machine,
-
-This is ambiguous. What is a "user"? A process calling from
-userspace? A device tree node?
-
-I would write "assign a collection of GPIO lines from any lines on
-existing physical GPIO chips to form a new virtual GPIO chip"
-
-That should be to the point, right?
-
-> +           2. Support GPIOs that are connected to a physical inverter,
-
-s/to/through/g
-
-> +           3. Provide a generic driver for a GPIO-operated device, to be
-> +               controlled from userspace using the GPIO chardev interface.
-
-I don't understand this, it needs to be elaborated. What is meant
-by a "GPIO-operated device" in this context? Example?
-
-I consistently use the term "GPIO line" as opposed to "GPIO"
-or "GPIO number" etc that are abigous, so please rephrase using
-"GPIO lines" rather than just "GPIOs" above.
-
-> +#include "gpiolib.h"
-
-Whenever this is included in a driver I want it to come with a comment
-explicitly stating exactly why and which internal symbols the driver
-needs to access. Ideally all drivers should just need <linux/gpio/driver.h>...
-
-> +static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *label,
-> +                        int hwnum, unsigned int *n)
-
-u16 hwnum for the hardware number but if it is always -1/U16_MAX
-then why pass the parameter at all.
-
-Is "label" the right name of this parameter if that is going to actually
-be line_name then use that.
-
-> +{
-> +       struct gpiod_lookup_table *lookups;
-> +
-> +       lookups = krealloc(aggr->lookups, struct_size(lookups, table, *n + 2),
-> +                          GFP_KERNEL);
-> +       if (!lookups)
-> +               return -ENOMEM;
-> +
-> +       lookups->table[*n].chip_label = label;
-
-This is pending the discussion on whether to just use "key" for this
-name.
-
-> +       lookups->table[*n].chip_hwnum = hwnum;
-
-If this is always going to be U16_MAX (-1 in the current code)
-then it can just be assigned as that here instead of passed as
-parameter.
-
-> +static int aggr_parse(struct gpio_aggregator *aggr)
-> +{
-> +       char *name, *offsets, *first, *last, *next;
-> +       unsigned int a, b, i, n = 0;
-> +       char *args = aggr->args;
-> +       int error;
-> +
-> +       for (name = get_arg(&args), offsets = get_arg(&args); name;
-> +            offsets = get_arg(&args)) {
-> +               if (IS_ERR(name)) {
-> +                       pr_err("Cannot get GPIO specifier: %ld\n",
-> +                              PTR_ERR(name));
-> +                       return PTR_ERR(name);
-> +               }
-> +
-> +               if (!isrange(offsets)) {
-> +                       /* Named GPIO line */
-> +                       error = aggr_add_gpio(aggr, name, -1, &n);
-
-So the third argument woule be U16_MAX here. Or not pass
-a parameter at all.
-
-But honestly, when I look at this I don't understand why you
-have to avoid so hard to use offsets for the GPIO lines on
-your aggregator?
-
-Just put a u16 ngpios in your
-struct gpio_aggregator and count it up every time you
-add some new offsets here and you have
-offset numbers for all your GPIO lines on the aggregator
-and you can just drop the patch for lookup up lines by line
-names.
-
-Is there something wrong with my reasoning here?
-
-At the pointe later when the lines are counted from the
-allocated lookups using gpiod_count() that will just figure
-out this number anyways, so it is not like we don't know
-it at the end of the day.
-
-So it seems the patch to gpiolib is just to use machine
-descriptor tables as a substitute for a simple counter
-variable in this local struct to me.
-
-> +static void __exit gpio_aggregator_remove_all(void)
-> +{
-> +       mutex_lock(&gpio_aggregator_lock);
-> +       idr_for_each(&gpio_aggregator_idr, gpio_aggregator_idr_remove, NULL);
-> +       idr_destroy(&gpio_aggregator_idr);
-> +       mutex_unlock(&gpio_aggregator_lock);
-> +}
-> +
-> +
-> +       /*
-> +        *  Common GPIO Forwarder
-> +        */
-> +
-
-Nitpick: lots and weird spacing here.
-
-> +struct gpiochip_fwd {
-> +       struct gpio_chip chip;
-> +       struct gpio_desc **descs;
-> +       union {
-> +               struct mutex mlock;     /* protects tmp[] if can_sleep */
-> +               spinlock_t slock;       /* protects tmp[] if !can_sleep */
-> +       };
-
-That was a very elegant use of union!
-
-> +static int gpio_fwd_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +                                unsigned long *bits)
-> +static void gpio_fwd_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +                                 unsigned long *bits)
-
-I guess these can both be optimized to use get/set_multiple on
-the target chip if the offsets are consecutive?
-
-However that is going to be tricky so I'm not saying you should
-implement that. So for now, let's say just add a TODO: comment
-about it.
-
-> +static int gpio_fwd_init_valid_mask(struct gpio_chip *chip,
-> +                                   unsigned long *valid_mask,
-> +                                   unsigned int ngpios)
-> +{
-> +       struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> +       unsigned int i;
-> +
-> +       for (i = 0; i < ngpios; i++) {
-> +               if (!gpiochip_line_is_valid(fwd->descs[i]->gdev->chip,
-> +                                           gpio_chip_hwgpio(fwd->descs[i])))
-> +                       clear_bit(i, valid_mask);
-> +       }
-
-This is what uses "gpiolib.h" is it not?
-
-devm_gpiod_get_index() will not succeed if the line
-is not valid so I think this can be just dropped, since
-what you do before this is exactly devm_gpiod_get_index()
-on each line, then you call gpiochip_fwd_create()
-with the result.
-
-So I think you can just drop this entire function.
-This will not happen.
-
-If it does happen, add a comment above this loop
-explaining which circumstances would make lines on
-the forwarder invalid.
-
-> +       for (i = 0; i < ngpios; i++) {
-> +               dev_dbg(dev, "gpio %u => gpio-%d (%s)\n", i,
-> +                       desc_to_gpio(descs[i]), descs[i]->label ? : "?");
-> +
-> +               if (gpiod_cansleep(descs[i]))
-> +                       chip->can_sleep = true;
-> +               if (descs[i]->gdev->chip->set_config)
-> +                       chip->set_config = gpio_fwd_set_config;
-> +               if (descs[i]->gdev->chip->init_valid_mask)
-> +                       chip->init_valid_mask = gpio_fwd_init_valid_mask;
-> +       }
-
-I do not think you should need to inspect the init_valid_mask()
-as explained above.
-
-Add a comment above the loop that if any of the GPIO lines
-are sleeping then the entire forwarder will be sleeping
-and if any of the chips support .set_config() we will support
-setting configs.
-
-However the way that the .gpio_fwd_set_config() is coded
-it looks like you can just unconditionally assign it and
-only check the cansleep condition in this loop.
-
-> +}
-> +
-> +
-> +       /*
-> +        *  Common GPIO Aggregator/Repeater platform device
-> +        */
-> +
-
-Nitpick: weird and excess spacing again.
-
-> +       for (i = 0; i < n; i++) {
-> +               descs[i] = devm_gpiod_get_index(dev, NULL, i, GPIOD_ASIS);
-> +               if (IS_ERR(descs[i]))
-> +                       return PTR_ERR(descs[i]);
-> +       }
-
-If this succeeds none of the obtained gpio_desc:s can be
-invalid.
-
-Yours,
-Linus Walleij
