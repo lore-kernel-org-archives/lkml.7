@@ -2,108 +2,201 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C4CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6678C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:21:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC042253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E1F21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:21:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="PjvCNeQb"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="s2Rjlz97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbfLLUTS (ORCPT
+        id S1730821AbfLLUVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:19:18 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:34134 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfLLUTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:19:18 -0500
-Received: from zn.tnic (p200300EC2F0A5A00BC9FD9E905C0F14B.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:bc9f:d9e9:5c0:f14b])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F2D5A1EC0B73;
-        Thu, 12 Dec 2019 21:19:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576181957;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=oatlnVsZthR9KXlPmJ8zR/1CkHrsrTm6Ha2l+vUm12M=;
-        b=PjvCNeQbKtPMoji85bIhmfr/3z5GpoGkkMD5MdHRGrOT2F6Xgz3nCuyrn3J0YDB0M2nx97
-        I1rGJfIIAA8Lw1yJuWwIjX5i0AArBElPUZ65L7o7m41mdbYVw+7+mGyI0tCAOw6TZxW7CM
-        i150REomX6xXWp8gLI+Gb9j4T8b9/GI=
-Date:   Thu, 12 Dec 2019 21:19:16 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Baoquan He <bhe@redhat.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] x86/mm/KASLR: Adjust the padding size for the
- direct mapping.
-Message-ID: <20191212201916.GL4991@zn.tnic>
-References: <20191115144917.28469-1-msys.mizuma@gmail.com>
- <20191115144917.28469-5-msys.mizuma@gmail.com>
+        Thu, 12 Dec 2019 15:21:21 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33160 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbfLLUVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 15:21:20 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c13so36127pls.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:21:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=GkrshFgovIOz5mKHPOOI1fytetL3PFoxDCjB2phi65c=;
+        b=s2Rjlz97JKzP6Or018d6McywMH1i3xB4nXOgwqzFOyXCyJ6BdM2/KCf73JfYdbC3xw
+         aVMYWcxHfXaKCmhW1EOmmj8j7SisETFrRn5vzxzSvUzixyHjz5ZkYafpjbikAeqaT8Kf
+         LkFL0vLczUaP7tchLl9uongSkC+Egma4nPGe+Ccni1zWILPQnxe4uj5nXXXlAkuMOyxJ
+         2IS3MfZ5QibpKPxjUXEMU9lATdWoGSGnA/z6UoaI5ZbtFB0JAZR3st0NkTmOY1usGDcI
+         O0kMXDiKs73AYa31Q4SiHUKdEYnEcdoUN1QzSTnXgIkoOviwsog+Jk6QjnB0pwzoXtvf
+         A45A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=GkrshFgovIOz5mKHPOOI1fytetL3PFoxDCjB2phi65c=;
+        b=LGMkkvclUHtM21Ko6F08jwE+b+brZk0WvjljuH4Vhc589xq4f1+/Ui/YA5Pmn+uoJZ
+         +ZATZZerYw5S2JZJ+OMGOMVzCmzWCGi2cF4vCd0P7GwEZZDvY/mepifiVS4hNu0olE6m
+         jildq6Kl7hyqP7WC93mQ8jqK4DuXNVTI0+GRVSinx8Hbt4EbplbeKCOp4K3mSu0D8Gi2
+         Z2om2hrIUsC0NGubInHiZpMLZRQh8aEZSoezcFjvoULQv9Q2byVQz/6HebGf0omuWjTP
+         Xtp/gUBXeg7+dYN0SGGi2014Uij4ffRvnNsfKrSd7aggQRhe3bw6bxP3zZ8wRgbNRGHS
+         Bt0w==
+X-Gm-Message-State: APjAAAW6WSWlkSTEMjgtXE5vXDExVABqz7U7zfQnoEHj0/Fph8n9sGCv
+        /Gpq2T1bDWjMV3WB2TiD9596GQ==
+X-Google-Smtp-Source: APXvYqyOkFfbyp5oeVbKzquUexA3TJ/wfgjPxlHeRKynDRUjQesTEsD9x2xj2HQGVzCzbkiGHoNoOg==
+X-Received: by 2002:a17:90a:3663:: with SMTP id s90mr12110462pjb.1.1576182079941;
+        Thu, 12 Dec 2019 12:21:19 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id y17sm8157194pfn.86.2019.12.12.12.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 12:21:19 -0800 (PST)
+Date:   Thu, 12 Dec 2019 12:21:15 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191212122115.612bb13b@cakuba.netronome.com>
+In-Reply-To: <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
+References: <CAEf4Bzb+3b-ypP8YJVA=ogQgp1KXx2xPConOswA0EiGXsmfJow@mail.gmail.com>
+        <20191211191518.GD3105713@mini-arch>
+        <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
+        <20191211200924.GE3105713@mini-arch>
+        <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
+        <20191212025735.GK3105713@mini-arch>
+        <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
+        <20191212162953.GM3105713@mini-arch>
+        <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
+        <20191212104334.222552a1@cakuba.netronome.com>
+        <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191115144917.28469-5-msys.mizuma@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 09:49:17AM -0500, Masayoshi Mizuma wrote:
-> +/*
-> + * Even though a huge virtual address space is reserved for the direct
-> + * mapping of physical memory, e.g in 4-level paging mode, it's 64TB,
-> + * rare system can own enough physical memory to use it up, most are
-> + * even less than 1TB.
+On Thu, 12 Dec 2019 11:54:16 -0800, Alexei Starovoitov wrote:
+> On Thu, Dec 12, 2019 at 10:43:34AM -0800, Jakub Kicinski wrote:
+> > On Thu, 12 Dec 2019 08:53:22 -0800, Andrii Nakryiko wrote:  
+> > > > > > Btw, how hard it would be to do this generation with a new python
+> > > > > > script instead of bpftool? Something along the lines of
+> > > > > > scripts/bpf_helpers_doc.py that parses BTF and spits out this C header
+> > > > > > (shouldn't be that hard to write custom BTF parser in python, right)?
+> > > > > >    
+> > > > >
+> > > > > Not impossible, but harder than I'd care to deal with. I certainly
+> > > > > don't want to re-implement a good chunk of ELF and BTF parsing (maps,
+> > > > > progs, in addition to datasec stuff). But "it's hard to use bpftool in
+> > > > > our build system" doesn't seem like good enough reason to do all that.    
+> > > > You can replace "our build system" with some other project you care about,
+> > > > like systemd. They'd have the same problem with vendoring in recent enough
+> > > > bpftool or waiting for every distro to do it. And all this work is
+> > > > because you think that doing:
+> > > >
+> > > >         my_obj->rodata->my_var = 123;
+> > > >
+> > > > Is easier / more type safe than doing:
+> > > >         int *my_var = bpf_object__rodata_lookup(obj, "my_var");
+> > > >         *my_var = 123;    
+> > > 
+> > > Your arguments are confusing me. Did I say that we shouldn't add this
+> > > type of "dynamic" interface to variables? Or did I say that every
+> > > single BPF application has to adopt skeleton and bpftool? I made no
+> > > such claims and it seems like discussion is just based around where I
+> > > have to apply my time and efforts... You think it's not useful - don't
+> > > integrate bpftool into your build system, simple as that. Skeleton is
+> > > used for selftests, but it's up to maintainers to decide whether to
+> > > keep this, similar to all the BTF decisions.  
+> > 
+> > Since we have two people suggesting this functionality to be a separate
+> > tool could you please reconsider my arguments from two days ago?
+> > 
+> >   There absolutely nothing this tool needs from [bpftool], no
+> >   JSON needed, no bpffs etc.   
+> 
+> To generate vmlinux.h bpftool doesn't need json and doesn't need bpffs.
 
-This sentence is unparseable.
+At least for header generation it pertains to the running system.
+And bpftool was (and still is AFAICT) about interacting with the BPF
+state on the running system.
 
-> So with KASLR enabled, we adapt the size of
+> > It can be a separate tool like
+> >   libbpf-skel-gen or libbpf-c-skel or something, distributed with libbpf.
+> >   That way you can actually soften the backward compat. In case people
+> >   become dependent on it they can carry that little tool on their own.  
+> 
+> Jakub,
+> 
+> Could you please consider Andrii's reply to your comment from two days ago:
+> https://lore.kernel.org/bpf/CAEf4BzbeZbmCTOOo2uQXjm0GL0WDu7aLN6fdUk18Nv2g0kfwVg@mail.gmail.com/
+> "we are trying to make users lives easier by having major distributions
+> distribute bpftool and libbpf properly. Adding extra binaries to
+> distribute around doesn't seem to be easing any of users pains."
 
-Who's "we"?
+Last time we argued I heard how GH makes libbpf packaging easier.
+Only to have that dis-proven once the people in Europe who do distro
+packaging woke up:
 
-> + * direct mapping area to the size of actual physical memory plus the
-> + * configured padding CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING.
-> + * The left part will be taken out to join memory randomization.
-> + */
-> +static inline unsigned long calc_direct_mapping_size(void)
+https://lkml.org/lkml/2019/12/5/101
+https://lkml.org/lkml/2019/12/5/312
 
-What direct mapping?!
+I feel I'm justified not to take your opinion on this as fact.
 
-The code is computing the physical memory regions base address and
-sizes.
+> My opinion is the following.
+> bpftool is necessary to write bpf programs already. It's necessary to produce
+> vmlinux.h for bpf programs to include it. It's part of build process. I can
+> relate to Stan's complains that he needs to update clang and pahole. He missed
+> the fact that he needs to update bpftool too if he wants to use all features of
+> CO-RE. Same thing for skeleton generation. If people need to run the latest
+> selftest/bpf on the latest kernel they need to upgrade to the latest clang,
+> pahole, libbpf, bpftool. Nothing new here.
 
-> +{
-> +	unsigned long size_tb, memory_tb;
-> +
-> +	memory_tb = DIV_ROUND_UP(max_pfn << PAGE_SHIFT, 1UL << TB_SHIFT) +
-> +		CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING;
-> +
-> +#ifdef CONFIG_MEMORY_HOTPLUG
-> +	if (boot_params.max_addr) {
-> +		unsigned long maximum_tb;
-> +
-> +		maximum_tb = DIV_ROUND_UP(boot_params.max_addr,
-> +				1UL << TB_SHIFT);
+They have to update libbpf, so why can't the code gen tool be part of
+libbpf? We don't need to build all BPF user space into one binary.
 
-All that jumping through hoops and adding a member to boot_params which
-is useless on !hot-add systems - basically the majority out there - just
-so that you can use that max address here?!
+> Backwards compat is the same concern for skeleton generation and for vmlinux.h
+> generation. Obviously no one wants to introduce something that will keep
+> changing. Is vmlinux.h generation stable? I like to believe so. Same with
+> skeleton. I wouldn't want to see it changing, but in both cases such chance
+> exists. 
 
-Did you not find acpi_table_parse_srat()?
+vmlinux.h is pretty stable, there isn't much wiggle room there.
+It's more of a conversion tool, if you will.
 
--- 
-Regards/Gruss,
-    Boris.
+Skeleton OTOH is supposed to make people's lives easier, so it's a
+completely different beast. It should be malleable so that users can
+improve and hack on it. Baking it into as system tool is counter
+productive. Users should be able to grab the skel tool single-file
+source and adjust for their project's needs. Distributing your own copy
+of bpftool because you want to adjust skel is a heavy lift.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+And maybe one day we do have Python/Go/whatever bindings, and we can
+convert the skel tool to a higher level language with modern templating.
+
+> We cannot and should not adopt kernel-like ABI guarantees to user space
+> code. It will paralyze the development.
+
+Discussion for another time :)
+
+> Now consider if vmlinux.h and skeleton generation is split out of bpftool into
+> new tool. Effectively it would mean a fork of bpftool. Two binaries doing bpf
+> elf file processing without clear distinction between them is going to be very
+> confusing.
+
+To be clear I'm suggesting skel gen is a separate tool, vmlinux and
+Quentin's header gen work on the running system, they are not pure
+build env tools.
