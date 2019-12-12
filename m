@@ -2,146 +2,148 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F203FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7E7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56AE21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFB621655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NW2MeACW"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="orVCi63V";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="EkhBYcXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfLLJbV (ORCPT
+        id S1728398AbfLLJbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:31:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728230AbfLLJbU (ORCPT
+        Thu, 12 Dec 2019 04:31:52 -0500
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:41288
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726382AbfLLJbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:31:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KvrwbQennYY8QnMZ8aYWegrb07xu+PIkjz3Z8wg/eK4=; b=NW2MeACWD7pQvnuQ878OqOex5
-        8Bl0zzFsRZzFAJXTKTkJ923v7X2eJEFzq8qA/FcdHnVm1fFjP625ix7THJU7C+ucJgFfYOHFRvD1L
-        Q/gAkZILIxrfAhp09zHvb40mkvjb3Cir5fN8qTVqXOfg1pQIGu2arcO4eJ7CgcrdRx+cVshg+IPgM
-        kgICX46GZXqN8SlxiHJSXc4k7ME0bto3wI6/OgBfFjjPtC/aFO3QWi0foIji9c7KsOhdTFH9UfoyF
-        5PhvHdRtW2unb456JPxJy0rrG2pAdMaPaxCMt3P7xXSCju64OuadJiOlqXHTXxohD5F88MpxkJ4/C
-        73mG9EV7w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifKoF-0005N7-JP; Thu, 12 Dec 2019 09:30:59 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A600305FEE;
-        Thu, 12 Dec 2019 10:29:35 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0517F2B18D290; Thu, 12 Dec 2019 10:30:55 +0100 (CET)
-Date:   Thu, 12 Dec 2019 10:30:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>
-Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
+        Thu, 12 Dec 2019 04:31:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576143110;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=ouHOZDTa38m5jgpyZx3jdMkeE7fUnBl8O7DVe4NkPvE=;
+        b=orVCi63Vpb1W5B9pveeaKRneucbmsxYWUWkWss7t4zCuPzY7kOzZYGZWNR8xDtpN
+        XW1HyMoDFVljKG+lwfoO04QxbOSn5tPYjGalAgoKXmJz1tapQ64Ns6Heobjzc86pIys
+        sKAKJPoybvJg96BQsLP8UMmUrTb+fFDHWo5OQ+q0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576143110;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=ouHOZDTa38m5jgpyZx3jdMkeE7fUnBl8O7DVe4NkPvE=;
+        b=EkhBYcXbw3n7Oo1ti/zaKHchNxNq0iWu14baaS1ReddjBmH5IXnCScucy43YVjjZ
+        CNXzKvMQzSr38r4OO7wU5N+PohWfuLInB19LFpve+gtcdGOnFdM44+pqUK1NvWcH56c
+        YR6xjL8SZ7fGnIqQDfixbvh8wVW5QwVX1M8EqN4I=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B7A08C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
+        dipankar@in.ibm.com, akpm@linux-foundation.org,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, joel@joelfernandes.org,
+        Bart Van Assche <bart.vanassche@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Shane M Seymour <shane.seymour@hpe.com>,
+        Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Roy Luo <royluo@google.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Helge Deller <deller@gmx.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Richard Henderson <rth@twiddle.net>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Subject: Re: [PATCH 08/17] asm-generic/tlb: Provide MMU_GATHER_TABLE_FREE
-Message-ID: <20191212093055.GT2827@hirez.programming.kicks-ass.net>
-References: <20191211120713.360281197@infradead.org>
- <20191211122956.112607298@infradead.org>
+        linux-wireless@vger.kernel.org
+Subject: Re: [PATCH tip/core/rcu 01/12] rcu: Remove rcu_swap_protected()
+References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
+        <20191210040741.2943-1-paulmck@kernel.org>
+        <yq1a77zmt4a.fsf@oracle.com>
+        <20191211035122.GC2889@paulmck-ThinkPad-P72>
+        <20191211183738.GA5190@paulmck-ThinkPad-P72>
+        <1911b7fa-c8d4-e34b-020d-3346a56f29d6@gmail.com>
+        <20191211231239.GK2889@paulmck-ThinkPad-P72>
+Date:   Thu, 12 Dec 2019 09:31:50 +0000
+In-Reply-To: <20191211231239.GK2889@paulmck-ThinkPad-P72> (Paul E. McKenney's
+        message of "Wed, 11 Dec 2019 15:12:39 -0800")
+Message-ID: <0101016ef9734051-f84be83c-272b-4fc7-9cbd-f2c18eebd00f-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211122956.112607298@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-SES-Outgoing: 2019.12.12-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:07:21PM +0100, Peter Zijlstra wrote:
-> @@ -56,6 +56,15 @@
->   *    Defaults to flushing at tlb_end_vma() to reset the range; helps when
->   *    there's large holes between the VMAs.
->   *
-> + *  - tlb_remove_table()
-> + *
-> + *    tlb_remove_table() is the basic primitive to free page-table directories
-> + *    (__p*_free_tlb()).  In it's most primitive form it is an alias for
-> + *    tlb_remove_page() below, for when page directories are pages and have no
-> + *    additional constraints.
-> + *
-> + *    See also MMU_GATHER_TABLE_FREE and MMU_GATHER_RCU_TABLE_FREE.
-> + *
->   *  - tlb_remove_page() / __tlb_remove_page()
->   *  - tlb_remove_page_size() / __tlb_remove_page_size()
->   *
++ linux-wireless
 
-> @@ -202,7 +193,16 @@ struct mmu_table_batch {
->  
->  extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
->  
-> -#endif
-> +#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
-> +
-> +/*
-> + * Without either HAVE_TABLE_FREE || CONFIG_HAVE_RCU_TABLE_FREE the
-> + * architecture is assumed to have page based page directories and
-> + * we can use the normal page batching to free them.
-> + */
-> +#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
-> +
-> +#endif /* CONFIG_MMU_GATHER_TABLE_FREE */
+"Paul E. McKenney" <paulmck@kernel.org> writes:
 
-The build robot kindly notified me that this breaks ARM because it does
-the exact same #define for the same reason.
+> On Wed, Dec 11, 2019 at 08:09:11PM +0100, Matthias Brugger wrote:
+>> On 11/12/2019 19:37, Paul E. McKenney wrote:
+>>
+>> > --- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
+>> > +++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
+>> > @@ -281,8 +281,8 @@ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno)
+>> >  {
+>> >  	struct mt76_rx_tid *tid = NULL;
+>> >  
+>> > -	rcu_swap_protected(wcid->aggr[tidno], tid,
+>> > -			   lockdep_is_held(&dev->mutex));
+>> > +	tid = rcu_swap_protected(wcid->aggr[tidno], tid,
+>> > +				 lockdep_is_held(&dev->mutex));
+>> 
+>> I suppose you meant: rcu_replace_pointer() here.
+>
+> Indeed I did, and thank you for catching this!  Bad patch day here.  :-/
+>
+> Update below...
+>
+> 							Thanx, Paul
+>
+> ------------------------------------------------------------------------
+>
+> commit ad5572b091429a45e863acaa6a36cf396d44f58d
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Wed Dec 11 10:30:21 2019 -0800
+>
+>     wireless/mediatek: Replace rcu_swap_protected() with rcu_replace_pointer()
+>     
+>     This commit replaces the use of rcu_swap_protected() with the more
+>     intuitively appealing rcu_replace_pointer() as a step towards removing
+>     rcu_swap_protected().
+>     
+>     Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
+>     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+>     Reported-by: "Martin K. Petersen" <martin.petersen@oracle.com>
+>     [ paulmck: Apply Matthias Brugger feedback. ]
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>     Reviewed-by: "Martin K. Petersen" <martin.petersen@oracle.com>
+>     Cc: Felix Fietkau <nbd@nbd.name>
+>     Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+>     Cc: Ryder Lee <ryder.lee@mediatek.com>
+>     Cc: Roy Luo <royluo@google.com>
+>     Cc: Kalle Valo <kvalo@codeaurora.org>
+>     Cc: "David S. Miller" <davem@davemloft.net>
+>     Cc: Matthias Brugger <matthias.bgg@gmail.com>
+>     Cc: <linux-wireless@vger.kernel.org>
+>     Cc: <netdev@vger.kernel.org>
+>     Cc: <linux-arm-kernel@lists.infradead.org>
+>     Cc: <linux-mediatek@lists.infradead.org>
 
-(and I noticed the comment is stale)
+Via which tree is this supposed to go? If I should take this please
+resend to linux-wireless so that patchwork sees it, but if someone else
+is planning to take this:
 
-I'll post a new version of this patch with the below delta.
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
----
---- a/arch/arm/include/asm/tlb.h
-+++ b/arch/arm/include/asm/tlb.h
-@@ -37,10 +37,6 @@ static inline void __tlb_remove_table(vo
- 
- #include <asm-generic/tlb.h>
- 
--#ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
--#define tlb_remove_table(tlb, entry) tlb_remove_page(tlb, entry)
--#endif
--
- static inline void
- __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte, unsigned long addr)
- {
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -196,9 +196,8 @@ extern void tlb_remove_table(struct mmu_
- #else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
- 
- /*
-- * Without either HAVE_TABLE_FREE || CONFIG_HAVE_RCU_TABLE_FREE the
-- * architecture is assumed to have page based page directories and
-- * we can use the normal page batching to free them.
-+ * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have page based
-+ * page directories and we can use the normal page batching to free them.
-  */
- #define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
- 
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
