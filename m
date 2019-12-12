@@ -2,103 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD056C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973A9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2402173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A5121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:18:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bKH9jNlx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SqE7s+D+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfLLXQz (ORCPT
+        id S1731356AbfLLXS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:16:55 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43422 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731337AbfLLXQv (ORCPT
+        Thu, 12 Dec 2019 18:18:26 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37682 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730846AbfLLXSZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:16:51 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p27so273925pli.10;
-        Thu, 12 Dec 2019 15:16:51 -0800 (PST)
+        Thu, 12 Dec 2019 18:18:25 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so435664pga.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:18:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6RmPSySB6yaq33KtHs8XUNhrbCfHLQh1/I6bnoO7bOU=;
-        b=bKH9jNlxo+A2rwduZywwg1nKEr08Ppi/z84u9kTTiy/LU/3n7XeUEmRWWF3XFOuExZ
-         D1Y99V2zbwDgmJN06eBZcmpdm+ytzlZlbhWa2Z77UW8yChFuuc3dhaS0oK8KNUrIrXAO
-         S/O4LVHu/glTYi3b+HhiU089OEeV7M+WZU2N2Xo/9x/llfsErnkx49I5oCwuS71MWLL2
-         WGP5adS0EUc5+N5RcpLO9tr7vnhs5DKa5EG1fM34Vdc80t8Gu+vtmWn0/C+8S8U1OjSv
-         FN/J8dGBvcE+VhSYnQholdvV6D/MkzdWflJ/wjbgGE5sV9CEN/v5mqS/x3SIWeSb+I63
-         GP9g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eSKr2UvQeHnJ1J34wBZpdetenzi2m5XSJBxN7DNlQ2U=;
+        b=SqE7s+D+7uwPKPM01MKY8oSngyBm+MyDtBx3EMaURnZlcRc9cZLVwyPcM9E7RaS0If
+         gBJ0ZA82j4XiatzJos4nkUSt7Py3z+m4HhThL/xpPotRmKvTa5E4jQGNKF4jTf/al9ZZ
+         YF+aV2W6PXqnl0wi2wEPyXF18+BJt6WuD0yikFEC1bzwk1R3OI8WVWPdgJbg7QN3O/ZW
+         BZyYYzpeGJdQEWy35Qry6OSJcq6txJITRM7VUinCyu+VF7csX6LNhWifs2Pia/knUAlY
+         /K74fOCw67GjEOSU7RqgY5sM9zri12PDWF1IvaL6O01w6If4EVfREVTMT/PNrEtI++Es
+         VUPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6RmPSySB6yaq33KtHs8XUNhrbCfHLQh1/I6bnoO7bOU=;
-        b=f/p7RE0bdWuCkJ2Ty8iFQkmCEIVEb7NXD61L3ht8yZn0gZl2jo0frJj7HRmLk6J4p2
-         PDwd/OQWSaViD7G72qmCzRhlr2v0O5mLjObwoNby7UpbKS49j9+B5VimJrDWFKo0K4KY
-         NIsGbPo8tjVHV05OzIJohLLuNdh0mcacxyUBqc5FzHSrWRlp5uWSo/cn2n97eup3OlBJ
-         NFNNmAnoAmB3giqbZh7lMaoJ7vnEwdCJ3OTi3TjxTrD3CDcOQGqtnMe1LVh0qPIPeSCJ
-         niQ49HCxHubN1B2o2YR8wDYtkQHNBcm7An6FfdaK4JpZSjigji+pQxhyUsTAv27skx1Y
-         +COw==
-X-Gm-Message-State: APjAAAWjDtevlLT8mny6QRZQkHTJt1iplHN2vgRjTR+b4UwY0jtkr/5w
-        fFz1KOlz1LPr4Mu+8UgMS4U=
-X-Google-Smtp-Source: APXvYqzMJkjYW1LUjKBbYMB1MnB4ShrNNsXMvWSY/vdGaL1YzXcdKJXiZJDWzU6pYvq9i5fxGyp73g==
-X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr13304783pjv.15.1576192611097;
-        Thu, 12 Dec 2019 15:16:51 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:200::1072])
-        by smtp.gmail.com with ESMTPSA id ev11sm9423307pjb.1.2019.12.12.15.16.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eSKr2UvQeHnJ1J34wBZpdetenzi2m5XSJBxN7DNlQ2U=;
+        b=LoVOQFD2AME1r6zzwbBGc9lwxbOEws46nB5+QDYt81ZX5izeO7IaUgPU7ZKxLYwl16
+         csUfIPhVISGN/KlRrjwV9TRdkVyuKFr5mcyszykdyTOS3shFZ2E3eq1fM/4SvqSbym4S
+         cFB/Is6BiMLT45Wzf9XeDK9f1Ug/E04XZ/eswsGBLouF/mMCt0N9TZj22ZKlNXECigJH
+         jhLcUPa52vLmVYlYGzKy/mNg4eY52BUvY4odiHLnvbjKYPE7YNedEP8IOuSdJkWo0C+l
+         AakTKpdo7xGWOZhSm5PZ5teEljdvtMfbEz9Mr4R8givyNx5qEMWDJCKzlRGOQAVuoW2P
+         XcNw==
+X-Gm-Message-State: APjAAAX9kW5nx4K0L7dBKu5NvMLWh6ImyvSg05O81dMNtVWHcxi2sB87
+        Uy3cBt7YM9LJrmYopmxpMNy5XQ==
+X-Google-Smtp-Source: APXvYqym66f1Av27Zu/JBw6fk6bxrLmnIsu5jCaB5d3pHu4LOGzJu78o+ZCtv/f7KMpycLd9pd+EYQ==
+X-Received: by 2002:aa7:9f94:: with SMTP id z20mr13164035pfr.111.1576192705032;
+        Thu, 12 Dec 2019 15:18:25 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p68sm8616675pfp.149.2019.12.12.15.18.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 15:16:50 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: aspeed: delete no-hw-checksum from yamp dts
-Date:   Thu, 12 Dec 2019 15:16:22 -0800
-Message-Id: <20191212231622.302-3-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191212231622.302-1-rentao.bupt@gmail.com>
-References: <20191212231622.302-1-rentao.bupt@gmail.com>
+        Thu, 12 Dec 2019 15:18:24 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:18:21 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 5/7] arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db
+ reserved-memory node
+Message-ID: <20191212231821.GP3143381@builder>
+References: <20191212193544.80640-1-dianders@chromium.org>
+ <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212113540.5.I4e41d4d872368e2e056db2ec8442ec18d3f7ef08@changeid>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On Thu 12 Dec 11:35 PST 2019, Douglas Anderson wrote:
 
-Delete "no-hw-checksum" property from yamp dts file because ftgmac100's
-checksum issue has been fixed by commit 88824e3bf29a ("net: ethernet:
-ftgmac100: Fix DMA coherency issue with SW checksum").
+> By using "memory" we trigger we trigger the "schemas/memory.yaml"
+> rules when we run "dtbs_check" which then complains that we don't have
+> a "device_type" of "memory".
+> 
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- arch/arm/boot/dts/aspeed-bmc-facebook-yamp.dts | 1 -
- 1 file changed, 1 deletion(-)
+I like "memory" here, so we have a whole bunch of these to fix up in
+various dts files...
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yamp.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yamp.dts
-index 52933598aac6..fe2e11c2da15 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-yamp.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yamp.dts
-@@ -35,7 +35,6 @@
- &mac0 {
- 	status = "okay";
- 	use-ncsi;
--	no-hw-checksum;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_rmii1_default>;
- 	clocks = <&syscon ASPEED_CLK_GATE_MAC1CLK>,
--- 
-2.17.1
+@Rob, should we move away to descriptive node names or to some other
+generic name for entries in reseved-memory?
 
+Regards,
+Bjorn
+
+> Looking at the "reserved-memory.txt" bindings, subnodes shouldn't just
+> be the word "memory".  Presumably using just "cmd-db" should be OK for
+> a node name.
+> 
+> Fixes: e0abc5eb526e ("arm64: dts: qcom: sc7180: Add cmd_db reserved area")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index d114feade8e7..9766867abc88 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -61,7 +61,7 @@ reserved_memory: reserved-memory {
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> -		aop_cmd_db_mem: memory@80820000 {
+> +		aop_cmd_db_mem: cmd-db@80820000 {
+>  			reg = <0x0 0x80820000 0x0 0x20000>;
+>  			compatible = "qcom,cmd-db";
+>  			no-map;
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
