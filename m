@@ -2,113 +2,110 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4914C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF50214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3047214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HshZQGQH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lP5Q5crX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbfLLA3g (ORCPT
+        id S1727298AbfLLAaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:29:36 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36330 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbfLLA3g (ORCPT
+        Wed, 11 Dec 2019 19:30:15 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37183 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfLLAaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:29:36 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n12so281879lfe.3;
-        Wed, 11 Dec 2019 16:29:34 -0800 (PST)
+        Wed, 11 Dec 2019 19:30:15 -0500
+Received: by mail-pl1-f193.google.com with SMTP id c23so261580plz.4
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 16:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pC6XF/C4qA6Z3fF58X0CjVZydy0fb8CelD9qd37i5gc=;
-        b=HshZQGQHDaBtH2auNRZfezkqBM+IIN3iaK35ve5/12tX8zrV3UwAwhNtW2CaOC4GGH
-         VulBEsCEkSHMh7Ln0pKDk9e8aB3S++LApRbmWewG2o0/isabLtPD9i09Pcr+uy6mJ1zh
-         yinfxOFIvvABQXxS3N32b9Hu/AlWcnXm7UipweDlDLPPkxZwaNQYKlS5DRi7NZgtqEvQ
-         5HiVMcTOP1bpSnkaN4n/2pVbUD/+EISG3O6fpniJ9EpXw3bgh0UEfNoVMAZi2BSoC1WR
-         BQ/rX5E358IAzM7hQ94LlfNSTL2fuo10CBtRH5favAiDybjbGb1diIYoP1VvKQCA7r6X
-         oWUA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=98MiLyb51h/Cn9dLTiDsE8vJncDIeF6YECGtn7W0cKg=;
+        b=lP5Q5crX7/86Q1Xp9XhlJT2FRQD7zC9MxT79L9+amXZP+PhH3+YyDU+ctYKmPb17dW
+         Q2cO/iO/ITwDzdv1X2LTcZl2EBQL0lUpWBssaHesdTeOEJ7ZFWYHQqJRR+tUg4n+Calt
+         iNFRm8QOAzdf4KF96xSvwJznLTkB4VYX8ZP3hfFaqjDjBiL6PkseF3kJB/r2Y8gU1TIi
+         UlimAMy4UwP96pqrj1AMt5GHymW2cJwEa9U3nOF/qWGj3RAXjQ2hnCRvMWvmtZEvSp5B
+         FMpsl4O4HQMYL6cr4l/B9Kizp0uceT4htzL1ROd3IO0a5ZjWDA1skCCReslvqApFuwTR
+         6J+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pC6XF/C4qA6Z3fF58X0CjVZydy0fb8CelD9qd37i5gc=;
-        b=CH04j7calde3YBRK69AHXtWFZN4MTur9MU579yU31ZJZbl7fIpG2+0HjyxCyw17/bl
-         C+grvvQJ2PhOnd8pFz/kH067StEzzJG5gV4tHU+Q97zfWLiiHz3cD6BVKyZPDCdzraDw
-         Yf+zey0ba9zVkaYPqKRBgWscPAkBF5YP7wS2TMJVWkGH9iwVHziVieH9I8IpWydLm0VS
-         VvwcIuXndX05xKsRi8Qk9fRmAouJNfqOU0fC8kTwpPeW+2nrhSVjT51CFG880T+yPbno
-         VK14z27puUWGOMZrzAySoAicMNpsnlpK6w5tS1+S2Z5gpmR51VhwfhcF3BMVUeliY+VM
-         RlzQ==
-X-Gm-Message-State: APjAAAU5lF1FD/9/EovHQ3F+oqTt45jUJ5q3freS29CGMfAKB/my6fM6
-        goOnr62iNxAKcIaguRlcujm/diwh
-X-Google-Smtp-Source: APXvYqyD9UYdejrNSyfdLH+9mfQMcI9Ym/rhgknNTIiB4I1iG4nafZurmwrznkO4CEVPBg3bmCBAvw==
-X-Received: by 2002:ac2:599c:: with SMTP id w28mr4173459lfn.78.1576110573638;
-        Wed, 11 Dec 2019 16:29:33 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id d16sm1964036lfa.16.2019.12.11.16.29.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 16:29:32 -0800 (PST)
-Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Scott Liu <scott.liu@emc.com.tw>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3da0327c-d7c4-b0f2-9ab4-b7088891ef7c@gmail.com>
-Date:   Thu, 12 Dec 2019 03:29:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=98MiLyb51h/Cn9dLTiDsE8vJncDIeF6YECGtn7W0cKg=;
+        b=qcdl1+ev45sWQCmR0+xPgdCqicyvojdJS/7pSkSZYsms8jgBjn3NWWZRvp/P2tsxBQ
+         iw5/fcVLVHmZSO8j1tx3F4/Xo4W8oqxHoRmriAx+v/kDXAgmBjHcDUUSaGrZAAvRks6l
+         O8G5bKpjSqSkqp385tiZFC4micuNe54kdvr4Q6GNhNzb1YoRgCqpPpv6ehhuteqlenTl
+         IHtQLdMx+UIyg1yqDE99oJAktuuCTucUwtLoJXruflO7lv9E4bnkqytwFs6VL43U9f7r
+         IjaMjG7DwQ7WYH1eBdFNxONiGF58+Sjntmi+htur6sByDkdPX3MyDRPA+4ItU6yv2vJm
+         sETg==
+X-Gm-Message-State: APjAAAWSfvtIy4GvpNqibtFwwy7YCEIs3HorDVjXRNWnA6FEguDRZXPa
+        d7UYeFuhDl/p8npOeu2damwW9Oz7nShmrvwhbu6TdQ==
+X-Google-Smtp-Source: APXvYqzq6Vm4MF0LJmgPetQ0HfLygKQDroi15h3w98cajYBED64kJb4iyOD59iDuYqSx2M7otcQUFs5SP10L1YECnr4=
+X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr6600338plm.232.1576110614370;
+ Wed, 11 Dec 2019 16:30:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191211192742.95699-1-brendanhiggins@google.com>
+ <20191211192742.95699-8-brendanhiggins@google.com> <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
+In-Reply-To: <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 11 Dec 2019 16:30:03 -0800
+Message-ID: <CAFd5g45MFYMK-eZWPC5fhm2OkynUXKfArUVhbanYVH+qKRUwPg@mail.gmail.com>
+Subject: Re: [PATCH v1 7/7] fsi: aspeed: add unspecified HAS_IOMEM dependency
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Andrew Jeffery <andrew@aj.id.au>, Jeremy Kerr <jk@ozlabs.org>,
+        Alistar Popple <alistair@popple.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>, linux-fsi@lists.ozlabs.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.12.2019 19:03, Michał Mirosław пишет:
-> This series cleans up the driver a bit and implements changes needed to
-> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
-> 
-> ---
-> v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
-> 
-> Dmitry Osipenko (3):
->   input: elants: support 0x66 reply opcode for reporting touches
->   dt-bindings: input: elants-i2c: Document common touchscreen properties
->   dt-bindings: input: elants-i2c: Document eKTF3624
-> 
-> Michał Mirosław (6):
->   input: elants: document some registers and values
->   input: elants: support old touch report format
->   input: elants: remove unused axes
->   input: elants: override touchscreen info with DT properties
->   input: elants: refactor elants_i2c_execute_command()
->   input: elants: read touchscreen size for EKTF3624
-> 
->  .../devicetree/bindings/input/elants_i2c.txt  |   6 +-
->  drivers/input/touchscreen/elants_i2c.c        | 358 ++++++++++++------
->  2 files changed, 239 insertions(+), 125 deletions(-)
-> 
+On Wed, Dec 11, 2019 at 4:12 PM Joel Stanley <joel@jms.id.au> wrote:
+>
+> On Wed, 11 Dec 2019 at 19:28, Brendan Higgins <brendanhiggins@google.com> wrote:
+> >
+> > Currently CONFIG_FSI_MASTER_ASPEED=y implicitly depends on
+> > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
+> > the following build error:
+> >
+> > ld: drivers/fsi/fsi-master-aspeed.o: in function `fsi_master_aspeed_probe':
+> > drivers/fsi/fsi-master-aspeed.c:436: undefined reference to `devm_ioremap_resource'
+> >
+> > Fix the build error by adding the unspecified dependency.
+> >
+> > Reported-by: Brendan Higgins <brendanhiggins@google.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>
+> Nice. I hit this when attempting to force on CONFIG_COMPILE_TEST in
+> order to build some ARM drivers under UM. Do you have plans to fix
+> that too?
 
-Hello Michał,
+The only broken configs I found for UML are all listed on the cover
+letter of this patch. I think fixing COMPILE_TEST on UM could be
+worthwhile. Did you see any brokenness other than what I mentioned on
+the cover letter?
 
-The series works and looks good to me, eKTF3624 touchscreen is working
-fine on Nexus 7. Thank you very much!
+> Do you want to get this in a fix for 5.5?
+
+Preferably, yes.
+
+> Acked-by: Joel Stanley <joel@jms.id.au>
+
+Thanks!
