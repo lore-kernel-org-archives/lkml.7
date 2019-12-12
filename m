@@ -2,63 +2,149 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A137EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E697C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841C12073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 461C32073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KfvC0uGu";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="YWSXUzWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfLLShj (ORCPT
+        id S1730519AbfLLShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:37:39 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52382 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730539AbfLLShR (ORCPT
+        Thu, 12 Dec 2019 13:37:13 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:32894
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730211AbfLLShI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:37:17 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifTKr-0001ft-Pm; Thu, 12 Dec 2019 18:37:13 +0000
-Date:   Thu, 12 Dec 2019 18:37:13 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] use do_mount() instead of ksys_mount()
-Message-ID: <20191212183713.GI4203@ZenIV.linux.org.uk>
-References: <20191212135724.331342-1-linux@dominikbrodowski.net>
- <CAHk-=wgQRXLjXC5YxJd1VHoGpMB6wg=2XaLj1FgH=H+bP8=fDQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgQRXLjXC5YxJd1VHoGpMB6wg=2XaLj1FgH=H+bP8=fDQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Thu, 12 Dec 2019 13:37:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576175827;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=/A4JNs5+DD0XYn+BOoqAC4r96uLwhOOtNDypqGwSDlQ=;
+        b=KfvC0uGuoowPiFqRisX+K4WcdM4pPal1+lJkpNdXyizvtCoqooa9eCoe8A7i8NSb
+        IeUoxCsGX1tgfFTXV8tbxrGSm87691tIaEt8Wd0XldVXuVzz0D0Luhb7D26/zyq7lZS
+        cXWfR9JFpE3MDxtj9GyfHsMTfw7xrUNbEf/977fg=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576175827;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=/A4JNs5+DD0XYn+BOoqAC4r96uLwhOOtNDypqGwSDlQ=;
+        b=YWSXUzWaqvlWNifq939d7JVQh/LnHI161wzFOZGHGstXfHJFMdSzOZ8Kf6m0VLch
+        OCit/hsc0wynkW/AfAg5ITJNyoXwjxxZ+ri9F/LszPNpzCLZfOm4tUScpMfBcsEgyDC
+        dKh5150j1abdRXduJLJdmyIg6zH1703Ki06oA774=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DD0D5C447A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     bjorn.anderssen@linaro.org, saiprakash.ranjan@codeaurora.org,
+        agross@kernel.org, swboyd@chromium.org
+Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 12/17] firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
+Date:   Thu, 12 Dec 2019 18:37:07 +0000
+Message-ID: <0101016efb6678fb-ee28fef8-971f-4a1e-a975-1db24ab3f49f-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576175807-11775-1-git-send-email-eberman@codeaurora.org>
+References: <1576175807-11775-1-git-send-email-eberman@codeaurora.org>
+X-SES-Outgoing: 2019.12.12-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:11:10AM -0800, Linus Torvalds wrote:
-> On Thu, Dec 12, 2019 at 5:59 AM Dominik Brodowski
-> <linux@dominikbrodowski.net> wrote:
-> >
-> > This small series replaces all in-kernel calls to the
-> > userspace-focused wrapper ksys_mount() with calls to
-> > the kernel-centric do_mount().
-> 
-> If you fix the pointless cast I pointed out, and put it in a git
-> branch, I'll pull it.
-> 
-> In fact, just do both series in the same branch, they do conceptually
-> the same thing, after all.
+Move SMCCC register filling to qcom_scm_call so that __scm_legacy_do
+only needs to concern itself with retry mechanism. qcom_scm_call then is
+responsible for translating qcom_scm_desc into the complete set of
+register arguments and passing onto __scm_legacy_do.
 
-IMO it's not a good idea.  Exposing the guts of fs/namespace.c to
-what's essentially a userland code that happens to run in kernel thread
-is asking for trouble - we'd been there and it had been hell to untangle.
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ drivers/firmware/qcom_scm-32.c | 36 ++++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index ce3a61b..acd956f 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -85,6 +85,14 @@ struct qcom_scm_res {
+ 	u64 result[MAX_QCOM_SCM_RETS];
+ };
+ 
++/**
++ * struct arm_smccc_args
++ * @args:	The array of values used in registers in smc instruction
++ */
++struct arm_smccc_args {
++	unsigned long args[8];
++};
++
+ #define SCM_LEGACY_FNID(s, c)	(((s) << 10) | ((c) & 0x3ff))
+ 
+ /**
+@@ -167,16 +175,14 @@ static inline void *scm_legacy_get_response_buffer(
+ 	return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+ }
+ 
+-static u32 __scm_legacy_do(u32 cmd_addr)
++static void __scm_legacy_do(const struct arm_smccc_args *smc,
++			    struct arm_smccc_res *res)
+ {
+-	int context_id;
+-	struct arm_smccc_res res;
+ 	do {
+-		arm_smccc_smc(1, (unsigned long)&context_id, cmd_addr,
+-			      0, 0, 0, 0, 0, &res);
+-	} while (res.a0 == QCOM_SCM_INTERRUPTED);
+-
+-	return res.a0;
++		arm_smccc_smc(smc->args[0], smc->args[1], smc->args[2],
++			      smc->args[3], smc->args[4], smc->args[5],
++			      smc->args[6], smc->args[7], res);
++	} while (res->a0 == QCOM_SCM_INTERRUPTED);
+ }
+ 
+ /**
+@@ -194,10 +200,12 @@ static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 			 struct qcom_scm_res *res)
+ {
+ 	u8 arglen = desc->arginfo & 0xf;
+-	int ret;
++	int ret = 0, context_id;
+ 	unsigned int i;
+ 	struct scm_legacy_command *cmd;
+ 	struct scm_legacy_response *rsp;
++	struct arm_smccc_args smc = {0};
++	struct arm_smccc_res smc_res;
+ 	const size_t cmd_len = arglen * sizeof(__le32);
+ 	const size_t resp_len = MAX_QCOM_SCM_RETS * sizeof(__le32);
+ 	size_t alloc_len = sizeof(*cmd) + cmd_len + sizeof(*rsp) + resp_len;
+@@ -226,10 +234,14 @@ static int qcom_scm_call(struct device *dev, const struct qcom_scm_desc *desc,
+ 		return -ENOMEM;
+ 	}
+ 
++	smc.args[0] = 1;
++	smc.args[1] = (unsigned long)&context_id;
++	smc.args[2] = cmd_phys;
++
+ 	mutex_lock(&qcom_scm_lock);
+-	ret = __scm_legacy_do(cmd_phys);
+-	if (ret < 0)
+-		ret = qcom_scm_remap_error(ret);
++	__scm_legacy_do(&smc, &smc_res);
++	if (smc_res.a0)
++		ret = qcom_scm_remap_error(smc_res.a0);
+ 	mutex_unlock(&qcom_scm_lock);
+ 	if (ret)
+ 		goto out;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
