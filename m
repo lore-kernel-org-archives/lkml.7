@@ -2,87 +2,79 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E37EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C248C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB7E222527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576166596;
-	bh=hfABrdLSbH0bF01p271neeli3FQecfhJg4XVLx7Gzt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e6SAPDW0cecyQOV3kz+Oad94jwVzvxgAzQWNIks/juiVdXNXzV2LU8tEswf6NnN13
-	 IyUUuYVP4TPopEEYet4acdXfd65rnpe+07FPQlVGyvDyYgWGJ12J/SU2sMPT5fUIiB
-	 NMLft84Uh1OVS006KWQWsv/f+vIAhV8zOoPDwvAo=
+	by mail.kernel.org (Postfix) with ESMTP id 63C902173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:04:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfLLQDP (ORCPT
+        id S1729839AbfLLQEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:03:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfLLQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:03:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A87C22173E;
-        Thu, 12 Dec 2019 16:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576166595;
-        bh=hfABrdLSbH0bF01p271neeli3FQecfhJg4XVLx7Gzt0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xoPRm99RqXB4G6cle4WwUEdyyR/xvWEN2/Pv6Q1/dEW7dcz94kHXPQUoWAlzNwVf6
-         CfAhr/QJHu8bLnf8dLLvaKAuEubbTEUmyqMocdFxvWs8wxkeif566rlC19JCkNCBuo
-         1ZP/hc43GyOhkAPxmlTplERgVf0xW5BcW91kOcy0=
-Date:   Thu, 12 Dec 2019 17:03:12 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Scott Schafer <schaferjscott@gmail.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
-        Manish Chopra <manishc@marvell.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 11/23] staging: qlge: Fix CHECK: braces {} should be
- used on all arms of this statement
-Message-ID: <20191212160312.GA1672580@kroah.com>
-References: <cover.1576086080.git.schaferjscott@gmail.com>
- <0e1fc1a16725094676fdab63d3a24a986309a759.1576086080.git.schaferjscott@gmail.com>
- <20191212121206.GB1895@kadam>
- <20191212150200.GA8219@karen>
+        Thu, 12 Dec 2019 11:04:24 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55759 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729658AbfLLQEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:04:21 -0500
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQwr-0003cW-KD; Thu, 12 Dec 2019 17:04:17 +0100
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQwr-0004L9-24; Thu, 12 Dec 2019 17:04:17 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, linus.walleij@linaro.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: [RESEND PATCH v3 0/3] Add DA9062 GPIO support
+Date:   Thu, 12 Dec 2019 17:04:10 +0100
+Message-Id: <20191212160413.15232-1-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212150200.GA8219@karen>
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:02:00AM -0600, Scott Schafer wrote:
-> On Thu, Dec 12, 2019 at 03:12:06PM +0300, Dan Carpenter wrote:
-> > On Wed, Dec 11, 2019 at 12:12:40PM -0600, Scott Schafer wrote:
-> > > @@ -351,8 +352,9 @@ static int ql_aen_lost(struct ql_adapter *qdev, struct mbox_params *mbcp)
-> > >  	mbcp->out_count = 6;
-> > >  
-> > >  	status = ql_get_mb_sts(qdev, mbcp);
-> > > -	if (status)
-> > > +	if (status) {
-> > >  		netif_err(qdev, drv, qdev->ndev, "Lost AEN broken!\n");
-> > > +	}
-> > >  	else {
-> > 
-> > The close } should be on the same line as the else.
-> > 
-> > >  		int i;
-> > >  
-> > 
-> > regards,
-> > dan carpenter
-> 
-> this was fixed in patch 22
+Hi,
 
-Don't add a warning that you later fix up :)
+this update address all comments made on [1], for further details see
+the patch based changelog.
+
+I resend this v3 since I forgot to add the MFD maintainers on the To:.
+Please can you review the MFD part?
+
+Regards,
+  Marco
+
+[1] https://patchwork.ozlabs.org/cover/1201549/
+
+Marco Felsch (3):
+  dt-bindings: mfd: da9062: add gpio bindings
+  mfd: da9062: add support for the DA9062 GPIOs in the core
+  pinctrl: da9062: add driver support
+
+ .../devicetree/bindings/mfd/da9062.txt        |  10 +
+ MAINTAINERS                                   |   1 +
+ drivers/mfd/da9062-core.c                     |  16 +-
+ drivers/pinctrl/Kconfig                       |  12 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-da9062.c              | 297 ++++++++++++++++++
+ 6 files changed, 336 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pinctrl/pinctrl-da9062.c
+
+-- 
+2.20.1
 
