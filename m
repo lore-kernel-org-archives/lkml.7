@@ -2,121 +2,93 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB57C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E49C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB9B22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDA224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uGHf5HOo"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="kpjgNJ8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfLLHcJ (ORCPT
+        id S1728124AbfLLHeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:32:09 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55600 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfLLHcJ (ORCPT
+        Thu, 12 Dec 2019 02:34:06 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:38321 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfLLHeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:32:09 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBC7VQQh072778;
-        Thu, 12 Dec 2019 01:31:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576135886;
-        bh=haW2fs/1/sUuQpF8Y3YpZnBRlXcDpUlKfXo5LXqv/OI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uGHf5HOo/y3rmRn0ytwmvZZww9niyfwPMg5JlFrNKgDCtqbXwoO+5yFTiPgkODcA5
-         pN8QO0cNKEH1QsRZ4qOwblX4SG3JOnJ/WCHD0aiXKvnD9az0FhQGI41pkKAItl6+3T
-         nLnAytAxL+JlPnjLQJiacGA2TLZH91y58v1AyhzQ=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBC7VQBY006953
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 01:31:26 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 01:31:25 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 01:31:25 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBC7VMHk027359;
-        Thu, 12 Dec 2019 01:31:23 -0600
-Subject: Re: [PATCH 3/3] mtd: spi-nor: Add USE_FSR flag for n25q* entries
-To:     <Tudor.Ambarus@microchip.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <Ashish.Kumar@nxp.com>, <linux-mtd@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <john.garry@huawei.com>
-References: <20191205065935.5727-1-vigneshr@ti.com>
- <20191205065935.5727-4-vigneshr@ti.com>
- <2d931347-d927-4674-86ff-7eb285624bfc@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <fec29113-e048-bd47-595e-3d1f6e3955e0@ti.com>
-Date:   Thu, 12 Dec 2019 13:01:51 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 02:34:06 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 338B423D09;
+        Thu, 12 Dec 2019 08:34:03 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1576136044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ahNlfZRgvyxNMfLruGaGs7saGlzvDiLyQV2jVcLv9i0=;
+        b=kpjgNJ8csN4y9W3dOZcgoA6Xm76QjIO2uzLC68Ruww0eJJVhotfhADAkr62cQnzi/SCblo
+        5TvosPORI6iVRAbMsuIcEzzdkoZRjp118ofA3dxSdiRr1fU8Cnk/z5/1bK5c1OrISEjMTx
+        oLzv39WgUp0awOhIjHDIErTaNTB7DL4=
 MIME-Version: 1.0
-In-Reply-To: <2d931347-d927-4674-86ff-7eb285624bfc@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Thu, 12 Dec 2019 08:34:03 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3] arm64: dts: ls1028a: fix reboot node
+In-Reply-To: <20191212020055.GB15858@dragon>
+References: <20191211171145.14736-1-michael@walle.cc>
+ <20191212020055.GB15858@dragon>
+Message-ID: <ad3885c9545cb73eced2fa3f0ce6f0be@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: +
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 338B423D09
+X-Spamd-Result: default: False [1.40 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.285];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[];
+         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tudor,
-
-On 10/12/19 10:11 pm, Tudor.Ambarus@microchip.com wrote:
-> Hi, Vignesh,
+Am 2019-12-12 03:00, schrieb Shawn Guo:
+> On Wed, Dec 11, 2019 at 06:11:45PM +0100, Michael Walle wrote:
+>> The reboot register isn't located inside the DCFG controller, but in 
+>> its
+>> own RST controller. Fix it.
+>> 
+>> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+>> Signed-off-by: Michael Walle <michael@walle.cc>
 > 
-> On 12/5/19 8:59 AM, Vignesh Raghavendra wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> Add USE_FSR flag to all variants of n25q entries that support Flag Status
->> Register.
-> 
-> On a first look, all Micron flashes define the Flag Status Register. Do you know
-> if there are any Micron flash that don't support FSR? If not, would you be
-> interested in doing some documentation work to check this?
-> 
+> You missed Leo's ACK on v2?  I added it and applied the patch.
 
-n25q and mt25 series support FSR but older m25p/m45p parts don't have
-FSR.  I don't know any easy way of finding out if flash part is m25p type.
+Yes, I forgot to add that, thanks.
 
-> I think we can do this more generic, always set SNOR_F_USE_FSR for micron
-> flashes, like below. More, if FSR is specific just for Micron, we can get rid of
-> the USE_FSR flag too.
-> 
-
-AFAIK, FSR is definitely Micron specific (other flash vendors have
-different registers/bits providing similar information though).
-
-
-> Thanks, Vignesh.
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index f4afe123e9dc..fe10beea60c3 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -4595,7 +4595,7 @@ static void sst_set_default_init(struct spi_nor *nor)
-> 
->  static void st_micron_set_default_init(struct spi_nor *nor)
->  {
-> -       nor->flags |= SNOR_F_HAS_LOCK;
-> +       nor->flags |= SNOR_F_HAS_LOCK | SNOR_F_USE_FSR;
->         nor->params.quad_enable = NULL;
->         nor->params.set_4byte = st_micron_set_4byte;
->  }
-> 
-
--- 
-Regards
-Vignesh
+-michael
