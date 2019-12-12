@@ -2,112 +2,224 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4E9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8B0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86AC92077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83AA22077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OFoPtBfc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727512AbfLLBDF (ORCPT
+        id S1727526AbfLLBDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:03:05 -0500
-Received: from mga05.intel.com ([192.55.52.43]:61888 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfLLBDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:03:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 17:03:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="210945278"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by fmsmga008.fm.intel.com with ESMTP; 11 Dec 2019 17:03:03 -0800
-Date:   Thu, 12 Dec 2019 09:04:24 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 4/7] KVM: VMX: Load CET states on vmentry/vmexit
-Message-ID: <20191212010423.GB17570@local-michael-cet-test.sh.intel.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-5-weijiang.yang@intel.com>
- <20191210212305.GM15758@linux.intel.com>
- <20191211015423.GC12845@local-michael-cet-test>
- <20191211163510.GF5044@linux.intel.com>
+        Wed, 11 Dec 2019 20:03:23 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57363 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727403AbfLLBDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:03:23 -0500
+X-UUID: 4abd8ddb461b4a88b062efb3c2ff6f08-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=1nVw2YWBGUS/oMhW5DDgBl2g5t5Me3srGmGp5Tfjzxg=;
+        b=OFoPtBfc8hc3RDn55qAHCBISzy4tvQOUk2ZkT9hq4TX+bdVXRG+xitr2/EV+NsVOucqrMaNhkjxZVHUoz+MXxpIEbFhjMS1mXJJATdLAKlzVrMbwpYHJOulEgaMF2Ik2sBg0EoVLSQ5JMmQt/ig+KqqeJyPgZ51+UqSEoAu1RKY=;
+X-UUID: 4abd8ddb461b4a88b062efb3c2ff6f08-20191212
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <dennis-yc.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1650934045; Thu, 12 Dec 2019 09:03:14 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 09:03:05 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 09:02:37 +0800
+Message-ID: <1576112593.17653.1.camel@mtkswgap22>
+Subject: Re: [PATCH v2 02/14] mailbox: cmdq: variablize address shift in
+ platform
+From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Dec 2019 09:03:13 +0800
+In-Reply-To: <1575942906.12891.6.camel@mtksdaap41>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-4-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1575942906.12891.6.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211163510.GF5044@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:35:10AM -0800, Sean Christopherson wrote:
-> On Wed, Dec 11, 2019 at 09:54:23AM +0800, Yang Weijiang wrote:
-> > On Tue, Dec 10, 2019 at 01:23:05PM -0800, Sean Christopherson wrote:
-> > > On Fri, Nov 01, 2019 at 04:52:19PM +0800, Yang Weijiang wrote:
-> > > > @@ -2834,6 +2837,9 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
-> > > >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > > >  	unsigned long hw_cr0;
-> > > >  
-> > > > +	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-> > > > +		cr0 |= X86_CR0_WP;
-> > > 
-> > > Huh?  What's the interaction between CR4.CET and CR0.WP?  If there really
-> > > is some non-standard interaction then it needs to be documented in at least
-> > > the changelog and probably with a comment as well.
-> > >
-> > The processor does not allow CR4.CET to be set if CR0.WP = 0 (similarly, it
-> > does not allow CR0.WP to be cleared while CR4.CET = 1).
-> 
-> Ya, as you surmised below, this needs to be a #GP condition.
->
-OK, will do it.
+SGkgQ0ssDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50Lg0KDQpPbiBUdWUsIDIwMTktMTItMTAg
+YXQgMDk6NTUgKzA4MDAsIENLIEh1IHdyb3RlOg0KPiBIaSwgRGVubmlzOg0KPiANCj4gT24gV2Vk
+LCAyMDE5LTExLTI3IGF0IDA5OjU4ICswODAwLCBEZW5uaXMgWUMgSHNpZWggd3JvdGU6DQo+ID4g
+U29tZSBnY2UgaGFyZHdhcmUgc2hpZnQgcGMgYW5kIGVuZCBhZGRyZXNzIGluIHJlZ2lzdGVyIHRv
+IHN1cHBvcnQNCj4gPiBsYXJnZSBkcmFtIGFkZHJlc3NpbmcuDQo+ID4gSW1wbGVtZW50IGdjZSBh
+ZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5kIHJlZ2lzdGVyLg0KPiA+
+IEFuZCBhZGQgc2hpZnQgYml0IGluIHBsYXRmb3JtIGRlZmluaXRpb24uDQo+ID4gDQo+ID4gU2ln
+bmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29t
+Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jICAgICAg
+IHwgNTcgKysrKysrKysrKysrKysrKysrLS0tLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiA+ICBpbmNsdWRlL2xpbnV4L21haWxib3gv
+bXRrLWNtZHEtbWFpbGJveC5oIHwgIDIgKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDQ4IGluc2Vy
+dGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jIGIvZHJpdmVycy9tYWlsYm94L210ay1jbWRxLW1h
+aWxib3guYw0KPiA+IGluZGV4IDlhNmNlOWY1YTdkYi4uZDU1MzY1NjNmY2UxIDEwMDY0NA0KPiA+
+IC0tLSBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiArKysgYi9kcml2
+ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+ID4gQEAgLTc2LDggKzc2LDIxIEBAIHN0
+cnVjdCBjbWRxIHsNCj4gPiAgCXN0cnVjdCBjbWRxX3RocmVhZAkqdGhyZWFkOw0KPiA+ICAJc3Ry
+dWN0IGNsawkJKmNsb2NrOw0KPiA+ICAJYm9vbAkJCXN1c3BlbmRlZDsNCj4gPiArCXU4CQkJc2hp
+ZnRfcGE7DQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdHJ1Y3QgZ2NlX3BsYXQgew0KPiA+ICsJdTMy
+IHRocmVhZF9ucjsNCj4gPiArCXU4IHNoaWZ0Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArdTggY21k
+cV9tYm94X3NoaWZ0KHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ID4gK3sNCj4gPiArCXN0cnVj
+dCBjbWRxICpjbWRxID0gY29udGFpbmVyX29mKGNoYW4tPm1ib3gsIHN0cnVjdCBjbWRxLCBtYm94
+KTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gY21kcS0+c2hpZnRfcGE7DQo+ID4gK30NCj4gDQo+IEVY
+UE9SVF9TWU1CT0woY21kcV9tYm94X3NoaWZ0KTsNCj4gDQoNCndpbGwgZG8NCg0KPiA+ICsNCj4g
+PiAgc3RhdGljIGludCBjbWRxX3RocmVhZF9zdXNwZW5kKHN0cnVjdCBjbWRxICpjbWRxLCBzdHJ1
+Y3QgY21kcV90aHJlYWQgKnRocmVhZCkNCj4gPiAgew0KPiA+ICAJdTMyIHN0YXR1czsNCj4gPiBA
+QCAtMTc2LDYgKzE4OSw3IEBAIHN0YXRpYyB2b2lkIGNtZHFfdGFza19yZW1vdmVfd2ZlKHN0cnVj
+dCBjbWRxX3Rhc2sgKnRhc2spDQo+ID4gIHsNCj4gPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9IHRh
+c2stPmNtZHEtPm1ib3guZGV2Ow0KPiA+ICAJdTY0ICpiYXNlID0gdGFzay0+cGt0LT52YV9iYXNl
+Ow0KPiA+ICsJc3RydWN0IGNtZHEgKmNtZHEgPSB0YXNrLT5jbWRxOw0KPiA+ICAJaW50IGk7DQo+
+ID4gIA0KPiA+ICAJZG1hX3N5bmNfc2luZ2xlX2Zvcl9jcHUoZGV2LCB0YXNrLT5wYV9iYXNlLCB0
+YXNrLT5wa3QtPmNtZF9idWZfc2l6ZSwNCj4gPiBAQCAtMTgzLDcgKzE5Nyw3IEBAIHN0YXRpYyB2
+b2lkIGNtZHFfdGFza19yZW1vdmVfd2ZlKHN0cnVjdCBjbWRxX3Rhc2sgKnRhc2spDQo+ID4gIAlm
+b3IgKGkgPSAwOyBpIDwgQ01EUV9OVU1fQ01EKHRhc2stPnBrdCk7IGkrKykNCj4gPiAgCQlpZiAo
+Y21kcV9jb21tYW5kX2lzX3dmZShiYXNlW2ldKSkNCj4gPiAgCQkJYmFzZVtpXSA9ICh1NjQpQ01E
+UV9KVU1QX0JZX09GRlNFVCA8PCAzMiB8DQo+ID4gLQkJCQkgIENNRFFfSlVNUF9QQVNTOw0KPiA+
+ICsJCQkJICBDTURRX0pVTVBfUEFTUyA+PiBjbWRxLT5zaGlmdF9wYTsNCj4gDQo+IGNtZHEgaXMg
+b25seSB1c2VkIGhlcmUsIHNvIEkgd291bGQgbGlrZQ0KPiANCj4gQ01EUV9KVU1QX1BBU1MgPj4g
+dGFzay0+Y21kcS0+c2hpZnRfcGE7DQo+IA0KDQpvaywgd2lsbCBmaXgNCg0KPiA+ICAJZG1hX3N5
+bmNfc2luZ2xlX2Zvcl9kZXZpY2UoZGV2LCB0YXNrLT5wYV9iYXNlLCB0YXNrLT5wa3QtPmNtZF9i
+dWZfc2l6ZSwNCj4gPiAgCQkJCSAgIERNQV9UT19ERVZJQ0UpOw0KPiA+ICB9DQo+ID4gQEAgLTIy
+MSwxMyArMjM1LDE1IEBAIHN0YXRpYyB2b2lkIGNtZHFfdGFza19oYW5kbGVfZXJyb3Ioc3RydWN0
+IGNtZHFfdGFzayAqdGFzaykNCj4gPiAgew0KPiA+ICAJc3RydWN0IGNtZHFfdGhyZWFkICp0aHJl
+YWQgPSB0YXNrLT50aHJlYWQ7DQo+ID4gIAlzdHJ1Y3QgY21kcV90YXNrICpuZXh0X3Rhc2s7DQo+
+ID4gKwlzdHJ1Y3QgY21kcSAqY21kcSA9IHRhc2stPmNtZHE7DQo+ID4gIA0KPiA+ICAJZGV2X2Vy
+cih0YXNrLT5jbWRxLT5tYm94LmRldiwgInRhc2sgMHglcCBlcnJvclxuIiwgdGFzayk7DQo+ID4g
+IAlXQVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQodGFzay0+Y21kcSwgdGhyZWFkKSA8IDApOw0K
+PiA+ICAJbmV4dF90YXNrID0gbGlzdF9maXJzdF9lbnRyeV9vcl9udWxsKCZ0aHJlYWQtPnRhc2tf
+YnVzeV9saXN0LA0KPiA+ICAJCQlzdHJ1Y3QgY21kcV90YXNrLCBsaXN0X2VudHJ5KTsNCj4gPiAg
+CWlmIChuZXh0X3Rhc2spDQo+ID4gLQkJd3JpdGVsKG5leHRfdGFzay0+cGFfYmFzZSwgdGhyZWFk
+LT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwobmV4dF90YXNrLT5w
+YV9iYXNlID4+IGNtZHEtPnNoaWZ0X3BhLA0KPiA+ICsJCSAgICAgICB0aHJlYWQtPmJhc2UgKyBD
+TURRX1RIUl9DVVJSX0FERFIpOw0KPiA+ICAJY21kcV90aHJlYWRfcmVzdW1lKHRocmVhZCk7DQo+
+ID4gIH0NCj4gPiAgDQo+ID4gQEAgLTI1Nyw3ICsyNzMsNyBAQCBzdGF0aWMgdm9pZCBjbWRxX3Ro
+cmVhZF9pcnFfaGFuZGxlcihzdHJ1Y3QgY21kcSAqY21kcSwNCj4gPiAgCWVsc2UNCj4gPiAgCQly
+ZXR1cm47DQo+ID4gIA0KPiA+IC0JY3Vycl9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFf
+VEhSX0NVUlJfQUREUik7DQo+ID4gKwljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01E
+UV9USFJfQ1VSUl9BRERSKSA8PCBjbWRxLT5zaGlmdF9wYTsNCj4gPiAgDQo+ID4gIAlsaXN0X2Zv
+cl9lYWNoX2VudHJ5X3NhZmUodGFzaywgdG1wLCAmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCwNCj4g
+PiAgCQkJCSBsaXN0X2VudHJ5KSB7DQo+ID4gQEAgLTM3MywxNiArMzg5LDIwIEBAIHN0YXRpYyBp
+bnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRh
+KQ0KPiA+ICAJCVdBUk5fT04oY2xrX2VuYWJsZShjbWRxLT5jbG9jaykgPCAwKTsNCj4gPiAgCQlX
+QVJOX09OKGNtZHFfdGhyZWFkX3Jlc2V0KGNtZHEsIHRocmVhZCkgPCAwKTsNCj4gPiAgDQo+ID4g
+LQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UsIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQURE
+Uik7DQo+ID4gLQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSwNCj4g
+PiArCQl3cml0ZWwodGFzay0+cGFfYmFzZSA+PiBjbWRxLT5zaGlmdF9wYSwNCj4gPiArCQkgICAg
+ICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiArCQl3cml0ZWwoKHRh
+c2stPnBhX2Jhc2UgKyBwa3QtPmNtZF9idWZfc2l6ZSkgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4g
+IAkJICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiArDQo+ID4g
+IAkJd3JpdGVsKHRocmVhZC0+cHJpb3JpdHksIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX1BSSU9S
+SVRZKTsNCj4gPiAgCQl3cml0ZWwoQ01EUV9USFJfSVJRX0VOLCB0aHJlYWQtPmJhc2UgKyBDTURR
+X1RIUl9JUlFfRU5BQkxFKTsNCj4gPiAgCQl3cml0ZWwoQ01EUV9USFJfRU5BQkxFRCwgdGhyZWFk
+LT5iYXNlICsgQ01EUV9USFJfRU5BQkxFX1RBU0spOw0KPiA+ICAJfSBlbHNlIHsNCj4gPiAgCQlX
+QVJOX09OKGNtZHFfdGhyZWFkX3N1c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiA+IC0JCWN1
+cnJfcGEgPSByZWFkbCh0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9DVVJSX0FERFIpOw0KPiA+IC0J
+CWVuZF9wYSA9IHJlYWRsKHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9BRERSKTsNCj4gPiAr
+CQljdXJyX3BhID0gcmVhZGwodGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERSKSA8PA0K
+PiA+ICsJCQljbWRxLT5zaGlmdF9wYTsNCj4gPiArCQllbmRfcGEgPSByZWFkbCh0aHJlYWQtPmJh
+c2UgKyBDTURRX1RIUl9FTkRfQUREUikgPDwNCj4gPiArCQkJY21kcS0+c2hpZnRfcGE7DQo+ID4g
+IA0KPiA+ICAJCS8qDQo+ID4gIAkJICogQXRvbWljIGV4ZWN1dGlvbiBzaG91bGQgcmVtb3ZlIHRo
+ZSBmb2xsb3dpbmcgd2ZlLCBpLmUuIG9ubHkNCj4gPiBAQCAtMzk1LDcgKzQxNSw3IEBAIHN0YXRp
+YyBpbnQgY21kcV9tYm94X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpk
+YXRhKQ0KPiA+ICAJCQkJY21kcV90aHJlYWRfd2FpdF9lbmQodGhyZWFkLCBlbmRfcGEpOw0KPiA+
+ICAJCQkJV0FSTl9PTihjbWRxX3RocmVhZF9zdXNwZW5kKGNtZHEsIHRocmVhZCkgPCAwKTsNCj4g
+PiAgCQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkgKi8NCj4gPiAtCQkJCXdyaXRlbCh0
+YXNrLT5wYV9iYXNlLA0KPiA+ICsJCQkJd3JpdGVsKHRhc2stPnBhX2Jhc2UgPj4gY21kcS0+c2hp
+ZnRfcGEsDQo+ID4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfQ1VSUl9BRERS
+KTsNCj4gPiAgCQkJfSBlbHNlIHsNCj4gPiAgCQkJCWNtZHFfdGFza19pbnNlcnRfaW50b190aHJl
+YWQodGFzayk7DQo+ID4gQEAgLTQwNywxNCArNDI3LDE0IEBAIHN0YXRpYyBpbnQgY21kcV9tYm94
+X3NlbmRfZGF0YShzdHJ1Y3QgbWJveF9jaGFuICpjaGFuLCB2b2lkICpkYXRhKQ0KPiA+ICAJCQlp
+ZiAoY3Vycl9wYSA9PSBlbmRfcGEgLSBDTURRX0lOU1RfU0laRSB8fA0KPiA+ICAJCQkgICAgY3Vy
+cl9wYSA9PSBlbmRfcGEpIHsNCj4gPiAgCQkJCS8qIHNldCB0byB0aGlzIHRhc2sgZGlyZWN0bHkg
+Ki8NCj4gPiAtCQkJCXdyaXRlbCh0YXNrLT5wYV9iYXNlLA0KPiA+ICsJCQkJd3JpdGVsKHRhc2st
+PnBhX2Jhc2UgPj4gY21kcS0+c2hpZnRfcGEsDQo+ID4gIAkJCQkgICAgICAgdGhyZWFkLT5iYXNl
+ICsgQ01EUV9USFJfQ1VSUl9BRERSKTsNCj4gPiAgCQkJfSBlbHNlIHsNCj4gPiAgCQkJCWNtZHFf
+dGFza19pbnNlcnRfaW50b190aHJlYWQodGFzayk7DQo+ID4gIAkJCQlzbXBfbWIoKTsgLyogbW9k
+aWZ5IGp1bXAgYmVmb3JlIGVuYWJsZSB0aHJlYWQgKi8NCj4gPiAgCQkJfQ0KPiA+ICAJCX0NCj4g
+PiAtCQl3cml0ZWwodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplLA0KPiA+ICsJCXdy
+aXRlbCgodGFzay0+cGFfYmFzZSArIHBrdC0+Y21kX2J1Zl9zaXplKSA+PiBjbWRxLT5zaGlmdF9w
+YSwNCj4gPiAgCQkgICAgICAgdGhyZWFkLT5iYXNlICsgQ01EUV9USFJfRU5EX0FERFIpOw0KPiA+
+ICAJCWNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiA+ICAJfQ0KPiA+IEBAIC00NjEsNiAr
+NDgxLDcgQEAgc3RhdGljIGludCBjbWRxX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpDQo+ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiAgCXN0cnVjdCBjbWRxICpjbWRx
+Ow0KPiA+ICAJaW50IGVyciwgaTsNCj4gPiArCXN0cnVjdCBnY2VfcGxhdCAqcGxhdF9kYXRhOw0K
+PiA+ICANCj4gPiAgCWNtZHEgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmNtZHEpLCBHRlBf
+S0VSTkVMKTsNCj4gPiAgCWlmICghY21kcSkNCj4gPiBAQCAtNDc5LDcgKzUwMCwxNCBAQCBzdGF0
+aWMgaW50IGNtZHFfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCQly
+ZXR1cm4gLUVJTlZBTDsNCj4gPiAgCX0NCj4gPiAgDQo+ID4gLQljbWRxLT50aHJlYWRfbnIgPSAo
+dTMyKSh1bnNpZ25lZCBsb25nKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiA+ICsJ
+cGxhdF9kYXRhID0gKHN0cnVjdCBnY2VfcGxhdCAqKW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShk
+ZXYpOw0KPiA+ICsJaWYgKCFwbGF0X2RhdGEpIHsNCj4gPiArCQlkZXZfZXJyKGRldiwgImZhaWxl
+ZCB0byBnZXQgbWF0Y2ggZGF0YVxuIik7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9
+DQo+ID4gKw0KPiA+ICsJY21kcS0+dGhyZWFkX25yID0gcGxhdF9kYXRhLT50aHJlYWRfbnI7DQo+
+ID4gKwljbWRxLT5zaGlmdF9wYSA9IHBsYXRfZGF0YS0+c2hpZnQ7DQo+ID4gIAljbWRxLT5pcnFf
+bWFzayA9IEdFTk1BU0soY21kcS0+dGhyZWFkX25yIC0gMSwgMCk7DQo+ID4gIAllcnIgPSBkZXZt
+X3JlcXVlc3RfaXJxKGRldiwgY21kcS0+aXJxLCBjbWRxX2lycV9oYW5kbGVyLCBJUlFGX1NIQVJF
+RCwNCj4gPiAgCQkJICAgICAgICJtdGtfY21kcSIsIGNtZHEpOw0KPiA+IEBAIC01NDIsOSArNTcw
+LDEyIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBjbWRxX3BtX29wcyA9IHsNCj4g
+PiAgCS5yZXN1bWUgPSBjbWRxX3Jlc3VtZSwNCj4gPiAgfTsNCj4gPiAgDQo+ID4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3QgZ2NlX3BsYXQgZ2NlX3BsYXRfdjIgPSB7LnRocmVhZF9uciA9IDE2LCAuc2hp
+ZnQgPSAwfTsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBnY2VfcGxhdCBnY2VfcGxhdF92MyA9
+IHsudGhyZWFkX25yID0gMjQsIC5zaGlmdCA9IDB9Ow0KPiANCj4gRm9yIGdsb2JhbCB2YXJpYWJs
+ZSwgeW91IG5lZWQgbm90IHRvIGluaXRpYWxpemUgaXQgdG8gemVyby4NCj4gDQoNCndpbGwgZml4
+DQoNCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGNtZHFfb2Zf
+aWRzW10gPSB7DQo+ID4gLQl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWdjZSIsIC5k
+YXRhID0gKHZvaWQgKikxNn0sDQo+ID4gLQl7LmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgz
+LWdjZSIsIC5kYXRhID0gKHZvaWQgKikyNH0sDQo+ID4gKwl7LmNvbXBhdGlibGUgPSAibWVkaWF0
+ZWssbXQ4MTczLWdjZSIsIC5kYXRhID0gKHZvaWQgKikmZ2NlX3BsYXRfdjJ9LA0KPiA+ICsJey5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1nY2UiLCAuZGF0YSA9ICh2b2lkICopJmdjZV9w
+bGF0X3YzfSwNCj4gPiAgCXt9DQo+ID4gIH07DQo+ID4gIA0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVr
+L210ay1jbWRxLWhlbHBlci5jDQo+ID4gaW5kZXggOWFkZDBmZDVmYTZjLi4yNzRmNmYzMTFkMDUg
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMN
+Cj4gPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IEBA
+IC0yODEsNiArMjgxLDcgQEAgRVhQT1JUX1NZTUJPTChjbWRxX3BrdF9wb2xsX21hc2spOw0KPiA+
+ICANCj4gPiAgc3RhdGljIGludCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBr
+dCkNCj4gPiAgew0KPiA+ICsJc3RydWN0IGNtZHFfY2xpZW50ICpjbCA9IHBrdC0+Y2w7DQo+ID4g
+IAlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0ID0geyB7MH0gfTsNCj4gPiAgCWludCBlcnI7
+DQo+ID4gIA0KPiA+IEBAIC0yOTMsNyArMjk0LDcgQEAgc3RhdGljIGludCBjbWRxX3BrdF9maW5h
+bGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCkNCj4gPiAgDQo+ID4gIAkvKiBKVU1QIHRvIGVuZCAq
+Lw0KPiA+ICAJaW5zdC5vcCA9IENNRFFfQ09ERV9KVU1QOw0KPiA+IC0JaW5zdC52YWx1ZSA9IENN
+RFFfSlVNUF9QQVNTOw0KPiA+ICsJaW5zdC52YWx1ZSA9IENNRFFfSlVNUF9QQVNTID4+IGNtZHFf
+bWJveF9zaGlmdChjbC0+Y2hhbik7DQo+IA0KPiBjbCBpcyB1c2VkIG9ubHkgaGVyZSwgc28gSSB3
+b3VsZCBsaWtlDQo+IA0KPiBjbWRxX21ib3hfc2hpZnQocGt0LT5jbC0+Y2hhbik7DQo+IA0KPiBS
+ZWdhcmRzLA0KPiBDSw0KPiANCg0Kd2lsbCBmaXgNCg0KDQpSZWdhcmRzLA0KRGVubmlzDQoNCj4g
+PiAgCWVyciA9IGNtZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gIA0KPiA+
+ICAJcmV0dXJuIGVycjsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210
+ay1jbWRxLW1haWxib3guaCBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmgNCj4gPiBpbmRleCBhNGRjNDVmYmVjMGEuLmRmZTViMmViODVjYyAxMDA2NDQNCj4gPiAtLS0g
+YS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oDQo+ID4gKysrIGIvaW5j
+bHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiA+IEBAIC04OCw0ICs4OCw2
+IEBAIHN0cnVjdCBjbWRxX3BrdCB7DQo+ID4gIAl2b2lkCQkJKmNsOw0KPiA+ICB9Ow0KPiA+ICAN
+Cj4gPiArdTggY21kcV9tYm94X3NoaWZ0KHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pOw0KPiA+ICsN
+Cj4gPiAgI2VuZGlmIC8qIF9fTVRLX0NNRFFfTUFJTEJPWF9IX18gKi8NCj4gDQo+IA0KDQo=
 
-> Have you tested SMM at all?  The interaction between CR0 and CR4 may be
-> problematic for em_rsm() and/or rsm_enter_protected_mode().
->
-Not yet, what's an easy way to test code in SMM mode?
-Thanks!
-
-> > > > +
-> > > >  	hw_cr0 = (cr0 & ~KVM_VM_CR0_ALWAYS_OFF);
-> > > >  	if (enable_unrestricted_guest)
-> > > >  		hw_cr0 |= KVM_VM_CR0_ALWAYS_ON_UNRESTRICTED_GUEST;
-> > > > @@ -2936,6 +2942,22 @@ static bool guest_cet_allowed(struct kvm_vcpu *vcpu, u32 feature, u32 mode)
-> > > >  	return false;
-> > > >  }
-> > > >  
-> > > > +bool is_cet_bit_allowed(struct kvm_vcpu *vcpu)
-> > > > +{
-> > > > +	unsigned long cr0;
-> > > > +	bool cet_allowed;
-> > > > +
-> > > > +	cr0 = kvm_read_cr0(vcpu);
-> > > > +	cet_allowed = guest_cet_allowed(vcpu, X86_FEATURE_SHSTK,
-> > > > +					XFEATURE_MASK_CET_USER) ||
-> > > > +		      guest_cet_allowed(vcpu, X86_FEATURE_IBT,
-> > > > +					XFEATURE_MASK_CET_USER);
-> > > > +	if ((cr0 & X86_CR0_WP) && cet_allowed)
-> > > > +		return true;
-> > > 
-> > > So, attempting to set CR4.CET if CR0.WP=0 takes a #GP?  But attempting
-> > > to clear CR0.WP if CR4.CET=1 is ignored?
-> > > 
-> > Per above words in spec., inject #GP to guest in either case?
-> > 
-> > > > +
-> > > > +	return false;
-> > > > +}
-> > > > +
