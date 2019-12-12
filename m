@@ -2,121 +2,148 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9304AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9F69C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AB42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CCE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="QTjchn3P"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaRmG0he"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfLLJqQ (ORCPT
+        id S1728381AbfLLJrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:46:16 -0500
-Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:55176 "EHLO
-        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfLLJqP (ORCPT
+        Thu, 12 Dec 2019 04:47:42 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43808 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfLLJrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:46:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1576143975;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dhXc0hzpDoP0LP4NSBAMjDZwUwr/XdPCcsPghJX+ijI=;
-  b=QTjchn3P1xveVX0WHkPFwa1p3SL6aQ4kwCuqH8hkncEa7TdorUr0Hs9X
-   fqaHRgTwY3O7212yu5B9Gw3UPvI27+3EQB2iN7D0HoDI5hrphkCnOIlq/
-   sl3WOzLp67ug95NJyLfA/3lFd65DyZfIJywfk8HHUNwqPLn761MMSZW2K
-   g=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa1.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa1.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa1.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: sZq+6Bqqho6dJH0ffNG0utzQUqfntE8WwDXagBrPi7yOImVchjjDnJ0Mgr+DwacELCKTWXP72Z
- RExnWQaI+o8qRO0fcfw3ThsOPkrf0TGVCURTUd9LOJo06Ljpbb+oRxHc3trlR/Z8ZxNQ+tiWfk
- 8a52pDLzYuXGKaSOFzWSsJzrHef8//cG9BMag8gfBED/rWhGdjvsutJi/Rys/nfwWbPvemsJN0
- Ux2SJ1Mf4UxEL6099h7iJzqHX3iK/rm+FBKSpKWdx0hBvN+g91sJdABtoeGoc3Qd0Xo+08M5fW
- 7EQ=
-X-SBRS: 2.7
-X-MesageID: 9705820
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,305,1571716800"; 
-   d="scan'208";a="9705820"
-Date:   Thu, 12 Dec 2019 10:46:00 +0100
-From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-To:     SeongJae Park <sj38.park@gmail.com>
-CC:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
-        <linux-block@vger.kernel.org>, <sjpark@amazon.com>,
-        <pdurrant@amazon.com>, SeongJae Park <sjpark@amazon.de>,
-        <linux-kernel@vger.kernel.org>, <xen-devel@lists.xenproject.org>
-Subject: Re: [Xen-devel] [PATCH v7 1/3] xenbus/backend: Add memory pressure
- handler callback
-Message-ID: <20191212094600.GA11756@Air-de-Roger>
-References: <20191211181016.14366-1-sjpark@amazon.de>
- <20191211181016.14366-2-sjpark@amazon.de>
+        Thu, 12 Dec 2019 04:47:41 -0500
+Received: by mail-vs1-f65.google.com with SMTP id x4so1068760vsx.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 01:47:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XMdYxxFfvBek0xJ9ws+XcV7OOK6TvbtKYblfPXo5Bx0=;
+        b=YaRmG0heHRTf1YamJewuwAaiScR2GhbNbuFYwcWc774QrWgGn/hDMHYjrvYeU/DYec
+         cMcfapTQsaH8k+N5fBhhDROkyzgZQDNeGp9uJp1QBVXQ21hQHFiTmCEuY/TvgDo5tv7m
+         RU09slsydMagH6yxibKUjcgugntALY8e2zRAggP/1tfg3dX693SU9ta/i9LI79Md9Ih4
+         lQaCQ7W7TF6D866/pFhPtRaqD6aUhJQ0ry+w+6QsFxIY039aSSKHSqVsQJqtJAiNgJzA
+         1Sp3LGvRApxwMgSj+MBq1b3P/Lqngavqp+MjuhAhwjdgM8YS0NvJGev3NDgjsamNsI5p
+         SSbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XMdYxxFfvBek0xJ9ws+XcV7OOK6TvbtKYblfPXo5Bx0=;
+        b=AqDP+afIKkCVSk8m53Y8yMI6B7XcM5BWNesYMeYdYZX4YUw/EL1VOFVItgq7GFGT+2
+         jBTLACLkZOW2IztYTNSPSV4KU7wZPaYtuGbGfwquEwZ+wxcPCHMGfPu2lFeHiT0RTPi2
+         OdeX2j2ufYhZY+R1EBlCw8cbhJgfxW7X+hZpXIhAsj/ykhRH+smTD2raGcmYAM96sGwJ
+         QpwgwCOWqKTMc0VHBqMfuTe+7Qbtb3r2O0ehXXpgyUlNyTLM/B4+b2awBe3BmFpLEZAY
+         Rnil/cTNhP6rkMlpW+lXR5SP/s8ZNn78zgufyVKSrszy/1iD9dzIosBQW/iEKVRRscF0
+         r4+A==
+X-Gm-Message-State: APjAAAUMJmE2QmQqHyFcRoCHPicQqasi7kOo3MmlT+cPPlS+84nnejrv
+        KBgp2O6j8cHq74Xz3puPk0Hq7TgVg7O+mG2yok8KRQ==
+X-Google-Smtp-Source: APXvYqz8bK51w8cXg8sOtlUH7nWrRPa31mFluvuPeG5or8/JqfR3jGZ+5D05DuNVCe7n2wO7bU++jdNTF+FXWAL0llg=
+X-Received: by 2002:a67:f496:: with SMTP id o22mr6244893vsn.9.1576144059117;
+ Thu, 12 Dec 2019 01:47:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191211181016.14366-2-sjpark@amazon.de>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL03.citrite.net (10.69.22.127)
+References: <cover.1576058136.git.amit.kucheria@linaro.org>
+ <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
+ <20191211171313.GA1530@gerhold.net>
+In-Reply-To: <20191211171313.GA1530@gerhold.net>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 12 Dec 2019 15:17:27 +0530
+Message-ID: <CAHLCerNYiuu_KA7ixjDmXLx0x8Bbodf5=BBEDBBY3qS_P5GAPg@mail.gmail.com>
+Subject: Re: [PATCH] drivers: thermal: tsens: Work with old DTBs
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Olof Johansson <olof@lixom.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 06:10:14PM +0000, SeongJae Park wrote:
-> Granting pages consumes backend system memory.  In systems configured
-> with insufficient spare memory for those pages, it can cause a memory
-> pressure situation.  However, finding the optimal amount of the spare
-> memory is challenging for large systems having dynamic resource
-> utilization patterns.  Also, such a static configuration might lack
-> flexibility.
-> 
-> To mitigate such problems, this commit adds a memory reclaim callback to
-> 'xenbus_driver'.  If a memory pressure is detected, 'xenbus' requests
-> every backend driver to volunarily release its memory.
-> 
-> Note that it would be able to improve the callback facility for more
-> sophisticated handlings of general pressures.  For example, it would be
-> possible to monitor the memory consumption of each device and issue the
-> release requests to only devices which causing the pressure.  Also, the
-> callback could be extended to handle not only memory, but general
-> resources.  Nevertheless, this version of the implementation defers such
-> sophisticated goals as a future work.
-> 
-> Reviewed-by: Juergen Gross <jgross@suse.com>
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+On Wed, Dec 11, 2019 at 10:43 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> Hi Amit,
+>
+> Thanks for the patch!
+>
+> On Wed, Dec 11, 2019 at 03:28:33PM +0530, Amit Kucheria wrote:
+> > In order for the old DTBs to continue working, the new interrupt code
+> > must not return an error if interrupts are not defined.
+> >
+> > Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  drivers/thermal/qcom/tsens.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> > index 015e7d2015985..d8f51067ed411 100644
+> > --- a/drivers/thermal/qcom/tsens.c
+> > +++ b/drivers/thermal/qcom/tsens.c
+> > @@ -109,7 +109,7 @@ static int tsens_register(struct tsens_priv *priv)
+> >
+> >       irq = platform_get_irq_byname(pdev, "uplow");
+> >       if (irq < 0) {
+> > -             ret = irq;
+> > +             dev_warn(&pdev->dev, "Missing uplow irq in DT\n");
+> >               goto err_put_device;
+> >       }
+>
+> platform_get_irq_byname() already logs an error if the IRQ cannot be
+> found: qcom-tsens 4a9000.thermal-sensor: IRQ uplow not found
+>
+> To replace that error with a warning (not sure if that is worth it),
+> we would need to replace the call with platform_get_irq_byname_optional().
 
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+I didn't know about optional, interesting.
 
-Thanks, Roger.
+> >
+> > @@ -118,7 +118,8 @@ static int tsens_register(struct tsens_priv *priv)
+> >                                       IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> >                                       dev_name(&pdev->dev), priv);
+> >       if (ret) {
+> > -             dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+> > +             dev_warn(&pdev->dev, "%s: failed to get uplow irq\n", __func__);
+> > +             ret = 0;
+> >               goto err_put_device;
+>
+> In case of the old DT, platform_get_irq_byname() will return -ENXIO,
+> because no interrupt is specified in the device tree.
+> So we should have already run into the error earlier,
+> and jumped to "err_put_device".
+>
+> Is this hunk really necessary?
+
+You're right. Just checking for ENXIO should be enough for old DTs.
+
+> In other words, wouldn't it be enough to do something like
+>
+> @@ -110,6 +110,8 @@ static int tsens_register(struct tsens_priv *priv)
+>         irq = platform_get_irq_byname(pdev, "uplow");
+>         if (irq < 0) {
+>                 ret = irq;
+> +               if (ret == -ENXIO)
+> +                       ret = 0;
+>                 goto err_put_device;
+>         }
+>
+> ... to essentially ignore only the "IRQ does not exist" condition
+> for old device trees?
+
+Thanks for the review.
