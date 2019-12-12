@@ -2,137 +2,162 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD39BC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCB7C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DDD22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A429321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YwBVWriE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9o4h16D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729298AbfLLMhy (ORCPT
+        id S1729304AbfLLMiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:37:54 -0500
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:1778 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729157AbfLLMhw (ORCPT
+        Thu, 12 Dec 2019 07:38:46 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28111 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729092AbfLLMiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:37:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576154272; x=1607690272;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=64i9dOS4nNgwTFfSAmSWV7jMZ71ZQlmzTwYxEKBpjQc=;
-  b=YwBVWriEPo3H0XaPTyAZBKR5NqaZK4T5A778guGAwvIIbgmeZDPG2Zjf
-   FWdHsZnMt0ZH5OhMXwuUEkLnRKErl7wIWfbWGzpiEGbke3qLO5nQ2HtTt
-   vPafJLhUZ8I6k+GjL69v7M26/7zPVtfbUMf/v+jFpdgWelJdNTMRD2VMY
-   g=;
-IronPort-SDR: u48cjDvfsDaqvN8mi03+dtkm+PjjjAcd0TOEvApWEU4rNGoaDFBQwhsWz1lW0OSTr6EgStUtWO
- qWR9JC3DsDjA==
-X-IronPort-AV: E=Sophos;i="5.69,305,1571702400"; 
-   d="scan'208";a="4722440"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 12 Dec 2019 12:37:39 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id B8FDBA1CBF;
-        Thu, 12 Dec 2019 12:37:36 +0000 (UTC)
-Received: from EX13D32EUB004.ant.amazon.com (10.43.166.212) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 12:37:36 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
- EX13D32EUB004.ant.amazon.com (10.43.166.212) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 12:37:35 +0000
-Received: from u2f063a87eabd5f.cbg10.amazon.com (10.125.106.135) by
- mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Thu, 12 Dec 2019 12:37:32 +0000
-From:   Paul Durrant <pdurrant@amazon.com>
-To:     <netdev@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Paul Durrant <pdurrant@amazon.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH net] xen-netback: avoid race that can lead to NULL pointer dereference
-Date:   Thu, 12 Dec 2019 12:37:23 +0000
-Message-ID: <20191212123723.21548-1-pdurrant@amazon.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 12 Dec 2019 07:38:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576154324;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HjG13pQnC6z3lipnj2OvOm4bGvR+32WxaKc1DUtleSc=;
+        b=O9o4h16DubQc8yT7OjnZbMOS4BPZAUsk2fEdMLTmfPdECdTfr+tnDbiLa1XoDM65y1mkD9
+        GL6SYLRC79106CrATCQJe12MNKoAbxco5yP01XGaCTKrzpbYXyeKLFuqeVygMQnNWiSi8E
+        1EdP9lThpA0gyHG00gClSMNabQLt+MM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-N9zt1eF6ND-eaFJKNOkRlQ-1; Thu, 12 Dec 2019 07:38:43 -0500
+X-MC-Unique: N9zt1eF6ND-eaFJKNOkRlQ-1
+Received: by mail-wr1-f70.google.com with SMTP id o6so974035wrp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 04:38:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HjG13pQnC6z3lipnj2OvOm4bGvR+32WxaKc1DUtleSc=;
+        b=gMeg873wPRIgM42fkO0P7QPYnSK+f0o1xspPay9fbuKHWHyawEvaN3WqttPl6XaJ9o
+         v23JPyyFhMERvedS11FhrwXQr6nlqeySvp8ozL6INlWzCn7h0FcdBNSFnUKrLDreRngW
+         dDz7l0N57Gm+eJnbNHHSCgV/c2KgZOojw3EggZPsLYJ8wGkAd+WMeekQNymxCxjjfUnf
+         GNJuT8KBel4m154kUOi8gYTfmqG6sNY7RQSwxrOntuT/h3KXCk7I6C0r75CMKu8yHl6N
+         LB8QGLEX2McVs2/YVEIgBwPs5YcHQG2Zus7uPFh7HDCvdug3lPH9/o41dz/EYjckcTtR
+         dUfg==
+X-Gm-Message-State: APjAAAXE9C6d/bFSzvHfdEgyJh9xvOT2TxyKkaDzJZ9de2TWXFKk/kJ2
+        IMf3cMxLS4BDCD0ANM49IKwYxsYeINNu2tWbktGGSVAA91mxDcH633zonC+DbB81FVokYmflqoW
+        yLUVfEMww/2seOWxAJB3bHuIn
+X-Received: by 2002:a7b:c8d4:: with SMTP id f20mr6672466wml.56.1576154321536;
+        Thu, 12 Dec 2019 04:38:41 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwwdmZoRBXRAhpV+I2D00L1wp6fAuTvagscxFEYVkPI+ZSRTzsiKfEn/1uAXKqpUma+stMrcA==
+X-Received: by 2002:a7b:c8d4:: with SMTP id f20mr6672437wml.56.1576154321316;
+        Thu, 12 Dec 2019 04:38:41 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id x6sm6440761wmi.44.2019.12.12.04.38.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 04:38:40 -0800 (PST)
+Subject: Re: [PATCH 5.5 regression fix 2/2] efi/libstub/helper: Initialize
+ pointer variables to zero for mixed mode
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+References: <20191212103158.4958-1-hdegoede@redhat.com>
+ <20191212103158.4958-3-hdegoede@redhat.com>
+ <CAKv+Gu9AjYVvLot9+enuwSWfyfzqgCWSuW3ioccm3FJ7KFA8eA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <9c5e89d7-7971-a0b4-fa56-fe4832007ca6@redhat.com>
+Date:   Thu, 12 Dec 2019 13:38:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <CAKv+Gu9AjYVvLot9+enuwSWfyfzqgCWSuW3ioccm3FJ7KFA8eA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2ac061ce97f4 ("xen/netback: cleanup init and deinit code")
-introduced a problem. In function xenvif_disconnect_queue(), the value of
-queue->rx_irq is zeroed *before* queue->task is stopped. Unfortunately that
-task may call notify_remote_via_irq(queue->rx_irq) and calling that
-function with a zero value results in a NULL pointer dereference in
-evtchn_from_irq().
+Hi,
 
-This patch simply re-orders things, stopping all tasks before zero-ing the
-irq values, thereby avoiding the possibility of the race.
+On 12-12-2019 12:29, Ard Biesheuvel wrote:
+> On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> When running in EFI mixed mode (running a 64 bit kernel on 32 bit EFI
+>> firmware), we _must_ initialize any pointers which are returned by
+>> reference by an EFI call to NULL before making the EFI call.
+>>
+>> In mixed mode pointers are 64 bit, but when running on a 32 bit firmware,
+>> EFI calls which return a pointer value by reference only fill the lower
+>> 32 bits of the passed pointer, leaving the upper 32 bits uninitialized
+>> unless we explicitly set them to 0 before the call.
+>>
+>> We have had this bug in the efi-stub-helper.c file reading code for
+>> a while now, but this has likely not been noticed sofar because
+>> this code only gets triggered when LILO style file=... arguments are
+>> present on the kernel cmdline.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   drivers/firmware/efi/libstub/efi-stub-helper.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>> index e02579907f2e..6ca7d86743af 100644
+>> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+>> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+>> @@ -365,7 +365,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+>>                                    u64 *file_sz)
+>>   {
+>>          efi_file_handle_t *h, *fh = __fh;
+> 
+> What about h? Doesn't it suffer from the same problem?
+> 
+>> -       efi_file_info_t *info;
+>> +       efi_file_info_t *info = NULL;
+>>          efi_status_t status;
+>>          efi_guid_t info_guid = EFI_FILE_INFO_ID;
+>>          unsigned long info_sz;
+> 
+> And info_sz?
 
-Signed-off-by: Paul Durrant <pdurrant@amazon.com>
----
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Wei Liu <wei.liu@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
----
- drivers/net/xen-netback/interface.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+You are right in both cases. I only checked allocate_pool and locate_protocol callers as those
+are the usual suspects.
 
-diff --git a/drivers/net/xen-netback/interface.c b/drivers/net/xen-netback/interface.c
-index 68dd7bb07ca6..f15ba3de6195 100644
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -628,18 +628,6 @@ int xenvif_connect_ctrl(struct xenvif *vif, grant_ref_t ring_ref,
- 
- static void xenvif_disconnect_queue(struct xenvif_queue *queue)
- {
--	if (queue->tx_irq) {
--		unbind_from_irqhandler(queue->tx_irq, queue);
--		if (queue->tx_irq == queue->rx_irq)
--			queue->rx_irq = 0;
--		queue->tx_irq = 0;
--	}
--
--	if (queue->rx_irq) {
--		unbind_from_irqhandler(queue->rx_irq, queue);
--		queue->rx_irq = 0;
--	}
--
- 	if (queue->task) {
- 		kthread_stop(queue->task);
- 		queue->task = NULL;
-@@ -655,6 +643,18 @@ static void xenvif_disconnect_queue(struct xenvif_queue *queue)
- 		queue->napi.poll = NULL;
- 	}
- 
-+	if (queue->tx_irq) {
-+		unbind_from_irqhandler(queue->tx_irq, queue);
-+		if (queue->tx_irq == queue->rx_irq)
-+			queue->rx_irq = 0;
-+		queue->tx_irq = 0;
-+	}
-+
-+	if (queue->rx_irq) {
-+		unbind_from_irqhandler(queue->rx_irq, queue);
-+		queue->rx_irq = 0;
-+	}
-+
- 	xenvif_unmap_frontend_data_rings(queue);
- }
- 
--- 
-2.20.1
+Shall I send a v2 of just this patch, or of the entire series, or are you going to
+fix this up?
+
+Regards,
+
+Hans
+
+
+> 
+> 
+>> @@ -527,7 +527,7 @@ efi_status_t handle_cmdline_files(efi_system_table_t *sys_table_arg,
+>>                                    unsigned long *load_addr,
+>>                                    unsigned long *load_size)
+>>   {
+>> -       struct file_info *files;
+>> +       struct file_info *files = NULL;
+>>          unsigned long file_addr;
+>>          u64 file_size_total;
+>>          efi_file_handle_t *fh = NULL;
+>> --
+>> 2.23.0
+>>
+> 
 
