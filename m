@@ -2,188 +2,141 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE68AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BF321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576179256;
-	bh=DSjzqa57tXjDkk2/y8MiZfkoGkXE5LuVpeVYvGkAzAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AirQq//5lvA5MRx3l0A+hiKTl5FXOKk387e9zvRwDLr7sKOgo9GVa6WfS/42Wg79t
-	 cNGr7eBFSnRrrqlosHdI6Fg567P7haydWGUxovCl2kAnT1eOzzG1pWAPSN+PY4xvw+
-	 T+KQKiVWKz/7V4XPr8bl+x8RvnQVtVQYajarYWF8=
+	by mail.kernel.org (Postfix) with ESMTP id 8F81621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FizTWvyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfLLTeJ (ORCPT
+        id S1730646AbfLLTez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:34:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLLTeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:34:08 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4714C21556;
-        Thu, 12 Dec 2019 19:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576179247;
-        bh=DSjzqa57tXjDkk2/y8MiZfkoGkXE5LuVpeVYvGkAzAw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bagGZkrK6wzLHJnf7BiRRpPhzPo5i+riIBOcS9DBGw4Oq1ZBQzyhZGBHdGOlcaaTg
-         WGFTIePbWzElznEfxHo/Qop3TWvFTUmiuMWZ2jloSXdTrYnKxApvRPSNaFF+bcowVa
-         2obC/XfXaO4qVL9xjg4eYXE4cX3X0COaAkN7hatc=
-Date:   Thu, 12 Dec 2019 19:34:01 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191212193401.GB19020@willie-the-truck>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
- <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au>
- <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
- <20191212180634.GA19020@willie-the-truck>
- <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+        Thu, 12 Dec 2019 14:34:55 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:40846 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730284AbfLLTez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:34:55 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s35so1496594pjb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:34:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IFlryiLHUodkFUHyul9JRSETVpiYHsZY3o54mIdwFns=;
+        b=FizTWvyU1A4ExbDpT2UuE4aYCU60rctg1gBJ5WR5COxthL7GosaRt/pb368fkQ+b22
+         QVMeuCeehi1v7G9Unrekbp7x5SiaZ/OtXQz9f5Xznvj4Rntb3UR3ca5leZ5LYBtJRKx2
+         x612miCMaPY5Sv/asIc2gkKqfcGBxqETTxVWP0ZIFnkfmOVcUFfW3GFdYuCzaiNPiUQp
+         JSG2MdKiSkmTGiNsT34dxA4fuk/ygNxj+SZxJfwIO2KhT5Ms1fTqPrQqnUf20764qcZC
+         5+s/wsVW23J/fLWInGM+jKaKU8E5+g+Wyu/mDw10wTueRwCD+g1G8NTRURscJIHDhq3l
+         NPfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IFlryiLHUodkFUHyul9JRSETVpiYHsZY3o54mIdwFns=;
+        b=q/a1uKLKkeMny92lDBwQP3XMziSPabedZSaEozyFROjc4LseGPsRW662h25G8CgSkS
+         VgH8Sf4h1dnKrAoX82i9nFTtJ8yFsj7wfrjJCyWYWQPbZ3G60QwGUFLWlvXjeJIkhCkg
+         nWq+aJsyBv4A3qirU+N9sbKV0Y0xuFVbDHwFRA0gtFNvt7xuqW2/7CBY6K4E8kFZ6Ouu
+         Vqlnf7CAj/vDGSi+06sfPukZMyg4VBcRN2NOpnwzA8DhPHTGRT4Fzm+hpilYyjFLbt0D
+         Q6gOJQcE1udGZ5yyP6yKgoUBBs+fFwAejqE8VP8SmCysN++i88KFjzfZd2RdzPPOonp4
+         RUtg==
+X-Gm-Message-State: APjAAAWW8H9oLrDG5NootMs22ZopZLFjBqCxhoWIltAGefspaMaPLTQy
+        vNiXvLm9Oxds+JuD5zGBxZpr6YESzTJ3DaR4ZWao6g==
+X-Google-Smtp-Source: APXvYqxDpjUCjUlCSd9D5HpG6l7mTCkwfCtR7gUjYNbmchtdSnj5MHHiXYtrS4dEMdidCEtwEUrq9Fm+jAazbPtXwiU=
+X-Received: by 2002:a17:902:8ec8:: with SMTP id x8mr10932263plo.119.1576179293980;
+ Thu, 12 Dec 2019 11:34:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211192252.35024-1-natechancellor@gmail.com>
+In-Reply-To: <20191211192252.35024-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Thu, 12 Dec 2019 11:34:42 -0800
+Message-ID: <CAKwvOdmQp+Rjgh49kbTp1ocLCjv4SUACEO4+tX5vz4stX-pPpg@mail.gmail.com>
+Subject: Re: [PATCH] ath11k: Remove unnecessary enum scan_priority
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 11, 2019 at 11:23 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> drivers/net/wireless/ath/ath11k/wmi.c:1827:23: warning: implicit
+> conversion from enumeration type 'enum wmi_scan_priority' to different
+> enumeration type 'enum scan_priority' [-Wenum-conversion]
+>         arg->scan_priority = WMI_SCAN_PRIORITY_LOW;
+>                            ~ ^~~~~~~~~~~~~~~~~~~~~
+> 1 warning generated.
+>
+> wmi_scan_priority and scan_priority have the same values but the wmi one
+> has WMI prefixed to the names. Since that enum is already being used,
+> get rid of scan_priority and switch its one use to wmi_scan_priority to
+> fix this warning.
+>
+> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/808
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-On Thu, Dec 12, 2019 at 10:43:05AM -0800, Linus Torvalds wrote:
-> On Thu, Dec 12, 2019 at 10:06 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > I'm currently trying to solve the issue by removing volatile from the bitop
-> > function signatures
-> 
-> I really think that's the wrong thing to do.
-> 
-> The bitop signature really should be "volatile" (and it should be
-> "const volatile" for test_bit, but I'm not sure anybody cares).
+Further, it looks like the member `scan_priority` in `struct
+wmi_start_scan_arg` and `struct wmi_start_scan_cmd` should probably
+use `enum wmi_scan_priority`, rather than `u32`.  Also, I don't know
+if the more concisely named enum is preferable?  Either way, thanks
+for the patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Agreed on the "const" part, although I do think the "volatile" aspect has
-nasty side-effects despite being a visual indicator that we're eliding
-locks. More below.
+> ---
+>  drivers/net/wireless/ath/ath11k/wmi.h | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+>
+> diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
+> index 4a518d406bc5..756101656391 100644
+> --- a/drivers/net/wireless/ath/ath11k/wmi.h
+> +++ b/drivers/net/wireless/ath/ath11k/wmi.h
+> @@ -2896,15 +2896,6 @@ struct wmi_bcn_offload_ctrl_cmd {
+>         u32 bcn_ctrl_op;
+>  } __packed;
+>
+> -enum scan_priority {
+> -       SCAN_PRIORITY_VERY_LOW,
+> -       SCAN_PRIORITY_LOW,
+> -       SCAN_PRIORITY_MEDIUM,
+> -       SCAN_PRIORITY_HIGH,
+> -       SCAN_PRIORITY_VERY_HIGH,
+> -       SCAN_PRIORITY_COUNT,
+> -};
+> -
+>  enum scan_dwelltime_adaptive_mode {
+>         SCAN_DWELL_MODE_DEFAULT = 0,
+>         SCAN_DWELL_MODE_CONSERVATIVE = 1,
+> @@ -3056,7 +3047,7 @@ struct scan_req_params {
+>         u32 scan_req_id;
+>         u32 vdev_id;
+>         u32 pdev_id;
+> -       enum scan_priority scan_priority;
+> +       enum wmi_scan_priority scan_priority;
+>         union {
+>                 struct {
+>                         u32 scan_ev_started:1,
+> --
+> 2.24.0
+>
+> --
 
-> Exactly because it's simply valid to say "hey, my data is volatile,
-> but do an atomic test of this bit". So it might be volatile in the
-> caller.
-
-That's fair, although the cases I've run into so far for the bitops are
-usually just that the functions have been wrapped, and volatile could easily
-be dropped from the caller as well (e.g. assign_bit(), __node_clear(),
-linkmode_test_bit()).
-
-> Now, I generally frown on actual volatile data structures - because
-> the data structure volatility often depends on _context_. The same
-> data might be volatile in one context (when you do some optimistic
-> test on it without locking), but 100% stable in another (when you do
-> have a lock).
-
-There are cases in driver code where it looks as though data members are
-being declared volatile specifically because of the bitops type signatures
-(e.g. 'wrapped' in 'struct mdp5_mdss', 'context_flag' in 'struct
-drm_device', 'state' in 'struct s2io_nic'). Yeah, it's bogus, but I think
-that having the modifier in the function signature is still leading people
-astray.
-
-> So I don't want to see "volatile" on data definitions ("jiffies" being
-> the one traditional exception), but marking things volatile in code
-> (because you know you're working with unlocked data) and then passing
-> them down to various helper functions - including the bitops ones - is
-> quite traditional and accepted.
-> 
-> In other words, 'volatile" should be treated the same way "const" is
-> largely treated in C.
-> 
-> A pointer to "const" data doesn't mean that the data is read-only, or
-> that it cannot be modified _elsewhere_, it means that within this
-> particular context and this copy of the pointer we promise not to
-> write to it.
-> 
-> Similarly, a pointer to "volatile" data doesn't mean that the data
-> might not be stable once you take a lock, for example. So it's ok to
-> have volatile pointers even if the data declaration itself isn't
-> volatile - you're stating something about the context, not something
-> fundamental about the data.
-> 
-> And in the context of the bit operations, "volatile" is the correct thing
-> to do.
-
-The root of my concern in all of this, and what started me looking at it in
-the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
-for a pointer means that local variables in macros declared using typeof()
-suddenly start generating *hideous* code, particularly when pointless stack
-spills get stackprotector all excited. Even if we simplify READ_ONCE() back
-to its old incantation, the acquire/release accessors will have the exact
-same issues on architectures that implement them.
-
-For example, consider this code on arm64:
-
-void ool_store_release(unsigned long *ptr, unsigned long val)
-{
-	smp_store_release(ptr, val);
-}
-
-This compiles to a single instruction plus return, which is what we want:
-
-0000000000000000 <ool_store_release>:
-   0:   c89ffc01        stlr    x1, [x0]
-   4:   d65f03c0        ret
-
-Now, see what happens if we make the 'ptr' argument volatile:
-
-void ool_store_release(volatile unsigned long *ptr, unsigned long val)
-{
-	smp_store_release(ptr, val);
-}
-
-0000000000000000 <ool_store_release>:
-   0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
-   4:   90000002        adrp    x2, 0 <__stack_chk_guard>
-   8:   91000042        add     x2, x2, #0x0
-   c:   910003fd        mov     x29, sp
-  10:   f9400043        ldr     x3, [x2]
-  14:   f9000fa3        str     x3, [x29, #24]
-  18:   d2800003        mov     x3, #0x0                        // #0
-  1c:   c89ffc01        stlr    x1, [x0]
-  20:   f9400fa1        ldr     x1, [x29, #24]
-  24:   f9400040        ldr     x0, [x2]
-  28:   ca000020        eor     x0, x1, x0
-  2c:   b5000060        cbnz    x0, 38 <ool_store_release+0x38>
-  30:   a8c27bfd        ldp     x29, x30, [sp], #32
-  34:   d65f03c0        ret
-  38:   94000000        bl      0 <__stack_chk_fail>
-
-It's a mess, and fixing READ_ONCE() doesn't help this case, which is why
-I was looking at getting rid of volatile where it's not strictly needed.
-I'm certainly open to other suggestions, I just haven't managed to think
-of anything else.
-
-Will
+-- 
+Thanks,
+~Nick Desaulniers
