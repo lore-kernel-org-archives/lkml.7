@@ -2,203 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3EBBC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65058C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80C224654
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lsWfVOx2"
+	by mail.kernel.org (Postfix) with ESMTP id 41EB924654
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfLLF4i (ORCPT
+        id S1727974AbfLLF4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 00:56:38 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14305 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfLLF4h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 00:56:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df1d68d0000>; Wed, 11 Dec 2019 21:56:29 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 11 Dec 2019 21:56:36 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 11 Dec 2019 21:56:36 -0800
-Received: from [10.2.165.195] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 05:56:35 +0000
-Subject: Re: [PATCH v9 23/25] mm/gup: track FOLL_PIN pages
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20191211025318.457113-1-jhubbard@nvidia.com>
- <20191211025318.457113-24-jhubbard@nvidia.com>
- <20191211112807.GN1551@quack2.suse.cz>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <f961d0b6-c660-85b9-ad01-53bce74e39e9@nvidia.com>
-Date:   Wed, 11 Dec 2019 21:53:45 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 12 Dec 2019 00:56:49 -0500
+Received: from mga04.intel.com ([192.55.52.120]:16608 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726833AbfLLF4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 00:56:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 21:56:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,304,1571727600"; 
+   d="scan'208";a="216003836"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
+  by orsmga006.jf.intel.com with ESMTP; 11 Dec 2019 21:56:43 -0800
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        stable@vger.kernel.org, Ramalingam C <ramalingam.c@intel.com>
+Subject: [char-misc-next] mei: hdcp: bind only with i915 on the same PCH
+Date:   Thu, 12 Dec 2019 10:41:03 +0200
+Message-Id: <20191212084103.2893-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191211112807.GN1551@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576130189; bh=WUvMFBOwsTbLT+9CzNbxGtAponFsFsmTJOyg8MjL8ds=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lsWfVOx2mYuCSEqMXkqo0p3SpKqw9VwSL+20QlVcuyoMSELQtTCN0YxM6RzLVo9oa
-         uq4Hl9KFn70q6l1bzqmgaiV5HLk4+H2168Aq1l5uWc+mWWgNKPzhftF1QMyxl40GPe
-         nNNgDtbzvAru+MjxE1MbEaMe+90vfqRYKPVuX/JzejQXCe2EVI5eyYy9CwInRuqtjp
-         2idGFh4dXFAMfDwQiKAN1Pz/TUuUoswEkyfXdQEyWp7z5jAlzfpntkPH8s96FOaimZ
-         1olYa+8gPiG8ccYKitvEKwCbv3GPr0UXUD+T0zjEzw7D9d6fQ9awWSzCOfMJ4VZl20
-         16ivttgOjkh4A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 3:28 AM, Jan Kara wrote:
-...
->=20
-> The patch looks mostly good to me now. Just a few smaller comments below.
->=20
->> Suggested-by: Jan Kara <jack@suse.cz>
->> Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->> Reviewed-by: Jan Kara <jack@suse.cz>
->> Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
->> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->=20
-> I think you inherited here the Reviewed-by tags from the "add flags" patc=
-h
-> you've merged into this one but that's not really fair since this patch
-> does much more... In particular I didn't give my Reviewed-by tag for this
-> patch yet.
+The mei device and i915 must reside on the same
+PCH in order for HDCP to work. Make the component
+matching function enforce this requirement.
 
-OK, I've removed those reviewed-by's. (I felt bad about dropping them, afte=
-r
-people had devoted time to reviewing, but I do see that it's wrong to imply
-that they've reviewed this much much larger thing.)
+                   hdcp
+                    |
+   i915            mei
+    |               |
+    +----= PCH =----+
 
-...
->=20
-> I somewhat wonder about the asymmetry of try_grab_compound_head() vs
-> try_grab_page() in the treatment of 'flags'. How costly would it be to ma=
-ke
-> them symmetric (i.e., either set FOLL_GET for try_grab_compound_head()
-> callers or make sure one of FOLL_GET, FOLL_PIN is set for try_grab_page()=
-)?
->=20
-> Because this difference looks like a subtle catch in the long run...
+Cc: <stable@vger.kernel.org> v5.0+
+Cc: Ramalingam C <ramalingam.c@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Reviewed-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ drivers/misc/mei/hdcp/mei_hdcp.c | 33 +++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-Done. It is only a modest code-level change, at least the way I've done it,=
- which is
-setting FOLL_GET for try_grab_compound_head(). In order to do that, I set
-it at the top of the internal gup fast calling stacks, which is actually a =
-good
-design anyway: gup fast is logically doing FOLL_GET in all cases. So settin=
-g
-the flag internally is accurate and consistent with the overall design.
+diff --git a/drivers/misc/mei/hdcp/mei_hdcp.c b/drivers/misc/mei/hdcp/mei_hdcp.c
+index 93027fd96c71..4c596c646ac0 100644
+--- a/drivers/misc/mei/hdcp/mei_hdcp.c
++++ b/drivers/misc/mei/hdcp/mei_hdcp.c
+@@ -757,11 +757,38 @@ static const struct component_master_ops mei_component_master_ops = {
+ 	.unbind = mei_component_master_unbind,
+ };
+ 
++/**
++ * mei_hdcp_component_match - compare function for matching mei hdcp.
++ *
++ *    The function checks if the driver is i915, the subcomponent is HDCP
++ *    and the grand parent of hdcp and the parent of i915 are the same
++ *    PCH device.
++ *
++ * @dev: master device
++ * @subcomponent: subcomponent to match (I915_COMPONENT_HDCP)
++ * @data: compare data (mei hdcp device)
++ *
++ * Return:
++ * * 1 - if components match
++ * * 0 - otherwise
++ */
+ static int mei_hdcp_component_match(struct device *dev, int subcomponent,
+ 				    void *data)
+ {
+-	return !strcmp(dev->driver->name, "i915") &&
+-	       subcomponent == I915_COMPONENT_HDCP;
++	struct device *base = data;
++
++	if (strcmp(dev->driver->name, "i915") ||
++	    subcomponent != I915_COMPONENT_HDCP)
++		return 0;
++
++	base = base->parent;
++	if (!base)
++		return 0;
++
++	base = base->parent;
++	dev = dev->parent;
++
++	return (base && dev && dev == base);
+ }
+ 
+ static int mei_hdcp_probe(struct mei_cl_device *cldev,
+@@ -785,7 +812,7 @@ static int mei_hdcp_probe(struct mei_cl_device *cldev,
+ 
+ 	master_match = NULL;
+ 	component_match_add_typed(&cldev->dev, &master_match,
+-				  mei_hdcp_component_match, comp_master);
++				  mei_hdcp_component_match, &cldev->dev);
+ 	if (IS_ERR_OR_NULL(master_match)) {
+ 		ret = -ENOMEM;
+ 		goto err_exit;
+-- 
+2.21.0
 
-
-> ...
->=20
->> @@ -1522,8 +1536,8 @@ struct page *follow_trans_huge_pmd(struct vm_area_=
-struct *vma,
->>   skip_mlock:
->>   	page +=3D (addr & ~HPAGE_PMD_MASK) >> PAGE_SHIFT;
->>   	VM_BUG_ON_PAGE(!PageCompound(page) && !is_zone_device_page(page), pag=
-e);
->> -	if (flags & FOLL_GET)
->> -		get_page(page);
->> +	if (!try_grab_page(page, flags))
->> +		page =3D ERR_PTR(-EFAULT);
->=20
-> I think you need to also move the try_grab_page() earlier in the function=
-.
-> At this point the page may be marked as mlocked and you'd need to undo th=
-at
-> in case try_grab_page() fails.
-
-
-OK, I've moved it up, adding a "subpage" variable in order to make that wor=
-k.
-
->=20
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index ac65bb5e38ac..0aab6fe0072f 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -4356,7 +4356,13 @@ long follow_hugetlb_page(struct mm_struct *mm, st=
-ruct vm_area_struct *vma,
->>   same_page:
->>   		if (pages) {
->>   			pages[i] =3D mem_map_offset(page, pfn_offset);
->> -			get_page(pages[i]);
->> +			if (!try_grab_page(pages[i], flags)) {
->> +				spin_unlock(ptl);
->> +				remainder =3D 0;
->> +				err =3D -ENOMEM;
->> +				WARN_ON_ONCE(1);
->> +				break;
->> +			}
->>   		}
->=20
-> This function does a refcount overflow check early so that it doesn't hav=
-e
-> to do try_get_page() here. So that check can be now removed when you do
-> try_grab_page() here anyway since that early check seems to be just a tin=
-y
-> optimization AFAICT.
->=20
-> 								Honza
->=20
-
-Yes. I've removed it, good spot.
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
