@@ -2,115 +2,75 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0549EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC732C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF70D22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1FA21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbfLLSA0 (ORCPT
+        id S1730343AbfLLSAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:00:26 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42677 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730003AbfLLSA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:00:26 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z14so2327462qkg.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:00:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rBuDgfE9sLA4203asMoCDWk+/8WmQc7l3W+E9Z8j78g=;
-        b=cKLtvvZJliZrTDwE6hpd5dGzMkCdZi83ZXrLL82eYxh+1o40FZXnVXRI0oTLQBHA7B
-         WAxIxJCkiAMBZTV9q23Gqp6DDH3zYAcWlUV1L2TIjyEku9PGi9PsQYwTfUyYmCQeoStd
-         582fEed6uqCpj3nNqzGplF/xvd60Dp64emPLS3+NoJi6F0OhDDhUuGh24YbpxhAfr400
-         GMeJhUhCuxSbnnAMcC8vz6fElnDlH0ZQQ5eCeH/tYna8CgydtljqS3SXuTKtdwCA5N2B
-         t7bAjaZOPhK2AR9l9dAlq2u0CDEcf5ykjSHp7GAETNwySBBlK8C1Yy3uasu1tK4Rxt12
-         CxKA==
-X-Gm-Message-State: APjAAAWMaSFZ+Qwqx6sGz/gzAsAXq9ndrIbLGR6mVlD3uQk7S1cTl4CZ
-        ADx+GUezetzVhsqPu961xOrOy0Q9
-X-Google-Smtp-Source: APXvYqxZMJZMxnFh+S3mIYmQTIp9GbiXIU38KyPzHtuMVKOBpTJlU6UMp9lQqX6wMY70/Bt24tr4QQ==
-X-Received: by 2002:a37:9bc2:: with SMTP id d185mr2045075qke.422.1576173624670;
-        Thu, 12 Dec 2019 10:00:24 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id j7sm1946037qkd.46.2019.12.12.10.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 10:00:23 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] init/main.c: minor cleanup/bugfix of envvar handling
-Date:   Thu, 12 Dec 2019 13:00:20 -0500
-Message-Id: <20191212180023.24339-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191123214039.139275-1-nivedita@alum.mit.edu>
-References: <20191123214039.139275-1-nivedita@alum.mit.edu>
+        Thu, 12 Dec 2019 13:00:47 -0500
+Received: from mga14.intel.com ([192.55.52.115]:9975 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730169AbfLLSAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:00:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 09:48:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="414006063"
+Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Dec 2019 09:48:55 -0800
+Subject: [PATCH =v2 3/3] tpm: selftest: cleanup after unseal with wrong
+ auth/policy test
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     tadeusz.struk@intel.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, jgg@ziepe.ca, mingo@redhat.com,
+        jeffrin@rajagiritech.edu.in, linux-integrity@vger.kernel.org,
+        will@kernel.org, peterhuewe@gmx.de
+Date:   Thu, 12 Dec 2019 09:48:59 -0800
+Message-ID: <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1>
+In-Reply-To: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
+References: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-unknown_bootoption passes unrecognized command line arguments to init as
-either environment variables or arguments. Some of the logic in the
-function is broken for quoted command line arguments.
+Unseal with wrong auth or wrong policy test affects DA lockout
+and eventually causes the tests to fail with:
+"ProtocolError: TPM_RC_LOCKOUT: rc=0x00000921"
+when the tests run multiple times.
+Send tpm clear command after the test to reset the DA counters.
 
-When an argument of the form param="value" is processed by parse_args
-and passed to unknown_bootoption, the command line has
-  param\0"value\0
-with val pointing to the beginning of value. The helper function
-repair_env_string is then used to restore the '=' character that was
-removed by parse_args, and strip the quotes off fully. This results in
-  param=value\0\0
-and val ends up pointing to the 'a' instead of the 'v' in value. This
-bug was introduced when repair_env_string was refactored into a separate
-function, and the decrement of val in repair_env_string became dead code.
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+---
+ tools/testing/selftests/tpm2/test_smoke.sh |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-This causes two problems in unknown_bootoption in the two places where
-the val pointer is used as a substitute for the length of param:
-
-1. An argument of the form param=".value" is misinterpreted as a
-potential module parameter, with the result that it will not be placed
-in init's environment.
-
-2. An argument of the form param="value" is checked to see if param is
-an existing environment variable that should be overwritten, but the
-comparison is off-by-one and compares 'param=v' instead of 'param='
-against the existing environment. So passing, for example, TERM="vt100"
-on the command line results in init being passed both TERM=linux and
-TERM=vt100 in its environment.
-
-Patch 1 adds logging for the arguments and environment passed to init
-and is independent of the rest: it can be dropped if this is
-unnecessarily verbose.
-
-Patch 2 removes repair_env_string from initcall parameter parsing in
-do_initcall_level, as that uses a separate copy of the command line now
-and the repairing is no longer necessary.
-
-Patch 3 fixes the bug in unknown_bootoption by recording the length of
-param explicitly instead of implying it from val-param.
-
-Changes from v1:
-- use pr_debug for additional logging in patch 1
-- move removal of dead val--; line from patch 2 to patch 3
-
-Arvind Sankar (3):
-  init/main.c: log arguments and environment passed to init
-  init/main.c: remove unnecessary repair_env_string in do_initcall_level
-  init/main.c: fix quoted value handling in unknown_bootoption
-
- init/main.c | 31 ++++++++++++++++++++++---------
- 1 file changed, 22 insertions(+), 9 deletions(-)
-
--- 
-2.23.0
+diff --git a/tools/testing/selftests/tpm2/test_smoke.sh b/tools/testing/selftests/tpm2/test_smoke.sh
+index cb54ab637ea6..8155c2ea7ccb 100755
+--- a/tools/testing/selftests/tpm2/test_smoke.sh
++++ b/tools/testing/selftests/tpm2/test_smoke.sh
+@@ -3,3 +3,8 @@
+ 
+ python -m unittest -v tpm2_tests.SmokeTest
+ python -m unittest -v tpm2_tests.AsyncTest
++
++CLEAR_CMD=$(which tpm2_clear)
++if [ -n $CLEAR_CMD ]; then
++	tpm2_clear -T device
++fi
 
