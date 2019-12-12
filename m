@@ -2,198 +2,126 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34269C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F8C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0138620637
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B6B20637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mpmFQMBq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQqkeUbc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfLLA7G (ORCPT
+        id S1727453AbfLLBBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:59:06 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52091 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfLLA7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:59:05 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YFmk24gsz9sPL;
-        Thu, 12 Dec 2019 11:59:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576112342;
-        bh=q29hxPkZ81zqhm8TCiG1DkHRYda5aQynV71wQB7CmII=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mpmFQMBquXMfKteBipHrly0/ZE7VLcyjgblIOhtdRx27viHxk53IscP+onNLVHn2q
-         20pgZlqIPgAdgcnH6g0RFBXO7/XrWL6cB4h+4v0WLQSyMjyGn0625Rhp+cjl125qZ9
-         llRL7zgUny/cQLIGquneYKBwGj5W0LFnd95a50hNUANHsUO934TiTZC3Sj6JET8IHJ
-         MydYJ8vfnTWEXQCQV+rp8BiqLd14XT+a4+ec20w91yZ3ZM7JLXK4SEBmzuFmesR5Xl
-         Xxw0ar9XI1HPefOopy4vz9l1NteUiTjRemd2il52NNVyoArrg9C9ZKCUw8zkjSwu5n
-         wNmzAenbwzcLw==
-Date:   Thu, 12 Dec 2019 11:59:01 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failures after merge of the keys tree
-Message-ID: <20191212115901.221d8ba1@canb.auug.org.au>
+        Wed, 11 Dec 2019 20:01:03 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34615 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfLLBBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:01:02 -0500
+Received: by mail-lf1-f66.google.com with SMTP id l18so335291lfc.1;
+        Wed, 11 Dec 2019 17:01:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1yHYuY8rVNWJMaDwGRTUaPkGk2faHXUM519JZN0chQw=;
+        b=gQqkeUbch5ZLoU/Oq5FAPfMhGY5+YZjAakgEaB28PtSPd2iA2ZvMBdMZYKkwbIs84T
+         9wuu0Olhd927uliwpr1WOVaF9uGmVHZsDnAKeV4s+Mv/27+f1syMU4qRauQuh4WM7SWn
+         /vpJ4LDhYoFB00+JtcRAeB9nbCaLCpVIwaAJ9/5DhB5TgvTzCsONNR/ChAiAeDBJMYNc
+         e+9dIfTRgAUiAWcA6+mkGAF4+ThVMshA8S3hv9PSh9umo5ykMaPVeQrcHt09zrFnW1Hm
+         PcvEiAUAfFfIYLqBHWaYzlEExqkUjfcBYvWJeJfzmUXuw108ZAkmNxqe+CNGUKo7Y0nR
+         x+0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1yHYuY8rVNWJMaDwGRTUaPkGk2faHXUM519JZN0chQw=;
+        b=k0YG0XkwR/sXpBPsAFoAsFe3zpppW7sRr43Bx/R/IE/ghBTj1NFD94/3TvCRtWQMWN
+         v9PYqPal6c38ah0aTdCjGsx/8M434rY9SK+P3KyEx3iZOgeMkPxaasoNT39Vs0Oudrhr
+         yTLjSdfvAttPLFQmtj8Kl9dA6p9ko+qxIqmg6fJpzrZGiosFwGujbt6mYnQWlQb+bcLS
+         0afbycTAzJ3mWpvMbBK0E5q1BCnXUIkiguhw9JsLxp7wBPcolEdyNz90kuqIbj6Mg1V1
+         cDC8ccY/d/p6GT1s+2M6mfnUWwZ423L/wwCtPDyi6LERs27aQXSsMW79sNWllvNlw98T
+         SAtQ==
+X-Gm-Message-State: APjAAAVSqsX4XpG1PUj4GISIYLEzh+3rLYhCwMJkQriAMkPNMhKSyI3S
+        MoUgR2ea0JZ8qZwBCX4iDLU=
+X-Google-Smtp-Source: APXvYqyOF2Os93Cc5b6hs3Zi3POGXACpSIzvcBlwaJRKs+mwxJu8IC6o1IHz8Bd6MPuVAijO/zCDGQ==
+X-Received: by 2002:ac2:48bc:: with SMTP id u28mr3965686lfg.81.1576112460540;
+        Wed, 11 Dec 2019 17:01:00 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y25sm1965881lfy.59.2019.12.11.17.00.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 17:01:00 -0800 (PST)
+Subject: Re: [PATCH v2 8/9] dt-bindings: input: elants-i2c: Document common
+ touchscreen properties
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <ecacdd9b1baea0cf332c30f3c7e01d5e734957be.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <24fcfedd-1c32-0c2e-73e3-08c4e289d96a@gmail.com>
+Message-ID: <a1aa3010-727b-3536-3426-7281030f6886@gmail.com>
+Date:   Thu, 12 Dec 2019 04:00:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/iFdWzqfb3Y03+bLckGVND9j";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <24fcfedd-1c32-0c2e-73e3-08c4e289d96a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/iFdWzqfb3Y03+bLckGVND9j
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+12.12.2019 03:58, Dmitry Osipenko пишет:
+> 11.12.2019 19:03, Michał Mirosław пишет:
+>> From: Dmitry Osipenko <digetx@gmail.com>
+>>
+>> Document support of the common touchscreen properties.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+>> ---
+>>  Documentation/devicetree/bindings/input/elants_i2c.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> index 5edac8be0802..45fab32bbc19 100644
+>> --- a/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> +++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
+>> @@ -14,9 +14,13 @@ Optional properties:
+>>  - reset-gpios: reset gpio the chip is connected to.
+>>  - vcc33-supply: a phandle for the regulator supplying 3.3V power.
+>>  - vccio-supply: a phandle for the regulator supplying IO power.
+>> +- see [2] for additional properties
+>> +
+>> +For additional optional properties see: touchscreen.txt
+>>  
+>>  [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>  [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+>> +[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+>>  
+>>  Example:
+>>  	&i2c1 {
+>>
+> 
+> Rob's email address is incorrect: <robh-dt@kernel.org> ->
+> <robh+dt@kernel.org>
+> 
+> But I suppose he's keeping an eye on the device-tree ML.
 
-Hi all,
-
-After merging the keys tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
-
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'allocate_filesystem_keyring':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 5 of 'keyring_=
-alloc' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:208:21: note: in expansion of macro 'KEY_POS_SEARCH'
-  208 |     current_cred(), KEY_POS_SEARCH |
-      |                     ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:390:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  390 | extern struct key *keyring_alloc(const char *description, kuid_t ui=
-d, kgid_t gid,
-      |                    ^~~~~~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'allocate_master_key_users_keyring':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 5 of 'keyring_=
-alloc' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:252:21: note: in expansion of macro 'KEY_POS_SEARCH'
-  252 |     current_cred(), KEY_POS_SEARCH |
-      |                     ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:390:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  390 | extern struct key *keyring_alloc(const char *description, kuid_t ui=
-d, kgid_t gid,
-      |                    ^~~~~~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'add_master_key_user':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 6 of 'key_allo=
-c' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:290:8: note: in expansion of macro 'KEY_POS_SEARCH'
-  290 |        KEY_POS_SEARCH | KEY_USR_VIEW, 0, NULL);
-      |        ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:256:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  256 | extern struct key *key_alloc(struct key_type *type,
-      |                    ^~~~~~~~~
-In file included from include/linux/keyctl.h:11,
-                 from include/linux/key.h:35,
-                 from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-fs/crypto/keyring.c: In function 'add_new_master_key':
-include/uapi/linux/keyctl.h:52:24: warning: passing argument 6 of 'key_allo=
-c' makes pointer from integer without a cast [-Wint-conversion]
-   52 | #define KEY_POS_SEARCH 0x08000000 /* possessor can find a key in se=
-arch / search a keyring */
-      |                        ^
-      |                        |
-      |                        int
-fs/crypto/keyring.c:362:4: note: in expansion of macro 'KEY_POS_SEARCH'
-  362 |    KEY_POS_SEARCH | KEY_USR_SEARCH | KEY_USR_VIEW,
-      |    ^~~~~~~~~~~~~~
-In file included from include/linux/key-type.h:11,
-                 from fs/crypto/keyring.c:22:
-include/linux/key.h:256:20: note: expected 'struct key_acl *' but argument =
-is of type 'int'
-  256 | extern struct key *key_alloc(struct key_type *type,
-      |                    ^~~~~~~~~
-fs/crypto/keysetup_v1.c: In function 'find_and_lock_process_key':
-fs/crypto/keysetup_v1.c:107:8: error: too few arguments to function 'reques=
-t_key'
-  107 |  key =3D request_key(&key_type_logon, description, NULL);
-      |        ^~~~~~~~~~~
-In file included from include/keys/user-type.h:11,
-                 from fs/crypto/keysetup_v1.c:25:
-include/linux/key.h:321:27: note: declared here
-  321 | static inline struct key *request_key(struct key_type *type,
-      |                           ^~~~~~~~~~~
-drivers/md/dm-verity-verify-sig.c: In function 'verity_verify_get_sig_from_=
-key':
-drivers/md/dm-verity-verify-sig.c:38:8: error: too few arguments to functio=
-n 'request_key'
-   38 |  key =3D request_key(&key_type_user,
-      |        ^~~~~~~~~~~
-In file included from include/keys/user-type.h:11,
-                 from drivers/md/dm-verity-verify-sig.c:10:
-include/linux/key.h:321:27: note: declared here
-  321 | static inline struct key *request_key(struct key_type *type,
-      |                           ^~~~~~~~~~~
-
-
-Caused by commit
-
-  068df091816a ("keys: Replace uid/gid/perm permissions checking with an AC=
-L")
-
-I have used the keys tree from next-20191211 for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/iFdWzqfb3Y03+bLckGVND9j
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xkNUACgkQAVBC80lX
-0Gycvgf9EwK6ivtSGRXCNrbIPSNf0N51zwzJyNj0T1uFMWq8yZdMmosP6cMVgUgm
-lA01WPbMajunv2hTmxwb1DstCc6wZunpfAZroDZVhoTCLIwt1/+vLq7fo1ROQdzh
-BGdgErQ28o0On/OZ4EN3kb38MYFP4WHzecaAvczZo8HpQy0efxlcFLN0T0lHdtkq
-X99T/IZTGPD7SR0Y9J3Tt0YPBDrUExYxtMrzfL4mR7d/fnV4B7N/gx3vt5MhUsE0
-VnumDGvjcdquEIuF1tun3AGSUNPX/sbKLYhSX5L40Npauxu3XY+Y63Us7ORTGuU1
-X6fn9tKLl+nLuz5F14CqkwnM0IQ2IA==
-=HzoL
------END PGP SIGNATURE-----
-
---Sig_/iFdWzqfb3Y03+bLckGVND9j--
+Adding Rob to CC using the correct address.
