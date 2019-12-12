@@ -2,118 +2,176 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551BEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA06C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206FA21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BBE214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fea64jzy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMzZaQbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfLLAdw (ORCPT
+        id S1727391AbfLLAel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:33:52 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49769 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726673AbfLLAdv (ORCPT
+        Wed, 11 Dec 2019 19:34:41 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41939 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLLAek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:33:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576110830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kxaQEzM6oe0SiXHNkoXFhJo/PdqrG74qMgwC+pUR+EA=;
-        b=fea64jzyLVvJiy0anhIysxzOE8z4ENwtMdRvA5xVklDDEHUKhsKNjTUgnN2kbMEmHUegon
-        SMn2bPsfwqiDVFWl2cKSlYQCd+D/zOPRxxZFQnYmDjwV6wt6UiY4QrR9f3bY1l3cXf5Bnj
-        q7pKx22lJplKxorPefSOHIQCzeOoeT0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-CBopdrhNO5ugP9w1f7LILg-1; Wed, 11 Dec 2019 19:33:49 -0500
-X-MC-Unique: CBopdrhNO5ugP9w1f7LILg-1
-Received: by mail-wm1-f71.google.com with SMTP id q26so82121wmq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 16:33:48 -0800 (PST)
+        Wed, 11 Dec 2019 19:34:40 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so208817ljc.8;
+        Wed, 11 Dec 2019 16:34:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lfmanDWtZG3y3lJcI6oG7JnQAfGL9a+2cuiNfOFKa/U=;
+        b=fMzZaQbCHQtOYueUIJe4RpN4ud9nulBhYYNsRlejm9BHPdtBBYb8brKQsPjZYQ4gXz
+         BRqwkLmdE5B7R8BnxhNA2xA4A1BSgfBGXiPAsI4yDsqdThulQvE1Xt2tIsScQuzNP9Zo
+         L4pBbg68FkyycdSq/XHyNWwxh4cej1dCJzl/txXhpSLV8hoI5zBgfyN+0qp8p54jiDrK
+         7zd3b/Vaa/RMD0Yr0p5iy/zV/BQ+gKYUY5IA1TC7R3OBu5FILh/50ydgo6jV525E4GFk
+         2DzUVyD2PTlMbw1Bj7rQ9k3hXYgMNY7POP2BhvRvzBjkwCh5Rt5okimkUoeC4oukCOl7
+         GZuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=kxaQEzM6oe0SiXHNkoXFhJo/PdqrG74qMgwC+pUR+EA=;
-        b=sIkuCtbhdTEqAc6WDjHWOIqbUXt6X4MyhbWcfsQo559cA69QiLlqytGV1xcoy1t/qb
-         2E+vNbFd8ZQpIZnOFtcya1CFCIzmztwp+ktA4W/7j9oMUNUKxS/55JYf7nYDnuDAl6dI
-         SaryrCXB27RkNGAQCR5cA3xcNeEvVDTze780GC46ZIs/fJARDZJOp2oAG4Dx+XVmALGG
-         zZZ7VxGiRNQzQlTHWx2k56App4mI94uVIZtI1lOPD8yIumqXYqViERyzk92YFyq+BaXu
-         Yu4Cq9EB3q8KeW1mbbh35+E39rvi36VT1p4oYRW0gBGXP2zkUlUQ7XlH5UR8URbjo99B
-         Rumw==
-X-Gm-Message-State: APjAAAW2tG9vM8F7dNV20Uydp6pt0XB37C0Z62xDUWMj9/JoOXAe2ZP6
-        vPdMfAQkKy1sTwwKZ61GLRQtzXZBbdIkbn5mqZojeFecgiiwfFj0PKzhh92mOVgpLVXPlt57Bgt
-        6MVRIh2vPAgBjJ/sAV885O8St
-X-Received: by 2002:a7b:cb06:: with SMTP id u6mr2810624wmj.59.1576110828053;
-        Wed, 11 Dec 2019 16:33:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyD0amd5WvU7gq7wzj8WYH1A6wG/po1G1jtnvaFUH1dPZs63RNPSrP3jOjG29NHFqZXaTnK6A==
-X-Received: by 2002:a7b:cb06:: with SMTP id u6mr2810593wmj.59.1576110827817;
-        Wed, 11 Dec 2019 16:33:47 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id l22sm3975613wmj.42.2019.12.11.16.33.45
+        bh=lfmanDWtZG3y3lJcI6oG7JnQAfGL9a+2cuiNfOFKa/U=;
+        b=p9eZsjL3+jrlNpYbyiDM9pKts/cDdue1v7KMvtaEcDsjCYgnzz8PhcBGvobBcQsZRE
+         XmsCmHOofpk9l4h+KQyX2nwv07XA2Sw2VMu8sTzCNcihPe2dQLhLAfBxRKPKeMmT8HPk
+         tDiid3nMbVlDeon9WjlyvV4beNhANeiii5ar3/b+BmFQ8+Lc84Cc0F+VKvtgh08DtzfZ
+         LH+F2ElgAOUwtgq2xGmDm8/Z8tt/UUXUXozq+yw8gtbtd7gnUdaGydV1WFUugdDzantH
+         yAb4HBSK0SEw0EKnWj5f+Mid54LQ1ib5AHfXmciJw2qr74drMdFOtp8z6aIuX4zM//gt
+         5VDw==
+X-Gm-Message-State: APjAAAWxJGn2vAYLYJ0AROzBG+cYCZsbnQGWn4U+j1VDzprEgCsDNhrW
+        D7I0FQ9Yw6SqUm2Y2ttiMJA=
+X-Google-Smtp-Source: APXvYqxUH+e7IDh7nFPQWY2Ftj5nPQ0qbSz4e9jk5LEJUrFPBZ0hJxpZfg34qYZBeaPXXSmtGWinqw==
+X-Received: by 2002:a2e:6c06:: with SMTP id h6mr3889022ljc.246.1576110877803;
+        Wed, 11 Dec 2019 16:34:37 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id y8sm1985797lji.56.2019.12.11.16.34.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 16:33:47 -0800 (PST)
-Subject: Re: [PATCH v2 1/3] KVM: x86: assign two bits to track SPTE kinds
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Junaid Shahid <junaids@google.com>
-References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
- <1569582943-13476-2-git-send-email-pbonzini@redhat.com>
- <CANgfPd8G194y1Bo-6HR-jP8wh4DvdAsaijue_pnhetjduyzn4A@mail.gmail.com>
- <20191211191327.GI5044@linux.intel.com>
- <4e850c10-ff14-d95e-df22-0d0fd7427509@redhat.com>
- <20191212002902.GM5044@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5c39ee9b-3b58-f1c9-889d-6e012bbbac6c@redhat.com>
-Date:   Thu, 12 Dec 2019 01:33:45 +0100
+        Wed, 11 Dec 2019 16:34:36 -0800 (PST)
+Subject: Re: [PATCH v2 1/9] input: elants: document some registers and values
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <82f3e18f260a3f372944401d12f8f92bd64bc9d2.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <4496f2db-0d14-2a55-ba6b-1e67da1fb04d@gmail.com>
+Date:   Thu, 12 Dec 2019 03:34:35 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20191212002902.GM5044@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <82f3e18f260a3f372944401d12f8f92bd64bc9d2.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 01:29, Sean Christopherson wrote:
->>   */
->> -#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(18, 0)
->> +#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(17, 0)
->>  
->>  #define MMIO_SPTE_GEN_LOW_START		3
->>  #define MMIO_SPTE_GEN_LOW_END		11
->>  #define MMIO_SPTE_GEN_LOW_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
->>  						    MMIO_SPTE_GEN_LOW_START)
->>  
->> -#define MMIO_SPTE_GEN_HIGH_START	52
->> -#define MMIO_SPTE_GEN_HIGH_END		61
->> +/* Leave room for SPTE_SPECIAL_MASK.  */
->> +#define MMIO_SPTE_GEN_HIGH_START	PT64_SECOND_AVAIL_BITS_SHIFT
-> I'd rather have GEN_HIGH_START be an explicit bit number and then add
-> a BUILD_BUG_ON(GEN_HIGH_START < PT64_SECOND_AVAIL_BITS_SHIFT) to ensure
-> the MMIO gen doesn't overlap other stuff.  That way we get a build error
-> if someone changes PT64_SECOND_AVAIL_BITS_SHIFT, otherwise the MMIO gen
-> will end up who knows where and probably overwrite NX or EPT.SUPPRESS_VE.
+11.12.2019 19:03, Michał Mirosław пишет:
+> Add information found in downstream kernels, to make the code less
+> magic.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 29 +++++++++++++++++++++-----
+>  1 file changed, 24 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index d4ad24ea54c8..887888c53996 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -77,7 +77,11 @@
+>  
+>  #define HEADER_REPORT_10_FINGER	0x62
+>  
+> -/* Header (4 bytes) plus 3 fill 10-finger packets */
+> +/* Power state */
+> +#define PWR_STATE_DEEP_SLEEP	0
+> +#define PWR_STATE_NORMAL	1
+> +
+> +/* Header (4 bytes) plus 3 full 10-finger packets */
+>  #define MAX_PACKET_SIZE		169
+>  
+>  #define BOOT_TIME_DELAY_MS	50
+> @@ -87,10 +91,21 @@
+>  #define E_ELAN_INFO_BC_VER	0x10
+>  #define E_ELAN_INFO_TEST_VER	0xE0
+>  #define E_ELAN_INFO_FW_ID	0xF0
+> +#define E_POWER_MODE		0x40
+> +#define E_POWER_STATE		0x50
+> +#define E_INFO_X_RES		0x60
+> +#define E_INFO_Y_RES		0x63
+>  #define E_INFO_OSR		0xD6
+>  #define E_INFO_PHY_SCAN		0xD7
+>  #define E_INFO_PHY_DRIVER	0xD8
+
+> +/* FW write command, 0x54 0x?? 0x0, 0x01 */
+> +#define E_POWER_MODE_BATTERY	0x40
+> +#define E_POWER_MODE_AC		0x41
+
+These commands are not utilized yet, but perhaps it's okay to add the
+definitions if you're going to add support for power source switching.
+
+> +#define E_POWER_MODE_USB	0x42
+> +#define E_POWER_STATE_SLEEP	0x50
+> +#define E_POWER_STATE_RESUME	0x58
+> +
+>  #define MAX_RETRIES		3
+>  #define MAX_FW_UPDATE_RETRIES	30
+>  
+> @@ -231,8 +246,8 @@ static int elants_i2c_calibrate(struct elants_data *ts)
+>  {
+>  	struct i2c_client *client = ts->client;
+>  	int ret, error;
+> -	static const u8 w_flashkey[] = { 0x54, 0xC0, 0xE1, 0x5A };
+> -	static const u8 rek[] = { 0x54, 0x29, 0x00, 0x01 };
+> +	static const u8 w_flashkey[] = { CMD_HEADER_WRITE, 0xC0, 0xE1, 0x5A };
+> +	static const u8 rek[] = { CMD_HEADER_WRITE, 0x29, 0x00, 0x01 };
+>  	static const u8 rek_resp[] = { CMD_HEADER_REK, 0x66, 0x66, 0x66 };
+>  
+>  	disable_irq(client->irq);
+> @@ -1295,7 +1310,9 @@ static int __maybe_unused elants_i2c_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct elants_data *ts = i2c_get_clientdata(client);
+> -	const u8 set_sleep_cmd[] = { 0x54, 0x50, 0x00, 0x01 };
+> +	const u8 set_sleep_cmd[] = {
+> +		CMD_HEADER_WRITE, E_POWER_STATE_SLEEP, 0x00, 0x01
+> +	};
+>  	int retry_cnt;
+>  	int error;
+>  
+> @@ -1332,7 +1349,9 @@ static int __maybe_unused elants_i2c_resume(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct elants_data *ts = i2c_get_clientdata(client);
+> -	const u8 set_active_cmd[] = { 0x54, 0x58, 0x00, 0x01 };
+> +	const u8 set_active_cmd[] = {
+> +		CMD_HEADER_WRITE, E_POWER_STATE_RESUME, 0x00, 0x01
+> +	};
+>  	int retry_cnt;
+>  	int error;
+>  
 > 
 
-Fair enough.  While at it I'll also add MMIO_SPTE_GEN_BITS (
-	MMIO_SPTE_GEN_LOW_END - MMIO_SPTE_GEN_LOW_START + 1
-	+ MMIO_SPTE_GEN_HIGH_END - MMIO_SPTE_GEN_HIGH_START + 1) and use it in
-MMIO_SPTE_GEN_MASK.
-
-Paolo
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 
