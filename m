@@ -2,151 +2,172 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80429C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE9FC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D40721655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:21:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SSsBUJhx"
+	by mail.kernel.org (Postfix) with ESMTP id 9B10E21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfLLNU7 (ORCPT
+        id S1729444AbfLLNVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:20:59 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41297 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729378AbfLLNU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:20:58 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so2254699ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 05:20:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hg7Wl/6CET3pvbTGNm/tGvdeGMQk6gSudBEEyfBygCo=;
-        b=SSsBUJhxA1aRWawSyAxOR8XEmSe8IeDhUogI22JjnRdTk3guoUUCNE18wU5spaIBSN
-         Tge40xKNTf2c46f/Ct3PtBV62vLDyTgN2F3kU/LEPoq1BJ2nnzBXF8JYtD2eEX1mqIJz
-         rW7wDkFNi5MxHljIDydZyIjHe6qK9dZp/ZzKZFTU8OzgxhvVNWUmlr/+DUAbJCPCYqdT
-         SZmfh20Q3fi5Bhn0MuHL9ePyN6uLVtDrP1daGTkTkZZvu5ew56B9/mLwobAy+2/ftSrB
-         0Q9aN+TRxhkjgCuoZ7lNHssuUGfAJkwH65uRfr9oM3Du3HhN0ra9yv9gV/v3pVzTcRo0
-         0k3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hg7Wl/6CET3pvbTGNm/tGvdeGMQk6gSudBEEyfBygCo=;
-        b=TLnWKAxtR2Sig7qwL/uTSl9LcTgYXQWvi5MfbIqroWfRV/zqpK5FElC3Kf/8gJcsSY
-         aksTkKd7fYDCuDKZ+CvaIAW63u4fct2ftzuedlWfIk+bCiCQ9d7PF6SSClWkWsaVxwfU
-         ajKn9U5vqJmhv6NuH7L9nnQg4oeAcaoLrnsGlOVQJLTqtMbLJ1lmZgISll+8pzUwYw+O
-         YsXLEfD08GNUauAj7PF2vZ4oipBXHu1LYgLzCRktIj05OTAKvt4pztepjYy3u8RWaVDj
-         //O+1qnvdXDEz9XqnKJcT171CfdrJXdQ2vzFrX+Tk9S8I2U41U6PB+bLj5768FRPvM6l
-         E0NQ==
-X-Gm-Message-State: APjAAAXTg91AFeXsSCOG/rVE0+1umUPRBSeQ1NNV+0GACj0uZr0VuH86
-        Ii2ZS+xnpxSoHWV2mGO525cVkVnQNy8klPIQM1yapw==
-X-Google-Smtp-Source: APXvYqw5fhzsAgc+HL+XC84iHcSjemi0g8V+vxBZMQOSmUPecN5cY5o5jyiYAB8ZURwvkZwuG5+myIg9qUaLJdi8vHI=
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr5871004ljh.183.1576156856527;
- Thu, 12 Dec 2019 05:20:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-3-geert+renesas@glider.be>
-In-Reply-To: <20191127084253.16356-3-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 14:20:45 +0100
-Message-ID: <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] gpiolib: Add support for gpiochipN-based table lookup
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Thu, 12 Dec 2019 08:21:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50418 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729378AbfLLNVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:21:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B70EFAFD8;
+        Thu, 12 Dec 2019 13:21:03 +0000 (UTC)
+Message-ID: <ff60337c5f6f324fb121fa7cad24e763af29cfe2.camel@suse.de>
+Subject: Re: [PATCH v4 8/8] linux/log2.h: Use roundup/dow_pow_two() on 64bit
+ calculations
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+        Frank Rowand <frowand.list@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        iommu@lists.linux-foundation.org
+Date:   Thu, 12 Dec 2019 14:21:00 +0100
+In-Reply-To: <20191205203845.GA243596@google.com>
+References: <20191205203845.GA243596@google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-lcx9Dpdc/nSfdN+F0tca"
+User-Agent: Evolution 3.34.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert!
 
-On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+--=-lcx9Dpdc/nSfdN+F0tca
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Currently GPIO controllers can only be referred to by label in GPIO
-> lookup tables.
->
-> Add support for looking them up by "gpiochipN" name, with "N" either the
-> corresponding GPIO device's ID number, or the GPIO controller's first
-> GPIO number.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Thu, 2019-12-05 at 14:38 -0600, Bjorn Helgaas wrote:
+> The subject contains a couple typos: it's missing "of" and it's
+> missing the "n" on "down".
 
-What the commit message is missing is a rationale, why is this needed?
+Noted >=20
+> On Tue, Dec 03, 2019 at 12:47:41PM +0100, Nicolas Saenz Julienne wrote:
+> > The function now is safe to use while expecting a 64bit value. Use it
+> > where relevant.
+>=20
+> Please include the function names ("roundup_pow_of_two()",
+> "rounddown_pow_of_two()") in the changelog so it is self-contained and
+> doesn't depend on the subject.
 
-> If this is rejected, the GPIO Aggregator documentation must be updated.
->
-> The second variant is currently used by the legacy sysfs interface only,
-> so perhaps the chip->base check should be dropped?
+Noted
 
-Anything improving the sysfs is actively discouraged by me.
-If it is just about staying compatible it is another thing.
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> With the nits above and below addressed,
+>=20
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci
 
-> +static int gpiochip_match_id(struct gpio_chip *chip, void *data)
-> +{
-> +       int id = (uintptr_t)data;
-> +
-> +       return id == chip->base || id == chip->gpiodev->id;
-> +}
->  static struct gpio_chip *find_chip_by_name(const char *name)
->  {
-> -       return gpiochip_find((void *)name, gpiochip_match_name);
-> +       struct gpio_chip *chip;
-> +       int id;
-> +
-> +       chip = gpiochip_find((void *)name, gpiochip_match_name);
-> +       if (chip)
-> +               return chip;
-> +
-> +       if (!str_has_prefix(name, GPIOCHIP_NAME))
-> +               return NULL;
-> +
-> +       if (kstrtoint(name + strlen(GPIOCHIP_NAME), 10, &id))
-> +               return NULL;
-> +
-> +       return gpiochip_find((void *)(uintptr_t)id, gpiochip_match_id);
+Thanks!
 
-Isn't it easier to just  augment the existing match function to
-check like this:
+> > ---
+> >  drivers/acpi/arm64/iort.c                        | 2 +-
+> >  drivers/net/ethernet/mellanox/mlx4/en_clock.c    | 3 ++-
+> >  drivers/of/device.c                              | 3 ++-
+> >  drivers/pci/controller/cadence/pcie-cadence-ep.c | 3 ++-
+> >  drivers/pci/controller/cadence/pcie-cadence.c    | 3 ++-
+> >  drivers/pci/controller/pcie-brcmstb.c            | 3 ++-
+> >  drivers/pci/controller/pcie-rockchip-ep.c        | 5 +++--
+> >  kernel/dma/direct.c                              | 2 +-
+> >  8 files changed, 15 insertions(+), 9 deletions(-)
+> > --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> > @@ -10,6 +10,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/sizes.h>
+> > +#include <linux/log2.h>
+> > =20
+> >  #include "pcie-cadence.h"
+> > =20
+> > @@ -65,7 +66,7 @@ static int cdns_pcie_ep_set_bar(struct pci_epc *epc, =
+u8
+> > fn,
+> >  	 * roundup_pow_of_two() returns an unsigned long, which is not suited
+> >  	 * for 64bit values.
+> >  	 */
+>=20
+> Please remove the comment above since it no longer applies.
 
-static int gpiochip_match_name(struct gpio_chip *chip, void *data)
-{
-        const char *name = data;
+Noted
 
-        if (!strcmp(chip->label, name))
-               return 0;
-        return !strcmp(dev_name(&chip->gpiodev->dev), name);
-}
+[...]
 
-We should I guess also add some kerneldoc to say we first
-match on the label and second on dev_name().
+> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> > index 6af7ae83c4ad..056886c4efec 100644
+> > --- a/kernel/dma/direct.c
+> > +++ b/kernel/dma/direct.c
+> > @@ -53,7 +53,7 @@ u64 dma_direct_get_required_mask(struct device *dev)
+> >  {
+> >  	u64 max_dma =3D phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
+> > =20
+> > -	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+> > +	return rounddown_pow_of_two(max_dma) * 2 - 1;
+>=20
+> Personally I would probably make this one a separate patch since it's
+> qualitatively different than the others and it would avoid the slight
+> awkwardness of the non-greppable "roundup/down_pow_of_two()"
+> construction in the commit subject.
+>=20
+> But it's fine either way.
 
-Yours,
-Linus Walleij
+I'll split it into two parts, as RobH made a similar complaint.
+
+Regards,
+Nicolas
+
+
+--=-lcx9Dpdc/nSfdN+F0tca
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yPrwACgkQlfZmHno8
+x/4DxAf/dUNU44c6C5UlupKkHs1V09AR3yPNPOe8GrxrtpnzWAaNQ9L4S0ZG9ocS
+gey8W3CCPJPrWmqSAjQ8ddX9w+wKaaRaGFE3wHRFiGVMDSN8kGzHySuWi1ytfy0Y
+x0msb/bX87L3SwSegRTGlvbRJ1rDZl4WxCVFSrhCNRwem2R+v668VGifVS24Ay1f
+dwS7xyDUcMTmaiCfpK8KyJK1GdbScI6kVPFUM57deANw/I60zWGWykBnTeTQtlrM
+gLN2fGNP1wLRKZ5IEHObKLWo0rXTRKBjsouzL4/D5dW69LXZK1nS02rJsdu5bpUl
+WepA96OKnIgxngbBiO8z4btiMgZ1Jw==
+=QTsG
+-----END PGP SIGNATURE-----
+
+--=-lcx9Dpdc/nSfdN+F0tca--
+
