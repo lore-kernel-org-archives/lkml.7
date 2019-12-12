@@ -6,156 +6,87 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4517CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A6C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14ACC2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937FF2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J3mtmXS3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Y5fgt64o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbfLLNtz (ORCPT
+        id S1729555AbfLLNuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:49:55 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33812 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729405AbfLLNtz (ORCPT
+        Thu, 12 Dec 2019 08:50:23 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:59036 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729418AbfLLNuX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:49:55 -0500
+        Thu, 12 Dec 2019 08:50:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=r9Ziduu2E/lHprflWnWjfIynK8+5aLFth0xvY5j7dKA=; b=J3mtmXS3fna1ZQeTt6NdUVwCQ
-        19bX/7lt8H+daXHuMfh1ujuX7UVjYjQDthpOFyAIlqkIs417kHXcLaUyI9n/FQeYYY8hI+3gpV2UH
-        DVQ/bB9AFVx6E6ivFLf23mkQUM960g0usLUADdNA+NJYnnygutMSVyt9XGf/GOyy0KuVebFLAnGu7
-        Tn2lwV7mGnr/yfFjyG+G0qmIv3ZflFt0JtZqWCmRp4zVW6EzR0V9VEF5l5/I0OvS0eO7cw9QtPwsg
-        doPSjG6kkgy93PooKN4mbmoh5cCsWp8+6qZhQiHIAzGPfSmaCovkV+Aw/4eOEFFuBTAj/IO37BqXp
-        YLku+A3FA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifOqn-0001D9-Kk; Thu, 12 Dec 2019 13:49:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 848863058B4;
-        Thu, 12 Dec 2019 14:48:31 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DDE9C29E10BD9; Thu, 12 Dec 2019 14:49:51 +0100 (CET)
-Date:   Thu, 12 Dec 2019 14:49:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v8] perf: Sharing PMU counters across compatible events
-Message-ID: <20191212134951.GX2844@hirez.programming.kicks-ass.net>
-References: <20191207002447.2976319-1-songliubraving@fb.com>
+         bh=XLmXJp8+ii9eSodSB5zreRiOjChLvck97k4PO2HaBzI=; b=Y5fgt64oeF7OU2lnonzLDrFAz
+        sRxQA0O+JkMRFJJOe7sBNjsWY5SPvwist/QHC1bohGmXTJ5SxQ41Vp6eghkPAaD6ZnT+z0HQgf2yr
+        onpKUfsa0Fu2JQjzsG6vZAcFT2R2lZCgbZshRKLaBWIWKBqP2/edRtgBX3Fj/0ASU+s/1ZHLPCGrf
+        57Ti/8Pxc3l8WTAfK/ldi6fCreN37jwJ+ERJGPL2vkCZioirHruMatwaVJqO1M0qnF/GjK5+m9HY+
+        9cpXkBijqEMrGYZrh3vivxDsh+3xYnFY7k6IA8RoDg6kunH9JYXtVpewn/UCsXZNg6ROjitfM4sNQ
+        ZnSPt16Cg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:40338)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ifOrC-00070B-1c; Thu, 12 Dec 2019 13:50:18 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ifOrA-0006rD-6i; Thu, 12 Dec 2019 13:50:16 +0000
+Date:   Thu, 12 Dec 2019 13:50:16 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Link: documentation seems to be misplaced
+Message-ID: <20191212135016.GH25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191207002447.2976319-1-songliubraving@fb.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 04:24:47PM -0800, Song Liu wrote:
+Hi,
 
-> @@ -750,6 +752,16 @@ struct perf_event {
->  	void *security;
->  #endif
->  	struct list_head		sb_list;
-> +
-> +	/* for PMU sharing */
-> +	struct perf_event		*dup_master;
-> +	/* check event_sync_dup_count() for the use of dup_base_* */
-> +	u64				dup_base_count;
-> +	u64				dup_base_child_count;
-> +	/* when this event is master,  read from master*count */
-> +	local64_t			master_count;
-> +	atomic64_t			master_child_count;
-> +	int				dup_active_count;
->  #endif /* CONFIG_PERF_EVENTS */
->  };
+It seems that the documentation for the Link: attribute in commit
+messages is misplaced in the Documentation/ subtree.
 
-> +/* PMU sharing aware version of event->pmu->add() */
-> +static int event_pmu_add(struct perf_event *event,
-> +			 struct perf_event_context *ctx)
-> +{
-> +	struct perf_event *master;
-> +	int ret;
-> +
-> +	/* no sharing, just do event->pmu->add() */
-> +	if (!event->dup_master)
-> +		return event->pmu->add(event, PERF_EF_START);
+There are two workflows:
 
-Possibly we should look at the location of perf_event::dup_master to be
-in a hot cacheline. Because I'm thinking you just added a guaranteed
-miss here.
+1) maintainer committing external patches that have come from a
+   mailing list.
 
-> +
-> +	master = event->dup_master;
-> +
-> +	if (!master->dup_active_count) {
-> +		ret = event->pmu->add(master, PERF_EF_START);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (master != event)
-> +			perf_event_set_state(master, PERF_EVENT_STATE_ENABLED);
-> +	}
-> +
-> +	master->dup_active_count++;
-> +	master->pmu->read(master);
-> +	event->dup_base_count = local64_read(&master->count);
-> +	event->dup_base_child_count = atomic64_read(&master->child_count);
-> +	return 0;
-> +}
+2) maintainer committing local patches that have been discussed on
+   a mailing list.
 
-> +/* PMU sharing aware version of event->pmu->del() */
-> +static void event_pmu_del(struct perf_event *event,
-> +			  struct perf_event_context *ctx)
-> +{
-> +	struct perf_event *master;
-> +
-> +	if (event->dup_master == NULL) {
-> +		event->pmu->del(event, 0);
-> +		return;
-> +	}
+While the current documentation seems to target initial setup for
+new people becoming maintainers, but it is way less obvious for
+existing maintainers or for case 2 - I came across this because I
+wanted to add a Link: tag for a discussion on a patch I'd posted,
+and could find nothing to describe it.  My grep for it failed:
 
-How about you write it exactly like the add version:
+  grep Link: Documentation/*/*ubmitting*
 
-	if (!event->dup_master)
-		return event->pmu->del(event, 0);
+Surely, the format of the Link: tag should be documented in the
+submitting-patches document with all the other attributations that
+we define in a commit message, with a reference to that from
+Documentation/maintainer/configure-git.rst ?
 
-?
+Thanks to Jiri Kosina for pointing out that it is in configure-git.rst.
 
-> +
-> +	master = event->dup_master;
-> +	event_sync_dup_count(event, master);
-> +	if (--master->dup_active_count == 0) {
-> +		event->pmu->del(master, 0);
-> +		perf_event_set_state(master, PERF_EVENT_STATE_INACTIVE);
-> +	} else if (master == event) {
-> +		perf_event_set_state(master, PERF_EVENT_STATE_ENABLED);
-> +	}
-> +}
-> +
-> +/* PMU sharing aware version of event->pmu->read() */
-> +static void event_pmu_read(struct perf_event *event)
-> +{
-> +	if (event->dup_master == NULL) {
-> +		event->pmu->read(event);
-> +		return;
-> +	}
-
-And here too.
-
-> +	event_sync_dup_count(event, event->dup_master);
-> +}
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
