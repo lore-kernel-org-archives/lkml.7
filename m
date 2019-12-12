@@ -2,101 +2,111 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC87BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C201BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A358022527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 971ED214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143442;
-	bh=9T8qbkKxvGdsgH/x9PIs2KKMJmn/JOtZtnDP7i1vdy4=;
+	s=default; t=1576143457;
+	bh=oJ1Wi824XDxsCOW+eDltih+dYyGc1ssB6AgkDwln7/A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hyms0Mhuhi15W5WiSYPbhN/hLBFNg2ZsHc+NU4kVdtU1XIGMklbB4Q+4Nq3dKfp4Z
-	 3RbK7RjQSkk2INjp8j3nlnLYI5lvklzmE8+3uLWNRL0S9BYjRb3gAST8pUyLhcw77c
-	 l1bIPsI8qWVaOkkSFet5btthaUtkiPsxc1+xVUWg=
+	b=I1VpBuKXu5HylvgF3lemqlEWfuUyzyvKhBBtc2lzcPyzH/MpPvPKkP/SXatdvGqUi
+	 Yo8cwia4M6+Z8yAMJC12eTsW40WlTfjdOOAkC88yfvXj9R0h0dJBNgAwhLJ3YDCULB
+	 WSh8S2037aJQSJWlmSyWs6oU5l1Qh7LVYi44NY1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLLJhV (ORCPT
+        id S1728433AbfLLJhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:37:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
+        Thu, 12 Dec 2019 04:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728274AbfLLJhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:37:20 -0500
+        id S1728230AbfLLJhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:37:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374A9214D8;
-        Thu, 12 Dec 2019 09:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149F622527;
+        Thu, 12 Dec 2019 09:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143439;
-        bh=9T8qbkKxvGdsgH/x9PIs2KKMJmn/JOtZtnDP7i1vdy4=;
+        s=default; t=1576143455;
+        bh=oJ1Wi824XDxsCOW+eDltih+dYyGc1ssB6AgkDwln7/A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hRgDpX9Z8e16Qkn1Ta7Da8mvw31j+yI5Ls5qWySQkyZNXp9BCRSfp4a8PscoRiMXf
-         gPkxlrxtJiSTMujgYESTy2uRJ2NN0oMrlBQmyvX8UtXLKXQmogNA7vxruvkLEM/gE4
-         YvBjKVOKX2yl+Z7ueB0EnRsZDnMdiF9wKPCTZS+k=
-Date:   Thu, 12 Dec 2019 10:35:30 +0100
+        b=MzLG+BPoGDbAsQQFGz0+FxhYifZncRdJEGAYJZ/krqgFV9t9uHmvHD8YxubcBXuyP
+         bbcnMooMOpzLc17uSgFjPKliegutg7nRg/Q5qXs0T3zgB6UB/LcE8sk6tf+pokrpbo
+         ttxd1aIRQRfN3X92pYGs2z+l/gw/SSQBzzbvcp5M=
+Date:   Thu, 12 Dec 2019 10:33:04 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/92] 4.4.206-stable review
-Message-ID: <20191212093530.GF1378792@kroah.com>
-References: <20191204174327.215426506@linuxfoundation.org>
- <2959daae-72f2-8f85-df04-d6a0fe33516d@kernel.org>
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 070/243] xfs: extent shifting doesnt fully
+ invalidate page cache
+Message-ID: <20191212093304.GC1378792@kroah.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150343.827226097@linuxfoundation.org>
+ <20191211232613.pxegji52vf4gd3eh@toshiba.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2959daae-72f2-8f85-df04-d6a0fe33516d@kernel.org>
+In-Reply-To: <20191211232613.pxegji52vf4gd3eh@toshiba.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:19:00PM -0700, shuah wrote:
-> On 12/4/19 10:49 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.4.206 release.
-> > There are 92 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Thu, Dec 12, 2019 at 08:26:13AM +0900, Nobuhiro Iwamatsu wrote:
+> On Wed, Dec 11, 2019 at 04:03:52PM +0100, Greg Kroah-Hartman wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
 > > 
-> > Responses should be made by Fri, 06 Dec 2019 17:42:37 +0000.
-> > Anything received after that time might be too late.
+> > [ Upstream commit 7f9f71be84bcab368e58020a42f6d0dd97adf0ce ]
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.206-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> > and the diffstat can be found below.
+> > The extent shifting code uses a flush and invalidate mechainsm prior
+> > to shifting extents around. This is similar to what
+> > xfs_free_file_space() does, but it doesn't take into account things
+> > like page cache vs block size differences, and it will fail if there
+> > is a page that it currently busy.
 > > 
-> > thanks,
+> > xfs_flush_unmap_range() handles all of these cases, so just convert
+> > xfs_prepare_shift() to us that mechanism rather than having it's own
+> > special sauce.
 > > 
-> > greg k-h
-> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
-> I know this is way late. I managed to boot 4.4.206 finally on my test
-> system running Ubuntu 19.10.
 > 
-> It turns out, Ubuntu 19.10 defaults to LZ4 compression.
+> This commit also required following commit:
 > 
-> /etc/initramfs-tools/initramfs.conf
-> COMPRESS=lz4
+> commit 1749d1ea89bdf3181328b7d846e609d5a0e53e50
+> Author: Brian Foster <bfoster@redhat.com>
+> Date:   Fri Apr 26 07:30:24 2019 -0700
 > 
-> Enabling the following worked for me.
+>     xfs: add missing error check in xfs_prepare_shift()
 > 
-> CONFIG_RD_LZ4=y
-> CONFIG_SQUASHFS_LZ4=y
-> CONFIG_LZ4_DECOMPRESS=y
-> CONFIG_DECOMPRESS_LZ4=y
+>     xfs_prepare_shift() fails to check the error return from
+>     xfs_flush_unmap_range(). If the latter fails, that could lead to an
+>     insert/collapse range operation over a delalloc range, which is not
+>     supported.
 > 
-> Stable release older than 4.19 will require the above change.
+>     Add an error check and return appropriately. This is reproduced
+>     rarely by generic/475.
+> 
+>     Fixes: 7f9f71be84bc ("xfs: extent shifting doesn't fully invalidate page cache")
+>     Signed-off-by: Brian Foster <bfoster@redhat.com>
+>     Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+>     Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+>     Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+>     Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
-Ah, thanks for figuring this out.  Or you can run without an initramfs :)
+Now added, thanks!
 
 greg k-h
