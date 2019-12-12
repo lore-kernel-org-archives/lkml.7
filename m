@@ -2,121 +2,90 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BED7FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD79AC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05AE21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E31E21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbfLLQTC (ORCPT
+        id S1729874AbfLLQTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:19:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfLLQTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:19:02 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A7B2073B;
-        Thu, 12 Dec 2019 16:19:01 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 11:19:00 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        arnaldo.melo@gmail.com, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH] libtraceevent: allow custom libdir path
-Message-ID: <20191212111900.3f46e033@gandalf.local.home>
-In-Reply-To: <20191207111440.6574-1-sudipm.mukherjee@gmail.com>
-References: <20191207111440.6574-1-sudipm.mukherjee@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 12 Dec 2019 11:19:07 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39791 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbfLLQTG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:19:06 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a67so847318oib.6;
+        Thu, 12 Dec 2019 08:19:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V6mXcyFHURt7wNS5bFeTnPVdoJMNw0zAfh1vJmQ26lM=;
+        b=gZPI4r5eaw9K7dJo/rh6CpP5ZavRYztoU/VocsvdaKGJgXyTo1zk+MaXz4lZzrfpYS
+         n3ma/civuduJcONoJ9UcMECOGRKoCtWs+pV9zxidxKmP9j8998i+GuyJdWKJVvVhMXY6
+         kl+0Vv9D5Sg5WOLLhNC7kdbHSAuR/CKgoKyPVJX5NR3rq/1gjBi86efGZ5S2AwP28ZdO
+         7BMQ2djTiewKMjRrx23MtIB1NhnwHXLy2Iv6lNLim85JaZBtmoriNe0sZD/dyRzwFAn5
+         eDwhroAwY3+kppSaRDVua5wMHaCNAuDIMB8xaG2KccaNqXjArJQ2AWn4VN0SbU9So0W4
+         FpJw==
+X-Gm-Message-State: APjAAAWYF4/yRoCiGZNn29FsWAkIszTgwTjpVJ2t9ZV/AgbiTOWA81A2
+        TuoXnxKJif7fJ6nY+noNJGSudh2qmP8b5dqkb9E=
+X-Google-Smtp-Source: APXvYqw5VClDGbQpWKwIP85q0cyMHOS3MRztEfDm3by5BJCak/k94Omx3F8Lyu1OQsKI9Pmj137sJ+SUDPMmccWs954=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr5637847oia.102.1576167545247;
+ Thu, 12 Dec 2019 08:19:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
+ <20191209163755.GF5483@sirena.org.uk> <fb87c957-40e8-587e-5789-33b740f8326d@ideasonboard.com>
+ <20191212155656.GE4310@sirena.org.uk>
+In-Reply-To: <20191212155656.GE4310@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 17:18:43 +0100
+Message-ID: <CAMuHMdXwNPKfL5Xijtb2RFvf5MDEuiqUZ9DOdWdWxD=RRhScwQ@mail.gmail.com>
+Subject: Re: Regulator probe on demand (or circular dependencies)
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
-Arnaldo,
+On Thu, Dec 12, 2019 at 4:57 PM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Dec 11, 2019 at 10:42:43PM +0000, Kieran Bingham wrote:
+ sort of wondering if something like this could optimise away some
+> > of the -EPROBE_DEFER iterations at a more global level, but I don't know
+> > how or if that would work anyway.
+>
+> In theory someone could try to do some sort of sorting with the DT
+> graph, people keep talking about it but nobody's done anything that I'm
+> aware of.
 
-Can you pull this patch in?
+"of_devlink" has landed in v5.5-rc1, cfr. commit a3e1d1a7f5fcccaf ("of:
+property: Add functional dependency link from DT bindings").
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+I gave it a try on some boards lately.  It improved the deferral situation on
+Koelsch, but made it worse on Salvator-XS.
 
--- Steve
+Gr{oetje,eeting}s,
 
+                        Geert
 
-On Sat,  7 Dec 2019 11:14:40 +0000
-Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> When I use prefix=/usr and try to install libtraceevent in my laptop it
-> tries to install in /usr/lib64. I am not having any folder as /usr/lib64
-> and also the debian policy doesnot allow installing in /usr/lib64. It
-> should be in /usr/lib/x86_64-linux-gnu/.
-> 
-> Quote: No package for a 64 bit architecture may install files in
-> 	/usr/lib64/ or in a subdirectory of it.
-> ref: https://www.debian.org/doc/debian-policy/ch-opersys.html
-> 
-> Make it more flexible by allowing to mention libdir_relative while
-> installing so that distros can mention the path according to their policy
-> or use the default one.
-> 
-> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> ---
-> 
-> Hi Steve,
-> 
-> And yet another one (hopefully the final one for now). I know I missed
-> the merge window, but your Ack should be ok.
-> 
->  tools/lib/traceevent/Makefile         | 5 +++--
->  tools/lib/traceevent/plugins/Makefile | 5 +++--
->  2 files changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-> index c5a03356a999..7e2450ddd7e1 100644
-> --- a/tools/lib/traceevent/Makefile
-> +++ b/tools/lib/traceevent/Makefile
-> @@ -39,11 +39,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
->  
->  LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
->  ifeq ($(LP64), 1)
-> -  libdir_relative = lib64
-> +  libdir_relative_temp = lib64
->  else
-> -  libdir_relative = lib
-> +  libdir_relative_temp = lib
->  endif
->  
-> +libdir_relative ?= $(libdir_relative_temp)
->  prefix ?= /usr/local
->  libdir = $(prefix)/$(libdir_relative)
->  man_dir = $(prefix)/share/man
-> diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
-> index f440989fa55e..edb046151305 100644
-> --- a/tools/lib/traceevent/plugins/Makefile
-> +++ b/tools/lib/traceevent/plugins/Makefile
-> @@ -32,11 +32,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
->  
->  LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
->  ifeq ($(LP64), 1)
-> -  libdir_relative = lib64
-> +  libdir_relative_tmp = lib64
->  else
-> -  libdir_relative = lib
-> +  libdir_relative_tmp = lib
->  endif
->  
-> +libdir_relative ?= $(libdir_relative_tmp)
->  prefix ?= /usr/local
->  libdir = $(prefix)/$(libdir_relative)
->  
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
