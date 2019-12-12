@@ -2,175 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E6C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E4C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FF82173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D637921655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576159217;
+	bh=w6j7nt8EVQhGqeeabig/3mMtxBUSwyE1b0/3qRLnlMY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nriDg5UfADZ252AdjWJutXXbgyWdqw0ibocT0IrNn7RakjfkAWdrY0XuHduZ5ZHB+
+	 4A/D93IP9+QoKQkln+Irwp9Jhxxq3ilRK0AW/jPpJPd3Axp3U4D0B32SlvcXpWs/oI
+	 I45bXeurF0JWcRVqbous4k2t/GO0UBDr1c3mpVAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfLLN7T (ORCPT
+        id S1729636AbfLLOAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:59:19 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:42642 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbfLLN7N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:59:13 -0500
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 394B2200A94;
-        Thu, 12 Dec 2019 13:59:11 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 5CBD620B70; Thu, 12 Dec 2019 14:57:38 +0100 (CET)
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
-Date:   Thu, 12 Dec 2019 14:57:24 +0100
-Message-Id: <20191212135724.331342-4-linux@dominikbrodowski.net>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191212135724.331342-1-linux@dominikbrodowski.net>
-References: <20191212135724.331342-1-linux@dominikbrodowski.net>
+        Thu, 12 Dec 2019 09:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729524AbfLLOAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:00:16 -0500
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 922A021655;
+        Thu, 12 Dec 2019 14:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576159215;
+        bh=w6j7nt8EVQhGqeeabig/3mMtxBUSwyE1b0/3qRLnlMY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rmi1gkkd4I+2394B3wixXdiXO3A3D0r2w2dH7yVZGFDe1Z8I0ja30fsJ2t8IZ+rCh
+         Duh2X+pXYS65dQtBq5brAD93r3mic178CAaeGzI1CbWc5IyIJ4BKhxWIqg+jTrDGWr
+         HUvkRctVRdbDGf5w3EXNugc6xO4/q/zWl++5AmOk=
+Received: by mail-qk1-f173.google.com with SMTP id r14so1618225qke.13;
+        Thu, 12 Dec 2019 06:00:15 -0800 (PST)
+X-Gm-Message-State: APjAAAWpxBDC38pzafU1+iiYfc2q4ZKd66/w08OALT6gF81m3mqlQhTz
+        MTgHxZ5Vg2XRB2MSw7gF2TGcwbP7BhM/0X59WQ==
+X-Google-Smtp-Source: APXvYqylVaRXooiFXE5LLn2gb6i2E8GDU2gD9ANvwzpoLnrIk+YG9DZFfJ8BliPuj1AETH76SC8tJJD1gjvt1ijX7t4=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr8219015qkg.152.1576159214753;
+ Thu, 12 Dec 2019 06:00:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1575965693-30395-1-git-send-email-frowand.list@gmail.com>
+ <20191211201856.GA21857@bogus> <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
+In-Reply-To: <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 12 Dec 2019 08:00:03 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
+Message-ID: <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
+Subject: Re: [PATCH] of: refcount leak when phandle_cache entry replaced
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In prepare_namespace(), do_mount() can be used instead of ksys_mount()
-as the first and third argument are const strings in the kernel, the
-second and fourth argument are passed through anyway, and the fifth
-argument is NULL.
+On Thu, Dec 12, 2019 at 5:17 AM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 12/11/19 2:18 PM, Rob Herring wrote:
+> > On Tue, 10 Dec 2019 02:14:53 -0600, frowand.list@gmail.com wrote:
+> >> From: Frank Rowand <frank.rowand@sony.com>
+> >>
+> >> of_find_node_by_phandle() does not do an of_node_put() of the existing
+> >> node in a phandle cache entry when that node is replaced by a new node.
+> >>
+> >> Reported-by: Rob Herring <robh+dt@kernel.org>
+> >> Fixes: b8a9ac1a5b99 ("of: of_node_get()/of_node_put() nodes held in phandle cache")
+> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> >> ---
+> >>
+> >> Checkpatch will warn about a line over 80 characters.  Let me know
+> >> if that bothers you.
+> >>
+> >>  drivers/of/base.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >>
+> >
+> > Applied, thanks.
+> >
+> > Rob
+> >
+>
+> If the rework patch of the cache that you posted shortly after accepting
+> my patch, then my patch becomes not needed and is just extra noise in the
+> history.  Once your patch finishes review (I am assuming it probably
+> will), then my patch should be reverted.
 
-In do_mount_root(), ksys_mount() is called with the first and third
-argument being already kernelspace strings, which do not need to be
-copied over from userspace to kernelspace (again). The second and
-fourth arguments are passed through to do_mount() anyway. The fifth
-argument, while already residing in kernelspace, needs to be put into
-a page of its own. Then, do_mount() can be used instead of
-ksys_mount().
+The question is what to backport: nothing, this patch or mine? My
+thought was to apply this mainly to backport. If you're fine with
+nothing or mine, then we can drop it. I'm a bit nervous marking mine
+for stable.
 
-Once this is done, there are no in-kernel users to ksys_mount() left,
-which can therefore be removed.
-
-Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
----
- fs/namespace.c           | 10 ++--------
- include/linux/syscalls.h |  2 --
- init/do_mounts.c         | 28 ++++++++++++++++++++++------
- 3 files changed, 24 insertions(+), 16 deletions(-)
-
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 2fd0c8bcb8c1..be601d3a8008 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3325,8 +3325,8 @@ struct dentry *mount_subtree(struct vfsmount *m, const char *name)
- }
- EXPORT_SYMBOL(mount_subtree);
- 
--int ksys_mount(const char __user *dev_name, const char __user *dir_name,
--	       const char __user *type, unsigned long flags, void __user *data)
-+SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
-+		char __user *, type, unsigned long, flags, void __user *, data)
- {
- 	int ret;
- 	char *kernel_type;
-@@ -3359,12 +3359,6 @@ int ksys_mount(const char __user *dev_name, const char __user *dir_name,
- 	return ret;
- }
- 
--SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
--		char __user *, type, unsigned long, flags, void __user *, data)
--{
--	return ksys_mount(dev_name, dir_name, type, flags, data);
--}
--
- /*
-  * Create a kernel mount representation for a new, prepared superblock
-  * (specified by fs_fd) and attach to an open_tree-like file descriptor.
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index d0391cc2dae9..5262b7a76d39 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1231,8 +1231,6 @@ asmlinkage long sys_ni_syscall(void);
-  * the ksys_xyzyyz() functions prototyped below.
-  */
- 
--int ksys_mount(const char __user *dev_name, const char __user *dir_name,
--	       const char __user *type, unsigned long flags, void __user *data);
- int ksys_umount(char __user *name, int flags);
- int ksys_dup(unsigned int fildes);
- int ksys_chroot(const char __user *filename);
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 43f6d098c880..f55cbd9cb818 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -387,12 +387,25 @@ static void __init get_fs_names(char *page)
- 	*s = '\0';
- }
- 
--static int __init do_mount_root(char *name, char *fs, int flags, void *data)
-+static int __init do_mount_root(const char *name, const char *fs,
-+				 const int flags, const void *data)
- {
- 	struct super_block *s;
--	int err = ksys_mount(name, "/root", fs, flags, data);
--	if (err)
--		return err;
-+	char *data_page;
-+	struct page *p;
-+	int ret;
-+
-+	/* do_mount() requires a full page as fifth argument */
-+	p = alloc_page(GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	data_page = page_address(p);
-+	strncpy(data_page, data, PAGE_SIZE - 1);
-+
-+	ret = do_mount(name, "/root", fs, flags, data_page);
-+	if (ret)
-+		goto out;
- 
- 	ksys_chdir("/root");
- 	s = current->fs->pwd.dentry->d_sb;
-@@ -402,7 +415,10 @@ static int __init do_mount_root(char *name, char *fs, int flags, void *data)
- 	       s->s_type->name,
- 	       sb_rdonly(s) ? " readonly" : "",
- 	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
--	return 0;
-+
-+out:
-+	put_page(p);
-+	return ret;
- }
- 
- void __init mount_block_root(char *name, int flags)
-@@ -671,7 +687,7 @@ void __init prepare_namespace(void)
- 	mount_root();
- out:
- 	devtmpfs_mount();
--	ksys_mount(".", "/", NULL, MS_MOVE, NULL);
-+	do_mount(".", "/", NULL, MS_MOVE, NULL);
- 	ksys_chroot(".");
- }
- 
--- 
-2.24.1
-
+Rob
