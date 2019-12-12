@@ -2,133 +2,139 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A58C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE9C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C8922527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="otNCU/9i"
+	by mail.kernel.org (Postfix) with ESMTP id A615A22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfLLSYR (ORCPT
+        id S1730441AbfLLSYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:24:17 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:45231 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730295AbfLLSYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:16 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r11so1363750pjp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:24:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u1PHlHUdNRkLYDULqBTcDHsCK0nWR/67FBcfs8Oqumk=;
-        b=otNCU/9in36hydlyZDESi7f5IA1iX06dCDae98JkQRLbariMr32467Lz6Qu0ScMrmh
-         +u6NLSvFW3ESXgW94Yoqt9owpUcY+nONAyJSPGSHhakpPDvio0g9a1J89i3+UoSj4HY4
-         JL+7ItCOIIw5A+C9qVwZotVcuXjeEt9cUAKQLegYiFfJB0az+qKIlOSXU0tkfyMShsxp
-         G/ecVTMPFi3ptkxnOrcvywkbzwHyOqNs8xuwhLwbvLmpc68uLPD91znn31R8REPW5kV7
-         U0tThNOx/pLhrE4E8ZdgMfNa0zbbdrMO8C1uPopM7FwK4cx5LpDUIHIS9WY8X0AXvgnb
-         C3Kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u1PHlHUdNRkLYDULqBTcDHsCK0nWR/67FBcfs8Oqumk=;
-        b=GkCsjNeUsbl2P4OduFMHtEeHiEcZNRh7YMpbbwhtJx2fExfKWuJRRBjsYmFTO+aUjq
-         7aNIv22EDPMrpPpJSuVFeiS7RWgyp9VX5Zieot5SgpxWfGvJUMw+hdD83P0E6JviHDmt
-         +3BUS1dEcHisLm5ZtbLDCsmet6TY2PvLvteAS108Udq8v/EuvWTPf41RdlQOB/AISOsD
-         hJbaE9aMAcT6VvW/Bkdh0izTE/FdHcEYp6EyicHuV8F3iv7gQcr/56IlbNMkO88q3ptE
-         XRp/wKEFKGP04VNG3SRCBCp+qMp1Ijy8a3CvcWQZgPhVy0/1VQ8lFIL/3uUiV9lTms7A
-         Yg7w==
-X-Gm-Message-State: APjAAAWNe8aiy3nWgPIlbPwOAmj3xmXBvmGFXC5fV30wX1XTZOQ6Jmuk
-        TwEWH3UVHDHZb8vzOTQDS5nycg==
-X-Google-Smtp-Source: APXvYqysKkIuW1bkdC2A856WgquKQLYeFECzV0m5sJBtr9RxOmKEcCR0YAEPhVdRk8gZU0lveLD8Dw==
-X-Received: by 2002:a17:902:8603:: with SMTP id f3mr10631884plo.198.1576175055155;
-        Thu, 12 Dec 2019 10:24:15 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d27sm7757087pgm.53.2019.12.12.10.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 10:24:14 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:24:11 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     cang@codeaurora.org
-Cc:     Avri Altman <Avri.Altman@wdc.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-Message-ID: <20191212182411.GE415177@yoga>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
- <MN2PR04MB69919AA0C345E7D6620C3ADFFC550@MN2PR04MB6991.namprd04.prod.outlook.com>
- <0101016efb07efac-32cf270a-68dd-455a-b037-9fac2f3834cd-000000@us-west-2.amazonses.com>
+        Thu, 12 Dec 2019 13:24:19 -0500
+Received: from mga07.intel.com ([134.134.136.100]:40385 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730295AbfLLSYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="245829305"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:24:16 -0800
+Subject: [PATCH RFC v2 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+Date:   Thu, 12 Dec 2019 11:24:16 -0700
+Message-ID: <157617505636.42350.1170110675242558018.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016efb07efac-32cf270a-68dd-455a-b037-9fac2f3834cd-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Dec 08:53 PST 2019, cang@codeaurora.org wrote:
+With the introduction of movdir64b instruction, there is now an instruction
+that can write 64 bytes of data atomicaly.
 
-> On 2019-12-12 15:00, Avri Altman wrote:
-> > > On Wed 11 Dec 22:01 PST 2019, cang@codeaurora.org wrote:
-> > > > On 2019-12-12 12:53, Bjorn Andersson wrote:
-> > > > > On Wed 11 Dec 00:49 PST 2019, Can Guo wrote:
-[..]
-> > > > And in real cases, as the UFS is the boot device, UFS driver will always
-> > > > be probed during bootup.
-> > > >
-> > > 
-> > > The UFS driver will load and probe because it's mentioned in the
-> > > devicetree, but if either the ufs drivers or any of its dependencies
-> > > (phy, resets, clocks, etc) are built as modules it might very well
-> > > finish probing after lateinitcall.
-> > > 
-> > > So in the even that the bsg is =y and any of these drivers are =m,
-> > > or if
-> > > you're having bad luck with your timing, the list will be empty.
-> > > 
-> > > As described below, if bsg=m, then there's nothing that will load the
-> > > module and the bsg will not probe...
-> > Right.
-> > bsg=y and ufshcd=m is a bad idea, and should be avoided.
-> > 
-> 
-> Yeah, I will get it addressed in the next patchset.
-> 
+Quoting from Intel SDM:
+"There is no atomicity guarantee provided for the 64-byte load operation
+from source address, and processor implementations may use multiple
+load operations to read the 64-bytes. The 64-byte direct-store issued
+by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
+that the data arrives at the destination in a single undivided 64-byte
+write transaction."
 
-If you build this around platform_device_register_data() from ufshcd I
-don't see a reason to add additional restrictions on this combination
-(even though it might not make much sense for people to use this
-combination).
+We have identified at least 3 different use cases for this instruction in
+the format of func(dst, src, count):
+1) Clear poison / Initialize MKTME memory
+   Destination is normal memory.
+   Source in normal memory. Does not increment. (Copy same line to all
+   targets)
+   Count (to clear/init multiple lines)
+2) Submit command(s) to new devices
+   Destination is a special MMIO region for a device. Does not increment.
+   Source is normal memory. Increments.
+   Count usually is 1, but can be multiple.
+3) Copy to iomem in big chunks
+   Destination is iomem and increments
+   Source in normal memory and increments
+   Count is number of chunks to copy
 
-Regards,
-Bjorn
+This commit adds support for case #2 to support device that will accept
+commands via this instruction.
+
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ arch/x86/include/asm/io.h |   42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 9997521fc5cd..2d3c9dd39479 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -399,4 +399,46 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+ 				      unsigned long size);
+ 
++static inline void __iowrite512(void __iomem *__dst, const void *src)
++{
++	/*
++	 * Note that this isn't an "on-stack copy", just definition of "dst"
++	 * as a pointer to 64-bytes of stuff that is going to be overwritten.
++	 * In the movdir64b() case that may be needed as you can use the
++	 * MOVDIR64B instruction to copy arbitrary memory around. This trick
++	 * lets the compiler know how much gets clobbered.
++	 */
++	volatile struct { char _[64]; } *dst = __dst;
++
++	/* movdir64b [rdx], rax */
++	asm volatile(".byte 0x66, 0x0f, 0x38, 0xf8, 0x02"
++			: "=m" (dst)
++			: "d" (src), "a" (dst));
++}
++
++/**
++ * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
++ * @dst: destination, in MMIO space (must be 512-bit aligned)
++ * @src: source
++ * @count: number of 512 bits quantities to submit
++ *
++ * Submit data from kernel space to MMIO space, in units of 512 bits at a
++ * time.  Order of access is not guaranteed, nor is a memory barrier
++ * performed afterwards.
++ *
++ * Warning: Do not use this helper unless your driver has checked that the CPU
++ * instruction is supported on the platform.
++ */
++static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
++				    size_t count)
++{
++	const u8 *from = src;
++	const u8 *end = from + count * 64;
++
++	while (from < end) {
++		__iowrite512(dst, from);
++		from += 64;
++	}
++}
++
+ #endif /* _ASM_X86_IO_H */
+
