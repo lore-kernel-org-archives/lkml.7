@@ -2,241 +2,141 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E588EC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D6C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD7F22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1388622527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfLLSZi (ORCPT
+        id S1730379AbfLLS2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:25:38 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35504 "EHLO mga18.intel.com"
+        Thu, 12 Dec 2019 13:28:38 -0500
+Received: from mga14.intel.com ([192.55.52.115]:12749 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730373AbfLLSZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:25:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1730017AbfLLS2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:28:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:35 -0800
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:18:04 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="245829827"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:25:34 -0800
-Subject: [PATCH RFC v2 14/14] dmaengine: idxd: add sysfs ABI for idxd driver
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
-        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:25:34 -0700
-Message-ID: <157617513437.42350.6807398093670501469.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+   d="scan'208";a="239040465"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2019 10:18:02 -0800
+Date:   Thu, 12 Dec 2019 10:18:02 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
+ VMX_FEATURES_*
+Message-ID: <20191212181802.GH3163@linux.intel.com>
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+ <20191128014016.4389-12-sean.j.christopherson@intel.com>
+ <20191212122646.GE4991@zn.tnic>
+ <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Lin <jing.lin@intel.com>
+On Thu, Dec 12, 2019 at 03:13:45PM +0100, Paolo Bonzini wrote:
+> On 12/12/19 13:26, Borislav Petkov wrote:
+> > 
+> > vmx flags       : virtual_nmis preemption_timer invvpid ept_x_only ept_ad ept_1gb flexpriority tsc_offsetting virtual_tpr mtf virt_apic_accesses ept vpid unrestricted_guest ple shadow_vmcs pml mode_based_ept_exec
 
-Add the sysfs ABI information for idxd driver in
-Documentation/ABI/stable directory.
+Tying into the consistency comment below, any objection to always prefixing
+"ept" for relevant controls instead of following the SDM?  Specifically,
+that would yield ept_mode_based_exec and ept_spp
 
-Signed-off-by: Jing Lin <jing.lin@intel.com>
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/stable/sysfs-driver-dma-idxd |  171 ++++++++++++++++++++++++
- 1 file changed, 171 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-driver-dma-idxd
+> > 
+> > virtual_nmis		-> vnmis
+> 
+> Even vnmi
+> 
+> > preemption_timer	-> preempt_tmr
+> 
+> I would prefer the full one here.
+> 
+> > flexpriority		-> flexprio
+> 
+> Full name?
+> 
+> > tsc_offsetting		-> tsc_ofs
+> 
+> tsc_offset?
 
-diff --git a/Documentation/ABI/stable/sysfs-driver-dma-idxd b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-new file mode 100644
-index 000000000000..f4be46cc6cb6
---- /dev/null
-+++ b/Documentation/ABI/stable/sysfs-driver-dma-idxd
-@@ -0,0 +1,171 @@
-+What:           sys/bus/dsa/devices/dsa<m>/cdev_major
-+Date:           Oct 25, 2019
-+KernelVersion: 	5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:	The major number that the character device driver assigned to
-+		this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/errors
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The error information for this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_batch_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The largest number of work descriptors in a batch.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_work_queues_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum work queue size supported by this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_engines
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of engines supported by this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_groups
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of groups can be created under this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_tokens
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The total number of bandwidth tokens supported by this device.
-+		The bandwidth tokens represent resources within the DSA
-+		implementation, and these resources are allocated by engines to
-+		support operations.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_transfer_size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The number of bytes to be read from the source address to
-+		perform the operation. The maximum transfer size is dependent on
-+		the workqueue the descriptor was submitted to.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/max_work_queues
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum work queue number that this device supports.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/numa_node
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The numa node number for this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/op_cap
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The operation capability bit mask specify the operation types
-+		supported by the this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/state
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The state information of this device. It can be either enabled
-+		or disabled.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/group<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned group under this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/engine<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned engine under this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/wq<m>.<n>
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The assigned work queue under this device.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/configurable
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    To indicate if this device is configurable or not.
-+
-+What:           sys/bus/dsa/devices/dsa<m>/token_limit
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The maximum number of bandwidth tokens that may be in use at
-+		one time by operations that access low bandwidth memory in the
-+		device.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/group_id
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The group id that this work queue belongs to.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/size
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The work queue size for this work queue.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/type
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The type of this work queue, it can be "kernel" type for work
-+		queue usages in the kernel space or "user" type for work queue
-+		usages by applications in user space.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/cdev_minor
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The minor number assigned to this work queue by the character
-+		device driver.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/mode
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The work queue mode type for this work queue.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/priority
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The priority value of this work queue, it is a vlue relative to
-+		other work queue in the same group to control quality of service
-+		for dispatching work from multiple workqueues in the same group.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/state
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The current state of the work queue.
-+
-+What:           sys/bus/dsa/devices/wq<m>.<n>/threshold
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The number of entries in this work queue that may be filled
-+		via a limited portal.
-+
-+What:           sys/bus/dsa/devices/engine<m>.<n>/group_id
-+Date:           Oct 25, 2019
-+KernelVersion:  5.6.0
-+Contact:        dmaengine@vger.kernel.org
-+Description:    The group that this engine belongs to.
+I'll go with tsc_offset.
 
+> > virtual_tpr		-> vtpr
+> 
+> Do we need this?  It's usually included together with flexpriority.
+> 
+> > virt_apic_accesses	-> vapic
+
+Using v<feature> across the board makes sense to keep things consistent,
+i.e. vnmi, vtpr, vapic, etc...
+
+Anyone have thoughts on how to shorten "APIC-register virtualization"
+without colliding with vapic or apicv?  I currently have apic_reg_virt,
+which is a bit wordy.  apic_regv isn't awful, but I don't love it.
+
+The other control that will be awkard is "Virtual Interrupt Delivery".
+vint_delivery?
+
+> > unrestricted_guest	-> unres_guest
+> 
+> Full? Or just unrestricted
+
+I prefer unrestricted_guest, a bare unrestricted just makes me wonder
+"unrestricted what?".   But I can live with "unrestricted" if that's the
+consensus.
+
+> In general I would stick to the same names as kvm_intel module
+> parameters (sans "enable_" if applicable) and not even bother publishing
+> the others.  Some features are either not used by KVM or available on
+> all VMX processors.
+
+IMO there's value in printing features that are not 1:1 with module params.
+
+I also think it makes sense to print features of interest even if KVM
+doesn't (yet) support the feature, e.g. to allow a user/developer to check
+if they can use/test a KVM build with support for a new feature without
+having to build and install the new kernel.
+
+> Paolo
+> 
+> > and so on. Those are just my examples - I betcha the SDM is more
+> > creative here with abbreviations. But you guys are going to grep for
+> > them. If it were me, I'd save on typing. :-)
