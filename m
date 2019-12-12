@@ -2,103 +2,116 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3043DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9B6C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00106214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852B82073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mUaC9PzR"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xbcplkXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfLLQew (ORCPT
+        id S1729945AbfLLQf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:34:52 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:41901 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfLLQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:34:51 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47YfXP2gjMzB09Zb;
-        Thu, 12 Dec 2019 17:34:45 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=mUaC9PzR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 9WuTQ52ZLv0o; Thu, 12 Dec 2019 17:34:45 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47YfXP0ZwbzB09Zd;
-        Thu, 12 Dec 2019 17:34:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576168485; bh=5ayd9PjJRgNmK3O5j33o8jKyMdGb9Kf50uNZGSjc28I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=mUaC9PzRHUQgIKKPVsLlwj3RKssxuq6EeDV67OR9T/w6yH9ybBbXdRE0UC8mNYv6b
-         iwCt44e25EqPI1h0UB4DarcGj1W790CZBg6CZI+atejs26GN/5qiD8nmGIFiGkCzXI
-         9E2CYb9yDOhLKkxGHZQYxRtNjf8H4GjjTX1RWNdc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A93118B877;
-        Thu, 12 Dec 2019 17:34:46 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id hamxpM4AZs8F; Thu, 12 Dec 2019 17:34:46 +0100 (CET)
-Received: from [172.25.230.112] (po15451.idsi0.si.c-s.fr [172.25.230.112])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8493D8B872;
-        Thu, 12 Dec 2019 17:34:46 +0100 (CET)
-Subject: Re: [PATCH v5] powerpc/irq: inline call_do_irq() and
- call_do_softirq() on PPC32
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
- <20191212125222.GB3381@infradead.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <878e4ac8-9bfa-394d-8bca-f09a78f54904@c-s.fr>
-Date:   Thu, 12 Dec 2019 17:34:46 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 12 Dec 2019 11:35:26 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41352 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729917AbfLLQf0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:35:26 -0500
+Received: by mail-il1-f194.google.com with SMTP id z90so2545282ilc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:35:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3FtLIVj+wnM2ARUnkHjLCIs+M1M/IA6PpWp8jtXGxBs=;
+        b=xbcplkXMsLKBVhI2XoEAIhOCDrqD47HX6n1yvO5V22GmwrrQQBKbWggYHs4jvP1r5e
+         d06kkPEOnjJE94l1i8s0OQBGyq2uCnz06HSXakJyefIeamZrYC04IsPHZG0q8AamKYX7
+         hQiBFF2unkfh+vzBU4sfnsk8eFSJqiqGb27+ELN3raRO+1VzqxuUmJvQteWCoq4j74gw
+         zDZjlxcYlLJc7nj02zY/1J5oio91PD6bX3m6ftojddzXMI4lyWGMcOBLF2IgQDl1+DS4
+         M8/9vHNTZSCqOo/1DexoCnH9ZtJ4bViECOh2oT+MHZ1qxnhhm7JEOSFNx7VJQCROP4qJ
+         4jQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3FtLIVj+wnM2ARUnkHjLCIs+M1M/IA6PpWp8jtXGxBs=;
+        b=Q8o+zKugmwhtVYHbkflC5to3mSgWFAbo7gEt7+GnFwM9sUcbK2mpxgSfJqv5ZLrrVv
+         sAuOTK0a2w31FCFKbHvADliHzAobMJzcusmFEgsHbQ9etBcgjJIuOmY6jVcIhvu3l/OO
+         4KBkGafUZgIEHgSrOUqgki5G6zrpSAViyGDeL8LT+CAp/6UDjAfgMDqoqmTyIyNLNVT9
+         e3PrhNdE4lE4dToLzE9mkU+fAQkDfBXHx6EYsNxX1rZ6XufPf8xlDT+GzErrZ3s2NVBY
+         IdMhFVZSX/UUzqQ9f1cYRwzlfaV+bVQHu/N5pXOLr6yTBDwr7XMr3ERGiTJvN3JdJdTr
+         w/Tw==
+X-Gm-Message-State: APjAAAVubTeoqjwM96AadtzoijaHYgVBlOO1LgQHO1KlBLcJo+h/C6hQ
+        gxXSyzHcVPqfI6wFMYNSvQ21iA==
+X-Google-Smtp-Source: APXvYqxAPt9ybQh/T8WYBX6qxbHJzz4zpYaVA1B8qE0Zhi2chspe24qfeJl3SeUOs00SEoxpnZbeng==
+X-Received: by 2002:a92:5d03:: with SMTP id r3mr8554165ilb.278.1576168525332;
+        Thu, 12 Dec 2019 08:35:25 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id x62sm1843784ill.86.2019.12.12.08.35.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 08:35:24 -0800 (PST)
+Subject: Re: [PATCH 15/24] compat_ioctl: scsi: move ioctl handling into
+ drivers
+To:     Christoph Hellwig <hch@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jason Wang <jasowang@redhat.com>,
+        Doug Gilbert <dgilbert@interlog.com>,
+        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
+        linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        John Garry <john.garry@huawei.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20191211204306.1207817-1-arnd@arndb.de>
+ <20191211204306.1207817-16-arnd@arndb.de>
+ <20191211180155-mutt-send-email-mst@kernel.org>
+ <858768fb-5f79-8259-eb6a-a26f18fb0e04@redhat.com>
+ <20191212162729.GB27991@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6e265890-23e5-6368-4e36-d59ff47879b2@kernel.dk>
+Date:   Thu, 12 Dec 2019 09:35:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191212125222.GB3381@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212162729.GB27991@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 12/12/2019 à 13:52, Christoph Hellwig a écrit :
-> On Sat, Dec 07, 2019 at 05:20:04PM +0000, Christophe Leroy wrote:
->> call_do_irq() and call_do_softirq() are simple enough to be
->> worth inlining.
->>
->> Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
->> It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
->>
->> This is inspired from S390 arch. Several other arches do more or
->> less the same. The way sparc arch does seems odd thought.
+On 12/12/19 9:27 AM, Christoph Hellwig wrote:
+> On Thu, Dec 12, 2019 at 01:28:08AM +0100, Paolo Bonzini wrote:
+>> I think it's because the only ioctl for virtio-blk is SG_IO.  It makes
+>> sense to lump it in with scsi, but I wouldn't mind getting rid of
+>> CONFIG_VIRTIO_BLK_SCSI altogether.
 > 
-> Any reason you only do this for 32-bit and not 64-bit as well?
-> 
+> CONFIG_VIRTIO_BLK_SCSI has been broken for about two years, as it
+> never set the QUEUE_FLAG_SCSI_PASSTHROUGH flag after that was
+> introduced.  I actually have a patch that I plan to send to remove
+> this support as it was a really idea to start with (speaking as
+> the person who had that idea back in the day).
 
-Yes ... There has been a long discussion on this in v4, see 
-https://patchwork.ozlabs.org/patch/1174288/
+We had this very discussion two years ago, and we never got it removed.
+Let's please get it done.
 
-The problem is that on PPC64, r2 register is used as TOC pointer and it 
-is apparently not straithforward to make sure the caller and the callee 
-are using the same TOC.
+-- 
+Jens Axboe
 
-On PPC32 it's more simple, r2 is current task_struct at all time, it 
-never changes.
-
-Christophe
