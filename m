@@ -6,65 +6,103 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA32C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DA2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1B922B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4768E214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfLLJBh (ORCPT
+        id S1728308AbfLLJJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:01:37 -0500
-Received: from mga09.intel.com ([134.134.136.24]:47745 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbfLLJBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:01:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 01:01:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,305,1571727600"; 
-   d="scan'208";a="220648559"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 12 Dec 2019 01:01:33 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 12 Dec 2019 11:01:32 +0200
-Date:   Thu, 12 Dec 2019 11:01:32 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     linux@roeck-us.net, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: fusb302: Fix an undefined reference to
- 'extcon_get_state'
-Message-ID: <20191212090132.GC31345@kuha.fi.intel.com>
-References: <1576136063-50916-1-git-send-email-zhongjiang@huawei.com>
+        Thu, 12 Dec 2019 04:09:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47892 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbfLLJJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:09:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9B62AE74;
+        Thu, 12 Dec 2019 09:09:49 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 10:09:48 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        AlekseyMakarov <aleksey.makarov@linaro.org>
+Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
+ multiple matches
+Message-ID: <20191212090948.pcskgf6tc6iitkkk@pathway.suse.cz>
+References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
+ <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
+ <b359a4a84d3dad08dc45899dc9b56e7323ffb734.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1576136063-50916-1-git-send-email-zhongjiang@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <b359a4a84d3dad08dc45899dc9b56e7323ffb734.camel@kernel.crashing.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:34:23PM +0800, zhong jiang wrote:
-> Fixes the following compile error:
+On Thu 2019-12-12 11:35:23, Benjamin Herrenschmidt wrote:
+> On Tue, 2019-12-10 at 10:15 +0100, Petr Mladek wrote:
+> > 
+> > Anyway, here is the patch that we use. Could you please check if it
+> > works for you as well? Does it make sense, please?
 > 
-> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
-> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
-> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
-> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
-> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
-> make: *** [vmlinux] Error 1
+> It doesn't fix my problem. tty0 remains the default console instead
+> of ttyS0 with your patch applied.
 
-There are stubs for those functions so that really should not be
-happening. I can not reproduce that.
+Sigh, I see.
 
-thanks,
+> I suspect for the same reason, we match uart0 which isn't preferred,
+> so we enable that but don't put it "first" in the list, and since
+> we break out of the loop we never match ttyS0.
 
--- 
-heikki
+Yeah.
+
+> I see 3 simple ways out of this that don't involve breaking up match()
+> 
+>  - Bite the bullet and use my patch assuming that calling setup()
+> multiple times is safe. I had a look at the two you had concerns
+> with, the zilog ones seems safe. pl1011 will leak a clk_prepare
+> reference but I think that's a non-issue for a kernel console
+> (I may be wrong)
+
+This does not sound much convincing to me. Leaking reference
+is an issue, definitely.
+
+
+>  - Rework the loop to try matching against the array entry pointed
+> by preferred_console first.
+
+IMHO, in principle, we are trying to solve the same problem as
+the commit cf39bf58afdaabc0b86f141 ("printk: fix double
+printing with earlycon").
+
+And it was reverted because it broke some setups, see
+the commit dac8bbbae1d0ccba96402d25d ("Revert "printk: fix double
+printing with earlycon").
+
+Trying only the preferred console first is less invasive but
+it might cause exactly the same regression.
+
+
+>  - Rework the loop to try matching the entries from the command line
+> before trying to match the entries added by the platform/arch.
+> (Easily done by flagging them in the array, I can cook a patch).
+
+This makes some sense. It would allow user to override the fallback
+defined by platform/arch.
+
+IMHO, it would solve all the problems that motivated people working
+on this. And it should not cause regression that forced us to
+revert the backward search.
+
+There is still some risk of regressions. But I would give it a try.
+
+Best Regards,
+Petr
