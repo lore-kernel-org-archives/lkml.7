@@ -2,175 +2,116 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CA2C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26584C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C771422B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BD321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ivh0Uxz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfLLNQl (ORCPT
+        id S1729459AbfLLNQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:16:41 -0500
-Received: from mx2.suse.de ([195.135.220.15]:48780 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729338AbfLLNQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:16:41 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9BC24AD07;
-        Thu, 12 Dec 2019 13:16:36 +0000 (UTC)
-Message-ID: <b35922dfd7f62489d35ab15362891a90bf46c3d2.camel@suse.de>
-Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
- roundup/down_pow_two()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     andrew.murray@arm.com, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.con>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, kexec@lists.infradead.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 12 Dec 2019 14:16:27 +0100
-In-Reply-To: <20191205223044.GA250573@google.com>
-References: <20191205223044.GA250573@google.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-vpJ9shRBsDfxzY4jD4N5"
-User-Agent: Evolution 3.34.2 
+        Thu, 12 Dec 2019 08:16:56 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1057 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729338AbfLLNQz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:16:55 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5df23dc00000>; Thu, 12 Dec 2019 05:16:48 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 12 Dec 2019 05:16:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 12 Dec 2019 05:16:55 -0800
+Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
+ 2019 13:16:52 +0000
+Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191211150221.153659747@linuxfoundation.org>
+ <20191212100456.GB1470066@kroah.com> <20191212121805.GB1540720@kroah.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e7fe3384-3482-3a8b-4908-328660d47c3e@nvidia.com>
+Date:   Thu, 12 Dec 2019 13:16:50 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <20191212121805.GB1540720@kroah.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1576156608; bh=Hr8X+LAQax3D0A2LsB8bsvJ0RbaHav4pRyZz9lMMtK0=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ivh0Uxz0HgL2fIBz1oAUbzBS+hFBa2SIcl8LG8fcX2ZPAqfeF/yUCWQHR0myfOLp3
+         PQ5O6Xs7vUnhTi/F6bNFeVwqbe6hZNNvOxtzaiNK4eYSDktg682xYodHdXQfTzoqJy
+         Q31zI9/QzDOjwD/1sHkAZOmfKYGDQbzoIh1O2Y7IoQDfbOqoz+RhQ4a0/L70G/7uA8
+         +IlxzVVyHlCwxFHaSVsv/2mGN9YfP31Su1qPo4lI1+A5+guszt+CiyfpsMuFfq38AA
+         Jnr0fhAPy8Q0Ps2IRtiWESzhdRt9k0DLLbFRIF28fQylfkPG90SLgFnIEy8qKvMgTZ
+         F/MEiX08J3K/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-vpJ9shRBsDfxzY4jD4N5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-12-05 at 16:30 -0600, Bjorn Helgaas wrote:
-> You got the "n" on "down" in the subject, but still missing "of" ;)
-
-Yes, sorry about that, I tend to re-read what I meant to say instead of wha=
-t
-it's actually written.
-
-> On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
-> > Some users need to make sure their rounding function accepts and return=
-s
-> > 64bit long variables regardless of the architecture. Sadly
-> > roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
-> > out ilog2() already handles 32/64bit calculations properly, and being
-> > the building block to the round functions we can rework them as a
-> > wrapper around it.
->=20
-> Missing "of" in the function names here.
-> s/a wrapper/wrappers/
-
-Noted
-
-> IIUC the point of this is that roundup_pow_of_two() returned
-> "unsigned long", which can be either 32 or 64 bits (worth pointing
-> out, I think), and many callers need something that returns
-> "unsigned long long" (always 64 bits).
-
-I'll update the commit message to be a more explicit.
-
-> It's a nice simplification to remove the "__" variants.  Just as a
-> casual reader of this commit message, I'd like to know why we had both
-> the roundup and the __roundup versions in the first place, and why we
-> no longer need both.
-
-So, the commit that introduced it (312a0c170945b) meant to use the '__' var=
-iant
-as a helper, but, due to the fact this is a header file, some found it and =
-made
-use of it. I went over some if the commits introducing '__' usages and none=
- of
-them seem to acknowledge its use as opposed to the macro version. I think i=
-t's
-fair to say it's a case of cargo-culting.
-
-> > -#define roundup_pow_of_two(n)			\
-> > -(						\
-> > -	__builtin_constant_p(n) ? (		\
-> > -		(n =3D=3D 1) ? 1 :			\
-> > -		(1UL << (ilog2((n) - 1) + 1))	\
-> > -				   ) :		\
-> > -	__roundup_pow_of_two(n)			\
-> > - )
-> > +#define roundup_pow_of_two(n)			  \
-> > +(						  \
-> > +	(__builtin_constant_p(n) && ((n) =3D=3D 1)) ? \
-> > +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
-> > +)
->=20
-> Should the resulting type of this expression always be a ULL, even
-> when n=3D=3D1, i.e., should it be this?
->=20
->   1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
->=20
-> Or maybe there's no case where that makes a difference?
-
-It should be 1ULL on either case.
-
-Regards,
-Nicolas
+On 12/12/2019 12:18, Greg Kroah-Hartman wrote:
+> On Thu, Dec 12, 2019 at 11:04:56AM +0100, Greg Kroah-Hartman wrote:
+>> On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 5.3.16 release.
+>>> There are 105 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc1.gz
+>>> or in the git tree and branch at:
+>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+>>> and the diffstat can be found below.
+>>
+>> I have pushed out -rc2 with a number of additional fixes:
+>> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc2.gz
+> 
+> That was the 5.4 patch, here is the correct 5.3 patch:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc2.gz
+> 
 
 
---=-vpJ9shRBsDfxzY4jD4N5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+All tests are passing for Tegra ...
 
------BEGIN PGP SIGNATURE-----
+Test results for stable-v5.3:
+    13 builds:	13 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    38 tests:	38 pass, 0 fail
 
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yPasACgkQlfZmHno8
-x/4qrgf9GTaIX4ZRG0TCYwOuyJCzR/7cg3GMSsuHo8bknRFfBKmZUwtS0JmNNrn7
-f1Av7IZ0OAbAWPJQkzOXw4OxNhVxq0ItdXAktetVKaF6U5Dz/5tWkkwHLFdhSepV
-FcS4qxWo8nOugcgYRzN6kDaihMFUqbAIioU7n1HGLRGN2s9vaJM1rNmOrGMPovU3
-BbGTs4/7BMM3FmqoGwWUKX5FPFNamYrxAaaOknMUVa16iI7MN7hYH5scWUUK56ER
-57y4jC6vGu17Cku4HBlynsoZpm6z6SvHDoXIMZCbUKbJogsiQo+b1+cZTWLVGi2P
-qQGX/jHjIhYWNVa2Le9F3qgxxmf0uA==
-=hg1F
------END PGP SIGNATURE-----
+Linux version:	5.3.16-rc2-g9f27b7f4a193
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
---=-vpJ9shRBsDfxzY4jD4N5--
+Cheers
+Jon
 
+-- 
+nvpublic
