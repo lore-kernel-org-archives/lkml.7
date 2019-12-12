@@ -2,135 +2,137 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967C9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7332BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACBC20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4909820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0uTSigX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTm8ausO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbfLLKiC (ORCPT
+        id S1728821AbfLLKiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:38:02 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35517 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLLKiC (ORCPT
+        Thu, 12 Dec 2019 05:38:10 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52400 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728573AbfLLKiK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:38:02 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p17so1923734wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:38:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9LEkUr58WGziT8fxYk1Ew3kC9fjqbADWx2DYTMjRwGQ=;
-        b=W0uTSigXUFE2xdm3NywrWLAehtiY1nqq3KXNKgVWsPsHs4FYM7q82PekauW43zhU+y
-         NbZNb/8+kXW7sH0tuPsGgM7Z/mdI1Txr44glAgZlrLb9ELa+Zqyujf83VLh9NAdvk5B4
-         tf1F7jjHyPYEZMeCJyGT7iiHVvZtajUKDYKWtpbJrvwcrJMDgbrXgG3WPSdQdQlOR/mg
-         eeeQequvLO1FvKN3dDyiWpbOsCqi2VlEt0ZkYZxAJ2q2xOj0TnU8WGJwwL8aQ6xZGhQ8
-         SUTF4f8yUUwsE5FeB1fXYHmU/DtsjoLrhV7OB90gbZKWyvbt2Uqa/W2v0Els2KLIdHXV
-         sP9A==
+        Thu, 12 Dec 2019 05:38:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576147089;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CGdrhhHyRlkbfocg8i54ButT9u7PpOFWc5l6oudrYoY=;
+        b=HTm8ausO0z/fCAFnUJ2o7oNaCen64eOavswJLHN/qHUr8/Br4Ici/U+qFQlFqRXtZoRgS6
+        FqhakvJsxXohehzaHwugmo+gwu+tjf/FZdnE8VfUjP0zrZx+rW4uRVlSTeM72MdVGUjKO/
+        wALxyW/7fiDtcltD3R5MJrV1ETWxnx0=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-371-oeiUNHW0Ol2ZB93_zOtE4Q-1; Thu, 12 Dec 2019 05:38:08 -0500
+X-MC-Unique: oeiUNHW0Ol2ZB93_zOtE4Q-1
+Received: by mail-qt1-f198.google.com with SMTP id v25so1114417qtq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:38:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9LEkUr58WGziT8fxYk1Ew3kC9fjqbADWx2DYTMjRwGQ=;
-        b=OU1BzPrV0fyXuyo8aPz+PvCL2+kWG+iwK4H6mrKdMzlA8veRZvMu0g9gS7+7VRcqMG
-         Jlc49kVjSakqFKlZj5r/4QtapFhRXxmM5XDHFgQYh8/Wr8P6M5+X0redpNR+oaQSLfmo
-         Dh4sLzq7uJ+jveAaanZ8OguDNuBqWxIB4bvTjrix7rKmb6B8SgiRkTUPhCt4bApyva9g
-         x6t7jxFNsc9OYCxCs6+ukwG7rNdJSpcSpjIjmk+3k0c7KEYGmVc1hiG+iNFc145Vixnf
-         LyzZLX/tPWuTgXRvI+kP3/QcarRBjEKkPl4mFvSYreTDGWphmPfuOtVeMBR5kChC4v06
-         XulA==
-X-Gm-Message-State: APjAAAWoV87kgU4qSvy/Nye47xBXCUMX8SPZybQymo49akumZ0XmkjzN
-        N01x4Mc+01MiIvRABNeG1mKAKIKMEe5MRBUgyfF6Lg==
-X-Google-Smtp-Source: APXvYqxr3fWC//jtQ4389G0t+wE4iStFTkxw+AcnJfeuE7/RxMxYE2FNqp3gvUBnlv+YKbpTnsdFT2YVgd4NFGhuVAs=
-X-Received: by 2002:a1c:a795:: with SMTP id q143mr5503441wme.52.1576147080146;
- Thu, 12 Dec 2019 02:38:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=CGdrhhHyRlkbfocg8i54ButT9u7PpOFWc5l6oudrYoY=;
+        b=W2793cWDYtRi2RzxrbFF02tpi454Aj4aDNUspEr5cbM+8XiAD8Q1k8Ocg9Rc4GDnkq
+         H3gSlfM1UD/yBmewgdJM0p3MjEhSxXwduvd2p6uZnyu45wxxznPWBH0jV2KsugZ6tfBs
+         EmfbSttkmfsWnYLGLvEa51yoYdY9EYle/M4pkCfi7OqLawt6i77/bSA5Vcmj+Z/i5c5r
+         xTJaru39uBN2ymdEQaAkrXO8LWEQOQ7pe4u5rvZ05GwKHkQ/+mAoakdLjSsGtOA0N/Av
+         PenJrAKS0n71inXDWdeMdlQAhnN+whepzsOL+PrrAHksHCr4bPuNdBEAtpi3A2TM8E+/
+         HfPA==
+X-Gm-Message-State: APjAAAWO/fPbAXiQb2DJonxpnBmKY8J0JNjQRkFehaQh4pV1RqrGGFf2
+        Mq9Arcx1pfph+LfmWcTf0P5xnbiBv5SFoU+2mHRCRQ+wmOPVKCvZv3nafXcW5skAS/VZ2xvrzMT
+        i+e08cwbR3xmDfCV1np5WsCq1
+X-Received: by 2002:ac8:31f0:: with SMTP id i45mr6826432qte.327.1576147087648;
+        Thu, 12 Dec 2019 02:38:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy533LAorMnek81fxEnELYfHSOMJtzaFsHpey7OtVFs0ONCSNjDRC58Vp1XiF2XTw+x7brejg==
+X-Received: by 2002:ac8:31f0:: with SMTP id i45mr6826421qte.327.1576147087458;
+        Thu, 12 Dec 2019 02:38:07 -0800 (PST)
+Received: from redhat.com (bzq-79-181-48-215.red.bezeqint.net. [79.181.48.215])
+        by smtp.gmail.com with ESMTPSA id 53sm2085127qtu.40.2019.12.12.02.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 02:38:06 -0800 (PST)
+Date:   Thu, 12 Dec 2019 05:38:02 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
+Message-ID: <20191212053403-mutt-send-email-mst@kernel.org>
+References: <20191129213505.18472-1-peterx@redhat.com>
+ <20191129213505.18472-5-peterx@redhat.com>
+ <20191211063830-mutt-send-email-mst@kernel.org>
+ <20191211205952.GA5091@xz-x1>
+ <20191211172713-mutt-send-email-mst@kernel.org>
+ <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
+ <20191212023154-mutt-send-email-mst@kernel.org>
+ <74edef57-c1c7-53cb-4b93-291d9f816688@redhat.com>
 MIME-Version: 1.0
-References: <20191212103158.4958-1-hdegoede@redhat.com> <20191212103158.4958-2-hdegoede@redhat.com>
-In-Reply-To: <20191212103158.4958-2-hdegoede@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 12 Dec 2019 10:37:58 +0000
-Message-ID: <CAKv+Gu9Fa=ccEyGW=hyZya0y-ujL27twKVX5JwcqWRMQ=yfQzg@mail.gmail.com>
-Subject: Re: [PATCH 5.5 regression fix 1/2] efi/libstub/random: Initialize
- pointer variables to zero for mixed mode
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <74edef57-c1c7-53cb-4b93-291d9f816688@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Commit 0d95981438c3 ("x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the
-> UEFI RNG table"), causes the drivers/efi/libstub/random.c code to get used
-> on x86 for the first time.
->
-> But this code was not written with EFI mixed mode in mind (running a 64
-> bit kernel on 32 bit EFI firmware), this causes the kernel to crash during
-> early boot when running in mixed mode.
->
-> The problem is that in mixed mode pointers are 64 bit, but when running on
-> a 32 bit firmware, EFI calls which return a pointer value by reference only
-> fill the lower 32 bits of the passed pointer, leaving the upper 32 bits
-> uninitialized which leads to crashes.
->
-> This commit fixes this by initializing pointers which are passed by
-> reference to EFI calls to NULL before passing them, so that the upper 32
-> bits are initialized to 0.
->
-> Fixes: 0d95981438c3 ("x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the UEFI RNG table")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Thu, Dec 12, 2019 at 09:12:04AM +0100, Paolo Bonzini wrote:
+> On 12/12/19 08:36, Michael S. Tsirkin wrote:
+> > On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
+> >>>> I'd say it won't be a big issue on locking 1/2M of host mem for a
+> >>>> vm...
+> >>>> Also note that if dirty ring is enabled, I plan to evaporate the
+> >>>> dirty_bitmap in the next post. The old kvm->dirty_bitmap takes
+> >>>> $GUEST_MEM/32K*2 mem.  E.g., for 64G guest it's 64G/32K*2=4M.  If with
+> >>>> dirty ring of 8 vcpus, that could be 64K*8=0.5M, which could be even
+> >>>> less memory used.
+> >>>
+> >>> Right - I think Avi described the bitmap in kernel memory as one of
+> >>> design mistakes. Why repeat that with the new design?
+> >>
+> >> Do you have a source for that?
+> > 
+> > Nope, it was a private talk.
+> > 
+> >> At least the dirty bitmap has to be
+> >> accessed from atomic context so it seems unlikely that it can be moved
+> >> to user memory.
+> > 
+> > Why is that? We could surely do it from VCPU context?
+> 
+> Spinlock is taken.
 
-Thanks Hans.
+Right, that's an implementation detail though isn't it?
 
-I'm a bit annoyed with myself since I should have been able to catch
-this in my QEMU tests and I didn't
+> >> The dirty ring could use user memory indeed, but it would be much harder
+> >> to set up (multiple ioctls for each ring?  what to do if userspace
+> >> forgets one? etc.).
+> > 
+> > Why multiple ioctls? If you do like virtio packed ring you just need the
+> > base and the size.
+> 
+> You have multiple rings, so multiple invocations of one ioctl.
+> 
+> Paolo
 
-I'll queue this (and the next patch) as a fix
+Oh. So when you said "multiple ioctls for each ring" - I guess you
+meant: "multiple ioctls - one for each ring"?
 
+And it's true, but then it allows supporting things like resize in a
+clean way without any effort in the kernel. You get a new ring address -
+you switch to that one.
 
+-- 
+MST
 
-> ---
->  drivers/firmware/efi/libstub/random.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
-> index 35edd7cfb6a1..97378cf96a2e 100644
-> --- a/drivers/firmware/efi/libstub/random.c
-> +++ b/drivers/firmware/efi/libstub/random.c
-> @@ -33,7 +33,7 @@ efi_status_t efi_get_random_bytes(efi_system_table_t *sys_table_arg,
->  {
->         efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
->         efi_status_t status;
-> -       struct efi_rng_protocol *rng;
-> +       struct efi_rng_protocol *rng = NULL;
->
->         status = efi_call_early(locate_protocol, &rng_proto, NULL,
->                                 (void **)&rng);
-> @@ -162,8 +162,8 @@ efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg)
->         efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
->         efi_guid_t rng_algo_raw = EFI_RNG_ALGORITHM_RAW;
->         efi_guid_t rng_table_guid = LINUX_EFI_RANDOM_SEED_TABLE_GUID;
-> -       struct efi_rng_protocol *rng;
-> -       struct linux_efi_random_seed *seed;
-> +       struct efi_rng_protocol *rng = NULL;
-> +       struct linux_efi_random_seed *seed = NULL;
->         efi_status_t status;
->
->         status = efi_call_early(locate_protocol, &rng_proto, NULL,
-> --
-> 2.23.0
->
