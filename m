@@ -2,138 +2,175 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B550C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CA2C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4174C21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lsp1jc77"
+	by mail.kernel.org (Postfix) with ESMTP id C771422B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbfLLNQH (ORCPT
+        id S1729455AbfLLNQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:16:07 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40119 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729338AbfLLNQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:16:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so2685109wrn.7;
-        Thu, 12 Dec 2019 05:16:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xC1V1OXM7iQO6hr2sfVaq+K9PrfoaGHt4GtTPGZeDwk=;
-        b=Lsp1jc77LRacRdX0U6+mRFDG8frM2mpWQwMeSGuqFjiGFjC5r7wOvdPOe/fNlNFfsN
-         ESuMHIe+ETmK/3pZ56Owi8ztDLBa/yhCFidSyTshVlX5IPvE3bojObJcd+Wv8cgzyyR+
-         ZgLLQ7JT71qDlwVJkC74I6PBISvHN16pFaGaX2SXocgyAj18ZzsrJDsubkcba51po/sD
-         GdvtKrqewCYiZQsviaL9gjREZISvaLnzXEPEbvyIt8d/oywicDvGNcFUjFiPo5KeDIcy
-         q9OG9rLryRCfW0kWNYqtfvMtmdpG2J9vdQ5MeCefi2Sg6wBJ+EPSVeA2cXW4i6pkn5hL
-         ebJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xC1V1OXM7iQO6hr2sfVaq+K9PrfoaGHt4GtTPGZeDwk=;
-        b=CQgQHpBZzj8XRal8+VOcJCCRM4mdzkxV/YjLUSJwc849mAumUMRBfnDEE6RnS7gL4f
-         9QmoUCiMxZKGBS1NWDVuaS3AkM6uxh20m0oEuEe77qyUbIL9vTOJiGPHpaiz5hlH+Zt1
-         xEJalKv51v3PrnMmmYfxt13GGJFG0R6T7MLkOfFP7MQA8BrA9pK5Hhpdn8DMeXa+malp
-         3DlsIKOMArr288d1LH7UzTlQlW6Fo9RVYII6skyjE0x+8CC7nZVjRDTQkiFrJkoKYMaz
-         LtHRvCIF+7UD3+I0TkpYFb1e3kfQ87rRneJKzqOF4mWKc/+kRsYBOyyAWivOHu507ZNr
-         U99g==
-X-Gm-Message-State: APjAAAXm1ctqKYgqMqqWQAaKKFfr+NZl97EDhlCiFgw0Lf0b/7zpgS8+
-        XIB0RZ9Y837G/KqB01gLPqQ=
-X-Google-Smtp-Source: APXvYqy68o0ch6tMvKbbixnsXmQ1TzXWiQrN6b9xHSlwFMCN4fCWbAyBAzJC69h+tbVHBzGeMOSJyA==
-X-Received: by 2002:a5d:61cf:: with SMTP id q15mr6416821wrv.231.1576156565036;
-        Thu, 12 Dec 2019 05:16:05 -0800 (PST)
-Received: from debian.office.codethink.co.uk ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id e12sm6027849wrn.56.2019.12.12.05.16.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 05:16:04 -0800 (PST)
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Subject: [PATCH] tty: link tty and port before configuring it as console
-Date:   Thu, 12 Dec 2019 13:16:02 +0000
-Message-Id: <20191212131602.29504-1-sudipm.mukherjee@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 12 Dec 2019 08:16:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:48780 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729338AbfLLNQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:16:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9BC24AD07;
+        Thu, 12 Dec 2019 13:16:36 +0000 (UTC)
+Message-ID: <b35922dfd7f62489d35ab15362891a90bf46c3d2.camel@suse.de>
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     andrew.murray@arm.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+Date:   Thu, 12 Dec 2019 14:16:27 +0100
+In-Reply-To: <20191205223044.GA250573@google.com>
+References: <20191205223044.GA250573@google.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-vpJ9shRBsDfxzY4jD4N5"
+User-Agent: Evolution 3.34.2 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There seems to be a race condition in tty drivers and I could see on
-many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-do 'tty->port->itty = tty' even though tty->port is NULL.
-'tty->port' will be set by the driver and if the driver has not yet done
-it before we open the tty device we can get to this situation. By adding
-some extra debug prints, I noticed that:
 
-6.650130: uart_add_one_port
-6.663849: register_console
-6.664846: tty_open
-6.674391: tty_init_dev
-6.675456: tty_port_link_device
+--=-vpJ9shRBsDfxzY4jD4N5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-uart_add_one_port() registers the console, as soon as it registers, the
-userspace tries to use it and that leads to tty_open() but
-uart_add_one_port() has not yet done tty_port_link_device() and so
-tty->port is not yet configured when control reaches tty_init_dev().
+On Thu, 2019-12-05 at 16:30 -0600, Bjorn Helgaas wrote:
+> You got the "n" on "down" in the subject, but still missing "of" ;)
 
-Further look into the code and tty_port_link_device() is done by
-uart_add_one_port(). After registering the console uart_add_one_port()
-will call tty_port_register_device_attr_serdev() and
-tty_port_link_device() is called from this.
+Yes, sorry about that, I tend to re-read what I meant to say instead of wha=
+t
+it's actually written.
 
-Call add tty_port_link_device() before uart_configure_port() is done and
-add a check in tty_port_link_device() so that it only links the port if
-it has not been done yet.
+> On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
+> > Some users need to make sure their rounding function accepts and return=
+s
+> > 64bit long variables regardless of the architecture. Sadly
+> > roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> > out ilog2() already handles 32/64bit calculations properly, and being
+> > the building block to the round functions we can rework them as a
+> > wrapper around it.
+>=20
+> Missing "of" in the function names here.
+> s/a wrapper/wrappers/
 
-Suggested-by: Jiri Slaby <jslaby@suse.com>
-Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
----
+Noted
 
-This actually should be v3. The previous discussions are at:
-https://lore.kernel.org/lkml/20191120151709.14148-2-sudipm.mukherjee@gmail.com/
-https://lore.kernel.org/lkml/20191121152239.28405-1-sudipm.mukherjee@gmail.com/
+> IIUC the point of this is that roundup_pow_of_two() returned
+> "unsigned long", which can be either 32 or 64 bits (worth pointing
+> out, I think), and many callers need something that returns
+> "unsigned long long" (always 64 bits).
 
- drivers/tty/serial/serial_core.c | 1 +
- drivers/tty/tty_port.c           | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+I'll update the commit message to be a more explicit.
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index b0a6eb106edb..7c2782785736 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -2834,6 +2834,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
- 	if (uport->cons && uport->dev)
- 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
- 
-+	tty_port_link_device(port, drv->tty_driver, uport->line);
- 	uart_configure_port(drv, state, uport);
- 
- 	port->console = uart_console(uport);
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 044c3cbdcfa4..5023c85ebc6e 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_port *port,
- {
- 	if (WARN_ON(index >= driver->num))
- 		return;
--	driver->ports[index] = port;
-+	if (!driver->ports[index])
-+		driver->ports[index] = port;
- }
- EXPORT_SYMBOL_GPL(tty_port_link_device);
- 
--- 
-2.11.0
+> It's a nice simplification to remove the "__" variants.  Just as a
+> casual reader of this commit message, I'd like to know why we had both
+> the roundup and the __roundup versions in the first place, and why we
+> no longer need both.
+
+So, the commit that introduced it (312a0c170945b) meant to use the '__' var=
+iant
+as a helper, but, due to the fact this is a header file, some found it and =
+made
+use of it. I went over some if the commits introducing '__' usages and none=
+ of
+them seem to acknowledge its use as opposed to the macro version. I think i=
+t's
+fair to say it's a case of cargo-culting.
+
+> > -#define roundup_pow_of_two(n)			\
+> > -(						\
+> > -	__builtin_constant_p(n) ? (		\
+> > -		(n =3D=3D 1) ? 1 :			\
+> > -		(1UL << (ilog2((n) - 1) + 1))	\
+> > -				   ) :		\
+> > -	__roundup_pow_of_two(n)			\
+> > - )
+> > +#define roundup_pow_of_two(n)			  \
+> > +(						  \
+> > +	(__builtin_constant_p(n) && ((n) =3D=3D 1)) ? \
+> > +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> > +)
+>=20
+> Should the resulting type of this expression always be a ULL, even
+> when n=3D=3D1, i.e., should it be this?
+>=20
+>   1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
+>=20
+> Or maybe there's no case where that makes a difference?
+
+It should be 1ULL on either case.
+
+Regards,
+Nicolas
+
+
+--=-vpJ9shRBsDfxzY4jD4N5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yPasACgkQlfZmHno8
+x/4qrgf9GTaIX4ZRG0TCYwOuyJCzR/7cg3GMSsuHo8bknRFfBKmZUwtS0JmNNrn7
+f1Av7IZ0OAbAWPJQkzOXw4OxNhVxq0ItdXAktetVKaF6U5Dz/5tWkkwHLFdhSepV
+FcS4qxWo8nOugcgYRzN6kDaihMFUqbAIioU7n1HGLRGN2s9vaJM1rNmOrGMPovU3
+BbGTs4/7BMM3FmqoGwWUKX5FPFNamYrxAaaOknMUVa16iI7MN7hYH5scWUUK56ER
+57y4jC6vGu17Cku4HBlynsoZpm6z6SvHDoXIMZCbUKbJogsiQo+b1+cZTWLVGi2P
+qQGX/jHjIhYWNVa2Le9F3qgxxmf0uA==
+=hg1F
+-----END PGP SIGNATURE-----
+
+--=-vpJ9shRBsDfxzY4jD4N5--
 
