@@ -2,94 +2,174 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10168C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D648C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57F0206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52B82067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:23:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="I2+up6ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfLLPWQ (ORCPT
+        id S1729193AbfLLPXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:22:16 -0500
-Received: from foss.arm.com ([217.140.110.172]:50530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbfLLPWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:22:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A559030E;
-        Thu, 12 Dec 2019 07:22:15 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88AC73F6CF;
-        Thu, 12 Dec 2019 07:22:14 -0800 (PST)
-Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
- <20191212144633.GE46910@lakrids.cambridge.arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
-Date:   Thu, 12 Dec 2019 15:22:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 10:23:25 -0500
+Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:58028 "EHLO
+        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728690AbfLLPXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:23:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1576164204;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=gYDKEote6nZzfFtY/B3Bt+4wk/QQ/K5SQUNQRMsAuMQ=;
+  b=I2+up6IDHnfKidG9nsR6b5dRrDM0jH4efQSp6odHSEYKuzGU2e7i+kHl
+   kCchBslIAwegbFf2CwxtihbE2Nz2ox6RGfWj+uu73zvi2IJFe40YMhpKd
+   m2gAjdP/XT6PdCB9HvoygvZfexUoN+2oVqqGhW0C8jGK81XNmYn5ie8LR
+   k=;
+Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa6.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa6.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa6.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: ZNyWCsM6N4/1gv+dV4ixDqV1rHhYuMm/H7nbvJT3hnqx/dL+UwTZMgz7Ce5hwJL4RZX2UnyI+y
+ SJITAIwvJR3i/CjdodxZ49Lh4pWTcQC/SGRwMz8Hxd+u0bGCIvvI2am3YIGJyp4Ljcjb23n5yT
+ +LblLtgyjvnRbFs8q21cjJ4jiMwTJ2Nm+Xvh6drEkrXUQTeUlBlHd1FrD6TqklMibsZSFzCUDw
+ bqu8OPqOH0iwIlOZhbggjEEYDXU9oK0IUN5TH+exjyJ1PMOipAwy8PjM58PrtyJERFue9+SH8W
+ teA=
+X-SBRS: 2.7
+X-MesageID: 10008666
+X-Ironport-Server: esa6.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,306,1571716800"; 
+   d="scan'208";a="10008666"
+Date:   Thu, 12 Dec 2019 16:23:17 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     SeongJae Park <sj38.park@gmail.com>
+CC:     <jgross@suse.com>, <axboe@kernel.dk>, <sjpark@amazon.com>,
+        <konrad.wilk@oracle.com>, <pdurrant@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>
+Subject: Re: Re: [Xen-devel] [PATCH v7 2/3] xen/blkback: Squeeze page pools
+ if a memory pressure is detected
+Message-ID: <20191212152317.GE11756@Air-de-Roger>
+References: <20191212114247.GB11756@Air-de-Roger>
+ <20191212133905.462-1-sj38.park@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212144633.GE46910@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191212133905.462-1-sj38.park@gmail.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 14:46, Mark Rutland wrote:
-> On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
->> +#define ID_ISAR6_JSCVT_SHIFT		0
->> +#define ID_ISAR6_DP_SHIFT		4
->> +#define ID_ISAR6_FHM_SHIFT		8
->> +#define ID_ISAR6_SB_SHIFT		12
->> +#define ID_ISAR6_SPECRES_SHIFT		16
->> +#define ID_ISAR6_BF16_SHIFT		20
->> +#define ID_ISAR6_I8MM_SHIFT		24
+On Thu, Dec 12, 2019 at 02:39:05PM +0100, SeongJae Park wrote:
+> On Thu, 12 Dec 2019 12:42:47 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+> > > On the slow block device
+> > > ------------------------
+> > > 
+> > >     max_pgs   Min       Max       Median     Avg    Stddev
+> > >     0         38.7      45.8      38.7       40.12  3.1752165
+> > >     1024      38.7      45.8      38.7       40.12  3.1752165
+> > >     No difference proven at 95.0% confidence
+> > > 
+> > > On the fast block device
+> > > ------------------------
+> > > 
+> > >     max_pgs   Min       Max       Median     Avg    Stddev
+> > >     0         417       423       420        419.4  2.5099801
+> > >     1024      414       425       416        417.8  4.4384682
+> > >     No difference proven at 95.0% confidence
+> > 
+> > This is intriguing, as it seems to prove that the usage of a cache of
+> > free pages is irrelevant performance wise.
+> > 
+> > The pool of free pages was introduced long ago, and it's possible that
+> > recent improvements to the balloon driver had made such pool useless,
+> > at which point it could be removed instead of worked around.
 > 
->> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
->>   	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
->>   	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
->>   	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
-> 
->> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
-> 
-> Using ftr_generic_32bits exposes the lowest-common-denominator for all
-> 4-bit fields in the register, and I don't think that's the right thing
-> to do here, because:
-> 
-> * We have no idea what ID_ISAR6 bits [31:28] may mean in future.
-> 
-> * AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
->    ARMv8.0-PredInv extension) operate on the local PE and are not
->    broadcast. To make those work as a guest expects, the host will need
->    to do additional things (e.g. to preserve that illusion when a vCPU is
->    migrated from one pCPU to another and back).
-> 
-> Given that, think we should add an explicit ftr_id_isar6 which only
-> exposes the fields that we're certain are safe to expose to a guest
-> (i.e. without SPECRES).
+> I guess the grant page allocation overhead in this test scenario is really
+> small.  In an absence of memory pressure, fragmentation, and NUMA imbalance,
+> the latency of the page allocation ('get_page()') is very short, as it will
+> success in the fast path.
 
-Agree. Thanks for pointing this out. I recommended the usage of
-generic_32bits table without actually looking at the feature
-definitions.
+The allocation of the pool of free pages involves more than get_page,
+it uses gnttab_alloc_pages which in the worse case will allocate a
+page and balloon it out issuing one hypercall.
 
-Anshuman,
+> Few years ago, I once measured the page allocation latency on my machine.
+> Roughly speaking, it was about 1us in best case, 100us in worst case, and 5us
+> in average.  Please keep in mind that the measurement was not designed and
+> performed in serious way.  Thus the results could have profile overhead in it,
+> though.  While keeping that in mind, let's simply believe the number and ignore
+> the latency of the block layer, blkback itself (including the grant
+> mapping), and anything else including context switch, cache miss, but the
+> allocation.  In other words, suppose that the grant page allocation is only one
+> source of the overhead.  It will be able to achieve 1 million IOPS (4KB *
+> 1MIOPS = 4 GB/s) in the best case, 200 thousand IOPS (800 MB/s) in average, and
+> 10 thousand IOPS (40 MB/s) in worst case.  Based on this coarse calculation, I
+> think the test results is reasonable.
+> 
+> This also means that the effect of the blkback's free pages pool might be
+> visible under page allocation fast path failure situation.  Nevertheless, it
+> would be also hard to measure that in micro level unless the measurement is
+> well designed and controlled.
+> 
+> > 
+> > Do you think you could perform some more tests (as pointed out above
+> > against the block device to skip the fs overhead) and report back the
+> > results?
+> 
+> To be honest, I'm not sure whether additional tests are really necessary,
+> because I think the `dd` test and the results explanation already makes some
+> sense and provide the minimal proof of the concept.  Also, this change is a
+> fallback for the memory pressure situation, which is an error path in some
+> point of view.  Such errorneous situation might not happen frequently and if
+> the situation is not solved in short time, something much worse (e.g., OOM kill
+> of the user space xen control processes) than temporal I/O performance
+> degradation could happen.  Thus, I'm not sure whether such detailed performance
+> measurement is necessary for this rare error handling change.
 
-Sorry about this.
+Right, my main concern is that we seem to be adding duck tape so
+things don't fall apart, but if such cache is really not beneficial
+from a performance PoV I would rather see it go away than adding more
+stuff to it in order to workaround corner cases like memory
+starvation.
 
-Cheers
-Suzuki
+Anyway, I guess we can take such change, but long term we need to look
+into fixing grants to not use ballooned pages, and figure out if the
+blkback free page cache is really useful or not.
+
+Thanks, Roger.
