@@ -2,106 +2,65 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F83C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A91C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DDB020663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:28:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPJQrSyp"
+	by mail.kernel.org (Postfix) with ESMTP id 63CE120663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfLLM23 (ORCPT
+        id S1729215AbfLLM3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:28:29 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40097 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbfLLM22 (ORCPT
+        Thu, 12 Dec 2019 07:29:36 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:38690 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729093AbfLLM3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:28:28 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 6so291256oix.7;
-        Thu, 12 Dec 2019 04:28:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Y9iHDYGIFVGjHT5t86r21P03HUM56r+DzbAOwdCIy0=;
-        b=DPJQrSypuwzJDFhhvWXFStMNHtDK4kRMnhohRqhhatDVu9ZRXwM9/nQYrdW0mL2KzZ
-         VUXVsBWblyD4X7mfsXhoKHR6c84+0fUc43IevkvAgFsE63KeEbBzHzeh65kZavFfpHDa
-         Rs7HDhqV97tQTXQ03MP7757pq6cqcVGmQul9g1XOJgBta4Zy2BlZvinSeZSTQiKXbahp
-         A0ikDora4rH7jVEyZFiEUHo65KK3iK+qwwAiOS52bh3HCtGTXUEi8WNsse5XHhttHd2J
-         3zrJW06o4wXd1wY8f1xmJhMaI8pRcHU1vYBJpndhclVw++Gx6tt5qg1gzhj2s3XwM06w
-         C56w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Y9iHDYGIFVGjHT5t86r21P03HUM56r+DzbAOwdCIy0=;
-        b=WqWpkyZAZULDQzKhhyCaGGBslYLzKRt0sxNpci955O89UB2U1uJ5367Pu68kS4iVLZ
-         PFJpk+sMxe7gi6vcH21RcwLsSUK7U8mkFiAIUWAsDThErU0hcecJu19QbB9Kptj2q7xQ
-         /oJr8HbXca/weFBWSJG3w1Yv8FXo+3PQG4GkssmVmiLMfphkl8ynI3EBFRgYMSVhTH70
-         FywWkegkgqicIabV+cxQPmHeKgNFlPsZedM6ldJnqX1dEIe4bSNNQ+G6ofPPmc7x0FUM
-         6tZo+mLZ9qA87cFXzBYNy+RQ+VBcZJ5l9kbhwhh2eJvojvz1aavhJih4LPu55fx8rgy6
-         +NDw==
-X-Gm-Message-State: APjAAAXIttvs21RdUchcJDnBzkDclvPxCh6TmTHNRC44aBYkcvTFkPAl
-        a6rMcq76LK0umsqkoaPni8KBb0nN3X/ChRHbrXg=
-X-Google-Smtp-Source: APXvYqwaEQwiecwpvxxqqhQAiSr5hflX5ePMX5oN5FvbSb4Y/nShYsYdSRVg1zBpGo5ZeTc04K0P1SRIsSeQTdK1BEE=
-X-Received: by 2002:aca:b04:: with SMTP id 4mr4598119oil.151.1576153707873;
- Thu, 12 Dec 2019 04:28:27 -0800 (PST)
+        Thu, 12 Dec 2019 07:29:36 -0500
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+X-isilmar-external: YES
+Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 60479200A83;
+        Thu, 12 Dec 2019 12:29:34 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 5997C20B6C; Thu, 12 Dec 2019 13:29:11 +0100 (CET)
+Date:   Thu, 12 Dec 2019 13:29:11 +0100
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5.5 regression fix 0/2] efi/libstub: Fix mixed-mode crash
+ at boot
+Message-ID: <20191212122911.GA302343@light.dominikbrodowski.net>
+References: <20191212103158.4958-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <20191211111628.2955-1-max.hirsch@gmail.com> <20191211162654.GD6622@ziepe.ca>
- <20191212084907.GU67461@unreal> <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
-In-Reply-To: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
-From:   Max Hirsch <max.hirsch@gmail.com>
-Date:   Thu, 12 Dec 2019 07:28:19 -0500
-Message-ID: <CADgTo8_mD6Z7WuA7wdEwh+7AR8YOy8nfJeaa2RbEAeftLGod7g@mail.gmail.com>
-Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
-To:     Gal Pressman <galpress@amazon.com>
-Cc:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danit Goldberg <danitg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dag Moxnes <dag.moxnes@oracle.com>,
-        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212103158.4958-1-hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I am happy to make a larger/functional change. From what I read,
-desired patch scope is proportional to linux community involvement but
-if that not how you guys do the infiniband driver that fine. Whats a
-feature you guys want but no one is working on yet, or rather where is
-such a list kept?
+On Thu, Dec 12, 2019 at 11:31:56AM +0100, Hans de Goede wrote:
+> Hi All,
+> 
+> Commit 0d95981438c3 ("x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the UEFI RNG table")
+> causes drivers/efi/libstub/random.c to be used on x86 for the first time
+> and some of the code in that file does not deal properly with mixed-mode
+> setups causing a crash at boot on mixed-mode devices.
+> 
+> The first patch in this series fixes this and is the regression-fix from
+> $subject.
 
-On Thu, Dec 12, 2019 at 7:10 AM Gal Pressman <galpress@amazon.com> wrote:
->
-> On 12/12/2019 10:49, Leon Romanovsky wrote:
-> > On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
-> >> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
-> >>> When running checkpatch on cma.c the following error was found:
-> >>
-> >> I think checkpatch will complain about your patch, did you run it?
-> >
-> > Jason, Doug
-> >
-> > I would like to ask to refrain from accepting checkpatch.pl patches
-> > which are not part of other large submission. Such standalone cleanups
-> > do more harm than actual benefit from them for old and more or less
-> > stable code (e.g. RDMA-CM).
->
-> Sounds like a great approach to prevent new developers from contributing code.
-> You have to start somewhere and checkpatch patches are a good entry point for
-> such developers, discouraging them will only hurt us in the long term.
->
-> Linus had an interesting post on the subject:
-> https://lkml.org/lkml/2004/12/20/255
+Sorry for the bug, and thanks for the bugfix!
+
+	Dominik
