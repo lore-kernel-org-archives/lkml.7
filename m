@@ -2,60 +2,61 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE604C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7776BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A21D321655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B158214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfnX5jsy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qvoQ62DK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbfLLXfL (ORCPT
+        id S1731319AbfLLXfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:35:11 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41134 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfLLXfL (ORCPT
+        Thu, 12 Dec 2019 18:35:14 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39152 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730979AbfLLXfN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:35:11 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so560995ljc.8;
-        Thu, 12 Dec 2019 15:35:09 -0800 (PST)
+        Thu, 12 Dec 2019 18:35:13 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e10so569139ljj.6;
+        Thu, 12 Dec 2019 15:35:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XMALgHPkuh/fgX4dtGxJeHepiAw93SnZTTwx7ykLGlQ=;
-        b=QfnX5jsyZ8lubfRzxTxq9S2tkfhBYifEb0P7UlQDoJfwDk9huYZBDC/dhUHTZtsvrm
-         fxiQ4hI1mh72QHk7LlrwTKdPolHMOd8DWZFs3Gjr7Wm83wOnfUGQ/mOEiBzUWc35WnS7
-         WLt2/a+yR0tblDb/7MJ5L9zhOcAb/xFdq+2bIBo21UOAjHB7/R5cMcp268Su2ItH34Gb
-         ya4X5ki8ZSn7joTOMfCip3SuvGf28oMk8BOsk+zhVsfGy9Z3v/Ag8HEDPDGinU2h5JnP
-         gM3cil67sgQvwDxx7lH/IgZULJOWvBnAg62Uhq57/ZVpUbiej0JavdzN5UlW3yKNcnyJ
-         VWMQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1cVsLJFz89Vu7CJdRahLgph9ywbohEGqsx2SWyRDeTQ=;
+        b=qvoQ62DKFza17wtpugsAb+eXLIKAXhiZjbSwnk4o3pFzMdgApDHILny97csQi2n2D6
+         s+XKapMvMMDYIm+GmKYFp2fO8ID+v+qAqukQw0ruC9gM5YwZAJub4g1inJQpq8sEnHat
+         ZZIorWo/dNBekYGecksgzlGYfe4T5LRRhOWq97i9CVHIfA1RqwqapReypOtF+ZZMEScL
+         Qoakwl3sky70ppEFv+GJpEe8w8CSYq5N5QDmCpMhhbhnSw0mgmxL5HBxPAsR6zy829pq
+         2YIhFrED5+dFTwHt4sxFkDEvcgzRlfD5PQUja4wqAbOWKXLq8DGXom0OrD3ijIMLKcVt
+         K4BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XMALgHPkuh/fgX4dtGxJeHepiAw93SnZTTwx7ykLGlQ=;
-        b=MGr2MfnBwKFl1RhKyq+yKhz9DDgLUpEdhulpF36N7nOkx/vEr2Fj2OaqLag+Ytic3k
-         vlU6rTetDsN6MCQRMq0GHTxUDR7pI2tmIsd4sMx1J9y63RkzH+bP1uac4oOt0ks+3g3L
-         23+UGui+Sg0rduOUgUytCnwZ7OggLt23fOC8LRiynC10c7CvDTWc9zxeVgQTGzrtgXoj
-         LdVdh3xDfJVwEw90bzRvXswMmj9/oBoIQ8Gltxo5DBEL7Vaejh/SaQkgZ1FL6sZj9ouG
-         +qcO35iKvQ1oNuHuJ2jXEevp41FvWIIlsUnYB+l5Jdybi10+QuvHYEnhpFyOOvz4TkPG
-         Uk1Q==
-X-Gm-Message-State: APjAAAXFEpyuRZTdA7yl6QW7wynxiWfQ353rWVynjUf0LB5TUkPw3YFy
-        tG9SyzmecyaqbaFRNLIy9g4IVNX0
-X-Google-Smtp-Source: APXvYqzOkTzeUocyxGe+AF2eb/2k7WrtEVpeY/sda04q044UYULGzf4YqlfV1F766iRQO75k7/73fg==
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr7642965ljh.183.1576193708812;
-        Thu, 12 Dec 2019 15:35:08 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1cVsLJFz89Vu7CJdRahLgph9ywbohEGqsx2SWyRDeTQ=;
+        b=kVJX3bmrBHIKJuQgQ3MItcDt62hrM1rrHqNG4amcaz7Z5IFtL64Zjs8m6MgQ7/A4fj
+         KSZc+bhN4TUa4LRUS+7tpSo0oFb/BQjP8hOEL6wZ77xqLaliO/7+kNQhi8dUHtmosgRT
+         umenvC+nECgjYSYmdC41D/ku5bilsbJu/k03OyoidPGg7+00UWCqBpsyCvWmGJbLOx4x
+         AZ8Gdoqq5aVi4FY2vVgUWaBs0SB5FK+JJQuaWYK6ItPWIK00g9iF06xkNaTTm1aJfKtk
+         o6anZPV9mBbPtTEA7EnMAnyo7DPaH3kLYNSYeuywh1CFUIoZxp5/bHJ9+lYCSzP33g7S
+         B6Cg==
+X-Gm-Message-State: APjAAAXMbgWtwvrhE+DoT89C6mJIxnNveyxG9CjvlXJpv3njwXga5dVs
+        ZQY7ivoVOZXAPGLjK1XtrK8=
+X-Google-Smtp-Source: APXvYqyjZO5T9LxNXzegg/i9RFDt2Dlhrdk0GASmx5EGlwGUoNiJdI2G95w6Qn1Q9DskdAc/wE1LNA==
+X-Received: by 2002:a2e:9b58:: with SMTP id o24mr7585247ljj.197.1576193710577;
+        Thu, 12 Dec 2019 15:35:10 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id q27sm3764283ljm.25.2019.12.12.15.35.07
+        by smtp.gmail.com with ESMTPSA id q27sm3764283ljm.25.2019.12.12.15.35.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 15:35:08 -0800 (PST)
+        Thu, 12 Dec 2019 15:35:10 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -63,10 +64,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 0/3] Tegra I2C: Support atomic transfers and correct suspend/resume
-Date:   Fri, 13 Dec 2019 02:34:25 +0300
-Message-Id: <20191212233428.14648-1-digetx@gmail.com>
+Subject: [PATCH v1 2/3] i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
+Date:   Fri, 13 Dec 2019 02:34:27 +0300
+Message-Id: <20191212233428.14648-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191212233428.14648-1-digetx@gmail.com>
+References: <20191212233428.14648-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,36 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+DMA is preferred for a larger transfers, while PIO is preferred for a
+smaller transfers to avoid unnecessary DMA overhead. There is no strict
+size limitations for the PIO-mode transfers, so let's rename the constant
+for clarity.
 
-This patchset adds support for atomic transfers which are required for
-shutting down machine properly. Secondly, a (not)suspending I2C is fixed
-by this small series as well.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-Changelog:
-
-v1: The "i2c: tegra: Support atomic transfers" previously was sent out as
-    a separate patch, but later I spotted that suspend/resume doesn't
-    work properly. The "i2c: tegra: Fix suspending in active runtime PM
-    state" patch depends on the atomic patch because there is a need to
-    active IRQ-safe mode for the runtime PM by both patches.
-
-    I fixed a missed doc-comment of the newly added "is_curr_atomic_xfer"
-    structure field and added additional comment that explains why IRQ needs
-    to be disabled for the atomic transfer in the "Support atomic transfers"
-    patch.
-
-    Lastly, I added a minor "i2c: tegra: Rename .." patch that helps to
-    follow driver's code.
-
-Dmitry Osipenko (3):
-  i2c: tegra: Support atomic transfers
-  i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
-  i2c: tegra: Fix suspending in active runtime PM state
-
- drivers/i2c/busses/i2c-tegra.c | 113 +++++++++++++++++++++++++++++----
- 1 file changed, 101 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 799c343571bc..b3ecdd87e91f 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -130,11 +130,10 @@
+ #define I2C_PACKET_HEADER_SIZE			12
+ 
+ /*
+- * Upto I2C_PIO_MODE_MAX_LEN bytes, controller will use PIO mode,
+- * above this, controller will use DMA to fill FIFO.
+- * MAX PIO len is 20 bytes excluding packet header.
++ * Up to 32 bytes, controller will use PIO mode, above this, controller will
++ * use DMA to fill FIFO. MAX PIO length is 20 bytes (excluding packet header).
+  */
+-#define I2C_PIO_MODE_MAX_LEN			32
++#define I2C_PIO_MODE_PREFERRED_LEN		32
+ 
+ /*
+  * msg_end_type: The bus control which need to be send at end of transfer.
+@@ -1105,7 +1104,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		xfer_size = msg->len + I2C_PACKET_HEADER_SIZE;
+ 
+ 	xfer_size = ALIGN(xfer_size, BYTES_PER_FIFO_WORD);
+-	i2c_dev->is_curr_dma_xfer = (xfer_size > I2C_PIO_MODE_MAX_LEN) &&
++	i2c_dev->is_curr_dma_xfer = (xfer_size > I2C_PIO_MODE_PREFERRED_LEN) &&
+ 				    i2c_dev->dma_buf &&
+ 				    !i2c_dev->is_curr_atomic_xfer;
+ 	tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
 -- 
 2.24.0
 
