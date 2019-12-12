@@ -3,102 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF5C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C97C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B479D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7377D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbfLLCCU convert rfc822-to-8bit (ORCPT
+        id S1727699AbfLLCC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:02:20 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2534 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727584AbfLLCCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:02:20 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 31B2679CAB7D093DF318;
-        Thu, 12 Dec 2019 10:02:17 +0800 (CST)
-Received: from dggeme765-chm.china.huawei.com (10.3.19.111) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 12 Dec 2019 10:02:16 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme765-chm.china.huawei.com (10.3.19.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 12 Dec 2019 10:02:16 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Thu, 12 Dec 2019 10:02:16 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH 6/6] KVM: Fix some writing mistakes
-Thread-Topic: [PATCH 6/6] KVM: Fix some writing mistakes
-Thread-Index: AdWwj3wg8ae1y0yjTKygu5joUnhHkg==
-Date:   Thu, 12 Dec 2019 02:02:16 +0000
-Message-ID: <64b60a489d1f405285781a6105a06f2d@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Wed, 11 Dec 2019 21:02:27 -0500
+Received: from mx.socionext.com ([202.248.49.38]:58677 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727678AbfLLCC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:02:27 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 12 Dec 2019 11:02:25 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 51E9C180B6B;
+        Thu, 12 Dec 2019 11:02:25 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 12 Dec 2019 11:03:05 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id C04DC1A0006;
+        Thu, 12 Dec 2019 11:02:24 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/2] PCI: Add new UniPhier PCIe endpoint driver
+Date:   Thu, 12 Dec 2019 11:02:16 +0900
+Message-Id: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson wrote:
->On Wed, Dec 11, 2019 at 02:26:25PM +0800, linmiaohe wrote:
->> From: Miaohe Lin <linmiaohe@huawei.com>
->> 
->> Fix some writing mistakes in the comments.
->> 
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> ---
->>  	 * This context will save all necessary information to walk page tables
->> -	 * of the an L2 guest. This context is only initialized for page table
->> +	 * of the L2 guest. This context is only initialized for page table
->
->I'd whack "the" instead of "and", i.e. ...walk page tables of an L2 guest, as KVM isn't limited to just one L2 guest.
+This series adds PCIe endpoint controller driver for Socionext UniPhier
+SoCs. This controller is based on the DesignWare PCIe core. This driver
+supports Pro5 SoC.
 
-I'd change this.
+Kunihiko Hayashi (2):
+  dt-bindings: PCI: Add UniPhier PCIe endpoint controller description
+  PCI: uniphier: Add UniPhier PCIe endpoint controller support
 
->>  	 * walking and not for faulting since we never handle l2 page faults 
->> on
->
->While you're here, want to change "l2" to "L2"?
+ .../devicetree/bindings/pci/uniphier-pcie-ep.txt   |  47 +++
+ MAINTAINERS                                        |   4 +-
+ drivers/pci/controller/dwc/Kconfig                 |  13 +-
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c      | 399 +++++++++++++++++++++
+ 5 files changed, 460 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie-ep.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
 
-I do nothing here. :)
+-- 
+2.7.4
 
->>  	 * the host.
->>  	 */
->> check_user_page_hwpoison(unsigned long addr)
->>  /*
->>   * The fast path to get the writable pfn which will be stored in @pfn,
->>   * true indicates success, otherwise false is returned.  It's also 
->> the
->> - * only part that runs if we can are in atomic context.
->> + * only part that runs if we can in atomic context.
->
->This should remove "can" instead of "are", i.e. ...part that runs if we are in atomic context.  The comment is calling out that hva_to_pfn() will return immediately if hva_to_pfn_fast() and the kernel is atomic context.
->
-
-Many thanks for your explanation, I would change this too. And many thanks for your review.
