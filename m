@@ -2,118 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59DAC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED7FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E262073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:18:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MePKYqk8"
+	by mail.kernel.org (Postfix) with ESMTP id A05AE21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfLLQSL (ORCPT
+        id S1729856AbfLLQTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:18:11 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54824 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbfLLQSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:18:10 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCGHvLv077744;
-        Thu, 12 Dec 2019 10:17:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576167477;
-        bh=nkLQXRQ87/SfQSBWWiilrp7/xPrpCi1hyGz8PEvF/Ss=;
-        h=From:To:CC:Subject:Date;
-        b=MePKYqk8/SzAObjqBi4Ei8Jj/L7n8dXOapx3cZPfRREr2XbqjHMo6qeDpjL7JMINx
-         aorcAwPvlEPWZENyarLXp1EPYBvJm2qxB1jHrZijLpIj8QeJWoDQo3inBbCpxzaSvI
-         Napit0EFcN1FLgXCYEA5W99U2Xu74ez1rBaoyGY8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCGHvK9122783
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 10:17:57 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 10:17:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 10:17:57 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCGHvpu030666;
-        Thu, 12 Dec 2019 10:17:57 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <mkl@pengutronix.de>,
-        <linux-can@vger.kernel.org>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-CC:     Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH linux-can/testing] can: tcan4x5x: Disable the INH pin device-state GPIO is unavailable
-Date:   Thu, 12 Dec 2019 10:15:36 -0600
-Message-ID: <20191212161536.23264-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 12 Dec 2019 11:19:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729591AbfLLQTC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:19:02 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A7B2073B;
+        Thu, 12 Dec 2019 16:19:01 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 11:19:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        arnaldo.melo@gmail.com, linux-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH] libtraceevent: allow custom libdir path
+Message-ID: <20191212111900.3f46e033@gandalf.local.home>
+In-Reply-To: <20191207111440.6574-1-sudipm.mukherjee@gmail.com>
+References: <20191207111440.6574-1-sudipm.mukherjee@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the device state GPIO is not connected to the host then disable the
-INH output from the TCAN device per section 8.3.5 of the data sheet.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/can/m_can/tcan4x5x.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Arnaldo,
 
-diff --git a/drivers/net/can/m_can/tcan4x5x.c b/drivers/net/can/m_can/tcan4x5x.c
-index b5d2ea0999c1..6a1f242d1876 100644
---- a/drivers/net/can/m_can/tcan4x5x.c
-+++ b/drivers/net/can/m_can/tcan4x5x.c
-@@ -102,6 +102,7 @@
- #define TCAN4X5X_MODE_NORMAL BIT(7)
- 
- #define TCAN4X5X_DISABLE_WAKE_MSK	(BIT(31) | BIT(30))
-+#define TCAN4X5X_DISABLE_INH_MSK	BIT(9)
- 
- #define TCAN4X5X_SW_RESET BIT(2)
- 
-@@ -360,6 +361,15 @@ static int tcan4x5x_disable_wake(struct m_can_classdev *cdev)
- 				  TCAN4X5X_DISABLE_WAKE_MSK, 0x00);
- }
- 
-+static int tcan4x5x_disable_state(struct m_can_classdev *cdev)
-+{
-+	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-+
-+	return regmap_update_bits(tcan4x5x->regmap, TCAN4X5X_CONFIG,
-+				  TCAN4X5X_DISABLE_INH_MSK, 0x01);
-+
-+}
-+
- static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- {
- 	struct tcan4x5x_priv *tcan4x5x = cdev->device_data;
-@@ -383,8 +393,10 @@ static int tcan4x5x_parse_config(struct m_can_classdev *cdev)
- 	tcan4x5x->device_state_gpio = devm_gpiod_get_optional(cdev->dev,
- 							      "device-state",
- 							      GPIOD_IN);
--	if (IS_ERR(tcan4x5x->device_state_gpio))
-+	if (IS_ERR(tcan4x5x->device_state_gpio)) {
- 		tcan4x5x->device_state_gpio = NULL;
-+		tcan4x5x_disable_state(cdev);
-+	}
- 
- 	return 0;
- }
--- 
-2.23.0
+Can you pull this patch in?
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+
+On Sat,  7 Dec 2019 11:14:40 +0000
+Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+
+> When I use prefix=/usr and try to install libtraceevent in my laptop it
+> tries to install in /usr/lib64. I am not having any folder as /usr/lib64
+> and also the debian policy doesnot allow installing in /usr/lib64. It
+> should be in /usr/lib/x86_64-linux-gnu/.
+> 
+> Quote: No package for a 64 bit architecture may install files in
+> 	/usr/lib64/ or in a subdirectory of it.
+> ref: https://www.debian.org/doc/debian-policy/ch-opersys.html
+> 
+> Make it more flexible by allowing to mention libdir_relative while
+> installing so that distros can mention the path according to their policy
+> or use the default one.
+> 
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> ---
+> 
+> Hi Steve,
+> 
+> And yet another one (hopefully the final one for now). I know I missed
+> the merge window, but your Ack should be ok.
+> 
+>  tools/lib/traceevent/Makefile         | 5 +++--
+>  tools/lib/traceevent/plugins/Makefile | 5 +++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+> index c5a03356a999..7e2450ddd7e1 100644
+> --- a/tools/lib/traceevent/Makefile
+> +++ b/tools/lib/traceevent/Makefile
+> @@ -39,11 +39,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
+>  
+>  LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+>  ifeq ($(LP64), 1)
+> -  libdir_relative = lib64
+> +  libdir_relative_temp = lib64
+>  else
+> -  libdir_relative = lib
+> +  libdir_relative_temp = lib
+>  endif
+>  
+> +libdir_relative ?= $(libdir_relative_temp)
+>  prefix ?= /usr/local
+>  libdir = $(prefix)/$(libdir_relative)
+>  man_dir = $(prefix)/share/man
+> diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
+> index f440989fa55e..edb046151305 100644
+> --- a/tools/lib/traceevent/plugins/Makefile
+> +++ b/tools/lib/traceevent/plugins/Makefile
+> @@ -32,11 +32,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
+>  
+>  LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+>  ifeq ($(LP64), 1)
+> -  libdir_relative = lib64
+> +  libdir_relative_tmp = lib64
+>  else
+> -  libdir_relative = lib
+> +  libdir_relative_tmp = lib
+>  endif
+>  
+> +libdir_relative ?= $(libdir_relative_tmp)
+>  prefix ?= /usr/local
+>  libdir = $(prefix)/$(libdir_relative)
+>  
 
