@@ -2,133 +2,114 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17974C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32569214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25632077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SH7Am+5F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI6lajdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfLLB4a (ORCPT
+        id S1727652AbfLLB6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:56:30 -0500
-Received: from mail-eopbgr20051.outbound.protection.outlook.com ([40.107.2.51]:9090
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727504AbfLLB4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:56:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NaIsc90vgofJ/NQL5OBc/aQSIRl2047Hna8Wj7MM4ug/9fC2AeJFPv2RAJXGvTH0I2HYlzlIJidJUwXR9xwgjwL12KXZlf+QWjMnFAjxkkjceovPvxBC+X+vJsniFo3WOE04WDPNGtL8lBRiL5Xm7haWaab9OLiQAZUyjm8yJeiTe63w5QCAswqmM1UDPddkIwFZr7TKj/Ea35r+flwQclexRbxhv6ldisX5F2hKF+Dg4T7/nlCW7nm89kbQ25tELKQu4A4N68p2d1ObM+tH8Fzoac07SNUpGiL+tWVIXiwDeqlY1vExY9DMqcEgOlVH2G1UEAWHvJGMEWUXb570Qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NGNsv+Yn3CX+aUNKzN0PTi9u1GNxvEgvZ9Pv5K6wZks=;
- b=EseKOL/6NK6lWW0P3iDqof/BL3HmDhWUl+UZ/Kexo6c79MX51VHLXahTDxeOF2gKyC9FsdX2fm5HMxCc2Ho/zPpqS7qa043IjGNVyeOgeYr+DswsEgqYKCY4rc33p2D0/jk4Pgi2AeD4fXUbtWrCPOa3AXGCj40VL1rL9bhY5fdXUUDS09eo1rF7Cx4Qa5rQ4rIeU72LNvcv3b1XGkgpm+tE2GCxq2kgIz3Z+CM9P9hlbV2K3kLt4r91qywtPZ0VZPhStK4NwzbutufHl24GRYVWpRD+8wxhzDcAnXMJsECGgnPOEYkVY8ZROaQqyjYmB35sN/GEGpuLNhmXquPJoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NGNsv+Yn3CX+aUNKzN0PTi9u1GNxvEgvZ9Pv5K6wZks=;
- b=SH7Am+5FwLE2H7j5FbM+u3rfNfjZr5A2LUFRJ13vvQhjtGZ/ttrgi9hzKuGGxDsLIaViOqFVTBAwvCYbv5ldTm5yqBd3zFbLY50qBviYIwkbeNdm+sy4AldgYrVvlMH5G7ybs8t3mubqnT4DhLd5CnHyoab5ozMHHB2/uDesKyM=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.232.15) by
- VE1PR04MB6464.eurprd04.prod.outlook.com (20.179.233.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15; Thu, 12 Dec 2019 01:56:26 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::100:f42b:82a1:68c2%7]) with mapi id 15.20.2538.017; Thu, 12 Dec 2019
- 01:56:26 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Peng Ma <peng.ma@nxp.com>, "vkoul@kernel.org" <vkoul@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [v4 1/2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Topic: [v4 1/2] dmaengine: fsl-edma: Add eDMA support for QorIQ LS1028A
- platform
-Thread-Index: AQHVr/pSW2nKczVFpUqjkN1Zue3zHqe1vhDg
-Date:   Thu, 12 Dec 2019 01:56:26 +0000
-Message-ID: <VE1PR04MB6638C482BFA65327668D181E89550@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20191211080749.30751-1-peng.ma@nxp.com>
-In-Reply-To: <20191211080749.30751-1-peng.ma@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cdec6179-d1b3-45e7-26b5-08d77ea67f83
-x-ms-traffictypediagnostic: VE1PR04MB6464:|VE1PR04MB6464:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6464B998DF5304C48A50A0E389550@VE1PR04MB6464.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:669;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(396003)(39860400002)(376002)(189003)(199004)(110136005)(54906003)(81156014)(8676002)(8936002)(81166006)(26005)(186003)(4326008)(86362001)(9686003)(55016002)(71200400001)(316002)(2906002)(53546011)(66446008)(6506007)(64756008)(7696005)(66946007)(478600001)(66476007)(76116006)(66556008)(52536014)(5660300002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6464;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BU2sLz04DAuRhhIrjsUfPu1wFqbEO0V1pN9BRYg93ZnNReoVHuDouDa7NF/XD7HEpUBCcyFqZZY5Cwl3/2K07Sc1vT3KFZ5DeAKdcPO2Z9NkoKNqeuey283l7GOpw5scOW8onqit39mUnd3iBJhjfjekL2rQi4+oaMvtMovWvmXOW7RTvlpbvskM0aYvYbfDH4uuISmUtpV17gcL84Dk/TdLGIzyMgoraClGcyrYwdg3IfJrNTpKDdkkoAkv2YRWUtt507MDIQkBajYspqN/fXXwGEkdNaQe5Bs8cbBRL8HyhUr0nP1FtQe+U7qNLC9BCbSQEUIzXGqIPwl2J856Z2wangsdIjvbx+i8T33+ZtJYFLYnwTZN3+Y8/QrJd5MdojtagBBzFIbyJHyksP7hiez4kBAqTlnG4a1JKurA92RD73jlCY9u073FN1MQZNAd
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 11 Dec 2019 20:58:43 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38859 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfLLB6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:58:42 -0500
+Received: by mail-lj1-f196.google.com with SMTP id k8so382231ljh.5;
+        Wed, 11 Dec 2019 17:58:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tIX439an0mvSSKUZP4UoZM6AftaCewaB/Dw94KbRNQw=;
+        b=cI6lajdchoiQCB0ZPJFKLDWjbXTKkewcnAA2vt0UpdVGrexxMyMDTsKROrMhQHeN3Q
+         mEYQlAG0yFtsx8u4aRBKGMKIvy1+TMeXs11Rwl8sHR68uS3P6hQOy8+rhvetoHQGe9T8
+         1MHG1ZwzevLOBtSLxWFhbBimeAth3fVIFTdtR14V1PeZPalL/vXu4Zo7T/gYHQC8TYFZ
+         UEvghfhhyuyvsHZPx9Y5VAwUdRqq+LBq1ODPrD6gBB2rI+d1JXqS/rP9nX0OUpmFZGq+
+         XDftqxyefM8oLqSSs56ivfUH4y3N7wdT4p5mk4wwyi50oPm3dNkS3eLcObO6C0DyOysA
+         HHEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tIX439an0mvSSKUZP4UoZM6AftaCewaB/Dw94KbRNQw=;
+        b=lFZBZIW/h7khWX2NQYt7S8a45x3G6h/QbK2Pg8qAMYMK08IHLFVQljOsFS+E+XrA0n
+         fUt1pZ3F8CgUh/TczX5Y1/PVz0B1DoQndcK/zrT9A9wNECVjUCb+DrTWWWJShrTui7D8
+         aeliu33BUji9pEkSFnSWIECTCpHkF+hfS0gI96AJHac9w/MGxStxCWGv2egXc+ohIn8t
+         EXLxbfoNWcnZP/9D2DYC7zaHEM1zQq8ylvPqT75qHZxGOnfMppH4WBF4c07dfd5fB+YB
+         0v6jrLQCv5LC8nrrZTKPRE0Q9Z+h0izkL63D7+nRHs/Yz4jrKXpJjtdEtIy3Mr74zJEY
+         Ydyw==
+X-Gm-Message-State: APjAAAUUZRLIpoNA9MpDFjr7oWpB6+xZl6MM4BZcNF453sXkVMcccMmS
+        Kh/Xcizg7Amo8OJVkUCo3snKiloT
+X-Google-Smtp-Source: APXvYqx4UOyMZoR302qC575ORpINoBpp4YP/1VBKp22kXDTTp1mMbo3doeHAENR3csP22uTGPLfFVA==
+X-Received: by 2002:a2e:9b8f:: with SMTP id z15mr4292823lji.20.1576115919796;
+        Wed, 11 Dec 2019 17:58:39 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id f11sm2337887lfa.9.2019.12.11.17.58.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 17:58:39 -0800 (PST)
+Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
+ driver(s)
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191203004116.11771-1-digetx@gmail.com>
+ <20191211085120.GX28289@pdeschrijver-desktop.Nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <804e46c7-1c39-926a-6624-924739433638@gmail.com>
+Date:   Thu, 12 Dec 2019 04:58:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdec6179-d1b3-45e7-26b5-08d77ea67f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 01:56:26.3797
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5KiLbeRV5KUsGC09KBoNm6LQP3VpnnNYtHpUJl6qcVjhI1kOtQT5LU6JrhZM+J04S8Zd4aR6Hz1K9EYofmuWMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6464
+In-Reply-To: <20191211085120.GX28289@pdeschrijver-desktop.Nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/12 16:10 Peng Ma <peng.ma@nxp.com> wrote:
-> Our platforms(such as LS1021A, LS1012A, LS1043A, LS1046A, LS1028A) with
-> below registers(CHCFG0 - CHCFG15) of eDMA as follows:
-> *-----------------------------------------------------------*
-> |     Offset   |	OTHERS      |		LS1028A	    |
-> |--------------|--------------------|-----------------------|
-> |     0x0      |        CHCFG0      |           CHCFG3      |
-> |--------------|--------------------|-----------------------|
-> |     0x1      |        CHCFG1      |           CHCFG2      |
-> |--------------|--------------------|-----------------------|
-> |     0x2      |        CHCFG2      |           CHCFG1      |
-> |--------------|--------------------|-----------------------|
-> |     0x3      |        CHCFG3      |           CHCFG0      |
-> |--------------|--------------------|-----------------------|
-> |     ...      |        ......      |           ......      |
-> |--------------|--------------------|-----------------------|
-> |     0xC      |        CHCFG12     |           CHCFG15     |
-> |--------------|--------------------|-----------------------|
-> |     0xD      |        CHCFG13     |           CHCFG14     |
-> |--------------|--------------------|-----------------------|
-> |     0xE      |        CHCFG14     |           CHCFG13     |
-> |--------------|--------------------|-----------------------|
-> |     0xF      |        CHCFG15     |           CHCFG12     |
-> *-----------------------------------------------------------*
->=20
-> This patch is to improve edma driver to fit LS1028A platform.
->=20
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-Reviewed-by: Robin Gong <yibin.gong@nxp.com>
+11.12.2019 11:51, Peter De Schrijver пишет:
+> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
+>> Hello,
+>>
+>> This series does the following:
+>>
+>>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
+>>      into common drivers/cpuidle/ directory.
+>>
+>>   2. Enables CPU cluster power-down idling state on Tegra30.
+>>
+>> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
+>> and of the Tegra's arch code in general. Please review, thanks!
+>>
+> 
+> Acked-By Peter De Schrijver <pdeschrijver@nvidia.com> for the series.
+> 
+> Peter.
+> 
+
+Thank you very much! Will be awesome if you could take a look at the
+cpufreq patches as well [1].
+
+There are also some other older unreviewed clk patches on the list that
+I'd want you to take a look. I'll revisit and re-send them soon. Maybe
+will add the PLLX LP1 patches [2] into cpufreq series.
+
+[1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=143592
+
+[2] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=139741
