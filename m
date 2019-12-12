@@ -2,287 +2,105 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3EFC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE526C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FC522527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CYurTowC"
+	by mail.kernel.org (Postfix) with ESMTP id AED5321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576170998;
+	bh=hCIUUjoV9LDxYFfpfhgTZKOW9fzOYuAszkQqCpfyxqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DXJxLa3EEZOkhsTkimbCrusorx2NdeurVVFYOUyBFaE77h9K+iwJpTYA0oseTLQ+E
+	 OcIpWpVhnKsySdtIjhNNWNYH3jWTXeVlRVF5whmtTPWymglk9hCu4Cw4aOVzxqHQy1
+	 iGBAERXbP7zmQwaakugfMUylI505VZ9SKrRQRdLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbfLLRP6 (ORCPT
+        id S1730134AbfLLRQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:15:58 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:44250 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbfLLRP4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:15:56 -0500
-Received: by mail-wr1-f74.google.com with SMTP id u18so1274616wrn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:15:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=JRGxEMxXqyLwwq/VLC1I/z+abNsCoEB8oREoiMjCzw4=;
-        b=CYurTowCo3NeG9CHGHLholAE9mQNbdbGPDQT49R1Lmtubio4iN/318jMH33rG87Zjx
-         wGL2YpYyAP3jue6mIO/AJQdIcqonRk3zhhei52OeHFzo/nLWR/R6NiZ+p7TjFhcXUs35
-         KYUhTcdOJS0KnlTq8VdpEcfj3NFzJfosFzgpm2T4Db0U5vyx35ofw0rUWO1/GUc//etY
-         zMC+euWL6VwIs/k94lLaKxtupRwAJHx0TUG3xZ44bj/kAJadj4vwGECoJoVdhLhGaEpV
-         JtfEpm1Sd5A4a8du8BD++qHOFbFv6yFdbAFnpTuGSJpnk1I7u9RbLoze9dutvq8dzNsp
-         ln7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=JRGxEMxXqyLwwq/VLC1I/z+abNsCoEB8oREoiMjCzw4=;
-        b=IB1zDJCkpUdPYo1pttkWIBWRIqzl3fAhKrMTmayC+jpca3263T6oPr3FVbKFzGlvyv
-         3y0l73FU71ewxlOtdL8RZ+ZIo/F54gdMql1Br/+my8iCJ7Hsbe41ukJokpcZtU6DVETt
-         CgOg/YThQCS8nJShddHAH4nPsVRE5RLAhMjX4tq6z1Dbryr5wVrBzDwm2FYaHyGyuDmm
-         pDJaxEtxiB7C1/ZTeaHAeI3wo2GjLvzISvudPWHPhUpuJOMQKjBz0G6W7ZNVr1Nv4Yn4
-         s9U016PqBknFQ12elRQFn57/+eDYYlDPGh59Lrc8gbCJAvgUqNC6di3zaXc4lBLCTNwF
-         UkNA==
-X-Gm-Message-State: APjAAAXm0eozELj6p0OMpTGdGeztX+/HaPhY42JdlQzsofDix1A6kOGx
-        nG993BwoXnJ7OJbCLwClaZqXIj7iAwvoLb2a
-X-Google-Smtp-Source: APXvYqwZSGOUFrDgSvckfYOQ79ZxiCcGgSE+6bmOJ/qSRTSUUi9MG7l+kSKLLPv3SZ7yvdlV2AFaM3ZR9pxQMMSE
-X-Received: by 2002:a5d:6408:: with SMTP id z8mr7658035wru.122.1576170953138;
- Thu, 12 Dec 2019 09:15:53 -0800 (PST)
-Date:   Thu, 12 Dec 2019 18:15:39 +0100
-In-Reply-To: <cover.1576170740.git.andreyknvl@google.com>
-Message-Id: <6b4b598d012d981c0c45fcc9f121ba210bd222f9.1576170740.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1576170740.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
-Subject: [PATCH RFC 2/2] HID: usbhid: kcov: add annotations for coverage collection
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Dec 2019 12:16:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730040AbfLLRQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:16:37 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93FE3205C9;
+        Thu, 12 Dec 2019 17:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576170996;
+        bh=hCIUUjoV9LDxYFfpfhgTZKOW9fzOYuAszkQqCpfyxqI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EWuay0I819XqGuvOSsknn0d9k75Vn8g4VG3BHr2E2DN4rsyF1Ff5RAOgMHPgzFwtc
+         8Na0syFuMwf74TW1Aod2SFGjufh5djkZ7Y9bO46PbSsdR7iP3IfPKFNvfs/9sqAhyU
+         WdC0UAGaNcw5F5Lq+ZtVZ6pmlyL17XIKquJFBPPY=
+Date:   Thu, 12 Dec 2019 17:16:31 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212171630.GC16364@willie-the-truck>
+References: <87blslei5o.fsf@mpe.ellerman.id.au>
+ <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <20191212170427.GA16364@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212170427.GA16364@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds kcov_remote_start/stop() callbacks into usbhid code that
-is executed in interrupt context. As the result, kcov can be used to
-collect coverage from those parts of the code, which is used to facilitate
-coverage-guided fuzzing with syzkaller.
+On Thu, Dec 12, 2019 at 05:04:27PM +0000, Will Deacon wrote:
+> On Thu, Dec 12, 2019 at 11:46:10AM +0100, Peter Zijlstra wrote:
+> > On Thu, Dec 12, 2019 at 10:07:56AM +0000, Will Deacon wrote:
+> > 
+> > > > So your proposed change _should_ be fine. Will, I'm assuming you never
+> > > > saw this on your ARGH64 builds when you did this code ?
+> > > 
+> > > I did see it, but (a) looking at the code out-of-line makes it look a lot
+> > > worse than it actually is (so the ext4 example is really helpful -- thanks
+> > > Michael!) and (b) I chalked it up to a crappy compiler.
+> > > 
+> > > However, see this comment from Arnd on my READ_ONCE series from the other
+> > > day:
+> > > 
+> > > https://lore.kernel.org/lkml/CAK8P3a0f=WvSQSBQ4t0FmEkcFE_mC3oARxaeTviTSkSa-D2qhg@mail.gmail.com
+> > > 
+> > > In which case, I'm thinking that we should be doing better in READ_ONCE()
+> > > for non-buggy compilers which would also keep the KCSAN folks happy for this
+> > > code (and would help with [1] too).
+> > 
+> > So something like this then? Although I suppose that should be moved
+> > into compiler-gcc.h and then guarded by #ifndef READ_ONCE or so.
+> 
+> Ah wait, I think we've been looking at this wrong. The volatile pointer
+> argument is actually the problem here, not READ_ONCE()! The use of typeof()
+> means that the temporary variable to which __READ_ONCE_SIZE writes ends up
+> being a volatile store, so it can't be optimised away. This is why we get
+> a stack access and why stack protector then wrecks the codegen for us.
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- drivers/hid/usbhid/hid-core.c | 25 ++++++++++++++++++++-----
- drivers/hid/usbhid/usbkbd.c   | 15 ++++++++++++---
- drivers/hid/usbhid/usbmouse.c |  7 ++++++-
- 3 files changed, 38 insertions(+), 9 deletions(-)
+Hmm, it's actually probably the volatile read which is causing the problem,
+since __READ_ONCE_SIZE has casted that away and just uses "void *", but you
+get the idea.
 
-diff --git a/drivers/hid/usbhid/hid-core.c b/drivers/hid/usbhid/hid-core.c
-index c7bc9db5b192..3e825f27d882 100644
---- a/drivers/hid/usbhid/hid-core.c
-+++ b/drivers/hid/usbhid/hid-core.c
-@@ -274,6 +274,8 @@ static void hid_irq_in(struct urb *urb)
- 	struct usbhid_device	*usbhid = hid->driver_data;
- 	int			status;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	switch (urb->status) {
- 	case 0:			/* success */
- 		usbhid->retry_delay = 0;
-@@ -300,12 +302,12 @@ static void hid_irq_in(struct urb *urb)
- 		clear_bit(HID_IN_RUNNING, &usbhid->iofl);
- 		set_bit(HID_CLEAR_HALT, &usbhid->iofl);
- 		schedule_work(&usbhid->reset_work);
--		return;
-+		goto out;
- 	case -ECONNRESET:	/* unlink */
- 	case -ENOENT:
- 	case -ESHUTDOWN:	/* unplug */
- 		clear_bit(HID_IN_RUNNING, &usbhid->iofl);
--		return;
-+		goto out;
- 	case -EILSEQ:		/* protocol error or unplug */
- 	case -EPROTO:		/* protocol error or unplug */
- 	case -ETIME:		/* protocol error or unplug */
-@@ -313,7 +315,7 @@ static void hid_irq_in(struct urb *urb)
- 		usbhid_mark_busy(usbhid);
- 		clear_bit(HID_IN_RUNNING, &usbhid->iofl);
- 		hid_io_error(hid);
--		return;
-+		goto out;
- 	default:		/* error */
- 		hid_warn(urb->dev, "input irq status %d received\n",
- 			 urb->status);
-@@ -330,6 +332,9 @@ static void hid_irq_in(struct urb *urb)
- 			hid_io_error(hid);
- 		}
- 	}
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- static int hid_submit_out(struct hid_device *hid)
-@@ -433,6 +438,8 @@ static void hid_irq_out(struct urb *urb)
- 	unsigned long flags;
- 	int unplug = 0;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	switch (urb->status) {
- 	case 0:			/* success */
- 		break;
-@@ -459,7 +466,7 @@ static void hid_irq_out(struct urb *urb)
- 				hid_submit_out(hid) == 0) {
- 			/* Successfully submitted next urb in queue */
- 			spin_unlock_irqrestore(&usbhid->lock, flags);
--			return;
-+			goto out;
- 		}
- 	}
- 
-@@ -467,6 +474,9 @@ static void hid_irq_out(struct urb *urb)
- 	spin_unlock_irqrestore(&usbhid->lock, flags);
- 	usb_autopm_put_interface_async(usbhid->intf);
- 	wake_up(&usbhid->wait);
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- /*
-@@ -480,6 +490,8 @@ static void hid_ctrl(struct urb *urb)
- 	unsigned long flags;
- 	int unplug = 0, status = urb->status;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	switch (status) {
- 	case 0:			/* success */
- 		if (usbhid->ctrl[usbhid->ctrltail].dir == USB_DIR_IN)
-@@ -510,7 +522,7 @@ static void hid_ctrl(struct urb *urb)
- 				hid_submit_ctrl(hid) == 0) {
- 			/* Successfully submitted next urb in queue */
- 			spin_unlock_irqrestore(&usbhid->lock, flags);
--			return;
-+			goto out;
- 		}
- 	}
- 
-@@ -518,6 +530,9 @@ static void hid_ctrl(struct urb *urb)
- 	spin_unlock_irqrestore(&usbhid->lock, flags);
- 	usb_autopm_put_interface_async(usbhid->intf);
- 	wake_up(&usbhid->wait);
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- static void __usbhid_submit_report(struct hid_device *hid, struct hid_report *report,
-diff --git a/drivers/hid/usbhid/usbkbd.c b/drivers/hid/usbhid/usbkbd.c
-index d5b7a696a68c..eae46e51ca6a 100644
---- a/drivers/hid/usbhid/usbkbd.c
-+++ b/drivers/hid/usbhid/usbkbd.c
-@@ -102,13 +102,15 @@ static void usb_kbd_irq(struct urb *urb)
- 	struct usb_kbd *kbd = urb->context;
- 	int i;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	switch (urb->status) {
- 	case 0:			/* success */
- 		break;
- 	case -ECONNRESET:	/* unlink */
- 	case -ENOENT:
- 	case -ESHUTDOWN:
--		return;
-+		goto out;
- 	/* -EPIPE:  should clear the halt */
- 	default:		/* error */
- 		goto resubmit;
-@@ -148,6 +150,9 @@ static void usb_kbd_irq(struct urb *urb)
- 		hid_err(urb->dev, "can't resubmit intr, %s-%s/input0, status %d",
- 			kbd->usbdev->bus->bus_name,
- 			kbd->usbdev->devpath, i);
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- static int usb_kbd_event(struct input_dev *dev, unsigned int type,
-@@ -192,6 +197,8 @@ static void usb_kbd_led(struct urb *urb)
- 	unsigned long flags;
- 	struct usb_kbd *kbd = urb->context;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	if (urb->status)
- 		hid_warn(urb->dev, "led urb status %d received\n",
- 			 urb->status);
-@@ -201,7 +208,7 @@ static void usb_kbd_led(struct urb *urb)
- 	if (*(kbd->leds) == kbd->newleds){
- 		kbd->led_urb_submitted = false;
- 		spin_unlock_irqrestore(&kbd->leds_lock, flags);
--		return;
-+		goto out;
- 	}
- 
- 	*(kbd->leds) = kbd->newleds;
-@@ -212,7 +219,9 @@ static void usb_kbd_led(struct urb *urb)
- 		kbd->led_urb_submitted = false;
- 	}
- 	spin_unlock_irqrestore(&kbd->leds_lock, flags);
--	
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- static int usb_kbd_open(struct input_dev *dev)
-diff --git a/drivers/hid/usbhid/usbmouse.c b/drivers/hid/usbhid/usbmouse.c
-index 073127e65ac1..f470ffa8fa87 100644
---- a/drivers/hid/usbhid/usbmouse.c
-+++ b/drivers/hid/usbhid/usbmouse.c
-@@ -53,13 +53,15 @@ static void usb_mouse_irq(struct urb *urb)
- 	struct input_dev *dev = mouse->dev;
- 	int status;
- 
-+	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
-+
- 	switch (urb->status) {
- 	case 0:			/* success */
- 		break;
- 	case -ECONNRESET:	/* unlink */
- 	case -ENOENT:
- 	case -ESHUTDOWN:
--		return;
-+		goto out;
- 	/* -EPIPE:  should clear the halt */
- 	default:		/* error */
- 		goto resubmit;
-@@ -83,6 +85,9 @@ static void usb_mouse_irq(struct urb *urb)
- 			"can't resubmit intr, %s-%s/input0, status %d\n",
- 			mouse->usbdev->bus->bus_name,
- 			mouse->usbdev->devpath, status);
-+
-+out:
-+	kcov_remote_stop();
- }
- 
- static int usb_mouse_open(struct input_dev *dev)
--- 
-2.24.1.735.g03f4e72817-goog
-
+Will
