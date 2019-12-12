@@ -2,160 +2,112 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B38C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C95C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D324D2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 899902173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="fAJUxPKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfLLKnX (ORCPT
+        id S1728798AbfLLKqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:43:23 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:51285 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728631AbfLLKnX (ORCPT
+        Thu, 12 Dec 2019 05:46:05 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39831 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728695AbfLLKqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:43:23 -0500
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2102B10000F;
-        Thu, 12 Dec 2019 10:43:21 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 11:43:20 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 1/2] rtc: hym8563: Read the valid flag directly instead
- of caching it
-Message-ID: <20191212104320.GD855977@aptenodytes>
-References: <20191212103658.937528-1-paul.kocialkowski@bootlin.com>
+        Thu, 12 Dec 2019 05:46:04 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y1so1323029lfb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jvqQ2LSPQakFyO6vrj7XjHi+q/qAmMP0jyqzyEsZ6cY=;
+        b=fAJUxPKa6DO3DxY2/J9PLqhfYlg/da8eDTz/vxL8gOoD6z21vggxxcj96lO60KKOo8
+         p0koKVNcaIOdBdVMeu+QAuEIAUfdTrzi0LWNyykx9hQxI6BmIDydNHVZ9K+Hr9crQIWx
+         1WIQiO4PvtcQhtih196GjeyVAvG28GxF0e+IAs1xreoZlIl5BdfEzXCGZe6VRQK/3y32
+         c4UBiESyQ5Yfo/pvMuzcBCOOk+TRBprA0w8q9ywu+MEc/jbeYhb9A6rcn2gyplg1R/4M
+         BLzvWfsPEG+qXB5Gw7IibuCyqUslGbXLtumbv9KvBuFi0Mznx1tC+CuaPMKxZ2a7UZm8
+         hJFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jvqQ2LSPQakFyO6vrj7XjHi+q/qAmMP0jyqzyEsZ6cY=;
+        b=RQeVkk05wQkmDwrepvDo3s/OBmcJLUYxhHrpNRXzHCGsPhVy5LNCbWdoDYOCTpPo/e
+         Xj87TPEnilz3wLbycKKXSAHUT36Cl4Vq35cc1d7N4T/uSx/nGt+rcgxRByq0AaM0spkS
+         0Piq5nyvSkPCkimaIZ0Rq93j+cqzDZnXACOiA0qRRs2LT4l52ep7bbmY5Fx7lrxiCFp0
+         L7eedN37faMSShYN9s6pgf40uC5fYrUm8px408B2YA6cTy9bHKdEEQIstpFPazYx2c82
+         qXERQa92zPSKRHXvAVG8DhE/gtBH0H9NG24bATUPg5AYLHLQH176+fcnp/QdV5qsHDH9
+         Ssgw==
+X-Gm-Message-State: APjAAAVMkzv/MyJRoWBo3wrA0ItrwIX+EzPbxE8X1//pcfoF0fhfWBn6
+        rOXy1Im3vpBBJMdK18wnzaWbebOGq5wYgw==
+X-Google-Smtp-Source: APXvYqwP+hehehn1jHv/Es8YupV7UnCXZ6dmvNhY+VQdGf477L2UvXNh73dt+c8DyKqvqavUkp3eUA==
+X-Received: by 2002:a19:f519:: with SMTP id j25mr5284968lfb.41.1576147562262;
+        Thu, 12 Dec 2019 02:46:02 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:2a7:d365:c8bb:a230:5f6e:8263? ([2a00:1fa0:2a7:d365:c8bb:a230:5f6e:8263])
+        by smtp.gmail.com with ESMTPSA id z7sm3048827lfa.81.2019.12.12.02.46.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 02:46:01 -0800 (PST)
+Subject: Re: [PATCH v2 20/23] staging: qlge: Fix CHECK: usleep_range is
+ preferred over udelay
+To:     Scott Schafer <schaferjscott@gmail.com>, gregkh@linuxfoundation.org
+Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1576086080.git.schaferjscott@gmail.com>
+ <a3f14b13d76102cd4e536152e09517a69ddbe9f9.1576086080.git.schaferjscott@gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
+Date:   Thu, 12 Dec 2019 13:45:57 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
-Content-Disposition: inline
-In-Reply-To: <20191212103658.937528-1-paul.kocialkowski@bootlin.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <a3f14b13d76102cd4e536152e09517a69ddbe9f9.1576086080.git.schaferjscott@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
---IDYEmSnFhs3mNXr+
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 11.12.2019 21:12, Scott Schafer wrote:
 
-Hi,
+> chage udelay() to usleep_range()
 
-On Thu 12 Dec 19, 11:36, Paul Kocialkowski wrote:
-> The RTC has a valid bit in the seconds register that indicates whether
-> power was lost since the pevious time set. This bit is currently read
-> once at probe time, cached and updated with set_time.
->=20
-> Howeever, caching the bit may prevent detecting power loss at runtime
-> (which can happen if the RTC's supply is distinct from the the platform's=
-).
->=20
-> Writing the seconds register when setting time will clear the bit,
-> so there should be no downside in reading the bit directly instead of
-> caching it.
->=20
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+    Change?
+
+> Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
 > ---
->  drivers/rtc/rtc-hym8563.c | 17 +++++++----------
->  1 file changed, 7 insertions(+), 10 deletions(-)
->=20
-> diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
-> index 443f6d05ce29..584a7815f246 100644
-> --- a/drivers/rtc/rtc-hym8563.c
-> +++ b/drivers/rtc/rtc-hym8563.c
-> @@ -78,7 +78,6 @@
->  struct hym8563 {
->  	struct i2c_client	*client;
->  	struct rtc_device	*rtc;
-> -	bool			valid;
->  #ifdef CONFIG_COMMON_CLK
->  	struct clk_hw		clkout_hw;
->  #endif
-> @@ -95,15 +94,16 @@ static int hym8563_rtc_read_time(struct device *dev, =
-struct rtc_time *tm)
->  	u8 buf[7];
->  	int ret;
-> =20
-> -	if (!hym8563->valid) {
-> -		dev_warn(&client->dev, "no valid clock/calendar values available\n");
-> -		return -EPERM;
-> -	}
-> -
->  	ret =3D i2c_smbus_read_i2c_block_data(client, HYM8563_SEC, 7, buf);
->  	if (ret < 0)
->  		return ret;
-> =20
-> +	if (ret & HYM8563_SEC_VL) {
+>   drivers/staging/qlge/qlge_main.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> index e18aa335c899..9427386e4a1e 100644
+> --- a/drivers/staging/qlge/qlge_main.c
+> +++ b/drivers/staging/qlge/qlge_main.c
+> @@ -147,7 +147,7 @@ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+>   	do {
+>   		if (!ql_sem_trylock(qdev, sem_mask))
+>   			return 0;
+> -		udelay(100);
+> +		usleep_range(100, 200);
 
-Ouch, I should be checking buf[0] here. Sorry about that, will send v2.
+    I hope you're not in atomic context...
 
-Cheers,
+>   	} while (--wait_count);
+>   	return -ETIMEDOUT;
+>   }
 
-Paul
-
-> +		dev_warn(&client->dev,
-> +			 "no valid clock/calendar values available\n");
-> +		return -EPERM;
-> +	}
-> +
->  	tm->tm_sec =3D bcd2bin(buf[0] & HYM8563_SEC_MASK);
->  	tm->tm_min =3D bcd2bin(buf[1] & HYM8563_MIN_MASK);
->  	tm->tm_hour =3D bcd2bin(buf[2] & HYM8563_HOUR_MASK);
-> @@ -157,8 +157,6 @@ static int hym8563_rtc_set_time(struct device *dev, s=
-truct rtc_time *tm)
->  	if (ret < 0)
->  		return ret;
-> =20
-> -	hym8563->valid =3D true;
-> -
->  	return 0;
->  }
-> =20
-> @@ -556,9 +554,8 @@ static int hym8563_probe(struct i2c_client *client,
->  	if (ret < 0)
->  		return ret;
-> =20
-> -	hym8563->valid =3D !(ret & HYM8563_SEC_VL);
->  	dev_dbg(&client->dev, "rtc information is %s\n",
-> -		hym8563->valid ? "valid" : "invalid");
-> +		(ret & HYM8563_SEC_VL) ? "invalid" : "valid");
-> =20
->  	hym8563->rtc =3D devm_rtc_device_register(&client->dev, client->name,
->  						&hym8563_rtc_ops, THIS_MODULE);
-> --=20
-> 2.24.0
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---IDYEmSnFhs3mNXr+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3yGcgACgkQ3cLmz3+f
-v9Fuiwf+NbOWhjtveqEVxSzv5moNBbpclOlxCFRb+48rR/+KD5SlNRuRoba+IUJW
-KkqirvfdMiuSzBK06AIYIrWGmD5T24L2Eg7Hv6YHJIznGNdWKL1AytmvXgJzviQR
-rig4uI7t70alC0DUvZ18tD8kTxAfCCVsHjSMGmpdqiCg8dn0WqT4vFAn5jw0/Iwg
-ZNUGJPmWHAJCri+CG9WDlreCeUZrf2cGgM40yulv3Y6Dy8AQrstFhdrxvvJxonU4
-NIJ8yyiH2ntiJkgC+XJDYpy26nLHCsZ+QFUiglEqNM7q0YC8/Z83ek1/sgNbDAct
-QnzL6w0qyboAEIOZeWyF31TIaEtCQg==
-=qo8+
------END PGP SIGNATURE-----
-
---IDYEmSnFhs3mNXr+--
+MBR, Sergei
