@@ -2,205 +2,136 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE9AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49197C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC9421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2F921655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LkKTzoYc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfLLGiL (ORCPT
+        id S1728045AbfLLGis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:38:11 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:42860 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727891AbfLLGiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:38:11 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2359EC00BD35B91B8CFF;
-        Thu, 12 Dec 2019 14:38:07 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
- 14:37:57 +0800
-Subject: Re: [PATCH] Perf stat: Fix the ratio comments of miss-events
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-References: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
- <20191119155936.GC24290@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <ak@linux.intel.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linuxarm@huawei.com>, <john.garry@huawei.com>,
-        <zhangshaokun@hisilicon.com>, <huangdaode@hisilicon.com>,
-        <linyunsheng@huawei.com>
-From:   Qi Liu <liuqi115@huawei.com>
-Message-ID: <1f6d8522-10df-4a68-47f5-978afc827d80@huawei.com>
-Date:   Thu, 12 Dec 2019 14:37:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 12 Dec 2019 01:38:48 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:45362 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727937AbfLLGir (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:38:47 -0500
+Received: by mail-yw1-f66.google.com with SMTP id d12so370178ywl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 22:38:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CT9GqLY0BruZCbulKamF3sFh9+aJmP2cftODhJk3Kmw=;
+        b=LkKTzoYcK1WRgGiSaCvg4nYYXbMvvd5ppeJD0PK1aaTFFl1pcQp0HIdTW+66kT0V4W
+         AMviqBFr0HpIaPdfXHSEVAQ4z5z6LaDOxO9LzMK1+YDvBU/54VPCQn80KArS9PzW/cek
+         2vyRsxGVKeey8FZyXRJy54EFtGzdugjUXeLXPrmt0ofz11LuyVQckNlt4j89FSBN9Bjv
+         xdA6JCOYND5bvpAPHlAIYthcDVDoOuyW/04JCGPAjE2Isr6+DHiHegIpWmMAOpfcpb4U
+         6Xr6Vg4pnYXaE5B1Ji98M1EGus5CND0EDxJlhu3hOH+XXNAFP+jPS5l7xBe7zOEiRMFg
+         kqbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CT9GqLY0BruZCbulKamF3sFh9+aJmP2cftODhJk3Kmw=;
+        b=qaSSEaHDY5kQ5HNQYYZBFrheC1jxXspUAa5C2moJHMtOIHFsYTCTcfLfLI6GjsDgG+
+         62Ks7KTxm8CtkmFU1989rOqoMGb6NTwAZSdOMD65/rCZukan8EQe/uG3fQ068cpqQZbB
+         ek/G9PbQ+k5/KNozph7TSsj6DkvjsnQthIuU808yi+L33SKbmKBM0Aghm6sWi9gN1s4w
+         1SXC0g/78Ry5IMSNFULon9+ptNdASrHP+q92Dp+/HgBtHKXDYRjXSVSop2n69aLBNJG0
+         ex1rY7WAjgQVoWJiYSf7unfAkYiRZ/6U8NOrIp9W7GbBZD5qFlY5DQSVBpXSGEg/0aJd
+         EM7Q==
+X-Gm-Message-State: APjAAAVz+1ZYhel7wvgVQGjfgYZY8id36WnMh5acwO5wdfxeZoI3Ezqd
+        gex8CbEgOahWib+hR9H01n6YzgPUNxy1HD5x3BjNNQ==
+X-Google-Smtp-Source: APXvYqxUtgWz7UDyASun5JkoSvnT/fcz7WF9MV3zZUgcN4BH066gw+fPZLVja50Rmlgxx4p55TxKEwa4+LstjESx3e0=
+X-Received: by 2002:a81:4c13:: with SMTP id z19mr2814282ywa.466.1576132726494;
+ Wed, 11 Dec 2019 22:38:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119155936.GC24290@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+References: <20191212160622.021517d3@canb.auug.org.au> <20191212060200.GW2889@paulmck-ThinkPad-P72>
+In-Reply-To: <20191212060200.GW2889@paulmck-ThinkPad-P72>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 11 Dec 2019 22:38:34 -0800
+Message-ID: <CANn89iKJhsMLUBNbkXSr1+t+38POFU8jWrP+tU3JWLjs__HuPw@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the rcu tree
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Arnaldo:
-Thanks for your reply and sorry for replying this mail so late.
+On Wed, Dec 11, 2019 at 10:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 04:06:22PM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > After merging the rcu (I think) tree, today's linux-next build (x86_64
+> > allnoconfig) produced this warning:
+> >
+> > kernel/time/timer.c: In function 'schedule_timeout':
+> > kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >   969 |   long diff = timer->expires - expires;
+> >       |               ~~~~~^~~~~~~~~
+> >
+> > Introduced by (bisected to) commit
+> >
+> >   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
+> >
+> > x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
+>
+> Well, if the timer is pending, then ->expires has to have been
+> initialized, but off where the compiler cannot see it, such as during a
+> previous call to __mod_timer().  And the change may have made it harder
+> for the compiler to see all of these relationships, but...
+>
+> I don't see this warning with gcc version 7.4.0.  Just out of curiosity,
+> what are you running, Stephen?
+>
+> Eric, any thoughts for properly educating the compiler on this one?
 
-I reflowed all the lines to keep the number of characters in each line
-less than 80. But I realized that the original code has exceeded 80. So
-if this code format isn't necessary, and to make it easier to compare
-the changes, I'll send a new patch as follow:
+Ah... the READ_ONCE() apparently turns off the compiler ability to
+infer that this branch should not be taken.
 
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
+Since __mod_timer() is inlined we could perhaps add a new option
 
-Thanks
-Qi Liu
+diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+index 4820823515e9..8bbce552568b 100644
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct
+timer_list *timer,
 
-On 2019/11/19 23:59, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Nov 16, 2019 at 03:48:41PM +0800, lqqq341 escreveu:
->> From: Qi Liu <liuqi115@hisilicon.com>
->>
->> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
->> iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
->> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
->> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
->> accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
->> cache and LL-cache are fixed in the same way.
->>
->> Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
->> ---
->>  tools/perf/util/stat-shadow.c | 30 ++++++++++++++++++++----------
->>  1 file changed, 20 insertions(+), 10 deletions(-)
->>
->> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
->> index 2c41d47..a3bdf2b 100644
->> --- a/tools/perf/util/stat-shadow.c
->> +++ b/tools/perf/util/stat-shadow.c
->> @@ -506,7 +506,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
->>  
->>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
->>  
->> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
->> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
->> +			  "of all L1-dcache accesses", ratio);
-> 
-> 
-> Why have you reflowed all those lines? This patch should have been like:
-> 
-> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-> +	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
-> 
-> Notice how it is easier to compare the changes, and also to keep the
-> flowing like it was before your change,
-> 
-> Thanks,
-> 
-> - Arnaldo
-> 
->>  }
->>  
->>  static void print_l1_icache_misses(struct perf_stat_config *config,
->> @@ -527,7 +528,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
->>  		ratio = avg / total * 100.0;
->>  
->>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
->> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
->> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
->> +			  "of all L1-icache accesses", ratio);
->>  }
->>  
->>  static void print_dtlb_cache_misses(struct perf_stat_config *config,
->> @@ -547,7 +549,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
->>  		ratio = avg / total * 100.0;
->>  
->>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
->> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
->> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
->> +			  "of all dTLB cache accesses", ratio);
->>  }
->>  
->>  static void print_itlb_cache_misses(struct perf_stat_config *config,
->> @@ -567,7 +570,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
->>  		ratio = avg / total * 100.0;
->>  
->>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
->> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
->> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
->> +			  "of all iTLB cache accesses", ratio);
->>  }
->>  
->>  static void print_ll_cache_misses(struct perf_stat_config *config,
->> @@ -587,7 +591,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
->>  		ratio = avg / total * 100.0;
->>  
->>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
->> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
->> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
->> +			  "of all LL-cache accesses", ratio);
->>  }
->>  
->>  /*
->> @@ -872,7 +877,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->>  		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
->>  			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
->>  		else
->> -			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
->> +			print_metric(config, ctxp, NULL, NULL,
->> +				     "of all L1-dcache accesses", 0);
->>  	} else if (
->>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
->> @@ -882,7 +888,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->>  		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
->>  			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
->>  		else
->> -			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
->> +			print_metric(config, ctxp, NULL, NULL,
->> +				     "of all L1-icache accesses", 0);
->>  	} else if (
->>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
->> @@ -892,7 +899,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->>  		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
->>  			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
->>  		else
->> -			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
->> +			print_metric(config, ctxp, NULL, NULL,
->> +				     "of all dTLB cache accesses", 0);
->>  	} else if (
->>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
->> @@ -902,7 +910,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->>  		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
->>  			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
->>  		else
->> -			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
->> +			print_metric(config, ctxp, NULL, NULL,
->> +				     "of all iTLB cache accesses", 0);
->>  	} else if (
->>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
->>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
->> @@ -912,7 +921,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
->>  		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
->>  			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
->>  		else
->> -			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
->> +			print_metric(config, ctxp, NULL, NULL,
->> +				     "of all LL-cache accesses", 0);
->>  	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
->>  		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
->>  
->> -- 
->> 2.8.1
-> 
+ #define MOD_TIMER_PENDING_ONLY         0x01
+ #define MOD_TIMER_REDUCE               0x02
++#define MOD_TIMER_NOTPENDING           0x04
 
+ static inline int
+ __mod_timer(struct timer_list *timer, unsigned long expires, unsigned
+int options)
+@@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned
+long expires, unsigned int option
+         * the timer is re-modified to have the same timeout or ends up in the
+         * same array bucket then just return:
+         */
+-       if (timer_pending(timer)) {
++       if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
+                /*
+                 * The downside of this optimization is that it can result in
+                 * larger granularity than you would get from adding a new
+@@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
+
+        timer.task = current;
+        timer_setup_on_stack(&timer.timer, process_timeout, 0);
+-       __mod_timer(&timer.timer, expire, 0);
++       __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
+        schedule();
+        del_singleshot_timer_sync(&timer.timer);
