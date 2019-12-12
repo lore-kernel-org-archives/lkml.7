@@ -2,102 +2,82 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2105C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C434C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EDD21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="K/BGdkTb"
+	by mail.kernel.org (Postfix) with ESMTP id 4826222527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbfLLJZR (ORCPT
+        id S1728314AbfLLJ2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:25:17 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:47846 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728344AbfLLJZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:25:16 -0500
-Received: from zn.tnic (p200300EC2F0A5A00984E1B37A4E020FA.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:984e:1b37:a4e0:20fa])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9E4F41EC0985;
-        Thu, 12 Dec 2019 10:25:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576142714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+dYA8drbIsiT7giIEQe7BBpW6cQ7yCAKZaHUc/zBWRM=;
-        b=K/BGdkTbgGNJ3oJxIP+zDsGaBijLUTL6eRRcQn81scGw+OHe8dzUUZE+q0t39gaKxHUqX+
-        VD4HI9lFACMrJGt79F9WU4np/Bgsd+KgljTPCLospi5QIiX4hEdaTV+g05+UjlIMz/lofV
-        F7Prs7AFNWlxF1UddZrrXLCUK9F8y9A=
-Date:   Thu, 12 Dec 2019 10:25:09 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191212092509.GB4991@zn.tnic>
-References: <20191128014016.4389-2-sean.j.christopherson@intel.com>
- <201912010347.7tMb4moN%lkp@intel.com>
- <20191202190633.GG4063@linux.intel.com>
+        Thu, 12 Dec 2019 04:28:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7225 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726382AbfLLJ2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:28:06 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8C59AC99D520A805682B;
+        Thu, 12 Dec 2019 17:28:04 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
+ 17:27:53 +0800
+Subject: Re: [PATCH -next] pinctrl: samsung: fix build error without
+ CONFIG_OF_GPIO
+To:     <tomasz.figa@gmail.com>, <krzk@kernel.org>,
+        <s.nawrocki@samsung.com>
+References: <20191212092136.37870-1-chenzhou10@huawei.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <407d0a27-187e-7339-197c-15261e79122a@huawei.com>
+Date:   Thu, 12 Dec 2019 17:27:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191202190633.GG4063@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212092136.37870-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 11:06:33AM -0800, Sean Christopherson wrote:
-> Argh, flat out missed this when doing search and replace.
+ignore this patch, i will repost it.
 
-There are more. What always works reliably for me is git grep:
+On 2019/12/12 17:21, Chen Zhou wrote:
+> If CONFIG_OF_GPIO is n, build fails:
+> 
+> drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
+> drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
+>    gc->of_node = bank->of_node;
+> 
+> Use #ifdef to guard this.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>Fixes
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index f26574e..5c29ad8 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -966,7 +966,9 @@ static int samsung_gpiolib_register(struct platform_device *pdev,
+>  		gc->base = bank->grange.base;
+>  		gc->ngpio = bank->nr_pins;
+>  		gc->parent = &pdev->dev;
+> +#ifdef CONFIG_OF_GPIO
+>  		gc->of_node = bank->of_node;
+> +#endif
+>  		gc->label = bank->name;
+>  
+>  		ret = devm_gpiochip_add_data(&pdev->dev, gc, bank);
+> 
 
-$ git grep MSR_IA32_FEATURE_CONTROL
-drivers/idle/intel_idle.c:1287:         rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-tools/arch/x86/include/asm/msr-index.h:561:#define MSR_IA32_FEATURE_CONTROL        0x0000003a
-tools/power/x86/turbostat/turbostat.c:4502:     if (!get_msr(base_cpu, MSR_IA32_FEATURE_CONTROL, &msr))
-tools/power/x86/turbostat/turbostat.c:4503:             fprintf(outf, "cpu%d: MSR_IA32_FEATURE_CONTROL: 0x%08llx (%sLocked %s)\n",
-tools/testing/selftests/kvm/include/x86_64/processor.h:771:#define MSR_IA32_FEATURE_CONTROL        0x0000003a
-tools/testing/selftests/kvm/lib/x86_64/vmx.c:162:       feature_control = rdmsr(MSR_IA32_FEATURE_CONTROL);
-tools/testing/selftests/kvm/lib/x86_64/vmx.c:164:               wrmsr(MSR_IA32_FEATURE_CONTROL, feature_control | required);
-
-those additional ones won't break the build but it is perhaps worth
-unifying them all since we're at it, anyway.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
