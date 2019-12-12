@@ -2,529 +2,141 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEF8C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06DDC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7674021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BCA52077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:03:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FJqm1hGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfLLCCe (ORCPT
+        id S1727746AbfLLCDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:02:34 -0500
-Received: from mx.socionext.com ([202.248.49.38]:58677 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbfLLCC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:02:29 -0500
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 12 Dec 2019 11:02:27 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 5E3AD603AB;
-        Thu, 12 Dec 2019 11:02:27 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 12 Dec 2019 11:03:07 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id E6AEC1A01CF;
-        Thu, 12 Dec 2019 11:02:26 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 2/2] PCI: uniphier: Add UniPhier PCIe endpoint controller support
-Date:   Thu, 12 Dec 2019 11:02:18 +0900
-Message-Id: <1576116138-16501-3-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1576116138-16501-1-git-send-email-hayashi.kunihiko@socionext.com>
+        Wed, 11 Dec 2019 21:03:31 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:13277 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727544AbfLLCDb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:03:31 -0500
+X-UUID: 3be0c63a967649d99dd905438b2ab4d7-20191212
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=58Kn1gNg/Vbwnp9rOtOIWJfzSVNVySk5I9bvfgOs8zs=;
+        b=FJqm1hGYBNcAr0iCcqx0uQRFX+TkLaek5WlEXOOW8/psp/5KbWOkLqnX0SRxtPTLncu22Vrr9z84cz4KnxHP4st2AKLCtGmaIYZ0GgwVy1ofrnd2AGMrMPbzMue7ev1eKGIptPFlZeswsQ5PB4o1BzVZLdIyzf0LpH8zw0SgqZE=;
+X-UUID: 3be0c63a967649d99dd905438b2ab4d7-20191212
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 211027014; Thu, 12 Dec 2019 10:03:26 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 12 Dec 2019 10:02:24 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 12 Dec 2019 10:03:20 +0800
+Message-ID: <1576116202.16444.4.camel@mtksdaap41>
+Subject: Re: [PATCH v2 04/14] mailbox: mediatek: cmdq: clear task in channel
+ before shutdown
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Thu, 12 Dec 2019 10:03:22 +0800
+In-Reply-To: <1576115494.17653.21.camel@mtkswgap22>
+References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1574819937-6246-6-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1575946181.16676.4.camel@mtksdaap41> <1576113221.17653.6.camel@mtkswgap22>
+         <1576114297.11762.1.camel@mtksdaap41>
+         <1576115494.17653.21.camel@mtkswgap22>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: A8FE64F7829C208CB8FCB2A8C581833FEC7AEC50ED8D9CA3A499B8304934AA792000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This introduces specific glue layer for UniPhier platform to support
-PCIe controller that is based on the DesignWare PCIe core, and
-this driver supports endpoint mode. This supports for Pro5 SoC only.
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- MAINTAINERS                                   |   2 +-
- drivers/pci/controller/dwc/Kconfig            |  13 +-
- drivers/pci/controller/dwc/Makefile           |   1 +
- drivers/pci/controller/dwc/pcie-uniphier-ep.c | 399 ++++++++++++++++++++++++++
- 4 files changed, 412 insertions(+), 3 deletions(-)
- create mode 100644 drivers/pci/controller/dwc/pcie-uniphier-ep.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4b6ec28..9ed0572 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12695,7 +12695,7 @@ M:	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
- L:	linux-pci@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/pci/uniphier-pcie*.txt
--F:	drivers/pci/controller/dwc/pcie-uniphier.c
-+F:	drivers/pci/controller/dwc/pcie-uniphier*.c
- 
- PCIE DRIVER FOR ST SPEAR13XX
- M:	Pratyush Anand <pratyush.anand@gmail.com>
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 0ba988b..6bc661a 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -247,15 +247,24 @@ config PCIE_TEGRA194
- 	  controller found in NVIDIA Tegra194 SoC.
- 
- config PCIE_UNIPHIER
--	bool "Socionext UniPhier PCIe controllers"
-+	bool "Socionext UniPhier PCIe host controllers"
- 	depends on ARCH_UNIPHIER || COMPILE_TEST
- 	depends on OF && HAS_IOMEM
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--	  Say Y here if you want PCIe controller support on UniPhier SoCs.
-+	  Say Y here if you want PCIe host controller support on UniPhier SoCs.
- 	  This driver supports LD20 and PXs3 SoCs.
- 
-+config PCIE_UNIPHIER_EP
-+	bool "Socionext UniPhier PCIe endpoint controllers"
-+	depends on ARCH_UNIPHIER || COMPILE_TEST
-+	depends on OF && HAS_IOMEM
-+	select PCIE_DW_EP
-+	help
-+	  Say Y here if you want PCIe endpoint controller support on
-+	  UniPhier SoCs. This driver supports Pro5 SoC.
-+
- config PCIE_AL
- 	bool "Amazon Annapurna Labs PCIe controller"
- 	depends on OF && (ARM64 || COMPILE_TEST)
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 69faff3..ba458b6 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PCIE_HISI_STB) += pcie-histb.o
- obj-$(CONFIG_PCI_MESON) += pci-meson.o
- obj-$(CONFIG_PCIE_TEGRA194) += pcie-tegra194.o
- obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
-+obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
- 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/controller/dwc/pcie-uniphier-ep.c b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-new file mode 100644
-index 00000000..7b5aa0f
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pcie-uniphier-ep.c
-@@ -0,0 +1,399 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe endpoint controller driver for UniPhier SoCs
-+ * Copyright 2018 Socionext Inc.
-+ * Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/pci.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "pcie-designware.h"
-+
-+/* Link Glue registers */
-+#define PCL_RSTCTRL0			0x0010
-+#define PCL_RSTCTRL_AXI_REG		BIT(3)
-+#define PCL_RSTCTRL_AXI_SLAVE		BIT(2)
-+#define PCL_RSTCTRL_AXI_MASTER		BIT(1)
-+#define PCL_RSTCTRL_PIPE3		BIT(0)
-+
-+#define PCL_RSTCTRL1			0x0020
-+#define PCL_RSTCTRL_PERST		BIT(0)
-+
-+#define PCL_RSTCTRL2			0x0024
-+#define PCL_RSTCTRL_PHY_RESET		BIT(0)
-+
-+#define PCL_MODE			0x8000
-+#define PCL_MODE_REGVAL			BIT(0)
-+
-+#define PCL_APP_CLK_CTRL		0x8004
-+#define PCL_APP_CLK_REQ			BIT(0)
-+
-+#define PCL_APP_READY_CTRL		0x8008
-+#define PCL_APP_LTSSM_ENABLE		BIT(0)
-+
-+#define PCL_APP_MSI0			0x8040
-+#define PCL_APP_VEN_MSI_TC_MASK		GENMASK(10, 8)
-+#define PCL_APP_VEN_MSI_VECTOR_MASK	GENMASK(4, 0)
-+
-+#define PCL_APP_MSI1			0x8044
-+#define PCL_APP_MSI_REQ			BIT(0)
-+
-+#define PCL_APP_INTX			0x8074
-+#define PCL_APP_INTX_SYS_INT		BIT(0)
-+
-+/* assertion time of intx in usec */
-+#define PCL_INTX_WIDTH_USEC		30
-+
-+struct uniphier_pcie_ep_priv {
-+	void __iomem *base;
-+	struct dw_pcie pci;
-+	struct clk *clk, *clk_gio;
-+	struct reset_control *rst, *rst_gio;
-+	struct phy *phy;
-+	const struct uniphier_pcie_ep_soc_data *data;
-+};
-+
-+struct uniphier_pcie_ep_soc_data {
-+	bool is_legacy;
-+	const struct pci_epc_features features;
-+};
-+
-+#define to_uniphier_pcie(x)	dev_get_drvdata((x)->dev)
-+
-+static void uniphier_pcie_ltssm_enable(struct uniphier_pcie_ep_priv *priv,
-+				       bool enable)
-+{
-+	u32 val;
-+
-+	val = readl(priv->base + PCL_APP_READY_CTRL);
-+	if (enable)
-+		val |= PCL_APP_LTSSM_ENABLE;
-+	else
-+		val &= ~PCL_APP_LTSSM_ENABLE;
-+	writel(val, priv->base + PCL_APP_READY_CTRL);
-+}
-+
-+static void uniphier_pcie_phy_reset(struct uniphier_pcie_ep_priv *priv,
-+				    bool assert)
-+{
-+	u32 val;
-+
-+	val = readl(priv->base + PCL_RSTCTRL2);
-+	if (assert)
-+		val |= PCL_RSTCTRL_PHY_RESET;
-+	else
-+		val &= ~PCL_RSTCTRL_PHY_RESET;
-+	writel(val, priv->base + PCL_RSTCTRL2);
-+}
-+
-+static void uniphier_pcie_init_ep(struct uniphier_pcie_ep_priv *priv)
-+{
-+	u32 val;
-+
-+	/* set EP mode */
-+	val = readl(priv->base + PCL_MODE);
-+	val |= PCL_MODE_REGVAL;
-+	writel(val, priv->base + PCL_MODE);
-+
-+	/* clock request */
-+	val = readl(priv->base + PCL_APP_CLK_CTRL);
-+	val &= ~PCL_APP_CLK_REQ;
-+	writel(val, priv->base + PCL_APP_CLK_CTRL);
-+
-+	/* deassert PIPE3 and AXI reset */
-+	val = readl(priv->base + PCL_RSTCTRL0);
-+	val |= PCL_RSTCTRL_AXI_REG | PCL_RSTCTRL_AXI_SLAVE
-+		| PCL_RSTCTRL_AXI_MASTER | PCL_RSTCTRL_PIPE3;
-+	writel(val, priv->base + PCL_RSTCTRL0);
-+
-+	uniphier_pcie_ltssm_enable(priv, false);
-+}
-+
-+static int uniphier_pcie_start_link(struct dw_pcie *pci)
-+{
-+	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-+
-+	uniphier_pcie_ltssm_enable(priv, true);
-+
-+	return 0;
-+}
-+
-+static void uniphier_pcie_stop_link(struct dw_pcie *pci)
-+{
-+	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-+
-+	uniphier_pcie_ltssm_enable(priv, false);
-+}
-+
-+static void uniphier_pcie_ep_init(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	enum pci_barno bar;
-+
-+	for (bar = BAR_0; bar <= BAR_5; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
-+}
-+
-+static int uniphier_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-+	u32 val;
-+
-+	/* assert INTx */
-+	val = readl(priv->base + PCL_APP_INTX);
-+	val |= PCL_APP_INTX_SYS_INT;
-+	writel(val, priv->base + PCL_APP_INTX);
-+
-+	udelay(PCL_INTX_WIDTH_USEC);
-+
-+	/* deassert INTx */
-+	val = readl(priv->base + PCL_APP_INTX);
-+	val &= ~PCL_APP_INTX_SYS_INT;
-+	writel(val, priv->base + PCL_APP_INTX);
-+
-+	return 0;
-+}
-+
-+static int uniphier_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,
-+					  u8 func_no, u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-+	u32 val;
-+
-+	val = FIELD_PREP(PCL_APP_VEN_MSI_TC_MASK, func_no)
-+		| FIELD_PREP(PCL_APP_VEN_MSI_VECTOR_MASK, interrupt_num - 1);
-+	writel(val, priv->base + PCL_APP_MSI0);
-+
-+	val = readl(priv->base + PCL_APP_MSI1);
-+	val |= PCL_APP_MSI_REQ;
-+	writel(val, priv->base + PCL_APP_MSI1);
-+
-+	return 0;
-+}
-+
-+static int uniphier_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				      enum pci_epc_irq_type type,
-+				      u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		return uniphier_pcie_ep_raise_legacy_irq(ep);
-+	case PCI_EPC_IRQ_MSI:
-+		return uniphier_pcie_ep_raise_msi_irq(ep, func_no,
-+						      interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type (%d)\n", type);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct pci_epc_features*
-+uniphier_pcie_get_features(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct uniphier_pcie_ep_priv *priv = to_uniphier_pcie(pci);
-+
-+	return &priv->data->features;
-+}
-+
-+static const struct dw_pcie_ep_ops uniphier_pcie_ep_ops = {
-+	.ep_init = uniphier_pcie_ep_init,
-+	.raise_irq = uniphier_pcie_ep_raise_irq,
-+	.get_features = uniphier_pcie_get_features,
-+};
-+
-+static int uniphier_add_pcie_ep(struct uniphier_pcie_ep_priv *priv,
-+				struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = &priv->pci;
-+	struct dw_pcie_ep *ep = &pci->ep;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	int ret;
-+
-+	ep->ops = &uniphier_pcie_ep_ops;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi2");
-+	pci->dbi_base2 = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pci->dbi_base2))
-+		return PTR_ERR(pci->dbi_base2);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-+	if (!res)
-+		return -EINVAL;
-+
-+	ep->phys_base = res->start;
-+	ep->addr_size = resource_size(res);
-+
-+	ret = dw_pcie_ep_init(ep);
-+	if (ret) {
-+		dev_err(dev, "Failed to initialize endpoint (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int uniphier_pcie_ep_enable(struct uniphier_pcie_ep_priv *priv)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(priv->clk_gio);
-+	if (ret)
-+		goto out_clk_disable;
-+
-+	ret = reset_control_deassert(priv->rst);
-+	if (ret)
-+		goto out_clk_gio_disable;
-+
-+	ret = reset_control_deassert(priv->rst_gio);
-+	if (ret)
-+		goto out_rst_assert;
-+
-+	uniphier_pcie_init_ep(priv);
-+
-+	if (priv->data->is_legacy)
-+		uniphier_pcie_phy_reset(priv, true);
-+
-+	ret = phy_init(priv->phy);
-+	if (ret)
-+		goto out_rst_gio_assert;
-+
-+	if (priv->data->is_legacy)
-+		uniphier_pcie_phy_reset(priv, false);
-+
-+	return 0;
-+
-+out_rst_gio_assert:
-+	reset_control_assert(priv->rst_gio);
-+out_rst_assert:
-+	reset_control_assert(priv->rst);
-+out_clk_gio_disable:
-+	clk_disable_unprepare(priv->clk_gio);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
-+
-+	return ret;
-+}
-+
-+static const struct dw_pcie_ops dw_pcie_ops = {
-+	.start_link = uniphier_pcie_start_link,
-+	.stop_link = uniphier_pcie_stop_link,
-+};
-+
-+static int uniphier_pcie_ep_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct uniphier_pcie_ep_priv *priv;
-+	struct resource *res;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->data = of_device_get_match_data(dev);
-+	if (WARN_ON(!priv->data))
-+		return -EINVAL;
-+
-+	priv->pci.dev = dev;
-+	priv->pci.ops = &dw_pcie_ops;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-+	priv->pci.dbi_base = devm_pci_remap_cfg_resource(dev, res);
-+	if (IS_ERR(priv->pci.dbi_base))
-+		return PTR_ERR(priv->pci.dbi_base);
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "link");
-+	priv->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	if (priv->data->is_legacy) {
-+		priv->clk_gio = devm_clk_get(dev, "gio");
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+
-+		priv->rst_gio =
-+			devm_reset_control_get_shared(dev, "gio");
-+		if (IS_ERR(priv->rst_gio))
-+			return PTR_ERR(priv->rst_gio);
-+
-+		priv->clk = devm_clk_get(dev, "link");
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+
-+		priv->rst =
-+			devm_reset_control_get_shared(dev, "link");
-+		if (IS_ERR(priv->rst))
-+			return PTR_ERR(priv->rst);
-+	} else {
-+		priv->clk = devm_clk_get(dev, NULL);
-+		if (IS_ERR(priv->clk))
-+			return PTR_ERR(priv->clk);
-+
-+		priv->rst = devm_reset_control_get_shared(dev, NULL);
-+		if (IS_ERR(priv->rst))
-+			return PTR_ERR(priv->rst);
-+	}
-+
-+	priv->phy = devm_phy_optional_get(dev, "pcie-phy");
-+	if (IS_ERR(priv->phy))
-+		return PTR_ERR(priv->phy);
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = uniphier_pcie_ep_enable(priv);
-+	if (ret)
-+		return ret;
-+
-+	return uniphier_add_pcie_ep(priv, pdev);
-+}
-+
-+static const struct uniphier_pcie_ep_soc_data uniphier_pro5_data = {
-+	.is_legacy = true,
-+	.features = {
-+		.linkup_notifier = false,
-+		.msi_capable = true,
-+		.msix_capable = false,
-+		.align = 1 << 16,
-+		.bar_fixed_64bit = BIT(BAR_0) | BIT(BAR_2) | BIT(BAR_4),
-+		.reserved_bar =  BIT(BAR_4),
-+	},
-+};
-+
-+static const struct of_device_id uniphier_pcie_ep_match[] = {
-+	{
-+		.compatible = "socionext,uniphier-pro5-pcie-ep",
-+		.data = &uniphier_pro5_data,
-+	},
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver uniphier_pcie_ep_driver = {
-+	.probe  = uniphier_pcie_ep_probe,
-+	.driver = {
-+		.name = "uniphier-pcie-ep",
-+		.of_match_table = uniphier_pcie_ep_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(uniphier_pcie_ep_driver);
--- 
-2.7.4
+SGksIERlbm5pczoNCg0KT24gVGh1LCAyMDE5LTEyLTEyIGF0IDA5OjUxICswODAwLCBEZW5uaXMt
+WUMgSHNpZWggd3JvdGU6DQo+IEhpIENLLA0KPiANCj4gT24gVGh1LCAyMDE5LTEyLTEyIGF0IDA5
+OjMxICswODAwLCBDSyBIdSB3cm90ZToNCj4gPiBIaSwgRGVubmlzOg0KPiA+IA0KPiA+IE9uIFRo
+dSwgMjAxOS0xMi0xMiBhdCAwOToxMyArMDgwMCwgRGVubmlzLVlDIEhzaWVoIHdyb3RlOg0KPiA+
+ID4gSGkgQ0ssDQo+ID4gPiANCj4gPiA+IE9uIFR1ZSwgMjAxOS0xMi0xMCBhdCAxMDo0OSArMDgw
+MCwgQ0sgSHUgd3JvdGU6DQo+ID4gPiA+IEhpLCBEZW5uaXM6DQo+ID4gPiA+IA0KPiA+ID4gPiBP
+biBXZWQsIDIwMTktMTEtMjcgYXQgMDk6NTggKzA4MDAsIERlbm5pcyBZQyBIc2llaCB3cm90ZToN
+Cj4gPiA+ID4gPiBEbyBzdWNjZXNzIGNhbGxiYWNrIGluIGNoYW5uZWwgd2hlbiBzaHV0ZG93bi4g
+Rm9yIHRob3NlIHRhc2sgbm90IGZpbmlzaCwNCj4gPiA+ID4gPiBjYWxsYmFjayB3aXRoIGVycm9y
+IGNvZGUgdGh1cyBjbGllbnQgaGFzIGNoYW5jZSB0byBjbGVhbnVwIG9yIHJlc2V0Lg0KPiA+ID4g
+PiA+IA0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IERlbm5pcyBZQyBIc2llaCA8ZGVubmlzLXlj
+LmhzaWVoQG1lZGlhdGVrLmNvbT4NCj4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiAgZHJpdmVycy9t
+YWlsYm94L210ay1jbWRxLW1haWxib3guYyB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+ID4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspDQo+ID4gPiA+ID4g
+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94
+LmMgYi9kcml2ZXJzL21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5jDQo+ID4gPiA+ID4gaW5kZXgg
+ZmQ1MTliNmY1MThiLi5jMTJhNzY4ZDExNzUgMTAwNjQ0DQo+ID4gPiA+ID4gLS0tIGEvZHJpdmVy
+cy9tYWlsYm94L210ay1jbWRxLW1haWxib3guYw0KPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvbWFp
+bGJveC9tdGstY21kcS1tYWlsYm94LmMNCj4gPiA+ID4gPiBAQCAtNDUwLDYgKzQ1MCwzMiBAQCBz
+dGF0aWMgaW50IGNtZHFfbWJveF9zdGFydHVwKHN0cnVjdCBtYm94X2NoYW4gKmNoYW4pDQo+ID4g
+PiA+ID4gIA0KPiA+ID4gPiA+ICBzdGF0aWMgdm9pZCBjbWRxX21ib3hfc2h1dGRvd24oc3RydWN0
+IG1ib3hfY2hhbiAqY2hhbikNCj4gPiA+ID4gPiAgew0KPiA+ID4gPiA+ICsJc3RydWN0IGNtZHFf
+dGhyZWFkICp0aHJlYWQgPSAoc3RydWN0IGNtZHFfdGhyZWFkICopY2hhbi0+Y29uX3ByaXY7DQo+
+ID4gPiA+ID4gKwlzdHJ1Y3QgY21kcSAqY21kcSA9IGRldl9nZXRfZHJ2ZGF0YShjaGFuLT5tYm94
+LT5kZXYpOw0KPiA+ID4gPiA+ICsJc3RydWN0IGNtZHFfdGFzayAqdGFzaywgKnRtcDsNCj4gPiA+
+ID4gPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsJc3Bp
+bl9sb2NrX2lycXNhdmUoJnRocmVhZC0+Y2hhbi0+bG9jaywgZmxhZ3MpOw0KPiA+ID4gPiA+ICsJ
+aWYgKGxpc3RfZW1wdHkoJnRocmVhZC0+dGFza19idXN5X2xpc3QpKQ0KPiA+ID4gPiA+ICsJCWdv
+dG8gZG9uZTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKwlXQVJOX09OKGNtZHFfdGhyZWFkX3N1
+c3BlbmQoY21kcSwgdGhyZWFkKSA8IDApOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArCS8qIG1h
+a2Ugc3VyZSBleGVjdXRlZCB0YXNrcyBoYXZlIHN1Y2Nlc3MgY2FsbGJhY2sgKi8NCj4gPiA+ID4g
+PiArCWNtZHFfdGhyZWFkX2lycV9oYW5kbGVyKGNtZHEsIHRocmVhZCk7DQo+ID4gPiA+ID4gKwlp
+ZiAobGlzdF9lbXB0eSgmdGhyZWFkLT50YXNrX2J1c3lfbGlzdCkpDQo+ID4gPiA+ID4gKwkJZ290
+byBkb25lOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2Fm
+ZSh0YXNrLCB0bXAsICZ0aHJlYWQtPnRhc2tfYnVzeV9saXN0LA0KPiA+ID4gPiA+ICsJCQkJIGxp
+c3RfZW50cnkpIHsNCj4gPiA+ID4gPiArCQljbWRxX3Rhc2tfZXhlY19kb25lKHRhc2ssIC1FQ09O
+TkFCT1JURUQpOw0KPiA+ID4gPiA+ICsJCWtmcmVlKHRhc2spOw0KPiA+ID4gPiA+ICsJfQ0KPiA+
+ID4gPiA+ICsNCj4gPiA+ID4gPiArCWNtZHFfdGhyZWFkX2Rpc2FibGUoY21kcSwgdGhyZWFkKTsN
+Cj4gPiA+ID4gPiArCWNsa19kaXNhYmxlKGNtZHEtPmNsb2NrKTsNCj4gPiA+ID4gPiArZG9uZToN
+Cj4gPiA+ID4gDQo+ID4gPiA+IGNtZHFfdGhyZWFkX3Jlc3VtZSh0aHJlYWQpOw0KPiA+ID4gPiAN
+Cj4gPiA+ID4gUmVnYXJkcywNCj4gPiA+ID4gQ0sNCj4gPiA+ID4gDQo+ID4gPiANCj4gPiA+IENh
+bGwgcmVzdW1lIGhlcmUgd2lsbCBjYXVzZSB2aW9sYXRpb24uIFRoZSB0aHJlYWQtPnRhc2tfYnVz
+eV9saXN0IGVtcHR5DQo+ID4gPiBtZWFucyBubyB0YXNrIHdvcmsgaW4gZ2NlIGFuZCB0aHJlYWQg
+c3RhdGUgc2hvdWxkIGFscmVhZHkgZGlzYWJsZQ0KPiA+ID4gd2l0aG91dCBjbG9jaywgd2hpY2gg
+aXMgd2hhdCB3ZSB3YW50IHNpbmNlIGNsaWVudCB0cnkgdG8gc2h1dCBkb3duIHRoaXMNCj4gPiA+
+IG1ib3ggY2hhbm5lbC4gU28gSSB0aGluayB3ZSBkb24ndCBuZWVkIHJlc3VtZSBoZXJlLg0KPiA+
+ID4gDQo+ID4gDQo+ID4gT0suIFdoZW4gY2xpZW50IGZyZWUgY2hhbm5lbCwgdGhyZWFkIGlzIHN1
+c3BlbmRlZC4gVGhlbiBjbGllbnQgcmVxdWVzdA0KPiA+IGNoYW5uZWwsIHdoZXJlIGRvIHlvdSBy
+ZXN1bWUgdGhyZWFkPw0KPiA+IA0KPiANCj4gd2hlbiBjbGllbnQgc2VuZCBuZXcgcGt0IHRvIG5l
+dyBjaGFubmVsLCBjbWRxX21ib3hfc2VuZF9kYXRhKCkgd2lsbA0KPiBlbmFibGUgdGhyZWFkLg0K
+DQppbiBjbWRxX21ib3hfc2VuZF9kYXRhKCksIGl0IHdvdWxkIHJ1biBiZWxvdyBjb21tYW5kOg0K
+DQpXQVJOX09OKGNsa19lbmFibGUoY21kcS0+Y2xvY2spIDwgMCk7DQpXQVJOX09OKGNtZHFfdGhy
+ZWFkX3Jlc2V0KGNtZHEsIHRocmVhZCkgPCAwKTsNCg0Kd3JpdGVsKHRhc2stPnBhX2Jhc2UsIHRo
+cmVhZC0+YmFzZSArIENNRFFfVEhSX0NVUlJfQUREUik7DQp3cml0ZWwodGFzay0+cGFfYmFzZSAr
+IHBrdC0+Y21kX2J1Zl9zaXplLA0KICAgICAgIHRocmVhZC0+YmFzZSArIENNRFFfVEhSX0VORF9B
+RERSKTsNCndyaXRlbCh0aHJlYWQtPnByaW9yaXR5LCB0aHJlYWQtPmJhc2UgKyBDTURRX1RIUl9Q
+UklPUklUWSk7DQp3cml0ZWwoQ01EUV9USFJfSVJRX0VOLCB0aHJlYWQtPmJhc2UgKyBDTURRX1RI
+Ul9JUlFfRU5BQkxFKTsNCndyaXRlbChDTURRX1RIUl9FTkFCTEVELCB0aHJlYWQtPmJhc2UgKyBD
+TURRX1RIUl9FTkFCTEVfVEFTSyk7DQoNCkRvIHlvdSBtZWFuIENNRFFfVEhSX0VOQUJMRV9UQVNL
+IGlzIHNldCB0byBDTURRX1RIUl9FTkFCTEVELCB0aGVuDQpDTURRX1RIUl9TVVNQRU5EX1RBU0sg
+d291bGQgYmUgYXV0b21hdGljYWxseSBzZXQgdG8gQ01EUV9USFJfUkVTVU1FPyBJZg0KdGhpcyBo
+YXJkd2FyZSB3b3JrIGluIHNvIHNwZWNpYWwgYmVoYXZpb3IsIHBsZWFzZSBhZGQgY29tbWVudCBm
+b3IgdGhpcy4NCg0KUmVnYXJkcywNCkNLDQoNCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBEZW5uaXMN
+Cj4gDQo+ID4gUmVnYXJkcywNCj4gPiBDSw0KPiA+IA0KPiA+ID4gDQo+ID4gPiBSZWdhcmRzLA0K
+PiA+ID4gRGVubmlzDQo+ID4gPiANCj4gPiA+ID4gPiArCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUo
+JnRocmVhZC0+Y2hhbi0+bG9jaywgZmxhZ3MpOw0KPiA+ID4gPiA+ICB9DQo+ID4gPiA+ID4gIA0K
+PiA+ID4gPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG1ib3hfY2hhbl9vcHMgY21kcV9tYm94X2No
+YW5fb3BzID0gew0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiANCj4gPiA+IA0KPiA+IA0KPiA+
+IA0KPiANCj4gDQoNCg==
 
