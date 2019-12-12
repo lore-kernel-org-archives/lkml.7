@@ -2,88 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CA6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E185C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170BA214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280302173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:35:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576157743;
+	bh=kX7tmQZUkMsb+wxM2lkuAZ/OE6BVVDyV/hHHPESUsac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S5azAp83wHg+vedSi0T3748IRq6cS7TlOdbwB1A4MlKJXFOcrUQTVqY89yLKTH49N
+	 FhB8C+0r1Yu9kbU2AhdZghQuIQahLpQaaV60uXPJjnf8U3wEsB/pcmMnIoGDaDXpeK
+	 zP8j1iroTnFeGuGKITqik85PzWE7utu2IfmQtVyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbfLLNdj (ORCPT
+        id S1729483AbfLLNfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:33:39 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:58871 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbfLLNdh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:33:37 -0500
-Received: from orion.localdomain ([77.9.34.244]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MNssA-1iLYQh28cK-00OGBN; Thu, 12 Dec 2019 14:33:35 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] drivers: gpio: remove unneeded MODULE_VERSION() usage
-Date:   Thu, 12 Dec 2019 14:33:06 +0100
-Message-Id: <20191212133306.24663-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:nGScxsI31qjcFratt33awZfiv+S6hopX8qziDv7bYFGHmgATF4u
- eBNSVnxWJa1MrB6bRN9e4C++w3HWI1U25+D1ZB0fkGXaLCwJZibr/OTF3pVHI5fhriNPbGT
- 9arMHUBNyes+l1evqc/XlLwBCyrksfX7tNxNpLD3BEvivSjyXXSNXE9ADp3DLzrrN08NyWK
- ieKdZ/M3DJXCHN2j4IY/Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:w/gr4XqYkPg=:I2rUN0t5cf6127LfNeTd5T
- IFeZ5H+xKT6rLv5lcgK7CMmzzlr/omHuc9GH/rBANg0mY6gbm9lQEIrrgMI8OuDYlDe1IhH8a
- HqIVTZCLL8ouKazF7S5lmpanh9NDT2I8rOULQEVLuR5/raKN5v+xfas96CToque/P5hxbrR03
- X8HMeU2ClaTr2Gh0cfte8eOTMnO8C5PMQfq4CDL+NLH8XcSlLM/II2e/6spdTzgf8kjPZ/akH
- ABIu1b0Fcf4u+g00WJTZchCEAIgaeHOZhxosWabGozXwVSMRyaRHydGqHUZI0eRLgnOpti0Gu
- V7wvxLk5Iy4WScg+orLjz1dpHzJuRA85CYZprzGhQ0Hmk406BiimPCIbDUgR+wpVvW+pj9dWI
- 3RWu70CSIdhp/UmcOMelPsW7xeXJkRuIK/ML5Cb0wilLiG9Z2ung+VGcV+PDhhecLA0tMxEKW
- lz5VDE3WSqrz0L9Ik9r+71/GcMgY38ADQCoskQf2BL04QKwtFMbZ1ZyyBgny+B6l9FNUOyVkI
- U66RT+sIKtlo2egkQRH7uofxG0TLwYXgHKH+ulzrag2tMce2bWLlzPQrD1PlTNyinAhr1Qrok
- wlyTWDD+0ajdKmAsOzXVx/8O314NnO7n635Hpe9NlUJvHYzf+LFPxEZLGumat9ZSKu8UfLJ+N
- HqG+fcWzp9iNDbM8RF2v/p5Flbzca9ZXTZyZhwXWnWjvN+v//IZmGPM5CXfpOrHRhmwWofa9B
- afKbBdFeodfS/yfeVuy9UzU52qmqBm5GwLVCpO1ePLcg4QDcc8Uwlgo4MEzConnFKmBdSIVtK
- bqex9jxLAhMfFuBOSzUtuRNdUSBwCtbkEo0qe9WXHuXz/3ess4enFmOlOp1qa7QtN3+VltBrm
- uK5j2pSTsXAIQuLGz1Qg==
+        Thu, 12 Dec 2019 08:35:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729457AbfLLNfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:35:42 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2D15214AF;
+        Thu, 12 Dec 2019 13:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576157741;
+        bh=kX7tmQZUkMsb+wxM2lkuAZ/OE6BVVDyV/hHHPESUsac=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BoyR0ZHnOCM+h1SLcosyobq3AU7Dt2V+OSXVLxawClCqojIZ2bAFsyhqBOiln6VJR
+         2tyjWyjao06jWXe2DM5EvcjPbXUzWQUQaAnuU5gyUvfnNM7G53OR9OAf+xyCR4Jje/
+         KMYKVot6sJ84MeRlL1Xu0KA10X+gtEBv5Agw+foo=
+Date:   Thu, 12 Dec 2019 14:35:39 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     zhenwei pi <pizhenwei@bytedance.com>
+Cc:     arnd@arndb.de, peng.hao2@zte.com.cn, linux-kernel@vger.kernel.org
+Subject: Re: [External] Re: [PATCH] misc: pvpanic: add crash loaded event
+Message-ID: <20191212133539.GA1571185@kroah.com>
+References: <20191212123226.1879155-1-pizhenwei@bytedance.com>
+ <20191212130155.GA1544206@kroah.com>
+ <0364f87c-7ad0-0208-fb03-d5f17d45ab73@bytedance.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0364f87c-7ad0-0208-fb03-d5f17d45ab73@bytedance.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove MODULE_VERSION(), as it isn't needed at all: the only version
-making sense is the kernel version.
+On Thu, Dec 12, 2019 at 09:26:22PM +0800, zhenwei pi wrote:
+> On 12/12/19 9:01 PM, Greg KH wrote:
+> 
+> > On Thu, Dec 12, 2019 at 08:32:26PM +0800, zhenwei pi wrote:
+> > > Some users prefer kdump tools to generate guest kernel dumpfile,
+> > > at the same time, need a out-of-band kernel panic event.
+> > > 
+> > > Currently if booting guest kernel with 'crash_kexec_post_notifiers',
+> > > QEMU will recieve PVPANIC_PANICKED event and stop VM. If booting
+> > > guest kernel without 'crash_kexec_post_notifiers', guest will not
+> > > call notifier chain.
+> > > 
+> > > Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
+> > > actually hit a kernel panic, but kernel wants to handle by itself.
+> > > 
+> > > Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+> > > ---
+> > >   drivers/misc/pvpanic.c | 10 +++++++++-
+> > >   1 file changed, 9 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
+> > > index 95ff7c5a1dfb..a8cc96c90550 100644
+> > > --- a/drivers/misc/pvpanic.c
+> > > +++ b/drivers/misc/pvpanic.c
+> > > @@ -10,6 +10,7 @@
+> > >   #include <linux/acpi.h>
+> > >   #include <linux/kernel.h>
+> > > +#include <linux/kexec.h>
+> > >   #include <linux/module.h>
+> > >   #include <linux/of.h>
+> > >   #include <linux/of_address.h>
+> > > @@ -19,6 +20,7 @@
+> > >   static void __iomem *base;
+> > >   #define PVPANIC_PANICKED        (1 << 0)
+> > > +#define PVPANIC_CRASH_LOADED    (1 << 1)
+> > BIT(1)?
+> 
+> zhenwei: yes, define PVPANIC_CRASH_LOADED as BIT(1)?
+> 
+> > 
+> > >   MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+> > >   MODULE_DESCRIPTION("pvpanic device driver");
+> > > @@ -34,7 +36,13 @@ static int
+> > >   pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+> > >   		     void *unused)
+> > >   {
+> > > -	pvpanic_send_event(PVPANIC_PANICKED);
+> > > +	unsigned int event = PVPANIC_PANICKED;
+> > > +
+> > > +	if (kexec_crash_loaded())
+> > > +		event = PVPANIC_CRASH_LOADED;
+> > > +
+> > > +	pvpanic_send_event(event);
+> > Who gets this event to know that the above new bit is set or not?
+> 
+> Hypervisor will catch this event. A typical case maybe like this: guest os triggers
+> pvpanic PVPANIC_CRASH_LOADED event, QEMU gets this event by handling vm-exit reason,
+> then QEMU posts event to libvirt. Monotor agent gets domain lifecycle event from
+> libvirt. Bingo, we can know that the guest has crashed but it handle error by
+> kexec crash loaded image.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/gpio/gpio-sama5d2-piobu.c | 1 -
- drivers/gpio/gpio-tb10x.c         | 1 -
- 2 files changed, 2 deletions(-)
+But as you have burried this user api value in a random .c file, how
+does anything outside of the kernel know what the value really is for?
 
-diff --git a/drivers/gpio/gpio-sama5d2-piobu.c b/drivers/gpio/gpio-sama5d2-piobu.c
-index b04c561f3280..4d47b2c41186 100644
---- a/drivers/gpio/gpio-sama5d2-piobu.c
-+++ b/drivers/gpio/gpio-sama5d2-piobu.c
-@@ -244,7 +244,6 @@ static struct platform_driver sama5d2_piobu_driver = {
- 
- module_platform_driver(sama5d2_piobu_driver);
- 
--MODULE_VERSION("1.0");
- MODULE_LICENSE("GPL v2");
- MODULE_DESCRIPTION("SAMA5D2 PIOBU controller driver");
- MODULE_AUTHOR("Andrei Stefanescu <andrei.stefanescu@microchip.com>");
-diff --git a/drivers/gpio/gpio-tb10x.c b/drivers/gpio/gpio-tb10x.c
-index 5e375186f90e..866201cf5f65 100644
---- a/drivers/gpio/gpio-tb10x.c
-+++ b/drivers/gpio/gpio-tb10x.c
-@@ -243,4 +243,3 @@ static struct platform_driver tb10x_gpio_driver = {
- module_platform_driver(tb10x_gpio_driver);
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("tb10x gpio.");
--MODULE_VERSION("0.0.1");
--- 
-2.11.0
+Shouldn't the #define be in a uapi file?
 
+thanks,
+
+greg k-h-
