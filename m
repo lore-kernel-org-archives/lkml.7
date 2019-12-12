@@ -2,123 +2,206 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DBAC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F10C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F2712464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576148632;
-	bh=RlQYE4ISnB8w71cVPWrVxWmmiBw1vv7db6O06zPNTEg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OSoB34Sbui0Qi3/iTP6gBt/M4zBS0wkeB1op7qbLXHd10ua9gQyGRsggmA90mmv7K
-	 753ZlXZTVUXIPPvxKBSoKB9MRVsJM/Iab1p0JO6M/r5D33KUiJBo2v4UL2nVbOlF8s
-	 aSmgbAEWdsCOALTV5zzgbc3w4anP5QMCOu04pcs8=
+	by mail.kernel.org (Postfix) with ESMTP id 78F5F2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbfLLLDv (ORCPT
+        id S1728861AbfLLLFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:03:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbfLLLDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:03:51 -0500
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E722122B48;
-        Thu, 12 Dec 2019 11:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576148630;
-        bh=RlQYE4ISnB8w71cVPWrVxWmmiBw1vv7db6O06zPNTEg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qNHGjkNNfqbO/iMeXj8vAZpZYJ8k+Y0WPRnnKuM4Pf8VuXrW7AhgfhGO4LUE6HiOu
-         blPA7D7ic9Ty1uJUHM5vCOuzfgCP28aU3Pa87e9a2XhCQ7xXOShup8BjrRdhR14jtU
-         +ZblW4z0tyJeNYEmpZ0RB+p5B5Jkv/7nrfYLUgM4=
-Received: by mail-lf1-f43.google.com with SMTP id b15so1373439lfc.4;
-        Thu, 12 Dec 2019 03:03:49 -0800 (PST)
-X-Gm-Message-State: APjAAAUEWlCU5DXCXKu1M4vfAIaVNFhORK/RiPhAHEsMJ1gWYQbgkfd8
-        sqduhwSq1/wl+2XBlONreAGQFIPklV2gNmjp8e8=
-X-Google-Smtp-Source: APXvYqxdSYzPggRDnt0KWf86ulCn6elVREWxE1DfX8yzjxQqmOd7sEsDF55jGJFa+FUUT8TXBVfOjvz0/2nUFepPM/I=
-X-Received: by 2002:ac2:5dc7:: with SMTP id x7mr5301381lfq.24.1576148628033;
- Thu, 12 Dec 2019 03:03:48 -0800 (PST)
+        Thu, 12 Dec 2019 06:05:11 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:40217 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728613AbfLLLFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 06:05:11 -0500
+Received: from mail-qt1-f180.google.com ([209.85.160.180]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N8nrc-1hc82N0iU2-015pgV; Thu, 12 Dec 2019 12:05:09 +0100
+Received: by mail-qt1-f180.google.com with SMTP id k40so219830qtk.8;
+        Thu, 12 Dec 2019 03:05:08 -0800 (PST)
+X-Gm-Message-State: APjAAAUM2PgCkhu40B0eHSm0jZcOQhKOjoGg7pzw/fdOlBGxS9G/gTEN
+        HxnYrUC3SB+1VX87hoG0/NRxTLs/NZJ1GpPck9I=
+X-Google-Smtp-Source: APXvYqz+DjQKwVb8onI5Bl4766PLexZ3Eyfl8bPq4KpH+pqHQ2QRIW4i+Ool5tGKrQv0opx42ZAqs07sNWCKoD7h4s0=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr6784581qtr.142.1576148707982;
+ Thu, 12 Dec 2019 03:05:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20191104154942.8935-1-hslester96@gmail.com> <29590e4f-cb9e-c9ac-608c-b7b72c308d25@xs4all.nl>
-In-Reply-To: <29590e4f-cb9e-c9ac-608c-b7b72c308d25@xs4all.nl>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 12 Dec 2019 12:03:36 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPctbuM_vZJPLORiyOh_8884Q3SEeEBmOmm7ON8xOp7m3w@mail.gmail.com>
-Message-ID: <CAJKOXPctbuM_vZJPLORiyOh_8884Q3SEeEBmOmm7ON8xOp7m3w@mail.gmail.com>
-Subject: Re: [PATCH] media: exynos4-is: add missed clk_disable_unprepare in remove
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-25-arnd@arndb.de>
+ <CAMuHMdW=eG9WWbeL0Od6dVzE7ydpBvVybvkn+cGFtyBR77sP6A@mail.gmail.com>
+In-Reply-To: <CAMuHMdW=eG9WWbeL0Od6dVzE7ydpBvVybvkn+cGFtyBR77sP6A@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Dec 2019 12:04:51 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0z2c4GCs0NOcsUA_FFiBJ3OhF5HXawZFJZzNH2cck=mg@mail.gmail.com>
+Message-ID: <CAK8P3a0z2c4GCs0NOcsUA_FFiBJ3OhF5HXawZFJZzNH2cck=mg@mail.gmail.com>
+Subject: Re: [PATCH 24/24] Documentation: document ioctl interfaces better
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:7aEUDq6DygRVQNOBeY23McUss7Srp0M8N4hLzUOLofAyxIcqSHR
+ refNKKPuQ6VP25E5alP3H9d1+LnlqpQoiCY6KzmF1Xb94PurPBz+X9dLSl5HnnilUdHGuZ/
+ g5m5YzjgrFr8fzNNHCws6J0x2v9ZKYL60iyNMzG7Ktfp5EZNvvghmfWaL26WXd7+reJgc1i
+ DJzAVAZm/lSxZmkaZ1eoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7VsM8gjWTuQ=:LTVuyS28GKNW3aAoa54dLl
+ oaSzXZfYub4B7nYhm7So84qBF+IY+7G+WcUx6qfjDGxGIob9AIgE3tj/fgd4YfvF78Nas3j03
+ Wj8d2DmpUw6dRM3GwQBAnPojO5MimY7pxSBily/les0WnxKGvScIYgZpWEZ21Fb9+BwevSG2q
+ 6KkOzbHAkGltLvJhxOwzKBOrpFMj5iKVpZ1C+xCWElMqLETA8p0Ot/tzdVIBVy5e7z4mWAyfv
+ d9g0xR5v2BzUvnbVE4V5bZG4ogNpsUJwehLa2jWOOwXBIXQV3DosVydcZlLQdh9hza6qGSPtz
+ diWV/qVt7SVInNHnYO8uOhc26nSenVCR4zg8lzMYGpY409uIGxgmBegj8jlMwbWsTr9g6u9X6
+ gI6LJ1teKErexn+02ZC2j1bybhx0+Km9MQwG2+x7nlqg4GrtMumoNWzSPJZi5WXUc6spdrtPW
+ GOvX8vEVRy1V8SaPbIcCrCsy+698/Xwl/UGIL8BI/tUhgrSCJFEvejBvRrWsu32dF13rFyOmH
+ vPJuZuiQXHReICeQWfYcODmJFYxKRx+MpNctmM2iKOd5hcqrfHb9F5tP1Dh5h/fnhfC419mcd
+ eFJ36PN/zGxHILJg64sINzgWIsVq/e+UYBpCl2+0pTSEBOeD+YRie+612PVIkViSbkML9WPOc
+ DReNerTfe7ri75unH2R5Xqlbs5xE/n4BOKrJ5ZjINHaFQRDGasK3ggg7lqBDzDTiJN02Pg2VB
+ 9abfqYnQ2I8yK5uwM0ismMiAyZGvbvc2uNH02fWEpLoJ2f/6LuiS3YP0MlgCSdXD0bh6nIPoT
+ WCDpfe6s8zLfHDjUWJhIm7TK0bj8zQG9eGBvQc9Ag19+4Xt8LOjS7liACW1EOk2EYkIxKZiNI
+ PK4dReHxFgGK9vF/NBLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 11:39, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+On Thu, Dec 12, 2019 at 9:16 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Dec 11, 2019 at 9:53 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > +``include/uapi/asm-generic/ioctl.h`` provides four macros for defining
+> > +ioctl commands that follow modern conventions: ``_IOC``, ``_IOR``,
+> > +``_IOW``, and ``_IORW``. These should be used for all new commands,
+> > +with the correct parameters:
+> > +
+> > +_IO/_IOR/_IOW/_IOWR
 >
-> On 11/4/19 4:49 PM, Chuhong Yuan wrote:
-> > This driver forgets to disable and unprepare clock when remove.
-> > Add a call to clk_disable_unprepare to fix it.
+> This says _IO....
 >
-> I'd like an Ack from Samsung before I apply this. I see this in the probe() in fimc-lite.c:
+> > +   The macro name determines whether the argument is used for passing
+> > +   data into kernel (_IOW), from the kernel (_IOR), both (_IOWR) or is
 >
->        if (!pm_runtime_enabled(dev)) {
->                 ret = clk_prepare_enable(fimc->clock);
->                 if (ret < 0)
->                         goto err_sd;
->         }
+> into the kernel
+> , or is
 >
-> So is it right to always call clk_disable_unprepare in the remove()?
+> > +   not a pointer (_IOC). It is possible but not recommended to pass an
+> > +   integer value instead of a pointer with _IOC.
 >
-> I suspect it is correct, but I would like someone else to take a look as well.
->
-> Regards,
->
->         Hans
->
-> >
-> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> > ---
-> >  drivers/media/platform/exynos4-is/fimc-lite.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
-> > index e87c6a09205b..6748bd96aada 100644
-> > --- a/drivers/media/platform/exynos4-is/fimc-lite.c
-> > +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
-> > @@ -1614,6 +1614,7 @@ static int fimc_lite_remove(struct platform_device *pdev)
-> >       struct fimc_lite *fimc = platform_get_drvdata(pdev);
-> >       struct device *dev = &pdev->dev;
-> >
-> > +     clk_disable_unprepare(fimc->clock);
-> >       pm_runtime_disable(dev);
-> >       pm_runtime_set_suspended(dev);
-> >       fimc_lite_unregister_capture_subdev(fimc);
+> ...which is not explained here, but _IOC is?
 
-No, it is wrong. The clock is enabled in probe only if
-!pm_runtime_enabled(). This will matter only if PM is disabled but now
-it leads to unbalanced disables. This was clearly not tested because I
-believe any test would trigger error. In such case, please mark the
-patches as RFT.
+I mean _IO() everywhere, I would consider _IOC an implementation
+detail and not document that here.
 
-There is some tendency to post small "fixes" like this without
-testing... ok, not everyone has hardware but then just mark it as
-not-tested or RFT...
+s/_IOC/_IO/ throughout the document now.
 
-Best regards,
-Krzysztof
+> > +size
+> > +  The name of the data type pointed to by the argument, the command
+> > +  number encodes the ``sizeof(size)`` value in a 13-bit or 14-bit integer,
+> > +  leading to a limit of 8191 bytes for the maximum size of the argument.
+> > +  Note: do not pass sizeof(type) type into _IOR/IOW, as that will lead
+> > +  to encoding sizeof(sizeof(type)), i.e. sizeof(size_t).
+>
+> Looks like "size" could be renamed, to make this more obvious?
+
+Changed to data_type now, which is what I found in some other
+documentation.
+
+
+> > +space timespec exactly. The get_timespec64() and put_timespec64() helper
+> > +functions canbe used to ensure that the layout remains compatible with
+>
+> can be
+
+done.
+
+> > +
+> > +``ktime_get_real_ns()`` can be used for CLOCK_REALTIME timestamps that
+> > +may be required for timestamps that need to be persistent across a reboot
+>
+> Drop "may be required for timestamps that"?
+
+done.
+
+> > +* ``long`` and ``unsigned long`` are the size of a register, so
+> > +  they can be either 32 bit or 64 bit wide and cannot be used in portable
+>
+> 32-bit or 64-bit (for consistency with the rest of the document)
+
+The convention I was trying to follow is to write
+
+"32-bit userspace" or "32-bit processor"
+
+but
+
+"this type is 32 bit wide"
+
+I wasn't consistent though, changed it now as you suggested.
+
+> > +
+> > +* On ARM OABI user space, 16-bit member variables have 32-bit
+> > +  alignment, making them incompatible with modern EABI kernels.
+> > +  Conversely, on the m68k architecture, all struct members have at most
+> > +  16-bit alignment. These rarely cause problems as neither ARM-OABI nor
+>
+> "have at most 16-bit alignment" sounds a bit weird to me, as a member
+> may have a greater alignment.
+> "struct members are not guaranteed to have an alignment greater than 16-bit"?
+
+done.
+
+> > +
+> > +As explained for the compat mode, it is best to not avoid any padding in
+>
+> best to avoid any implicit padding?
+
+done.
+
+> > +
+> > +* The complexity of user space access and data structure layout at done
+>
+> is done
+
+changed
+
+> > +There are many cases in which ioctl is not the best solution for a
+> > +problem. Alternatives include
+>
+> :
+
+done
+
+> > +* System calls are a better choice for a system-wide feature that
+> > +  is not tied to a physical device or constrained by the file system
+> > +  permissions of a character device node
+> > +
+> > +* netlink is the preferred way of configuring any network related
+> > +  objects through sockets.
+> > +
+> > +* debugfs is used for ad-hoc interfaces for debugging functionality
+> > +  that does not need to be exposed as a stable interface to applications.
+> > +
+> > +* sysfs is a good way to expose the state of an in-kernel object
+> > +  that is not tied to a file descriptor.
+> > +
+> > +* configfs can be used for more complex configuration than sysfs
+> > +
+> > +* A custom file system can provide extra flexibility with a simple
+> > +  user interface but add a lot of complexity in the implementation.
+>
+> adds ... to
+
+done.
+
+Thanks for all the suggestions!
+
+      Arnd
