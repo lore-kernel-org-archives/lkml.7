@@ -2,93 +2,183 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E49C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E313AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDA224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59202465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="kpjgNJ8c"
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="lmtQeDO0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfLLHeG (ORCPT
+        id S1728150AbfLLHed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:34:06 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38321 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728072AbfLLHeG (ORCPT
+        Thu, 12 Dec 2019 02:34:33 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44187 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbfLLHeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:34:06 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 338B423D09;
-        Thu, 12 Dec 2019 08:34:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1576136044;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ahNlfZRgvyxNMfLruGaGs7saGlzvDiLyQV2jVcLv9i0=;
-        b=kpjgNJ8csN4y9W3dOZcgoA6Xm76QjIO2uzLC68Ruww0eJJVhotfhADAkr62cQnzi/SCblo
-        5TvosPORI6iVRAbMsuIcEzzdkoZRjp118ofA3dxSdiRr1fU8Cnk/z5/1bK5c1OrISEjMTx
-        oLzv39WgUp0awOhIjHDIErTaNTB7DL4=
+        Thu, 12 Dec 2019 02:34:31 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so1512422wrm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:34:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=Ouu20+mE9n/tPYHmfkHzcHWK0RTLjVdq3889eJu3VP0=;
+        b=lmtQeDO0RVMVq5UaQ/yHPY07AfXs62TQ590bzWxxhQaAA/OaOB21aNqrC1Zlo45s+i
+         0vqOpszc8Sfm2BBuncYr8tlj7W9bIc7EYH4J1UDr3BBFEYge7eIFNYAJWO2NQIzACRy8
+         sSVzNMIr1hZEY5iikGTDJf2NPrHPoeHl5AG5OylC98AeaeJw96Euvod9mMvblTCJGjD9
+         6qsE8uOYHKRAsu1xmiY5Az/7p9YfDoB1FtlTfUJDUJsN9RxZJ0sIKI+lDVR/bCYUud7F
+         n3m5AqVOLGyqEbqy9t5Cdr6E/ifNMpVhVtWyCb8LVjExB3CRLPxurspWLQshKirl27l9
+         TJtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=Ouu20+mE9n/tPYHmfkHzcHWK0RTLjVdq3889eJu3VP0=;
+        b=qjSO32snuOvWud5pS9tWLZc9K9+YvyV9zdwE3PZziQCXsS3r2MobPJYo7hHfpJonac
+         MO6TpJ0SNPf/Xs7ulL1DryUzt/oIwEhTGRCs9gtgFXCJ8pW9hubIa9CxpMzNgM9UK8Tw
+         iMpR9YCgXrR5hdzvTMpQYsRPSIB+YFQbxiBwK4ceeAm+Co11U4/cx+JzuMbTwUOdE57U
+         G86kx0cJ0ghQhQjTliqvuEu+Rwvsf8xEVNb0O8kfPXNzBeZuEIKuYYfH7Qb81nfhxLGN
+         nk0CV8a3+wXCTmIEt1ch27ZHl3Sm/ppM2GsXIU6GP1XACeKAizYNVTv3uBLJyfDZA5LF
+         8eJA==
+X-Gm-Message-State: APjAAAVKhuVd+QLQClt0HnKUA8ZH+XDJ8hGAVN4KzfxHtmtFyabHfcU6
+        bJ46bstFW0ZKmDOHxdzXzyUaOQ==
+X-Google-Smtp-Source: APXvYqwlTzWP0XWOqGIJf4UvsmxnRFuIxB+FV85xriWGt31SdJo44/OLaYrtTWBOIOO+0sMh8wDsnw==
+X-Received: by 2002:a5d:6802:: with SMTP id w2mr4385600wru.353.1576136068427;
+        Wed, 11 Dec 2019 23:34:28 -0800 (PST)
+Received: from angus.unipv.it (angus.unipv.it. [193.206.67.163])
+        by smtp.gmail.com with ESMTPSA id o66sm1101251wmo.20.2019.12.11.23.34.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 23:34:27 -0800 (PST)
+Message-ID: <430b562eeba371ef3b917193246b9eb6c46be71e.camel@unipv.it>
+Subject: Re: AW: Slow I/O on USB media after commit
+ f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+From:   Andrea Vai <andrea.vai@unipv.it>
+To:     Ming Lei <ming.lei@redhat.com>, "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Schmid, Carsten" <Carsten_Schmid@mentor.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Thu, 12 Dec 2019 08:34:26 +0100
+In-Reply-To: <20191211213316.GA14983@ming.t460p>
+References: <f82fd5129e3dcacae703a689be60b20a7fedadf6.camel@unipv.it>
+         <20191129005734.GB1829@ming.t460p> <20191129023555.GA8620@ming.t460p>
+         <320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it>
+         <20191203022337.GE25002@ming.t460p>
+         <8196b014b1a4d91169bf3b0d68905109aeaf2191.camel@unipv.it>
+         <20191210080550.GA5699@ming.t460p> <20191211024137.GB61323@mit.edu>
+         <20191211040058.GC6864@ming.t460p> <20191211160745.GA129186@mit.edu>
+         <20191211213316.GA14983@ming.t460p>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Dec 2019 08:34:03 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] arm64: dts: ls1028a: fix reboot node
-In-Reply-To: <20191212020055.GB15858@dragon>
-References: <20191211171145.14736-1-michael@walle.cc>
- <20191212020055.GB15858@dragon>
-Message-ID: <ad3885c9545cb73eced2fa3f0ce6f0be@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.8
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: 338B423D09
-X-Spamd-Result: default: False [1.40 / 15.00];
-         ARC_NA(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.285];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-12-12 03:00, schrieb Shawn Guo:
-> On Wed, Dec 11, 2019 at 06:11:45PM +0100, Michael Walle wrote:
->> The reboot register isn't located inside the DCFG controller, but in 
->> its
->> own RST controller. Fix it.
->> 
->> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
->> Signed-off-by: Michael Walle <michael@walle.cc>
+Il giorno gio, 12/12/2019 alle 05.33 +0800, Ming Lei ha scritto:
+> On Wed, Dec 11, 2019 at 11:07:45AM -0500, Theodore Y. Ts'o wrote:
+> > On Wed, Dec 11, 2019 at 12:00:58PM +0800, Ming Lei wrote:
+> > > I didn't reproduce the issue in my test environment, and follows
+> > > Andrea's test commands[1]:
+> > > 
+> > >   mount UUID=$uuid /mnt/pendrive 2>&1 |tee -a $logfile
+> > >   SECONDS=0
+> > >   cp $testfile /mnt/pendrive 2>&1 |tee -a $logfile
+> > >   umount /mnt/pendrive 2>&1 |tee -a $logfile
+> > > 
+> > > The 'cp' command supposes to open/close the file just once,
+> however
+> > > ext4_release_file() & write pages is observed to run for 4358
+> times
+> > > when executing the above 'cp' test.
+> > 
+> > Why are we sure the ext4_release_file() / _fput() is coming from
+> the
+> > cp command, as opposed to something else that might be running on
+> the
+> > system under test?  _fput() is called by the kernel when the last
 > 
-> You missed Leo's ACK on v2?  I added it and applied the patch.
+> Please see the log:
+> 
+> https://lore.kernel.org/linux-scsi/3af3666920e7d46f8f0c6d88612f143ffabc743c.camel@unipv.it/2-log_ming.zip
+> 
+> Which is collected by:
+> 
+> #!/bin/sh
+> MAJ=$1
+> MIN=$2
+> MAJ=$(( $MAJ << 20 ))
+> DEV=$(( $MAJ | $MIN ))
+> 
+> /usr/share/bcc/tools/trace -t -C \
+>     't:block:block_rq_issue (args->dev == '$DEV') "%s %d %d", args-
+> >rwbs, args->sector, args->nr_sector' \
+>     't:block:block_rq_insert (args->dev == '$DEV') "%s %d %d", args-
+> >rwbs, args->sector, args->nr_sector'
+> 
+> $MAJ:$MIN points to the USB storage disk.
+> 
+> From the above IO trace, there are two write paths, one is from cp,
+> another is from writeback wq.
+> 
+> The stackcount trace[1] is consistent with the IO trace log since it
+> only shows two IO paths, that is why I concluded that the write done
+> via
+> ext4_release_file() is from 'cp'.
+> 
+> [1] 
+> https://lore.kernel.org/linux-scsi/320b315b9c87543d4fb919ecbdf841596c8fbcea.camel@unipv.it/2-log_ming_20191129_150609.zip
+> 
+> > reference to a struct file is released.  (Specifically, if you
+> have a
+> > fd which is dup'ed, it's only when the last fd corresponding to
+> the
+> > struct file is closed, and the struct file is about to be
+> released,
+> > does the file system's f_ops->release function get called.)
+> > 
+> > So the first question I'd ask is whether there is anything else
+> going
+> > on the system, and whether the writes are happening to the USB
+> thumb
+> > drive, or to some other storage device.  And if there is something
+> > else which is writing to the pendrive, maybe that's why no one
+> else
+> > has been able to reproduce the OP's complaint....
+> 
+> OK, we can ask Andrea to confirm that via the following trace, which
+> will add pid/comm info in the stack trace:
+> 
+> /usr/share/bcc/tools/stackcount  blk_mq_sched_request_inserted
+> 
+> Andrea, could you collect the above log again when running new/bad
+> kernel for confirming if the write done by ext4_release_file() is
+> from
+> the 'cp' process?
 
-Yes, I forgot to add that, thanks.
+Yes, I will try to do it as soon as possible and let you know.
+I will also try xfs or btrfs, as you suggested in another message.
 
--michael
+Thanks, and bye
+Andrea
+
