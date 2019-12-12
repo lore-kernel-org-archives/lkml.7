@@ -2,109 +2,100 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A65CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C353C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6BDD2073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3157206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhJMtdHA"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VHyI13Hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbfLLSoR (ORCPT
+        id S1730470AbfLLSrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:44:17 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43615 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbfLLSoR (ORCPT
+        Thu, 12 Dec 2019 13:47:36 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:45851 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730258AbfLLSrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:44:17 -0500
-Received: by mail-wr1-f65.google.com with SMTP id d16so3848882wre.10;
-        Thu, 12 Dec 2019 10:44:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5DKpgH8XAvi3uA/mISb+fZKoyXnYonlOHAe7V1uGxoE=;
-        b=nhJMtdHAGaGjkw2xvo1YkJMwUtNAion8YJTDLtnPbocPLXhvIlE+MEgTdXFBqPidTX
-         icSEhQYwhGARMdwJcJ14WnnQtNIFaHCW6o9VLbL97/ZGOynr1xS2L63QfNeQBba03FWl
-         Ij/CZVfkXUDM0Kg3hUWaEVVZS1iKkpc21lUEDea6kM/TGbwtuDfRhXh28aUzW10c25VP
-         SjRwzGqO6E/t0KXVHwIIzc8FXmyiOQnD44lRXKZmw4bQmU4toWl5YUAiPi9Bb/kRoxsY
-         8dJynUIEvHqnosW1APwgAntrLVNG5jJorKKVpBGsfaCOUCobs/lT5/PBLwb/I2IeWCwo
-         wqxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5DKpgH8XAvi3uA/mISb+fZKoyXnYonlOHAe7V1uGxoE=;
-        b=Tl3tH/D92jK5MA72Egv3G1WLN2RMEA+6o7nXOJFsBAJEtR3HqOmqnbPsLYw0JxhM3P
-         j3XiCilYE8fhx89DpYWjhM5pREU1yPkFUwQ4FvCOdWBesB63pCYpNb6IYJabD6O/QqDP
-         ob+GNGpAZNWrvJ3U7fpoWOFUeOsLoDZ6keVSUu7AZwrMfVsX6elFHfvrfGiF0aZbeVfo
-         QAnOktvpTc2NRYcq4zQdFCYmkEaoPnopDfDIhtQKACC5O6DcMTKq5ui7LhYJQsvDGIGr
-         cdnb4kxaJhEriaTWIpJNCJYOSQxz2OfMio+iOTv5NOLUaCNzi1aKJctQSDFALGRaRQsn
-         A0sA==
-X-Gm-Message-State: APjAAAUqFTvRyRVsuLE/idATnXVvcHrAumInwuQ1HU1BqfUt+rij3yF1
-        QmsfPvFFvHhtCawJW6bzIpQ=
-X-Google-Smtp-Source: APXvYqyuQOSGLR6/IBab/w6lPDb1uX2GY2FBp9dNcex+KPlzE9sVx24oZImN1D/YwW2KKoKQqGJJVQ==
-X-Received: by 2002:a5d:62d0:: with SMTP id o16mr7725210wrv.197.1576176255053;
-        Thu, 12 Dec 2019 10:44:15 -0800 (PST)
-Received: from kwango.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id p15sm2305631wma.40.2019.12.12.10.44.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 10:44:14 -0800 (PST)
-From:   Ilya Dryomov <idryomov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 5.5-rc2
-Date:   Thu, 12 Dec 2019 19:43:56 +0100
-Message-Id: <20191212184356.7143-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.19.2
+        Thu, 12 Dec 2019 13:47:36 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 36169220DD;
+        Thu, 12 Dec 2019 13:47:35 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 12 Dec 2019 13:47:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=4mxdiD
+        QsfZD57JRu05aHGqyvwaIJ8QTGQZI90Fgydd4=; b=VHyI13HrTGZaW29m3NPvPp
+        QYnyqv1yxXQqfY7S65bQ1P8D+a1s4FBvXARJxdoqRT6NY+CPbtG/eXPNSmCJKB1j
+        zNsUMC9OUmMu5gurOWxl0LffUQCVGXiRQwS4PzI94O+wQg8fO+7iqOcXfSnQQEuP
+        sBpePNNhk/W7ijzo6LgE/eMwnB9WXP5N4/Xeh4CGNNFC4teXNPlbknopT1a1jxT6
+        3hG5LfI/PFCFpBsVUFiYhgvF/vW82hrxy1B8mdR6X8UlH5iTTHp0Xy3wb/9zyZSz
+        2KI8qoa58NKLLWkegCDzubVbobEKy8AQ4ndv+IcjQz7zOSwqA1MUBfjv5De1V/aQ
+        ==
+X-ME-Sender: <xms:RovyXZ6dENrjQfkLucsOxKRmsEP6eT-P-ZPKMwiAgDbz3aFKozescw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeljedguddukecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
+    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepud
+    elfedrgeejrdduieehrddvhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgt
+    hhesihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:RovyXW1RuBc_k0gpyJ1lKw9soDUrYUFgEc5x_pe8CbmPRlhSsFgR7A>
+    <xmx:RovyXcC3H1mJIGrqiaLbU6gtBpFQjufXlvA30ApLoN8Wn7mwVeLGTA>
+    <xmx:RovyXXERYLM9YddjfK8Ej4pT-UOGVWanW22NckQIjdV-Mc9mQWuaGA>
+    <xmx:R4vyXYG8Kyhe1AtsLribXicv6vK9yVUXFm2oQfSWlH5DZzDnFItZnw>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5ABE13060134;
+        Thu, 12 Dec 2019 13:47:34 -0500 (EST)
+Date:   Thu, 12 Dec 2019 20:47:32 +0200
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     Yuval Avnery <yuvalav@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gospodarek <andy@greyhouse.net>
+Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
+Message-ID: <20191212184732.GA570918@splinter>
+References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
+ <20191211095854.6cd860f1@cakuba.netronome.com>
+ <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191211111537.416bf078@cakuba.netronome.com>
+ <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191211142401.742189cf@cakuba.netronome.com>
+ <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191211154952.50109494@cakuba.netronome.com>
+ <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
+ <20191212102517.602a8a5d@cakuba.netronome.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212102517.602a8a5d@cakuba.netronome.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, Dec 12, 2019 at 10:25:17AM -0800, Jakub Kicinski wrote:
+> I'd like to see netdevsim to also serve as sort of a reference model
+> for device behaviour. Vendors who are not first to implement a feature
+> always complain that there is no documentation on how things should
+> work.
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
++1
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+I have a patch set that adds FIB offload implementation to netdevsim and
+a gazillion of test cases that I share between netdevsim and mlxsw. Can
+be used by more drivers when they land.
 
-are available in the Git repository at:
-
-  https://github.com/ceph/ceph-client.git tags/ceph-for-5.5-rc2
-
-for you to fetch changes up to da08e1e1d7c3f805f8771ad6a6fd3a7a30ba4fe2:
-
-  ceph: add more debug info when decoding mdsmap (2019-12-09 20:55:10 +0100)
-
-----------------------------------------------------------------
-A fix to avoid a corner case when scheduling cap reclaim in batches
-from Xiubo, a patch to add some observability into cap waiters from
-Jeff and a couple of cleanups.
-
-----------------------------------------------------------------
-Jeff Layton (2):
-      ceph: convert int fields in ceph_mount_options to unsigned int
-      ceph: show tasks waiting on caps in debugfs caps file
-
-Xiubo Li (3):
-      ceph: trigger the reclaim work once there has enough pending caps
-      ceph: switch to global cap helper
-      ceph: add more debug info when decoding mdsmap
-
- fs/ceph/caps.c       | 41 +++++++++++++++++++++++++++--------------
- fs/ceph/debugfs.c    | 13 +++++++++++++
- fs/ceph/mds_client.c |  8 +++++---
- fs/ceph/mds_client.h |  9 +++++++++
- fs/ceph/mdsmap.c     | 12 ++++++++----
- fs/ceph/super.c      | 28 +++++++++++++++-------------
- fs/ceph/super.h      | 16 ++++++++--------
- 7 files changed, 85 insertions(+), 42 deletions(-)
+It's also very convenient for fuzzing now that syzkaller supports
+netdevsim instances thanks to Jiri. I've been running syzkaller for a
+few weeks now to test the FIB implementation.
