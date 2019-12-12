@@ -2,361 +2,144 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2148C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC6BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D6722527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1918F2073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="nOpPdrjP"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="mmvLvDM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfLLFmX (ORCPT
+        id S1726907AbfLLFpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 00:42:23 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41907 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725980AbfLLFmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 00:42:22 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YN3W5hTfz9sPL;
-        Thu, 12 Dec 2019 16:42:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576129338;
-        bh=O++zJuVq/umtcNrYXf5LhasAFc6eMDvjl5VA+AjA2+I=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=nOpPdrjPzPCDNQrHjnZ7q2qw7WWDHHNICSgRUrjZBFxCHxoi5qb+ZFkLrI2Sv6kBm
-         tyNhlMWLzGjL3RJ8jzNTLnFNOejZeyORlNsX2fYynbewuk9iwNzdjkFFNWWXrQF38F
-         TQWScHI4JaWHJsRP/pCx2PqIttsAEszJ8wzmhua80EuYYRwFOMZIcqc8v2offuMCJy
-         vwSay/WBom0mokybMVtsMzjFD8hEU3GE5LodA5sTiwAh3tzRFbgajTrwUOMvXtWvjF
-         EuFRlyOhMv6DPKziq4bOpsHe96F3euxVzqEq46kpW8oe8ZdFVvtCQ399L3B0q1iFx9
-         wKCIfGudgJ7wA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-In-Reply-To: <20191206131650.GM2827@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
-Date:   Thu, 12 Dec 2019 16:42:13 +1100
-Message-ID: <875zimp0ay.fsf@mpe.ellerman.id.au>
+        Thu, 12 Dec 2019 00:45:24 -0500
+Received: from mail-mw2nam12on2087.outbound.protection.outlook.com ([40.107.244.87]:55104
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726775AbfLLFpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 00:45:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ls3BWT2JZiMF1quQjuW2S15TCuOw5zaqfW9UMp5+cvzya7BxjfU74GoDqUL2DJTrnAx+fjLKdAbomdSn5Fx/m72igko0+A/n6ztqQNoegncHpDvr54Bd5WoF6QGRO2HpikosAsGNl8e3jCV0krI3R8vQLtB8fLJLO89Ib3nhXswYhv1dsgFYjiXKAuOfyeNU9A8f/QYo6ppB+wglcOl74xMwbuROdoXVo2FeLPbLXJ4z0S/buRnbAb7e5n5R5Z2nnJ/2xBeipiGCpyhbtd5SrqdZZWlwKn+XQm//eEYGhTzDHN2vpgUB4a1/Pv1dXh02mEebwBDVbjgDcl4yYTKBfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V6a0Tis2G2v9de9CINqeKkPu/zvCMbwC7NJdlkWUaG8=;
+ b=eV/aKQy4/0wP1xhcE3sGrnKPyha8bqv+fqEb55YD+2oP7SpNie+Q0h7LIYWrdbKtolJGrdVMS0zqPWfi3GAOt/+hIYVyDliMx1wH+wsw89BX+70M3ZxvbYUgJoYDgiyS/6o3gQCsByqVntW6BQ40neFF25Q2QLZciZy6LDgEJAvZJOpWKaTW+YRSDMaVPa8QwewQknXecSUh0lm6O20Hoa0uQKsfAE6BLFuhJG6VfSLiMmSBY+AU1ixphIvL6TWlJjLv/S/WYEc3lP402kWKi3jkiO2SS0GYgna6V0AiimJ6dbjqTjFs7ckJvUzlIDEm122+PsABBG6UknZFMCOaOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V6a0Tis2G2v9de9CINqeKkPu/zvCMbwC7NJdlkWUaG8=;
+ b=mmvLvDM8nAWVILtSfZh238d9XxZzfllSCu8k/lQ5MW7kKE7HUBGytftme1HhcwrJZRf/JCvgXkw4e9v9YUPPflLhCcqef4M11Ns83aYDbpfBMD7sQTsqrLOUU7467sJMicpJI9Y+w5YaYdCM/mtUHieDF1wU6KX4RPEG8VGoCQk=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6245.namprd02.prod.outlook.com (52.132.230.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Thu, 12 Dec 2019 05:45:20 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::5d66:1c32:4c41:b087]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::5d66:1c32:4c41:b087%3]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
+ 05:45:20 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>
+CC:     "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH v1 3/7] net: axienet: add unspecified HAS_IOMEM dependency
+Thread-Topic: [PATCH v1 3/7] net: axienet: add unspecified HAS_IOMEM
+ dependency
+Thread-Index: AQHVsFkiqR8nSduRnUG1Mm2Zwj3HCqe1/amA
+Date:   Thu, 12 Dec 2019 05:45:20 +0000
+Message-ID: <CH2PR02MB7000A8C27E849A6B81251AFEC7550@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20191211192742.95699-1-brendanhiggins@google.com>
+ <20191211192742.95699-4-brendanhiggins@google.com>
+In-Reply-To: <20191211192742.95699-4-brendanhiggins@google.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9c65c8d5-7781-406b-2a30-08d77ec6796f
+x-ms-traffictypediagnostic: CH2PR02MB6245:|CH2PR02MB6245:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB62457B07B6E59B127FE8C450C7550@CH2PR02MB6245.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(396003)(136003)(39860400002)(13464003)(189003)(199004)(66946007)(76116006)(52536014)(478600001)(5660300002)(33656002)(9686003)(66476007)(26005)(2906002)(6636002)(4326008)(86362001)(186003)(66556008)(8936002)(66446008)(8676002)(316002)(7696005)(6506007)(53546011)(54906003)(71200400001)(81166006)(81156014)(64756008)(110136005)(55016002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6245;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wbdqpDUm6dDxHM6Yvm8GkKgvuhOVZSxhUtBsfZflN18AxhVoVk7/VXD6EAKeDeS1y2Sw+dm6fuCyRblTV31iVAGsDtIUchHUw1rsd++YE0bZ5oarS/QW6M+reEpGTBcEWXC2x3Q6PuKHP8EUeRBxQGPwJQLeM2aAAeI/qKOVv91Q9JVhTTL3extGojM9HvFQFpgz02uk5sYjXDskSYGKAzaO2t42mc9Fo+dEojE6C9qBSwYnnK9yg46rN3Jieih2vOOzLOR7mM7z8CEAZz7kzuk158QLG2S+vvvJAD5AMBcxgdVW3LmQJ8mlHw2WMGEVb5Pcy7pJf3zIOuU1YU/N/C8Cjfg/UdZC1Q8QziAI/Tp0Nnp+0phMjmQQBP6wrckK+8MlQtTJxKkz+Yfd/beaH4m1cQF12wkEOCcyGNn1rUZXL3bDP/7Wyv1u39XSKKH5muzcjrpgBT8tdO02DIjB0pWaR7fqe0QXXLatNQkselBeyoSodigOO5vaBFQqroR3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c65c8d5-7781-406b-2a30-08d77ec6796f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 05:45:20.1141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3vu+7lUBSOYsSLoPc2QJVeXj42dT7tBNwx8k4EpdsOZX7dK5n+akLfOMwqT+jG4Oi8TkJTpnrmZ5favEIMyRzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6245
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ trimmed CC a bit ]
-
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Fri, Dec 06, 2019 at 11:46:11PM +1100, Michael Ellerman wrote:
-...
-> you write:
->
->   "Currently bitops-instrumented.h assumes that the architecture provides
-> atomic, non-atomic and locking bitops (e.g. both set_bit and __set_bit).
-> This is true on x86 and s390, but is not always true: there is a
-> generic bitops/non-atomic.h header that provides generic non-atomic
-> operations, and also a generic bitops/lock.h for locking operations."
->
-> Is there any actual benefit for PPC to using their own atomic bitops
-> over bitops/lock.h ? I'm thinking that the generic code is fairly
-> optimal for most LL/SC architectures.
-
-Yes and no :)
-
-Some of the generic versions don't generate good code compared to our
-versions, but that's because READ_ONCE() is triggering stack protector
-to be enabled.
-
-For example, comparing an out-of-line copy of the generic and ppc
-versions of test_and_set_bit_lock():
-
-   1 <generic_test_and_set_bit_lock>:           1 <ppc_test_and_set_bit_lock>:
-   2         addis   r2,r12,361
-   3         addi    r2,r2,-4240
-   4         stdu    r1,-48(r1)
-   5         rlwinm  r8,r3,29,3,28
-   6         clrlwi  r10,r3,26                   2         rldicl  r10,r3,58,6
-   7         ld      r9,3320(r13)
-   8         std     r9,40(r1)
-   9         li      r9,0
-  10         li      r9,1                        3         li      r9,1
-                                                 4         clrlwi  r3,r3,26
-                                                 5         rldicr  r10,r10,3,60
-  11         sld     r9,r9,r10                   6         sld     r3,r9,r3
-  12         add     r10,r4,r8                   7         add     r4,r4,r10
-  13         ldx     r8,r4,r8
-  14         and.    r8,r9,r8
-  15         bne     34f
-  16         ldarx   r7,0,r10                    8         ldarx   r9,0,r4,1
-  17         or      r8,r9,r7                    9         or      r10,r9,r3
-  18         stdcx.  r8,0,r10                   10         stdcx.  r10,0,r4
-  19         bne-    16b                        11         bne-    8b
-  20         isync                              12         isync
-  21         and     r9,r7,r9                   13         and     r3,r3,r9
-  22         addic   r7,r9,-1                   14         addic   r9,r3,-1
-  23         subfe   r7,r7,r9                   15         subfe   r3,r9,r3
-  24         ld      r9,40(r1)
-  25         ld      r10,3320(r13)
-  26         xor.    r9,r9,r10
-  27         li      r10,0
-  28         mr      r3,r7
-  29         bne     36f
-  30         addi    r1,r1,48
-  31         blr                                16         blr
-  32         nop
-  33         nop
-  34         li      r7,1
-  35         b       24b
-  36         mflr    r0
-  37         std     r0,64(r1)
-  38         bl      <__stack_chk_fail+0x8>
-
-
-If you squint, the generated code for the actual logic is pretty similar, but
-the stack protector gunk makes a big mess. It's particularly bad here
-because the ppc version doesn't even need a stack frame.
-
-I've also confirmed that even when test_and_set_bit_lock() is inlined
-into an actual call site the stack protector logic still triggers.
-
-eg, if I make two versions of ext4_resize_begin() which call the generic or ppc
-version of test_and_set_bit_lock(), the generic version gets a bunch of extra
-stack protector code.
-
-   1 c0000000005336e0 <ext4_resize_begin_generic>:           1 c0000000005335b0 <ext4_resize_begin_ppc>:
-   2         addis   r2,r12,281                              2         addis   r2,r12,281
-   3         addi    r2,r2,-12256                            3         addi    r2,r2,-11952
-   4         mflr    r0                                      4         mflr    r0
-   5         bl      <_mcount>                               5         bl      <_mcount>
-   6         mflr    r0                                      6         mflr    r0
-   7         std     r31,-8(r1)                              7         std     r31,-8(r1)
-   8         std     r30,-16(r1)                             8         std     r30,-16(r1)
-   9         mr      r31,r3                                  9         mr      r31,r3
-  10         li      r3,24                                  10         li      r3,24
-  11         std     r0,16(r1)                              11         std     r0,16(r1)
-  12         stdu    r1,-128(r1)                            12         stdu    r1,-112(r1)
-  13         ld      r9,3320(r13)
-  14         std     r9,104(r1)
-  15         li      r9,0
-  16         ld      r30,920(r31)                           13         ld      r30,920(r31)
-  17         bl      <capable+0x8>                          14         bl      <capable+0x8>
-  18         nop                                            15         nop
-  19         cmpdi   cr7,r3,0                               16         cmpdi   cr7,r3,0
-  20         beq     cr7,<ext4_resize_begin_generic+0xf0>   17         beq     cr7,<ext4_resize_begin_ppc+0xc0>
-  21         ld      r9,920(r31)                            18         ld      r9,920(r31)
-  22         ld      r10,96(r30)                            19         ld      r10,96(r30)
-  23         lwz     r7,84(r30)                             20         lwz     r7,84(r30)
-  24         ld      r8,104(r9)                             21         ld      r8,104(r9)
-  25         ld      r10,24(r10)                            22         ld      r10,24(r10)
-  26         lwz     r8,20(r8)                              23         lwz     r8,20(r8)
-  27         srd     r10,r10,r7                             24         srd     r10,r10,r7
-  28         cmpd    cr7,r10,r8                             25         cmpd    cr7,r10,r8
-  29         bne     cr7,<ext4_resize_begin_generic+0x128>  26         bne     cr7,<ext4_resize_begin_ppc+0xf8>
-  30         lhz     r10,160(r9)                            27         lhz     r10,160(r9)
-  31         andi.   r10,r10,2                              28         andi.   r10,r10,2
-  32         bne     <ext4_resize_begin_generic+0x100>
-  33         ld      r10,560(r9)
-  34         andi.   r10,r10,1
-  35         bne     <ext4_resize_begin_generic+0xe0>       29         bne     <ext4_resize_begin_ppc+0xd0>
-  36         addi    r7,r9,560                              30         addi    r9,r9,560
-  37         li      r8,1                                   31         li      r10,1
-  38         ldarx   r10,0,r7                               32         ldarx   r3,0,r9,1
-  39         or      r6,r8,r10                              33         or      r8,r3,r10
-  40         stdcx.  r6,0,r7                                34         stdcx.  r8,0,r9
-  41         bne-    <ext4_resize_begin_generic+0x90>       35         bne-    <ext4_resize_begin_ppc+0x78>
-  42         isync                                          36         isync
-                                                            37         clrldi  r3,r3,63
-  43         andi.   r9,r10,1                               38         addi    r3,r3,-1
-  44         li      r3,0                                   39         rlwinm  r3,r3,0,27,27
-  45         bne     <ext4_resize_begin_generic+0xe0>       40         addi    r3,r3,-16
-  46         ld      r9,104(r1)
-  47         ld      r10,3320(r13)
-  48         xor.    r9,r9,r10
-  49         li      r10,0
-  50         bne     <ext4_resize_begin_generic+0x158>
-  51         addi    r1,r1,128                              41         addi    r1,r1,112
-  52         ld      r0,16(r1)                              42         ld      r0,16(r1)
-  53         ld      r30,-16(r1)                            43         ld      r30,-16(r1)
-  54         ld      r31,-8(r1)                             44         ld      r31,-8(r1)
-  55         mtlr    r0                                     45         mtlr    r0
-  56         blr                                            46         blr
-  57         nop                                            47         nop
-  58         li      r3,-16
-  59         b       <ext4_resize_begin_generic+0xb0>
-  60         nop                                            48         nop
-  61         nop                                            49         nop
-  62         li      r3,-1                                  50         li      r3,-1
-  63         b       <ext4_resize_begin_generic+0xb0>       51         b       <ext4_resize_begin_ppc+0x9c>
-  64         nop                                            52         nop
-  65         nop                                            53         nop
-  66         addis   r6,r2,-118                             54         addis   r6,r2,-118
-  67         addis   r4,r2,-140                             55         addis   r4,r2,-140
-  68         mr      r3,r31                                 56         mr      r3,r31
-  69         li      r5,97                                  57         li      r5,46
-  70         addi    r6,r6,30288                            58         addi    r6,r6,30288
-  71         addi    r4,r4,3064                             59         addi    r4,r4,3040
-  72         bl      <__ext4_warning+0x8>                   60         bl      <__ext4_warning+0x8>
-  73         nop                                            61         nop
-  74         li      r3,-1                                  62         li      r3,-1
-  75         b       <ext4_resize_begin_generic+0xb0>       63         b       <ext4_resize_begin_ppc+0x9c>
-  76         ld      r9,96(r9)                              64         ld      r9,96(r9)
-  77         addis   r6,r2,-118                             65         addis   r6,r2,-118
-  78         addis   r4,r2,-140                             66         addis   r4,r2,-140
-  79         mr      r3,r31                                 67         mr      r3,r31
-  80         li      r5,87                                  68         li      r5,36
-  81         addi    r6,r6,30240                            69         addi    r6,r6,30240
-  82         addi    r4,r4,3064                             70         addi    r4,r4,3040
-  83         ld      r7,24(r9)                              71         ld      r7,24(r9)
-  84         bl      <__ext4_warning+0x8>                   72         bl      <__ext4_warning+0x8>
-  85         nop                                            73         nop
-  86         li      r3,-1                                  74         li      r3,-1
-  87         b       <ext4_resize_begin_generic+0xb0>       75         b       <ext4_resize_begin_ppc+0x9c>
-  88         bl      <__stack_chk_fail+0x8>
-
-
-If I change the READ_ONCE() in test_and_set_bit_lock():
-
-	if (READ_ONCE(*p) & mask)
-		return 1;
-
-to a regular pointer access:
-
-	if (*p & mask)
-		return 1;
-
-Then the generated code looks more or less the same, except for the extra early
-return in the generic version of test_and_set_bit_lock(), and different handling
-of the return code by the compiler.
-
-   1 <ext4_resize_begin_generic>:                            1 <ext4_resize_begin_ppc>:
-   2         addis   r2,r12,281                              2         addis   r2,r12,281
-   3         addi    r2,r2,-12256                            3         addi    r2,r2,-11952
-   4         mflr    r0                                      4         mflr    r0
-   5         bl      <_mcount>                               5         bl      <_mcount>
-   6         mflr    r0                                      6         mflr    r0
-   7         std     r31,-8(r1)                              7         std     r31,-8(r1)
-   8         std     r30,-16(r1)                             8         std     r30,-16(r1)
-   9         mr      r31,r3                                  9         mr      r31,r3
-  10         li      r3,24                                  10         li      r3,24
-  11         std     r0,16(r1)                              11         std     r0,16(r1)
-  12         stdu    r1,-112(r1)                            12         stdu    r1,-112(r1)
-  13         ld      r30,920(r31)                           13         ld      r30,920(r31)
-  14         bl      <capable+0x8>                          14         bl      <capable+0x8>
-  15         nop                                            15         nop
-  16         cmpdi   cr7,r3,0                               16         cmpdi   cr7,r3,0
-  17         beq     cr7,<ext4_resize_begin_generic+0xe0>   17         beq     cr7,<ext4_resize_begin_ppc+0xc0>
-  18         ld      r9,920(r31)                            18         ld      r9,920(r31)
-  19         ld      r10,96(r30)                            19         ld      r10,96(r30)
-  20         lwz     r7,84(r30)                             20         lwz     r7,84(r30)
-  21         ld      r8,104(r9)                             21         ld      r8,104(r9)
-  22         ld      r10,24(r10)                            22         ld      r10,24(r10)
-  23         lwz     r8,20(r8)                              23         lwz     r8,20(r8)
-  24         srd     r10,r10,r7                             24         srd     r10,r10,r7
-  25         cmpd    cr7,r10,r8                             25         cmpd    cr7,r10,r8
-  26         bne     cr7,<ext4_resize_begin_generic+0x118>  26         bne     cr7,<ext4_resize_begin_ppc+0xf8>
-  27         lhz     r10,160(r9)                            27         lhz     r10,160(r9)
-  28         andi.   r10,r10,2                              28         andi.   r10,r10,2
-  29         bne     <ext4_resize_begin_generic+0xf0>       29         bne     <ext4_resize_begin_ppc+0xd0>
-  30         ld      r10,560(r9)
-  31         andi.   r10,r10,1
-  32         bne     <ext4_resize_begin_generic+0xc0>
-  33         addi    r7,r9,560                              30         addi    r9,r9,560
-  34         li      r8,1                                   31         li      r10,1
-  35         ldarx   r10,0,r7                               32         ldarx   r3,0,r9,1
-  36         or      r6,r8,r10                              33         or      r8,r3,r10
-  37         stdcx.  r6,0,r7                                34         stdcx.  r8,0,r9
-  38         bne-    <ext4_resize_begin_generic+0x84>       35         bne-    <ext4_resize_begin_ppc+0x78>
-  39         isync                                          36         isync
-                                                            37         clrldi  r3,r3,63
-  40         andi.   r9,r10,1                               38         addi    r3,r3,-1
-  41         li      r3,0                                   39         rlwinm  r3,r3,0,27,27
-  42         bne     <ext4_resize_begin_generic+0xc0>       40         addi    r3,r3,-16
-  43         addi    r1,r1,112                              41         addi    r1,r1,112
-  44         ld      r0,16(r1)                              42         ld      r0,16(r1)
-  45         ld      r30,-16(r1)                            43         ld      r30,-16(r1)
-  46         ld      r31,-8(r1)                             44         ld      r31,-8(r1)
-  47         mtlr    r0                                     45         mtlr    r0
-  48         blr                                            46         blr
-  49         nop                                            47         nop
-  50         addi    r1,r1,112                              48         nop
-  51         li      r3,-16
-  52         ld      r0,16(r1)
-  53         ld      r30,-16(r1)
-  54         ld      r31,-8(r1)
-  55         mtlr    r0
-  56         blr
-  57         nop                                            49         nop
-  58         li      r3,-1                                  50         li      r3,-1
-  59         b       <ext4_resize_begin_generic+0xa4>       51         b       <ext4_resize_begin_ppc+0x9c>
-  60         nop                                            52         nop
-  61         nop                                            53         nop
-  62         addis   r6,r2,-118                             54         addis   r6,r2,-118
-  63         addis   r4,r2,-140                             55         addis   r4,r2,-140
-  64         mr      r3,r31                                 56         mr      r3,r31
-  65         li      r5,97                                  57         li      r5,46
-  66         addi    r6,r6,30288                            58         addi    r6,r6,30288
-  67         addi    r4,r4,3064                             59         addi    r4,r4,3040
-  68         bl      <__ext4_warning+0x8>                   60         bl      <__ext4_warning+0x8>
-  69         nop                                            61         nop
-  70         li      r3,-1                                  62         li      r3,-1
-  71         b       <ext4_resize_begin_generic+0xa4>       63         b       <ext4_resize_begin_ppc+0x9c>
-  72         ld      r9,96(r9)                              64         ld      r9,96(r9)
-  73         addis   r6,r2,-118                             65         addis   r6,r2,-118
-  74         addis   r4,r2,-140                             66         addis   r4,r2,-140
-  75         mr      r3,r31                                 67         mr      r3,r31
-  76         li      r5,87                                  68         li      r5,36
-  77         addi    r6,r6,30240                            69         addi    r6,r6,30240
-  78         addi    r4,r4,3064                             70         addi    r4,r4,3040
-  79         ld      r7,24(r9)                              71         ld      r7,24(r9)
-  80         bl      <__ext4_warning+0x8>                   72         bl      <__ext4_warning+0x8>
-  81         nop                                            73         nop
-  82         li      r3,-1                                  74         li      r3,-1
-  83         b       <ext4_resize_begin_generic+0xa4>       75         b       <ext4_resize_begin_ppc+0x9c>
-
-
-So READ_ONCE() + STACKPROTECTOR_STRONG is problematic. The root cause is
-presumably that READ_ONCE() does an access to an on-stack variable,
-which triggers the heuristics in the compiler that the stack needs
-protecting.
-
-It seems like a compiler "mis-feature" that a constant-sized access to the stack
-triggers the stack protector logic, especially when the access is eventually
-optimised away. But I guess that's probably what we get for doing tricks like
-READ_ONCE() in the first place :/
-
-I tried going back to the version of READ_ONCE() that doesn't use a
-union, ie. effectively reverting dd36929720f4 ("kernel: make READ_ONCE()
-valid on const arguments") to get:
-
-#define READ_ONCE(x)							\
-	({ typeof(x) __val; __read_once_size(&x, &__val, sizeof(__val)); __val; })
-
-But it makes no difference, the stack protector stuff still triggers. So
-I guess it's simply taking the address of a stack variable that triggers
-it.
-
-There seems to be a function attribute to enable stack protector for a
-function, but not one to disable it:
-  https://gcc.gnu.org/onlinedocs/gcc-9.2.0/gcc/Common-Function-Attributes.html#index-stack_005fprotect-function-attribute
-
-That may not be a good solution even if it did exist, because it would
-potentially disable stack protector in places where we do want it
-enabled.
-
-cheers
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCcmVuZGFuIEhpZ2dpbnMgPGJy
+ZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBEZWNlbWJlciAxMiwg
+MjAxOSAxMjo1OCBBTQ0KPiBUbzogamRpa2VAYWRkdG9pdC5jb207IHJpY2hhcmRAbm9kLmF0Ow0K
+PiBhbnRvbi5pdmFub3ZAY2FtYnJpZGdlZ3JleXMuY29tOyBEYXZpZCBTLiBNaWxsZXINCj4gPGRh
+dmVtQGRhdmVtbG9mdC5uZXQ+OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFJh
+ZGhleQ0KPiBTaHlhbSBQYW5kZXkgPHJhZGhleXNAeGlsaW54LmNvbT4NCj4gQ2M6IGxpbnV4LXVt
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRh
+dmlkZ293QGdvb2dsZS5jb207IEJyZW5kYW4gSGlnZ2lucyA8YnJlbmRhbmhpZ2dpbnNAZ29vZ2xl
+LmNvbT47DQo+IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBbUEFUQ0ggdjEgMy83XSBuZXQ6IGF4aWVuZXQ6IGFk
+ZCB1bnNwZWNpZmllZCBIQVNfSU9NRU0NCj4gZGVwZW5kZW5jeQ0KPiANCj4gQ3VycmVudGx5IENP
+TkZJR19YSUxJTlhfQVhJX0VNQUM9eSBpbXBsaWNpdGx5IGRlcGVuZHMgb24NCj4gQ09ORklHX0hB
+U19JT01FTT15OyBjb25zZXF1ZW50bHksIG9uIGFyY2hpdGVjdHVyZXMgd2l0aG91dCBJT01FTSB3
+ZQ0KPiBnZXQNCj4gdGhlIGZvbGxvd2luZyBidWlsZCBlcnJvcjoNCj4gDQo+IGxkOiBkcml2ZXJz
+L25ldC9ldGhlcm5ldC94aWxpbngveGlsaW54X2F4aWVuZXRfbWFpbi5vOiBpbiBmdW5jdGlvbg0K
+PiBgYXhpZW5ldF9wcm9iZSc6DQo+IGRyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC94aWxpbnhf
+YXhpZW5ldF9tYWluLmM6MTY4MDogdW5kZWZpbmVkIHJlZmVyZW5jZQ0KPiB0byBgZGV2bV9pb3Jl
+bWFwX3Jlc291cmNlJw0KPiBsZDogZHJpdmVycy9uZXQvZXRoZXJuZXQveGlsaW54L3hpbGlueF9h
+eGllbmV0X21haW4uYzoxNzc5OiB1bmRlZmluZWQNCj4gcmVmZXJlbmNlIHRvIGBkZXZtX2lvcmVt
+YXBfcmVzb3VyY2UnDQo+IGxkOiBkcml2ZXJzL25ldC9ldGhlcm5ldC94aWxpbngveGlsaW54X2F4
+aWVuZXRfbWFpbi5jOjE3ODk6IHVuZGVmaW5lZA0KPiByZWZlcmVuY2UgdG8gYGRldm1faW9yZW1h
+cF9yZXNvdXJjZScNCj4gDQo+IEZpeCB0aGUgYnVpbGQgZXJyb3IgYnkgYWRkaW5nIHRoZSB1bnNw
+ZWNpZmllZCBkZXBlbmRlbmN5Lg0KPiANCj4gUmVwb3J0ZWQtYnk6IEJyZW5kYW4gSGlnZ2lucyA8
+YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQnJlbmRhbiBIaWdn
+aW5zIDxicmVuZGFuaGlnZ2luc0Bnb29nbGUuY29tPg0KUmV2aWV3ZWQtYnk6IFJhZGhleSBTaHlh
+bSBQYW5kZXkgPHJhZGhleS5zaHlhbS5wYW5kZXlAeGlsaW54LmNvbT4NClRoYW5rcyENCg0KPiAt
+LS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC9LY29uZmlnIHwgMSArDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25l
+dC9ldGhlcm5ldC94aWxpbngvS2NvbmZpZw0KPiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlu
+eC9LY29uZmlnDQo+IGluZGV4IDYzMDRlYmQ4YjVjNjkuLmIxYTI4NWU2OTM3NTYgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC9LY29uZmlnDQo+ICsrKyBiL2RyaXZl
+cnMvbmV0L2V0aGVybmV0L3hpbGlueC9LY29uZmlnDQo+IEBAIC0yNSw2ICsyNSw3IEBAIGNvbmZp
+ZyBYSUxJTlhfRU1BQ0xJVEUNCj4gDQo+ICBjb25maWcgWElMSU5YX0FYSV9FTUFDDQo+ICAJdHJp
+c3RhdGUgIlhpbGlueCAxMC8xMDAvMTAwMCBBWEkgRXRoZXJuZXQgc3VwcG9ydCINCj4gKwlkZXBl
+bmRzIG9uIEhBU19JT01FTQ0KPiAgCXNlbGVjdCBQSFlMSU5LDQo+ICAJLS0taGVscC0tLQ0KPiAg
+CSAgVGhpcyBkcml2ZXIgc3VwcG9ydHMgdGhlIDEwLzEwMC8xMDAwIEV0aGVybmV0IGZyb20gWGls
+aW54IGZvciB0aGUNCj4gLS0NCj4gMi4yNC4wLjUyNS5nOGYzNmEzNTRhZS1nb29nDQoNCg==
