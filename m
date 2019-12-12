@@ -2,106 +2,87 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3507C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E37EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0382173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:02:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Sj0Wn+YL"
+	by mail.kernel.org (Postfix) with ESMTP id CB7E222527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:03:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576166596;
+	bh=hfABrdLSbH0bF01p271neeli3FQecfhJg4XVLx7Gzt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e6SAPDW0cecyQOV3kz+Oad94jwVzvxgAzQWNIks/juiVdXNXzV2LU8tEswf6NnN13
+	 IyUUuYVP4TPopEEYet4acdXfd65rnpe+07FPQlVGyvDyYgWGJ12J/SU2sMPT5fUIiB
+	 NMLft84Uh1OVS006KWQWsv/f+vIAhV8zOoPDwvAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfLLQC1 (ORCPT
+        id S1729817AbfLLQDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:02:27 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:46576 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbfLLQCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:02:25 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCG0o5u121018;
-        Thu, 12 Dec 2019 16:02:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=f7AVG1lyL0yNfd+//JV/XgNkQxufThH6oQbBgh5a/Ww=;
- b=Sj0Wn+YL4klICcznGm6I71xp21V+X5XUBe6wB6k6sOlBPMO9KyhfBYA08sxyElTN8AGb
- g//51JVWibxwezuxAndAOvGoqx0Amnr4EKxGsiPL5GWEPfcGeC3iBrfCI69dRJr/AIpv
- dvazGiJxCvLSViJ8cQAyF4yPhVkx+nxCQna2x2Glsg/ieS3bMVesGfzq/71PoU5jDTyv
- /SMvldgrHrc7Fnvk1ihMdpgfbOCK/GuKQP4xzp17iWYvirVOm6QAfWt20qMdYjwYIh/i
- al+KeiXzEx37QzYyPpUcRZYgWeX2WfMc7fzlaxDzCYNfPHMIa8LiFWMatkEbPIjjxx8N Dg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wr4qruvmd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 16:02:18 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCFsKHv101098;
-        Thu, 12 Dec 2019 16:00:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2wums9kqwk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 16:00:17 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCG0GdA008664;
-        Thu, 12 Dec 2019 16:00:16 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Dec 2019 08:00:16 -0800
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id B081A6A0119; Thu, 12 Dec 2019 11:03:45 -0500 (EST)
-Date:   Thu, 12 Dec 2019 11:03:45 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 0/7] Introduce support for guest CET feature
-Message-ID: <20191212160345.GA13420@char.us.oracle.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
+        Thu, 12 Dec 2019 11:03:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfLLQDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:03:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87C22173E;
+        Thu, 12 Dec 2019 16:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576166595;
+        bh=hfABrdLSbH0bF01p271neeli3FQecfhJg4XVLx7Gzt0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xoPRm99RqXB4G6cle4WwUEdyyR/xvWEN2/Pv6Q1/dEW7dcz94kHXPQUoWAlzNwVf6
+         CfAhr/QJHu8bLnf8dLLvaKAuEubbTEUmyqMocdFxvWs8wxkeif566rlC19JCkNCBuo
+         1ZP/hc43GyOhkAPxmlTplERgVf0xW5BcW91kOcy0=
+Date:   Thu, 12 Dec 2019 17:03:12 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Scott Schafer <schaferjscott@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, GR-Linux-NIC-Dev@marvell.com,
+        Manish Chopra <manishc@marvell.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 11/23] staging: qlge: Fix CHECK: braces {} should be
+ used on all arms of this statement
+Message-ID: <20191212160312.GA1672580@kroah.com>
+References: <cover.1576086080.git.schaferjscott@gmail.com>
+ <0e1fc1a16725094676fdab63d3a24a986309a759.1576086080.git.schaferjscott@gmail.com>
+ <20191212121206.GB1895@kadam>
+ <20191212150200.GA8219@karen>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191101085222.27997-1-weijiang.yang@intel.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912120124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912120125
+In-Reply-To: <20191212150200.GA8219@karen>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 04:52:15PM +0800, Yang Weijiang wrote:
-> Control-flow Enforcement Technology (CET) provides protection against
-> Return/Jump-Oriented Programming (ROP/JOP) attack. It includes two
-> sub-features: Shadow Stack (SHSTK) and Indirect Branch Tracking (IBT).
+On Thu, Dec 12, 2019 at 09:02:00AM -0600, Scott Schafer wrote:
+> On Thu, Dec 12, 2019 at 03:12:06PM +0300, Dan Carpenter wrote:
+> > On Wed, Dec 11, 2019 at 12:12:40PM -0600, Scott Schafer wrote:
+> > > @@ -351,8 +352,9 @@ static int ql_aen_lost(struct ql_adapter *qdev, struct mbox_params *mbcp)
+> > >  	mbcp->out_count = 6;
+> > >  
+> > >  	status = ql_get_mb_sts(qdev, mbcp);
+> > > -	if (status)
+> > > +	if (status) {
+> > >  		netif_err(qdev, drv, qdev->ndev, "Lost AEN broken!\n");
+> > > +	}
+> > >  	else {
+> > 
+> > The close } should be on the same line as the else.
+> > 
+> > >  		int i;
+> > >  
+> > 
+> > regards,
+> > dan carpenter
 > 
-> KVM change is required to support guest CET feature.
-> This patch serial implemented CET related CPUID/XSAVES enumeration, MSRs
-> and vmentry/vmexit configuration etc.so that guest kernel can setup CET
-> runtime infrastructure based on them. Some CET MSRs and related feature
-> flags used reference the definitions in kernel patchset.
-> 
-> CET kernel patches is here:
-> https://lkml.org/lkml/2019/8/13/1110
-> https://lkml.org/lkml/2019/8/13/1109
+> this was fixed in patch 22
 
-Is there a git tree with all of them against v5.5-rc1 (so all three series)?
-I tried your github tree: https://github.com/yyu168/linux_cet.git #cet
-but sadly that does not apply against 5.5-rc1 :-(
+Don't add a warning that you later fix up :)
 
-Thanks!
