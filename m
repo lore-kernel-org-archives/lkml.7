@@ -2,216 +2,169 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D532C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DAAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D59520663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576151035;
-	bh=qPXUENaXmxO/rCa+6s1+YTi6pnox2/cBw4zCaYCcn+M=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=OgkTCnoLLAsTtbM9nrufmOGbj+f4LLRw/xG8wHDSn3vYH9kFvGyXd6lvZw/k2SX0g
-	 BEiEL9EJZWhV/Fb41YbeDkCG4ozNkoi0cywVpl4tHCNbtvGWpnCgzaLBad11L98SAQ
-	 Z5v/4caTqmKoRubvcgeyu+2BMAWHMvzRtr53J0kw=
+	by mail.kernel.org (Postfix) with ESMTP id 3C49820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:45:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Dol4+ATh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfLLLny (ORCPT
+        id S1729067AbfLLLpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:43:54 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45000 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbfLLLnx (ORCPT
+        Thu, 12 Dec 2019 06:45:46 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:33957 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726492AbfLLLpq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:43:53 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ifMsn-0000U9-7R; Thu, 12 Dec 2019 12:43:49 +0100
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 12 Dec 2019 06:45:46 -0500
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 87F22730;
+        Thu, 12 Dec 2019 06:45:44 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute7.internal (MEProxy); Thu, 12 Dec 2019 06:45:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=4yy/mf
+        yeqp/ssdzr+XsQXJ2B1nLiIhHBkihSE4FidX0=; b=Dol4+AThWANER7tsxzPEIX
+        NW95ZDS1On6p0s9gqy4Gl8G1mZiTbgVO6rzJWXH2ZalqRSYzwcnLkPMI4wT2MiiS
+        E/GcCfD3vAEX1/uJwYBOUKJVzdZzcAUX0h6Zqw27/XU9zsTQFLjNQ1YUQ6Sjil3g
+        Q/8xsSUdABrDLbSF9gCUmCQVcXzBRxkV8ydh1idwRhihFQXhwqavB1CQtQ41Om/j
+        t0czsZLMEa//0nvlthshpnPvOxYI4u8L+MGMHKMwfG64YJJMI0D+5Hlbnv/V7NVC
+        ijbmm7osCWB4Xgg+ugPxTmgDdU0RykE87CgKy6DvBmVRWRlDKVp5q6mNuCx0Tc4g
+        ==
+X-ME-Sender: <xms:ZyjyXYT4hKc7n74_Mb1ily2ziyno86CJEyi76_KK4QCDou1WmLhMHw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeljedgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucfkphepledurdeihedrfeegrdef
+    feenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslh
+    gvthhhihhnghhslhgrsgdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:ZyjyXQN2LSZm3P8Qn-aC1l2ffQQJ-bkZ3XjLdyPCwDHAvcbi1rlQCg>
+    <xmx:ZyjyXdVvkNAwKbGOU1RrNtj0xs9PCGz30doeHRp75SXjZt7R50AxCg>
+    <xmx:ZyjyXTgdRd2ps4gOzLIcUuLAP6C6LKhm9AoXAOPFBmLK4Oj_D4oCFg>
+    <xmx:aCjyXfPswloc9LIWbcxc3IW2s-mqTdxiXJccd0Ri7JflafI9qobXQg>
+Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id F267C3060130;
+        Thu, 12 Dec 2019 06:45:42 -0500 (EST)
+Date:   Thu, 12 Dec 2019 12:45:40 +0100
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Suwan Kim <suwan.kim027@gmail.com>
+Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
+Message-ID: <20191212114540.GV11116@mail-itl>
+References: <20191212052841.6734-1-suwan.kim027@gmail.com>
+ <20191212052841.6734-3-suwan.kim027@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Dec 2019 11:43:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
-        <kvmarm@lists.cs.columbia.edu>
-In-Reply-To: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
-References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
-Message-ID: <bdb9e0149de9d2a5020ddbdd8a4033b3@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, will@kernel.org, kvmarm@lists.cs.columbia.edu
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CMEQapY8OuP5ao1l"
+Content-Disposition: inline
+In-Reply-To: <20191212052841.6734-3-suwan.kim027@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 10:14, Anshuman Khandual wrote:
-> This adds basic building blocks required for ISAR6 CPU ID register 
-> which
-> identifies support for various instruction implementation on AArch32 
-> state.
 
-nit: the register name is ID_ISAR6.
+--CMEQapY8OuP5ao1l
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
 
->
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kvmarm@lists.cs.columbia.edu
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+On Thu, Dec 12, 2019 at 02:28:41PM +0900, Suwan Kim wrote:
+> If a transaction error happens in vhci_recv_ret_submit(), event
+> handler closes connection and changes port status to kick hub_event.
+> Then hub tries to flush the endpoint URBs, but that causes infinite
+> loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
+> "vhci_priv" in vhci_urb_dequeue() was already released by
+> vhci_recv_ret_submit() before a transmission error occurred. Thus,
+> vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
+> continuously calls vhci_urb_dequeue().
+>=20
+> The root cause of this issue is that vhci_recv_ret_submit()
+> terminates early without giving back URB when transaction error
+> occurs in vhci_recv_ret_submit(). That causes the error URB to still
+> be linked at endpoint list without =E2=80=9Cvhci_priv".
+>=20
+> So, in the case of trasnaction error in vhci_recv_ret_submit(),
+                       ^^^ typo
+
+> unlink URB from the endpoint, insert proper error code in
+> urb->status and give back URB.
+>=20
+> Reported-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab=
+=2Ecom>
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+
+Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+
 > ---
->  arch/arm64/include/asm/cpu.h    | 1 +
->  arch/arm64/include/asm/sysreg.h | 9 +++++++++
->  arch/arm64/kernel/cpufeature.c  | 7 ++++++-
->  arch/arm64/kernel/cpuinfo.c     | 1 +
->  arch/arm64/kvm/sys_regs.c       | 2 +-
->  5 files changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/cpu.h 
-> b/arch/arm64/include/asm/cpu.h
-> index d72d995..b4a4053 100644
-> --- a/arch/arm64/include/asm/cpu.h
-> +++ b/arch/arm64/include/asm/cpu.h
-> @@ -39,6 +39,7 @@ struct cpuinfo_arm64 {
->  	u32		reg_id_isar3;
->  	u32		reg_id_isar4;
->  	u32		reg_id_isar5;
-> +	u32		reg_id_isar6;
->  	u32		reg_id_mmfr0;
->  	u32		reg_id_mmfr1;
->  	u32		reg_id_mmfr2;
-> diff --git a/arch/arm64/include/asm/sysreg.h
-> b/arch/arm64/include/asm/sysreg.h
-> index 6db3a9b..4fd3327 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -146,6 +146,7 @@
->  #define SYS_ID_ISAR4_EL1		sys_reg(3, 0, 0, 2, 4)
->  #define SYS_ID_ISAR5_EL1		sys_reg(3, 0, 0, 2, 5)
->  #define SYS_ID_MMFR4_EL1		sys_reg(3, 0, 0, 2, 6)
-> +#define SYS_ID_ISAR6_EL1		sys_reg(3, 0, 0, 2, 7)
->
->  #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
->  #define SYS_MVFR1_EL1			sys_reg(3, 0, 0, 3, 1)
-> @@ -683,6 +684,14 @@
->  #define ID_ISAR5_AES_SHIFT		4
->  #define ID_ISAR5_SEVL_SHIFT		0
->
-> +#define ID_ISAR6_JSCVT_SHIFT		0
-> +#define ID_ISAR6_DP_SHIFT		4
-> +#define ID_ISAR6_FHM_SHIFT		8
-> +#define ID_ISAR6_SB_SHIFT		12
-> +#define ID_ISAR6_SPECRES_SHIFT		16
-> +#define ID_ISAR6_BF16_SHIFT		20
-> +#define ID_ISAR6_I8MM_SHIFT		24
+>  drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
+> index 33f8972ba842..dc26acad6baf 100644
+> --- a/drivers/usb/usbip/vhci_rx.c
+> +++ b/drivers/usb/usbip/vhci_rx.c
+> @@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *=
+vdev,
+>  	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
+> =20
+>  	/* recv transfer buffer */
+> -	if (usbip_recv_xbuff(ud, urb) < 0)
+> -		return;
+> +	if (usbip_recv_xbuff(ud, urb) < 0) {
+> +		urb->status =3D -EPIPE;
+> +		goto error;
+> +	}
+> =20
+>  	/* recv iso_packet_descriptor */
+> -	if (usbip_recv_iso(ud, urb) < 0)
+> -		return;
+> +	if (usbip_recv_iso(ud, urb) < 0) {
+> +		urb->status =3D -EPIPE;
+> +		goto error;
+> +	}
+> =20
+>  	/* restore the padding in iso packets */
+>  	usbip_pad_iso(ud, urb);
+> =20
+> +error:
+>  	if (usbip_dbg_flag_vhci_rx)
+>  		usbip_dump_urb(urb);
+> =20
 
-I couldn't find the last two items in the E.a revision of the ARMv8 
-ARM.
-I guess they are for post 8.5 revisions of the architecture?
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
 
-> +
->  #define MVFR0_FPROUND_SHIFT		28
->  #define MVFR0_FPSHVEC_SHIFT		24
->  #define MVFR0_FPSQRT_SHIFT		20
-> diff --git a/arch/arm64/kernel/cpufeature.c 
-> b/arch/arm64/kernel/cpufeature.c
-> index f344cea..3b9ac8b 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -346,7 +346,7 @@ static const struct arm64_ftr_bits ftr_zcr[] = {
->   * Common ftr bits for a 32bit register with all hidden, strict
->   * attributes, with 4bit feature fields and a default safe value of
->   * 0. Covers the following 32bit registers:
-> - * id_isar[0-4], id_mmfr[1-3], id_pfr1, mvfr[0-1]
-> + * id_isar[0-4, 6], id_mmfr[1-3], id_pfr1, mvfr[0-1]
->   */
->  static const struct arm64_ftr_bits ftr_generic_32bits[] = {
->  	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
-> @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
->  	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
->  	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
->  	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
-> +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
->
->  	/* Op1 = 0, CRn = 0, CRm = 3 */
->  	ARM64_FTR_REG(SYS_MVFR0_EL1, ftr_generic_32bits),
-> @@ -603,6 +604,7 @@ void __init init_cpu_features(struct 
-> cpuinfo_arm64 *info)
->  		init_cpu_ftr_reg(SYS_ID_ISAR3_EL1, info->reg_id_isar3);
->  		init_cpu_ftr_reg(SYS_ID_ISAR4_EL1, info->reg_id_isar4);
->  		init_cpu_ftr_reg(SYS_ID_ISAR5_EL1, info->reg_id_isar5);
-> +		init_cpu_ftr_reg(SYS_ID_ISAR6_EL1, info->reg_id_isar6);
->  		init_cpu_ftr_reg(SYS_ID_MMFR0_EL1, info->reg_id_mmfr0);
->  		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
->  		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
-> @@ -756,6 +758,8 @@ void update_cpu_features(int cpu,
->  					info->reg_id_isar4, boot->reg_id_isar4);
->  		taint |= check_update_ftr_reg(SYS_ID_ISAR5_EL1, cpu,
->  					info->reg_id_isar5, boot->reg_id_isar5);
-> +		taint |= check_update_ftr_reg(SYS_ID_ISAR6_EL1, cpu,
-> +					info->reg_id_isar6, boot->reg_id_isar6);
->
->  		/*
->  		 * Regardless of the value of the AuxReg field, the AIFSR, ADFSR, 
-> and
-> @@ -834,6 +838,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
->  	read_sysreg_case(SYS_ID_ISAR3_EL1);
->  	read_sysreg_case(SYS_ID_ISAR4_EL1);
->  	read_sysreg_case(SYS_ID_ISAR5_EL1);
-> +	read_sysreg_case(SYS_ID_ISAR6_EL1);
->  	read_sysreg_case(SYS_MVFR0_EL1);
->  	read_sysreg_case(SYS_MVFR1_EL1);
->  	read_sysreg_case(SYS_MVFR2_EL1);
-> diff --git a/arch/arm64/kernel/cpuinfo.c 
-> b/arch/arm64/kernel/cpuinfo.c
-> index 10121f5..6005d38 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -362,6 +362,7 @@ static void __cpuinfo_store_cpu(struct
-> cpuinfo_arm64 *info)
->  		info->reg_id_isar3 = read_cpuid(ID_ISAR3_EL1);
->  		info->reg_id_isar4 = read_cpuid(ID_ISAR4_EL1);
->  		info->reg_id_isar5 = read_cpuid(ID_ISAR5_EL1);
-> +		info->reg_id_isar6 = read_cpuid(ID_ISAR6_EL1);
->  		info->reg_id_mmfr0 = read_cpuid(ID_MMFR0_EL1);
->  		info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
->  		info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 7dadd24..a6b8ca1 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1424,7 +1424,7 @@ static const struct sys_reg_desc 
-> sys_reg_descs[] = {
->  	ID_SANITISED(ID_ISAR4_EL1),
->  	ID_SANITISED(ID_ISAR5_EL1),
->  	ID_SANITISED(ID_MMFR4_EL1),
-> -	ID_UNALLOCATED(2,7),
-> +	ID_SANITISED(ID_ISAR6_EL1),
->
->  	/* CRm=3 */
->  	ID_SANITISED(MVFR0_EL1),
+--CMEQapY8OuP5ao1l
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Otherwise,
+-----BEGIN PGP SIGNATURE-----
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl3yKGQACgkQ24/THMrX
+1yyGhwf6Ao9XCbDr3/5+tsoBrYZRGAUiFToowB3TYnozElhzWd6C324buzzhKOAI
+qQOTLtxe75OamWTSlJgdzPscrPL2e2vmu5zvmJm0qdWaW3+5wOT8SqLt0eXhpLx/
+PF9Yyw/cUaXWSlYNZVcYtVC1BaY0Qrnzcb/Pwb90N8QtbUVIexDMZqyJQf9TCxx0
+7QppyGr1tA+jT2vtJEEjVpRG978vd4Ma2aNMod3E34pjzGJJ+2p+igdZ9NrIKMwj
++BFIKqLXjsmby0WJskDGFQcVqH8Yw116BshrAiSxNcrrviqonGrif41KcqWG54eQ
+m8UwtNUUAleiStYns1hb0D1OoQjXTA==
+=+pPz
+-----END PGP SIGNATURE-----
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+--CMEQapY8OuP5ao1l--
