@@ -2,103 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA58C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C3CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F32C205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:55:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EfCot0cP"
+	by mail.kernel.org (Postfix) with ESMTP id 08B822073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfLLPzO (ORCPT
+        id S1729709AbfLLPzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:55:14 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:48925 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729509AbfLLPzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:55:14 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47Ydfl2H6MzB09ZV;
-        Thu, 12 Dec 2019 16:55:11 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=EfCot0cP; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id D9rWWWTshkIZ; Thu, 12 Dec 2019 16:55:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47Ydfl1CmQzB09ZT;
-        Thu, 12 Dec 2019 16:55:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576166111; bh=PJztFoqZeZST1HMzqILi2xyKFqgX3RxPFx1/4+TG/tk=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=EfCot0cPMLRcALyzGy3x1WzkPa0APIh0auRG5pNwxZo4b8aMF1/1AuW51bYPESZ9Y
-         ziBgDeI5oE/4VJLWfQJzArHXiDhT/RM2jU9+Mlon2y9KpuYpFaPvE9JRTUFmP0hPUw
-         SWOnTZe7prONi+zR7dyM5qmsxnh/nNhDVTJJhZm4=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B10348B872;
-        Thu, 12 Dec 2019 16:55:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 9AsI8caOxSn5; Thu, 12 Dec 2019 16:55:12 +0100 (CET)
-Received: from [172.25.230.112] (po15451.idsi0.si.c-s.fr [172.25.230.112])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 935D68B860;
-        Thu, 12 Dec 2019 16:55:12 +0100 (CET)
-Subject: Re: [PATCH v3 1/3] kasan: define and use MAX_PTRS_PER_* for early
- shadow tables
-To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com,
-        bsingharora@gmail.com
-References: <20191212151656.26151-1-dja@axtens.net>
- <20191212151656.26151-2-dja@axtens.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <65a52c58-4409-de89-6f5d-8797d0ebca74@c-s.fr>
-Date:   Thu, 12 Dec 2019 16:55:12 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 12 Dec 2019 10:55:23 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59989 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729540AbfLLPzX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:55:23 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQo8-0002KX-2S; Thu, 12 Dec 2019 16:55:16 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQo5-000678-TI; Thu, 12 Dec 2019 16:55:13 +0100
+Date:   Thu, 12 Dec 2019 16:55:13 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191212155513.fevajupxi6omphzf@pengutronix.de>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <CACRpkda4PFA=99u33xsXzQND1FaP=8GXGRQULngcd5a=zFepXg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212151656.26151-2-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkda4PFA=99u33xsXzQND1FaP=8GXGRQULngcd5a=zFepXg@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 16:51:05 up 27 days,  7:09, 36 users,  load average: 0.12, 0.17,
+ 0.13
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-
-Le 12/12/2019 à 16:16, Daniel Axtens a écrit :
-> powerpc has a variable number of PTRS_PER_*, set at runtime based
-> on the MMU that the kernel is booted under.
+On 19-12-12 16:08, Linus Walleij wrote:
+> On Wed, Dec 11, 2019 at 6:09 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 > 
-> This means the PTRS_PER_* are no longer constants, and therefore
-> breaks the build.
+> > I discussed it with a colleague again and he mentioned that pinctrl
+> > should be named pinctrl instead it should be named padctrl.
 > 
-> Define default MAX_PTRS_PER_*s in the same style as MAX_PTRS_PER_P4D.
-> As KASAN is the only user at the moment, just define them in the kasan
-> header, and have them default to PTRS_PER_* unless overridden in arch
-> code.
+> Quoting Documentation/driver-api/pinctl.rst:
 > 
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Suggested-by: Balbir Singh <bsingharora@gmail.com>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
+> (...)
+> Definition of PIN:
+> 
+> - PINS are equal to pads, fingers, balls or whatever packaging input or
+>   output line you want to control and these are denoted by unsigned integers
+>   in the range 0..maxpin.
+> (...)
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Okay there is the definition.
 
-> ---
->   include/linux/kasan.h | 18 +++++++++++++++---
->   mm/kasan/init.c       |  6 +++---
->   2 files changed, 18 insertions(+), 6 deletions(-)
+> > We don't
+> > reconfigure the pad to a other function it is still a device general
+> > purpose input pad. The hw-signal flow goes always trough the gpio block
+> > so one argument more for my solution. Also we don't configure the "pad"
+> > to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
+> > function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
+> > Instead we tell the regulator to use _this_ GPIO e.g. for voltage
+> > selection so we go the other way around. My last argument why pinctrl
+> > isn't the correct place is that the GPIO1 can be used for
+> > regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
+> > have different states which is invalid IMHO.
+> 
+> Yeah it is just one of these cases where the silicon designer pulled
+> a line of polysilicone over to the regulator enable signal and put a
+> switch on it and say "so you can also enable the regulator
+> with a signal from here", it can be used in parallel with anything
+> else, which is especially messy.
+
+I didn't say that the design isn't messy ;) I just wanna make the right
+abstraction and IMHO this is the correct abstraction.
+
+Regards,
+  Marco
+
+> Special cases require special handling, since the electronic design
+> of this thing is a bit Rube Goldberg.
+> 
+> Yours,
+> Linus Walleij
 > 
 
-Christophe
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
