@@ -2,74 +2,132 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC84DC2D0C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E2BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775C224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576124049;
-	bh=0mpDmJeRph5V4WCjDlSYPIPApLhVkthD1RCkFHUF3VA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=LGoqGvMkYdRDp6yLM3nsTBpYxfRFiuSxjsNypFLBv0QDCEFUW9iLHlFl0DOlWiCd0
-	 jz9pUgrJ1jrDh9qg6DqC/Q3bNXlkbMGMXlDgwv/99wm6s+wKVKM0PXeyFNAu1o+Wtm
-	 v/Pm91i6Al4CmffMnQXkl0O7ahN4LLWX94TyW2lU=
+	by mail.kernel.org (Postfix) with ESMTP id 7EBE2214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:26:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e7LFQ1Vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfLLEOI (ORCPT
+        id S1727846AbfLLE0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 23:14:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40976 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 23:26:19 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37931 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbfLLEOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 23:14:08 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727541AbfLLE0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 23:26:18 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BEF7222C4;
-        Thu, 12 Dec 2019 04:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576124047;
-        bh=0mpDmJeRph5V4WCjDlSYPIPApLhVkthD1RCkFHUF3VA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=mozfCL26QoAKfeRTZyfTvbvLMpiHZ1vFRCq7AxvyzrYYpkR/kLRjWkFpdpH4Q1SLq
-         S9zmBnTpnmxEWEdukHa37XDxvNxDqXT9hC7edVpvBe/PYUCHC9dTSFZqOqpwBhsSbl
-         7+uYC9+AMMgeimI/nPQiSstsmQ+TMLvtMI9fxCkc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DEEE5352035F; Wed, 11 Dec 2019 20:14:06 -0800 (PST)
-Date:   Wed, 11 Dec 2019 20:14:06 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     kbuild-all@lists.01.org, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, joel@joelfernandes.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rcu@vger.kernel.org, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] fs: nfs: dir.c: Fix sparse error
-Message-ID: <20191212041406.GT2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <201912110621.WJ6oENgf%lkp@intel.com>
- <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YLMp2JKDz9s4Y;
+        Thu, 12 Dec 2019 15:26:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576124774;
+        bh=Eqai7+WQWBkKaqBz7HdJtgVKHhsjgX3gWrQDtFd14uU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e7LFQ1VfcShH+XZ+HvM54md4KWtORBdcZ7ZwN8Wi42bZYbTZ4zGtTa9NXYPWF3clT
+         h7XS60jIpFYNd5T3gY2f14M0C3f8cQxYURxdMNi1mbcvcE/s0vG5B9ncZb7yCfTS0v
+         1AOmM7S1k1h5e5fGNGSzplAYgdnQ1VN1ApIbbapnaUVtCrknw9w8An3gVvBp101pEi
+         xKyCjdCiYI86wG6D3M10iibP0XR43nRV2JppJzLQpTIkk6PxwZn1PGuHKWon6U1l8f
+         2lMBWL+0fyQavmfuT/2OiVmu2lsWSTs7qiHDt/RfunWFuKWa3YubJpDPnJYBuVsX4T
+         ufu1QTO4J3ntA==
+Date:   Thu, 12 Dec 2019 15:26:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rcu tree
+Message-ID: <20191212152613.7ad30842@canb.auug.org.au>
+In-Reply-To: <20191212040737.GR2889@paulmck-ThinkPad-P72>
+References: <20191212134516.3b5f4a4e@canb.auug.org.au>
+        <20191212040737.GR2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_/Re48kZjn=vaHox2Q=VY6NBy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 01:18:42PM +0530, madhuparnabhowmik04@gmail.com wrote:
-> This build error is because the macro list_tail_rcu() is
-> not yet present in the mainline kernel.
-> 
-> This patch is dependent on the patch : https://lore.kernel.org/linux-kernel-mentees/CAF65HP2SC89k9HJZfcLgeOMRPBKRyasCMiLo2gZgBKycjHuU6A@mail.gmail.com/T/#t
+--Sig_/Re48kZjn=vaHox2Q=VY6NBy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If the NFS folks are OK with it, I would be happy to take it in -rcu,
-where the list_tail_rcu() patch is currently located.
+Hi Paul,
 
-							Thanx, Paul
+On Wed, 11 Dec 2019 20:07:37 -0800 "Paul E. McKenney" <paulmck@kernel.org> =
+wrote:
+>
+> On Thu, Dec 12, 2019 at 01:45:16PM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> >=20
+> > After merging the rcu tree, today's linux-next build (x86_64 allmodconf=
+ig)
+> > failed like this:
+> >=20
+> > drivers/misc/watch_queue.c: In function 'watch_queue_set_filter':
+> > drivers/misc/watch_queue.c:526:2: error: implicit declaration of functi=
+on 'rcu_swap_protected' [-Werror=3Dimplicit-function-declaration]
+> >   526 |  rcu_swap_protected(wqueue->filter, wfilter,
+> >       |  ^~~~~~~~~~~~~~~~~~
+> >=20
+> > Caused by commit
+> >=20
+> >   af8c9224182e ("rcu: Remove rcu_swap_protected()")
+> >=20
+> > interacting with commit
+> >=20
+> >   fe78d401ca6b ("General notification queue with user mmap()'able ring =
+buffer")
+> >=20
+> > from the keys tree.
+> >=20
+> > I have added the following merge fix patch for today:
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Thu, 12 Dec 2019 13:37:52 +1100
+> > Subject: [PATCH] rcu: fix up for "Remove rcu_swap_protected()"
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au> =20
+>=20
+> Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+Thanks.
+
+> I would be happy to take this if desired, but it would probably be better
+> for this to be applied directly to the keys tree.  Either way, please let
+> me know.
+
+Well, you can't take this fix up without merging the keys tree ... and
+the keys tree is currently in flux so it should be easy for it to be
+applied there since rcu_replace_pointer() already exists in Linus'
+tree, right?.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Re48kZjn=vaHox2Q=VY6NBy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xwWUACgkQAVBC80lX
+0GzCOgf7BbFJvolBAPWDOWrgwhfUfMapwwP5QE3aI7cYu0J2cWjEzbllDe5rgnfe
+3XpBtxZvs6wHs+g3Hnu+VwNY8bX6JzZ3pDsS4f+3vpotS72ZdTnenXM4XLYncb60
+h5AQ0Rzxr7xVxVBPpsdNx09W7zmquL/ZtC5s4+KEt/1d2+bavVByzVXZEZWuQcqY
+79AeTsPjCDX7map9eEqmFK8dsrKQO2w4/i327LmmSQBmalImHwmPtAoFY19C2MNr
+rAvmVLDwVZjMxaH2HumnhNEIs18QI7nEKHOaIABgOMxpwIJ6kyVqAhQ4Lp2PGlE9
+W6g6mMOGDJiXADlh09bMi5gkIjbCCA==
+=tcPR
+-----END PGP SIGNATURE-----
+
+--Sig_/Re48kZjn=vaHox2Q=VY6NBy--
