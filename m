@@ -2,132 +2,90 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84650C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23036C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BE321655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD0B22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:15:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o41nx2Fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfLLPPD (ORCPT
+        id S1729235AbfLLPPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:15:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34634 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728654AbfLLPPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:15:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A95F9ADDF;
-        Thu, 12 Dec 2019 15:15:00 +0000 (UTC)
-Subject: Re: [RFC 04/25] spi: gpio: Implement LSB First bitbang support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-5-afaerber@suse.de>
- <CAMuHMdWdxJ9AaWhyCW-u8fCpXSDCPd-D6Dx129SF5nRssZsK=g@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <9b4b6287-c1d9-1b41-88a8-7ac9fe222642@suse.de>
-Date:   Thu, 12 Dec 2019 16:14:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 10:15:31 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40624 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbfLLPPb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:15:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fqIAUYObIqhJeHpHjDLZJpvGSDr/AnjM2VLcw/JukHs=; b=o41nx2FahlOPNHfP7Q0L1ZpCw
+        WuIg0y8CiVgeOACrHgtzNu9jKnfWi55H3b3Qvd+T2Ckldvb7rZxsOeqkBiXhnq4gVfeeRpcQkntU/
+        LiBZpxsxl9jZdVx5bzEQvr1b5oet6Z+3/wrBzyzXOvN0f8eUOnBTiH+Lukt2WZyVCwo79apL7Ues3
+        /CqS8NOVf+I+PqUxBYweYwB7AFrP/sfhP6VSf4JoIA8p3Ri3JjmVYCCrKYXJUz8BZD2FMvsqEHzAf
+        fM5V8ZZAGOMjMn0PDWFOfIssp06hi/aD2oDU+F5fHL9UUVkzjfYbBm0MgL7TFUmUmOCVyDqO5dCFs
+        l48pgnpLQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifQBU-0002pM-Jb; Thu, 12 Dec 2019 15:15:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8BF5300F29;
+        Thu, 12 Dec 2019 16:13:58 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 10DD22B195AE5; Thu, 12 Dec 2019 16:15:19 +0100 (CET)
+Date:   Thu, 12 Dec 2019 16:15:19 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
+ kthread
+Message-ID: <20191212151519.GA2827@hirez.programming.kicks-ass.net>
+References: <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com>
+ <20191211224617.GE19256@dread.disaster.area>
+ <20191212101031.GV2827@hirez.programming.kicks-ass.net>
+ <20191212150737.GC21797@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWdxJ9AaWhyCW-u8fCpXSDCPd-D6Dx129SF5nRssZsK=g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212150737.GC21797@linux.vnet.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-Am 12.12.19 um 09:40 schrieb Geert Uytterhoeven:
-> On Thu, Dec 12, 2019 at 4:41 AM Andreas Färber <afaerber@suse.de> wrote:
->> Add support for slave DT property spi-lsb-first, i.e., SPI_LSB_FIRST mode.
->>
->> Duplicate the inline helpers bitbang_txrx_be_cpha{0,1} as LE versions.
->> Make checkpatch.pl happy by changing "unsigned" to "unsigned int".
->>
->> Conditionally call them from all the spi-gpio txrx_word callbacks.
->>
->> Signed-off-by: Andreas Färber <afaerber@suse.de>
+On Thu, Dec 12, 2019 at 08:37:37PM +0530, Srikar Dronamraju wrote:
+> * Peter Zijlstra <peterz@infradead.org> [2019-12-12 11:10:31]:
 > 
-> Thanks for your patch!
-
-NP. I prefer fixing issues at the source over awkward workarounds. :)
-
->> --- a/drivers/spi/spi-gpio.c
->> +++ b/drivers/spi/spi-gpio.c
->> @@ -135,25 +135,37 @@ static inline int getmiso(const struct spi_device *spi)
->>  static u32 spi_gpio_txrx_word_mode0(struct spi_device *spi,
->>                 unsigned nsecs, u32 word, u8 bits, unsigned flags)
->>  {
->> -       return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
->> +       if (unlikely(spi->mode & SPI_LSB_FIRST))
->> +               return bitbang_txrx_le_cpha0(spi, nsecs, 0, flags, word, bits);
->> +       else
->> +               return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
->>  }
+> > 
+> > +static struct sched_entity *
+> > +__pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr);
 > 
-> Duplicating all functions sounds a bit wasteful to me.
+> I think we already have __pick_next_entity in kernel/sched/fair.c
 
-Two functions duplicated, eight function calls duplicated.
-
-> What about reverting the word first, and calling the normal functions?
-> 
->     if (unlikely(spi->mode & SPI_LSB_FIRST)) {
->             if (bits <= 8)
->                     word = bitrev8(word) >> (bits - 8);
->             else if (bits <= 16)
->                     word = bitrev16(word) >> (bits - 16);
->             else
->                     word = bitrev32(word) >> (bits - 32);
->     }
->     return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
-
-Hm, wasn't aware of those helpers, so I opted not to loop over the bits
-for reversing myself, as Thomas Gleixner disliked bit loops in irqchip.
-Performance appeared to be a concern here, too.
-
-Eight functions duplicated then. I don't like that - at least we should
-pack that into an inline helper or macro, to not copy&paste even more
-lines around. Who knows, maybe we'll get 64-bit support at one point?
-
-Do you think it would be acceptable to instead encapsulate this inside
-the _be inline helpers? That would lead the name ad absurdum, of course,
-but we would then need to do it only twice, not eight times.
-
-However, either way would seem to make the LSB code path slower than MSB
-due to the prepended reversal.
-
-Delays are already stubbed out, with open TODOs for further inlining
-functions that are being dispatched today.
-
-So from that angle I don't see a better way than either duplicating the
-functions or using some macro magic to #include the header twice. If we
-wanted to go down that path, we could probably de-duplicate the existing
-two functions, too, but I was trying to err on the cautious side, since
-I don't have setups to test all four code paths myself (and a ton of
-more relevant but less fun patches to flush out ;)).
-
-Regards,
-Andreas
-
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+D'oh... yeah, I just wrote stuff, it never actually got near a compiler.
