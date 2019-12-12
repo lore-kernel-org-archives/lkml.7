@@ -2,150 +2,95 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFE6C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AB0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D315021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnvWkqCI"
+	by mail.kernel.org (Postfix) with ESMTP id 5F20421655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576114417;
+	bh=aSqr1hJWtMMxzd/mwd+f6S41xyu3LdRpaMI+0ZpCGUc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fPLtsTEB8qzut/jOAfWru6DdVlEpeXI9TylTFFYtiAckScGE+Isa+VFbwWEBemjCR
+	 UiX7JOn/tpTxQHfTWF7xeY8OI0dGTcWusYCMU/JO0q7ryi1pJfmEee7fEYeUOJzlUv
+	 bK9Tf6Y4mbcjUmFlU6Z0C2KjvC+sIjLEh8+5uH4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfLLBdV (ORCPT
+        id S1727555AbfLLBdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:33:21 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34677 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfLLBdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:33:21 -0500
-Received: by mail-ot1-f65.google.com with SMTP id a15so769710otf.1;
-        Wed, 11 Dec 2019 17:33:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lzwdJDAmxJY1eABknzBM4VRQbsIRzOn9IbtmF0lZgCU=;
-        b=CnvWkqCIuOLMkvjfdwAteNxGWDSx/41p6Mxfq1pDteizNN4eSX3TrU6hCvEzwzGHlL
-         I2savvk5kobSLwvhb4l+JPtAKAh8/XZ1NmIkNmpROXN7N5lh5J9orwRJDGIkeTp1tL/E
-         m0XcH3/8Eyh4ItkJ/KDVbAMRGKx2OhWPC0JfDvt0vhbj0O+CTVWUWartgVImJ0XYDshT
-         6VTQLpE9QWbAX6CpKEvQHP4K/cDUDi23fUOqxC0tjOkb0AryP2A0X8yURAUt1dvqC22c
-         VwODXc0/eTYZdanR/YwU6TyOywUphf1zXBRPZIf9n5pQBT+I/xGvMyEv/8uJP8s6ftFw
-         EtdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lzwdJDAmxJY1eABknzBM4VRQbsIRzOn9IbtmF0lZgCU=;
-        b=m0jOsNtog8EEZ/u2IZb6wSgEGtX0d3ISa23+XZV8gFjXMQzjYEdkjZ7y/jakWZX9xQ
-         mASGPEG+N1UN1J7TqAM/mVuU0BRX2xdYaYfuxNKinBkAzopV7gQ4WzmQEPgEaUbKomIh
-         l5pFJofALXhNj5hneZBx5R1aBqcmGYos78B3kf2tb6Ii8OHlS0ImNmufbL4wB4gz0CEz
-         UkDzyKiCbTQ5czzdMPeHPAqkV7DxOrn3QlHq1hBrWjwgyMDKdcLWY2v5/JuvuiLn8A7B
-         c0BAqiibI1YqxAoDH43YVuhKwPFGvRJ/YaD5x+ZWNo7srLMKm6zoSJ+Su/h40gz5Gsm9
-         tNOg==
-X-Gm-Message-State: APjAAAX2KS6xmRAwASB3kPJMVQsa2iyFtwBjkALk99+JLSF7wIRx0ILH
-        qsMdjTW7i9fEgzNc1La6ODh0lNPqqiSUQDOekSc=
-X-Google-Smtp-Source: APXvYqx0Veo01LY+lVcztJhE85CJaZ2sZ5n/EcknAKg/M7aXZfNy5+ZipN+IhtT0o3fqlLmnElL+3FhI+5yErdlFwlY=
-X-Received: by 2002:a05:6830:158d:: with SMTP id i13mr5301485otr.33.1576114400042;
- Wed, 11 Dec 2019 17:33:20 -0800 (PST)
+        Wed, 11 Dec 2019 20:33:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41766 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727351AbfLLBdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:33:36 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549D9208C3;
+        Thu, 12 Dec 2019 01:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576114415;
+        bh=aSqr1hJWtMMxzd/mwd+f6S41xyu3LdRpaMI+0ZpCGUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1vpHfeD2zMadp8x5qUWBBf90jxFhkBdc9CaL0TRS1bCzQ1/+U11pfQylXrfw2SK4n
+         /bNtLqWf4qaay373ZTwnNwPcKukmOonId+f2uJANg7NOFiJrLwqAPn15lBN/09g+xD
+         uHd1y5UKet/dkOYTJDRqjZQM0biLerXEEBMqWtYo=
+Date:   Thu, 12 Dec 2019 09:33:24 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: linux-next: build failure after merge of the imx-mxs tree
+Message-ID: <20191212013323.GZ15858@dragon>
+References: <20191212083556.1b98ece7@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191211111628.2955-1-max.hirsch@gmail.com> <20191211162654.GD6622@ziepe.ca>
-In-Reply-To: <20191211162654.GD6622@ziepe.ca>
-From:   Max Hirsch <max.hirsch@gmail.com>
-Date:   Wed, 11 Dec 2019 20:33:10 -0500
-Message-ID: <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
-Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danit Goldberg <danitg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dag Moxnes <dag.moxnes@oracle.com>,
-        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212083556.1b98ece7@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the quick response. This is my first patch, so I want to
-follow the correct protocol. I reran checkpatch after making the
-changes and there were no errors or warnings in the region I changed.
+Hi Stephen,
 
-...
-WARNING: line over 80 characters
-#308: FILE: drivers/infiniband/core/cma.c:308:
-+ return cma_dev->default_roce_tos[port - rdma_start_port(cma_dev->device)]=
-;
+On Thu, Dec 12, 2019 at 08:35:56AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the imx-mxs tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
 
-<<<<<<<<<<<<<<<<<< HERE IS WHERE THE ERROR WAS
+Sorry for the breakage.
 
-WARNING: line over 80 characters
-#495: FILE: drivers/infiniband/core/cma.c:495:
-+ struct cma_multicast *mc =3D container_of(kref, struct cma_multicast, mcr=
-ef);
-...
+> 
+> Error: arch/arm/boot/dts/imx6ull-colibri.dtsi:536.4-5 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[2]: *** [scripts/Makefile.lib:285: arch/arm/boot/dts/imx6ull-colibri-wifi-eval-v3.dtb] Error 1
+> Error: arch/arm/boot/dts/imx6ull-colibri.dtsi:536.4-5 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[2]: *** [scripts/Makefile.lib:285: arch/arm/boot/dts/imx6ull-colibri-eval-v3.dtb] Error 1
+> arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi:422.28-424.7: Warning (graph_endpoint): /soc/aips-bus@2100000/i2c@21a0000/edp-bridge@68/ports/port@2/endpoint: graph connection to node '/panel/port/endpoint' is not bidirectional
+> arch/arm/boot/dts/imx6qdl-zii-rdu2.dtsi:422.28-424.7: Warning (graph_endpoint): /soc/aips-bus@2100000/i2c@21a0000/edp-bridge@68/ports/port@2/endpoint: graph connection to node '/panel/port/endpoint' is not bidirectional
+> 
+> Caused by commit
+> 
+>   e7ebb215cb78 ("ARM: dts: colibri-imx6ull: correct wrong pinmuxing and add comments")
+> 
+> The warning was (probably) introduced by commit
+> 
+>   e79295edf1df ("ARM: dts: imx6: RDU2: link eDP bridge to panel")
 
-I was have read that it is beneficial to make the changes very small.
-I wanted to target a specific checkpatch error. If you believe it
-would be better I can make a patch cleaning up the entire function.
+I have just taken these two commits out.
 
-I can also make a second patch changing ret to a bool. I did not want
-to do that as a part of this patch because: I wanted a VERY small
-change (increase acceptance likelihood), and there is a specific
-protocol for submitting multiple commits in a patch, i.e. ordering
-them correctly. I did not want to introduce a potential error source
-when submitting a patch i.e. I submitted 2 commits in the wrong order.
+> 
+> I have used the imx-mxs tree from next-20191211 for today.
 
-Since you have the comment to remove the brackets around the ret
-assign how would I go about modifying this patch? Should I resubmit a
-patch i.e. start a new email with with your proposed changes?
+Thanks.
 
-
-On Wed, Dec 11, 2019 at 11:26 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
-> > When running checkpatch on cma.c the following error was found:
->
-> I think checkpatch will complain about your patch, did you run it?
->
-> > ERROR: do not use assignment in if condition
-> > #413: FILE: drivers/infiniband/tmp.c:413:
-> > +     if ((ret =3D (id_priv->state =3D=3D comp)))
-> >
-> > This patch moves the assignment of ret to the previous line. The if sta=
-tement then checks the value of ret assigned on the previous line. The assi=
-gned value of ret is not changed. Testing involved recompiling and loading =
-the kernel. After the changes checkpatch does not report this the error in =
-cma.c.
-> >
-> > Signed-off-by: Max Hirsch <max.hirsch@gmail.com>
-> >  drivers/infiniband/core/cma.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cm=
-a.c
-> > index 25f2b70fd8ef..bdb7a8493517 100644
-> > +++ b/drivers/infiniband/core/cma.c
-> > @@ -410,7 +410,8 @@ static int cma_comp_exch(struct rdma_id_private *id=
-_priv,
-> >       int ret;
-> >
-> >       spin_lock_irqsave(&id_priv->lock, flags);
-> > -     if ((ret =3D (id_priv->state =3D=3D comp)))
-> > +     ret =3D (id_priv->state =3D=3D comp);
->
-> Brackets are not needed
->
-> Ret and the return result should be changed to a bool
->
-> Jason
+Shawn
