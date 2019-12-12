@@ -2,121 +2,315 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A2FC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1611AC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0196D2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88A222527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TwGczfOt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czfeMlbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfLLBhl (ORCPT
+        id S1727566AbfLLBjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:37:41 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:35071 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727473AbfLLBhk (ORCPT
+        Wed, 11 Dec 2019 20:39:15 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34434 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfLLBjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:37:40 -0500
-X-UUID: 844b7efeed284b5a8e5fc471bae98c14-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=PipsN9f6SWadwcwIrVs3U74QlgXQz8aVan1+C+FVNtA=;
-        b=TwGczfOt/sn2BvfIAJGPx0gzPpkXhck7/79SNxXautFLDURVlPDA85L38tAdur/DzjQjPtRQ2m/SnNHhx0H+ErsCyZd/gqWwDeTpGZbqNJlX51IC30sP8Je4AFlbbd51N3Jis56mgwfE1BU6kKXIZOYJSNazyOs8F+vf43DkqAU=;
-X-UUID: 844b7efeed284b5a8e5fc471bae98c14-20191212
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 497109503; Thu, 12 Dec 2019 09:37:34 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 09:37:17 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 09:37:28 +0800
-Message-ID: <1576114652.17653.13.camel@mtkswgap22>
-Subject: Re: [PATCH v2 12/14] soc: mediatek: cmdq: add loop function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 12 Dec 2019 09:37:32 +0800
-In-Reply-To: <1576028899.19653.5.camel@mtksdaap41>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-14-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1576028899.19653.5.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 11 Dec 2019 20:39:14 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m6so366124ljc.1;
+        Wed, 11 Dec 2019 17:39:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bqxzhgdGZNhkxunyYQSbh59QLtmloCd3WtfRiMYQPto=;
+        b=czfeMlbAEYXz0vXlbVuxjrr8ubv4YllExI80yT2QzsMEhV2uFBBEoeHfovOHINDCeG
+         k469H0iJdV3K/cifYPToJF+dp8cuyiKTVujK6Qd9oIstv/b5YIYD89LrVyQoTAY1cRwl
+         gsNbAqJXOXP5hkPm/tVB2bPbfmQnvRUtM9uYgysLmKyATf4Mogg9Hs19J1FZJL7FP9mi
+         pHLHlyT5wFGjE/Ke0FidgJfc2KG3mzPUNDsHCSwyznK6UWXnz1MhRnCx8etNt1Od+S/b
+         ujeK4L+aXeoO0tdy/eeL00sPH6vZK9b7o10bLXukpiWmJsPE4C1kS+AodU3GPyAfET3c
+         rxtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bqxzhgdGZNhkxunyYQSbh59QLtmloCd3WtfRiMYQPto=;
+        b=oK0FuIB+3L402GraCD0f6x47gb4tSt1T/5+qHVskwk0E/u6+JH0KdOPCm4kfgJWWxs
+         Mp4tzhosQpKGYPNBSBXXPHSl0IRWZSH/3IsMZYEdt6y99OfBEqjkKINJeJR8SWsKWZq+
+         qNUxoBmDvbM1UYOji1WxyqVDVyNzSURzprBWgP92i4HwakmUpCa0yjsxymp0IeAqVg3d
+         ESYH4ArUs0+eLlHgv4M+Wlxe+uLTj/F97okdIAoCKKkQWvHmfsbjaWduntQ/jotXjDcz
+         IuSHlLdrn//h9bFTJOQwIpTimqjrOhu1GiZ+x5Vvv9jPiyA1r+q2iq6rlDJPHOuW59ex
+         u0Cw==
+X-Gm-Message-State: APjAAAUX36EUr/jMIeU6phSxAieYP8IimW/DWHN5PnKBp5p4PVOpZFbY
+        gUQWQjgKirHT5djurPZBSW0=
+X-Google-Smtp-Source: APXvYqycflaulLJPW1gce2m3mrKE/XyE11yqkOAzLcbpcf5sIe3xLgXDDn9ICItxJURgoMhBxRGf4A==
+X-Received: by 2002:a2e:81c7:: with SMTP id s7mr3592515ljg.3.1576114750634;
+        Wed, 11 Dec 2019 17:39:10 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id c8sm1959778lfm.65.2019.12.11.17.39.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 17:39:09 -0800 (PST)
+Subject: Re: [PATCH v3 03/15] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        mperttunen@nvidia.com, sboyd@kernel.org, pdeschrijver@nvidia.com
+Cc:     gregkh@linuxfoundation.org, tglx@linutronix.de, robh+dt@kernel.org,
+        mark.rutland@arm.com, allison@lohutok.net, pgaikwad@nvidia.com,
+        mturquette@baylibre.com, horms+renesas@verge.net.au,
+        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
+        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        alexios.zavras@intel.com, alsa-devel@alsa-project.org
+References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
+ <1575600535-26877-4-git-send-email-skomatineni@nvidia.com>
+ <7cf4ff77-2f33-4ee5-0e09-5aa6aef3e8be@gmail.com>
+ <ad3a6743-4b36-fa25-9cc7-72803038ecc5@gmail.com>
+ <dc7a057a-0bed-0e6f-0987-edcfec47f867@gmail.com>
+ <288a1701-def6-d628-26bc-a305f817bdb1@gmail.com>
+ <78644d45-2ae3-121f-99fc-0a46f205907d@nvidia.com>
+ <b35916e1-c6ee-52ca-9111-5ae109437b6e@nvidia.com>
+ <ccb715cc-c927-ea91-a26e-24d6eeeeef1a@gmail.com>
+ <ee1d39d4-9a57-da9b-fce6-8130dac1d2fd@nvidia.com>
+ <49da77dc-b346-68eb-9ef8-42cfb3221489@nvidia.com>
+ <3f1c9325-3017-62be-1e3b-82fd28540fdf@nvidia.com>
+ <6fcbff3d-8695-7cd0-60de-6eb523b6964c@gmail.com>
+ <8eb792ad-cded-05cc-93fc-763be7ee66aa@nvidia.com>
+ <bb966cf2-50f6-6729-7644-54d71d55bbcb@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <02109d70-2747-c246-5401-69a2d5c84771@gmail.com>
+Date:   Thu, 12 Dec 2019 04:39:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <bb966cf2-50f6-6729-7644-54d71d55bbcb@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ0ssDQoNCk9uIFdlZCwgMjAxOS0xMi0xMSBhdCAwOTo0OCArMDgwMCwgQ0sgSHUgd3JvdGU6
-DQo+IEhpLCBEZW5uaXM6DQo+IA0KPiBPbiBXZWQsIDIwMTktMTEtMjcgYXQgMDk6NTggKzA4MDAs
-IERlbm5pcyBZQyBIc2llaCB3cm90ZToNCj4gPiBBZGQgZmluYWxpemUgbG9vcCBmdW5jdGlvbiBp
-biBjbWRxIGhlbHBlciBmdW5jdGlvbnMgd2hpY2ggbG9vcCB3aG9sZSBwa3QNCj4gPiBpbiBnY2Ug
-aGFyZHdhcmUgdGhyZWFkIHdpdGhvdXQgY3B1IG9wZXJhdGlvbi4NCj4gPiANCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBEZW5uaXMgWUMgSHNpZWggPGRlbm5pcy15Yy5oc2llaEBtZWRpYXRlay5jb20+DQo+
-ID4gLS0tDQo+ID4gIGRyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIHwgMjIg
-KysrKysrKysrKysrKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9t
-dGstY21kcS5oICB8ICA4ICsrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMzAgaW5zZXJ0
-aW9ucygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGst
-Y21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+
-ID4gaW5kZXggMzhlMGMxM2UxOTIyLi4xMGE5YjQ0ODFlNTggMTAwNjQ0DQo+ID4gLS0tIGEvZHJp
-dmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCj4gPiArKysgYi9kcml2ZXJzL3Nv
-Yy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IEBAIC00MTQsNiArNDE0LDI4IEBAIGlu
-dCBjbWRxX3BrdF9maW5hbGl6ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCkNCj4gPiAgfQ0KPiA+ICBF
-WFBPUlRfU1lNQk9MKGNtZHFfcGt0X2ZpbmFsaXplKTsNCj4gPiAgDQo+ID4gK2ludCBjbWRxX3Br
-dF9maW5hbGl6ZV9sb29wKHN0cnVjdCBjbWRxX3BrdCAqcGt0KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1
-Y3QgY21kcV9jbGllbnQgKmNsID0gcGt0LT5jbDsNCj4gPiArCXN0cnVjdCBjbWRxX2luc3RydWN0
-aW9uIGluc3QgPSB7IHswfSB9Ow0KPiA+ICsJaW50IGVycjsNCj4gPiArDQo+ID4gKwkvKiBpbnNl
-cnQgRU9DIGFuZCBnZW5lcmF0ZSBJUlEgZm9yIGVhY2ggY29tbWFuZCBpdGVyYXRpb24gKi8NCj4g
-PiArCWluc3Qub3AgPSBDTURRX0NPREVfRU9DOw0KPiA+ICsJZXJyID0gY21kcV9wa3RfYXBwZW5k
-X2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiArCWlmIChlcnIgPCAwKQ0KPiA+ICsJCXJldHVybiBl
-cnI7DQo+IA0KPiBJdCBsb29rcyBsaWtlIHlvdSB3YW50IGEgcGt0IGV4ZWN1dGUgY29tbWFuZCBy
-ZXBlYXRlZGx5LCBidXQgd2h5IGRvIHlvdQ0KPiByZXBlYXRlZGx5IHRyaWdnZXIgSVJRPyBUaGlz
-IElSUSB3b3VsZCBkbyBub3RoaW5nIGJlY2F1c2UgdGhpcyBwa3Qgd291bGQNCj4gbmV2ZXIgZmlu
-aXNoLg0KPiANCg0Kc2VlIGZvbGxvd2luZyBzZWN0aW9uDQoNCj4gPiArDQo+ID4gKwkvKiBKVU1Q
-IGFiYW9sdXRlIHRvIGJlZ2luICovDQo+ID4gKwlpbnN0Lm9wID0gQ01EUV9DT0RFX0pVTVA7DQo+
-ID4gKwlpbnN0Lm9mZnNldCA9IDE7DQo+ID4gKwlpbnN0LnZhbHVlID0gcGt0LT5wYV9iYXNlID4+
-IGNtZHFfbWJveF9zaGlmdChjbC0+Y2hhbik7DQo+ID4gKwllcnIgPSBjbWRxX3BrdF9hcHBlbmRf
-Y29tbWFuZChwa3QsIGluc3QpOw0KPiANCj4gV2h5IG5vdCBqdXN0IGV4cG9ydCB0aGlzIGZ1bmN0
-aW9uIGFzIGNtZHFfcGt0X2p1bXAoKT8gTGV0IGNsaWVudCBkZWNpZGUNCj4gd2hlcmUgdG8ganVt
-cCB3b3VsZCBiZSBtb3JlIGZsZXhpYmxlLg0KPiANCj4gUmVnYXJkcywNCj4gQ0sNCj4gDQoNCm9r
-LCBJIHdpbGwgcmVtb3ZlIHRoaXMgcGFydCBhbmQgZXhwb3NlIGNtZHFfcGt0X2p1bXAoKQ0KDQoN
-ClJlZ2FyZHMsDQpEZW5uaXMNCg0KPiA+ICsNCj4gPiArCXJldHVybiBlcnI7DQo+ID4gK30NCj4g
-PiArRVhQT1JUX1NZTUJPTChjbWRxX3BrdF9maW5hbGl6ZV9sb29wKTsNCj4gPiArDQo+ID4gIHN0
-YXRpYyB2b2lkIGNtZHFfcGt0X2ZsdXNoX2FzeW5jX2NiKHN0cnVjdCBjbWRxX2NiX2RhdGEgZGF0
-YSkNCj4gPiAgew0KPiA+ICAJc3RydWN0IGNtZHFfcGt0ICpwa3QgPSAoc3RydWN0IGNtZHFfcGt0
-ICopZGF0YS5kYXRhOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRl
-ay9tdGstY21kcS5oIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+
-IGluZGV4IDk5OGJjOTBmOWRhOS4uZDE1ZDhjOTQxOTkyIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1
-ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiArKysgYi9pbmNsdWRlL2xpbnV4
-L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gQEAgLTIxMiw2ICsyMTIsMTQgQEAgaW50IGNt
-ZHFfcGt0X2Fzc2lnbihzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTE2IHJlZ19pZHgsIHUzMiB2YWx1
-ZSk7DQo+ID4gICAqLw0KPiA+ICBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNtZHFfcGt0
-ICpwa3QpOw0KPiA+ICANCj4gPiArLyoqDQo+ID4gKyAqIGNtZHFfcGt0X2ZpbmFsaXplX2xvb3Ao
-KSAtIEFwcGVuZCBFT0MgYW5kIGp1bXAgY29tbWFuZCB0byBsb29wIHBrdC4NCj4gPiArICogQHBr
-dDoJdGhlIENNRFEgcGFja2V0DQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybjogMCBmb3Igc3VjY2Vz
-czsgZWxzZSB0aGUgZXJyb3IgY29kZSBpcyByZXR1cm5lZA0KPiA+ICsgKi8NCj4gPiAraW50IGNt
-ZHFfcGt0X2ZpbmFsaXplX2xvb3Aoc3RydWN0IGNtZHFfcGt0ICpwa3QpOw0KPiA+ICsNCj4gPiAg
-LyoqDQo+ID4gICAqIGNtZHFfcGt0X2ZsdXNoX2FzeW5jKCkgLSB0cmlnZ2VyIENNRFEgdG8gYXN5
-bmNocm9ub3VzbHkgZXhlY3V0ZSB0aGUgQ01EUQ0KPiA+ICAgKiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcGFja2V0IGFuZCBjYWxsIGJhY2sgYXQgdGhlIGVuZCBvZiBkb25lIHBhY2tldA0KPiAN
-Cj4gDQoNCg==
+11.12.2019 21:50, Sowjanya Komatineni пишет:
+> 
+> On 12/10/19 5:06 PM, Sowjanya Komatineni wrote:
+>>
+>> On 12/10/19 9:41 AM, Dmitry Osipenko wrote:
+>>> 10.12.2019 19:53, Sowjanya Komatineni пишет:
+>>>> On 12/9/19 3:03 PM, Sowjanya Komatineni wrote:
+>>>>> On 12/9/19 12:46 PM, Sowjanya Komatineni wrote:
+>>>>>> On 12/9/19 12:12 PM, Dmitry Osipenko wrote:
+>>>>>>> 08.12.2019 00:36, Sowjanya Komatineni пишет:
+>>>>>>>> On 12/7/19 11:59 AM, Sowjanya Komatineni wrote:
+>>>>>>>>> On 12/7/19 8:00 AM, Dmitry Osipenko wrote:
+>>>>>>>>>> 07.12.2019 18:53, Dmitry Osipenko пишет:
+>>>>>>>>>>> 07.12.2019 18:47, Dmitry Osipenko пишет:
+>>>>>>>>>>>> 07.12.2019 17:28, Dmitry Osipenko пишет:
+>>>>>>>>>>>>> 06.12.2019 05:48, Sowjanya Komatineni пишет:
+>>>>>>>>>>>>>> Tegra210 and prior Tegra PMC has clk_out_1, clk_out_2,
+>>>>>>>>>>>>>> clk_out_3
+>>>>>>>>>>>>>> with
+>>>>>>>>>>>>>> mux and gate for each of these clocks.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Currently these PMC clocks are registered by Tegra clock
+>>>>>>>>>>>>>> driver
+>>>>>>>>>>>>>> using
+>>>>>>>>>>>>>> clk_register_mux and clk_register_gate by passing PMC base
+>>>>>>>>>>>>>> address
+>>>>>>>>>>>>>> and register offsets and PMC programming for these clocks
+>>>>>>>>>>>>>> happens
+>>>>>>>>>>>>>> through direct PMC access by the clock driver.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> With this, when PMC is in secure mode any direct PMC access
+>>>>>>>>>>>>>> from the
+>>>>>>>>>>>>>> non-secure world does not go through and these clocks will
+>>>>>>>>>>>>>> not be
+>>>>>>>>>>>>>> functional.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> This patch adds these clocks registration with PMC as a clock
+>>>>>>>>>>>>>> provider
+>>>>>>>>>>>>>> for these clocks. clk_ops callback implementations for these
+>>>>>>>>>>>>>> clocks
+>>>>>>>>>>>>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC
+>>>>>>>>>>>>>> programming
+>>>>>>>>>>>>>> in secure mode and non-secure mode.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>>>>>>> ---
+>>>>>>>>>>>> [snip]
+>>>>>>>>>>>>
+>>>>>>>>>>>>>> +
+>>>>>>>>>>>>>> +static const struct clk_ops pmc_clk_gate_ops = {
+>>>>>>>>>>>>>> +    .is_enabled = pmc_clk_is_enabled,
+>>>>>>>>>>>>>> +    .enable = pmc_clk_enable,
+>>>>>>>>>>>>>> +    .disable = pmc_clk_disable,
+>>>>>>>>>>>>>> +};
+>>>>>>>>>>>>> What's the benefit of separating GATE from the MUX?
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> I think it could be a single clock.
+>>>>>>>>>>>> According to TRM:
+>>>>>>>>>>>>
+>>>>>>>>>>>> 1. GATE and MUX are separate entities.
+>>>>>>>>>>>>
+>>>>>>>>>>>> 2. GATE is the parent of MUX (see PMC's CLK_OUT paths diagram
+>>>>>>>>>>>> in TRM).
+>>>>>>>>>>>>
+>>>>>>>>>>>> 3. PMC doesn't gate EXTPERIPH clock but could "force-enable"
+>>>>>>>>>>>> it,
+>>>>>>>>>>>> correct?
+>>>>>>>> Was following existing clk-tegra-pmc as I am not sure of reason for
+>>>>>>>> having these clocks registered as separate mux and gate clocks.
+>>>>>>>>
+>>>>>>>> Yes, PMC clocks can be registered as single clock and can use
+>>>>>>>> clk_ops
+>>>>>>>> for set/get parent and enable/disable.
+>>>>>>>>
+>>>>>>>> enable/disable of PMC clocks is for force-enable to force the
+>>>>>>>> clock to
+>>>>>>>> run regardless of ACCEPT_REQ or INVERT_REQ.
+>>>>>>>>
+>>>>>>>>>>> 4. clk_m_div2/4 are internal PMC OSC dividers and thus these
+>>>>>>>>>>> clocks
+>>>>>>>>>>> should belong to PMC.
+>>>>>>>>>> Also, it should be "osc" and not "clk_m".
+>>>>>>>>> I followed the same parents as it were in existing clk-tegra-pmc
+>>>>>>>>> driver.
+>>>>>>>>>
+>>>>>>>>> Yeah they are wrong and they should be from osc and not clk_m.
+>>>>>>>>>
+>>>>>>>>> Will fix in next version.
+>>>>>>>>>
+>>>>> Reg clk_m_div2/3, they are dividers at OSC pad and not really internal
+>>>>> to PMC block.
+>>>>>
+>>>>> current clock driver creates clk_m_div clocks which should actually be
+>>>>> osc_div2/osc_div4 clocks with osc as parent.
+>>>>>
+>>>>> There are no clk_m_div2 and clk_m_div4 from clk_m
+>>>>>
+>>>>> Will fix this in next version.
+>>>>>
+>>>>>>> Could you please describe the full EXTPERIPH clock topology and
+>>>>>>> how the
+>>>>>>> pinmux configuration is related to it all?
+>>>>>>>
+>>>>>>> What is internal to the Tegra chip and what are the external
+>>>>>>> outputs?
+>>>>>>>
+>>>>>>> Is it possible to bypass PMC on T30+ for the EXTPERIPH clocks?
+>>>>>> PMC CLK1/2/3 possible sources are OSC_DIV1, OSC_DIV2, OSC_DIV4,
+>>>>>> EXTPERIPH from CAR.
+>>>>>>
+>>>>>> OSC_DIV1/2/4 are with internal dividers at the OSC Pads
+>>>>>>
+>>>>>> EXTPERIPH is from CAR and it has reset and enable controls along with
+>>>>>> clock source selections to choose one of the PLLA_OUT0, CLK_S,
+>>>>>> PLLP_OUT0, CLK_M, PLLE_OUT0
+>>>>>>
+>>>>>> So, PMC CLK1/2/4 possible parents are OSC_DIV1, OSC_DIV2, OSC_DIV4,
+>>>>>> EXTERN.
+>>>>>>
+>>>>>>
+>>>>>> CLK1/2/3 also has Pinmux to route EXTPERIPH output on to these pins.
+>>>>>>
+>>>>>>
+>>>>>> When EXTERN output clock is selected for these PMC clocks thru
+>>>>>> CLKx_SRC_SEL, output clock is from driver by EXTPERIPH from CAR via
+>>>>>> Pinmux logic or driven as per CLKx_SRC_SEL bypassing pinmux based on
+>>>>>> CLKx_ACCEPT_REQ bit.
+>>>>>>
+>>>>>>
+>>>>>> PMC Clock control register has bit CLKx_ACCEPT_REQ
+>>>>>> When CLKx_ACCEPT_REQ = 0, output clock driver is from by EXTPERIPH
+>>>>>> through the pinmux
+>>>>>> When CLKx_ACCEPT_REQ = 1, output clock is based on CLKx_SRC_SEL bits
+>>>>>> (OSC_DIV1/2/4 and EXTPERIPH clock bypassing the pinmux)
+>>>>>>
+>>>>>> FORCE_EN bit in PMC CLock control register forces the clock to run
+>>>>>> regardless of this.
+>>>> PMC clock gate is based on the state of CLKx_ACCEPT_REQ and FORCE_EN
+>>>> like explained above.
+>>>>
+>>>> CLKx_ACCEPT_REQ is 0 default and FORCE_EN acts as gate to
+>>>> enable/disable
+>>>> EXTPERIPH clock output to PMC CLK_OUT_1/2/3.
+>>> [and to enable OSC as well]
+>>>
+>>>> So I believe we need to register as MUX and Gate rather than as a
+>>>> single
+>>>> clock. Please confirm.
+>>> 1. The force-enabling is applied to both OSC and EXTERN sources of
+>>> PMC_CLK_OUT_x by PMC at once.
+>>>
+>>> 2. Both of PMC's force-enabling and OSC/EXTERN selection is internal
+>>> to PMC.
+>>>
+>>> Should be better to define it as a single "pmc_clk_out_x". I don't see
+>>> any good reasons for differentiating PMC's Gate from the MUX, it's a
+>>> single hardware unit from a point of view of the rest of the system.
+>>>
+>>> Peter, do you have any objections?
+>>
+>> We added fallback option for audio mclk and also added check for
+>> assigned-clock-parents dt property in audio driver and if its not then
+>> we do parent init configuration in audio driver.
+>>
+>> Current clock driver creates 2 separate clocks clk_out_1_mux and
+>> clk_out_1 for each pmc clock in clock driver and uses extern1 as
+>> parent to clk_out_1_mux and clk_out_1_mux is parent to clk_out_1.
+>>
+>> With change of registering each pmc clock as a single clock, when we
+>> do parent init assignment in audio driver when
+>> assigned-clock-properties are not used in DT (as we removed parent
+>> inits for extern and clk_outs from clock driver), we should still try
+>> to get clock based on clk_out_1_mux as parent assignment of extern1 is
+>> for clk_out_1_mux as per existing clock tree.
+>>
+>> clk_out_1_mux clock retrieve will fail with this change of single
+>> clock when any new platform device tree doesn't specify
+>> assigned-clock-parents properties and tegra_asoc_utils_init fails.
 
+You made the PMC/CaR changes before the audio changes, the clk_out_1_mux
+won't exist for the audio driver patches.
+
+If you care about bisect-ability of the patches, then the clock and
+audio changes need to be done in a single patch. But I don't think that
+it's worthwhile.
+
+>> With single clock, extern1 is the parent for clk_out_1 and with
+>> separate clocks for mux and gate, extern1 is the parent for
+>> clk_out_1_mux.
+> 
+> If we move to single clock now, it need one more additional fallback
+> implementation in audio driver during parent configuration as
+> clk_out_1_mux will not be there with single clock change and old/current
+> kernel has it as it uses separate clocks for pmc mux and gate.
+
+Why additional fallback? Additional to what?
+
+> Also, with single clock for both PMC mux and gate now, new DT should use
+> extern1 as parent to CLK_OUT_1 as CLK_OUT_1_MUX will not be there old
+> PMC dt-bindings has separate clocks for MUX (CLK_OUT_1_MUX) and gate
+> (CLK_OUT_1)
+> 
+> DT bindings will not be compatible b/w old and new changes if we move to
+> Single PMC clock now.
+
+Sorry, I don't understand what you're meaning by the "new changes".
+
+> Should we go with same separate clocks to have it compatible to avoid
+> all this?
+> 
