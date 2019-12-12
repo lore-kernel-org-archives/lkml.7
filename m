@@ -2,129 +2,146 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B8BC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C13FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF60E21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2A1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:19:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtm9D6o+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfLLSRI (ORCPT
+        id S1730325AbfLLSTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:17:08 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59697 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730145AbfLLSRI (ORCPT
+        Thu, 12 Dec 2019 13:19:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45320 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730034AbfLLSTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:17:08 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ifT1L-0005CM-2Q; Thu, 12 Dec 2019 18:17:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kenneth Feng <kenneth.feng@amd.com>,
-        Yintian Tao <yttao@amd.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amd/powerplay: fix various dereferences of a pointer before it is null checked
-Date:   Thu, 12 Dec 2019 18:16:57 +0000
-Message-Id: <20191212181657.101381-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 12 Dec 2019 13:19:05 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so1548026pgk.12;
+        Thu, 12 Dec 2019 10:19:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rgR8f1oUjZUBATiXVQBzGKim6OO45u2oQD6/qlDZ5vY=;
+        b=Wtm9D6o+Rw8Z/2kp4hHqYDHWqiMHjwhwJqZhBTWYSHV2QpyziCmhpYw+iNK0EgzI3H
+         zGleLoIAO28mM3cOv19mKVDWUK61FVVwzzD3+6kbxOz+BfeHEKNahCUGnzcKrhOEXE+2
+         aB/nCzugj9ZsvFyd+DPg/5v0DWreTLMC4vnEjGuYeg6Qyq3FlQrMI9sYVRBvRaVuWBDc
+         e7sWjrPaysRzCNwpT/Y3OlICwSLUIgfRSM0eBOzYeA9WtZE3B87GJQT/f5eRnyPcTcYU
+         Ig0qqPA6T1itDrUh/ZAm6nxFSZ3FSEXMYYWNjaTehaci/dCW3SrZZeqUJpfOQcp9jGgA
+         SXLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=rgR8f1oUjZUBATiXVQBzGKim6OO45u2oQD6/qlDZ5vY=;
+        b=boczkkHJLJ8eypLPeFv6fT8IUU/RFnDjb8f3KQH+dQkFwOc6hdRDlbREiYufvZUGFm
+         Uc5k0syikhLMU4p/3vY0pWVaKIoDwP1ko30IuODX7qLOGlKx6Fgkjc9HxkTaidZ7Dkb1
+         0CkoFCmu/ZKajrEobfkAcq2embesjRHEJRKwEaCUJ7BLLLnd5lrYJTaxbbVUf9j5/HQA
+         +KwvhezNPPWgn8IxnneW/yzt9l1UvmsM8k5Jf/2L+zJlFF/TZu7iM98hMokj1+mm7WXp
+         A/9RbzdLraEO8iVpQVSWWgA2NasRV4EGTrDYzzSEYFHcylY8uAbxLBrVt8VD2Pz1HYam
+         /Rzw==
+X-Gm-Message-State: APjAAAUaxv9vH+YGNjoC+2RyCpmjaCCnwa58RXiNe8cEiKMSkwrB4GkJ
+        JVufobTpzPmI2R5X/COcLpygKr80
+X-Google-Smtp-Source: APXvYqxQtpo2SEZbeVIFNPFPIA35uoCJcj9XN/Bo4jPUjDncYiMyW5uqrgD6u/nV/eD4veoZsq1Ccg==
+X-Received: by 2002:a63:fd10:: with SMTP id d16mr11817204pgh.177.1576174744975;
+        Thu, 12 Dec 2019 10:19:04 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d14sm6702804pjz.12.2019.12.12.10.19.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Dec 2019 10:19:04 -0800 (PST)
+Date:   Thu, 12 Dec 2019 10:19:02 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>,
+        Denis Efremov <efremov@linux.com>
+Subject: Re: [PATCH 1/2] watchdog: mtx-1: Drop au1000.h header inclusion
+Message-ID: <20191212181902.GA31779@roeck-us.net>
+References: <20191211210204.31579-1-f.fainelli@gmail.com>
+ <20191211210204.31579-2-f.fainelli@gmail.com>
+ <21b7be75-db61-3b14-c57c-04af0b78b347@roeck-us.net>
+ <3fdc99fa-f75c-33d4-e1c4-ec8ad185e2cd@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fdc99fa-f75c-33d4-e1c4-ec8ad185e2cd@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, Dec 11, 2019 at 07:38:29PM -0800, Florian Fainelli wrote:
+> 
+> 
+> On 12/11/2019 5:35 PM, Guenter Roeck wrote:
+> > On 12/11/19 1:02 PM, Florian Fainelli wrote:
+> >> Including au1000.h from the machine specific header directory prevents
+> >> this driver from being built on any other platforms (MIPS included).
+> >> Since we do not use any definitions, drop it.
+> >>
+> >> Reported-by: Denis Efremov <efremov@linux.com>
+> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >> ---
+> >>   drivers/watchdog/mtx-1_wdt.c | 2 --
+> >>   1 file changed, 2 deletions(-)
+> >>
+> >> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
+> >> index 25a92857b217..aeca22f7450e 100644
+> >> --- a/drivers/watchdog/mtx-1_wdt.c
+> >> +++ b/drivers/watchdog/mtx-1_wdt.c
+> >> @@ -41,8 +41,6 @@
+> >>   #include <linux/uaccess.h>
+> >>   #include <linux/gpio/consumer.h>
+> >>   -#include <asm/mach-au1x00/au1000.h>
+> >> -
+> >>   #define MTX1_WDT_INTERVAL    (5 * HZ)
+> >>     static int ticks = 100 * HZ;
+> >>
+> > 
+> > Given that this is nothing but yet another gpio watchdog driver, I'd
+> > personally rather have it merged with gpio_wdt.c. On a higher level,
+> > cleaning up old-style watchdog drivers, without converting them to
+> > using the watchdog core, is a waste of time.
+> 
+> If that makes you feel any better, I was not planning on going further
+> than that, and yes, removing this driver and using gpio_wdt.c would be
+> the way to go, this driver greatly predates gpio_wdt.c and I have since
+> then not had access to my MTX-1 platforms which is why this did not
+> happen. We can attempt a "blind conversion" without testing, but what
+> good would that make, not sure.
+> 
 
-There are several occurrances of the pointer hwmgr being dereferenced
-before it is null checked.  Fix these by performing the dereference
-of hwmgr after it has been null checked.
+It sounds like this is a purely cosmetical change to improve test build
+coverage for a more or less obsolete driver. No, that doesn't make me feel
+better; I get way too many of those lately. Worse, some of those test build
+"improvements" actually end up breaking real builds, which then costs me
+and others even more time to track down.
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 8497d2bcdee1 ("drm/amd/powerplay: enable pp one vf mode for vega10")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/powerplay/amd_powerplay.c |  6 +++---
- drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c   | 15 +++------------
- 2 files changed, 6 insertions(+), 15 deletions(-)
+We should really discourage that. Is there some challenge going on somewhere,
+along the line of "improve test build coverage" ?
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-index 5087d6bdba60..322c2015d3a0 100644
---- a/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-+++ b/drivers/gpu/drm/amd/powerplay/amd_powerplay.c
-@@ -275,12 +275,12 @@ static int pp_dpm_load_fw(void *handle)
- {
- 	struct pp_hwmgr *hwmgr = handle;
- 
--	if (!hwmgr->not_vf)
--		return 0;
--
- 	if (!hwmgr || !hwmgr->smumgr_funcs || !hwmgr->smumgr_funcs->start_smu)
- 		return -EINVAL;
- 
-+	if (!hwmgr->not_vf)
-+		return 0;
-+
- 	if (hwmgr->smumgr_funcs->start_smu(hwmgr)) {
- 		pr_err("fw load failed\n");
- 		return -EINVAL;
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
-index e2b82c902948..f48fdc7f0382 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/hwmgr.c
-@@ -282,10 +282,7 @@ int hwmgr_hw_init(struct pp_hwmgr *hwmgr)
- 
- int hwmgr_hw_fini(struct pp_hwmgr *hwmgr)
- {
--	if (!hwmgr->not_vf)
--		return 0;
--
--	if (!hwmgr || !hwmgr->pm_en)
-+	if (!hwmgr || !hwmgr->pm_en || !hwmgr->not_vf)
- 		return 0;
- 
- 	phm_stop_thermal_controller(hwmgr);
-@@ -305,10 +302,7 @@ int hwmgr_suspend(struct pp_hwmgr *hwmgr)
- {
- 	int ret = 0;
- 
--	if (!hwmgr->not_vf)
--		return 0;
--
--	if (!hwmgr || !hwmgr->pm_en)
-+	if (!hwmgr || !hwmgr->pm_en || !hwmgr->not_vf)
- 		return 0;
- 
- 	phm_disable_smc_firmware_ctf(hwmgr);
-@@ -327,13 +321,10 @@ int hwmgr_resume(struct pp_hwmgr *hwmgr)
- {
- 	int ret = 0;
- 
--	if (!hwmgr->not_vf)
--		return 0;
--
- 	if (!hwmgr)
- 		return -EINVAL;
- 
--	if (!hwmgr->pm_en)
-+	if (!hwmgr->not_vf || !hwmgr->pm_en)
- 		return 0;
- 
- 	ret = phm_setup_asic(hwmgr);
--- 
-2.24.0
+Guenter
 
+> > 
+> > Wim, should we make it a policy to reject patches into old-style drivers
+> > unless they fix a real bug ? It is getting a pain to have to review those
+> > patches.
+> > 
+> > Thanks,
+> > Guenter
+> 
+> -- 
+> Florian
