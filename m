@@ -2,302 +2,94 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95DD7C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8D1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F26A22B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D998E22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9/eaQKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbfLLSYm (ORCPT
+        id S1730490AbfLLSYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:24:42 -0500
-Received: from mga07.intel.com ([134.134.136.100]:40421 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730210AbfLLSYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="220749862"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 10:24:40 -0800
-Subject: [PATCH RFC v2 05/14] dmaengine: add dma_request support functions
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
-        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:24:40 -0700
-Message-ID: <157617507999.42350.9957499768810549174.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        Thu, 12 Dec 2019 13:24:46 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38446 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730210AbfLLSYn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:43 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a17so953323pls.5;
+        Thu, 12 Dec 2019 10:24:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+yXUnT7p17Ie0K+wMnq//C2QNUFuiX6CATyd3WqyTQY=;
+        b=Z9/eaQKxArfp/r0C9iMfIBVx7VDXiNMOsHq4T5u9QhTytVEsYA01P5NW6u4cgZ8nUo
+         8lhZKkd2HeAHNdR0/o6zIyr7NOK17CZABLKstv0X+HtR90ZtfBJKuPHxfveMBtGpEKm+
+         g9JOtBlM+1JwVV5vQa5dzrk8zYtYAB1Td2V5PYsVHHsuK6bcfUDCt+CCEhQRz47s+B8A
+         vsctpViBYGbqrzODYzbMOPwamdS3CWcyw1nFdrA4Uwsvnzmmm00jbGn5tLVEl3gpNErj
+         2n2C0kNL3m4YX/f7Ap/ydMxjGwUtR0CbGRP9esNJ9oHqRcJRYmY67iC/jJJ6Ro1t1Kri
+         TxjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+yXUnT7p17Ie0K+wMnq//C2QNUFuiX6CATyd3WqyTQY=;
+        b=dMg+sIV0i3wHCTER89BveY+qHQZAS0SXdQlQasFNZM3q/Po5cjnozGFuO1HZD7J0p3
+         iJ6tKireluCg0TKxCwL9kd3ziWWyAUvfu4nE37LubVvT+Wx7xRHHmuiVOy/5ebBEAjWp
+         JiAaKQZ3w+51xI+umIkTViYR4Di9pVhC2jRKsZawxbHL7i/0tjtAwgrAjeA2vdPqS1Zk
+         gEwAKCNa7l5nfpkc9u01d5t5M5HqIphHXhpDo+VKmsPFGHPRfPxhmVh5FMNRB2yF72Do
+         tDxnOVUAuOelWJY34lSxM+LWUDr/XY0qj2A14kV0UZzOV4xzBIVZXpKV+UCpA3AU24Ul
+         bAiw==
+X-Gm-Message-State: APjAAAWeLY+dE6sqBev88bqMJiQprCUNO7tL0Olwpu+xNtYI25qY5bKb
+        5v54HzlrjB1q95vW3Ta+sf8=
+X-Google-Smtp-Source: APXvYqwEsunvsFHpXGOUpqwbXvlzeDyE/MDghAFSJYV9eLT+2v8BegkezBbGkbmqxqa1wWGI3hy65Q==
+X-Received: by 2002:a17:902:9302:: with SMTP id bc2mr11199629plb.148.1576175082872;
+        Thu, 12 Dec 2019 10:24:42 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c68sm8030267pfc.156.2019.12.12.10.24.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Dec 2019 10:24:42 -0800 (PST)
+Date:   Thu, 12 Dec 2019 10:24:41 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
+Message-ID: <20191212182441.GB26863@roeck-us.net>
+References: <20191211150221.153659747@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to provide a lockless submission path, the request context needs
-to be pre-allocated rather than pulling from a memory pool.
-Use the common request allocation call request_from_pages_alloc() to
-accomplish this. The sbitmap code will be used to get the next
-free request context. This is a simplified version of what blk-mq does
-(not sbitmap_queue). The config option DMA_ENGINE_REQUEST is added so that
-only drivers that supports dma request would enable the code.
+On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.16 release.
+> There are 105 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+> Anything received after that time might be too late.
+> 
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/Kconfig       |    5 ++
- drivers/dma/Makefile      |    1 
- drivers/dma/dma-request.c |   96 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/dmaengine.h |   57 +++++++++++++++++++++++++++
- 4 files changed, 159 insertions(+)
- create mode 100644 drivers/dma/dma-request.c
+For v5.3.15-116-g9f27b7f4a193:
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 6fa1eba9d477..4a1458bdd249 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -56,6 +56,11 @@ config DMA_OF
- 	depends on OF
- 	select DMA_ENGINE
- 
-+config DMA_ENGINE_REQUEST
-+	def_bool n
-+	depends on DMA_ENGINE
-+	select SBITMAP
-+
- #devices
- config ALTERA_MSGDMA
- 	tristate "Altera / Intel mSGDMA Engine"
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 42d7e2fc64fa..f80720075399 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_DMA_ENGINE) += dmaengine.o
- obj-$(CONFIG_DMA_VIRTUAL_CHANNELS) += virt-dma.o
- obj-$(CONFIG_DMA_ACPI) += acpi-dma.o
- obj-$(CONFIG_DMA_OF) += of-dma.o
-+obj-$(CONFIG_DMA_ENGINE_REQUEST) += dma-request.o
- 
- #dmatest
- obj-$(CONFIG_DMATEST) += dmatest.o
-diff --git a/drivers/dma/dma-request.c b/drivers/dma/dma-request.c
-new file mode 100644
-index 000000000000..01390f179107
---- /dev/null
-+++ b/drivers/dma/dma-request.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Copyright(c) 2019 Intel Corporation. All rights reserved.  */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/mm.h>
-+#include <linux/device.h>
-+#include <linux/dmaengine.h>
-+#include <linux/mempool.h>
-+
-+struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
-+{
-+	int nr;
-+	struct dma_request *req;
-+
-+	nr = sbitmap_get(&chan->sbmap, 0, false);
-+	if (nr < 0)
-+		return NULL;
-+
-+	req = chan->rqs[nr];
-+	req->rq_private = NULL;
-+	req->callback = NULL;
-+	memset(&req->result, 0, sizeof(struct dmaengine_result));
-+	return req;
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_alloc_request);
-+
-+void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq)
-+{
-+	sbitmap_clear_bit(&chan->sbmap, rq->id);
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_free_request);
-+
-+void dma_chan_free_request_resources(struct dma_chan *chan)
-+{
-+	request_from_pages_free(&chan->page_list);
-+	kfree(chan->rqs);
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_free_request_resources);
-+
-+static void dma_chan_assign_request(void *ctx, void *ptr, int idx)
-+{
-+	struct dma_chan *chan = (struct dma_chan *)ctx;
-+	struct dma_request *rq = ptr;
-+
-+	chan->rqs[idx] = rq;
-+}
-+
-+int dma_chan_alloc_request_resources(struct dma_chan *chan)
-+{
-+	int i, node, rc, id = 0;
-+	size_t rq_size;
-+
-+	/* Requests are already allocated */
-+	if (chan->rqs)
-+		return 0;
-+
-+	node = dev_to_node(chan->device->dev);
-+	rc = sbitmap_init_node(&chan->sbmap, chan->depth, -1,
-+			       GFP_KERNEL, node);
-+	if (rc < 0)
-+		return rc;
-+
-+	chan->rqs = kcalloc_node(chan->depth, sizeof(struct dma_request *),
-+				 GFP_KERNEL, node);
-+	if (!chan->rqs) {
-+		rc = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	INIT_LIST_HEAD(&chan->page_list);
-+
-+	rq_size = round_up(sizeof(struct dma_request) +
-+			chan->max_sgs * sizeof(struct scatterlist),
-+			cache_line_size());
-+
-+	rc = request_from_pages_alloc((void *)chan, chan->depth, rq_size,
-+				      &chan->page_list, 4, node,
-+				      dma_chan_assign_request);
-+	if (rc < 0)
-+		goto fail;
-+
-+	for (i = 0; i < rc; i++) {
-+		struct dma_request *rq = chan->rqs[i];
-+
-+		rq->id = id++;
-+		rq->chan = chan;
-+	}
-+
-+	return 0;
-+
-+ fail:
-+	sbitmap_free(&chan->sbmap);
-+	dma_chan_free_request_resources(chan);
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(dma_chan_alloc_request_resources);
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 0202d44a17a5..7bc8c3f8283f 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -12,6 +12,8 @@
- #include <linux/scatterlist.h>
- #include <linux/bitmap.h>
- #include <linux/types.h>
-+#include <linux/sbitmap.h>
-+#include <linux/bvec.h>
- #include <asm/page.h>
- 
- /**
-@@ -176,6 +178,8 @@ struct dma_interleaved_template {
-  * @DMA_PREP_CMD: tell the driver that the data passed to DMA API is command
-  *  data and the descriptor should be in different format from normal
-  *  data descriptors.
-+ *  @DMA_SUBMIT_NONBLOCK: tell the driver do not wait for resources if submit
-+ *  is not possible.
-  */
- enum dma_ctrl_flags {
- 	DMA_PREP_INTERRUPT = (1 << 0),
-@@ -186,6 +190,7 @@ enum dma_ctrl_flags {
- 	DMA_PREP_FENCE = (1 << 5),
- 	DMA_CTRL_REUSE = (1 << 6),
- 	DMA_PREP_CMD = (1 << 7),
-+	DMA_SUBMIT_NONBLOCK = (1 << 8),
- };
- 
- /**
-@@ -268,6 +273,13 @@ struct dma_chan {
- 	struct dma_router *router;
- 	void *route_data;
- 
-+	/* DMA request */
-+	int max_sgs;
-+	int depth;
-+	struct sbitmap sbmap;
-+	struct dma_request **rqs;
-+	struct list_head page_list;
-+
- 	void *private;
- };
- 
-@@ -511,6 +523,25 @@ struct dma_async_tx_descriptor {
- #endif
- };
- 
-+struct dma_request {
-+	int id;
-+	struct dma_chan *chan;
-+	enum dma_transaction_type cmd;
-+	enum dma_ctrl_flags flags;
-+	struct bio_vec bvec;
-+	dma_addr_t pg_dma;
-+	int sg_nents;
-+	void *rq_private;
-+
-+	/* Set by driver */
-+	dma_async_tx_callback_result callback;
-+	struct dmaengine_result result;
-+	void *callback_param;
-+
-+	/* Leave as last member for flexible array of scatterlist */
-+	struct scatterlist sg[];
-+};
-+
- #ifdef CONFIG_DMA_ENGINE
- static inline void dma_set_unmap(struct dma_async_tx_descriptor *tx,
- 				 struct dmaengine_unmap_data *unmap)
-@@ -1359,6 +1390,32 @@ static inline int dma_get_slave_caps(struct dma_chan *chan,
- }
- #endif
- 
-+#ifdef CONFIG_DMA_ENGINE_REQUEST
-+struct dma_request *dma_chan_alloc_request(struct dma_chan *chan);
-+void dma_chan_free_request(struct dma_chan *chan, struct dma_request *rq);
-+void dma_chan_free_request_resources(struct dma_chan *chan);
-+int dma_chan_alloc_request_resources(struct dma_chan *chan);
-+#else
-+static inline struct dma_request *dma_chan_alloc_request(struct dma_chan *chan)
-+{
-+	return NULL;
-+}
-+
-+static inline void dma_chan_free_request(struct dma_chan *chan,
-+					 struct dma_request *rq)
-+{
-+}
-+
-+static inline void dma_chan_free_request_resources(struct dma_chan *chan)
-+{
-+}
-+
-+static inline int dma_chan_alloc_request_resources(struct dma_chan *chan)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
- #define dma_request_slave_channel_reason(dev, name) dma_request_chan(dev, name)
- 
- static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 394 pass: 394 fail: 0
 
+Guenter
