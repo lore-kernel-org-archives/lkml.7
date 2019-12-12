@@ -2,190 +2,214 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C942C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C95C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74FA2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BFF2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="b20Kj6sL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OT/1j1tK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbfLLMei (ORCPT
+        id S1729260AbfLLMfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:34:38 -0500
-Received: from mail-eopbgr690065.outbound.protection.outlook.com ([40.107.69.65]:63107
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729170AbfLLMei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:34:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Mx3DMFoaV4wQagXk6ZPpKB+eU0cBfVeLN42VN2JwMdbunMYAVutxwsFj2gE1SwV3RVwWXqSNZpWFCc5UdKrKSJFec81t3i1O/Io1pwbJwYF5jTqFF/K6WucXbBNba0lQ75DWJ9Qk4XMUJ2lmX2MSnGTgRrhLN8AR8EibxK419UcSLiPkwJyTbDM5Spp9NtmSU0EstTNvZW8trR4gACgHrQzxcKVQc7DlTgX4TvcBUb/0BFsniFYImugyM8aj7GHxYg0B+yVH1NhHys65JE4eqraWmdBB5fa/8RrcB9TeJxRcbZg2bXYpZyuhvPC+Ou+REWnS/RRlD4QUyhY/oNJlZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ENQdJc4+TFEmmoFlrgz6EzYOKUk6+9FLOxleSAK/J0=;
- b=RzI3a5fgnTbQYlK6AJd2hqNu/abdGv51YV2FaoRT35muE3u+aCFfgzfhFkdiFuZdA6bnjw9E3Z9ufO69DS/oV7YXuxUib27YxxIZB5Jg4LD2f7M0r/pseX4AU1q8qJio2NYN4PBvihaiDNEfp4/UiY/BKEw0GMuMWYn/EGo1y5v++wWLe9VfD0iftq4zz62G008hvEOzBQhQ995Mzlb7afVVY6NYX9esvaynfw7OjDGNcRzEipediuag30irw7FksX2nyFy9ZuruXTvwIKfo9PXmJsbfW2Jjz0+TjU9U4gPOwMSyeggJWzq/my/pNOe2U4+Be69/duJ0XCU6eEiSeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ENQdJc4+TFEmmoFlrgz6EzYOKUk6+9FLOxleSAK/J0=;
- b=b20Kj6sLn4cqJCh1JREQFx2+mi31EVJn0bJXDB+ffOEzmitZ6nDFDvteTiWO8NDIHPCBpAglvK3i95Jgdb4helzYGntCZbsJyyeyvWnzbOt/8qKBaWlossIvJHhn2GrEUhpfp1B8pr9xdgayS6IaKs7Az11eLhAurMge4YCiTfQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Rijo-john.Thomas@amd.com; 
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com (10.175.62.7) by
- CY4PR12MB1575.namprd12.prod.outlook.com (10.172.71.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.12; Thu, 12 Dec 2019 12:34:35 +0000
-Received: from CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4]) by CY4PR12MB1925.namprd12.prod.outlook.com
- ([fe80::cd8b:1d7e:31c2:e8b4%7]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
- 12:34:35 +0000
-Subject: Re: [RFC PATCH v3 0/4] TEE driver for AMD APUs
-To:     Jens Wiklander <jens.wiklander@linaro.org>,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Nimesh Easow <Nimesh.Easow@amd.com>,
-        Devaraj Rangasamy <Devaraj.Rangasamy@amd.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>
-References: <cover.1575608819.git.Rijo-john.Thomas@amd.com>
-From:   "Thomas, Rijo-john" <Rijo-john.Thomas@amd.com>
-Message-ID: <f7803de4-b09d-cfb7-9289-7abf5dde37c0@amd.com>
-Date:   Thu, 12 Dec 2019 18:04:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <cover.1575608819.git.Rijo-john.Thomas@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA1PR0101CA0003.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:21::13) To CY4PR12MB1925.namprd12.prod.outlook.com
- (2603:10b6:903:120::7)
-MIME-Version: 1.0
-X-Originating-IP: [165.204.156.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5600b12d-bb99-48e5-36f3-08d77effa518
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1575:|CY4PR12MB1575:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB15756D1025093DE82FEA943ECF550@CY4PR12MB1575.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 0249EFCB0B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(189003)(199004)(36756003)(2616005)(81156014)(8936002)(66556008)(8676002)(81166006)(6666004)(54906003)(31686004)(66946007)(316002)(6506007)(66476007)(53546011)(52116002)(4326008)(6486002)(6512007)(478600001)(31696002)(26005)(186003)(5660300002)(2906002)(966005)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1575;H:CY4PR12MB1925.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dGcQPpCktljPU/ggbxHCEmgC/CoYB24tP/asPcb/IvlPnLCNuhov/9jqDIa4Q1blGmV6paRIHMc943gMWa8x2F2VhSl0UWiPwankbQglgWC7TUIcZ+0av94/1n4Bm2dMfCV1VCKXTGEocFf8RHxB3pHOjX5RimcZ9Exlrl0J/3c+2aPHoPfWp2e/zW40qSk8zR8rXzTl3LEiZJlhVLPH8bWB3octSOg4Hx1qEEYQB1c2i5v3/MB936kOFAI9Ms1FKEZiIzV2Cukl8WzvpCibLsXyQ6xBz/4k9nUT3T4Zu3Wvrst23iTMiZfILbll/fGMubcfuOqK3BLpUdCTN7Fnh9FdQv2cvjrZCyWHmxbakaW5P0sACapAolBj71dGv0l8O97SZurd7FNyXeUiG3u/W6CNXToTsbQttYBic2QQRLCtkbCWgucufruQaTjPgkij
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5600b12d-bb99-48e5-36f3-08d77effa518
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2019 12:34:34.9721
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +Bd0bMNZFUNBg1EvqZUVifJFtC0Uhg7QMzpdthBfah8UBvTX+17yHq0SC91yIZaVZFE+o3pY5OnG+5BQPYGWEA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1575
+        Thu, 12 Dec 2019 07:35:31 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57008 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbfLLMfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:35:31 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCCTpGa128359;
+        Thu, 12 Dec 2019 12:34:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=n1JBRyyfCwsCHYv3CHqoGwd85kLedGZ22Wnm/zj+jG0=;
+ b=OT/1j1tK0abiy5wwnE5NhUn83CiDA9dfgm1NfceOVUHSKUPTBAcIbhrXPAXH9jRLaP5L
+ sEeIBsq33bMGm5iaRBN3uIHjy/67+I+GDiHF46ySgbH4ClSK4DurTiNi/FT9gr/SHq2/
+ 8j5f7gtDq5k/Wbqs4mpz9JC29JEqEBSR6bgOaHZ3QO2BjkthdbIDYafAGTVdNwpnKVd5
+ 8/kuWWFDeL/tFVS2aZLaQeXw89An+FXsY/Gk+MiTtbNXlJCiyEkZAOOfVKgUaYeSE7wd
+ wsBk/hW/fociplvOOdTgHM8eFK2D7gYK5AWqEJRaKrKCtUpV8B7ahVz0voPx6UD/o02b tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2wr4qrtn4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 12:34:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCCYBjl123101;
+        Thu, 12 Dec 2019 12:34:20 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2wumvy3ffe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 12:34:20 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCCXhC4029770;
+        Thu, 12 Dec 2019 12:33:43 GMT
+Received: from [192.168.14.112] (/109.65.223.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 04:33:42 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v4 2/2] kvm: Use huge pages for DAX-backed files
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20191211213207.215936-3-brho@google.com>
+Date:   Thu, 12 Dec 2019 14:33:36 +0200
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com>
+References: <20191211213207.215936-1-brho@google.com>
+ <20191211213207.215936-3-brho@google.com>
+To:     Barret Rhoden <brho@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
 
-Please let me know if there are any comments for this patch series. I
-shall address them, if any, and post for next review.
 
-Thanks,
-Rijo
+> On 11 Dec 2019, at 23:32, Barret Rhoden <brho@google.com> wrote:
+>=20
+> This change allows KVM to map DAX-backed files made of huge pages with
+> huge mappings in the EPT/TDP.
+>=20
+> DAX pages are not PageTransCompound.  The existing check is trying to
+> determine if the mapping for the pfn is a huge mapping or not.  For
+> non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
+> For DAX, we can check the page table itself.
 
-On 06/12/19 10:48 am, Rijo Thomas wrote:
-> This patch series introduces Trusted Execution Environment (TEE) driver
-> for AMD APU enabled systems. The TEE is a secure area of a processor which
-> ensures that sensitive data is stored, processed and protected in an
-> isolated and trusted environment. The AMD Secure Processor is a dedicated
-> processor which provides TEE to enable HW platform security. It offers
-> protection against software attacks generated in Rich Operating
-> System (Rich OS) such as Linux running on x86. The AMD-TEE Trusted OS
-> running on AMD Secure Processor allows loading and execution of security
-> sensitive applications called Trusted Applications (TAs). An example of
-> a TA would be a DRM (Digital Rights Management) TA written to enforce
-> content protection.
-> 
-> Linux already provides a tee subsystem, which is described in [1]. The tee
-> subsystem provides a generic TEE ioctl interface which can be used by user
-> space to talk to a TEE driver. AMD-TEE driver registers with tee subsystem
-> and implements tee function callbacks in an AMD platform specific manner.
-> 
-> The following TEE commands are recognized by AMD-TEE Trusted OS:
-> 1. TEE_CMD_ID_LOAD_TA : Load Trusted Application (TA) binary into TEE
->    environment
-> 2. TEE_CMD_ID_UNLOAD_TA : Unload TA binary from TEE environment
-> 3. TEE_CMD_ID_OPEN_SESSION : Open session with loaded TA
-> 4. TEE_CMD_ID_CLOSE_SESSION : Close session with loaded TA
-> 5. TEE_CMD_ID_INVOKE_CMD : Invoke a command with loaded TA
-> 6. TEE_CMD_ID_MAP_SHARED_MEM : Map shared memory
-> 7. TEE_CMD_ID_UNMAP_SHARED_MEM : Unmap shared memory
-> 
-> Each command has its own payload format. The AMD-TEE driver creates a
-> command buffer payload for submission to AMD-TEE Trusted OS.
-> 
-> This patch series has a dependency on another patch set titled - Add TEE
-> interface support to AMD Secure Processor driver.
-> Link: https://lkml.org/lkml/2019/12/4/42
-> 
-> v3:
-> * Updated [1] with driver details
-> 
-> v2:
-> * Added a helper API in AMD Secure Processor driver, which can be
->   called by AMD-TEE driver during module init to check if TEE is
->   present on the device
-> * Added proper checks for parameter attribute variable
-> * Used tee_shm_pool_alloc() to allocate struct tee_shm_pool data structure
-> * Removed all references to tee_private.h header file in driver code,
->   except for the file drivers/tee/amdtee/core.c. The driver loads TA binary
->   by calling request_firmware(), which takes struct device* as one of its
->   arguments. The device 'dev' field is part of struct tee_device, defined
->   in tee_private.h
-> 
-> [1] https://www.kernel.org/doc/Documentation/tee.txt
-> 
-> Rijo Thomas (4):
->   tee: allow compilation of tee subsystem for AMD CPUs
->   tee: add AMD-TEE driver
->   tee: amdtee: check TEE status during driver initialization
->   Documentation: tee: add AMD-TEE driver details
-> 
->  Documentation/tee.txt               |  81 ++++++
->  drivers/crypto/ccp/tee-dev.c        |  11 +
->  drivers/tee/Kconfig                 |   4 +-
->  drivers/tee/Makefile                |   1 +
->  drivers/tee/amdtee/Kconfig          |   8 +
->  drivers/tee/amdtee/Makefile         |   5 +
->  drivers/tee/amdtee/amdtee_if.h      | 183 +++++++++++++
->  drivers/tee/amdtee/amdtee_private.h | 159 +++++++++++
->  drivers/tee/amdtee/call.c           | 373 ++++++++++++++++++++++++++
->  drivers/tee/amdtee/core.c           | 516 ++++++++++++++++++++++++++++++++++++
->  drivers/tee/amdtee/shm_pool.c       |  93 +++++++
->  include/linux/psp-tee.h             |  18 ++
->  include/uapi/linux/tee.h            |   1 +
->  13 files changed, 1451 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/tee/amdtee/Kconfig
->  create mode 100644 drivers/tee/amdtee/Makefile
->  create mode 100644 drivers/tee/amdtee/amdtee_if.h
->  create mode 100644 drivers/tee/amdtee/amdtee_private.h
->  create mode 100644 drivers/tee/amdtee/call.c
->  create mode 100644 drivers/tee/amdtee/core.c
->  create mode 100644 drivers/tee/amdtee/shm_pool.c
-> 
-> --
-> 1.9.1
-> 
+For hugetlbfs pages, tdp_page_fault() -> mapping_level() -> =
+host_mapping_level() -> kvm_host_page_size() -> vma_kernel_pagesize()
+will return the page-size of the hugetlbfs without the need to parse the =
+page-tables.
+See vma->vm_ops->pagesize() callback implementation at =
+hugetlb_vm_ops->pagesize()=3D=3Dhugetlb_vm_op_pagesize().
+
+Only for pages that were originally mapped as small-pages and later =
+merged to larger pages by THP, there is a need to check for =
+PageTransCompound(). Again, instead of parsing page-tables.
+
+Therefore, it seems more logical to me that:
+(a) If DAX-backed files are mapped as large-pages to userspace, it =
+should be reflected in vma->vm_ops->page_size() of that mapping. Causing =
+kvm_host_page_size() to return the right size without the need to parse =
+the page-tables.
+(b) If DAX-backed files small-pages can be later merged to large-pages =
+by THP, then the =E2=80=9Cstruct page=E2=80=9D of these pages should be =
+modified as usual to make PageTransCompound() return true for them. =
+I=E2=80=99m not highly familiar with this mechanism, but I would expect =
+THP to be able to merge DAX-backed files small-pages to large-pages in =
+case DAX provides =E2=80=9Cstruct page=E2=80=9D for the DAX pages.
+
+>=20
+> Note that KVM already faulted in the page (or huge page) in the host's
+> page table, and we hold the KVM mmu spinlock.  We grabbed that lock in
+> kvm_mmu_notifier_invalidate_range_end, before checking the mmu seq.
+>=20
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> ---
+> arch/x86/kvm/mmu/mmu.c | 36 ++++++++++++++++++++++++++++++++----
+> 1 file changed, 32 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 6f92b40d798c..cd07bc4e595f 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -3384,6 +3384,35 @@ static int kvm_handle_bad_page(struct kvm_vcpu =
+*vcpu, gfn_t gfn, kvm_pfn_t pfn)
+> 	return -EFAULT;
+> }
+>=20
+> +static bool pfn_is_huge_mapped(struct kvm *kvm, gfn_t gfn, kvm_pfn_t =
+pfn)
+> +{
+> +	struct page *page =3D pfn_to_page(pfn);
+> +	unsigned long hva;
+> +
+> +	if (!is_zone_device_page(page))
+> +		return PageTransCompoundMap(page);
+> +
+> +	/*
+> +	 * DAX pages do not use compound pages.  The page should have =
+already
+> +	 * been mapped into the host-side page table during =
+try_async_pf(), so
+> +	 * we can check the page tables directly.
+> +	 */
+> +	hva =3D gfn_to_hva(kvm, gfn);
+> +	if (kvm_is_error_hva(hva))
+> +		return false;
+> +
+> +	/*
+> +	 * Our caller grabbed the KVM mmu_lock with a successful
+> +	 * mmu_notifier_retry, so we're safe to walk the page table.
+> +	 */
+> +	switch (dev_pagemap_mapping_shift(hva, current->mm)) {
+
+Doesn=E2=80=99t dev_pagemap_mapping_shift() get =E2=80=9Cstruct page=E2=80=
+=9D as first parameter?
+Was this changed by a commit I missed?
+
+-Liran
+
+> +	case PMD_SHIFT:
+> +	case PUD_SIZE:
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
+> static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+> 					gfn_t gfn, kvm_pfn_t *pfnp,
+> 					int *levelp)
+> @@ -3398,8 +3427,8 @@ static void transparent_hugepage_adjust(struct =
+kvm_vcpu *vcpu,
+> 	 * here.
+> 	 */
+> 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> -	    !kvm_is_zone_device_pfn(pfn) && level =3D=3D =
+PT_PAGE_TABLE_LEVEL &&
+> -	    PageTransCompoundMap(pfn_to_page(pfn)) &&
+> +	    level =3D=3D PT_PAGE_TABLE_LEVEL &&
+> +	    pfn_is_huge_mapped(vcpu->kvm, gfn, pfn) &&
+> 	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) =
+{
+> 		unsigned long mask;
+> 		/*
+> @@ -6015,8 +6044,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct =
+kvm *kvm,
+> 		 * mapping if the indirect sp has level =3D 1.
+> 		 */
+> 		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> -		    !kvm_is_zone_device_pfn(pfn) &&
+> -		    PageTransCompoundMap(pfn_to_page(pfn))) {
+> +		    pfn_is_huge_mapped(kvm, sp->gfn, pfn)) {
+> 			pte_list_remove(rmap_head, sptep);
+>=20
+> 			if (kvm_available_flush_tlb_with_range())
+> --=20
+> 2.24.0.525.g8f36a354ae-goog
+>=20
+
