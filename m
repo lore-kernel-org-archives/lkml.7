@@ -2,74 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DFDC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D626BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89AD6227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576148822;
-	bh=Y0loDw+uKFeN7cf78aOvQigklGH6Ys0zQRFUm0ZVYuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KBdiUiQ/q60lw9Lqs3xq1V5GcN6u5Hmb9GwSW7ZaNBEiI8HPjxXZMm8dCe5yY3eFm
-	 XkIHJbg1KHUS24oqjTZXkQ2pCDMw8Zt3sMiXrLQmpsVegi+Jma0nCcv2yGZetGRS1t
-	 hQRaWlhgHrT4R8IB5cw7eXDHMfXsIToCUyg97fFs=
+	by mail.kernel.org (Postfix) with ESMTP id ABFF3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bLPkQT4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfLLLHB (ORCPT
+        id S1728913AbfLLLHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:07:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbfLLLHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:07:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58F3D2067C;
-        Thu, 12 Dec 2019 11:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576148820;
-        bh=Y0loDw+uKFeN7cf78aOvQigklGH6Ys0zQRFUm0ZVYuQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tuv5lWkKG9kriUxqdbH5FxuUH9XO3guojzxKaKZd+KUI1T8MVOL6B7LBUfWoPhe8H
-         q84SwjIt4mJwXWZkE0CpFYt/x6lDVIea1uiurG7NAuwJ8Pu+KH2rKSMhpch/OAKHXg
-         wyJnS0ybv0P5RM2PSrgZnTk48ns+Ht87FPCFyNbU=
-Date:   Thu, 12 Dec 2019 12:06:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Hyunki Koo <kkoos00@naver.com>,
-        HYUN-KI KOO <hyunki00.koo@samsung.com>,
-        Shinbeom Choi <sbeom.choi@samsung.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/10] tty: serial: samsung.h: fix up minor comment issues
-Message-ID: <20191212110658.GA1490894@kroah.com>
-References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
- <20191210143706.3928480-3-gregkh@linuxfoundation.org>
- <20191210151204.GH11222@pi3>
+        Thu, 12 Dec 2019 06:07:47 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34214 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728613AbfLLLHr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 06:07:47 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCAwwB0056725;
+        Thu, 12 Dec 2019 11:07:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=YRk6g7FxBAzSfJq2rxanLkGSDrmUILvwq1H4o0Nf8a0=;
+ b=bLPkQT4mKEuc+Fxi6AsqdsjDk7SkewoV2cW2scJzIgOoM6V1VVjV6yYT2VGz/llEMpli
+ 9+AOLjuW/a+GW5xS4GUHGkgVqHujAQ2xuJ+LgZTcWmeJOyHE0/dMHrqPMlK08daP53NR
+ ynuC13Tt3ntLOtezqcZZ5jksE/F66YAABFmXqgqr24/U/zmvZLGGoibPU/EpERAXKk8o
+ f/eFw0+as9S6ouBrMbN/WJFuBzv/mkC5SxaZy3OiYbwJ8Mlq9qVF39i6/1czkx2D/pEw
+ AmlXnm4spgO+P5xr+5MkpYJyhb38NfJhB2T+SXm4/xy3uvb3lq6QWDHRnH0gO7J84HGp nA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2wr41qjaqm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:07:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCB7MRO095116;
+        Thu, 12 Dec 2019 11:07:40 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wu3k15fa3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:07:40 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBCB7cZZ011111;
+        Thu, 12 Dec 2019 11:07:39 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 03:07:38 -0800
+Date:   Thu, 12 Dec 2019 14:07:29 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Scott Schafer <schaferjscott@gmail.com>,
+        gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        netdev@vger.kernel.org, GR-Linux-NIC-Dev@marvell.com,
+        linux-kernel@vger.kernel.org, Manish Chopra <manishc@marvell.com>
+Subject: Re: [PATCH v2 20/23] staging: qlge: Fix CHECK: usleep_range is
+ preferred over udelay
+Message-ID: <20191212110729.GD2070@kadam>
+References: <cover.1576086080.git.schaferjscott@gmail.com>
+ <a3f14b13d76102cd4e536152e09517a69ddbe9f9.1576086080.git.schaferjscott@gmail.com>
+ <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191210151204.GH11222@pi3>
+In-Reply-To: <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120082
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:12:04PM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Dec 10, 2019 at 03:36:59PM +0100, Greg Kroah-Hartman wrote:
-> > checkpatch found some minor issues with comments in samsung.h, so fix
-> > that up.
-> >
+On Thu, Dec 12, 2019 at 01:45:57PM +0300, Sergei Shtylyov wrote:
+> Hello!
 > 
-> No, you remove this header two patches later. No point to fix checkpatch
-> issues here.
+> On 11.12.2019 21:12, Scott Schafer wrote:
+> 
+> > chage udelay() to usleep_range()
+> 
+>    Change?
+> 
+> > Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+> > ---
+> >   drivers/staging/qlge/qlge_main.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> > index e18aa335c899..9427386e4a1e 100644
+> > --- a/drivers/staging/qlge/qlge_main.c
+> > +++ b/drivers/staging/qlge/qlge_main.c
+> > @@ -147,7 +147,7 @@ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+> >   	do {
+> >   		if (!ql_sem_trylock(qdev, sem_mask))
+> >   			return 0;
+> > -		udelay(100);
+> > +		usleep_range(100, 200);
+> 
+>    I hope you're not in atomic context...
 
-It's nice to delete "clean" files :)
+I have an unpublished Smatch check which says that we aren't in atomic
+context, but still this has spin_lock() in the name so you're right, it
+shouldn't sleep.
+
+regards,
+dan carpenter
 
