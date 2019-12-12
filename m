@@ -2,100 +2,129 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D6EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAB8C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE162077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E744C2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="x2FnOlHQ"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="gVztby/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbfLLI1m (ORCPT
+        id S1728224AbfLLI3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:27:42 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44160 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbfLLI1m (ORCPT
+        Thu, 12 Dec 2019 03:29:06 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35561 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727906AbfLLI3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:27:42 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so752448pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:27:41 -0800 (PST)
+        Thu, 12 Dec 2019 03:29:05 -0500
+Received: by mail-vs1-f66.google.com with SMTP id x123so976598vsc.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:29:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dNWOBA5YwzD3g4C2lwDOuDcI1Q0TYRPb9GI/Gzl2Jr8=;
-        b=x2FnOlHQRZ7INIj6O8+MnWCeuiBYNLqdiOswnaoZ864UO6WAQA0twmxYmsxNsOSSnC
-         Ly2ePlLH8p6iDtGIDroA3OJfk3onQ1aAi6kOs1Vv3KZnPsyQ+ZCKvfm8W0y5Io2aTcdz
-         VH/iUSMpZbosWLX5kkWHuNjQ8dFo9lKDfbBTTqS3KKKKOCA+/a3ksx+H2d9O/ans7WNx
-         020CaCgf58fo16lOvDb94CwsHbwZ8t+RvoC7x+ouG8mmKxVK63YWUmPbswnA2ptBbmuC
-         LiOB60aqKZRsoIZEgcmHbJhH15rTh/w+KVSG460Ep745jP/deByOZvgklH6GlWkCZBVK
-         C+yw==
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XgxCnRiTfja1L+B6Xn0JuIUwn0x0QrtKVBtLGuTEljg=;
+        b=gVztby/BHQJ9PZBKa3D0z7om1skfkDzVsuhBRH82k9/hXT9aRdfZ6KGtjWHOutFleq
+         uF1WSfJ8tUrou3WPu+hDg5If+SNIO2Ufb6a+9pPgHemfEqDmvBGYc79gx+x1N0w8G0b1
+         l1mEnz/PBcmVnZppUrc7t6d4FNIcEk6K6weCBa6/VehlKZP6Ob5UcMo1iORqF65cBM/c
+         Iv41qh9jbeSX7tFgULRbU1bGCyznTNPQrmyJqJoywgSrOx082uCOuDCRoTAmQ/wANuxW
+         GK/IyyFBIHd5E9Li4OslsbEGWt4pWiS40vkZpksi5880AnShIACe0dpD/onBAzjlkhvw
+         nHlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dNWOBA5YwzD3g4C2lwDOuDcI1Q0TYRPb9GI/Gzl2Jr8=;
-        b=GEIyLKPcQ20JW4df1+kRrlWjVEAWH0sCm7LycV/FdhxuQsdmkQmvJj/+coRGkoIMXB
-         dLRsgyAHPSettzDhy1pG0U0kKmIYqR2UmJlIYBpswOxrejoUyBjZAf1FG9/yKviQC7WE
-         JUqs1TVvah5ujdjPSuYi4myL11DqqEzUXA/ekxq2d6aqWdtaDDxS36MMA8+N17IoV/L8
-         WQTXSwNmfEx59PbKWqy2zGFHVoPa8pNwFG+3nvoaAMDDvaUJXXPn4jnpwkJHT0laUPF/
-         vqpb94YyPtB/HSgTElqGi6Qm5NnTW+CYL9sWMqSPaV3+fEOcPaihyQ9eWZgkh77yOvXZ
-         sgpQ==
-X-Gm-Message-State: APjAAAVcA+mH354MGdu0aQ8qT/5RfVt7jDbgilmwuCSfx0zRQkqJ14f7
-        omQcfagR0fOZquvXTrI883zGbw==
-X-Google-Smtp-Source: APXvYqxBBy+O8IUr//c8wJuqru1jWzqjv78xdvkaJ7eDXK/yp7162K1YVGhRaKCcqhiNQoRjFc6OKw==
-X-Received: by 2002:a63:d108:: with SMTP id k8mr9032354pgg.434.1576139261361;
-        Thu, 12 Dec 2019 00:27:41 -0800 (PST)
-Received: from debian ([122.174.90.102])
-        by smtp.gmail.com with ESMTPSA id hg11sm4897908pjb.14.2019.12.12.00.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 00:27:40 -0800 (PST)
-Date:   Thu, 12 Dec 2019 13:57:29 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 00/92] 5.4.3-stable review
-Message-ID: <20191212082729.GA3268@debian>
-References: <20191211150221.977775294@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XgxCnRiTfja1L+B6Xn0JuIUwn0x0QrtKVBtLGuTEljg=;
+        b=gouz0FxsVYzFU0k3tRciGiUOgqs8qvC434dZCYs0REOB4l52J5Isro7rvpxxYeyGML
+         Gq9LZYGMQyoi51vkOwd73kvKJsvo6HLula3b2LZ/CWvuue/mmVYOKSan4FiUVH/AeOm2
+         ixLEZtOp/+TVMIzEcecSwMPC5VaaHj0mYBDbP3JHS11tJvZLBP2ToLBvkUKpm4dXGtGH
+         +geQ7DvL53t5xKisyM+F1OdpY9paTBvfGWqr6ccp0kJyXp1dbfUJyIcLwkRakpCWhKYu
+         yB5u5pk7e2GHzvB04mKF+Kvu/m8zjc2m4ytMepj8fIUFXafiTkP1sxV6RTOLvshYQWfc
+         EaBA==
+X-Gm-Message-State: APjAAAWSHxxwxRD4KsTCs4+fIipw4p1XJSMO8gxS25zbKMjSjzIXtyu4
+        9DNot1iJLIA3KXE89VDa9ZoBnVbvhahyleKCtwOZbw==
+X-Google-Smtp-Source: APXvYqxwBVwLqxEvOxIflOhsGsMSkYb6lfxJt1tosG6/eY6xpGyjucXTvEj741coTmOODqT107Q/DNxtylHdDzMIdYA=
+X-Received: by 2002:a67:7acd:: with SMTP id v196mr5961661vsc.95.1576139344363;
+ Thu, 12 Dec 2019 00:29:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191212061702.BFE2D6E85603@corona.crabdance.com>
+In-Reply-To: <20191212061702.BFE2D6E85603@corona.crabdance.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 12 Dec 2019 13:58:52 +0530
+Message-ID: <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
+Subject: Re: [RESEND PATCH] thermal: rockchip: enable hwmon
+To:     schaecsn@gmx.net
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        linux-rockchip@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:04:51PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.3 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
+On Thu, Dec 12, 2019 at 11:47 AM Stefan Schaeckeler <schaecsn@gmx.net> wrote:
+>
+> By default, of-based thermal drivers do not enable hwmon.
+> Explicitly enable hwmon for both, the soc and gpu temperature
+> sensor.
 
-No new errors from "sudo dmesg -l err".
+Is there any reason you need to expose this in hwmon?
 
---
-software engineer
-rajagiri school of engineering and technology
-
-
+> Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+>
+> ---
+>  drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+> index 343c2f5c5a25..e47c60010259 100644
+> --- a/drivers/thermal/rockchip_thermal.c
+> +++ b/drivers/thermal/rockchip_thermal.c
+> @@ -19,6 +19,8 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/pinctrl/consumer.h>
+>
+> +#include "thermal_hwmon.h"
+> +
+>  /**
+>   * If the temperature over a period of time High,
+>   * the resulting TSHUT gave CRU module,let it reset the entire chip,
+> @@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+>
+>         thermal->chip->control(thermal->regs, true);
+>
+> -       for (i = 0; i < thermal->chip->chn_num; i++)
+> +       for (i = 0; i < thermal->chip->chn_num; i++) {
+>                 rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+> +               thermal->sensors[i].tzd->tzp->no_hwmon = false;
+> +               error = thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
+> +               if (error)
+> +                       dev_warn(&pdev->dev,
+> +                                "failed to register sensor %d with hwmon: %d\n",
+> +                                i, error);
+> +       }
+>
+>         platform_set_drvdata(pdev, thermal);
+>
+> @@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_device *pdev)
+>         for (i = 0; i < thermal->chip->chn_num; i++) {
+>                 struct rockchip_thermal_sensor *sensor = &thermal->sensors[i];
+>
+> +               thermal_remove_hwmon_sysfs(sensor->tzd);
+>                 rockchip_thermal_toggle_sensor(sensor, false);
+>         }
+>
+> --
+> 2.24.0
+>
