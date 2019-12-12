@@ -2,146 +2,97 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A4FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B16C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7335214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A9D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:08:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iN08be9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbfLLOIE (ORCPT
+        id S1729693AbfLLOIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 12 Dec 2019 09:08:07 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:34760 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729529AbfLLOIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 09:08:04 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:43142 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbfLLOIC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:08:02 -0500
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-X-isilmar-external: YES
-Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 402AC200A94;
-        Thu, 12 Dec 2019 14:08:00 +0000 (UTC)
-Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id D393A20B6E; Thu, 12 Dec 2019 15:07:57 +0100 (CET)
-From:   Dominik Brodowski <linux@dominikbrodowski.net>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] fs: remove ksys_dup()
-Date:   Thu, 12 Dec 2019 15:07:52 +0100
-Message-Id: <20191212140752.347520-3-linux@dominikbrodowski.net>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20191212140752.347520-1-linux@dominikbrodowski.net>
-References: <20191212140752.347520-1-linux@dominikbrodowski.net>
+Received: from zn.tnic (p200300EC2F0A5A0074DA66A3488432B7.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:74da:66a3:4884:32b7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DD9531EC0CF2;
+        Thu, 12 Dec 2019 15:08:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576159682;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=NsGklImh4vHVCyOymFTYnrXanEPRgUlIlWs7cbNiu6U=;
+        b=iN08be9/huQMl+iEiScV/paCVRtsQQsrwRQWEmnmeKWF4TaYjWL7tcPT5X+/ES58fRlVVr
+        kVIPZMR1e7Ps9ywEugeQgXrEl7h2CEDePKINMyshMRNHt9sa+VGG79bGrKQmN89cCwLwTn
+        R7BunpK0TFmEoQOUB8O2Au8IIAXvGhQ=
+Date:   Thu, 12 Dec 2019 15:07:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 00/19] x86/cpu: Clean up handling of VMX features
+Message-ID: <20191212140755.GF4991@zn.tnic>
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ksys_dup() is used only at one place in the kernel, namely to duplicate
-fd 0 of /dev/console to stdout and stderr. The same functionality can be
-achieved by using functions already available within the kernel namespace.
+On Wed, Nov 27, 2019 at 05:39:57PM -0800, Sean Christopherson wrote:
+> Clean up a handful of interrelated warts in the kernel's handling of VMX:
+> 
+>   - Enable VMX in IA32_FEATURE_CONTROL during boot instead of on-demand
+>     during KVM load to avoid future contention over IA32_FEATURE_CONTROL.
+> 
+>   - Rework VMX feature reporting so that it is accurate and up-to-date,
+>     now and in the future.
+> 
+>   - Consolidate code across CPUs that support VMX.
 
-Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
----
- fs/file.c                |  7 +------
- include/linux/syscalls.h |  1 -
- init/main.c              | 26 ++++++++++++++++++++------
- 3 files changed, 21 insertions(+), 13 deletions(-)
+Ok, this is shaping up slowly to be upstream-ready, AFAICT.
 
-diff --git a/fs/file.c b/fs/file.c
-index 3da91a112bab..2f4fcf985079 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -960,7 +960,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
- 	return ksys_dup3(oldfd, newfd, 0);
- }
- 
--int ksys_dup(unsigned int fildes)
-+SYSCALL_DEFINE1(dup, unsigned int, fildes)
- {
- 	int ret = -EBADF;
- 	struct file *file = fget_raw(fildes);
-@@ -975,11 +975,6 @@ int ksys_dup(unsigned int fildes)
- 	return ret;
- }
- 
--SYSCALL_DEFINE1(dup, unsigned int, fildes)
--{
--	return ksys_dup(fildes);
--}
--
- int f_dupfd(unsigned int from, struct file *file, unsigned flags)
- {
- 	int err;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index d0391cc2dae9..517dd0bd3939 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1234,7 +1234,6 @@ asmlinkage long sys_ni_syscall(void);
- int ksys_mount(const char __user *dev_name, const char __user *dir_name,
- 	       const char __user *type, unsigned long flags, void __user *data);
- int ksys_umount(char __user *name, int flags);
--int ksys_dup(unsigned int fildes);
- int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
-diff --git a/init/main.c b/init/main.c
-index 2cd736059416..b397ab7aad2c 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -93,6 +93,7 @@
- #include <linux/rodata_test.h>
- #include <linux/jump_label.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/file.h>
- 
- #include <asm/io.h>
- #include <asm/bugs.h>
-@@ -1157,13 +1158,26 @@ static int __ref kernel_init(void *unused)
- 
- void console_on_rootfs(void)
- {
--	/* Open the /dev/console as stdin, this should never fail */
--	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
--		pr_err("Warning: unable to open an initial console.\n");
-+	struct file *file;
-+	unsigned int i;
-+
-+	/* Open /dev/console in kernelspace, this should never fail */
-+	file = filp_open((const char *) "/dev/console", O_RDWR, 0);
-+	if (!file)
-+		goto err_out;
-+
-+	/* create stdin/stdout/stderr, this should never fail */
-+	for (i = 0; i < 3; i++) {
-+		if (f_dupfd(i, file, 0) != i)
-+			goto err_out;
-+	}
-+
-+	return;
- 
--	/* create stdout/stderr */
--	(void) ksys_dup(0);
--	(void) ksys_dup(0);
-+err_out:
-+	/* no panic -- this might not be fatal */
-+	pr_err("Warning: unable to open an initial console.\n");
-+	return;
- }
- 
- static noinline void __init kernel_init_freeable(void)
+How are we merging the next revision, after the minor things have been
+taken care of? Through tip?
+
+Paolo?
+
 -- 
-2.24.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
