@@ -2,191 +2,350 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA0DC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA468C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B46208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rFHOh26/"
+	by mail.kernel.org (Postfix) with ESMTP id 71F11208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfLLCKO (ORCPT
+        id S1727783AbfLLCLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:10:14 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:46952 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727544AbfLLCKN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:10:13 -0500
-X-UUID: 28645188f81543daa26b4ac3a15a528a-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VpgZcjR1SsBox1/HBPJxCX6RUerx/cuwQ7AnJYi8EIw=;
-        b=rFHOh26/RdrbPri00JBSqbakNv5Z+KWYLRxSTLUP6hzQD4EB8b13qUeWaYA6yDXfV1e3tmXrX2vujjEV9oe1VvqjtJrC79MKDtuzI+UN/j8nxawAb+F0ohcvupfQg/UXuikDh/GrtsHuG1YLle/Yy0vRICBb4cP5AHalL3Yyk9A=;
-X-UUID: 28645188f81543daa26b4ac3a15a528a-20191212
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 197373770; Thu, 12 Dec 2019 10:10:02 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N2.mediatek.inc
- (172.27.4.72) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 12 Dec
- 2019 10:05:23 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 10:10:06 +0800
-Message-ID: <1576116600.21256.3.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 4/4] usb: usb3503: Convert to use GPIO descriptors
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-CC:     <linux-usb@vger.kernel.org>, <linux-samsung-soc@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Stefan Agner" <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Date:   Thu, 12 Dec 2019 10:10:00 +0800
-In-Reply-To: <20191211145226.25074-1-m.szyprowski@samsung.com>
-References: <20191211145054.24835-1-m.szyprowski@samsung.com>
-         <CGME20191211145231eucas1p29d4e0ed105274c79682b48a613b45904@eucas1p2.samsung.com>
-         <20191211145226.25074-1-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 11 Dec 2019 21:11:05 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23469 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727637AbfLLCLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:11:05 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 18:10:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
+   d="scan'208";a="245525172"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Dec 2019 18:10:51 -0800
+Date:   Wed, 11 Dec 2019 21:02:40 -0500
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [RFC PATCH 4/9] vfio-pci: register default dynamic-trap-bar-info
+ region
+Message-ID: <20191212020240.GA21868@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20191205032650.29794-1-yan.y.zhao@intel.com>
+ <20191205165530.1f29fe85@x1.home>
+ <20191206060407.GF31791@joy-OptiPlex-7040>
+ <20191206082038.2b1078d9@x1.home>
+ <20191209062212.GL31791@joy-OptiPlex-7040>
+ <20191209141608.310520fc@x1.home>
+ <20191210074444.GA28339@joy-OptiPlex-7040>
+ <20191210093805.36a5b443@x1.home>
+ <20191211062555.GC28339@joy-OptiPlex-7040>
+ <20191211115655.7ecc5c83@x1.home>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 3AA4084B10160E7ED06A631047B49B5C3DEDD960766FE10618DCAC976FA6C5572000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211115655.7ecc5c83@x1.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTExIGF0IDE1OjUyICswMTAwLCBNYXJlayBTenlwcm93c2tpIHdyb3Rl
-Og0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQo+IA0K
-PiBUaGlzIGNvbnZlcnRzIHRoZSBVU0IzNTAzIHRvIHBpY2sgR1BJTyBkZXNjcmlwdG9ycyBmcm9t
-IHRoZQ0KPiBkZXZpY2UgdHJlZSBpbnN0ZWFkIG9mIGl0ZXJhdGl2ZWx5IHBpY2tpbmcgb3V0IEdQ
-SU8gbnVtYmVyDQo+IHJlZmVyZW5jZXMgYW5kIHRoZW4gcmVmZXJlbmNpbmcgdGhlc2UgZnJvbSB0
-aGUgZ2xvYmFsIEdQSU8NCj4gbnVtYmVyc3BhY2UuDQo+IA0KPiBUaGUgVVNCMzUwMyBpcyBvbmx5
-IHVzZWQgZnJvbSBkZXZpY2UgdHJlZSBhbW9uZyB0aGUgaW4tdHJlZQ0KPiBwbGF0Zm9ybXMuIElm
-IGJvYXJkIGZpbGVzIHdvdWxkIHN0aWxsIGRlc2lyZSB0byB1c2UgaXQgdGhleSBjYW4NCj4gcHJv
-dmlkZSBtYWNoaW5lIGRlc2NyaXB0b3IgdGFibGVzLg0KPiANCj4gTWFrZSBzdXJlIHRvIHByZXNl
-cnZlIHNlbWFudGljcyBzdWNoIGFzIHRoZSByZXNldCBkZWxheQ0KPiBpbnRyb2R1Y2VkIGJ5IFN0
-ZWZhbi4NCj4gDQo+IENjOiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+
-DQo+IENjOiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+DQo+IENj
-OiBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD4NCj4gQ2M6IEtyenlzenRvZiBLb3psb3dz
-a2kgPGtyemtAa2VybmVsLm9yZz4NCj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGlu
-dXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiBbbXN6eXByb3c6IGludmVydCB0aGUgbG9naWMgYmVo
-aW5kIHJlc2V0IEdQSU8gbGluZV0NCj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgU3p5cHJvd3NraSA8
-bS5zenlwcm93c2tpQHNhbXN1bmcuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvdXNiL21pc2MvdXNi
-MzUwMy5jICAgICAgICAgICAgfCA5NCArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0NCj4gIGlu
-Y2x1ZGUvbGludXgvcGxhdGZvcm1fZGF0YS91c2IzNTAzLmggfCAgMyAtDQo+ICAyIGZpbGVzIGNo
-YW5nZWQsIDM1IGluc2VydGlvbnMoKyksIDYyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvdXNiL21pc2MvdXNiMzUwMy5jIGIvZHJpdmVycy91c2IvbWlzYy91c2IzNTAz
-LmMNCj4gaW5kZXggNzJmMzlhOTc1MWI1Li4xMTZiZDc4OWU1NjggMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvdXNiL21pc2MvdXNiMzUwMy5jDQo+ICsrKyBiL2RyaXZlcnMvdXNiL21pc2MvdXNiMzUw
-My5jDQo+IEBAIC03LDExICs3LDEwIEBADQo+ICANCj4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4N
-Cj4gICNpbmNsdWRlIDxsaW51eC9pMmMuaD4NCj4gLSNpbmNsdWRlIDxsaW51eC9ncGlvLmg+DQo+
-ICsjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2Rl
-bGF5Lmg+DQo+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L21v
-ZHVsZS5oPg0KPiAtI2luY2x1ZGUgPGxpbnV4L29mX2dwaW8uaD4NCj4gICNpbmNsdWRlIDxsaW51
-eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kYXRhL3Vz
-YjM1MDMuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4NCj4gQEAgLTQ3LDE5ICs0Niwx
-OSBAQCBzdHJ1Y3QgdXNiMzUwMyB7DQo+ICAJc3RydWN0IGRldmljZQkJKmRldjsNCj4gIAlzdHJ1
-Y3QgY2xrCQkqY2xrOw0KPiAgCXU4CXBvcnRfb2ZmX21hc2s7DQo+IC0JaW50CWdwaW9faW50bjsN
-Cj4gLQlpbnQJZ3Bpb19yZXNldDsNCj4gLQlpbnQJZ3Bpb19jb25uZWN0Ow0KPiArCXN0cnVjdCBn
-cGlvX2Rlc2MJKmludG47DQo+ICsJc3RydWN0IGdwaW9fZGVzYyAJKnJlc2V0Ow0KPiArCXN0cnVj
-dCBncGlvX2Rlc2MgCSpjb25uZWN0Ow0KPiAgCWJvb2wJc2Vjb25kYXJ5X3JlZl9jbGs7DQo+ICB9
-Ow0KPiAgDQo+ICBzdGF0aWMgaW50IHVzYjM1MDNfcmVzZXQoc3RydWN0IHVzYjM1MDMgKmh1Yiwg
-aW50IHN0YXRlKQ0KPiAgew0KPiAtCWlmICghc3RhdGUgJiYgZ3Bpb19pc192YWxpZChodWItPmdw
-aW9fY29ubmVjdCkpDQo+IC0JCWdwaW9fc2V0X3ZhbHVlX2NhbnNsZWVwKGh1Yi0+Z3Bpb19jb25u
-ZWN0LCAwKTsNCj4gKwlpZiAoIXN0YXRlICYmIGh1Yi0+Y29ubmVjdCkNCj4gKwkJZ3Bpb2Rfc2V0
-X3ZhbHVlX2NhbnNsZWVwKGh1Yi0+Y29ubmVjdCwgMCk7DQo+ICANCj4gLQlpZiAoZ3Bpb19pc192
-YWxpZChodWItPmdwaW9fcmVzZXQpKQ0KPiAtCQlncGlvX3NldF92YWx1ZV9jYW5zbGVlcChodWIt
-PmdwaW9fcmVzZXQsIHN0YXRlKTsNCj4gKwlpZiAoaHViLT5yZXNldCkNCj4gKwkJZ3Bpb2Rfc2V0
-X3ZhbHVlX2NhbnNsZWVwKGh1Yi0+cmVzZXQsICFzdGF0ZSk7DQpXaGF0IGFib3V0IHByZXBhcmlu
-ZyBhbm90aGVyIHBhdGNoIGZvciBAc3RhdGUgYmVmb3JlIHRoaXMgcGF0aD8NCg0KPiAgDQo+ICAJ
-LyogV2FpdCBUX0hVQklOSVQgPT0gNG1zIGZvciBodWIgbG9naWMgdG8gc3RhYmlsaXplICovDQo+
-ICAJaWYgKHN0YXRlKQ0KPiBAQCAtMTE1LDggKzExNCw4IEBAIHN0YXRpYyBpbnQgdXNiMzUwM19j
-b25uZWN0KHN0cnVjdCB1c2IzNTAzICpodWIpDQo+ICAJCX0NCj4gIAl9DQo+ICANCj4gLQlpZiAo
-Z3Bpb19pc192YWxpZChodWItPmdwaW9fY29ubmVjdCkpDQo+IC0JCWdwaW9fc2V0X3ZhbHVlX2Nh
-bnNsZWVwKGh1Yi0+Z3Bpb19jb25uZWN0LCAxKTsNCj4gKwlpZiAoaHViLT5jb25uZWN0KQ0KPiAr
-CQlncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoaHViLT5jb25uZWN0LCAxKTsNCj4gIA0KPiAgCWh1
-Yi0+bW9kZSA9IFVTQjM1MDNfTU9ERV9IVUI7DQo+ICAJZGV2X2luZm8oZGV2LCAic3dpdGNoZWQg
-dG8gSFVCIG1vZGVcbiIpOw0KPiBAQCAtMTYzLDEzICsxNjIsMTEgQEAgc3RhdGljIGludCB1c2Iz
-NTAzX3Byb2JlKHN0cnVjdCB1c2IzNTAzICpodWIpDQo+ICAJaW50IGVycjsNCj4gIAl1MzIgbW9k
-ZSA9IFVTQjM1MDNfTU9ERV9IVUI7DQo+ICAJY29uc3QgdTMyICpwcm9wZXJ0eTsNCj4gKwllbnVt
-IGdwaW9kX2ZsYWdzIGZsYWdzOw0KPiAgCWludCBsZW47DQo+ICANCj4gIAlpZiAocGRhdGEpIHsN
-Cj4gIAkJaHViLT5wb3J0X29mZl9tYXNrCT0gcGRhdGEtPnBvcnRfb2ZmX21hc2s7DQo+IC0JCWh1
-Yi0+Z3Bpb19pbnRuCQk9IHBkYXRhLT5ncGlvX2ludG47DQo+IC0JCWh1Yi0+Z3Bpb19jb25uZWN0
-CT0gcGRhdGEtPmdwaW9fY29ubmVjdDsNCj4gLQkJaHViLT5ncGlvX3Jlc2V0CQk9IHBkYXRhLT5n
-cGlvX3Jlc2V0Ow0KPiAgCQlodWItPm1vZGUJCT0gcGRhdGEtPmluaXRpYWxfbW9kZTsNCj4gIAl9
-IGVsc2UgaWYgKG5wKSB7DQo+ICAJCXUzMiByYXRlID0gMDsNCj4gQEAgLTIzMCw1OSArMjI3LDM4
-IEBAIHN0YXRpYyBpbnQgdXNiMzUwM19wcm9iZShzdHJ1Y3QgdXNiMzUwMyAqaHViKQ0KPiAgCQkJ
-fQ0KPiAgCQl9DQo+ICANCj4gLQkJaHViLT5ncGlvX2ludG4JPSBvZl9nZXRfbmFtZWRfZ3Bpbyhu
-cCwgImludG4tZ3Bpb3MiLCAwKTsNCj4gLQkJaWYgKGh1Yi0+Z3Bpb19pbnRuID09IC1FUFJPQkVf
-REVGRVIpDQo+IC0JCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsNCj4gLQkJaHViLT5ncGlvX2Nvbm5l
-Y3QgPSBvZl9nZXRfbmFtZWRfZ3BpbyhucCwgImNvbm5lY3QtZ3Bpb3MiLCAwKTsNCj4gLQkJaWYg
-KGh1Yi0+Z3Bpb19jb25uZWN0ID09IC1FUFJPQkVfREVGRVIpDQo+IC0JCQlyZXR1cm4gLUVQUk9C
-RV9ERUZFUjsNCj4gLQkJaHViLT5ncGlvX3Jlc2V0ID0gb2ZfZ2V0X25hbWVkX2dwaW8obnAsICJy
-ZXNldC1ncGlvcyIsIDApOw0KPiAtCQlpZiAoaHViLT5ncGlvX3Jlc2V0ID09IC1FUFJPQkVfREVG
-RVIpDQo+IC0JCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsNCj4gIAkJb2ZfcHJvcGVydHlfcmVhZF91
-MzIobnAsICJpbml0aWFsLW1vZGUiLCAmbW9kZSk7DQo+ICAJCWh1Yi0+bW9kZSA9IG1vZGU7DQo+
-ICAJfQ0KPiAgDQo+IC0JaWYgKGh1Yi0+cG9ydF9vZmZfbWFzayAmJiAhaHViLT5yZWdtYXApDQo+
-IC0JCWRldl9lcnIoZGV2LCAiUG9ydHMgZGlzYWJsZWQgd2l0aCBubyBjb250cm9sIGludGVyZmFj
-ZVxuIik7DQo+IC0NCj4gLQlpZiAoZ3Bpb19pc192YWxpZChodWItPmdwaW9faW50bikpIHsNCj4g
-LQkJaW50IHZhbCA9IGh1Yi0+c2Vjb25kYXJ5X3JlZl9jbGsgPyBHUElPRl9PVVRfSU5JVF9MT1cg
-Og0KPiAtCQkJCQkJICAgR1BJT0ZfT1VUX0lOSVRfSElHSDsNCj4gLQkJZXJyID0gZGV2bV9ncGlv
-X3JlcXVlc3Rfb25lKGRldiwgaHViLT5ncGlvX2ludG4sIHZhbCwNCj4gLQkJCQkJICAgICJ1c2Iz
-NTAzIGludG4iKTsNCj4gLQkJaWYgKGVycikgew0KPiAtCQkJZGV2X2VycihkZXYsDQo+IC0JCQkJ
-InVuYWJsZSB0byByZXF1ZXN0IEdQSU8gJWQgYXMgaW50ZXJydXB0IHBpbiAoJWQpXG4iLA0KPiAt
-CQkJCWh1Yi0+Z3Bpb19pbnRuLCBlcnIpOw0KPiAtCQkJcmV0dXJuIGVycjsNCj4gLQkJfQ0KPiAt
-CX0NCj4gLQ0KPiAtCWlmIChncGlvX2lzX3ZhbGlkKGh1Yi0+Z3Bpb19jb25uZWN0KSkgew0KPiAt
-CQllcnIgPSBkZXZtX2dwaW9fcmVxdWVzdF9vbmUoZGV2LCBodWItPmdwaW9fY29ubmVjdCwNCj4g
-LQkJCQlHUElPRl9PVVRfSU5JVF9MT1csICJ1c2IzNTAzIGNvbm5lY3QiKTsNCj4gLQkJaWYgKGVy
-cikgew0KPiAtCQkJZGV2X2VycihkZXYsDQo+IC0JCQkJInVuYWJsZSB0byByZXF1ZXN0IEdQSU8g
-JWQgYXMgY29ubmVjdCBwaW4gKCVkKVxuIiwNCj4gLQkJCQlodWItPmdwaW9fY29ubmVjdCwgZXJy
-KTsNCj4gLQkJCXJldHVybiBlcnI7DQo+IC0JCX0NCj4gLQl9DQo+IC0NCj4gLQlpZiAoZ3Bpb19p
-c192YWxpZChodWItPmdwaW9fcmVzZXQpKSB7DQo+IC0JCWVyciA9IGRldm1fZ3Bpb19yZXF1ZXN0
-X29uZShkZXYsIGh1Yi0+Z3Bpb19yZXNldCwNCj4gLQkJCQlHUElPRl9PVVRfSU5JVF9MT1csICJ1
-c2IzNTAzIHJlc2V0Iik7DQo+ICsJaWYgKGh1Yi0+c2Vjb25kYXJ5X3JlZl9jbGspDQo+ICsJCWZs
-YWdzID0gR1BJT0RfT1VUX0xPVzsNCj4gKwllbHNlDQo+ICsJCWZsYWdzID0gR1BJT0RfT1VUX0hJ
-R0g7DQo+ICsJaHViLT5pbnRuID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoZGV2LCAiaW50biIs
-IGZsYWdzKTsNCj4gKwlpZiAoSVNfRVJSKGh1Yi0+aW50bikpDQo+ICsJCXJldHVybiBQVFJfRVJS
-KGh1Yi0+aW50bik7DQo+ICsJaWYgKGh1Yi0+aW50bikNCj4gKwkJZ3Bpb2Rfc2V0X2NvbnN1bWVy
-X25hbWUoaHViLT5pbnRuLCAidXNiMzUwMyBpbnRuIik7DQo+ICsNCj4gKwlodWItPmNvbm5lY3Qg
-PSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChkZXYsICJjb25uZWN0IiwgR1BJT0RfT1VUX0xPVyk7
-DQo+ICsJaWYgKElTX0VSUihodWItPmNvbm5lY3QpKQ0KPiArCQlyZXR1cm4gUFRSX0VSUihodWIt
-PmNvbm5lY3QpOw0KPiArCWlmIChodWItPmNvbm5lY3QpDQo+ICsJCWdwaW9kX3NldF9jb25zdW1l
-cl9uYW1lKGh1Yi0+Y29ubmVjdCwgInVzYjM1MDMgY29ubmVjdCIpOw0KPiArDQo+ICsJaHViLT5y
-ZXNldCA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgInJlc2V0IiwgR1BJT0RfT1VUX0hJ
-R0gpOw0KPiArCWlmIChJU19FUlIoaHViLT5yZXNldCkpDQo+ICsJCXJldHVybiBQVFJfRVJSKGh1
-Yi0+cmVzZXQpOw0KPiArCWlmIChodWItPnJlc2V0KSB7DQo+ICAJCS8qIERhdGFzaGVldCBkZWZp
-bmVzIGEgaGFyZHdhcmUgcmVzZXQgdG8gYmUgYXQgbGVhc3QgMTAwdXMgKi8NCj4gIAkJdXNsZWVw
-X3JhbmdlKDEwMCwgMTAwMDApOw0KPiAtCQlpZiAoZXJyKSB7DQo+IC0JCQlkZXZfZXJyKGRldiwN
-Cj4gLQkJCQkidW5hYmxlIHRvIHJlcXVlc3QgR1BJTyAlZCBhcyByZXNldCBwaW4gKCVkKVxuIiwN
-Cj4gLQkJCQlodWItPmdwaW9fcmVzZXQsIGVycik7DQo+IC0JCQlyZXR1cm4gZXJyOw0KPiAtCQl9
-DQo+ICsJCWdwaW9kX3NldF9jb25zdW1lcl9uYW1lKGh1Yi0+cmVzZXQsICJ1c2IzNTAzIHJlc2V0
-Iik7DQo+ICAJfQ0KPiAgDQo+ICsJaWYgKGh1Yi0+cG9ydF9vZmZfbWFzayAmJiAhaHViLT5yZWdt
-YXApDQo+ICsJCWRldl9lcnIoZGV2LCAiUG9ydHMgZGlzYWJsZWQgd2l0aCBubyBjb250cm9sIGlu
-dGVyZmFjZVxuIik7DQo+ICsNCj4gIAl1c2IzNTAzX3N3aXRjaF9tb2RlKGh1YiwgaHViLT5tb2Rl
-KTsNCj4gIA0KPiAgCWRldl9pbmZvKGRldiwgIiVzOiBwcm9iZWQgaW4gJXMgbW9kZVxuIiwgX19m
-dW5jX18sDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEvdXNiMzUw
-My5oIGIvaW5jbHVkZS9saW51eC9wbGF0Zm9ybV9kYXRhL3VzYjM1MDMuaA0KPiBpbmRleCBlMDQ5
-ZDUxYzEzNTMuLmQwMWVmOTdkZGYzNiAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9wbGF0
-Zm9ybV9kYXRhL3VzYjM1MDMuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3BsYXRmb3JtX2RhdGEv
-dXNiMzUwMy5oDQo+IEBAIC0xNyw5ICsxNyw2IEBAIGVudW0gdXNiMzUwM19tb2RlIHsNCj4gIHN0
-cnVjdCB1c2IzNTAzX3BsYXRmb3JtX2RhdGEgew0KPiAgCWVudW0gdXNiMzUwM19tb2RlCWluaXRp
-YWxfbW9kZTsNCj4gIAl1OAlwb3J0X29mZl9tYXNrOw0KPiAtCWludAlncGlvX2ludG47DQo+IC0J
-aW50CWdwaW9fY29ubmVjdDsNCj4gLQlpbnQJZ3Bpb19yZXNldDsNCj4gIH07DQo+ICANCj4gICNl
-bmRpZg0KDQo=
+On Thu, Dec 12, 2019 at 02:56:55AM +0800, Alex Williamson wrote:
+> On Wed, 11 Dec 2019 01:25:55 -0500
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
+> 
+> > On Wed, Dec 11, 2019 at 12:38:05AM +0800, Alex Williamson wrote:
+> > > On Tue, 10 Dec 2019 02:44:44 -0500
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > On Tue, Dec 10, 2019 at 05:16:08AM +0800, Alex Williamson wrote:  
+> > > > > On Mon, 9 Dec 2019 01:22:12 -0500
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > >     
+> > > > > > On Fri, Dec 06, 2019 at 11:20:38PM +0800, Alex Williamson wrote:    
+> > > > > > > On Fri, 6 Dec 2019 01:04:07 -0500
+> > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > >       
+> > > > > > > > On Fri, Dec 06, 2019 at 07:55:30AM +0800, Alex Williamson wrote:      
+> > > > > > > > > On Wed,  4 Dec 2019 22:26:50 -0500
+> > > > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > > > > >         
+> > > > > > > > > > Dynamic trap bar info region is a channel for QEMU and vendor driver to
+> > > > > > > > > > communicate dynamic trap info. It is of type
+> > > > > > > > > > VFIO_REGION_TYPE_DYNAMIC_TRAP_BAR_INFO and subtype
+> > > > > > > > > > VFIO_REGION_SUBTYPE_DYNAMIC_TRAP_BAR_INFO.
+> > > > > > > > > > 
+> > > > > > > > > > This region has two fields: dt_fd and trap.
+> > > > > > > > > > When QEMU detects a device regions of this type, it will create an
+> > > > > > > > > > eventfd and write its eventfd id to dt_fd field.
+> > > > > > > > > > When vendor drivre signals this eventfd, QEMU reads trap field of this
+> > > > > > > > > > info region.
+> > > > > > > > > > - If trap is true, QEMU would search the device's PCI BAR
+> > > > > > > > > > regions and disable all the sparse mmaped subregions (if the sparse
+> > > > > > > > > > mmaped subregion is disablable).
+> > > > > > > > > > - If trap is false, QEMU would re-enable those subregions.
+> > > > > > > > > > 
+> > > > > > > > > > A typical usage is
+> > > > > > > > > > 1. vendor driver first cuts its bar 0 into several sections, all in a
+> > > > > > > > > > sparse mmap array. So initally, all its bar 0 are passthroughed.
+> > > > > > > > > > 2. vendor driver specifys part of bar 0 sections to be disablable.
+> > > > > > > > > > 3. on migration starts, vendor driver signals dt_fd and set trap to true
+> > > > > > > > > > to notify QEMU disabling the bar 0 sections of disablable flags on.
+> > > > > > > > > > 4. QEMU disables those bar 0 section and hence let vendor driver be able
+> > > > > > > > > > to trap access of bar 0 registers and make dirty page tracking possible.
+> > > > > > > > > > 5. on migration failure, vendor driver signals dt_fd to QEMU again.
+> > > > > > > > > > QEMU reads trap field of this info region which is false and QEMU
+> > > > > > > > > > re-passthrough the whole bar 0 region.
+> > > > > > > > > > 
+> > > > > > > > > > Vendor driver specifies whether it supports dynamic-trap-bar-info region
+> > > > > > > > > > through cap VFIO_PCI_DEVICE_CAP_DYNAMIC_TRAP_BAR in
+> > > > > > > > > > vfio_pci_mediate_ops->open().
+> > > > > > > > > > 
+> > > > > > > > > > If vfio-pci detects this cap, it will create a default
+> > > > > > > > > > dynamic_trap_bar_info region on behalf of vendor driver with region len=0
+> > > > > > > > > > and region->ops=null.
+> > > > > > > > > > Vvendor driver should override this region's len, flags, rw, mmap in its
+> > > > > > > > > > vfio_pci_mediate_ops.        
+> > > > > > > > > 
+> > > > > > > > > TBH, I don't like this interface at all.  Userspace doesn't pass data
+> > > > > > > > > to the kernel via INFO ioctls.  We have a SET_IRQS ioctl for
+> > > > > > > > > configuring user signaling with eventfds.  I think we only need to
+> > > > > > > > > define an IRQ type that tells the user to re-evaluate the sparse mmap
+> > > > > > > > > information for a region.  The user would enumerate the device IRQs via
+> > > > > > > > > GET_IRQ_INFO, find one of this type where the IRQ info would also
+> > > > > > > > > indicate which region(s) should be re-evaluated on signaling.  The user
+> > > > > > > > > would enable that signaling via SET_IRQS and simply re-evaluate the        
+> > > > > > > > ok. I'll try to switch to this way. Thanks for this suggestion.
+> > > > > > > >       
+> > > > > > > > > sparse mmap capability for the associated regions when signaled.        
+> > > > > > > > 
+> > > > > > > > Do you like the "disablable" flag of sparse mmap ?
+> > > > > > > > I think it's a lightweight way for user to switch mmap state of a whole region,
+> > > > > > > > otherwise going through a complete flow of GET_REGION_INFO and re-setup
+> > > > > > > > region might be too heavy.      
+> > > > > > > 
+> > > > > > > No, I don't like the disable-able flag.  At what frequency do we expect
+> > > > > > > regions to change?  It seems like we'd only change when switching into
+> > > > > > > and out of the _SAVING state, which is rare.  It seems easy for
+> > > > > > > userspace, at least QEMU, to drop the entire mmap configuration and      
+> > > > > > ok. I'll try this way.
+> > > > > >     
+> > > > > > > re-read it.  Another concern here is how do we synchronize the event?
+> > > > > > > Are we assuming that this event would occur when a user switch to
+> > > > > > > _SAVING mode on the device?  That operation is synchronous, the device
+> > > > > > > must be in saving mode after the write to device state completes, but
+> > > > > > > it seems like this might be trying to add an asynchronous dependency.
+> > > > > > > Will the write to device_state only complete once the user handles the
+> > > > > > > eventfd?  How would the kernel know when the mmap re-evaluation is
+> > > > > > > complete.  It seems like there are gaps here that the vendor driver
+> > > > > > > could miss traps required for migration because the user hasn't
+> > > > > > > completed the mmap transition yet.  Thanks,
+> > > > > > > 
+> > > > > > > Alex      
+> > > > > > 
+> > > > > > yes, this asynchronous event notification will cause vendor driver miss
+> > > > > > traps. But it's supposed to be of very short period time. That's also a
+> > > > > > reason for us to wish the re-evaluation to be lightweight. E.g. if it's
+> > > > > > able to be finished before the first iterate, it's still safe.    
+> > > > > 
+> > > > > Making the re-evaluation lightweight cannot solve the race, it only
+> > > > > masks it.
+> > > > >     
+> > > > > > But I agree, the timing is not guaranteed, and so it's best for kernel
+> > > > > > to wait for mmap re-evaluation to complete. 
+> > > > > > 
+> > > > > > migration_thread
+> > > > > >     |->qemu_savevm_state_setup
+> > > > > >     |   |->ram_save_setup
+> > > > > >     |   |   |->migration_bitmap_sync
+> > > > > >     |   |       |->kvm_log_sync
+> > > > > >     |   |       |->vfio_log_sync
+> > > > > >     |   |
+> > > > > >     |   |->vfio_save_setup
+> > > > > >     |       |->set_device_state(_SAVING)
+> > > > > >     |
+> > > > > >     |->qemu_savevm_state_pending
+> > > > > >     |   |->ram_save_pending
+> > > > > >     |   |   |->migration_bitmap_sync 
+> > > > > >     |   |      |->kvm_log_sync
+> > > > > >     |   |      |->vfio_log_sync
+> > > > > >     |   |->vfio_save_pending
+> > > > > >     |
+> > > > > >     |->qemu_savevm_state_iterate
+> > > > > >     |   |->ram_save_iterate //send pages
+> > > > > >     |   |->vfio_save_iterate
+> > > > > >     ...
+> > > > > > 
+> > > > > > 
+> > > > > > Actually, we previously let qemu trigger the re-evaluation when migration starts.
+> > > > > > And now the reason for we to wish kernel to trigger the mmap re-evaluation is that
+> > > > > > there're other two possible use cases:
+> > > > > > (1) keep passing through devices when migration starts and track dirty pages
+> > > > > >     using hardware IOMMU. Then when migration is about to complete, stop the
+> > > > > >     device and start trap PCI BARs for software emulation. (we made some
+> > > > > >     changes to let device stop ahead of vcpu )    
+> > > > > 
+> > > > > How is that possible?  I/O devices need to continue to work until the
+> > > > > vCPU stops otherwise the vCPU can get blocked on the device.  Maybe QEMU    
+> > > > hi Alex
+> > > > For devices like DSA [1], it can support SVM mode. In this mode, when a
+> > > > page fault happens, the Intel DSA device blocks until the page fault is
+> > > > resolved, if PRS is enabled; otherwise it is reported as an error.
+> > > > 
+> > > > Therefore, to pass through DSA into guest and do live migration with it,
+> > > > it is desired to stop DSA before stopping vCPU, as there may be an
+> > > > outstanding page fault to be resolved.
+> > > > 
+> > > > During the period when DSA is stopped and vCPUs are still running, all the
+> > > > pass-through resources are trapped and emulated by host mediation driver until
+> > > > vCPUs stop.  
+> > > 
+> > > If the DSA is stopped and resources are trapped and emulated, then is
+> > > the device really stopped from a QEMU perspective or has it simply
+> > > switched modes underneath QEMU?  If the device is truly stopped, then
+> > > I'd like to understand how a vCPU doing a PIO read from the device
+> > > wouldn't wedge the VM.
+> > >  
+> > It doesn't matter if the device is truly stopped or not (although from
+> > my point of view, just draining commands and keeping device running is
+> > better as it handles live migration failure better).
+> > PIOs also need to be trapped and emulated if a vCPU accesses them.
+> 
+> We seem to be talking around each other here.  If PIOs are trapped and
+> emulated then the device is not "stopped" as far as QEMU is concerned,
+> right?  "Stopping" a device suggests to me that a running vCPU doing a
+> PIO read from the device would block and cause problems in the still
+> running VM.  So I think you're suggesting some sort of mode switch in
+> the device where direct access is disabled an emulation takes over
+> until the vCPUs are stopped.
 
+sorry for this confusion.
+yes, it's a kind of mode switch from a QEMU perspective.
+Currently, its implementation in our local branch is like that:
+1. before migration thread stopping vCPUs, a migration state
+(COMPLETING) notification is sent to vfio migration state notifier, and
+this notifier would put device state to !RUNNING, and put all BARs to trap
+state.
+2. in the kernel, when device state is set to !RUNNING, draining all
+pending device requests, and starts emulation.
+
+This implementation has two issues:
+1. it requires hardcode in QEMU to put all BARs trapped and the time
+spending on revoking mmaps is not necessary for devices that do not need it.
+2. !RUNNING state here is not accurate and it will confuse vendor
+drivers who stop devices after vCPUs stop.
+
+For the 2nd issue, I think we can propose a new device state like
+PRE-STOPPING.
+
+But for the 1st issue, not sure how to fix it right now.
+Maybe we can still add an asynchronous kernel notification and wait until
+QEMU have switched the region mmap state?
+
+
+> > > > [1] https://software.intel.com/sites/default/files/341204-intel-data-streaming-accelerator-spec.pdf
+> > > > 
+> > > >   
+> > > > > should assume all mmaps should be dropped on vfio device after we pass
+> > > > > some point of the migration process.
+> > > > >     
+> > > > yes, it should be workable for the use case of DSA.
+> > > >   
+> > > > > If there are a fixed set of mmap settings for a region and discrete
+> > > > > conditions under which they become active (ex. switch device to SAVING
+> > > > > mode) then QEMU could choose the right mapping itself and we wouldn't
+> > > > > need to worry about this asynchronous signaling problem, it would just
+> > > > > be defined as part of the protocol userspace needs to use.
+> > > > >    
+> > > > It's ok to let QEMU trigger dynamic trap on certain condition (like switching
+> > > > device to SAVING mode), but it seems that there's no fixed set of mmap settings
+> > > > for a region.
+> > > > For example, some devices may want to trap the whole BARs, but some devices
+> > > > only requires to trap a range of pages in a BAR for performance consideration.
+> > > > 
+> > > > If the "disable-able" flag is not preferable, maybe re-evaluation way is
+> > > > the only choice? But it is a burden to ask for re-evaluation if they are
+> > > > not required.
+> > > > 
+> > > > What about introducing a "region_bitmask" in ctl header of the migration region?
+> > > > when QEMU writes a region index to the "region_bitmask", it can read back
+> > > > from this field a bitmask to know which mmap to disable.  
+> > > 
+> > > If a vendor driver wanted to have a migration sparse mmap that's
+> > > different from its runtime sparse mmap, we could simply add a new
+> > > capability in the region_info.  Userspace would only need to switch to
+> > > a different mapping for regions which advertise a new migration sparse
+> > > mmap capability.  Doesn't that serve the same purpose as the proposed
+> > > bitmap?  
+> > 
+> > yes, it does.
+> > I will try this way in next version.
+> > 
+> > > > > > (2) performance optimization. There's an example in GVT (mdev case): 
+> > > > > >     PCI BARs are passed through on vGPU initialization and are mmaped to a host
+> > > > > >     dummy buffer. Then after initialization done, start trap of PCI BARs of
+> > > > > >     vGPUs and start normal host mediation. The initial pass-through can save
+> > > > > >     1000000 times of mmio trap.    
+> > > > > 
+> > > > > Much of this discussion has me worried that many assumptions are being
+> > > > > made about the user and device interaction.  Backwards compatible
+> > > > > behavior is required.  If a mdev device presents an initial sparse mmap
+> > > > > capability for this acceleration, how do you support an existing
+> > > > > userspace that doesn't understand the new dynamic mmap semantics and
+> > > > > continues to try to operate with the initial sparse mmap?  Doesn't this
+> > > > > introduce another example of the raciness of the device trying to
+> > > > > switch mmaps?  Seems that if QEMU doesn't handle the eventfd with
+> > > > > sufficient timeliness the switch back to trap behavior could miss an
+> > > > > important transaction.  This also seems like an optimization targeted
+> > > > > at VMs running for only a short time, where it's not obvious to me that
+> > > > > GVT-g overlaps those sorts of use cases.  How much initialization time
+> > > > > is actually being saved with such a hack?  Thanks,
+> > > > >    
+> > > > It can save about 4s initialization time with such a hack. But you are
+> > > > right, the backward compatibility is a problem and we are not going to
+> > > > upstream that. Just an example to show the usage.
+> > > > It's fine if we drop the way of asynchronous kernel notification.  
+> > > 
+> > > I think to handle such a situation we'd need a mechanism to revoke the
+> > > user's mmap.  We can make use of an asynchronous mechanism to improve
+> > > performance of a device, but we need a synchronous mechanism to
+> > > maintain correctness.  For this example, the sparse mmap capability
+> > > could advertise the section of the BAR as mmap'able and revoke that
+> > > user mapping after the device finishes the initialization phase.
+> > > Potentially the user re-evaluating region_info after the initialization
+> > > phase would see a different sparse mmap capability excluding these
+> > > sections, but then we might need to think whether we want to suggest
+> > > that the user always re-read the region_info after device reset.  AFAIK,
+> > > we currently have no mechanism to revoke user mmaps. Thanks,
+> > >   
+> > Actually I think the "disable-able" flag is good except for its backward
+> > compatibility :)
+> 
+> Setting a flag on a section of a region doesn't solve the asynchronous
+> problem.  Thanks,
+> 
+yes. I mean we are ok to give up the way of kernel to trigger re-evaluation
+for now, as currently the use cases of DSA and GVT are not in upstream
+phase and we can add that if necessary in future.
+And I think "disable-able" flag is a way to re-use existing sparse mmap,
+because otherwise we have to either re-evaluate the region_info or introduce
+new caps like migration_sparse_mmap, reset_sparse_mmap. But I agree,
+this flag may cause problem for old QEMUs.
+
+Thanks
+Yan
