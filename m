@@ -2,82 +2,78 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C434C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F92C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4826222527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1032173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576142892;
+	bh=LURWB7IPn2xebRXLRJLfXE/2zhnJQAov8ugdWAGE32Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZKrWzNdWYYTFpqrARYlNweEqSAjHNVMLjQNAAZvjS4C5fpTgzxpsifamAobcrkLO4
+	 bkr2YLkVn3CtMwKBVpJc8FfKwJnGXHUfNFs0GpFFeXl3+/MuriDkXsrFRG5StT2bXm
+	 RJyeP92e1mgY406v562lj4VjzKtF0lt4WpanbxY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbfLLJ2H (ORCPT
+        id S1728348AbfLLJ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:28:07 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7225 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbfLLJ2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:28:06 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C59AC99D520A805682B;
-        Thu, 12 Dec 2019 17:28:04 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
- 17:27:53 +0800
-Subject: Re: [PATCH -next] pinctrl: samsung: fix build error without
- CONFIG_OF_GPIO
-To:     <tomasz.figa@gmail.com>, <krzk@kernel.org>,
-        <s.nawrocki@samsung.com>
-References: <20191212092136.37870-1-chenzhou10@huawei.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <407d0a27-187e-7339-197c-15261e79122a@huawei.com>
-Date:   Thu, 12 Dec 2019 17:27:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Thu, 12 Dec 2019 04:28:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56448 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfLLJ2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:28:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDEC221655;
+        Thu, 12 Dec 2019 09:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576142888;
+        bh=LURWB7IPn2xebRXLRJLfXE/2zhnJQAov8ugdWAGE32Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fkv6ANwWodj6MoID/TlWL5GVntVWcTHamaWlMTDefa8u3sP5GdN4vsGCdjMPIkmGw
+         7/Gi+PNgYjyqg6aSuhPSvMYXY1FUTyTFZ8SQoSYFn5eBBd4806h1t96PHv16VP5LAm
+         LnmRQTmozPU01wWnhRnZeeSH0R2g/0srD7D8INrk=
+Date:   Thu, 12 Dec 2019 10:28:05 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        linux@roeck-us.net, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: fusb302: Fix an undefined reference to
+ 'extcon_get_state'
+Message-ID: <20191212092805.GA1375559@kroah.com>
+References: <1576136063-50916-1-git-send-email-zhongjiang@huawei.com>
+ <20191212090132.GC31345@kuha.fi.intel.com>
+ <5DF20530.2040509@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212092136.37870-1-chenzhou10@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DF20530.2040509@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ignore this patch, i will repost it.
+On Thu, Dec 12, 2019 at 05:15:28PM +0800, zhong jiang wrote:
+> On 2019/12/12 17:01, Heikki Krogerus wrote:
+> > On Thu, Dec 12, 2019 at 03:34:23PM +0800, zhong jiang wrote:
+> >> Fixes the following compile error:
+> >>
+> >> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
+> >> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
+> >> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
+> >> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
+> >> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
+> >> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
+> >> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
+> >> make: *** [vmlinux] Error 1
+> > There are stubs for those functions so that really should not be
+> > happening. I can not reproduce that.
+> It can be reproduced in next branch. you can try it in the latest next branch.
 
-On 2019/12/12 17:21, Chen Zhou wrote:
-> If CONFIG_OF_GPIO is n, build fails:
-> 
-> drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
-> drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
->    gc->of_node = bank->of_node;
-> 
-> Use #ifdef to guard this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>Fixes
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> index f26574e..5c29ad8 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -966,7 +966,9 @@ static int samsung_gpiolib_register(struct platform_device *pdev,
->  		gc->base = bank->grange.base;
->  		gc->ngpio = bank->nr_pins;
->  		gc->parent = &pdev->dev;
-> +#ifdef CONFIG_OF_GPIO
->  		gc->of_node = bank->of_node;
-> +#endif
->  		gc->label = bank->name;
->  
->  		ret = devm_gpiochip_add_data(&pdev->dev, gc, bank);
-> 
-
+Can it be reproduced in 5.5-rc1?
