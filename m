@@ -2,79 +2,107 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9857C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B18DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBF52173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="W0zjhyFu"
+	by mail.kernel.org (Postfix) with ESMTP id 2C6C4214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfLLJxJ (ORCPT
+        id S1728431AbfLLJye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:53:09 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:50019 "EHLO frisell.zx2c4.com"
+        Thu, 12 Dec 2019 04:54:34 -0500
+Received: from verein.lst.de ([213.95.11.211]:32911 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728348AbfLLJxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:53:09 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 27aff7ec;
-        Thu, 12 Dec 2019 08:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=uLMjB8m4/DGzwbgB4YAjzY8FX+s=; b=W0zjhy
-        FuZk2iDgknFlmyo7GxA2cpuOWLEZgWuRp3L6VPFZIkKIMGeClAq3vJMrh1Njxztl
-        KYpyG6juhnFoNZDCN/yctB02IqatVHaPrJZmaZom4SSV3KU6NIdu2mXIZ6cG6Aiz
-        yLlE/YLgFSv8Qavk+h4NwoFs0zHjP3h2fEqJY9WSApOixeN9Y9nbHOUBlrkZYwYP
-        v8caggK+asJGXMQYqXyo/CNGzQxyEfRmRwRQgS5Q4KbZ9gEMmiAje00JBWZIjBfk
-        lDKIOVdCfHphrXiMMYR415/QgNqFKjQMDy6x6t5qIGQxljs7CQTb2bdAubeQAdzd
-        UoqSgYghBxJCT9hQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d19fdaaa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 12 Dec 2019 08:57:20 +0000 (UTC)
-Received: by mail-ot1-f50.google.com with SMTP id 66so1228261otd.9;
-        Thu, 12 Dec 2019 01:53:06 -0800 (PST)
-X-Gm-Message-State: APjAAAUNT4PprM++2G2MUaAD+Us+twyFKYMzj7Nm50J3lgklPA5kbF+c
-        R+7l+01z2DgTH4lb/R4m/kDKuZSPRII0fu8s+9c=
-X-Google-Smtp-Source: APXvYqzzCr8AIVVzRHm5jB+v++pLKtoFo36nbLfIhws6k4JnwsU8tvA44DpopjLtyjY6u6I87eEYZ1DhGjq6VqKLNOw=
-X-Received: by 2002:a05:6830:1b6a:: with SMTP id d10mr7471945ote.52.1576144385762;
- Thu, 12 Dec 2019 01:53:05 -0800 (PST)
+        id S1728282AbfLLJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:54:34 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 59FF468B05; Thu, 12 Dec 2019 10:54:31 +0100 (CET)
+Date:   Thu, 12 Dec 2019 10:54:31 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Balbir Singh <sblbir@amazon.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        axboe@kernel.dk, mst@redhat.com, jejb@linux.ibm.com, hch@lst.de,
+        linux-nvme@lists.infradead.org,
+        Someswarudu Sangaraju <ssomesh@amazon.com>
+Subject: Re: [RFC PATCH] block/genhd: Notify udev about capacity change
+Message-ID: <20191212095431.GA3720@lst.de>
+References: <20191210030131.4198-1-sblbir@amazon.com>
 MIME-Version: 1.0
-References: <20191212091527.35293-1-yuehaibing@huawei.com>
-In-Reply-To: <20191212091527.35293-1-yuehaibing@huawei.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 12 Dec 2019 10:52:54 +0100
-X-Gmail-Original-Message-ID: <CAHmME9pVuOR-EMxXVHVqippJ6UL4cMEoXZ4hoooK-qtQ=az5uQ@mail.gmail.com>
-Message-ID: <CAHmME9pVuOR-EMxXVHVqippJ6UL4cMEoXZ4hoooK-qtQ=az5uQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: Remove unused including <linux/version.h>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210030131.4198-1-sblbir@amazon.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:18 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Remove including <linux/version.h> that don't need it.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Tue, Dec 10, 2019 at 03:01:31AM +0000, Balbir Singh wrote:
+> Allow block/genhd to notify user space (via udev) about disk size changes
+> using a new helper disk_set_capacity(), which is a wrapper on top
+> of set_capacity(). disk_set_capacity() will only notify via udev if
+> the current capacity or the target capacity is not zero.
+> 
+> disk_set_capacity() is not enabled for all devices, just virtio block,
+> xen-blockfront, nvme and sd. Owners of other block disk devices can
+> easily move over by changing set_capacity() to disk_set_capacity()
+> 
+> Background:
+> 
+> As a part of a patch to allow sending the RESIZE event on disk capacity
+> change, Christoph (hch@lst.de) requested that the patch be made generic
+> and the hacks for virtio block and xen block devices be removed and
+> merged via a generic helper.
+> 
+> Testing:
+> 1. I did some basic testing with an NVME device, by resizing it in
+> the backend and ensured that udevd received the event.
+> 
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Balbir Singh <sblbir@amazon.com>
+> Signed-off-by: Someswarudu Sangaraju <ssomesh@amazon.com>
+> ---
+>  block/genhd.c                | 19 +++++++++++++++++++
+>  drivers/block/virtio_blk.c   |  4 +---
+>  drivers/block/xen-blkfront.c |  5 +----
+>  drivers/nvme/host/core.c     |  2 +-
+>  drivers/scsi/sd.c            |  2 +-
+>  include/linux/genhd.h        |  1 +
+>  6 files changed, 24 insertions(+), 9 deletions(-)
+> 
+> diff --git a/block/genhd.c b/block/genhd.c
+> index ff6268970ddc..94faec98607b 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -46,6 +46,25 @@ static void disk_add_events(struct gendisk *disk);
+>  static void disk_del_events(struct gendisk *disk);
+>  static void disk_release_events(struct gendisk *disk);
+>  
+> +/*
+> + * Set disk capacity and notify if the size is not currently
+> + * zero and will not be set to zero
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Nit: Use up all the 80 chars per line.  Also maybe turn this into a
+kerneldoc comment.  I think you also want to mention the notification
+as well.
 
-Thanks. Committed with some wording changes to wireguard-linux.git for staging:
+> +EXPORT_SYMBOL_GPL(disk_set_capacity);
+> +
+> +
+>  void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/wireguard-linux.git/commit/?id=062fd1993cdbf64a57395320c719e58b9a75b767
+No need for the double empty line.
 
-I'll re-send this to net-next as part of a cleanup series I'm
-preparing in a few days.
+>  {
+>  	if (queue_is_mq(q))
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 7ffd719d89de..869cd3c31529 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
 
-Jason
+And you probably want to turn this into a series with patch 1 adding
+the infrastructure, and then one patch per driver switched over.
