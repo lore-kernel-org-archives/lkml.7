@@ -2,99 +2,90 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FFDC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A9C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721232054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C817E21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576169380;
-	bh=LKSn41kkriO561pO2wAK39PinJzm2f1kU5mB8knzV4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ihus5w+vTk1Cf0LyiyNaAj++xydTsBjyupjkjxKZN3INS4wtLJGn7In2G8E/qNXpd
-	 NvDNVk5C7pBnFw1AJvtPCofX/iv7rC6ZO1exclINzX8T0/aiOo1agVO+9BO7/BHzIF
-	 Lfy7Px90q5xdKGQkRTDjG0HKoVY/CBCtXRaCH3Mg=
+	s=default; t=1576169407;
+	bh=eaCUUCpdZ+9jexLrCcFGczPuBpNoGYYZMgq+3l/E9xQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b/hbzt0xoa+obWYh0wqSaE0kMidhF6yB3m2sqIeu0Dzi21Iirte00xBAypILUTEO3
+	 WbNEhpMqXCC7q9EGmgu6RpAMi49IFP5Snn3DWsAQmW5qvbMKOPZZQJKyi1VbsUnR6s
+	 H14q88Hn8h+EvwfDiuNKLqQQsI+YRo2cAaLqXEqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbfLLQtj (ORCPT
+        id S1729974AbfLLQuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:49:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:53228 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfLLQtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:49:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D760130E;
-        Thu, 12 Dec 2019 08:49:38 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5777F3F6CF;
-        Thu, 12 Dec 2019 08:49:38 -0800 (PST)
-Date:   Thu, 12 Dec 2019 16:49:36 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: Regulator probe on demand (or circular dependencies)
-Message-ID: <20191212164936.GI4310@sirena.org.uk>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
- <20191209163755.GF5483@sirena.org.uk>
- <fb87c957-40e8-587e-5789-33b740f8326d@ideasonboard.com>
- <20191212155656.GE4310@sirena.org.uk>
- <CAMuHMdXwNPKfL5Xijtb2RFvf5MDEuiqUZ9DOdWdWxD=RRhScwQ@mail.gmail.com>
+        Thu, 12 Dec 2019 11:50:06 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45242 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729762AbfLLQuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:50:06 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so2613954otp.12;
+        Thu, 12 Dec 2019 08:50:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eaCUUCpdZ+9jexLrCcFGczPuBpNoGYYZMgq+3l/E9xQ=;
+        b=i4l9Lk0XVMNukyGJcxO7E0U5Q9Jv98x4y7i8eTujCwGCKMtQ/r8aM1lwp8gOG7IUc3
+         T1+u61IvdwZ2SdS+jFeptIyp8LHhd9jvUnrVEfj+2uFUKQhgRb70WGwDZRX51W9lFuPA
+         7jwcOgKs/Of0r3O2+CDY5lahzGwVEcPuQwOoiPGO5lefsZqWWDpeJNCJg5QFDVQ+4k7J
+         fGa6O+SqEAfW64cJMren2nU9bWVHDbVDuRqtWp9F1ZqldqLqKTjin0ouZkl/Nafwyy2x
+         poBOb0FXrJs3XAjOL643wf1w7XqmXrO6kWjqFKQjT06xjI00Uga+0kKGoRSOXVu1aub0
+         Xg2Q==
+X-Gm-Message-State: APjAAAXIokBEml44bvZJqq0NFq7PHwlTqqZ0jNDFuO6fu7NYWbGerJz8
+        83woFNOCUsb8xpQXwaoGnBMnT96xL2veXmAvBuyJaA==
+X-Google-Smtp-Source: APXvYqy8SxGzaYOvMgcZc8OPw5g1ZlMhu7aM6woCRSkpZ1ycT5QV3+ZW9Xg6QZLm8CbRVZuD0AEdYw/DWJoG5fIDvYQ=
+X-Received: by 2002:a05:6830:95:: with SMTP id a21mr8617620oto.167.1576169405609;
+ Thu, 12 Dec 2019 08:50:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ev7mvGV+3JQuI2Eo"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXwNPKfL5Xijtb2RFvf5MDEuiqUZ9DOdWdWxD=RRhScwQ@mail.gmail.com>
-X-Cookie: We have DIFFERENT amounts of HAIR --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2691942.bH9KnLg61H@kreacher> <AM0PR04MB44814D98FDF152FB6D186B13885A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB44814D98FDF152FB6D186B13885A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 12 Dec 2019 17:49:54 +0100
+Message-ID: <CAJZ5v0j7khsPq_Gye8vutmK8_=z1ZUCfZ4t1ENtmOdVR4qWQeg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU offline
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 2:53 PM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> > Subject: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU
+> > offline
+> >
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > The scheduler code calling cpufreq_update_util() may run during CPU offline
+> > on the target CPU after the IRQ work lists have been flushed for it, so the
+> > target CPU should be prevented from running code that may queue up an IRQ
+> > work item on it at that point.
+> >
+> > Unfortunately, that may not be the case if dvfs_possible_from_any_cpu is set
+> > for at least one cpufreq policy in the system, because that allows the CPU
+> > going offline to run the utilization update callback of the cpufreq governor on
+> > behalf of another (online) CPU in some cases.
+> >
+> > If that happens, the cpufreq governor callback may queue up an IRQ work on
+> > the CPU running it, which is going offline, and the IRQ work will not be flushed
+>
+> "will" -> "might"
 
---ev7mvGV+3JQuI2Eo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Dec 12, 2019 at 05:18:43PM +0100, Geert Uytterhoeven wrote:
-> On Thu, Dec 12, 2019 at 4:57 PM Mark Brown <broonie@kernel.org> wrote:
-
-> > In theory someone could try to do some sort of sorting with the DT
-> > graph, people keep talking about it but nobody's done anything that I'm
-> > aware of.
-
-> "of_devlink" has landed in v5.5-rc1, cfr. commit a3e1d1a7f5fcccaf ("of:
-> property: Add functional dependency link from DT bindings").
-
-> I gave it a try on some boards lately.  It improved the deferral situation on
-> Koelsch, but made it worse on Salvator-XS.
-
-Ah, nice.  It's at least a start on that, that's good.
-
---ev7mvGV+3JQuI2Eo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yb6AACgkQJNaLcl1U
-h9CLfwf+OAU/ea7UJ6vHvXERuvufBK30An3dBf8rNAW4VU0uM8CREyiUfVQEtdEL
-bS5y/7f8wHfDkN6G7WS3+5MXAnPs4Vvtl2fjgEqWqGVTQeVTewokEfQrP2kozlpc
-hEBftKAWvW+Aziiqqf5kNiZMO4nRdrHR2LWYCggB8h4DD6cJtjx/GGRzsnK7ZWu/
-EwZi/l8b83GTE8zRrlkNgaTX/fAtEsRf4NqjOnxf4m2ZcFEnOW4QrXFwfqPencAR
-IeVyO/04Md1gDul/D3ptMskjRhVvfRnKFMghZolfskYJqZZmQPdyT4hV0HzqSmS5
-EqDDFpefLtIMsGz9yMRVlFJP0xkguw==
-=H+lB
------END PGP SIGNATURE-----
-
---ev7mvGV+3JQuI2Eo--
+Well, I'm not sure, but OK.
