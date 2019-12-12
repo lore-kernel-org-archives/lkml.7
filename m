@@ -2,206 +2,94 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D38C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FA4C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E692321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:33:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="KNdoCX78"
+	by mail.kernel.org (Postfix) with ESMTP id 47E1522527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfLLLdu (ORCPT
+        id S1729042AbfLLLfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:33:50 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:47276 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728920AbfLLLdt (ORCPT
+        Thu, 12 Dec 2019 06:35:02 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:55006 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbfLLLfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:33:49 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 1F5F43F26D;
-        Thu, 12 Dec 2019 12:33:47 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=KNdoCX78;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lVmIvZW3qp8P; Thu, 12 Dec 2019 12:33:46 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id BBCC13F260;
-        Thu, 12 Dec 2019 12:33:42 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id E08613621B7;
-        Thu, 12 Dec 2019 12:33:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1576150422; bh=j+eZpqHQB3Fw6vN5gPAYjZGzDln9/TW6yi+1c53Ud3s=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=KNdoCX78D1HbeR+xToPzg2mJbPz6wjJPjDEQEQ52UZaJwdyDy3+Z0KvmHWDn3zLgX
-         wQL2+nf0yms8GAk3wQ9STIOAjhr2665XcT+S6WoGFE+vpqB/qUYM4zJtemeV6M9mG1
-         UoMNK4wLqkbbpG8BBjfClh+E+jwqtrhyQt3/BKrM=
-Subject: Re: [PATCH v16 11/25] mm: pagewalk: Add p4d_entry() and pgd_entry()
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Zong Li <zong.li@sifive.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20191206135316.47703-1-steven.price@arm.com>
- <20191206135316.47703-12-steven.price@arm.com>
- <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
-Date:   Thu, 12 Dec 2019 12:33:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 12 Dec 2019 06:35:01 -0500
+Received: by mail-il1-f198.google.com with SMTP id t4so1352865ili.21
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 03:35:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=zFl6E7DmT67W68XqVzR2aCsqjcFpWexNUq+6/CXmVUk=;
+        b=naO/ZhL+w/AS0RX8U7FKfnEsOlNAOJe17ne90c8JK2dqm4D0tlWYo3SUOGen4eNGwo
+         uIP1ni2+HzYXsoDYEI4tvZDwUh4vxum2HBorhg0mnstQC7xgfWdp5zpe2/OTvx7ClYec
+         WVbuDsVMoWvXIX/q0v29+ru663U1dMFp6aq+HCSrA75l4V1XncXf6v85GvN3v7o/n1SY
+         E95L73n7pGII8LPDLSGas/GmWPeFV+J4yUcVIXLmNvAVHsfZEPj0J2/MkCO1CeeMucqD
+         gC21tS7A0oz/bpCKhQ4Ha173YJnI525RnqX0dnRjtCfuFmWElXNQpxi3uEZ89AdiA7b3
+         sTYg==
+X-Gm-Message-State: APjAAAWYxgvXf+m96X9+CWcfjwQ/Cd4IhleO7Xn86Mbk8o6kAFpSHqeQ
+        rEIwErlRxNegyRfQeaxiWKjojjWdMP2+9te4w7wKdNEsQLbM
+X-Google-Smtp-Source: APXvYqx7tAF42179GqyQGzxmn7mnoZxL7LgtxR3PNlsI/lOpd2FmYULEa+vakNib69tHnoQvSF7+iHISpB+uiby7hAsvBYRTiqDc
 MIME-Version: 1.0
-In-Reply-To: <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Received: by 2002:a92:3b19:: with SMTP id i25mr7844146ila.85.1576150500982;
+ Thu, 12 Dec 2019 03:35:00 -0800 (PST)
+Date:   Thu, 12 Dec 2019 03:35:00 -0800
+In-Reply-To: <000000000000b6b03205997b71cf@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b949ee0599802274@google.com>
+Subject: Re: BUG: corrupted list in __dentry_kill (2)
+From:   syzbot <syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com>
+To:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
+        andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
+        ast@domdv.de, ast@kernel.org, b.a.t.m.a.n@lists.open-mesh.org,
+        bpf@vger.kernel.org, bridge@lists.linux-foundation.org,
+        cleech@redhat.com, daniel@iogearbox.net, davem@davemloft.net,
+        dsa@cumulusnetworks.com, dsahern@gmail.com, dvyukov@google.com,
+        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
+        haiyangz@microsoft.com, hawk@kernel.org, hdanton@sina.com,
+        idosch@mellanox.com, info@metux.net, j.vosburgh@gmail.com, j@w1.fi,
+        jakub.kicinski@netronome.com, jhs@mojatatu.com, jiri@mellanox.com,
+        jiri@resnulli.us, johan.hedberg@gmail.com, johannes.berg@intel.com,
+        john.fastabend@gmail.com, john.hurley@netronome.com,
+        jwi@linux.ibm.com, kafai@fb.com, kstewart@linuxfoundation.org,
+        kvalo@codeaurora.org, kys@microsoft.com,
+        linux-bluetooth@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ppp@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-wpan@vger.kernel.org,
+        liuhangbin@gmail.com, marcel@holtmann.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 12:23 PM, Thomas Hellström (VMware) wrote:
-> On 12/6/19 2:53 PM, Steven Price wrote:
->> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
->> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
->> no users. We're about to add users so reintroduce them, along with
->> p4d_entry() as we now have 5 levels of tables.
->>
->> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
->> PUD-sized transparent hugepages") already re-added pud_entry() but with
->> different semantics to the other callbacks. Since there have never
->> been upstream users of this, revert the semantics back to match the
->> other callbacks. This means pud_entry() is called for all entries, not
->> just transparent huge pages.
->
-> Actually, there are two users of pud_entry(), in hmm.c and since 
-> 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic 
-> and requires no attention but the one in hmm.c is probably largely 
-> untested, and seems to assume it was called outside of the spinlock.
->
-> The problem with the current patch is that the hmm pud_entry will 
-> traverse also pmds, so that will be done twice now.
->
-> In another thread we were discussing a means of rerunning the level 
-> (in case of a race), or continuing after a level, based on the return 
-> value after the callback. The change was fairly invasive,
->
-Hmm. Forgot to remove the above text that appears twice. :(. The correct 
-one is inline below.
+syzbot has bisected this bug to:
 
->
->> Tested-by: Zong Li <zong.li@sifive.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->>   include/linux/pagewalk.h | 19 +++++++++++++------
->>   mm/pagewalk.c            | 27 ++++++++++++++++-----------
->>   2 files changed, 29 insertions(+), 17 deletions(-)
->>
->> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
->> index 6ec82e92c87f..06790f23957f 100644
->> --- a/include/linux/pagewalk.h
->> +++ b/include/linux/pagewalk.h
->> @@ -8,15 +8,15 @@ struct mm_walk;
->>     /**
->>    * mm_walk_ops - callbacks for walk_page_range
->> - * @pud_entry:        if set, called for each non-empty PUD 
->> (2nd-level) entry
->> - *            this handler should only handle pud_trans_huge() puds.
->> - *            the pmd_entry or pte_entry callbacks will be used for
->> - *            regular PUDs.
->> - * @pmd_entry:        if set, called for each non-empty PMD 
->> (3rd-level) entry
->> + * @pgd_entry:        if set, called for each non-empty PGD 
->> (top-level) entry
->> + * @p4d_entry:        if set, called for each non-empty P4D entry
->> + * @pud_entry:        if set, called for each non-empty PUD entry
->> + * @pmd_entry:        if set, called for each non-empty PMD entry
->>    *            this handler is required to be able to handle
->>    *            pmd_trans_huge() pmds.  They may simply choose to
->>    *            split_huge_page() instead of handling it explicitly.
->> - * @pte_entry:        if set, called for each non-empty PTE 
->> (4th-level) entry
->> + * @pte_entry:        if set, called for each non-empty PTE 
->> (lowest-level)
->> + *            entry
->>    * @pte_hole:        if set, called for each hole at all levels
->>    * @hugetlb_entry:    if set, called for each hugetlb entry
->>    * @test_walk:        caller specific callback function to 
->> determine whether
->> @@ -27,8 +27,15 @@ struct mm_walk;
->>    * @pre_vma:            if set, called before starting walk on a 
->> non-null vma.
->>    * @post_vma:           if set, called after a walk on a non-null 
->> vma, provided
->>    *                      that @pre_vma and the vma walk succeeded.
->> + *
->> + * p?d_entry callbacks are called even if those levels are folded on a
->> + * particular architecture/configuration.
->>    */
->>   struct mm_walk_ops {
->> +    int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
->> +             unsigned long next, struct mm_walk *walk);
->> +    int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
->> +             unsigned long next, struct mm_walk *walk);
->>       int (*pud_entry)(pud_t *pud, unsigned long addr,
->>                unsigned long next, struct mm_walk *walk);
->>       int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
->> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
->> index ea0b9e606ad1..c089786e7a7f 100644
->> --- a/mm/pagewalk.c
->> +++ b/mm/pagewalk.c
->> @@ -94,15 +94,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned 
->> long addr, unsigned long end,
->>           }
->>             if (ops->pud_entry) {
->> -            spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
->> -
->> -            if (ptl) {
->> -                err = ops->pud_entry(pud, addr, next, walk);
->> -                spin_unlock(ptl);
->> -                if (err)
->> -                    break;
->> -                continue;
->> -            }
->> +            err = ops->pud_entry(pud, addr, next, walk);
->> +            if (err)
->> +                break;
->
-> Actually, there are two current users of pud_entry(), in hmm.c and 
-> since 5.5rc1 also mapping_dirty_helpers.c. The latter one is 
-> unproblematic and requires no attention but the one in hmm.c is 
-> probably largely untested, and seems to assume it was called outside 
-> of the spinlock.
->
-> The problem with the current patch is that the hmm pud_entry will 
-> traverse also pmds, so that will now be done twice.
->
-> /Thomas
->
+commit ab92d68fc22f9afab480153bd82a20f6e2533769
+Author: Taehee Yoo <ap420073@gmail.com>
+Date:   Mon Oct 21 18:47:51 2019 +0000
 
+     net: core: add generic lockdep keys
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d37cb6e00000
+start commit:   938f49c8 Add linux-next specific files for 20191211
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11d37cb6e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d37cb6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=96834c884ba7bb81
+dashboard link: https://syzkaller.appspot.com/bug?extid=31043da7725b6ec210f1
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12dc83dae00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ac8396e00000
+
+Reported-by: syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com
+Fixes: ab92d68fc22f ("net: core: add generic lockdep keys")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
