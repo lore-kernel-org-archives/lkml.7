@@ -2,126 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D596FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F15C2D0CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF3421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2872C22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576171976;
+	bh=d8T+W80ohSAutSwyvwOIJCoFk70VslbyWmhLhSjuY/o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s22pqKpxpEX3su5ZHy0OhCoz4cFtSIv3uK9ryBuAGnH608OSbbn+wqPfVIGimXCGn
+	 6qop8X9xIonMrDEQdUCfbCG/rdxzcMNZ+AnpJloUMhP30+APctLrWNFJGbPHRPmzul
+	 gh72rbw/Ao43reXRzRI4YKMMWaYbrdDLMfQwQXJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbfLLRcZ (ORCPT
+        id S1730183AbfLLRcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:32:25 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34958 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730061AbfLLRcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:32:24 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ifSK3-00027O-P9; Thu, 12 Dec 2019 17:32:19 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC7)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1ifSK3-0005J3-82; Thu, 12 Dec 2019 17:32:19 +0000
-Message-ID: <e51e280b1a2ec31d4a9acb541b26f2e5420c703d.camel@decadent.org.uk>
-Subject: Re: [PATCH 4.9 45/47] Smack: Dont ignore other bprm->unsafe flags
- if LSM_UNSAFE_PTRACE is set
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 12 Dec 2019 17:32:14 +0000
-In-Reply-To: <20191212170649.GA1681017@kroah.com>
-References: <20191006172016.873463083@linuxfoundation.org>
-         <20191006172019.260683324@linuxfoundation.org>
-         <64c5b8b423774029c3030ae778bf214d36499d2a.camel@decadent.org.uk>
-         <20191212170649.GA1681017@kroah.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-5TWjip13pX9rhqBM9tED"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 12 Dec 2019 12:32:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730023AbfLLRcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:32:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C21FA21655;
+        Thu, 12 Dec 2019 17:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576171974;
+        bh=d8T+W80ohSAutSwyvwOIJCoFk70VslbyWmhLhSjuY/o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f3WTTM5ez2jJGTd/r4ZgkBqS0RQv+WurCDZfPVTAe9IMbQVFSXPGEZ/4/oPfA+PLc
+         1HpYJVtHaQxCrhoZlvds+/CWRZStluyP0fTC8gN5/TQhnuz7SLcb54YCtcBgRW/ZqR
+         k95AzqrkG069hz1bwHqMckyPeMKhD7tdGsmsMR6M=
+Date:   Thu, 12 Dec 2019 18:32:51 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [RFC 5/5] i3c: add i3cdev module to expose i3c dev in /dev
+Message-ID: <20191212173251.GA1702856@kroah.com>
+References: <cover.1575977795.git.vitor.soares@synopsys.com>
+ <f9f20eaf900ed5629dd3d824bc1e90c7e6b4a371.1575977795.git.vitor.soares@synopsys.com>
+ <20191212144459.GB1668196@kroah.com>
+ <CH2PR12MB421658E00DF331400728DB6CAE550@CH2PR12MB4216.namprd12.prod.outlook.com>
+ <20191212160045.GA1672362@kroah.com>
+ <CH2PR12MB4216CB1D650A543A635CC67FAE550@CH2PR12MB4216.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR12MB4216CB1D650A543A635CC67FAE550@CH2PR12MB4216.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 12, 2019 at 05:25:28PM +0000, Vitor Soares wrote:
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Date: Thu, Dec 12, 2019 at 16:00:45
+> 
+> > On Thu, Dec 12, 2019 at 02:56:56PM +0000, Vitor Soares wrote:
+> > > Hi Greg,
+> > > 
+> > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > Date: Thu, Dec 12, 2019 at 14:44:59
+> > > 
+> > > > On Tue, Dec 10, 2019 at 04:37:33PM +0100, Vitor Soares wrote:
+> > > > > +static int __init i3cdev_init(void)
+> > > > > +{
+> > > > > +	int res;
+> > > > > +
+> > > > > +	pr_info("i3c /dev entries driver\n");
+> > > > 
+> > > > Please remove debugging information, kernel code should be quiet unless
+> > > > something goes wrong.
+> > > 
+> > > I will remove it.
+> > > 
+> > > > 
+> > > > > +	/* Dynamically request unused major number */
+> > > > > +	res = alloc_chrdev_region(&i3cdev_number, 0, N_I3C_MINORS, "i3c");
+> > > > 
+> > > > Do you really need a whole major, or will a few minors work?
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > 
+> > > I'm reserving one per device. What do you suggest?
+> > 
+> > How many devices do you have in a system?
+> 
+> According to MIPI I3C spec, the maximum number of devices on a bus will 
+> depend on trace length, bus load, and clock requirements.
+> 
+> Frankly, I don't know what is the best compromise because it depends from 
+> system to system and the end-use of it. In my case, I started developing 
+> this to help me during the HC controller driver development.
+> Even If I choose a fixed major, I wouldn't know in which one i3c fits.
 
---=-5TWjip13pX9rhqBM9tED
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ok, a full major will be fine, I was worried you only wanted 1 or 2
+minor numbers, which would mean you could have used a misc device
+instead.
 
-On Thu, 2019-12-12 at 18:06 +0100, Greg Kroah-Hartman wrote:
-> On Thu, Dec 05, 2019 at 03:50:07PM +0000, Ben Hutchings wrote:
-> > On Sun, 2019-10-06 at 19:21 +0200, Greg Kroah-Hartman wrote:
-> > > From: Jann Horn <jannh@google.com>
-> > >=20
-> > > commit 3675f052b43ba51b99b85b073c7070e083f3e6fb upstream.
-> > [...]
-> > > --- a/security/smack/smack_lsm.c
-> > > +++ b/security/smack/smack_lsm.c
-> > > @@ -949,7 +949,8 @@ static int smack_bprm_set_creds(struct l
-> > > =20
-> > >  		if (rc !=3D 0)
-> > >  			return rc;
-> > > -	} else if (bprm->unsafe)
-> > > +	}
-> > > +	if (bprm->unsafe & ~LSM_UNSAFE_PTRACE)
-> >=20
-> > I think this needs to be ~(LSM_UNSAFE_PTRACE | LSM_UNSAFE_PTRACE_CAP)
-> > for 4.9 and older branches.
->=20
-> Why?  Where did the LSM_UNSAFE_PTRACE_CAP requirement come from (or
-> really, go away?)
+This is fine.
 
-LSM_UNSAFE_PTRACE_CAP was combined with LSM_UNSAFE_PTRACE by:
+thanks,
 
-commit 9227dd2a84a765fcfef1677ff17de0958b192eda
-Author: Eric W. Biederman <ebiederm@xmission.com>
-Date:   Mon Jan 23 17:26:31 2017 +1300
-
-    exec: Remove LSM_UNSAFE_PTRACE_CAP
-
-If I understand the patch ("Smack: Dont ignore other bprm->unsafe
-flags =E2=80=A6") correctly, this function should have one if-statement
-handling LSM_UNSAFE_PTRACE (and LSM_UNSAFE_PTRACE_CAP if it exists),
-followed by another if-statement handling all other flags in
-bprm->unsafe.
-
-Ben.
-
---=20
-Ben Hutchings
-Sturgeon's Law: Ninety percent of everything is crap.
-
-
---=-5TWjip13pX9rhqBM9tED
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3yeZ8ACgkQ57/I7JWG
-EQlZtA//Vc+1fMfaULjuYh6nSrneMY6YWu/Y5Q1MFJoxEycjb7rMr9CYFyfTa2gK
-S+SQdPneKD3Aqc7j/nYwdXLC3M8JvSHQHzUMQS6AqB377LPlsHDKEoTkZDv7aTFv
-g4PP7L2S3JIKGKkehRu63OEVPbBWyXkNcFmVdnzwxF/aH2x1cBcdAeiyK4wa8Ggb
-4nIHDH7quI3BMAllYH5bwVrz5K3GF2l/kaEhLEsi/EtYHZ+mgdMhFFDzwBWyiIYU
-/J4LEUKf85qtDn/8fToactAOW8Q50oMoPlt/apQ/GnzWbUIjlhDq9DCp5wtjdMXW
-lBhm7W9H8G10lTGeq/hz68WmnWGZT8lMAJ6hqD5wacGTuO2d2JHNrlboLVZWs7RY
-M3uDgJAUTWebubmFr3eu1dahnDxMPy5OIz2f/hxzHZB9A++4s56WKfHH3X2TZG6m
-8gU/57zhLBg3u9LWeR2P4K7IXWqtibfN7dy7qnNO16xhX7pRcCjRqM9YlbSO8Yxs
-Zxe1HPcUphhiHXt2V3j2fAWk9UPNxFeCEg0T3SMAVlR1+0FfxBS/STDbYnWJV0oq
-5vUi+QnJYGE8N6Bcy7yyphubfbfEne9AYzUkwj6+OZcKGxyke4QMbS5wioeTsCJk
-eyaW/S95ud0OmgJc8rESE8sORgJeyL4Lqq2NWsqFbCqmZxQtJDY=
-=Halt
------END PGP SIGNATURE-----
-
---=-5TWjip13pX9rhqBM9tED--
+greg k-h
