@@ -2,133 +2,98 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D8FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C49CEC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32732173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D7D22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:34:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfLLG2E (ORCPT
+        id S1727972AbfLLGeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:28:04 -0500
-Received: from mail.windriver.com ([147.11.1.11]:33403 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfLLG2E (ORCPT
+        Thu, 12 Dec 2019 01:34:10 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37369 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727592AbfLLGeJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:28:04 -0500
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id xBC6RfSb021450
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 11 Dec 2019 22:27:41 -0800 (PST)
-Received: from [128.224.155.90] (128.224.155.90) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 11 Dec
- 2019 22:27:40 -0800
-Subject: Re: [tipc-discussion] [PATCH net/tipc] Replace rcu_swap_protected()
- with rcu_replace_pointer()
-To:     <paulmck@kernel.org>
-CC:     Tuong Lien Tong <tuong.t.lien@dektech.com.au>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mingo@kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-        <kernel-team@fb.com>, <torvalds@linux-foundation.org>,
-        <davem@davemloft.net>
-References: <20191210033146.GA32522@paulmck-ThinkPad-P72>
- <0e565b68-ece1-5ae6-bb5d-710163fb8893@windriver.com>
- <20191210223825.GS2889@paulmck-ThinkPad-P72>
- <54112a30-de24-f6b2-b02e-05bc7d567c57@windriver.com>
- <707801d5afc6$cac68190$605384b0$@dektech.com.au>
- <db88d33f-8e25-8859-84ec-3372a108c759@windriver.com>
- <20191211184609.GI2889@paulmck-ThinkPad-P72>
-From:   Ying Xue <ying.xue@windriver.com>
-Message-ID: <58df887e-cfb5-37fd-6c06-d5f98449edd5@windriver.com>
-Date:   Thu, 12 Dec 2019 14:14:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 01:34:09 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b15so786653lfc.4;
+        Wed, 11 Dec 2019 22:34:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=tsgISRT9nMqn7DtbA+3ig/4ziAEQqFlvqbhmxo2BOXA=;
+        b=M6qRhMzNPiauKMSkXt8t/PQ0Bpbp/GPTLMbxi9RcK5ZRC28MqtqBDw6kSgWE0Mm5BH
+         GpAiOUbUPMXoG3zEYSzGmBU2TmV/3QnXHPXgynOmm0f+l7VtcOSfHezKhgGjHWsXsDNV
+         ok2gheXSt6rLMoKaTNPqNyjolZhwqNPAu24i8QrB7GvUSBYWlVvN+huiz8RuXjVqv/Db
+         PwZFmXDWewmmc5OEa2RDjZeWEMFcBwQP0u6aKcB5G/3WhwcLrGNXG2oC3tX2OPZwz9fU
+         MM12P51YYTSjJsH+IHvrMNbIBaDQOf+pdELrgq79IkBVkMIJ6v7UhWhNR68cNVs5i/in
+         HujQ==
+X-Gm-Message-State: APjAAAUXHieh/rKRv44rQROasd+JYcQnAgYMSTS5oI+GGmvRfCVMO+AI
+        3+37iTG5N+no7GDlK7i1khY=
+X-Google-Smtp-Source: APXvYqwcO1EBpNCrSVsbfjdToy0npzPSrlOSfa5qmD5cbpeISW76J5wn0ZZUhlANoXHcSR2ncacx+Q==
+X-Received: by 2002:a19:f519:: with SMTP id j25mr4687723lfb.41.1576132447488;
+        Wed, 11 Dec 2019 22:34:07 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id n5sm2342265ljh.86.2019.12.11.22.34.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 22:34:06 -0800 (PST)
+Date:   Thu, 12 Dec 2019 08:33:54 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Use new GPIO direction defines for intel pinctrl
+Message-ID: <cover.1576132131.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211184609.GI2889@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [128.224.155.90]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 2:46 AM, Paul E. McKenney wrote:
-> On Wed, Dec 11, 2019 at 12:42:00PM +0800, Ying Xue wrote:
->> On 12/11/19 10:00 AM, Tuong Lien Tong wrote:
->>>>  
->>>>  	/* Move passive key if any */
->>>>  	if (key.passive) {
->>>> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
->>>> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2,
->>> &rx->lock);
->>> The 3rd parameter should be the lockdep condition checking instead of the
->>> spinlock's pointer i.e. "lockdep_is_held(&rx->lock)"?
->>> That's why I'd prefer to use the 'tipc_aead_rcu_swap ()' macro, which is
->>> clear & concise at least for the context here. It might be re-used later as
->>> well...
->>>
->>
->> Right. The 3rd parameter of rcu_replace_pointer() should be
->> "lockdep_is_held(&rx->lock)" instead of "&rx->lock".
-> 
-> Like this?
+We added definitions for GPIO line directions here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?id=9208b1e77d6e8e9776f34f46ef4079ecac9c3c25
 
-Yes, I think it's better to set the 3rd parameter of
-rcu_replace_pointer() with "lockdep_is_held(&rx->lock)".
+Let's use them on Intel pincontrollers too.
 
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 575bb4ba1b22383656760feb3d122e11656ccdfd
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Mon Dec 9 19:13:45 2019 -0800
-> 
->     net/tipc: Replace rcu_swap_protected() with rcu_replace_pointer()
->     
->     This commit replaces the use of rcu_swap_protected() with the more
->     intuitively appealing rcu_replace_pointer() as a step towards removing
->     rcu_swap_protected().
->     
->     Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
->     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
->     Reported-by: kbuild test robot <lkp@intel.com>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->     [ paulmck: Updated based on Ying Xue and Tuong Lien Tong feedback. ]
->     Cc: Jon Maloy <jon.maloy@ericsson.com>
->     Cc: Ying Xue <ying.xue@windriver.com>
->     Cc: "David S. Miller" <davem@davemloft.net>
->     Cc: <netdev@vger.kernel.org>
->     Cc: <tipc-discussion@lists.sourceforge.net>
-> 
-> diff --git a/net/tipc/crypto.c b/net/tipc/crypto.c
-> index 990a872..c8c47fc 100644
-> --- a/net/tipc/crypto.c
-> +++ b/net/tipc/crypto.c
-> @@ -257,9 +257,6 @@ static char *tipc_key_change_dump(struct tipc_key old, struct tipc_key new,
->  #define tipc_aead_rcu_ptr(rcu_ptr, lock)				\
->  	rcu_dereference_protected((rcu_ptr), lockdep_is_held(lock))
->  
-> -#define tipc_aead_rcu_swap(rcu_ptr, ptr, lock)				\
-> -	rcu_swap_protected((rcu_ptr), (ptr), lockdep_is_held(lock))
-> -
->  #define tipc_aead_rcu_replace(rcu_ptr, ptr, lock)			\
->  do {									\
->  	typeof(rcu_ptr) __tmp = rcu_dereference_protected((rcu_ptr),	\
-> @@ -1189,7 +1186,7 @@ static bool tipc_crypto_key_try_align(struct tipc_crypto *rx, u8 new_pending)
->  
->  	/* Move passive key if any */
->  	if (key.passive) {
-> -		tipc_aead_rcu_swap(rx->aead[key.passive], tmp2, &rx->lock);
-> +		tmp2 = rcu_replace_pointer(rx->aead[key.passive], tmp2, lockdep_is_held(&rx->lock));
->  		x = (key.passive - key.pending + new_pending) % KEY_MAX;
->  		new_passive = (x <= 0) ? x + KEY_MAX : x;
->  	}
-> 
+Changes for v2:
+  - Replaced ternary operator with if() for better readability
+
+---
+
+Matti Vaittinen (3):
+  pinctrl: pinctrl-intel: Use GPIO direction definitions
+  pinctrl: pinctrl-cherryview: Use GPIO direction definitions
+  pinctrl: pinctrl-baytrail: Use GPIO direction definitions
+
+ drivers/pinctrl/intel/pinctrl-baytrail.c   | 4 ++--
+ drivers/pinctrl/intel/pinctrl-cherryview.c | 5 ++++-
+ drivers/pinctrl/intel/pinctrl-intel.c      | 5 ++++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
+
+
+base-commit: e42617b825f8 ("Linux 5.5-rc1")
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
