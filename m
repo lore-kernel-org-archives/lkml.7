@@ -2,84 +2,126 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B6CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683A321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513C02173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TJm/Ng73"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iG1uqwZN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfLLXUL (ORCPT
+        id S1730883AbfLLXVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:20:11 -0500
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:48026 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726427AbfLLXUK (ORCPT
+        Thu, 12 Dec 2019 18:21:18 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46542 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730965AbfLLXVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:20:10 -0500
-X-Greylist: delayed 444 seconds by postgrey-1.27 at vger.kernel.org; Thu, 12 Dec 2019 18:20:10 EST
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 1801D30C047;
-        Thu, 12 Dec 2019 15:08:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 1801D30C047
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1576192090;
-        bh=GUHozoaDgbqjfROjXkEJw092rtDS8++6YoSJnSbvtOs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TJm/Ng73wQ9MRMHSQu23Rs6/CAol/PxhHn5hDL8FSzsi1yUrQ1ZWsQx8DAQKxH5H2
-         hBcjJuA6zXvysnTtThtBA3iGZkLigoAS3Lx+LNkZTmtlzVySXXaiQ3fbq4bBIKW0OT
-         8Vk3JDA/NF5tR/StYpnvUvkOw/YmzBcqWOFzVoJ0=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id E6F7C140069;
-        Thu, 12 Dec 2019 15:12:43 -0800 (PST)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-spi@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jim Quinlan <james.quinlan@broadcom.com>
-Subject: [PATCH] spi: bcm2835: don't print error on clk_get() DEFER
-Date:   Thu, 12 Dec 2019 18:12:13 -0500
-Message-Id: <20191212231213.29061-1-jquinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Dec 2019 18:21:18 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y14so251391pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:21:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PwEI1yJ6T0AFskT5dlCNbVTasQQQ68Q/cR6yPVKDil0=;
+        b=iG1uqwZNOR1syLRVOi5Xd7H0Lm4Jnn5MY+w22djMXoS46pswB6y0UCzuOqvdbdDikD
+         AqJ2oBwf5BDU2K5gqkyjBAX1/hVf5EGz7VOxT693uKpiOw2uPledAL9RuFL+kuoGGMPD
+         5nGJceZfX101Ebtp07JCQeG86/VFQXUbhpKzahW9CIndokO35peMC+Vjxg7s3+S5I1Hd
+         Qz93ae7WzVta5hovaCxu8Zaz7CGm17bIW9ZtfxFEkmNYd9MHOfXMS8H6/vXg195vAPKV
+         EH+Px9KjnYEWp2VV/d1fJTukKJWcI5BSKIH7TY6NjJ8+IB57+Zwa7PWjfRAk/5uaD8v6
+         AZMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PwEI1yJ6T0AFskT5dlCNbVTasQQQ68Q/cR6yPVKDil0=;
+        b=uG1UaWOlJtKcugN/7sgFCjQ2vpPaF7FNTha07tMTSZ2JzBuekbO31CVZPXFynzlH0K
+         QPfAxRF24ZebKEy1+dD5T/aXuJ0ZSJCAfFyrG2IOQ++qjFy+yram090anrRek6LCxoW8
+         /TIfjAMYXjiKyfxVWKyLSk9DdqrGEtS592MV6WY5eyHLj5my44M7ss33IDLFLmlCZQpx
+         /vfha7zFRIv657/XDaPnrFWk5a/rsSqVn4tmYACGNmK1O0ffyFBRD90yZhKy6ATaCyab
+         xz4TLF3LN1F/o3F/hLv0qY9wKktEhaaVcpoJDWG6VK1g7CZAdRtxPnSPkitPJZzb3Tjr
+         Zyig==
+X-Gm-Message-State: APjAAAWMyBmUDqtayn5nl2qiuoB+SX9D4ZPk1kkzUSuL1vjKipA0Xyr4
+        TQqv2u8L63wMwYzHmhXKEaMxwg==
+X-Google-Smtp-Source: APXvYqxov3K1Wj491tYe3QMx2tNmECKyTzhVquS5PWR+IxNp3gxFXhBdBmzbiNQlyXk9Y/bYPZ5YJQ==
+X-Received: by 2002:aa7:9306:: with SMTP id 6mr12471387pfj.159.1576192877506;
+        Thu, 12 Dec 2019 15:21:17 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h5sm8646678pfk.30.2019.12.12.15.21.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 15:21:16 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:21:14 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 0/7] arm64: dts: sc7180: Make dtbs_check mostly happy
+Message-ID: <20191212232114.GQ3143381@builder>
+References: <20191212193544.80640-1-dianders@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise one may get multiple error messages for normal
-operation of a clock provider.
+On Thu 12 Dec 11:35 PST 2019, Douglas Anderson wrote:
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
----
- drivers/spi/spi-bcm2835.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> This gets rid of all of the dtbs_check that showed up atop the current
+> qcom maintainer tree for sc7180-idp, except the errors in the
+> 'thermal-sensor' nodes.  I believe those are known / being dealt with
+> separately [1] [2].
+> 
+> I don't expect this series to have any functional changes, it just
+> makes the device tree cleaner.  I was able to boot after applying
+> these patches atop a working tree.
+> 
+> I have tried to sort the changes here, first including the "obviously
+> correct" changes and later changes I am less certain about.  There are
+> no known dependencies between the changes.
+> 
+> [1] https://lore.kernel.org/r/CAD=FV=UXC3UT78vGBr9rRuRxz=8iwH4tOkFx6NC-pSs+Z5+7Xw@mail.gmail.com
+> [2] https://lore.kernel.org/r/CAD=FV=UtHebABCpJo1QUc6C2v2iZq2rFL+pTMx=EHBL+7d=jTQ@mail.gmail.com
+> 
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index fb61a620effc..6c9addc9f276 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1305,7 +1305,8 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
- 	bs->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(bs->clk)) {
- 		err = PTR_ERR(bs->clk);
--		dev_err(&pdev->dev, "could not get clk: %d\n", err);
-+		if (err != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "could not get clk: %d\n", err);
- 		goto out_controller_put;
- 	}
- 
--- 
-2.17.1
+I applied patch 1-4 and 6. Would like to hear from Rob on patch 5 and
+waiting for you to finish up the commit message in patch 7.
 
+Thanks,
+Bjorn
+
+> 
+> Douglas Anderson (7):
+>   arm64: dts: qcom: sc7180: Add SoC name to compatible
+>   arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
+>   arm64: dts: qcom: sc7180: Add "#clock-cells" property to usb_1_ssphy
+>   arm64: dts: qcom: pm6150: Remove macro from unit name of adc-chan
+>   arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory
+>     node
+>   arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+>   arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+> 
+>  arch/arm64/boot/dts/qcom/pm6150.dtsi    |  2 +-
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  2 +-
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 45 +++++++++++++------------
+>  3 files changed, 25 insertions(+), 24 deletions(-)
+> 
+> -- 
+> 2.24.1.735.g03f4e72817-goog
+> 
