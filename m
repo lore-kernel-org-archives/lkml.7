@@ -2,277 +2,161 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89261C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0909EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7CA2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08232077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aw7NK/nK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dxnweIl6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbfLLK6x (ORCPT
+        id S1728905AbfLLK7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:58:53 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39670 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfLLK6w (ORCPT
+        Thu, 12 Dec 2019 05:59:14 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:56934 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728777AbfLLK7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:58:52 -0500
-Received: by mail-lj1-f196.google.com with SMTP id e10so1773084ljj.6;
-        Thu, 12 Dec 2019 02:58:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MdFiPrT4aTcu+uxYUpE8vjkyE4T7x3v0GuPMtOhzjJI=;
-        b=aw7NK/nKtju3QQ8uB7brON1d7V06/qTqGN4gClZBZGizrHTDY6P8UF6KwkhELyD/w9
-         ld1eaq8rLxUtSiBGstZCbJcxT59ItflqY+EiAjiEoIAqM9tTaik3LnA5l8kiL2xAO3yc
-         q/4THpTXfhtwJSppqiLJ/boHmXGEGA4G4s+5p8YL5ZATlnY/rXu2KAgfmGMjUO3eIpwp
-         k6Gl09u6bAvNkhTQzDA8R0yZl81Jc0H3SAEDISZikB9eZIBUpkgCmRJm+rMrGKvLxnBb
-         aSqNjvvi1BJhozn9mFtENlxA6OwNoZH5bd/sjcaQ2fI2vYfDgU8J3ODfHkCb9NYav75I
-         ox9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MdFiPrT4aTcu+uxYUpE8vjkyE4T7x3v0GuPMtOhzjJI=;
-        b=bT0dE6PMrRHpGF15uDl4MP0BF2grvh8miyOVpXmYozv2rviTYOS8MiDTV6ntfj8O1z
-         Rc59puP8vcGoLsFgXsFa7xVMww+RTisN8ocQMKb5TXMk0Z42VJP11RCXro+USOGD4yb0
-         9yABcy/cmDcpSKipIlmVOuw3/WXwTawQVVEqGKiM5O+rLg1onRSsaMLdQjpLwQzW868G
-         6QvvlUGHrj5VCwOH8hyWPTAJyw9lDQEuY3n/Z5ALngs3mzxErxMmZy6LzpmZrdHO2BWR
-         9QB/Z1tDSaYED/4uiLUTcGi/rAkfiHg7NowfCBIzD025i/d0m+w2C8pos1LDE6D35qul
-         bJ/A==
-X-Gm-Message-State: APjAAAU3R8bgVE1ms2d4/q5rgRtb1eJ0XN69EsLIaAdqkql4gJxKHlI4
-        lnOVHQ+L+3zgn9B0ID+be3I=
-X-Google-Smtp-Source: APXvYqwgVbK3KavsgLhtzDUGEnxKcVdSmx0O0TkFgq6nQgLJJ3VIP69yDYUcUeXrfN73RP4eyT6DGg==
-X-Received: by 2002:a2e:9610:: with SMTP id v16mr5560953ljh.88.1576148329191;
-        Thu, 12 Dec 2019 02:58:49 -0800 (PST)
-Received: from ul001888.synapse.com (18-129-132-95.pool.ukrtel.net. [95.132.129.18])
-        by smtp.gmail.com with ESMTPSA id f24sm2811496ljm.12.2019.12.12.02.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 02:58:48 -0800 (PST)
-From:   Vasyl Gomonovych <gomonovych@gmail.com>
-To:     jeffrey.t.kirsher@intel.com, davem@davemloft.net,
-        intel-wired-lan@lists.osuosl.org, gomonovych@gmail.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] igb: index regs_buff array via index variable
-Date:   Thu, 12 Dec 2019 11:58:47 +0100
-Message-Id: <20191212105847.16488-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 12 Dec 2019 05:59:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NVAO4NsxMosCRBEylhmBkoWn6ov2knzY5pHJsDnfa7I=; b=dxnweIl6bWU44iMtkgtbb38WH
+        6Vgw7Mw7Cu9YmlufX1PCxC7DkzrkiObt0ibqAu2qHWg8CWherkYCL/OOlpK/Hcco8xv4lK3oG+iuW
+        zNhtrtSGbIbEf9d1Ej2O93OhTmuzb5Bf1Pxw0qBtg6hPgwJbak5e9FYncgBY/8zWdbQGGbnkxuXC+
+        Bq3GMPxQQJiIb6VsUisaqLrr+MMCKiche4wSnBWEabM0Ot9YzV3mUuFNUAfy4CSFfE9vu+Q4O7obn
+        o8yEl0cgPKmybjZEMxc+ffqN60M781lzWdLro9IA37tup/D2o+EZM+Ig97HD2+De7HLoOoWVZY4An
+        R3IdArweg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51932)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ifMBS-00069r-91; Thu, 12 Dec 2019 10:59:02 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ifMBN-0006gn-MP; Thu, 12 Dec 2019 10:58:57 +0000
+Date:   Thu, 12 Dec 2019 10:58:57 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux@rempel-privat.de" <linux@rempel-privat.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Bogdan Florin Vlad <bogdan.vlad@nxp.com>,
+        BOUGH CHEN <haibo.chen@nxp.com>,
+        Clark Wang <xiaoning.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Fancy Fang <chen.fang@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Jun Li <jun.li@nxp.com>, Leo Zhang <leo.zhang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Mircea Pop <mircea.pop@nxp.com>,
+        Mirela Rabulea <mirela.rabulea@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Peter Chen <peter.chen@nxp.com>,
+        Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Shenwei Wang <shenwei.wang@nxp.com>,
+        Viorel Suman <viorel.suman@nxp.com>,
+        Ying Liu <victor.liu@nxp.com>,
+        Zening Wang <zening.wang@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH] i2c: imx: Defer probing if EDMA not available
+Message-ID: <20191212105857.GE25745@shell.armlinux.org.uk>
+References: <20191127071136.5240-1-peng.ma@nxp.com>
+ <20191128100613.GI25745@shell.armlinux.org.uk>
+ <VI1PR04MB4431CF7F051F9439C84F84FAED5A0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20191211104347.GA25745@shell.armlinux.org.uk>
+ <VI1PR04MB44313AA19A4F81BA1AD9BC5CED5A0@VI1PR04MB4431.eurprd04.prod.outlook.com>
+ <20191211114230.GC25745@shell.armlinux.org.uk>
+ <VI1PR04MB4431DF2E270FC45A6CC878A9ED550@VI1PR04MB4431.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB4431DF2E270FC45A6CC878A9ED550@VI1PR04MB4431.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is just a preparation for additional register dump in regs_buff.
-To make new register insertion in the middle of regs_buff array easier
-change array indexing to use local counter reg_ix.
+On Thu, Dec 12, 2019 at 03:09:32AM +0000, Peng Ma wrote:
+> Hello Russell,
+> 
+> Thanks very much for your strict guidance and comments.
+> I realized it is hard to us that we want to i2c used edma when edma
+> probe after i2c probe.
 
----
+I have no problem with that aim.  I'm just very concerned by the
+proposed implementation, especially when it has already been proven
+to cause regressions in the kernel. I seem to remember that the
+infinite loop caused other issues, such as the system being unable
+to complete booting.
 
-Basically this path is just a subject to ask
-How to add a new register to dump from dataseet
-Because it is logically better to add an additional register
-in the middle of an array but that will break ABI.
-To not have the ABI problem we should just add it at the
-end of the array and increase the array size.
+> I look forward to discussing with you as below, if you like.
+> Thanks.
+> 
+> You say I could do this:
+> "So, if you want to do this (and yes, I'd also encourage it to be
+> conditional on EDMA being built-in, as I2C is commonly used as a way
+> to get at RTCs, which are read before kernel modules can be loaded)
+> then you MUST move
+> i2c_imx_dma_request() before
+> i2c_add_numbered_adapter() to avoid the infinite loop."
+> 
+> Even if I do this, It's hard to avoid the infinite loop of i2c probe caused by EDMA(build-in) initialization failure.
 
----
+It isn't clear what you mean here.
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/net/ethernet/intel/igb/igb_ethtool.c | 110 ++++++++++---------
- 1 file changed, 57 insertions(+), 53 deletions(-)
+If EDMA fails to probe (because fsl_edma_probe() returns an error other
+than EPROBE_DEFER) then of_dma_find_controller() will return NULL. That
+will be propagated down through i2c_imx_dma_request(). This is no
+different from the case where EDMA is built as a module. It is also no
+different from the case where EDMA hasn't yet been probed.
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_ethtool.c b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-index 3182b059bf55..4531f7ea9d99 100644
---- a/drivers/net/ethernet/intel/igb/igb_ethtool.c
-+++ b/drivers/net/ethernet/intel/igb/igb_ethtool.c
-@@ -459,6 +459,7 @@ static void igb_get_regs(struct net_device *netdev,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 *regs_buff = p;
- 	u8 i;
-+	int reg_ix = 0;
- 
- 	memset(p, 0, IGB_REGS_LEN * sizeof(u32));
- 
-@@ -603,116 +604,119 @@ static void igb_get_regs(struct net_device *netdev,
- 	regs_buff[119] = adapter->stats.scvpc;
- 	regs_buff[120] = adapter->stats.hrmpc;
- 
-+	reg_ix = 121;
- 	for (i = 0; i < 4; i++)
--		regs_buff[121 + i] = rd32(E1000_SRRCTL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_SRRCTL(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[125 + i] = rd32(E1000_PSRTYPE(i));
-+		regs_buff[reg_ix++] = rd32(E1000_PSRTYPE(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[129 + i] = rd32(E1000_RDBAL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RDBAL(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[133 + i] = rd32(E1000_RDBAH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RDBAH(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[137 + i] = rd32(E1000_RDLEN(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RDLEN(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[141 + i] = rd32(E1000_RDH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RDH(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[145 + i] = rd32(E1000_RDT(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RDT(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[149 + i] = rd32(E1000_RXDCTL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RXDCTL(i));
- 
- 	for (i = 0; i < 10; i++)
--		regs_buff[153 + i] = rd32(E1000_EITR(i));
-+		regs_buff[reg_ix++] = rd32(E1000_EITR(i));
- 	for (i = 0; i < 8; i++)
--		regs_buff[163 + i] = rd32(E1000_IMIR(i));
-+		regs_buff[reg_ix++] = rd32(E1000_IMIR(i));
- 	for (i = 0; i < 8; i++)
--		regs_buff[171 + i] = rd32(E1000_IMIREXT(i));
-+		regs_buff[reg_ix++] = rd32(E1000_IMIREXT(i));
- 	for (i = 0; i < 16; i++)
--		regs_buff[179 + i] = rd32(E1000_RAL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RAL(i));
- 	for (i = 0; i < 16; i++)
--		regs_buff[195 + i] = rd32(E1000_RAH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_RAH(i));
- 
- 	for (i = 0; i < 4; i++)
--		regs_buff[211 + i] = rd32(E1000_TDBAL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDBAL(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[215 + i] = rd32(E1000_TDBAH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDBAH(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[219 + i] = rd32(E1000_TDLEN(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDLEN(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[223 + i] = rd32(E1000_TDH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDH(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[227 + i] = rd32(E1000_TDT(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDT(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[231 + i] = rd32(E1000_TXDCTL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TXDCTL(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[235 + i] = rd32(E1000_TDWBAL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDWBAL(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[239 + i] = rd32(E1000_TDWBAH(i));
-+		regs_buff[reg_ix++] = rd32(E1000_TDWBAH(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[243 + i] = rd32(E1000_DCA_TXCTRL(i));
-+		regs_buff[reg_ix++] = rd32(E1000_DCA_TXCTRL(i));
- 
- 	for (i = 0; i < 4; i++)
--		regs_buff[247 + i] = rd32(E1000_IP4AT_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_IP4AT_REG(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[251 + i] = rd32(E1000_IP6AT_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_IP6AT_REG(i));
- 	for (i = 0; i < 32; i++)
--		regs_buff[255 + i] = rd32(E1000_WUPM_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_WUPM_REG(i));
- 	for (i = 0; i < 128; i++)
--		regs_buff[287 + i] = rd32(E1000_FFMT_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_FFMT_REG(i));
- 	for (i = 0; i < 128; i++)
--		regs_buff[415 + i] = rd32(E1000_FFVT_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_FFVT_REG(i));
- 	for (i = 0; i < 4; i++)
--		regs_buff[543 + i] = rd32(E1000_FFLT_REG(i));
-+		regs_buff[reg_ix++] = rd32(E1000_FFLT_REG(i));
- 
--	regs_buff[547] = rd32(E1000_TDFH);
--	regs_buff[548] = rd32(E1000_TDFT);
--	regs_buff[549] = rd32(E1000_TDFHS);
--	regs_buff[550] = rd32(E1000_TDFPC);
-+	regs_buff[reg_ix++] = rd32(E1000_TDFH);
-+	regs_buff[reg_ix++] = rd32(E1000_TDFT);
-+	regs_buff[reg_ix++] = rd32(E1000_TDFHS);
-+	regs_buff[reg_ix++] = rd32(E1000_TDFPC);
- 
- 	if (hw->mac.type > e1000_82580) {
--		regs_buff[551] = adapter->stats.o2bgptc;
--		regs_buff[552] = adapter->stats.b2ospc;
--		regs_buff[553] = adapter->stats.o2bspc;
--		regs_buff[554] = adapter->stats.b2ogprc;
-+		regs_buff[reg_ix++] = adapter->stats.o2bgptc;
-+		regs_buff[reg_ix++] = adapter->stats.b2ospc;
-+		regs_buff[reg_ix++] = adapter->stats.o2bspc;
-+		regs_buff[reg_ix++] = adapter->stats.b2ogprc;
- 	}
- 
-+	reg_ix = 555;
- 	if (hw->mac.type == e1000_82576) {
- 		for (i = 0; i < 12; i++)
--			regs_buff[555 + i] = rd32(E1000_SRRCTL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_SRRCTL(i + 4));
- 		for (i = 0; i < 4; i++)
--			regs_buff[567 + i] = rd32(E1000_PSRTYPE(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_PSRTYPE(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[571 + i] = rd32(E1000_RDBAL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RDBAL(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[583 + i] = rd32(E1000_RDBAH(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RDBAH(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[595 + i] = rd32(E1000_RDLEN(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RDLEN(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[607 + i] = rd32(E1000_RDH(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RDH(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[619 + i] = rd32(E1000_RDT(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RDT(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[631 + i] = rd32(E1000_RXDCTL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_RXDCTL(i + 4));
- 
- 		for (i = 0; i < 12; i++)
--			regs_buff[643 + i] = rd32(E1000_TDBAL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDBAL(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[655 + i] = rd32(E1000_TDBAH(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDBAH(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[667 + i] = rd32(E1000_TDLEN(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDLEN(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[679 + i] = rd32(E1000_TDH(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDH(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[691 + i] = rd32(E1000_TDT(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDT(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[703 + i] = rd32(E1000_TXDCTL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TXDCTL(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[715 + i] = rd32(E1000_TDWBAL(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDWBAL(i + 4));
- 		for (i = 0; i < 12; i++)
--			regs_buff[727 + i] = rd32(E1000_TDWBAH(i + 4));
-+			regs_buff[reg_ix++] = rd32(E1000_TDWBAH(i + 4));
- 	}
- 
-+	reg_ix = 739;
- 	if (hw->mac.type == e1000_i210 || hw->mac.type == e1000_i211)
--		regs_buff[739] = rd32(E1000_I210_RR2DCDELAY);
-+		regs_buff[reg_ix] = rd32(E1000_I210_RR2DCDELAY);
- }
- 
- static int igb_get_eeprom_len(struct net_device *netdev)
+If i2c_imx_dma_request() is placed after i2c_add_numbered_adapter(),
+and EPROBE_DEFER is propagated out of i2c_imx_probe(), then _yes_, it
+will cause an infinite loop, because you are replicating the exact
+conditions that caused the attempt to propagate i2c_imx_dma_request()'s
+return value to be reverted last time - which brought the kernel to a
+grinding halt.
+
+If i2c_imx_dma_request() is placed before i2c_add_numbered_adapter(),
+then there is no infinite deferred probing loop - yes, i2c_imx_probe()
+will be called as a result of other drivers successfully probing, and
+each time it will return EPROBE_DEFER, but the _key_ point is that
+the action of i2c_imx_probe() will not _self trigger_ the deferred
+probing _and_ place itself onto the deferred probe list.
+
+Please, rather than continuing to send emails arguing over this point,
+investigate the stated issue with some practical tests:
+
+1. Make i2c_imx_probe() propagate i2c_imx_dma_request()'s return value,
+   as it did in the original patch.
+2. Build i2c-imx into the kernel.
+3. Build edma as a module.
+4. Build and test boot the kernel and check what happens.
+5. Move i2c_imx_dma_request() before i2c_add_numbered_adapter()
+6. Build and test boot the resulting kernel and note any differences.
+
 -- 
-2.17.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
