@@ -2,478 +2,97 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747E1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCEBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517C62253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8012253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RUPwEtc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfLLSYz (ORCPT
+        id S1730522AbfLLSZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:24:55 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59647 "EHLO mga05.intel.com"
+        Thu, 12 Dec 2019 13:25:00 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:45940 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbfLLSYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="245829459"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 10:24:51 -0800
-Subject: [PATCH RFC v2 07/14] dmaengine: update dmatest to support dma
- request
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org
-Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
-        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
-        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
-        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:24:51 -0700
-Message-ID: <157617509183.42350.16448608428757625955.stgit@djiang5-desk3.ch.intel.com>
-In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: StGit/unknown-version
+        id S1730387AbfLLSY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:58 -0500
+Received: from zn.tnic (p200300EC2F0A5A0010289BED6992E3B4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:1028:9bed:6992:e3b4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F9D91EC0D00;
+        Thu, 12 Dec 2019 19:24:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576175096;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=2TIUuWa9aevx3nEsXKaaJadXZODvPPCYg3qJs/3YyTc=;
+        b=RUPwEtc2CyutYOTrS9uUbw0IzlfZzeDWyGpy0WBgpf3SauLu0oZsdtWZ3BZQsU2nKP7gGj
+        5/E6w07e/8PMng4lFhpGy3IG+UdEDJzSUlUV+xwqgXfC9rCs1iaXMv0tJjXB5yIIkPKYm/
+        5k0uPzwn4ZqpQ4gImaqfM5EdnwounOs=
+Date:   Thu, 12 Dec 2019 19:24:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 10/19] x86/cpu: Detect VMX features on Intel, Centaur
+ and Zhaoxin CPUs
+Message-ID: <20191212182455.GH4991@zn.tnic>
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+ <20191128014016.4389-11-sean.j.christopherson@intel.com>
+ <20191212113838.GD4991@zn.tnic>
+ <20191212175511.GG3163@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191212175511.GG3163@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce dmatest to the new dma request API so the testing of the new
-drivers that utilizies the new functionalities can be performed. The
-existing DMA setup function has been split to its own function.
+On Thu, Dec 12, 2019 at 09:55:11AM -0800, Sean Christopherson wrote:
+> The reasoning behind using vanilla rdmsr() on PROC and PIN controls is that
+> those MSRs should exist on any CPU that supports VMX, i.e. we want the WARN.
+> 
+> The alternative would be to use rdmsr_safe() for everything and then
+> explicitly disable VMX if a fault on PROC or PIN occurs, but that circles
+> us back to the handling a fault on rdmsr(MSR_IA32_FEAT_CTL), i.e. is it
+> really worth gracefully handling a fault that should never occur?
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- drivers/dma/dmatest.c |  366 ++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 241 insertions(+), 125 deletions(-)
+No but pls put a comment above it explaining why we're doing rdmsr()
+only with those two MSRs.
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index a2cadfa2e6d7..a544f05b0fd7 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -535,6 +535,240 @@ static int dmatest_alloc_test_data(struct dmatest_data *d,
- 	return -ENOMEM;
- }
- 
-+static int dma_test_req_op(struct dmatest_thread *thread,
-+			   struct dmatest_data *src, struct dmatest_data *dst,
-+			   int total_tests, unsigned int len)
-+{
-+	struct dmatest_info *info = thread->info;
-+	struct dmatest_params *params = &info->params;
-+	struct dma_chan *chan = thread->chan;
-+	struct dma_device *dma_dev = chan->device;
-+	struct device *dev = dma_dev->dev;
-+	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-+	int ret = -ENOMEM;
-+	struct dma_request *rq;
-+	struct scatterlist *sg;
-+	void *vdst = dst->aligned[0] + dst->off;
-+	int req_retry = 100;
-+
-+	do {
-+		rq = dma_chan_alloc_request(chan);
-+		if (!rq)
-+			msleep(20);
-+	} while (!rq && req_retry--);
-+
-+	if (!rq) {
-+		result("get request", total_tests, src->off, dst->off,
-+		       len, ret);
-+		return -ENXIO;
-+	}
-+
-+	if (thread->type == DMA_MEMCPY) {
-+		rq->cmd = DMA_MEMCPY;
-+	} else {
-+		dma_chan_free_request(chan, rq);
-+		result("wrong thread type", total_tests, src->off, dst->off,
-+		       len, ret);
-+		return -ENXIO;
-+	}
-+
-+	rq->chan = chan;
-+	rq->flags = flags;
-+	rq->bvec.bv_page = virt_to_page(vdst);
-+	rq->bvec.bv_offset = offset_in_page(vdst);
-+	rq->pg_dma = dma_map_page(dev, rq->bvec.bv_page, rq->bvec.bv_offset,
-+				  len, DMA_FROM_DEVICE);
-+	if (rq->pg_dma == DMA_MAPPING_ERROR) {
-+		dma_chan_free_request(chan, rq);
-+		result("DMA map dest", total_tests, src->off, dst->off,
-+		       len, ret);
-+		msleep(100);
-+		return -ENXIO;
-+	}
-+
-+	rq->bvec.bv_len = len;
-+	sg = &rq->sg[0];
-+	sg_init_one(sg, src->aligned[0] + src->off, len);
-+	rq->sg_nents = 1;
-+
-+	ret = dma_map_sg(dev, sg, 1, DMA_TO_DEVICE);
-+	if (ret == 0) {
-+		dma_unmap_page(dev, rq->pg_dma, len, DMA_FROM_DEVICE);
-+		dma_chan_free_request(chan, rq);
-+		result("DMA map src", total_tests, src->off, dst->off,
-+		       len, ret);
-+		return -ENXIO;
-+	}
-+
-+	ret = dmaengine_submit_request_and_wait(chan, rq,
-+						msecs_to_jiffies(params->timeout));
-+	if (ret < 0) {
-+		dma_chan_free_request(chan, rq);
-+		dma_unmap_page(dev, rq->pg_dma, len, DMA_FROM_DEVICE);
-+		dma_unmap_sg(dev, sg, 1, DMA_TO_DEVICE);
-+		result("submit error", total_tests, src->off, dst->off,
-+		       len, ret);
-+		return -ENXIO;
-+	}
-+
-+	if (ret == 0) {
-+		result("test timed out", total_tests, src->off,
-+		       dst->off, len, 0);
-+		ret = -ETIMEDOUT;
-+		goto out_unmap;
-+	} else if (rq->result.result != DMA_TRANS_NOERROR) {
-+		result("completion error", total_tests, src->off,
-+		       dst->off, len, ret);
-+		ret = -ENXIO;
-+		goto out_unmap;
-+	}
-+
-+ out_unmap:
-+	dma_unmap_page(dev, rq->pg_dma, len, DMA_FROM_DEVICE);
-+	dma_unmap_sg(dev, sg, 1, DMA_TO_DEVICE);
-+	dma_chan_free_request(chan, rq);
-+
-+	return ret;
-+}
-+
-+static int dma_test_op(struct dmatest_thread *thread,
-+		       struct dmatest_data *src, struct dmatest_data *dst,
-+		       dma_addr_t *srcs, dma_addr_t *dma_pq,
-+		       int total_tests, unsigned int len, u8 *pq_coefs)
-+{
-+	struct dma_async_tx_descriptor *tx = NULL;
-+	struct dmaengine_unmap_data *um;
-+	struct dmatest_info *info = thread->info;
-+	struct dmatest_params *params = &info->params;
-+	struct dma_chan *chan = thread->chan;
-+	struct dma_device *dev = chan->device;
-+	struct dmatest_done *done = &thread->test_done;
-+	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
-+	dma_cookie_t cookie;
-+	dma_addr_t *dsts;
-+	enum dma_status status;
-+	int ret = -ENOMEM, i;
-+
-+	um = dmaengine_get_unmap_data(dev->dev, src->cnt + dst->cnt,
-+				      GFP_KERNEL);
-+	if (!um) {
-+		result("unmap data NULL", total_tests,
-+		       src->off, dst->off, len, ret);
-+		return -ENXIO;
-+	}
-+
-+	um->len = len;
-+	for (i = 0; i < src->cnt; i++) {
-+		void *buf = src->aligned[i];
-+		struct page *pg = virt_to_page(buf);
-+		unsigned long pg_off = offset_in_page(buf);
-+
-+		um->addr[i] = dma_map_page(dev->dev, pg, pg_off,
-+					   um->len, DMA_TO_DEVICE);
-+		srcs[i] = um->addr[i] + src->off;
-+		ret = dma_mapping_error(dev->dev, um->addr[i]);
-+		if (ret) {
-+			result("src mapping error", total_tests,
-+			       src->off, dst->off, len, ret);
-+			goto error_unmap;
-+		}
-+		um->to_cnt++;
-+	}
-+	/* map with DMA_BIDIRECTIONAL to force writeback/invalidate */
-+	dsts = &um->addr[src->cnt];
-+	for (i = 0; i < dst->cnt; i++) {
-+		void *buf = dst->aligned[i];
-+		struct page *pg = virt_to_page(buf);
-+		unsigned long pg_off = offset_in_page(buf);
-+
-+		dsts[i] = dma_map_page(dev->dev, pg, pg_off, um->len,
-+				       DMA_BIDIRECTIONAL);
-+		ret = dma_mapping_error(dev->dev, dsts[i]);
-+		if (ret) {
-+			result("dst mapping error", total_tests,
-+			       src->off, dst->off, len, ret);
-+			goto error_unmap;
-+		}
-+		um->bidi_cnt++;
-+	}
-+
-+	if (thread->type == DMA_MEMCPY)
-+		tx = dev->device_prep_dma_memcpy(chan,
-+						 dsts[0] + dst->off,
-+						 srcs[0], len, flags);
-+	else if (thread->type == DMA_MEMSET)
-+		tx = dev->device_prep_dma_memset(chan,
-+					dsts[0] + dst->off,
-+					*(src->aligned[0] + src->off),
-+					len, flags);
-+	else if (thread->type == DMA_XOR)
-+		tx = dev->device_prep_dma_xor(chan,
-+					      dsts[0] + dst->off,
-+					      srcs, src->cnt,
-+					      len, flags);
-+	else if (thread->type == DMA_PQ) {
-+		for (i = 0; i < dst->cnt; i++)
-+			dma_pq[i] = dsts[i] + dst->off;
-+		tx = dev->device_prep_dma_pq(chan, dma_pq, srcs,
-+					     src->cnt, pq_coefs,
-+					     len, flags);
-+	}
-+
-+	if (!tx) {
-+		result("prep error", total_tests, src->off,
-+		       dst->off, len, ret);
-+		msleep(100);
-+		goto error_unmap;
-+	}
-+
-+	done->done = false;
-+	if (!params->polled) {
-+		tx->callback = dmatest_callback;
-+		tx->callback_param = done;
-+	}
-+	cookie = tx->tx_submit(tx);
-+
-+	if (dma_submit_error(cookie)) {
-+		result("submit error", total_tests, src->off,
-+		       dst->off, len, ret);
-+		msleep(100);
-+		goto error_unmap;
-+	}
-+
-+	if (params->polled) {
-+		status = dma_sync_wait(chan, cookie);
-+		dmaengine_terminate_sync(chan);
-+		if (status == DMA_COMPLETE)
-+			done->done = true;
-+	} else {
-+		dma_async_issue_pending(chan);
-+
-+		wait_event_freezable_timeout(thread->done_wait, done->done,
-+					     msecs_to_jiffies(params->timeout));
-+
-+		status = dma_async_is_tx_complete(chan, cookie, NULL, NULL);
-+	}
-+
-+	if (!done->done) {
-+		result("test timed out", total_tests, src->off, dst->off,
-+		       len, 0);
-+		goto error_unmap;
-+	} else if (status != DMA_COMPLETE) {
-+		result(status == DMA_ERROR ?
-+		       "completion error status" :
-+		       "completion busy status", total_tests, src->off,
-+		       dst->off, len, ret);
-+		goto error_unmap;
-+	}
-+
-+	dmaengine_unmap_put(um);
-+	return 0;
-+
-+ error_unmap:
-+	dmaengine_unmap_put(um);
-+	return -ENXIO;
-+}
-+
- /*
-  * This function repeatedly tests DMA transfers of various lengths and
-  * offsets for a given operation type until it is told to exit by
-@@ -552,7 +786,6 @@ static int dmatest_alloc_test_data(struct dmatest_data *d,
- static int dmatest_func(void *data)
- {
- 	struct dmatest_thread	*thread = data;
--	struct dmatest_done	*done = &thread->test_done;
- 	struct dmatest_info	*info;
- 	struct dmatest_params	*params;
- 	struct dma_chan		*chan;
-@@ -560,8 +793,6 @@ static int dmatest_func(void *data)
- 	unsigned int		error_count;
- 	unsigned int		failed_tests = 0;
- 	unsigned int		total_tests = 0;
--	dma_cookie_t		cookie;
--	enum dma_status		status;
- 	enum dma_ctrl_flags 	flags;
- 	u8			*pq_coefs = NULL;
- 	int			ret;
-@@ -664,9 +895,6 @@ static int dmatest_func(void *data)
- 	ktime = ktime_get();
- 	while (!kthread_should_stop()
- 	       && !(params->iterations && total_tests >= params->iterations)) {
--		struct dma_async_tx_descriptor *tx = NULL;
--		struct dmaengine_unmap_data *um;
--		dma_addr_t *dsts;
- 		unsigned int len;
- 
- 		total_tests++;
-@@ -714,123 +942,17 @@ static int dmatest_func(void *data)
- 			filltime = ktime_add(filltime, diff);
- 		}
- 
--		um = dmaengine_get_unmap_data(dev->dev, src->cnt + dst->cnt,
--					      GFP_KERNEL);
--		if (!um) {
-+		if (dev->device_submit_request)
-+			ret = dma_test_req_op(thread, src, dst, total_tests,
-+					      len);
-+		else
-+			ret = dma_test_op(thread, src, dst, srcs,
-+					  dma_pq, total_tests, len, pq_coefs);
-+		if (ret < 0) {
- 			failed_tests++;
--			result("unmap data NULL", total_tests,
--			       src->off, dst->off, len, ret);
- 			continue;
- 		}
- 
--		um->len = buf_size;
--		for (i = 0; i < src->cnt; i++) {
--			void *buf = src->aligned[i];
--			struct page *pg = virt_to_page(buf);
--			unsigned long pg_off = offset_in_page(buf);
--
--			um->addr[i] = dma_map_page(dev->dev, pg, pg_off,
--						   um->len, DMA_TO_DEVICE);
--			srcs[i] = um->addr[i] + src->off;
--			ret = dma_mapping_error(dev->dev, um->addr[i]);
--			if (ret) {
--				result("src mapping error", total_tests,
--				       src->off, dst->off, len, ret);
--				goto error_unmap_continue;
--			}
--			um->to_cnt++;
--		}
--		/* map with DMA_BIDIRECTIONAL to force writeback/invalidate */
--		dsts = &um->addr[src->cnt];
--		for (i = 0; i < dst->cnt; i++) {
--			void *buf = dst->aligned[i];
--			struct page *pg = virt_to_page(buf);
--			unsigned long pg_off = offset_in_page(buf);
--
--			dsts[i] = dma_map_page(dev->dev, pg, pg_off, um->len,
--					       DMA_BIDIRECTIONAL);
--			ret = dma_mapping_error(dev->dev, dsts[i]);
--			if (ret) {
--				result("dst mapping error", total_tests,
--				       src->off, dst->off, len, ret);
--				goto error_unmap_continue;
--			}
--			um->bidi_cnt++;
--		}
--
--		if (thread->type == DMA_MEMCPY)
--			tx = dev->device_prep_dma_memcpy(chan,
--							 dsts[0] + dst->off,
--							 srcs[0], len, flags);
--		else if (thread->type == DMA_MEMSET)
--			tx = dev->device_prep_dma_memset(chan,
--						dsts[0] + dst->off,
--						*(src->aligned[0] + src->off),
--						len, flags);
--		else if (thread->type == DMA_XOR)
--			tx = dev->device_prep_dma_xor(chan,
--						      dsts[0] + dst->off,
--						      srcs, src->cnt,
--						      len, flags);
--		else if (thread->type == DMA_PQ) {
--			for (i = 0; i < dst->cnt; i++)
--				dma_pq[i] = dsts[i] + dst->off;
--			tx = dev->device_prep_dma_pq(chan, dma_pq, srcs,
--						     src->cnt, pq_coefs,
--						     len, flags);
--		}
--
--		if (!tx) {
--			result("prep error", total_tests, src->off,
--			       dst->off, len, ret);
--			msleep(100);
--			goto error_unmap_continue;
--		}
--
--		done->done = false;
--		if (!params->polled) {
--			tx->callback = dmatest_callback;
--			tx->callback_param = done;
--		}
--		cookie = tx->tx_submit(tx);
--
--		if (dma_submit_error(cookie)) {
--			result("submit error", total_tests, src->off,
--			       dst->off, len, ret);
--			msleep(100);
--			goto error_unmap_continue;
--		}
--
--		if (params->polled) {
--			status = dma_sync_wait(chan, cookie);
--			dmaengine_terminate_sync(chan);
--			if (status == DMA_COMPLETE)
--				done->done = true;
--		} else {
--			dma_async_issue_pending(chan);
--
--			wait_event_freezable_timeout(thread->done_wait,
--					done->done,
--					msecs_to_jiffies(params->timeout));
--
--			status = dma_async_is_tx_complete(chan, cookie, NULL,
--							  NULL);
--		}
--
--		if (!done->done) {
--			result("test timed out", total_tests, src->off, dst->off,
--			       len, 0);
--			goto error_unmap_continue;
--		} else if (status != DMA_COMPLETE) {
--			result(status == DMA_ERROR ?
--			       "completion error status" :
--			       "completion busy status", total_tests, src->off,
--			       dst->off, len, ret);
--			goto error_unmap_continue;
--		}
--
--		dmaengine_unmap_put(um);
--
- 		if (params->noverify) {
- 			verbose_result("test passed", total_tests, src->off,
- 				       dst->off, len, 0);
-@@ -871,12 +993,6 @@ static int dmatest_func(void *data)
- 			verbose_result("test passed", total_tests, src->off,
- 				       dst->off, len, 0);
- 		}
--
--		continue;
--
--error_unmap_continue:
--		dmaengine_unmap_put(um);
--		failed_tests++;
- 	}
- 	ktime = ktime_sub(ktime_get(), ktime);
- 	ktime = ktime_sub(ktime, comparetime);
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
