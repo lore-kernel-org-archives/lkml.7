@@ -2,123 +2,144 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57202C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DDEC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3584521556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576174002;
-	bh=QbYFPcyUbQkcB6fG8/43kB0aA3LyHLLV1x1hYhirNx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sc8yC7vwwiHfoPhagrr3eZSqYNQ6AaVsEudr/c9CzrwLxkZmEqN0GiAQEMQioJDwN
-	 mY5nXrOABFRcLwEpsIe1V3WRxs7yGMLMjWNGF/r3hXC8PIKFPj2JbZfjFVpaXQhtUL
-	 w9VHFwPM7xe6ZE7JhBCqXWXerkzPhPE6VK0e6Phw=
+	by mail.kernel.org (Postfix) with ESMTP id 16A48214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:07:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QoHqsVEg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730271AbfLLSGl (ORCPT
+        id S1730303AbfLLSHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:06:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730159AbfLLSGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:06:41 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8834214AF;
-        Thu, 12 Dec 2019 18:06:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576174000;
-        bh=QbYFPcyUbQkcB6fG8/43kB0aA3LyHLLV1x1hYhirNx0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ONkagQPlYuBVQGWVNonUeKbx415r1LL+qzkuQsGkw33plWbHk8Y/45w/+OuUwoXCm
-         a5KjjB7xE5Vn1z36KKIiaXEYfj4X67Sr4VZj4DfY1fCjTA3atFezHXphkDnvLkYhOh
-         HUgLBzevlZk67TF8LP5CzctiU32bk+HDC9azTeo4=
-Date:   Thu, 12 Dec 2019 18:06:35 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
+        Thu, 12 Dec 2019 13:07:15 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49638 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730082AbfLLSHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:07:14 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCHn5xg022218;
+        Thu, 12 Dec 2019 18:04:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=6nE9TIG7gNozX0c5JrZbeLjKkq4aQbbrTaX/7iiac6M=;
+ b=QoHqsVEgjltKrKrKhFjzmk9Zn/ASebnNcXuELwwEQ/5cS9mmVSmps2rX7hNKBuX6pXMT
+ sdm52YxuW5sfixN5za1MBMEg4vDiUE7Ym7hbqI5IRT43WbebTKsJ9n0AxIBczDbozi9o
+ 25fjX4Es42jQ+8e+O/zXdxDvS78UjmxyO0C9iMChc/hEBLLSXsOUyQlwpdvQcjjTNDLu
+ BmMHZPmMADobfwXrXMVsBhCx9Wmch2cHttWSr4ZuY50Y3L+3Xkh7gwQrC/nRPzeQEBZ0
+ OylEEo/4AeVjb9eIjVz/2atdPhT3gHhIU63AWXR+laKZYf27RZgzk0Fzi3vuOfQLYdZ0 uA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wr41qmpbp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:04:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCHnNUj192570;
+        Thu, 12 Dec 2019 18:04:32 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2wumw0r9f8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:04:32 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBCI4SXO006421;
+        Thu, 12 Dec 2019 18:04:28 GMT
+Received: from [192.168.14.112] (/109.65.223.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 10:04:27 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
+ VMX_FEATURES_*
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <CALMp9eRAYj=dKDtnPymkUA_OOMv+9a4WdPNt4hdpFtBgzwNA9w@mail.gmail.com>
+Date:   Thu, 12 Dec 2019 20:04:19 +0200
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191212180634.GA19020@willie-the-truck>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
- <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au>
- <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck>
- <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EA5BE610-6E9C-4357-AD62-5678C7E81043@oracle.com>
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+ <20191128014016.4389-12-sean.j.christopherson@intel.com>
+ <20191212122646.GE4991@zn.tnic>
+ <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
+ <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
+ <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
+ <20191212174357.GE3163@linux.intel.com>
+ <52dd758d-a590-52a6-4248-22d6852b75cd@redhat.com>
+ <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
+ <CALMp9eRAYj=dKDtnPymkUA_OOMv+9a4WdPNt4hdpFtBgzwNA9w@mail.gmail.com>
+To:     Jim Mattson <jmattson@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=869
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=926 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:41:32AM -0800, Linus Torvalds wrote:
-> On Thu, Dec 12, 2019 at 2:46 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > +#ifdef GCC_VERSION < 40800
-> 
-> Where does that 4.8 version check come from, and why?
-> 
-> Yeah, I know, but this really wants a comment. Sadly it looks like gcc
-> bugzilla is down, so
-> 
->    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-> 
-> currently gives an "Internal Server Error" for me.
-> 
-> [ Delete the horrid code we have because of gcc bugs ]
-> 
-> > +#else /* GCC_VERSION < 40800 */
-> > +
-> > +#define READ_ONCE_NOCHECK(x)                                           \
-> > +({                                                                     \
-> > +       typeof(x) __x = *(volatile typeof(x))&(x);                      \
-> 
-> I think we can/should just do this unconditionally if it helps th eissue.
 
-I'm currently trying to solve the issue by removing volatile from the bitop
-function signatures, but it's grotty because there are quite a few callers
-to fix up. I'm still trying to do it, because removing volatile fields from
-structurs is generally a "good thing", but I'd be keen to simplify
-READ_ONCE() as you suggest regardless.
 
-> Maybe add a warning about how gcc < 4.8 might mis-compile the kernel -
-> those versions are getting close to being unacceptable for kernel
-> builds anyway.
-> 
-> We could also look at being stricter for the normal READ/WRITE_ONCE(),
-> and require that they are
-> 
->  (a) regular integer types
-> 
->  (b) fit in an atomic word
-> 
-> We actually did (b) for a while, until we noticed that we do it on
-> loff_t's etc and relaxed the rules. But maybe we could have a
-> "non-atomic" version of READ/WRITE_ONCE() that is used for the
-> questionable cases?
+> On 12 Dec 2019, at 19:57, Jim Mattson <jmattson@google.com> wrote:
+>=20
+> On Thu, Dec 12, 2019 at 9:53 AM Liran Alon <liran.alon@oracle.com> =
+wrote:
+>=20
+>> Why should CPU VMX features be treated differently than standard =
+CPUID deduced features?
+>=20
+> Do we have the right Intel people on the recipient list to answer this
+> question? Presumably, Intel felt that this information should be
+> available in supervisor mode only.
+>=20
+> Sean?
 
-That makes a lot of sense to me, and it would allow us to use
-compiletime_assert_atomic_type() as we do for the acquire/release accessors.
+Good question. Probably because it just makes sense that Ring3 will =
+never need to use
+this info as all VMX instructions are privileged. i.e. Can only be =
+executed in Ring0.
 
-Will
+De-facto in KVM we have discovered this assumption to be problematic =
+BTW,
+as KVM created an interface to query VMX MSRs values to properly define =
+the requested
+vCPU model. :P (See kvm_get_msr_feature())
+
+
