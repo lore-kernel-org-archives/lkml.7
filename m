@@ -2,451 +2,406 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA1BC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E557AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2788B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="KgWShGdH";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="KgWShGdH"
+	by mail.kernel.org (Postfix) with ESMTP id AF9B1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbfLLPvM (ORCPT
+        id S1729734AbfLLPvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:51:12 -0500
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:57985
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729581AbfLLPvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:51:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L5pWvwKEYxKavoOxdfOM/q9l0OsKplXSJZilPesnq1k=;
- b=KgWShGdHY8mTQ8rKeNszQlKXlvI7LpF7s21FIGGL7rZGio2lznkD0CSQ7av17PCBydt1TlmUI9pp2OgJcLLenevWoBbr7UPb7ZVuFDXE3u4erqP+bWvCXM15Vm+BJ7ewbYdW2P/15XHqUPLsyMGvI9QEr+hW2MocxSHi0BnhgsU=
-Received: from VI1PR0802CA0045.eurprd08.prod.outlook.com
- (2603:10a6:800:a9::31) by AM0PR08MB3427.eurprd08.prod.outlook.com
- (2603:10a6:208:d6::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.17; Thu, 12 Dec
- 2019 15:51:03 +0000
-Received: from DB5EUR03FT038.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e0a::200) by VI1PR0802CA0045.outlook.office365.com
- (2603:10a6:800:a9::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2538.15 via Frontend
- Transport; Thu, 12 Dec 2019 15:51:02 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT038.mail.protection.outlook.com (10.152.21.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.18 via Frontend Transport; Thu, 12 Dec 2019 15:50:53 +0000
-Received: ("Tessian outbound d87d9aeb44be:v37"); Thu, 12 Dec 2019 15:50:28 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 06e4ea517652665c
-X-CR-MTA-TID: 64aa7808
-Received: from 3f3304466407.3
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 3B74CDBA-7165-443B-8A8B-B8CC5412083B.1;
-        Thu, 12 Dec 2019 15:50:23 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 3f3304466407.3
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 12 Dec 2019 15:50:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VeoP2m3oU+LkvKFwBWUUm9WWom2bpp8OptW6E/ZBYVRa41bFJozKyLndIrmhzP9WgDydnxmtMOHvb0nmmc06gG+sMqL1pNwJpxEW6Xpym0yxU/MaTuXvOQP12HQhle4guPOY6O13/8QRfx0d/QKvNFYtycaRPfmvFnQO0V4c9H48v0UUS4maKoTSwh4LtuvGNVqBa6NDzzRYD7CsFMzIda/6hX1HGsGhHAlrpHJIDNGZhvkmRqyIXvWmsK/0EH68rL72tv2h0S2QPH4Oq1Dpd8tWcJoPGGK3NW7KUhtOs495nO+FAAs6rP1oaMVTKsDfuSYoIU1Kuv7peJ6/yFM0Jg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L5pWvwKEYxKavoOxdfOM/q9l0OsKplXSJZilPesnq1k=;
- b=FMWKMqvFUIFebRALF+GGp95nNZGgamr2uPyf9KeTuDz09br1RJiefxt9KU5G7w+av5NfxXK5LAHzDQrL0OUpY/svyMphO0fJ9rSXg1R04hGcxBLLjckZ7YPRdASTdadynSaFLpjF/227lT2qqWEmmnOquvhRait58Bl7ue2t0j6MnQ8y8FY++d0l+MuOCCaIRz7SqwOG66SWY/I/1XZSSTRMmZS/d5Li2+94OaZlpLSHP0aXJurdsz8PfILwcR1Tad3iZ0XK2MAO8vp7+vgGDCl/jUAQVbuuIjYcJZND2GIjuKFkMB35ypJblYJfqiIl29NHh9u5GtkMBPl/us005A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L5pWvwKEYxKavoOxdfOM/q9l0OsKplXSJZilPesnq1k=;
- b=KgWShGdHY8mTQ8rKeNszQlKXlvI7LpF7s21FIGGL7rZGio2lznkD0CSQ7av17PCBydt1TlmUI9pp2OgJcLLenevWoBbr7UPb7ZVuFDXE3u4erqP+bWvCXM15Vm+BJ7ewbYdW2P/15XHqUPLsyMGvI9QEr+hW2MocxSHi0BnhgsU=
-Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com (10.172.218.15) by
- AM4PR0802MB2194.eurprd08.prod.outlook.com (10.172.216.148) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Thu, 12 Dec 2019 15:50:17 +0000
-Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com
- ([fe80::844b:154:23f3:7214]) by AM4PR0802MB2242.eurprd08.prod.outlook.com
- ([fe80::844b:154:23f3:7214%10]) with mapi id 15.20.2516.019; Thu, 12 Dec 2019
- 15:50:17 +0000
-From:   James Clark <James.Clark@arm.com>
-To:     Tan Xiaojun <tanxiaojun@huawei.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-        "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>,
-        "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>,
-        "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        Kim Phillips <Kim.Phillips@arm.com>,
-        Jeremy Linton <Jeremy.Linton@arm.com>
-CC:     "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>,
-        "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>,
-        "liwei391@huawei.com" <liwei391@huawei.com>,
-        "huawei.libin@huawei.com" <huawei.libin@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [RFC v3 5/5] perf tools: Add support to process multi spe events
-Thread-Topic: [RFC v3 5/5] perf tools: Add support to process multi spe events
-Thread-Index: AQHVod/ZKr1coAq3Q0S9sJ/PKFXD8KeiYYKAgACI2ACACmsbgIADuwgAgAWzcgA=
-Date:   Thu, 12 Dec 2019 15:50:17 +0000
-Message-ID: <35e583fc-d5ab-fafd-2ce7-b43dd7a3e7fd@arm.com>
-References: <20191123101118.12635-1-tanxiaojun@huawei.com>
- <20191123101118.12635-6-tanxiaojun@huawei.com>
- <2f2db9d2-e468-b327-34e6-1412a40cb5c9@arm.com>
- <1a29399e-4c24-1a55-fa44-9f8b7b46308c@huawei.com>
- <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
- <896ba5d6-5a40-5882-5c2b-999974dd5baf@huawei.com>
-In-Reply-To: <896ba5d6-5a40-5882-5c2b-999974dd5baf@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [217.140.96.140]
-x-clientproxiedby: LO2P265CA0232.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:b::28) To AM4PR0802MB2242.eurprd08.prod.outlook.com
- (2603:10a6:200:5f::15)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=James.Clark@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 73c21577-1807-4583-43ae-08d77f1b1311
-X-MS-TrafficTypeDiagnostic: AM4PR0802MB2194:|AM4PR0802MB2194:|AM0PR08MB3427:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR08MB3427EFEE449469A6945F57C6E2550@AM0PR08MB3427.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
-x-forefront-prvs: 0249EFCB0B
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(199004)(40434004)(189003)(2616005)(30864003)(7416002)(6512007)(81156014)(8936002)(71200400001)(36756003)(44832011)(81166006)(4326008)(8676002)(64756008)(66556008)(66476007)(66446008)(31686004)(316002)(66946007)(186003)(6506007)(5660300002)(6486002)(31696002)(52116002)(6636002)(53546011)(110136005)(86362001)(478600001)(26005)(2906002)(54906003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR0802MB2194;H:AM4PR0802MB2242.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: Xy3Z2A8a0VrOUARahWFK2VkrHVVxV0yaLD7qLawN3ajHIcxWv2aZJZu4nKWdq1AEPKZu5r7YjXaZAyVLrVzDyCaPd8uYJX3qX4tH8woi0NXPr89u6Ou+IGvc9Ny5ExcTsfHAdjB9NcwcsApPxH4vOUs0Ahl25c8iHFZj9rSxZqG0XJopXJXMwZadNUVT3UzJpttdh0DJnhKEFi67lNL5A8Ohd/lfLfFPuM/hj3Is5aUe5rvkXaR0Up2BhKLoeonVe7zBcd9pQA+TwztNq/plWYbi6ZYJ4i8mAABNxA3MqfRGpRIi6YIasBy2xA6nE2mTYRjE5Gf26pXrcngr4bM6402YtzqdI4MYYaWZ4UJO5OTAOsEiLeEkLsaozzhIxzWWZuAXsUTxVS1aOmCcyq1r7AYyPG7rZbVtolkMNj1KPv/TWpBp9bRfupKb0leBw42UXnKDE1Lh6furoemsQ36zwQvEFuZKkOHj7mQjP2RZGHoICs57z8FhrT5xTlLT60WTt/4f0V15VVH306S10Dw8LQ==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5C7D39BB7F44574D9F4E4E3AF5EF32CA@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 12 Dec 2019 10:51:18 -0500
+Received: from out28-98.mail.aliyun.com ([115.124.28.98]:55781 "EHLO
+        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729599AbfLLPvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:51:16 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.696685-0.00271529-0.3006;DS=CONTINUE|ham_system_inform|0.00946848-0.000206421-0.990325;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03300;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.GFo2FEj_1576165852;
+Received: from zhouyanjie-virtual-machine.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GFo2FEj_1576165852)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Thu, 12 Dec 2019 23:51:00 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, paul@crapouillou.net, paul.burton@mips.com,
+        paulburton@kernel.org, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Subject: [PATCH 2/2] I2C: JZ4780: Add support for the X1000.
+Date:   Thu, 12 Dec 2019 23:50:50 +0800
+Message-Id: <1576165850-20727-4-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1576165850-20727-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1576165850-20727-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2194
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=James.Clark@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT038.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(396003)(189003)(40434004)(199004)(70586007)(450100002)(70206006)(316002)(110136005)(6512007)(336012)(54906003)(6486002)(356004)(2616005)(6636002)(76130400001)(478600001)(53546011)(8676002)(6506007)(4326008)(31696002)(26005)(36756003)(5660300002)(81156014)(81166006)(26826003)(8936002)(2906002)(31686004)(30864003)(186003)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3427;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: c561346d-d62c-4a2c-eae6-08d77f1afc06
-NoDisclaimer: True
-X-Forefront-PRVS: 0249EFCB0B
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KBq/GllVbgA6rLaZzC7VrUb1grVCgGkosPUL1T3Sckt9quQAx6XF+POHpC1n5CON3MKJ9+XiCCZhNbBsC6SjgSKk2UVKlnL46XYMrf31o98WDNJU+tyIqg3j3Hd10f2EoigZomJmeTFggFutyWQPEuVriw1g4hnODl8Luw2Dm7zuFWu6tCG2Gkhm+GoAe0Bw3FSW9Yhomiw0I32rgSWsso22cumOqvZm08NVGDbwTBdTt11y5+Dc9mXYjTYnJeiVJrGL3V97G0Ae8ewiJruZnqOQsctScrJnUsgo0dkhkngBjpfvJ9bAlbw/22D32Kt6mKLIoF2bV6QIEJX5UJTD3ht+UQZ97v+/XBlQR3+zOa6kcUZK/P9GNLJx5ql3geUqoWi1vHCafZ6uPaVQY617B7NFBGpFtSW6c83wWme/U1FssCMN0FZn85vxPoDZSNe39IQx+Jym2wGNapYcTTlYwsCwi5GiMBkkQ/Ko4jjsByGdgXazOoWpwLPOw3OsK/ETFvy+qsDR/6zfxm/eJssPyA==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2019 15:50:53.7912
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73c21577-1807-4583-43ae-08d77f1b1311
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3427
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpIaSBYaWFvanVuLA0KDQo+IEl0IG1heSBiZSB0aGF0IHlvdSBkaWQgbm90IHJlY29tcGlsZSB0
-aGUga2VybmVsLiBJbiBvcmRlciB0byBzdXBwb3J0IHRoaXMgbWV0aG9kLCBJIG1vZGlmaWVkIHRo
-ZSBzcGUgZHJpdmVyLCB3aGljaCByZXF1aXJlcyByZWNvbXBpbGluZyB0aGUga2VybmVsIHRvIHN1
-cHBvcnQgaXQuDQoNCkFoIHllcyBzb3JyeSBJIG1pc3NlZCB0aGF0IHRoZXJlIHdlcmUga2VybmVs
-IGNoYW5nZXMuIEknbSBjdXJyZW50bHkgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgd2hhdCBhZGRpdGlv
-bmFsIGJlaGF2aW9yIGlzLiBUaGUgd2F5IEkgdW5kZXJzdGFuZCBpdCwgaXMgdGhhdCBpdCBpcyB0
-aGF0IGl0J3MgYWxyZWFkeQ0KcG9zc2libGUgdG8gY29uZmlndXJlIHRoZSBmaWx0ZXJpbmcgbGlr
-ZSB0aGlzOiAuL3BlcmYgcmVjb3JkIC1lIGFybV9zcGUvdHNfZW5hYmxlPTEsYnJhbmNoX2ZpbHRl
-cj0xLyBscy4gU28gdGhlIG5ldyBzeW50aGV0aWMgU1BFIGV2ZW50cyBhcmVuJ3Qgc3RyaWN0bHkg
-bmVjZXNzYXJ5Lg0KDQpJIHRoaW5rIGl0IHdvdWxkIGJlIGJlc3QgdG8gYXZvaWQga2VybmVsIGNo
-YW5nZXMgYmVjYXVzZSB0aGUgU1BFIGRyaXZlciBoYXMgYmVlbiBpbiB0aGUga2VybmVsIGZvciBx
-dWl0ZSBzb21lIHRpbWUgbm93LiBBbmQgcmVseWluZyBvbiBhIG5ldyB2ZXJzaW9uIGluIHBlcmYg
-d2lsbA0KbWFrZSBpdCBtb3JlIGRpZmZpY3VsdCBmb3IgcGVvcGxlIHRvIGFjY2VzcyB0aGlzIGZl
-YXR1cmUgZWFzaWx5Lg0KDQpEbyB5b3UgdGhpbmsgaXQgd2lsbCBiZSBwb3NzaWJsZSB0byBnZXQg
-YWxsIHRoZSBmdW5jdGlvbmFsaXR5IHdpdGggdGhlIGV4aXN0aW5nIGRyaXZlcj8gSSB0aGluayBS
-RkMgdjIgd2FzIHdvcmtpbmcgcXVpdGUgd2VsbCwgYXBhcnQgZnJvbSB0aGUgbXVsdGlwbGUgZXZl
-bnRzIGlzc3VlLg0KQnV0IG1heWJlIHRoYXQgaXMgbm90IHRoYXQgaW1wb3J0YW50IG9mIGEgdXNl
-IGNhc2UuIEFuZCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gZ2V0IGEgYmFzaWMgdmVyc2lvbiBhY2Nl
-cHRlZCBzb29uZXIuDQoNCg0KUmVnYXJkcw0KSmFtZXMNCg0KPj4NCj4+IFRoYW5rcw0KPj4gSmFt
-ZXMNCj4+DQo+PiBPbiAzMC8xMS8yMDE5IDAwOjQyLCBUYW4gWGlhb2p1biB3cm90ZToNCj4+PiBP
-biAyMDE5LzExLzMwIDA6MzIsIEphbWVzIENsYXJrIHdyb3RlOg0KPj4+PiBIaSBYaWFvanVuLA0K
-Pj4+Pg0KPj4+PiBTb3JyeSBmb3Igbm90IHJlcGx5aW5nIGVhcmxpZXIsIEkgd2FzIGF0IGEgY29u
-ZmVyZW5jZS4gVW5mb3J0dW5hdGVseSBJIGhhdmUgdGVtcG9yYXJpbHkgbG9zdCBhY2Nlc3MgdG8g
-U1BFIGVuYWJsZWQgaGFyZHdhcmUgYnV0IEkgd2lsbCB0ZXN0IHRoaXMgb3V0IGFuZCBnZXQgYmFj
-ayB0byB5b3UgYXMgc29vbiBhcyBwb3NzaWJsZS4NCj4+Pj4NCj4+Pj4NCj4+Pj4gVGhhbmtzDQo+
-Pj4+IEphbWVzDQo+Pj4+DQo+Pj4NCj4+PiBPSy4NCj4+Pg0KPj4+IFRoYW5rcy4NCj4+PiBYaWFv
-anVuLg0KPj4+DQo+Pj4+IE9uIDIzLzExLzIwMTkgMTA6MTEsIFRhbiBYaWFvanVuIHdyb3RlOg0K
-Pj4+Pj4gVW5kZXIgdGhlIG9yaWdpbmFsIGxvZ2ljLCBpZiB0aGUgdXNlciBzcGVjaWZpZXMgbXVs
-dGlwbGUgc3BlDQo+Pj4+PiBldmVudHMgZHVyaW5nIHRoZSByZWNvcmQsIHBlcmYgd2lsbCByZXBv
-cnQgYW4gZXJyb3IgYW5kIGV4aXQNCj4+Pj4+IHdpdGhvdXQgYWN0dWFsbHkgcnVubmluZy4gVGhp
-cyBpcyBub3QgdmVyeSBmcmllbmRseS4NCj4+Pj4+DQo+Pj4+PiBUaGlzIHBhdGNoIHNsaWdodGx5
-IG1vZGlmaWVzIHRoaXMgbG9naWMsIGluIHdoaWNoIGNhc2UgYQ0KPj4+Pj4gd2FybmluZyBpcyBy
-ZXBvcnRlZCBhbmQgdGhlIGZpcnN0IHNwZSBldmVudCBpcyB0YWtlbiBhcyBhDQo+Pj4+PiByZWNv
-cmQuDQo+Pj4+Pg0KPj4+Pj4gQXQgdGhlIHNhbWUgdGltZSwgdGhpcyBwYXRjaCBhbHNvIHN1cHBv
-cnRzIHRoZSByZWNvcmRpbmcgb2YNCj4+Pj4+IG11bHRpIG5ldyBzeW50aGV0aWMgZXZlbnRzLiBI
-b3dldmVyLCBpZiB0aGUgdXNlciBzcGVjaWZpZXMgdGhlDQo+Pj4+PiBzcGUgZXZlbnQgYW5kIHRo
-ZW4gc3BlY2lmaWVzIHRoZSBzeW50aGV0aWMgc3BlIGV2ZW50cywgYSB3YXJuaW5nDQo+Pj4+PiB3
-aWxsIGJlIHJlcG9ydGVkIGFuZCB0aGUgYWJvdmUgcHJpbmNpcGxlcyB3aWxsIHN0aWxsIGJlIGZv
-bGxvd2VkLA0KPj4+Pj4gb25seSB0aGUgZmlyc3Qgc3BlIGV2ZW50IHdpbGwgYmUgcmVjb3JkZWQu
-DQo+Pj4+Pg0KPj4+Pj4gRXhhbXBsZToNCj4+Pj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4+Pj4gMSkgRm9yIG11
-bHRpcGxlIHNwZSBldmVudHMNCj4+Pj4+ICQgcGVyZiByZWNvcmQgLWUgYXJtX3NwZV8wL3RzX2Vu
-YWJsZT0wLGxvYWRfZmlsdGVyPTEsaml0dGVyPTEsbWluX2xhdGVuY3k9MC8gLWUgYXJtX3NwZV8w
-L3RzX2VuYWJsZT0wLHN0b3JlX2ZpbHRlcj0xLGppdHRlcj0xLG1pbl9sYXRlbmN5PTAvIGxzDQo+
-Pj4+PiBXYXJuaW5nOg0KPj4+Pj4gVGhlcmUgbWF5IGJlIG9ubHkgb25lIGFybV9zcGVfeCBldmVu
-dC4gTW9yZSB0aGFuIG9uZSBzcGUgZXZlbnQgd2lsbCBiZSBpZ25vcmVkLCB1bmxlc3MgdGhleSBh
-cmUgc3ludGhldGljIGV2ZW50cyBvZiBzcGUsIGxpa2U6DQo+Pj4+PiBhcm1fc3BlX3gvbGxjX21p
-c3MvDQo+Pj4+PiBhcm1fc3BlX3gvYnJhbmNoX21pc3MvDQo+Pj4+PiBhcm1fc3BlX3gvdGxiX21p
-c3MvDQo+Pj4+PiBhcm1fc3BlX3gvcmVtb3RlX2FjY2Vzcy8NCj4+Pj4+IChzZWUgJ3BlcmYgbGlz
-dCcpDQo+Pj4+PiAuLi4NCj4+Pj4+IFsgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDEgdGltZXMgdG8g
-d3JpdGUgZGF0YSBdDQo+Pj4+PiBbIHBlcmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMC4w
-NzggTUIgcGVyZi5kYXRhIF0NCj4+Pj4+DQo+Pj4+PiAkIHBlcmYgcmVwb3J0IC0tc3RkaW8NCj4+
-Pj4+IC4uLg0KPj4+Pj4gICMgU2FtcGxlczogMCAgb2YgZXZlbnQgJ2FybV9zcGVfMC90c19lbmFi
-bGU9MCxsb2FkX2ZpbHRlcj0xLGppdHRlcj0xLG1pbl9sYXRlbmN5PTAvJw0KPj4+Pj4gLi4uDQo+
-Pj4+Pg0KPj4+Pj4gMikgRm9yIG11bHRpcGxlIHNwZSBwcmVjaXNlIGlwIGV2ZW50cyAoc3ludGhl
-dGljIGV2ZW50KQ0KPj4+Pj4gJCBwZXJmIHJlY29yZCAtZSBhcm1fc3BlXzAvbGxjX21pc3MvIC1l
-IGFybV9zcGVfMC9sbGNfbWlzcy8gLWUgYXJtX3NwZV8wL3RsYl9taXNzLyBscw0KPj4+Pj4gV2Fy
-bmluZzoNCj4+Pj4+IFRoZXNlIGV2ZW50cyBhcmUgcHJlY2lzZSBpcCBldmVudHMsIHBsZWFzZSBh
-ZGQgOnAvcHAvcHBwIGFmdGVyIHRoZSBldmVudC4NCj4+Pj4+IC4uLg0KPj4+Pj4gWyBwZXJmIHJl
-Y29yZDogV29rZW4gdXAgMSB0aW1lcyB0byB3cml0ZSBkYXRhIF0NCj4+Pj4+IFsgcGVyZiByZWNv
-cmQ6IENhcHR1cmVkIGFuZCB3cm90ZSAwLjM0MyBNQiBwZXJmLmRhdGEgXQ0KPj4+Pj4NCj4+Pj4+
-ICQgcGVyZiByZXBvcnQgLS1zdGRpbw0KPj4+Pj4gICMgVG8gZGlzcGxheSB0aGUgcGVyZi5kYXRh
-IGhlYWRlciBpbmZvLCBwbGVhc2UgdXNlIC0taGVhZGVyLy0taGVhZGVyLW9ubHkgb3B0aW9ucy4N
-Cj4+Pj4+ICAjDQo+Pj4+PiAgIw0KPj4+Pj4gICMgVG90YWwgTG9zdCBTYW1wbGVzOiAwDQo+Pj4+
-PiAgIw0KPj4+Pj4gICMgU2FtcGxlczogMCAgb2YgZXZlbnQgJ2FybV9zcGVfMC9sbGNfbWlzcy8s
-IGFybV9zcGVfMC90bGJfbWlzcy8nDQo+Pj4+PiAgIyBFdmVudCBjb3VudCAoYXBwcm94Lik6IDAN
-Cj4+Pj4+ICAjDQo+Pj4+PiAgIyBDaGlsZHJlbiAgICAgIFNlbGYgIENvbW1hbmQgIFNoYXJlZCBP
-YmplY3QgIFN5bWJvbA0KPj4+Pj4gICMgLi4uLi4uLi4gIC4uLi4uLi4uICAuLi4uLi4uICAuLi4u
-Li4uLi4uLi4uICAuLi4uLi4NCj4+Pj4+ICAjDQo+Pj4+Pg0KPj4+Pj4gICMgU2FtcGxlczogMCAg
-b2YgZXZlbnQgJ2R1bW15OnUnDQo+Pj4+PiAgIyBFdmVudCBjb3VudCAoYXBwcm94Lik6IDANCj4+
-Pj4+ICAjDQo+Pj4+PiAgIyBDaGlsZHJlbiAgICAgIFNlbGYgIENvbW1hbmQgIFNoYXJlZCBPYmpl
-Y3QgIFN5bWJvbA0KPj4+Pj4gICMgLi4uLi4uLi4gIC4uLi4uLi4uICAuLi4uLi4uICAuLi4uLi4u
-Li4uLi4uICAuLi4uLi4NCj4+Pj4+ICAjDQo+Pj4+Pg0KPj4+Pj4gICMgU2FtcGxlczogODMgIG9m
-IGV2ZW50ICdsbGMtbWlzcycNCj4+Pj4+ICAjIEV2ZW50IGNvdW50IChhcHByb3guKTogODMNCj4+
-Pj4+ICAjDQo+Pj4+PiAgIyBDaGlsZHJlbiAgICAgIFNlbGYgIENvbW1hbmQgIFNoYXJlZCBPYmpl
-Y3QgICAgICBTeW1ib2wNCj4+Pj4+ICAjIC4uLi4uLi4uICAuLi4uLi4uLiAgLi4uLi4uLiAgLi4u
-Li4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KPj4+
-Pj4gICMNCj4+Pj4+ICAgICAgNDIuMTclICAgIDQyLjE3JSAgbHMgICAgICAgW2tlcm5lbC5rYWxs
-c3ltc10gIFtrXSBwZXJmX2l0ZXJhdGVfY3R4LmNvbnN0cHJvcC42NA0KPj4+Pj4gICAgICAxNC40
-NiUgICAgMTQuNDYlICBscyAgICAgICBba2VybmVsLmthbGxzeW1zXSAgW2tdIG1lbWNocl9pbnYN
-Cj4+Pj4+ICAgICAgMTMuMjUlICAgIDEzLjI1JSAgbHMgICAgICAgW2tlcm5lbC5rYWxsc3ltc10g
-IFtrXSBwZXJmX2V2ZW50X21tYXANCj4+Pj4+ICAgICAgIDIuNDElICAgICAyLjQxJSAgbHMgICAg
-ICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSBhdmFpbGFibGVfaWRsZV9jcHUNCj4+Pj4+ICAgICAg
-IDIuNDElICAgICAyLjQxJSAgbHMgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSBjb3B5X3Bh
-Z2UNCj4+Pj4+ICAgICAgIDIuNDElICAgICAyLjQxJSAgbHMgICAgICAgW2tlcm5lbC5rYWxsc3lt
-c10gIFtrXSB0cnlfdG9fd2FrZV91cA0KPj4+Pj4gICAgICAgMi40MSUgICAgIDIuNDElICBscyAg
-ICAgICBba2VybmVsLmthbGxzeW1zXSAgW2tdIHZtYV9pbnRlcnZhbF90cmVlX2luc2VydA0KPj4+
-Pj4gICAgICAgMi40MSUgICAgIDIuNDElICBscyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5d
-IF9kbF9sb29rdXBfc3ltYm9sX3gNCj4+Pj4+ICAgICAgIDIuNDElICAgICAyLjQxJSAgbHMgICAg
-ICAgbGQtMi4yOC5zbyAgICAgICAgIFsuXSBfZGxfcmVsb2NhdGVfb2JqZWN0DQo+Pj4+PiAgICAg
-ICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gZXh0NF9n
-ZXRhdHRyDQo+Pj4+PiAgICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFtrZXJuZWwua2Fs
-bHN5bXNdICBba10gZ2V0X3BhZ2VfZnJvbV9mcmVlbGlzdA0KPj4+Pj4gICAgICAgMS4yMCUgICAg
-IDEuMjAlICBscyAgICAgICBba2VybmVsLmthbGxzeW1zXSAgW2tdIGdldF9wYXJ0aWFsX25vZGUu
-aXNyYS4yNQ0KPj4+Pj4gICAgICAgMS4yMCUgICAgIDEuMjAlICBscyAgICAgICBba2VybmVsLmth
-bGxzeW1zXSAgW2tdIGxvY2tfcGFnZV9tZW1jZw0KPj4+Pj4gICAgICAgMS4yMCUgICAgIDEuMjAl
-ICBscyAgICAgICBba2VybmVsLmthbGxzeW1zXSAgW2tdIG1heV9vcGVuDQo+Pj4+PiAgICAgICAx
-LjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gcmFkaXhfdHJl
-ZV9uZXh0X2NodW5rDQo+Pj4+PiAgICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFtrZXJu
-ZWwua2FsbHN5bXNdICBba10gcmJfcHJldg0KPj4+Pj4gICAgICAgMS4yMCUgICAgIDEuMjAlICBs
-cyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIF9kbF9tYXBfb2JqZWN0X2Zyb21fZmQNCj4+
-Pj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAgICAgIFsu
-XSBfZGxfc3RhcnQNCj4+Pj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMgICAgICAgbGQtMi4y
-OC5zbyAgICAgICAgIFsuXSBkb19sb29rdXBfeA0KPj4+Pj4gICAgICAgMS4yMCUgICAgIDEuMjAl
-ICBscyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIHJ0bGRfbG9ja19kZWZhdWx0X2xvY2tf
-cmVjdXJzaXZlDQo+Pj4+PiAgICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIGxpYmMtMi4y
-OC5zbyAgICAgICBbLl0gZ2V0ZW52DQo+Pj4+PiAgICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAg
-ICAgIFt1bmtub3duXSAgICAgICAgICBbLl0gMHhmZmZmMjlmMTE5MDAyOWI4DQo+Pj4+Pg0KPj4+
-Pj4gICMgU2FtcGxlczogMTMgIG9mIGV2ZW50ICd0bGItbWlzcycNCj4+Pj4+ICAjIEV2ZW50IGNv
-dW50IChhcHByb3guKTogMTMNCj4+Pj4+ICAjDQo+Pj4+PiAgIyBDaGlsZHJlbiAgICAgIFNlbGYg
-IENvbW1hbmQgIFNoYXJlZCBPYmplY3QgICAgICBTeW1ib2wNCj4+Pj4+ICAjIC4uLi4uLi4uICAu
-Li4uLi4uLiAgLi4uLi4uLiAgLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4NCj4+Pj4+ICAjDQo+Pj4+PiAgICAgIDE1LjM4JSAgICAxNS4zOCUgIGxzICAgICAg
-IFtrZXJuZWwua2FsbHN5bXNdICBba10gX19hdWRpdF9zeXNjYWxsX2VudHJ5DQo+Pj4+PiAgICAg
-IDE1LjM4JSAgICAxNS4zOCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gZ2V0X3Bh
-cnRpYWxfbm9kZS5pc3JhLjI1DQo+Pj4+PiAgICAgIDE1LjM4JSAgICAxNS4zOCUgIGxzICAgICAg
-IGxkLTIuMjguc28gICAgICAgICBbLl0gX2RsX3JlbG9jYXRlX29iamVjdA0KPj4+Pj4gICAgICAx
-NS4zOCUgICAgMTUuMzglICBscyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIGRvX2xvb2t1
-cF94DQo+Pj4+PiAgICAgICA3LjY5JSAgICAgNy42OSUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5
-bXNdICBba10gbWVtY2hyX2ludg0KPj4+Pj4gICAgICAgNy42OSUgICAgIDcuNjklICBscyAgICAg
-ICBsZC0yLjI4LnNvICAgICAgICAgWy5dIF9kbF9tYXBfb2JqZWN0X2Zyb21fZmQNCj4+Pj4+ICAg
-ICAgIDcuNjklICAgICA3LjY5JSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAgICAgIFsuXSBfZGxf
-c2V0dXBfaGFzaA0KPj4+Pj4gICAgICAgNy42OSUgICAgIDcuNjklICBscyAgICAgICBsZC0yLjI4
-LnNvICAgICAgICAgWy5dIF9kbF9zdGFydA0KPj4+Pj4gICAgICAgNy42OSUgICAgIDcuNjklICBs
-cyAgICAgICBscyAgICAgICAgICAgICAgICAgWy5dIDB4MDAwMDAwMDAwMDAwOTdhMA0KPj4+Pj4N
-Cj4+Pj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQ0KPj4+Pj4NCj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFRhbiBYaWFvanVu
-IDx0YW54aWFvanVuQGh1YXdlaS5jb20+DQo+Pj4+PiAtLS0NCj4+Pj4+ICB0b29scy9wZXJmL2Fy
-Y2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMgfCA0NyArKysrKysrKysrKysrKysrKysrKysrKysrLS0t
-DQo+Pj4+PiAgdG9vbHMvcGVyZi91dGlsL2FybS1zcGUuYyAgICAgICAgICAgIHwgMjUgKysrKysr
-KysrKysrKysrDQo+Pj4+PiAgdG9vbHMvcGVyZi91dGlsL2FybS1zcGUuaCAgICAgICAgICAgIHwg
-MjAgKysrKysrKysrKysrDQo+Pj4+PiAgMyBmaWxlcyBjaGFuZ2VkLCA4OCBpbnNlcnRpb25zKCsp
-LCA0IGRlbGV0aW9ucygtKQ0KPj4+Pj4NCj4+Pj4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2Fy
-Y2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMgYi90b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0t
-c3BlLmMNCj4+Pj4+IGluZGV4IGViYTY1NDFlYzBmMS4uNjhlOTFmM2M5NjE0IDEwMDY0NA0KPj4+
-Pj4gLS0tIGEvdG9vbHMvcGVyZi9hcmNoL2FybTY0L3V0aWwvYXJtLXNwZS5jDQo+Pj4+PiArKysg
-Yi90b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMNCj4+Pj4+IEBAIC02NywyMSAr
-NjcsNjAgQEAgc3RhdGljIGludCBhcm1fc3BlX3JlY29yZGluZ19vcHRpb25zKHN0cnVjdCBhdXh0
-cmFjZV9yZWNvcmQgKml0ciwNCj4+Pj4+ICAgICAgIHN0cnVjdCBhcm1fc3BlX3JlY29yZGluZyAq
-c3BlciA9DQo+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgY29udGFpbmVyX29mKGl0ciwgc3Ry
-dWN0IGFybV9zcGVfcmVjb3JkaW5nLCBpdHIpOw0KPj4+Pj4gICAgICAgc3RydWN0IHBlcmZfcG11
-ICphcm1fc3BlX3BtdSA9IHNwZXItPmFybV9zcGVfcG11Ow0KPj4+Pj4gLSAgICAgc3RydWN0IGV2
-c2VsICpldnNlbCwgKmFybV9zcGVfZXZzZWwgPSBOVUxMOw0KPj4+Pj4gKyAgICAgc3RydWN0IGV2
-c2VsICpldnNlbCwgKnRtcCwgKmFybV9zcGVfZXZzZWwgPSBOVUxMOw0KPj4+Pj4gICAgICAgYm9v
-bCBwcml2aWxlZ2VkID0gcGVyZl9ldmVudF9wYXJhbm9pZF9jaGVjaygtMSk7DQo+Pj4+PiAgICAg
-ICBzdHJ1Y3QgZXZzZWwgKnRyYWNraW5nX2V2c2VsOw0KPj4+Pj4gKyAgICAgY2hhciBldnNlbF9u
-YW1lWzEyOF07DQo+Pj4+PiAgICAgICBpbnQgZXJyOw0KPj4+Pj4NCj4+Pj4+ICAgICAgIHNwZXIt
-PmV2bGlzdCA9IGV2bGlzdDsNCj4+Pj4+DQo+Pj4+PiAtICAgICBldmxpc3RfX2Zvcl9lYWNoX2Vu
-dHJ5KGV2bGlzdCwgZXZzZWwpIHsNCj4+Pj4+ICsgICAgIGV2bGlzdF9fZm9yX2VhY2hfZW50cnlf
-c2FmZShldmxpc3QsIHRtcCwgZXZzZWwpIHsNCj4+Pj4+ICAgICAgICAgICAgICAgaWYgKGV2c2Vs
-LT5jb3JlLmF0dHIudHlwZSA9PSBhcm1fc3BlX3BtdS0+dHlwZSkgew0KPj4+Pj4gICAgICAgICAg
-ICAgICAgICAgICAgIGlmIChhcm1fc3BlX2V2c2VsKSB7DQo+Pj4+PiAtICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBwcl9lcnIoIlRoZXJlIG1heSBiZSBvbmx5IG9uZSAiIEFSTV9TUEVfUE1V
-X05BTUUgInggZXZlbnRcbiIpOw0KPj4+Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cmV0dXJuIC1FSU5WQUw7DQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZiAo
-KGV2c2VsLT5jb3JlLmF0dHIuY29uZmlnDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJiBHRU5NQVNLX1VMTChBUk1fU1BFX0VWRU5UX0hJLA0KPj4+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-QVJNX1NQRV9FVkVOVF9MTykpDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgJiYgKGFybV9zcGVfZXZzZWwtPmNvcmUuYXR0ci5jb25maWcNCj4+Pj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmIEdFTk1BU0tf
-VUxMKEFSTV9TUEVfRVZFTlRfSEksDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBBUk1fU1BFX0VWRU5UX0xPKSkpIHsNCj4+Pj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXJtX3NwZV9ldnNlbC0+Y29yZS5h
-dHRyLmNvbmZpZyB8PQ0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBldnNlbC0+Y29yZS5hdHRyLmNvbmZpZzsNCj4+Pj4+
-ICsNCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFzdHJz
-dHIoYXJtX3NwZV9ldnNlbC0+bmFtZSwgZXZzZWwtPm5hbWUpKSB7DQo+Pj4+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2NucHJpbnRmKGV2c2VsX25hbWUs
-IHNpemVvZihldnNlbF9uYW1lKSwNCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIiVzLCAlcyIsIGFybV9zcGVfZXZzZWwt
-Pm5hbWUsDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGV2c2VsLT5uYW1lKTsNCj4+Pj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhcm1fc3BlX2V2c2VsLT5uYW1lID0gc3RyZHVw
-KGV2c2VsX25hbWUpOw0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB9DQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UNCj4+Pj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHJfd2FybmluZygiV2FybmluZzpc
-biINCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAi
-VGhlcmUgbWF5IGJlIG9ubHkgb25lICINCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBBUk1fU1BFX1BNVV9OQU1FICJ4IGV2ZW50LiINCj4+Pj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiIE1vcmUgdGhhbiBv
-bmUgc3BlIGV2ZW50Ig0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICIgd2lsbCBiZSBpZ25vcmVkLCB1bmxlc3MiDQo+Pj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIiB0aGV5IGFyZSBzeW50aGV0aWMgZXZl
-bnRzIg0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICIgb2Ygc3BlLCBsaWtlOiINCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAiXG5hcm1fc3BlX3gvbGxjX21pc3MvIg0KPj4+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJcbmFybV9zcGVfeC9icmFuY2hfbWlz
-cy8iDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IlxuYXJtX3NwZV94L3RsYl9taXNzLyINCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAiXG5hcm1fc3BlX3gvcmVtb3RlX2FjY2Vzcy8iDQo+Pj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlxuKHNlZSAncGVy
-ZiBsaXN0JylcbiIpOw0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZsaXN0
-X19yZW1vdmUoZXZsaXN0LCBldnNlbCk7DQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBldnNlbF9fZGVsZXRlKGV2c2VsKTsNCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIGNvbnRpbnVlOw0KPj4+Pj4gICAgICAgICAgICAgICAgICAgICAgIH0NCj4+Pj4+ICAg
-ICAgICAgICAgICAgICAgICAgICBldnNlbC0+Y29yZS5hdHRyLmZyZXEgPSAwOw0KPj4+Pj4gICAg
-ICAgICAgICAgICAgICAgICAgIGV2c2VsLT5jb3JlLmF0dHIuc2FtcGxlX3BlcmlvZCA9IDE7DQo+
-Pj4+PiArICAgICAgICAgICAgICAgICAgICAgaWYgKGV2c2VsLT5jb3JlLmF0dHIuY29uZmlnDQo+
-Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICYgR0VOTUFTS19VTEwo
-QVJNX1NQRV9FVkVOVF9ISSwgQVJNX1NQRV9FVkVOVF9MTykpIHsNCj4+Pj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGV2c2VsLT5jb3JlLmF0dHIuY29uZmlnIHw9IFNQRV9BVFRSX1RT
-X0VOQUJMRTsNCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmICghZXZzZWwt
-PmNvcmUuYXR0ci5wcmVjaXNlX2lwKQ0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBwcl93YXJuaW5nKCJXYXJuaW5nOlxuIg0KPj4+Pj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJUaGVzZSBldmVudHMgYXJlIHByZWNpc2Ug
-aXAgZXZlbnRzLCINCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAiIHBsZWFzZSBhZGQgOnAvcHAvcHBwIGFmdGVyIHRoZSBldmVudC5cbiIpOw0KPj4+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgIH0NCj4+Pj4+ICsNCj4+Pj4+ICAgICAgICAgICAgICAg
-ICAgICAgICBhcm1fc3BlX2V2c2VsID0gZXZzZWw7DQo+Pj4+PiAgICAgICAgICAgICAgICAgICAg
-ICAgb3B0cy0+ZnVsbF9hdXh0cmFjZSA9IHRydWU7DQo+Pj4+PiAgICAgICAgICAgICAgIH0NCj4+
-Pj4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0aWwvYXJtLXNwZS5jIGIvdG9vbHMvcGVyZi91
-dGlsL2FybS1zcGUuYw0KPj4+Pj4gaW5kZXggZTcyODJjMjYxNmYzLi4wYzlkN2ZhNTE4YTUgMTAw
-NjQ0DQo+Pj4+PiAtLS0gYS90b29scy9wZXJmL3V0aWwvYXJtLXNwZS5jDQo+Pj4+PiArKysgYi90
-b29scy9wZXJmL3V0aWwvYXJtLXNwZS5jDQo+Pj4+PiBAQCAtNzc5LDYgKzc3OSwzMSBAQCBhcm1f
-c3BlX3N5bnRoX2V2ZW50cyhzdHJ1Y3QgYXJtX3NwZSAqc3BlLCBzdHJ1Y3QgcGVyZl9zZXNzaW9u
-ICpzZXNzaW9uKQ0KPj4+Pj4gICAgICAgYXR0ci5zYW1wbGVfaWRfYWxsID0gZXZzZWwtPmNvcmUu
-YXR0ci5zYW1wbGVfaWRfYWxsOw0KPj4+Pj4gICAgICAgYXR0ci5yZWFkX2Zvcm1hdCA9IGV2c2Vs
-LT5jb3JlLmF0dHIucmVhZF9mb3JtYXQ7DQo+Pj4+Pg0KPj4+Pj4gKyAgICAgaWYgKGV2c2VsLT5j
-b3JlLmF0dHIuY29uZmlnDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgJiBHRU5NQVNLX1VM
-TChBUk1fU1BFX0VWRU5UX0hJLA0KPj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-QVJNX1NQRV9FVkVOVF9MTykpIHsNCj4+Pj4+ICsgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRz
-LmxsY19taXNzID0gZmFsc2U7DQo+Pj4+PiArICAgICAgICAgICAgIHNwZS0+c3ludGhfb3B0cy50
-bGJfbWlzcyA9IGZhbHNlOw0KPj4+Pj4gKyAgICAgICAgICAgICBzcGUtPnN5bnRoX29wdHMuYnJh
-bmNoX21pc3MgPSBmYWxzZTsNCj4+Pj4+ICsgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLnJl
-bW90ZV9hY2Nlc3MgPSBmYWxzZTsNCj4+Pj4+ICsNCj4+Pj4+ICsgICAgICAgICAgICAgaWYgKGV2
-c2VsLT5jb3JlLmF0dHIuY29uZmlnDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAmIChBUk1fU1BFX0VWRU5UX0xMQ19NSVNTIDw8IEFSTV9TUEVfRVZFTlRfTE8pKQ0KPj4+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgIHNwZS0+c3ludGhfb3B0cy5sbGNfbWlzcyA9IHRydWU7DQo+
-Pj4+PiArDQo+Pj4+PiArICAgICAgICAgICAgIGlmIChldnNlbC0+Y29yZS5hdHRyLmNvbmZpZw0K
-Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJiAoQVJNX1NQRV9FVkVOVF9UTEJf
-TUlTUyA8PCBBUk1fU1BFX0VWRU5UX0xPKSkNCj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICBz
-cGUtPnN5bnRoX29wdHMudGxiX21pc3MgPSB0cnVlOw0KPj4+Pj4gKw0KPj4+Pj4gKyAgICAgICAg
-ICAgICBpZiAoZXZzZWwtPmNvcmUuYXR0ci5jb25maWcNCj4+Pj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICYgKEFSTV9TUEVfRVZFTlRfQlJBTkNIX01JU1MgPDwgQVJNX1NQRV9FVkVO
-VF9MTykpDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLmJyYW5j
-aF9taXNzID0gdHJ1ZTsNCj4+Pj4+ICsNCj4+Pj4+ICsgICAgICAgICAgICAgaWYgKGV2c2VsLT5j
-b3JlLmF0dHIuY29uZmlnDQo+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmIChB
-Uk1fU1BFX0VWRU5UX1JFTU9URV9BQ0NFU1MgPDwgQVJNX1NQRV9FVkVOVF9MTykpDQo+Pj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLnJlbW90ZV9hY2Nlc3MgPSB0cnVl
-Ow0KPj4+Pj4gKyAgICAgfQ0KPj4+Pj4gKw0KPj4+Pj4gICAgICAgLyogY3JlYXRlIG5ldyBpZCB2
-YWwgdG8gYmUgYSBmaXhlZCBvZmZzZXQgZnJvbSBldnNlbCBpZCAqLw0KPj4+Pj4gICAgICAgaWQg
-PSBldnNlbC0+Y29yZS5pZFswXSArIDEwMDAwMDAwMDA7DQo+Pj4+Pg0KPj4+Pj4gZGlmZiAtLWdp
-dCBhL3Rvb2xzL3BlcmYvdXRpbC9hcm0tc3BlLmggYi90b29scy9wZXJmL3V0aWwvYXJtLXNwZS5o
-DQo+Pj4+PiBpbmRleCA5OGQzMjM1NzgxYzMuLmRiNzQyMDEyMTk3OSAxMDA2NDQNCj4+Pj4+IC0t
-LSBhL3Rvb2xzL3BlcmYvdXRpbC9hcm0tc3BlLmgNCj4+Pj4+ICsrKyBiL3Rvb2xzL3BlcmYvdXRp
-bC9hcm0tc3BlLmgNCj4+Pj4+IEBAIC05LDYgKzksMjYgQEANCj4+Pj4+DQo+Pj4+PiAgI2RlZmlu
-ZSBBUk1fU1BFX1BNVV9OQU1FICJhcm1fc3BlXyINCj4+Pj4+DQo+Pj4+PiArI2RlZmluZSBBUk1f
-U1BFX0VWRU5UX0xPICAgICAgICAgICAgICAgICAgICAgMw0KPj4+Pj4gKyNkZWZpbmUgQVJNX1NQ
-RV9FVkVOVF9ISSAgICAgICAgICAgICAgICAgICAgIDYNCj4+Pj4+ICsjZGVmaW5lIEFSTV9TUEVf
-RVZFTlRfTExDX01JU1MgICAgICAgICAgICAgICAgICAgICAgIEJJVCgwKQ0KPj4+Pj4gKyNkZWZp
-bmUgQVJNX1NQRV9FVkVOVF9CUkFOQ0hfTUlTUyAgICAgICAgICAgIEJJVCgxKQ0KPj4+Pj4gKyNk
-ZWZpbmUgQVJNX1NQRV9FVkVOVF9UTEJfTUlTUyAgICAgICAgICAgICAgICAgICAgICAgQklUKDIp
-DQo+Pj4+PiArI2RlZmluZSBBUk1fU1BFX0VWRU5UX1JFTU9URV9BQ0NFU1MgICAgICAgICAgQklU
-KDMpDQo+Pj4+PiArDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRUUl9UU19FTkFCTEUgICAgICAgICAg
-ICAgICAgICAgQklUKDApDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRUUl9QQV9FTkFCTEUgICAgICAg
-ICAgICAgICAgICAgQklUKDEpDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRUUl9QQ1RfRU5BQkxFICAg
-ICAgICAgICAgICAgICAgQklUKDIpDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRUUl9KSVRURVIgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBCSVQoMTYpDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRU
-Ul9CUkFOQ0hfRklMVEVSICAgICAgICAgICAgICAgICAgICAgICBCSVQoMzIpDQo+Pj4+PiArI2Rl
-ZmluZSBTUEVfQVRUUl9MT0FEX0ZJTFRFUiAgICAgICAgICAgICAgICAgQklUKDMzKQ0KPj4+Pj4g
-KyNkZWZpbmUgU1BFX0FUVFJfU1RPUkVfRklMVEVSICAgICAgICAgICAgICAgICAgICAgICAgQklU
-KDM0KQ0KPj4+Pj4gKw0KPj4+Pj4gKyNkZWZpbmUgU1BFX0FUVFJfRVZfUkVUSVJFRCAgICAgICAg
-ICAgICAgICAgIEJJVCgxKQ0KPj4+Pj4gKyNkZWZpbmUgU1BFX0FUVFJfRVZfQ0FDSEUgICAgICAg
-ICAgICAgICAgICAgIEJJVCgzKQ0KPj4+Pj4gKyNkZWZpbmUgU1BFX0FUVFJfRVZfVExCICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgQklUKDUpDQo+Pj4+PiArI2RlZmluZSBTUEVfQVRUUl9F
-Vl9CUkFOQ0ggICAgICAgICAgICAgICAgICAgQklUKDcpDQo+Pj4+PiArDQo+Pj4+PiAgZW51bSB7
-DQo+Pj4+PiAgICAgICBBUk1fU1BFX1BNVV9UWVBFLA0KPj4+Pj4gICAgICAgQVJNX1NQRV9QRVJf
-Q1BVX01NQVBTLA0KPj4+Pj4NCj4+Pj4gSU1QT1JUQU5UIE5PVElDRTogVGhlIGNvbnRlbnRzIG9m
-IHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgY29uZmlkZW50aWFsIGFuZCBtYXkg
-YWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50
-LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIGRvIG5vdCBkaXNjbG9z
-ZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwgdXNlIGl0IGZvciBhbnkgcHVycG9z
-ZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24gaW4gYW55IG1lZGl1bS4gVGhhbmsg
-eW91Lg0KPj4+Pg0KPj4+DQo+Pj4NCj4gDQo+IA0K
+Add support for probing i2c driver on the X1000 Soc from Ingenic.
+call the corresponding fifo parameter according to the device
+model obtained from the devicetree.
+
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+ drivers/i2c/busses/i2c-jz4780.c | 159 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 117 insertions(+), 42 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz4780.c
+index 25dcd73..3b21896 100644
+--- a/drivers/i2c/busses/i2c-jz4780.c
++++ b/drivers/i2c/busses/i2c-jz4780.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright (C) 2006 - 2009 Ingenic Semiconductor Inc.
+  * Copyright (C) 2015 Imagination Technologies
++ * Copyright (C) 2019 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+  */
+ 
+ #include <linux/bitops.h>
+@@ -17,6 +18,7 @@
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/sched.h>
+ #include <linux/slab.h>
+@@ -55,6 +57,7 @@
+ #define JZ4780_I2C_ACKGC	0x98
+ #define JZ4780_I2C_ENSTA	0x9C
+ #define JZ4780_I2C_SDAHD	0xD0
++#define X1000_I2C_SDAHD		0x7C
+ 
+ #define JZ4780_I2C_CTRL_STPHLD		BIT(7)
+ #define JZ4780_I2C_CTRL_SLVDIS		BIT(6)
+@@ -73,6 +76,8 @@
+ #define JZ4780_I2C_STA_TFNF		BIT(1)
+ #define JZ4780_I2C_STA_ACT		BIT(0)
+ 
++#define X1000_I2C_DC_STOP		BIT(9)
++
+ static const char * const jz4780_i2c_abrt_src[] = {
+ 	"ABRT_7B_ADDR_NOACK",
+ 	"ABRT_10ADDR1_NOACK",
+@@ -130,18 +135,32 @@ static const char * const jz4780_i2c_abrt_src[] = {
+ #define JZ4780_I2CFLCNT_ADJUST(n)	(((n) - 1) < 8 ? 8 : ((n) - 1))
+ 
+ #define JZ4780_I2C_FIFO_LEN	16
+-#define TX_LEVEL		3
+-#define RX_LEVEL		(JZ4780_I2C_FIFO_LEN - TX_LEVEL - 1)
++
++#define X1000_I2C_FIFO_LEN	64
+ 
+ #define JZ4780_I2C_TIMEOUT	300
+ 
+ #define BUFSIZE 200
+ 
++enum ingenic_i2c_version {
++	ID_JZ4780,
++	ID_X1000,
++};
++
++/** ingenic_i2c_config: SOC specific config data. */
++struct ingenic_i2c_config {
++	int fifosize;
++	int tx_level;
++	int rx_level;
++};
++
+ struct jz4780_i2c {
+ 	void __iomem		*iomem;
+ 	int			 irq;
+ 	struct clk		*clk;
+ 	struct i2c_adapter	 adap;
++	enum ingenic_i2c_version version;
++	const struct ingenic_i2c_config *cdata;
+ 
+ 	/* lock to protect rbuf and wbuf between xfer_rd/wr and irq handler */
+ 	spinlock_t		lock;
+@@ -340,11 +359,18 @@ static int jz4780_i2c_set_speed(struct jz4780_i2c *i2c)
+ 
+ 	if (hold_time >= 0) {
+ 		/*i2c hold time enable */
+-		hold_time |= JZ4780_I2C_SDAHD_HDENB;
+-		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
++		if (i2c->version >= ID_X1000)
++			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, hold_time);
++		else {
++			hold_time |= JZ4780_I2C_SDAHD_HDENB;
++			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, hold_time);
++		}
+ 	} else {
+ 		/* disable hold time */
+-		jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
++		if (i2c->version >= ID_X1000)
++			jz4780_i2c_writew(i2c, X1000_I2C_SDAHD, 0);
++		else
++			jz4780_i2c_writew(i2c, JZ4780_I2C_SDAHD, 0);
+ 	}
+ 
+ 	return 0;
+@@ -359,9 +385,11 @@ static int jz4780_i2c_cleanup(struct jz4780_i2c *i2c)
+ 	spin_lock_irqsave(&i2c->lock, flags);
+ 
+ 	/* can send stop now if need */
+-	tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+-	tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	if (i2c->version < ID_X1000) {
++		tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
++		tmp &= ~JZ4780_I2C_CTRL_STPHLD;
++		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	}
+ 
+ 	/* disable all interrupts first */
+ 	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0);
+@@ -399,11 +427,18 @@ static int jz4780_i2c_prepare(struct jz4780_i2c *i2c)
+ 	return jz4780_i2c_enable(i2c);
+ }
+ 
+-static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c, int cmd_count)
++static void jz4780_i2c_send_rcmd(struct jz4780_i2c *i2c,
++				       int cmd_count, int cmd_left)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < cmd_count; i++)
++	for (i = 0; i < cmd_count - 1; i++)
++		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
++
++	if ((cmd_left == 0) && (i2c->version >= ID_X1000))
++		jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
++				JZ4780_I2C_DC_READ | X1000_I2C_DC_STOP);
++	else
+ 		jz4780_i2c_writew(i2c, JZ4780_I2C_DC, JZ4780_I2C_DC_READ);
+ }
+ 
+@@ -458,37 +493,40 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void *dev_id)
+ 
+ 		rd_left = i2c->rd_total_len - i2c->rd_data_xfered;
+ 
+-		if (rd_left <= JZ4780_I2C_FIFO_LEN)
++		if (rd_left <= i2c->cdata->fifosize)
+ 			jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, rd_left - 1);
+ 	}
+ 
+ 	if (intst & JZ4780_I2C_INTST_TXEMP) {
+ 		if (i2c->is_write == 0) {
+ 			int cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
+-			int max_send = (JZ4780_I2C_FIFO_LEN - 1)
++			int max_send = (i2c->cdata->fifosize - 1)
+ 					 - (i2c->rd_cmd_xfered
+ 					 - i2c->rd_data_xfered);
+ 			int cmd_to_send = min(cmd_left, max_send);
+ 
+ 			if (i2c->rd_cmd_xfered != 0)
+ 				cmd_to_send = min(cmd_to_send,
+-						  JZ4780_I2C_FIFO_LEN
+-						  - TX_LEVEL - 1);
++						  i2c->cdata->fifosize
++						  - i2c->cdata->tx_level - 1);
+ 
+ 			if (cmd_to_send) {
+-				jz4780_i2c_send_rcmd(i2c, cmd_to_send);
+ 				i2c->rd_cmd_xfered += cmd_to_send;
++				cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
++				jz4780_i2c_send_rcmd(i2c, cmd_to_send, cmd_left);
++
+ 			}
+ 
+-			cmd_left = i2c->rd_total_len - i2c->rd_cmd_xfered;
+ 			if (cmd_left == 0) {
+ 				intmsk = jz4780_i2c_readw(i2c, JZ4780_I2C_INTM);
+ 				intmsk &= ~JZ4780_I2C_INTM_MTXEMP;
+ 				jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, intmsk);
+ 
+-				tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+-				tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+-				jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++				if (i2c->version < ID_X1000) {
++					tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
++					tmp &= ~JZ4780_I2C_CTRL_STPHLD;
++					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++				}
+ 			}
+ 		} else {
+ 			unsigned short data;
+@@ -496,24 +534,22 @@ static irqreturn_t jz4780_i2c_irq(int irqno, void *dev_id)
+ 
+ 			i2c_sta = jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+ 
+-			while ((i2c_sta & JZ4780_I2C_STA_TFNF) &&
+-			       (i2c->wt_len > 0)) {
++			while ((i2c_sta & JZ4780_I2C_STA_TFNF) && (i2c->wt_len > 0)) {
+ 				i2c_sta = jz4780_i2c_readw(i2c, JZ4780_I2C_STA);
+ 				data = *i2c->wbuf;
+ 				data &= ~JZ4780_I2C_DC_READ;
+-				jz4780_i2c_writew(i2c, JZ4780_I2C_DC,
+-						  data);
++				if ((!i2c->stop_hold) && (i2c->version >= ID_X1000))
++					data |= X1000_I2C_DC_STOP;
++				jz4780_i2c_writew(i2c, JZ4780_I2C_DC, data);
+ 				i2c->wbuf++;
+ 				i2c->wt_len--;
+ 			}
+ 
+ 			if (i2c->wt_len == 0) {
+-				if (!i2c->stop_hold) {
+-					tmp = jz4780_i2c_readw(i2c,
+-							       JZ4780_I2C_CTRL);
++				if ((!i2c->stop_hold) && (i2c->version < ID_X1000)) {
++					tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+ 					tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+-					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL,
+-							  tmp);
++					jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
+ 				}
+ 
+ 				jz4780_i2c_trans_done(i2c);
+@@ -567,20 +603,22 @@ static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+ 	i2c->rd_data_xfered = 0;
+ 	i2c->rd_cmd_xfered = 0;
+ 
+-	if (len <= JZ4780_I2C_FIFO_LEN)
++	if (len <= i2c->cdata->fifosize)
+ 		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, len - 1);
+ 	else
+-		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, RX_LEVEL);
++		jz4780_i2c_writew(i2c, JZ4780_I2C_RXTL, i2c->cdata->rx_level);
+ 
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
++	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+ 
+ 	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM,
+ 			  JZ4780_I2C_INTM_MRXFL | JZ4780_I2C_INTM_MTXEMP
+ 			  | JZ4780_I2C_INTM_MTXABT | JZ4780_I2C_INTM_MRXOF);
+ 
+-	tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+-	tmp |= JZ4780_I2C_CTRL_STPHLD;
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	if (i2c->version < ID_X1000) {
++		tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
++		tmp |= JZ4780_I2C_CTRL_STPHLD;
++		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	}
+ 
+ 	spin_unlock_irqrestore(&i2c->lock, flags);
+ 
+@@ -626,14 +664,16 @@ static inline int jz4780_i2c_xfer_write(struct jz4780_i2c *i2c,
+ 	i2c->wbuf = buf;
+ 	i2c->wt_len = len;
+ 
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, TX_LEVEL);
++	jz4780_i2c_writew(i2c, JZ4780_I2C_TXTL, i2c->cdata->tx_level);
+ 
+ 	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, JZ4780_I2C_INTM_MTXEMP
+ 					| JZ4780_I2C_INTM_MTXABT);
+ 
+-	tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+-	tmp |= JZ4780_I2C_CTRL_STPHLD;
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	if (i2c->version < ID_X1000) {
++		tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
++		tmp |= JZ4780_I2C_CTRL_STPHLD;
++		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	}
+ 
+ 	spin_unlock_irqrestore(&i2c->lock, flags);
+ 
+@@ -716,8 +756,21 @@ static const struct i2c_algorithm jz4780_i2c_algorithm = {
+ 	.functionality	= jz4780_i2c_functionality,
+ };
+ 
++static const struct ingenic_i2c_config jz4780_i2c_config = {
++	.fifosize = JZ4780_I2C_FIFO_LEN,
++	.tx_level = JZ4780_I2C_FIFO_LEN / 2,
++	.rx_level = JZ4780_I2C_FIFO_LEN / 2 - 1,
++};
++
++static const struct ingenic_i2c_config x1000_i2c_config = {
++	.fifosize = X1000_I2C_FIFO_LEN,
++	.tx_level = X1000_I2C_FIFO_LEN / 2,
++	.rx_level = X1000_I2C_FIFO_LEN / 2 - 1,
++};
++
+ static const struct of_device_id jz4780_i2c_of_matches[] = {
+-	{ .compatible = "ingenic,jz4780-i2c", },
++	{ .compatible = "ingenic,jz4780-i2c", .data = (void *) ID_JZ4780 },
++	{ .compatible = "ingenic,x1000-i2c", .data = (void *) ID_X1000 },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, jz4780_i2c_of_matches);
+@@ -729,11 +782,24 @@ static int jz4780_i2c_probe(struct platform_device *pdev)
+ 	unsigned short tmp;
+ 	struct resource *r;
+ 	struct jz4780_i2c *i2c;
++	const struct platform_device_id *id = platform_get_device_id(pdev);
++	const struct of_device_id  *of_id = of_match_device(
++			jz4780_i2c_of_matches, &pdev->dev);
+ 
+ 	i2c = devm_kzalloc(&pdev->dev, sizeof(struct jz4780_i2c), GFP_KERNEL);
+ 	if (!i2c)
+ 		return -ENOMEM;
+ 
++	if (of_id)
++		i2c->version = (enum ingenic_i2c_version)of_id->data;
++	else
++		i2c->version = (enum ingenic_i2c_version)id->driver_data;
++
++	if (i2c->version >= ID_X1000)
++		i2c->cdata = &x1000_i2c_config;
++	else
++		i2c->cdata = &jz4780_i2c_config;
++
+ 	i2c->adap.owner		= THIS_MODULE;
+ 	i2c->adap.algo		= &jz4780_i2c_algorithm;
+ 	i2c->adap.algo_data	= i2c;
+@@ -777,9 +843,11 @@ static int jz4780_i2c_probe(struct platform_device *pdev)
+ 
+ 	dev_info(&pdev->dev, "Bus frequency is %d KHz\n", i2c->speed);
+ 
+-	tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
+-	tmp &= ~JZ4780_I2C_CTRL_STPHLD;
+-	jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	if (i2c->version < ID_X1000) {
++		tmp = jz4780_i2c_readw(i2c, JZ4780_I2C_CTRL);
++		tmp &= ~JZ4780_I2C_CTRL_STPHLD;
++		jz4780_i2c_writew(i2c, JZ4780_I2C_CTRL, tmp);
++	}
+ 
+ 	jz4780_i2c_writew(i2c, JZ4780_I2C_INTM, 0x0);
+ 
+@@ -809,6 +877,12 @@ static int jz4780_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct platform_device_id ingenic_i2c_ids[] = {
++	{ "jz4780-i2c", ID_JZ4780 },
++	{ "x1000-i2c", ID_X1000 },
++	{},
++};
++
+ static struct platform_driver jz4780_i2c_driver = {
+ 	.probe		= jz4780_i2c_probe,
+ 	.remove		= jz4780_i2c_remove,
+@@ -816,6 +890,7 @@ static struct platform_driver jz4780_i2c_driver = {
+ 		.name	= "jz4780-i2c",
+ 		.of_match_table = of_match_ptr(jz4780_i2c_of_matches),
+ 	},
++	.id_table = ingenic_i2c_ids,
+ };
+ 
+ module_platform_driver(jz4780_i2c_driver);
+-- 
+2.7.4
+
