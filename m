@@ -2,105 +2,88 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9225DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E25C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8D8208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6AC208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzWGsDSW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bRXwJmZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfLLBXX (ORCPT
+        id S1727490AbfLLBY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:23:23 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:46013 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfLLBXX (ORCPT
+        Wed, 11 Dec 2019 20:24:26 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38868 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfLLBYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:23:23 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r11so288962pjp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:23:22 -0800 (PST)
+        Wed, 11 Dec 2019 20:24:25 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a17so308691pls.5
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:24:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3JnTxmN8bRkEHsxonCr7JuulpHDsIp/mbioLEIpCtLo=;
-        b=OzWGsDSWOHh4LCnZfVnogP8qxHuXMKTE6ClCai9ULySKFzMaz+rwU4bDRtYNOvfAdf
-         Mg+rzFD+6nSC95jAVllMVgm81bdHnTuLce6EY2TFQy4G0UmWR7tQCp8cJfGgY1IGBG8X
-         H6eiFCG4vC3F7V3Z9OwOj61KTZsZYBkXecHc6F+gF83Gc4w652OWla91sQQTKQdnxoFo
-         BHnjrnGYAaWi8McCfpa6z9lWINyu55vwcLVlqFJhcKgU7ys/k3TN8VZgZX2hOZhzlwWs
-         vP2vhCOgBShw/SdlFqKfNm8F9QMr98/yP8KdYXXuVktbI3vY1jHD711lM8qBjYmmSL0U
-         4Pjw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yxfmdDL7T65vpl8mxodCbmEtdWkrwaTZC5+tzyhVGaA=;
+        b=bRXwJmZHFv0/DvcR8LfYtM1OzaacaOYEZFWDRRvs+auLJumkDckP/tK4HXzXX0EDsA
+         5a+xu78dCM+F+leSzcpQcllZzKsh/bltxO7tR0PDqSlBEzwhxPMDZOCjfPxKOdqjMzH4
+         hjZKFpu0D9hv3HL6Y6H33Q949WW4CYgG0kQz0l5EwDy9d5WW9JCw0XngN9mLAZAYW/bh
+         mD9VlPuPCpzqEdwPBII9BTNK2VTOEj+y0ixQXJX3Xj+qc6MaZ6txvGH5zovaunDkhpeo
+         0gZzNR5sxFf+mbnAwvYvp/ZabyNwah5oDZ1c5ZUfoo+Co9G+yemh/eV7s0OFZL8Ix+5V
+         j/kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3JnTxmN8bRkEHsxonCr7JuulpHDsIp/mbioLEIpCtLo=;
-        b=EtuLD7iW+WFs/94wfV/+RP8FZ7P8LwP0Z3TSEr9CTgYgpSekAklFzzd46T4O4X9a0H
-         9ILFis+VDlbykrHkXBT+S0TPvJjsreFGZomYWgoDrazi7t8omFz5Yu+F0Ii+QdhjyVo4
-         siu9Wj8wyEYg1umY0aolr6IRQcJxWA99Ry8husVgvxvoTiFXmUwfmkNhbF2ETvNqiZ7c
-         B9KhO0WbUWvGmdFYdZO211SbiV6PXhu8OKmuUBc5kr8eN52AXEFSVc/Rt3swfuupr+jW
-         X9fAf9Fo6e0njmMWHc9UQcvWTghRyk0340cD63GLfbxK4NxBsEzhXXavyIyJbOmnjxXY
-         yrkw==
-X-Gm-Message-State: APjAAAWMwKp32x9/GsB/y0Pzi0UJTzHHC9WzPF19t0xX3z/n2goLR7OQ
-        vyqEL03m+JYvGCeLHvoA7l8=
-X-Google-Smtp-Source: APXvYqxNfrxsMFmz9h9f4OxUO9xfYOR7l6Lkvi1Eim10U8Sr8QVAoKR6UH4mCd0SA6s5jCyZ/nPbwg==
-X-Received: by 2002:a17:902:aa8f:: with SMTP id d15mr6884521plr.80.1576113802399;
-        Wed, 11 Dec 2019 17:23:22 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id q9sm4305225pgc.5.2019.12.11.17.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 17:23:21 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:23:19 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        AlekseyMakarov <aleksey.makarov@linaro.org>
-Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
- multiple matches
-Message-ID: <20191212012319.GP88619@google.com>
-References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
- <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
- <50d2c44a15960760c6a9d24442a93fa4b31b7594.camel@kernel.crashing.org>
- <20191211091740.p6bgjy7sy75maenw@pathway.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yxfmdDL7T65vpl8mxodCbmEtdWkrwaTZC5+tzyhVGaA=;
+        b=Ybe9kjZatYeAn9SM6yXfsmSOxaT4P1naa7oWgRbzK3RjV1qhA0wnm58ARoIjyxT8xf
+         5MBT/ArTn5futFdBeA/hgw44Np5IWlxjE6lOx/2luiQH6P4UUYMZJHLwS7aTJeWLVHaT
+         XcJ2tjmVYxEYMwMBeTB4/W+7XuXsQOmdmsjPogq8uidsHhO71WYxrdbZ0p7xgC6xL+EE
+         9uQCqznJbL0uxTMAMoDLtIf0YWCNdi/uaxGyJh4zEuLG4UP6LX+AUujDEM7QAEKDQ+nA
+         vOPJXS+b9PuhJsIcnhg2A0PcQU+rtbfm25Itb9DspTk8fVulZbjj9Z4VF16I5o/0vSSy
+         uE1g==
+X-Gm-Message-State: APjAAAVUQsTHxrV200a++ek3qi6d5OAHhriI8zBRm3M++peE1F/iv3Ff
+        EkgiUkrC5IBCDeXJhnDAk0BvVSTtjxglw/pxco8PQg==
+X-Google-Smtp-Source: APXvYqwh1XJUkOPCF0dyTQQeW2Obj5SdR1i9KBjXveDUQi9/tEWPhx3U7JPzGxqbNmrqdb2cgomvPt7qSdwYBUlbqFc=
+X-Received: by 2002:a17:902:9f98:: with SMTP id g24mr6788276plq.325.1576113864508;
+ Wed, 11 Dec 2019 17:24:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211091740.p6bgjy7sy75maenw@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191205093440.21824-1-sjpark@amazon.com> <20191205093440.21824-5-sjpark@amazon.com>
+In-Reply-To: <20191205093440.21824-5-sjpark@amazon.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 11 Dec 2019 17:24:13 -0800
+Message-ID: <CAFd5g46j137egWyACg-op7q1gQVMhYzbUdG9_a0hO8Zc9By0sw@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] kunit: Place 'test.log' under the 'build_dir'
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     SeongJae Park <sj38.park@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, shuah <shuah@kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/12/11 10:17), Petr Mladek wrote:
-> And this would exactly happen as pointed out by Sergey. match() does
-> also some setup operations. I would be scared to call them twice.
-> 
-> > This looks indeed a lot more invasive. Is there any reason why what I
-> > propose wouldn't work as a first patch that can easily be backported ?
-> 
-> Your solution is not acceptable because it might cause calling
-> match() more times.
-> 
-> The reverse search of list of console does not work for ttySX
-> consoles because the number is omitted when matching. And the messages
-> will appear only on the first matched serial console. There is
-> a paragraph about this in the commit message of my patch.
+On Thu, Dec 5, 2019 at 1:35 AM SeongJae Park <sjpark@amazon.com> wrote:
+>
+> From: SeongJae Park <sjpark@amazon.de>
+>
+> 'kunit' writes the 'test.log' under the kernel source directory even
+> though a 'build_dir' option is given.  As users who use the option might
+> expect the outputs to be placed under the specified directory, this
+> commit modifies the logic to write the log file under the 'build_dir'.
+>
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
 
-A fast path for preferred_console match()/setup() sounds like
-something that may work. There won't be double setup()-s and
-we scan console list in the same direction. We just have
-separate match()/setup() for preferred_console. Do you think
-this won't do the trick?
-
-	-ss
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Tested-by: Brendan Higgins <brendanhiggins@google.com>
