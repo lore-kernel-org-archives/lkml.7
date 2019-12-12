@@ -2,171 +2,98 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AC3C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B699C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB4C205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:52:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQK+F5Tq"
+	by mail.kernel.org (Postfix) with ESMTP id 4613E205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfLLPwX (ORCPT
+        id S1729599AbfLLPyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:52:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50673 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729416AbfLLPwW (ORCPT
+        Thu, 12 Dec 2019 10:54:09 -0500
+Received: from netrider.rowland.org ([192.131.102.5]:55367 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729498AbfLLPyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:52:22 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so2916697wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:52:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ppVt/c6SNGbxwMT06FmYWiQkL8ReCtZAObgQLli/bGc=;
-        b=FQK+F5Tqc8VmatT6qdaJSBwIwwPtF4BX7q+Zo2tSJdUU7H3Poig4l99vIp+I1/Vvlh
-         mimYc8wDLLjPw0140MevtlhicgJTxyOHkfWRR5ay61yk0bxeCWWLe4PrBHC4fIXmy8xg
-         ffcCWN9W2Sts1HHv2X6IJH3dkKfXiIOEIBUem78RJYbraY689kLWgWeWyJNiG3YG7Mru
-         PJyaMuC+g111+wvG/l7UEPS5W5yajVSs2te9dnR4P63kRf/E3jnMGPhIBVqUIGqSyNk7
-         JlY1+9WWAU6STu+j4Oi234ZDrjlFqABIbb7Sj/1lHOB31K2H9V5kA4HnFDRFrdDawBKB
-         vBHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ppVt/c6SNGbxwMT06FmYWiQkL8ReCtZAObgQLli/bGc=;
-        b=kwd3rI4OByR0qlEXLe0jc6081E3k/aqJBmbtY70AWatBYDwKQjqUQ2HFuybRYfhCAO
-         qoPj27pjFf469h6TzNEMqanh20IpEiwjjLlSXYK3MTa+wWr630N9tXI7C7cmntJWYWN7
-         +Oa0aoFH9a5DNNdJn54D2LAibBiSk0C3wQXlh7F4knq0l4vo3qqXYCuuv8WqbLT7L99f
-         7sUsmdY1cAoudwnYM5GFGB9o1U1FI69T5yH4mls/8R9dUgabeQM2YMK4pUMwpQEF+jUQ
-         bkuSqAnDPX6Wdchj7pnZAMHahptDSKvu/lSJrnLJM9J8TX7judxEu+mFSFzy5qNnJ4Gh
-         rnBg==
-X-Gm-Message-State: APjAAAVb+EoVNgqHjH43lp5kkwT1jBnFekeUmt24Ek14amsOM18t2Dlz
-        yAeq9Du3e73jLvje9lAYRHcktA==
-X-Google-Smtp-Source: APXvYqyvc2Y2xdShKzDEsC4cVAZysnpb3aqCe69/dn9O8AQEa41FSMBBexqoLXh3Te7JRAVg4RzXxA==
-X-Received: by 2002:a1c:14a:: with SMTP id 71mr7609430wmb.48.1576165939689;
-        Thu, 12 Dec 2019 07:52:19 -0800 (PST)
-Received: from dell ([95.149.164.71])
-        by smtp.gmail.com with ESMTPSA id z189sm7190746wmc.2.2019.12.12.07.52.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 07:52:19 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:52:09 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
- to pwm_pmic_backlight
-Message-ID: <20191212155209.GC3468@dell>
-References: <20191119151818.67531-1-hdegoede@redhat.com>
- <20191119151818.67531-3-hdegoede@redhat.com>
- <20191210085111.GQ3468@dell>
- <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
- <20191212084546.GA3468@dell>
- <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
+        Thu, 12 Dec 2019 10:54:09 -0500
+Received: (qmail 17464 invoked by uid 500); 12 Dec 2019 10:54:08 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Dec 2019 10:54:08 -0500
+Date:   Thu, 12 Dec 2019 10:54:08 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@netrider.rowland.org
+To:     Suwan Kim <suwan.kim027@gmail.com>
+cc:     shuah@kernel.org, <valentina.manea.m@gmail.com>,
+        <gregkh@linuxfoundation.org>, <marmarek@invisiblethingslab.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>
+Subject: Re: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
+In-Reply-To: <20191212052841.6734-3-suwan.kim027@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1912121050130.14053-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, Hans de Goede wrote:
+On Thu, 12 Dec 2019, Suwan Kim wrote:
 
-> Hi,
+> If a transaction error happens in vhci_recv_ret_submit(), event
+> handler closes connection and changes port status to kick hub_event.
+> Then hub tries to flush the endpoint URBs, but that causes infinite
+> loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
+> "vhci_priv" in vhci_urb_dequeue() was already released by
+> vhci_recv_ret_submit() before a transmission error occurred. Thus,
+> vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
+> continuously calls vhci_urb_dequeue().
 > 
-> On 12-12-2019 09:45, Lee Jones wrote:
-> > On Wed, 11 Dec 2019, Hans de Goede wrote:
-> > 
-> > > Hi Lee,
-> > > 
-> > > On 10-12-2019 09:51, Lee Jones wrote:
-> > > > On Tue, 19 Nov 2019, Hans de Goede wrote:
-> > > > 
-> > > > > At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
-> > > > > different PWM controllers for controlling the LCD's backlight brightness.
-> > > > > 
-> > > > > Either the one integrated into the PMIC or the one integrated into the
-> > > > > SoC (the 1st LPSS PWM controller).
-> > > > > 
-> > > > > So far in the LPSS code on BYT we have skipped registering the LPSS PWM
-> > > > > controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
-> > > > > present, assuming that in this case the PMIC PWM controller will be used.
-> > > > > 
-> > > > > On CHT we have been relying on only 1 of the 2 PWM controllers being
-> > > > > enabled in the DSDT at the same time; and always registered the lookup.
-> > > > > 
-> > > > > So far this has been working, but the correct way to determine which PWM
-> > > > > controller needs to be used is by checking a bit in the VBT table and
-> > > > > recently I've learned about 2 different BYT devices:
-> > > > > Point of View MOBII TAB-P800W
-> > > > > Acer Switch 10 SW5-012
-> > > > > 
-> > > > > Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
-> > > > > PWM controller (and the VBT correctly indicates this), so here our old
-> > > > > heuristics fail.
-> > > > > 
-> > > > > Since only the i915 driver has access to the VBT, this commit renames
-> > > > > the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
-> > > > > controller to "pwm_pmic_backlight" so that the i915 driver can do a
-> > > > > pwm_get() for the right controller depending on the VBT bit, instead of
-> > > > > the i915 driver relying on a "pwm_backlight" lookup getting registered
-> > > > > which magically points to the right controller.
-> > > > > 
-> > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > > > ---
-> > > > >    drivers/mfd/intel_soc_pmic_core.c | 2 +-
-> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > For my own reference:
-> > > >     Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> > > 
-> > > As mentioned in the cover-letter, to avoid breaking bi-sectability
-> > > as well as to avoid breaking the intel-gfx CI we need to merge this series
-> > > in one go through one tree. Specifically through the drm-intel tree.
-> > > Is that ok with you ?
-> > > 
-> > > If this is ok with you, then you do not have to do anything, I will just push
-> > > the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
-> > > does not see much changes so I do not expect this to lead to any conflicts.
-> > 
-> > It's fine, so long as a minimal immutable pull-request is provided.
-> > Whether it's pulled or not will depend on a number of factors, but it
-> > needs to be an option.
+> The root cause of this issue is that vhci_recv_ret_submit()
+> terminates early without giving back URB when transaction error
+> occurs in vhci_recv_ret_submit(). That causes the error URB to still
+> be linked at endpoint list without “vhci_priv".
 > 
-> The way the drm subsys works that is not really a readily available
-> option. The struct definition which this patch changes a single line in
-> has not been touched since 2015-06-26 so I really doubt we will get a
-> conflict from this.
+> So, in the case of trasnaction error in vhci_recv_ret_submit(),
+> unlink URB from the endpoint, insert proper error code in
+> urb->status and give back URB.
+> 
+> Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+>  drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
+> index 33f8972ba842..dc26acad6baf 100644
+> --- a/drivers/usb/usbip/vhci_rx.c
+> +++ b/drivers/usb/usbip/vhci_rx.c
+> @@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
+>  	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
+>  
+>  	/* recv transfer buffer */
+> -	if (usbip_recv_xbuff(ud, urb) < 0)
+> -		return;
+> +	if (usbip_recv_xbuff(ud, urb) < 0) {
+> +		urb->status = -EPIPE;
+> +		goto error;
+> +	}
+>  
+>  	/* recv iso_packet_descriptor */
+> -	if (usbip_recv_iso(ud, urb) < 0)
+> -		return;
+> +	if (usbip_recv_iso(ud, urb) < 0) {
+> +		urb->status = -EPIPE;
+> +		goto error;
+> +	}
 
-Always with the exceptions ...
+-EPIPE is used for STALL.  The appropriate error code for transaction 
+error would be -EPROTO (or -EILSEQ or -ETIME, but people seem to be 
+settling on -EPROTO).
 
-OOI, why does this *have* to go through the DRM tree?
+Alan Stern
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
