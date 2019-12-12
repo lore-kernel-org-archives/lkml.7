@@ -2,100 +2,146 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C1C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F203FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1800B22B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143036;
-	bh=s0qY9t/hlZ/5iI+Wf7uj7AnfVTDo45ZB/RFGbHlgG0g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vu4Q14RzYJBaxymgHVEt9NtYXPPKWtxntluTG/rln7GSm8MLoSJNCMW/PkAQ3auQG
-	 vEU2gkaThM5RSoWGzDQwpU5lgccVugLIBWGfGSbYam90i7aUp0jQqcPpYUsRJ2/72x
-	 TpKAilaA2y80MZqglua8UMvz9EozpOgncHRL6GLM=
+	by mail.kernel.org (Postfix) with ESMTP id C56AE21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:31:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NW2MeACW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfLLJaf (ORCPT
+        id S1728391AbfLLJbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:30:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbfLLJae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:30:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 12 Dec 2019 04:31:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38404 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfLLJbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:31:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KvrwbQennYY8QnMZ8aYWegrb07xu+PIkjz3Z8wg/eK4=; b=NW2MeACWD7pQvnuQ878OqOex5
+        8Bl0zzFsRZzFAJXTKTkJ923v7X2eJEFzq8qA/FcdHnVm1fFjP625ix7THJU7C+ucJgFfYOHFRvD1L
+        Q/gAkZILIxrfAhp09zHvb40mkvjb3Cir5fN8qTVqXOfg1pQIGu2arcO4eJ7CgcrdRx+cVshg+IPgM
+        kgICX46GZXqN8SlxiHJSXc4k7ME0bto3wI6/OgBfFjjPtC/aFO3QWi0foIji9c7KsOhdTFH9UfoyF
+        5PhvHdRtW2unb456JPxJy0rrG2pAdMaPaxCMt3P7xXSCju64OuadJiOlqXHTXxohD5F88MpxkJ4/C
+        73mG9EV7w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifKoF-0005N7-JP; Thu, 12 Dec 2019 09:30:59 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73EE722527;
-        Thu, 12 Dec 2019 09:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143033;
-        bh=s0qY9t/hlZ/5iI+Wf7uj7AnfVTDo45ZB/RFGbHlgG0g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YzfwQnf/tu5r2OsL8h3kxP2ZboSoKmurhHpHjejIc/a9/7WeoICjPty4fjyIEnFze
-         Xar3yCj36ZNclUTbaEvWaSc8HOjT4+cxDpi1mDB8M/0uvy0vBrYFpgc+RDFmeXLq7D
-         Zw2j7j2ZB2/wmwgLOiVYQVXiN16nZQ5A5oDov3qI=
-Date:   Thu, 12 Dec 2019 10:30:31 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191212093031.GB1378792@kroah.com>
-References: <20191211150221.153659747@linuxfoundation.org>
- <f753b0b9-dbed-c4f9-f530-a57c88b08634@nvidia.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A600305FEE;
+        Thu, 12 Dec 2019 10:29:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0517F2B18D290; Thu, 12 Dec 2019 10:30:55 +0100 (CET)
+Date:   Thu, 12 Dec 2019 10:30:55 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Helge Deller <deller@gmx.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Re: [PATCH 08/17] asm-generic/tlb: Provide MMU_GATHER_TABLE_FREE
+Message-ID: <20191212093055.GT2827@hirez.programming.kicks-ass.net>
+References: <20191211120713.360281197@infradead.org>
+ <20191211122956.112607298@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f753b0b9-dbed-c4f9-f530-a57c88b08634@nvidia.com>
+In-Reply-To: <20191211122956.112607298@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:13:06PM +0000, Jon Hunter wrote:
-> 
-> On 11/12/2019 15:04, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.16 release.
-> > There are 105 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > -------------
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.3:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.3.16-rc1-g0b6bd9e91738
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+On Wed, Dec 11, 2019 at 01:07:21PM +0100, Peter Zijlstra wrote:
+> @@ -56,6 +56,15 @@
+>   *    Defaults to flushing at tlb_end_vma() to reset the range; helps when
+>   *    there's large holes between the VMAs.
+>   *
+> + *  - tlb_remove_table()
+> + *
+> + *    tlb_remove_table() is the basic primitive to free page-table directories
+> + *    (__p*_free_tlb()).  In it's most primitive form it is an alias for
+> + *    tlb_remove_page() below, for when page directories are pages and have no
+> + *    additional constraints.
+> + *
+> + *    See also MMU_GATHER_TABLE_FREE and MMU_GATHER_RCU_TABLE_FREE.
+> + *
+>   *  - tlb_remove_page() / __tlb_remove_page()
+>   *  - tlb_remove_page_size() / __tlb_remove_page_size()
+>   *
 
-Thanks for testing these and letting me know.
+> @@ -202,7 +193,16 @@ struct mmu_table_batch {
+>  
+>  extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
+>  
+> -#endif
+> +#else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+> +
+> +/*
+> + * Without either HAVE_TABLE_FREE || CONFIG_HAVE_RCU_TABLE_FREE the
+> + * architecture is assumed to have page based page directories and
+> + * we can use the normal page batching to free them.
+> + */
+> +#define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
+> +
+> +#endif /* CONFIG_MMU_GATHER_TABLE_FREE */
 
-greg k-h
+The build robot kindly notified me that this breaks ARM because it does
+the exact same #define for the same reason.
+
+(and I noticed the comment is stale)
+
+I'll post a new version of this patch with the below delta.
+
+---
+--- a/arch/arm/include/asm/tlb.h
++++ b/arch/arm/include/asm/tlb.h
+@@ -37,10 +37,6 @@ static inline void __tlb_remove_table(vo
+ 
+ #include <asm-generic/tlb.h>
+ 
+-#ifndef CONFIG_MMU_GATHER_RCU_TABLE_FREE
+-#define tlb_remove_table(tlb, entry) tlb_remove_page(tlb, entry)
+-#endif
+-
+ static inline void
+ __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte, unsigned long addr)
+ {
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -196,9 +196,8 @@ extern void tlb_remove_table(struct mmu_
+ #else /* !CONFIG_MMU_GATHER_HAVE_TABLE_FREE */
+ 
+ /*
+- * Without either HAVE_TABLE_FREE || CONFIG_HAVE_RCU_TABLE_FREE the
+- * architecture is assumed to have page based page directories and
+- * we can use the normal page batching to free them.
++ * Without MMU_GATHER_TABLE_FREE the architecture is assumed to have page based
++ * page directories and we can use the normal page batching to free them.
+  */
+ #define tlb_remove_table(tlb, page) tlb_remove_page((tlb), (page))
+ 
