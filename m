@@ -2,132 +2,168 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0CDC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1409C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70552253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576172514;
-	bh=Hwihxtiy20/Qjh2bOmETsVop6SoQWdsHsbvLQ9Wf1fc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T9/CtJeD1LsFCQpTwSxnFW0mradfJ6wrUhGXQg421US/9b01+xDuzFB8MimxxZoVQ
-	 XHPVfj3u8CRPgpb9HhWHWwj3BUgqxarL7noPQXr5IlFSyZkrJ0fvPd4Fim2qUaWC0B
-	 ruJqstzKRITk1mHASzfFq99CsUQMrp/njGzV/eE4=
+	by mail.kernel.org (Postfix) with ESMTP id 7DE34214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:43:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AnD962j2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfLLRly (ORCPT
+        id S1730251AbfLLRnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:41:54 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34041 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730023AbfLLRlx (ORCPT
+        Thu, 12 Dec 2019 12:43:52 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44725 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730235AbfLLRnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:41:53 -0500
-Received: by mail-lj1-f193.google.com with SMTP id m6so3247525ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:41:52 -0800 (PST)
+        Thu, 12 Dec 2019 12:43:51 -0500
+Received: by mail-pl1-f195.google.com with SMTP id az3so881328plb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:43:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bMM9+SXbUifsEu+Y3zqfvwzhjRsedDBd5kfOwAh/UwA=;
-        b=MAwdhQ2ApXj+Y01Th4BCE3RSlffcMF2vn+S1n9g9eLPqUXBxqb7H1E20UVL+9mb/zo
-         TUamH+60U4LyvobpVidwKOG160coaIFky35EjHAPgaruzcWX7fUztBbagb0MZDX0xKZK
-         b+3B1PXWXfIs13GZ1+vXd3HB1o38BkFLHhGiE=
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GuBEFzX5L/KmRFYdGw2tsnNnogFgZtYo6kJYMRL2d1I=;
+        b=AnD962j2myid8WfZ47WNy9/d7nvicLmLtLcM+Pb2j1MmswRDY41Z8qerQylGnuKcr5
+         n9tvb681VzrQjbF+0arWfQn+N+O37W/1PXmwDDI8BYmYA9DkSDcRhlrswW3j777R0Efv
+         cooEe887dVu+x52URwUGFbOfmceut8N4hhUiw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bMM9+SXbUifsEu+Y3zqfvwzhjRsedDBd5kfOwAh/UwA=;
-        b=ds/YKjX1aL1ADNlXM6LCiDc9+jRF/vh7SMT6TbKXRpoOUwiHfBr1JpwobJ47ulK2al
-         SZas584V//xDeQtZFjy1jexcMR/qTxZEQ97KhmKNoSMiy0T/gj53nuIAvoRsaXbkq4+I
-         ZKS5pwNkJ2fwdYnAOdoTGXqUMvIDhXtTYN/V6ri5hnADcuIOuJNyTbYQq7O92mOJuFMB
-         wzZgPXjg9iPLp5AnsaNs5KV3P0/9KlEyh6lUmvX8lFnSgp7zXStnkm4P4pko3FmkRgGF
-         RKaOsWAe4vJmCPOr5cegKb0vFeVLD5pGGWNDJscy9sKkJ3G4vLWL0xnworUIZZrNnfew
-         wpFw==
-X-Gm-Message-State: APjAAAW01a/Tacb6rJHLFk0Px9vVyu9Te/r4nJfD+XXcA+1zuUiO2Npl
-        4q89WjbZzl8484bQcGQkuaSs75im/1Y=
-X-Google-Smtp-Source: APXvYqzSRZnR49oGoVFUD9NZ51lkCHBL7xW0gJzLq3Nq9FPt2e2wkmSKE/Q0qSqCrbkBsw/OwLnxXQ==
-X-Received: by 2002:a2e:9942:: with SMTP id r2mr6947647ljj.182.1576172510529;
-        Thu, 12 Dec 2019 09:41:50 -0800 (PST)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id b22sm3484752lji.66.2019.12.12.09.41.48
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GuBEFzX5L/KmRFYdGw2tsnNnogFgZtYo6kJYMRL2d1I=;
+        b=MThNdLppfTUlT9mvz30zIuWaH5Wlx00p3pYtIRT9+MUpnpPhOTOwgqBcnuDTyicyyR
+         LL61Ag/rgy1Iws9Qu2ldorYzC1QfZVHO1Y74dG7b7AzmIW96jLPNxrz2rDO3KkxoEQAy
+         t22SqrB6yWvnbKsWLn+QS0eWA/65Flt0/9PBKusYTP+5ybQ9Z3ibCRIjv8AqXPnBERrZ
+         PFh2hfdYOp9GCJDjMiLKYAF3zV9lDl91FK+KTy5jUdCvTtUNG7J/eN3q8X7Lj3o+fdcS
+         STh1huvglLq1Px6LTS4JfqCTT65lDbpstsHsqz8NaesGzUtzSbjAfElfnNTyIv2GW2nc
+         6vmA==
+X-Gm-Message-State: APjAAAXIcny370Poia0JND2GoKcIB2j8cvwC7OJEFFstrbYIw/hmCHSx
+        YTU1PTGfOfkspH9qnBqz646U4w==
+X-Google-Smtp-Source: APXvYqy85B8z0SRxDxoW/j7/NrrCzAIIIDx2u3ctp9q7gR3aMilopGNx5KCUBaUWfYYHV6RHzgNCmQ==
+X-Received: by 2002:a17:90a:62ca:: with SMTP id k10mr11283072pjs.59.1576172630293;
+        Thu, 12 Dec 2019 09:43:50 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id g18sm7986007pfo.123.2019.12.12.09.43.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 09:41:50 -0800 (PST)
-Received: by mail-lj1-f170.google.com with SMTP id k8so3232210ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:41:48 -0800 (PST)
-X-Received: by 2002:a2e:241a:: with SMTP id k26mr6727345ljk.26.1576172507997;
- Thu, 12 Dec 2019 09:41:47 -0800 (PST)
+        Thu, 12 Dec 2019 09:43:49 -0800 (PST)
+Date:   Thu, 12 Dec 2019 09:43:48 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        tientzu@chromium.org, seanpaul@chromium.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable clocks required for BT SOC
+Message-ID: <20191212174348.GS228856@google.com>
+References: <20191114081430.25427-1-bgodavar@codeaurora.org>
 MIME-Version: 1.0
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191212104610.GW2827@hirez.programming.kicks-ass.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 12 Dec 2019 09:41:32 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
-Message-ID: <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191114081430.25427-1-bgodavar@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 2:46 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> +#ifdef GCC_VERSION < 40800
-
-Where does that 4.8 version check come from, and why?
-
-Yeah, I know, but this really wants a comment. Sadly it looks like gcc
-bugzilla is down, so
-
-   https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-
-currently gives an "Internal Server Error" for me.
-
-[ Delete the horrid code we have because of gcc bugs ]
-
-> +#else /* GCC_VERSION < 40800 */
+On Thu, Nov 14, 2019 at 01:44:30PM +0530, Balakrishna Godavarthi wrote:
+> Instead of relying on other subsytem to turn ON clocks
+> required for BT SoC to operate, voting them from the driver.
+> 
+> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 31 +++++++++++++++++++++++++++++--
+>  1 file changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index f10bdf8e1fc5..dc95e378574b 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -164,6 +164,7 @@ struct qca_serdev {
+>  };
+>  
+>  static int qca_regulator_enable(struct qca_serdev *qcadev);
+> +static int qca_power_on(struct qca_serdev *qcadev);
+>  static void qca_regulator_disable(struct qca_serdev *qcadev);
+>  static void qca_power_shutdown(struct hci_uart *hu);
+>  static int qca_power_off(struct hci_dev *hdev);
+> @@ -528,7 +529,7 @@ static int qca_open(struct hci_uart *hu)
+>  		} else {
+>  			hu->init_speed = qcadev->init_speed;
+>  			hu->oper_speed = qcadev->oper_speed;
+> -			ret = qca_regulator_enable(qcadev);
+> +			ret = qca_power_on(qcadev);
+>  			if (ret) {
+>  				destroy_workqueue(qca->workqueue);
+>  				kfree_skb(qca->rx_skb);
+> @@ -1214,7 +1215,7 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+>  	qcadev = serdev_device_get_drvdata(hu->serdev);
+>  	if (!qcadev->bt_power->vregs_on) {
+>  		serdev_device_close(hu->serdev);
+> -		ret = qca_regulator_enable(qcadev);
+> +		ret = qca_power_on(qcadev);
+>  		if (ret)
+>  			return ret;
+>  
+> @@ -1408,6 +1409,9 @@ static void qca_power_shutdown(struct hci_uart *hu)
+>  	host_set_baudrate(hu, 2400);
+>  	qca_send_power_pulse(hu, false);
+>  	qca_regulator_disable(qcadev);
 > +
-> +#define READ_ONCE_NOCHECK(x)                                           \
-> +({                                                                     \
-> +       typeof(x) __x = *(volatile typeof(x))&(x);                      \
+> +	if (qcadev->susclk)
+> +		clk_disable_unprepare(qcadev->susclk);
+>  }
+>  
+>  static int qca_power_off(struct hci_dev *hdev)
+> @@ -1423,6 +1427,20 @@ static int qca_power_off(struct hci_dev *hdev)
+>  	return 0;
+>  }
+>  
+> +static int qca_power_on(struct qca_serdev *qcadev)
+> +{
+> +	int err;
+> +
+> +	if (qcadev->susclk) {
+> +		err = clk_prepare_enable(qcadev->susclk);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	qca_regulator_enable(qcadev);
+> +	return 0;
+> +}
+> +
+>  static int qca_regulator_enable(struct qca_serdev *qcadev)
+>  {
+>  	struct qca_power *power = qcadev->bt_power;
+> @@ -1523,6 +1541,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  
+>  		qcadev->bt_power->vregs_on = false;
+>  
+> +		if (qcadev->btsoc_type == QCA_WCN3990 ||
+> +		    qcadev->btsoc_type == QCA_WCN3991) {
+> +			qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+> +			if (IS_ERR(qcadev->susclk)) {
+> +				dev_err(&serdev->dev, "failed to acquire clk\n");
+> +				return PTR_ERR(qcadev->susclk);
+> +			}
 
-I think we can/should just do this unconditionally if it helps th eissue.
+This will break existing users. Use devm_clk_get_optional() and at most
+raise a warning if the clock doesn't exist.
 
-Maybe add a warning about how gcc < 4.8 might mis-compile the kernel -
-those versions are getting close to being unacceptable for kernel
-builds anyway.
+It would also be nice to add the clock to the affected devices in the tree
+if possible:
 
-We could also look at being stricter for the normal READ/WRITE_ONCE(),
-and require that they are
-
- (a) regular integer types
-
- (b) fit in an atomic word
-
-We actually did (b) for a while, until we noticed that we do it on
-loff_t's etc and relaxed the rules. But maybe we could have a
-"non-atomic" version of READ/WRITE_ONCE() that is used for the
-questionable cases?
-
-              Linus
+arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi:                compatible = "qcom,wcn3990-bt";
+arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi:              compatible = "qcom,wcn3990-bt";
+arch/arm64/boot/dts/qcom/qcs404-evb.dtsi:               compatible = "qcom,wcn3990-bt";
+arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi:             compatible = "qcom,wcn3990-bt";
+arch/arm64/boot/dts/qcom/sdm845-db845c.dts:             compatible = "qcom,wcn3990-bt";
+arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts:           compatible = "qcom,wcn3990-bt";
