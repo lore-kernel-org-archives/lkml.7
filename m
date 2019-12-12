@@ -2,96 +2,144 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F7EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4ECC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00D921556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576177663;
-	bh=ANPuit8CUGvpyOSxrfqaVoP/O11me6aRM0Z9C3p/CxM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZX41pdYVzxWuXjS9i0Kg+Q37Dv1lB03drFPyhNwwVxOqgkM1Pf4tz2RdDePNp/lzz
-	 V93WfhL6h9hXRpi4MHx8NIcZ5GrYKK4AstCSy+Q9ad5fBLGbb8B4H5gGg4kz3Yj3UA
-	 8cheEg2qEXyiS+f/fEgUf9Xj5eBTDXxIeJ7qIxyk=
+	by mail.kernel.org (Postfix) with ESMTP id 834F822527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:09:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XShq7tcK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfLLTHm (ORCPT
+        id S1730449AbfLLTJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:07:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730338AbfLLTHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:07:41 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A983F21556;
-        Thu, 12 Dec 2019 19:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576177660;
-        bh=ANPuit8CUGvpyOSxrfqaVoP/O11me6aRM0Z9C3p/CxM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cFbL/N62GrrXsrO2zofuHlY4+fwwWdtZJfItGnjsbRY1qjtFMWpj1y9WZtpRF3PDv
-         lDqtzDjhimb0EYmft7jiZihhHa0EtEdHBOjsSfrNxwfzM3LN+28Dy6t0dvrLL7HiSN
-         MXDvbQl5mPhf46ocXbA5s9hluonthbOTZyIPBtwU=
-Received: by mail-qt1-f171.google.com with SMTP id g17so70405qtp.11;
-        Thu, 12 Dec 2019 11:07:40 -0800 (PST)
-X-Gm-Message-State: APjAAAUqokheDyr01YB6muHHQdyxYq2qLn+n4VBsOgxwxzi52Zo4SJ39
-        vNDOpJ12JeOUvumuOempH1yKCoMf5TSUmTOMQg==
-X-Google-Smtp-Source: APXvYqxPd7u2BVtzEcJMszwB++LSELwIU5oN4rc6uLt/0iXtkRbuFYfXjWly+Op56BYv8RBb77vw/SpXprWPBF1drRc=
-X-Received: by 2002:ac8:1c4e:: with SMTP id j14mr9145655qtk.300.1576177659861;
- Thu, 12 Dec 2019 11:07:39 -0800 (PST)
+        Thu, 12 Dec 2019 14:09:05 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35982 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730096AbfLLTJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:09:05 -0500
+Received: by mail-wm1-f67.google.com with SMTP id p17so3826747wma.1;
+        Thu, 12 Dec 2019 11:09:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IxK9FtGpYJeOUfvnF7MggY9vmvu7+uyxyDOUYBGOZPw=;
+        b=XShq7tcKoeE+Txh1DEN5WhLp0eR/w69ZPSSfE+iXxHgHs0gOju6ZXq+p1U1RcRKBWV
+         Pf+WEL7yhcSNaso+niPZhq2I8ig9HcwcmRZj7C4V/UAuLNCRpAZKF9uNqdj4kI6+qitF
+         wssJMmQKMq541gCc68PXUiZilDMwnSycahaOS/M8D87+Jx+RGR+vA4bDuWm2rJNcMcaI
+         XYnurMLbUaQz1lQ1tReQLskTknW118Rbuf61l+6gaoVBCXcTiXVGR8QggDfpmKcnGAiY
+         ScpzgnYUw8E4wE6BVOB7oojAGJ256kAey11+LG3HL4J6s1/0DZfZmQKGk6BLrKGcA65Q
+         lHAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IxK9FtGpYJeOUfvnF7MggY9vmvu7+uyxyDOUYBGOZPw=;
+        b=dTox4/e4DGPRi1pJN8BrU3elvLkqFT9/RiBO8nKIcmR5zHY57tRFtI9raea+9Vng9J
+         i2cOklihcLc+TA9jtpx2+LUG4uuw288NWqJhlL7igcSlEoK1N3VzIVG8jKukSOBViTLO
+         jJgEJSi/kZUF9miJIwIHy95VVYHJHPrX0ZzcbtacLcq1edaxiny83IrH9dp9gT4ZzEc/
+         Pdgjz3phHDdv0hzmH7E32cL2mjXxvXLusjAdDHCZMq4jrbQLSI0uQeqbx6JG91to7Egj
+         FnB0/QQPEK8VfvN1bkozNwtdgdulXeajj0YQZIqhBSdB8GYiC2G/8JEsfunRw2qbn4LK
+         JX6g==
+X-Gm-Message-State: APjAAAU9rs6mev720pdAvkzWLaT8Ncd89LIPOAQRk+++gy6N5yLxoaQS
+        MkmlY+Ov1PVMjRwh7Pj2eF4=
+X-Google-Smtp-Source: APXvYqwsF9/+E9ejZwZFR/MJTQSnIfDekPVMn7yz+SlJiFAcLzJ1ytlyj48O3iuSD4HZvW680PcnvQ==
+X-Received: by 2002:a1c:2705:: with SMTP id n5mr8858556wmn.68.1576177742710;
+        Thu, 12 Dec 2019 11:09:02 -0800 (PST)
+Received: from arch-thunder.localdomain (a109-49-46-234.cpe.netcabo.pt. [109.49.46.234])
+        by smtp.gmail.com with ESMTPSA id o66sm3322584wmo.20.2019.12.12.11.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 11:09:01 -0800 (PST)
+Date:   Thu, 12 Dec 2019 19:08:58 +0000
+From:   Rui Miguel Silva <rmfrfs@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Chuhong Yuan <hslester96@gmail.com>, devel@driverdev.osuosl.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
+ v4l2_async_notifier_cleanup in remove
+Message-ID: <20191212190858.nslwdcjpbjnrfvq2@arch-thunder.localdomain>
+References: <20191209085828.16183-1-hslester96@gmail.com>
+ <20191212115134.GA1895@kadam>
 MIME-Version: 1.0
-References: <20191211150021.20125-1-benjamin.gaignard@st.com>
- <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com> <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
-In-Reply-To: <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 12 Dec 2019 13:07:28 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-Message-ID: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212115134.GA1895@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 2:16 AM Benjamin GAIGNARD
-<benjamin.gaignard@st.com> wrote:
->
->
-> On 12/11/19 8:52 PM, Rob Herring wrote:
-> > On Wed, Dec 11, 2019 at 9:00 AM Benjamin Gaignard
-> > <benjamin.gaignard@st.com> wrote:
-> >> Typical pwm nodes should be named pwm@xxx.
-> >> The pattern shouldn't match nodes named pwm-xxx to avoid
-> >> conflicts with pinmux or pwm-fan nodes.
-> > It only matches pwm-$(a-hex-number), not any string, so that shouldn't
-> > be a problem. This is needed for things like GPIO based devices (not
-> > just PWMs) which don't have any address.
-> >
-> > Pinmux nodes are going to need to adopt some sort of standard pattern
-> > we can match on.
-> I have push a patch to stop using '@' and '_' in pinmux groups names:
-> https://lore.kernel.org/patchwork/patch/1162591/
-> It remove the warnings when compiling the devicetre with W=12 but pwm.yaml
-> complain because pwm pinmux is named pwm-1.
->
-> How can I solve these issues at the same time ?
+Hi Dan,
+Thanks for the inputs.
+On Thu, Dec 12, 2019 at 02:51:34PM +0300, Dan Carpenter wrote:
+> On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
+> > All drivers in imx call v4l2_async_notifier_cleanup() after
+> > unregistering the notifier except this driver.  This should be a
+> > miss and we need to add the call to fix it.
+> > 
+> > Signed-off-by: Chuhong Yuan <hslester96@gmail.com> ---
+> > drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c
+> > b/drivers/staging/media/imx/imx7-mipi-csis.c index
+> > 99166afca071..2bfa85bb84e7 100644 ---
+> > a/drivers/staging/media/imx/imx7-mipi-csis.c +++
+> > b/drivers/staging/media/imx/imx7-mipi-csis.c @@ -1105,6 +1105,7 @@
+> > static int mipi_csis_remove(struct platform_device *pdev)
+> > mipi_csis_debugfs_exit(state);
+> > v4l2_async_unregister_subdev(&state->mipi_sd);
+> > v4l2_async_notifier_unregister(&state->subdev_notifier); +
+> > v4l2_async_notifier_cleanup(&state->subdev_notifier);
+> >  
+> 
+> In this case the "state->subdev_notifier" was never initialized or
+> used so both v4l2_async_notifier_unregister() and
+> v4l2_async_notifier_cleanup() are no-ops.
 
-Name the nodes *-pins or *-pins-[0-9]. You're probably going to need
-some pattern anyways when you do a pinmux schema.
+I have applied this patch on top of Steve's series [0], since by the
+timeline I was expecting to be applied before this one, that series
+adds a bound notifier, even though, it is not named the same, eheh.
 
-Rob
+That trigged me to think that this cleanup was correct since a
+notifier was initialized in probe.
+
+But as you say, it is a no-ops in the end.
+
+@Steve, that said, it looks that in [0], you will need to add some
+unregister and cleanup for the notifiers that you are adding in
+several places.
+
+A patch to fix this will follow.
+
+------
+Cheers,
+     Rui
+
+
+
+[0]: https://patchwork.kernel.org/project/linux-media/list/?series=207517
+
+> 
+> We should just delete "subdev_notifier".
+> 
+> regards, dan carpenter
+> 
+> _______________________________________________ devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
