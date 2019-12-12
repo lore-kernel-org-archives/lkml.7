@@ -2,42 +2,43 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F86C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22AAC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB9D22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB67206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XfXtQ2WG";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="OGuZr61s"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hY/5JiSz";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="SV4WXI+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbfLLSvI (ORCPT
+        id S1730628AbfLLSvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:51:08 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:39998
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730258AbfLLSvI (ORCPT
+        Thu, 12 Dec 2019 13:51:16 -0500
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:60194
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730528AbfLLSvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:51:08 -0500
+        Thu, 12 Dec 2019 13:51:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576176667;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=kKoHOP9qOffADui+fbcwZFFFHSchmemtI+XGhBYvyJs=;
-        b=XfXtQ2WGRnit+XEMx4jUF75saxoMfwEy3tOdfXqrSZq5r5AUzlAI9XlzbfNr6O/m
-        +vAIHzvIddFFGbOGfBg/kL7IhZzSWOvLMOT5STtwdArprRROLvUoP1m5K1vG0CDL7m1
-        Puvn3LQEnm7yUXuwVzLQZFUyWjfC3T5QgLBaTWTM=
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576176669;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
+        bh=/f/uwcycvkqHfz6rQ6bCQ07NgIkbE8y3JfXx2nqrEJw=;
+        b=hY/5JiSz9C49d3MyANFZXKWw1R7TEKXr4XQea/8sP410LFo46qmTMyt5btL3uwp/
+        RbIsh18Tjrop9qefgr/UFLsvUPf3yvuZOLHTr+S+gK6/tnsc0IKXQnjj4eJKw6e0PGV
+        dKKBbU9Za4oi3IWWCPYqjEIu/qXEhn+kjQFkDtPU=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576176667;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=kKoHOP9qOffADui+fbcwZFFFHSchmemtI+XGhBYvyJs=;
-        b=OGuZr61swyJvcW/TOkPAM6bDhKxygvLhLvkpNLeCu7RbahNLcP1muoIgvArtPsYl
-        AcTFZGYj3CKLJ3+oZ+f/nUDKg8uIJ5rUf4UUV4yvNZksabSUyeDvNOJbRQdMGNrbWKz
-        aKW3YcwXNvOR+Xp6WtKLMAYey1DiYWnRpZwQS390=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8F65AC4479F
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576176669;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
+        bh=/f/uwcycvkqHfz6rQ6bCQ07NgIkbE8y3JfXx2nqrEJw=;
+        b=SV4WXI+0If9zlz0QEF9uskHUpBenPhDTJQbC1lqntPL87d9uV4dBxs8M5CKXCr6b
+        zWMvn7RBLZcCm8GVvxODG1VaIEORrYb4utIjQZq2w8meRzk2EFZwForzMZ/SMZ/NTM2
+        lzAbP8guRqrNTMaBhhGZOUQd3HLXYJZ73+b9XHNc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22662C4479F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -46,99 +47,50 @@ Cc:     Elliot Berman <eberman@codeaurora.org>,
         saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
         sidgup@codeaurora.org, psodagud@codeaurora.org,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/17] Restructure, improve target support for qcom_scm driver 
-Date:   Thu, 12 Dec 2019 18:51:07 +0000
-Message-ID: <0101016efb7349c0-3c8f33b3-f7d2-46df-9bbb-c8f4401c5bf2-000000@us-west-2.amazonses.com>
+Subject: [PATCH v4 04/17] firmware: qcom_scm-64: Make SMC macros less magical
+Date:   Thu, 12 Dec 2019 18:51:09 +0000
+Message-ID: <0101016efb7353b8-d392d835-835b-4851-a560-4d6a11e7d46a-000000@us-west-2.amazonses.com>
 X-Mailer: git-send-email 2.7.4
-X-SES-Outgoing: 2019.12.12-54.240.27.21
+In-Reply-To: <1576176651-17089-1-git-send-email-eberman@codeaurora.org>
+References: <1576176651-17089-1-git-send-email-eberman@codeaurora.org>
+X-SES-Outgoing: 2019.12.12-54.240.27.188
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series improves support for 32-bit Qualcomm targets on qcom_scm driver and cleans
-up the driver for 64-bit implementations.
+Improve understandability of SMC macros by reversing the logic as they
+are all functions of how many arguments can be shoved in registers and
+how many SCM arguments are supported.
 
-Currently, the qcom_scm driver supports only 64-bit Qualcomm targets and very
-old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
-Convention to communicate with secure world. Older 32-bit targets use a
-"buffer-based" legacy approach for communicating with secure world (as
-implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM SMCCC.
-Currently, SMCCC-based communication is enabled only on ARM64 config and
-buffer-based communication only on ARM config. This patch-series combines SMCCC
-and legacy conventions and selects the correct convention by querying the secure
-world [1].
+There aren't 4 register arguments because are 7 arguments that go into a
+buffer - there are up to 7 arguments that are overflowed into a buffer
+because only 4 registers are allocated for arguments.
 
-We decided to take the opportunity as well to clean up the driver rather than
-try to patch together qcom_scm-32 and qcom_scm-64.
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ drivers/firmware/qcom_scm-64.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Patches 1-3 and 15 improve macro names, reorder macros/functions, and prune unused
-            macros/functions. No functional changes were introduced.
-Patches 4-8 clears up the SCM abstraction in qcom_scm-64.
-Patches 9-14 clears up the SCM abstraction in qcom_scm-32.
-Patches 16-17 enable dynamically using the different calling conventions.
-
-[1]: https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/soc/qcom/scm.c?h=kernel.lnx.4.9.r28-rel#n555
-
-Changes since v3:
- - Updated recepients
-
-Changes since v2:
- - Addressed Stephen's comments throughout v2.
- - Rebased onto latest for-next branch
- - Removed v2 08/18 (firmware: qcom_scm-64: Remove qcom_scm_call_do_smccc)
- - Cleaned up the convention query from v2 to align with [1].
-
-Changes since v1:
- - Renamed functions/variables per Vinod's suggestions
- - Split v1 01/17 into v2 [01,02,03]/18 per Vinod's suggestion
- - Fix suggestions by Bjorn in v1 09/18 (now v2 10/18)
- - Refactor last 3 commits per Bjorn suggestions in v1 17/18 and v1 10/18
-
-Changes since RFC:
- - Fixed missing return values in qcom_scm_call_smccc
- - Fixed order of arguments in qcom_scm_set_warm_boot_addr
- - Adjusted logic of SMC convention to properly support older QCOM secure worlds
- - Boot tested on IFC6410 based on linaro kernel tag:
-   debian-qcom-dragonboard410c-18.01 (which does basic verification of legacy
-   SCM calls: at least warm_boot_addr, cold_boot_addr, and power_down)
-
-Elliot Berman (17):
-  firmware: qcom_scm: Rename macros and structures
-  firmware: qcom_scm: Apply consistent naming scheme to command IDs
-  firmware: qcom_scm: Remove unused qcom_scm_get_version
-  firmware: qcom_scm-64: Make SMC macros less magical
-  firmware: qcom_scm-64: Move svc/cmd/owner into qcom_scm_desc
-  firmware: qcom_scm-64: Add SCM results struct
-  firmware: qcom_scm-64: Move SMC register filling to
-    qcom_scm_call_smccc
-  firmware: qcom_scm-64: Improve SMC convention detection
-  firmware: qcom_scm-32: Use SMC arch wrappers
-  firmware: qcom_scm-32: Add funcnum IDs
-  firmware: qcom_scm-32: Use qcom_scm_desc in non-atomic calls
-  firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
-  firmware: qcom_scm-32: Create common legacy atomic call
-  firmware: qcom_scm-32: Add device argument to atomic calls
-  firmware: qcom_scm: Order functions, definitions by service/command
-  firmware: qcom_scm: Remove thin wrappers
-  firmware: qcom_scm: Dynamically support SMCCC and legacy conventions
-
- drivers/firmware/Kconfig           |   8 -
- drivers/firmware/Makefile          |   5 +-
- drivers/firmware/qcom_scm-32.c     | 671 -----------------------------
- drivers/firmware/qcom_scm-64.c     | 579 -------------------------
- drivers/firmware/qcom_scm-legacy.c | 242 +++++++++++
- drivers/firmware/qcom_scm-smc.c    | 151 +++++++
- drivers/firmware/qcom_scm.c        | 852 +++++++++++++++++++++++++++++--------
- drivers/firmware/qcom_scm.h        | 178 ++++----
- include/linux/qcom_scm.h           | 113 ++---
- 9 files changed, 1224 insertions(+), 1575 deletions(-)
- delete mode 100644 drivers/firmware/qcom_scm-32.c
- delete mode 100644 drivers/firmware/qcom_scm-64.c
- create mode 100644 drivers/firmware/qcom_scm-legacy.c
- create mode 100644 drivers/firmware/qcom_scm-smc.c
-
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index 976c2b9..3101f36 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -58,9 +58,9 @@ static DEFINE_MUTEX(qcom_scm_lock);
+ #define QCOM_SCM_EBUSY_WAIT_MS 30
+ #define QCOM_SCM_EBUSY_MAX_RETRY 20
+ 
+-#define SCM_SMC_N_EXT_ARGS 7
+-#define SCM_SMC_FIRST_EXT_IDX 3
+-#define SCM_SMC_N_REG_ARGS (MAX_QCOM_SCM_ARGS - SCM_SMC_N_EXT_ARGS + 1)
++#define SCM_SMC_N_REG_ARGS	4
++#define SCM_SMC_FIRST_EXT_IDX	(SCM_SMC_N_REG_ARGS - 1)
++#define SCM_SMC_N_EXT_ARGS	(MAX_QCOM_SCM_ARGS - SCM_SMC_N_REG_ARGS + 1)
+ 
+ static void __scm_smc_do_quirk(const struct qcom_scm_desc *desc,
+ 			       struct arm_smccc_res *res, u32 fn_id,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
