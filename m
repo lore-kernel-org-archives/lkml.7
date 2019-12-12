@@ -2,67 +2,71 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24335C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E296C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FFF2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645B02173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:53:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="paKL9cFH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a4AiFZYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfLLHxg (ORCPT
+        id S1728201AbfLLHxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:53:36 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46794 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728144AbfLLHxf (ORCPT
+        Thu, 12 Dec 2019 02:53:38 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33491 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728099AbfLLHxg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:53:35 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so1552441wrl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:53:34 -0800 (PST)
+        Thu, 12 Dec 2019 02:53:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so1640676wrq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:53:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IJXVdneHJKhB0U91ipQr9JiHsEf8lKmyUeV2ozlf9kU=;
-        b=paKL9cFHlHryFquBJHL+8c4NN4kE9PP2TvzfRSav5Y/5+yw5gKqPq/F+WsFuviGnpX
-         a3N5Dc+grTp5ujUOVDDT3useFQsOf8f3H6+AWoVl/PsE849P9TMbT30Lf3eqe8ZLoIXG
-         I6q7zGxsRYwkzhule7RMZqm2qK+rkFCXm/kO+S33hmiNR/k+T4PI95a/HKD7SSwyos9E
-         bWn3z65M5wixIxoJYNYD2CjR9u6NAiPYdcbziByEhEf1OGDwc7aA0cu3gPrBezd4iuRX
-         cYB03DDXS5G40yust2I6oE2A4yU3xKDuJy34dLP4G85A+uhDKJC04s+4Qplwdl0A5rLb
-         uOeQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=V2BxefIfBzald1w3B2qVq4/Mnrw+MpcEMXquUNshwCQ=;
+        b=a4AiFZYKsCKuIL2IwNdbbxZROXHMrl0otYb2KrvVl67D12pLPV5ToyhpKan9Lxwtah
+         zH1gICMj5/TgwKYMz8rWYAhYkLvFbaPf+luFG2MN5OByqzHGjLFCO6jUb1mHIpFKSV0u
+         NenALf80YXM6faIkMBsbpQTDtBl9DXbMpEN68aCSq3LQnsHuReU6Jw9N95tQCefPGNlc
+         PBwSpPEIKTCZpv1jsB83030xy8Q3KSxZSEkCYRXBDp+AL3DLG+hO7GJISuPb1F7idq1g
+         vTM4t4sbLHCvOFISPXgWfKf7PE8DxMboCIjJgetj1XObhZqr3gaP/61Kfxs4QR8I97/Y
+         cwWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IJXVdneHJKhB0U91ipQr9JiHsEf8lKmyUeV2ozlf9kU=;
-        b=mo0zU9oNM1PIyGCJq7vYEyLagQsL7UeT9q1bFjH9WoLNc+3C7h1aGQzWbEep2d4JqM
-         vucpi6XyInPsmXEuYRnjUVnkSzkTAyeXkijUQj59Ho5S/twzydYKxHx/2dr7u0Z8AuK5
-         fEbmJIE7FiRmpWYTpTn5zwKA2LJvYdIx5fy8FSiDunmkJrWNzs7E2yJmJrQ9KKDqmu8X
-         wsd5EKPMDlcWlhCoMBzNSv/jVZlUHVyubT5Z1jt4Izenlq2kEZT5q4u2G+DDQSgbOwot
-         82H+xQyt2T67TRcGS3MAeqOR3Rb3CVwg/xrHrgAnsJadB8HkslIKVLiAmQcBIfQVvSOd
-         Q2zg==
-X-Gm-Message-State: APjAAAWg/an4QQkEkYT2WvzV3UbYh0Wa7HJjBdzSlQGuMQXgzA3gmGJa
-        iZKOXaxQKju1pSbEriM/StyVcQ==
-X-Google-Smtp-Source: APXvYqzM+pvEcMGMPeMb7kguiSsOu7enKlFBuvbc6gZwJOO5/qoaoDt+tHt0EEFhY411UtUb0P6eYA==
-X-Received: by 2002:a5d:428c:: with SMTP id k12mr4594651wrq.57.1576137213471;
-        Wed, 11 Dec 2019 23:53:33 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=V2BxefIfBzald1w3B2qVq4/Mnrw+MpcEMXquUNshwCQ=;
+        b=OQimnbL2ml/wKxS2BMVWXinagvAIAxk7hwyfcvWmACWBBUo9Ke79fFq8d1VTSYYxIW
+         1L5pDi1PH6IOSF7oJ4ZyoiG+u/5RSYgGXI/7t2K/++Jh154U6XW1GyEKRwLx3svi4fMd
+         ADnzndu2yHutKCUeNgbEvqIDg3srEV5CUGj4CRI94NiVyqVEfspbBZLnWUisRwFmbKBl
+         T5C9XM68aZVSX/eqvhCNMGL7LXqJRrjXU7n3t//lat85ulH+W+I255SBkrQKWa3RUSAQ
+         IHr/PshLjrFgtjR9IhlYFt4W4aTTSXvIqvG4yLbfs+FiETooXEwv412ffZCteFb8yvhh
+         1A7w==
+X-Gm-Message-State: APjAAAW9Jgh4LVxoN4PewyT4RJlvTDBhhL87cqPuPDQOxwKZuNyOY9DQ
+        euq9RsJc3r7BSPbrTUgfUSCylOA6SyE=
+X-Google-Smtp-Source: APXvYqy0OeAvvpsa5iPv/x2SAjzroaVo9o7GLOwqpo+4emy6BPTE1Ec+48oc85wlwUtDJCgR0SQcww==
+X-Received: by 2002:a5d:6b82:: with SMTP id n2mr4544132wrx.153.1576137214539;
+        Wed, 11 Dec 2019 23:53:34 -0800 (PST)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id x6sm5636742wmi.44.2019.12.11.23.53.32
+        by smtp.googlemail.com with ESMTPSA id x6sm5636742wmi.44.2019.12.11.23.53.33
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Dec 2019 23:53:32 -0800 (PST)
+        Wed, 11 Dec 2019 23:53:34 -0800 (PST)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH 0/4] interconnect fixes for 5.5
-Date:   Thu, 12 Dec 2019 09:53:28 +0200
-Message-Id: <20191212075332.16202-1-georgi.djakov@linaro.org>
+Subject: [PATCH 1/4] interconnect: qcom: Fix Kconfig indentation
+Date:   Thu, 12 Dec 2019 09:53:29 +0200
+Message-Id: <20191212075332.16202-2-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191212075332.16202-1-georgi.djakov@linaro.org>
+References: <20191212075332.16202-1-georgi.djakov@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,27 +74,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-Here are some fixes for 5.5-rc. This includes fixing a linked list
-corruption in some drivers and a Kconfig indentation fix. Two of
-the patches are tagged for stable. Please apply to char-misc when
-possible.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Thanks,
-Georgi
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+---
+ drivers/interconnect/qcom/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Georgi Djakov (3):
-  interconnect: qcom: sdm845: Walk the list safely on node removal
-  interconnect: qcom: qcs404: Walk the list safely on node removal
-  interconnect: qcom: msm8974: Walk the list safely on node removal
-
-Krzysztof Kozlowski (1):
-  interconnect: qcom: Fix Kconfig indentation
-
- drivers/interconnect/qcom/Kconfig   | 14 +++++++-------
- drivers/interconnect/qcom/msm8974.c |  8 ++++----
- drivers/interconnect/qcom/qcs404.c  |  8 ++++----
- drivers/interconnect/qcom/sdm845.c  |  4 ++--
- 4 files changed, 17 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+index c49afbea3458..2f9304d1db49 100644
+--- a/drivers/interconnect/qcom/Kconfig
++++ b/drivers/interconnect/qcom/Kconfig
+@@ -6,13 +6,13 @@ config INTERCONNECT_QCOM
+ 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
+ 
+ config INTERCONNECT_QCOM_MSM8974
+-       tristate "Qualcomm MSM8974 interconnect driver"
+-       depends on INTERCONNECT_QCOM
+-       depends on QCOM_SMD_RPM
+-       select INTERCONNECT_QCOM_SMD_RPM
+-       help
+-         This is a driver for the Qualcomm Network-on-Chip on msm8974-based
+-         platforms.
++	tristate "Qualcomm MSM8974 interconnect driver"
++	depends on INTERCONNECT_QCOM
++	depends on QCOM_SMD_RPM
++	select INTERCONNECT_QCOM_SMD_RPM
++	help
++	 This is a driver for the Qualcomm Network-on-Chip on msm8974-based
++	 platforms.
+ 
+ config INTERCONNECT_QCOM_QCS404
+ 	tristate "Qualcomm QCS404 interconnect driver"
