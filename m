@@ -2,84 +2,49 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F8C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF37C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B6B20637
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQqkeUbc"
+	by mail.kernel.org (Postfix) with ESMTP id BFBD520637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLLBBD (ORCPT
+        id S1727484AbfLLBBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:01:03 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34615 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbfLLBBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:01:02 -0500
-Received: by mail-lf1-f66.google.com with SMTP id l18so335291lfc.1;
-        Wed, 11 Dec 2019 17:01:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1yHYuY8rVNWJMaDwGRTUaPkGk2faHXUM519JZN0chQw=;
-        b=gQqkeUbch5ZLoU/Oq5FAPfMhGY5+YZjAakgEaB28PtSPd2iA2ZvMBdMZYKkwbIs84T
-         9wuu0Olhd927uliwpr1WOVaF9uGmVHZsDnAKeV4s+Mv/27+f1syMU4qRauQuh4WM7SWn
-         /vpJ4LDhYoFB00+JtcRAeB9nbCaLCpVIwaAJ9/5DhB5TgvTzCsONNR/ChAiAeDBJMYNc
-         e+9dIfTRgAUiAWcA6+mkGAF4+ThVMshA8S3hv9PSh9umo5ykMaPVeQrcHt09zrFnW1Hm
-         PcvEiAUAfFfIYLqBHWaYzlEExqkUjfcBYvWJeJfzmUXuw108ZAkmNxqe+CNGUKo7Y0nR
-         x+0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1yHYuY8rVNWJMaDwGRTUaPkGk2faHXUM519JZN0chQw=;
-        b=k0YG0XkwR/sXpBPsAFoAsFe3zpppW7sRr43Bx/R/IE/ghBTj1NFD94/3TvCRtWQMWN
-         v9PYqPal6c38ah0aTdCjGsx/8M434rY9SK+P3KyEx3iZOgeMkPxaasoNT39Vs0Oudrhr
-         yTLjSdfvAttPLFQmtj8Kl9dA6p9ko+qxIqmg6fJpzrZGiosFwGujbt6mYnQWlQb+bcLS
-         0afbycTAzJ3mWpvMbBK0E5q1BCnXUIkiguhw9JsLxp7wBPcolEdyNz90kuqIbj6Mg1V1
-         cDC8ccY/d/p6GT1s+2M6mfnUWwZ423L/wwCtPDyi6LERs27aQXSsMW79sNWllvNlw98T
-         SAtQ==
-X-Gm-Message-State: APjAAAVSqsX4XpG1PUj4GISIYLEzh+3rLYhCwMJkQriAMkPNMhKSyI3S
-        MoUgR2ea0JZ8qZwBCX4iDLU=
-X-Google-Smtp-Source: APXvYqyOF2Os93Cc5b6hs3Zi3POGXACpSIzvcBlwaJRKs+mwxJu8IC6o1IHz8Bd6MPuVAijO/zCDGQ==
-X-Received: by 2002:ac2:48bc:: with SMTP id u28mr3965686lfg.81.1576112460540;
-        Wed, 11 Dec 2019 17:01:00 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y25sm1965881lfy.59.2019.12.11.17.00.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 17:01:00 -0800 (PST)
-Subject: Re: [PATCH v2 8/9] dt-bindings: input: elants-i2c: Document common
- touchscreen properties
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Scott Liu <scott.liu@emc.com.tw>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <ecacdd9b1baea0cf332c30f3c7e01d5e734957be.1576079249.git.mirq-linux@rere.qmqm.pl>
- <24fcfedd-1c32-0c2e-73e3-08c4e289d96a@gmail.com>
-Message-ID: <a1aa3010-727b-3536-3426-7281030f6886@gmail.com>
-Date:   Thu, 12 Dec 2019 04:00:59 +0300
+        Wed, 11 Dec 2019 20:01:08 -0500
+Received: from mga07.intel.com ([134.134.136.100]:37975 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726791AbfLLBBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:01:08 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 17:01:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
+   d="scan'208";a="225733894"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 17:01:04 -0800
+Cc:     baolu.lu@linux.intel.com
+Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
+ <20191211163511.gjju2s3yy4sus44w@cantor>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <86270320-efae-1c37-4c5a-6e5415e36a95@linux.intel.com>
+Date:   Thu, 12 Dec 2019 09:00:18 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <24fcfedd-1c32-0c2e-73e3-08c4e289d96a@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191211163511.gjju2s3yy4sus44w@cantor>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,41 +52,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.12.2019 03:58, Dmitry Osipenko пишет:
-> 11.12.2019 19:03, Michał Mirosław пишет:
->> From: Dmitry Osipenko <digetx@gmail.com>
->>
->> Document support of the common touchscreen properties.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
->> ---
->>  Documentation/devicetree/bindings/input/elants_i2c.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/input/elants_i2c.txt b/Documentation/devicetree/bindings/input/elants_i2c.txt
->> index 5edac8be0802..45fab32bbc19 100644
->> --- a/Documentation/devicetree/bindings/input/elants_i2c.txt
->> +++ b/Documentation/devicetree/bindings/input/elants_i2c.txt
->> @@ -14,9 +14,13 @@ Optional properties:
->>  - reset-gpios: reset gpio the chip is connected to.
->>  - vcc33-supply: a phandle for the regulator supplying 3.3V power.
->>  - vccio-supply: a phandle for the regulator supplying IO power.
->> +- see [2] for additional properties
->> +
->> +For additional optional properties see: touchscreen.txt
->>  
->>  [0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>  [1]: Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
->> +[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
->>  
->>  Example:
->>  	&i2c1 {
->>
-> 
-> Rob's email address is incorrect: <robh-dt@kernel.org> ->
-> <robh+dt@kernel.org>
-> 
-> But I suppose he's keeping an eye on the device-tree ML.
+Hi,
 
-Adding Rob to CC using the correct address.
+On 12/12/19 12:35 AM, Jerry Snitselaar wrote:
+> On Wed Dec 11 19, Lu Baolu wrote:
+>> If the default DMA domain of a group doesn't fit a device, it
+>> will still sit in the group but use a private identity domain.
+>> When map/unmap/iova_to_phys come through iommu API, the driver
+>> should still serve them, otherwise, other devices in the same
+>> group will be impacted. Since identity domain has been mapped
+>> with the whole available memory space and RMRRs, we don't need
+>> to worry about the impact on it.
+>>
+> 
+> Does this pose any potential issues with the reverse case where the
+> group has a default identity domain, and the first device fits that,
+> but a later device in the group needs dma and gets a private dma
+> domain?
+
+No. iommu_map/unmap() should not be called for default identity domain.
+
+         if (unlikely(!(domain->type & __IOMMU_DOMAIN_PAGING)))
+                 return -EINVAL;
+
+Best regards,
+baolu
+
+> 
+>> Link: https://www.spinics.net/lists/iommu/msg40416.html
+>> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced 
+>> with private")
+>> Cc: stable@vger.kernel.org # v5.3+
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>> drivers/iommu/intel-iommu.c | 8 --------
+>> 1 file changed, 8 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index 0c8d81f56a30..b73bebea9148 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -5478,9 +5478,6 @@ static int intel_iommu_map(struct iommu_domain 
+>> *domain,
+>>     int prot = 0;
+>>     int ret;
+>>
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return -EINVAL;
+>> -
+>>     if (iommu_prot & IOMMU_READ)
+>>         prot |= DMA_PTE_READ;
+>>     if (iommu_prot & IOMMU_WRITE)
+>> @@ -5523,8 +5520,6 @@ static size_t intel_iommu_unmap(struct 
+>> iommu_domain *domain,
+>>     /* Cope with horrid API which requires us to unmap more than the
+>>        size argument if it happens to be a large-page mapping. */
+>>     BUG_ON(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level));
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return 0;
+>>
+>>     if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
+>>         size = VTD_PAGE_SIZE << level_to_offset_bits(level);
+>> @@ -5556,9 +5551,6 @@ static phys_addr_t 
+>> intel_iommu_iova_to_phys(struct iommu_domain *domain,
+>>     int level = 0;
+>>     u64 phys = 0;
+>>
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return 0;
+>> -
+>>     pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+>>     if (pte)
+>>         phys = dma_pte_addr(pte);
+>> -- 
+>> 2.17.1
+>>
+> 
