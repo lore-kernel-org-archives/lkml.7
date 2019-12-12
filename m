@@ -2,34 +2,33 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4580C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE67C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F1FB22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7713C22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbfLLSYN (ORCPT
+        id S1730451AbfLLSY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:24:13 -0500
-Received: from mga18.intel.com ([134.134.136.126]:35375 "EHLO mga18.intel.com"
+        Thu, 12 Dec 2019 13:24:27 -0500
+Received: from mga01.intel.com ([192.55.52.88]:20582 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbfLLSYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:24:12 -0500
+        id S1730295AbfLLSYY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:24:24 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:11 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:24:23 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="211161238"
+   d="scan'208";a="216201185"
 Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007.fm.intel.com with ESMTP; 12 Dec 2019 10:24:10 -0800
-Subject: [PATCH RFC v2 00/14] idxd driver for Intel Data Streaming
- Accelerator
+  by orsmga006.jf.intel.com with ESMTP; 12 Dec 2019 10:24:22 -0800
+Subject: [PATCH RFC v2 02/14] dmaengine: break out channel registration
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
         vkoul@kernel.org
@@ -38,221 +37,251 @@ Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
         jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
         akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
         bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
-Date:   Thu, 12 Dec 2019 11:24:10 -0700
-Message-ID: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+Date:   Thu, 12 Dec 2019 11:24:22 -0700
+Message-ID: <157617506217.42350.158281933095533374.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
 User-Agent: StGit/unknown-version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2:
-Borislav:
-- Pushed CPU feature check burden to the driver and removed feature check and alignment check from iosubmit_cmds512()
-- Removed generic support and make iosubmit_cmds512() x86 only
-DaveH:
-- added comments to explain __iowrite512() quirks.
+In preparation for dynamic channel registration, the code segment that
+does the channel registration is broken out to its own function.
 
-The patch series breaks down into following parts:
-Patch 1: x86 arch, add a new I/O accessor based on movdir64b
-Patches 2,3,5-7,12: dmaengine subsystem additions
-Patch 3: mm, moving common allocation code from blk-mq to mm
-Patches 8-11,13,14: idxd driver
-
-This patch series implements the first part of the driver for the Intel
-Data Streaming accelerator, the Intel Data Accelerator driver (idxd).
-The Intel DSA replaces the Intel IOAT DMA engine from previous Xeon platforms
-on a future processor platform. Many new features are implemented by Intel DSA.
-1. Descriptors can be issued directly from kernel, user, and guest via new CPU
-   instructions enqcmd, enqcmds, and movdir64b. The descriptor is written to
-   an mmio address in one of the device's PCI BAR and is called a portal.
-   New CPU instruction details can be found in the latest Intel Software
-   Developer's Manual. [1]
-2. Shared workqueues allow multiple users issue descriptors to the same
-   workqueue.
-3. Shared Virtual Memory (SVM) support allows using virtual address instead of
-   requiring pinned physical address that traditional DMA controllers require.
-   This simplifies programming and makes it easier for user space to do DMA
-   operations. Page faults can be recovered through PCI Address Translation
-   Service (ATS) performed by the DMA device.
-4. Supports scalable IOV (SIOV) to accelerate virtualization. [2]
-
-The submission will happen in multiple stages depending on availability of
-kernel support for Process Address Space ID (PASID), IOMMU, vIOMMU, and
-Interrupt Message Storage (IMS).
-
-Stage 1 (this series): idxd driver with only dedicated workqueue support.
-	- No PASID support
-	- No shared workqueue (requires PASID) support
-	- With DMA engine plumbing
-	- With char driver for user command portal export.
-Stage 2. idxd driver with PASID support and shared workqueue support
-STage 3. idxd driver with VFIO mediated device (mdev) and with IMS support.
-
-The DSA device defines sub-components called workqueues, groups, and engines.
-A group is an abstract container that can have 1 or more workqueues and 1 or
-more engines. The number of groups, workqueues, and engines supported by the
-device can be detected from the general capabilities register. The workqueues
-are where descriptors queued up before being processed by the engines.
-
-The DSA device also has a memory BAR that contains multiple portals.
-Depending on the offset from the BAR, various portals can be used to submit
-descriptors with one of the CPU commands mentioned above. The types of
-portals are MSIX limited, MSIX unlimited, IMS limited, and IMS unlimited as
-defined by the hardware spec. The MSIX unlimited portals are reserved for
-kernel submissions. The limited portals can be exported to user space for
-application usages. A limited portal is configured by the workqueue threshold
-attribute and can be restricted to have a workqueue size that is smaller than
-the actual workqueue size. This allows the kernel to submit command descriptors
-to a workqueue and not be blocked by the user application.
-
-There are two types of workqueues that the DSA device supports, dedicated and
-shared. A dedicated workqueue receives descriptors via the movdir64b
-instruction. This instruction is a posted write and therefore does not wait for
-a completion. Because of this, the software must keep track of the number of
-descriptors submitted to the workqueue. A full workqueue will drop the
-descriptor without notice. A shared workqueue accepts the enqcmds instruction in
-the kernel and enqcmd instruction from user applications. The command will set
-the zero flag to indicate whether the submission of the descriptor is
-successful. The enqcmd(s) instruction is non-posted and waits for the write
-completion before return.
-
-The stage 1 of the patch submission provides a base driver that only support
-the dedicated workqueue type without PASID support. The supported source and
-destination addresses must be physical. This is similar to traditional
-DMA operations where the device receives a descriptor with physical source and
-destination addresses for operation. Plumbing to the existing kernel dmaengine
-subsystem is added in order to support such usages. DMA memmove operation can be
-tested with the in kernel dmatest module.
-
-A large part of the base driver is the sysfs component.  There is also
-no requirement for DSA to be used during early kernel boot. Configuration
-of the device during initramfs should be sufficient.
-
-A bus type (dsa_bus) is defined for a hierachy of DSA devices and
-sub-components to be connected to, /sys/bus/dsa/.
-A struct device is created for each DSA device and for each of its
-sub-component (workqueues, groups, and engines).  So looking under
-/sys/bus/dsa/devices, one would observe entries such as dsa0, dsa1, wq0.0,
-wq1.0, group0.0, engine0.0, and etc. Each of those has sysfs attributes
-underneath that allows the configuration of those parts or reporting status or
-capabilities of the parts that they represent.
-
-/sys/bus/dsa/devices
-├── dsa0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0
-├── engine0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.0
-├── engine0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.1
-├── engine0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.2
-├── engine0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/engine0.3
-├── group0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.0
-├── group0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.1
-├── group0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.2
-├── group0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/group0.3
-├── wq0.0 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.0
-├── wq0.1 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.1
-├── wq0.2 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.2
-├── wq0.3 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.3
-├── wq0.4 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.4
-├── wq0.5 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.5
-├── wq0.6 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.6
-├── wq0.7 -> ../../../devices/pci0000:00/0000:00:0a.0/dsa0/wq0.7
-
-Under /sys/bus/dsa/drivers/dsa/ there is a bind and an unbind attribute. Those
-allow us to enable and disable the device and workqueue components through the
-bus probe and remove functions in the driver. By writing the "device" names
-(i.e. dsa0, wq0.0) into bind or unbind attributes we can enable or disable those
-components respectively. This is the typical driver-core bind / unbind behavior.
-
-The workqueue device attributes exports two attributes, type and name, to
-indicate how the workqueue is being utilized. There are 2 primary types that
-the driver recognizes: kernel, user. An additonal mdev type is available from
-stage 3 enabling.  The "kernel" type marks the workqueue for in kernel usages.
-The "user" type surfaces a char device for user application consumption.
-The "name" attribute is a string type that marks the workqueue for more
-specific usages. For example, for the dmaengine subsystem to claim the
-workqueue the name should be "dmanegine". For "user" queue types, the name
-can be any valid string useful for identification by the user application.
-
-For the "user" workqueue that surfaces a char device, char device allows a
-limited portal region to be exported to user applications by the mmap() call
-once the application opens the char device.  Character device nodes in
-/dev/dsa/wqM.N will be made visible for application to open the device.
-A user application can use the enqcmd CPU instruction to submit
-descriptors directly to a workqueue without kernel driver involvement.
-
-Kernel branch for easy review:
-https://github.com/intel/idxd-driver.git idxd-stage1
-
-[1]: https://software.intel.com/en-us/articles/intel-sdm
-[2]: https://software.intel.com/en-us/download/intel-scalable-io-virtualization-technical-specification
-[3]: https://software.intel.com/en-us/download/intel-data-streaming-accelerator-preliminary-architecture-specification
-[4]: https://01.org/blogs/2019/introducing-intel-data-streaming-accelerator
-
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
+ drivers/dma/dmaengine.c   |  157 ++++++++++++++++++++++++++++++---------------
+ include/linux/dmaengine.h |    4 +
+ 2 files changed, 107 insertions(+), 54 deletions(-)
 
-Dave Jiang (13):
-      x86/asm: add iosubmit_cmds512() based on movdir64b CPU instruction
-      dmaengine: break out channel registration
-      dmaengine: add new dma device registration
-      mm: create common code from request allocation based from blk-mq code
-      dmaengine: add dma_request support functions
-      dmaengine: add dma request submit and completion path support
-      dmaengine: update dmatest to support dma request
-      dmaengine: idxd: Init and probe for Intel data accelerators
-      dmaengine: idxd: add configuration component of driver
-      dmaengine: idxd: add descriptor manipulation routines
-      dmaengine: idxd: connect idxd to dmaengine subsystem
-      dmaengine: request submit optimization
-      dmaengine: idxd: add char driver to expose submission portal to userland
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 03ac4b96117c..a20ab568b637 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -900,15 +900,109 @@ static int get_dma_id(struct dma_device *device)
+ 	return 0;
+ }
+ 
++static int __dma_async_device_channel_register(struct dma_device *device,
++					       struct dma_chan *chan,
++					       int chan_id)
++{
++	int rc = 0;
++	int chancnt = device->chancnt;
++	atomic_t *idr_ref;
++	struct dma_chan *tchan;
++
++	tchan = list_first_entry_or_null(&device->channels,
++					 struct dma_chan, device_node);
++	if (tchan->dev) {
++		idr_ref = tchan->dev->idr_ref;
++	} else {
++		idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
++		if (!idr_ref)
++			return -ENOMEM;
++		atomic_set(idr_ref, 0);
++	}
++
++	chan->local = alloc_percpu(typeof(*chan->local));
++	if (!chan->local)
++		goto err_out;
++	chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
++	if (!chan->dev) {
++		free_percpu(chan->local);
++		chan->local = NULL;
++		goto err_out;
++	}
++
++	/*
++	 * When the chan_id is a negative value, we are dynamically adding
++	 * the channel. Otherwise we are static enumerating.
++	 */
++	chan->chan_id = chan_id < 0 ? chancnt : chan_id;
++	chan->dev->device.class = &dma_devclass;
++	chan->dev->device.parent = device->dev;
++	chan->dev->chan = chan;
++	chan->dev->idr_ref = idr_ref;
++	chan->dev->dev_id = device->dev_id;
++	atomic_inc(idr_ref);
++	dev_set_name(&chan->dev->device, "dma%dchan%d",
++		     device->dev_id, chan->chan_id);
++
++	rc = device_register(&chan->dev->device);
++	if (rc)
++		goto err_out;
++	chan->client_count = 0;
++	device->chancnt = chan->chan_id + 1;
++
++	return 0;
++
++ err_out:
++	free_percpu(chan->local);
++	kfree(chan->dev);
++	if (atomic_dec_return(idr_ref) == 0)
++		kfree(idr_ref);
++	return rc;
++}
++
++int dma_async_device_channel_register(struct dma_device *device,
++				      struct dma_chan *chan)
++{
++	int rc;
++
++	rc = __dma_async_device_channel_register(device, chan, -1);
++	if (rc < 0)
++		return rc;
++
++	dma_channel_rebalance();
++	return 0;
++}
++EXPORT_SYMBOL_GPL(dma_async_device_channel_register);
++
++static void __dma_async_device_channel_unregister(struct dma_device *device,
++						  struct dma_chan *chan)
++{
++	WARN_ONCE(chan->client_count,
++		  "%s called while %d clients hold a reference\n",
++		  __func__, chan->client_count);
++	mutex_lock(&dma_list_mutex);
++	chan->dev->chan = NULL;
++	mutex_unlock(&dma_list_mutex);
++	device_unregister(&chan->dev->device);
++	free_percpu(chan->local);
++}
++
++void dma_async_device_channel_unregister(struct dma_device *device,
++					 struct dma_chan *chan)
++{
++	__dma_async_device_channel_unregister(device, chan);
++	dma_channel_rebalance();
++}
++EXPORT_SYMBOL_GPL(dma_async_device_channel_unregister);
++
+ /**
+  * dma_async_device_register - registers DMA devices found
+  * @device: &dma_device
+  */
+ int dma_async_device_register(struct dma_device *device)
+ {
+-	int chancnt = 0, rc;
++	int rc, i = 0;
+ 	struct dma_chan* chan;
+-	atomic_t *idr_ref;
+ 
+ 	if (!device)
+ 		return -ENODEV;
+@@ -1000,59 +1094,23 @@ int dma_async_device_register(struct dma_device *device)
+ 	if (device_has_all_tx_types(device))
+ 		dma_cap_set(DMA_ASYNC_TX, device->cap_mask);
+ 
+-	idr_ref = kmalloc(sizeof(*idr_ref), GFP_KERNEL);
+-	if (!idr_ref)
+-		return -ENOMEM;
+ 	rc = get_dma_id(device);
+-	if (rc != 0) {
+-		kfree(idr_ref);
++	if (rc != 0)
+ 		return rc;
+-	}
+-
+-	atomic_set(idr_ref, 0);
+ 
+ 	/* represent channels in sysfs. Probably want devs too */
+ 	list_for_each_entry(chan, &device->channels, device_node) {
+-		rc = -ENOMEM;
+-		chan->local = alloc_percpu(typeof(*chan->local));
+-		if (chan->local == NULL)
++		rc = __dma_async_device_channel_register(device, chan, i++);
++		if (rc < 0)
+ 			goto err_out;
+-		chan->dev = kzalloc(sizeof(*chan->dev), GFP_KERNEL);
+-		if (chan->dev == NULL) {
+-			free_percpu(chan->local);
+-			chan->local = NULL;
+-			goto err_out;
+-		}
+-
+-		chan->chan_id = chancnt++;
+-		chan->dev->device.class = &dma_devclass;
+-		chan->dev->device.parent = device->dev;
+-		chan->dev->chan = chan;
+-		chan->dev->idr_ref = idr_ref;
+-		chan->dev->dev_id = device->dev_id;
+-		atomic_inc(idr_ref);
+-		dev_set_name(&chan->dev->device, "dma%dchan%d",
+-			     device->dev_id, chan->chan_id);
+-
+-		rc = device_register(&chan->dev->device);
+-		if (rc) {
+-			free_percpu(chan->local);
+-			chan->local = NULL;
+-			kfree(chan->dev);
+-			atomic_dec(idr_ref);
+-			goto err_out;
+-		}
+-		chan->client_count = 0;
+ 	}
+ 
+-	if (!chancnt) {
++	if (!device->chancnt) {
+ 		dev_err(device->dev, "%s: device has no channels!\n", __func__);
+ 		rc = -ENODEV;
+ 		goto err_out;
+ 	}
+ 
+-	device->chancnt = chancnt;
+-
+ 	mutex_lock(&dma_list_mutex);
+ 	/* take references on public channels */
+ 	if (dmaengine_ref_count && !dma_has_cap(DMA_PRIVATE, device->cap_mask))
+@@ -1080,9 +1138,8 @@ int dma_async_device_register(struct dma_device *device)
+ 
+ err_out:
+ 	/* if we never registered a channel just release the idr */
+-	if (atomic_read(idr_ref) == 0) {
++	if (!device->chancnt) {
+ 		ida_free(&dma_ida, device->dev_id);
+-		kfree(idr_ref);
+ 		return rc;
+ 	}
+ 
+@@ -1115,16 +1172,8 @@ void dma_async_device_unregister(struct dma_device *device)
+ 	dma_channel_rebalance();
+ 	mutex_unlock(&dma_list_mutex);
+ 
+-	list_for_each_entry(chan, &device->channels, device_node) {
+-		WARN_ONCE(chan->client_count,
+-			  "%s called while %d clients hold a reference\n",
+-			  __func__, chan->client_count);
+-		mutex_lock(&dma_list_mutex);
+-		chan->dev->chan = NULL;
+-		mutex_unlock(&dma_list_mutex);
+-		device_unregister(&chan->dev->device);
+-		free_percpu(chan->local);
+-	}
++	list_for_each_entry(chan, &device->channels, device_node)
++		__dma_async_device_channel_unregister(device, chan);
+ }
+ EXPORT_SYMBOL(dma_async_device_unregister);
+ 
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 8fcdee1c0cf9..0202d44a17a5 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1399,6 +1399,10 @@ static inline int dmaengine_desc_free(struct dma_async_tx_descriptor *desc)
+ int dma_async_device_register(struct dma_device *device);
+ int dmaenginem_async_device_register(struct dma_device *device);
+ void dma_async_device_unregister(struct dma_device *device);
++int dma_async_device_channel_register(struct dma_device *device,
++				      struct dma_chan *chan);
++void dma_async_device_channel_unregister(struct dma_device *device,
++					 struct dma_chan *chan);
+ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+ struct dma_chan *dma_get_slave_channel(struct dma_chan *chan);
+ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
 
-Jing Lin (1):
-      dmaengine: idxd: add sysfs ABI for idxd driver
-
-
- Documentation/ABI/stable/sysfs-driver-dma-idxd |  171 +++
- MAINTAINERS                                    |    8 
- arch/x86/include/asm/io.h                      |   42 +
- block/blk-mq.c                                 |   94 -
- drivers/dma/Kconfig                            |   19 
- drivers/dma/Makefile                           |    2 
- drivers/dma/dma-request.c                      |   96 ++
- drivers/dma/dmaengine.c                        |  312 +++--
- drivers/dma/dmatest.c                          |  366 ++++--
- drivers/dma/idxd/Makefile                      |    2 
- drivers/dma/idxd/cdev.c                        |  304 +++++
- drivers/dma/idxd/device.c                      |  699 +++++++++++
- drivers/dma/idxd/dma.c                         |  120 ++
- drivers/dma/idxd/idxd.h                        |  307 +++++
- drivers/dma/idxd/init.c                        |  550 +++++++++
- drivers/dma/idxd/irq.c                         |  275 ++++
- drivers/dma/idxd/registers.h                   |  336 +++++
- drivers/dma/idxd/submit.c                      |  178 +++
- drivers/dma/idxd/sysfs.c                       | 1510 ++++++++++++++++++++++++
- include/linux/dmaengine.h                      |  132 ++
- include/linux/idxd.h                           |   20 
- include/linux/mempool.h                        |    6 
- include/uapi/linux/idxd.h                      |  218 +++
- mm/Makefile                                    |    2 
- mm/request_alloc.c                             |   95 ++
- usr/include/Makefile                           |    1 
- 26 files changed, 5579 insertions(+), 286 deletions(-)
- create mode 100644 Documentation/ABI/stable/sysfs-driver-dma-idxd
- create mode 100644 drivers/dma/dma-request.c
- create mode 100644 drivers/dma/idxd/Makefile
- create mode 100644 drivers/dma/idxd/cdev.c
- create mode 100644 drivers/dma/idxd/device.c
- create mode 100644 drivers/dma/idxd/dma.c
- create mode 100644 drivers/dma/idxd/idxd.h
- create mode 100644 drivers/dma/idxd/init.c
- create mode 100644 drivers/dma/idxd/irq.c
- create mode 100644 drivers/dma/idxd/registers.h
- create mode 100644 drivers/dma/idxd/submit.c
- create mode 100644 drivers/dma/idxd/sysfs.c
- create mode 100644 include/linux/idxd.h
- create mode 100644 include/uapi/linux/idxd.h
- create mode 100644 mm/request_alloc.c
-
---
