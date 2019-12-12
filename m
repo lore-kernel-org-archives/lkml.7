@@ -2,94 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1D9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3043DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC262073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00106214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mUaC9PzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfLLQd1 (ORCPT
+        id S1729925AbfLLQew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:33:27 -0500
-Received: from sauhun.de ([88.99.104.3]:37048 "EHLO pokefinder.org"
+        Thu, 12 Dec 2019 11:34:52 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:41901 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729591AbfLLQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:33:27 -0500
-Received: from localhost (p54B331D1.dip0.t-ipconnect.de [84.179.49.209])
-        by pokefinder.org (Postfix) with ESMTPSA id 7C6252C04D8;
-        Thu, 12 Dec 2019 17:33:23 +0100 (CET)
-Date:   Thu, 12 Dec 2019 17:33:15 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, broonie@kernel.org,
-        lee.jones@linaro.org, lars@metafoo.de, pascal.huerst@gmail.com
-Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
-Message-ID: <20191212163315.GA3932@kunai>
-References: <20191209183511.3576038-1-daniel@zonque.org>
- <20191209183511.3576038-9-daniel@zonque.org>
- <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+        id S1729591AbfLLQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:34:51 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47YfXP2gjMzB09Zb;
+        Thu, 12 Dec 2019 17:34:45 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=mUaC9PzR; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 9WuTQ52ZLv0o; Thu, 12 Dec 2019 17:34:45 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47YfXP0ZwbzB09Zd;
+        Thu, 12 Dec 2019 17:34:45 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1576168485; bh=5ayd9PjJRgNmK3O5j33o8jKyMdGb9Kf50uNZGSjc28I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mUaC9PzRHUQgIKKPVsLlwj3RKssxuq6EeDV67OR9T/w6yH9ybBbXdRE0UC8mNYv6b
+         iwCt44e25EqPI1h0UB4DarcGj1W790CZBg6CZI+atejs26GN/5qiD8nmGIFiGkCzXI
+         9E2CYb9yDOhLKkxGHZQYxRtNjf8H4GjjTX1RWNdc=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A93118B877;
+        Thu, 12 Dec 2019 17:34:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id hamxpM4AZs8F; Thu, 12 Dec 2019 17:34:46 +0100 (CET)
+Received: from [172.25.230.112] (po15451.idsi0.si.c-s.fr [172.25.230.112])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8493D8B872;
+        Thu, 12 Dec 2019 17:34:46 +0100 (CET)
+Subject: Re: [PATCH v5] powerpc/irq: inline call_do_irq() and
+ call_do_softirq() on PPC32
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <72a6cd86137b2a7ab835213cf5c74df6ed2f6ea7.1575739197.git.christophe.leroy@c-s.fr>
+ <20191212125222.GB3381@infradead.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <878e4ac8-9bfa-394d-8bca-f09a78f54904@c-s.fr>
+Date:   Thu, 12 Dec 2019 17:34:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Content-Disposition: inline
-In-Reply-To: <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212125222.GB3381@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-Hi Luca,
+Le 12/12/2019 à 13:52, Christoph Hellwig a écrit :
+> On Sat, Dec 07, 2019 at 05:20:04PM +0000, Christophe Leroy wrote:
+>> call_do_irq() and call_do_softirq() are simple enough to be
+>> worth inlining.
+>>
+>> Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
+>> It also allows GCC to keep the saved ksp_limit in an nonvolatile reg.
+>>
+>> This is inspired from S390 arch. Several other arches do more or
+>> less the same. The way sparc arch does seems odd thought.
+> 
+> Any reason you only do this for 32-bit and not 64-bit as well?
+> 
 
-thanks for the review!
+Yes ... There has been a long discussion on this in v4, see 
+https://patchwork.ozlabs.org/patch/1174288/
 
-> good, but I think there's a problem in this function. A "normal"
-> master_xfer function issues a repeated start between one msg and the
-> next one, at least in the typical case where all msgs have the same
-> slave address. Your implementation breaks repeated start. At first sight
-> we might need more complex code here to coalesce all consecutive msgs
-> with the same address into a single i2c_transfer() call.
+The problem is that on PPC64, r2 register is used as TOC pointer and it 
+is apparently not straithforward to make sure the caller and the callee 
+are using the same TOC.
 
-Note that it is by far the standard case that all messages in a transfer
-have the same client address (99,999%?). But technically, this is not a
-requirement and the repeated start on the bus is totally independent of
-the addresses used. It is just a master wanting to send without being
-interrupted by another master.
+On PPC32 it's more simple, r2 is current task_struct at all time, it 
+never changes.
 
-   Wolfram
-
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3ya8cACgkQFA3kzBSg
-KbZBdQ/6ApPjJEPmloupECtcOPxRdHIBMJSbDi9HpBk6QSvFwtknvv6ybcJHJ3Dc
-2GkbUK4EAcDvvDx4mTqhw7t8JPay3Bu3O13a/wXP5PDb7DeHJ5xDaBsEYVLC9id2
-E1I5aEfdrrxsL1HFUZn86BmmthMuupvelZAyfL7pXDT3AU5oNkPipfKzoiC0EiBP
-MPu2HN8BIX7l1ECvOL9j0pZYCfz00UHA4PtWHwz7zjiCG7RmY3qlm6xw5l6XFeq3
-wbcmTXcLr8OIG/8sw0PMJjJFqHfH9Vlj8aYcRrsgjDEHQbSTKAQ/RTDw9rcmAktW
-/1u6RUea0ckwX6rhKWZSXVktPzCV5LWaywD6lsMGXxhF/0T2tvKRqV6+xIngUY3n
-8KnzpK2i3gvLmP9BYYxa/BM8qiuR4SimZi35lmofttUzXUs/5fgJwxFg2UuJqpPD
-Ex/lyLc1AUbRRp8mDsSMsGg7Ku6WUt5T7OxmVjzvIYPLJ84GlTvZLA4WIskzWFVw
-aZ2+E4YZq35snfMfawdrDmTOOmNOEPfVuT5Cm2ul1HVTprAgF/DVkQHVWPzNtOo9
-xxwPgX9lrN0I+Ek2F1kSJguphMzVjIFRvFCl77TJUQ7qvBEWYDLQs1hBdmXieBxA
-bNZoxeVI6DmFF5qTxkQ3Qh9NUGWkPKuslRF2Fh7dWQIoS9FauJo=
-=Gmcp
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+Christophe
