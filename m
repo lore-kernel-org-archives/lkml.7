@@ -2,99 +2,130 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D72C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C1CC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264B521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BED21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Og0OIM3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfLLOBx (ORCPT
+        id S1729622AbfLLOCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:01:53 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:37145 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729567AbfLLOBw (ORCPT
+        Thu, 12 Dec 2019 09:02:37 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39519 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729524AbfLLOCg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:01:52 -0500
-Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N3bGP-1hfdeO18S3-010ZSZ for <linux-kernel@vger.kernel.org>; Thu, 12 Dec
- 2019 15:01:51 +0100
-Received: by mail-qt1-f173.google.com with SMTP id g17so2315588qtp.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:01:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWSqAZrBsQ9UD4HBo9CvGM4XmWYrmfqY3SsMOBKvF26xm0oZ8vA
-        lEHz0kuFww9625o1H9hefxtlTLAYSHy/O06Yvqc=
-X-Google-Smtp-Source: APXvYqzkeOEKDJDD9e0FU+o99pAokx+dAi91wJshp+kRii5ICBk5AliiSF00Tg1aRGR0INJ1C0cMEe+m5Gc1ISGhKoE=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr7485750qtr.7.1576159310220;
- Thu, 12 Dec 2019 06:01:50 -0800 (PST)
+        Thu, 12 Dec 2019 09:02:36 -0500
+Received: by mail-wm1-f66.google.com with SMTP id d5so2630512wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u2RUDl0mYLvmXxjsLkAo20DZhbBWkB25mVRHhxsu6eI=;
+        b=Og0OIM3ERcWxCnRN++RWWG4z6rzmr5a6nHC6FsZO8HVaAVTtF1LczCuN6879Xt0VbM
+         rtvTvkjllgM1I2VrJQitukSJtlMPazhlm11Eah76iznHoRB3K14Tt5F4kvYqB5FJxaf5
+         cvb+o1m/OKAS7Sg4eHfWZPgI8/P0KTHHdS2q3CM0n6DmXuEy7UM/0tFCR+2D1qLBZjBA
+         4dDgTIEpIdAa5yyroiTlCgmjN97ODLzvGmGwfwOdkI+U0IKJUOokU2BTHsCFXnJ+fsvc
+         LjqAhgryPODrbsbMMp69/CKJtew/4PWTYKeo2iyVqC95uEJSKCPbCY9VSDzMj+uwuQH9
+         hviw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u2RUDl0mYLvmXxjsLkAo20DZhbBWkB25mVRHhxsu6eI=;
+        b=W6ensMgwuXenxMxBL6RqU0ymcx2pr4R6RT1LG1vHBhOiww7FjgX3EwFw26Xo73/LRe
+         thWz0/9kgi9uG84r3VvlVkDXAca/QzXTvCyyL/v6Bl5B1LrT5n7edzwUIlpIzuzY+Q5P
+         H9M4khcuQ8HEiCJcx+lFcwhK7363UR48bbnMqUbRPKOZmabb6FlDyF6enlgjsrwicgJP
+         KZNUXeOV6bAzqpYzvT2IlZCqBZlbX9GKGEZXCh6WGKiy009hWlhlkD8nOlnZ/Ldv09Zz
+         mYX0QcCGiwiNqLYi1N9Lotr6jMyowEpVikdlZ4g0ooG1WOUDZ5TwJJKmloPd5ruNW9eM
+         vOEQ==
+X-Gm-Message-State: APjAAAWuv7VT0lV2d+9jnPNZfDo+ZAYKzBQpa6IKNQnBwH8JHGZeoBzk
+        Dhh0Fy8oponH2lxoCLRx9u94ZccMI6JWA7eCuEF+Qg==
+X-Google-Smtp-Source: APXvYqxbofXUzxSXHnSYtdpsEwkoDNF3YT6M3W65sasL+TC5Y8hxcYGpm8mGi9TIXs/EUWoX6MrXiLHTPwCwSvhT8tk=
+X-Received: by 2002:a7b:c95a:: with SMTP id i26mr6726628wml.67.1576159354472;
+ Thu, 12 Dec 2019 06:02:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20191212135815.4176658-1-arnd@arndb.de>
-In-Reply-To: <20191212135815.4176658-1-arnd@arndb.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 12 Dec 2019 15:01:34 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a32xAmiJpH0=EFUqbzkJz=MrFzZz1J2n9thqXQUGzRMKA@mail.gmail.com>
-Message-ID: <CAK8P3a32xAmiJpH0=EFUqbzkJz=MrFzZz1J2n9thqXQUGzRMKA@mail.gmail.com>
-Subject: Re: [PATCH] x86/platform/uv: avoid unused variable warning
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+References: <20191212103158.4958-1-hdegoede@redhat.com> <20191212103158.4958-3-hdegoede@redhat.com>
+ <CAKv+Gu9AjYVvLot9+enuwSWfyfzqgCWSuW3ioccm3FJ7KFA8eA@mail.gmail.com> <82c65f05-1140-e10e-ba2f-0c4c5c85bbc8@redhat.com>
+In-Reply-To: <82c65f05-1140-e10e-ba2f-0c4c5c85bbc8@redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 12 Dec 2019 15:02:15 +0100
+Message-ID: <CAKv+Gu9StgwBs=y6KU2Pb_P499SfH8po978gHoAbXVL8mB722A@mail.gmail.com>
+Subject: Re: [PATCH 5.5 regression fix 2/2] efi/libstub/helper: Initialize
+ pointer variables to zero for mixed mode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
         "the arch/x86 maintainers" <x86@kernel.org>,
-        Mike Travis <mike.travis@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Justin Ernst <justin.ernst@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:DTL9TI+LraeThV8ca41FrvKST6QYipTVazU1t0HfFsO7HsnsRiB
- HBiosEFylsaB621EPnyZIqa0kM8lzzknQ77uzO5PU5HmFqPQDCQlSr52GQCsMorpOoIFXH/
- 3EXPLzoUdhWeLlpsc8XTuhKqCIXULNMqfmGvZgnlzbLb1G8umFaD03qMmRu5IBFH8PbP5LI
- RV6b0BmaRN2mpXGtU9rVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uYM0kjdZxN0=:XLhZMhzOrBfbsxAFrJJZ3K
- C6+DrEzBm7OcTfCJQkVGJU7M9DCi3ZvcXlBP0O+WmIoayDuALHQUzR4xGcXcvi0HR+noog6Cj
- jecB8svGdvyBsBO4FFiQmMNaAGMMdEYWeC4Ysai0X3BwY+3KGdlpWh4A71gPV65B4pWS+x9Nx
- KVByLoOuoxaPPerP6Ji87ZZ7JaRFx1Omo7IXAx4TEAKdHy+H6kfM3bYelaWc+iJ/gvVOIb8ik
- IJudmEICJx6XvJjcy1zfd2J56Ijh3H+FR9s4WIFA4naT4upYKQgHLg4fRzRuP9L+YMn6alVZ0
- HqMOSo/8gjLn8yrqNt5oHqcbV0O17dckDDlBOYl5URNc3nk8b2a+1TRJ91+RTUMki0DmK5xD8
- pSfkLsJI4jZPrUE3AmzndyOp/eVcp7mcKHTUN6v9pMlaRyyvAQi4qV2gPQnxRS6kUW2BqdcTj
- OHp0n5L9nGJP73IkDXSMXgRlZcbr8ElUqVSqSHrIyne1+0tl/weRvncym7BnnVR07kYdSAJ8e
- qYYA+L8Rfwh3YsHXyPGQ7wKhCGMqcSMgZ3DcqUEnAFhsbG0X8D7epwcrzXrsXhc+F03q9TYE8
- S4Ii/mh6trZypjpHmpkR54hywqNpeANISOytPVZwnvGRKT3obn5FdZNvvAoE3edpBrhbsoilW
- zakw4nY+xYIbj91/Ej8vmnAwfy5GOw4Znvb4YW7hpuMSm6jYlFB2lvOHicQnyfjNebLDfeRZv
- HR6yOhZtbnfykLzdLXuZufJEYFGhgKVylKIQ4ui8BsXQ8k4ZHC9g/tSqO5nBkE336vw8DX68L
- w3i99MEYOlSNPQ3h3RTvvE97yBrk27amk+2SJB0pENXVEWG7YJM0rSmj55s7GLEuQTBDRq5KY
- rsZwLdwSDLFJ3ioFqhsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 2:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, 12 Dec 2019 at 13:45, Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> When CONFIG_PROC_FS is disabled, the compiler warns about an
-> unused variable:
+> Hi,
 >
-> arch/x86/kernel/apic/x2apic_uv_x.c: In function 'uv_setup_proc_files':
-> arch/x86/kernel/apic/x2apic_uv_x.c:1546:8: error: unused variable 'name' [-Werror=unused-variable]
->   char *name = hubless ? "hubless" : "hubbed";
+> On 12-12-2019 12:29, Ard Biesheuvel wrote:
+> > On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> When running in EFI mixed mode (running a 64 bit kernel on 32 bit EFI
+> >> firmware), we _must_ initialize any pointers which are returned by
+> >> reference by an EFI call to NULL before making the EFI call.
+> >>
+> >> In mixed mode pointers are 64 bit, but when running on a 32 bit firmware,
+> >> EFI calls which return a pointer value by reference only fill the lower
+> >> 32 bits of the passed pointer, leaving the upper 32 bits uninitialized
+> >> unless we explicitly set them to 0 before the call.
+> >>
+> >> We have had this bug in the efi-stub-helper.c file reading code for
+> >> a while now, but this has likely not been noticed sofar because
+> >> this code only gets triggered when LILO style file=... arguments are
+> >> present on the kernel cmdline.
+> >>
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >> ---
+> >>   drivers/firmware/efi/libstub/efi-stub-helper.c | 4 ++--
+> >>   1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> >> index e02579907f2e..6ca7d86743af 100644
+> >> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
+> >> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
+> >> @@ -365,7 +365,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
+> >>                                    u64 *file_sz)
+> >>   {
+> >>          efi_file_handle_t *h, *fh = __fh;
+> >
+> > What about h? Doesn't it suffer from the same problem?
+> >
+> >> -       efi_file_info_t *info;
+> >> +       efi_file_info_t *info = NULL;
+> >>          efi_status_t status;
+> >>          efi_guid_t info_guid = EFI_FILE_INFO_ID;
+> >>          unsigned long info_sz;
+> >
+> > And info_sz?
 >
-> Simplify the code so this variable is no longer needed.
+> And "efi_file_io_interface_t *io" and "efi_file_handle_t *fh"
+> in efi_open_volume().
 >
-> Fixes: 8785968bce1c ("x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> I think that is all of them.
+>
 
-I noticed a second too late that this loses the oemid procfs file (annoyingly
-I did not get a warning because gcc ignores unused static const variables)
+OK.
 
-Please wait for v2.
-
-        Arnd
+I'll fix it up locally.
