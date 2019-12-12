@@ -2,102 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB983C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491C9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5C7F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576157305;
-	bh=ZR+E7hI0jXgCgxQ/exA/SglO8JUgxFhrhLaVV/l9OE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UItXViDNWU1bT+7dBFoWdYXKVjD0NJ9+8rnL39YzV9OMlm70bZmqVOozypgZFFRkR
-	 PJtNZgRFWN1ipwtE2RCbIaoyw2ktIPIBG3JiOCfgS2tehul+DKks3pjo0HSMR58q64
-	 aTNJfVQvJVbuv2zGFH2Fx7c+cnTo/mhwUYVSdz4o=
+	by mail.kernel.org (Postfix) with ESMTP id 2501F22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfLLN2Y (ORCPT
+        id S1729448AbfLLN22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:28:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfLLN2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:28:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFE0214AF;
-        Thu, 12 Dec 2019 13:28:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576157303;
-        bh=ZR+E7hI0jXgCgxQ/exA/SglO8JUgxFhrhLaVV/l9OE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kfmr96zdl0GqQ1vaXTG5kFRmmmOTquDp3eLF5aMn5qLNM/Mj3kGBpOwSnGMHIt1Ns
-         BSGXfbt0isXK2gWK8lYQ0G09EUBovvzm8FqNgpR7P/oSylghDkAGO01m3UEtIkoef1
-         Z1O2iNPROJXNjkP/wR/fpkpqM7R+ANt+sEsvLryk=
-Date:   Thu, 12 Dec 2019 14:28:20 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
-Message-ID: <20191212132820.GA1558872@kroah.com>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191212100524.GC1470066@kroah.com>
- <6cf4afbe-4fa3-6bbd-4090-ff9764c4fce1@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6cf4afbe-4fa3-6bbd-4090-ff9764c4fce1@nvidia.com>
+        Thu, 12 Dec 2019 08:28:28 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:33467 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729170AbfLLN20 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:28:26 -0500
+Received: from orion.localdomain ([77.9.34.244]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N3Gok-1hfLzv0MEc-010PqN; Thu, 12 Dec 2019 14:28:25 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     info@metux.net, platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
+Date:   Thu, 12 Dec 2019 14:27:56 +0100
+Message-Id: <20191212132756.23767-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:uYYbIXN6u977H9q2Z7ur9CNmsRycQWJnvxo7HOOu296jowcOUQq
+ vWCwj+YdqYxO7l1Vv/pIsjvOLImJsIyZ0roYxGJrCZ18GVrGPYvidnwrQuPIZnNNOzHhSe7
+ VsZriHCDsIzD7sqHNpTxdSTGYDMaAUgTlrwF5iKaL/ellvpiJuDQBptv+T861saiXljbUHa
+ DuyFOH/WMnHQ1zXy86r9w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pC0Z+e3jamc=:ufdPHa2HX7OwotodO9gCr3
+ b33f6XAYXOkQ5tUALcFwY/U5kDslDf0dJ33SFXJs7PEfRlxt2zfRFkVH1pmW1f9aFS79JgHEH
+ eHmvj/rOBd2/4L5I6hBFUtf2Srk0Ysb2cwQBCrzWTz8zLVpEPTxMc/T1Ntt0ptgw8QOKYDRHb
+ yyT+H7VDCrcY4AFWqmk2iaR/uQn9m7NWNWEJQhj6csRqvbpOqI1hNOq36L3QHk81oVmcGRu65
+ qkp7LN7HJbreCn+yKgyyI2EBRJBrafNlpPWKKtgfZ6pizphzb/eSBCcRncuKm8brW3ywPcI3t
+ zR0OT1qrzMwSNg2rgn06dETVl8IPfoMoxpt+Fw+Fh7y7Il4bNigxM3ghaWDNqaop+o7QIQ2sg
+ kJWzJq27cGtmBXfCHbwxj/6Q1jYgkVguYN0OybAGM7e82u3mmbu/Z13NB48wjPf+YOeBi22oL
+ 1pYiMK1vStL3PWmzX/ivhEmB/yL7Sq4TZn+bt7doS0mXe/9K+/dS/8bS05K+io1y+04jr9D6i
+ kdvmAJeiIue92/pWZFaUAAodCE7j6mnp8Vb3PXc3bxmx0a7TJPh/uBje0BdX1mcuFtosdpeDn
+ yZ5iyNPkHfgLf33IVENaRNjjoQQp66ldKlBF26EgLDtH47M0pCkinxEqIG8sn3vvdA2Yf8Dou
+ b4jOYSOrWXxSMuODwRq5tt9m4E3eU5UxZLeez7oH48P9wf7kgLiT4R0xKoVfIez6Rzx+Aqohy
+ 3+q/G7YQKEasMJwr/cnbW+y885aRl4mz2Sm6SicIFtrTnUwNvDZWRWzEpgIYqA6REpJHpv/xk
+ BjiqrYUgTHfRxXb5kayDmCcUFR/7+p+PYLNjG5wtt1hvQVXz3rl5JYdJnZNvkJdbKhDTjitKJ
+ mJPD8fMO8YecZwLHbMxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 01:15:25PM +0000, Jon Hunter wrote:
-> 
-> On 12/12/2019 10:05, Greg Kroah-Hartman wrote:
-> > On Wed, Dec 11, 2019 at 04:02:42PM +0100, Greg Kroah-Hartman wrote:
-> >> This is the start of the stable review cycle for the 4.19.89 release.
-> >> There are 243 patches in this series, all will be posted as a response
-> >> to this one.  If anyone has any issues with these being applied, please
-> >> let me know.
-> >>
-> >> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> >> Anything received after that time might be too late.
-> >>
-> >> The whole patch series can be found in one patch at:
-> >> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
-> >> or in the git tree and branch at:
-> >> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> >> and the diffstat can be found below.
-> > 
-> > I have pushed out -rc2 with a bunch of fixes for existing issues, and
-> > some new fixes:
-> >  	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc2.gz
-> > 
-> 
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v4.19:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	4.19.89-rc2-gb71ac9dfc6f0
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
+need to match on DMI data.
 
-Wonderful, thanks for testing all of these and letting me know.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/platform/x86/pcengines-apuv2.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-greg k-h
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index 48b112b4f0b0..49f25bffce3c 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -189,6 +189,33 @@ static const struct dmi_system_id apu_gpio_dmi_table[] __initconst = {
+ 		},
+ 		.driver_data = (void *)&board_apu2,
+ 	},
++	/* APU4 w/ legacy bios < 4.0.8 */
++	{
++		.ident        = "apu4",
++		.matches    = {
++			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
++			DMI_MATCH(DMI_BOARD_NAME, "APU4")
++		},
++		.driver_data = (void *)&board_apu2,
++	},
++	/* APU4 w/ legacy bios >= 4.0.8 */
++	{
++		.ident       = "apu4",
++		.matches     = {
++			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
++			DMI_MATCH(DMI_BOARD_NAME, "apu4")
++		},
++		.driver_data = (void *)&board_apu2,
++	},
++	/* APU4 w/ mainline bios */
++	{
++		.ident       = "apu4",
++		.matches     = {
++			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
++			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
++		},
++		.driver_data = (void *)&board_apu2,
++	},
+ 	{}
+ };
+ 
+-- 
+2.11.0
+
