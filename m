@@ -2,105 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434E2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FDACC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F55214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:03:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uJQ81efn"
+	by mail.kernel.org (Postfix) with ESMTP id EC3B72173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576170276;
+	bh=cStQM6dJAgiI/M8e5otdqNPehlU5HK8fnoGish0RYPA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TqvWMeXNNxCFgTHpPzzspyzrObSo1wcEQGnu/SLrS3B63zbL0aKJSA4awtP/5QGYk
+	 fcPJ9zToBzFOe0E+oC3Hp06C38O1I+RWbXATOxTneGe8U2eqxj5DzWxoSUrGbTNswv
+	 ZVHQ2LrdRf2ustaVrPO6Heq9opHBgZxD8OoPSKZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfLLRDl (ORCPT
+        id S1730061AbfLLREf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:03:41 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39993 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729260AbfLLRDk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:03:40 -0500
-Received: by mail-qv1-f65.google.com with SMTP id k10so1227681qve.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:03:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BFu2QWawMDo8B85b8x7NXC6lIZ2Hbdt7KAZDH/cd0Mw=;
-        b=uJQ81efnMOHOq6dmsBK8drxQnWrVDOdv8wGOOqXsdXxN7MhmstzRl6qMKoIgIuASAY
-         lEMPd/dfy/crfpO/6N/VYadcmKGFrnXX4+mmXiFkiUzG5PU/Xej146ZJHj/dEykZgxvy
-         O+736S4rCVpZL8qO9PDMpS7ySgMAdKBw9pj7/tzKtk7CI7RTtduMaLcqZk07DY8+moZF
-         bhUxoQO5G3JypRZzuwZiBUVL1eXd8sas3jVkAS5Wsw+g0QVTow0WeUF7SMo0GvEb1yGN
-         kTpPj0oqoIC97Z/MBaZkh6bNy1JKFpcUqpZ4ZUFKziv0r5L1pZe+Jr9MM94NAGfLXcIO
-         wA3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BFu2QWawMDo8B85b8x7NXC6lIZ2Hbdt7KAZDH/cd0Mw=;
-        b=KEsneptvEHPfd5BggOqDSTidifbxi16v4Ut1CzPHcbXkIxdNP9Tf3moo0xcNlVWXaT
-         2tuRfCCOQDWUzeWbNMPF1T7MPccbUi7gD/OU9HXnIH+nKyg4GPZa+p0f6QIT9XbinzfU
-         9l5OhoaAb/lWimyRK+k3eXy0Tvs8ZdMCvdvcU6GD75V9T8HeAxo0lCmi16uznfyokX//
-         BF7LALkl+1XG0r+mOkJE+/aZZg3/RHCi9cVysVYvibdVdXZLGK/NEEwp5w8mxJdJUBaX
-         +siRG5Us8dAe7N/3hcFxtgbw9WtV22NXCuWBsPFdr03MiV7V164zxFF81j0CIOBJ3U9/
-         v+aQ==
-X-Gm-Message-State: APjAAAUjkT/NM7oiAdWnr2WBk9RRgqveMNNAP9t38sI3AZwIjA6/xXxT
-        4qsY5wt53OzKiePUOjqML5/TTw==
-X-Google-Smtp-Source: APXvYqyixXbMscj+Nh5/8lf0UVe2+f6RVkD6z054yrZ1R+8RY56Ujz8IweJ8MUL8w3BnzkuS2BNpnA==
-X-Received: by 2002:ad4:580b:: with SMTP id dd11mr9025509qvb.242.1576170219393;
-        Thu, 12 Dec 2019 09:03:39 -0800 (PST)
-Received: from ?IPv6:2620:0:1004:a:6e2b:60f7:b51b:3b04? ([2620:0:1004:a:6e2b:60f7:b51b:3b04])
-        by smtp.gmail.com with ESMTPSA id b7sm1906173qkh.106.2019.12.12.09.03.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 09:03:38 -0800 (PST)
-Subject: Re: [PATCH v4 2/2] kvm: Use huge pages for DAX-backed files
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jason.zeng@intel.com
-References: <20191211213207.215936-1-brho@google.com>
- <20191211213207.215936-3-brho@google.com>
- <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com>
-From:   Barret Rhoden <brho@google.com>
-Message-ID: <ce8fa354-4530-2a01-6ccc-3cffd0692547@google.com>
-Date:   Thu, 12 Dec 2019 12:03:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 12:04:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729927AbfLLREf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:04:35 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A4EB214AF;
+        Thu, 12 Dec 2019 17:04:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576170274;
+        bh=cStQM6dJAgiI/M8e5otdqNPehlU5HK8fnoGish0RYPA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xKrPjstBHwTbT220UQOtLkKeCMvT6WPqTLCez8mR+Lq7UVly0+SrA5HonfG1lMuyO
+         Uy6bO0rwELdpe2xXOhR9JbKXRiq4xqT6Xsi+e/OTI+9prkABIh2bIOaZcKkaGFGW5p
+         YqTrrN1JrVJnnP8s94OpHruGOkFIRCOQrvvW7fz8=
+Date:   Thu, 12 Dec 2019 17:04:28 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212170427.GA16364@willie-the-truck>
+References: <87blslei5o.fsf@mpe.ellerman.id.au>
+ <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 7:33 AM, Liran Alon wrote:
->> +	/*
->> +	 * Our caller grabbed the KVM mmu_lock with a successful
->> +	 * mmu_notifier_retry, so we're safe to walk the page table.
->> +	 */
->> +	switch (dev_pagemap_mapping_shift(hva, current->mm)) {
-> Doesn’t dev_pagemap_mapping_shift() get “struct page” as first parameter?
-> Was this changed by a commit I missed?
+On Thu, Dec 12, 2019 at 11:46:10AM +0100, Peter Zijlstra wrote:
+> On Thu, Dec 12, 2019 at 10:07:56AM +0000, Will Deacon wrote:
+> 
+> > > So your proposed change _should_ be fine. Will, I'm assuming you never
+> > > saw this on your ARGH64 builds when you did this code ?
+> > 
+> > I did see it, but (a) looking at the code out-of-line makes it look a lot
+> > worse than it actually is (so the ext4 example is really helpful -- thanks
+> > Michael!) and (b) I chalked it up to a crappy compiler.
+> > 
+> > However, see this comment from Arnd on my READ_ONCE series from the other
+> > day:
+> > 
+> > https://lore.kernel.org/lkml/CAK8P3a0f=WvSQSBQ4t0FmEkcFE_mC3oARxaeTviTSkSa-D2qhg@mail.gmail.com
+> > 
+> > In which case, I'm thinking that we should be doing better in READ_ONCE()
+> > for non-buggy compilers which would also keep the KCSAN folks happy for this
+> > code (and would help with [1] too).
+> 
+> So something like this then? Although I suppose that should be moved
+> into compiler-gcc.h and then guarded by #ifndef READ_ONCE or so.
 
-I changed this in Patch 1.  The place I call it in KVM has the address 
-and mm available, which is the only think dev_pagemap_mapping_shift() 
-really needs.  (The first thing it did was convert page to address).
+Ah wait, I think we've been looking at this wrong. The volatile pointer
+argument is actually the problem here, not READ_ONCE()! The use of typeof()
+means that the temporary variable to which __READ_ONCE_SIZE writes ends up
+being a volatile store, so it can't be optimised away. This is why we get
+a stack access and why stack protector then wrecks the codegen for us.
 
-I'll add some more text to patch 1's commit message about that.
+I'll cook a patch getting rid of those volatiles.
 
-Thanks,
-
-Barret
-
-
+Will
