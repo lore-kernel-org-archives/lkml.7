@@ -2,85 +2,80 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74E8C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD150C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B571F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89326214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rb/kVlm9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfLLWtN (ORCPT
+        id S1731197AbfLLWuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:49:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38150 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730707AbfLLWtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:49:13 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7C129AB71;
-        Thu, 12 Dec 2019 22:49:11 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 14:42:44 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Waiman Long <longman@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH v2] hugetlbfs: Disable softIRQ when taking hugetlb_lock
-Message-ID: <20191212224244.ohfcrvnuc7euzmzw@linux-p48b>
-Mail-Followup-To: Andi Kleen <ak@linux.intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Waiman Long <longman@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>
-References: <20191211194615.18502-1-longman@redhat.com>
- <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
- <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
- <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
- <20191212060650.ftqq27ftutxpc5hq@linux-p48b>
- <871rt99qmg.fsf@linux.intel.com>
+        Thu, 12 Dec 2019 17:50:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:34926 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbfLLWuD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 17:50:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Z35C5KvkFaXtsq++gd9LaBNy9EzUqvGOEvfQ9q1Iyc4=; b=Rb/kVlm9RYoH32rjzoL52rvrg
+        M2Twe3ZUJ3oXF/D0iJVdUsuck4FS55+heBLF1NVhwdy0tHkXqxZDXDNjdqlxHZq94RkbDpJi9zROy
+        wJoCmdFcutxOiUIwj0LO1YbFadXXVxA2GDKhc7ryl2C/dcbnUj8KBLWTlP+m5tUdugfv/M/MooSC5
+        QWW5oxFK7b0+nXYfm9cYtpWhIzB8tLRuDPd22eZ3KevnVqpKV8zguHgf0L3K7iSvi3N4ZyADDcKKq
+        LVzdawisvEftVlNLbZNQWPjq+HzIKtHtHkNHmJZJTQszrq3xZnjnP5/gVtUduxrhQI5P1gCmHC+N6
+        D0lOzzmHQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifXHW-0006uZ-He; Thu, 12 Dec 2019 22:50:02 +0000
+Subject: Re: [PATCHv2] vfs: Handle file systems without ->parse_params better
+To:     Laura Abbott <labbott@redhat.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        David Howells <dhowells@redhat.com>
+Cc:     Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>
+References: <20191212224139.15970-1-labbott@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fae0b08a-17ac-385b-5f2f-b63ceeeae89a@infradead.org>
+Date:   Thu, 12 Dec 2019 14:50:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <871rt99qmg.fsf@linux.intel.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191212224139.15970-1-labbott@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019, Andi Kleen wrote:
+typo:
 
->Davidlohr Bueso <dave@stgolabs.net> writes:
->> +void free_huge_page(struct page *page)
->> +{
->> +	struct hugetlb_free_page_work work;
->> +
->> +	work.page = page;
->> +	INIT_WORK_ONSTACK(&work.work, free_huge_page_workfn);
->> +	queue_work(hugetlb_free_page_wq, &work.work);
->> +
->> +	/*
->> +	 * Wait until free_huge_page is done.
->> +	 */
->> +	flush_work(&work.work);
->> +	destroy_work_on_stack(&work.work);
->
->Does flushing really work in softirq context?
->
->Anyways, waiting seems inefficient over fire'n'forget
+On 12/12/19 2:41 PM, Laura Abbott wrote:
+> +/**
+> + * ignore_unknowns_parse_param - ->parse_param function for a file system that
 
-Yep. I was only thinking about the workerfn not blocking
-and therefore we could wait safely, but flush_work has no
-such guarantees.
+      ignore_unknown_parse_param
 
-Thanks,
-Davidlohr
+> + * takes no arguments
+> + * @fc: The filesystem context
+> + * @param: The parameter.
+> + */
+> +static int ignore_unknown_parse_param(struct fs_context *fc, struct fs_parameter *param)
+
+thanks.
+-- 
+~Randy
