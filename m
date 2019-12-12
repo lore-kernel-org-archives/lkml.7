@@ -2,135 +2,122 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C935FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D289C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E85206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8248214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EJNBm0jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfLLKXb convert rfc822-to-8bit (ORCPT
+        id S1728654AbfLLKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:23:31 -0500
-Received: from mail-oln040092253056.outbound.protection.outlook.com ([40.92.253.56]:6191
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728339AbfLLKXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:23:31 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQX9L+MQcArEmTu+v+Z4CHMtdaEpT0EHUFyQd+rtFo+NmGQAFeqESJbNz05DnNgWf6pOvii0qw/5E7HMmK91VuvnRTMqReE3MulGI+yAK0ogV5MzOVxtvRzLHUsReR2Ojp7KWG4fhh2ZUES0tSVDA8+LZprsNiSBKFKhhCX6maAYKTQqE/I7e3QIllSUjyslnhxQePtIM/zYZwdmumcA1b0YztO2NYy2u3vv0CvT1Jd2JfYADpB/q/0LD/e2ByC52rKNAZHrJoaHZ/l5kULfZAfsVUVZ6rO63Or9adcXEvbOCqCybl/hJqAhr9TorvG/EE3ZWYxWEAZLtK1qGoxOLA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2suxBRlx4DortOsNvdQiwdZ9XeaEm9SX5PpELvBdc+s=;
- b=lQDrxaE2C0KM6bBaWEgky28z766sT+RQ/IJCqo/yasCi+u6+pOk7EZJ9os0/OkAHmHuMGQ5u2nVFoq5MmUVPHrYT+DBOmoTF8a/74Dsb3sAdngO76YDSJO9I1eYpBKIBCwGMojk5RsG/424mLyVigPW04qU2dzZUfeo+neVjsPmhMxSQdbHtV7+C1H2Uz1Me/4RNyJt+ObFEHAlIifHz1ClKWkL2vxQxnbkeIPquX4j05oxpE1q7hmtAgbCd0sdzIGwdfBNlUrB/zCmXt5+S0f2Vw6rFVcI1novCUyeumgHi3UFLHiSP/QIVJjFaIm3FHjUEl3HLNdfxUFseExLbww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from SG2APC01FT050.eop-APC01.prod.protection.outlook.com
- (10.152.250.53) by SG2APC01HT180.eop-APC01.prod.protection.outlook.com
- (10.152.251.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Thu, 12 Dec
- 2019 10:23:26 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
- SG2APC01FT050.mail.protection.outlook.com (10.152.251.238) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.15 via Frontend Transport; Thu, 12 Dec 2019 10:23:26 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2538.016; Thu, 12 Dec
- 2019 10:23:26 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Topic: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
- enumeration
-Thread-Index: AQHVrpB+5sK/XGeQw0yttw28ATWBvaez5zkAgAJn/IA=
-Date:   Thu, 12 Dec 2019 10:23:26 +0000
-Message-ID: <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20191210213836.GA149297@google.com>
-In-Reply-To: <20191210213836.GA149297@google.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0100.ausprd01.prod.outlook.com
- (2603:10c6:10:1::16) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:08F74278F8568228DB0DBBC190698F687120CB3AB3BB5E174018E19F267EE2CD;UpperCasedChecksum:F4E01E1F6AAF9B48191FDBA8D8A0D702537B3C556F6E680C35DFB83F6261F3E5;SizeAsReceived:7693;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [LtKVBW5ZIO1RG3O+fC9OjTqW4dAtljzfF3k5Phq8hQWWdwWq4711EspiPt5lKaIVNev+t/YTcEY=]
-x-microsoft-original-message-id: <20191212102317.GA1503@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 345ef186-b1c1-4286-8b80-08d77eed5276
-x-ms-traffictypediagnostic: SG2APC01HT180:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6JqG5le3xz48xCiNrYSWEcj7I8/icb4hySvLnLXeE7pRZlqbFruzM0Lgjosw2VNPawcNzJJg+mgX99BKm9mhzn/YNnpq0gqBPt/F7OgcyTC5fBEWc8iTrEA6RJGoXyhqJJ760gE355YBRWfpgrpOJdDiFTLVcBwFs9htijlCMTdkbusOqkJOkpJxnM0glW6h
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <ABC6B899D7F08A4E8A8F1D0B29364526@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Thu, 12 Dec 2019 05:23:38 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:38694 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728339AbfLLKXi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:23:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IFLrETBaYvDuLlrtTw9nVCwAdrvTZDXVVkvqQo2PJU0=; b=EJNBm0jye4L2AlfkwLM9KUfOd
+        RX3yYLvm/FjGDshAP6S14IpVWY94odiDbEAGfmTWkGjnAbj2d5lJDgnV+TQ2t7+A+1cQDGRMvkCpq
+        GtTxYGxGmeYdjbwMgHnns4Cs1hOsD01DX3p7F5B6maP78NkoZG/E5Bk2IoGju8MatFsucAw35Uksg
+        loWZDK9xdSGPyJr2VM0F5y0LEo2/9FsFawVrf1OqXkZxzMSKD2jfopyJVx4aefBR8S94/zRIQGT9Z
+        2dGS9Zp6Qt8IPVybi3Al4tTpEsvSKtUBzrIgXYF9XH6Jk7g0bIJqLuONZzg/unMZnA8bT/eJ/q5ca
+        usttVG64A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifLd3-0007KT-9K; Thu, 12 Dec 2019 10:23:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B6FAC304D2B;
+        Thu, 12 Dec 2019 11:22:07 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 058AB2012196F; Thu, 12 Dec 2019 11:23:27 +0100 (CET)
+Date:   Thu, 12 Dec 2019 11:23:27 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
+ kthread
+Message-ID: <20191212102327.GI2871@hirez.programming.kicks-ass.net>
+References: <20191120220313.GC18056@pauld.bos.csb>
+ <20191121132937.GW4114@hirez.programming.kicks-ass.net>
+ <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com>
+ <20191211224617.GE19256@dread.disaster.area>
+ <20191212101031.GV2827@hirez.programming.kicks-ass.net>
+ <20191212101424.GH2871@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 345ef186-b1c1-4286-8b80-08d77eed5276
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 10:23:26.1709
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212101424.GH2871@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 03:38:36PM -0600, Bjorn Helgaas wrote:
-> On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
-> > Hi all,
-> > 
-> > Since last time:
-> > 	Reverse Christmas tree for a couple of variables
-> > 
-> > 	Changed while to whilst (sounds more formal, and so that 
-> > 	grepping for "while" only brings up code)
-> > 
-> > 	Made sure they still apply to latest Linux v5.5-rc1
-> > 
-> > Kind regards,
-> > Nicholas
-> > 
-> > Nicholas Johnson (4):
-> >   PCI: Consider alignment of hot-added bridges when distributing
-> >     available resources
-> >   PCI: In extend_bridge_window() change available to new_size
-> >   PCI: Change extend_bridge_window() to set resource size directly
-> >   PCI: Allow extend_bridge_window() to shrink resource if necessary
-> > 
-> >  drivers/pci/setup-bus.c | 182 +++++++++++++++++++---------------------
-> >  1 file changed, 88 insertions(+), 94 deletions(-)
+On Thu, Dec 12, 2019 at 11:14:24AM +0100, Peter Zijlstra wrote:
+> On Thu, Dec 12, 2019 at 11:10:31AM +0100, Peter Zijlstra wrote:
+> > @@ -4156,13 +4159,13 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
+> >  	if (delta_exec < sysctl_sched_min_granularity)
+> >  		return;
+> >  
+> > -	se = __pick_first_entity(cfs_rq);
+> > +	se = __pick_next_entity(cfs_rq, NULL);
+> >  	delta = curr->vruntime - se->vruntime;
+> >  
+> >  	if (delta < 0)
+> >  		return;
 > 
-> Applied to pci/resource for v5.6, thanks!
-Thank you all for your time, support and patience with me. I have 
-learned a lot in the past year.
+> What I mean with the below comment is, when this isn't enough, try
+> something like:
+> 
+> 	if (se == cfs_rq->next)
+> 		ideal_runtime /= 2;
+> 
+> to make it yield sooner to 'next' buddies. Sadly, due to the whole
+> cgroup mess, we can't say what actual task is on the end of it (without
+> doing a full hierarchy pick, which is more expensive still).
 
-I will obviously stick around to address any potential concerns with the 
-patches, but it also seems like kernel development is what I want to do 
-as a career. Hopefully I can take this beyond a hobby despite my 
-physical location. Perth, Western Australia is not big on this. Perhaps 
-there are companies open to telecommuting employees. In any case, you 
-will continue to see me around.
+Just for giggles, that'd look something like:
 
-Kind regards,
-Nicholas
+	while (!entity_is_task(se) {
+		cfs_rq = group_cfs_rq(se);
+		se = pick_next_entity(cfs_rq, cfs_rq->curr);
+	}
+	p = task_of(se);
+
+	if (is_per_cpu_kthread(p))
+		ideal_runtime /= 2;
+
+the core-scheduling patch set includes the right primitive for this I
+think, pick_task_fair().
+
+> > -	if (delta > ideal_runtime)
+> > +	if (delta > ideal_runtime) // maybe frob this too ?
+> >  		resched_curr(rq_of(cfs_rq));
+> >  }
