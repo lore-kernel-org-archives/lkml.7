@@ -2,117 +2,152 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 381ADC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF0FC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031B3214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="l+U2Sw+3"
+	by mail.kernel.org (Postfix) with ESMTP id A54F5205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfLLIRB (ORCPT
+        id S1728229AbfLLIR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:17:01 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63288 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726382AbfLLIRA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:17:00 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC8DAAo003441;
-        Thu, 12 Dec 2019 09:16:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=KsOBRBxWPhArWs9FKdG6YL4u5JqiyaVQsva4ZRyLfUM=;
- b=l+U2Sw+3S5Qt8f6sZFDqdyII+hJpuDX71t7BGx1q2JiXki9K5UtQWlpu6h75hNa/+OdO
- 3nfKh7vB7tbzKpFhMfKFbC95L1IWb6OnOCRlzrUgC5x+2fYuQu7vwgS3xK1r+a6cpxPD
- XnnLku/CZqnWnpjgwdHBepA7sVKInP1xAvLfbHVygG1Cvy3LbWx1EuyVaH5ZLNSw2b/e
- TW6m6xp/kjxXqq/Z6rPgKvUJ/wsHCqGSUmQVgul6SrKs7obanfHU/abC8GSHXyC/ZMJt
- ZIeiwvw9TsxjRgzhz4xEh/UGTCCP/14G3xPP8h4V9Opy5DnPufSDRHT4wndvo0yDxhpR kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wt5wv3dpf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 09:16:49 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A1A75100048;
-        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 749142A96FD;
-        Thu, 12 Dec 2019 09:16:48 +0100 (CET)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 12 Dec
- 2019 09:16:48 +0100
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Thu, 12 Dec 2019 09:16:47 +0100
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= 
-        <u.kleine-koenig@pengutronix.de>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Topic: [PATCH] dt-bindings: pwm: fix nodename pattern
-Thread-Index: AQHVsDO3MV8l3Qp4hkSb3+FMjTJqHqe1R/UAgADP3oA=
-Date:   Thu, 12 Dec 2019 08:16:47 +0000
-Message-ID: <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
-References: <20191211150021.20125-1-benjamin.gaignard@st.com>
- <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com>
-Accept-Language: en-US
+        Thu, 12 Dec 2019 03:17:29 -0500
+Received: from comms.puri.sm ([159.203.221.185]:48236 "EHLO comms.puri.sm"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfLLIR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 03:17:29 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 59FAFE01F3;
+        Thu, 12 Dec 2019 00:17:28 -0800 (PST)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id r6kXsETnmb9G; Thu, 12 Dec 2019 00:17:27 -0800 (PST)
+Subject: Re: [PATCH V5 2/3] thermal/drivers/cpu_cooling: Introduce the cpu
+ idle cooling driver
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
+        linux-kernel@vger.kernel.org
+References: <20191211224347.1001-1-daniel.lezcano@linaro.org>
+ <20191211224347.1001-2-daniel.lezcano@linaro.org>
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
+ mQINBFULfZABEADRxJqDOYAHfrp1w8Egcv88qoru37k1x0Ugy8S6qYtKLAAt7boZW+q5gPv3
+ Sj2KjfkWA7gotXpASN21OIfE/puKGwhDLAySY1DGNMQ0gIVakUO0ji5GJPjeB9JlmN5hbA87
+ Si9k3yKQQfv7Cf9Lr1iZaV4A4yjLP/JQMImaCVdC5KyqJ98Luwci1GbsLIGX3EEjfg1+MceO
+ dnJTKZpBAKd1J7S2Ib3dRwvALdiD7zqMGqkw5xrtwasatS7pc6o/BFgA9GxbeIzKmvW/hc3Q
+ amS/sB12BojyzdUJ3TnIoAqvwKTGcv5VYo2Z+3FV+/MJVXPo8cj2vmfxQx1WG4n6X0pK4X8A
+ BkCKw2N/evMZblNqAzzGVtoJvqQYkzQ20Fm+d3wFl6lS1db4MB+kU13G8kEIE22Q3i6kx4NA
+ N49FLlPeDabGfJUyDaZp5pmKdcd7/FIGH/HjShjx7g+LKSwWNMkDygr4WARAP4h8zYDZuNqe
+ ofPvMLqJxHeexBPIGF/+OwMyTvM7otP5ODuFmq6OqjNPf1irJmkiFv3yEa+Ip0vZzwl4XvrZ
+ U0IKjSy2rbRLg22NsJT0XVZJbutIXYSvIHGqSxzzfiOOLnRjR++fbeEoVlRJ4NZHDKCh3pJv
+ LNd+j03jXr4Rm058YLgO7164yr7FhMZniBJw6z648rk8/8gGPQARAQABtC1NYXJ0aW4gS2Vw
+ cGxpbmdlciA8bWFydGluLmtlcHBsaW5nZXJAcHVyaS5zbT6JAk4EEwEIADgWIQTyCCuID55C
+ OTRobj9QA5jfWrOH0wUCXPSlkwIbAwULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBQA5jf
+ WrOH06/FEACC/GTz88DOdWR5JgghjtOhaW+EfpFMquJaZwhsaVips7ttkTKbf95rzunhkf2e
+ 8YSalWfmyDzZlf/LKUTcmJZHeU7GAj/hBmxeKxo8yPWIQRQE74OEx5MrwPzL6X7LKzWYt4PT
+ 66bCD7896lhmsMP/Fih2SLKUtL0q41J2Ju/gFwQ6s7klxqZkgTJChKp4GfQrBSChVyYxSyYG
+ UtjS4fTFQYfDKTqwXIZQgIt9tHz4gthJk4a6ZX/b68mRd11GAmFln8yA1WLYCQCYw+wsvCZ0
+ Ua7gr6YANkMY91JChnezfHW/u/xZ1cCjNP2wpTf4eTMsV1kxW6lkoJRQv643PqzRR2rJPEaS
+ biyg7AFZWza/z7rMB5m7r3wN7BKKAj7Lvt+xoLcncx4jLjgSlROtyRTrctBFXT7cIhcGWHw+
+ Ib42JF0u96OlPYhRsaIVS3KaD40jMrXf6IEsQw3g6DnuRb2t5p61OX/d9AIcExyYwbdStENN
+ gW9RurhmvW3z9gxvFEByjRE+uVoVuVPsZXwAZqFMi/iK4zRfnjdINYMcxKpjhj8vUdBDtZH3
+ IpgcI8NemE3B3w/7d3aPjIBz3Igo5SJ3x9XX4hfiWXMU3cT7b5kPcqEN0uAW5RmTA/REC956
+ rzZYU7WnSgkM8E8xetz5YuqpNeAmi4aeTPiKDo6By8vfJbkCDQRVC32QARAAxTazPZ9jfp6u
+ C+BSiItjwkrFllNEVKptum98JJovWp1kibM+phl6iVo+wKFesNsm568viM2CAzezVlMr7F0u
+ 6NQNK6pu084W9yHSUKROFFr83Uin6t04U88tcCiBYLQ5G+TrVuGX/5qY1erVWI4ycdkqQzb8
+ APbMFrW/sRb781f8wGXWhDs6Bd4PNYKHv7C0r8XYo77PeSqGSV/55lpSsmoE2+zR3MW5TVoa
+ E83ZxhfqgtTIWMf88mg/20EIhYCRG0iOmjXytWf++xLm9xpMeKnKfWXQxRbfvKg3+KzF30A0
+ hO3YByKENYnwtSBz8od32N7onG5++azxfuhYZG5MkaNeJPLKPQpyGMc2Ponp0BhCZTvxIbI8
+ 1ZeX6TC+OZbeW+03iGnC7Eo4yJ93QUkzWFOhGGEx0FHj+qBkDQLsREEYwsdxqqr9k1KUD1GF
+ VDl0gzuKqiV4YjlJiFfHh9fbTDztr3Nl/raWNNxA3MtX9nstOr7b+PoA4gH1GXL9YSlXdfBP
+ VnrhgpuuJYcqLy02i3/90Ukii990nmi5CzzhBVFwNjsZTXw7NRStIrPtKCa+eWRCOzfaOqBU
+ KfmzXEHgMl4esqkyFu2MSvbR6clIVajkBmc4+dEgv13RJ9VWW6qNdQw7qTbDJafgQUbmOUMI
+ ygDRjCAL2st/LiAi2MWgl80AEQEAAYkCHwQYAQIACQUCVQt9kAIbDAAKCRBQA5jfWrOH0wSZ
+ EACpfQPYFL4Ii4IpSujqEfb1/nL+Mi+3NLrm8Hp3i/mVgMrUwBd4x0+nDxc7+Kw/IiXNcoQB
+ Q3NC1vsssJ6D+06JOnGJWB9QwoyELGdQ7tSWna405rwDxcsynNnXDT0d39QwFN2nXCyys+7+
+ Pri5gTyOByJ+E52F27bX29L05iVSRREVe1zLLjYkFQ4LDNStUp/camD6FOfb+9uVczsMoTZ1
+ do2QtjJMlRlhShGz3GYUw52haWKfN3tsvrIHjZf2F5AYy5zOEgrf8O3jm2LDNidin830+UHb
+ aoJVibCTJvdbVqp/BlA1IKp1s/Y88ylSgxDFwFuXUElJA9GlmNHAzZBarPEJVkYBTHpRtIKp
+ wqmUTH/yH0pzdt8hitI+RBDYynYn0nUxiLZUPAeM5wRLt1XaQ2QDc0QJR8VwBCVSe8+35gEP
+ dO/QmrleN5iA3qOHMW8XwXJokd7MaS6FJKGdFjjZPDMR4Qi8PTn2Lm1NkDHpEtaEjjKmdrt/
+ 4OpE6fV4iKtC1kcvOtvqxNXzmFn9yabHVlbMwTY2TxF8ImfZvr/1Sdzbs6yziasNRfxTGmmY
+ G2rmB/XO6AMdal5ewWDFfVmIiRoiVdMSuVM6QxrDnyCfP7W8D0rOqTWQwCWrWv///vz8vfTb
+ WlN21GIcpbgBmf9lB8oBpLsmZyXNplhQVmFlorkCDQRc9Ka1ARAA1/asLtvTrK+nr7e93ZVN
+ xLIfNO4L70TlBQEjUdnaOetBWQoZNH1/vaq84It4ZNGnd0PQ4zCkW+Z90tMftZIlbL2NAuT1
+ iQ6INnmgnOpfNgEag2/Mb41a57hfP9TupWL5d2zOtCdfTLTEVwnkvDEx5TVhujxbdrEWLWfx
+ 0DmrI+jLbdtCene7kDV+6IYKDMdXKVyTzHGmtpn5jZnXqWN4FOEdjQ0IPHOlc1BT0lpMgmT6
+ cSMms5pH3ZYf9tHG94XxKSpRpeemTTNfMUkFItU6+gbw9GIox6Vqbv6ZEv0PAhbKPoEjrbrp
+ FZw9k0yUepX0e8nr0eD4keQyC6WDWWdDKVyFFohlcBiFRb6BchJKm/+3EKZu4+L1IEtUMEtJ
+ Agn1eiA42BODp2OG4FBT/wtHE7CYhHxzyKk/lxxXy2QWGXtCBIK3LPPclMDgYh0x0bosY7bu
+ 3tX4jiSs0T95IL3Yl4weMClAxQRQYt45EiESWeOBnl8AHV8YDwy+O7uIT2OHpxvdY7YK1gHN
+ i5E3yaI0XCXXtyw82LIAOxcCUuMkuNMsBOtBM3gHDourxrNnYxZEDP6UcoJn3fTyevRBqMRa
+ QwUSHuo0x6yvjzY2HhOHzrg3Qh7XLn8mxIr/z82kn++cD/q3ewEe6uAXkt7I12MR0jbihGwb
+ 8KZWlwK9rYAtfCMAEQEAAYkEcgQYAQgAJhYhBPIIK4gPnkI5NGhuP1ADmN9as4fTBQJc9Ka1
+ AhsCBQkDwmcAAkAJEFADmN9as4fTwXQgBBkBCAAdFiEER3IIz/s0aDIAhj4GfiztzT9UrIUF
+ Alz0prUACgkQfiztzT9UrIUfiBAAt3N8bUUH2ZQahtVO2CuEiHyc3H0f8BmEVGzvnDcmoJEf
+ H6uS/0kF0Y05aX+U6oYg/E9VWztA6E6guC7Bz9zr6fYZaLnDefzkuDRQAzZzBNpxcUrJheOk
+ YDAa/8fORIQXJO12DSOq4g9X2RSqIcmQgx2/KoW4UG3e4OArqgMS7ESDT6uT1WFcscfqjPJX
+ jXKIH3tg/aJ7ZDkGMFanYsDaiII1ZKpor9WZAsfImPi0n2UZSNEZZtXoR6rtp4UT+O3QrMrn
+ MZQlOBkv2HDq1Fe1PXMiFst5kAUcghIebyHdRhQABI7rLFeUqHoEVGuAyuayTsVNecMse7pF
+ O44otpwFZe+5eDTsEihY1LeWuXIkjBgo0kmNTZOTwjNeL2aDdpZzN70H4Ctv6+r24248RFMi
+ y1YUosIG/Un6OKY4hVShLuXOqsUL41j4UJKRClHEWEIFFUhUgej3Ps1pUxLVOI+ukhAUJwWw
+ BagsKq/Gb8T/AhH3noosCHBXeP5ZyT5vMmHk2ZvwwWQnUJVHBAv2e9pXoOWMepyaTs/N9u4u
+ 3HG3/rYSnYFjgl4wzPZ73QUvCxEYfJi9V4Yzln+F9hK6hKj3bKHAQivx+E3NvFuIIM1adiRh
+ hQClh2MaZVy94xU6Sftl9co3BsilV3H7wrWd5/vufZlZDtHmPodae7v5AFmavrIXFxAAsm4Z
+ OwwzhG6iz+9mGakJBWjXEKxnAotuI2FCLWZV/Zs8tfhkbeqYFO8Vlz3o0sj+r63sWFkVTXOb
+ X7jCQUwW7HXEdMaCaDfC6NUkkKT1PJIBC+kpcVPSq4v/Nsn+yg+K+OGUbHjemhjvS77ByZrN
+ /IBZOm94DSYgZQJRTmTVYd96G++2dMPOaUtWjqmCzu3xOfpluL1dR19qCZjD1+mAx5elqLi7
+ BrZgJOUjmUb/XI/rDLBpoFQ/6xNJuDA4UTi1d+eEZecOEu7mY1xBQkvKNXL6esqx7ldieaLN
+ Af4wUksA+TEUl2XPu84pjLMUbm0FA+sUnGvMkhCn8YdQtEbcgNYq4eIlOjHW+h7zU2G5/pm+
+ FmxNAJx7iiXaUY9KQ3snoEz3r37RxEDcvTY9KKahwxEzk2Mf58OPVaV4PEsRianrmErSUfmp
+ l93agbtZK1r5LaxeItFOj+O2hWFLNDenJRlBYwXwlJCiHxM/O273hZZPoP8L5p54uXhaS5EJ
+ uV2Xzgbi3VEbw3GZr+EnDC7XNE2wUrnlD/w2W6RzVYjVT6IX4SamNlV+MWX0/1fYCutfqZl8
+ 6BSKmJjlWpfkPKzyzjhGQVZrTZYnKAu471hRv8/6Dx5JuZJgDCnYanNx3DDreRMu/nq6TfaO
+ ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
+Message-ID: <5075876b-17d2-61ba-c383-38a6ddae076f@puri.sm>
+Date:   Thu, 12 Dec 2019 09:17:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20191211224347.1001-2-daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F6BB0E9CA0FA9F408718F9859B2DA2E8@st.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_01:2019-12-12,2019-12-12 signatures=0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAxMi8xMS8xOSA4OjUyIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gV2VkLCBEZWMg
-MTEsIDIwMTkgYXQgOTowMCBBTSBCZW5qYW1pbiBHYWlnbmFyZA0KPiA8YmVuamFtaW4uZ2FpZ25h
-cmRAc3QuY29tPiB3cm90ZToNCj4+IFR5cGljYWwgcHdtIG5vZGVzIHNob3VsZCBiZSBuYW1lZCBw
-d21AeHh4Lg0KPj4gVGhlIHBhdHRlcm4gc2hvdWxkbid0IG1hdGNoIG5vZGVzIG5hbWVkIHB3bS14
-eHggdG8gYXZvaWQNCj4+IGNvbmZsaWN0cyB3aXRoIHBpbm11eCBvciBwd20tZmFuIG5vZGVzLg0K
-PiBJdCBvbmx5IG1hdGNoZXMgcHdtLSQoYS1oZXgtbnVtYmVyKSwgbm90IGFueSBzdHJpbmcsIHNv
-IHRoYXQgc2hvdWxkbid0DQo+IGJlIGEgcHJvYmxlbS4gVGhpcyBpcyBuZWVkZWQgZm9yIHRoaW5n
-cyBsaWtlIEdQSU8gYmFzZWQgZGV2aWNlcyAobm90DQo+IGp1c3QgUFdNcykgd2hpY2ggZG9uJ3Qg
-aGF2ZSBhbnkgYWRkcmVzcy4NCj4NCj4gUGlubXV4IG5vZGVzIGFyZSBnb2luZyB0byBuZWVkIHRv
-IGFkb3B0IHNvbWUgc29ydCBvZiBzdGFuZGFyZCBwYXR0ZXJuDQo+IHdlIGNhbiBtYXRjaCBvbi4N
-CkkgaGF2ZSBwdXNoIGEgcGF0Y2ggdG8gc3RvcCB1c2luZyAnQCcgYW5kICdfJyBpbiBwaW5tdXgg
-Z3JvdXBzIG5hbWVzOg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEx
-NjI1OTEvDQpJdCByZW1vdmUgdGhlIHdhcm5pbmdzIHdoZW4gY29tcGlsaW5nIHRoZSBkZXZpY2V0
-cmUgd2l0aCBXPTEyIGJ1dCBwd20ueWFtbA0KY29tcGxhaW4gYmVjYXVzZSBwd20gcGlubXV4IGlz
-IG5hbWVkIHB3bS0xLg0KDQpIb3cgY2FuIEkgc29sdmUgdGhlc2UgaXNzdWVzIGF0IHRoZSBzYW1l
-IHRpbWUgPw0KDQpCZW5qYW1pbg0KDQo+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWln
-bmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLnlhbWwgfCAyICstDQo+PiAgIDEgZmlsZSBj
-aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20ueWFtbA0KPj4gaW5kZXggZmE0Zjlk
-ZTkyMDkwLi4yOWI4Njg4NmMyODIgMTAwNjQ0DQo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS55YW1sDQo+PiBAQCAtMTEsNyArMTEsNyBAQCBtYWludGFp
-bmVyczoNCj4+DQo+PiAgIHByb3BlcnRpZXM6DQo+PiAgICAgJG5vZGVuYW1lOg0KPj4gLSAgICBw
-YXR0ZXJuOiAiXnB3bShALip8LVswLTlhLWZdKSokIg0KPj4gKyAgICBwYXR0ZXJuOiAiXnB3bShA
-LipbMC05YS1mXSkqJCINCj4+DQo+PiAgICAgIiNwd20tY2VsbHMiOg0KPj4gICAgICAgZGVzY3Jp
-cHRpb246DQo+PiAtLQ0KPj4gMi4xNS4wDQo+Pg==
+
+On 11.12.19 23:43, Daniel Lezcano wrote:
+> The cpu idle cooling device offers a new method to cool down a CPU by
+> injecting idle cycles at runtime.
+> 
+> It has some similarities with the intel power clamp driver but it is
+> actually designed to be more generic and relying on the idle injection
+> powercap framework.
+> 
+> The idle injection duration is fixed while the running duration is
+> variable. That allows to have control on the device reactivity for the
+> user experience.
+> 
+> An idle state powering down the CPU or the cluster will allow to drop
+> the static leakage, thus restoring the heat capacity of the SoC. It
+> can be set with a trip point between the hot and the critical points,
+> giving the opportunity to prevent a hard reset of the system when the
+> cpufreq cooling fails to cool down the CPU.
+> 
+> With more sophisticated boards having a per core sensor, the idle
+> cooling device allows to cool down a single core without throttling
+> the compute capacity of several cpus belonging to the same clock line,
+> so it could be used in collaboration with the cpufreq cooling device.
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+
+thanks
