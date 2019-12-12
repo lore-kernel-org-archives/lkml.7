@@ -2,87 +2,70 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 153AAC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A7AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58D22464B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958162464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576118910;
-	bh=BYkjhzKIuktii6xSof1BOBNHWNSxPKMC25YuyhU174o=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=C+mByR3PQcRGADmE7NzKJkNV7EEfMhsr5otWEn+hpQ5q3fbOd6htD3S9O4W+IkPGR
-	 ZL4YIDQgNrwCWbiUjJKhnrDZbnlQEK2+WhcfMN4QeYmxvCs4m6Bp8hvDGQ0pCBBYdD
-	 hz25OIgszr5FExkoeEHlzs03YmzccyWuJI8GJxFU=
+	s=default; t=1576119004;
+	bh=UPCC/x01BlBLT7CIZuEuox8GyPHZ1Q2XEbX0lTlzesc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=XPHpXSXcgWwn49ciQ0NbG6gGfLeDkYURtsriQvlvxJdvrdLhOqYbt/EnqoSjAeK4G
+	 FMMdDsPfKsb1jw8f40RGM+WYHtnOAVThOnKUfuAjB8BDRQtPjz99cLds7saZNJSCBz
+	 Rw4pOLbqSaTJhI9eSfheXuCjYpaoSPL/E082sg+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfLLCsa (ORCPT
+        id S1727925AbfLLCuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:48:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53770 "EHLO mail.kernel.org"
+        Wed, 11 Dec 2019 21:50:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727599AbfLLCs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:48:29 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC742054F;
-        Thu, 12 Dec 2019 02:48:28 +0000 (UTC)
+        id S1727909AbfLLCuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:50:03 -0500
+Subject: Re: [GIT PULL] afs: Miscellaneous fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576118909;
-        bh=BYkjhzKIuktii6xSof1BOBNHWNSxPKMC25YuyhU174o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZHYKwTltg7WeAtYkme3X09TeZMmaQTJaJSH2tMmiNg+frFXd21r3xH+zmnw8+I8L0
-         jivLj8U774wWoktqcnOG03QgP7DI4dGA6KHGefLrFFh29ZCJxR1Eg/vs1Wyg1uDA1a
-         4i7TDq4s+o2plOvDspTNQzBq39fyaYvzdygb3zkg=
-Subject: Re: [PATCH 5.4 00/92] 5.4.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        s=default; t=1576119002;
+        bh=UPCC/x01BlBLT7CIZuEuox8GyPHZ1Q2XEbX0lTlzesc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=cvQzquuc8itBxKh0Vav91ng5TybS0BXsT73JgmzEPqkXsJwLuNrqEtH+EJPXvWIjT
+         +2TUnjwolugI0FVynllGh0i4rU7KqZJdGrqFWJCLnxJ6ABwHlPDZthg38SBFOLYpvJ
+         YxuCaKUJziYxyZIAZ+dgliZ0I9tx1m6ANf8ye0sw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <11743.1576099077@warthog.procyon.org.uk>
+References: <11743.1576099077@warthog.procyon.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <11743.1576099077@warthog.procyon.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git
+ tags/afs-fixes-20191211
+X-PR-Tracked-Commit-Id: 50559800b76a7a2a46da303100da639536261808
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ae4b064e2a616b545acf02b8f50cc513b32c7522
+Message-Id: <157611900281.8855.6872248503781144513.pr-tracker-bot@kernel.org>
+Date:   Thu, 12 Dec 2019 02:50:02 +0000
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
+        marc.dionne@auristor.com, jsbillings@jsbillings.org,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20191211150221.977775294@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0253e33d-afa5-3dda-95d5-220535537eb4@kernel.org>
-Date:   Wed, 11 Dec 2019 19:48:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191211150221.977775294@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 8:04 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.3 release.
-> There are 92 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+The pull request you sent on Wed, 11 Dec 2019 21:17:57 +0000:
 
-Compiled and booted on my test system. No dmesg regressions.
+> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20191211
 
-thanks,
--- Shuah
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ae4b064e2a616b545acf02b8f50cc513b32c7522
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
