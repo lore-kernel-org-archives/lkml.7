@@ -2,83 +2,143 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C3AC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CC7C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF6A522527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FadP9GPE"
+	by mail.kernel.org (Postfix) with ESMTP id 4BED222527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:34:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576136088;
+	bh=XtgX0cs3LO559cZljj3C1HKQa7WygDdwZ/aXLdtuvzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mUsIwrgqWBkkyb8HhPOmpmJxRHAZ1Felv/4txJT58d7AAVvjCfNaog+NiuihgD0i3
+	 6GMkrpMUYiakMe+TMw08yhI8IqSDfWEsi5H2Fy+iRc0IITxPpId33L2LbACHMLL1Q7
+	 ZinW1peyl3HjWkzdnkxIaD4W5UiviJYSDIMgXeLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfLLHeh (ORCPT
+        id S1728179AbfLLHer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:34:37 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21756 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbfLLHee (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:34:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576136073;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QcotRZOg8cVYsqL5GLsgP8ixI9kdR95Q2W4XEWIcwA4=;
-        b=FadP9GPEhm/EYxZySOIyhBMHnzfufJdHIvS3nCljWZx0aRefR+lkR8RJBm5HJeuAnbFAaE
-        sDIN4EbymvXShHzznUHwie194Y1F8mb8z92EfciYmTrmsbLS1wSPiyC8+f0Wsa1Zq5lbCX
-        H/rkFiFRtLLpimqXc+ho/C7mDz8qFDA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-4Wt3wXf3P0GGIDpB7LgN2g-1; Thu, 12 Dec 2019 02:34:30 -0500
-X-MC-Unique: 4Wt3wXf3P0GGIDpB7LgN2g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 12 Dec 2019 02:34:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728096AbfLLHeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 02:34:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 148EB107ACC7;
-        Thu, 12 Dec 2019 07:34:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-52.rdu2.redhat.com [10.10.120.52])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1352D6013D;
-        Thu, 12 Dec 2019 07:34:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wgVpV-O4zeO+xOMcOUyKZi+1kg+6Kmi-P7SUx-ydZm5Og@mail.gmail.com>
-References: <CAHk-=wgVpV-O4zeO+xOMcOUyKZi+1kg+6Kmi-P7SUx-ydZm5Og@mail.gmail.com> <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk> <20191206135604.GB2734@twin.jikos.cz> <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com> <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com> <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com> <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com> <9417.1576097731@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, David Sterba <dsterba@suse.cz>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
+        by mail.kernel.org (Postfix) with ESMTPSA id AC65122527;
+        Thu, 12 Dec 2019 07:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576136085;
+        bh=XtgX0cs3LO559cZljj3C1HKQa7WygDdwZ/aXLdtuvzY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F4qpun/l7qSb7z6SG45XfI5PKUh/JUO02JDrkrX7C+cpGpUAQB3ylwJbzFBaW7ZZh
+         hkJbfth9xaGQbk1khSVqlDlSYYaNpVnDzS43O4/ePBM4ky50vJirKybedl3zBN8Lk6
+         2SPXHCDuDfQnF7yZMHI7Vh4Xy1Pexy51XOay15bk=
+Date:   Thu, 12 Dec 2019 08:34:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Wei Wang <wvw@google.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Wei Wang <wei.vince.wang@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 0/3] thermal: introduce by-name softlink
+Message-ID: <20191212073443.GC1364286@kroah.com>
+References: <20191205071953.121511-1-wvw@google.com>
+ <69dd3a7a-c5fe-3ae7-8a4d-c3939870eed8@linaro.org>
+ <CAGXk5yrsmvHK_xwvp_kFNmSqKOZ7Ef3HrVBHYDMBmDsCz0FNSQ@mail.gmail.com>
+ <0603228e-5f0b-d335-30ce-67cf0626a489@linaro.org>
+ <20191211085400.GB500800@kroah.com>
+ <CAGXk5yrFp1eeeadhJar_qJqJ9G1q2mn+5m8JW4705ouQDLqzsw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1416.1576136065.1@warthog.procyon.org.uk>
-Date:   Thu, 12 Dec 2019 07:34:25 +0000
-Message-ID: <1417.1576136065@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGXk5yrFp1eeeadhJar_qJqJ9G1q2mn+5m8JW4705ouQDLqzsw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, Dec 11, 2019 at 12:11:53PM -0800, Wei Wang wrote:
+> On Wed, Dec 11, 2019 at 12:54 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Dec 10, 2019 at 09:54:11PM +0100, Daniel Lezcano wrote:
+> > > On 10/12/2019 21:01, Wei Wang wrote:
+> > > > On Tue, Dec 10, 2019 at 6:36 AM Daniel Lezcano
+> > > > <daniel.lezcano@linaro.org> wrote:
+> > > >>
+> > > >> On 05/12/2019 08:19, Wei Wang wrote:
+> > > >>> The paths thermal_zone%d and cooling_device%d are not intuitive and the
+> > > >>> numbers are subject to change due to device tree change. This usually
+> > > >>> leads to tree traversal in userspace code.
+> >
+> > tree traversal is supposed to be done in userspace code :)
+> >
+> Yes, that can be done in userspace, but given the amount of thermal
+> zones we have in some mobile devices, this will bring a lot of
+> convenience.
 
-> You are sure you won't want that for the notification queue cases? I
-> guess they'll never want to "sync" part..
+Userspace is easier to write than kernel code.  Kernel code and apis you
+have to retain for the next 20+ years, are you willing to do that?
 
-Actually, that's a good point, I do call it in post_one_notification() since I
-have to hold the lock anyway.  But, as you say, I'm not sure whether I need
-the sync variant.
+> e.g. this is on Pixel 4 XL:
+> coral:/ # ls  /sys/devices/virtual/thermal/
+> cdev-by-name      cooling_device15  cooling_device22  cooling_device3
+>  cooling_device9  thermal_zone15  thermal_zone22  thermal_zone3
+> thermal_zone37  thermal_zone44  thermal_zone51  thermal_zone59
+> thermal_zone66  thermal_zone73  thermal_zone80  thermal_zone88
+> cooling_device0   cooling_device16  cooling_device23  cooling_device30
+>  thermal_zone0    thermal_zone16  thermal_zone23  thermal_zone30
+> thermal_zone38  thermal_zone45  thermal_zone52  thermal_zone6
+> thermal_zone67  thermal_zone74  thermal_zone81  thermal_zone9
+> cooling_device1   cooling_device17  cooling_device24  cooling_device31
+>  thermal_zone1    thermal_zone17  thermal_zone24  thermal_zone31
+> thermal_zone39  thermal_zone46  thermal_zone53  thermal_zone60
+> thermal_zone68  thermal_zone75  thermal_zone82  tz-by-name
+> cooling_device10  cooling_device18  cooling_device25  cooling_device4
+>  thermal_zone10   thermal_zone18  thermal_zone25  thermal_zone32
+> thermal_zone4   thermal_zone47  thermal_zone54  thermal_zone61
+> thermal_zone69  thermal_zone76  thermal_zone83
+> cooling_device11  cooling_device19  cooling_device26  cooling_device5
+>  thermal_zone11   thermal_zone19  thermal_zone26  thermal_zone33
+> thermal_zone40  thermal_zone48  thermal_zone55  thermal_zone62
+> thermal_zone7   thermal_zone77  thermal_zone84
+> cooling_device12  cooling_device2   cooling_device27  cooling_device6
+>  thermal_zone12   thermal_zone2   thermal_zone27  thermal_zone34
+> thermal_zone41  thermal_zone49  thermal_zone56  thermal_zone63
+> thermal_zone70  thermal_zone78  thermal_zone85
+> cooling_device13  cooling_device20  cooling_device28  cooling_device7
+>  thermal_zone13   thermal_zone20  thermal_zone28  thermal_zone35
+> thermal_zone42  thermal_zone5   thermal_zone57  thermal_zone64
+> thermal_zone71  thermal_zone79  thermal_zone86
+> cooling_device14  cooling_device21  cooling_device29  cooling_device8
+>  thermal_zone14   thermal_zone21  thermal_zone29  thermal_zone36
+> thermal_zone43  thermal_zone50  thermal_zone58  thermal_zone65
+> thermal_zone72  thermal_zone8   thermal_zone87
 
-David
+Nice, you have a crazy SoC here, good luck!  :)
 
+> > But what userspace code needs to do this, and for what?
+> In Android, thermal daemon and thermal HAL as well as some init.rc
+> script would use those thermal paths for managing and monitoring
+> thermal. The daemon/HAL could have logic pipled in, however Android's
+> init.rc script would be really tricky.
+
+Then put that logic in your userspace code.
+
+> On a related note, we also create /dev/block/by-name links from userspace.
+
+Yes we do, from userspace, not from within the kernel itself, so I think
+you have answered the question :)
+
+thanks,
+
+greg k-h
