@@ -2,159 +2,159 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B50C2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F0AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C8820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46574208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfLLAk6 (ORCPT
+        id S1727385AbfLLAnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:40:58 -0500
-Received: from mga12.intel.com ([192.55.52.136]:57723 "EHLO mga12.intel.com"
+        Wed, 11 Dec 2019 19:43:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:53958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727313AbfLLAk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:40:58 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 16:40:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="296434047"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga001.jf.intel.com with ESMTP; 11 Dec 2019 16:40:55 -0800
-Date:   Thu, 12 Dec 2019 08:42:16 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        yu-cheng.yu@intel.com
-Subject: Re: [PATCH v8 7/7] KVM: X86: Add user-space access interface for CET
- MSRs
-Message-ID: <20191212004215.GA17570@local-michael-cet-test.sh.intel.com>
-References: <20191101085222.27997-1-weijiang.yang@intel.com>
- <20191101085222.27997-8-weijiang.yang@intel.com>
- <20191210215859.GO15758@linux.intel.com>
- <20191211021951.GE12845@local-michael-cet-test>
- <20191211162702.GE5044@linux.intel.com>
+        id S1727335AbfLLAnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:43:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 753E11FB;
+        Wed, 11 Dec 2019 16:43:54 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1D0D3F52E;
+        Wed, 11 Dec 2019 16:43:53 -0800 (PST)
+Date:   Thu, 12 Dec 2019 00:43:52 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: rockchip: Fix register number offset to program IO
+ outbound ATU
+Message-ID: <20191212004347.GD24359@e119886-lin.cambridge.arm.com>
+References: <20191211093450.7481-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211162702.GE5044@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191211093450.7481-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:27:02AM -0800, Sean Christopherson wrote:
-> On Wed, Dec 11, 2019 at 10:19:51AM +0800, Yang Weijiang wrote:
-> > On Tue, Dec 10, 2019 at 01:58:59PM -0800, Sean Christopherson wrote:
-> > > On Fri, Nov 01, 2019 at 04:52:22PM +0800, Yang Weijiang wrote:
-> > > > There're two different places storing Guest CET states, states
-> > > > managed with XSAVES/XRSTORS, as restored/saved
-> > > > in previous patch, can be read/write directly from/to the MSRs.
-> > > > For those stored in VMCS fields, they're access via vmcs_read/
-> > > > vmcs_write.
-> > > > 
-> > > >  
-> > > > +#define CET_MSR_RSVD_BITS_1    0x3
-> > > > +#define CET_MSR_RSVD_BITS_2   (0xF << 6)
-> > > > +
-> > > > +static bool cet_msr_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > > > +{
-> > > > +	u32 index = msr->index;
-> > > > +	u64 data = msr->data;
-> > > > +	u32 high_word = data >> 32;
-> > > > +
-> > > > +	if ((index == MSR_IA32_U_CET || index == MSR_IA32_S_CET) &&
-> > > > +	    (data & CET_MSR_RSVD_BITS_2))
-> > > > +		return false;
-> > > > +
-> > > > +	if (is_64_bit_mode(vcpu)) {
-> > > > +		if (is_noncanonical_address(data & PAGE_MASK, vcpu))
-> > > 
-> > > I don't think this is correct.  MSRs that contain an address usually only
-> > > fault on a non-canonical value and do the non-canonical check regardless
-> > > of mode.  E.g. VM-Enter's consistency checks on SYSENTER_E{I,S}P only care
-> > > about a canonical address and are not dependent on mode, and SYSENTER
-> > > itself states that bits 63:32 are ignored in 32-bit mode.  I assume the
-> > > same is true here.
-> > The spec. reads like this:  Must be machine canonical when written on parts
-> > that support 64 bit mode. On parts that do not support 64 bit mode, the bits
-> > 63:32 are reserved and must be 0.
+On Wed, Dec 11, 2019 at 10:34:50AM +0100, Enric Balletbo i Serra wrote:
+> Since commit '62240a88004b ("PCI: rockchip: Drop storing driver private
+> outbound resource data)' the offset calculation is wrong to access the
+> register number to program the IO outbound ATU. The offset should be
+> based on the IORESOURCE_MEM resource size instead of the IORESOURCE_IO
+> size.
 > 
-> Yes, that agrees with me.  The key word is "support", i.e. "on parts that
-> support 64 bit mode" means "on parts with CPUID.0x80000001.EDX.LM=1."
+> This patch fixes the following 'synchronous external abort' bug:
 > 
-> The reason the architecture works this way is that unless hardware clears
-> the MSRs on transition from 64->32, bits 63:32 need to be ignored on the
-> way out instead of being validated on the way in, e.g. software writes a
-> 64-bit value to the MSR and then transitions to 32-bit mode.  Clearing the
-> MSRs would be painful, slow and error prone, so it's easier for hardware
-> to simply ignore bits 63:32 in 32-bit mode.
->
-Make sense, I'll move the canonical check up to kvm_set_msr() like other
-MSRs, thanks!
+> [   15.362128] mwifiex_pcie 0000:01:00.0: enabling device (0000 -> 0002)
+> [   15.369655] mwifiex_pcie: PCI memory map Virt0: 00000000a573ad00 PCI memory map Virt2: 00000000783126c4
+> [   15.381466] Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
+> [   15.389965] Modules linked in: mwifiex_pcie(+) mwifiex uvcvideo cfg80211 atmel_mxt_ts videobuf2_vmalloc ...
+> [   15.461095] CPU: 2 PID: 269 Comm: systemd-udevd Not tainted 5.4.0+ #327
+> [   15.461097] Hardware name: Google Kevin (DT)
+> [   15.461101] pstate: 60000005 (nZCv daif -PAN -UAO)
+> [   15.461116] pc : mwifiex_register_dev+0x264/0x3f8 [mwifiex_pcie]
+> [   15.461121] lr : mwifiex_register_dev+0x150/0x3f8 [mwifiex_pcie]
+> [   15.461123] sp : ffff800012073860
+> [   15.461128] x29: ffff800012073860 x28: ffff8000100a2e28
+> [   15.509043] x27: ffff8000118b6210 x26: ffff800008f57458
+> [   15.515055] x25: ffff0000ecfda000 x24: 0000000000000001
+> [   15.521069] x23: ffff0000e9905080 x22: ffff800008f5d000
+> [   15.527082] x21: ffff0000eecea078 x20: ffff0000e9905080
+> [   15.533096] x19: ffff0000eecea000 x18: 0000000000000001
+> [   15.539108] x17: 0000000000000000 x16: 0000000000000000
+> [   15.545118] x15: ffffffffffffffff x14: ffff8000118998c8
+> [   15.551128] x13: ffff000000000000 x12: 0000000000000008
+> [   15.557138] x11: 0101010101010101 x10: ffff7f7fffff7fff
+> [   15.563148] x9 : 0000000000000000 x8 : ffff0000e3c24240
+> [   15.569159] x7 : 0000000000000000 x6 : ffff0000e3c24148
+> [   15.575169] x5 : ffff0000e3c24148 x4 : ffff0000e7975ec8
+> [   15.581178] x3 : 0000000000000001 x2 : 0000000000002b42
+> [   15.587188] x1 : ffff800012c00008 x0 : ffff0000e9905080
+> [   15.593200] Call trace:
+> [   15.595970]  mwifiex_register_dev+0x264/0x3f8 [mwifiex_pcie]
+> [   15.602398]  mwifiex_add_card+0x2f8/0x430 [mwifiex]
+> [   15.607920]  mwifiex_pcie_probe+0x98/0x148 [mwifiex_pcie]
+> [   15.614033]  local_pci_probe+0x3c/0xa0
+> [   15.618275]  pci_device_probe+0x110/0x1a8
+> [   15.622812]  really_probe+0xd4/0x308
+> [   15.626856]  driver_probe_device+0x54/0xe8
+> [   15.631491]  device_driver_attach+0x6c/0x78
+> [   15.636224]  __driver_attach+0x54/0xd0
+> [   15.640465]  bus_for_each_dev+0x70/0xc0
+> [   15.644804]  driver_attach+0x20/0x28
+> [   15.648847]  bus_add_driver+0x178/0x1d8
+> [   15.653186]  driver_register+0x60/0x110
+> [   15.657525]  __pci_register_driver+0x40/0x48
+> [   15.662359]  mwifiex_pcie_init+0x24/0x1000 [mwifiex_pcie]
+> [   15.668469]  do_one_initcall+0x74/0x1a8
+> [   15.672810]  do_init_module+0x50/0x208
+> [   15.677050]  load_module+0x1a78/0x1d18
+> [   15.681290]  __do_sys_finit_module+0xd0/0xe8
+> [   15.686120]  __arm64_sys_finit_module+0x1c/0x28
+> [   15.691247]  el0_svc_common.constprop.2+0x88/0x150
+> [   15.696668]  el0_svc_handler+0x20/0x80
+> [   15.700909]  el0_sync_handler+0x118/0x188
+> [   15.705444]  el0_sync+0x140/0x180
+> [   15.716955] Code: a8c67bfd d65f03c0 f942ac01 91002021 (b9400021)
+> [   15.731548] ---[ end trace 1488ca6d6b162849 ]---
+> 
+> Fixes: 62240a88004b ("PCI: rockchip: Drop storing driver private outbound resource data)
+> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Suggested-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+>  drivers/pci/controller/pcie-rockchip-host.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index d9b63bfa5dd7..94af6f5828a3 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -834,10 +834,12 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+>  	if (!entry)
+>  		return -ENODEV;
+>  
+> +	/* store the register number offset to program RC io outbound ATU */
 
-> > > If that is indeed the case, what about adding these to the common canonical
-> > > check in __kvm_set_msr()?  That'd cut down on the boilerplate here and
-> > > might make it easier to audit KVM's canonical checks.
-> > > 
-> > > > +			return false;
-> > > > +		else if ((index == MSR_IA32_PL0_SSP ||
-> > > > +			  index == MSR_IA32_PL1_SSP ||
-> > > > +			  index == MSR_IA32_PL2_SSP ||
-> > > > +			  index == MSR_IA32_PL3_SSP) &&
-> > > > +			  (data & CET_MSR_RSVD_BITS_1))
-> > > > +			return false;
-> > > > +	} else {
-> > > > +		if (msr->index == MSR_IA32_INT_SSP_TAB)
-> > > > +			return false;
-> > > > +		else if ((index == MSR_IA32_U_CET ||
-> > > > +			  index == MSR_IA32_S_CET ||
-> > > > +			  index == MSR_IA32_PL0_SSP ||
-> > > > +			  index == MSR_IA32_PL1_SSP ||
-> > > > +			  index == MSR_IA32_PL2_SSP ||
-> > > > +			  index == MSR_IA32_PL3_SSP) &&
-> > > > +			  (high_word & ~0ul))
-> > > > +			return false;
-> > > > +	}
-> > > > +
-> > > > +	return true;
-> > > > +}
-> > > 
-> > > This helper seems like overkill, e.g. it's filled with index-specific
-> > > checks, but is called from code that has already switched on the index.
-> > > Open coding the individual checks is likely more readable and would require
-> > > less code, especially if the canonical checks are cleaned up.
-> > >
-> > I'm afraid if the checks are not wrapped in a helper, there're many
-> > repeat checking-code, that's why I'm using a wrapper.
-> 
-> But you're adding almost as much, if not more, code to re-split the checks
-> in this helper.
->
-Sure, thanks!
+Thanks for this fix. I've read your previous thread with Lorenzo and I can see
+that this restores the logic of the original code.
 
-> > > > +
-> > > > +static bool cet_msr_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> > > > +{
-> > > > +	u64 kvm_xss;
-> > > > +	u32 index = msr->index;
-> > > > +
-> > > > +	if (is_guest_mode(vcpu))
-> > > > +		return false;
-> > > 
-> > > I may have missed this in an earlier discussion, does CET not support
-> > > nesting?
-> > >
-> > I don't want to make CET avaible to nested guest at time being, first to
-> > make it available to L1 guest first. So I need to avoid exposing any CET
-> > CPUID/MSRs to a nested guest.
+If I understand correctly - the intent of offset is to ensure that when we
+start programming the ATU for IO, we don't overwrite the windows we've already
+written for MEMORY. Thus we need to calculate offset for the old (MEMORY) size.
+
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+
+Thanks,
+
+Andrew Murray
+
+> +	offset = size >> 20;
+> +
+>  	size = resource_size(entry->res);
+>  	pci_addr = entry->res->start - entry->offset;
+>  
+> -	offset = size >> 20;
+>  	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
+>  		err = rockchip_pcie_prog_ob_atu(rockchip,
+>  						reg_no + 1 + offset,
+> -- 
+> 2.20.1
+> 
