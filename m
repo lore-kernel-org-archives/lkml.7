@@ -2,113 +2,155 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E637C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FED4C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB4224658
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 260ED22B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:46:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N1PqWi95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfLLIkn convert rfc822-to-8bit (ORCPT
+        id S1728254AbfLLIqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:40:43 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32787 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbfLLIkm (ORCPT
+        Thu, 12 Dec 2019 03:46:00 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50724 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728225AbfLLIp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:40:42 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d17so1005920otc.0;
-        Thu, 12 Dec 2019 00:40:42 -0800 (PST)
+        Thu, 12 Dec 2019 03:45:59 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so1408358wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:45:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ysjj9kjjoSIsFGYFqXCoqpOZyZtCGjaHakYJs3J9tu0=;
+        b=N1PqWi95BtpSJzjsz/imsAalWGW70TyGbewoErGOeVYBvmj9ihXbpRHlxXIvaeIdlR
+         nHD/dzoQNgA60wueuAOGCb/L+hXKeY7w9KTGtJUq1VSy6T2dfe1tL7lOYkrcG1ddn4gw
+         hOBTY06mszGcg9kdbiouVhtIe1PYsdzXkRvp+rXKt6w0STrNRVaF/lGfCGKAb1pV+Z1Y
+         yHpNGXQ3JIoX2JaEcuk5Wp/anUnYiXNSkvJX2qXWnHcutx24QNBY/QFaNHIMyG4LFKSE
+         LOOR99KWBWA/Ukr08iOkTK5nE9MvbxjarBOjT/6rEux4i6ppKrzbd2Cynkl7BHjOIzlm
+         mdAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AQWN2ilbL/pV9oSuedTqVkyb3PS6uRdUps6Bbw03pBk=;
-        b=HUZ4/wTMw472O2T+Q/MJ7GOQqRE96HOiG64HeAVowLjh9DdoTSz8DwgAoMgbt+Hx5f
-         a/oiQYcHi7sVk/1vHujEYMm8fN8aLc0ECWZqfcCsGrP30fmT1SCbH+Rsznsdh+xuKT9k
-         zQWZLdcimErGaFEdfKT5w32X7kP2fTWTiAU74f3t4rEyiTgvTy8evngNi46UFRHdYwnl
-         oLYch8m1mGu70x5JGfAavh2PqsFiZ4OovMx28321dvR0WW6Ep9EfYhh4Ho13Rw0ndm++
-         Au+87INy5bArQc2fI4W6Ar6BuQp5KcifuycxgwtzKIv6/SP2/ucJ3rLVsnCt2/AyiNsd
-         fCXg==
-X-Gm-Message-State: APjAAAU0ixez0zOsUAgXpAY1TZenFIaZ429kYZuGQaS3nFIY2sLFirCk
-        yGdxJy3dosdoF2qY60UmXeg0p3mok8mhHLEVRJo=
-X-Google-Smtp-Source: APXvYqysUxu8Fvc2fIhN06OFqRY0qpSAEhlRgYRJ7iOByHsa4CbdkD7ZfCNq5icsxrmSiZ5dHtFTX6Xxp+lE34VAdgE=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr7036813ots.250.1576140041766;
- Thu, 12 Dec 2019 00:40:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ysjj9kjjoSIsFGYFqXCoqpOZyZtCGjaHakYJs3J9tu0=;
+        b=pLGJNkpFkWgBgtzg3mvgib7iQ2MvF3xdO3aVXVYllcclOcWBXPdROKdoFUPDjJYhTq
+         i4B77FMLlSMqD/3X76VEsv8uvgX6XIDkEbV+EITB4JXy6nWTJnpLhvJq13y8X/u6Ab//
+         980oB/fFhWvs5UdwvKD/1Pt5w56UpoXXrRfEV8uNkUZyNlamtpZTwZzrB4zSnxHjzYDy
+         mw0N5NwASIrvxxg21ay9+kf/oO6AYbjO86ybCVLTQzMh1z4HRFCLwkQJnuq35VsJnA8n
+         zqeGnM6jQ8BaIdJA6NWy5YEwc6HRvA2tpksYPfb/rHhFGrsC2UyCe9ELMMUcqRn6Qnz+
+         fHrg==
+X-Gm-Message-State: APjAAAXBXGG7EMFc3dXL7qNGHA7D+YMyrg0IimUMGzd5k3SEVZ0wXXNe
+        rugh+8wTYh6nVaAD5zZqAhhsOt5Wawc=
+X-Google-Smtp-Source: APXvYqwAZfpkK8vySmNTpYajooUQMZ/RgbPaVPzY1J92T1Yb1GNzuR3Kfm3il2PW8j/esg6YAvAe+g==
+X-Received: by 2002:a7b:cc13:: with SMTP id f19mr5235577wmh.81.1576140357340;
+        Thu, 12 Dec 2019 00:45:57 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id k8sm5263306wrl.3.2019.12.12.00.45.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 00:45:56 -0800 (PST)
+Date:   Thu, 12 Dec 2019 08:45:46 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
+ to pwm_pmic_backlight
+Message-ID: <20191212084546.GA3468@dell>
+References: <20191119151818.67531-1-hdegoede@redhat.com>
+ <20191119151818.67531-3-hdegoede@redhat.com>
+ <20191210085111.GQ3468@dell>
+ <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
 MIME-Version: 1.0
-References: <20191212033952.5967-1-afaerber@suse.de> <20191212033952.5967-5-afaerber@suse.de>
-In-Reply-To: <20191212033952.5967-5-afaerber@suse.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Dec 2019 09:40:20 +0100
-Message-ID: <CAMuHMdWdxJ9AaWhyCW-u8fCpXSDCPd-D6Dx129SF5nRssZsK=g@mail.gmail.com>
-Subject: Re: [RFC 04/25] spi: gpio: Implement LSB First bitbang support
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+On Wed, 11 Dec 2019, Hans de Goede wrote:
 
-On Thu, Dec 12, 2019 at 4:41 AM Andreas Färber <afaerber@suse.de> wrote:
-> Add support for slave DT property spi-lsb-first, i.e., SPI_LSB_FIRST mode.
->
-> Duplicate the inline helpers bitbang_txrx_be_cpha{0,1} as LE versions.
-> Make checkpatch.pl happy by changing "unsigned" to "unsigned int".
->
-> Conditionally call them from all the spi-gpio txrx_word callbacks.
->
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Hi Lee,
+> 
+> On 10-12-2019 09:51, Lee Jones wrote:
+> > On Tue, 19 Nov 2019, Hans de Goede wrote:
+> > 
+> > > At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
+> > > different PWM controllers for controlling the LCD's backlight brightness.
+> > > 
+> > > Either the one integrated into the PMIC or the one integrated into the
+> > > SoC (the 1st LPSS PWM controller).
+> > > 
+> > > So far in the LPSS code on BYT we have skipped registering the LPSS PWM
+> > > controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
+> > > present, assuming that in this case the PMIC PWM controller will be used.
+> > > 
+> > > On CHT we have been relying on only 1 of the 2 PWM controllers being
+> > > enabled in the DSDT at the same time; and always registered the lookup.
+> > > 
+> > > So far this has been working, but the correct way to determine which PWM
+> > > controller needs to be used is by checking a bit in the VBT table and
+> > > recently I've learned about 2 different BYT devices:
+> > > Point of View MOBII TAB-P800W
+> > > Acer Switch 10 SW5-012
+> > > 
+> > > Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
+> > > PWM controller (and the VBT correctly indicates this), so here our old
+> > > heuristics fail.
+> > > 
+> > > Since only the i915 driver has access to the VBT, this commit renames
+> > > the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
+> > > controller to "pwm_pmic_backlight" so that the i915 driver can do a
+> > > pwm_get() for the right controller depending on the VBT bit, instead of
+> > > the i915 driver relying on a "pwm_backlight" lookup getting registered
+> > > which magically points to the right controller.
+> > > 
+> > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > > ---
+> > >   drivers/mfd/intel_soc_pmic_core.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > For my own reference:
+> >    Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> 
+> As mentioned in the cover-letter, to avoid breaking bi-sectability
+> as well as to avoid breaking the intel-gfx CI we need to merge this series
+> in one go through one tree. Specifically through the drm-intel tree.
+> Is that ok with you ?
+> 
+> If this is ok with you, then you do not have to do anything, I will just push
+> the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
+> does not see much changes so I do not expect this to lead to any conflicts.
 
-Thanks for your patch!
-
-> --- a/drivers/spi/spi-gpio.c
-> +++ b/drivers/spi/spi-gpio.c
-> @@ -135,25 +135,37 @@ static inline int getmiso(const struct spi_device *spi)
->  static u32 spi_gpio_txrx_word_mode0(struct spi_device *spi,
->                 unsigned nsecs, u32 word, u8 bits, unsigned flags)
->  {
-> -       return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
-> +       if (unlikely(spi->mode & SPI_LSB_FIRST))
-> +               return bitbang_txrx_le_cpha0(spi, nsecs, 0, flags, word, bits);
-> +       else
-> +               return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
->  }
-
-Duplicating all functions sounds a bit wasteful to me.
-
-What about reverting the word first, and calling the normal functions?
-
-    if (unlikely(spi->mode & SPI_LSB_FIRST)) {
-            if (bits <= 8)
-                    word = bitrev8(word) >> (bits - 8);
-            else if (bits <= 16)
-                    word = bitrev16(word) >> (bits - 16);
-            else
-                    word = bitrev32(word) >> (bits - 32);
-    }
-    return bitbang_txrx_be_cpha0(spi, nsecs, 0, flags, word, bits);
-
-Gr{oetje,eeting}s,
-
-                        Geert
+It's fine, so long as a minimal immutable pull-request is provided.
+Whether it's pulled or not will depend on a number of factors, but it
+needs to be an option.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
