@@ -2,174 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A89BC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D298FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB2D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GhgvB6ch"
+	by mail.kernel.org (Postfix) with ESMTP id B371C2465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfLLOSF (ORCPT
+        id S1729722AbfLLOSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:18:05 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:59414 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbfLLOSE (ORCPT
+        Thu, 12 Dec 2019 09:18:47 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42563 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbfLLOSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:18:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sLQKwGit9wLSgboUFNJSj0UuCKgTnkxAwBeCTVETGRM=; b=GhgvB6chdyHnUTDYNs015+Il8
-        ODfPi+ysABPUR4KShO40i06LpIl6SBFQORMDqrMTR2tk5o9ZI4455WH50RipoykJ1xN3AByQhnkoY
-        dK1yzNt/9Cm8gLK5xHxLNl9YrHfV11g+xYZc5E+Wdvq8tOtiJ95XTSBZjhbWdPWrdT1wAYh7wmQG3
-        VPtn/nhGUpV8RfBYROZuyzUlnJqqLnN67O6ObAMclAoC6p/SvxZbtn9G51pm6njYYhfJzBIVFiFfH
-        w6nnd0FpE80ItbAT2Lw49ekjdFa7nK5rR0F+0ojdBOAKnMwyMA4etvo75JUcURB7dc/eHzZiMMXCA
-        Jyx/ehTkw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:40348)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ifPHr-000791-JH; Thu, 12 Dec 2019 14:17:51 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ifPHn-0006sN-Ar; Thu, 12 Dec 2019 14:17:47 +0000
-Date:   Thu, 12 Dec 2019 14:17:47 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-Message-ID: <20191212141747.GI25745@shell.armlinux.org.uk>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga>
- <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
- <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
- <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
- <20191211222829.GV50317@dtor-ws>
- <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
+        Thu, 12 Dec 2019 09:18:46 -0500
+Received: by mail-ed1-f68.google.com with SMTP id e10so1922251edv.9;
+        Thu, 12 Dec 2019 06:18:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QORpcfpxTVun2omq37w//epuRfcr5mZBlHsi85Oa95M=;
+        b=IUewxsqbsSeH2FIzex3kps6Y+7jFx2NA91RD1LaeCT+kEcf4zn4f9NcjW72luM8L0Y
+         mp9M5lirJhmYGYd7gtV9U99ttRAUo8NRvZXhCY3/symEdUKudcAzcgqDHBjPyIslhrbd
+         xpEoh5rrA3/UUGCoVJqyiCUG2admqbmwiSif4t/5fiyBLAPwWFVrl17B+bmBOPbKPaKW
+         hlNsgoCf2PAsUck+HHQEBz3B3G5xrQ3cU1/dDzCyIsIOvcc1mWInleHuiXf1E5lWpMH7
+         o9t6M+WLRiftGmY83CcfamPrA/Ks8+OYiPy0FD+xpvhsXqNDACzdg8ZZ6S5Kd2aRR2Yv
+         nYFQ==
+X-Gm-Message-State: APjAAAX58QbFTCQvN6oClgnbezvN1e5mr9HRhVBji0WuvZgF1+1jKaWX
+        Mgra0aT3Mqjw00yNvqhwJbT3qPN90Uc=
+X-Google-Smtp-Source: APXvYqwdGWOlKR4douX6oCIzSlnsAcb7BtN7h5bhf8rXp7y7dPR4MGUuWgC2J051AqKFNIdEnP2z1w==
+X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr9985791ejb.164.1576160324391;
+        Thu, 12 Dec 2019 06:18:44 -0800 (PST)
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
+        by smtp.gmail.com with ESMTPSA id 11sm151005ejn.83.2019.12.12.06.18.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 06:18:44 -0800 (PST)
+Received: by mail-wm1-f53.google.com with SMTP id t14so2694863wmi.5;
+        Thu, 12 Dec 2019 06:18:43 -0800 (PST)
+X-Received: by 2002:a1c:6a05:: with SMTP id f5mr6752029wmc.2.1576160323683;
+ Thu, 12 Dec 2019 06:18:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211150339.185439726@linuxfoundation.org> <20191211150351.658072828@linuxfoundation.org>
+ <20191212133132.GA13171@amd> <20191212140241.GA1595136@kroah.com>
+In-Reply-To: <20191212140241.GA1595136@kroah.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Thu, 12 Dec 2019 22:18:34 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
+Message-ID: <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
+Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device node
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Pavel Machek <pavel@denx.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:53:40PM +0100, Marc Gonzalez wrote:
-> On 11/12/2019 23:28, Dmitry Torokhov wrote:
-> 
-> > On Wed, Dec 11, 2019 at 05:17:28PM +0100, Marc Gonzalez wrote:
+On Thu, Dec 12, 2019 at 10:02 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
+> > Hi!
 > >
-> >> What is the rationale for the devm_add_action API?
-> > 
-> > For one-off and maybe complex unwind actions in drivers that wish to use
-> > devm API (as mixing devm and manual release is verboten). Also is often
-> > used when some core subsystem does not provide enough devm APIs.
-> 
-> Thanks for the insight, Dmitry. Thanks to Robin too.
-> 
-> This is what I understand so far:
-> 
-> devm_add_action() is nice because it hides/factorizes the complexity
-> of the devres API, but it incurs a small storage overhead of one
-> pointer per call, which makes it unfit for frequently used actions,
-> such as clk_get.
-> 
-> Is that correct?
-> 
-> My question is: why not design the API without the small overhead?
-> 
-> Proof of concept below:
-> 
-> 
-> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> index 0bbb328bd17f..76392dd6273b 100644
-> --- a/drivers/base/devres.c
-> +++ b/drivers/base/devres.c
-> @@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
->  }
->  EXPORT_SYMBOL_GPL(devres_release_group);
->  
-> +void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
-> +{
-> +	void *data = devres_alloc(func, size, GFP_KERNEL);
-> +
-> +	if (data) {
-> +		memcpy(data, arg, size);
-> +		devres_add(dev, data);
-> +	} else
-> +		func(dev, arg);
-> +
-> +	return data;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_add);
-> +
->  /*
->   * Custom devres actions allow inserting a simple function call
->   * into the teadown sequence.
-> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
-> index be160764911b..8db671823126 100644
-> --- a/drivers/clk/clk-devres.c
-> +++ b/drivers/clk/clk-devres.c
-> @@ -4,6 +4,11 @@
->  #include <linux/export.h>
->  #include <linux/gfp.h>
->  
-> +static void __clk_put(struct device *dev, void *data)
-> +{
-> +	clk_put(*(struct clk **)data);
-> +}
-> +
->  static void devm_clk_release(struct device *dev, void *res)
->  {
->  	clk_put(*(struct clk **)res);
-> @@ -11,19 +16,11 @@ static void devm_clk_release(struct device *dev, void *res)
->  
->  struct clk *devm_clk_get(struct device *dev, const char *id)
->  {
-> -	struct clk **ptr, *clk;
-> -
-> -	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
-> -	if (!ptr)
-> -		return ERR_PTR(-ENOMEM);
-> +	struct clk *clk = clk_get(dev, id);
->  
-> -	clk = clk_get(dev, id);
-> -	if (!IS_ERR(clk)) {
-> -		*ptr = clk;
-> -		devres_add(dev, ptr);
-> -	} else {
-> -		devres_free(ptr);
-> -	}
-> +	if (!IS_ERR(clk))
-> +		if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
-> +			clk = ERR_PTR(-ENOMEM);
+> > > The RTC module on the A23 was claimed to be the same as on the A31, when
+> > > in fact it is not. The A31 does not have an RTC external clock output,
+> > > and its internal RC oscillator's average clock rate is not in the same
+> > > range. The A33's RTC is the same as the A23.
+> > >
+> > > This patch fixes the compatible string and clock properties to conform
+> > > to the updated bindings. The register range is also fixed.
+> >
+> > No, this is not okay for v4.19. New compatible is not in
+> > ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
+>
+> Good catch, I would have thought both of those would happen at the same
+> time.
 
-You leak clk here.
+(Fixed Maxime's email)
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Neither were marked for stable. I guess Sasha's auto selection bot is at
+work here. Is there anything we can do to prevent them from being selected?
+For sunxi, we pretty much don't expect things to be backported, unless
+something critical was fixed.
+
+Thanks
+
+ChenYu
+
+> Now dropped, thanks.
+>
+> greg k-h
