@@ -2,96 +2,171 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97267C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AC3C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BD0214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB4C205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:52:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FQK+F5Tq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfLLPv3 (ORCPT
+        id S1729652AbfLLPwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:51:29 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:48126 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729424AbfLLPv2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:51:28 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 05F9E20348;
-        Thu, 12 Dec 2019 16:51:26 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E13E42007E;
-        Thu, 12 Dec 2019 16:51:25 +0100 (CET)
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga> <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
- <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
- <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
- <20191211222829.GV50317@dtor-ws>
- <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
- <20191212141747.GI25745@shell.armlinux.org.uk>
- <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
- <20191212144616.GJ25745@shell.armlinux.org.uk>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <d2595721-b5cb-d268-d6bd-bc794c07aacc@free.fr>
-Date:   Thu, 12 Dec 2019 16:51:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 10:52:23 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50673 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729416AbfLLPwW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:52:22 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so2916697wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:52:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ppVt/c6SNGbxwMT06FmYWiQkL8ReCtZAObgQLli/bGc=;
+        b=FQK+F5Tqc8VmatT6qdaJSBwIwwPtF4BX7q+Zo2tSJdUU7H3Poig4l99vIp+I1/Vvlh
+         mimYc8wDLLjPw0140MevtlhicgJTxyOHkfWRR5ay61yk0bxeCWWLe4PrBHC4fIXmy8xg
+         ffcCWN9W2Sts1HHv2X6IJH3dkKfXiIOEIBUem78RJYbraY689kLWgWeWyJNiG3YG7Mru
+         PJyaMuC+g111+wvG/l7UEPS5W5yajVSs2te9dnR4P63kRf/E3jnMGPhIBVqUIGqSyNk7
+         JlY1+9WWAU6STu+j4Oi234ZDrjlFqABIbb7Sj/1lHOB31K2H9V5kA4HnFDRFrdDawBKB
+         vBHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ppVt/c6SNGbxwMT06FmYWiQkL8ReCtZAObgQLli/bGc=;
+        b=kwd3rI4OByR0qlEXLe0jc6081E3k/aqJBmbtY70AWatBYDwKQjqUQ2HFuybRYfhCAO
+         qoPj27pjFf469h6TzNEMqanh20IpEiwjjLlSXYK3MTa+wWr630N9tXI7C7cmntJWYWN7
+         +Oa0aoFH9a5DNNdJn54D2LAibBiSk0C3wQXlh7F4knq0l4vo3qqXYCuuv8WqbLT7L99f
+         7sUsmdY1cAoudwnYM5GFGB9o1U1FI69T5yH4mls/8R9dUgabeQM2YMK4pUMwpQEF+jUQ
+         bkuSqAnDPX6Wdchj7pnZAMHahptDSKvu/lSJrnLJM9J8TX7judxEu+mFSFzy5qNnJ4Gh
+         rnBg==
+X-Gm-Message-State: APjAAAVb+EoVNgqHjH43lp5kkwT1jBnFekeUmt24Ek14amsOM18t2Dlz
+        yAeq9Du3e73jLvje9lAYRHcktA==
+X-Google-Smtp-Source: APXvYqyvc2Y2xdShKzDEsC4cVAZysnpb3aqCe69/dn9O8AQEa41FSMBBexqoLXh3Te7JRAVg4RzXxA==
+X-Received: by 2002:a1c:14a:: with SMTP id 71mr7609430wmb.48.1576165939689;
+        Thu, 12 Dec 2019 07:52:19 -0800 (PST)
+Received: from dell ([95.149.164.71])
+        by smtp.gmail.com with ESMTPSA id z189sm7190746wmc.2.2019.12.12.07.52.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 07:52:19 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:52:09 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
+        <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mfd: intel_soc_pmic: Rename pwm_backlight pwm-lookup
+ to pwm_pmic_backlight
+Message-ID: <20191212155209.GC3468@dell>
+References: <20191119151818.67531-1-hdegoede@redhat.com>
+ <20191119151818.67531-3-hdegoede@redhat.com>
+ <20191210085111.GQ3468@dell>
+ <a05e5a2b-568e-2b0d-0293-aa937c590a74@redhat.com>
+ <20191212084546.GA3468@dell>
+ <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212144616.GJ25745@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Dec 12 16:51:26 2019 +0100 (CET)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d22e9a04-da09-0f41-a78e-ac17a947650a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 15:46, Russell King - ARM Linux admin wrote:
+On Thu, 12 Dec 2019, Hans de Goede wrote:
 
-> However, please don't call this __clk_put().
-> git grep __clk_put will tell you why.  Thanks.
+> Hi,
+> 
+> On 12-12-2019 09:45, Lee Jones wrote:
+> > On Wed, 11 Dec 2019, Hans de Goede wrote:
+> > 
+> > > Hi Lee,
+> > > 
+> > > On 10-12-2019 09:51, Lee Jones wrote:
+> > > > On Tue, 19 Nov 2019, Hans de Goede wrote:
+> > > > 
+> > > > > At least Bay Trail (BYT) and Cherry Trail (CHT) devices can use 1 of 2
+> > > > > different PWM controllers for controlling the LCD's backlight brightness.
+> > > > > 
+> > > > > Either the one integrated into the PMIC or the one integrated into the
+> > > > > SoC (the 1st LPSS PWM controller).
+> > > > > 
+> > > > > So far in the LPSS code on BYT we have skipped registering the LPSS PWM
+> > > > > controller "pwm_backlight" lookup entry when a Crystal Cove PMIC is
+> > > > > present, assuming that in this case the PMIC PWM controller will be used.
+> > > > > 
+> > > > > On CHT we have been relying on only 1 of the 2 PWM controllers being
+> > > > > enabled in the DSDT at the same time; and always registered the lookup.
+> > > > > 
+> > > > > So far this has been working, but the correct way to determine which PWM
+> > > > > controller needs to be used is by checking a bit in the VBT table and
+> > > > > recently I've learned about 2 different BYT devices:
+> > > > > Point of View MOBII TAB-P800W
+> > > > > Acer Switch 10 SW5-012
+> > > > > 
+> > > > > Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
+> > > > > PWM controller (and the VBT correctly indicates this), so here our old
+> > > > > heuristics fail.
+> > > > > 
+> > > > > Since only the i915 driver has access to the VBT, this commit renames
+> > > > > the "pwm_backlight" lookup entries for the Crystal Cove PMIC's PWM
+> > > > > controller to "pwm_pmic_backlight" so that the i915 driver can do a
+> > > > > pwm_get() for the right controller depending on the VBT bit, instead of
+> > > > > the i915 driver relying on a "pwm_backlight" lookup getting registered
+> > > > > which magically points to the right controller.
+> > > > > 
+> > > > > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > > > > ---
+> > > > >    drivers/mfd/intel_soc_pmic_core.c | 2 +-
+> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > For my own reference:
+> > > >     Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> > > 
+> > > As mentioned in the cover-letter, to avoid breaking bi-sectability
+> > > as well as to avoid breaking the intel-gfx CI we need to merge this series
+> > > in one go through one tree. Specifically through the drm-intel tree.
+> > > Is that ok with you ?
+> > > 
+> > > If this is ok with you, then you do not have to do anything, I will just push
+> > > the entire series to drm-intel. drivers/mfd/intel_soc_pmic_core.c
+> > > does not see much changes so I do not expect this to lead to any conflicts.
+> > 
+> > It's fine, so long as a minimal immutable pull-request is provided.
+> > Whether it's pulled or not will depend on a number of factors, but it
+> > needs to be an option.
+> 
+> The way the drm subsys works that is not really a readily available
+> option. The struct definition which this patch changes a single line in
+> has not been touched since 2015-06-26 so I really doubt we will get a
+> conflict from this.
 
-$ git grep __clk_put
-drivers/clk/clk-devres.c:static void __clk_put(struct device *dev, void *data)
-drivers/clk/clk-devres.c:               if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
-drivers/clk/clk.c:void __clk_put(struct clk *clk)
-drivers/clk/clk.h:void __clk_put(struct clk *clk);
-drivers/clk/clk.h:static inline void __clk_put(struct clk *clk) { }
-drivers/clk/clkdev.c:   __clk_put(clk);
+Always with the exceptions ...
 
-I see. I will s/__clk_put/my_clk_put/ in my proposal.
+OOI, why does this *have* to go through the DRM tree?
 
-Out of curiosity...
-
-$ git grep __clk_put v2.6.29-rc1
-v2.6.29-rc1:arch/arm/common/clkdev.c:   __clk_put(clk);
-v2.6.29-rc1:arch/arm/mach-ep93xx/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-v2.6.29-rc1:arch/arm/mach-integrator/include/mach/clkdev.h:static inline void __clk_put(struct clk *clk)
-v2.6.29-rc1:arch/arm/mach-pxa/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-v2.6.29-rc1:arch/arm/mach-realview/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-v2.6.29-rc1:arch/arm/mach-versatile/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-
-Genesis seems to be 0318e693d3a56
-
-The clkdev API expected platforms to export a __clk_put method?
-
-Regards.
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
