@@ -2,161 +2,89 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42ECBC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DD0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8D222527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ud0LAurH"
+	by mail.kernel.org (Postfix) with ESMTP id 9F0F824658
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576143533;
+	bh=YiBHRvmzqwP2Wcik2ucd5vLbYHnFu3fPz1cXkn7qxfY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xZeq0TgyvRZfMr5qEAP0lP3cZwm7Opfw3qhti9LGZdgT/f2HImb76EASmWg+HosHb
+	 0w2jrGB05GVZ5WtbKcA9tCNw27raBg38bCR1W+HXFAh7gzBdQnaia8uFnrkBzJ90uE
+	 y8Jq0dhHy+UdsIFI0YVbXg4nQLtg1qdn27j0iEN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfLLJiu (ORCPT
+        id S1728560AbfLLJiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:38:50 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:22030 "EHLO pegase1.c-s.fr"
+        Thu, 12 Dec 2019 04:38:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbfLLJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728329AbfLLJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 04:38:49 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47YTJQ19QQz9tx9d;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ud0LAurH; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PtgGjD3L2HhS; Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47YTJQ04Spz9tx9b;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576143526; bh=PmEFgaQ7Eo9rbAL5MPouRGU/8Glf/6NoE8/kyEXX9XI=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=ud0LAurHVCHTtzHonbn8ggiFwj8yqRLCq120So6BnJYTKnINs+gq8gijKGFlcEk8d
-         +TgnRymV/wNbxtAsJKay2iOmRUp+H61LLodMFeYPw1Athio8oP8JCZjOortSPz5NQK
-         1pwHjkeNU9ObsJxl02zEkD5UarY4Tr0gAvrMwPFM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1E80E8B85B;
-        Thu, 12 Dec 2019 10:38:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kkSWjlcM3lXj; Thu, 12 Dec 2019 10:38:47 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 350948B776;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-To:     Balbir Singh <bsingharora@gmail.com>,
-        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-5-dja@axtens.net>
- <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
- <875zincu8a.fsf@dja-thinkpad.axtens.net>
- <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
- <87wob3aqis.fsf@dja-thinkpad.axtens.net>
- <1bffad2d-db13-9808-afc9-5594f02dcf01@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <2f017b74-b6f4-5723-591a-fe7525b85419@c-s.fr>
-Date:   Thu, 12 Dec 2019 10:38:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05FE52173E;
+        Thu, 12 Dec 2019 09:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576143529;
+        bh=YiBHRvmzqwP2Wcik2ucd5vLbYHnFu3fPz1cXkn7qxfY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bXrka/lB2G+PKc73Fwbd0Cfp/zQWZGY5Qz1X1NztoqumrJjBf+Yny9ObSeBmb9ww9
+         S9BA5Y3M7rBSUEqBtLbgixO3oYaKf0Zpjjyc13hZOounJN5qxo1Rf1FYzih03/V9bU
+         mBJoMwttf4ouaDkFIrTRReMO0OyiNLPa44eAGEkk=
+Received: by mail-lf1-f41.google.com with SMTP id r14so1174890lfm.5;
+        Thu, 12 Dec 2019 01:38:48 -0800 (PST)
+X-Gm-Message-State: APjAAAWMtM20YyZmGJFMDMv+0AWY5EccPS0uxzy9OiehGHgX2wjvdN0Y
+        fAOT57yiTP55U0oWBcrsRjEJtPbba7HeqKfXkiM=
+X-Google-Smtp-Source: APXvYqyu6b08O6ZGMeq8/kKx/orBKXWk5tK9GegZevaZ2Ce3P9wKAHrRq/kEDZ52TNvDve1nfF/peti7vg4C6vQePZ0=
+X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr5132078lfp.106.1576143527223;
+ Thu, 12 Dec 2019 01:38:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1bffad2d-db13-9808-afc9-5594f02dcf01@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20191212092726.41027-1-chenzhou10@huawei.com>
+In-Reply-To: <20191212092726.41027-1-chenzhou10@huawei.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 12 Dec 2019 10:38:35 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
+Message-ID: <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
+Subject: Re: [PATCH -next v2] pinctrl: samsung: fix build error without CONFIG_OF_GPIO
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
+        linux-gpio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Dec 2019 at 10:30, Chen Zhou <chenzhou10@huawei.com> wrote:
+>
+> If CONFIG_OF_GPIO is n, build fails:
+>
+> drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
+> drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
+>    gc->of_node = bank->of_node;
+>
+> Use #ifdef to guard this.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
+I was thinking about adding OF_GPIO but I could not trigger such case
+as you mention. How can I reproduce this?
 
-Le 12/12/2019 à 08:42, Balbir Singh a écrit :
-> 
-> 
-> On 12/12/19 1:24 am, Daniel Axtens wrote:
->> Hi Balbir,
->>
->>>>>> +Discontiguous memory can occur when you have a machine with memory spread
->>>>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
->>>>>> +
->>>>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
->>>>>> + - then there's a gap,
->>>>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
->>>>>> +
->>>>>> +This can create _significant_ issues:
->>>>>> +
->>>>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
->>>>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
->>>>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
->>>>>> +   region. But when we try to access any of that, we'll try to access pages
->>>>>> +   that are not physically present.
->>>>>> +
->>>>>
->>>>> If we reserved memory for KASAN from each node (discontig region), we might survive
->>>>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
->>>>> out loud.
->>>>
->>>> The challenge is that - AIUI - in inline instrumentation, the compiler
->>>> doesn't generate calls to things like __asan_loadN and
->>>> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
->>>> checks, and only calls the __asan_report* family of functions if it
->>>> detects an issue. This also matches what I can observe with objdump
->>>> across outline and inline instrumentation settings.
->>>>
->>>> This means that for this sort of thing to work we would need to either
->>>> drop back to out-of-line calls, or teach the compiler how to use a
->>>> nonlinear, NUMA aware mem-to-shadow mapping.
->>>
->>> Yes, out of line is expensive, but seems to work well for all use cases.
->>
->> I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
->> stacks and globals will only be instrumented if you can provide
->> KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
->> static offset. I _think_ this is a compiler limitation, where some of
->> those instrumentations only work/make sense with a static offset, but
->> perhaps that's not right? Dmitry and Andrey, can you shed some light on
->> this?
->>
-> 
->  From what I can read, everything should still be supported, the info page
-> for gcc states that globals, stack asan should be enabled by default.
-> allocas may have limited meaning if stack-protector is turned on (no?)
+Anyway, the select/dependencies in Kconfig should be fixed up -
+PINCTRL_SAMSUNG should depend on OF and GPIOLIB.
 
-Where do you read that ?
-
-As far as I can see, there is not much details about 
--fsanitize=kernel-address and -fasan-shadow-offset=number in GCC doc 
-(https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html)
-
-[...]
-
-
->>
-> 
-> I think I got CONFIG_PHYS_MEM_SIZE_FOR_KASN wrong, honestly I don't get why
-> we need this size? The size is in MB and the default is 0.
-> 
-> Why does the powerpc port of KASAN need the SIZE to be explicitly specified?
-> 
-
-AFAICS, it is explained in details in Daniel's commit log. That's 
-because on book3s64, KVM requires KASAN to also work when MMU is off.
-
-The 0 default is for when CONFIG_KASAN is not selected, in order to 
-avoid a forest of #ifdefs in the code.
-
-Christophe
+Best regards,
+Krzysztof
