@@ -2,257 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B838DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89013C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7D42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EF6621655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:13:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eQj4QWR7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S2gx1qRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbfLLNIH (ORCPT
+        id S1729375AbfLLNNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:08:07 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36094 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729226AbfLLNIH (ORCPT
+        Thu, 12 Dec 2019 08:13:07 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39838 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbfLLNNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:08:07 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so1027096pjc.3;
-        Thu, 12 Dec 2019 05:08:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=m70cX1ccVQcNfsKFfTZkLfHn+4sYxmeVX2PubKBQQYk=;
-        b=eQj4QWR7HnvXJxzOEyWU2YU3ey9CVqVCmQ1zWc/J+X23rHezy3cYLlcid7D/47kcXT
-         cw1Xl3gf7c1eV3Z+f7pi2g4lyW5Lat/1iyVte3e1KhzsaaUd1CCjrKHRlxmH24+wUngu
-         DkppcS3jHLfnkbe0wzUq9i5Xkq2QDY9tgfFPOQYgX5M5XqYQFKFEM6hS4LwqJpId/UCn
-         7AQZZ845vOQuqAIJbLuBNS/YQ36zyYhlHwo892o3iXyXae+6tVYrQYk/14/vmx0k6SyL
-         2O5wXC5gqEJvGylY96c8yZauKRduqgoa0Ih6eoVYXYqqWcxCvaQTF9gc/Jnj5N6EhPMw
-         TbVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=m70cX1ccVQcNfsKFfTZkLfHn+4sYxmeVX2PubKBQQYk=;
-        b=G+YSc636zuDgwk+4va9EqoswPb/uzPUciZu199asbnu3x4uiLoExX8H4Wy2hSMZJAh
-         WcC5Puo1ctlWwIk0wrpSC4lX4ZakYS2bKD/gJ4Kiv+2wc8f3klueaBjos/edWWn8LrwK
-         edM2lbXpR8piceivKo8251JNt3wno86Xj5on4iAsKTsw372DiV2MPBR4CGyEJ3bl7VbH
-         XklLW07k6j1lVa5DF4X8/ze1S0OTRrnVs9Pz3rN4VESo/WP+4TQVGqHWBw0zXjU/w2X7
-         FI4JvP80jZCxrlYypaRTWdJq743onini6gQgifq/hDKQIaBjeXypBvHGMXlzFjVTWbgY
-         guQQ==
-X-Gm-Message-State: APjAAAX+awHhFO+Yufeh6pqqzhbgNdpy/wOy31gkuW1IYbrBZRfYv6Kn
-        3kGlLqpPxijgwljcB779FoY=
-X-Google-Smtp-Source: APXvYqwf7VM4nbjuXimflPq6vJbRg+SwKMix0ZmX48Mq7CN4j8H3LLurUPCFFa8AMR0/wpiOvODwjQ==
-X-Received: by 2002:a17:902:b598:: with SMTP id a24mr9064883pls.247.1576156086662;
-        Thu, 12 Dec 2019 05:08:06 -0800 (PST)
-Received: from cnn ([2402:3a80:457:6a63:7070:9118:7874:2897])
-        by smtp.gmail.com with ESMTPSA id v8sm6627508pff.151.2019.12.12.05.08.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 05:08:06 -0800 (PST)
-Date:   Thu, 12 Dec 2019 18:37:58 +0530
-From:   Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-To:     andrew@aj.id.au, joel@jms.id.au
-Cc:     sdasari@fb.com, vijaykhemka@fb.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: [PATCH v4 2/2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191212130758.GA7388@cnn>
+        Thu, 12 Dec 2019 08:13:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Mi/YeA+WCgrkkaP3IUCQ5eXMERR2u2J8/KyXlUMxhsE=; b=S2gx1qRERPnBJWKB6odU0gfHJ
+        Io+0i7BKBcpoqwishvDmCIx3U83XeZEDzTtyk6o/vY4WNhGGpgMr33r5Xkz8KxPkZmbYkbtLZJdf6
+        2H6hG7zJ8uGDO1IquD+xfTW59+narXHB94w5Wz2UVpIVt2sYSUk9jQl/b4nolTM+jgLeg0EKj3f6y
+        DcPRlxcpeHAajXYpMtSHKKGRmWMf/vZIDRXY6u5NL14xRMK3JA0gTQvQeEAWDq1GlXYbTTJJUxmp7
+        cB3HVp7jTpLleY90VXPi2wTeWEZf5xARINmVaSAPeUXFONfryGgbC+Db61Pu2vV404tywa77Hws7M
+        h9/plfWpQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifOGw-0000yE-7k; Thu, 12 Dec 2019 13:12:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C9107300F29;
+        Thu, 12 Dec 2019 14:11:26 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D801203BF6F0; Thu, 12 Dec 2019 14:12:47 +0100 (CET)
+Date:   Thu, 12 Dec 2019 14:12:47 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-fs <linux-fsdevel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
+ kthread
+Message-ID: <20191212131247.GY2827@hirez.programming.kicks-ass.net>
+References: <20191209165122.GA27229@linux.vnet.ibm.com>
+ <20191209231743.GA19256@dread.disaster.area>
+ <20191210054330.GF27253@linux.vnet.ibm.com>
+ <20191210172307.GD9139@linux.vnet.ibm.com>
+ <20191211173829.GB21797@linux.vnet.ibm.com>
+ <20191211224617.GE19256@dread.disaster.area>
+ <20191212101031.GV2827@hirez.programming.kicks-ass.net>
+ <20191212101424.GH2871@hirez.programming.kicks-ass.net>
+ <20191212102327.GI2871@hirez.programming.kicks-ass.net>
+ <CAKfTPtCUm5vuvNiWszJ5tWHxmcZ2v_KexOxnBHLUkBcqC-P3fw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAKfTPtCUm5vuvNiWszJ5tWHxmcZ2v_KexOxnBHLUkBcqC-P3fw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platform based on AST2500 SoC.
+On Thu, Dec 12, 2019 at 12:20:01PM +0100, Vincent Guittot wrote:
+> On Thu, 12 Dec 2019 at 11:23, Peter Zijlstra <peterz@infradead.org> wrote:
 
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
+> > Just for giggles, that'd look something like:
+> >
+> >         while (!entity_is_task(se) {
+> >                 cfs_rq = group_cfs_rq(se);
+> >                 se = pick_next_entity(cfs_rq, cfs_rq->curr);
+> >         }
+> >         p = task_of(se);
+> >
+> >         if (is_per_cpu_kthread(p))
+> >                 ideal_runtime /= 2;
+> >
+> > the core-scheduling patch set includes the right primitive for this I
+> > think, pick_task_fair().
+> 
+> why not only updating wan_gran() which is the only function which uses
+> sysctl_sched_wakeup_granularity ?
 
---- Reviews summary
---- v4[2/2] - Spell and contributor name correction.
----         - License identifier changed to GPL-2.0-or-later.
----         - aspeed-gpio.h removed.
----         - FAN2 tacho channel changed.
----      v4 - Bootargs removed.
----      v3 - Uart1 Debug removed .
----      v2 - LPC and VUART removed .
----      v1 - Initial draft.
+I don't see how, it works on se, which need not be a task.
 
-Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-Acked-by   : Andrew Jeffery <andrew@aj.id.au>
-Reviewed-by: Vijay Khemka <vkhemka@fb.com>
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 148 +++++++++++++++++++++
- 1 file changed, 148 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> For per cpu kthread, we could set the gran to sched_min_granularity
+> instead of scaling it with thread's priority so per cpu kthread can
+> still preempt current ask even if sysctl_sched_wakeup_granularity is
+> large
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..ffd7f4c
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,148 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// Copyright (c) 2018 Facebook Inc.
-+
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+			&pinctrl_adc1_default
-+			&pinctrl_adc2_default
-+			&pinctrl_adc3_default
-+			&pinctrl_adc4_default
-+			&pinctrl_adc5_default
-+			&pinctrl_adc6_default
-+			&pinctrl_adc7_default
-+			&pinctrl_adc8_default
-+			&pinctrl_adc9_default
-+			&pinctrl_adc10_default
-+			&pinctrl_adc11_default
-+			&pinctrl_adc12_default
-+			&pinctrl_adc13_default
-+			&pinctrl_adc14_default
-+			&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	//FRU EEPROM
-+	status = "okay";
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	//INLET & OUTLET TEMP
-+	status = "okay";
-+	tmp421@4e {
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	//HSC
-+	status = "okay";
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	//MEZZ_TEMP_SENSOR
-+	status = "okay";
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	//MEZZ_FRU
-+	status = "okay";
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	//FSC
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+};
--- 
-2.7.4
+Also, we're not poking at wakeup preemption anymore. That, as explained
+by Dave, is not the right thing to do. What we want instead is to make
+tick preemption a little more agressive.
 
+And tick based preemption currently purely looks at the leftmost entity
+for each runqueue we find while iterating current. IE, it might never
+even see the task we tagged with next.
+
+Also, did I say I hates cgroups :-)
