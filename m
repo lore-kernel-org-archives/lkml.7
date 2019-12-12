@@ -2,300 +2,209 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD7FC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3A322527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 085252077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eFoJLZ09"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="sXQ/5gg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfLLITY (ORCPT
+        id S1728522AbfLLIXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:19:24 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8506 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728304AbfLLITW (ORCPT
+        Thu, 12 Dec 2019 03:23:13 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:41674 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbfLLIXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:19:22 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df1f8000000>; Thu, 12 Dec 2019 00:19:14 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 12 Dec 2019 00:19:21 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 12 Dec 2019 00:19:21 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 08:19:18 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 12 Dec 2019 08:19:18 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df1f8060002>; Thu, 12 Dec 2019 00:19:18 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: [PATCH v10 01/25] mm/gup: factor out duplicate code from four routines
-Date:   Thu, 12 Dec 2019 00:18:53 -0800
-Message-ID: <20191212081917.1264184-2-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191212081917.1264184-1-jhubbard@nvidia.com>
-References: <20191212081917.1264184-1-jhubbard@nvidia.com>
+        Thu, 12 Dec 2019 03:23:11 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20191212082309euoutp0252b802c0e12df4beefd9a558888a2dde~fkg9oA_U30201802018euoutp02a
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:23:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20191212082309euoutp0252b802c0e12df4beefd9a558888a2dde~fkg9oA_U30201802018euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1576138989;
+        bh=xDuUwadBE0kt6XD5tpV9niV0Sfcra9cZCGe37EaX0/M=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=sXQ/5gg76ekNpnTPQ1fb4LfibDiGSUv2OiZ3gjnsP/I2ksc/3ut3iaDqxtPncKO5z
+         UOkFDRt4hZyy9AY6LHyPvXjwDvjR4Ai2VZej9/qJubKcdGA/mjCfbTMauWZ+wOJmzr
+         sJM5XDsiMZo+YahRa6vVPcij0ORtaxb8WTwWSpxw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191212082309eucas1p2af50b8b384d69135943d01c85ea17868~fkg9SAd2k3081030810eucas1p2J;
+        Thu, 12 Dec 2019 08:23:09 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5D.FB.61286.CE8F1FD5; Thu, 12
+        Dec 2019 08:23:09 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191212082308eucas1p1e0ce843cf3e6f6beba6beffff1c999dc~fkg88jml61415614156eucas1p1Q;
+        Thu, 12 Dec 2019 08:23:08 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191212082308eusmtrp14d7cdb21a52724346d6433f7de391a8e~fkg87Bd9E2511325113eusmtrp1I;
+        Thu, 12 Dec 2019 08:23:08 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-e7-5df1f8ec466a
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 14.DF.08375.CE8F1FD5; Thu, 12
+        Dec 2019 08:23:08 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191212082307eusmtip2ef9e20e1d2ac9ca1378d7108f3a0814f~fkg75OO_w0288302883eusmtip2F;
+        Thu, 12 Dec 2019 08:23:07 +0000 (GMT)
+Subject: Re: [PATCH v2 4/4] usb: usb3503: Convert to use GPIO descriptors
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <f33fe872-50cf-c33b-ea6c-cfffb82c57a7@samsung.com>
+Date:   Thu, 12 Dec 2019 09:23:07 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.1
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576138754; bh=NjEUDVUY50BsRhke7z2S9TxhDwSe8KFPL35zO7aJjtI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Type:Content-Transfer-Encoding;
-        b=eFoJLZ094H96VEw0VZgoT9vY9t8XJ6NaXBjIsxip9K649lfdEn/ehXVDoLK9SlQkD
-         RyOdKG0XsitgjGVAO+jZJ6f5YATGR6f+qRZQ5RNBPxs9uD5H0Yqv3a1TPRx3nck2AY
-         +LcFM2Cp9I3lHAX62B2OT04NIfdIhzEMy7EuFgIzMfLv71VoZZzbeWiefw0OnELqhp
-         zdeHTzZe1ZQtecRfLfhH+fXQP2LTjs52RlYm9LVOwnED6782E4fHDqhVmIRKUTpDTR
-         8WXsicsI67F2F6YDOcQfqMJxTAOSyrNidx2obEbqCZpcY7FuguL2uHwUoJyDzaKobz
-         1qlwE2jYi0Ryw==
+In-Reply-To: <1576116600.21256.3.camel@mhfsdcap03>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0iTURj27Lvsczk9TXMvFQmzBCU1rexE2UUKPiGqH0UQTFv5oZbO2tSy
+        HyVaS4dGpZBOrVBRW3k3MzPFS05bOC8QdjEqLSyYaWoXisj5WfnveZ/nPOd5n8PhKIWdWc7F
+        ahMFnVYTp2JldGP3jz5/+/cp9TrzVQnpG/1Jk9q8aoZY2yZocqm1iCbpJdUssdlqpCT3V7mE
+        1I0+Y8hQcyFLhtIHEMmztUpIcdlFiqRdWE8MmWUMqa+6JCU/OmySHZgv+faa4mve3WH4B6YR
+        KV9nzmT5V89aWL6t6K6Ury89z1/obaP5yw1mxE/XrdovOyzbGiXExSYLusBtR2QxmaVG5mSB
+        55mvPQY2FeUojMiZA7wB8mfGWQdW4AoEI5NKI5LN4RkE9/K7WHGYRvD0qVn611FQ83lBKEcw
+        NtmHxMGOYLx1Zk7hOHccDo+KfB0GD7wWDNabEscZCltpyJ4xMQ6BxUFgtBvns+V4GzRPfJjH
+        NF4Do7ZWqeOeZVgNGeUx4pGl0Js/RjtoZxwMxT0qB01hL7hvL6RErIQXY2IU4HwOnj9PR+LS
+        u2BybEoiYnf4ZGlYKLMSrDlZtGhIR/C2r1IqDlkIhtLyFtxboNMywDiSKewL1c2BIr0TRmz9
+        83sCdoVh+1JxCVe41nidEmk5ZBgWXtoHTJaqf7Ht/YPUFaQyLWpmWlTHtKiO6X/uLUSbkVJI
+        0sdHC/ogrXA6QK+J1ydpowOOJcTXoblPaP1t+dKEZgePdiDMIZWL/M2KKbWC0STrU+I7EHCU
+        ykNuMUyoFfIoTcpZQZcQqUuKE/QdaAVHq5Ty9cUf1QocrUkUTgjCSUH3V5VwzstT0UVqqzwv
+        Nbh9k3fkqff7eBe37qzcIxHsxiXa4eJH68I6W/zc6Ojjw04Pz23O3h3otCdXGVDQe72+Vni8
+        9/aBNM/Z7vBDqzcc3FhpFmqvbO/KkQ5RDb+bZtkKtj/72KlQ8sQlpOVloU9Ry88bibXKKM9v
+        ER58Y6p3tVdoiPp7WJe/q4rWx2iC/CidXvMHRW6lGYADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpkleLIzCtJLcpLzFFi42I5/e/4Pd03Pz7GGuzsULM49/g3i8XGGetZ
+        LU7vf8di0b5vLotF8+L1bBbnz29gt5jyZzmTxabH11gtLu+aw2Zxufkio8WM8/uYLBYta2W2
+        aGoxtmjrXMZqsXldO7vFz0PnmRwEPBZ/v8fsseHRalaPnbPusntsWtXJ5nHn2h42j/1z17B7
+        bF5S79Fycj+LR9+WVYwenzfJBXBF6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZ
+        mSrp29mkpOZklqUW6dsl6GV0LuliLZgtVvHtRBtbA+NkoS5GTg4JAROJ2Rves3UxcnEICSxl
+        lHi84SoLREJG4uS0BlYIW1jiz7UuqKLXjBIr7h5i6mLk4BAW8JTYO1cTpEZEQEei7fR8JpAa
+        ZoHzLBLPbj9lhWh4yyjR8OEzG0gVm4ChRNfbLjCbV8BOYte7Z2A2i4CqxOPz+9hBbFGBWInv
+        Kz8xQtQISpyc+YQFZBmngJHEohNKIGFmATOJeZsfMkPY8hLb386BssUlbj2ZzzSBUWgWku5Z
+        SFpmIWmZhaRlASPLKkaR1NLi3PTcYkO94sTc4tK8dL3k/NxNjMDo33bs5+YdjJc2Bh9iFOBg
+        VOLh7ZD8GCvEmlhWXJl7iFGCg1lJhPd427tYId6UxMqq1KL8+KLSnNTiQ4ymQL9NZJYSTc4H
+        Jqa8knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TBycUg2M0ipLku6qq3Wf
+        mL3OcsU5Lb95ylMOHFtzXPlOj8zKQuPHmmdTzb6H9n22rMuT7e2eYnm2f/YSww7RLsszcd7x
+        x1Ya1t6vdXVetf9w19mD776d3Ghw+5rYoqz/Z+7mtxV7eGslvXnzyv9GrgzPokuRmU+Mj7LK
+        G5ut05r+YM8uo/3WMru2XiiZo8RSnJFoqMVcVJwIAOpMfpcUAwAA
+X-CMS-MailID: 20191212082308eucas1p1e0ce843cf3e6f6beba6beffff1c999dc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191211145231eucas1p29d4e0ed105274c79682b48a613b45904
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191211145231eucas1p29d4e0ed105274c79682b48a613b45904
+References: <20191211145054.24835-1-m.szyprowski@samsung.com>
+        <CGME20191211145231eucas1p29d4e0ed105274c79682b48a613b45904@eucas1p2.samsung.com>
+        <20191211145226.25074-1-m.szyprowski@samsung.com>
+        <1576116600.21256.3.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are four locations in gup.c that have a fair amount of code
-duplication. This means that changing one requires making the same
-changes in four places, not to mention reading the same code four
-times, and wondering if there are subtle differences.
+Hi Chunfeng,
 
-Factor out the common code into static functions, thus reducing the
-overall line count and the code's complexity.
+On 12.12.2019 03:10, Chunfeng Yun wrote:
+> On Wed, 2019-12-11 at 15:52 +0100, Marek Szyprowski wrote:
+>> From: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> This converts the USB3503 to pick GPIO descriptors from the
+>> device tree instead of iteratively picking out GPIO number
+>> references and then referencing these from the global GPIO
+>> numberspace.
+>>
+>> The USB3503 is only used from device tree among the in-tree
+>> platforms. If board files would still desire to use it they can
+>> provide machine descriptor tables.
+>>
+>> Make sure to preserve semantics such as the reset delay
+>> introduced by Stefan.
+>>
+>> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>> Cc: Stefan Agner <stefan@agner.ch>
+>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>> [mszyprow: invert the logic behind reset GPIO line]
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>> ---
+>>   drivers/usb/misc/usb3503.c            | 94 ++++++++++-----------------
+>>   include/linux/platform_data/usb3503.h |  3 -
+>>   2 files changed, 35 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
+>> index 72f39a9751b5..116bd789e568 100644
+>> --- a/drivers/usb/misc/usb3503.c
+>> +++ b/drivers/usb/misc/usb3503.c
+>> @@ -7,11 +7,10 @@
+>>   
+>>   #include <linux/clk.h>
+>>   #include <linux/i2c.h>
+>> -#include <linux/gpio.h>
+>> +#include <linux/gpio/consumer.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/module.h>
+>> -#include <linux/of_gpio.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/platform_data/usb3503.h>
+>>   #include <linux/regmap.h>
+>> @@ -47,19 +46,19 @@ struct usb3503 {
+>>   	struct device		*dev;
+>>   	struct clk		*clk;
+>>   	u8	port_off_mask;
+>> -	int	gpio_intn;
+>> -	int	gpio_reset;
+>> -	int	gpio_connect;
+>> +	struct gpio_desc	*intn;
+>> +	struct gpio_desc 	*reset;
+>> +	struct gpio_desc 	*connect;
+>>   	bool	secondary_ref_clk;
+>>   };
+>>   
+>>   static int usb3503_reset(struct usb3503 *hub, int state)
+>>   {
+>> -	if (!state && gpio_is_valid(hub->gpio_connect))
+>> -		gpio_set_value_cansleep(hub->gpio_connect, 0);
+>> +	if (!state && hub->connect)
+>> +		gpiod_set_value_cansleep(hub->connect, 0);
+>>   
+>> -	if (gpio_is_valid(hub->gpio_reset))
+>> -		gpio_set_value_cansleep(hub->gpio_reset, state);
+>> +	if (hub->reset)
+>> +		gpiod_set_value_cansleep(hub->reset, !state);
+> What about preparing another patch for @state before this path?
 
-Also, take the opportunity to slightly improve the efficiency of the
-error cases, by doing a mass subtraction of the refcount, surrounded
-by get_page()/put_page().
+In such case the driver will be broken after such patch until a 
+conversion to descriptor based GPIO api is done.
 
-Also, further simplify (slightly), by waiting until the the successful
-end of each routine, to increment *nr.
+...
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
- mm/gup.c | 91 ++++++++++++++++++++++----------------------------------
- 1 file changed, 36 insertions(+), 55 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 7646bf993b25..f764432914c4 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1978,6 +1978,25 @@ static int __gup_device_huge_pud(pud_t pud, pud_t *p=
-udp, unsigned long addr,
- }
- #endif
-=20
-+static int record_subpages(struct page *page, unsigned long addr,
-+			   unsigned long end, struct page **pages)
-+{
-+	int nr;
-+
-+	for (nr =3D 0; addr !=3D end; addr +=3D PAGE_SIZE)
-+		pages[nr++] =3D page++;
-+
-+	return nr;
-+}
-+
-+static void put_compound_head(struct page *page, int refs)
-+{
-+	/* Do a get_page() first, in case refs =3D=3D page->_refcount */
-+	get_page(page);
-+	page_ref_sub(page, refs);
-+	put_page(page);
-+}
-+
- #ifdef CONFIG_ARCH_HAS_HUGEPD
- static unsigned long hugepte_addr_end(unsigned long addr, unsigned long en=
-d,
- 				      unsigned long sz)
-@@ -2007,32 +2026,20 @@ static int gup_hugepte(pte_t *ptep, unsigned long s=
-z, unsigned long addr,
- 	/* hugepages are never "special" */
- 	VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
-=20
--	refs =3D 0;
- 	head =3D pte_page(pte);
--
- 	page =3D head + ((addr & (sz-1)) >> PAGE_SHIFT);
--	do {
--		VM_BUG_ON(compound_head(page) !=3D head);
--		pages[*nr] =3D page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr +=3D PAGE_SIZE, addr !=3D end);
-+	refs =3D record_subpages(page, addr, end, pages + *nr);
-=20
- 	head =3D try_get_compound_head(head, refs);
--	if (!head) {
--		*nr -=3D refs;
-+	if (!head)
- 		return 0;
--	}
-=20
- 	if (unlikely(pte_val(pte) !=3D pte_val(*ptep))) {
--		/* Could be optimized better */
--		*nr -=3D refs;
--		while (refs--)
--			put_page(head);
-+		put_compound_head(head, refs);
- 		return 0;
- 	}
-=20
-+	*nr +=3D refs;
- 	SetPageReferenced(head);
- 	return 1;
- }
-@@ -2079,28 +2086,19 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, un=
-signed long addr,
- 		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
- 	}
-=20
--	refs =3D 0;
- 	page =3D pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
--	do {
--		pages[*nr] =3D page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr +=3D PAGE_SIZE, addr !=3D end);
-+	refs =3D record_subpages(page, addr, end, pages + *nr);
-=20
- 	head =3D try_get_compound_head(pmd_page(orig), refs);
--	if (!head) {
--		*nr -=3D refs;
-+	if (!head)
- 		return 0;
--	}
-=20
- 	if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
--		*nr -=3D refs;
--		while (refs--)
--			put_page(head);
-+		put_compound_head(head, refs);
- 		return 0;
- 	}
-=20
-+	*nr +=3D refs;
- 	SetPageReferenced(head);
- 	return 1;
- }
-@@ -2120,28 +2118,19 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, un=
-signed long addr,
- 		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
- 	}
-=20
--	refs =3D 0;
- 	page =3D pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
--	do {
--		pages[*nr] =3D page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr +=3D PAGE_SIZE, addr !=3D end);
-+	refs =3D record_subpages(page, addr, end, pages + *nr);
-=20
- 	head =3D try_get_compound_head(pud_page(orig), refs);
--	if (!head) {
--		*nr -=3D refs;
-+	if (!head)
- 		return 0;
--	}
-=20
- 	if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
--		*nr -=3D refs;
--		while (refs--)
--			put_page(head);
-+		put_compound_head(head, refs);
- 		return 0;
- 	}
-=20
-+	*nr +=3D refs;
- 	SetPageReferenced(head);
- 	return 1;
- }
-@@ -2157,28 +2146,20 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, un=
-signed long addr,
- 		return 0;
-=20
- 	BUILD_BUG_ON(pgd_devmap(orig));
--	refs =3D 0;
-+
- 	page =3D pgd_page(orig) + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
--	do {
--		pages[*nr] =3D page;
--		(*nr)++;
--		page++;
--		refs++;
--	} while (addr +=3D PAGE_SIZE, addr !=3D end);
-+	refs =3D record_subpages(page, addr, end, pages + *nr);
-=20
- 	head =3D try_get_compound_head(pgd_page(orig), refs);
--	if (!head) {
--		*nr -=3D refs;
-+	if (!head)
- 		return 0;
--	}
-=20
- 	if (unlikely(pgd_val(orig) !=3D pgd_val(*pgdp))) {
--		*nr -=3D refs;
--		while (refs--)
--			put_page(head);
-+		put_compound_head(head, refs);
- 		return 0;
- 	}
-=20
-+	*nr +=3D refs;
- 	SetPageReferenced(head);
- 	return 1;
- }
---=20
-2.24.0
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
