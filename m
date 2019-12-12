@@ -2,126 +2,99 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6F3C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF414C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1F206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576147271;
-	bh=G5dWhTA8yXw0fcvJ7dmJ0Yzd87sWKpxCPFgwWJQb2Rs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PGkIl+Xm9rWPQyfZbBzssIdLIqEAFfA5wnEcnehmj49TKKaanR/J9GVttye3u5tO9
-	 3TmP7oLed+0mpAFyuSkP4rMFAQTH7pc+iQZo1WO+rLyIDv6VPN0Mn2ykA89PWb2k1q
-	 66ba+qpDl5pR7HWOtOnX8XHsmIHAk8EKETY3wDqA=
+	by mail.kernel.org (Postfix) with ESMTP id 994E72467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbfLLKlK (ORCPT
+        id S1728744AbfLLKlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:41:10 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44964 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfLLKlK (ORCPT
+        Thu, 12 Dec 2019 05:41:51 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:55819 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbfLLKlu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:41:10 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q10so2136303wrm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:41:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S1F+4TtH6sI5cY7070NYFBNoEudVsb5hE0A8Xjrz5eo=;
-        b=IoFTsowcKg00Iz0WKrEvjoKZLOSi2ZqpF99/sCBHGd5DKtMjKOw1Tp9WmMpWY4Uyc1
-         pjpjQALGqvEyTdP0ShRSigI1zjN3alf3G63cxsFJEcwiSyfAm4u1/1E4njifOoCWMrGo
-         wBlElywR6HBU9TEbPJ/dRt4zpBx93FgyGMcJFrjW7wl8vHA4RBhVyOpFwBacbmTJKFMJ
-         ZNTo2HDaNhTw4Cy3bn41+QpAfoa6bt8X7vDT60PdzeFSODSt1fcxjMYbDFBdyf9JB38t
-         hgudH22TocRCL2sFW4BT4j7GynyeIqkEKivOJTnz+weeYqkeZ5h8kD8/iGTnvnadcGfc
-         E/Jw==
-X-Gm-Message-State: APjAAAX+mdqrAeRNZpDXCyNzRk4JQ9X2fxNHoUB4lTkJmTIslZMz42zB
-        /YGUqfNRp8W/+bsqkrdl4Ms=
-X-Google-Smtp-Source: APXvYqxOce3OTxugq2NkVg7LzBetfJZWQP02bBZN2IlNy0Ymm6100zVdUAOzD2ENCSn8R+WsdvEx0A==
-X-Received: by 2002:a5d:67c7:: with SMTP id n7mr5367757wrw.319.1576147267915;
-        Thu, 12 Dec 2019 02:41:07 -0800 (PST)
-Received: from localhost (ip-37-188-179-200.eurotel.cz. [37.188.179.200])
-        by smtp.gmail.com with ESMTPSA id w20sm5587444wmk.34.2019.12.12.02.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 02:41:06 -0800 (PST)
-Date:   Thu, 12 Dec 2019 11:41:05 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Edward Chron <echron@arista.com>,
-        David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] mm/oom: fix pgtables units mismatch in Killed process
- message
-Message-ID: <20191212104105.GB12165@dhcp22.suse.cz>
-References: <20191211202830.1600-1-idryomov@gmail.com>
+        Thu, 12 Dec 2019 05:41:50 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M4sD3-1igBOV2XEl-00214f for <linux-kernel@vger.kernel.org>; Thu, 12 Dec
+ 2019 11:41:48 +0100
+Received: by mail-qt1-f173.google.com with SMTP id g17so1838763qtp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:41:48 -0800 (PST)
+X-Gm-Message-State: APjAAAUoaoG9q5UilucHOPn6XBjbhoNiTwCIPIJPbvgVnE3q+wlEeTGy
+        WXtGrwQEm/9iGKNkz+EUBM3p974k8rBSoi9gB14=
+X-Google-Smtp-Source: APXvYqx1qrhJ+ZLEtmXG5NHyXLPObQKIYvH94tn9l2YlTaR7V4qRxqgCwC/Mys/F8s6u6Mb1U7HeaoE+R2W7PWRDd0c=
+X-Received: by 2002:ac8:3a27:: with SMTP id w36mr6752546qte.204.1576147307532;
+ Thu, 12 Dec 2019 02:41:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211202830.1600-1-idryomov@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-2-arnd@arndb.de>
+ <20191212101654.GA12950@willie-the-truck>
+In-Reply-To: <20191212101654.GA12950@willie-the-truck>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Dec 2019 11:41:31 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2BrURQ=w0ux1v+76mANZhqpxeZhdT4u7-_w16zrssDXQ@mail.gmail.com>
+Message-ID: <CAK8P3a2BrURQ=w0ux1v+76mANZhqpxeZhdT4u7-_w16zrssDXQ@mail.gmail.com>
+Subject: Re: [PATCH 01/24] compat: ARM64: always include asm-generic/compat.h
+To:     Will Deacon <will@kernel.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:WZ8y0+uK6sDA4hVKO/dlo23gH8I4AjDhraWWuj7mQALg8Ii+szU
+ LNrJJFR1QSHLxaJrxRfQ4zkRSmeMqXaHe5yX6RVHFGn3IzYiGQlUhhE2oKS3ngf9s5P0hSq
+ QUWcEXd7G3QSqUDIpT+X+AvGkYbkdZPavYTbLVsbChlwHAnu040/WzonAavHqkIHjc/Q4tp
+ SEi/X+N9myxg1enF3UdYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UIkeoW66Iww=:gqQY3AASFlC/IIhrWQdSHy
+ pQvt4ff/GTfauc7HgEcXx7HPNcnpkdbZT0IdNflUx+k7HLm4ZQHKL04PFfuBnQRPr2NOW9um6
+ 5rbv6a+IIe2cANPOsq8eOT4raGfWBKCgVnCu1A3xa7nb6cDcXRpdF2PlUPG+8AQcdegObxQ0G
+ q9ebNcn/abeIgTanGEHkSM1JibkufSnw3K3JwkyUq8wWZqxFebyg32zmVhTs6ibdPJw+xknl+
+ xjsSSs2VCcLmUbtkV1qOv3RvX+pZFK2FJbfSoBNmrNpmpG2TJwN2is4Uarj28Ekr8H/h4gp9d
+ iKkNr4qquiz63AEtpE4MicBXeHXJb58QXe9fEpndly5wYxl4+L7A0KKJ3xet+80EtihGxQ5xz
+ +jt+6gopjtud8Hkbka7uU975rFI4jkJwwUmf0CqKl1+V4bzSR5RVj5NHYuQaj9woO6Q43pDii
+ urtYuPzdDJCDXhfIdRfpQQ9dDaglhdmZfmJ5FhzoKp3eM08uooxRwRu4FRBOLg2/BIENpWdXx
+ RpFtxJHmIcNiJY+zEM6f1br9ZClt7+M2M1gvrxlc8eG2pHs4ve4Pn5+UsGKl7cZ6tQ+Jz6WdT
+ p9Z5Ydtf8jCVJgGfHJ6/DKrPi1UfZLcQgkwY+SLE21IKdAT9QDk2jBaEBsX82ZsMNrAeOAnRC
+ 087rxDEPtDIyk/dPLFMFoT99XL+UmNPJrdfxT6MzDKFOSQdbxy+l9QumU4woFQmnRKdoeTpsO
+ lZ9sR2T9NYX0tFEX1PalBPxoqEdnEAOpMU7ZC+8Vm9XizhT+Mgp/yDCmZ6EHuovJ9y9OFnM7d
+ My09VhFveY/uw4oLaxzFTxvIM1P+oR/tR20ymiaydrGMbA0uL5p/cIzizZ/HEAX0Ugf+F87Fw
+ eHRtkDLIa2sZsE889FDA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 11-12-19 21:28:30, Ilya Dryomov wrote:
-> pr_err() expects kB, but mm_pgtables_bytes() returns the number of
-> bytes.  As everything else is printed in kB, I chose to fix the value
-> rather than the string.
-> 
-> Before:
-> 
-> [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> ...
-> [   1878]  1000  1878   217253   151144  1269760        0             0 python
-> ...
-> Out of memory: Killed process 1878 (python) total-vm:869012kB, anon-rss:604572kB, file-rss:4kB, shmem-rss:0kB, UID:1000 pgtables:1269760kB oom_score_adj:0
-> 
-> After:
-> 
-> [  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name
-> ...
-> [   1436]  1000  1436   217253   151890  1294336        0             0 python
-> ...
-> Out of memory: Killed process 1436 (python) total-vm:869012kB, anon-rss:607516kB, file-rss:44kB, shmem-rss:0kB, UID:1000 pgtables:1264kB oom_score_adj:0
-> 
-> Fixes: 70cb6d267790 ("mm/oom: add oom_score_adj and pgtables to Killed process message")
-> Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-
-Ups, I have missed that when reviewing 70cb6d267790.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
+On Thu, Dec 12, 2019 at 11:17 AM Will Deacon <will@kernel.org> wrote:
+>
+> On Wed, Dec 11, 2019 at 09:42:35PM +0100, Arnd Bergmann wrote:
+> > In order to use compat_* type defininitions in device drivers
+> > outside of CONFIG_COMPAT, move the inclusion of asm-generic/compat.h
+> > ahead of the #ifdef.
+> >
+> > All other architectures already do this.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/arm64/include/asm/compat.h | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> Acked-by: Will Deacon <will@kernel.org>
 
 Thanks!
-> ---
->  mm/oom_kill.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index 71e3acea7817..d58c481b3df8 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -890,7 +890,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
->  		K(get_mm_counter(mm, MM_FILEPAGES)),
->  		K(get_mm_counter(mm, MM_SHMEMPAGES)),
->  		from_kuid(&init_user_ns, task_uid(victim)),
-> -		mm_pgtables_bytes(mm), victim->signal->oom_score_adj);
-> +		mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_adj);
->  	task_unlock(victim);
->  
->  	/*
-> -- 
-> 2.19.2
-> 
 
--- 
-Michal Hocko
-SUSE Labs
+> (Please let me know if you'd prefer this patch to be routed via the arm64
+> tree).
+
+No, it needs to stay together with patch 02/24. The later patches in the
+series are independent of those two though.
+
+     Arnd
