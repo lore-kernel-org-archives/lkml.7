@@ -2,128 +2,111 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028D6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99500C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC424214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFF0214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RKc0Wyrg"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="idUCuBkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbfLLIML (ORCPT
+        id S1728217AbfLLIMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:12:11 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20545 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728160AbfLLIMK (ORCPT
+        Thu, 12 Dec 2019 03:12:55 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:43254 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbfLLIMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:12:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576138329;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3vbKumHRhYv4hi2VaZ7lUNT3xifUzCtPM0UHF+6l3NA=;
-        b=RKc0WyrgCu87JJ6B2k6WKHdDUJtltniPy+8EuVvBgTbjq6DSG0OGzD9Sc+/AC9meLkWa/4
-        9//MUBhSAvhIdzudevdODc2av492nKnzSxQCP3D46nG9/2OZ6m0YQQ4+oL1fMw1HC6Bjm0
-        KyqmNRReKrCfEq8hVpTU3S5tca+BCYw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-KpY90oDPP9W1BkH8xwpGdg-1; Thu, 12 Dec 2019 03:12:08 -0500
-X-MC-Unique: KpY90oDPP9W1BkH8xwpGdg-1
-Received: by mail-wr1-f72.google.com with SMTP id z14so731031wrs.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:12:07 -0800 (PST)
+        Thu, 12 Dec 2019 03:12:55 -0500
+Received: by mail-pj1-f67.google.com with SMTP id g4so690974pjs.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:12:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ieuNU3BxQNBlr5wacK6RSBM8UAY3+jZD+rGJxQ2r+2w=;
+        b=idUCuBklPDpVcwuCAeYiQS7bb3n6PjK0uWRYClqzf76Z98GfJCybphCzT2opcGL6S/
+         3JgT9GfUZDfXUgvywaVFvgrCImPzLLV1iixkkK3wMHT+afWyPgdJVnKlnZa24DaSL5y9
+         SusB4/xv7MuZxtlaOJvMflaiNZot3T7jIBcwO+iLQ9D8riIER895g7AO90MD1w6T6c2S
+         Gg1z2I7DxqL+DgmEkSFityz6NE7+B7sYuB0hVhJ5AuzMqK8VVkxc86qFqUpWFPOuiS+y
+         MwTa/cgfn7w32DnkWYaJxjxsy9KoSUslhLrJNy7w+pxFuGLQSIoRA6uEG1xkvy5S0Y0l
+         izaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3vbKumHRhYv4hi2VaZ7lUNT3xifUzCtPM0UHF+6l3NA=;
-        b=lkY2NDLOTEVZT6EsZozehOcyww8jz4L+E42oKTKPwHB3XK4DlHK5AEOzttEFO7Ljb5
-         Ysh8lEiniK2jm4ZJRVrmCi1D5P7mlUL+jDOK8fyq3lgZqt0UR94Yutuyuk/x6T5ywg7d
-         oe8KMH5Mjr9/gyF164H70WJswtk7Aus4F5SD5YbC4+zImxVtHhVXErE+wdrJH0pGpP2w
-         OCCC/pY4DGdnZhqGVVGF/lHv/wxxI2pKs013xeEI37LMKuJU3jmOWjq0oGc0L0QK9MCv
-         kwNapmcyDNyEoUS+0AtRHW+zuvzKKxgNtaN8PJ0ggExsVcW6qV5/6RzAKG3SX/Y0H8xL
-         T9bQ==
-X-Gm-Message-State: APjAAAWN/PRD58RtxCEq3J8Er8NBOiAnP7I4gAzpq5Y4nDX4QFGq0RiJ
-        75OVuLf0q5P6NEaCpIHnzobItzCuPlhlisH4a6Z7z3hTxv7ZeELgq6ABGvkMkWwfQzq6ANKHXr0
-        d7FVqTMSZjEJYYCB3kIhCxtx9
-X-Received: by 2002:adf:fbc9:: with SMTP id d9mr4916142wrs.20.1576138326656;
-        Thu, 12 Dec 2019 00:12:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzxhPY9tb9EraSB3/G5RixEIryJ8sYFEuzvoUZhFyLUeSxfGbn39kUpvyoDawp63DhfWRplrA==
-X-Received: by 2002:adf:fbc9:: with SMTP id d9mr4916109wrs.20.1576138326388;
-        Thu, 12 Dec 2019 00:12:06 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id g9sm5198355wro.67.2019.12.12.00.12.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 00:12:05 -0800 (PST)
-Subject: Re: [PATCH RFC 04/15] KVM: Implement ring-based dirty memory tracking
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-References: <20191129213505.18472-1-peterx@redhat.com>
- <20191129213505.18472-5-peterx@redhat.com>
- <20191211063830-mutt-send-email-mst@kernel.org> <20191211205952.GA5091@xz-x1>
- <20191211172713-mutt-send-email-mst@kernel.org>
- <46ceb88c-0ddd-0d9a-7128-3aa5a7d9d233@redhat.com>
- <20191212023154-mutt-send-email-mst@kernel.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <74edef57-c1c7-53cb-4b93-291d9f816688@redhat.com>
-Date:   Thu, 12 Dec 2019 09:12:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ieuNU3BxQNBlr5wacK6RSBM8UAY3+jZD+rGJxQ2r+2w=;
+        b=p/WVTki8DJ3+EockSGo26f03i50kQxQjbYDeN1SMXikotCxL1GqL6WZ45fcMCBtYIc
+         e/038ZKHILfrRpUCHb1ofBOVeKc5dn9rHyBqr+fdJbQADmdu8KDD1eAdjK/9uZ6Hi4Kx
+         Hh/0CZIsRdOcBbEta5YX63thp60QdMfEQUTtnpa3l7f+QhxYvZ7YXeqPHijFWFjwEYYQ
+         luQEzWCbX1iJicXdFbK/BtRzUsSSlOk29LlhtjJjyvrtlnCDYfyE4OkU3n4Am6D6Tnvf
+         vUr7hqaCGgTFBMuZDRuJec8vnLeXmaV122YSzGVvV71FWpt0orOz/zwC1R6Yqrw7NtCX
+         625A==
+X-Gm-Message-State: APjAAAUNq1KZBrDSbnHxHqQT9HNk/9fCmo2mI3hsTBdM+x1Epuniwh89
+        kZE9xSbk7MgWqsFLZYLmVfWTFg==
+X-Google-Smtp-Source: APXvYqxb7RLa7bbmoiInTQAaQl62w7+UdiUrGstBnfUBKncodbLw2Y6ukkROPOm97s7y7P4lV0LIGQ==
+X-Received: by 2002:a17:902:968b:: with SMTP id n11mr7556492plp.120.1576138374309;
+        Thu, 12 Dec 2019 00:12:54 -0800 (PST)
+Received: from debian ([122.174.90.102])
+        by smtp.gmail.com with ESMTPSA id r66sm6260219pfc.74.2019.12.12.00.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 00:12:53 -0800 (PST)
+Date:   Thu, 12 Dec 2019 13:42:42 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     Tadeusz Struk <tadeusz.struk@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Will Deacon <will@kernel.org>, peterz@infradead.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+        jeffrin@rajagiritech.edu.in
+Subject: Re: [PROBLEM]: WARNING: lock held when returning to user space!
+ (5.4.1 #16 Tainted: G )
+Message-ID: <20191212081242.GB2657@debian>
+References: <20191207173420.GA5280@debian>
+ <20191209103432.GC3306@willie-the-truck>
+ <20191209202552.GK19243@linux.intel.com>
+ <34e5340f-de75-f20e-7898-6142eac45c13@intel.com>
+ <20191211151701.GA3643@debian>
+ <00804293-7f60-0ac1-fe01-0143eb508a2b@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212023154-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00804293-7f60-0ac1-fe01-0143eb508a2b@intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 08:36, Michael S. Tsirkin wrote:
-> On Thu, Dec 12, 2019 at 01:08:14AM +0100, Paolo Bonzini wrote:
->>>> I'd say it won't be a big issue on locking 1/2M of host mem for a
->>>> vm...
->>>> Also note that if dirty ring is enabled, I plan to evaporate the
->>>> dirty_bitmap in the next post. The old kvm->dirty_bitmap takes
->>>> $GUEST_MEM/32K*2 mem.  E.g., for 64G guest it's 64G/32K*2=4M.  If with
->>>> dirty ring of 8 vcpus, that could be 64K*8=0.5M, which could be even
->>>> less memory used.
->>>
->>> Right - I think Avi described the bitmap in kernel memory as one of
->>> design mistakes. Why repeat that with the new design?
->>
->> Do you have a source for that?
+On Wed, Dec 11, 2019 at 10:36:15AM -0800, Tadeusz Struk wrote:
+> On 12/11/19 7:17 AM, Jeffrin Jose wrote:
+> > above patch shows errors when i try to apply it.
+> > --------------------x------------------------x------------------
+> > error: git diff header lacks filename information when removing 1 leading pathname component (line 2)
+> > when i did  related to this "diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c"
+> > i get another error
+> > error: corrupt patch at line 27
+> > ----------------------x------------------------x-----------------
+> > 
+> > i use "git apply"
 > 
-> Nope, it was a private talk.
-> 
->> At least the dirty bitmap has to be
->> accessed from atomic context so it seems unlikely that it can be moved
->> to user memory.
-> 
-> Why is that? We could surely do it from VCPU context?
+> Hi,
+> This was just a copy and paste that wasn't meant to be applied.
+> If you want to try it please use the patch that I sent later:
+> https://patchwork.kernel.org/patch/11283317/
+>
 
-Spinlock is taken.
+i applied the patch and problem seem to be fixed.
 
->> The dirty ring could use user memory indeed, but it would be much harder
->> to set up (multiple ioctls for each ring?  what to do if userspace
->> forgets one? etc.).
-> 
-> Why multiple ioctls? If you do like virtio packed ring you just need the
-> base and the size.
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
 
-You have multiple rings, so multiple invocations of one ioctl.
-
-Paolo
+--
+software engineer
+rajagiri school of engineering and technology
 
