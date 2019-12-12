@@ -6,100 +6,59 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B63C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8675EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD302073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63CE32073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfLLGHK (ORCPT
+        id S1727935AbfLLGIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:07:10 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726784AbfLLGHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:07:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CAD5EB2C2;
-        Thu, 12 Dec 2019 06:07:07 +0000 (UTC)
-Subject: Re: [PATCH v3 4/4] xen-blkback: support dynamic unbind/bind
-To:     Paul Durrant <pdurrant@amazon.com>, xen-devel@lists.xenproject.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20191211152956.5168-1-pdurrant@amazon.com>
- <20191211152956.5168-5-pdurrant@amazon.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <d3c61bd0-c29f-bb73-f637-158c7541a5f3@suse.com>
-Date:   Thu, 12 Dec 2019 07:07:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 01:08:23 -0500
+Received: from helcar.hmeau.com ([216.24.177.18]:54204 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726784AbfLLGIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:08:23 -0500
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1ifHe9-0003qw-8Q; Thu, 12 Dec 2019 14:08:21 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1ifHe6-0002vB-W1; Thu, 12 Dec 2019 14:08:19 +0800
+Date:   Thu, 12 Dec 2019 14:08:18 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, sfr@canb.auug.org.au
+Subject: Re: [PATCH 1/2] crypto: arm/curve25519 - add arch-specific key
+ generation function
+Message-ID: <20191212060818.w4orbhieq66btymf@gondor.apana.org.au>
+References: <20191211102455.7b55218e@canb.auug.org.au>
+ <20191211092640.107621-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211152956.5168-5-pdurrant@amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211092640.107621-1-Jason@zx2c4.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.12.19 16:29, Paul Durrant wrote:
-> By simply re-attaching to shared rings during connect_ring() rather than
-> assuming they are freshly allocated (i.e assuming the counters are zero)
-> it is possible for vbd instances to be unbound and re-bound from and to
-> (respectively) a running guest.
+On Wed, Dec 11, 2019 at 10:26:39AM +0100, Jason A. Donenfeld wrote:
+> Somehow this was forgotten when Zinc was being split into oddly shaped
+> pieces, resulting in linker errors. The x86_64 glue has a specific key
+> generation implementation, but the Arm one does not. However, it can
+> still receive the NEON speedups by calling the ordinary DH function
+> using the base point.
 > 
-> This has been tested by running:
-> 
-> while true;
->    do fio --name=randwrite --ioengine=libaio --iodepth=16 \
->    --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
->    done
-> 
-> in a PV guest whilst running:
-> 
-> while true;
->    do echo vbd-$DOMID-$VBD >unbind;
->    echo unbound;
->    sleep 5;
->    echo vbd-$DOMID-$VBD >bind;
->    echo bound;
->    sleep 3;
->    done
-> 
-> in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
-> re-bind its system disk image.
-> 
-> This is a highly useful feature for a backend module as it allows it to be
-> unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
-> This was also tested by running:
-> 
-> while true;
->    do echo vbd-$DOMID-$VBD >unbind;
->    echo unbound;
->    sleep 5;
->    rmmod xen-blkback;
->    echo unloaded;
->    sleep 1;
->    modprobe xen-blkback;
->    echo bound;
->    cd $(pwd);
->    sleep 3;
->    done
-> 
-> in dom0 whilst running the same loop as above in the (single) PV guest.
-> 
-> Some (less stressful) testing has also been done using a Windows HVM guest
-> with the latest 9.0 PV drivers installed.
-> 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+>  arch/arm/crypto/curve25519-glue.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
