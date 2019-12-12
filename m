@@ -2,327 +2,214 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781A6C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A1CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D3D2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0012B22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i58l0aps";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GPMJx/lo"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="rgtrRVuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfLLQxx (ORCPT
+        id S1729950AbfLLQzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:53:53 -0500
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:49612
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729912AbfLLQxx (ORCPT
+        Thu, 12 Dec 2019 11:55:12 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38687 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729260AbfLLQzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:53:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576169631;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=e5LEyuQPaqBKMvryEzwuTRuvgb7OjYFZFRWOhaS4cjU=;
-        b=i58l0apsYsb5C4lxPkvmVzd62zm33bDJ1IetjJGQJh3iBs+hSpWQRdCI8tsutFR8
-        d30fLHS92J9ZMuj84zBgbzXOBRrqV7Bn9MdRA9fIcEHz09fkkuT+96Ro1hdH5AnljOI
-        LLcBMZc5KKiTuMQep/eZjedWqlFGAN5bzZqcQF14=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576169631;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=e5LEyuQPaqBKMvryEzwuTRuvgb7OjYFZFRWOhaS4cjU=;
-        b=GPMJx/lopZOnTLbvDcAFwUYvolECrAXzJefOex13BIIBnSRG87rAX/3nLFny3KNf
-        jeYKu6eqwCWsagDNgh5R4rsEWuVoKS2vtcly5L1xQh7xMVyMLXcQcOqjK8NJFd1dmfi
-        bO7chyhG/5xeOaD1iXLP+tUgp2djoiLJk0be1wOk=
+        Thu, 12 Dec 2019 11:55:11 -0500
+Received: by mail-ot1-f68.google.com with SMTP id h20so2674116otn.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:55:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IjDUBfxBJhXNaC2BIeIEC43hkHaDAGwaiQqn3TQYiIk=;
+        b=rgtrRVuq6mdTTp7elEykgE89Ca9kZfn8QGs2v++8uceH3hFUstkL2ayypXJmkZfxk1
+         iEGWW63b5xe8cb11bY30cimjn6zlRLLAZ0SBZbITIqWmtK9ObULY/ZUjOhVQpHgy43tK
+         vac8DIrdJ543HRUPfBajdEIZV1GmYiBat32AFIvi3TBXKX1su2WzlK2cncw5h6144hey
+         kOBYwgTRo2VfskCO21DnFQr6uUTKWUqlPo51785MVMk82ugVbKBZDUbGNO7frgqCR7rY
+         ZjPZecmpJa3QOFc0keUDCp2aSgzufXIt1iNv04Rl7hV1xbkD7RXbi3OjPTdOoMLxaXhC
+         B4+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IjDUBfxBJhXNaC2BIeIEC43hkHaDAGwaiQqn3TQYiIk=;
+        b=eS27eYcIWZ5zhnPVidnc9vc8Fw1M9aX2j9qdv2r0OXU52PWnYQhoL1tvCZSuw7T0bq
+         36To9vxl2rQzYD7vYiObP4luwz7FGoWURZui8qgqFrWMKnBjDKBlYd1kaNcHo+X2S5QK
+         hgm1QGWIT5fWDkw6ldVaI/8m1JL1seKH4jZbUwo+hQeO49s5xQDWJ7nJSuwCsNxGEG+8
+         wIsOATBPMqMnEbMksjbYrbHqgGuQW4RNuJtfhXageHGwZGaIw6eyiu5KZFGIi/5JZlz7
+         nbgmDqad6nojIJi8bRnkqVMfht23ecN0q490gKabFDTjrH7quaaSw6ctid09QwpZbJ6f
+         ubDw==
+X-Gm-Message-State: APjAAAXiDYC6D0+ywJcBYeQrYDOy5QzQWyq3e57CHA/dJlu0n4djO4Vx
+        0RRVo2LbxX+tmbXwEYIwetxzzTGX3MoYeMYhp5JUkQ==
+X-Google-Smtp-Source: APXvYqyr1ygzuNz/tNcPyx+AVQmEEPaxXCSetasrTiHp3InGql8xutKQ6hNSEWwo2qQnFd4JZbh62sd3hFut1H3bUl0=
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr9361501otk.363.1576169710137;
+ Thu, 12 Dec 2019 08:55:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Dec 2019 16:53:51 +0000
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-In-Reply-To: <MN2PR04MB69919AA0C345E7D6620C3ADFFC550@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
- <MN2PR04MB69919AA0C345E7D6620C3ADFFC550@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <0101016efb07efaa-17fec92c-201b-4363-be47-815470c500ac-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.12-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20191211213207.215936-1-brho@google.com> <20191211213207.215936-3-brho@google.com>
+ <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com>
+In-Reply-To: <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 12 Dec 2019 08:54:59 -0800
+Message-ID: <CAPcyv4gpYF=D323G+69FhFZw4i5W-15_wTRa1xNPdmear0phTw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] kvm: Use huge pages for DAX-backed files
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Barret Rhoden <brho@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Zeng, Jason" <jason.zeng@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 15:00, Avri Altman wrote:
->> 
->> 
->> On Wed 11 Dec 22:01 PST 2019, cang@codeaurora.org wrote:
->> 
->> > On 2019-12-12 12:53, Bjorn Andersson wrote:
->> > > On Wed 11 Dec 00:49 PST 2019, Can Guo wrote:
->> > >
->> > > > In order to improve the flexibility of ufs-bsg, modulizing it is a
->> > > > good choice. This change introduces tristate to ufs-bsg to allow
->> > > > users compile it as an external module.
->> > >
->> > > Can you please elaborate on what this "flexibility" is and why it's
->> > > a good thing?
->> > >
->> >
->> > ufs-bsg is a helpful gadget for debug/test purpose. But neither
->> > disabling it nor enabling it is the best way on a commercialized
->> > device. Disabling it means we cannot use it, while enabling it by
->> > default will expose all the DEVM/UIC/TM interfaces to user space,
->> > which is not "safe" on a commercialized device to let users play with it.
->> > Making it a module can resolve this, because only vendors can install
->> > it as they have the root permissions.
-> Agree.
-> We see that the public ufs-utils
-> (https://github.com/westerndigitalcorporation/ufs-utils) that uses
-> this infrastructure,
-> is gaining momentum, and currently being used not only by chipset and
-> flash vendors,
-> but by end customers as well.
-> This change will e.g. enable, field application engineers to debug
-> issues in a safer mode.
-> 
+On Thu, Dec 12, 2019 at 4:34 AM Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 11 Dec 2019, at 23:32, Barret Rhoden <brho@google.com> wrote:
+> >
+> > This change allows KVM to map DAX-backed files made of huge pages with
+> > huge mappings in the EPT/TDP.
+> >
+> > DAX pages are not PageTransCompound.  The existing check is trying to
+> > determine if the mapping for the pfn is a huge mapping or not.  For
+> > non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
+> > For DAX, we can check the page table itself.
+>
+> For hugetlbfs pages, tdp_page_fault() -> mapping_level() -> host_mapping_=
+level() -> kvm_host_page_size() -> vma_kernel_pagesize()
+> will return the page-size of the hugetlbfs without the need to parse the =
+page-tables.
+> See vma->vm_ops->pagesize() callback implementation at hugetlb_vm_ops->pa=
+gesize()=3D=3Dhugetlb_vm_op_pagesize().
+>
+> Only for pages that were originally mapped as small-pages and later merge=
+d to larger pages by THP, there is a need to check for PageTransCompound().=
+ Again, instead of parsing page-tables.
+>
+> Therefore, it seems more logical to me that:
+> (a) If DAX-backed files are mapped as large-pages to userspace, it should=
+ be reflected in vma->vm_ops->page_size() of that mapping. Causing kvm_host=
+_page_size() to return the right size without the need to parse the page-ta=
+bles.
 
-True, thank you for the comments.
+A given dax-mapped vma may have mixed page sizes so ->page_size()
+can't be used reliably to enumerating the mapping size.
 
->> >
->> > > >
->> > > > Signed-off-by: Can Guo <cang@codeaurora.org>
->> > > > ---
->> > > >  drivers/scsi/ufs/Kconfig   |  3 ++-
->> > > >  drivers/scsi/ufs/Makefile  |  2 +-  drivers/scsi/ufs/ufs_bsg.c |
->> > > > 49
->> > > > +++++++++++++++++++++++++++++++++++++++++++---
->> > > >  drivers/scsi/ufs/ufs_bsg.h |  8 --------
->> > > > drivers/scsi/ufs/ufshcd.c  | 36 ++++++++++++++++++++++++++++++----
->> > > >  drivers/scsi/ufs/ufshcd.h  |  7 ++++++-
->> > > >  6 files changed, 87 insertions(+), 18 deletions(-)
->> > > >
->> > > > diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
->> > > > index d14c224..72620ce 100644
->> > > > --- a/drivers/scsi/ufs/Kconfig
->> > > > +++ b/drivers/scsi/ufs/Kconfig
->> > > > @@ -38,6 +38,7 @@ config SCSI_UFSHCD
->> > > >   select PM_DEVFREQ
->> > > >   select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> > > >   select NLS
->> > > > + select BLK_DEV_BSGLIB
->> > >
->> > > Why is this needed?
->> > >
->> >
->> > Because ufshcd.c needs to call some funcs defined in bsg lib.
->> >
->> > > >   ---help---
->> > > >   This selects the support for UFS devices in Linux, say Y and make
->> > > >     sure that you know the name of your UFS host adapter (the card
->> > > > @@ -143,7 +144,7 @@ config SCSI_UFS_TI_J721E
->> > > >     If unsure, say N.
->> > > >
->> > > >  config SCSI_UFS_BSG
->> > > > - bool "Universal Flash Storage BSG device node"
->> > > > + tristate "Universal Flash Storage BSG device node"
->> > > >   depends on SCSI_UFSHCD
->> > > >   select BLK_DEV_BSGLIB
->> > > >   help
->> > > > diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
->> > > > index 94c6c5d..904eff1 100644
->> > > > --- a/drivers/scsi/ufs/Makefile
->> > > > +++ b/drivers/scsi/ufs/Makefile
->> > > > @@ -6,7 +6,7 @@ obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) +=
->> > > > cdns-pltfrm.o
->> > > >  obj-$(CONFIG_SCSI_UFS_QCOM) += ufs-qcom.o
->> > > >  obj-$(CONFIG_SCSI_UFSHCD) += ufshcd-core.o
->> > > >  ufshcd-core-y                            += ufshcd.o ufs-sysfs.o
->> > > > -ufshcd-core-$(CONFIG_SCSI_UFS_BSG)       += ufs_bsg.o
->> > > > +obj-$(CONFIG_SCSI_UFS_BSG)       += ufs_bsg.o
->> > > >  obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
->> > > >  obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
->> > > >  obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o diff --git
->> > > > a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c index
->> > > > 3a2e68f..302222f 100644
->> > > > --- a/drivers/scsi/ufs/ufs_bsg.c
->> > > > +++ b/drivers/scsi/ufs/ufs_bsg.c
->> > > > @@ -164,13 +164,15 @@ static int ufs_bsg_request(struct bsg_job *job)
->> > > >   */
->> > > >  void ufs_bsg_remove(struct ufs_hba *hba)  {
->> > > > - struct device *bsg_dev = &hba->bsg_dev;
->> > > > + struct device *bsg_dev = hba->bsg_dev;
->> > > >
->> > > >   if (!hba->bsg_queue)
->> > > >           return;
->> > > >
->> > > >   bsg_remove_queue(hba->bsg_queue);
->> > > >
->> > > > + hba->bsg_dev = NULL;
->> > > > + hba->bsg_queue = NULL;
->> > > >   device_del(bsg_dev);
->> > > >   put_device(bsg_dev);
->> > > >  }
->> > > > @@ -178,6 +180,7 @@ void ufs_bsg_remove(struct ufs_hba *hba)
->> > > >  static inline void ufs_bsg_node_release(struct device *dev)
->> > > >  {
->> > > >   put_device(dev->parent);
->> > > > + kfree(dev);
->> > > >  }
->> > > >
->> > > >  /**
->> > > > @@ -186,14 +189,19 @@ static inline void ufs_bsg_node_release(struct
->> > > > device *dev)
->> > > >   *
->> > > >   * Called during initial loading of the driver, and before
->> > > > scsi_scan_host.
->> > > >   */
->> > > > -int ufs_bsg_probe(struct ufs_hba *hba)
->> > > > +static int ufs_bsg_probe(struct ufs_hba *hba)
->> > > >  {
->> > > > - struct device *bsg_dev = &hba->bsg_dev;
->> > > > + struct device *bsg_dev;
->> > > >   struct Scsi_Host *shost = hba->host;
->> > > >   struct device *parent = &shost->shost_gendev;
->> > > >   struct request_queue *q;
->> > > >   int ret;
->> > > >
->> > > > + bsg_dev = kzalloc(sizeof(*bsg_dev), GFP_KERNEL);
->> > > > + if (!bsg_dev)
->> > > > +         return -ENOMEM;
->> > > > +
->> > > > + hba->bsg_dev = bsg_dev;
->> > > >   device_initialize(bsg_dev);
->> > > >
->> > > >   bsg_dev->parent = get_device(parent);
->> > > > @@ -217,6 +225,41 @@ int ufs_bsg_probe(struct ufs_hba *hba)
->> > > >
->> > > >  out:
->> > > >   dev_err(bsg_dev, "fail to initialize a bsg dev %d\n",
->> > > > shost->host_no);
->> > > > + hba->bsg_dev = NULL;
->> > > >   put_device(bsg_dev);
->> > > >   return ret;
->> > > >  }
->> > > > +
->> > > > +static int __init ufs_bsg_init(void)
->> > > > +{
->> > > > + struct list_head *hba_list = NULL;
->> > > > + struct ufs_hba *hba;
->> > > > + int ret = 0;
->> > > > +
->> > > > + ufshcd_get_hba_list_lock(&hba_list);
->> > > > + list_for_each_entry(hba, hba_list, list) {
->> > > > +         ret = ufs_bsg_probe(hba);
->> > > > +         if (ret)
->> > > > +                 break;
->> > > > + }
->> > >
->> > > So what happens if I go CONFIG_SCSI_UFS_BSG=y and
->> > > CONFIG_SCSI_UFS_QCOM=y?
->> > >
->> > > Wouldn't that mean that ufs_bsg_init() is called before ufshcd_init()
->> > > has added the controller to the list? And even in the even that they are
->> > > both =m, what happens if they are invoked in the "wrong" order?
->> > >
->> >
->> > In the case that CONFIG_SCSI_UFS_BSG=y and CONFIG_SCSI_UFS_QCOM=y,
->> > I give late_initcall_sync(ufs_bsg_init) to make sure ufs_bsg_init
->> > is invoked only after platform driver is probed. I tested this combination.
->> >
->> > In the case that both of them are "m", installing ufs-bsg before ufs-qcom
->> > is installed would have no effect as ufs_hba_list is empty, which is
->> > expected.
->> 
->> Why is it the expected behavior that bsg may or may not probe 
->> depending
->> on the driver load order and potentially timing of the initialization.
->> 
->> > And in real cases, as the UFS is the boot device, UFS driver will always
->> > be probed during bootup.
->> >
->> 
->> The UFS driver will load and probe because it's mentioned in the
->> devicetree, but if either the ufs drivers or any of its dependencies
->> (phy, resets, clocks, etc) are built as modules it might very well
->> finish probing after lateinitcall.
->> 
->> So in the even that the bsg is =y and any of these drivers are =m, or 
->> if
->> you're having bad luck with your timing, the list will be empty.
->> 
->> As described below, if bsg=m, then there's nothing that will load the
->> module and the bsg will not probe...
-> Right.
-> bsg=y and ufshcd=m is a bad idea, and should be avoided.
-> 
+> (b) If DAX-backed files small-pages can be later merged to large-pages by=
+ THP, then the =E2=80=9Cstruct page=E2=80=9D of these pages should be modif=
+ied as usual to make PageTransCompound() return true for them. I=E2=80=99m =
+not highly familiar with this mechanism, but I would expect THP to be able =
+to merge DAX-backed files small-pages to large-pages in case DAX provides =
+=E2=80=9Cstruct page=E2=80=9D for the DAX pages.
 
-Yeah, I will get it addressed in the next patchset.
+DAX pages do not participate in THP and do not have the
+PageTransCompound accounting. The only mechanism that records the
+mapping size for dax is the page tables themselves.
 
-Thanks,
-Can Guo.
 
->> 
->> [..]
->> > > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> [..]
->> > > >  void ufshcd_remove(struct ufs_hba *hba)
->> > > >  {
->> > > > - ufs_bsg_remove(hba);
->> > > > + struct device *bsg_dev = hba->bsg_dev;
->> > > > +
->> > > > + mutex_lock(&ufs_hba_list_lock);
->> > > > + list_del(&hba->list);
->> > > > + if (hba->bsg_queue) {
->> > > > +         bsg_remove_queue(hba->bsg_queue);
->> > > > +         device_del(bsg_dev);
->> > >
->> > > Am I reading this correct in that you probe the bsg_dev form initcall
->> > > and you delete it as the ufshcd instance is removed? That's not okay.
->> > >
->> > > Regards,
->> > > Bjorn
->> > >
->> >
->> > If ufshcd is removed, its ufs-bsg, if exists, should also be removed.
->> > Could you please enlighten me a better way to do this? Thanks.
->> >
->> 
->> It's the asymmetry that I don't like.
->> 
->> Perhaps if you instead make ufshcd platform_device_register_data() the
->> bsg device you would solve the probe ordering, the remove will be
->> symmetric and module autoloading will work as well (although then you
->> need a MODULE_ALIAS of platform:device-name).
->> 
->> Regards,
->> Bjorn
+>
+> >
+> > Note that KVM already faulted in the page (or huge page) in the host's
+> > page table, and we hold the KVM mmu spinlock.  We grabbed that lock in
+> > kvm_mmu_notifier_invalidate_range_end, before checking the mmu seq.
+> >
+> > Signed-off-by: Barret Rhoden <brho@google.com>
+> > ---
+> > arch/x86/kvm/mmu/mmu.c | 36 ++++++++++++++++++++++++++++++++----
+> > 1 file changed, 32 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > index 6f92b40d798c..cd07bc4e595f 100644
+> > --- a/arch/x86/kvm/mmu/mmu.c
+> > +++ b/arch/x86/kvm/mmu/mmu.c
+> > @@ -3384,6 +3384,35 @@ static int kvm_handle_bad_page(struct kvm_vcpu *=
+vcpu, gfn_t gfn, kvm_pfn_t pfn)
+> >       return -EFAULT;
+> > }
+> >
+> > +static bool pfn_is_huge_mapped(struct kvm *kvm, gfn_t gfn, kvm_pfn_t p=
+fn)
+> > +{
+> > +     struct page *page =3D pfn_to_page(pfn);
+> > +     unsigned long hva;
+> > +
+> > +     if (!is_zone_device_page(page))
+> > +             return PageTransCompoundMap(page);
+> > +
+> > +     /*
+> > +      * DAX pages do not use compound pages.  The page should have alr=
+eady
+> > +      * been mapped into the host-side page table during try_async_pf(=
+), so
+> > +      * we can check the page tables directly.
+> > +      */
+> > +     hva =3D gfn_to_hva(kvm, gfn);
+> > +     if (kvm_is_error_hva(hva))
+> > +             return false;
+> > +
+> > +     /*
+> > +      * Our caller grabbed the KVM mmu_lock with a successful
+> > +      * mmu_notifier_retry, so we're safe to walk the page table.
+> > +      */
+> > +     switch (dev_pagemap_mapping_shift(hva, current->mm)) {
+>
+> Doesn=E2=80=99t dev_pagemap_mapping_shift() get =E2=80=9Cstruct page=E2=
+=80=9D as first parameter?
+> Was this changed by a commit I missed?
+>
+> -Liran
+>
+> > +     case PMD_SHIFT:
+> > +     case PUD_SIZE:
+> > +             return true;
+> > +     }
+> > +     return false;
+> > +}
+> > +
+> > static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+> >                                       gfn_t gfn, kvm_pfn_t *pfnp,
+> >                                       int *levelp)
+> > @@ -3398,8 +3427,8 @@ static void transparent_hugepage_adjust(struct kv=
+m_vcpu *vcpu,
+> >        * here.
+> >        */
+> >       if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> > -         !kvm_is_zone_device_pfn(pfn) && level =3D=3D PT_PAGE_TABLE_LE=
+VEL &&
+> > -         PageTransCompoundMap(pfn_to_page(pfn)) &&
+> > +         level =3D=3D PT_PAGE_TABLE_LEVEL &&
+> > +         pfn_is_huge_mapped(vcpu->kvm, gfn, pfn) &&
+> >           !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) =
+{
+> >               unsigned long mask;
+> >               /*
+> > @@ -6015,8 +6044,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct k=
+vm *kvm,
+> >                * mapping if the indirect sp has level =3D 1.
+> >                */
+> >               if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> > -                 !kvm_is_zone_device_pfn(pfn) &&
+> > -                 PageTransCompoundMap(pfn_to_page(pfn))) {
+> > +                 pfn_is_huge_mapped(kvm, sp->gfn, pfn)) {
+> >                       pte_list_remove(rmap_head, sptep);
+> >
+> >                       if (kvm_available_flush_tlb_with_range())
+> > --
+> > 2.24.0.525.g8f36a354ae-goog
+> >
+>
