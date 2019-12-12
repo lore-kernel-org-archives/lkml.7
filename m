@@ -2,136 +2,132 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA91DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F831C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A1C2073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576176206;
-	bh=PJyKfMalY0gpBEpyEjCuKvuwLGOUy0Zl0QRKgM0JWu8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VaRefb8IIPmn1MRdiZxFqr5FLpdFxzDxL2HXoo0Ci+xK7cVAQVMDE+WXpjbOmCQNb
-	 Dz04GkTCYUvpm9hPbfVz9Ll5SVtw7W1okfk/BW38isOmj2zWbdvS14L9xIN0cz38gL
-	 MaHZ1PEeMTTa4FZ+CJFvuw4RYlwQ5JLgG1tSMLtA=
+	by mail.kernel.org (Postfix) with ESMTP id 6B97E24671
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="ABRb/h4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbfLLSnZ (ORCPT
+        id S1730535AbfLLSnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:43:25 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33033 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbfLLSnZ (ORCPT
+        Thu, 12 Dec 2019 13:43:39 -0500
+Received: from mail-pf1-f182.google.com ([209.85.210.182]:38035 "EHLO
+        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfLLSni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:43:25 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 21so3448697ljr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:43:23 -0800 (PST)
+        Thu, 12 Dec 2019 13:43:38 -0500
+Received: by mail-pf1-f182.google.com with SMTP id x185so1241381pfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:43:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=daP2x4GLzegqYAtGzoN/GqQWx/OgbUZpFEmzsIb9AuY=;
-        b=ESVNK1Mwi4VakiBbtSIOLOxnFTfo9yicVGMiebqVDAAObXDl8gUPGjFP3V6AoTVKJc
-         HXbX49wJTIP8gVq4DIOHImreynSyKqrAyaVA413Sj66yFki8qzqdppnMRHspROxc1wIy
-         o3RYW91grmKJW3WGA8r4+DqCoBMnHPzXSZzsw=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=fEIPg/nQz4H3SkrhOeevoDfxx5kg6oJ1sVD3wkmZeI0=;
+        b=ABRb/h4SFCN15IlJ59pRxlKmFUVBRkKSP6xEkKHRgMqwZqw8UpadE/n46IhjBKm0xI
+         Hw1BTt6v5y/rIocXnccHBkGIZVICyVqoz7xSWV3uvQoQCugmlWIqMOnOZYzBrg5cUpmG
+         0+5vBkHOKMxEjtmzhGa3uzOdCsXMc7nOlFLXDOzzplMSDchmHph+zrBYze+a5cBo+LX2
+         ymnHRs8Jc2JLBOi7lFmdClxmXEtdYs8rvZ5Bap2HczqawwPjhm47w2r/96Lb/IiRn55+
+         Vc8URDEpeNvnjiUsCGI37gERHaXpJDwJbNcy+GHI8WYirzeS+z/DZdl/KAJQzyYcmXDj
+         q2vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=daP2x4GLzegqYAtGzoN/GqQWx/OgbUZpFEmzsIb9AuY=;
-        b=HBjX54aDP/54LJaMRDiuHzPczX2jFPeihUUZ5+nDnaUROOg7yeHjZ6RdwTPKW4AJK8
-         Wbkv8AGbnnzF+4PPW57M4VLJgNvbHGVgC+Dcgch5B4XOwsAaeJCcV2wLCbxmTn2DoD/G
-         6RDw+q4CsK3h7n9dQWn1docIms47+u9CoMSLvphVksoYv3PY3qDr6BCqqgyCvicNxExS
-         GaO2BdsRf7oYjEaGioCks8IuKq6/EaJbIKqUSrDsM5lcJWLppSW9nct+uhHSFRXq5SvC
-         F7qYO+SX5ZxGMzuAVXiw7LGiqXDfdcsg9KzbwUF31z4cplUj7Utt3772HtXuAa3UPDtk
-         6FtQ==
-X-Gm-Message-State: APjAAAUWqB5Y7Ij2XlDk3g/Ch3vFy0oSIGKtVLh2jBpX7RNj1bLCZ3s+
-        6y1u4ZloqVd4azMLbIV9FMr2goV3Rbs=
-X-Google-Smtp-Source: APXvYqw2ngl46VL0ZEy5KVACHVCvxKJiCiDVYcWsHA9wxgZuzngszZ9MGfRj2ktu7xhSdGPiWrliiw==
-X-Received: by 2002:a05:651c:2046:: with SMTP id t6mr6125805ljo.180.1576176202617;
-        Thu, 12 Dec 2019 10:43:22 -0800 (PST)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id w2sm3463385ljo.61.2019.12.12.10.43.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 10:43:21 -0800 (PST)
-Received: by mail-lf1-f46.google.com with SMTP id n12so38211lfe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:43:21 -0800 (PST)
-X-Received: by 2002:ac2:4946:: with SMTP id o6mr6694407lfi.170.1576176201157;
- Thu, 12 Dec 2019 10:43:21 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=fEIPg/nQz4H3SkrhOeevoDfxx5kg6oJ1sVD3wkmZeI0=;
+        b=ZCi+epnPq8q67X/uGRIrRqwEQfjWZNy+PbQjchTiVFoyPa+qqjSFY9Wf+EDNhWlivL
+         ajK4S66UugB4bzmLfdvTAm8MvlhHc2hahuhuchq4bukmlMJvcml5QMLbHTAxIZlNx+9b
+         tZRiO9bc3ofy3JoQrpcGPmqdd9ldphEjzlYIhe4ojS2e+jnUeEQMgr33duxLWByT71Uj
+         leSBZTRhqpJf608k8oQD5NHQ/jGYgxlMcAHvrkvFJhMr0KEWZ0rvF87fNTX3GqSDqYNi
+         LPXaeaSag3PmyFVwXhj6ifPYOM8973j+fzwjmEqXMGB02yQbmiIiEpoGmiDbj1JVl2P5
+         RT8A==
+X-Gm-Message-State: APjAAAV8qmcKyZHYMu9+A6O1tDVamNb1/Wrxb6Rkpzg6rzOfPcsDt0L0
+        IDhjMMSBLfdwgYYSV5x1OgiExg==
+X-Google-Smtp-Source: APXvYqyVlBeifCyE3IO6vVv8sLrUbg/iyOye4wEh0A4o2JqPV+oWytkfEMTm0IaR5HFgRNwZljzrVg==
+X-Received: by 2002:a62:1742:: with SMTP id 63mr11114346pfx.231.1576176217889;
+        Thu, 12 Dec 2019 10:43:37 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id j14sm7532044pgs.57.2019.12.12.10.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 10:43:37 -0800 (PST)
+Date:   Thu, 12 Dec 2019 10:43:34 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191212104334.222552a1@cakuba.netronome.com>
+In-Reply-To: <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
+References: <20191210225900.GB3105713@mini-arch>
+        <CAEf4BzYtqywKn4yGQ+vq2sKod4XE03HYWWBfUiNvg=BXhgFdWg@mail.gmail.com>
+        <20191211172432.GC3105713@mini-arch>
+        <CAEf4Bzb+3b-ypP8YJVA=ogQgp1KXx2xPConOswA0EiGXsmfJow@mail.gmail.com>
+        <20191211191518.GD3105713@mini-arch>
+        <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
+        <20191211200924.GE3105713@mini-arch>
+        <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
+        <20191212025735.GK3105713@mini-arch>
+        <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
+        <20191212162953.GM3105713@mini-arch>
+        <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au> <20191212080105.GV2844@hirez.programming.kicks-ass.net>
- <20191212100756.GA11317@willie-the-truck> <20191212104610.GW2827@hirez.programming.kicks-ass.net>
- <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com> <20191212180634.GA19020@willie-the-truck>
-In-Reply-To: <20191212180634.GA19020@willie-the-truck>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 12 Dec 2019 10:43:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
-Message-ID: <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-To:     Will Deacon <will@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:06 AM Will Deacon <will@kernel.org> wrote:
->
-> I'm currently trying to solve the issue by removing volatile from the bitop
-> function signatures
+On Thu, 12 Dec 2019 08:53:22 -0800, Andrii Nakryiko wrote:
+> > > > Btw, how hard it would be to do this generation with a new python
+> > > > script instead of bpftool? Something along the lines of
+> > > > scripts/bpf_helpers_doc.py that parses BTF and spits out this C header
+> > > > (shouldn't be that hard to write custom BTF parser in python, right)?
+> > > >  
+> > >
+> > > Not impossible, but harder than I'd care to deal with. I certainly
+> > > don't want to re-implement a good chunk of ELF and BTF parsing (maps,
+> > > progs, in addition to datasec stuff). But "it's hard to use bpftool in
+> > > our build system" doesn't seem like good enough reason to do all that.  
+> > You can replace "our build system" with some other project you care about,
+> > like systemd. They'd have the same problem with vendoring in recent enough
+> > bpftool or waiting for every distro to do it. And all this work is
+> > because you think that doing:
+> >
+> >         my_obj->rodata->my_var = 123;
+> >
+> > Is easier / more type safe than doing:
+> >         int *my_var = bpf_object__rodata_lookup(obj, "my_var");
+> >         *my_var = 123;  
+> 
+> Your arguments are confusing me. Did I say that we shouldn't add this
+> type of "dynamic" interface to variables? Or did I say that every
+> single BPF application has to adopt skeleton and bpftool? I made no
+> such claims and it seems like discussion is just based around where I
+> have to apply my time and efforts... You think it's not useful - don't
+> integrate bpftool into your build system, simple as that. Skeleton is
+> used for selftests, but it's up to maintainers to decide whether to
+> keep this, similar to all the BTF decisions.
 
-I really think that's the wrong thing to do.
+Since we have two people suggesting this functionality to be a separate
+tool could you please reconsider my arguments from two days ago?
 
-The bitop signature really should be "volatile" (and it should be
-"const volatile" for test_bit, but I'm not sure anybody cares).
+  There absolutely nothing this tool needs from [bpftool], no
+  JSON needed, no bpffs etc. It can be a separate tool like
+  libbpf-skel-gen or libbpf-c-skel or something, distributed with libbpf.
+  That way you can actually soften the backward compat. In case people
+  become dependent on it they can carry that little tool on their own.
 
-Exactly because it's simply valid to say "hey, my data is volatile,
-but do an atomic test of this bit". So it might be volatile in the
-caller.
-
-Now, I generally frown on actual volatile data structures - because
-the data structure volatility often depends on _context_. The same
-data might be volatile in one context (when you do some optimistic
-test on it without locking), but 100% stable in another (when you do
-have a lock).
-
-So I don't want to see "volatile" on data definitions ("jiffies" being
-the one traditional exception), but marking things volatile in code
-(because you know you're working with unlocked data) and then passing
-them down to various helper functions - including the bitops ones - is
-quite traditional and accepted.
-
-In other words, 'volatile" should be treated the same way "const" is
-largely treated in C.
-
-A pointer to "const" data doesn't mean that the data is read-only, or
-that it cannot be modified _elsewhere_, it means that within this
-particular context and this copy of the pointer we promise not to
-write to it.
-
-Similarly, a pointer to "volatile" data doesn't mean that the data
-might not be stable once you take a lock, for example. So it's ok to
-have volatile pointers even if the data declaration itself isn't
-volatile - you're stating something about the context, not something
-fundamental about the data.
-
-And in the context of the bit operations, "volatile" is the correct thing to do.
-
-                     Linus
+I'd honestly leave the distro packaging problem for people who actually
+work on that to complain about.
