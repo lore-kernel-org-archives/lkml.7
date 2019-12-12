@@ -2,127 +2,198 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BA3C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B34C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADEDD206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99C12067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pkqrboVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfLLPHv (ORCPT
+        id S1729055AbfLLPIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:07:51 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728815AbfLLPHu (ORCPT
+        Thu, 12 Dec 2019 10:08:02 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41565 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728815AbfLLPIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:07:50 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCF7c8I009948
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:07:49 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wu1fnmg97-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:07:48 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
-        Thu, 12 Dec 2019 15:07:46 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Dec 2019 15:07:41 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCF7eX939977108
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 15:07:40 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB5C04C040;
-        Thu, 12 Dec 2019 15:07:40 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D51B4C044;
-        Thu, 12 Dec 2019 15:07:38 +0000 (GMT)
-Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Thu, 12 Dec 2019 15:07:38 +0000 (GMT)
-Date:   Thu, 12 Dec 2019 20:37:37 +0530
-From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-References: <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
- <20191211173829.GB21797@linux.vnet.ibm.com>
- <20191211224617.GE19256@dread.disaster.area>
- <20191212101031.GV2827@hirez.programming.kicks-ass.net>
+        Thu, 12 Dec 2019 10:08:02 -0500
+Received: by mail-vs1-f67.google.com with SMTP id f8so1767551vsq.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:08:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zbYuLohJ6uz9IV3uB+nuAd8APjXTFVTSFGSirgS84Fw=;
+        b=pkqrboVtNyI5GfSeksmn9z5PnU5TgHPwW8EtQ28nj33hzudbVH9SuoYaMsPTPRIgK5
+         Eqp/3oIW6uUE4++T9Mj7TzjbQVgb7UC+hw4/pxWH8PYZ5u0kbc6O8eVmn//rz5aTQjKV
+         LvnklEtIK4gpufnMuZelStusOrqeQFUhrVcDtUa2c5qB/zC2el+WhNR1eOvWGcC9SION
+         Hk0ue7RAmyWIELLCOGkDVdtEF4DVFtZUBK5v2mxCV3MXD6tPUmvejYAdc7Q4wp3f42D3
+         a3nwTSWD+upAi+wOj1E3pl5atpf7VUwWRmypPWUiCHH8mQFqEOqg/0K5HZcYFxqA92a2
+         4XyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zbYuLohJ6uz9IV3uB+nuAd8APjXTFVTSFGSirgS84Fw=;
+        b=KY3jO7GbsdvheFD103eao24mRlj3lG0y2QhRl0FkDX3aLSBik2D6a4SmJx7BLsAmlJ
+         AIWuxovNcuDeBUJbAyagoWSnBMIFj2DNGcndaoU1564eUixs7GdYpqNYvwVkKIGd68O8
+         bjxeEr21izokGsmOnrZGKHeBLGAK+PQzzq2TX7SbwkpNHSKGVOfiS+qlodhneoKZwI54
+         wlTZ9t0xee/rlnQad7KJokZ4nF6o/j17a8n9+xWEnpsDaZHjxWedwIwpKpTV6tNIvwna
+         NkfJV75uvrrh77Nh4nfWMMWN70FVByPwrVpanCftRRbnN/ogePm4sF87atVPPwNqD7Qd
+         FKpg==
+X-Gm-Message-State: APjAAAUZOUYz+urlWlsne3OQJHGvPqTiAdn3ir8GBKeSqWIck6GXJ2dX
+        QuZeu0pBuWnpbIt0WiVmtKoeY8bd1fsfLi5AQgKShQ==
+X-Google-Smtp-Source: APXvYqw8Cxw8goN18pz+XIVG0ArSx5rkSvWM5IzHtNml4ttcHm9tifgGxLAx++YkwezG41U68dvM6EO/SuWVRkgPtZ0=
+X-Received: by 2002:a67:b649:: with SMTP id e9mr7320111vsm.34.1576163280703;
+ Thu, 12 Dec 2019 07:08:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20191212101031.GV2827@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-x-cbid: 19121215-0028-0000-0000-000003C7E3ED
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121215-0029-0000-0000-0000248B1DE8
-Message-Id: <20191212150737.GC21797@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_03:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 bulkscore=0 spamscore=0 lowpriorityscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 phishscore=0
- adultscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912120117
+References: <20191210014011.21987-1-digetx@gmail.com> <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+ <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com> <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
+ <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com> <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
+In-Reply-To: <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 12 Dec 2019 16:07:24 +0100
+Message-ID: <CAPDyKFq26Wcd9f3VJ1afxv9TVDJQu4wi+yLS-4Pi1bYnFLyWsg@mail.gmail.com>
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Zijlstra <peterz@infradead.org> [2019-12-12 11:10:31]:
+On Thu, 12 Dec 2019 at 15:23, Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 11.12.2019 19:29, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > 11.12.2019 19:10, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >> On Wed, 11 Dec 2019 at 16:46, Dmitry Osipenko <digetx@gmail.com> wrote=
+:
+> >>>
+> >>> Hello Ulf,
+> >>>
+> >>> 11.12.2019 11:11, Ulf Hansson =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>>> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wro=
+te:
+> >>>>>
+> >>>>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are a=
+ffected
+> >>>>> by a problem where WiFi chip reports CCCR v1.10, while it should v1=
+.20.
+> >>>>> In a result high-speed mode isn't enabled for the WiFi card and thi=
+s
+> >>>>> results in a malfunctioning SDIO communication.
+> >>>>
+> >>>> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR=
+_SPEED?
+> >>>
+> >>> Yes, the SDIO_SPEED_SHS bit is set.
+> >>>
+> >>>>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 fai=
+led: -84
+> >>>>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send =
+NAK
+> >>>>>
+> >>>>> Downstream kernels are overriding card's CCCR info in SDHCI driver =
+to fix
+> >>>>> the problem, let's do the same in upstream.
+> >>>>>
+> >>>>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC dr=
+iver,
+> >>>>> which overrides card's info for the TI wl1251 WiFi.
+> >>>>
+> >>>> This is a temporary solution and should be replaced by doing the DT
+> >>>> parsing during
+> >>>>
+> >>>> So, yes, let's see if we can use a card quirk instead. That's the fi=
+rst option.
+> >>>>
+> >>>> A second option is simply to parse the DT subnode for a new DT
+> >>>> property during mmc_sdio_init_card(). Along the lines of what we do
+> >>>> for the broken-hpi DT binding for eMMC.
+> >>>
+> >>> Let's try the first option. My understanding is that the problem affe=
+cts
+> >>> only the specific model of the WiFi chip and it's not a board-specifi=
+c
+> >>> problem. I'll add Broadcom driver people to CC for the next version o=
+f
+> >>> the patch, maybe they'll have something to say.
+> >>
+> >> Okay, sounds reasonable. By looking at your latest attempt for a fix,
+> >> I have two minor nitpicks, otherwise it looks good.
+> >>
+> >> The nitpicks:
+> >> I suggest to rename MMC_QUIRK_HIGH_SPEED_CARD to MMC_QUIRK_HIGH_SPEED
+> >> and mmc_card_need_high_speed_toggle() to mmc_card_quirk_hs().
+> >
+> > I'll take it into account, thanks.
+>
+> Looks like I managed to figure out what's really going on:
+>
+>   1. The BCM4329 doc clearly states that High Speed is supported, see
+> page 49 (Section 11: WLAN Interfaces, SDIO v1.2)
+>
+> https://www.cypress.com/file/298626/download
+>
+>   2. I googled for performance results of the BCM4329 SDIO WiFi and came
+> to a conclusion that ~40 Mbit/s is a realistic maximum of the WiFi-data
+> throughput for NVIDIA Tegra20 boards due to antenna configuration
+> limitations and whatever.
 
-> 
-> +static struct sched_entity *
-> +__pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr);
+Okay.
 
-I think we already have __pick_next_entity in kernel/sched/fair.c
+>
+>   3. The Tegra's SDHCI clock is pre-configured to 48MHz at the time of
+> kernel's boot-up.
+>
+>   4. IIUC, the maximum clock rate for the legacy SD signaling mode is
+> ~25MHz and that is more than enough for a 4-lane SDIO data-bus that
+> allows up to 100 Mbit/s for the WiFi which is capped to 40 Mbit/s anyways=
+.
 
-static struct sched_entity *__pick_next_entity(struct sched_entity *se)
-{
-        struct rb_node *next = rb_next(&se->run_node);
+Yes, I see.
 
-        if (!next)
-                return NULL;
+>
+>   5. Apparently MMC core doesn't limit the clock rate for the Normal
+> Speed cards.
 
-        return rb_entry(next, struct sched_entity, run_node);
-}
+It should, else it's a bug (I would be really surprised if that's the
+case, but who knows).
 
-I checked in v5.5-rc1, v5.4 and tip/master too. Let me know if you were
-referring to a different version of code.
+>
+>
+> So, I added "max-frequency =3D <25000000>;" to the SDHCI node of the
+> board's device-tree and ta-da! WiFi works absolutely fine without the
+> quirk! Thus the SDIO card quirk isn't really needed and I'm dropping it
+> for now.
+>
+> Ulf, do you know if it's a bug or a feature of the MMC core that it
+> doesn't limit clock rate for the Normal Speed cards?
 
-So I modified the only place its called to the newer
-__pick_next_entity(cfs_rq, curr); 
+It should limit the speed, else it's a bug. Can you perhaps check what
+the requested clock rate is via some debug prints in the host ops
+->set_ios()? And also what the real rate becomes after dividers.
 
-But wanted to verify if that's what you had in mind.
+If it's not a bug in the core, I suspect that there may be generic
+problem dealing with initialization frequencies for sdhci-tegra.
 
+For example, mmc_rescan_try_freq() tries to initialize the SDIO card
+at 400KHz, then 300, then 200 then 100 (in that order, and note
+*KHz*). When a frequency is successful, initialization continues and
+later on the clock rate should be increased to 25MHz, for legacy speed
+mode.
 
--- 
-Thanks and Regards
-Srikar Dronamraju
-
+Kind regards
+Uffe
