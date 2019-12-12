@@ -2,141 +2,113 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE68AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA47C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F81621556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DBE22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FizTWvyU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TrM7s1KV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730646AbfLLTez (ORCPT
+        id S1730662AbfLLTgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:34:55 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40846 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730284AbfLLTez (ORCPT
+        Thu, 12 Dec 2019 14:36:17 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39832 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730463AbfLLTgR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:34:55 -0500
-Received: by mail-pj1-f66.google.com with SMTP id s35so1496594pjb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:34:54 -0800 (PST)
+        Thu, 12 Dec 2019 14:36:17 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so1367031pfx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:36:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IFlryiLHUodkFUHyul9JRSETVpiYHsZY3o54mIdwFns=;
-        b=FizTWvyU1A4ExbDpT2UuE4aYCU60rctg1gBJ5WR5COxthL7GosaRt/pb368fkQ+b22
-         QVMeuCeehi1v7G9Unrekbp7x5SiaZ/OtXQz9f5Xznvj4Rntb3UR3ca5leZ5LYBtJRKx2
-         x612miCMaPY5Sv/asIc2gkKqfcGBxqETTxVWP0ZIFnkfmOVcUFfW3GFdYuCzaiNPiUQp
-         JSG2MdKiSkmTGiNsT34dxA4fuk/ygNxj+SZxJfwIO2KhT5Ms1fTqPrQqnUf20764qcZC
-         5+s/wsVW23J/fLWInGM+jKaKU8E5+g+Wyu/mDw10wTueRwCD+g1G8NTRURscJIHDhq3l
-         NPfg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZEGuXuYPUWE/qYdSZqED1gh4bU/O1uzRJFgkr80g5hE=;
+        b=TrM7s1KVt+BcjbKEaGH7FQnsY49TdXgU8izplBUx/dCEO0MX3pTuBKF0wxwWHmauNX
+         OwrsQv4JxlXkxvePcns/akl3lBJVwNWyWbBMz7UpTg9Nku8ehYHundEKPsvwpqaBmeVU
+         Ka6mVdvvvCVv7s3gRlKvcGgGRXbWmlYyfl0ew=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IFlryiLHUodkFUHyul9JRSETVpiYHsZY3o54mIdwFns=;
-        b=q/a1uKLKkeMny92lDBwQP3XMziSPabedZSaEozyFROjc4LseGPsRW662h25G8CgSkS
-         VgH8Sf4h1dnKrAoX82i9nFTtJ8yFsj7wfrjJCyWYWQPbZ3G60QwGUFLWlvXjeJIkhCkg
-         nWq+aJsyBv4A3qirU+N9sbKV0Y0xuFVbDHwFRA0gtFNvt7xuqW2/7CBY6K4E8kFZ6Ouu
-         Vqlnf7CAj/vDGSi+06sfPukZMyg4VBcRN2NOpnwzA8DhPHTGRT4Fzm+hpilYyjFLbt0D
-         Q6gOJQcE1udGZ5yyP6yKgoUBBs+fFwAejqE8VP8SmCysN++i88KFjzfZd2RdzPPOonp4
-         RUtg==
-X-Gm-Message-State: APjAAAWW8H9oLrDG5NootMs22ZopZLFjBqCxhoWIltAGefspaMaPLTQy
-        vNiXvLm9Oxds+JuD5zGBxZpr6YESzTJ3DaR4ZWao6g==
-X-Google-Smtp-Source: APXvYqxDpjUCjUlCSd9D5HpG6l7mTCkwfCtR7gUjYNbmchtdSnj5MHHiXYtrS4dEMdidCEtwEUrq9Fm+jAazbPtXwiU=
-X-Received: by 2002:a17:902:8ec8:: with SMTP id x8mr10932263plo.119.1576179293980;
- Thu, 12 Dec 2019 11:34:53 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZEGuXuYPUWE/qYdSZqED1gh4bU/O1uzRJFgkr80g5hE=;
+        b=d8u3JMuKsSLyCWMrdsGBQe85Cd9OoweYhLUQFXni0P1ViznnljDk/rqwEsXsr21htY
+         BQjzTKT28KK0A7qWVL2BpcIm2yQJNypcShkEWMsnKiVwPNJrudL/O/zeqalO9TtTNOwm
+         ANHALf1FIkmz02EZFdbDc5THNm2Pn1oDTmPJ6ATntvhmjxVNGXEsj+br48r8RrbE9nZy
+         COFPCvXC40Y0I+7WgDt8be9tXv+HLeCaBuNx8NwFuimklnm3sdP14u4v4uIDe/hisbZN
+         tHIdf91r7ezaerZR+dT0/hc20Xoqs/FuTs+QoY67r4rHm2Scd+lvJ2yNvmZEWW/ba5Wf
+         FaLw==
+X-Gm-Message-State: APjAAAUChK79ac/IYi1dOlFzytmR14mWQbYGQBJTXL4gFeC4XPVnXmDC
+        kHPzVZQ4qZwWdoq3Q4h2U6cd5Q==
+X-Google-Smtp-Source: APXvYqxghN0ayxKucn1BnTnQnYD8PpnXbxp/upzKjgiCF4kPosXUnpb3rT2o3+6itZxqbbh957q/bA==
+X-Received: by 2002:a63:7985:: with SMTP id u127mr12217817pgc.169.1576179376641;
+        Thu, 12 Dec 2019 11:36:16 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 11:36:16 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, swboyd@chromium.org,
+        mka@chromium.org, Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 0/7] arm64: dts: sc7180: Make dtbs_check mostly happy
+Date:   Thu, 12 Dec 2019 11:35:36 -0800
+Message-Id: <20191212193544.80640-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 MIME-Version: 1.0
-References: <20191211192252.35024-1-natechancellor@gmail.com>
-In-Reply-To: <20191211192252.35024-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 12 Dec 2019 11:34:42 -0800
-Message-ID: <CAKwvOdmQp+Rjgh49kbTp1ocLCjv4SUACEO4+tX5vz4stX-pPpg@mail.gmail.com>
-Subject: Re: [PATCH] ath11k: Remove unnecessary enum scan_priority
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 11:23 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/net/wireless/ath/ath11k/wmi.c:1827:23: warning: implicit
-> conversion from enumeration type 'enum wmi_scan_priority' to different
-> enumeration type 'enum scan_priority' [-Wenum-conversion]
->         arg->scan_priority = WMI_SCAN_PRIORITY_LOW;
->                            ~ ^~~~~~~~~~~~~~~~~~~~~
-> 1 warning generated.
->
-> wmi_scan_priority and scan_priority have the same values but the wmi one
-> has WMI prefixed to the names. Since that enum is already being used,
-> get rid of scan_priority and switch its one use to wmi_scan_priority to
-> fix this warning.
->
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/808
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+This gets rid of all of the dtbs_check that showed up atop the current
+qcom maintainer tree for sc7180-idp, except the errors in the
+'thermal-sensor' nodes.  I believe those are known / being dealt with
+separately [1] [2].
 
-Further, it looks like the member `scan_priority` in `struct
-wmi_start_scan_arg` and `struct wmi_start_scan_cmd` should probably
-use `enum wmi_scan_priority`, rather than `u32`.  Also, I don't know
-if the more concisely named enum is preferable?  Either way, thanks
-for the patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+I don't expect this series to have any functional changes, it just
+makes the device tree cleaner.  I was able to boot after applying
+these patches atop a working tree.
 
-> ---
->  drivers/net/wireless/ath/ath11k/wmi.h | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
->
-> diff --git a/drivers/net/wireless/ath/ath11k/wmi.h b/drivers/net/wireless/ath/ath11k/wmi.h
-> index 4a518d406bc5..756101656391 100644
-> --- a/drivers/net/wireless/ath/ath11k/wmi.h
-> +++ b/drivers/net/wireless/ath/ath11k/wmi.h
-> @@ -2896,15 +2896,6 @@ struct wmi_bcn_offload_ctrl_cmd {
->         u32 bcn_ctrl_op;
->  } __packed;
->
-> -enum scan_priority {
-> -       SCAN_PRIORITY_VERY_LOW,
-> -       SCAN_PRIORITY_LOW,
-> -       SCAN_PRIORITY_MEDIUM,
-> -       SCAN_PRIORITY_HIGH,
-> -       SCAN_PRIORITY_VERY_HIGH,
-> -       SCAN_PRIORITY_COUNT,
-> -};
-> -
->  enum scan_dwelltime_adaptive_mode {
->         SCAN_DWELL_MODE_DEFAULT = 0,
->         SCAN_DWELL_MODE_CONSERVATIVE = 1,
-> @@ -3056,7 +3047,7 @@ struct scan_req_params {
->         u32 scan_req_id;
->         u32 vdev_id;
->         u32 pdev_id;
-> -       enum scan_priority scan_priority;
-> +       enum wmi_scan_priority scan_priority;
->         union {
->                 struct {
->                         u32 scan_ev_started:1,
-> --
-> 2.24.0
->
-> --
+I have tried to sort the changes here, first including the "obviously
+correct" changes and later changes I am less certain about.  There are
+no known dependencies between the changes.
+
+[1] https://lore.kernel.org/r/CAD=FV=UXC3UT78vGBr9rRuRxz=8iwH4tOkFx6NC-pSs+Z5+7Xw@mail.gmail.com
+[2] https://lore.kernel.org/r/CAD=FV=UtHebABCpJo1QUc6C2v2iZq2rFL+pTMx=EHBL+7d=jTQ@mail.gmail.com
+
+
+Douglas Anderson (7):
+  arm64: dts: qcom: sc7180: Add SoC name to compatible
+  arm64: dts: qcom: sc7180: Rename gic-its node to msi-controller
+  arm64: dts: qcom: sc7180: Add "#clock-cells" property to usb_1_ssphy
+  arm64: dts: qcom: pm6150: Remove macro from unit name of adc-chan
+  arm64: dts: qcom: sc7180: Avoid "memory" for cmd-db reserved-memory
+    node
+  arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+  arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
+
+ arch/arm64/boot/dts/qcom/pm6150.dtsi    |  2 +-
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts |  2 +-
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 45 +++++++++++++------------
+ 3 files changed, 25 insertions(+), 24 deletions(-)
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.24.1.735.g03f4e72817-goog
+
