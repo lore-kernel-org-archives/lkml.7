@@ -2,147 +2,156 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847EBC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB532C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554F820663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8214C227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DJ6YaoPV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="icICU74h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbfLLLqH (ORCPT
+        id S1729108AbfLLLqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:46:07 -0500
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:33691 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbfLLLqG (ORCPT
+        Thu, 12 Dec 2019 06:46:24 -0500
+Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:14089 "EHLO
+        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfLLLqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:46:06 -0500
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id BA1B3725;
-        Thu, 12 Dec 2019 06:46:04 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Thu, 12 Dec 2019 06:46:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ol6RFW
-        OIya20JlX27c+UNzAio0bqaxzpviWh9kgvntk=; b=DJ6YaoPVWBLH9EEVX9M3nl
-        vfkaWhkcS2rur+gAlk5xib9TIW3fmqG6zrLqaxS9hUgnRlm1EYzMyMGdmI0j3qc7
-        7J7PlEnw43gLOuXw+MA3o1JhEsgz3yZ/Dmk28dytHyB3e6oEu1YwXJZZfdWAC8Sk
-        I8Uaqw1McwM+wDSJmJCb9Bzg7wbhakAX/1cEggCX2Z+1D9iy5AGikL/bVi1kFt6X
-        kVMusyPqV7xISsjTBU1QgAoiCswm5+VEv3Rjs5Zl3AObQA/NT+XHXyFfiEiNYq+M
-        E7sG528MDORuTIRQoy47HU+vWOMgyw5p+nesS1WGcc533oWVq8KGKSC8SLFv5wng
-        ==
-X-ME-Sender: <xms:fCjyXVhT38A60yl56bzcPmJ0Pm_1zcvVYvsVweVdMPdVcVFVuZ4r3Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeljedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
-    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
-    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucfkphepledurdeihedrfeegrdef
-    feenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslh
-    gvthhhihhnghhslhgrsgdrtghomhenucevlhhushhtvghrufhiiigvpedu
-X-ME-Proxy: <xmx:fCjyXQeu4fJb78qZjQ-MgGvc0yTc7mv1Uym0BXewvvrTH7dcafIoBw>
-    <xmx:fCjyXSkX9HZGrOdrMpCPmxFzUdPAZ5SjgQyOlEJE1i5tPq6PFN_3NA>
-    <xmx:fCjyXSrAQlmxHNpeMew9dUyAqHw66-S8HK3FECeeT95qyhMQGSZ5WQ>
-    <xmx:fCjyXZiELqMSNaWzBNwmVM3tb8uS-9f7LHVsLf-JcCBaIoOEBpVbvw>
-Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2AF1F80059;
-        Thu, 12 Dec 2019 06:46:03 -0500 (EST)
-Date:   Thu, 12 Dec 2019 12:45:59 +0100
-From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-To:     Suwan Kim <suwan.kim027@gmail.com>
-Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] usbip: Fix receive error in vhci-hcd when using
- scatter-gather
-Message-ID: <20191212114559.GW11116@mail-itl>
-References: <20191212052841.6734-1-suwan.kim027@gmail.com>
- <20191212052841.6734-2-suwan.kim027@gmail.com>
+        Thu, 12 Dec 2019 06:46:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1576151183;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/nxsGOBE3z4PzlqxdwsQCYIwr15kAEC2A0iA/M8NzNg=;
+  b=icICU74h003kifl2jdm+et2D3XyEB/t2n2OKVEVCcGgCUxRwFHU86tlM
+   9mxtm+IS4VBf5YSMZJIclIXAHzRqIYiFedlueLeW8PJ14Q2KPQsIQCoHP
+   9mywOaI9VdnrkeTDm37NYK21wx309rz+F2MNRjKyad6fdUKuxmB7DvnV5
+   k=;
+Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
+  roger.pau@citrix.com designates 162.221.158.21 as permitted
+  sender) identity=mailfrom; client-ip=162.221.158.21;
+  receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="roger.pau@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
+  envelope-from="roger.pau@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: XQ11SJm5VCacmy8DmwUR5YBttttsCxa7c+4A6W5FO1lnetauOgWcBAilaBYOG9mjh8og6E3E7k
+ d80WC/dPXXp7i7xvlxin2xOzS6ZEj9NH9TmKSZdDqAt2bj54bVwMAiEI7tdLcAiE+j9CfaYKWO
+ pZkPtYjN+yWKdCifxyVjGfk4fvf4j2dhKFNM7remQHt4HVxXGwqwGzumCPmBnssCTJRCv7h45i
+ VcJsqxjiLT/VcVDb0Qz6li+5fFT09GmlRKpT2gAbnYu1RJRQs5xKEpSw/h+OfZSNXQu3rpsF0m
+ g0g=
+X-SBRS: 2.7
+X-MesageID: 9932140
+X-Ironport-Server: esa5.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.69,305,1571716800"; 
+   d="scan'208";a="9932140"
+Date:   Thu, 12 Dec 2019 12:46:16 +0100
+From:   Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+To:     Paul Durrant <pdurrant@amazon.com>
+CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>
+Subject: Re: [PATCH v3 4/4] xen-blkback: support dynamic unbind/bind
+Message-ID: <20191212114616.GC11756@Air-de-Roger>
+References: <20191211152956.5168-1-pdurrant@amazon.com>
+ <20191211152956.5168-5-pdurrant@amazon.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="R7Dyui215VKdTDYA"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20191212052841.6734-2-suwan.kim027@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211152956.5168-5-pdurrant@amazon.com>
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL03.citrite.net (10.69.22.127)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 03:29:56PM +0000, Paul Durrant wrote:
+> By simply re-attaching to shared rings during connect_ring() rather than
+> assuming they are freshly allocated (i.e assuming the counters are zero)
+> it is possible for vbd instances to be unbound and re-bound from and to
+> (respectively) a running guest.
+> 
+> This has been tested by running:
+> 
+> while true;
+>   do fio --name=randwrite --ioengine=libaio --iodepth=16 \
+>   --rw=randwrite --bs=4k --direct=1 --size=1G --verify=crc32;
+>   done
+> 
+> in a PV guest whilst running:
+> 
+> while true;
+>   do echo vbd-$DOMID-$VBD >unbind;
+>   echo unbound;
+>   sleep 5;
+>   echo vbd-$DOMID-$VBD >bind;
+>   echo bound;
+>   sleep 3;
+>   done
+> 
+> in dom0 from /sys/bus/xen-backend/drivers/vbd to continuously unbind and
+> re-bind its system disk image.
+> 
+> This is a highly useful feature for a backend module as it allows it to be
+> unloaded and re-loaded (i.e. updated) without requiring domUs to be halted.
+> This was also tested by running:
+> 
+> while true;
+>   do echo vbd-$DOMID-$VBD >unbind;
+>   echo unbound;
+>   sleep 5;
+>   rmmod xen-blkback;
+>   echo unloaded;
+>   sleep 1;
+>   modprobe xen-blkback;
+>   echo bound;
+>   cd $(pwd);
+>   sleep 3;
+>   done
+> 
+> in dom0 whilst running the same loop as above in the (single) PV guest.
+> 
+> Some (less stressful) testing has also been done using a Windows HVM guest
+> with the latest 9.0 PV drivers installed.
+> 
+> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 
---R7Dyui215VKdTDYA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] usbip: Fix receive error in vhci-hcd when using
- scatter-gather
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
 
-On Thu, Dec 12, 2019 at 02:28:40PM +0900, Suwan Kim wrote:
-> When vhci uses SG and receives data whose size is smaller than SG
-> buffer size, it tries to receive more data even if it acutally
-> receives all the data from the server. If then, it erroneously adds
-> error event and triggers connection shutdown.
->=20
-> vhci-hcd should check if it received all the data even if there are
-> more SG entries left. So, check if it receivces all the data from
-> the server in for_each_sg() loop.
->=20
-> Fixes: ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub dr=
-iver")
-> Reported-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab=
-=2Ecom>
-> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+Thanks!
 
-Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+Juergen: I guess you will also pick this series and merge it from the
+Xen tree instead of the block one?
 
-> ---
->  drivers/usb/usbip/usbip_common.c | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/usb/usbip/usbip_common.c b/drivers/usb/usbip/usbip_c=
-ommon.c
-> index 6532d68e8808..e4b96674c405 100644
-> --- a/drivers/usb/usbip/usbip_common.c
-> +++ b/drivers/usb/usbip/usbip_common.c
-> @@ -727,6 +727,9 @@ int usbip_recv_xbuff(struct usbip_device *ud, struct =
-urb *urb)
-> =20
->  			copy -=3D recv;
->  			ret +=3D recv;
-> +
-> +			if (!copy)
-> +				break;
->  		}
-> =20
->  		if (ret !=3D size)
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-
---R7Dyui215VKdTDYA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl3yKHgACgkQ24/THMrX
-1ywSWwf/aXnourZh6+z8Levd5Q3SYBwIJXKYM9bNFOW1KwgCtYhhjVKYKVpkMh0v
-dsn9QNc3Is5A0bp+zfgsqskyDLCJYbtT7nq5UIdSd4xKID0oa6nlz1ODmgfducTI
-HTJ3jCyYoscaJZhCBkMSv0hcnoJQMAta+yr9qZJkYh/E5LnA5yErl8o6juSJ+E7g
-624+4ZHwgYIopr+fFSyD51c42dhrciu4j2C6URNhhJRMVqann/jvQZHT6eaBWfzt
-Uz0o3vfRLg5rBoU7luV2tTqPJOCve7Q+/CGUdawOIqRXs1FqnePq46r9T3VS5T3u
-0rWwX0nGquiKG6pYh/myHMobV2JuCA==
-=UnQt
------END PGP SIGNATURE-----
-
---R7Dyui215VKdTDYA--
+Roger.
