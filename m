@@ -2,85 +2,146 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C79BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6584C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95E6214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:52:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZSWj6tvE"
+	by mail.kernel.org (Postfix) with ESMTP id A184C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfLLWwT (ORCPT
+        id S1731262AbfLLWy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:52:19 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:54072 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfLLWwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:52:18 -0500
-Received: from zn.tnic (p200300EC2F0A5A00B4F8B0259BBDD02E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:b4f8:b025:9bbd:d02e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 722BD1EC0B73;
-        Thu, 12 Dec 2019 23:52:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576191137;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=I+6z30f30I6nzK22n10S/qvVdimFKEIApG864hhwozE=;
-        b=ZSWj6tvEbRghIKYhiFRQxD/CUxOZbYtFakqG/F3cprL57n4lXuwuZnOHq66hSdODVIQQsx
-        x728844ttPnfBk5OioQWoQro+7bmd4+2RYDruiXWM28VqLE2OErRq0AdPH6eFlY2l2f3KC
-        g6Ka0lr2wOGG1/FMtAZgFYsGwROrmtw=
-Date:   Thu, 12 Dec 2019 23:52:10 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Tony Luck <tony.luck@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/cpufeatures: Add feature flag for fast short rep
- movsb
-Message-ID: <20191212225210.GA22094@zn.tnic>
-References: <20191212214908.20185-1-tony.luck@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191212214908.20185-1-tony.luck@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Dec 2019 17:54:27 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35984 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731158AbfLLWy1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 17:54:27 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCMsJhR141014
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 17:54:25 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wu4t7nwqd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 17:54:25 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 12 Dec 2019 22:54:23 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Dec 2019 22:54:20 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCMrbVo43581744
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 22:53:37 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A452AAE04D;
+        Thu, 12 Dec 2019 22:54:19 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BB85AE045;
+        Thu, 12 Dec 2019 22:54:18 +0000 (GMT)
+Received: from dhcp-9-31-102-17.watson.ibm.com (unknown [9.31.102.17])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Dec 2019 22:54:18 +0000 (GMT)
+Subject: Re: [PATCH v2 1/2] IMA: Define workqueue for early boot "key"
+ measurements
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
+        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
+        sashal@kernel.org, jamorris@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Thu, 12 Dec 2019 17:54:18 -0500
+In-Reply-To: <b4ff3607-076e-7b90-24d1-9a129d9ce720@linux.microsoft.com>
+References: <20191211185116.2740-1-nramas@linux.microsoft.com>
+         <20191211185116.2740-2-nramas@linux.microsoft.com>
+         <1576138743.4579.147.camel@linux.ibm.com>
+         <0cc15a43-8e1b-9819-33fe-8325068f8df2@linux.microsoft.com>
+         <1576185189.4579.165.camel@linux.ibm.com>
+         <b4ff3607-076e-7b90-24d1-9a129d9ce720@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19121222-0028-0000-0000-000003C7FC54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121222-0029-0000-0000-0000248B37CD
+Message-Id: <1576191258.4579.181.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_08:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 spamscore=0 clxscore=1015 suspectscore=3
+ mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912120175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 01:49:08PM -0800, Tony Luck wrote:
-> From the Intel Optimization Reference Manual:
+On Thu, 2019-12-12 at 13:59 -0800, Lakshmi Ramasubramanian wrote:
+> On 12/12/19 1:13 PM, Mimi Zohar wrote:
 > 
-> 3.7.6.1 Fast Short REP MOVSB
-> Beginning with processors based on Ice Lake Client microarchitecture,
-> REP MOVSB performance of short operations is enhanced. The enhancement
-> applies to string lengths between 1 and 128 bytes long.  Support for
-> fast-short REP MOVSB is enumerated by the CPUID feature flag: CPUID
-> [EAX=7H, ECX=0H).EDX.FAST_SHORT_REP_MOVSB[bit 4] = 1. There is no change
-> in the REP STOS performance.
+> > 
+> > Looking at this again, something seems off or at least the comment
+> > doesn't match the code.
+> > 
+> >         /*
+> >           * To avoid holding the mutex while processing queued keys,
+> >           * transfer the queued keys with the mutex held to a temp list,
+> >           * release the mutex, and then process the queued keys from
+> >           * the temp list.
+> >           *
+> >           * Since ima_process_keys is set to true above, any new key will
+> >           * be processed immediately and not queued.
+> >           */
+> > 
+> > Setting ima_process_key before taking the lock won't prevent the race.
+> >   I think you want to test ima_process_keys before taking the lock and
+> > again immediately afterward taking the lock, before setting it.  Then
+> > the comment would match the code.
+> > 
+> > Shouldn't ima_process_keys be defined as static to limit the scope to
+> > this file?
+> > 
+> > Mimi
+> > 
 > 
-> Add an X86_FEATURE_FSRM flag for this.
+> In IMA hook, ima_process_key is checked without lock. If it is false, 
+> ima_queue_key is called. If the key was queued (by ima_queue_key()) then 
+> the hook defers measurement. Else, it processes it immediately.
 > 
-> Signed-off-by: Tony Luck <tony.luck@intel.com>
-> ---
+> In ima_queue_key() function the check for ima_process_key is done after 
+> taking the lock and the key queued if the flag is false.
 > 
-> Net effect of this patch is just to make "fsrm" appear in the
-> flags section of /proc/cpuinfo. Maybe someone can look into whether
-> we should make copy routines that use "rep movsb" check for this
-> flag to optimize copies on older CPUs that don't have it?
+> In ima_process_keys() ima_process_key is set without lock and then the 
+> queued keys are moved to a temp list after taking the lock.
+> 
+> I have reviewed the changes myself and also with a few of my colleagues. 
+> I don't think there is a race condition. Please let me know if you do 
+> see a problem.
+> 
+> I can move the setting of ima_process_key flag inside the lock. But 
+> honestly I don't think that is necessary.
+> 
+> I agree that ima_process_keys should be static since it is used in this 
+> file one. I'll make that change.
+> 
+> I can also move the setting of ima_process_key flag inside the lock 
+> along with the above change.
 
-We can then add the feature flag too. Just showing it in /proc/cpuinfo
-without any users is kinda pointless...
+My concern is with the last sentence "Since ima_process_keys is set to
+true above, any new key will be processed immediately and not queued."
+  It's unlikely, but possible, that a second process will wait for the
+ima_keys_mutex.  Either we remove this sentence or move setting
+ima_process_keys to after taking the lock.
 
--- 
-Regards/Gruss,
-    Boris.
+Mimi 
 
-https://people.kernel.org/tglx/notes-about-netiquette
