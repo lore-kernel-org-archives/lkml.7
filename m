@@ -6,91 +6,97 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F47C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC908C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3BC206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576176523;
-	bh=MTd9muN0RFcbU7r9IeK72YN2J5t+SjeoBTN78A1i2RI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rxCDQRB/u4Bb5iskhVpRzjlqBKqeVI9nsrJ5elUnkoyvCy9aihN39phTeCrYE7pp0
-	 eLEdSmjYlthSuArGzm134Ne1J80xd9IVUUyPkajO09Zlov05NNnlpG4nJSZ/cl+E1I
-	 IQVxIw1sH0/sbdrIGBpjkVxVLj1s0lHc1TI/8vTs=
+	by mail.kernel.org (Postfix) with ESMTP id A650D206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FG29BMip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfLLSsm (ORCPT
+        id S1730563AbfLLStJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:48:42 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37914 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730473AbfLLSsl (ORCPT
+        Thu, 12 Dec 2019 13:49:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52096 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730454AbfLLStJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:48:41 -0500
-Received: by mail-lj1-f194.google.com with SMTP id k8so3445556ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:48:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yLX/s+7Ivhh0xF9dE8Ygc3zv1BE9WaHo0SxDQx/ndOw=;
-        b=Hxo7zIOH626xCx5M7isNX9Kz2i6WfXy8dvU+dHqLV39CO//zL/XyJhwdy9zMUggXsF
-         sKVjhBuXVQzllryD1mGY0+h/6F170yVG671fMzLLAz66yPU2LfkO41ADlv1O+3YGsXdW
-         gJZ1lANbmyuJbIB7rg2DrjzC2Wjd1R0mzUPj4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yLX/s+7Ivhh0xF9dE8Ygc3zv1BE9WaHo0SxDQx/ndOw=;
-        b=Nod1kR4wP5CdQoIC5S4b7J7kEx5YA0sid57Q4MloxGCF4gOJ4V6QYe0pegytp5ZzL/
-         Y+APOD2Uo/OZpgvWHx4fLEsyi6CMyrlcPFLHPUogiIkWTqSPKhZpeixgIwnX/ePhgB04
-         ENsYJAROgUaFBLNwbUgXD2OKIN3aPvutPgC1oYpECrStQbKJgcvBei2QcFVqQn7QplHo
-         3fEnin3lcb5BL1HP1HxTZHbAcGeOV+AEafeqzQx+CIldOvnCg+zM/jbQHtJbSDje/PyP
-         0vFRurpXUVxIfqk0VVBqK/CE6slCphUO8+IloHt6ocj1kfuCGfUEVgjtZuNgQj/j2het
-         Xs3Q==
-X-Gm-Message-State: APjAAAVIb7APMKzlPgY3qdY4o8bjVgJ0HX4v0xknITWlV44h2946BoVW
-        KRwsp/3qIlw2CXWsKf6AIpa+wkYMS7E=
-X-Google-Smtp-Source: APXvYqzPk6YH+rKagLV8YHy5FQfHJkd3taeBJHCEroXGR2erpOm9SttWVHAThjx8Us5nqlFBEhcXgg==
-X-Received: by 2002:a2e:808a:: with SMTP id i10mr6590531ljg.151.1576176519194;
-        Thu, 12 Dec 2019 10:48:39 -0800 (PST)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id x29sm3763110lfg.45.2019.12.12.10.48.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 10:48:38 -0800 (PST)
-Received: by mail-lf1-f50.google.com with SMTP id 203so11685lfa.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:48:38 -0800 (PST)
-X-Received: by 2002:ac2:50cc:: with SMTP id h12mr6524868lfm.29.1576176517766;
- Thu, 12 Dec 2019 10:48:37 -0800 (PST)
+        Thu, 12 Dec 2019 13:49:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576176548;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qpXCGeo7xgW2LT0AqWyUEsSRJ1ASgG9iQOrS7V8eA/g=;
+        b=FG29BMip5qUvXiqlLjmDcXe2y2OEG+l34URyI0N1PrHAxTwms8QV7AgTt4c++E5hIkTRJN
+        cGDI5ISuv41WoUD2tr+YZEJEts2MSIknmLRKFJE6OllSveE131t+OIibLTNYjPNXm/fA2w
+        bL1RGTU3wHbb2rj0UcVNximIlv5QomQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-XWVqn2iyPxqbWS4-CexswA-1; Thu, 12 Dec 2019 13:49:04 -0500
+X-MC-Unique: XWVqn2iyPxqbWS4-CexswA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D582911E9;
+        Thu, 12 Dec 2019 18:49:03 +0000 (UTC)
+Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8880310013A1;
+        Thu, 12 Dec 2019 18:49:01 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 12:48:59 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
+Message-ID: <20191212184859.zjj2ycfkvpcns5bk@treble>
+References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
+ <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
 MIME-Version: 1.0
-References: <20191212140752.347520-1-linux@dominikbrodowski.net>
- <20191212140752.347520-3-linux@dominikbrodowski.net> <20191212183848.GJ4203@ZenIV.linux.org.uk>
-In-Reply-To: <20191212183848.GJ4203@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 12 Dec 2019 10:48:22 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiGH8mBqShwmOy-g+QA4_+prs-5s4eX6wZa7yatCu3aNw@mail.gmail.com>
-Message-ID: <CAHk-=wiGH8mBqShwmOy-g+QA4_+prs-5s4eX6wZa7yatCu3aNw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] fs: remove ksys_dup()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:38 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> Let's not expose the kernel guts to init/*.c more than absolutely unavoidable.
+On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
+> On 12/10/19 7:14 PM, Andrew Morton wrote:
+> > The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
+> > 
+> >    http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > mmotm-readme.txt says
+> > 
+> > README for mm-of-the-moment:
+> > 
+> > http://www.ozlabs.org/~akpm/mmotm/
+> > 
+> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > more than once a week.
+> > 
+> > You will need quilt to apply these patches to the latest Linus release (5.x
+> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > http://ozlabs.org/~akpm/mmotm/series
+> > 
+> > The file broken-out.tar.gz contains two datestamp files: .DATE and
+> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+> > followed by the base kernel version against which this patch series is to
+> > be applied.
+> 
+> on x86_64:
+> 
+> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
+> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
+> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
 
-Well, in this case I think it's more than justified: it removes one of
-the nasty "pass user pointers from kernel space" cases.
+Randy, can you share the .o files?
 
-I'd like to get to the point where "init" doesn't need set_fs() at
-all. We're not there now - do_execve() is going to be painful. So
-maybe we'll never be. But this gets us one step closer, at least.
+-- 
+Josh
 
-               Linus
