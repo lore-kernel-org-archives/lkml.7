@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62DEC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73551C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19272253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54D7521556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730375AbfLLSOk (ORCPT
+        id S1730357AbfLLSOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:14:40 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:56804 "EHLO
-        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730346AbfLLSOh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 13:14:37 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:56768 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730320AbfLLSOf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:14:35 -0500
 X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
@@ -28,10 +28,10 @@ X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 7C628200A95;
-        Thu, 12 Dec 2019 18:14:34 +0000 (UTC)
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id D572F200A83;
+        Thu, 12 Dec 2019 18:14:33 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 4A81C20B74; Thu, 12 Dec 2019 19:14:31 +0100 (CET)
+        id D5CE020B72; Thu, 12 Dec 2019 19:14:30 +0100 (CET)
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -39,9 +39,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] fs: remove ksys_dup()
-Date:   Thu, 12 Dec 2019 19:14:22 +0100
-Message-Id: <20191212181422.31033-6-linux@dominikbrodowski.net>
+Subject: [PATCH 4/5] init: unify opening /dev/console as stdin/stdout/stderr
+Date:   Thu, 12 Dec 2019 19:14:21 +0100
+Message-Id: <20191212181422.31033-5-linux@dominikbrodowski.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191212181422.31033-1-linux@dominikbrodowski.net>
 References: <20191212181422.31033-1-linux@dominikbrodowski.net>
@@ -52,99 +52,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ksys_dup() is used only at one place in the kernel, namely to duplicate
-fd 0 of /dev/console to stdout and stderr. The same functionality can be
-achieved by using functions already available within the kernel namespace.
+Merge the two instances where /dev/console is opened as
+stdin/stdout/stderr.
 
 Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
 ---
- fs/file.c                |  7 +------
- include/linux/syscalls.h |  1 -
- init/main.c              | 26 ++++++++++++++++++++------
- 3 files changed, 21 insertions(+), 13 deletions(-)
+ include/linux/initrd.h  |  2 ++
+ init/do_mounts_initrd.c |  5 +----
+ init/main.c             | 17 ++++++++++++-----
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/fs/file.c b/fs/file.c
-index 3da91a112bab..2f4fcf985079 100644
---- a/fs/file.c
-+++ b/fs/file.c
-@@ -960,7 +960,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
- 	return ksys_dup3(oldfd, newfd, 0);
- }
+diff --git a/include/linux/initrd.h b/include/linux/initrd.h
+index d77fe34fb00a..aa5914355728 100644
+--- a/include/linux/initrd.h
++++ b/include/linux/initrd.h
+@@ -28,3 +28,5 @@ extern unsigned int real_root_dev;
  
--int ksys_dup(unsigned int fildes)
-+SYSCALL_DEFINE1(dup, unsigned int, fildes)
+ extern char __initramfs_start[];
+ extern unsigned long __initramfs_size;
++
++void console_on_rootfs(void);
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index 3bf7b74153ab..dab8b1151b56 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -48,10 +48,7 @@ early_param("initrd", early_initrd);
+ static int init_linuxrc(struct subprocess_info *info, struct cred *new)
  {
- 	int ret = -EBADF;
- 	struct file *file = fget_raw(fildes);
-@@ -975,11 +975,6 @@ int ksys_dup(unsigned int fildes)
- 	return ret;
- }
- 
--SYSCALL_DEFINE1(dup, unsigned int, fildes)
--{
--	return ksys_dup(fildes);
--}
--
- int f_dupfd(unsigned int from, struct file *file, unsigned flags)
- {
- 	int err;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 5262b7a76d39..2960dedcfde8 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1232,7 +1232,6 @@ asmlinkage long sys_ni_syscall(void);
-  */
- 
- int ksys_umount(char __user *name, int flags);
--int ksys_dup(unsigned int fildes);
- int ksys_chroot(const char __user *filename);
- ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
- int ksys_chdir(const char __user *filename);
+ 	ksys_unshare(CLONE_FS | CLONE_FILES);
+-	/* stdin/stdout/stderr for /linuxrc */
+-	ksys_open("/dev/console", O_RDWR, 0);
+-	ksys_dup(0);
+-	ksys_dup(0);
++	console_on_rootfs();
+ 	/* move initrd over / and chdir/chroot in initrd root */
+ 	ksys_chdir("/root");
+ 	do_mount(".", "/", NULL, MS_MOVE, NULL);
 diff --git a/init/main.c b/init/main.c
-index 2cd736059416..ec3a1463ac69 100644
+index 91f6ebb30ef0..2cd736059416 100644
 --- a/init/main.c
 +++ b/init/main.c
-@@ -93,6 +93,7 @@
- #include <linux/rodata_test.h>
- #include <linux/jump_label.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/file.h>
- 
- #include <asm/io.h>
- #include <asm/bugs.h>
-@@ -1157,13 +1158,26 @@ static int __ref kernel_init(void *unused)
- 
- void console_on_rootfs(void)
- {
--	/* Open the /dev/console as stdin, this should never fail */
--	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
--		pr_err("Warning: unable to open an initial console.\n");
-+	struct file *file;
-+	unsigned int i;
-+
-+	/* Open /dev/console in kernelspace, this should never fail */
-+	file = filp_open("/dev/console", O_RDWR, 0);
-+	if (!file)
-+		goto err_out;
-+
-+	/* create stdin/stdout/stderr, this should never fail */
-+	for (i = 0; i < 3; i++) {
-+		if (f_dupfd(i, file, 0) != i)
-+			goto err_out;
-+	}
-+
-+	return;
- 
--	/* create stdout/stderr */
--	(void) ksys_dup(0);
--	(void) ksys_dup(0);
-+err_out:
-+	/* no panic -- this might not be fatal */
-+	pr_err("Warning: unable to open an initial console.\n");
-+	return;
+@@ -1155,6 +1155,17 @@ static int __ref kernel_init(void *unused)
+ 	      "See Linux Documentation/admin-guide/init.rst for guidance.");
  }
  
++void console_on_rootfs(void)
++{
++	/* Open the /dev/console as stdin, this should never fail */
++	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
++		pr_err("Warning: unable to open an initial console.\n");
++
++	/* create stdout/stderr */
++	(void) ksys_dup(0);
++	(void) ksys_dup(0);
++}
++
  static noinline void __init kernel_init_freeable(void)
+ {
+ 	/*
+@@ -1190,12 +1201,8 @@ static noinline void __init kernel_init_freeable(void)
+ 
+ 	do_basic_setup();
+ 
+-	/* Open the /dev/console on the rootfs, this should never fail */
+-	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
+-		pr_err("Warning: unable to open an initial console.\n");
++	console_on_rootfs();
+ 
+-	(void) ksys_dup(0);
+-	(void) ksys_dup(0);
+ 	/*
+ 	 * check if there is an early userspace init.  If yes, let it do all
+ 	 * the work
 -- 
 2.24.1
 
