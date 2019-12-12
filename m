@@ -2,111 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154EDC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2900EC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD84522B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFAB621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DqN9lB24"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iVNKJCwr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfLLU6W (ORCPT
+        id S1730974AbfLLU61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:58:22 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20059 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730871AbfLLU6V (ORCPT
+        Thu, 12 Dec 2019 15:58:27 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38296 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730895AbfLLU60 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:58:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576184300;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xFBksdHVlqSH2UyhAzKrEfmaK2aji1YTG0bwajfDZLs=;
-        b=DqN9lB24EhqUvYcjtHsukTTHIaqRiE7PrVMXWrL9vRcyBdGPM/ZeDT+YceQV0Uj3lyHbOe
-        ylLJDvZho8Yv0vwyWdR3bftdW75Vlnr/HAKh8cVsebiD2fIPeWeb7b+331/V/0Jq9ZmxlJ
-        UNngXEkX2G/V0EBMSJLXveDwIAdra44=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-b45Qw4c8MFKlLP0zkn1p-w-1; Thu, 12 Dec 2019 15:58:16 -0500
-X-MC-Unique: b45Qw4c8MFKlLP0zkn1p-w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D9159DB78;
-        Thu, 12 Dec 2019 20:58:14 +0000 (UTC)
-Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 785E95C548;
-        Thu, 12 Dec 2019 20:58:13 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 14:58:11 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
-Message-ID: <20191212205811.4vrrb4hou3tbiada@treble>
-References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
- <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
- <20191212184859.zjj2ycfkvpcns5bk@treble>
- <042c6cd7-c983-03f1-6a79-5642549f57c4@infradead.org>
+        Thu, 12 Dec 2019 15:58:26 -0500
+Received: by mail-pj1-f67.google.com with SMTP id l4so29374pjt.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:58:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FGjQzF0iKScXXFdM9JyIEL8mVJUWt3ih5NTxXqTlgWE=;
+        b=iVNKJCwr+xuHXTJtsLemsYjlS79bMKUifmCLbob6M3lvrmBC0K910BTYSyXsTSHW/B
+         DO1gmpZMZFYVmXapGtfEwWetW2lkuTUkqPYXnr47RhMrCgYuv2VRuBZj6R/J+CW8EhPv
+         /PZcnOW5zZoa4aCVtCzIj3X9nhks2xL8EmKyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FGjQzF0iKScXXFdM9JyIEL8mVJUWt3ih5NTxXqTlgWE=;
+        b=Z6Vy7uUMs47l4Ow3xPouf8UpMgKKMl7SfKZv2d/gB3sTT4PYDgGT8prhx530mT/Ujr
+         0QJL1TMlbmzOa0x5e3jLL1V1QLZOiQw/sgnHX7Z2u6GFYeaWhIQR07I2643/oJ9wgYIE
+         iooYglbbHpzMUrC4eXvFYg8uFCT42X7BoGdN6NKvaKKbBHn9hPeqxufe+NYI+KHJs8R4
+         DmPLYKldA7b9pSrNV2SPh41Yd081jgouWgVwlMydOv9IQMiM7aKcLgBQ+vY6FpCHnAsd
+         0sxkORCZx6FxPKteglgrT2Xa+dZQdTQfZDymwAyr8mW4FnD7dVQE896rho3P1Attpz+i
+         XfSA==
+X-Gm-Message-State: APjAAAWk2yjydETp59R+idBZxFFQbaesYl31VHIrsGEi1DsH42o8YKga
+        75gmcBOVweQBIlHelSqbP58z/Q==
+X-Google-Smtp-Source: APXvYqw8d7KvyNToM0AiNFq3Pm1ocL+6ODQlQfYD5UvuACYtqwlHLA2yWKnFX3iNF+jHnoJEdX24qw==
+X-Received: by 2002:a17:902:9a91:: with SMTP id w17mr11383362plp.96.1576184305763;
+        Thu, 12 Dec 2019 12:58:25 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id k9sm6929652pje.26.2019.12.12.12.58.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 12:58:25 -0800 (PST)
+Date:   Thu, 12 Dec 2019 12:58:23 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Rajeshwari <rkambl@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix order of nodes
+Message-ID: <20191212205823.GT228856@google.com>
+References: <20191212115443.1.I55198466344789267ed1eb5ec555fd890c9fc6e1@changeid>
+ <CAD=FV=XD2GKPc5qeMakvW8Ej9-y7n0Hi2qAie-gUM=DJOSv6sw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <042c6cd7-c983-03f1-6a79-5642549f57c4@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <CAD=FV=XD2GKPc5qeMakvW8Ej9-y7n0Hi2qAie-gUM=DJOSv6sw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:21:17PM -0800, Randy Dunlap wrote:
-> On 12/12/19 10:48 AM, Josh Poimboeuf wrote:
-> > On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
-> >> On 12/10/19 7:14 PM, Andrew Morton wrote:
-> >>> The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
-> >>>
-> >>>    http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> mmotm-readme.txt says
-> >>>
-> >>> README for mm-of-the-moment:
-> >>>
-> >>> http://www.ozlabs.org/~akpm/mmotm/
-> >>>
-> >>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> >>> more than once a week.
-> >>>
-> >>> You will need quilt to apply these patches to the latest Linus release (5.x
-> >>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> >>> http://ozlabs.org/~akpm/mmotm/series
-> >>>
-> >>> The file broken-out.tar.gz contains two datestamp files: .DATE and
-> >>> .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> >>> followed by the base kernel version against which this patch series is to
-> >>> be applied.
-> >>
-> >> on x86_64:
-> >>
-> >> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
-> >> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
-> >> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
-> > 
-> > Randy, can you share the .o files?
+On Thu, Dec 12, 2019 at 12:45:46PM -0800, Doug Anderson wrote:
+> Hi,
 > 
-> Sure. They are attached.
+> On Thu, Dec 12, 2019 at 11:55 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> > +               pdc: interrupt-controller@b220000 {
+> > +                       compatible = "qcom,sc7180-pdc", "qcom,pdc";
+> > +                       reg = <0 0xb220000 0 0x30000>;
+> 
+> nit: when applying, maybe Bjorn / Andy could change 0xb220000 to
+> 0x0b220000 to match the convention elsewhere in this file.  That's not
+> a new problem introduced in your patch, but it seems like it could be
+> part of the same patch and it feels like a waste to re-send just for
+> that.  ;-)
 
-These look like compiler bugs to me... execution is falling off the edge
-of the functions for no apparent reason.  Could potentially be triggered
-by the '#define if' trace code.
+haha, I also stumbled across this and doubted whether to change it in this
+patch ;-)
 
--- 
-Josh
+Sure, I can send a v2 that includes it.
 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks!
