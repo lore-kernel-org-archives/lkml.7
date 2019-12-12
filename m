@@ -6,153 +6,90 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99932C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AEBC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7DB214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870682173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731062AbfLLVPw (ORCPT
+        id S1731080AbfLLVVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:15:52 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60706 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730971AbfLLVPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:15:51 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCL7Eno051267;
-        Thu, 12 Dec 2019 16:15:49 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wujxrppd5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 16:15:48 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xBCL7YiG052047;
-        Thu, 12 Dec 2019 16:15:48 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wujxrppcv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 16:15:48 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBCL9xOL012765;
-        Thu, 12 Dec 2019 21:15:47 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 2wr3q7dhy4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 21:15:47 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCLFka655836952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 21:15:46 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48A8678060;
-        Thu, 12 Dec 2019 21:15:46 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C55197805E;
-        Thu, 12 Dec 2019 21:15:44 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Dec 2019 21:15:44 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] drivers/vhost : Removes unnecessary 'else' in vhost_copy_from_user
-Date:   Thu, 12 Dec 2019 18:15:39 -0300
-Message-Id: <20191212211539.34578-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_07:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- clxscore=1011 suspectscore=0 bulkscore=0 spamscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912120164
+        Thu, 12 Dec 2019 16:21:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:25359 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730971AbfLLVVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:21:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 13:20:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
+   d="scan'208";a="226062842"
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by orsmga002.jf.intel.com with ESMTP; 12 Dec 2019 13:20:50 -0800
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Rik van Riel <riel@surriel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v2 2/3] x86/fpu/xstate: Make xfeature_is_supervisor()/xfeature_is_user() return bool
+Date:   Thu, 12 Dec 2019 13:08:54 -0800
+Message-Id: <20191212210855.19260-3-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191212210855.19260-1-yu-cheng.yu@intel.com>
+References: <20191212210855.19260-1-yu-cheng.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need for this else statement, given that if block will return.
-This change is not supposed to change the output binary.
+In the previous patch, xfeature_is_supervisor()'s description is revised,
+and since xfeature_is_supervisor()/xfeature_is_user() are used only in
+boolean context, make both return bool.
 
-It reduces identation level on most lines in this function, and also
-fixes an split string on vq_err().
-
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
 ---
- drivers/vhost/vhost.c | 50 +++++++++++++++++++++----------------------
- 1 file changed, 24 insertions(+), 26 deletions(-)
+ arch/x86/kernel/fpu/xstate.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index f44340b41494..b23d1b74c32f 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -824,34 +824,32 @@ static int vhost_copy_from_user(struct vhost_virtqueue *vq, void *to,
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 0bd313351650..56e87d00a92f 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -107,7 +107,7 @@ int cpu_has_xfeatures(u64 xfeatures_needed, const char **feature_name)
+ }
+ EXPORT_SYMBOL_GPL(cpu_has_xfeatures);
  
- 	if (!vq->iotlb)
- 		return __copy_from_user(to, from, size);
--	else {
--		/* This function should be called after iotlb
--		 * prefetch, which means we're sure that vq
--		 * could be access through iotlb. So -EAGAIN should
--		 * not happen in this case.
--		 */
--		void __user *uaddr = vhost_vq_meta_fetch(vq,
--				     (u64)(uintptr_t)from, size,
--				     VHOST_ADDR_DESC);
--		struct iov_iter f;
+-static int xfeature_is_supervisor(int xfeature_nr)
++static bool xfeature_is_supervisor(int xfeature_nr)
+ {
+ 	/*
+ 	 * Extended State Enumeration Sub-leaves (EAX = 0DH, ECX = n, n > 1)
+@@ -117,10 +117,10 @@ static int xfeature_is_supervisor(int xfeature_nr)
+ 	u32 eax, ebx, ecx, edx;
  
--		if (uaddr)
--			return __copy_from_user(to, uaddr, size);
-+	/* This function should be called after iotlb
-+	 * prefetch, which means we're sure that vq
-+	 * could be access through iotlb. So -EAGAIN should
-+	 * not happen in this case.
-+	 */
-+	void __user *uaddr = vhost_vq_meta_fetch(vq,
-+			     (u64)(uintptr_t)from, size,
-+			     VHOST_ADDR_DESC);
-+	struct iov_iter f;
+ 	cpuid_count(XSTATE_CPUID, xfeature_nr, &eax, &ebx, &ecx, &edx);
+-	return !!(ecx & 1);
++	return ecx & 1;
+ }
  
--		ret = translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov,
--				     ARRAY_SIZE(vq->iotlb_iov),
--				     VHOST_ACCESS_RO);
--		if (ret < 0) {
--			vq_err(vq, "IOTLB translation failure: uaddr "
--			       "%p size 0x%llx\n", from,
--			       (unsigned long long) size);
--			goto out;
--		}
--		iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
--		ret = copy_from_iter(to, size, &f);
--		if (ret == size)
--			ret = 0;
--	}
-+	if (uaddr)
-+		return __copy_from_user(to, uaddr, size);
-+
-+	ret = translate_desc(vq, (u64)(uintptr_t)from, size, vq->iotlb_iov,
-+			     ARRAY_SIZE(vq->iotlb_iov),
-+			     VHOST_ACCESS_RO);
-+	if (ret < 0) {
-+		vq_err(vq, "IOTLB translation failure: uaddr %p size 0x%llx\n",
-+		       from, (unsigned long long)size);
-+		goto out;
-+	}
-+	iov_iter_init(&f, READ, vq->iotlb_iov, ret, size);
-+	ret = copy_from_iter(to, size, &f);
-+	if (ret == size)
-+		ret = 0;
- 
- out:
- 	return ret;
+-static int xfeature_is_user(int xfeature_nr)
++static bool xfeature_is_user(int xfeature_nr)
+ {
+ 	return !xfeature_is_supervisor(xfeature_nr);
+ }
 -- 
-2.23.0
+2.17.1
 
