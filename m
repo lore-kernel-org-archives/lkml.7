@@ -2,346 +2,105 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1B9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88391C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AC521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:21:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PTPsLbZk"
+	by mail.kernel.org (Postfix) with ESMTP id 553C3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729847AbfLLQVZ (ORCPT
+        id S1729872AbfLLQWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:21:25 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55204 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbfLLQVY (ORCPT
+        Thu, 12 Dec 2019 11:22:05 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47519 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729655AbfLLQWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:21:24 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCGKWO6078658;
-        Thu, 12 Dec 2019 10:20:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576167632;
-        bh=EKhrusKd8zolIN/dSgAeFtf+NFVJE7omodOrb2uPQao=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PTPsLbZkU+LYWZth6gT92ENS9jsuDmdsQ2+BynzTlMp1996SW3hXaObEk9PqyBCBU
-         rV+8bRDE9Ipj347tirJLk04/IqlF4yldZsiwcpGkTJGYNIY4PJvjD0ia1O/IiVdXpj
-         f6bvlP35kZ2DwjhcPS7a884aIwCgJ+2+keHa24S8=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCGKW93024506
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 10:20:32 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 10:20:32 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 10:20:32 -0600
-Received: from [10.250.79.55] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCGKTM7057596;
-        Thu, 12 Dec 2019 10:20:29 -0600
-Subject: Re: [RESEND][PATCH v16 3/5] dma-buf: heaps: Add system heap to dmabuf
- heaps
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-CC:     Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        <dri-devel@lists.freedesktop.org>
-References: <20191203172641.66642-1-john.stultz@linaro.org>
- <20191203172641.66642-4-john.stultz@linaro.org>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <59d42752-e5b1-a1e0-0978-dff0824e2ebd@ti.com>
-Date:   Thu, 12 Dec 2019 11:20:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 11:22:04 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifRDw-0005fc-Ik; Thu, 12 Dec 2019 17:21:56 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifRDt-0007Ok-4v; Thu, 12 Dec 2019 17:21:53 +0100
+Date:   Thu, 12 Dec 2019 17:21:53 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "andrew@aj.id.au" <andrew@aj.id.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Message-ID: <20191212162152.5uu3feacduetysq7@pengutronix.de>
+References: <20191129172537.31410-1-m.felsch@pengutronix.de>
+ <20191129172537.31410-4-m.felsch@pengutronix.de>
+ <20191204134631.GT1998@sirena.org.uk>
+ <20191210094144.mxximpuouchy3fqu@pengutronix.de>
+ <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
+ <20191212161019.GF4310@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191203172641.66642-4-john.stultz@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212161019.GF4310@sirena.org.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:17:35 up 27 days,  7:36, 37 users,  load average: 0.01, 0.04,
+ 0.08
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/3/19 12:26 PM, John Stultz wrote:
-> This patch adds system heap to the dma-buf heaps framework.
+On 19-12-12 16:10, Mark Brown wrote:
+> On Wed, Dec 11, 2019 at 06:09:18PM +0100, Marco Felsch wrote:
 > 
-> This allows applications to get a page-allocator backed dma-buf
-> for non-contiguous memory.
+> > so one argument more for my solution. Also we don't configure the "pad"
+> > to be a vsel/ena-pin. The hw-pad can only be a gpio or has an alternate
+> > function (WDKICK for GPIO0, Seq. SYS_EN for GPIO2, Seq. PWR_EN for GPIO4).
+> > Instead we tell the regulator to use _this_ GPIO e.g. for voltage
+> > selection so we go the other way around. My last argument why pinctrl
+> > isn't the correct place is that the GPIO1 can be used for
+> > regulator-0:vsel-in and for regulator-1:enable-in. So this pad would
+> > have different states which is invalid IMHO.
 > 
-> This code is an evolution of the Android ION implementation, so
-> thanks to its original authors and maintainters:
->   Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
-> 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Cc: Sandeep Patil <sspatil@google.com>
-> Cc: Hillf Danton <hdanton@sina.com>
-> Cc: Dave Airlie <airlied@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Reviewed-by: Brian Starkey <brian.starkey@arm.com>
-> Acked-by: Sandeep Patil <sspatil@android.com>
-> Acked-by: Laura Abbott <labbott@redhat.com>
-> Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2:
-> * Switch allocate to return dmabuf fd
-> * Simplify init code
-> * Checkpatch fixups
-> * Droped dead system-contig code
-> v3:
-> * Whitespace fixups from Benjamin
-> * Make sure we're zeroing the allocated pages (from Liam)
-> * Use PAGE_ALIGN() consistently (suggested by Brian)
-> * Fold in new registration style from Andrew
-> * Avoid needless dynamic allocation of sys_heap (suggested by
->   Christoph)
-> * Minor cleanups
-> * Folded in changes from Andrew to use simplified page list
->   from the heap helpers
-> v4:
-> * Optimization to allocate pages in chunks, similar to old
->   pagepool code
-> * Use fd_flags when creating dmabuf fd (Suggested by Benjamin)
-> v5:
-> * Back out large order page allocations (was leaking memory,
->   as the page array didn't properly track order size)
-> v6:
-> * Minor whitespace change suggested by Brian
-> * Remove unused variable
-> v7:
-> * Use newly lower-cased init_heap_helper_buffer helper
-> * Add system heap DOS avoidance suggested by Laura from ION code
-> * Use new dmabuf export helper
-> v8:
-> * Make struct dma_heap_ops consts (suggested by Christoph)
-> * Get rid of needless struct system_heap (suggested by Christoph)
-> * Condense dma_heap_buffer and heap_helper_buffer (suggested by
->   Christoph)
-> * Add forgotten include file to fix build issue on x86
-> v12:
-> * Minor tweaks to prep loading heap from module
-> v14:
-> * Fix "redundant assignment to variable ret" issue reported
->   by Colin King and fixed by Andrew Davis
-> v15:
-> * Drop unused heap flag from heap_helper_buffer as suggested
->   by Sandeep Patil
-> ---
->  drivers/dma-buf/Kconfig             |   2 +
->  drivers/dma-buf/heaps/Kconfig       |   6 ++
->  drivers/dma-buf/heaps/Makefile      |   1 +
->  drivers/dma-buf/heaps/system_heap.c | 123 ++++++++++++++++++++++++++++
->  4 files changed, 132 insertions(+)
->  create mode 100644 drivers/dma-buf/heaps/Kconfig
->  create mode 100644 drivers/dma-buf/heaps/system_heap.c
-> 
-> diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-> index bffa58fc3e6e..0613bb7770f5 100644
-> --- a/drivers/dma-buf/Kconfig
-> +++ b/drivers/dma-buf/Kconfig
-> @@ -53,4 +53,6 @@ menuconfig DMABUF_HEAPS
->  	  allows userspace to allocate dma-bufs that can be shared
->  	  between drivers.
->  
-> +source "drivers/dma-buf/heaps/Kconfig"
-> +
->  endmenu
-> diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-> new file mode 100644
-> index 000000000000..205052744169
-> --- /dev/null
-> +++ b/drivers/dma-buf/heaps/Kconfig
-> @@ -0,0 +1,6 @@
-> +config DMABUF_HEAPS_SYSTEM
-> +	bool "DMA-BUF System Heap"
-> +	depends on DMABUF_HEAPS
-> +	help
-> +	  Choose this option to enable the system dmabuf heap. The system heap
-> +	  is backed by pages from the buddy allocator. If in doubt, say Y.
-> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-> index de49898112db..d1808eca2581 100644
-> --- a/drivers/dma-buf/heaps/Makefile
-> +++ b/drivers/dma-buf/heaps/Makefile
-> @@ -1,2 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-y					+= heap-helpers.o
-> +obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-> diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
-> new file mode 100644
-> index 000000000000..1aa01e98c595
-> --- /dev/null
-> +++ b/drivers/dma-buf/heaps/system_heap.c
-> @@ -0,0 +1,123 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * DMABUF System heap exporter
-> + *
-> + * Copyright (C) 2011 Google, Inc.
-> + * Copyright (C) 2019 Linaro Ltd.
-> + */
-> +
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/dma-heap.h>
-> +#include <linux/err.h>
-> +#include <linux/highmem.h>
-> +#include <linux/mm.h>
-> +#include <linux/module.h>
-> +#include <linux/scatterlist.h>
-> +#include <linux/slab.h>
-> +#include <linux/sched/signal.h>
-> +#include <asm/page.h>
-> +
-> +#include "heap-helpers.h"
-> +
-> +struct dma_heap *sys_heap;
-> +
-> +static void system_heap_free(struct heap_helper_buffer *buffer)
-> +{
-> +	pgoff_t pg;
-> +
-> +	for (pg = 0; pg < buffer->pagecount; pg++)
-> +		__free_page(buffer->pages[pg]);
-> +	kfree(buffer->pages);
-> +	kfree(buffer);
-> +}
-> +
-> +static int system_heap_allocate(struct dma_heap *heap,
-> +				unsigned long len,
-> +				unsigned long fd_flags,
-> +				unsigned long heap_flags)
-> +{
-> +	struct heap_helper_buffer *helper_buffer;
-> +	struct dma_buf *dmabuf;
-> +	int ret = -ENOMEM;
-> +	pgoff_t pg;
-> +
-> +	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-> +	if (!helper_buffer)
-> +		return -ENOMEM;
-> +
-> +	init_heap_helper_buffer(helper_buffer, system_heap_free);
-> +	helper_buffer->heap = heap;
-> +	helper_buffer->size = len;
-> +
-> +	helper_buffer->pagecount = len / PAGE_SIZE;
-> +	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-> +					     sizeof(*helper_buffer->pages),
-> +					     GFP_KERNEL);
-> +	if (!helper_buffer->pages) {
-> +		ret = -ENOMEM;
-> +		goto err0;
-> +	}
-> +
-> +	for (pg = 0; pg < helper_buffer->pagecount; pg++) {
-> +		/*
-> +		 * Avoid trying to allocate memory if the process
-> +		 * has been killed by by SIGKILL
-> +		 */
-> +		if (fatal_signal_pending(current))
-> +			goto err1;
-> +
-> +		helper_buffer->pages[pg] = alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +		if (!helper_buffer->pages[pg])
-> +			goto err1;
-> +	}
-> +
-> +	/* create the dmabuf */
-> +	dmabuf = heap_helper_export_dmabuf(helper_buffer, fd_flags);
-> +	if (IS_ERR(dmabuf)) {
-> +		ret = PTR_ERR(dmabuf);
-> +		goto err1;
-> +	}
-> +
-> +	helper_buffer->dmabuf = dmabuf;
-> +
-> +	ret = dma_buf_fd(dmabuf, fd_flags);
-> +	if (ret < 0) {
-> +		dma_buf_put(dmabuf);
-> +		/* just return, as put will call release and that will free */
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +
-> +err1:
-> +	while (pg > 0)
-> +		__free_page(helper_buffer->pages[--pg]);
-> +	kfree(helper_buffer->pages);
-> +err0:
-> +	kfree(helper_buffer);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct dma_heap_ops system_heap_ops = {
-> +	.allocate = system_heap_allocate,
-> +};
-> +
-> +static int system_heap_create(void)
-> +{
-> +	struct dma_heap_export_info exp_info;
-> +	int ret = 0;
-> +
-> +	exp_info.name = "system_heap";
+> Note that there's two bits to my concern - one is if we should be using
+> gpiolib or pinctrl, the other is what's driving the input (whichever API
+> it's configured through) which didn't seem to be mentioned.
 
+gpiolib or pinctrl:
+I pointed out all my arguments above so I think it is time for Linus.
 
-nit: Would prefer the name just be "system", the heap part is redundant
-given it will be in a "heaps" directory, other heaps don't have that. As
-the heap will be accessed by users using this name:
-(/sys/dma_heap/system_heap) we need to think of it like an ABI and get
-it right the first time. The directory name should probably also be
-plural "heaps" as it is a collection of heaps..
+"... what's driving the input ..":
+Sorry I didn't get you here. What did you mean? The input is driven by
+the host. This can be any gpio line and in my case it is a gpio line
+driven by the soc-hw during a suspend operation.
 
-Andrew
-
-
-> +	exp_info.ops = &system_heap_ops;
-> +	exp_info.priv = NULL;
-> +
-> +	sys_heap = dma_heap_add(&exp_info);
-> +	if (IS_ERR(sys_heap))
-> +		ret = PTR_ERR(sys_heap);
-> +
-> +	return ret;
-> +}
-> +module_init(system_heap_create);
-> +MODULE_LICENSE("GPL v2");
-> 
+Regards,
+  Marco
