@@ -2,75 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70430C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B22AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FE42067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BA62067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bxIPBTZs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbfLLKdI convert rfc822-to-8bit (ORCPT
+        id S1728702AbfLLKdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:33:08 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:45993 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLLKdI (ORCPT
+        Thu, 12 Dec 2019 05:33:44 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43955 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfLLKdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:33:08 -0500
-Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 25707CECE2;
-        Thu, 12 Dec 2019 11:42:17 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QCA6390
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
-Date:   Thu, 12 Dec 2019 11:33:06 +0100
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
-References: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
-To:     Rocky Liao <rjliao@codeaurora.org>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Thu, 12 Dec 2019 05:33:43 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 9so1279115lfq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:33:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qPF/yalYFBJGDvckzezeF6fnanapi0q/ha5oqUAAdfg=;
+        b=bxIPBTZs+yyuk1iz9+TSeqfLyQlsmsZfby1gnoJPTupkUIIcjhzcAZV9uufsKBGZWN
+         vR23FlTa/YkI85fPoHmQ4FgXSF9a7mK/nnWkW+c3Zpzt+nLzOEGOesVlVfVJPQgaGr93
+         FlPWdlWae9BWBbJ15aG9wHqztZLEl0OZXoJtDEar4hhVSb8uVspdReOtPfaMBf3qojY4
+         /HwPMp5fU9dpztsingagfq+N1kqlraRGZ4M2CJ34t8ohPrUd/rzGc0PZLnz01aZfCeeq
+         3r4OBKGePnEbVXQ/kbKUExFUz7YRNCsM6bo5mmnQC8DmaVZ3EtsZRxS9P037JZWIDzeD
+         x/fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qPF/yalYFBJGDvckzezeF6fnanapi0q/ha5oqUAAdfg=;
+        b=H0O9jLouhLO8ksAkYrODWXLrSZKJuewYZ8jFYg0BGk9n+IlJWTN+JNdMlWQxxFN030
+         JaMp1qdCxfiKPpl9a4AKsURiXWfaSyDU6VG5jJdkFfyZHxQcLRlPzZ9X1lDUZXmH6uVb
+         OJEeqpHYnQa834X/kO0Yg+Cd5JBi8CbM+7sQcvCv21OMkPcoVkH2Hs0orVJWa6QJ/U1t
+         3Y53AdPQbI6XY/ladBjDxF2L4olcjgbHx9lry4SsV9OCzL0bLi3nuokmvUcZcgZlPYFi
+         WnvuuooPkGoZFcT4PlO0gRnvJRd5MuKDDMnWG6/tZ2UaIGDLBEklt3pMLSK17gccaQdt
+         vEKg==
+X-Gm-Message-State: APjAAAWRsaw1RG3ykMn3YqtYNyqqdd4ELQL0bviNdIncwvbeqBdGBOy1
+        iuNpWKjN+cuEUmQ1/vzujlIDMLl/rhmwzq8HA0glQw==
+X-Google-Smtp-Source: APXvYqx0DF665CL99HUndMdW5PwUL0nbCGCmH0rw2D798Z4vnEevdnPuA75RWOwCG6MTgLnkPM3wqGCGL/aWEO6tMgE=
+X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr5064376lfp.133.1576146821960;
+ Thu, 12 Dec 2019 02:33:41 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1574871463.git.nishadkamdar@gmail.com> <bcb86aa22d8d8499502bbd8c54a364be24886a86.1574871463.git.nishadkamdar@gmail.com>
+In-Reply-To: <bcb86aa22d8d8499502bbd8c54a364be24886a86.1574871463.git.nishadkamdar@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 11:33:30 +0100
+Message-ID: <CACRpkdYL+_bQU0PRfOFBY37O0K8W8WW0-tRM49FckA3Uh8S8WA@mail.gmail.com>
+Subject: Re: [PATCH 3/5] pinctrl: meson-axg: Use the correct style for SPDX
+ License Identifier
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+On Wed, Nov 27, 2019 at 5:44 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
 
-> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
-> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
-> 1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 68b67d9db63a..87b7f9d22414 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -10,6 +10,7 @@ device the slave device is attached to.
-> Required properties:
->  - compatible: should contain one of the following:
->    * "qcom,qca6174-bt"
-> +   * "qcom,qca6390-bt"
->    * "qcom,wcn3990-bt"
->    * "qcom,wcn3998-bt"
+> This patch corrects the SPDX License Identifier style in
+> header file related Meson axg SoC pinctrl driver.
+> It assigns explicit block comment for the SPDX License Identifier.
+>
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
+>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
 
-now I am confused. Is this a DT platform or ACPI or both?
+Patch applied.
 
-Regards
-
-Marcel
-
+Yours,
+Linus Walleij
