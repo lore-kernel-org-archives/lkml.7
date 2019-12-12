@@ -2,192 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01329C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71252C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13B6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28661214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PEe8To71"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ek8oJ4F/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbfLLRAK (ORCPT
+        id S1730040AbfLLRBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:00:10 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43276 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729907AbfLLRAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:00:10 -0500
-Received: by mail-il1-f193.google.com with SMTP id u16so2604252ilg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:00:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VFbGuOmt8927R+vYeTAQfCaDgF/GDKY3t3T6KS+4jUA=;
-        b=PEe8To71VSS0ZUGmCNvztFYyKJaky6xNL19ZnUI4w8FyeyUpZeT18qnwk/v43/LI9H
-         4OMWHz3NG2O5QKX4qcDah8HVgYA3ZVKIvn8anspz21uipN5+K+4FXdIKgIhy2Fle8eEx
-         /p/Jl28uAvIyZZ+ZkYBoy8Tg0jFkYiLByPpCw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VFbGuOmt8927R+vYeTAQfCaDgF/GDKY3t3T6KS+4jUA=;
-        b=T68h7L340T5yTILl03ClABs/VKlnRucBWD+yTmlgru3vFxEgMICsjF+0shGAYBJR/H
-         fmFgYqnK8IotpbLXnZKOLX9rgPjTygOjt+51Dggqpi1uMZXJFr13hMykctPeNxSLTSsr
-         +It/aAFHTUbniBi8dgiXWN+gu3HUOHgHRASfpPxl5hXccz5lsIML/L2WkViguaPd8zYL
-         pUlC+bO/H9du+QAbVjfkkK4hawDDOxg3OJURSJ7arUBhNlG4Vfz+gvupdT6T2gz8SkaT
-         iX4IduV9jlXvGKlogzeZKL/F9CLEe/DAYrdun5A3vr4FhuZ5092tBvWcaz3O48o2z9ur
-         Ly+A==
-X-Gm-Message-State: APjAAAWk/pgPJp0Z0DBJpoMO5HOoVo5YbWtn1GlxQxtjEMFFLyjYxMcD
-        HD7IzpB/wf9HoiEeMKS9QAZzn83HxSw=
-X-Google-Smtp-Source: APXvYqyKefNjXbv7OM0BP0yBVRsiTihb2bqOUbIrb9v64Dx9zVJVq8nbYuzC4jdobekQfhMGlEToMA==
-X-Received: by 2002:a92:91c7:: with SMTP id e68mr9414416ill.161.1576170009040;
-        Thu, 12 Dec 2019 09:00:09 -0800 (PST)
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com. [209.85.166.169])
-        by smtp.gmail.com with ESMTPSA id 16sm1412339iog.13.2019.12.12.09.00.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 09:00:08 -0800 (PST)
-Received: by mail-il1-f169.google.com with SMTP id t9so2635609iln.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:00:08 -0800 (PST)
-X-Received: by 2002:a92:1547:: with SMTP id v68mr8798475ilk.58.1576170007669;
- Thu, 12 Dec 2019 09:00:07 -0800 (PST)
+        Thu, 12 Dec 2019 12:01:14 -0500
+Received: from mail-eopbgr20051.outbound.protection.outlook.com ([40.107.2.51]:41345
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729260AbfLLRBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:01:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LDjTypG92CNi91KiP5P5CgaBTO0iczW8dUEPATPoJ9RCNAso3YFHBNR3HNXg7CFuUxkbzYBZmFYchdEx1XMGKOouKfjR61A7kqFecT4oZn6/ZZUKCOUrcW9Iqllwjjfn07M/7+u46IdLnS4TikM6qNZsF2siOIWwE5+iWIDtUKASc3y02+6PrSEZHVo93Sw5c7QznIuvR+/xIovOIwaVAwf9EMJnSYfw2E+bxWvAUtbAi//kCYHNByXGRrcawJElidAtJja8jAuT4UafCerd7JvThK4qfoih0h3Gu3VbHbSrlRtCh9rFXUUkJ+DnfHUjqhwEpbKvXPwOqBbz5xGQTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X9lwkZ0sgfq21w7jcSqrK/oZ735Z6ZdzVYTaN9hifEU=;
+ b=FtcDZXC2+opcNvtsv1w2hipsDRZ2VcJxR1X0rLfLBJmUHemkkKWP7E+VkGts5R2Vb59BuYJJ+QHmWEVm+4RHGqGJi+34zvDdifAG5y2XWuStVip8rhA6pLfppE18dtH9EBDgQjyeL02N8H4BBP+mYfnxpu776FJ5Q8WH3YrHrvwF/bF9vahOvvIBXPOMHZ6C0okfYuXpYaUA4LDCWCr3nnm9B3OtXGJB3o/PU/SGksDMbuV1AMTqP8odctKYDBMNXGpmuhY28lVkKQirPdT6NixyDCWGdWz/ELiZHkt6XsoETV6KfXK7CXvkuVJHucZwNt6+e3SZm9Go40RjiIeJPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X9lwkZ0sgfq21w7jcSqrK/oZ735Z6ZdzVYTaN9hifEU=;
+ b=ek8oJ4F/QKztECnOb7AhxrmSCKJzNrytEWVUWKpRS8lUePCiw/QoEqzihit8lGZmNkPjbLsIzeNpTIDG0bJSaJUoixhQLjZVYvsz2Qrdn/nY36zrhqbXFWaODl2C6AjcDhESpvfTP5OuOP54EDdIfFKAXEX798N3/AUYhntbXFk=
+Received: from DB8PR04MB5931.eurprd04.prod.outlook.com (20.179.11.140) by
+ DB8PR04MB6650.eurprd04.prod.outlook.com (20.179.251.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.14; Thu, 12 Dec 2019 17:01:10 +0000
+Received: from DB8PR04MB5931.eurprd04.prod.outlook.com
+ ([fe80::5002:adf2:99f5:a4fe]) by DB8PR04MB5931.eurprd04.prod.outlook.com
+ ([fe80::5002:adf2:99f5:a4fe%7]) with mapi id 15.20.2516.020; Thu, 12 Dec 2019
+ 17:01:10 +0000
+From:   Youri Querry <youri.querry_1@nxp.com>
+To:     Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>
+CC:     Youri Querry <youri.querry_1@nxp.com>
+Subject: [PATCH 0/3] soc: fsl: dpio: Enable QMAN batch enqueuing
+Thread-Topic: [PATCH 0/3] soc: fsl: dpio: Enable QMAN batch enqueuing
+Thread-Index: AQHVsQ3AyGczVLMI40Km2qz47OLo9w==
+Date:   Thu, 12 Dec 2019 17:01:10 +0000
+Message-ID: <1576170032-3124-1-git-send-email-youri.querry_1@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR08CA0017.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::30) To DB8PR04MB5931.eurprd04.prod.outlook.com
+ (2603:10a6:10:ae::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=youri.querry_1@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [72.142.119.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: eef162b9-dccf-4868-76a3-08d77f24e329
+x-ms-traffictypediagnostic: DB8PR04MB6650:|DB8PR04MB6650:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB665085F9B4811F9D0B4C4EB6F3550@DB8PR04MB6650.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(376002)(396003)(39860400002)(366004)(189003)(199004)(478600001)(26005)(52116002)(66446008)(6506007)(86362001)(6512007)(316002)(4326008)(2906002)(71200400001)(186003)(36756003)(6486002)(5660300002)(4744005)(81166006)(81156014)(2616005)(6636002)(64756008)(8676002)(66476007)(66946007)(8936002)(110136005)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6650;H:DB8PR04MB5931.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ER9sFAM2lVRxox33xBPtov+ChSZOPjM0twI0gLFFwOYQyXKH2xNb7PUmLFT1eSEKRxAwYo1+QA6A7cmXOWJKRIOf7Kmu7kbG7x1lwkOgsAgBjEBpwaj7UBc7rp0GVNQhhKayttGjbLrMCATQFhhK5TRxjykaE64mBno4NN8uCW3Hb4kWDN/Exm1YGHYiISOco1ANI8DR7/yL8/dzr6QP0WkXXUI9p9ZJgigtlIQ0stwaK2ct4E8HUm0HdiCJSq9cu4cHgZqcdUgxPgrpT1EMEliUrbad0JwLecQQ30SgJllpFETZv5gw738Ofm2KKOmcM8CYIicy1wcNxd+bgvpuGPI+1obE0DyAylTKHu04mHFiW+q5QEBDaDX7U9Dain+HXFGQqZ8XQ+wCDa15QuQXJ73rXbRDiV5M70Oi4cu33a77wfNe4eS12K0NYUzicmZt
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
- <1574934847-30372-2-git-send-email-rkambl@codeaurora.org> <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
- <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com> <CAHLCerPKC2dK0Baom9MguvUfD0L--EeuLYnLnQENis92uzKbgg@mail.gmail.com>
-In-Reply-To: <CAHLCerPKC2dK0Baom9MguvUfD0L--EeuLYnLnQENis92uzKbgg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 12 Dec 2019 08:59:55 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VfyrNk+VJZ+p8RLgQGab5XQBkALfH3FeRooeu+FY7BXw@mail.gmail.com>
-Message-ID: <CAD=FV=VfyrNk+VJZ+p8RLgQGab5XQBkALfH3FeRooeu+FY7BXw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
- for TSENS in SC7180
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Rajeshwari <rkambl@codeaurora.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        sivaa@codeaurora.org, sanm@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eef162b9-dccf-4868-76a3-08d77f24e329
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 17:01:10.5698
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZXrsNpXKKiM+4mYB+wC4GPKaKIR1g1kV24vrcsFoXXIiYQqcI11PUUplqeFyvSKxu0gCU0i6REYSCBP/19J8Ew==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6650
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch set consists of:
+- We added an interface to enqueue several packets at a time and
+  improve performance.
+- Make the algorithm decisions once at initialization and use
+  function pointers to improve performance.
+- Replaced the QMAN enqueue array mode algorithm with a ring
+  mode algorithm. This is to make the enqueue of several frames
+  at a time more effective.
 
-On Thu, Dec 12, 2019 at 8:56 AM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
->
-> On Thu, Dec 12, 2019 at 9:39 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Dec 12, 2019 at 3:00 AM Amit Kucheria
-> > <amit.kucheria@verdurent.com> wrote:
-> > >
-> > > Hi Rajeshwari,
-> > >
-> > > On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
-> > > >
-> > > > Add TSENS node and user thermal zone for TSENS sensors in SC7180.
-> > > >
-> > > > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 527 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > index 666e9b9..6656ffc 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > @@ -911,6 +911,26 @@
-> > > >                         status = "disabled";
-> > > >                 };
-> > > >
-> > > > +               tsens0: thermal-sensor@c263000 {
-> > > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > > > +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> > > > +                               <0 0x0c222000 0 0x1ff>; /* SROT */
-> > > > +                       #qcom,sensors = <15>;
-> > > > +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +                       interrupt-names = "uplow";
-> > > > +                       #thermal-sensor-cells = <1>;
-> > > > +               };
-> > > > +
-> > > > +               tsens1: thermal-sensor@c265000 {
-> > > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > > > +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> > > > +                               <0 0x0c223000 0 0x1ff>; /* SROT */
-> > > > +                       #qcom,sensors = <10>;
-> > > > +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-> > > > +                       interrupt-names = "uplow";
-> > > > +                       #thermal-sensor-cells = <1>;
-> > > > +               };
-> > > > +
-> > > >                 spmi_bus: spmi@c440000 {
-> > > >                         compatible = "qcom,spmi-pmic-arb";
-> > > >                         reg = <0 0x0c440000 0 0x1100>,
-> > > > @@ -1121,6 +1141,513 @@
-> > > >                 };
-> > > >         };
-> > > >
-> > > > +       thermal-zones {
-> > > > +               cpu0-thermal {
-> > > > +                       polling-delay-passive = <250>;
-> > > > +                       polling-delay = <1000>;
-> > > > +
-> > > > +                       thermal-sensors = <&tsens0 1>;
-> > > > +
-> > > > +                       trips {
-> > > > +                               cpu0_alert0: trip-point0 {
-> > > > +                                       temperature = <90000>;
-> > > > +                                       hysteresis = <2000>;
-> > > > +                                       type = "passive";
-> > > > +                               };
-> > > > +
-> > > > +                               cpu0_alert1: trip-point1 {
-> > > > +                                       temperature = <95000>;
-> > > > +                                       hysteresis = <2000>;
-> > > > +                                       type = "passive";
-> > > > +                               };
-> > > > +
-> > > > +                               cpu0_crit: cpu_crit {
-> > > > +                                       temperature = <110000>;
-> > > > +                                       hysteresis = <1000>;
-> > > > +                                       type = "critical";
-> > > > +                               };
-> > >
-> > > Where are the cooling maps for all the cpu thermal zones? A passive
-> > > trip point w/o a cooling map is not of much use. If you are waiting
-> > > for cpufreq support to land before adding them, then remove the
-> > > passive trip points for now and add them along with the cooling maps
-> > > when you have cooling devices.
-> >
-> > I will note that cpufreq support has landed in the qcom tree::
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=86899d8235ea0d3d7c293404fb43a6fabff866e6
-> >
-> > ...so I guess the right thing is to send a patch adding the cooling
-> > maps for the cpu thermal zones?
->
-> Great, then the cooling maps should be added to this patch itself.
+Youri Querry (3):
+  soc: fsl: dpio: Adding QMAN multiple enqueue interface.
+  soc: fsl: dpio: QMAN performance improvement. Function pointer
+    indirection.
+  soc: fsl: dpio: Replace QMAN array mode by ring mode enqueue.
 
-Well, except that this patch itself has also landed:
+ drivers/soc/fsl/dpio/dpio-service.c |  69 +++-
+ drivers/soc/fsl/dpio/qbman-portal.c | 766 ++++++++++++++++++++++++++++++++=
+----
+ drivers/soc/fsl/dpio/qbman-portal.h | 158 +++++++-
+ include/soc/fsl/dpaa2-io.h          |   6 +-
+ 4 files changed, 907 insertions(+), 92 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=82bdc93972bf293c3407cb7fdac163aadfbb2c12
+--=20
+2.7.4
 
-...so I think my advice is still correct: the right thing is to send a
-patch adding the cooling maps for the cpu thermal zones
-
--Doug
