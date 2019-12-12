@@ -2,62 +2,62 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFDB1C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E147C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF662077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21852465E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fEiCjzD2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZw/F1Ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbfLLBmr (ORCPT
+        id S1727705AbfLLBmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:42:47 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33335 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfLLBmq (ORCPT
+        Wed, 11 Dec 2019 20:42:55 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43880 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727649AbfLLBmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:42:46 -0500
-Received: by mail-pl1-f195.google.com with SMTP id c13so336114pls.0
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:42:45 -0800 (PST)
+        Wed, 11 Dec 2019 20:42:43 -0500
+Received: by mail-pl1-f194.google.com with SMTP id q16so315476plr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:42:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=okKeUrpGRdRMM1YttfPu++dPsYz1GD2rw9QI6vDbyQ4=;
-        b=fEiCjzD2vzN0vq5Yvk8MuiJWXuVxsYSs8Ohm9vcxVt4HuVC115y9PZl/iP6JFB87sD
-         Z06vMHEE4ybMVnm6B7L+3RrKBdtDVBRTp84+7MFNLZHJpf8NsRBH0Z0Ed5sO4PoNfUnU
-         Oegr5NAMSpg2elSJ82GKbecEiWSG67wATl7KVgPJjgAfBDc30uzZVDRG0FGo37OymIkV
-         9LPlAT8nhgXDqo63ZA58CJVNCEwElFMH/L39Iu2X/xYrkdv8WghJTFXi5h2PfVcfnToh
-         UNY9DiOlKpZvUi6F+TJqBofFvhYrN6pA1HqcBuu/rTDjYvn+/wbILUCT8RP+m+RnKhf4
-         0fCA==
+        bh=lzv7sY1flH0+P+bTRde+D/HgFmOOUcTmct5WYnIY1iE=;
+        b=UZw/F1MlTuPlHpKe4kDgjY8F/v9Xiz+1gFoJAVS8UHhspGP2Fpw30FdQGna543kbZg
+         NbdJ1yCDvKj06pyzxBU0LtWEiCOyPP2nEnN5BQp2LQPpQQh1psGtyt854LkbViLnC/lZ
+         zz5LUJ5yIGZ2v/n8y29ac7682PdEVLzC0fdyMrtdayTHw7t725nH9/M9yyMuNfvE9asz
+         LvvbKS5ncKH2sjpaV1y6oNpbpM55xotDt0IKntm3jKD+mR2Cbrs0sG1O55wRIIcJcdVc
+         haJ/fBVgZw5PBDj5189st+r/ZpQMkoJcgE/UEqyhv/NtKX4ai4J9wrizbLIRKyjvs6vz
+         8YTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=okKeUrpGRdRMM1YttfPu++dPsYz1GD2rw9QI6vDbyQ4=;
-        b=lpV1f/gBHWgRe0Q/5nuZZVW83vF/85mugBSHXB+DtJSpnK6S1fDtl6ehi+bb55V+98
-         01uijQnAW2+sk6gCmX7sclIrwzQ4lCYHCrkWLGxF8ehfKQRCaoN+xOOjdmMwHxl7rBBt
-         1SxIZsQN43XHi01/k/LAcm42cJcIUrGcPNALB2/vx+KiTIPORp9ADGYRmUbZrnPZ2Cvm
-         pZeygHmbRcXhR5K+qu1oEQ/mCG1EiPq0xc/5IN7adtf6V3kiGs5/UjhlN30pKybU0w2O
-         sSk9vSESODFeLWIlRv9UsDT6ddt3lm/XoQYWaDmCI9QKKp7gAWWmwYeIiaXI4IzjJ1Kl
-         secA==
-X-Gm-Message-State: APjAAAUxy/0cY1o+DFku/MbM1gRRAFk0EP7nyElIaxzYCvWDv+990nEp
-        XmJbHq4jkTiPqxMDBAarT1xNasimfDE=
-X-Google-Smtp-Source: APXvYqxvESeTDKX7aFK/kefdrKXspH/aC5ujQXlsEEpZCgVR9C5X2KaPnz+m0r/s83c6Ales87cUNQ==
-X-Received: by 2002:a17:90a:250a:: with SMTP id j10mr7112628pje.134.1576114965024;
-        Wed, 11 Dec 2019 17:42:45 -0800 (PST)
+        bh=lzv7sY1flH0+P+bTRde+D/HgFmOOUcTmct5WYnIY1iE=;
+        b=tUwHeKCVakDX5/1ceoDX0eOzNA/gk2i7redy5GNy1zNUcC386SVZerX9nN3Dm9ga+h
+         a01oiCTEPZhoPQVfsoJh2LXSioJAvkz8aQVjf/7ztQE3JkiUOkilSmWQjSOSBjry5Mka
+         YTdvPeFZ47SSWWfPGety1W46EiNq+heGYN1vQCt5H23uBw046Zb+LHxuXqqJa/L2x9e2
+         oP84YW55xm6zcXXXCbVkphI37TxoZCD3IJPSyiqMedaKMvJUyUe5nsW+c6RNPHrVJY+g
+         I4UXB5vL7ElREIRSvMnv1Zt4ouPQUsfMoTH0TiFvtaZdUQSEqMern5KHHehRogH/cz1X
+         X/LA==
+X-Gm-Message-State: APjAAAWhuqsiPuYxonQJTIiisWI5yr2py9XH1Y5bfua201VjbPBokkg+
+        bWxsO58szGK97LCuMcxPiKPXppOaMqA=
+X-Google-Smtp-Source: APXvYqz1y2cw7lalEK+SC8etwGXhPJDXQAo5rWmg0AyCI1cAqs37h6s3jVRWoE17CI7K8C0/J8/9lQ==
+X-Received: by 2002:a17:902:43:: with SMTP id 61mr6924104pla.88.1576114962763;
+        Wed, 11 Dec 2019 17:42:42 -0800 (PST)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id p16sm4217996pgi.50.2019.12.11.17.42.44
+        by smtp.gmail.com with ESMTPSA id p16sm4217996pgi.50.2019.12.11.17.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 17:42:44 -0800 (PST)
+        Wed, 11 Dec 2019 17:42:42 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Yu Chen <chenyu56@huawei.com>,
+Cc:     John Stultz <john.stultz@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -65,17 +65,17 @@ Cc:     Yu Chen <chenyu56@huawei.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        Yu Chen <chenyu56@huawei.com>, Felipe Balbi <balbi@kernel.org>,
         Hans de Goede <hdegoede@redhat.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Jun Li <lijun.kernel@gmail.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Guillaume Gardet <Guillaume.Gardet@arm.com>,
         Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
-Subject: [PATCH v7 8/8] misc: hisi_hikey_usb: Driver to support onboard USB gpio hub on Hikey960
-Date:   Thu, 12 Dec 2019 01:42:33 +0000
-Message-Id: <20191212014233.32799-9-john.stultz@linaro.org>
+        devicetree@vger.kernel.org
+Subject: [PATCH v7 6/8] usb: dwc3: Rework resets initialization to be more flexible
+Date:   Thu, 12 Dec 2019 01:42:31 +0000
+Message-Id: <20191212014233.32799-7-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191212014233.32799-1-john.stultz@linaro.org>
 References: <20191212014233.32799-1-john.stultz@linaro.org>
@@ -84,22 +84,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+The dwc3 core binding specifies one reset.
 
-The HiKey960 has a fairly complex USB configuration due to it
-needing to support a USB-C port for host/device mode and multiple
-USB-A ports in host mode, all using a single USB controller.
+However some variants of the hardware may have more. Previously
+this was handled by using the dwc3-of-simple glue driver, but
+that resulted in a proliferation of bindings for for every
+variant, when the only difference was the clocks and resets
+lists.
 
-See schematics here:
-  https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
+So this patch reworks the reading of the resets to fetch all the
+resets specified in the dts together.
 
-This driver acts as a usb-role-switch intermediary, intercepting
-the role switch notifications from the tcpm code, and passing
-them on to the dwc3 core.
-
-In doing so, it also controls the onboard hub and power gpios in
-order to properly route the data lines between the USB-C port
-and the onboard hub to the USB-A ports.
+This patch was recommended by Rob Herring <robh@kernel.org>
+as an alternative to creating multiple bindings for each variant
+of hardware.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -118,256 +116,29 @@ Cc: Guillaume Gardet <Guillaume.Gardet@arm.com>
 Cc: Jack Pham <jackp@codeaurora.org>
 Cc: linux-usb@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-[jstultz: Major rework to make the driver a usb-role-switch
-          intermediary]
+Suggested-by: Rob Herring <robh@kernel.org>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v3:
-* Major rework to make the driver a usb-role-switch intermediary
-  rather then trying to do notifier callbacks from the role switch
-  logic
-v7:
-* Add MAINTAINERS entry and more verbose Kconfig description
+v3: Rework dwc3 core rather then adding another dwc-of-simple
+    binding.
+v6: Re-introduce this patch, on Rob's suggestion
 ---
- MAINTAINERS                   |   7 ++
- drivers/misc/Kconfig          |   9 ++
- drivers/misc/Makefile         |   1 +
- drivers/misc/hisi_hikey_usb.c | 178 ++++++++++++++++++++++++++++++++++
- 4 files changed, 195 insertions(+)
- create mode 100644 drivers/misc/hisi_hikey_usb.c
+ drivers/usb/dwc3/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bd5847e802de..ae5bebc2b3e5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7422,6 +7422,13 @@ F:	include/uapi/linux/if_hippi.h
- F:	net/802/hippi.c
- F:	drivers/net/hippi/
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index c6316d4b7593..19504b907476 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -1462,7 +1462,7 @@ static int dwc3_probe(struct platform_device *pdev)
  
-+HIKEY960 ONBOARD USB GPIO HUB DRIVER
-+M:	John Stultz <john.stultz@linaro.org>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/misc/hisi_hikey_usb.c
-+F:	Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.yaml
-+
- HISILICON SECURITY ENGINE V2 DRIVER (SEC2)
- M:	Zaibo Xu <xuzaibo@huawei.com>
- L:	linux-crypto@vger.kernel.org
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 7f0d48f406e3..563492f67be3 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -465,6 +465,15 @@ config PVPANIC
- 	  a paravirtualized device provided by QEMU; it lets a virtual machine
- 	  (guest) communicate panic events to the host.
+ 	dwc3_get_properties(dwc);
  
-+config HISI_HIKEY_USB
-+	tristate "USB GPIO Hub on HiSilicon Hikey960 Platform"
-+	depends on OF && GPIOLIB
-+	help
-+	  If you say yes here this adds support for the on-board USB gpio hub
-+	  found on the HiKey960, which is necssary to support switching between
-+	  the dual-role USB-C port and the USB-A host ports using only one USB
-+	  controller.
-+
- source "drivers/misc/c2port/Kconfig"
- source "drivers/misc/eeprom/Kconfig"
- source "drivers/misc/cb710/Kconfig"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c1860d35dc7e..e5e85ad0dd57 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -57,3 +57,4 @@ obj-y				+= cardreader/
- obj-$(CONFIG_PVPANIC)   	+= pvpanic.o
- obj-$(CONFIG_HABANA_AI)		+= habanalabs/
- obj-$(CONFIG_XILINX_SDFEC)	+= xilinx_sdfec.o
-+obj-$(CONFIG_HISI_HIKEY_USB)	+= hisi_hikey_usb.o
-diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
-new file mode 100644
-index 000000000000..32015bc9ccf6
---- /dev/null
-+++ b/drivers/misc/hisi_hikey_usb.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Support for usb functionality of Hikey series boards
-+ * based on Hisilicon Kirin Soc.
-+ *
-+ * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Authors: Yu Chen <chenyu56@huawei.com>
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+#include <linux/usb/role.h>
-+
-+#define DEVICE_DRIVER_NAME "hisi_hikey_usb"
-+
-+#define HUB_VBUS_POWER_ON 1
-+#define HUB_VBUS_POWER_OFF 0
-+#define USB_SWITCH_TO_HUB 1
-+#define USB_SWITCH_TO_TYPEC 0
-+#define TYPEC_VBUS_POWER_ON 1
-+#define TYPEC_VBUS_POWER_OFF 0
-+
-+struct hisi_hikey_usb {
-+	struct gpio_desc *otg_switch;
-+	struct gpio_desc *typec_vbus;
-+	struct gpio_desc *hub_vbus;
-+
-+	struct usb_role_switch *hub_role_sw;
-+	struct usb_role_switch *dev_role_sw;
-+	struct notifier_block nb;
-+};
-+
-+static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
-+}
-+
-+static void usb_switch_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-+			    int switch_to)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->otg_switch, switch_to);
-+}
-+
-+static void usb_typec_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb,
-+				 int value)
-+{
-+	gpiod_set_value_cansleep(hisi_hikey_usb->typec_vbus, value);
-+}
-+
-+static int hub_usb_role_switch_set(struct device *dev, enum usb_role role)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
-+
-+	if (!hisi_hikey_usb || !hisi_hikey_usb->dev_role_sw)
-+		return -EINVAL;
-+
-+	switch (role) {
-+	case USB_ROLE_NONE:
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_HUB);
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_ON);
-+		break;
-+	case USB_ROLE_HOST:
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_ON);
-+		break;
-+	case USB_ROLE_DEVICE:
-+		hub_power_ctrl(hisi_hikey_usb, HUB_VBUS_POWER_OFF);
-+		usb_typec_power_ctrl(hisi_hikey_usb, TYPEC_VBUS_POWER_OFF);
-+		usb_switch_ctrl(hisi_hikey_usb, USB_SWITCH_TO_TYPEC);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return usb_role_switch_set_role(hisi_hikey_usb->dev_role_sw, role);
-+}
-+
-+static enum usb_role hub_usb_role_switch_get(struct device *dev)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = dev_get_drvdata(dev);
-+
-+	if (!hisi_hikey_usb || !hisi_hikey_usb->dev_role_sw)
-+		return -EINVAL;
-+
-+	return usb_role_switch_get_role(hisi_hikey_usb->dev_role_sw);
-+}
-+
-+static int hisi_hikey_usb_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct hisi_hikey_usb *hisi_hikey_usb;
-+	struct usb_role_switch_desc hub_role_switch = {NULL};
-+
-+	hisi_hikey_usb = devm_kzalloc(dev, sizeof(*hisi_hikey_usb), GFP_KERNEL);
-+	if (!hisi_hikey_usb)
-+		return -ENOMEM;
-+
-+	hisi_hikey_usb->typec_vbus = devm_gpiod_get(dev, "typec-vbus",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(hisi_hikey_usb->typec_vbus))
-+		return PTR_ERR(hisi_hikey_usb->typec_vbus);
-+
-+	hisi_hikey_usb->otg_switch = devm_gpiod_get(dev, "otg-switch",
-+						    GPIOD_OUT_HIGH);
-+	if (IS_ERR(hisi_hikey_usb->otg_switch))
-+		return PTR_ERR(hisi_hikey_usb->otg_switch);
-+
-+	/* hub-vdd33-en is optional */
-+	hisi_hikey_usb->hub_vbus = devm_gpiod_get_optional(dev, "hub-vdd33-en",
-+							   GPIOD_OUT_HIGH);
-+	if (IS_ERR(hisi_hikey_usb->hub_vbus))
-+		return PTR_ERR(hisi_hikey_usb->hub_vbus);
-+
-+	hisi_hikey_usb->dev_role_sw = usb_role_switch_get(dev);
-+	if (!hisi_hikey_usb->dev_role_sw)
-+		return -EPROBE_DEFER;
-+	if (IS_ERR(hisi_hikey_usb->dev_role_sw))
-+		return PTR_ERR(hisi_hikey_usb->dev_role_sw);
-+
-+	hub_role_switch.fwnode = dev_fwnode(dev);
-+	hub_role_switch.set = hub_usb_role_switch_set;
-+	hub_role_switch.get = hub_usb_role_switch_get;
-+	hisi_hikey_usb->hub_role_sw = usb_role_switch_register(dev,
-+							&hub_role_switch);
-+
-+	if (IS_ERR(hisi_hikey_usb->hub_role_sw)) {
-+		usb_role_switch_put(hisi_hikey_usb->dev_role_sw);
-+		return PTR_ERR(hisi_hikey_usb->hub_role_sw);
-+	}
-+
-+	platform_set_drvdata(pdev, hisi_hikey_usb);
-+
-+	return 0;
-+}
-+
-+static int  hisi_hikey_usb_remove(struct platform_device *pdev)
-+{
-+	struct hisi_hikey_usb *hisi_hikey_usb = platform_get_drvdata(pdev);
-+
-+	if (hisi_hikey_usb->hub_role_sw)
-+		usb_role_switch_unregister(hisi_hikey_usb->hub_role_sw);
-+
-+	if (hisi_hikey_usb->dev_role_sw)
-+		usb_role_switch_put(hisi_hikey_usb->dev_role_sw);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id id_table_hisi_hikey_usb[] = {
-+	{.compatible = "hisilicon,gpio_hubv1"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, id_table_hisi_hikey_usb);
-+
-+static struct platform_driver hisi_hikey_usb_driver = {
-+	.probe = hisi_hikey_usb_probe,
-+	.remove = hisi_hikey_usb_remove,
-+	.driver = {
-+		.name = DEVICE_DRIVER_NAME,
-+		.of_match_table = id_table_hisi_hikey_usb,
-+	},
-+};
-+
-+module_platform_driver(hisi_hikey_usb_driver);
-+
-+MODULE_AUTHOR("Yu Chen <chenyu56@huawei.com>");
-+MODULE_DESCRIPTION("Driver Support for USB functionality of Hikey");
-+MODULE_LICENSE("GPL v2");
+-	dwc->reset = devm_reset_control_get_optional_shared(dev, NULL);
++	dwc->reset = devm_reset_control_array_get(dev, true, true);
+ 	if (IS_ERR(dwc->reset))
+ 		return PTR_ERR(dwc->reset);
+ 
 -- 
 2.17.1
 
