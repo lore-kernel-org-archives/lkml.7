@@ -2,90 +2,66 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF35C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09B7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9C524658
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576130522;
-	bh=NO9m42cW/b/BbBvcGzyWKOv1cE/P07W3l66y4FInuOA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=dTRjb3Ubq0kVkxuXbWiFwTQ+GGX3/EPgrdsMSkp6myBOaKlsUSqiBd4eMl1r/7C3d
-	 bbLdTI+D5t0P1qpuIQeM8aauyBXctXbtMWzW0Yrm+ghjrUbJwS8zgppTEFDWCBw+HL
-	 xnRUc70HdGHDo5iPUe/q9lnyHdPPh1fGtzHY0P94=
+	by mail.kernel.org (Postfix) with ESMTP id 8FC7B24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfLLGCB (ORCPT
+        id S1727954AbfLLGCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:02:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfLLGCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:02:01 -0500
-Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63F724656;
-        Thu, 12 Dec 2019 06:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576130520;
-        bh=NO9m42cW/b/BbBvcGzyWKOv1cE/P07W3l66y4FInuOA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=E0uFtmRXSBVlI1RcyyNz/6sv9u/zPh/p7GN5DY2KmyydUz9M1Zhl1mGzvopFHNOa/
-         7IIrL6QcFn1mmU3QdtlGEeuDMs8U5NQDTunxc1W+VV6PpVv4GNfIScdm2J8isSYbJr
-         fxupr4VqlnUVBNfAm1+nCVp5dh0sw1j8IGWAZc9g=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 506C435203A1; Wed, 11 Dec 2019 22:02:00 -0800 (PST)
-Date:   Wed, 11 Dec 2019 22:02:00 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>
-Subject: Re: linux-next: build warning after merge of the rcu tree
-Message-ID: <20191212060200.GW2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191212160622.021517d3@canb.auug.org.au>
+        Thu, 12 Dec 2019 01:02:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:59902 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726907AbfLLGCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:02:21 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3FC70AD20;
+        Thu, 12 Dec 2019 06:02:19 +0000 (UTC)
+Subject: Re: [PATCH v3 2/4] xenbus: limit when state is forced to closed
+To:     Paul Durrant <pdurrant@amazon.com>, xen-devel@lists.xenproject.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>
+References: <20191211152956.5168-1-pdurrant@amazon.com>
+ <20191211152956.5168-3-pdurrant@amazon.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <61622e02-9cdc-03bc-b107-f3d1e6ff0fb9@suse.com>
+Date:   Thu, 12 Dec 2019 07:02:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212160622.021517d3@canb.auug.org.au>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191211152956.5168-3-pdurrant@amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 04:06:22PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On 11.12.19 16:29, Paul Durrant wrote:
+> If a driver probe() fails then leave the xenstore state alone. There is no
+> reason to modify it as the failure may be due to transient resource
+> allocation issues and hence a subsequent probe() may succeed.
 > 
-> After merging the rcu (I think) tree, today's linux-next build (x86_64
-> allnoconfig) produced this warning:
+> If the driver supports re-binding then only force state to closed during
+> remove() only in the case when the toolstack may need to clean up. This can
+> be detected by checking whether the state in xenstore has been set to
+> closing prior to device removal.
 > 
-> kernel/time/timer.c: In function 'schedule_timeout':
-> kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
->   969 |   long diff = timer->expires - expires;
->       |               ~~~~~^~~~~~~~~
+> NOTE: Re-bind support is indicated by new boolean in struct xenbus_driver,
+>        which defaults to false. Subsequent patches will add support to
+>        some backend drivers.
 > 
-> Introduced by (bisected to) commit
-> 
->   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
-> 
-> x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
+> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 
-Well, if the timer is pending, then ->expires has to have been
-initialized, but off where the compiler cannot see it, such as during a
-previous call to __mod_timer().  And the change may have made it harder
-for the compiler to see all of these relationships, but...
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
-I don't see this warning with gcc version 7.4.0.  Just out of curiosity,
-what are you running, Stephen?
 
-Eric, any thoughts for properly educating the compiler on this one?
-
-							Thanx, Paul
+Juergen
