@@ -2,103 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66956C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967C9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE7D205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ACBC20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zrhJ0jrk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W0uTSigX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfLLKhv (ORCPT
+        id S1728808AbfLLKiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:37:51 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42201 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728573AbfLLKhu (ORCPT
+        Thu, 12 Dec 2019 05:38:02 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35517 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLLKiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:37:50 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e28so1685923ljo.9
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:37:49 -0800 (PST)
+        Thu, 12 Dec 2019 05:38:02 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so1923734wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:38:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5SqIcgl9aAE6TWcTOYOiDMyzk/mR4NkfrL+RLRJKD3A=;
-        b=zrhJ0jrk8v5e2O4535/tOC22kazrIMievOQeaiWJ+BlR4UVjsChlFbVD0HUP/xerlF
-         3wBn6gl7CtLZNMLO+hWHrUxx7TlUMy+HaBVNYdFSjUevwA+HgtpDaR/FfWiBn+H3/er1
-         Ir1JZ0uUzRwlVBp6+6TflpQV+NyONx/CUx6PfVtw8pha+1yrolweS7xYIjv4DlMP0k1P
-         XOhV11uS5VZMIYGGOzwg0tu3/fO6zs+rszwaXK1aYekYsMbWaPyrGtTq3LYaH/mvE5iQ
-         s9UeDa5n1umu6QM/E8cUVmJXwoUnqEmMp8bLHfDq9VdNK4nvCsZsWa5Hwgkt0RCw1ijh
-         DpHw==
+        bh=9LEkUr58WGziT8fxYk1Ew3kC9fjqbADWx2DYTMjRwGQ=;
+        b=W0uTSigXUFE2xdm3NywrWLAehtiY1nqq3KXNKgVWsPsHs4FYM7q82PekauW43zhU+y
+         NbZNb/8+kXW7sH0tuPsGgM7Z/mdI1Txr44glAgZlrLb9ELa+Zqyujf83VLh9NAdvk5B4
+         tf1F7jjHyPYEZMeCJyGT7iiHVvZtajUKDYKWtpbJrvwcrJMDgbrXgG3WPSdQdQlOR/mg
+         eeeQequvLO1FvKN3dDyiWpbOsCqi2VlEt0ZkYZxAJ2q2xOj0TnU8WGJwwL8aQ6xZGhQ8
+         SUTF4f8yUUwsE5FeB1fXYHmU/DtsjoLrhV7OB90gbZKWyvbt2Uqa/W2v0Els2KLIdHXV
+         sP9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5SqIcgl9aAE6TWcTOYOiDMyzk/mR4NkfrL+RLRJKD3A=;
-        b=ZvSXvm/ZalVh5ssnnAYLcLyoh0Sm/l2uQEM3FqkSpzcjngOaQlxRibH+Hxq4w75Btn
-         A4y5zl6HXWZNfmO9FxMZcOIZRGnPct0AsUVY7oW1b2u0/RXDK6Qg2HeXbgNQTVxFzyIc
-         G/58bjj0uM5VvjP3KV4aJfL78ZxUdBTvj/4JuyZFkefJA5xNK1dkZpMsiEm0wDZcinFa
-         hoNK0T7EtXzIhrsr4XirrMpqyHLpFiYMtMgDMpP1WK3RwlbLkti1NcuceXQdIDe7v+zS
-         BJfC1xR7fo9P9ougAXotFUbHbLMgeVWKQR4Ebx6eA+nJZlSMtpr8zwbsjmiy/RNITlAq
-         HZOw==
-X-Gm-Message-State: APjAAAVqpO/mW9iWzHyDOxUX04CEeaOjy5Ea8BDQp3nf2LSrRRGo0Edv
-        BwcRidUt+PAZu1y0jSE06NnZYK0RtGaQOoN83EVj0g==
-X-Google-Smtp-Source: APXvYqxXDWfApEe5saT3On7j10fORvpRuprInc2tRlPoCQ/N7PszanwFYUgT0kGoFWH15AGjzElKuVlkyQcfwIG8L6U=
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr5366826ljh.183.1576147068543;
- Thu, 12 Dec 2019 02:37:48 -0800 (PST)
+        bh=9LEkUr58WGziT8fxYk1Ew3kC9fjqbADWx2DYTMjRwGQ=;
+        b=OU1BzPrV0fyXuyo8aPz+PvCL2+kWG+iwK4H6mrKdMzlA8veRZvMu0g9gS7+7VRcqMG
+         Jlc49kVjSakqFKlZj5r/4QtapFhRXxmM5XDHFgQYh8/Wr8P6M5+X0redpNR+oaQSLfmo
+         Dh4sLzq7uJ+jveAaanZ8OguDNuBqWxIB4bvTjrix7rKmb6B8SgiRkTUPhCt4bApyva9g
+         x6t7jxFNsc9OYCxCs6+ukwG7rNdJSpcSpjIjmk+3k0c7KEYGmVc1hiG+iNFc145Vixnf
+         LyzZLX/tPWuTgXRvI+kP3/QcarRBjEKkPl4mFvSYreTDGWphmPfuOtVeMBR5kChC4v06
+         XulA==
+X-Gm-Message-State: APjAAAWoV87kgU4qSvy/Nye47xBXCUMX8SPZybQymo49akumZ0XmkjzN
+        N01x4Mc+01MiIvRABNeG1mKAKIKMEe5MRBUgyfF6Lg==
+X-Google-Smtp-Source: APXvYqxr3fWC//jtQ4389G0t+wE4iStFTkxw+AcnJfeuE7/RxMxYE2FNqp3gvUBnlv+YKbpTnsdFT2YVgd4NFGhuVAs=
+X-Received: by 2002:a1c:a795:: with SMTP id q143mr5503441wme.52.1576147080146;
+ Thu, 12 Dec 2019 02:38:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-2-geert+renesas@glider.be>
-In-Reply-To: <20191127084253.16356-2-geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 11:37:37 +0100
-Message-ID: <CACRpkdY18k7EXb_oMAYXM44jz4Oc+AtcNWZfStPBZ4K1TnZ6mw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] gpiolib: Add GPIOCHIP_NAME definition
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
+References: <20191212103158.4958-1-hdegoede@redhat.com> <20191212103158.4958-2-hdegoede@redhat.com>
+In-Reply-To: <20191212103158.4958-2-hdegoede@redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 12 Dec 2019 10:37:58 +0000
+Message-ID: <CAKv+Gu9Fa=ccEyGW=hyZya0y-ujL27twKVX5JwcqWRMQ=yfQzg@mail.gmail.com>
+Subject: Re: [PATCH 5.5 regression fix 1/2] efi/libstub/random: Initialize
+ pointer variables to zero for mixed mode
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-
-> The string literal "gpiochip" is used in several places.
-> Add a definition for it, and use it everywhere, to make sure everything
-> stays in sync.
+On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Commit 0d95981438c3 ("x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the
+> UEFI RNG table"), causes the drivers/efi/libstub/random.c code to get used
+> on x86 for the first time.
+>
+> But this code was not written with EFI mixed mode in mind (running a 64
+> bit kernel on 32 bit EFI firmware), this causes the kernel to crash during
+> early boot when running in mixed mode.
+>
+> The problem is that in mixed mode pointers are 64 bit, but when running on
+> a 32 bit firmware, EFI calls which return a pointer value by reference only
+> fill the lower 32 bits of the passed pointer, leaving the upper 32 bits
+> uninitialized which leads to crashes.
+>
+> This commit fixes this by initializing pointers which are passed by
+> reference to EFI calls to NULL before passing them, so that the upper 32
+> bits are initialized to 0.
+>
+> Fixes: 0d95981438c3 ("x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the UEFI RNG table")
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+Thanks Hans.
+
+I'm a bit annoyed with myself since I should have been able to catch
+this in my QEMU tests and I didn't
+
+I'll queue this (and the next patch) as a fix
+
+
+
 > ---
-> v3:
->   - New.
-
-This is a good patch on its own merits so I have applied
-this with the ACKs. (Haven't looked at the rest yet...)
-
-Yours,
-Linus Walleij
+>  drivers/firmware/efi/libstub/random.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/random.c b/drivers/firmware/efi/libstub/random.c
+> index 35edd7cfb6a1..97378cf96a2e 100644
+> --- a/drivers/firmware/efi/libstub/random.c
+> +++ b/drivers/firmware/efi/libstub/random.c
+> @@ -33,7 +33,7 @@ efi_status_t efi_get_random_bytes(efi_system_table_t *sys_table_arg,
+>  {
+>         efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
+>         efi_status_t status;
+> -       struct efi_rng_protocol *rng;
+> +       struct efi_rng_protocol *rng = NULL;
+>
+>         status = efi_call_early(locate_protocol, &rng_proto, NULL,
+>                                 (void **)&rng);
+> @@ -162,8 +162,8 @@ efi_status_t efi_random_get_seed(efi_system_table_t *sys_table_arg)
+>         efi_guid_t rng_proto = EFI_RNG_PROTOCOL_GUID;
+>         efi_guid_t rng_algo_raw = EFI_RNG_ALGORITHM_RAW;
+>         efi_guid_t rng_table_guid = LINUX_EFI_RANDOM_SEED_TABLE_GUID;
+> -       struct efi_rng_protocol *rng;
+> -       struct linux_efi_random_seed *seed;
+> +       struct efi_rng_protocol *rng = NULL;
+> +       struct linux_efi_random_seed *seed = NULL;
+>         efi_status_t status;
+>
+>         status = efi_call_early(locate_protocol, &rng_proto, NULL,
+> --
+> 2.23.0
+>
