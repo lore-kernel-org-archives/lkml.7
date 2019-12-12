@@ -2,158 +2,759 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C80AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AABBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C06A22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="JZ5+WGDL"
+	by mail.kernel.org (Postfix) with ESMTP id C8B3F2253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfLLSZ0 (ORCPT
+        id S1730573AbfLLSZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:25:26 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45945 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730550AbfLLSZW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:25:22 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so1559116pgk.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:25:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=dq8iMUhZ2yfBywJFDlsyvo5d9zUYOkAnGOhY/ugaTfg=;
-        b=JZ5+WGDLMqcN43s4lZE8f2qx6LIqv25/YKdRZArNa+TIOR4zXMBDSDbF7EmxMp0teV
-         z1yPgFHV6R/Y9nblOr69R2by1K+voQaFqi1czL1TEgAnwKlhaWWZZOyJb4nkuo/BLt/j
-         wvdVj/ii5Vw695+oPBU4gtmV6mzDwuLoBejlJLVaGxuRsPGe5db080gTD4+bXeAAkx7d
-         YsJRtU9GgMY8L8P2KyUMmX/U6lfmDO4F9mwWnkrYv/C/XW/u2hNoBAISrq4fnjV5ENKG
-         fM0llueVK1mnbYBGRuPlE3cVPr1d4j3j6vm3deESJo64OOHDYqdZvR+4eQMMthrLa89/
-         3kpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=dq8iMUhZ2yfBywJFDlsyvo5d9zUYOkAnGOhY/ugaTfg=;
-        b=FIbaWbUZdfEVkXZE/88dkj3VGCJ0n3b+Y4tC/ZtReSygShib+hej2Hskp7k3Oi2/hy
-         vg0GwplIAyLqwDMeOjzWHiqroNa+yGrGYyzJs/eYpUx8h9XSlQcPYNwet4gYL7zj6ObO
-         ZIYDas9VbCLo5Tk+4WER9yPfruSi5RckpD69DmdQ3aB5Xkpait1cNzY/laZWj6pibVW1
-         1TpW9RLwgzPU0BIqLxtOtUneC1Nfgk4dQmBZQNmf2KCDjL7czc2RenaFCG2USUM5uDFt
-         57aFjhsGuJFUfevIxvxjjq1gvXoH4/hg5wjYhk1UuAcC/pvD/pBqGVmSOHGqhDNJgri6
-         wQaA==
-X-Gm-Message-State: APjAAAVlIdKOUsYPRRAf8ULAvYKrPw3My0sgVI8lOyZLYdaGBqjxRbkP
-        S0/CUHkpXZ0qVgg/JSVB5jFUZA==
-X-Google-Smtp-Source: APXvYqwKszuLsvTn/P8C2foIW/l93vtwMR+8x9dN4BqBvz0LjXnY6T5W9/poyEteamIBt2ikAk11+A==
-X-Received: by 2002:a63:c12:: with SMTP id b18mr11819556pgl.156.1576175121153;
-        Thu, 12 Dec 2019 10:25:21 -0800 (PST)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id i4sm6344645pjw.28.2019.12.12.10.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 10:25:20 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:25:17 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Yuval Avnery <yuvalav@mellanox.com>
-Cc:     Jiri Pirko <jiri@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gospodarek <andy@greyhouse.net>
-Subject: Re: [PATCH net-next] netdevsim: Add max_vfs to bus_dev
-Message-ID: <20191212102517.602a8a5d@cakuba.netronome.com>
-In-Reply-To: <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
-References: <1576033133-18845-1-git-send-email-yuvalav@mellanox.com>
-        <20191211095854.6cd860f1@cakuba.netronome.com>
-        <AM6PR05MB514244DC6D25DDD433C0E238C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211111537.416bf078@cakuba.netronome.com>
-        <AM6PR05MB5142CCAB9A06DAC199F7100CC55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211142401.742189cf@cakuba.netronome.com>
-        <AM6PR05MB51423D365FB5A8DB22B1DE62C55A0@AM6PR05MB5142.eurprd05.prod.outlook.com>
-        <20191211154952.50109494@cakuba.netronome.com>
-        <AM6PR05MB51425B74E736C5D765356DC8C5550@AM6PR05MB5142.eurprd05.prod.outlook.com>
-Organization: Netronome Systems, Ltd.
+        Thu, 12 Dec 2019 13:25:30 -0500
+Received: from mga01.intel.com ([192.55.52.88]:20703 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730312AbfLLSZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:25:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="220750025"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Dec 2019 10:25:28 -0800
+Subject: [PATCH RFC v2 13/14] dmaengine: idxd: add char driver to expose
+ submission portal to userland
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+Date:   Thu, 12 Dec 2019 11:25:28 -0700
+Message-ID: <157617512852.42350.11721243168831821440.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 05:11:12 +0000, Yuval Avnery wrote:
-> > > > Okay, please post v2 together with the tests. We don't accept
-> > > > netdevsim features without tests any more.  
-> > >
-> > > I think the only test I can currently write is the enable SR-IOV max_vfs  
-> > > enforcement. Because subdev is not in yet.
-> > > Will that be good enough?  
-> > 
-> > It'd be good to test some netdev API rather than just the enforcement itself
-> > which is entirely in netdevsim, I think.
-> > 
-> > So max_vfs enforcement plus checking that ip link lists the correct number of
-> > entries (and perhaps the entries are in reset state after
-> > enable) would do IMO.  
-> 
-> Ok, but this is possible regardless of my patch (to enable vfs).
+Create a char device region that will allow acquisition of user portals in
+order to allow applications to submit DMA operations. A char device will be
+created per work queue that gets exposed. The workqueue type "user"
+is used to mark a work queue for user char device. For example if the
+workqueue 0 of DSA device 0 is marked for char device, then a device node
+of /dev/dsa/wq0.0 will be created.
 
-I was being lenient :) Your patch is only really needed when the
-devlink API lands, since devlink will display all max VFs not enabled.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+ drivers/dma/idxd/Makefile |    2 
+ drivers/dma/idxd/cdev.c   |  304 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/dma/idxd/device.c |    2 
+ drivers/dma/idxd/idxd.h   |   38 ++++++
+ drivers/dma/idxd/init.c   |   10 +
+ drivers/dma/idxd/irq.c    |   18 +++
+ drivers/dma/idxd/submit.c |    4 -
+ drivers/dma/idxd/sysfs.c  |   52 +++++++-
+ 8 files changed, 425 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/dma/idxd/cdev.c
 
-> > My knee jerk reaction is that we should populate the values to those set via
-> > devlink upon SR-IOV enable, but then if user overwrites those values that's
-> > their problem.
-> > 
-> > Sort of mirror how VF MAC addrs work, just a level deeper. The VF defaults
-> > to the MAC addr provided by the PF after reset, but it can change it to
-> > something else (things may stop working because spoof check etc. will drop
-> > all its frames, but nothing stops the VF in legacy HW from writing its MAC
-> > addr register).
-> > 
-> > IOW the devlink addr is the default/provisioned addr, not necessarily the
-> > addr the PF has set _now_.
-> > 
-> > Other options I guess are (a) reject the changes of the address from the PF
-> > once devlink has set a value; (b) provide some device->control CPU notifier
-> > which can ack/reject a request from the PF to change devlink's value..?
-> > 
-> > You guys posted the devlink patches a while ago, what was your
-> > implementation doing?  
-> 
-> devlink simply calls the driver with set or get.
-> It is up to the vendor driver/HW if to make this address persistent or not.
-> The address is not saved in the devlink layer.
+diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
+index a036ba0e77d2..8978b898d777 100644
+--- a/drivers/dma/idxd/Makefile
++++ b/drivers/dma/idxd/Makefile
+@@ -1,2 +1,2 @@
+ obj-$(CONFIG_INTEL_IDXD) += idxd.o
+-idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o
++idxd-y := init.o irq.o device.o sysfs.o submit.o dma.o cdev.o
+diff --git a/drivers/dma/idxd/cdev.c b/drivers/dma/idxd/cdev.c
+new file mode 100644
+index 000000000000..a90d38a9769a
+--- /dev/null
++++ b/drivers/dma/idxd/cdev.c
+@@ -0,0 +1,304 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2019 Intel Corporation. All rights rsvd. */
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/device.h>
++#include <linux/sched/task.h>
++#include <linux/intel-svm.h>
++#include <linux/io-64-nonatomic-lo-hi.h>
++#include <linux/cdev.h>
++#include <linux/fs.h>
++#include <linux/poll.h>
++#include <uapi/linux/idxd.h>
++#include "registers.h"
++#include "idxd.h"
++
++struct idxd_cdev_context {
++	const char *name;
++	dev_t devt;
++	struct ida minor_ida;
++};
++
++/*
++ * ictx is an array based off of accelerator types. enum idxd_type
++ * is used as index
++ */
++static struct idxd_cdev_context ictx[IDXD_TYPE_MAX] = {
++	{ .name = "dsa" },
++};
++
++struct idxd_user_context {
++	struct idxd_wq *wq;
++	struct task_struct *task;
++	unsigned int flags;
++};
++
++enum idxd_cdev_cleanup {
++	CDEV_NORMAL = 0,
++	CDEV_FAILED,
++};
++
++static void idxd_cdev_dev_release(struct device *dev)
++{
++	dev_dbg(dev, "releasing cdev device\n");
++	kfree(dev);
++}
++
++static struct device_type idxd_cdev_device_type = {
++	.name = "idxd_cdev",
++	.release = idxd_cdev_dev_release,
++};
++
++static inline struct idxd_cdev *inode_idxd_cdev(struct inode *inode)
++{
++	struct cdev *cdev = inode->i_cdev;
++
++	return container_of(cdev, struct idxd_cdev, cdev);
++}
++
++static inline struct idxd_wq *idxd_cdev_wq(struct idxd_cdev *idxd_cdev)
++{
++	return container_of(idxd_cdev, struct idxd_wq, idxd_cdev);
++}
++
++static inline struct idxd_wq *inode_wq(struct inode *inode)
++{
++	return idxd_cdev_wq(inode_idxd_cdev(inode));
++}
++
++static int idxd_cdev_open(struct inode *inode, struct file *filp)
++{
++	struct idxd_user_context *ctx;
++	struct idxd_device *idxd;
++	struct idxd_wq *wq;
++	struct device *dev;
++	struct idxd_cdev *idxd_cdev;
++
++	wq = inode_wq(inode);
++	idxd = wq->idxd;
++	dev = &idxd->pdev->dev;
++	idxd_cdev = &wq->idxd_cdev;
++
++	dev_dbg(dev, "%s called\n", __func__);
++
++	if (idxd_wq_refcount(wq) > 1 && wq_dedicated(wq))
++		return -EBUSY;
++
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->wq = wq;
++	filp->private_data = ctx;
++	idxd_wq_get(wq);
++	return 0;
++}
++
++static int idxd_cdev_release(struct inode *node, struct file *filep)
++{
++	struct idxd_user_context *ctx = filep->private_data;
++	struct idxd_wq *wq = ctx->wq;
++	struct idxd_device *idxd = wq->idxd;
++	struct device *dev = &idxd->pdev->dev;
++
++	dev_dbg(dev, "%s called\n", __func__);
++	filep->private_data = NULL;
++
++	kfree(ctx);
++	idxd_wq_put(wq);
++	return 0;
++}
++
++static int check_vma(struct idxd_wq *wq, struct vm_area_struct *vma,
++		     const char *func)
++{
++	struct device *dev = &wq->idxd->pdev->dev;
++
++	if ((vma->vm_end - vma->vm_start) > PAGE_SIZE) {
++		dev_info_ratelimited(dev,
++				     "%s: %s: mapping too large: %lu\n",
++				     current->comm, func,
++				     vma->vm_end - vma->vm_start);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int idxd_cdev_mmap(struct file *filp, struct vm_area_struct *vma)
++{
++	struct idxd_user_context *ctx = filp->private_data;
++	struct idxd_wq *wq = ctx->wq;
++	struct idxd_device *idxd = wq->idxd;
++	struct pci_dev *pdev = idxd->pdev;
++	phys_addr_t base = pci_resource_start(pdev, IDXD_WQ_BAR);
++	unsigned long pfn;
++	int rc;
++
++	dev_dbg(&pdev->dev, "%s called\n", __func__);
++	rc = check_vma(wq, vma, __func__);
++
++	vma->vm_flags |= VM_DONTCOPY;
++	pfn = (base + idxd_get_wq_portal_full_offset(wq->id,
++				IDXD_PORTAL_LIMITED)) >> PAGE_SHIFT;
++	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
++	vma->vm_private_data = ctx;
++
++	return io_remap_pfn_range(vma, vma->vm_start, pfn, PAGE_SIZE,
++			vma->vm_page_prot);
++}
++
++static __poll_t idxd_cdev_poll(struct file *filp,
++			       struct poll_table_struct *wait)
++{
++	struct idxd_user_context *ctx = filp->private_data;
++	struct idxd_wq *wq = ctx->wq;
++	struct idxd_device *idxd = wq->idxd;
++	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
++	unsigned long flags;
++	__poll_t out = 0;
++
++	poll_wait(filp, &idxd_cdev->err_queue, wait);
++	spin_lock_irqsave(&idxd->dev_lock, flags);
++	if (idxd->sw_err.valid)
++		out = EPOLLIN | EPOLLRDNORM;
++	spin_unlock_irqrestore(&idxd->dev_lock, flags);
++
++	return out;
++}
++
++static const struct file_operations idxd_cdev_fops = {
++	.owner = THIS_MODULE,
++	.open = idxd_cdev_open,
++	.release = idxd_cdev_release,
++	.mmap = idxd_cdev_mmap,
++	.poll = idxd_cdev_poll,
++};
++
++int idxd_cdev_get_major(struct idxd_device *idxd)
++{
++	return MAJOR(ictx[idxd->type].devt);
++}
++
++static int idxd_wq_cdev_dev_setup(struct idxd_wq *wq)
++{
++	struct idxd_device *idxd = wq->idxd;
++	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
++	struct idxd_cdev_context *cdev_ctx;
++	struct device *dev;
++	int minor, rc;
++
++	idxd_cdev->dev = kzalloc(sizeof(*idxd_cdev->dev), GFP_KERNEL);
++	if (!idxd_cdev->dev)
++		return -ENOMEM;
++
++	dev = idxd_cdev->dev;
++	dev->parent = &idxd->pdev->dev;
++	dev_set_name(dev, "%s/wq%u.%u", idxd_get_dev_name(idxd),
++		     idxd->id, wq->id);
++	dev->bus = idxd_get_bus_type(idxd);
++
++	cdev_ctx = &ictx[wq->idxd->type];
++	minor = ida_simple_get(&cdev_ctx->minor_ida, 0, MINORMASK, GFP_KERNEL);
++	if (minor < 0) {
++		rc = minor;
++		goto ida_err;
++	}
++
++	dev->devt = MKDEV(MAJOR(cdev_ctx->devt), minor);
++	dev->type = &idxd_cdev_device_type;
++	rc = device_register(dev);
++	if (rc < 0) {
++		dev_err(&idxd->pdev->dev, "device register failed\n");
++		put_device(dev);
++		goto dev_reg_err;
++	}
++	idxd_cdev->minor = minor;
++
++	return 0;
++
++ dev_reg_err:
++	ida_simple_remove(&cdev_ctx->minor_ida, MINOR(dev->devt));
++ ida_err:
++	kfree(dev);
++	idxd_cdev->dev = NULL;
++	return rc;
++}
++
++static void idxd_wq_cdev_cleanup(struct idxd_wq *wq,
++				 enum idxd_cdev_cleanup cdev_state)
++{
++	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
++	struct idxd_cdev_context *cdev_ctx;
++
++	cdev_ctx = &ictx[wq->idxd->type];
++	if (cdev_state == CDEV_NORMAL)
++		cdev_del(&idxd_cdev->cdev);
++	device_unregister(idxd_cdev->dev);
++	/*
++	 * The device_type->release() will be called on the device and free
++	 * the allocated struct device. We can just forget it.
++	 */
++	ida_simple_remove(&cdev_ctx->minor_ida, idxd_cdev->minor);
++	idxd_cdev->dev = NULL;
++	idxd_cdev->minor = -1;
++}
++
++int idxd_wq_add_cdev(struct idxd_wq *wq)
++{
++	struct idxd_cdev *idxd_cdev = &wq->idxd_cdev;
++	struct cdev *cdev = &idxd_cdev->cdev;
++	struct device *dev;
++	int rc;
++
++	rc = idxd_wq_cdev_dev_setup(wq);
++	if (rc < 0)
++		return rc;
++
++	dev = idxd_cdev->dev;
++	cdev_init(cdev, &idxd_cdev_fops);
++	cdev_set_parent(cdev, &dev->kobj);
++	rc = cdev_add(cdev, dev->devt, 1);
++	if (rc) {
++		dev_dbg(&wq->idxd->pdev->dev, "cdev_add failed: %d\n", rc);
++		idxd_wq_cdev_cleanup(wq, CDEV_FAILED);
++		return rc;
++	}
++
++	init_waitqueue_head(&idxd_cdev->err_queue);
++	idxd_wq_get(wq);
++	return 0;
++}
++
++void idxd_wq_del_cdev(struct idxd_wq *wq)
++{
++	idxd_wq_cdev_cleanup(wq, CDEV_NORMAL);
++	idxd_wq_put(wq);
++}
++
++int idxd_cdev_register(void)
++{
++	int rc, i;
++
++	for (i = 0; i < IDXD_TYPE_MAX; i++) {
++		ida_init(&ictx[i].minor_ida);
++		rc = alloc_chrdev_region(&ictx[i].devt, 0, MINORMASK,
++					 ictx[i].name);
++		if (rc)
++			return rc;
++	}
++
++	return 0;
++}
++
++void idxd_cdev_remove(void)
++{
++	int i;
++
++	for (i = 0; i < IDXD_TYPE_MAX; i++) {
++		unregister_chrdev_region(ictx[i].devt, MINORMASK);
++		ida_destroy(&ictx[i].minor_ida);
++	}
++}
+diff --git a/drivers/dma/idxd/device.c b/drivers/dma/idxd/device.c
+index 49638d3a2151..fd33e2985e95 100644
+--- a/drivers/dma/idxd/device.c
++++ b/drivers/dma/idxd/device.c
+@@ -545,7 +545,7 @@ static int idxd_wq_config_write(struct idxd_wq *wq)
+ 	wq->wqcfg.wq_thresh = wq->threshold;
+ 
+ 	/* byte 8-11 */
+-	wq->wqcfg.priv = 1; /* kernel, therefore priv */
++	wq->wqcfg.priv = !!(wq->type == IDXD_WQT_KERNEL);
+ 	wq->wqcfg.mode = 1;
+ 
+ 	wq->wqcfg.priority = wq->priority;
+diff --git a/drivers/dma/idxd/idxd.h b/drivers/dma/idxd/idxd.h
+index 7f94e50267cc..62ee01ab0901 100644
+--- a/drivers/dma/idxd/idxd.h
++++ b/drivers/dma/idxd/idxd.h
+@@ -7,6 +7,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/percpu-rwsem.h>
+ #include <linux/wait.h>
++#include <linux/cdev.h>
+ #include "registers.h"
+ 
+ #define IDXD_DRIVER_VERSION	"1.00"
+@@ -63,6 +64,14 @@ enum idxd_wq_flag {
+ enum idxd_wq_type {
+ 	IDXD_WQT_NONE = 0,
+ 	IDXD_WQT_KERNEL,
++	IDXD_WQT_USER,
++};
++
++struct idxd_cdev {
++	struct cdev cdev;
++	struct device *dev;
++	int minor;
++	struct wait_queue_head err_queue;
+ };
+ 
+ #define IDXD_ALLOCATED_BATCH_SIZE	128U
+@@ -72,6 +81,7 @@ enum idxd_wq_type {
+ struct idxd_wq {
+ 	void __iomem *dportal;
+ 	struct device conf_dev;
++	struct idxd_cdev idxd_cdev;
+ 	struct idxd_device *idxd;
+ 	int id;
+ 	enum idxd_wq_type type;
+@@ -139,6 +149,7 @@ struct idxd_device {
+ 	enum idxd_device_state state;
+ 	unsigned long flags;
+ 	int id;
++	int major;
+ 
+ 	struct pci_dev *pdev;
+ 	void __iomem *reg_base;
+@@ -191,11 +202,29 @@ struct idxd_desc {
+ #define confdev_to_idxd(dev) container_of(dev, struct idxd_device, conf_dev)
+ #define confdev_to_wq(dev) container_of(dev, struct idxd_wq, conf_dev)
+ 
++extern struct bus_type dsa_bus_type;
++
+ static inline bool wq_dedicated(struct idxd_wq *wq)
+ {
+ 	return test_bit(WQ_FLAG_DEDICATED, &wq->flags);
+ }
+ 
++enum idxd_portal_prot {
++	IDXD_PORTAL_UNLIMITED = 0,
++	IDXD_PORTAL_LIMITED,
++};
++
++static inline int idxd_get_wq_portal_offset(enum idxd_portal_prot prot)
++{
++	return prot * 0x1000;
++}
++
++static inline int idxd_get_wq_portal_full_offset(int wq_id,
++						 enum idxd_portal_prot prot)
++{
++	return ((wq_id * 4) << PAGE_SHIFT) + idxd_get_wq_portal_offset(prot);
++}
++
+ static inline void idxd_set_type(struct idxd_device *idxd)
+ {
+ 	struct pci_dev *pdev = idxd->pdev;
+@@ -228,6 +257,7 @@ int idxd_setup_sysfs(struct idxd_device *idxd);
+ void idxd_cleanup_sysfs(struct idxd_device *idxd);
+ int idxd_register_driver(void);
+ void idxd_unregister_driver(void);
++struct bus_type *idxd_get_bus_type(struct idxd_device *idxd);
+ 
+ /* device interrupt control */
+ irqreturn_t idxd_irq_handler(int vec, void *data);
+@@ -266,4 +296,12 @@ void idxd_unregister_dma_device(struct idxd_device *idxd);
+ int idxd_register_dma_channel(struct idxd_wq *wq);
+ void idxd_unregister_dma_channel(struct idxd_wq *wq);
+ void idxd_parse_completion_status(u8 status, enum dmaengine_tx_result *res);
++
++/* cdev */
++int idxd_cdev_register(void);
++void idxd_cdev_remove(void);
++int idxd_cdev_get_major(struct idxd_device *idxd);
++int idxd_wq_add_cdev(struct idxd_wq *wq);
++void idxd_wq_del_cdev(struct idxd_wq *wq);
++
+ #endif
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 3ec1ef0f733e..6ec477e9026f 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -188,6 +188,7 @@ static int idxd_setup_internals(struct idxd_device *idxd)
+ 		mutex_init(&wq->wq_lock);
+ 		atomic_set(&wq->dq_count, 0);
+ 		init_waitqueue_head(&wq->submit_waitq);
++		wq->idxd_cdev.minor = -1;
+ 		rc = percpu_init_rwsem(&wq->submit_lock);
+ 		if (rc < 0) {
+ 			idxd_wqs_free_lock(idxd);
+@@ -320,6 +321,8 @@ static int idxd_probe(struct idxd_device *idxd)
+ 		goto err_idr_fail;
+ 	}
+ 
++	idxd->major = idxd_cdev_get_major(idxd);
++
+ 	dev_dbg(dev, "IDXD device %d probed successfully\n", idxd->id);
+ 	return 0;
+ 
+@@ -518,6 +521,10 @@ static int __init idxd_init_module(void)
+ 	if (err < 0)
+ 		goto err_idxd_driver_register;
+ 
++	err = idxd_cdev_register();
++	if (err)
++		goto err_cdev_register;
++
+ 	err = pci_register_driver(&idxd_pci_driver);
+ 	if (err)
+ 		goto err_pci_register;
+@@ -525,6 +532,8 @@ static int __init idxd_init_module(void)
+ 	return 0;
+ 
+ err_pci_register:
++	idxd_cdev_remove();
++err_cdev_register:
+ 	idxd_unregister_driver();
+ err_idxd_driver_register:
+ 	idxd_unregister_bus_type();
+@@ -535,6 +544,7 @@ module_init(idxd_init_module);
+ static void __exit idxd_exit_module(void)
+ {
+ 	pci_unregister_driver(&idxd_pci_driver);
++	idxd_cdev_remove();
+ 	idxd_unregister_bus_type();
+ }
+ module_exit(idxd_exit_module);
+diff --git a/drivers/dma/idxd/irq.c b/drivers/dma/idxd/irq.c
+index b4adeb2817d1..442f21eeb0fb 100644
+--- a/drivers/dma/idxd/irq.c
++++ b/drivers/dma/idxd/irq.c
+@@ -89,6 +89,24 @@ irqreturn_t idxd_misc_thread(int vec, void *data)
+ 			idxd->sw_err.bits[i] = ioread64(idxd->reg_base +
+ 					IDXD_SWERR_OFFSET + i * sizeof(u64));
+ 		iowrite64(IDXD_SWERR_ACK, idxd->reg_base + IDXD_SWERR_OFFSET);
++
++		if (idxd->sw_err.valid && idxd->sw_err.wq_idx_valid) {
++			int id = idxd->sw_err.wq_idx;
++			struct idxd_wq *wq = &idxd->wqs[id];
++
++			if (wq->type == IDXD_WQT_USER)
++				wake_up_interruptible(&wq->idxd_cdev.err_queue);
++		} else {
++			int i;
++
++			for (i = 0; i < idxd->max_wqs; i++) {
++				struct idxd_wq *wq = &idxd->wqs[i];
++
++				if (wq->type == IDXD_WQT_USER)
++					wake_up_interruptible(&wq->idxd_cdev.err_queue);
++			}
++		}
++
+ 		spin_unlock_bh(&idxd->dev_lock);
+ 		val |= IDXD_INTC_ERR;
+ 
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+index f7baa1bbb0c7..0e6dea34edc9 100644
+--- a/drivers/dma/idxd/submit.c
++++ b/drivers/dma/idxd/submit.c
+@@ -71,17 +71,19 @@ static int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc,
+ {
+ 	struct idxd_device *idxd = wq->idxd;
+ 	int vec = desc->hw->int_handle;
++	void __iomem *portal;
+ 
+ 	if (idxd->state != IDXD_DEV_ENABLED)
+ 		return -EIO;
+ 
++	portal = wq->dportal + idxd_get_wq_portal_offset(IDXD_PORTAL_UNLIMITED);
+ 	/*
+ 	 * The wmb() flushes writes to coherent DMA data before possibly
+ 	 * triggering a DMA read. The wmb() is necessary even on UP because
+ 	 * the recipient is a device.
+ 	 */
+ 	wmb();
+-	iosubmit_cmds512(wq->dportal, desc->hw, 1);
++	iosubmit_cmds512(portal, desc->hw, 1);
+ 
+ 	/*
+ 	 * Pending the descriptor to the lockless list for the irq_entry
+diff --git a/drivers/dma/idxd/sysfs.c b/drivers/dma/idxd/sysfs.c
+index a7468d22c287..81a41a2b84ce 100644
+--- a/drivers/dma/idxd/sysfs.c
++++ b/drivers/dma/idxd/sysfs.c
+@@ -13,6 +13,7 @@
+ static char *idxd_wq_type_names[] = {
+ 	[IDXD_WQT_NONE]		= "none",
+ 	[IDXD_WQT_KERNEL]	= "kernel",
++	[IDXD_WQT_USER]		= "user",
+ };
+ 
+ static void idxd_conf_device_release(struct device *dev)
+@@ -63,6 +64,11 @@ static inline bool is_idxd_wq_dmaengine(struct idxd_wq *wq)
+ 	return false;
+ }
+ 
++static inline bool is_idxd_wq_cdev(struct idxd_wq *wq)
++{
++	return wq->type == IDXD_WQT_USER ? true : false;
++}
++
+ static int idxd_config_bus_match(struct device *dev,
+ 				 struct device_driver *drv)
+ {
+@@ -109,6 +115,9 @@ static int idxd_config_bus_probe(struct device *dev)
+ 			return -EBUSY;
+ 		}
+ 
++		if (!try_module_get(THIS_MODULE))
++			return -ENXIO;
++
+ 		spin_lock_irqsave(&idxd->dev_lock, flags);
+ 
+ 		/* Perform IDXD configuration and enabling */
+@@ -216,6 +225,13 @@ static int idxd_config_bus_probe(struct device *dev)
+ 				mutex_unlock(&wq->wq_lock);
+ 				return rc;
+ 			}
++		} else if (is_idxd_wq_cdev(wq)) {
++			rc = idxd_wq_add_cdev(wq);
++			if (rc < 0) {
++				dev_dbg(dev, "Cdev creation failed\n");
++				mutex_unlock(&wq->wq_lock);
++				return rc;
++			}
+ 		}
+ 
+ 		mutex_unlock(&wq->wq_lock);
+@@ -241,6 +257,8 @@ static void disable_wq(struct idxd_wq *wq)
+ 
+ 	if (is_idxd_wq_dmaengine(wq))
+ 		idxd_unregister_dma_channel(wq);
++	else if (is_idxd_wq_cdev(wq))
++		idxd_wq_del_cdev(wq);
+ 
+ 	if (idxd_wq_refcount(wq))
+ 		dev_warn(dev, "Clients has claim on wq %d: %d\n",
+@@ -295,10 +313,12 @@ static int idxd_config_bus_remove(struct device *dev)
+ 		spin_lock_irqsave(&idxd->dev_lock, flags);
+ 		rc = idxd_device_disable(idxd);
+ 		spin_unlock_irqrestore(&idxd->dev_lock, flags);
++		module_put(THIS_MODULE);
+ 		if (rc < 0)
+ 			dev_warn(dev, "Device disable failed\n");
+ 		else
+ 			dev_info(dev, "Device %s disabled\n", dev_name(dev));
++
+ 	}
+ 
+ 	return 0;
+@@ -309,7 +329,7 @@ static void idxd_config_bus_shutdown(struct device *dev)
+ 	dev_dbg(dev, "%s called\n", __func__);
+ }
+ 
+-static struct bus_type dsa_bus_type = {
++struct bus_type dsa_bus_type = {
+ 	.name = "dsa",
+ 	.match = idxd_config_bus_match,
+ 	.probe = idxd_config_bus_probe,
+@@ -334,7 +354,7 @@ static struct idxd_device_driver *idxd_drvs[] = {
+ 	&dsa_drv
+ };
+ 
+-static struct bus_type *idxd_get_bus_type(struct idxd_device *idxd)
++struct bus_type *idxd_get_bus_type(struct idxd_device *idxd)
+ {
+ 	return idxd_bus_types[idxd->type];
+ }
+@@ -938,6 +958,9 @@ static ssize_t wq_type_show(struct device *dev,
+ 	case IDXD_WQT_KERNEL:
+ 		return sprintf(buf, "%s\n",
+ 			       idxd_wq_type_names[IDXD_WQT_KERNEL]);
++	case IDXD_WQT_USER:
++		return sprintf(buf, "%s\n",
++			       idxd_wq_type_names[IDXD_WQT_USER]);
+ 	case IDXD_WQT_NONE:
+ 	default:
+ 		return sprintf(buf, "%s\n",
+@@ -960,6 +983,8 @@ static ssize_t wq_type_store(struct device *dev,
+ 	old_type = wq->type;
+ 	if (sysfs_streq(buf, idxd_wq_type_names[IDXD_WQT_KERNEL]))
+ 		wq->type = IDXD_WQT_KERNEL;
++	else if (sysfs_streq(buf, idxd_wq_type_names[IDXD_WQT_USER]))
++		wq->type = IDXD_WQT_USER;
+ 	else
+ 		wq->type = IDXD_WQT_NONE;
+ 
+@@ -1002,6 +1027,17 @@ static ssize_t wq_name_store(struct device *dev,
+ static struct device_attribute dev_attr_wq_name =
+ 		__ATTR(name, 0644, wq_name_show, wq_name_store);
+ 
++static ssize_t wq_cdev_minor_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct idxd_wq *wq = container_of(dev, struct idxd_wq, conf_dev);
++
++	return sprintf(buf, "%d\n", wq->idxd_cdev.minor);
++}
++
++static struct device_attribute dev_attr_wq_cdev_minor =
++		__ATTR(cdev_minor, 0444, wq_cdev_minor_show, NULL);
++
+ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_clients.attr,
+ 	&dev_attr_wq_state.attr,
+@@ -1011,6 +1047,7 @@ static struct attribute *idxd_wq_attributes[] = {
+ 	&dev_attr_wq_priority.attr,
+ 	&dev_attr_wq_type.attr,
+ 	&dev_attr_wq_name.attr,
++	&dev_attr_wq_cdev_minor.attr,
+ 	NULL,
+ };
+ 
+@@ -1224,6 +1261,16 @@ static ssize_t token_limit_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(token_limit);
+ 
++static ssize_t cdev_major_show(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct idxd_device *idxd =
++		container_of(dev, struct idxd_device, conf_dev);
++
++	return sprintf(buf, "%u\n", idxd->major);
++}
++static DEVICE_ATTR_RO(cdev_major);
++
+ static struct attribute *idxd_device_attributes[] = {
+ 	&dev_attr_max_groups.attr,
+ 	&dev_attr_max_work_queues.attr,
+@@ -1239,6 +1286,7 @@ static struct attribute *idxd_device_attributes[] = {
+ 	&dev_attr_errors.attr,
+ 	&dev_attr_max_tokens.attr,
+ 	&dev_attr_token_limit.attr,
++	&dev_attr_cdev_major.attr,
+ 	NULL,
+ };
+ 
 
-It'd be preferable for the behaviour of the kernel API to not be vendor
-specific. That defeats the purpose of having an operating system as a
-HW abstraction layer. SR-IOV devices of today are so FW heavy we can
-make them behave whatever way we choose makes most sense.
-
-> The MAC address in mlx5 is stored in the HW and
-> persistent (until PF reset) , whether it is set by devlink or ip link.
-
-Okay, let's see if I understand. The devlink and ip link interfaces
-basically do the same thing but one reaches from control CPU and the
-other one from the SR-IOV host? And on SR-IOV host reset the addresses
-go back to 00:00.. i.e. any?
-
-What happens if the SR-IOV host changes the MAC? Is it used by HW or is
-the MAC provisioned by the control CPU used for things like spoof check?
-
-Does the control CPU get a notification for SR-IOV host reset? In that
-case the control CPU driver could restore the MAC addr.
-
-> So from what I understand, we have the freedom to choose how netdevsim
-> behave in this case, which means non-persistent is ok.
-
-To be clear - by persistent I meant that it survives the SR-IOV host's
-resets, not necessarily written to NVRAM of any sort.
-
-I'd like to see netdevsim to also serve as sort of a reference model
-for device behaviour. Vendors who are not first to implement a feature
-always complain that there is no documentation on how things should
-work.
