@@ -2,188 +2,91 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F55C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5A5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1442073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="dTe1qHDg"
+	by mail.kernel.org (Postfix) with ESMTP id 7A90F205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576170593;
+	bh=66+JdRK3MHSvSFGBy74pY66a28t1UPHfvPBHNumTkEw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZW3iui1BJiTaJPKwBi/8rdXrwdIBUaReFnnCt5Or0fwpQcdXFDN3SHE3+KB+yxFQb
+	 OdSDIuKyoEaoSRf6wK/Gi46i7goU46yLxacrLH6ahC6ORsMR+IHI7BDjeXcNnNcWeE
+	 0E0ldJfW2Rmswwwxi8GiFLXdFDbCZC4lWWog59VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbfLLRH5 (ORCPT
+        id S1730065AbfLLRJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:07:57 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:33607 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729804AbfLLRH5 (ORCPT
+        Thu, 12 Dec 2019 12:09:52 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41849 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729546AbfLLRJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:07:57 -0500
-Received: by mail-vs1-f66.google.com with SMTP id n27so2109058vsa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:07:56 -0800 (PST)
+        Thu, 12 Dec 2019 12:09:52 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so3115123ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:09:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gtV1kMMZOt9BBy7gC33kLI2d+FIAWgyItD6+NoqJfrk=;
-        b=dTe1qHDgLCR3hFu1EHejH8zrr86ot3OrTdrb4hX3GDCDalgvGAI0D0IdxMebsmoh4i
-         ybVXyOHUfPN5oscxefXKWtPPpITIZy2Mxgwm8jJygqwur2QCeIE0ueL9g2M2QpxOW/r4
-         uG5ZStInuYc7aa4Z6E/UvUu4VHBpyz5Oau0YBWQ4RnrLWrqtLVLB2Vl/7OCq4+v+6pjF
-         7T2kSPkjFQsnSLk4BMIvf91+LclznDss+7GprVZK/xaBpsz2klJac3LXn0eMXBwlDf4z
-         DuDr4WsbXrXD9vSHjR2u4U8OY5BQkmclsGTb8ZC78Dyruc6uJG9tzm5OySn/VpgBT3oE
-         rKQw==
+        bh=tcBK2OXBUdCz5AXrgTLD+qna9CmZkEmzcIDc1qfE9ns=;
+        b=O5eviaFh4+3bEsZKbmmNcaSSZ7g4oowOSXJET8bW1/aq/wTG3y5ZUARw84j0sfi2qn
+         9GQ1P7LwixSAiPal3ouF9HF9OJ/nu908lnrHCP93/vFahvnnkIU04D6Hbcmj+wuvSTvN
+         47I1bwhdj4OPhqRte7eBZ5c4h5NrYB7eS4f30=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gtV1kMMZOt9BBy7gC33kLI2d+FIAWgyItD6+NoqJfrk=;
-        b=GOzXdeAP8dwuSo44h+5GGF4OrdKFUKgIWMBhiPXfFQ0jskORVkr4XoB8M3BSLisTYV
-         J94lJGTNSMS56zl8SYlmA/9iS+XFabT3pRrtLJXE32NTnPkjHdJUjoD++65YciZ6Pie0
-         zuZyWoRZabLHPVTGSzjFm68Cj0x96CYB4g39GItPIMkoz4N0jbgEiM/CJTf38gBGkVA2
-         ojxLqAa7CcEJnBBjK2rUApu9UTCZa9Wrp9d41oZ6ZRbasOZ4se1FWJ5nQeeqvArERqK0
-         0unOuYnAaFKOVExHlwgqbySG1eO3yzT1V21tbYY7H7xCyTzR1AKEXzIOqzqc5zi1XMka
-         98Ow==
-X-Gm-Message-State: APjAAAUbDhZ9ljSI9WllcoS3aYSKPjmwVedOt4E35GLxOAmQpqKL1ulz
-        kdmtAWA5M94uekPHhoCd6l3gd1yFBZuJ1Kc8aGVkcQ==
-X-Google-Smtp-Source: APXvYqwcbvXMW91N7sisLXp52MPAggGkSfD8QX6sR8H9ZfwkTvmzxGdhuufqUOqHdVa8LXG+dBgNOJCTo9rbikuMa2w=
-X-Received: by 2002:a67:fb41:: with SMTP id e1mr7474596vsr.159.1576170476104;
- Thu, 12 Dec 2019 09:07:56 -0800 (PST)
+        bh=tcBK2OXBUdCz5AXrgTLD+qna9CmZkEmzcIDc1qfE9ns=;
+        b=TPU5HZIasRFGwS4CpDPm72sU1wOO6QUEbHWF2c6bCxzMHqWGYDZVvyV73Gwcv/7t9z
+         a0PvM3Pnv5nTkY022DuQS+3ocKkv+kMlV1u8PS4D2KFzggIbRAVO+lntfpSgB0gGRULf
+         VzSXrAjmbF21P+UBQI5gAHeCKlvaa5ALy3fumBCNy4FGAaC9pcXzR/4wO2EwlmQOVhqd
+         4APaCQ4EorBoLFHW1agw03t290u9CbhcS4rztoMxU5AU6RTHJj6K5vQrk5nHZ8ZoN2e1
+         IjGqdT//0k/ZRROLxRlnbTFJ0W0BSfL3szbSuc51K0H36Y3wXwZbpuiBFxw8qI1i7sQi
+         qr4g==
+X-Gm-Message-State: APjAAAU787T3dSjjUcHU2esoqgu7Wtn1rg1C9aedog/JLAXG4TgcRNXx
+        5v4mFFiMgMYL30CW61PzQZVDxTtrIBw=
+X-Google-Smtp-Source: APXvYqwGRW8bszjr7PWKdmhQ77cfX/cG7jIcE2OwuK/WwJOSkGo+V+FkEKwLptrKkc3GdOEw/TFtJA==
+X-Received: by 2002:a2e:9687:: with SMTP id q7mr6716662lji.80.1576170589631;
+        Thu, 12 Dec 2019 09:09:49 -0800 (PST)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id x23sm3233383lff.24.2019.12.12.09.09.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 09:09:48 -0800 (PST)
+Received: by mail-lf1-f48.google.com with SMTP id 15so2278004lfr.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:09:48 -0800 (PST)
+X-Received: by 2002:ac2:50cc:: with SMTP id h12mr6251627lfm.29.1576170588425;
+ Thu, 12 Dec 2019 09:09:48 -0800 (PST)
 MIME-Version: 1.0
-References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
- <1574934847-30372-2-git-send-email-rkambl@codeaurora.org> <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
- <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
- <CAHLCerPKC2dK0Baom9MguvUfD0L--EeuLYnLnQENis92uzKbgg@mail.gmail.com> <CAD=FV=VfyrNk+VJZ+p8RLgQGab5XQBkALfH3FeRooeu+FY7BXw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VfyrNk+VJZ+p8RLgQGab5XQBkALfH3FeRooeu+FY7BXw@mail.gmail.com>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 12 Dec 2019 22:37:45 +0530
-Message-ID: <CAHLCerNAsmd5PyeL5ztedfhRdXVT-tpkR=OzJQaKeAPzpOjOtA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
- for TSENS in SC7180
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rajeshwari <rkambl@codeaurora.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        sivaa@codeaurora.org, sanm@codeaurora.org
+References: <20191212140752.347520-1-linux@dominikbrodowski.net> <20191212140752.347520-3-linux@dominikbrodowski.net>
+In-Reply-To: <20191212140752.347520-3-linux@dominikbrodowski.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 12 Dec 2019 09:09:32 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjFZQRdzVqAzrYTw2C1BnoSoO8J5Jw0QTRa-UzLd1HYBA@mail.gmail.com>
+Message-ID: <CAHk-=wjFZQRdzVqAzrYTw2C1BnoSoO8J5Jw0QTRa-UzLd1HYBA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fs: remove ksys_dup()
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:30 PM Doug Anderson <dianders@chromium.org> wrote:
+On Thu, Dec 12, 2019 at 6:08 AM Dominik Brodowski
+<linux@dominikbrodowski.net> wrote:
 >
-> Hi,
->
-> On Thu, Dec 12, 2019 at 8:56 AM Amit Kucheria
-> <amit.kucheria@verdurent.com> wrote:
-> >
-> > On Thu, Dec 12, 2019 at 9:39 PM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Dec 12, 2019 at 3:00 AM Amit Kucheria
-> > > <amit.kucheria@verdurent.com> wrote:
-> > > >
-> > > > Hi Rajeshwari,
-> > > >
-> > > > On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
-> > > > >
-> > > > > Add TSENS node and user thermal zone for TSENS sensors in SC7180.
-> > > > >
-> > > > > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 527 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > index 666e9b9..6656ffc 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > > > > @@ -911,6 +911,26 @@
-> > > > >                         status = "disabled";
-> > > > >                 };
-> > > > >
-> > > > > +               tsens0: thermal-sensor@c263000 {
-> > > > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > > > > +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> > > > > +                               <0 0x0c222000 0 0x1ff>; /* SROT */
-> > > > > +                       #qcom,sensors = <15>;
-> > > > > +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +                       interrupt-names = "uplow";
-> > > > > +                       #thermal-sensor-cells = <1>;
-> > > > > +               };
-> > > > > +
-> > > > > +               tsens1: thermal-sensor@c265000 {
-> > > > > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > > > > +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> > > > > +                               <0 0x0c223000 0 0x1ff>; /* SROT */
-> > > > > +                       #qcom,sensors = <10>;
-> > > > > +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-> > > > > +                       interrupt-names = "uplow";
-> > > > > +                       #thermal-sensor-cells = <1>;
-> > > > > +               };
-> > > > > +
-> > > > >                 spmi_bus: spmi@c440000 {
-> > > > >                         compatible = "qcom,spmi-pmic-arb";
-> > > > >                         reg = <0 0x0c440000 0 0x1100>,
-> > > > > @@ -1121,6 +1141,513 @@
-> > > > >                 };
-> > > > >         };
-> > > > >
-> > > > > +       thermal-zones {
-> > > > > +               cpu0-thermal {
-> > > > > +                       polling-delay-passive = <250>;
-> > > > > +                       polling-delay = <1000>;
-> > > > > +
-> > > > > +                       thermal-sensors = <&tsens0 1>;
-> > > > > +
-> > > > > +                       trips {
-> > > > > +                               cpu0_alert0: trip-point0 {
-> > > > > +                                       temperature = <90000>;
-> > > > > +                                       hysteresis = <2000>;
-> > > > > +                                       type = "passive";
-> > > > > +                               };
-> > > > > +
-> > > > > +                               cpu0_alert1: trip-point1 {
-> > > > > +                                       temperature = <95000>;
-> > > > > +                                       hysteresis = <2000>;
-> > > > > +                                       type = "passive";
-> > > > > +                               };
-> > > > > +
-> > > > > +                               cpu0_crit: cpu_crit {
-> > > > > +                                       temperature = <110000>;
-> > > > > +                                       hysteresis = <1000>;
-> > > > > +                                       type = "critical";
-> > > > > +                               };
-> > > >
-> > > > Where are the cooling maps for all the cpu thermal zones? A passive
-> > > > trip point w/o a cooling map is not of much use. If you are waiting
-> > > > for cpufreq support to land before adding them, then remove the
-> > > > passive trip points for now and add them along with the cooling maps
-> > > > when you have cooling devices.
-> > >
-> > > I will note that cpufreq support has landed in the qcom tree::
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=86899d8235ea0d3d7c293404fb43a6fabff866e6
-> > >
-> > > ...so I guess the right thing is to send a patch adding the cooling
-> > > maps for the cpu thermal zones?
-> >
-> > Great, then the cooling maps should be added to this patch itself.
->
-> Well, except that this patch itself has also landed:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=82bdc93972bf293c3407cb7fdac163aadfbb2c12
->
-> ...so I think my advice is still correct: the right thing is to send a
-> patch adding the cooling maps for the cpu thermal zones
+> -       if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
+> +       file = filp_open((const char *) "/dev/console", O_RDWR, 0);
 
-In that case, yes.
+You need to remove the now pointless cast too.
+
+                        Linus
