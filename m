@@ -2,178 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42143C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A81A20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBCC20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="E2t3y5q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfLLMcM (ORCPT
+        id S1729248AbfLLMce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:32:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53394 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729092AbfLLMcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:32:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D740AC35;
-        Thu, 12 Dec 2019 12:32:07 +0000 (UTC)
-Message-ID: <0a3e22d627a70cb60237c811b5874b9a4413329f.camel@suse.de>
-Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
- roundup/down_pow_two()
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>, andrew.murray@arm.com,
-        maz@kernel.org, linux-kernel@vger.kernel.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Mirko Lindner <mlindner@marvell.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
-        Edward Cree <ecree@solarflare.com>,
-        Martin Habets <mhabets@solarflare.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.con>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "David S. Miller" <davem@davemloft.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, kexec@lists.infradead.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 12 Dec 2019 13:31:57 +0100
-In-Reply-To: <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
-References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
-         <20191203114743.1294-8-nsaenzjulienne@suse.de>
-         <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-FrLm7Huzs2OM/GGn8vDZ"
-User-Agent: Evolution 3.34.2 
-MIME-Version: 1.0
+        Thu, 12 Dec 2019 07:32:34 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38126 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729092AbfLLMcd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:32:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id x185so696109pfc.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 04:32:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=9sBfV8A9Gi7/9h4NUiER2g/Z/6X+tDwbNIeFjDaeKe8=;
+        b=E2t3y5q1A6U3YMflqCkd7C6Y6H2tEc6Ey4FQjStJzai3KPK0UZS9UYmrU86ZrMb53G
+         h768jeRqjoAJwi2estu/gfeZPaa3Ab42PUTP4PR3T0BaUzkENI3b2LbVscnALiskDiwl
+         yS9OnYGglwPPIf06sSBHq32aZkuWJ4/ofHYqzKTxChaDrLZ98Ahk6OKojj3vJ0eWNrUm
+         WCWUFZ1uafgotLAsTtIaKPRfoWeMeLigrswYmu2gxsC9SH6K1eusSSY0VwDzys3NZxgf
+         MXoGsTx3KUdRYIBNmYlhyIBNf98iL4N2beVglONk+Aoz2kakS7Wc3N0nwiQIMCls420f
+         WbcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9sBfV8A9Gi7/9h4NUiER2g/Z/6X+tDwbNIeFjDaeKe8=;
+        b=AbEUMpvkrRko0/ak1MY7noyS+aGwGVytMVuDUbmJWhsuZyER8fO1AWtD3hMSnAeX6P
+         Q6a6+zKeOpLQSJ8pgbMYkGehOjyNXCLGqI5G70KZlKNlFLyTL4xSuXqkRsvU7dTWRfF6
+         Ui0xkT16mXCd03+JbbW4KQe5XCpI/si7Wo6a5qGIWksbvAtLVeozbN+PHBEQUXPoHuwx
+         p3Wydht5Roqc46ZgxMW8tUWWfCIcNB7Uaa/6PQ63lbSiKO6tzZtdsirXlXYX5Ts0p+TR
+         fr1XHu1KzUGv6dTpJJshiwPN6jMYo5Jcwo9V+xfeym7/c103DO3/HsTPuuPvBhHrdthy
+         58lQ==
+X-Gm-Message-State: APjAAAXMoD0ozHqjioacbWd/QJj0wz+HF1akmQfma57cYiMrFJ3bv9BP
+        876n7jnJ6xyiH6ft+WHWFsjbBRt6GoU=
+X-Google-Smtp-Source: APXvYqwKVOoYX/80PIQN+LH+fun7vrr4coCVo6LPlyIiAprjSJCbzPxw8DC0ERzCeDgepVPv9645aQ==
+X-Received: by 2002:a63:31d1:: with SMTP id x200mr9435694pgx.405.1576153953124;
+        Thu, 12 Dec 2019 04:32:33 -0800 (PST)
+Received: from libai.bytedance.net ([61.120.150.71])
+        by smtp.gmail.com with ESMTPSA id t30sm6571490pgl.75.2019.12.12.04.32.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 04:32:32 -0800 (PST)
+From:   zhenwei pi <pizhenwei@bytedance.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org, peng.hao2@zte.com.cn
+Cc:     linux-kernel@vger.kernel.org, pizhenwei@bytedance.com
+Subject: [PATCH] misc: pvpanic: add crash loaded event
+Date:   Thu, 12 Dec 2019 20:32:26 +0800
+Message-Id: <20191212123226.1879155-1-pizhenwei@bytedance.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some users prefer kdump tools to generate guest kernel dumpfile,
+at the same time, need a out-of-band kernel panic event.
 
---=-FrLm7Huzs2OM/GGn8vDZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Currently if booting guest kernel with 'crash_kexec_post_notifiers',
+QEMU will recieve PVPANIC_PANICKED event and stop VM. If booting
+guest kernel without 'crash_kexec_post_notifiers', guest will not
+call notifier chain.
 
-Hi Robin,
+Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
+actually hit a kernel panic, but kernel wants to handle by itself.
 
-On Thu, 2019-12-05 at 17:48 +0000, Robin Murphy wrote:
-> On 03/12/2019 11:47 am, Nicolas Saenz Julienne wrote:
-> > Some users need to make sure their rounding function accepts and return=
-s
-> > 64bit long variables regardless of the architecture. Sadly
-> > roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
-> > out ilog2() already handles 32/64bit calculations properly, and being
-> > the building block to the round functions we can rework them as a
-> > wrapper around it.
->=20
-> Neat! Although all the additional ULL casts this introduces seem=20
-> somewhat unwelcome - I suppose the (1ULL << (ilog2(n))) makes it=20
-> effectively always return unsigned long long now. Might it make sense to=
-=20
-> cast the return value to typeof(n) to avoid this slightly non-obvious=20
-> behaviour (and the associated churn)?
+Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+---
+ drivers/misc/pvpanic.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-It might alleviate some of the churn alright but I don't think a cast is re=
-ally
-going to make the behaviour more obvious. Say your expression is a big mess=
-,
-you'll have to analyze it to infer the output type, keeping in mind things =
-like
-integer promotion. See this example, 'params->nelem_hint' and
-'params->min_size' are u16:
-
-	diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-	index bdb7e4cadf05..70908678c7a8 100644
-	--- a/lib/rhashtable.c
-	+++ b/lib/rhashtable.c
-	@@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhas=
-htable_params *params)
-
-		if (params->nelem_hint)
-			retsize =3D max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
-	-                             (unsigned long)params->min_size);
-	+                             (unsigned long long)params->min_size);
-		else
-			retsize =3D max(HASH_DEFAULT_SIZE,
-				      (unsigned long)params->min_size);
-
-With a cast the patch will look like this:
-
-	diff --git a/lib/rhashtable.c b/lib/rhashtable.c
-	index bdb7e4cadf05..70908678c7a8 100644
-	--- a/lib/rhashtable.c
-	+++ b/lib/rhashtable.c
-	@@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhas=
-htable_params *params)
-
-		if (params->nelem_hint)
-			retsize =3D max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
-	-                             (unsigned long)params->min_size);
-	+                             (int)params->min_size);
-		else
-			retsize =3D max(HASH_DEFAULT_SIZE,
-				      (unsigned long)params->min_size);
-
-To me it's even less obvious than with a fixed ULL.
-
-My intuition tells me to keep it as similar as the old behaviour, at the
-expense of the extra churn (which is not that different from the current st=
-atus
-quo anyway). That said, I'll be happy to change it.
-
-Regards,
-Nicolas
-
-
---=-FrLm7Huzs2OM/GGn8vDZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yMz0ACgkQlfZmHno8
-x/50Nwf8DZv64TadvwE8CB4bWgsqMtbiu/fef5NUbUYuFUED8TIdE3BewSgcKkjR
-UcmnTnVxq9m204FNfGnEcHAS2TjDnv2GvkRDGKIAoXt2ewgnMSoS5cwHJrHfHLr9
-KX2ULSnGQqqtWEYGUe9h/hzd1mfC0gun3Mqafs1lQD7h2XeckKMt0iEa/WtfYGnP
-8UJbPU5wHnCJwEbQHCtc+mV/kcQfh+3u5OHh3O4KQHcBo5TJVJovpZ6jBV4uBV1G
-ePj2s84UCGZcXy1ZuwV2g32zpn8RgDXDWmdEgJ3hi1bTYZZzG4YQc2sTpjidvRB7
-86UCrw4pWQ/M0pNf1UdlDlf+jz7Njw==
-=1uX6
------END PGP SIGNATURE-----
-
---=-FrLm7Huzs2OM/GGn8vDZ--
+diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
+index 95ff7c5a1dfb..a8cc96c90550 100644
+--- a/drivers/misc/pvpanic.c
++++ b/drivers/misc/pvpanic.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/kernel.h>
++#include <linux/kexec.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -19,6 +20,7 @@
+ static void __iomem *base;
+ 
+ #define PVPANIC_PANICKED        (1 << 0)
++#define PVPANIC_CRASH_LOADED    (1 << 1)
+ 
+ MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
+ MODULE_DESCRIPTION("pvpanic device driver");
+@@ -34,7 +36,13 @@ static int
+ pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
+ 		     void *unused)
+ {
+-	pvpanic_send_event(PVPANIC_PANICKED);
++	unsigned int event = PVPANIC_PANICKED;
++
++	if (kexec_crash_loaded())
++		event = PVPANIC_CRASH_LOADED;
++
++	pvpanic_send_event(event);
++
+ 	return NOTIFY_DONE;
+ }
+ 
+-- 
+2.11.0
 
