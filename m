@@ -2,280 +2,220 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC9AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ADCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7693214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 026F520836
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:12:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Imlmo23G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iJi33v66"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DDPFIoc2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfLLBIX (ORCPT
+        id S1727411AbfLLBMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:08:23 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51667 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726791AbfLLBIW (ORCPT
+        Wed, 11 Dec 2019 20:12:23 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35804 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbfLLBMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:08:22 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9168D22396;
-        Wed, 11 Dec 2019 20:08:21 -0500 (EST)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 11 Dec 2019 20:08:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=22RmgyxfJBeRaOGSVLQVBw8m1e4rYRQ
-        3qBL8OQyhN/Y=; b=Imlmo23GJ4QKdJUpt5POxJxEZpbC7ctOVu7pyNq2j/KsAzP
-        zZrU1zj8p43psHP0Gbye7hKCnxDVNOhMF27UkYYI/92V5lZZ7vTwZPMg16jRez1h
-        FOHZIHzMjaKN/LV5QKNISXQAptOxja0WwfnAIyYZNM47nRDEtnt3prAW95FQ04lq
-        zaEQSJvcGlZ7plP8tYrmbw8wbd5kFeLOnH3jrc22GnBut5c2kvyVPGZLyINFclO8
-        sH0/YatoOr8+nMGyYGgrCe/cbMjaRHWtikPY3oVq55fyAzpU1j+dpEeroZgGXT3q
-        z/S9vmOIBZj55RaylPOmg7otZTvDm74JrIHcU9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=22Rmgy
-        xfJBeRaOGSVLQVBw8m1e4rYRQ3qBL8OQyhN/Y=; b=iJi33v66ZxMXJSINKmsIje
-        i15D2JBbp7LqZbs6GzH5B21XuH4tnx6hWkeFHjk+Hna88R/ZxH7CczzV6s0QWy28
-        El1nJh9TQSIXG17cBmrIz2UezZoIGIopAMJsBkudjXoqEpKg0HdJiMDqgrWhjjKy
-        biUIGl22KQI27E3AvwkIykU1YtztFmxbasx6XNPsRXsJaYeScwxVmquNCASYdUx/
-        l2u28/D9/rL1/UYZRCPj5n4zDXhKd7AYU5RG4lMF0q+VGDHlSpdILS4E9ZjJ0OVP
-        7FDzycKrwQYbJHdJVK9lDOqhUX3Ud7PrgURwFNV6mVs7JdsKtIvU/Tkj1pEcpWVg
-        ==
-X-ME-Sender: <xms:BJPxXRu9Q43kARsWuqi9hPpfRnqs0NAe9O-1iraS9_Td-uCXSUnUSg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeliedgvdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuffhomh
-    grihhnpehoiihlrggsshdrohhrghenucfrrghrrghmpehmrghilhhfrhhomheprghnughr
-    vgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:BJPxXc3sE6S4-KnHKsaJfEmfm9cy3_7h_SywkMa7HBmp7UiyIhvRag>
-    <xmx:BJPxXeACy88E_qLznCMjv-WUPyuZTxmzG_P0IHghE4IdODxFLWBKYw>
-    <xmx:BJPxXbUkRlBYL9dpfySX1av0iQDMxTufh5HlSR3AjUJOxmEyU-ZbbA>
-    <xmx:BZPxXS5vw9LN0T0uSZEZixaXr2S6QM5crlBzqRYudQn-waBXInKcuQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 6CCE0E00A2; Wed, 11 Dec 2019 20:08:20 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
-Mime-Version: 1.0
-Message-Id: <78c346a0-217c-4216-b16a-498f80e7303a@www.fastmail.com>
-In-Reply-To: <20191211202620.GA31628@cnn>
-References: <20191211202620.GA31628@cnn>
-Date:   Thu, 12 Dec 2019 11:39:59 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
-        "Joel Stanley" <joel@jms.id.au>, vkhemka@fb.com
-Cc:     "Sai Dasari" <sdasari@fb.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v4 2/2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Content-Type: text/plain
+        Wed, 11 Dec 2019 20:12:22 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC154e3021324;
+        Thu, 12 Dec 2019 01:12:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=8pcHE4iVKZPDt2NxHh3s+hUhwFDrIvd6ht/hiXFyytI=;
+ b=DDPFIoc2WUXIiYYXJhv2Zo6p1Vxl6QttOLWzjxPmIxjgfBp/7DZsXGfE9b59jEk4Mw6f
+ KB5tl+FY5YB7pQjU5OgjuF7XFL/Eh+OvjoIxKosYkP2Y+jRojorI38a5zNdND9udM4Nx
+ 6Ya+lykfUbwYpjk8GD+ifTKjgEW0pDohibMtErGScniRxUztskMJbstYpirryVakGDMp
+ 6Ksvis7euXLw+OzIOAisg7H5+47sZ02/YZIhqs83UnVwQSkf7sNpmOrndvAE/Ns65mVT
+ E45//77E0ejI824H+s2nCugJgY3Qm7OUGq7QbLbQ3J/7NnbQsFaZU2tLDDp1evcZU0lD Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wrw4ncw2d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 01:12:05 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBC19DB3192981;
+        Thu, 12 Dec 2019 01:12:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wu2fv99qp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 01:12:05 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBC1C0A0025898;
+        Thu, 12 Dec 2019 01:12:00 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 11 Dec 2019 17:12:00 -0800
+Subject: Re: [PATCH v2] hugetlbfs: Disable softIRQ when taking hugetlb_lock
+To:     Waiman Long <longman@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@kernel.org>
+References: <20191211194615.18502-1-longman@redhat.com>
+ <4fbc39a9-2c9c-4c2c-2b13-a548afe6083c@oracle.com>
+ <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <0fcce71f-bc20-0ea3-b075-46592c8d533d@oracle.com>
+Date:   Wed, 11 Dec 2019 17:11:55 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <32d2d4f2-83b9-2e40-05e2-71cd07e01b80@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120002
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 12 Dec 2019, at 06:56, Manikandan Elumalai wrote:
-> The Yosemite V2 is a facebook multi-node server
-> platform that host four OCP server. The BMC
-> in the Yosemite V2 platform based on AST2500 SoC.
+On 12/11/19 2:19 PM, Waiman Long wrote:
+> On 12/11/19 5:04 PM, Mike Kravetz wrote:
+>> Cc: Michal
+>>
+>> Sorry for the late reply on this effort.
+>>
+>> On 12/11/19 11:46 AM, Waiman Long wrote:
+>>> The following lockdep splat was observed when a certain hugetlbfs test
+>>> was run:
+>>>
+>>> [  612.388273] ================================
+>>> [  612.411273] WARNING: inconsistent lock state
+>>> [  612.432273] 4.18.0-159.el8.x86_64+debug #1 Tainted: G        W --------- -  -
+>>> [  612.469273] --------------------------------
+>>> [  612.489273] inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+>>> [  612.517273] swapper/30/0 [HC0[0]:SC1[1]:HE1:SE0] takes:
+>>> [  612.541273] ffffffff9acdc038 (hugetlb_lock){+.?.}, at: free_huge_page+0x36f/0xaa0
+>>> [  612.576273] {SOFTIRQ-ON-W} state was registered at:
+>>> [  612.598273]   lock_acquire+0x14f/0x3b0
+>>> [  612.616273]   _raw_spin_lock+0x30/0x70
+>>> [  612.634273]   __nr_hugepages_store_common+0x11b/0xb30
+>>> [  612.657273]   hugetlb_sysctl_handler_common+0x209/0x2d0
+>>> [  612.681273]   proc_sys_call_handler+0x37f/0x450
+>>> [  612.703273]   vfs_write+0x157/0x460
+>>> [  612.719273]   ksys_write+0xb8/0x170
+>>> [  612.736273]   do_syscall_64+0xa5/0x4d0
+>>> [  612.753273]   entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+>>> [  612.777273] irq event stamp: 691296
+>>> [  612.794273] hardirqs last  enabled at (691296): [<ffffffff99bb034b>] _raw_spin_unlock_irqrestore+0x4b/0x60
+>>> [  612.839273] hardirqs last disabled at (691295): [<ffffffff99bb0ad2>] _raw_spin_lock_irqsave+0x22/0x81
+>>> [  612.882273] softirqs last  enabled at (691284): [<ffffffff97ff0c63>] irq_enter+0xc3/0xe0
+>>> [  612.922273] softirqs last disabled at (691285): [<ffffffff97ff0ebe>] irq_exit+0x23e/0x2b0
+>>> [  612.962273]
+>>> [  612.962273] other info that might help us debug this:
+>>> [  612.993273]  Possible unsafe locking scenario:
+>>> [  612.993273]
+>>> [  613.020273]        CPU0
+>>> [  613.031273]        ----
+>>> [  613.042273]   lock(hugetlb_lock);
+>>> [  613.057273]   <Interrupt>
+>>> [  613.069273]     lock(hugetlb_lock);
+>>> [  613.085273]
+>>> [  613.085273]  *** DEADLOCK ***
+>>>       :
+>>> [  613.245273] Call Trace:
+>>> [  613.256273]  <IRQ>
+>>> [  613.265273]  dump_stack+0x9a/0xf0
+>>> [  613.281273]  mark_lock+0xd0c/0x12f0
+>>> [  613.297273]  ? print_shortest_lock_dependencies+0x80/0x80
+>>> [  613.322273]  ? sched_clock_cpu+0x18/0x1e0
+>>> [  613.341273]  __lock_acquire+0x146b/0x48c0
+>>> [  613.360273]  ? trace_hardirqs_on+0x10/0x10
+>>> [  613.379273]  ? trace_hardirqs_on_caller+0x27b/0x580
+>>> [  613.401273]  lock_acquire+0x14f/0x3b0
+>>> [  613.419273]  ? free_huge_page+0x36f/0xaa0
+>>> [  613.440273]  _raw_spin_lock+0x30/0x70
+>>> [  613.458273]  ? free_huge_page+0x36f/0xaa0
+>>> [  613.477273]  free_huge_page+0x36f/0xaa0
+>>> [  613.495273]  bio_check_pages_dirty+0x2fc/0x5c0
+>>> [  613.516273]  clone_endio+0x17f/0x670 [dm_mod]
+>>> [  613.536273]  ? disable_discard+0x90/0x90 [dm_mod]
+>>> [  613.558273]  ? bio_endio+0x4ba/0x930
+>>> [  613.575273]  ? blk_account_io_completion+0x400/0x530
+>>> [  613.598273]  blk_update_request+0x276/0xe50
+>>> [  613.617273]  scsi_end_request+0x7b/0x6a0
+>>> [  613.636273]  ? lock_downgrade+0x6f0/0x6f0
+>>> [  613.654273]  scsi_io_completion+0x1c6/0x1570
+>>> [  613.674273]  ? sd_completed_bytes+0x3a0/0x3a0 [sd_mod]
+>>> [  613.698273]  ? scsi_mq_requeue_cmd+0xc0/0xc0
+>>> [  613.718273]  blk_done_softirq+0x22e/0x350
+>>> [  613.737273]  ? blk_softirq_cpu_dead+0x230/0x230
+>>> [  613.758273]  __do_softirq+0x23d/0xad8
+>>> [  613.776273]  irq_exit+0x23e/0x2b0
+>>> [  613.792273]  do_IRQ+0x11a/0x200
+>>> [  613.806273]  common_interrupt+0xf/0xf
+>>> [  613.823273]  </IRQ>
+>> This is interesting.  I'm trying to wrap my head around how we ended up
+>> with a BIO pointing to a hugetlbfs page.  My 'guess' is that user space
+>> code passed an address to some system call or driver.  And, that system
+>> call or driver set up the IO.  For the purpose of addressing this issue,
+>> it does not matter.  I am just a little confused/curious.
+>>
+>>> Since hugetlb_lock can be taken from both process and softIRQ contexts,
+>>> we need to protect the lock from nested locking by disabling softIRQ
+>>> using spin_lock_bh() before taking it.
+>>>
+>>> Currently, only free_huge_page() is known to be called from softIRQ
+>>> context.
+>> We discussed this exact same issue more than a year ago.  See,
+>> https://lkml.org/lkml/2018/9/5/398
+>>
+>> At that time, the only 'known' caller of put_page for a hugetlbfs page from
+>> softirq context was in powerpc specific code.  IIRC, Aneesh addressed the
+>> issue last year by modifying the powerpc specific code.  The more general
+>> issue in the hugetlbfs code was never addressed. :(
+>>
+>> As part of the discussion in the previous e-mail thread, the issue of
+>> whether we should address put_page for hugetlbfs pages for only softirq
+>> or extend to hardirq context was discussed.  The conclusion (or at least
+>> suggestion from Andrew and Michal) was that we should modify code to allow
+>> for calls from hardirq context.  The reasoning IIRC, was that put_page of
+>> other pages was allowed from hardirq context, so hugetlbfs pages should be
+>> no different.
+>>
+>> Matthew, do you think that reasoning from last year is still valid?  Should
+>> we be targeting soft or hard irq calls?
+>>
+>> One other thing.  free_huge_page may also take a subpool specific lock via
+>> spin_lock().  See hugepage_subpool_put_pages.  This would also need to take
+>> irq context into account.
 > 
-> This patch adds linux device tree entry related to
-> Yosemite V2 specific devices connected to BMC SoC.
+> Thanks for the background information.
 > 
-> --- Reviews summary
-> --- v4[2/2] - Spell and contributor name correction.
-> ---         - License identifier changed to GPL-2.0-or-later.
-> ---         - aspeed-gpio.h removed.
-> ---         - FAN2 tacho channel changed.
-> ---      v4 - Bootargs removed.
-> ---         - Reviewed-by: Vijay Khemka <vkhemka@fb.com>
-> ---      v3 - Uart1 Debug removed .
-> ---         - Acked-by:Andrew Jeffery <andrew@aj.id.au>
+> We will need to use spin_lock_irq() or spin_lock_irqsave() for allowing
+> hardirq context calls like what is in the v1 patch. I will look further
+> into the subpool specific lock also.
 
-You need to put the Reviewed-by / Acked-by tags down below your Signed-off-by. That
-way we know that the patch is still ready to go (and they appear in patchwork - you can
-(currently) see that they're missing[1]).
+Sorry,
 
-[1] https://patchwork.ozlabs.org/project/linux-aspeed/list/?series=147912&state=%2A&archive=both
+I did not fully read all of Matthew's comments/suggestions on the original
+patch.  His initial suggestion was for a workqueue approach that you did
+start implementing, but thought was too complex.  Andi also suggested this
+approach.
 
-Andrew
+The workqueue approach would address both soft and hard irq context issues.
+As a result, I too think this is the approach we should explore.  Since there
+is more than one lock involved, this also is reason for a work queue approach.
 
-> ---      v2 - LPC and VUART removed .
-> ---      v1 - Initial draft.
-> 
-> Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> ---
->  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 148 +++++++++++++++++++++
->  1 file changed, 148 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> new file mode 100644
-> index 0000000..ffd7f4c
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +// Copyright (c) 2018 Facebook Inc.
-> +
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +/ {
-> +	model = "Facebook Yosemitev2 BMC";
-> +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> +	aliases {
-> +		serial4 = &uart5;
-> +	};
-> +	chosen {
-> +		stdout-path = &uart5;
-> +	};
-> +
-> +	memory@80000000 {
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +
-> +	iio-hwmon {
-> +		// VOLATAGE SENSOR
-> +		compatible = "iio-hwmon";
-> +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> +	};
-> +};
-> +
-> +&fmc {
-> +	status = "okay";
-> +	flash@0 {
-> +		status = "okay";
-> +		m25p,fast-read;
-> +#include "openbmc-flash-layout.dtsi"
-> +	};
-> +};
-> +
-> +&spi1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_spi1_default>;
-> +	flash@0 {
-> +		status = "okay";
-> +		m25p,fast-read;
-> +		label = "pnor";
-> +	};
-> +};
-> +
-> +&uart5 {
-> +	// BMC Console
-> +	status = "okay";
-> +};
-> +
-> +&mac0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_rmii1_default>;
-> +	use-ncsi;
-> +};
-> +
-> +&adc {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_default
-> +			&pinctrl_adc1_default
-> +			&pinctrl_adc2_default
-> +			&pinctrl_adc3_default
-> +			&pinctrl_adc4_default
-> +			&pinctrl_adc5_default
-> +			&pinctrl_adc6_default
-> +			&pinctrl_adc7_default
-> +			&pinctrl_adc8_default
-> +			&pinctrl_adc9_default
-> +			&pinctrl_adc10_default
-> +			&pinctrl_adc11_default
-> +			&pinctrl_adc12_default
-> +			&pinctrl_adc13_default
-> +			&pinctrl_adc14_default
-> +			&pinctrl_adc15_default>;
-> +};
-> +
-> +&i2c8 {
-> +	//FRU EEPROM
-> +	status = "okay";
-> +	eeprom@51 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x51>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&i2c9 {
-> +	//INLET & OUTLET TEMP
-> +	status = "okay";
-> +	tmp421@4e {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x4e>;
-> +	};
-> +	tmp421@4f {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x4f>;
-> +	};
-> +};
-> +
-> +&i2c10 {
-> +	//HSC
-> +	status = "okay";
-> +	adm1278@40 {
-> +		compatible = "adi,adm1278";
-> +		reg = <0x40>;
-> +	};
-> +};
-> +
-> +&i2c11 {
-> +	//MEZZ_TEMP_SENSOR
-> +	status = "okay";
-> +	tmp421@1f {
-> +		compatible = "ti,tmp421";
-> +		reg = <0x1f>;
-> +	};
-> +};
-> +
-> +&i2c12 {
-> +	//MEZZ_FRU
-> +	status = "okay";
-> +	eeprom@51 {
-> +		compatible = "atmel,24c64";
-> +		reg = <0x51>;
-> +		pagesize = <32>;
-> +	};
-> +};
-> +
-> +&pwm_tacho {
-> +	//FSC
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +	fan@0 {
-> +		reg = <0x00>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> +	};
-> +	fan@1 {
-> +		reg = <0x01>;
-> +		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
->
+I'll take a look at initial workqueue implementation.  However, I have not
+dealt with workqueues in some time so it may take few days to evaluate.
+-- 
+Mike Kravetz
