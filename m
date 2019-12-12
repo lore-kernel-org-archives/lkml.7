@@ -2,172 +2,92 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCFBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD499C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BE0D24658
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576145285;
-	bh=8oMGWZ4X5eA0CJO5Djd99i+IOL5EsEg13Vf8WiNVrk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bTlZEvPuRm6+YXFgQ2UYzdeyFgDz7HR9S9aVehxShxqpsMZVxaGhYHjcdqgaqReUS
-	 c8eEbTF2UjNuwmjzns+cg69jZ0gACWxVFfBXCyWQkx3lAK2LTTHk+mg6aWBthQGuih
-	 n6q4e/msLSuCD/rk9f4DR7smzibJ9HLZOOv2p/8A=
+	by mail.kernel.org (Postfix) with ESMTP id 90005206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:08:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEB/cJ9c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbfLLKIE (ORCPT
+        id S1728561AbfLLKIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:08:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfLLKID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:08:03 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 12 Dec 2019 05:08:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23106 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728436AbfLLKIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:08:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576145327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=j1+8eRAxKG6Ud2RGfhC7VbF42zHlNF5b6S5RY/ZXaPk=;
+        b=aEB/cJ9c0D1KxuTP5DWNSKMYqYMk/pmr1jBgXuFFpkVDOb1Yx/mljAHplLRdoEBT3J2gRj
+        0G5yeiG5qgwaXuaDWfG336OzrcNkNBhOepmuxUylfwMJWerYEBcSbo7nsDt0PATCu9Z4FS
+        cMAUQtSnswoCtvOlmTrcQwzyO6PcN+o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-tr6-AnJ9MJ-8rOvF7nI1Mw-1; Thu, 12 Dec 2019 05:08:43 -0500
+X-MC-Unique: tr6-AnJ9MJ-8rOvF7nI1Mw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AC8C22B48;
-        Thu, 12 Dec 2019 10:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576145282;
-        bh=8oMGWZ4X5eA0CJO5Djd99i+IOL5EsEg13Vf8WiNVrk8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=to/x3BzMP75kgcqYnhNo7MpRT3Yjg7ArR3k/uhqgmx1WmoBWQUC07i/so0ToXoYbR
-         bgM7dtoIqrWrzghk3LxH3nXGLy/b9nIIJF7ZvGf1A+SHKFlGKXgyCmtRnc0L8Uo/rN
-         CbEdG0AEDN12X1lwHAh9IeDw1TWI2RDws6lqWZpY=
-Date:   Thu, 12 Dec 2019 10:07:56 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
- Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
-Message-ID: <20191212100756.GA11317@willie-the-truck>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
- <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <875zimp0ay.fsf@mpe.ellerman.id.au>
- <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F373812A7E5C;
+        Thu, 12 Dec 2019 10:08:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (ovpn-204-22.brq.redhat.com [10.40.204.22])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C909560BC9;
+        Thu, 12 Dec 2019 10:08:39 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 12 Dec 2019 11:08:41 +0100 (CET)
+Date:   Thu, 12 Dec 2019 11:08:38 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     qiwuchen55@gmail.com
+Cc:     peterz@infradead.org, mingo@kernel.org,
+        christian.brauner@ubuntu.com, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH] kernel/exit: do panic earlier to get coredump if global
+ init task exit
+Message-ID: <20191212100838.GB5460@redhat.com>
+References: <1576131255-3433-1-git-send-email-qiwuchen55@gmail.com>
+ <20191212095127.GA5460@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212080105.GV2844@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212095127.GA5460@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:01:05AM +0100, Peter Zijlstra wrote:
-> On Thu, Dec 12, 2019 at 04:42:13PM +1100, Michael Ellerman wrote:
-> > Peter Zijlstra <peterz@infradead.org> writes:
-> > > On Fri, Dec 06, 2019 at 11:46:11PM +1100, Michael Ellerman wrote:
-> > Some of the generic versions don't generate good code compared to our
-> > versions, but that's because READ_ONCE() is triggering stack protector
-> > to be enabled.
-> 
-> Bah, there's never anything simple, is there :/
-> 
-> > For example, comparing an out-of-line copy of the generic and ppc
-> > versions of test_and_set_bit_lock():
-> > 
-> >    1 <generic_test_and_set_bit_lock>:           1 <ppc_test_and_set_bit_lock>:
-> >    2         addis   r2,r12,361
-> >    3         addi    r2,r2,-4240
-> >    4         stdu    r1,-48(r1)
-> >    5         rlwinm  r8,r3,29,3,28
-> >    6         clrlwi  r10,r3,26                   2         rldicl  r10,r3,58,6
-> >    7         ld      r9,3320(r13)
-> >    8         std     r9,40(r1)
-> >    9         li      r9,0
-> >   10         li      r9,1                        3         li      r9,1
-> >                                                  4         clrlwi  r3,r3,26
-> >                                                  5         rldicr  r10,r10,3,60
-> >   11         sld     r9,r9,r10                   6         sld     r3,r9,r3
-> >   12         add     r10,r4,r8                   7         add     r4,r4,r10
-> >   13         ldx     r8,r4,r8
-> >   14         and.    r8,r9,r8
-> >   15         bne     34f
-> >   16         ldarx   r7,0,r10                    8         ldarx   r9,0,r4,1
-> >   17         or      r8,r9,r7                    9         or      r10,r9,r3
-> >   18         stdcx.  r8,0,r10                   10         stdcx.  r10,0,r4
-> >   19         bne-    16b                        11         bne-    8b
-> >   20         isync                              12         isync
-> >   21         and     r9,r7,r9                   13         and     r3,r3,r9
-> >   22         addic   r7,r9,-1                   14         addic   r9,r3,-1
-> >   23         subfe   r7,r7,r9                   15         subfe   r3,r9,r3
-> >   24         ld      r9,40(r1)
-> >   25         ld      r10,3320(r13)
-> >   26         xor.    r9,r9,r10
-> >   27         li      r10,0
-> >   28         mr      r3,r7
-> >   29         bne     36f
-> >   30         addi    r1,r1,48
-> >   31         blr                                16         blr
-> >   32         nop
-> >   33         nop
-> >   34         li      r7,1
-> >   35         b       24b
-> >   36         mflr    r0
-> >   37         std     r0,64(r1)
-> >   38         bl      <__stack_chk_fail+0x8>
-> > 
-> > 
-> > If you squint, the generated code for the actual logic is pretty similar, but
-> > the stack protector gunk makes a big mess. It's particularly bad here
-> > because the ppc version doesn't even need a stack frame.
-> > 
-> > I've also confirmed that even when test_and_set_bit_lock() is inlined
-> > into an actual call site the stack protector logic still triggers.
-> 
-> > If I change the READ_ONCE() in test_and_set_bit_lock():
-> > 
-> > 	if (READ_ONCE(*p) & mask)
-> > 		return 1;
-> > 
-> > to a regular pointer access:
-> > 
-> > 	if (*p & mask)
-> > 		return 1;
-> > 
-> > Then the generated code looks more or less the same, except for the extra early
-> > return in the generic version of test_and_set_bit_lock(), and different handling
-> > of the return code by the compiler.
-> 
-> So given that the function signature is:
-> 
-> static inline int test_and_set_bit_lock(unsigned int nr,
-> 					volatile unsigned long *p)
-> 
-> @p already carries the required volatile qualifier, so READ_ONCE() does
-> not add anything here (except for easier to read code and poor code
-> generation).
-> 
-> So your proposed change _should_ be fine. Will, I'm assuming you never
-> saw this on your ARGH64 builds when you did this code ?
+can't you use is_global_init() && group_dead ?
 
-I did see it, but (a) looking at the code out-of-line makes it look a lot
-worse than it actually is (so the ext4 example is really helpful -- thanks
-Michael!) and (b) I chalked it up to a crappy compiler.
+On 12/12, Oleg Nesterov wrote:
+>
+> On 12/12, qiwuchen55@gmail.com wrote:
+> >
+> > Of course testing signal_group_exit() is not sufficient. It is still
+> > possible that this is someone calling exit(2)
+> 
+> Or execve(), so
+> 
+> > @@ -785,6 +781,9 @@ void __noreturn do_exit(long code)
+> >  		panic("Aiee, killing interrupt handler!");
+> >  	if (unlikely(!tsk->pid))
+> >  		panic("Attempted to kill the idle task!");
+> > +	if (unlikely(is_global_init(tsk) &&
+> > +		(signal_group_exit(tsk->signal) || thread_group_empty(tsk))))
+> > +		panic("Attempted to kill init! exitcode=0x%08lx\n", code);
+> 
+> so this can panic() if one of init's threads does does exec.
+> 
+> Oleg.
 
-However, see this comment from Arnd on my READ_ONCE series from the other
-day:
-
-https://lore.kernel.org/lkml/CAK8P3a0f=WvSQSBQ4t0FmEkcFE_mC3oARxaeTviTSkSa-D2qhg@mail.gmail.com
-
-In which case, I'm thinking that we should be doing better in READ_ONCE()
-for non-buggy compilers which would also keep the KCSAN folks happy for this
-code (and would help with [1] too).
-
-Will
-
-[1] https://lkml.org/lkml/2019/11/12/898
