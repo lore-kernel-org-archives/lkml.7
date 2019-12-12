@@ -2,164 +2,114 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE781C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 930D0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B668622527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IkYgMnF2"
+	by mail.kernel.org (Postfix) with ESMTP id 5BE8721655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbfLLQHN (ORCPT
+        id S1729786AbfLLQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:07:13 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44154 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbfLLQHM (ORCPT
+        Thu, 12 Dec 2019 11:07:27 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41057 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbfLLQH0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:07:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id x7so1355066pgl.11;
-        Thu, 12 Dec 2019 08:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=hCXWACuOCexCnHIz0jCOmF4DYKWkjPdd5H/jFPoItro=;
-        b=IkYgMnF2gLAlQaxdpyryOpYIwVwEh0VKVFj7HudbihnYnxNZu4QI18aPJ37U4uzyp/
-         BlD1tWs7IMBduKKeEZDaejczWP08RcOs4A+9t+gX6ojw+dyuoKPsnmPsHgURKQ9XP3eL
-         oKjYVUqECyX1zczto/andUpR8yFdi3epbkapsSPYdqxNH1llQjEtnGm0yoG7x4+EB5Sq
-         98r+UhLcWm8ADQpErB6akvg09+atbU2lE7wRZXexZSjl3fgD9tgZSW25uC81LTqyVmzJ
-         NIIK9S7QAhXdr03iO+IRSNMmMe3rPGOknSlE/A0/RchzyNOr6L/UsJYKdBNPCJz9qnUe
-         jO1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=hCXWACuOCexCnHIz0jCOmF4DYKWkjPdd5H/jFPoItro=;
-        b=tiUjk6U2khjIXJb6sTT50p31up3mYq3zK0vSsizsuMw+M2HA11jS4uuf9KJtLY+b7L
-         76GV7QX81p32eONYFlZu92bqaUGa2bcn6FPq2hVufhRZsaz8oEcfoM/mzcJS32j7fOKN
-         NsKiYtreCIwQztDPkLpdvm5Dia9LdnCJajLUjzYX0qdizCyKO3b5wxgQRcFzh30CvFY6
-         FxCKOo5bSCdEPNNvvCB6Kzf8StiXo4XRnEH2zDzs8apYvpa7TobYWNREP7EmW/vgLmiA
-         SH12lBfOamcKuDxx8/osgrC/RPdh75KIVdK1XaGP0aLieJ6jy9xqtWjR+Fn0LVKTb76v
-         P+Kg==
-X-Gm-Message-State: APjAAAXiJ5xT8L/lrsQwERyZ8oEufQwIKC8PmUrxzbplbJEBjAKMVjTO
-        aTGQmDY5W0VCBDIsGAjDC0w=
-X-Google-Smtp-Source: APXvYqxSVQfqyqgkVT73oV6Yh6YcW5Bxj10GO45cM95SrDPjF4K5yUaFstQ/B47LysRt136MrdXZdQ==
-X-Received: by 2002:a63:338e:: with SMTP id z136mr11343954pgz.60.1576166831821;
-        Thu, 12 Dec 2019 08:07:11 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id b2sm8183016pff.6.2019.12.12.08.07.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 08:07:10 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Cc:     jgross@suse.com, axboe@kernel.dk, sjpark@amazon.com,
-        konrad.wilk@oracle.com, pdurrant@amazon.com,
-        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: Re: [Xen-devel] [PATCH v7 2/3] xen/blkback: Squeeze page pools if a memory pressure is detected
-Date:   Thu, 12 Dec 2019 17:06:58 +0100
-Message-Id: <20191212160658.10466-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.2
+        Thu, 12 Dec 2019 11:07:26 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQzq-00041M-VG; Thu, 12 Dec 2019 17:07:22 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifQzq-0006tq-55; Thu, 12 Dec 2019 17:07:22 +0100
+Date:   Thu, 12 Dec 2019 17:07:22 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: Enable egalax touch screen
+Message-ID: <20191212160722.wgqjeeknvm257hwi@pengutronix.de>
+References: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191212152757.GF11756@Air-de-Roger>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:04:57 up 27 days,  7:23, 36 users,  load average: 0.04, 0.19,
+ 0.15
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 16:27:57 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+Hi Sjoerd,
 
-> > diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-> > index fd1e19f1a49f..98823d150905 100644
-> > --- a/drivers/block/xen-blkback/blkback.c
-> > +++ b/drivers/block/xen-blkback/blkback.c
-> > @@ -142,6 +142,21 @@ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
-> >  		HZ * xen_blkif_pgrant_timeout);
-> >  }
-> >  
-> > +/* Once a memory pressure is detected, squeeze free page pools for a while. */
-> > +static unsigned int buffer_squeeze_duration_ms = 10;
-> > +module_param_named(buffer_squeeze_duration_ms,
-> > +		buffer_squeeze_duration_ms, int, 0644);
-> > +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
-> > +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
-> > +
-> > +static unsigned long buffer_squeeze_end;
-> > +
-> > +void xen_blkbk_reclaim_memory(struct xenbus_device *dev)
-> > +{
-> > +	buffer_squeeze_end = jiffies +
-> > +		msecs_to_jiffies(buffer_squeeze_duration_ms);
+On 19-12-12 17:02, Sjoerd Simons wrote:
+> Sabrelite boards can have an lvds screen attached with a built-in i2c touch
+> screen. Enable this in the dtsi.
+
+Can this be any screen available on the market?
+
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> ---
 > 
-> I'm not sure this is fully correct. This function will be called for
-> each blkback instance, but the timeout is stored in a global variable
-> that's shared between all blkback instances. Shouldn't this timeout be
-> stored in xen_blkif so each instance has it's own local variable?
+>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Or else in the case you have 1k blkback instances the timeout is
-> certainly going to be longer than expected, because each call to
-> xen_blkbk_reclaim_memory will move it forward.
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> index 8468216dae9b..382b127b2251 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> @@ -416,6 +416,14 @@ &i2c3 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_i2c3>;
+>  	status = "okay";
+> +
+> +	touchscreen@4 {
+> +		compatible = "eeti,egalax_ts";
+> +		reg = <0x04>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
 
-Agreed that.  I think the extended timeout would not make a visible
-performance, though, because the time that 1k-loop take would be short enough
-to be ignored compared to the millisecond-scope duration.
+The wakeup-gpio and the irq-line are sharing the same gpio line?
 
-I took this way because I wanted to minimize such structural changes as far as
-I can, as this is just a point-fix rather than ultimate solution.  That said,
-it is not fully correct and very confusing.  My another colleague also pointed
-out it in internal review.  Correct solution would be to adding a variable in
-the struct as you suggested or avoiding duplicated update of the variable by
-initializing the variable once the squeezing duration passes.  I would prefer
-the later way, as it is more straightforward and still not introducing
-structural change.  For example, it might be like below:
+Regards,
+  Marco 
 
-diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-index f41c698dd854..6856c8ef88de 100644
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -152,8 +152,9 @@ static unsigned long buffer_squeeze_end;
- 
- void xen_blkbk_reclaim_memory(struct xenbus_device *dev)
- {
--       buffer_squeeze_end = jiffies +
--               msecs_to_jiffies(buffer_squeeze_duration_ms);
-+       if (!buffer_squeeze_end)
-+               buffer_squeeze_end = jiffies +
-+                       msecs_to_jiffies(buffer_squeeze_duration_ms);
- }
- 
- static inline int get_free_page(struct xen_blkif_ring *ring, struct page **page)
-@@ -669,10 +670,13 @@ int xen_blkif_schedule(void *arg)
-                }
- 
-                /* Shrink the free pages pool if it is too large. */
--               if (time_before(jiffies, buffer_squeeze_end))
-+               if (time_before(jiffies, buffer_squeeze_end)) {
-                        shrink_free_pagepool(ring, 0);
--               else
-+               } else {
-+                       if (unlikely(buffer_squeeze_end))
-+                               buffer_squeeze_end = 0;
-                        shrink_free_pagepool(ring, max_buffer_pages);
-+               }
- 
-                if (log_stats && time_after(jiffies, ring->st_print))
-                        print_stats(ring);
-
-May I ask you what way would you prefer?
-
-
-Thanks,
-SeongJae Park
-
+> +	};
+>  };
+>  
+>  &iomuxc {
+> -- 
+> 2.24.0
 > 
-> Thanks, Roger.
 > 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
