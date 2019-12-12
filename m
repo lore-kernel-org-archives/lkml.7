@@ -2,278 +2,138 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8023DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B550C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD3C21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4174C21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:16:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lsp1jc77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbfLLNPf (ORCPT
+        id S1729446AbfLLNQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:15:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:46524 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfLLNPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:15:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA36030E;
-        Thu, 12 Dec 2019 05:15:32 -0800 (PST)
-Received: from [10.37.9.115] (unknown [10.37.9.115])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C7D53F718;
-        Thu, 12 Dec 2019 05:15:28 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v16 11/25] mm: pagewalk: Add p4d_entry() and pgd_entry()
-To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Zong Li <zong.li@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20191206135316.47703-1-steven.price@arm.com>
- <20191206135316.47703-12-steven.price@arm.com>
- <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
- <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
-Message-ID: <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
-Date:   Thu, 12 Dec 2019 13:15:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Thu, 12 Dec 2019 08:16:07 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40119 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729338AbfLLNQH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:16:07 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c14so2685109wrn.7;
+        Thu, 12 Dec 2019 05:16:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xC1V1OXM7iQO6hr2sfVaq+K9PrfoaGHt4GtTPGZeDwk=;
+        b=Lsp1jc77LRacRdX0U6+mRFDG8frM2mpWQwMeSGuqFjiGFjC5r7wOvdPOe/fNlNFfsN
+         ESuMHIe+ETmK/3pZ56Owi8ztDLBa/yhCFidSyTshVlX5IPvE3bojObJcd+Wv8cgzyyR+
+         ZgLLQ7JT71qDlwVJkC74I6PBISvHN16pFaGaX2SXocgyAj18ZzsrJDsubkcba51po/sD
+         GdvtKrqewCYiZQsviaL9gjREZISvaLnzXEPEbvyIt8d/oywicDvGNcFUjFiPo5KeDIcy
+         q9OG9rLryRCfW0kWNYqtfvMtmdpG2J9vdQ5MeCefi2Sg6wBJ+EPSVeA2cXW4i6pkn5hL
+         ebJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xC1V1OXM7iQO6hr2sfVaq+K9PrfoaGHt4GtTPGZeDwk=;
+        b=CQgQHpBZzj8XRal8+VOcJCCRM4mdzkxV/YjLUSJwc849mAumUMRBfnDEE6RnS7gL4f
+         9QmoUCiMxZKGBS1NWDVuaS3AkM6uxh20m0oEuEe77qyUbIL9vTOJiGPHpaiz5hlH+Zt1
+         xEJalKv51v3PrnMmmYfxt13GGJFG0R6T7MLkOfFP7MQA8BrA9pK5Hhpdn8DMeXa+malp
+         3DlsIKOMArr288d1LH7UzTlQlW6Fo9RVYII6skyjE0x+8CC7nZVjRDTQkiFrJkoKYMaz
+         LtHRvCIF+7UD3+I0TkpYFb1e3kfQ87rRneJKzqOF4mWKc/+kRsYBOyyAWivOHu507ZNr
+         U99g==
+X-Gm-Message-State: APjAAAXm1ctqKYgqMqqWQAaKKFfr+NZl97EDhlCiFgw0Lf0b/7zpgS8+
+        XIB0RZ9Y837G/KqB01gLPqQ=
+X-Google-Smtp-Source: APXvYqy68o0ch6tMvKbbixnsXmQ1TzXWiQrN6b9xHSlwFMCN4fCWbAyBAzJC69h+tbVHBzGeMOSJyA==
+X-Received: by 2002:a5d:61cf:: with SMTP id q15mr6416821wrv.231.1576156565036;
+        Thu, 12 Dec 2019 05:16:05 -0800 (PST)
+Received: from debian.office.codethink.co.uk ([167.98.27.226])
+        by smtp.gmail.com with ESMTPSA id e12sm6027849wrn.56.2019.12.12.05.16.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 05:16:04 -0800 (PST)
+From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Subject: [PATCH] tty: link tty and port before configuring it as console
+Date:   Thu, 12 Dec 2019 13:16:02 +0000
+Message-Id: <20191212131602.29504-1-sudipm.mukherjee@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 11:33, Thomas Hellström (VMware) wrote:
-> On 12/12/19 12:23 PM, Thomas Hellström (VMware) wrote:
->> On 12/6/19 2:53 PM, Steven Price wrote:
->>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
->>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
->>> no users. We're about to add users so reintroduce them, along with
->>> p4d_entry() as we now have 5 levels of tables.
->>>
->>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
->>> PUD-sized transparent hugepages") already re-added pud_entry() but with
->>> different semantics to the other callbacks. Since there have never
->>> been upstream users of this, revert the semantics back to match the
->>> other callbacks. This means pud_entry() is called for all entries, not
->>> just transparent huge pages.
+There seems to be a race condition in tty drivers and I could see on
+many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+do 'tty->port->itty = tty' even though tty->port is NULL.
+'tty->port' will be set by the driver and if the driver has not yet done
+it before we open the tty device we can get to this situation. By adding
+some extra debug prints, I noticed that:
 
-When I wrote that there were no upstream users, which sadly shows how
-long ago that was :(
+6.650130: uart_add_one_port
+6.663849: register_console
+6.664846: tty_open
+6.674391: tty_init_dev
+6.675456: tty_port_link_device
 
->> Actually, there are two users of pud_entry(), in hmm.c and since 
->> 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic 
->> and requires no attention but the one in hmm.c is probably largely 
->> untested, and seems to assume it was called outside of the spinlock.
->>
->> The problem with the current patch is that the hmm pud_entry will 
->> traverse also pmds, so that will be done twice now.
->>
->> In another thread we were discussing a means of rerunning the level 
->> (in case of a race), or continuing after a level, based on the return 
->> value after the callback. The change was fairly invasive,
->>
-> Hmm. Forgot to remove the above text that appears twice. :(. The correct 
-> one is inline below.
-> 
->>
->>> Tested-by: Zong Li <zong.li@sifive.com>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>>   include/linux/pagewalk.h | 19 +++++++++++++------
->>>   mm/pagewalk.c            | 27 ++++++++++++++++-----------
->>>   2 files changed, 29 insertions(+), 17 deletions(-)
->>>
->>> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
->>> index 6ec82e92c87f..06790f23957f 100644
->>> --- a/include/linux/pagewalk.h
->>> +++ b/include/linux/pagewalk.h
->>> @@ -8,15 +8,15 @@ struct mm_walk;
->>>     /**
->>>    * mm_walk_ops - callbacks for walk_page_range
->>> - * @pud_entry:        if set, called for each non-empty PUD 
->>> (2nd-level) entry
->>> - *            this handler should only handle pud_trans_huge() puds.
->>> - *            the pmd_entry or pte_entry callbacks will be used for
->>> - *            regular PUDs.
->>> - * @pmd_entry:        if set, called for each non-empty PMD 
->>> (3rd-level) entry
->>> + * @pgd_entry:        if set, called for each non-empty PGD 
->>> (top-level) entry
->>> + * @p4d_entry:        if set, called for each non-empty P4D entry
->>> + * @pud_entry:        if set, called for each non-empty PUD entry
->>> + * @pmd_entry:        if set, called for each non-empty PMD entry
->>>    *            this handler is required to be able to handle
->>>    *            pmd_trans_huge() pmds.  They may simply choose to
->>>    *            split_huge_page() instead of handling it explicitly.
->>> - * @pte_entry:        if set, called for each non-empty PTE 
->>> (4th-level) entry
->>> + * @pte_entry:        if set, called for each non-empty PTE 
->>> (lowest-level)
->>> + *            entry
->>>    * @pte_hole:        if set, called for each hole at all levels
->>>    * @hugetlb_entry:    if set, called for each hugetlb entry
->>>    * @test_walk:        caller specific callback function to 
->>> determine whether
->>> @@ -27,8 +27,15 @@ struct mm_walk;
->>>    * @pre_vma:            if set, called before starting walk on a 
->>> non-null vma.
->>>    * @post_vma:           if set, called after a walk on a non-null 
->>> vma, provided
->>>    *                      that @pre_vma and the vma walk succeeded.
->>> + *
->>> + * p?d_entry callbacks are called even if those levels are folded on a
->>> + * particular architecture/configuration.
->>>    */
->>>   struct mm_walk_ops {
->>> +    int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
->>> +             unsigned long next, struct mm_walk *walk);
->>> +    int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
->>> +             unsigned long next, struct mm_walk *walk);
->>>       int (*pud_entry)(pud_t *pud, unsigned long addr,
->>>                unsigned long next, struct mm_walk *walk);
->>>       int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
->>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
->>> index ea0b9e606ad1..c089786e7a7f 100644
->>> --- a/mm/pagewalk.c
->>> +++ b/mm/pagewalk.c
->>> @@ -94,15 +94,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned 
->>> long addr, unsigned long end,
->>>           }
->>>             if (ops->pud_entry) {
->>> -            spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
->>> -
->>> -            if (ptl) {
->>> -                err = ops->pud_entry(pud, addr, next, walk);
->>> -                spin_unlock(ptl);
->>> -                if (err)
->>> -                    break;
->>> -                continue;
->>> -            }
->>> +            err = ops->pud_entry(pud, addr, next, walk);
->>> +            if (err)
->>> +                break;
->>
->> Actually, there are two current users of pud_entry(), in hmm.c and 
->> since 5.5rc1 also mapping_dirty_helpers.c. The latter one is 
->> unproblematic and requires no attention but the one in hmm.c is 
->> probably largely untested, and seems to assume it was called outside 
->> of the spinlock.
+uart_add_one_port() registers the console, as soon as it registers, the
+userspace tries to use it and that leads to tty_open() but
+uart_add_one_port() has not yet done tty_port_link_device() and so
+tty->port is not yet configured when control reaches tty_init_dev().
 
-Thanks for pointing that out, I guess the simplest fix would be to
-squash in something like the below which should restore the old
-behaviour for hmm.c without affecting others.
+Further look into the code and tty_port_link_device() is done by
+uart_add_one_port(). After registering the console uart_add_one_port()
+will call tty_port_register_device_attr_serdev() and
+tty_port_link_device() is called from this.
 
-Steve
+Call add tty_port_link_device() before uart_configure_port() is done and
+add a check in tty_port_link_device() so that it only links the port if
+it has not been done yet.
 
----8<----
-diff --git a/mm/hmm.c b/mm/hmm.c
-index d379cb6496ae..744b6644d0e4 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -478,19 +478,26 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
-  	pmd_t *pmdp;
-  	pud_t pud;
-  	int ret;
-+	spinlock_t *ptl = pud_trans_huge_lock(pudp, walk->vma);
-+	if (!ptl)
-+		return 0;
-  
-  again:
-  	pud = READ_ONCE(*pudp);
--	if (pud_none(pud))
--		return hmm_vma_walk_hole(start, end, walk);
-+	if (pud_none(pud)) {
-+		ret = hmm_vma_walk_hole(start, end, walk);
-+		goto out_unlock;
-+	}
-  
-  	if (pud_huge(pud) && pud_devmap(pud)) {
-  		unsigned long i, npages, pfn;
-  		uint64_t *pfns, cpu_flags;
-  		bool fault, write_fault;
-  
--		if (!pud_present(pud))
--			return hmm_vma_walk_hole(start, end, walk);
-+		if (!pud_present(pud)) {
-+			ret = hmm_vma_walk_hole(start, end, walk);
-+			goto out_unlock;
-+		}
-  
-  		i = (addr - range->start) >> PAGE_SHIFT;
-  		npages = (end - addr) >> PAGE_SHIFT;
-@@ -499,16 +506,20 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
-  		cpu_flags = pud_to_hmm_pfn_flags(range, pud);
-  		hmm_range_need_fault(hmm_vma_walk, pfns, npages,
-  				     cpu_flags, &fault, &write_fault);
--		if (fault || write_fault)
--			return hmm_vma_walk_hole_(addr, end, fault,
--						write_fault, walk);
-+		if (fault || write_fault) {
-+			ret = hmm_vma_walk_hole_(addr, end, fault,
-+						 write_fault, walk);
-+			goto out_unlock;
-+		}
-  
-  		pfn = pud_pfn(pud) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-  		for (i = 0; i < npages; ++i, ++pfn) {
-  			hmm_vma_walk->pgmap = get_dev_pagemap(pfn,
-  					      hmm_vma_walk->pgmap);
--			if (unlikely(!hmm_vma_walk->pgmap))
--				return -EBUSY;
-+			if (unlikely(!hmm_vma_walk->pgmap)) {
-+				ret = -EBUSY;
-+				goto out_unlock;
-+			}
-  			pfns[i] = hmm_device_entry_from_pfn(range, pfn) |
-  				  cpu_flags;
-  		}
-@@ -517,7 +528,8 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
-  			hmm_vma_walk->pgmap = NULL;
-  		}
-  		hmm_vma_walk->last = end;
--		return 0;
-+		ret = 0;
-+		goto out_unlock;
-  	}
-  
-  	split_huge_pud(walk->vma, pudp, addr);
-@@ -529,10 +541,14 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
-  		next = pmd_addr_end(addr, end);
-  		ret = hmm_vma_walk_pmd(pmdp, addr, next, walk);
-  		if (ret)
--			return ret;
-+			goto out_unlock;
-  	} while (pmdp++, addr = next, addr != end);
-  
--	return 0;
-+	ret = 0;
-+
-+out_unlock:
-+	spin_unlock(ptl);
-+	return ret;
-  }
-  #else
-  #define hmm_vma_walk_pud	NULL
+Suggested-by: Jiri Slaby <jslaby@suse.com>
+Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+---
+
+This actually should be v3. The previous discussions are at:
+https://lore.kernel.org/lkml/20191120151709.14148-2-sudipm.mukherjee@gmail.com/
+https://lore.kernel.org/lkml/20191121152239.28405-1-sudipm.mukherjee@gmail.com/
+
+ drivers/tty/serial/serial_core.c | 1 +
+ drivers/tty/tty_port.c           | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index b0a6eb106edb..7c2782785736 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -2834,6 +2834,7 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 	if (uport->cons && uport->dev)
+ 		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
++	tty_port_link_device(port, drv->tty_driver, uport->line);
+ 	uart_configure_port(drv, state, uport);
+ 
+ 	port->console = uart_console(uport);
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index 044c3cbdcfa4..5023c85ebc6e 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -89,7 +89,8 @@ void tty_port_link_device(struct tty_port *port,
+ {
+ 	if (WARN_ON(index >= driver->num))
+ 		return;
+-	driver->ports[index] = port;
++	if (!driver->ports[index])
++		driver->ports[index] = port;
+ }
+ EXPORT_SYMBOL_GPL(tty_port_link_device);
+ 
+-- 
+2.11.0
+
