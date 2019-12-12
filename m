@@ -2,302 +2,76 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C83C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6139C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1227206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B33EC2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfLLPEz (ORCPT
+        id S1728738AbfLLPGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:04:55 -0500
-Received: from mga11.intel.com ([192.55.52.93]:25637 "EHLO mga11.intel.com"
+        Thu, 12 Dec 2019 10:06:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:49942 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728611AbfLLPEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:04:54 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 07:04:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="225952395"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga002.jf.intel.com with ESMTP; 12 Dec 2019 07:04:50 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v3 2/2] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
-Date:   Thu, 12 Dec 2019 18:04:40 +0300
-Message-Id: <20191212150440.11377-3-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20191212150440.11377-1-roman.sudarikov@linux.intel.com>
-References: <20191212150440.11377-1-roman.sudarikov@linux.intel.com>
+        id S1728581AbfLLPGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:06:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B06EB30E;
+        Thu, 12 Dec 2019 07:06:48 -0800 (PST)
+Received: from [192.168.0.9] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42FA23F6CF;
+        Thu, 12 Dec 2019 07:06:47 -0800 (PST)
+Subject: Re: [PATCH v3 0/5] sched/fair: Task placement biasing using uclamp
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, qperret@google.com,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191211113851.24241-1-valentin.schneider@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <7c9caf20-de5b-3fa2-2663-e712ba3d7829@arm.com>
+Date:   Thu, 12 Dec 2019 16:06:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191211113851.24241-1-valentin.schneider@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+On 11/12/2019 12:38, Valentin Schneider wrote:
+> Hi,
+> 
+> While uclamp restrictions currently only impact schedutil's frequency
+> selection, it would make sense to also let them impact CPU selection in
+> asymmetric topologies. This would let us steer specific tasks towards
+> certain CPU capacities regardless of their actual utilization - I give a
+> few examples in patch 4.
+> 
+> The first three patches are mainly cleanups, the meat of the thing is
+> in patches 4 and 5.
+> 
+> Note that this is in the same spirit as what Patrick had proposed for EAS
+> on Android [1]
+> 
+> [1]: https://android.googlesource.com/kernel/common/+/b61876ed122f816660fe49e0de1b7ee4891deaa2%5E%21
 
-Current version supports a server line starting Intel® Xeon® Processor
-Scalable Family and introduces mapping for IIO Uncore units only.
-Other units can be added on demand.
+Reviewed-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Tested-By: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-IIO stack to PMON mapping is exposed through:
-    /sys/devices/uncore_iio_<pmu_idx>/platform_mapping
-    in the following format: domain:bus
+Tested on Juno-r0 (Arm64) cpumask [0x3f] w/ big [0x06], LITTLE [0x39]
+[orig cpu capacity big,LITTLE: 1024,446] and rt-app
 
-For example, on a 4-die Intel Xeon® server platform:
-    $ cat /sys/devices/uncore_iio_0/platform_mapping
-    0000:00,0000:40,0000:80,0000:c0
+4 periodic tasks runtime/period [800/16000], per task uclamp_min/max
+[600,1024]
 
-Which means:
-IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
-IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
-IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
-IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
-
-Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
----
- arch/x86/events/intel/uncore.c       |   2 +-
- arch/x86/events/intel/uncore.h       |   1 +
- arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
- 3 files changed, 164 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 2c53ad44b51f..c0d86bc8e786 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -16,7 +16,7 @@ struct pci_driver *uncore_pci_driver;
- DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
- struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
- struct pci_extra_dev *uncore_extra_pci_dev;
--static int max_dies;
-+int max_dies;
- 
- /* mask of cpus that collect uncore events */
- static cpumask_t uncore_cpu_mask;
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index f52dd3f112a7..94eacca6f485 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -523,6 +523,7 @@ extern raw_spinlock_t pci2phy_map_lock;
- extern struct list_head pci2phy_map_head;
- extern struct pci_extra_dev *uncore_extra_pci_dev;
- extern struct event_constraint uncore_constraint_empty;
-+extern int max_dies;
- 
- /* uncore_snb.c */
- int snb_uncore_pci_init(void);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10a5ec79e48..2562fde2e5b8 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -273,6 +273,30 @@
- #define SKX_CPUNODEID			0xc0
- #define SKX_GIDNIDMAP			0xd4
- 
-+/*
-+ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-+ * that BIOS programmed. MSR has package scope.
-+ * |  Bit  |  Default  |  Description
-+ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-+ *                       numbers have been initialized. (RO)
-+ * |[62:48]|    ---    | Reserved
-+ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(5). (RO)
-+ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(4). (RO)
-+ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(3). (RO)
-+ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(2). (RO)
-+ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(1). (RO)
-+ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(0). (RO)
-+ */
-+#define SKX_MSR_CPU_BUS_NUMBER		0x300
-+#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-+#define BUS_NUM_STRIDE			8
-+
- /* SKX CHA */
- #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
- #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-@@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
- 	.read_counter		= uncore_msr_read_counter,
- };
- 
-+static int skx_iio_get_topology(struct intel_uncore_type *type);
-+static int skx_iio_set_mapping(struct intel_uncore_type *type);
-+
- static struct intel_uncore_type skx_uncore_iio = {
- 	.name			= "iio",
- 	.num_counters		= 4,
-@@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
- 	.constraints		= skx_uncore_iio_constraints,
- 	.ops			= &skx_uncore_iio_ops,
- 	.format_group		= &skx_uncore_iio_format_group,
-+	.get_topology		= skx_iio_get_topology,
-+	.set_mapping		= skx_iio_set_mapping,
- };
- 
- enum perf_uncore_iio_freerunning_type_id {
-@@ -3780,6 +3809,139 @@ static int skx_count_chabox(void)
- 	return hweight32(val);
- }
- 
-+static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-+{
-+	u64 msr_value;
-+
-+	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-+			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-+		return -1;
-+
-+	*topology = msr_value;
-+
-+	return 0;
-+}
-+
-+static int skx_iio_get_topology(struct intel_uncore_type *type)
-+{
-+	int ret, cpu, die, current_die;
-+	struct pci_bus *bus = NULL;
-+
-+	/*
-+	 * Verified single-segment environments only; disabled for multiple
-+	 * segment topologies for now.
-+	 */
-+	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
-+		;
-+	if (bus) {
-+		pr_info("I/O stack mapping is not supported for multi-seg\n");
-+		return -1;
-+	}
-+
-+	type->topology = kzalloc(max_dies * sizeof(u64), GFP_KERNEL);
-+	if (!type->topology)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	/* Invalid value to start loop.*/
-+	current_die = -1;
-+	for_each_online_cpu(cpu) {
-+		die = topology_logical_die_id(cpu);
-+		if (current_die == die)
-+			continue;
-+		ret = skx_msr_cpu_bus_read(cpu, &type->topology[die]);
-+		if (ret) {
-+			kfree(type->topology);
-+			break;
-+		}
-+		current_die = die;
-+	}
-+	cpus_read_unlock();
-+
-+	return ret;
-+}
-+
-+static inline u8 skx_iio_stack_bus(struct intel_uncore_pmu *pmu, int die)
-+{
-+	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-+}
-+
-+static int skx_iio_set_box_mapping(struct intel_uncore_pmu *pmu)
-+{
-+	char *buf;
-+	int die = 0;
-+	/* Length of template "%04x:%02x," without null character. */
-+	const int template_len = 8;
-+
-+	/*
-+	 * Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-+	 * Set "0" platform mapping for PMUs which have zero stack bus and
-+	 * non-zero index.
-+	 */
-+	if (!skx_iio_stack_bus(pmu, die) && pmu->pmu_idx) {
-+		pmu->mapping = kzalloc(2, GFP_KERNEL);
-+		if (!pmu->mapping)
-+			return -ENOMEM;
-+		sprintf(pmu->mapping, "0");
-+		return 0;
-+	}
-+
-+	pmu->mapping = kzalloc(max_dies * template_len + 1, GFP_KERNEL);
-+	if (!pmu->mapping)
-+		return -ENOMEM;
-+
-+	buf = pmu->mapping;
-+	for (; die < max_dies; die++) {
-+		buf += snprintf(buf, template_len + 1, "%04x:%02x,", 0,
-+				skx_iio_stack_bus(pmu, die));
-+	}
-+
-+	*(--buf) = '\0';
-+
-+	return 0;
-+}
-+
-+static int skx_iio_set_mapping(struct intel_uncore_type *type)
-+{
-+	/*
-+	 * Each IIO stack (PCIe root port) has its own IIO PMON block, so each
-+	 * platform_mapping holds bus number(s) of PCIe root port(s), which can
-+	 * be monitored by that IIO PMON block.
-+	 *
-+	 * For example, on 4-die Xeon platform with up to 6 IIO stacks per die
-+	 * and, therefore, 6 IIO PMON blocks per die, the platform_mapping
-+	 * of IIO PMON block 0 holds "0000:00,0000:40,0000:80,0000:c0":
-+	 *
-+	 * $ cat /sys/devices/uncore_iio_0/platform_mapping
-+	 * 0000:00,0000:40,0000:80,0000:c0
-+	 *
-+	 * Which means:
-+	 * IIO PMON 0 on die 0 belongs to PCIe RP on bus 0x00, domain 0x0000
-+	 * IIO PMON 0 on die 1 belongs to PCIe RP on bus 0x40, domain 0x0000
-+	 * IIO PMON 0 on die 2 belongs to PCIe RP on bus 0x80, domain 0x0000
-+	 * IIO PMON 0 on die 3 belongs to PCIe RP on bus 0xc0, domain 0x0000
-+	 */
-+
-+	int ret;
-+	struct intel_uncore_pmu *pmu = type->pmus;
-+
-+	for (; pmu - type->pmus < type->num_boxes; pmu++) {
-+		ret = skx_iio_set_box_mapping(pmu);
-+		if (ret) {
-+			for (; pmu->pmu_idx > 0; --pmu)
-+				kfree(pmu->mapping);
-+			break;
-+		}
-+	}
-+
-+	kfree(type->topology);
-+	return ret;
-+}
-+
- void skx_uncore_cpu_init(void)
- {
- 	skx_uncore_chabox.num_boxes = skx_count_chabox();
--- 
-2.19.1
-
+w/o uclamp: EAS puts the tasks on LITTLE CPUs [0x39]
+w/  uclamp: EAS puts the tasks on big CPUs [0x06]
