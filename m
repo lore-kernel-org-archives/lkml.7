@@ -2,196 +2,150 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9021AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621A0214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19EF214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:46:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPAqKbxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbfLLDp6 convert rfc822-to-8bit (ORCPT
+        id S1727811AbfLLDqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:45:58 -0500
-Received: from smtp.h3c.com ([60.191.123.56]:56748 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727181AbfLLDp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:45:56 -0500
-Received: from DAG2EX09-IDC.srv.huawei-3com.com ([10.8.0.72])
-        by h3cspam01-ex.h3c.com with ESMTPS id xBC3hlk4029032
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 11:43:47 +0800 (GMT-8)
-        (envelope-from li.kai4@h3c.com)
-Received: from DAG2EX07-IDC.srv.huawei-3com.com (10.8.0.70) by
- DAG2EX09-IDC.srv.huawei-3com.com (10.8.0.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 12 Dec 2019 11:43:49 +0800
-Received: from DAG2EX07-IDC.srv.huawei-3com.com ([::1]) by
- DAG2EX07-IDC.srv.huawei-3com.com ([fe80::c439:37f7:8e24:31c4%9]) with mapi id
- 15.01.1713.004; Thu, 12 Dec 2019 11:43:49 +0800
-From:   Likai <li.kai4@h3c.com>
-To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
-        "mark@fasheh.com" <mark@fasheh.com>,
-        "jlbec@evilplan.org" <jlbec@evilplan.org>,
-        "chge@linux.alibaba.com" <chge@linux.alibaba.com>
-CC:     "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ocfs2: call journal flush to mark journal as empty after
- journal recovery when mount
-Thread-Topic: [PATCH] ocfs2: call journal flush to mark journal as empty after
- journal recovery when mount
-Thread-Index: AQHVsApQjv9leuKFH0CaG26YADPZnQ==
-Date:   Thu, 12 Dec 2019 03:43:49 +0000
-Message-ID: <d260e4d565cd46cdaa7e22dc50d17cb2@h3c.com>
-References: <20191211100338.510-1-li.kai4@h3c.com>
- <76d8166c-afe9-fc63-98b2-5293e3956669@linux.alibaba.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.125.108.72]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 11 Dec 2019 22:46:53 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33076 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfLLDqw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:46:52 -0500
+Received: by mail-pf1-f196.google.com with SMTP id y206so30051pfb.0;
+        Wed, 11 Dec 2019 19:46:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VxRH7y7mD8w9ZMZtzGYEhqBg5gtMnJozuYmxD6CW22s=;
+        b=fPAqKbxQ0dJtthqA7ldLeEe0ZalIWx+lVwE7yf7MPF8PK3PFVU4Yjpv/mhcxq7vOUI
+         DEa2ZKPGQTT4hPbXw6VztGvV7h7FKAMXjZy+759xiWlozmvUrK7OwR2Lb7y/6gU0oqdV
+         WodjjXnQTedSQQB1Zhz3fmpvEJ7Oa3A+w428wl0uWduvlTWCfgKEtKtC9DU+q9Arudpy
+         yYzTRRe7UMnFYvsOlPyUUqKU76HWn16VDe5fe/2TltoQaKa4FT4oC7GxtAPSxwC9mih7
+         PAUBB5hIuNlQT3FP0AqXO7sDG/zedVyAjoSFRBl6H9pZHYmk42ax3UY6qoBIFffiMhYn
+         7a9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VxRH7y7mD8w9ZMZtzGYEhqBg5gtMnJozuYmxD6CW22s=;
+        b=ornMRvP/IpXvfbsv0DOBKQhhwnea2llPRO65IZpZnzW3tUCZLRsIzpmTHLp/mKmNmU
+         X7Hffvyjw9sqIrwRlWN/90C+jHMIh1DkEuS6gNskFuu+FGMW1gbV2HxeUYojnTT6GDN8
+         DE4e5QcTNpa3VqCd8d1aX/9MPmcf0OSE1a6neTXrIBjJNIW0mvIkYPjNqFp4Nht7hjf+
+         DqEMnZTBM0Ebxq4HBfq7CMrpAg+bmT0AY0IiGRv9uONBEpDEYDyAUKwmXlCiF0KcFDuR
+         J2aj5nduNtabGt9ExYdacU1cCLYUUiRfhS6Yc2VHdiq6YAV47eEpRQ1p0flTc4CGBQRN
+         KkwQ==
+X-Gm-Message-State: APjAAAVxgyrulOr9c7JJ/kWnzjO+PYj/U3E/o6DfpV/SgZiEztcBmwli
+        ZgWHF6n+MeatypCysecovnc=
+X-Google-Smtp-Source: APXvYqwI7ntwHsEHTnB33WT/ymjEuB/A8th9gpJMZ7lWikARhC2o8fe9tNDXiIHZRqRQ28bySBi+hA==
+X-Received: by 2002:a63:d358:: with SMTP id u24mr8241064pgi.218.1576122411557;
+        Wed, 11 Dec 2019 19:46:51 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id p21sm4718312pfn.103.2019.12.11.19.46.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 19:46:51 -0800 (PST)
+Subject: Re: [PATCH net-next 3/6] dt-bindings: net: dsa: add new MT7531
+ binding to support MT7531
+To:     Landen Chao <landen.chao@mediatek.com>, andrew@lunn.ch,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <8afaf60d-bbbd-2931-3992-69511fb1e839@gmail.com>
+Date:   Wed, 11 Dec 2019 19:46:49 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com xBC3hlk4029032
+In-Reply-To: <1c382fd916b66bfe3ce8ef18c12f954dbcbddbbc.1575914275.git.landen.chao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/12/11 21:17, Joseph Qi wrote:
->
-> On 19/12/11 18:03, Kai Li wrote:
->> If journal is dirty when mount, it will be replayed but jbd2 sb
->> log tail cannot be updated to mark a new start because
->> journal->j_flag has already been set with JBD2_ABORT first
->> in journal_init_common. When a new transaction is committed, it
->> will be recored in block 1 first(journal->j_tail is set to 1 in
->> journal_reset).
->>
->> If emergency restart happens again before journal super block is
->> updated unfortunately, the new recorded trans will not be replayed
->> in the next mount.
->>
-> I think I've finally understood the problem. But I don't think it has
-> been clearly described for reviewing. I strongly suggest you describe
-> the problem in the way of timeline, such as in which step, do what
-> operation, and what is the status, etc.
-ok, Joseph
- The following steps describe this procedure in detail.
-    1. mount and touch some files
-    2. these transactions are committed to journal area but not checkpointed
-    3. emergency restart
-    4. mount again and its journals are replayed
-    5. journal super block's first s_start is 1, but its s_seq is not
-updated
-    6. touch a new file and its trans is committed but not checkpointed
-    7. emergency restart again
-    8. mount and journal is dirty, but trans committed in 6 will not be
-    replayed.
 
-It will be added later.
-thanks.
->
->> This exception happens when this lun is used by only one node. If it
->> is used by multi-nodes, other node will replay its journal and its
->> journal sb block will be updated after recovery.
->>
->> To fix this problem, use jbd2_journal_flush to mark journal as empty as
->> ocfs2_replay_journal has done.> 
-> Sounds reasonable. But IMO, it is really a corner use scenario, using
-> cluster filesystem in single node...
->
-> Thanks,
-> Joseph
->
->> The following jbd2 journal can be generated by touching a new file after
->> journal is replayed, and seq 15 is the first valid commit, but first seq
->> is 13 in journal super block.
->> logdump:
->> Block 0: Journal Superblock
->> Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
->> Blocksize: 4096   Total Blocks: 32768   First Block: 1
->> First Commit ID: 13   Start Log Blknum: 1
->> Error: 0
->> Feature Compat: 0
->> Feature Incompat: 2 block64
->> Feature RO compat: 0
->> Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
->> FS Share Cnt: 1   Dynamic Superblk Blknum: 0
->> Per Txn Block Limit    Journal: 0    Data: 0
->>
->> Block 1: Journal Commit Block
->> Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
->>
->> Block 2: Journal Descriptor
->> Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
->> No. Blocknum        Flags
->>  0. 587             none
->> UUID: 00000000000000000000000000000000
->>  1. 8257792         JBD2_FLAG_SAME_UUID
->>  2. 619             JBD2_FLAG_SAME_UUID
->>  3. 24772864        JBD2_FLAG_SAME_UUID
->>  4. 8257802         JBD2_FLAG_SAME_UUID
->>  5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
->> ...
->> Block 7: Inode
->> Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
->> FS Generation: 2839773110 (0xa9437fb6)
->> CRC32: 00000000   ECC: 0000
->> Type: Regular   Attr: 0x0   Flags: Valid
->> Dynamic Features: (0x1) InlineData
->> User: 0 (root)   Group: 0 (root)   Size: 7
->> Links: 1   Clusters: 0
->> ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->> atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
->> mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
->> dtime: 0x0 -- Thu Jan  1 08:00:00 1970
->> ...
->> Block 9: Journal Commit Block
->> Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
->>
->> The following is jouranl recovery log when recovering the upper jbd2
->> journal when mount again.
->> syslog:
->> [ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
->> [ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
->> [ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
->> [ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
->> [ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
->>
->> Due to first commit seq 13 recorded in journal super is not consistent
->> with the value recorded in block 1(seq is 14), journal recovery will be
->> terminated before seq 15 even though it is an unbroken commit, inode
->> 8257802 is a new file and it will be lost.
->>
->> Signed-off-by: Kai Li <li.kai4@h3c.com>
->> ---
->>  fs/ocfs2/journal.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
->> index 1afe57f425a0..b8b9d26fa731 100644
->> --- a/fs/ocfs2/journal.c
->> +++ b/fs/ocfs2/journal.c
->> @@ -1066,6 +1066,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
->>  
->>  	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
->>  
->> +	if (replayed) {
->> +		/* wipe the journal */
->> +		jbd2_journal_lock_updates(journal->j_journal);
->> +		status = jbd2_journal_flush(journal->j_journal);
->> +		jbd2_journal_unlock_updates(journal->j_journal);
->> +		mlog(ML_NOTICE, "journal recovery complete, status=%d", status);
->> +	}
->> +
->>  	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
->>  	if (status < 0) {
->>  		mlog_errno(status);
->>
 
+On 12/10/2019 12:14 AM, Landen Chao wrote:
+> Add devicetree binding to support the compatible mt7531 switch as used
+> in the MediaTek MT7531 switch.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+
+With the comments from Andrew fixed, this looks good to me.
+-- 
+Florian
