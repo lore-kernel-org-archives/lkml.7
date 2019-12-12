@@ -2,144 +2,87 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F74AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4FBC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2B1E206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6958B22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZPouwBx"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="swMATU3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbfLLO5Z (ORCPT
+        id S1729101AbfLLO73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:57:25 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45538 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbfLLO5Z (ORCPT
+        Thu, 12 Dec 2019 09:59:29 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54322 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728943AbfLLO72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:57:25 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b9so1254316pgk.12;
-        Thu, 12 Dec 2019 06:57:24 -0800 (PST)
+        Thu, 12 Dec 2019 09:59:28 -0500
+Received: by mail-wm1-f68.google.com with SMTP id b11so2699186wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:59:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0WhcdRR33BP6aOfthkITtaARbX81vs+CP8HbIHKE68w=;
-        b=kZPouwBxetJpiVaX/NEsPrlNjSthou8Id9g6A/b8rX+G6xGM0Td6uP/KZhD6mM5OJp
-         P8ANrV6ZZAXDR/XqdeWQQuKuEfz8sjsPhpJmDfvrbOKkttcn71zzqtAvPA4H6zon3pBO
-         5bfNAcFV0YV5tUNYYULDwdynZnehZgNGQz6M4M/2wK6UIlnVN2EjhoHlQSXpnkPzKz8l
-         8c5zN20bjNZEFWFWwy5euVnFw0foCBIQE9KYayNWAoVCs6AOM2RC64f1kQ4IlejlPuZk
-         62pexrrg6KqMBCOjfTJlQanLrcJYs5hwmTrwM+NgoMYordisASJojImLPPO4ZvljCfqh
-         fLpA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q8cDD1h6Kbt+wm67+7ymZTLscWfxx20xc71x85bi1V8=;
+        b=swMATU3v8KmM1+9GIdXKQR6jSiOWRMCOPd5Xl01rpFArfJ3XAfwd8XMvQ1jGf7EYvH
+         S7MyPMiaWUjl2NpRaTx0B/o0QlP/ReDBkqJZ494uKUJZM04o8MM4jHdRMtaA9rGbcxH5
+         md7ZfDoyr0+K5+Ds4FRCXnDr05l58y/YgLN/xVSuCdUTQ6J3M0y9atPTykJGq013MPKy
+         taPvYnxGEb/o4PfaH6zsEyDl7nndMkomGvzcJKRL7jDZPI79kpFik1saoJHdGqJNgh+u
+         lyqOOG8mSXuI/iktQ2xEuGxTypgZB83oAz+GqolP2EGv77BXqSSbpi/2IpH756bGcB87
+         2MtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0WhcdRR33BP6aOfthkITtaARbX81vs+CP8HbIHKE68w=;
-        b=FzVWpQ/LPl1m4AY29bAWqSS3JiNNFeGerWN6L4hkHIQzqQbMOD8tAWz5wUou/yA97p
-         M40QSSPuQLDUdgjFqIeKJbIcwr49wCUZVzeyAoFFa3VxCpPTf/nNXzENNqsyi/9FklTY
-         g+RdkxGqmSmmYti2DVNTUrDFJGBC8+iCe21ACxyrLpDzqO8Ks290UbTUw+aakjqGK6YJ
-         1v4H782wr0buwrfxqY1WDv0jLgxZG3HEDkFQRJoTqrZQl9Ekzkv37vcRVN4qWQzpzDKq
-         XcHow1A2ZhchQa5Rixec4O5+nppftuEeadxsZ1K1//BTRpdbCKVHoCpSIbUMk88OqYTy
-         awDA==
-X-Gm-Message-State: APjAAAWcmB/hQJYqLgYNIhXcscM20uQWe0esyfIdKU91XzKYnSJw/MD1
-        l+UUIYHXocrCBriFoiAy70wJLZAN
-X-Google-Smtp-Source: APXvYqzLzE3QoOLcJpz/9cKpseC//OAJ8I8/QamS1G+kxt/6OR/ZaicI60KlwVq3a3n3mBFaWLy9Xw==
-X-Received: by 2002:a63:d807:: with SMTP id b7mr11164325pgh.52.1576162644417;
-        Thu, 12 Dec 2019 06:57:24 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v29sm7003731pgl.88.2019.12.12.06.57.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 06:57:23 -0800 (PST)
-Date:   Thu, 12 Dec 2019 06:57:22 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        zhong jiang <zhongjiang@huawei.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: typec: fusb302: Fix an undefined reference to
- 'extcon_get_state'
-Message-ID: <20191212145722.GA361@roeck-us.net>
-References: <1576136063-50916-1-git-send-email-zhongjiang@huawei.com>
- <20191212090132.GC31345@kuha.fi.intel.com>
- <5DF20530.2040509@huawei.com>
- <20191212092805.GA1375559@kroah.com>
- <5DF20B18.4020601@huawei.com>
- <20191212111805.GD31345@kuha.fi.intel.com>
- <20191212122053.GA1541203@kroah.com>
- <20191212124937.GE31345@kuha.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212124937.GE31345@kuha.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q8cDD1h6Kbt+wm67+7ymZTLscWfxx20xc71x85bi1V8=;
+        b=rKLyvfzg1anz7j2hEX9tX3hZ4yEbbCGdwUEH4JlfW+W4T99LV6Jkd/u3nhyloAnK5B
+         6bN/6amozgtlU61CoDjfO1bXpDbnvE45w3T88UXpJ4swlbJaN0yIqsbwyLeOlOyorZ3X
+         d3ATy9si//GqIBLnEgOys/+kT8+tN6apk44p2G38DX+ZaY1+bZ0Sdh2EM9oFFsKy1fpt
+         cPaVLif4Q7bFxhAbzoffL0RtiM7d2tWn0vyGjPjeXLmxd0lddsKcj+e7TFbkozHbcUdE
+         tF+sBtHqFkabtkGTNy3HhOAYChR6GwoDv7dGmI+rAN8pLMGcW+TRUI4wg+8I378SGTV6
+         uxxg==
+X-Gm-Message-State: APjAAAVK3Hql8N7Wh6nG1ywexYw4RULyAfcmJwXD6uImCfofEykeK0YV
+        k8gNWhbQyx+PuCU3/qG7rLEiLg==
+X-Google-Smtp-Source: APXvYqxQvIfo9ValD2pZteRv78WUJy9Ja4QFpldqUrLBkg8LV7Tf3HWrTT9klIIijQsPl9BRZGoXrA==
+X-Received: by 2002:a1c:1987:: with SMTP id 129mr6978284wmz.112.1576162767185;
+        Thu, 12 Dec 2019 06:59:27 -0800 (PST)
+Received: from glaroque-ThinkPad-T480.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id h8sm6670292wrx.63.2019.12.12.06.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 06:59:26 -0800 (PST)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     narmstrong@baylibre.com, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
+        devicetree@vger.kernel.org
+Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] Add support of CEC wakeup on Amlogic G12 and SM1 SoCs
+Date:   Thu, 12 Dec 2019 15:59:22 +0100
+Message-Id: <20191212145925.32123-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:49:37PM +0200, Heikki Krogerus wrote:
-> On Thu, Dec 12, 2019 at 01:20:53PM +0100, Greg KH wrote:
-> > On Thu, Dec 12, 2019 at 01:18:05PM +0200, Heikki Krogerus wrote:
-> > > On Thu, Dec 12, 2019 at 05:40:40PM +0800, zhong jiang wrote:
-> > > > On 2019/12/12 17:28, Greg KH wrote:
-> > > > > On Thu, Dec 12, 2019 at 05:15:28PM +0800, zhong jiang wrote:
-> > > > >> On 2019/12/12 17:01, Heikki Krogerus wrote:
-> > > > >>> On Thu, Dec 12, 2019 at 03:34:23PM +0800, zhong jiang wrote:
-> > > > >>>> Fixes the following compile error:
-> > > > >>>>
-> > > > >>>> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
-> > > > >>>> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
-> > > > >>>> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
-> > > > >>>> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
-> > > > >>>> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
-> > > > >>>> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
-> > > > >>>> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
-> > > > >>>> make: *** [vmlinux] Error 1
-> > > > >>> There are stubs for those functions so that really should not be
-> > > > >>> happening. I can not reproduce that.
-> > > > >> It can be reproduced in next branch. you can try it in the latest next branch.
-> > > > > Can it be reproduced in 5.5-rc1?
-> > > > >
-> > > > commit 78adcacd4edbd6795e164bbda9a4b2b7e51666a7
-> > > > Author: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > > Date:   Thu Dec 12 15:48:07 2019 +1100
-> > > > 
-> > > >     Add linux-next specific files for 20191212
-> > > > 
-> > > > I  reproduce it  based on this commit.  The related config is attached.
-> > > 
-> > > OK, now I get what's going on. EXTCON is build as a module, but
-> > > FUSB302 is not. This should be explained in the commit message.
-> > > 
-> > > That does not mean we have to force everybody to enable EXTCON in
-> > > order to use this driver. Try something like this:
-> > > 
-> > > diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-> > > index 72481bbb2af3..06e026f6325c 100644
-> > > --- a/drivers/usb/typec/tcpm/Kconfig
-> > > +++ b/drivers/usb/typec/tcpm/Kconfig
-> > > @@ -31,6 +31,7 @@ endif # TYPEC_TCPCI
-> > > 
-> > >  config TYPEC_FUSB302
-> > >         tristate "Fairchild FUSB302 Type-C chip driver"
-> > > +       depends on EXTCON=n || EXTCON=y || (EXTCON=m && m)
-> > 
-> > Ugh.  We need a better "pattern" for stuff like this, it's getting more
-> > and more frequent.
-> > 
-> > And no, I don't have a better idea :(
-> 
-> I think this works:
-> 
->         depends on EXTCON || !EXTCON
+this patchset add support of CEC wakeup.
+We need to set logical address and activate some options in registers before going in suspend.
+Registers address and options values come from amlogic driver.
 
-Yes, that is what I usually use for hwmon, though it dos look weird.
-I agree, it would be nice to have something expressing such dependencies
-in a better way.
+Guillaume La Roque (3):
+  media: dt-bindings: media: meson-ao-cec: Add support of ao-sysctrl
+    syscon
+  arm64: dts: meson-g12g12: add syscon phandle in cec node
+  media: platform: meson-ao-cec-g12a: add wakeup support
 
-Guenter
+ .../media/amlogic,meson-gx-ao-cec.yaml        |  4 +++
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |  1 +
+ drivers/media/platform/meson/ao-cec-g12a.c    | 33 +++++++++++++++++++
+ 3 files changed, 38 insertions(+)
+
+-- 
+2.17.1
+
