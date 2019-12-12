@@ -2,99 +2,102 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9002AC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB983C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DDF2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="L5e/4sTM"
+	by mail.kernel.org (Postfix) with ESMTP id A5C7F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576157305;
+	bh=ZR+E7hI0jXgCgxQ/exA/SglO8JUgxFhrhLaVV/l9OE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UItXViDNWU1bT+7dBFoWdYXKVjD0NJ9+8rnL39YzV9OMlm70bZmqVOozypgZFFRkR
+	 PJtNZgRFWN1ipwtE2RCbIaoyw2ktIPIBG3JiOCfgS2tehul+DKks3pjo0HSMR58q64
+	 aTNJfVQvJVbuv2zGFH2Fx7c+cnTo/mhwUYVSdz4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfLLNZi (ORCPT
+        id S1729417AbfLLN2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:25:38 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:50082 "EHLO vps0.lunn.ch"
+        Thu, 12 Dec 2019 08:28:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbfLLNZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:25:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bxnXIodnVA+EXBQ9CzKw2+L2s06f/eW1ZteOUMDWsiU=; b=L5e/4sTMJEgfoy08MJh5WXYJ6i
-        vtxgJMqAJUi8fKfN/Q5KP8FQnuW4FE9UBwBZ/KRoW0xWFvLE685wFxZz9EFJekPOrDAqg783JqQJ3
-        XPskH3kEU7fR0/Ph78F3bj9HvZWOr4H99XHMwhfMNb8afPT2T5Xye6Z5mz+fbKas7xlU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ifOT2-0002nd-BQ; Thu, 12 Dec 2019 14:25:20 +0100
-Date:   Thu, 12 Dec 2019 14:25:20 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Biao Huang <biao.huang@mediatek.com>
-Cc:     davem@davemloft.net, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
-Subject: Re: [PATCH 1/2] net-next: stmmac: mediatek: add more suuport for RMII
-Message-ID: <20191212132520.GB9959@lunn.ch>
-References: <20191212024145.21752-1-biao.huang@mediatek.com>
- <20191212024145.21752-2-biao.huang@mediatek.com>
+        id S1729170AbfLLN2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:28:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DFE0214AF;
+        Thu, 12 Dec 2019 13:28:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576157303;
+        bh=ZR+E7hI0jXgCgxQ/exA/SglO8JUgxFhrhLaVV/l9OE8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kfmr96zdl0GqQ1vaXTG5kFRmmmOTquDp3eLF5aMn5qLNM/Mj3kGBpOwSnGMHIt1Ns
+         BSGXfbt0isXK2gWK8lYQ0G09EUBovvzm8FqNgpR7P/oSylghDkAGO01m3UEtIkoef1
+         Z1O2iNPROJXNjkP/wR/fpkpqM7R+ANt+sEsvLryk=
+Date:   Thu, 12 Dec 2019 14:28:20 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+Message-ID: <20191212132820.GA1558872@kroah.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191212100524.GC1470066@kroah.com>
+ <6cf4afbe-4fa3-6bbd-4090-ff9764c4fce1@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212024145.21752-2-biao.huang@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6cf4afbe-4fa3-6bbd-4090-ff9764c4fce1@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:41:44AM +0800, Biao Huang wrote:
-> MT2712 SoC can provide the rmii reference clock, and the clock
-> will output from TXC pin only, which means ref_clk pin of external
-> PHY should connect to TXC pin in this case.
-> Add corresponding clock and timing settings.
+On Thu, Dec 12, 2019 at 01:15:25PM +0000, Jon Hunter wrote:
+> 
+> On 12/12/2019 10:05, Greg Kroah-Hartman wrote:
+> > On Wed, Dec 11, 2019 at 04:02:42PM +0100, Greg Kroah-Hartman wrote:
+> >> This is the start of the stable review cycle for the 4.19.89 release.
+> >> There are 243 patches in this series, all will be posted as a response
+> >> to this one.  If anyone has any issues with these being applied, please
+> >> let me know.
+> >>
+> >> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+> >> Anything received after that time might be too late.
+> >>
+> >> The whole patch series can be found in one patch at:
+> >> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
+> >> or in the git tree and branch at:
+> >> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> >> and the diffstat can be found below.
+> > 
+> > I have pushed out -rc2 with a bunch of fixes for existing issues, and
+> > some new fixes:
+> >  	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc2.gz
+> > 
+> 
+> 
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v4.19:
+>     13 builds:	13 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     32 tests:	32 pass, 0 fail
+> 
+> Linux version:	4.19.89-rc2-gb71ac9dfc6f0
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
-Hi Biao
+Wonderful, thanks for testing all of these and letting me know.
 
-Subject line has a typo.
-
-> @@ -278,6 +296,7 @@ static int mediatek_dwmac_config_dt(struct mediatek_dwmac_plat_data *plat)
->  	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
->  	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
->  	plat->rmii_rxc = of_property_read_bool(plat->np, "mediatek,rmii-rxc");
-> +	plat->rmii_clk_from_mac = of_property_read_bool(plat->np, "mediatek,rmii-clk-from-mac");
->  
->  	return 0;
->  }
-> @@ -287,6 +306,16 @@ static int mediatek_dwmac_clk_init(struct mediatek_dwmac_plat_data *plat)
->  	const struct mediatek_dwmac_variant *variant = plat->variant;
->  	int i, num = variant->num_clks;
->  
-> +	plat->mac_rmii_clk = NULL;
-> +	if (plat->phy_mode == PHY_INTERFACE_MODE_RMII &&
-> +	    plat->rmii_clk_from_mac) {
-> +		plat->mac_rmii_clk = devm_clk_get(plat->dev, "rmii_internal");
-> +		if (IS_ERR(plat->mac_rmii_clk)) {
-> +			dev_err(plat->dev, "Failed to get reference clk from MAC\n");
-> +			return PTR_ERR(plat->mac_rmii_clk);
-> +		}
-> +	}
-
-Please don't use a binary property. This is a clock, so describe it in
-DT as a clock. Add it to the existing list of clocks.
-
-   Andrew
+greg k-h
