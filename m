@@ -2,102 +2,209 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE68CC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5487AC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8972073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:32:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="kzsW8/3f"
+	by mail.kernel.org (Postfix) with ESMTP id 3C0AF2073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfLLScp (ORCPT
+        id S1730473AbfLLSdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:32:45 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:47250 "EHLO mail.skyhub.de"
+        Thu, 12 Dec 2019 13:33:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:13185 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730211AbfLLSco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:32:44 -0500
-Received: from zn.tnic (p200300EC2F0A5A0010289BED6992E3B4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:1028:9bed:6992:e3b4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 62E201EC01AD;
-        Thu, 12 Dec 2019 19:32:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576175562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=1vhjna/rh+rVgKI+zkzgMfp5mWRrD9pxqEOzOJXpA4Y=;
-        b=kzsW8/3fnaWojTpWx+xOZuFE5jkvWcgtWb0zHWdGQvHha8Z3n16k6oLdIOkrt3LZWH/mbE
-        40RXHatBBtsZbAG2t/5SMWP8ndSe6ntSi7+6wLxah6GSy4g0pqbbHSZpsh98GMHiVzGYvm
-        Z5LGh7kWizRyKULfw1bLYt/9PqDVdYU=
-Date:   Thu, 12 Dec 2019 19:32:41 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
- VMX_FEATURES_*
-Message-ID: <20191212183241.GI4991@zn.tnic>
-References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
- <20191128014016.4389-12-sean.j.christopherson@intel.com>
- <20191212122646.GE4991@zn.tnic>
- <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
- <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
- <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
- <20191212174357.GE3163@linux.intel.com>
- <52dd758d-a590-52a6-4248-22d6852b75cd@redhat.com>
- <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
+        id S1730344AbfLLSdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:33:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:25:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="216380396"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2019 10:25:10 -0800
+Subject: [PATCH RFC v2 10/14] dmaengine: idxd: add descriptor manipulation
+ routines
+From:   Dave Jiang <dave.jiang@intel.com>
+To:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vkoul@kernel.org
+Cc:     dan.j.williams@intel.com, tony.luck@intel.com, jing.lin@intel.com,
+        ashok.raj@intel.com, sanjay.k.kumar@intel.com, megha.dey@intel.com,
+        jacob.jun.pan@intel.com, yi.l.liu@intel.com, axboe@kernel.dk,
+        akpm@linux-foundation.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, fenghua.yu@intel.com, hpa@zytor.com
+Date:   Thu, 12 Dec 2019 11:25:10 -0700
+Message-ID: <157617511035.42350.5798193672511246769.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+References: <157617487798.42350.4471714981643413895.stgit@djiang5-desk3.ch.intel.com>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 07:52:55PM +0200, Liran Alon wrote:
-> Why should CPU VMX features be treated differently than standard CPUID
-> deduced features? CPU SVM features are also present in /proc/cpuinfo
-> today (Because they are deduced from CPUID leafs). So it should be
-> similar.
+This commit adds helper functions for DSA descriptor allocation, setup,
+submission, and free operations.
 
-Well, VMX features are not CPUID bits apparently because <reasons>. And
-Intel hw folk will give you a bunch, I bet. So Sean needs to do all this
-dancing to get them to be more usable to other kernel code.
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-SVM feature bits are proper CPUID bits and this is what the cpufeatures
-glue does - mirro CPUID bits, mainly.
+---
 
--- 
-Regards/Gruss,
-    Boris.
+idxd_submit_desc() and idxd_alloc_desc() are used in the next patch in the
+series.
+---
+ drivers/dma/idxd/Makefile |    2 -
+ drivers/dma/idxd/submit.c |  127 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 128 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/dma/idxd/submit.c
 
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/drivers/dma/idxd/Makefile b/drivers/dma/idxd/Makefile
+index a552560a03dc..50eca12015e2 100644
+--- a/drivers/dma/idxd/Makefile
++++ b/drivers/dma/idxd/Makefile
+@@ -1,2 +1,2 @@
+ obj-$(CONFIG_INTEL_IDXD) += idxd.o
+-idxd-y := init.o irq.o device.o sysfs.o
++idxd-y := init.o irq.o device.o sysfs.o submit.o
+diff --git a/drivers/dma/idxd/submit.c b/drivers/dma/idxd/submit.c
+new file mode 100644
+index 000000000000..2dcd13f9f654
+--- /dev/null
++++ b/drivers/dma/idxd/submit.c
+@@ -0,0 +1,127 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright(c) 2019 Intel Corporation. All rights rsvd. */
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pci.h>
++#include <linux/dmaengine.h>
++#include <uapi/linux/idxd.h>
++#include "../dmaengine.h"
++#include "idxd.h"
++#include "registers.h"
++
++static struct idxd_desc *idxd_alloc_desc(struct idxd_wq *wq, bool nonblock)
++{
++	struct idxd_desc *desc;
++	int idx;
++	struct idxd_device *idxd = wq->idxd;
++
++	if (idxd->state != IDXD_DEV_ENABLED)
++		return ERR_PTR(-EIO);
++
++	if (!nonblock)
++		percpu_down_read(&wq->submit_lock);
++	else if (!percpu_down_read_trylock(&wq->submit_lock))
++		return ERR_PTR(-EBUSY);
++
++	if (!atomic_add_unless(&wq->dq_count, 1, wq->size)) {
++		int rc;
++
++		if (nonblock) {
++			percpu_up_read(&wq->submit_lock);
++			return ERR_PTR(-EAGAIN);
++		}
++
++		percpu_up_read(&wq->submit_lock);
++		percpu_down_write(&wq->submit_lock);
++		rc = wait_event_interruptible(wq->submit_waitq,
++				atomic_add_unless(&wq->dq_count, 1, wq->size) ||
++				idxd->state != IDXD_DEV_ENABLED);
++		percpu_up_write(&wq->submit_lock);
++		if (rc < 0)
++			return ERR_PTR(-EINTR);
++		if (idxd->state != IDXD_DEV_ENABLED)
++			return ERR_PTR(-EIO);
++	} else {
++		percpu_up_read(&wq->submit_lock);
++	}
++
++	idx = sbitmap_get(&wq->sbmap, 0, false);
++	if (idx < 0) {
++		atomic_dec(&wq->dq_count);
++		return ERR_PTR(-EAGAIN);
++	}
++
++	desc = wq->descs[idx];
++	memset(desc->hw, 0, sizeof(struct dsa_hw_desc));
++	memset(desc->completion, 0, sizeof(struct dsa_completion_record));
++	return desc;
++}
++
++void idxd_free_desc(struct idxd_wq *wq, struct idxd_desc *desc)
++{
++	atomic_dec(&wq->dq_count);
++
++	sbitmap_clear_bit(&wq->sbmap, desc->id);
++	wake_up(&wq->submit_waitq);
++}
++
++static int idxd_submit_desc(struct idxd_wq *wq, struct idxd_desc *desc,
++			    bool nonblock)
++{
++	struct idxd_device *idxd = wq->idxd;
++	int vec = desc->hw->int_handle;
++
++	if (idxd->state != IDXD_DEV_ENABLED)
++		return -EIO;
++
++	/*
++	 * The wmb() flushes writes to coherent DMA data before possibly
++	 * triggering a DMA read. The wmb() is necessary even on UP because
++	 * the recipient is a device.
++	 */
++	wmb();
++	iosubmit_cmds512(wq->dportal, desc->hw, 1);
++
++	/*
++	 * Pending the descriptor to the lockless list for the irq_entry
++	 * that we designated the descriptor to.
++	 */
++	llist_add(&desc->llnode, &idxd->irq_entries[vec].pending_llist);
++
++	return 0;
++}
++
++static inline void idxd_prep_desc_common(struct idxd_wq *wq,
++					 struct dsa_hw_desc *hw, char opcode,
++					 u64 addr_f1, u64 addr_f2, u64 len,
++					 u64 compl, u32 flags)
++{
++	hw->flags = flags;
++	hw->opcode = opcode;
++	hw->src_addr = addr_f1;
++	hw->dst_addr = addr_f2;
++	hw->xfer_size = len;
++	hw->priv = !!(wq->type == IDXD_WQT_KERNEL);
++	hw->completion_addr = compl;
++
++	/*
++	 * Descriptor completion vectors are 1-8 for MSIX. We will round
++	 * robin through the 8 vectors.
++	 */
++	hw->int_handle = ++wq->vec_ptr;
++	wq->vec_ptr = wq->vec_ptr & 7;
++}
++
++static inline void set_desc_addresses(struct dma_request *req,
++				      u64 *src, u64 *dst)
++{
++		*src = sg_dma_address(&req->sg[0]);
++		*dst = req->pg_dma;
++}
++
++static inline void set_completion_address(struct idxd_desc *desc,
++					  u64 *compl_addr)
++{
++		*compl_addr = desc->compl_dma;
++}
+
