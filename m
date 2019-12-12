@@ -2,101 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D298FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D53C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B371C2465A
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61641214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbfLLOSr (ORCPT
+        id S1729705AbfLLOUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:18:47 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42563 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbfLLOSq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:18:46 -0500
-Received: by mail-ed1-f68.google.com with SMTP id e10so1922251edv.9;
-        Thu, 12 Dec 2019 06:18:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QORpcfpxTVun2omq37w//epuRfcr5mZBlHsi85Oa95M=;
-        b=IUewxsqbsSeH2FIzex3kps6Y+7jFx2NA91RD1LaeCT+kEcf4zn4f9NcjW72luM8L0Y
-         mp9M5lirJhmYGYd7gtV9U99ttRAUo8NRvZXhCY3/symEdUKudcAzcgqDHBjPyIslhrbd
-         xpEoh5rrA3/UUGCoVJqyiCUG2admqbmwiSif4t/5fiyBLAPwWFVrl17B+bmBOPbKPaKW
-         hlNsgoCf2PAsUck+HHQEBz3B3G5xrQ3cU1/dDzCyIsIOvcc1mWInleHuiXf1E5lWpMH7
-         o9t6M+WLRiftGmY83CcfamPrA/Ks8+OYiPy0FD+xpvhsXqNDACzdg8ZZ6S5Kd2aRR2Yv
-         nYFQ==
-X-Gm-Message-State: APjAAAX58QbFTCQvN6oClgnbezvN1e5mr9HRhVBji0WuvZgF1+1jKaWX
-        Mgra0aT3Mqjw00yNvqhwJbT3qPN90Uc=
-X-Google-Smtp-Source: APXvYqwdGWOlKR4douX6oCIzSlnsAcb7BtN7h5bhf8rXp7y7dPR4MGUuWgC2J051AqKFNIdEnP2z1w==
-X-Received: by 2002:a17:907:11cc:: with SMTP id va12mr9985791ejb.164.1576160324391;
-        Thu, 12 Dec 2019 06:18:44 -0800 (PST)
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com. [209.85.128.53])
-        by smtp.gmail.com with ESMTPSA id 11sm151005ejn.83.2019.12.12.06.18.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 06:18:44 -0800 (PST)
-Received: by mail-wm1-f53.google.com with SMTP id t14so2694863wmi.5;
-        Thu, 12 Dec 2019 06:18:43 -0800 (PST)
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr6752029wmc.2.1576160323683;
- Thu, 12 Dec 2019 06:18:43 -0800 (PST)
+        Thu, 12 Dec 2019 09:20:17 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7227 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729392AbfLLOUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:20:17 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ECD4EA4312FAC6B1B3DC;
+        Thu, 12 Dec 2019 22:20:12 +0800 (CST)
+Received: from [127.0.0.1] (10.133.219.218) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
+ 22:20:11 +0800
+Message-ID: <5DF24C9B.7030402@huawei.com>
+Date:   Thu, 12 Dec 2019 22:20:11 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-References: <20191211150339.185439726@linuxfoundation.org> <20191211150351.658072828@linuxfoundation.org>
- <20191212133132.GA13171@amd> <20191212140241.GA1595136@kroah.com>
-In-Reply-To: <20191212140241.GA1595136@kroah.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Thu, 12 Dec 2019 22:18:34 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
-Message-ID: <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
-Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device node
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>, <linux@roeck-us.net>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: typec: fusb302: Fix an undefined reference to 'extcon_get_state'
+References: <1576136063-50916-1-git-send-email-zhongjiang@huawei.com> <20191212090132.GC31345@kuha.fi.intel.com> <5DF20530.2040509@huawei.com> <20191212092805.GA1375559@kroah.com> <5DF20B18.4020601@huawei.com> <20191212111805.GD31345@kuha.fi.intel.com> <20191212122053.GA1541203@kroah.com> <20191212124937.GE31345@kuha.fi.intel.com>
+In-Reply-To: <20191212124937.GE31345@kuha.fi.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.219.218]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:02 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On 2019/12/12 20:49, Heikki Krogerus wrote:
+> On Thu, Dec 12, 2019 at 01:20:53PM +0100, Greg KH wrote:
+>> On Thu, Dec 12, 2019 at 01:18:05PM +0200, Heikki Krogerus wrote:
+>>> On Thu, Dec 12, 2019 at 05:40:40PM +0800, zhong jiang wrote:
+>>>> On 2019/12/12 17:28, Greg KH wrote:
+>>>>> On Thu, Dec 12, 2019 at 05:15:28PM +0800, zhong jiang wrote:
+>>>>>> On 2019/12/12 17:01, Heikki Krogerus wrote:
+>>>>>>> On Thu, Dec 12, 2019 at 03:34:23PM +0800, zhong jiang wrote:
+>>>>>>>> Fixes the following compile error:
+>>>>>>>>
+>>>>>>>> drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
+>>>>>>>> fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
+>>>>>>>> fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
+>>>>>>>> fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
+>>>>>>>> fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
+>>>>>>>> drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
+>>>>>>>> fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
+>>>>>>>> make: *** [vmlinux] Error 1
+>>>>>>> There are stubs for those functions so that really should not be
+>>>>>>> happening. I can not reproduce that.
+>>>>>> It can be reproduced in next branch. you can try it in the latest next branch.
+>>>>> Can it be reproduced in 5.5-rc1?
+>>>>>
+>>>> commit 78adcacd4edbd6795e164bbda9a4b2b7e51666a7
+>>>> Author: Stephen Rothwell <sfr@canb.auug.org.au>
+>>>> Date:   Thu Dec 12 15:48:07 2019 +1100
+>>>>
+>>>>     Add linux-next specific files for 20191212
+>>>>
+>>>> I  reproduce it  based on this commit.  The related config is attached.
+>>> OK, now I get what's going on. EXTCON is build as a module, but
+>>> FUSB302 is not. This should be explained in the commit message.
+>>>
+>>> That does not mean we have to force everybody to enable EXTCON in
+>>> order to use this driver. Try something like this:
+>>>
+>>> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+>>> index 72481bbb2af3..06e026f6325c 100644
+>>> --- a/drivers/usb/typec/tcpm/Kconfig
+>>> +++ b/drivers/usb/typec/tcpm/Kconfig
+>>> @@ -31,6 +31,7 @@ endif # TYPEC_TCPCI
+>>>
+>>>  config TYPEC_FUSB302
+>>>         tristate "Fairchild FUSB302 Type-C chip driver"
+>>> +       depends on EXTCON=n || EXTCON=y || (EXTCON=m && m)
+>> Ugh.  We need a better "pattern" for stuff like this, it's getting more
+>> and more frequent.
+>>
+>> And no, I don't have a better idea :(
+> I think this works:
 >
-> On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
-> > Hi!
-> >
-> > > The RTC module on the A23 was claimed to be the same as on the A31, when
-> > > in fact it is not. The A31 does not have an RTC external clock output,
-> > > and its internal RC oscillator's average clock rate is not in the same
-> > > range. The A33's RTC is the same as the A23.
-> > >
-> > > This patch fixes the compatible string and clock properties to conform
-> > > to the updated bindings. The register range is also fixed.
-> >
-> > No, this is not okay for v4.19. New compatible is not in
-> > ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
+>         depends on EXTCON || !EXTCON
+It seems to be better and works when I test the above patch.
+
+Thanks,
+zhong jiang
+> thanks,
 >
-> Good catch, I would have thought both of those would happen at the same
-> time.
 
-(Fixed Maxime's email)
 
-Neither were marked for stable. I guess Sasha's auto selection bot is at
-work here. Is there anything we can do to prevent them from being selected?
-For sunxi, we pretty much don't expect things to be backported, unless
-something critical was fixed.
-
-Thanks
-
-ChenYu
-
-> Now dropped, thanks.
->
-> greg k-h
