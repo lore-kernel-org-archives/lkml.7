@@ -2,192 +2,166 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A25C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281EDC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD614214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:28:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFknJIJN"
+	by mail.kernel.org (Postfix) with ESMTP id ED32F214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:29:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576186180;
+	bh=8Wowg5V6SXmd4dQi9NTO8PQLQmoKCLNZs2KZBgwQU2A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=vfRWDpG0wq2gS1m5gjmA+r5ohlx8ElyUAsBnKanxPRD1IQGfJZihWwsbWwjHwYqHe
+	 pBg2oYKUmV7FJoo60v85wNWOF6usj4evvZxuyIwK8QnN5IYPsN6atJOJKomCJeFrFn
+	 8ZdB+fN2SMrSQ77zGTf7M5zqBlzpnAMum/4UZNvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731090AbfLLV2F (ORCPT
+        id S1731101AbfLLV3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:28:05 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35184 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731040AbfLLV2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:28:05 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so228454pgk.2;
-        Thu, 12 Dec 2019 13:28:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D/gv7eytCwvP7hIyDmJBH2pwd4vDwIqS68/F/jtBrbU=;
-        b=eFknJIJNiil5F7PUR+gHKjhDpm10AC+X7Qnb0xCyWsoJRpWKmQsQpFMmP9xgr7Ce9J
-         A61tfE2oPwHitKCYXIHXbPfcUYOMZslJ8+hGb+SCYnsLu96xPawRQeHMAdG0jE+qycBj
-         dpNjyYSftQYwEFFCPhR9dGo9tnkQOA9QhgDkyrKyqkRbAkkTmq/kKKon2FKbgL0Zgntl
-         qAZlGWEozUHMlu6jFdIeD0uAGzfXg6saraQuhaHiu+EtCXsfx0GQ6+x4WE5F06i9FxvJ
-         c0zu/Vbb8QrW5Zh017NXJTT0elYiaH2BmKI0i5icQkPJr8ewpL4oHBtgGziHuTEv6a4G
-         MnWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D/gv7eytCwvP7hIyDmJBH2pwd4vDwIqS68/F/jtBrbU=;
-        b=oBG9TNdRrexC/BXRqgtIJ0uc0d8U34bNYVERLU2/eE4yU/p+352iczRMRsMys3kYxy
-         NIEz70hi3DEXRYhFbVtErH68DLk66WQDi9vqAOXcMjzaQKiPzz3gocf2Rim6kDGJ3J83
-         Sokel4Wal4EmMlLLKFsFOgCRZ1o3O0ooz8I5RNWZkCvvUFM7qHPxyR8CJCFJjy2ul8FP
-         3j3Q19mWWQ+PsyYcXYbD9hwAqx7Ku5VqvRwJGBxgVmDtCc/twqT5KM2Mk2Si7OeUvppr
-         r/Lwj0yT1QNbnGo3VO5PYHoppg37m8TwRKOVQbBbHHGsbq8atVYlN4tNYWYXomfbwlPt
-         FiPA==
-X-Gm-Message-State: APjAAAWWISps4hfeZrkwgszda7U0HxTDhbvqCPvIiAm567JZjUAhMxt3
-        A2aZtuN9XTdGtzlSmQFfGjY=
-X-Google-Smtp-Source: APXvYqwiF1zBZxfO3KLzlfcFvL6W+z5uHLsDMIHhT3FRbyLkJ+LG0Gd0hZgzNESr4nwKGacBAkKpgw==
-X-Received: by 2002:a62:e519:: with SMTP id n25mr12079467pff.220.1576186084062;
-        Thu, 12 Dec 2019 13:28:04 -0800 (PST)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::b509])
-        by smtp.gmail.com with ESMTPSA id 20sm7844486pgw.71.2019.12.12.13.28.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 13:28:03 -0800 (PST)
-Date:   Thu, 12 Dec 2019 13:28:00 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Andrii Nakryiko <andriin@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
-Message-ID: <20191212212759.mhzrlqj5brcyfwgb@ast-mbp.dhcp.thefacebook.com>
-References: <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
- <20191211200924.GE3105713@mini-arch>
- <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
- <20191212025735.GK3105713@mini-arch>
- <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
- <20191212162953.GM3105713@mini-arch>
- <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
- <20191212104334.222552a1@cakuba.netronome.com>
- <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
- <20191212122115.612bb13b@cakuba.netronome.com>
+        Thu, 12 Dec 2019 16:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731067AbfLLV3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:29:39 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD8402054F;
+        Thu, 12 Dec 2019 21:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576186178;
+        bh=8Wowg5V6SXmd4dQi9NTO8PQLQmoKCLNZs2KZBgwQU2A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=V5RKeHQ9a9KdRLvZdxd5Dc72m6H6D2KCCRw5jUO301Obli6gN9ibNNCTHU1FFH3zh
+         y7q0Vm0PH4DR3hp2kJekphvHEyAnkMTyP3f+dDUWCcE9ZLEDrKQYfcKPfJI8l00nIa
+         behpVtbVmbo1KZBwtFHSA4x52JxbjIhqAlf3WEAs=
+Date:   Thu, 12 Dec 2019 15:29:36 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-rockchip@lists.infradead.org,
+        Shawn Lin <shawn.lin@rock-chips.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vicente Bergas <vicencb@gmail.com>
+Subject: Re: [PATCH] PCI: rockchip: Fix register number offset to program IO
+ outbound ATU
+Message-ID: <20191212212936.GA13645@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212122115.612bb13b@cakuba.netronome.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20191211093450.7481-1-enric.balletbo@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:21:15PM -0800, Jakub Kicinski wrote:
-> > > 
-> > >   There absolutely nothing this tool needs from [bpftool], no
-> > >   JSON needed, no bpffs etc.   
-> > 
-> > To generate vmlinux.h bpftool doesn't need json and doesn't need bpffs.
+[+cc Vicente]
+
+On Wed, Dec 11, 2019 at 10:34:50AM +0100, Enric Balletbo i Serra wrote:
+> Since commit '62240a88004b ("PCI: rockchip: Drop storing driver private
+> outbound resource data)' the offset calculation is wrong to access the
+> register number to program the IO outbound ATU. The offset should be
+> based on the IORESOURCE_MEM resource size instead of the IORESOURCE_IO
+> size.
+>
+> ...
+
+> Fixes: 62240a88004b ("PCI: rockchip: Drop storing driver private outbound resource data)
+> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Suggested-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Thanks, I applied this with Vicente's reported-by and tested-by and
+Andrew's ack to for-linus for v5.5.
+
+I'm confused about "msg_bus_addr".  It is computed as
+"entry->res->start - entry->offset + <other stuff>".  A struct
+resource contains a CPU physical address, and adding entry->offset
+gets you a PCI bus address.  But later rockchip_pcie_probe() calls
+devm_ioremap(rockchip->msg_bus_addr), which expects a CPU physical
+address.  So it looks like we're passing a PCI bus address when we
+should be passing a CPU physical address.  What am I missing?
+
+For the future, I do think we should consider:
+
+  - Renaming rockchip_pcie_prog_ob_atu() and
+    rockchip_pcie_prog_ib_atu() so they match
+    dw_pcie_prog_outbound_atu() and dw_pcie_prog_inbound_atu().
+
+  - Changing the rockchip_pcie_prog_ob_atu() and
+    rockchip_pcie_prog_ib_atu() interfaces so they take a 64-bit
+    pci_addr/cpu_addr instead of 32-bit lower_addr and upper_addr,
+    also to follow the dw examples.
+
+  - Renaming the rockchip_pcie_cfg_atu() local "offset" to "index" or
+    similar since it's a register number, not a memory or I/O space
+    offset.
+
+  - Reworking the rockchip_pcie_cfg_atu() loops.  Currently there are
+    three different ways to compute the register number.  The
+    msg_bus_addr computation is split between the top and bottom of
+    the function and uses "reg_no" left over from the IO loop and
+    "offset" left from the memory loop.  Maybe something like this:
+
+      rockchip_pcie_prog_inbound_atu(rockchip, 2, 32 - 1, 0);
+
+      atu_idx = 1;
+
+      mem = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
+      mem_entries = resource_size(mem->res) >> 20;
+      mem_pci_addr = mem->res->start - mem->offset;
+      for (i = 0; i < mem_entries; i++, atu_idx++)
+        rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
+                                        AXI_WRAPPER_MEM_WRITE, 20 - 1,
+                                        mem_pci_addr + (i << 20));
+
+      io = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
+      io_entries = resource_size(entry->res) >> 20;
+      io_pci_addr = io->res->start - io->offset;
+      for (i = 0; i < io_entries; i++, atu_idx++)
+        rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
+                                        AXI_WRAPPER_IO_WRITE, 20 - 1,
+                                        io_pci_addr + (i << 20));
+
+      rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
+                                      AXI_WRAPPER_NOR_MSG, 20 - 1, 0);
+      rockchip->msg_bus_addr = mem_pci_addr +
+        (mem_entries + io_entries) << 20);
+
+> ---
 > 
-> At least for header generation it pertains to the running system.
-> And bpftool was (and still is AFAICT) about interacting with the BPF
-> state on the running system.
-
-No. Reality is different. vmlinux.h generation doesn't need to touch
-kernel on the running system. Part of its job is to generate multiple
-vmlinux.h from a set of vmlinux elf files. Different .h for different kernels.
-It can generate vmlinux.h from running kernel too, but its less relevant
-to make use of CO-RE.
-In the future bpftool will be used to merge such multiple .h-s.
-Likely it will first merge BTFs from vmlinuxes and then will produce
-merged vmlinux_4_x_and_5_x.h
-
-> > > It can be a separate tool like
-> > >   libbpf-skel-gen or libbpf-c-skel or something, distributed with libbpf.
-> > >   That way you can actually soften the backward compat. In case people
-> > >   become dependent on it they can carry that little tool on their own.  
-> > 
-> > Jakub,
-> > 
-> > Could you please consider Andrii's reply to your comment from two days ago:
-> > https://lore.kernel.org/bpf/CAEf4BzbeZbmCTOOo2uQXjm0GL0WDu7aLN6fdUk18Nv2g0kfwVg@mail.gmail.com/
-> > "we are trying to make users lives easier by having major distributions
-> > distribute bpftool and libbpf properly. Adding extra binaries to
-> > distribute around doesn't seem to be easing any of users pains."
+>  drivers/pci/controller/pcie-rockchip-host.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> Last time we argued I heard how GH makes libbpf packaging easier.
-> Only to have that dis-proven once the people in Europe who do distro
-> packaging woke up:
+> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
+> index d9b63bfa5dd7..94af6f5828a3 100644
+> --- a/drivers/pci/controller/pcie-rockchip-host.c
+> +++ b/drivers/pci/controller/pcie-rockchip-host.c
+> @@ -834,10 +834,12 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
+>  	if (!entry)
+>  		return -ENODEV;
+>  
+> +	/* store the register number offset to program RC io outbound ATU */
+> +	offset = size >> 20;
+> +
+>  	size = resource_size(entry->res);
+>  	pci_addr = entry->res->start - entry->offset;
+>  
+> -	offset = size >> 20;
+>  	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
+>  		err = rockchip_pcie_prog_ob_atu(rockchip,
+>  						reg_no + 1 + offset,
+> -- 
+> 2.20.1
 > 
-> https://lkml.org/lkml/2019/12/5/101
-> https://lkml.org/lkml/2019/12/5/312
-
-I think you missed the point of these two comments. It was about packaging
-bpftool and libbpf together. Regardless how bpftool is packaged. I still
-strongly suggest to use github/libbpf to package libbpf. It's something that is
-actually tested whereas libbpf in the kernel tree has unit test coverage only.
-
-> 
-> > My opinion is the following.
-> > bpftool is necessary to write bpf programs already. It's necessary to produce
-> > vmlinux.h for bpf programs to include it. It's part of build process. I can
-> > relate to Stan's complains that he needs to update clang and pahole. He missed
-> > the fact that he needs to update bpftool too if he wants to use all features of
-> > CO-RE. Same thing for skeleton generation. If people need to run the latest
-> > selftest/bpf on the latest kernel they need to upgrade to the latest clang,
-> > pahole, libbpf, bpftool. Nothing new here.
-> 
-> They have to update libbpf, so why can't the code gen tool be part of
-> libbpf? 
-
-I'm not sure why two answers were not enough.
-No idea how to answer this question differently for the third time.
-
-> > Backwards compat is the same concern for skeleton generation and for vmlinux.h
-> > generation. Obviously no one wants to introduce something that will keep
-> > changing. Is vmlinux.h generation stable? I like to believe so. Same with
-> > skeleton. I wouldn't want to see it changing, but in both cases such chance
-> > exists. 
-> 
-> vmlinux.h is pretty stable, there isn't much wiggle room there.
-
-Do you have experience working with vmlinux.h? I bet the answer is no.
-While we have and identified few things that needs improvement.
-They require vmlinux.h to be generated differently.
-
-> It's more of a conversion tool, if you will.
-> 
-> Skeleton OTOH is supposed to make people's lives easier, so it's a
-> completely different beast. It should be malleable so that users can
-> improve and hack on it. Baking it into as system tool is counter
-> productive. Users should be able to grab the skel tool single-file
-> source and adjust for their project's needs. Distributing your own copy
-> of bpftool because you want to adjust skel is a heavy lift.
-
-Adjust generator for their custom needs? essentially fork it for
-private use? I'd rather prevent such possibility.
-When people start using it I'd prefer they come back to this mailing
-list with patches than do 'easy fork'.
-
-> > Now consider if vmlinux.h and skeleton generation is split out of bpftool into
-> > new tool. Effectively it would mean a fork of bpftool. Two binaries doing bpf
-> > elf file processing without clear distinction between them is going to be very
-> > confusing.
-> 
-> To be clear I'm suggesting skel gen is a separate tool, vmlinux and
-> Quentin's header gen work on the running system, they are not pure
-> build env tools.
-
-You meant to say Andrii's header generator that is based on Quentin's man page
-generator. Its output bpf_helper_defs.h makes sense as a part of libbpf
-package. The generator script itself doesn't need to be included with any package.
-bpftool vmlinux gen consumes vmlinux elf files and is a part of the build.
-bpftool skeleton gen consumes bpf elf files and is a part of the same build.
-
