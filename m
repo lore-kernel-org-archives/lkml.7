@@ -2,52 +2,51 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCA8C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1A6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F6C722527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F412173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AdH+nTjO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ABuTfH8H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbfLLN4I (ORCPT
+        id S1729589AbfLLN4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:56:08 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56928 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729429AbfLLN4F (ORCPT
+        Thu, 12 Dec 2019 08:56:13 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40770 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729485AbfLLN4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 08:56:05 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDti1m130359;
-        Thu, 12 Dec 2019 07:55:44 -0600
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtqSw063125;
+        Thu, 12 Dec 2019 07:55:52 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576158944;
-        bh=0iLDWJMQzCj3Znd8rcYL8KQNQ37u7msZ1UlTKw8z0pc=;
-        h=From:To:CC:Subject:Date;
-        b=AdH+nTjOUFattoYbz5vKh2MjG+4yqS1zif/iNhB21H+DZbRiO20JjhhW8xOvy3Y04
-         wn+MTpkS88eSIfWD0CaxGGtvldkKfB3oAJL2hhXZdyf1cRvxBy1Nkywn/ozs+9epDi
-         AkZ22nws08ke9QXgRFRV//PMXcYwY/441UCJJz9I=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCDtiJX044250
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 07:55:44 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        s=ti-com-17Q1; t=1576158952;
+        bh=/VjfGP3WRkp95PceeWAWMC/LGOv+vDTnn9JLhZJ8NM4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ABuTfH8HNFdORfuhcBqXcsaqeQmzQvcV/Q9Ok0dDxOkbf2JsUpcFq8HtX/18ok+Jf
+         LFENwjNTmAr+Cxw6xLoZNRLgucxKnqGfma3cSum7Hy/8pLl1Vu/FWwSuCWPFI+0BIC
+         4I3eQPPF5PNOJciIP6uCEwew1yiihdZgUhhXS6+g=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtqeb116351;
+        Thu, 12 Dec 2019 07:55:52 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 07:55:44 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 07:55:51 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 07:55:43 -0600
+ Frontend Transport; Thu, 12 Dec 2019 07:55:51 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqQ048444;
-        Thu, 12 Dec 2019 07:55:40 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqS048444;
+        Thu, 12 Dec 2019 07:55:48 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <nsaenzjulienne@suse.de>,
         <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -59,10 +58,12 @@ CC:     <vkoul@kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-rpi-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 0/9] spi: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Thu, 12 Dec 2019 15:55:41 +0200
-Message-ID: <20191212135550.4634-1-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/9] spi: bcm2835: Release the DMA channel if probe fails after dma_init
+Date:   Thu, 12 Dec 2019 15:55:43 +0200
+Message-ID: <20191212135550.4634-3-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191212135550.4634-1-peter.ujfalusi@ti.com>
+References: <20191212135550.4634-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -72,44 +73,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The DMA channel was not released if either devm_request_irq() or
+devm_spi_register_controller() failed.
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
-
-With dma_request_chan() drivers can receive the real error code and can support
-deferred probing against DMA.
-
-The series has been compile tested only (allyesconfig).
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (9):
-  spi: atmel: Use dma_request_chan() instead dma_request_slave_channel()
-  spi: bcm2835: Release the DMA channel if probe fails after dma_init
-  spi: bcm2835: Use dma_request_chan() instead
-    dma_request_slave_channel()
-  spi: img-spfi: Use dma_request_chan() instead
-    dma_request_slave_channel()
-  spi: mxs: Use dma_request_chan() instead dma_request_slave_channel()
-  spi: sirf: Use dma_request_chan() instead dma_request_slave_channel()
-  spi: spi-fsl-dspi: Use dma_request_chan() instead
-    dma_request_slave_channel()
-  spi: stm32-qspi: Use dma_request_chan() instead
-    dma_request_slave_channel()
-  spi: stm32: Use dma_request_chan() instead dma_request_slave_channel()
+ drivers/spi/spi-bcm2835.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- drivers/spi/spi-atmel.c      | 29 ++++++++++----------------
- drivers/spi/spi-bcm2835.c    | 40 +++++++++++++++++++++++++-----------
- drivers/spi/spi-fsl-dspi.c   | 12 +++++------
- drivers/spi/spi-img-spfi.c   | 18 ++++++++++++++--
- drivers/spi/spi-mxs.c        |  6 +++---
- drivers/spi/spi-sirf.c       | 12 +++++------
- drivers/spi/spi-stm32-qspi.c | 30 +++++++++++++++++++++------
- drivers/spi/spi-stm32.c      | 32 ++++++++++++++++++++---------
- 8 files changed, 116 insertions(+), 63 deletions(-)
-
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index fb61a620effc..662d55e9f21d 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -1327,20 +1327,22 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 			       dev_name(&pdev->dev), ctlr);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
+-		goto out_clk_disable;
++		goto out_dma_release;
+ 	}
+ 
+ 	err = devm_spi_register_controller(&pdev->dev, ctlr);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not register SPI controller: %d\n",
+ 			err);
+-		goto out_clk_disable;
++		goto out_dma_release;
+ 	}
+ 
+ 	bcm2835_debugfs_create(bs, dev_name(&pdev->dev));
+ 
+ 	return 0;
+ 
++out_dma_release:
++	bcm2835_dma_release(ctlr, bs);
+ out_clk_disable:
+ 	clk_disable_unprepare(bs->clk);
+ out_controller_put:
 -- 
 Peter
 
