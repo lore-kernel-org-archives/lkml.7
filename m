@@ -2,82 +2,166 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53820C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3F0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC7A2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sL9QHEKU"
+	by mail.kernel.org (Postfix) with ESMTP id C28822253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576179664;
+	bh=3mdH5uJVVqe6b0uV/b7ne6K15jv7ISIqE7RpR8fkSo8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eE9NvUgHI1Lsbx35i4mgeAUHyc4ZxFRItMMMZTEWzG9s8Pj0z5CE6aKJ8cm55vSyR
+	 3Qjqff0ie1hJGtjPGTFZyBUiABEWpAg0ZTZ8glGeCJ7y+hapjeL7omHiiMI24zxK0M
+	 HcozHqL75/DfjAYN1Vp8Ih/Q7N9T5XhC3hO5dHDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfLLTin (ORCPT
+        id S1730654AbfLLTlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:38:43 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46801 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730284AbfLLTim (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:38:42 -0500
-Received: by mail-pg1-f193.google.com with SMTP id z124so17460pgb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:38:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=nO1Xvte7AHlIbFQy+ePVzlUeHQ3CsGcG48YlqFHOTlw=;
-        b=sL9QHEKUW7AQpOsREX++fq+CABCPzEVaWhNpvN+2nVXu97o+mwotR0gpjkBNB0WDCc
-         BoZLZld9YORyrUkh1GWkJoK4M+o50hULQuYMjuSvr7+WHJy3Q76DF0xyzyJjzow+gI81
-         CS/44yThSAuTvgNo+qTEf/JNSns4UqYQJP4hYjOWLmA1EOmlTEfDmsAtCfFZD8k5pqsW
-         H+gDh1HVb8dee7euqzphzNu16t4IJufA/2nWid3ePpjh7Nym6pDnbXge6dutrXncdvrv
-         1CwP9xRoj9eLlFP0YOOs2oWye36ZnrTAv58m6A1CwE31VsIOMI+TxUZ9lpf+5QoHJvdj
-         tFtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=nO1Xvte7AHlIbFQy+ePVzlUeHQ3CsGcG48YlqFHOTlw=;
-        b=qZM0NPoBX7izedHWMCDmLX5PYVmJeViG0fgaYMV61/aWz8aeXeY7LzVtUSD0+48PN/
-         xNKtGBvR5LtKodypJCYjOzke0CAp1+wmWJL18cjE/UY/V4nOsJ/MLcGECy7gwNTN4UpN
-         R2ATF26w0RhMwq1EmnBHl1exH6yYgj5/+LXGm3uBSzP1faQKF778sBhGKj4VtH9xw1a+
-         S6OKsSY9mAbPccC8PV8qj9kb/015x8m2asuWDQoruW1snpPBekLpbXEH6/mWo2D+bXPG
-         gSg6ukZ8FvhIceLEbS4vwZfRO2D3ilKsrCeaSKNac6o9lk88MdHY/dKB7nAaszaGr+r1
-         Fplw==
-X-Gm-Message-State: APjAAAWeAsGrVcQ6wVGb+clsUymBIxiotC9kRGloUVb+o4ar7dUFp+JB
-        2ijYjjby2jlZalLMFOScPXqmDw==
-X-Google-Smtp-Source: APXvYqzLzdjr2HqsdVrX5PuBO0uJYGQpjtYnz8xrey+lYpgLwL0QgLIlxLijTHUj4J1SIZPlrthuyA==
-X-Received: by 2002:a63:cc4f:: with SMTP id q15mr12527612pgi.159.1576179521721;
-        Thu, 12 Dec 2019 11:38:41 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id x7sm3542837pfp.93.2019.12.12.11.38.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 11:38:41 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        narmstrong@baylibre.com, mchehab@kernel.org,
-        hverkuil-cisco@xs4all.nl, devicetree@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Add support of CEC wakeup on Amlogic G12 and SM1 SoCs
-In-Reply-To: <20191212145925.32123-1-glaroque@baylibre.com>
-References: <20191212145925.32123-1-glaroque@baylibre.com>
-Date:   Thu, 12 Dec 2019 11:38:40 -0800
-Message-ID: <7hpngtjpvj.fsf@baylibre.com>
+        Thu, 12 Dec 2019 14:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730284AbfLLTlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:41:03 -0500
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673D3227BF
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 19:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576179662;
+        bh=3mdH5uJVVqe6b0uV/b7ne6K15jv7ISIqE7RpR8fkSo8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OZovex24FGJneMwgx2EDsdJl+8WhEdW3+H1iZrlBGsvnanfDpx+cPqP1UJ9mO27tw
+         BUhYuW86mpRdbQfo1Mvjs9gHHFSB5h0iy06YDKFGhQU6g0uZbDvW1OBkii78WPrScR
+         18WphFUqKkunluSkP37QdHdgcSL+sJkBFJ0zbyuE=
+Received: by mail-wr1-f51.google.com with SMTP id q10so4012994wrm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:41:02 -0800 (PST)
+X-Gm-Message-State: APjAAAU5OFMxeJv6cxlqQu9YQlDnQ6WgeQpMLVOkRGXYobjpW9VwWoKD
+        lrPJCEDJD6kKNUAYMEo39xboRYahLWdRwxrsw03zLg==
+X-Google-Smtp-Source: APXvYqzI/kwPwq2F8DDKlhALkyGBDaEmukQnDgvmTxM5D0RNlH70QBZtezYOEVACQL/pNf1U1rC/RbBDjFfhxcf9CGU=
+X-Received: by 2002:adf:eb09:: with SMTP id s9mr8477929wrn.61.1576179660775;
+ Thu, 12 Dec 2019 11:41:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
+ <20191121185303.GB199273@romley-ivt3.sc.intel.com> <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
+ <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
+ <20191122092555.GA4097@hirez.programming.kicks-ass.net> <3908561D78D1C84285E8C5FCA982C28F7F4DD19F@ORSMSX115.amr.corp.intel.com>
+ <20191122203105.GE2844@hirez.programming.kicks-ass.net> <CALCETrVjXC7RHZCkAcWEeCrJq7DPeVBooK8S3mG0LT8q9AxvPw@mail.gmail.com>
+ <20191211175202.GQ2827@hirez.programming.kicks-ass.net> <CALCETrXUZ790WFk9SEzuiKg-wMva=RpWhZNYPf+MqzT0xdu+gg@mail.gmail.com>
+ <20191211223407.GT2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20191211223407.GT2844@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 12 Dec 2019 11:40:48 -0800
+X-Gmail-Original-Message-ID: <CALCETrUr+LwpQm5caeKgXGhaZ87HmcNn4wTsmkPzTEptp6sC6g@mail.gmail.com>
+Message-ID: <CALCETrUr+LwpQm5caeKgXGhaZ87HmcNn4wTsmkPzTEptp6sC6g@mail.gmail.com>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guillaume La Roque <glaroque@baylibre.com> writes:
+On Wed, Dec 11, 2019 at 2:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Dec 11, 2019 at 10:12:56AM -0800, Andy Lutomirski wrote:
 
-> this patchset add support of CEC wakeup.
-> We need to set logical address and activate some options in registers before going in suspend.
-> Registers address and options values come from amlogic driver.
+> > > Sure, but we're talking two cpus here.
+> > >
+> > >         u32 var = 0;
+> > >         u8 *ptr = &var;
+> > >
+> > >         CPU0                    CPU1
+> > >
+> > >                                 xchg(ptr, 1)
+> > >
+> > >         xchg((ptr+1, 1);
+> > >         r = READ_ONCE(var);
+> > >
+> > > AFAICT nothing guarantees r == 0x0101. The CPU1 store can be stuck in
+> > > CPU1's store-buffer. CPU0's xchg() does not overlap and therefore
+> > > doesn't force a snoop or forward.
+> >
+> > I think I don't quite understand.  The final value of var had better
+> > be 0x0101 or something is severely wrong.
+>
+> > But r can be 0x0100 because
+> > nothing in this example guarantees that the total order of the locked
+> > instructions has CPU 1's instruction first.
+>
+> Assuming CPU1 goes first, why would the load from CPU0 see CPU1's
+> ptr[0]? It can be in CPU1 store buffer, and TSO allows regular reads to
+> ignore (remote) store-buffers.
 
-Tested-by: Kevin Hilman <khilman@baylibre.com>
+What I'm saying is: if CPU0 goes first, then the three operations order as:
 
+
+
+xchg(ptr+1, 1);
+r = READ_ONCE(var);  /* 0x0100 */
+xchg(ptr, 1);
+
+Anyway, this is all a bit too hypothetical for me.  Is there a clear
+example where the total ordering of LOCKed instructions is observable?
+ That is, is there a sequence of operations on, presumably, two or
+three CPUs, such that LOCKed instructions being only partially ordered
+allows an outcome that is disallowed by a total ordering?  I suspect
+there is, but I haven't come up with it yet.  (I mean in an x86-like
+memory model.  Getting this in a relaxed atomic model is easy.)
+
+As a probably bad example:
+
+u32 x0, x1, a1, b0, b1;
+
+CPU 0:
+xchg(&x0, 1);
+barrier();
+a1 = READ_ONCE(x1);
+
+CPU 1:
+xchg(&b, 1);
+
+CPU 2:
+b1 = READ_ONCE(x1);
+smp_rmb();  /* which is just barrier() on x86 */
+b0 = READ_ONCE(x0);
+
+Suppose a1 == 0 and b1 == 1.  Then we know that CPU0's READ_ONCE
+happened before CPU1's xchg and hence CPU0's xchg happened before
+CPU1's xchg.  We also know that CPU2's first read observed the write
+from CPU1's xchg, which means that CPU2's second read should have been
+after CPU0's xchg (because the xchg operations have a total order
+according to the SDM).  This means that b0 can't be 0.
+
+Hence the outcome (a1, b1, b0) == (0, 1, 0) is disallowed.
+
+It's entirely possible that I screwed up the analysis.  But I think
+this means that the cache coherency mechanism is doing something more
+intelligent than just shoving the x0=1 write into the store buffer and
+letting it hang out there.  Something needs to make sure that CPU 2
+observes everything in the same order that CPU 0 observes, and, as far
+as I know it, there is a considerable amount of complexity in the CPUs
+that makes sure this happens.
+
+So here's my question: do you have a concrete example of a series of
+operations and an outcome that you suspect Intel CPUs allow but that
+is disallowed in the SDM?
+
+--Andy
