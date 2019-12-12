@@ -2,106 +2,69 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B84C04E30
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25D6C04E30
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02511214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dnu12qoc"
+	by mail.kernel.org (Postfix) with ESMTP id 926B7214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfLLDlv (ORCPT
+        id S1727517AbfLLDns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:41:51 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35133 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbfLLDlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:41:50 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YKNQ6p0Nz9sSQ;
-        Thu, 12 Dec 2019 14:41:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1576122106;
-        bh=qNe+Q/0e/+XGLzL9L0UcJVLDaBn2jLogw36ETox1VAg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dnu12qocJMzXWYPB9VglDV1fzeST+kv4DG2SjmO0uO0BWUXuB8PyLijF3lUFdH9Ly
-         d4g4E41jA/sczThluJawDZlpuV3dVxLq3OcByJcFLKxvfhg/oN5ZIVP5Nj5A2Z0UT7
-         GRhORy7tM5yVGyNZON8VE/WFp4wxdJq74jdVfczrW9RqpknHY5JTAHKP3YY15U/Zqs
-         uPmyCp6Mwr5xqXaX2jBjUQbpugw9B2KssILxZk2zZxOizXQh9OHJoMvkgZy48cbisy
-         W5Gba2XT4gJjshk5vL5gm77/Jn9lLGNHdRJd4dP0kNR2fBK+Wr0Nu0w1DFMv2KIJDJ
-         V76xkMs79/yXw==
-Date:   Thu, 12 Dec 2019 14:41:41 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kees Cook <keescook@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>
-Subject: linux-next: manual merge of the kspp tree with the bpf-next tree
-Message-ID: <20191212144141.62a303cb@canb.auug.org.au>
+        Wed, 11 Dec 2019 22:43:48 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48054 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727381AbfLLDnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:43:47 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 31912E95EE8E62413E16;
+        Thu, 12 Dec 2019 11:43:45 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 12 Dec 2019 11:43:36 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
+Subject: [PATCH] sched/fair: fix function name in comment
+Date:   Thu, 12 Dec 2019 11:40:51 +0800
+Message-ID: <20191212034051.161513-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CDuDp1dY65J4_qh1hIpJPMW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/CDuDp1dY65J4_qh1hIpJPMW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Function name "init_sched_domains" has been modified to
+"sched_init_domains" in commit 8d5dc5126bb2
+("sched/topology: Small cleanup"). Fix the function name
+"init_sched_domains" in comment.
 
-Hi all,
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Today's linux-next merge of the kspp tree got a conflict in:
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 08a233e..c872fd4 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9512,7 +9512,7 @@ void update_max_interval(void)
+  * It checks each scheduling domain to see if it is due to be balanced,
+  * and initiates a balancing operation if so.
+  *
+- * Balancing parameters are set up in init_sched_domains.
++ * Balancing parameters are set up in sched_init_domains.
+  */
+ static void rebalance_domains(struct rq *rq, enum cpu_idle_type idle)
+ {
+-- 
+2.7.4
 
-  net/bpf/test_run.c
-
-between commit:
-
-  b590cb5f802d ("bpf: Switch to offsetofend in BPF_PROG_TEST_RUN")
-
-from the bpf-next tree and commit:
-
-  c593642c8be0 ("treewide: Use sizeof_field() macro")
-
-from the kspp tree.
-
-I fixed it up (I just used the former version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/CDuDp1dY65J4_qh1hIpJPMW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xtvUACgkQAVBC80lX
-0Gy5pQf9EDmaBbrtUKq4iQKL3KWPYk1mq6qW+ZrvzwDMG6pZMBgOpV3nWNxM8q99
-BqEFQpFmhdd7Oqp73udyXcFvOkePbWniAJzYOMqrQJGwT8VLpBw/AUqDZO7KmlVH
-zQ8aYxacx7GONv9dbFL+NDpkdtgawB2zlhsEuL7koRlyC9s7dtjHktcmyTSDsy2t
-rWXzU+/40HNbqKU1suHSoRN3LycL9QUFjXS8B+rBNtkuVfa0LDqnPNEkhn4ctBuk
-FZfGrcmbbsoZNFd4hXApjFwkZk3bgwcBXOUPE/2mfCOBK7OL7+ibRMg6Ywi413mW
-IKO3+t2qz8TwIJYj8gj3T+vR7vZn0w==
-=t6+P
------END PGP SIGNATURE-----
-
---Sig_/CDuDp1dY65J4_qh1hIpJPMW--
