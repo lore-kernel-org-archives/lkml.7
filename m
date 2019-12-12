@@ -2,119 +2,97 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E4C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B0EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB7C2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2437C2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:04:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pe5grwTE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qk+JfLLq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfLLPDw (ORCPT
+        id S1728818AbfLLPEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:03:52 -0500
-Received: from mailgw01.mediatek.com ([216.200.240.184]:42039 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfLLPDw (ORCPT
+        Thu, 12 Dec 2019 10:04:36 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59264 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728624AbfLLPEg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:03:52 -0500
-X-UUID: 19c4e568909043eb8a02ec1502cd1e2d-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=F7v29UFNtFNozY6v/Vmo8huw/9C0N0CfhqOK+BHJmfA=;
-        b=pe5grwTEbxdX+eTkwE4Ar8K4zi/1qUGrGJxUuCGROcDg5t2JSSCQA0QCVg3yEPHNjashIe2SJSO0ZU/xkS2AttIYkmEHisbN+8tf2AxYDn962cGDX4HAwEMwr5Wv3QluUZHSLJ+XtVlCwgK3WU1o5UFYCsmCNxY2o+YJMeCq6zU=;
-X-UUID: 19c4e568909043eb8a02ec1502cd1e2d-20191212
-Received: from mtkcas68.mediatek.inc [(172.29.94.19)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1856947062; Thu, 12 Dec 2019 07:03:50 -0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 07:04:04 -0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 23:03:32 +0800
-Message-ID: <1576163014.23763.90.camel@mtksdccf07>
-Subject: Re: [PATCH net-next 2/6] net: dsa: mt7530: Extend device data ready
- for adding a new hardware
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>
-Date:   Thu, 12 Dec 2019 23:03:34 +0800
-In-Reply-To: <d77e3109-e022-3581-2ca8-02889c5ddbf4@gmail.com>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
-         <2d546d6bb15ff8b4b75af2220e20db4e634f4145.1575914275.git.landen.chao@mediatek.com>
-         <d77e3109-e022-3581-2ca8-02889c5ddbf4@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 12 Dec 2019 10:04:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rnKPEPHq5zWJRr2D9M8D7b1LZbRScvFVrRnHqxj8R2Y=; b=Qk+JfLLq7VE+GfWfLz9sBZPDG
+        RbfdAD7UVvPSwk+5qsrwzipk3m6cYByNZmYuaEZDxb186BGsGu3DzU5KQzhPiTSNujtPXM8IP5/uS
+        996MttNeOxiAldY20deJCtPv6xa+LrcH+bbOlxznh0H0//johEHSu0frJ4N5Et3Cd74LKWfWp3T+s
+        FsnylRaDG6sDaEghhqcx7mSzQ9CnwZtYvJ6DJS8yy/X9Yg4CMtndj+OuPOOHad5DBt4nB13KYb/UO
+        V9t4f6VmybuDBuc1lgmBFe60y3GDRIgYr7Xm5ln1dac6hpLOrsUE/qWrythI3Y/oriSkR/SQ/Z1wM
+        w4Yfqghnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifQ11-0000oE-Pv; Thu, 12 Dec 2019 15:04:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 29CB4304D2B;
+        Thu, 12 Dec 2019 16:03:09 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9053920120E34; Thu, 12 Dec 2019 16:04:29 +0100 (CET)
+Date:   Thu, 12 Dec 2019 16:04:29 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Cheng Jian <cj.chengjian@huawei.com>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org,
+        chenwandun@huawei.com, xiexiuqi@huawei.com, liwei391@huawei.com,
+        huawei.libin@huawei.com, bobo.shaobowang@huawei.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org
+Subject: Re: [PATCH] sched/fair: Optimize select_idle_cpu
+Message-ID: <20191212150429.GZ2827@hirez.programming.kicks-ass.net>
+References: <20191212144102.181510-1-cj.chengjian@huawei.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212144102.181510-1-cj.chengjian@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTEyIGF0IDExOjQ1ICswODAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiANCj4gT24gMTIvMTAvMjAxOSAxMjoxNCBBTSwgTGFuZGVuIENoYW8gd3JvdGU6DQo+ID4g
-QWRkIGEgc3RydWN0dXJlIGhvbGRpbmcgcmVxdWlyZWQgb3BlcmF0aW9ucyBmb3IgZWFjaCBkZXZp
-Y2Ugc3VjaCBhcyBkZXZpY2UNCj4gPiBpbml0aWFsaXphdGlvbiwgUEhZIHBvcnQgcmVhZCBvciB3
-cml0ZSwgYSBjaGVja2VyIHdoZXRoZXIgUEhZIGludGVyZmFjZSBpcw0KPiA+IHN1cHBvcnRlZCBv
-biBhIGNlcnRhaW4gcG9ydCwgTUFDIHBvcnQgc2V0dXAgZm9yIGVpdGhlciBidXMgcGFkIG9yIGEN
-Cj4gPiBzcGVjaWZpYyBQSFkgaW50ZXJmYWNlLg0KPiA+IA0KPiA+IFRoZSBwYXRjaCBpcyBkb25l
-IGZvciByZWFkeSBhZGRpbmcgYSBuZXcgaGFyZHdhcmUgTVQ3NTMxLg0KPiA+IA0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IExhbmRlbiBDaGFvIDxsYW5kZW4uY2hhb0BtZWRpYXRlay5jb20+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0K
-PiBbc25pcF0NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyBi
-L2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+IGluZGV4IGVkMWVjMTBlYzYyYi4uOWE2NDhk
-MWY1ZDA5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+ICsr
-KyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+IEBAIC00MjUsNyArNDI1LDcgQEAgbXQ3
-NTMwX2ZkYl93cml0ZShzdHJ1Y3QgbXQ3NTMwX3ByaXYgKnByaXYsIHUxNiB2aWQsDQo+ID4gIH0N
-Cj4gPiAgDQo+ID4gIHN0YXRpYyBpbnQNCj4gPiAtbXQ3NTMwX3BhZF9jbGtfc2V0dXAoc3RydWN0
-IGRzYV9zd2l0Y2ggKmRzLCBpbnQgbW9kZSkNCj4gPiArbXQ3NTMwX3BhZF9jbGtfc2V0dXAoc3Ry
-dWN0IGRzYV9zd2l0Y2ggKmRzLCBwaHlfaW50ZXJmYWNlX3QgbW9kZSkNCj4gDQo+IEhlcmUgeW91
-IHBhc3MgYSBwaHlfaW50ZXJmYWNlX3QgYXJndW1lbnQgYnV0IG5vdCBpbiBtdDc2MzJfcGFkX2Ns
-a19zZXR1cCgpLg0KPiANCj4gPiArc3RhdGljIGludA0KPiA+ICttdDc1MzBfcGFkX3NldHVwKHN0
-cnVjdCBkc2Ffc3dpdGNoICpkcywgY29uc3Qgc3RydWN0IHBoeWxpbmtfbGlua19zdGF0ZSAqc3Rh
-dGUpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdDc1MzBfcHJpdiAqcHJpdiA9IGRzLT5wcml2Ow0K
-PiA+ICsNCj4gPiArCS8qIFNldHVwIFRYIGNpcmN1aXQgaW5jbHVpbmcgcmVsZXZhbnQgUEFEIGFu
-ZCBkcml2aW5nICovDQo+ID4gKwltdDc1MzBfcGFkX2Nsa19zZXR1cChkcywgc3RhdGUtPmludGVy
-ZmFjZSk7DQo+ID4gKw0KPiA+ICsJaWYgKHByaXYtPmlkID09IElEX01UNzUzMCkgew0KPiA+ICsJ
-CS8qIFNldHVwIFJYIGNpcmN1aXQsIHJlbGV2YW50IFBBRCBhbmQgZHJpdmluZyBvbiB0aGUNCj4g
-PiArCQkgKiBob3N0IHdoaWNoIG11c3QgYmUgcGxhY2VkIGFmdGVyIHRoZSBzZXR1cCBvbiB0aGUN
-Cj4gPiArCQkgKiBkZXZpY2Ugc2lkZSBpcyBhbGwgZmluaXNoZWQuDQo+ID4gKwkJICovDQo+ID4g
-KwkJbXQ3NjIzX3BhZF9jbGtfc2V0dXAoZHMpOw0KPiANCj4gV291bGQgbm90IGl0IG1ha2Ugc2Vu
-c2UgdG8gcGFzcyBpdCBkb3duIGhlcmUgYXMgd2VsbCBmb3IgY29uc2lzdGVuY3k/DQptdDc2MjNf
-cGFkX2NsaygpIGNvbnRhaW5zIHRoZSBzZXR0aW5nIGZvciBQSFlfSU5URVJGQUNFX01PREVfVFJH
-TUlJLiBJdA0KaXMgcmVhbGx5IGJldHRlciB0byBwYXNzIHBoeV9pbnRlcmZhY2VfdCBmb3IgZXJy
-b3IgaGFuZGxpbmcuDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gQEAgLTE2NjAsOCArMTc2OCwxOSBA
-QCBtdDc1MzBfcHJvYmUoc3RydWN0IG1kaW9fZGV2aWNlICptZGlvZGV2KQ0KPiA+ICAJLyogR2V0
-IHRoZSBoYXJkd2FyZSBpZGVudGlmaWVyIGZyb20gdGhlIGRldmljZXRyZWUgbm9kZS4NCj4gPiAg
-CSAqIFdlIHdpbGwgbmVlZCBpdCBmb3Igc29tZSBvZiB0aGUgY2xvY2sgYW5kIHJlZ3VsYXRvciBz
-ZXR1cC4NCj4gPiAgCSAqLw0KPiA+IC0JcHJpdi0+aWQgPSAodW5zaWduZWQgaW50KSh1bnNpZ25l
-ZCBsb25nKQ0KPiA+IC0JCW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmbWRpb2Rldi0+ZGV2KTsN
-Cj4gPiArCXByaXYtPmluZm8gPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJm1kaW9kZXYtPmRl
-dik7DQo+ID4gKwlpZiAoIXByaXYtPmluZm8pDQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4g
-Kw0KPiA+ICsJLyogU2FuaXR5IGNoZWNrIGlmIHRoZXNlIHJlcXVpcmVkIGRldmljZSBvcGVyc3Rh
-aW9ucyBhcmUgZmlsbGVkDQo+ID4gKwkgKiBwcm9wZXJseS4NCj4gDQo+IFR5cG86IG9wZXJhdGlv
-bnMuDQpPb3BzLCBzb3JyeS4gSSdsbCBjb3JyZWN0IGl0Lg0KDQpMYW5kZW4NCj4gDQo+IE90aGVy
-IHRoYW4gdGhhdCwgdGhpcyBsb29rcyBva2F5IHRvIG1lLg0KDQo=
+On Thu, Dec 12, 2019 at 10:41:02PM +0800, Cheng Jian wrote:
+> select_idle_cpu will scan the LLC domain for idle CPUs,
+> it's always expensive. so commit
+>     1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+> introduces a way to limit how many CPUs we scan.
+> 
+> But this also lead to the following issue:
+> 
+> Our threads are all bind to the front CPUs of the LLC domain,
+> and now all the threads runs on the last CPU of them. nr is
+> always less than the cpumask_weight, for_each_cpu_wrap can't
+> find the CPU which our threads can run on, so the threads stay
+> at the last CPU all the time.
+> 
+> Fixes: 1ad3aaf3fcd2 ("sched/core: Implement new approach to scale select_idle_cpu()")
+> Signed-off-by: Cheng Jian <cj.chengjian@huawei.com>
+> ---
+>  kernel/sched/fair.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 08a233e97a01..16a29b570803 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5834,6 +5834,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
+>  	s64 delta;
+>  	int this = smp_processor_id();
+>  	int cpu, nr = INT_MAX, si_cpu = -1;
+> +	struct cpumask cpus;
 
+NAK, you must not put a cpumask on stack.
