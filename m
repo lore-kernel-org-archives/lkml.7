@@ -2,113 +2,155 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EAEC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 062AEC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8903C20637
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F8420637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="k59qNnW2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbfLLAw6 (ORCPT
+        id S1727453AbfLLAyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:52:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:54270 "EHLO foss.arm.com"
+        Wed, 11 Dec 2019 19:54:04 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52829 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfLLAw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:52:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AAB431B;
-        Wed, 11 Dec 2019 16:52:57 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D035B3F52E;
-        Wed, 11 Dec 2019 16:52:56 -0800 (PST)
-Date:   Thu, 12 Dec 2019 00:52:55 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Stefan =?iso-8859-1?Q?M=E4tje?= <stefan.maetje@esd.eu>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
-Message-ID: <20191212005254.GE24359@e119886-lin.cambridge.arm.com>
-References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
- <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
+        id S1727235AbfLLAyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:54:04 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YFfg4PNdz9sPL;
+        Thu, 12 Dec 2019 11:53:47 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576112041;
+        bh=xP4wAChxRtmz838D7Vove34rD2wPRk8iB6jI8lbLBng=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=k59qNnW2EuyQcr+fPSATZIvgOx8NavMUB6nPinviztt5O+TUF8w4DuoQ/U3nx3scs
+         rg5FT0dYjnl9Kt34VRtUCe88ZU6Ik+cxA0kwsRVvJ26XTfrlcrpffFmK7aSrre4CPk
+         XNZOId+FR4OqjHERyiJV9uAYjBjXlF9DwUh6ucFGje+22fQhygi/lCHOCR0CXYNFPH
+         e/x3EZ14HOnX6IMTLRQixX9PcDS9lN9y0g23WSKDUHWWyAYZS4kW7/sK9wMAc7OssW
+         VA/Em+7j/04lsGPc8gHxBzuiyWAIqFMrfRcXeuteEHBes3BqeuHyrH+KS4gliAKV4w
+         9prgTXTjbiHDg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Justin Forbes <jmforbes@linuxtx.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list\:BPF \(Safe dynamic programs and tools\)" 
+        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
+        "open list\:BPF \(Safe dynamic programs and tools\)" 
+        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+        Martin KaFai Lau <kafai@fb.com>,
+        Aurelien Jarno <aurelien@aurel32.net>,
+        debian-kernel@lists.debian.org, Nick Clifton <nickc@redhat.com>
+Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with recent binutils
+In-Reply-To: <20191211160133.GB4580@calabresa>
+References: <20191201195728.4161537-1-aurelien@aurel32.net> <87zhgbe0ix.fsf@mpe.ellerman.id.au> <20191202093752.GA1535@localhost.localdomain> <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com> <20191210222553.GA4580@calabresa> <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com> <20191211160133.GB4580@calabresa>
+Date:   Thu, 12 Dec 2019 11:53:47 +1100
+Message-ID: <87a77ypdno.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:12:56AM +0000, Robin Murphy wrote:
-> Hi Vicente,
-> 
-> On 2019-12-11 11:38 pm, Vicente Bergas wrote:
-> > Hi,
-> > since v5.5-rc1 the google kevin chromebook does not boot.
-> > Git bisect reports 5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled()
-> > unnecessary locking
-> > as the first bad commit.
-> > 
-> > In order to revert it from v5.5-rc1 i had to also revert some dependencies:
-> > 5e0c21c75e8c08375a69710527e4a921b897cb7e
-> > aff5d0552da4055da3faa27ee4252e48bb1f5821
-> > 35efea32b26f9aacc99bf07e0d2cdfba2028b099
-> > 687aaf386aeb551130f31705ce40d1341047a936
-> > 72ea91afbfb08619696ccde610ee4d0d29cf4a1d
-> > 87e90283c94c76ee11d379ab5a0973382bbd0baf
-> > After reverting all of this, still no luck.
-> > So, either the results of git bisect are not to be trusted, or
-> > there are more bad commits.
-> > 
-> > By "does not boot" i mean that the display fails to start and
-> > the display is the only output device, so debugging is quite difficult.
-> 
-> Assuming it's a manifestation of the same PCI breakage that Enric and
-> Lorenzo figured out, there's a proposed fix here:
-> https://lkml.org/lkml/2019/12/11/199
+Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
+> On Wed, Dec 11, 2019 at 09:33:53AM -0600, Justin Forbes wrote:
+>> On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
+>> <cascardo@canonical.com> wrote:
+>> >
+>> > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
+>> > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>> > > >
+>> > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
+>> > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
+>> > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
+>> > > > > > field when dumping the symbols of an object file. For example:
+>> > > > > >
+>> > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
+>> > > > > >
+>> > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
+>> > > > > > be computed correctly and causes the checkabi target to fail.
+>> > > > > >
+>> > > > > > Fix that by looking for the symbol name in the last field instead of the
+>> > > > > > 8th one. This way it should also cope with future extra fields.
+>> > > > > >
+>> > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
+>> > > > > > ---
+>> > > > > >  tools/lib/bpf/Makefile | 4 ++--
+>> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+>> > > > >
+>> > > > > Thanks for fixing that, it's been on my very long list of test failures
+>> > > > > for a while.
+>> > > > >
+>> > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+>> > > >
+>> > > > Looks good & also continues to work on x86. Applied, thanks!
+>> > >
+>> > > This actually seems to break horribly on PPC64le with binutils 2.33.1
+>> > > resulting in:
+>> > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
+>> > > match with num of versioned symbols in libbpf.so (184). Please make
+>> > > sure all LIBBPF_API symbols are versioned in libbpf.map.
+>> > >
+>> > > This is the only arch that fails, with x86/arm/aarch64/s390 all
+>> > > building fine.  Reverting this patch allows successful build across
+>> > > all arches.
+>> > >
+>> > > Justin
+>> >
+>> > Well, I ended up debugging this same issue and had the same fix as Jarno's when
+>> > I noticed his fix was already applied.
+>> >
+>> > I just installed a system with the latest binutils, 2.33.1, and it still breaks
+>> > without such fix. Can you tell what is the output of the following command on
+>> > your system?
+>> >
+>> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
+>> >
+>> 
+>> readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
+>> -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
+>> !/UND/ {print $0}'
+>>    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1
+>> libbpf_num_possible_cpus [<localentry>: 8]
+>>    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free
+>> [<localentry>: 8]
+> [...]
+>
+> This is a patch on binutils carried by Fedora:
+>
+> https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
+>
+> " b8265c Have readelf display extra symbol information at the end of the line. "
+>
+> It has the following comment:
+>
+> # FIXME:    The proper fix would be to update the scripts that are expecting
+> #           a fixed output from readelf.  But it seems that some of them are
+> #           no longer being maintained.
+>
+> This commit is from 2017, had it been on binutils upstream, maybe the situation
+> right now would be different.
 
-It's likely that any PCI driver that uses PCI IO with that controller will
-suffer the same fate.
+Bleeping bleep.
 
-Vicente - can you try the patch that has been proposed and verify it fixes
-the issue for you?
+Looks like it was actually ruby that was the original problem:
 
-Thanks,
+  https://bugzilla.redhat.com/show_bug.cgi?id=1479302
 
-Andrew Murray
 
-> 
-> Robin.
-> 
-> > v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
-> > # CONFIG_PCI is not set
-> > 
-> > Regards,
-> >   Vicente.
-> > 
-> > 
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Why it wasn't hacked around in the ruby package I don't know, doing it in
+the distro binutils package is not ideal.
+
+cheers
