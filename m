@@ -2,106 +2,178 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBF1C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8F4C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F882214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52C4214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pl/pUQBm"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="dhwzw1wZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731264AbfLLV7y (ORCPT
+        id S1731280AbfLLWAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:59:54 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38306 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbfLLV7y (ORCPT
+        Thu, 12 Dec 2019 17:00:04 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35350 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731265AbfLLWAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:59:54 -0500
-Received: by mail-pl1-f194.google.com with SMTP id a17so155802pls.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:59:54 -0800 (PST)
+        Thu, 12 Dec 2019 17:00:04 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l24so293455pgk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 14:00:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:cc:to:subject:user-agent:date;
-        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
-        b=Pl/pUQBmMNlT60swExa6Lc0oNeW8xywtmM0c5iE+6MjRqMLAh/sicSUDhIRtJUFEJF
-         LkeK0S+MTgT2BjI+j/Bjr/9clApktvsRn9HX1KIaIChXS/MIG/vKXkv5PgabEjK1dGGE
-         PKdVuMVX4sx3mWJ46X6FmpnNqriJ5y4UJ1Ir8=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=eXtHpJiSJg/9/jwCXXHyz4QnHW3p4m3tmPKqXv4Q3JE=;
+        b=dhwzw1wZBzp+s1092ddhqC+owajACV6UNC+ewplg0XmeIadQL9Q2tBXgv38VT+bjHn
+         hi7S0tLXuKEMahgR8NYCTuA0zJ2NVnjr9X8JzuJtf38ZyyB+dCJ3IxYDkZUrd5SRbLhF
+         X3ZL+kOBK48Y0ynokhghL761Pm3Ec68LA1dYnfXEBhWL8xA1qQdtzrWiqR3oYSe2tsVr
+         5t9cEzuupG/iodz1xU38GCFy2ktQqLWDUzZsdy9fNw3uBGIrsvsy+SN9SXavrG8iU2pw
+         STVChoWdWWpI6KT++PIYksG8UZrUiU2x0UL/i5NWMUzFNirPeT0yiKqRiZgKxejvmaWf
+         oqfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
-         :user-agent:date;
-        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
-        b=jy8rZj3poPOsT+nQZIgBFnHmhNlSUWueRAmD78wmgB4yn7A7zlmAzDXE9FIWxROk0r
-         gplv4k6OKpvTA0dOAu7XdCyQ8EeJe4cPo4UnjJMx/bBvSo0jAL9EzGBmahfMzt31/xp1
-         nkhOkUKPITwyEpZXEOUV3ejQJbWuek5Ivr5agEJsnbKxPCUpkrk4a/iqt+uH+SMJDyaZ
-         nZ3lkRQVm2+Puhuru8eeaH/hWweIMvh9laNZE6ujyXDggVH+i+KM7xtESGkOAdKCVJCQ
-         QCp9vPfadMJ/yuYO7ICZgyFkWUfWcBS9D74KQWhJNfiM5EPgg9r6xxozrjhQVW3aPy5C
-         DSdg==
-X-Gm-Message-State: APjAAAXswkoynjnEHVkj/RM0XttUgyBlefw0+ZuIYrJ76YSnhYBbVwe4
-        UC8ZG+cIincNn2PhH92AErlqJg==
-X-Google-Smtp-Source: APXvYqyYdeFIttKHtScn51FUQtkOnmir8OiEGe0EwjEvNpgQw9TAoxHuXImKHk2nhWN4iUrT/Ec2Fg==
-X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr11523626plp.54.1576187993538;
-        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b73sm8519686pfb.72.2019.12.12.13.59.52
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=eXtHpJiSJg/9/jwCXXHyz4QnHW3p4m3tmPKqXv4Q3JE=;
+        b=QbqQy/SR7i9onRdYwmsWTRvyomIQja5e7zosez8/5+UEfV+NF+fMaKXKUSnvS6i/35
+         TpROYnp9PFOG9qS/pBtHtD4Y18Q2exS+PpyWRZ8cwB3wvFqCeFau9Os36s7vlkG/wkCA
+         +04st044nEOkxiDN1frG6wG1DRE2ZcmjzC19NOwcGiRpLf5KhUikj57cKOzDQhWbDwSs
+         +0SM1iFteEZ/gDpcN7Pnx2m6MkI/bHv7rtVZ1Bdx1uIaoOGWIaR4Ja3EeEIOqzRQRl++
+         4HrUQniKO9IwD77qwS/CFS9mYSVunSSJCWNmNVtVxVZUKzEOStrTPfzr0uxno9hRiGkP
+         FNDw==
+X-Gm-Message-State: APjAAAXUrdGChB/GBjWoLpYjDZuNbIG9UvQtkxuVEI5IrGS5F8awEp7Q
+        Wf5KLV6gVcc0IIKJ4hVChg+nUA==
+X-Google-Smtp-Source: APXvYqwk0NcZ0t/BrYKLnyGvjeMXhCyG35EKksRxuhSEtPiXZM3VURxiPC0j7O9YZhTqcfB2I+boig==
+X-Received: by 2002:a63:31cf:: with SMTP id x198mr12855135pgx.272.1576188001988;
+        Thu, 12 Dec 2019 14:00:01 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e6sm8525411pfh.32.2019.12.12.14.00.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
-Message-ID: <5df2b859.1c69fb81.3a87e.5ace@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Dec 2019 14:00:01 -0800 (PST)
+Date:   Thu, 12 Dec 2019 13:59:58 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Stanislav Fomichev <sdf@fomichev.me>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <kernel-team@fb.com>
+Subject: Re: [PATCH bpf-next 11/15] bpftool: add skeleton codegen command
+Message-ID: <20191212135958.2970f188@cakuba.netronome.com>
+In-Reply-To: <20191212212759.mhzrlqj5brcyfwgb@ast-mbp.dhcp.thefacebook.com>
+References: <CAEf4BzYofFFjSAO3O-G37qyeVHE6FACex=yermt8bF8mXksh8g@mail.gmail.com>
+        <20191211200924.GE3105713@mini-arch>
+        <CAEf4BzaE0Q7LnPOa90p1RX9qSbOA_8hkT=6=7peP9C88ErRumQ@mail.gmail.com>
+        <20191212025735.GK3105713@mini-arch>
+        <CAEf4BzY2KHK4h5e40QgGt4GzJ6c+rm-vtbyEdM41vUSqcs=txA@mail.gmail.com>
+        <20191212162953.GM3105713@mini-arch>
+        <CAEf4BzYJHvuFbBM-xvCCsEa+Pg-bG1tprGMbCDtsbGHdv7KspA@mail.gmail.com>
+        <20191212104334.222552a1@cakuba.netronome.com>
+        <20191212195415.ubnuypco536rp6mu@ast-mbp.dhcp.thefacebook.com>
+        <20191212122115.612bb13b@cakuba.netronome.com>
+        <20191212212759.mhzrlqj5brcyfwgb@ast-mbp.dhcp.thefacebook.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 6/7] arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
-User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 13:59:52 -0800
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2019-12-12 11:35:42)
-> The bindings for the QMP PHY are truly strange.  I believe (?) that
-> they may have originated because with PCIe each lane is treated as a
-> different PHY and the same PHY driver is used for a whole bunch of
-> things (incluidng PCIe).
->=20
-> In any case, now that we have "make dtbs_check", we find that having
-> the outer node named "phy" triggers the
-> "schemas/phy/phy-provider.yaml" schema, yelling about:
->=20
->   phy@88e9000: '#phy-cells' is a required property
->=20
-> Let's call the outer node the "phy-wrapper" and the inner node the
-> "phy" to make dtbs_check happy.
->=20
-> Fixes: 0b766e7fe5a2 ("arm64: dts: qcom: sc7180: Add USB related nodes")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+On Thu, 12 Dec 2019 13:28:00 -0800, Alexei Starovoitov wrote:
+> On Thu, Dec 12, 2019 at 12:21:15PM -0800, Jakub Kicinski wrote:
+> > > > It can be a separate tool like
+> > > >   libbpf-skel-gen or libbpf-c-skel or something, distributed with libbpf.
+> > > >   That way you can actually soften the backward compat. In case people
+> > > >   become dependent on it they can carry that little tool on their own.    
+> > > 
+> > > Jakub,
+> > > 
+> > > Could you please consider Andrii's reply to your comment from two days ago:
+> > > https://lore.kernel.org/bpf/CAEf4BzbeZbmCTOOo2uQXjm0GL0WDu7aLN6fdUk18Nv2g0kfwVg@mail.gmail.com/
+> > > "we are trying to make users lives easier by having major distributions
+> > > distribute bpftool and libbpf properly. Adding extra binaries to
+> > > distribute around doesn't seem to be easing any of users pains."  
+> > 
+> > Last time we argued I heard how GH makes libbpf packaging easier.
+> > Only to have that dis-proven once the people in Europe who do distro
+> > packaging woke up:
+> > 
+> > https://lkml.org/lkml/2019/12/5/101
+> > https://lkml.org/lkml/2019/12/5/312  
+> 
+> I think you missed the point of these two comments. It was about packaging
+> bpftool and libbpf together. Regardless how bpftool is packaged. I still
+> strongly suggest to use github/libbpf to package libbpf. It's something that is
+> actually tested whereas libbpf in the kernel tree has unit test coverage only.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+I disagree.
 
-Would be good to add phy-wrapper to possible node names in the DT spec
-too.
+> > > My opinion is the following.
+> > > bpftool is necessary to write bpf programs already. It's necessary to produce
+> > > vmlinux.h for bpf programs to include it. It's part of build process. I can
+> > > relate to Stan's complains that he needs to update clang and pahole. He missed
+> > > the fact that he needs to update bpftool too if he wants to use all features of
+> > > CO-RE. Same thing for skeleton generation. If people need to run the latest
+> > > selftest/bpf on the latest kernel they need to upgrade to the latest clang,
+> > > pahole, libbpf, bpftool. Nothing new here.  
+> > 
+> > They have to update libbpf, so why can't the code gen tool be part of
+> > libbpf?   
+> 
+> I'm not sure why two answers were not enough.
+> No idea how to answer this question differently for the third time.
 
+I'm just presenting what I consider to be a cleaner solution.
+
+> > > Backwards compat is the same concern for skeleton generation and for vmlinux.h
+> > > generation. Obviously no one wants to introduce something that will keep
+> > > changing. Is vmlinux.h generation stable? I like to believe so. Same with
+> > > skeleton. I wouldn't want to see it changing, but in both cases such chance
+> > > exists.   
+> > 
+> > vmlinux.h is pretty stable, there isn't much wiggle room there.  
+> 
+> Do you have experience working with vmlinux.h? I bet the answer is no.
+> While we have and identified few things that needs improvement.
+> They require vmlinux.h to be generated differently.
+> 
+> > It's more of a conversion tool, if you will.
+> > 
+> > Skeleton OTOH is supposed to make people's lives easier, so it's a
+> > completely different beast. It should be malleable so that users can
+> > improve and hack on it. Baking it into as system tool is counter
+> > productive. Users should be able to grab the skel tool single-file
+> > source and adjust for their project's needs. Distributing your own copy
+> > of bpftool because you want to adjust skel is a heavy lift.  
+> 
+> Adjust generator for their custom needs? essentially fork it for
+> private use? I'd rather prevent such possibility.
+> When people start using it I'd prefer they come back to this mailing
+> list with patches than do 'easy fork'.
+> 
+> > > Now consider if vmlinux.h and skeleton generation is split out of bpftool into
+> > > new tool. Effectively it would mean a fork of bpftool. Two binaries doing bpf
+> > > elf file processing without clear distinction between them is going to be very
+> > > confusing.  
+> > 
+> > To be clear I'm suggesting skel gen is a separate tool, vmlinux and
+> > Quentin's header gen work on the running system, they are not pure
+> > build env tools.  
+> 
+> You meant to say Andrii's header generator that is based on Quentin's man page
+> generator. Its output bpf_helper_defs.h makes sense as a part of libbpf
+> package. The generator script itself doesn't need to be included with any package.
+> bpftool vmlinux gen consumes vmlinux elf files and is a part of the build.
+> bpftool skeleton gen consumes bpf elf files and is a part of the same build.
+
+I said what I meant to say tools/bpf/bpftool/feature.c
