@@ -2,92 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B24C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABD9C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04782227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16CF206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:10:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="btmETCZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbfLLMG1 (ORCPT
+        id S1729127AbfLLMKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:06:27 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39370 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728996AbfLLMG0 (ORCPT
+        Thu, 12 Dec 2019 07:10:48 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:10474 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbfLLMKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:06:26 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id C77F31C2461; Thu, 12 Dec 2019 13:06:24 +0100 (CET)
-Date:   Thu, 12 Dec 2019 13:06:24 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 134/243] bpf: btf: check name validity for various
- types
-Message-ID: <20191212120624.GA15567@duo.ucw.cz>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150348.188128369@linuxfoundation.org>
+        Thu, 12 Dec 2019 07:10:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1576152647; x=1607688647;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=IjCFRzWON9rJgnZo0jNdRDXJF1z083Lh5WgdDsRG8k8=;
+  b=btmETCZPHZUlhp68TFLjDqEtrF997U2KpvcYeHUpbnvgM7p5kGdKIYCN
+   MgD5gRbJ6Jx8abvYUPC/LPfuCzS1NW9R58zA828Xr4wuY1AAvmutKRoQj
+   yH6fJHWEGwa9svH+Yj7Gh8OgsEtHDogJW6c751wQkVxchwqQ9kAeOlgPE
+   o=;
+IronPort-SDR: wnwSLi2X93c+EWQX+sZvq/5Ca9tiKM8HI59BmLIYxpS8tAY1odPp1C9IHUPizrKvHVVythAMyn
+ xCnJbhKFVBtQ==
+X-IronPort-AV: E=Sophos;i="5.69,305,1571702400"; 
+   d="scan'208";a="14500165"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-821c648d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 12 Dec 2019 12:10:34 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-821c648d.us-east-1.amazon.com (Postfix) with ESMTPS id E600CA2184;
+        Thu, 12 Dec 2019 12:10:29 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Dec 2019 12:10:29 +0000
+Received: from 8c85908914bf.ant.amazon.com (10.43.160.109) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 12 Dec 2019 12:10:23 +0000
+Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
+To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Max Hirsch <max.hirsch@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danit Goldberg <danitg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dag Moxnes <dag.moxnes@oracle.com>,
+        Myungho Jung <mhjungk@gmail.com>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191211111628.2955-1-max.hirsch@gmail.com>
+ <20191211162654.GD6622@ziepe.ca> <20191212084907.GU67461@unreal>
+From:   Gal Pressman <galpress@amazon.com>
+Message-ID: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
+Date:   Thu, 12 Dec 2019 14:10:12 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-In-Reply-To: <20191211150348.188128369@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212084907.GU67461@unreal>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.160.109]
+X-ClientProxiedBy: EX13D27UWB004.ant.amazon.com (10.43.161.101) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/12/2019 10:49, Leon Romanovsky wrote:
+> On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
+>> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
+>>> When running checkpatch on cma.c the following error was found:
+>>
+>> I think checkpatch will complain about your patch, did you run it?
+> 
+> Jason, Doug
+> 
+> I would like to ask to refrain from accepting checkpatch.pl patches
+> which are not part of other large submission. Such standalone cleanups
+> do more harm than actual benefit from them for old and more or less
+> stable code (e.g. RDMA-CM).
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sounds like a great approach to prevent new developers from contributing code.
+You have to start somewhere and checkpatch patches are a good entry point for
+such developers, discouraging them will only hurt us in the long term.
 
-On Wed 2019-12-11 16:04:56, Greg Kroah-Hartman wrote:
-> From: Yonghong Song <yhs@fb.com>
->=20
-> [ Upstream commit eb04bbb608e683f8fd3ef7f716e2fa32dd90861f ]
->=20
-> This patch added name checking for the following types:
->  . BTF_KIND_PTR, BTF_KIND_ARRAY, BTF_KIND_VOLATILE,
->    BTF_KIND_CONST, BTF_KIND_RESTRICT:
->      the name must be null
->  . BTF_KIND_STRUCT, BTF_KIND_UNION: the struct/member name
->      is either null or a valid identifier
->  . BTF_KIND_ENUM: the enum type name is either null or a valid
->      identifier; the enumerator name must be a valid identifier.
->  . BTF_KIND_FWD: the name must be a valid identifier
->  . BTF_KIND_TYPEDEF: the name must be a valid identifier
->=20
-> For those places a valid name is required, the name must be
-> a valid C identifier. This can be relaxed later if we found
-> use cases for a different (non-C) frontend.
-
-Does this fix any serious bug? I don't think this is suitable for
-stable.
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXfItQAAKCRAw5/Bqldv6
-8sZNAKCpPlKj4aNOz24kULtOT5OPHge6zgCdFh7w/ah2JlnWD5WRRljYPZLpo48=
-=1DLt
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+Linus had an interesting post on the subject:
+https://lkml.org/lkml/2004/12/20/255
