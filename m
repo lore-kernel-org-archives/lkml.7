@@ -2,172 +2,166 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48551C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705D7C04E30
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1377F24653
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C86222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V8Nbw7mU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DL/sEUxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbfLLEMM (ORCPT
+        id S1728000AbfLLEMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 23:12:12 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37093 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbfLLEMB (ORCPT
+        Wed, 11 Dec 2019 23:12:15 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40883 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfLLEML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 23:12:01 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m188so538887qkc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 20:12:00 -0800 (PST)
+        Wed, 11 Dec 2019 23:12:11 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so11376plp.7;
+        Wed, 11 Dec 2019 20:12:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6+qiJLEvyuiYORpTYpkszMQhGViiRl65Hb8NmS+Suao=;
-        b=V8Nbw7mUeIrHldWS5nFNKfJdGB4qHiNdNTYjY1qvbgaYlBmG0UP0hXKMukl7iJK62b
-         fjfc1gJpy19etdQ/JZT3fyGAtsxUbU0XX0mPd/nk9va0kJQYeKKb00xzx97uR1hVIpV9
-         9bgn7w19rtWoFDB0X31dshrVh4CoKiCAKpv2O36os/lhfzlT/cItx7TooXcr1s2D/LjQ
-         ncDctb1dKp/bbB6hOPS0IWVuu7qzRRuBZTUedwFL9MaeyYSloYHKI/5yZtWjYfPOKDYg
-         UtcTVIAdFUUeXcZqudRTw4C1g0a1y0vzzpmgd+a6Zs8/mOeP0jYgm8o23/8esdUvxxvP
-         jACw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qay1LF8Oeto8Clk9zgjvEsuMPZtPffWiYUK4/AI02p0=;
+        b=DL/sEUxRRk7dSrY8qQi/4UENYwICeEFpJ2TzWojoH3hTa8yJC/Sb10dmQfzsTZ7UXP
+         unnrvdPP4jHUuBmvGTQ3KQLbS/LkdMOm2rSZV8CPbMECEQjK+yzGqCd6+vi6NFwMHGzA
+         uB4nFPQCWxr0VZ0NmS+s3UYTNJIj67L95/1h2Nb8QIHyygfrm2s+L8TOAeB9W39LOR3D
+         ZOGmE1sTh3bAH8J4z5RK2OwWDDLIg3hIrT6VxspXMtsoz28uqG+/5zcxBmN+2lfuNb63
+         uR/5st1SzSmK/deU1vWKljrus2aHQFrpIVjr/BzfFwFYtuMcKm56hMA9SRh1GJOxXdkZ
+         XEkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=6+qiJLEvyuiYORpTYpkszMQhGViiRl65Hb8NmS+Suao=;
-        b=hsR6XwvS0FuS2EjtY1Wtg+W90AXaaUxgsW/ZdfdoEqD6Drh/bnitNZi/v215ZBD2PY
-         UgjD/BynBhImD8jE8aZLaKFgFgpQaC26zL6g+AI0n9wKHwQjp2dUuNK85lDSO4ZWNRpD
-         vZXDn5P0hZxHVpRmdLurplOSbNfUc1DmImdVvBkwao9HJPtsYR/w87uNL0qwtfO8SU0C
-         yc9BpEKd/2L8ho2QTStyR+M8dZiyxfXZ7OSj+CnkZQkRXIoLxL64mWWNkOvVaeRuOOgK
-         OVcmYRzkUEVdlD7IKWpmOjFUZVq/V7XunJPeP4N0xBcQKSachfynxY4gcZa2qc6k/mEF
-         SJpg==
-X-Gm-Message-State: APjAAAWNg1CE9oEiPXO0K5zXYQqBPPs9fgviq9qnBdzRcIXMNhGiAnf3
-        pnugJwaKkZsKOjlhLKMGe2jmeQ==
-X-Google-Smtp-Source: APXvYqwNVgNQm2jR8zDbsOYILXkHxD5vxXDTEHmCNGFHepaXQj3yxAGuYq9Hgg7gAdfVwr5eJtYRWQ==
-X-Received: by 2002:a37:a5d7:: with SMTP id o206mr6231110qke.227.1576123920124;
-        Wed, 11 Dec 2019 20:12:00 -0800 (PST)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id s11sm1364126qkg.99.2019.12.11.20.11.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Dec 2019 20:11:59 -0800 (PST)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v6 7/7] sched/fair: Enable tuning of decay period
-Date:   Wed, 11 Dec 2019 23:11:48 -0500
-Message-Id: <1576123908-12105-8-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
-References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qay1LF8Oeto8Clk9zgjvEsuMPZtPffWiYUK4/AI02p0=;
+        b=jSG9OoqmyNVIuTFDiJydCPv8BSmSOw/xjuRVFq6A81dgDfu3uUD5b27eNGIeq6AqMF
+         lNc2ovq1/osYwUn/XDlTpHAyd+aLCNIoALcLj/ShLW1SYW3GjUY0W6QvjeOsu3wMOvE0
+         McJJxco2JNiYQIVnQBBWg711Yp6ExSl4oBQiMmKGHak65utHBj+ftliQ4SmZ1fA/xi5O
+         DEcDjaXl2j7IKwAe01hB0WpmxZ078Uf1V9qxagG9kPqS1PIk82cVd3FTuEasN+0IVfIi
+         lXMflrGWPdDJYJCUh8yfHSQ9YNGwwU3U4UOP+NoGz1kwboLbVSdBcKlzI8J49W/WKDff
+         YAiA==
+X-Gm-Message-State: APjAAAUCwVByP22eYTQxaPtjhznOLq/LoNgMQcZyloVsJZHAcQygY7XC
+        7e72qU+kzlW2ziREsMXaQsMmDaq8
+X-Google-Smtp-Source: APXvYqx9KpCB1MZGLnDn5yOs6A/TQCl17ItRMd0pXYWmJIT8MV1XudnJWoqsT33f154a8/jI+FvN7A==
+X-Received: by 2002:a17:902:d68f:: with SMTP id v15mr5842815ply.308.1576123930730;
+        Wed, 11 Dec 2019 20:12:10 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id s196sm5032317pfs.136.2019.12.11.20.12.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 20:12:10 -0800 (PST)
+Subject: Re: [PATCH net-next v3 5/5] ethtool: provide link mode names as a
+ string set
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+References: <cover.1576057593.git.mkubecek@suse.cz>
+ <7aa9bf09b8007967b9aa1c48b3c342fd36bcc8b4.1576057593.git.mkubecek@suse.cz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <f4ac49ee-79a2-b91c-ae9a-1c7ab56580f1@gmail.com>
+Date:   Wed, 11 Dec 2019 20:12:08 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <7aa9bf09b8007967b9aa1c48b3c342fd36bcc8b4.1576057593.git.mkubecek@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal pressure follows pelt signas which means the decay period for
-thermal pressure is the default pelt decay period. Depending on soc
-charecteristics and thermal activity, it might be beneficial to decay
-thermal pressure slower, but still in-tune with the pelt signals.  One way
-to achieve this is to provide a command line parameter to set a decay
-shift parameter to an integer between 0 and 10.
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
 
-v4->v5:
-	- Changed _coeff to _shift as per review comments on the list.
-v5->v6:
-	- as per review comments introduced rq_clock_thermal to return
-	  clock shifted by the decay_shift.
+On 12/11/2019 1:58 AM, Michal Kubecek wrote:
+> Unlike e.g. netdev features, the ethtool ioctl interface requires link mode
+> table to be in sync between kernel and userspace for userspace to be able
+> to display and set all link modes supported by kernel. The way arbitrary
+> length bitsets are implemented in netlink interface, this will be no longer
+> needed.
+> 
+> To allow userspace to access all link modes running kernel supports, add
+> table of ethernet link mode names and make it available as a string set to
+> userspace GET_STRSET requests. Add build time check to make sure names
+> are defined for all modes declared in enum ethtool_link_mode_bit_indices.
+> 
+> Once the string set is available, make it also accessible via ioctl.
+> 
+> Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 
- Documentation/admin-guide/kernel-parameters.txt |  5 ++++
- kernel/sched/fair.c                             | 34 +++++++++++++++++++++++--
- 2 files changed, 37 insertions(+), 2 deletions(-)
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6e..ffe456d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4330,6 +4330,11 @@
- 			incurs a small amount of overhead in the scheduler
- 			but is useful for debugging and performance tuning.
- 
-+	sched_thermal_decay_shift=
-+			[KNL, SMP] Set decay shift for thermal pressure signal.
-+			Format: integer between 0 and 10
-+			Default is 0.
-+
- 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
- 			xtime_lock contention on larger systems, and/or RCU lock
- 			contention on all systems with CONFIG_MAXSMP set.
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 4840655..9154cf8 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -86,6 +86,36 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity	= 1000000UL;
- 
- const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
- 
-+/**
-+ * By default the decay is the default pelt decay period.
-+ * The decay shift can change the decay period in
-+ * multiples of 32.
-+ *  Decay shift		Decay period(ms)
-+ *	0			32
-+ *	1			64
-+ *	2			128
-+ *	3			256
-+ *	4			512
-+ */
-+static int sched_thermal_decay_shift;
-+
-+static inline u64 rq_clock_thermal(struct rq *rq)
-+{
-+	return rq_clock_task(rq) >> sched_thermal_decay_shift;
-+}
-+
-+static int __init setup_sched_thermal_decay_shift(char *str)
-+{
-+	int _shift;
-+
-+	if (kstrtoint(str, 0, &_shift))
-+		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
-+
-+	sched_thermal_decay_shift = clamp(_shift, 0, 10);
-+	return 1;
-+}
-+__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
-+
- #ifdef CONFIG_SMP
- /*
-  * For asym packing, by default the lower numbered CPU has higher priority.
-@@ -7501,7 +7531,7 @@ static bool __update_blocked_others(struct rq *rq, bool *done)
- 
- 	decayed = update_rt_rq_load_avg(now, rq, curr_class == &rt_sched_class) |
- 		  update_dl_rq_load_avg(now, rq, curr_class == &dl_sched_class) |
--		  update_thermal_load_avg(rq_clock_task(rq), rq,
-+		  update_thermal_load_avg(rq_clock_thermal(rq), rq,
- 					  thermal_pressure) 			|
- 		  update_irq_load_avg(rq, 0);
- 
-@@ -10288,7 +10318,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 
- 	update_misfit_status(curr, rq);
- 	update_overutilized_status(task_rq(curr));
--	update_thermal_load_avg(rq_clock_task(rq), rq, thermal_pressure);
-+	update_thermal_load_avg(rq_clock_thermal(rq), rq, thermal_pressure);
- }
- 
- /*
+I would have almost treated the _Half_ modes a special to omit
+specifying Full for 90% of the remaining modes and save both characters
+and room for errors, but that's fine this way too.
 -- 
-2.1.4
-
+Florian
