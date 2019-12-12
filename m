@@ -2,155 +2,214 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062AEC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092F3C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F8420637
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A3120637
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="k59qNnW2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cyG2KgzT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfLLAyE (ORCPT
+        id S1727472AbfLLAyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:54:04 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:52829 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727235AbfLLAyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:54:04 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YFfg4PNdz9sPL;
-        Thu, 12 Dec 2019 11:53:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576112041;
-        bh=xP4wAChxRtmz838D7Vove34rD2wPRk8iB6jI8lbLBng=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=k59qNnW2EuyQcr+fPSATZIvgOx8NavMUB6nPinviztt5O+TUF8w4DuoQ/U3nx3scs
-         rg5FT0dYjnl9Kt34VRtUCe88ZU6Ik+cxA0kwsRVvJ26XTfrlcrpffFmK7aSrre4CPk
-         XNZOId+FR4OqjHERyiJV9uAYjBjXlF9DwUh6ucFGje+22fQhygi/lCHOCR0CXYNFPH
-         e/x3EZ14HOnX6IMTLRQixX9PcDS9lN9y0g23WSKDUHWWyAYZS4kW7/sK9wMAc7OssW
-         VA/Em+7j/04lsGPc8gHxBzuiyWAIqFMrfRcXeuteEHBes3BqeuHyrH+KS4gliAKV4w
-         9prgTXTjbiHDg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Justin Forbes <jmforbes@linuxtx.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list\:BPF \(Safe dynamic programs and tools\)" 
-        <netdev@vger.kernel.org>, Yonghong Song <yhs@fb.com>,
-        "open list\:BPF \(Safe dynamic programs and tools\)" 
-        <bpf@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        Martin KaFai Lau <kafai@fb.com>,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        debian-kernel@lists.debian.org, Nick Clifton <nickc@redhat.com>
-Subject: Re: [PATCH] libbpf: fix readelf output parsing on powerpc with recent binutils
-In-Reply-To: <20191211160133.GB4580@calabresa>
-References: <20191201195728.4161537-1-aurelien@aurel32.net> <87zhgbe0ix.fsf@mpe.ellerman.id.au> <20191202093752.GA1535@localhost.localdomain> <CAFxkdAqg6RaGbRrNN3e_nHfHFR-xxzZgjhi5AnppTxxwdg0VyQ@mail.gmail.com> <20191210222553.GA4580@calabresa> <CAFxkdAp6Up0qSyp0sH0O1yD+5W3LvY-+-iniBrorcz2pMV+y-g@mail.gmail.com> <20191211160133.GB4580@calabresa>
-Date:   Thu, 12 Dec 2019 11:53:47 +1100
-Message-ID: <87a77ypdno.fsf@mpe.ellerman.id.au>
+        Wed, 11 Dec 2019 19:54:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40268 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727235AbfLLAyS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:54:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id i23so301601lfo.7;
+        Wed, 11 Dec 2019 16:54:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=G9Qg/GyPOd9K6cMtoRafpLeoPZbmboxVDp4qkKep044=;
+        b=cyG2KgzTYpa2RLZLCT1xK9/x5Wm13gaf3Z/K95ojZPT7sh5dmhhqpPvH41iT5gYXOy
+         UlSOu6SWxf1bE/lQrqpspUAwGrYs/FqOTVi7spe60wfVKMfSqQi4i5FnuDYu8MxOYN6Y
+         CHVThnBBlXCAFh0Fl02uoqIM6C5K5qS/EsUMsDEIDRy6vzmD3Q+yUY8A340VfO3GKOoB
+         23horKorV2al/UgFbzV6a1lfyQ6J61d7cWtI1oGS0iiBIg797TBYHtmqU0kOS2HaTrvT
+         z+lZhI1CpozHeRRdEwLAn4rZGj3xvpV2XFN0KZRbFfPoFi82ZGzd2odm4C71H+bV5Tpe
+         yrCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=G9Qg/GyPOd9K6cMtoRafpLeoPZbmboxVDp4qkKep044=;
+        b=IUeGwPIP2Hwof4qLONtua9Hb9cowHQ89nBN0qgH3OssbRSm9ngM9mxoVjfTlPKGI+c
+         wVVglz27AbggYIuyFUZwBrdUYgnk7+RVtfreq4Pg+M2XUfJJPJ4vye80W1eOY5LapKl/
+         EflABHct6rsf9tt5lq8tGFRE5fTgYZDggXf8SzIZ0lJmveG+jq41rfE5HQqRvaEwI5+A
+         VLaz3nhyj0x0L3A26Wrsq1iEV/wEH9FcU93AGKsb2cEQTYg8BwEXelBqiKKrjcsf8Q5V
+         zpeTOg3+emiySpTa7tiOWp2aNJigJ1+NDoCtHyuD0BL9sffGbmRsKGHF5UYdhbMs5P1W
+         Pxtw==
+X-Gm-Message-State: APjAAAUqS9mBPNuBaay/0qSWafk6TkmHUR07ah7+55LC/fEYewsNeG0U
+        6QWS97acmvetcw/VFwWP4+E=
+X-Google-Smtp-Source: APXvYqzEMmSTnj9o5/mEH8I77pXpxWljgb2sZufJlSi5xWVeo5B4nrSzy0u0LnC2dkGHFCp8w2tEGg==
+X-Received: by 2002:ac2:420e:: with SMTP id y14mr4083282lfh.145.1576112055177;
+        Wed, 11 Dec 2019 16:54:15 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id l8sm1974300ljj.96.2019.12.11.16.54.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 16:54:14 -0800 (PST)
+Subject: Re: [PATCH v2 2/9] input: elants: support old touch report format
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
+Date:   Thu, 12 Dec 2019 03:54:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thadeu Lima de Souza Cascardo <cascardo@canonical.com> writes:
-> On Wed, Dec 11, 2019 at 09:33:53AM -0600, Justin Forbes wrote:
->> On Tue, Dec 10, 2019 at 4:26 PM Thadeu Lima de Souza Cascardo
->> <cascardo@canonical.com> wrote:
->> >
->> > On Tue, Dec 10, 2019 at 12:58:33PM -0600, Justin Forbes wrote:
->> > > On Mon, Dec 2, 2019 at 3:37 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
->> > > >
->> > > > On Mon, Dec 02, 2019 at 04:53:26PM +1100, Michael Ellerman wrote:
->> > > > > Aurelien Jarno <aurelien@aurel32.net> writes:
->> > > > > > On powerpc with recent versions of binutils, readelf outputs an extra
->> > > > > > field when dumping the symbols of an object file. For example:
->> > > > > >
->> > > > > >     35: 0000000000000838    96 FUNC    LOCAL  DEFAULT [<localentry>: 8]     1 btf_is_struct
->> > > > > >
->> > > > > > The extra "[<localentry>: 8]" prevents the GLOBAL_SYM_COUNT variable to
->> > > > > > be computed correctly and causes the checkabi target to fail.
->> > > > > >
->> > > > > > Fix that by looking for the symbol name in the last field instead of the
->> > > > > > 8th one. This way it should also cope with future extra fields.
->> > > > > >
->> > > > > > Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
->> > > > > > ---
->> > > > > >  tools/lib/bpf/Makefile | 4 ++--
->> > > > > >  1 file changed, 2 insertions(+), 2 deletions(-)
->> > > > >
->> > > > > Thanks for fixing that, it's been on my very long list of test failures
->> > > > > for a while.
->> > > > >
->> > > > > Tested-by: Michael Ellerman <mpe@ellerman.id.au>
->> > > >
->> > > > Looks good & also continues to work on x86. Applied, thanks!
->> > >
->> > > This actually seems to break horribly on PPC64le with binutils 2.33.1
->> > > resulting in:
->> > > Warning: Num of global symbols in sharedobjs/libbpf-in.o (32) does NOT
->> > > match with num of versioned symbols in libbpf.so (184). Please make
->> > > sure all LIBBPF_API symbols are versioned in libbpf.map.
->> > >
->> > > This is the only arch that fails, with x86/arm/aarch64/s390 all
->> > > building fine.  Reverting this patch allows successful build across
->> > > all arches.
->> > >
->> > > Justin
->> >
->> > Well, I ended up debugging this same issue and had the same fix as Jarno's when
->> > I noticed his fix was already applied.
->> >
->> > I just installed a system with the latest binutils, 2.33.1, and it still breaks
->> > without such fix. Can you tell what is the output of the following command on
->> > your system?
->> >
->> > readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $0}'
->> >
->> 
->> readelf -s --wide tools/lib/bpf/sharedobjs/libbpf-in.o | cut -d "@"
->> -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | awk '/GLOBAL/ && /DEFAULT/ &&
->> !/UND/ {print $0}'
->>    373: 00000000000141bc  1376 FUNC    GLOBAL DEFAULT    1
->> libbpf_num_possible_cpus [<localentry>: 8]
->>    375: 000000000001869c   176 FUNC    GLOBAL DEFAULT    1 btf__free
->> [<localentry>: 8]
-> [...]
->
-> This is a patch on binutils carried by Fedora:
->
-> https://src.fedoraproject.org/rpms/binutils/c/b8265c46f7ddae23a792ee8306fbaaeacba83bf8
->
-> " b8265c Have readelf display extra symbol information at the end of the line. "
->
-> It has the following comment:
->
-> # FIXME:    The proper fix would be to update the scripts that are expecting
-> #           a fixed output from readelf.  But it seems that some of them are
-> #           no longer being maintained.
->
-> This commit is from 2017, had it been on binutils upstream, maybe the situation
-> right now would be different.
+11.12.2019 19:03, Michał Mirosław пишет:
+> Support ELAN touchpad sensor with older firmware as found on eg. Asus
+> Transformer Pads.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/input/touchscreen/elants_i2c.c | 36 ++++++++++++++++++--------
+>  1 file changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
+> index 887888c53996..eadd26d5a06f 100644
+> --- a/drivers/input/touchscreen/elants_i2c.c
+> +++ b/drivers/input/touchscreen/elants_i2c.c
+> @@ -65,6 +65,7 @@
+>  #define CMD_HEADER_REK		0x66
+>  
+>  /* FW position data */
+> +#define PACKET_SIZE_OLD		40
+>  #define PACKET_SIZE		55
+>  #define MAX_CONTACT_NUM		10
+>  #define FW_POS_HEADER		0
+> @@ -792,7 +793,8 @@ static int elants_i2c_fw_update(struct elants_data *ts)
+>   * Event reporting.
+>   */
+>  
+> -static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+> +static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf,
+> +				size_t report_len)
+>  {
+>  	struct input_dev *input = ts->input;
+>  	unsigned int n_fingers;
+> @@ -804,7 +806,8 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+>  			buf[FW_POS_STATE];
+>  
+>  	dev_dbg(&ts->client->dev,
+> -		"n_fingers: %u, state: %04x\n",  n_fingers, finger_state);
+> +		"n_fingers: %u, state: %04x, report_len: %zu\n",
+> +		n_fingers, finger_state, report_len);
+>  
+>  	for (i = 0; i < MAX_CONTACT_NUM && n_fingers; i++) {
+>  		if (finger_state & 1) {
+> @@ -814,8 +817,16 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+>  			pos = &buf[FW_POS_XY + i * 3];
+>  			x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
+>  			y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
+> -			p = buf[FW_POS_PRESSURE + i];
+> -			w = buf[FW_POS_WIDTH + i];
+> +			if (report_len == PACKET_SIZE_OLD) {
+> +				w = buf[FW_POS_WIDTH + i / 2];
+> +				w >>= 4 * (~i & 1);	// little-endian-nibbles
+> +				w |= w << 4;
+> +				w |= !w;
+> +				p = w;
 
-Bleeping bleep.
+Did you copy this from the downstream driver as-is? I'm looking at the
+Nexus 7 driver and it does the following for older format:
 
-Looks like it was actually ruby that was the original problem:
+u8 size_idx[] = { 35, 35, 36, 36, 37, 37, 38, 38, 39, 39 };
+unsigned int s;
 
-  https://bugzilla.redhat.com/show_bug.cgi?id=1479302
+if (i & 1)
+	s = buf[size_idx[i]];
+else
+	s = buf[size_idx[i]] / 16;
 
+w = s & 0xf;
+p = s * 16;
 
-Why it wasn't hacked around in the ruby package I don't know, doing it in
-the distro binutils package is not ideal.
-
-cheers
+> +			} else {
+> +				p = buf[FW_POS_PRESSURE + i];
+> +				w = buf[FW_POS_WIDTH + i];
+> +			}
+>  
+>  			dev_dbg(&ts->client->dev, "i=%d x=%d y=%d p=%d w=%d\n",
+>  				i, x, y, p, w);
+> @@ -848,7 +859,8 @@ static u8 elants_i2c_calculate_checksum(u8 *buf)
+>  	return checksum;
+>  }
+>  
+> -static void elants_i2c_event(struct elants_data *ts, u8 *buf)
+> +static void elants_i2c_event(struct elants_data *ts, u8 *buf,
+> +			     size_t report_len)
+>  {
+>  	u8 checksum = elants_i2c_calculate_checksum(buf);
+>  
+> @@ -862,7 +874,7 @@ static void elants_i2c_event(struct elants_data *ts, u8 *buf)
+>  			 "%s: unknown packet type: %02x\n",
+>  			 __func__, buf[FW_POS_HEADER]);
+>  	else
+> -		elants_i2c_mt_event(ts, buf);
+> +		elants_i2c_mt_event(ts, buf, report_len);
+>  }
+>  
+>  static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+> @@ -920,7 +932,8 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+>  			break;
+>  
+>  		case QUEUE_HEADER_SINGLE:
+> -			elants_i2c_event(ts, &ts->buf[HEADER_SIZE]);
+> +			elants_i2c_event(ts, &ts->buf[HEADER_SIZE],
+> +					 ts->buf[FW_HDR_LENGTH]);
+>  			break;
+>  
+>  		case QUEUE_HEADER_NORMAL:
+> @@ -933,17 +946,18 @@ static irqreturn_t elants_i2c_irq(int irq, void *_dev)
+>  			}
+>  
+>  			report_len = ts->buf[FW_HDR_LENGTH] / report_count;
+> -			if (report_len != PACKET_SIZE) {
+> +			if (report_len != PACKET_SIZE &&
+> +			    report_len != PACKET_SIZE_OLD) {
+>  				dev_err(&client->dev,
+> -					"mismatching report length: %*ph\n",
+> +					"unsupported report length: %*ph\n",
+>  					HEADER_SIZE, ts->buf);
+>  				break;
+>  			}
+>  
+>  			for (i = 0; i < report_count; i++) {
+>  				u8 *buf = ts->buf + HEADER_SIZE +
+> -							i * PACKET_SIZE;
+> -				elants_i2c_event(ts, buf);
+> +					  i * report_len;
+> +				elants_i2c_event(ts, buf, report_len);
+>  			}
+>  			break;
+>  
+> 
