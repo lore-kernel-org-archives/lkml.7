@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB56C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFAEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3275322527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF2D22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UAjuQ6Dk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RsOFgETh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfLLN41 (ORCPT
+        id S1729666AbfLLN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:56:27 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49790 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729619AbfLLN4Y (ORCPT
+        Thu, 12 Dec 2019 08:56:33 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57032 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729650AbfLLN4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:56:24 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDuBoE122342;
-        Thu, 12 Dec 2019 07:56:11 -0600
+        Thu, 12 Dec 2019 08:56:31 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDuJC3130575;
+        Thu, 12 Dec 2019 07:56:19 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576158971;
-        bh=N84nicFtZRDOC4if/LtlJxXAd3jsAQdvY5Hn/7Nnaa8=;
+        s=ti-com-17Q1; t=1576158979;
+        bh=sT2GTlfLRw0eUXbETF9GVVQ6WAg3uD6MtSWiMfyqi+M=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=UAjuQ6DkrcsHCfp0NM1sS9F1OhDfnnaDg9e5p07XmCXAQM3kXTIxymohXQYJ5TlsE
-         3zpH8/VlKyo8rzPxoP5I/FzqBMMt73l1SSOsBZnoeX2kp9oqjYu9u41HcDK055OUSA
-         sywEIQE37EumheCoSUdZ4Xnv5oPE6nstjs5CtIZQ=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDuBR9117127;
-        Thu, 12 Dec 2019 07:56:11 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        b=RsOFgEThAZihJpqCZMapImij1AG0ZEd06hlyMRl5+UDp6U3N7xHaJORSvQZSyZayi
+         vZH5625luHJSMUF9zXBaNVuWFpANZE6VQH0Wk4oJKqDWerLRmUQ2ShLOlWfYnFM/7m
+         7/lAV2rm7YGPF653rxtp+GRYimudAe4wCXKsNIrE=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCDuJM0045145
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Dec 2019 07:56:19 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 07:56:11 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 07:56:19 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 07:56:11 -0600
+ Frontend Transport; Thu, 12 Dec 2019 07:56:19 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqX048444;
-        Thu, 12 Dec 2019 07:56:07 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqZ048444;
+        Thu, 12 Dec 2019 07:56:15 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <nsaenzjulienne@suse.de>,
         <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -58,9 +59,9 @@ CC:     <vkoul@kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-rpi-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 7/9] spi: spi-fsl-dspi: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Thu, 12 Dec 2019 15:55:48 +0200
-Message-ID: <20191212135550.4634-8-peter.ujfalusi@ti.com>
+Subject: [PATCH 9/9] spi: stm32: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Thu, 12 Dec 2019 15:55:50 +0200
+Message-ID: <20191212135550.4634-10-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191212135550.4634-1-peter.ujfalusi@ti.com>
 References: <20191212135550.4634-1-peter.ujfalusi@ti.com>
@@ -81,37 +82,80 @@ probing against DMA.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/spi/spi-fsl-dspi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/spi/spi-stm32.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index 442cff71a0d2..52ccd8397c35 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -395,17 +395,17 @@ static int dspi_request_dma(struct fsl_dspi *dspi, phys_addr_t phy_addr)
- 	if (!dma)
- 		return -ENOMEM;
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 7d75632c4151..e041f9c4ec47 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -1879,17 +1879,29 @@ static int stm32_spi_probe(struct platform_device *pdev)
+ 	master->transfer_one = stm32_spi_transfer_one;
+ 	master->unprepare_message = stm32_spi_unprepare_msg;
  
--	dma->chan_rx = dma_request_slave_channel(dev, "rx");
--	if (!dma->chan_rx) {
-+	dma->chan_rx = dma_request_chan(dev, "rx");
-+	if (IS_ERR(dma->chan_rx)) {
- 		dev_err(dev, "rx dma channel not available\n");
--		ret = -ENODEV;
-+		ret = PTR_ERR(dma->chan_rx);
- 		return ret;
+-	spi->dma_tx = dma_request_slave_channel(spi->dev, "tx");
+-	if (!spi->dma_tx)
++	spi->dma_tx = dma_request_chan(spi->dev, "tx");
++	if (IS_ERR(spi->dma_tx)) {
++		ret = PTR_ERR(spi->dma_tx);
++		spi->dma_tx = NULL;
++		if (ret == -EPROBE_DEFER)
++			goto err_clk_disable;
++
+ 		dev_warn(&pdev->dev, "failed to request tx dma channel\n");
+-	else
++	} else {
+ 		master->dma_tx = spi->dma_tx;
++	}
++
++	spi->dma_rx = dma_request_chan(spi->dev, "rx");
++	if (IS_ERR(spi->dma_rx)) {
++		ret = PTR_ERR(spi->dma_rx);
++		spi->dma_rx = NULL;
++		if (ret == -EPROBE_DEFER)
++			goto err_dma_release;
+ 
+-	spi->dma_rx = dma_request_slave_channel(spi->dev, "rx");
+-	if (!spi->dma_rx)
+ 		dev_warn(&pdev->dev, "failed to request rx dma channel\n");
+-	else
++	} else {
+ 		master->dma_rx = spi->dma_rx;
++	}
+ 
+ 	if (spi->dma_tx || spi->dma_rx)
+ 		master->can_dma = stm32_spi_can_dma;
+@@ -1901,26 +1913,26 @@ static int stm32_spi_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "spi master registration failed: %d\n",
+ 			ret);
+-		goto err_dma_release;
++		goto err_pm_disable;
  	}
  
--	dma->chan_tx = dma_request_slave_channel(dev, "tx");
--	if (!dma->chan_tx) {
-+	dma->chan_tx = dma_request_chan(dev, "tx");
-+	if (IS_ERR(dma->chan_tx)) {
- 		dev_err(dev, "tx dma channel not available\n");
--		ret = -ENODEV;
-+		ret = PTR_ERR(dma->chan_tx);
- 		goto err_tx_channel;
+ 	if (!master->cs_gpiods) {
+ 		dev_err(&pdev->dev, "no CS gpios available\n");
+ 		ret = -EINVAL;
+-		goto err_dma_release;
++		goto err_pm_disable;
  	}
  
+ 	dev_info(&pdev->dev, "driver initialized\n");
+ 
+ 	return 0;
+ 
++err_pm_disable:
++	pm_runtime_disable(&pdev->dev);
+ err_dma_release:
+ 	if (spi->dma_tx)
+ 		dma_release_channel(spi->dma_tx);
+ 	if (spi->dma_rx)
+ 		dma_release_channel(spi->dma_rx);
+-
+-	pm_runtime_disable(&pdev->dev);
+ err_clk_disable:
+ 	clk_disable_unprepare(spi->clk);
+ err_master_put:
 -- 
 Peter
 
