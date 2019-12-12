@@ -2,99 +2,138 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2751C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A04BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA81D22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576158117;
-	bh=eKIpRDx+zfn9tjbkvPcwD44F+RZgeuddmRcdxODecF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A6qZ2reWCH/OtS1jr/NzGs9Tb6PeeEUnnypGna+V5psz7QoqyIV1kak9Z7IGyz7Kl
-	 45Erz8f2vdV1WzjTZkyT9AVJf5C5SEkHw/JRMj3kgmtTmDtxV8f4OZItzbYtweiz1F
-	 B1LrVjbhUSK0u0wkwAK5lFwoGK1I1G1D8yuEKSEE=
+	by mail.kernel.org (Postfix) with ESMTP id 1E4D82077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:42:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t/mN+nbv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfLLNl4 (ORCPT
+        id S1729509AbfLLNmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:41:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfLLNl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:41:56 -0500
-Received: from localhost (unknown [193.47.165.251])
+        Thu, 12 Dec 2019 08:42:43 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:40004 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbfLLNmm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:42:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=rJa/W2tgIFhiXVFPcpKb0nFBD1So+fskYEhVFV4Lyeo=; b=t/mN+nbvqhhz38AdviLVnyhVu
+        xYiIN4f7rZpxm7bwweRNQ3uLeYJnaGEeRx4J6OTDXgeK1c0+4c0sVs0YaJshLnr3yWmUxTFkznYnw
+        gRFZJklq/Ovmwdti2gnzOV68LlHiZcQkqZt7e7ADORypdWBpYWE7qf7jZFlsFEaMNZEcdi1LSrQwy
+        92s5XFsERA2Ou7NAWJaBOcfncGSEXl8TPTOD7jD5l8rUMEZvBNDiQ6Y0Mm9VYH3xTt4gunl8X0QiA
+        3+S2AAFWiruPcmZXkGa60oybDy4udKiD7zThaA2hmk9LaUvTVQFDkosAPd84yakQDcwyYE+9jkl7F
+        AhpV3yYaw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifOjg-0001Xc-Rj; Thu, 12 Dec 2019 13:42:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8A722077B;
-        Thu, 12 Dec 2019 13:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576158115;
-        bh=eKIpRDx+zfn9tjbkvPcwD44F+RZgeuddmRcdxODecF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EDAQC728DMmhZg3qL4jAR538yfhDTJ0lm6Kf+9fpYSdnhWz7nT0DicXenTE+nLnrb
-         i1+Eho4lCWrAClTzN+L7XkHJhwcfQEaR44cPTD94jsd6VNWM8bLU3/CT2cVXi3lhKj
-         6+uVNGLXoeQK6BaGmxNf4SBFFt3MJgYTS0p68kJs=
-Date:   Thu, 12 Dec 2019 15:41:52 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Gal Pressman <galpress@amazon.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Max Hirsch <max.hirsch@gmail.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        Steve Wise <swise@opengridcomputing.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Danit Goldberg <danitg@mellanox.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dag Moxnes <dag.moxnes@oracle.com>,
-        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
-Message-ID: <20191212134152.GB67461@unreal>
-References: <20191211111628.2955-1-max.hirsch@gmail.com>
- <20191211162654.GD6622@ziepe.ca>
- <20191212084907.GU67461@unreal>
- <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E687C300F29;
+        Thu, 12 Dec 2019 14:41:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 46A2729E10BD6; Thu, 12 Dec 2019 14:42:31 +0100 (CET)
+Date:   Thu, 12 Dec 2019 14:42:31 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v8] perf: Sharing PMU counters across compatible events
+Message-ID: <20191212134231.GW2844@hirez.programming.kicks-ass.net>
+References: <20191207002447.2976319-1-songliubraving@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191207002447.2976319-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 02:10:12PM +0200, Gal Pressman wrote:
-> On 12/12/2019 10:49, Leon Romanovsky wrote:
-> > On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
-> >> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
-> >>> When running checkpatch on cma.c the following error was found:
-> >>
-> >> I think checkpatch will complain about your patch, did you run it?
-> >
-> > Jason, Doug
-> >
-> > I would like to ask to refrain from accepting checkpatch.pl patches
-> > which are not part of other large submission. Such standalone cleanups
-> > do more harm than actual benefit from them for old and more or less
-> > stable code (e.g. RDMA-CM).
->
-> Sounds like a great approach to prevent new developers from contributing code.
-> You have to start somewhere and checkpatch patches are a good entry point for
-> such developers, discouraging them will only hurt us in the long term.
+On Fri, Dec 06, 2019 at 04:24:47PM -0800, Song Liu wrote:
+> +/* Remove dup_master for the event */
+> +static void perf_event_remove_dup(struct perf_event *event,
+> +				  struct perf_event_context *ctx)
+> +
+> +{
+> +	struct perf_event *tmp, *new_master;
+> +	int count;
+> +
+> +	/* no sharing */
+> +	if (!event->dup_master)
+> +		return;
+> +
+> +	WARN_ON_ONCE(event->state != PERF_EVENT_STATE_INACTIVE &&
+> +		     event->state != PERF_EVENT_STATE_OFF);
+> +
+> +	/* this event is not the master */
+> +	if (event->dup_master != event) {
+> +		event->dup_master = NULL;
+> +		return;
+> +	}
+> +
+> +	/* this event is the master */
+> +	perf_event_exit_dup_master(event);
+> +
+> +	count = 0;
+> +	new_master = NULL;
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+> +		WARN_ON_ONCE(tmp->state > PERF_EVENT_STATE_INACTIVE);
+> +		if (tmp->dup_master == event) {
+> +			count++;
+> +			if (!new_master)
+> +				new_master = tmp;
+> +		}
+> +	}
+> +
+> +	if (!count)
+> +		return;
+> +
+> +	if (count == 1) {
+> +		/* no more sharing */
+> +		new_master->dup_master = NULL;
+> +		return;
+> +	}
+> +
+> +	perf_event_init_dup_master(new_master);
+> +
+> +	/* switch to new_master */
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry)
+> +		if (tmp->dup_master == event)
+> +			tmp->dup_master = new_master;
+> +}
 
-We have staging tree where new developer can train their checkpatch patches.
+I'm thinking you can do that in a single iteration:
 
-What about fixing smatch and sparse errors? It doesn't require HW for
-that and much better entry point for the new developers.
+	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+		if (tmp->dup_master != event)
+			continue;
 
->
-> Linus had an interesting post on the subject:
-> https://lkml.org/lkml/2004/12/20/255
+		if (!new_master)
+			new_master = tmp;
 
-We are in 2019 and our opinions, Linus's back 15 years ago and mine can be different.
+		tmp->dup_master = new_master;
+		count++;
+	}
 
-Thanks
+	if (count == 1)
+		new_master->dup_master = NULL;
+	else
+		perf_event_init_dup_master(new_master);
+
+Hmm?
