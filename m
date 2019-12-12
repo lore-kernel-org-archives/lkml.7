@@ -2,153 +2,112 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4DBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD7BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 171C324671
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576174902;
-	bh=i+dcJM/f6xnhJQ9i63A4Z9F3vQYpJTHOxEAe+lR+QTw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=k+zcK9E6htZaaLmNWTKF8CLKLCQ12XI4IEpSkw90ylHyzuB9YSjhWekMmyNkDyc57
-	 u0YU8yuNI8PRgyHnl2CBHz9tSpCueBUEKg/I9M0lyEETWZf8UJcM8LXE0QbABjasfK
-	 xpczUFXTU2yk1WWkVCxF28d/RsCe0JfMSwrdjeyY=
+	by mail.kernel.org (Postfix) with ESMTP id 78A6C22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wOmXzfFa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730334AbfLLSVk (ORCPT
+        id S1730353AbfLLSWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:21:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbfLLSVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:21:40 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BBED21556;
-        Thu, 12 Dec 2019 18:21:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576174899;
-        bh=i+dcJM/f6xnhJQ9i63A4Z9F3vQYpJTHOxEAe+lR+QTw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=MofbQa+M16OKmySZ0fjGFEYYV9jhtP606xxBU8XZeCthREeFJ2ZFvZndPaRMTZ0yS
-         Y7sL09uwIBUFXKNHGQRUIn+ga11ipL6aiwAEjGK+PNCdbl91we4M7SGVgBTUv/6jvN
-         1iQloQW7HnVbigA/nfHwLT859Bgb0JBmoapSrp7Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 05C5B3522757; Thu, 12 Dec 2019 10:21:39 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:21:39 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Bart Van Assche <bart.vanassche@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Shane M Seymour <shane.seymour@hpe.com>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH tip/core/rcu 01/12] rcu: Remove rcu_swap_protected()
-Message-ID: <20191212182139.GA2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191210040714.GA2715@paulmck-ThinkPad-P72>
- <20191210040741.2943-1-paulmck@kernel.org>
- <yq1a77zmt4a.fsf@oracle.com>
- <20191211035122.GC2889@paulmck-ThinkPad-P72>
- <20191211183738.GA5190@paulmck-ThinkPad-P72>
- <1911b7fa-c8d4-e34b-020d-3346a56f29d6@gmail.com>
- <20191211231239.GK2889@paulmck-ThinkPad-P72>
- <87mubxdh52.fsf@kamboji.qca.qualcomm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87mubxdh52.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 12 Dec 2019 13:22:54 -0500
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:45495 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730168AbfLLSWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:22:54 -0500
+Received: by mail-qk1-f202.google.com with SMTP id 143so1936570qkg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:22:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=rEnziU9nLlHlYc/tf137lSRc7sdTqh5wg35Mf+C3wB0=;
+        b=wOmXzfFazrugxZCYf410kz6njqqI2ZayPQ3Zp1rCCJAl61eXIHZJMLIXKd7ipcL41R
+         Sm+Wcca2Q6JqgT++kdbvjzbjYq0FYVW/lmi7QB7yJwkVuo4MV424+x+d7yCwKx0ttep0
+         Lptl32SFvhXt0TyRQZlvv9SqXlyRFpCG1TsG3O7/iQ2t4vkLUnHSfRpXrHshDh35/gFo
+         c/KEVVI0neOaMUy1YUeklfjbepAMeO7ukOv7HLZ0ISIwDFMKd/GAqrrKh7r8JeBNqa+r
+         SbafHPrcaqVH22AN6GG+pQawROsiZA4u3mp/RCCP/9BjFwd9lIMMNNZaOz5x++hHZB3m
+         2fSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=rEnziU9nLlHlYc/tf137lSRc7sdTqh5wg35Mf+C3wB0=;
+        b=V0PrT5Kny29qS9tFGgbbs49uPEIC7j53NB2ob7LbrrX3jGj2LpwrbfHCmfcxChelwn
+         hVWACmyA8mJb4DBApR3I7XKcG5EA9LrPTqO1qWf9fRkOUfe3OijbdLFQQtKwhYcI/Zuu
+         44zur+bzQC8yoa7unPdyUUbNek/PSm1fHLQXStYHoJQ7mh2rk4hY3JXoKqM+JeQv3wEz
+         Y+8x1IOY6TuNMqIpTEPdzbVTk7OCcG4BopvE05yVMdV/EcPs1ZAGAz+rLGgJXqZjwb2O
+         ggbyvIwuFlTsEDxk0wq9n5ThIGeHRySo6C1nhAobMzdrbjD42/qIjWQbk+qPQ9V9mgDO
+         mZzQ==
+X-Gm-Message-State: APjAAAUvMya4mr0WT/qGFOsJP7gD01x9WlQf9SsKYFdQeum8Glqrq2Ll
+        3+ixjdA4S8IaGoRVqqZoEEICSXyA
+X-Google-Smtp-Source: APXvYqzcW/ZghkfJqEYc4rFEK2YkEyqYYEYYl+bxHBfcPF4MTg+EIi+2m6XM7rKZ/g0d94tGM2bioMma
+X-Received: by 2002:ac8:5308:: with SMTP id t8mr8677688qtn.51.1576174973189;
+ Thu, 12 Dec 2019 10:22:53 -0800 (PST)
+Date:   Thu, 12 Dec 2019 13:22:36 -0500
+Message-Id: <20191212182238.46535-1-brho@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
+Subject: [PATCH v5 0/2] kvm: Use huge pages for DAX-backed files
+From:   Barret Rhoden <brho@google.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:31:37AM +0200, Kalle Valo wrote:
-> + linux-wireless
-> 
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> 
-> > On Wed, Dec 11, 2019 at 08:09:11PM +0100, Matthias Brugger wrote:
-> >> On 11/12/2019 19:37, Paul E. McKenney wrote:
-> >>
-> >> > --- a/drivers/net/wireless/mediatek/mt76/agg-rx.c
-> >> > +++ b/drivers/net/wireless/mediatek/mt76/agg-rx.c
-> >> > @@ -281,8 +281,8 @@ void mt76_rx_aggr_stop(struct mt76_dev *dev, struct mt76_wcid *wcid, u8 tidno)
-> >> >  {
-> >> >  	struct mt76_rx_tid *tid = NULL;
-> >> >  
-> >> > -	rcu_swap_protected(wcid->aggr[tidno], tid,
-> >> > -			   lockdep_is_held(&dev->mutex));
-> >> > +	tid = rcu_swap_protected(wcid->aggr[tidno], tid,
-> >> > +				 lockdep_is_held(&dev->mutex));
-> >> 
-> >> I suppose you meant: rcu_replace_pointer() here.
-> >
-> > Indeed I did, and thank you for catching this!  Bad patch day here.  :-/
-> >
-> > Update below...
-> >
-> > 							Thanx, Paul
-> >
-> > ------------------------------------------------------------------------
-> >
-> > commit ad5572b091429a45e863acaa6a36cf396d44f58d
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Wed Dec 11 10:30:21 2019 -0800
-> >
-> >     wireless/mediatek: Replace rcu_swap_protected() with rcu_replace_pointer()
-> >     
-> >     This commit replaces the use of rcu_swap_protected() with the more
-> >     intuitively appealing rcu_replace_pointer() as a step towards removing
-> >     rcu_swap_protected().
-> >     
-> >     Link: https://lore.kernel.org/lkml/CAHk-=wiAsJLw1egFEE=Z7-GGtM6wcvtyytXZA1+BHqta4gg6Hw@mail.gmail.com/
-> >     Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> >     Reported-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-> >     [ paulmck: Apply Matthias Brugger feedback. ]
-> >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> >     Reviewed-by: "Martin K. Petersen" <martin.petersen@oracle.com>
-> >     Cc: Felix Fietkau <nbd@nbd.name>
-> >     Cc: Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-> >     Cc: Ryder Lee <ryder.lee@mediatek.com>
-> >     Cc: Roy Luo <royluo@google.com>
-> >     Cc: Kalle Valo <kvalo@codeaurora.org>
-> >     Cc: "David S. Miller" <davem@davemloft.net>
-> >     Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> >     Cc: <linux-wireless@vger.kernel.org>
-> >     Cc: <netdev@vger.kernel.org>
-> >     Cc: <linux-arm-kernel@lists.infradead.org>
-> >     Cc: <linux-mediatek@lists.infradead.org>
-> 
-> Via which tree is this supposed to go? If I should take this please
-> resend to linux-wireless so that patchwork sees it, but if someone else
-> is planning to take this:
-> 
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+This patchset allows KVM to map huge pages for DAX-backed files.
 
-I have queued it just preceding the commit that remove rcu_swap_protected()
-with your ack, thank you!
+v4 -> v5:
+v4: https://lore.kernel.org/lkml/20191211213207.215936-1-brho@google.com/
+- Rebased onto kvm/queue
+- Removed the switch statement and fixed PUD_SIZE; just use
+  dev_pagemap_mapping_shift() > PAGE_SHIFT
+- Added explanation of parameter changes to patch 1's commit message
 
-							Thanx, Paul
+v3 -> v4:
+v3: https://lore.kernel.org/lkml/20190404202345.133553-1-brho@google.com/
+- Rebased onto linus/master
+
+v2 -> v3:
+v2: https://lore.kernel.org/lkml/20181114215155.259978-1-brho@google.com/
+- Updated Acks/Reviewed-by
+- Rebased onto linux-next
+
+v1 -> v2:
+https://lore.kernel.org/lkml/20181109203921.178363-1-brho@google.com/
+- Updated Acks/Reviewed-by
+- Minor touchups
+- Added patch to remove redundant PageReserved() check
+- Rebased onto linux-next
+
+RFC/discussion thread:
+https://lore.kernel.org/lkml/20181029210716.212159-1-brho@google.com/
+
+Barret Rhoden (2):
+  mm: make dev_pagemap_mapping_shift() externally visible
+  kvm: Use huge pages for DAX-backed files
+
+ arch/x86/kvm/mmu/mmu.c | 31 +++++++++++++++++++++++++++----
+ include/linux/mm.h     |  3 +++
+ mm/memory-failure.c    | 38 +++-----------------------------------
+ mm/util.c              | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 67 insertions(+), 39 deletions(-)
+
+-- 
+2.24.0.525.g8f36a354ae-goog
+
