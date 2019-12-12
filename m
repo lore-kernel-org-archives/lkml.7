@@ -2,125 +2,125 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D79C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E869C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780842253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D14C721556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XOcfVfvO"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="akQTQ8DG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbfLLVzc (ORCPT
+        id S1731214AbfLLVzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:55:32 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34858 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731194AbfLLVzc (ORCPT
+        Thu, 12 Dec 2019 16:55:39 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34871 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731204AbfLLVzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:55:32 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so282808pgk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:55:31 -0800 (PST)
+        Thu, 12 Dec 2019 16:55:37 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so282997pgk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:55:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:from:cc:to:subject:user-agent:date;
-        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
-        b=XOcfVfvOeLyjRRYv4YyBXqZXcq674DERW9bH+JuR+mQJt/1eouj+sPsXldunowJEUn
-         qlpu9yXRRfrpE6pfkWSuTGgw8mAJbHuDHNCDrkx2oINnIZ6BMwSP9wwG3T8SlxIXEEZi
-         7mdxLGuIfBHoCbfpCh4O4Dca0tfCbxhpKNjAk=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=h/VdtXdRQlPmJqNAwJpL0SAreQKh5WfidHfGkffdfTY=;
+        b=akQTQ8DGz4+sLf+zxm0p7E7OSR4ZVNkCljcLLOLKtWKJJXAmgxCFUjPlwOG5fbSC9N
+         mERo4ScyELdDEEkmatrR1iPy+pdwUVhfxjnUUIR+kUGOsjfUBzr5wxbpFNbTqRNtQ09z
+         b+wx6vcHLgpVhQN4aXYz0T07BsuRDMg6DU2cw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
-         :user-agent:date;
-        bh=urg3oqpkUyFoOb/JDlCrmqkZ7jXqGD4fg9eldRMT63E=;
-        b=Vafs5OrjbVzGeiMRpGPB2Q5c4mRbWocPvTY+DGjKZHqAy37TTAiRcvYfHioStsiy5z
-         WS2/1d96UaHHvWRAxm8+BFV0fWXSNw901AUQVZ/vcfYpjxPtA093ny8GYStloCqC85FR
-         h1+LJGKqk3RNiH91xRngXAgMmKqeDt+YkaVsEE29G/EQ5tf29//J4rfHAUlus7GvjppV
-         yPksA3VvbbjzyrZGR5m1/ADgazwFaf97kES0G0Mri8NsBY5TO+3qZuFjMgc0mqC1fLVj
-         NB1OemOpMnV/9k4io1kTc2Pm+3JkkYxTYKGvsuBYIiEgZBHwhF0dCvOAxY3vO/VAsI9b
-         KKPw==
-X-Gm-Message-State: APjAAAUKB9v36ivGGUDQTZsrFTM4rrZYUTug5FA2Zemn4TDHYjKP9FqK
-        8UlAfjVoA0mEE7I0+t3oYuYKUA==
-X-Google-Smtp-Source: APXvYqxsU3Zn83nmi5BMPuXs1io7SR/MxzioX+tPsoqMwseMYXhYSyyUPQtfuvaRWLq5j4dET5VfoQ==
-X-Received: by 2002:a63:d543:: with SMTP id v3mr12769373pgi.285.1576187731374;
-        Thu, 12 Dec 2019 13:55:31 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id o8sm6775711pjo.7.2019.12.12.13.55.30
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=h/VdtXdRQlPmJqNAwJpL0SAreQKh5WfidHfGkffdfTY=;
+        b=o6Q7UEQJquuxoW7+6my68OZCvFeV/mkeUH9UQ5fXjTtWt7sSqfkL5X5xdCouYxvEdT
+         rBb6YlVMM2dtconn/qx19E7ZmWb/EKjv7qdnnRZtu2AKQ7DOkGC24daxK4XQtkqvHVZK
+         fs+xq1OVfhQ34Jdy0RNuogIiGqn1Z0vh68SWLnWfa74sA5PkLbjeLhDRLpPKI+0P0C9l
+         RHuvCXyUt/qOMnmi40P/gGk/D/EddDqUHGd1AyInXCnf2QewoEDgvVqKJEGKngzTvZMA
+         AtaJ8DeH24bBmvxjtyxZ3wlYxcAmXbvIa/dtZu0NCqvOe/DzLtriPq1vpeSbJkBPdBeA
+         eAEQ==
+X-Gm-Message-State: APjAAAUfYbwUcAeKLRdxhp9EhTngGY4XL9XcaE/0jW+XAJZCaexIUXEr
+        2a4ytjIYl7sHxP4fdJjuNikzG6DVEtA=
+X-Google-Smtp-Source: APXvYqwsMX2eicc0dbN7r6W5gmKv0tIxPb2fvRfeVxEEAY6q0Rx/j41gSkqdSqxQQojNi+feY0HBOQ==
+X-Received: by 2002:a63:7843:: with SMTP id t64mr13106609pgc.144.1576187736533;
+        Thu, 12 Dec 2019 13:55:36 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id k88sm7172380pjb.15.2019.12.12.13.55.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 13:55:30 -0800 (PST)
-Message-ID: <5df2b752.1c69fb81.77c46.0f9a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Dec 2019 13:55:35 -0800 (PST)
+Date:   Thu, 12 Dec 2019 16:55:34 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     madhuparnabhowmik04@gmail.com, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, linux-nfs@vger.kernel.org,
+        rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] fs: nfs: dir.c: Fix sparse error
+Message-ID: <20191212215534.GE129023@google.com>
+References: <20191206151640.10966-1-madhuparnabhowmik04@gmail.com>
+ <20191206160238.GE2889@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
-References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
-User-Agent: alot/0.8.1
-Date:   Thu, 12 Dec 2019 13:55:29 -0800
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191206160238.GE2889@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2019-12-12 11:35:43)
-> Running `make dtbs_check` yells:
->=20
->   arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: timer@17c20000: #size-cell=
-s:0:0: 1 was expected
->=20
-> It appears that someone was trying to assert the fact that sub-nodes
-> describing frames would never have a size that's more than 32-bits
-> big.  That's certainly true in the case of sc7180.
->=20
-> I guess this is a hint that it's time to do the thing that nobody
-> seems to do but that "writing-bindings.txt" says we should all do.
-> Specifically it says: "DO use non-empty 'ranges' to limit the size of
-> child buses/devices".  That means we should probably limit the
+On Fri, Dec 06, 2019 at 08:02:38AM -0800, Paul E. McKenney wrote:
 
-It got cut off here. I'm waiting to find out what it is!!
+Thanks for fixing these issues and I caught up with all the patches.
 
->=20
-> I believe that this patch is the way to do it and there should be no
-> bad side effects here.  I believe that since we're far enough down
-> (not trying to describe an actual device, just some sub-pieces) that
-> this won't cause us to run into the problems that caused us to
-> increase the soc-level #address-cells and #size-cells to 2 in sdm845
-> in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase address
-> and size cells for soc").
->=20
-> I can at least confirm that "arch_mem_timer" seems to keep getting
-> interrupts in "/proc/interrupts" after this change.
->=20
-> Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for =
-SC7180 soc")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+> 
+> o	Create a list that is safe for bidirectional RCU traversal.
+> 	This can use list_head, and would need these functions,
+> 	give or take the exact names:
 
-This pattern exists in most of the qcom dts files. Can you fix all the
-arm,armv7-timer-mem nodes. Maybe the binding has the same problem too in
-the example.
+On a related topic, I was trying to reason about how one could come up with
+bidirectional traversal without ever getting rid of poisoning.
 
->=20
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++--------------
->  1 file changed, 18 insertions(+), 18 deletions(-)
->=20
+As you noted in another post, if during traversal, the node is deleted and
+poisoned, then the traverser can access a poisoned pointer. If the list is
+being traversed in reverse (by following prev), then poisioning could hurt
+it.
+
+Even with the below modifications, poisoning would still hurt it. No? Were
+you suggesting to remove poisoning for such bidirectional RCU list?
+
+Sorry if I missed something.
+thanks,
+
+ - Joel
+
+
+> 	list_add_tail_rcuprev():  This is like list_add_tail_rcu(),
+> 	but also has smp_store_release() for ->prev.  (As in there is
+> 	also a __list_add_rcuprev() helper that actually contains the
+> 	additional smp_store_release().)
+> 
+> 	list_del_rcuprev():  This can be exactly __list_del_entry(),
+> 	but with the assignment to ->prev in __list_del() becoming
+> 	WRITE_ONCE().  And it looks like callers to __list_del_entry()
+> 	and __list_del() might need some attention!  And these might
+> 	result in additional users of *_rcuprev().
+> 
+> 	list_prev_rcu() as in your first patch, but with READ_ONCE().
+> 	Otherwise DEC Alpha can fail.  And more subtle compiler issues
+> 	can appear on other architectures.
+> 
+> 	Note that list_move_tail() will be OK give or take *_ONCE().
+> 	It might be better to define a list_move_tail_rcuprev(), given
+> 	the large number of users of list_move_tail() -- some of these
+> 	users might not like even the possibility of added overhead due
+> 	to volatile accesses.  ;-)
+> 
+> Or am I missing something subtle here?
+> 
+> 							Thanx, Paul
