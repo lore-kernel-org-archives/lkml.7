@@ -2,86 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7318BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62FEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBD621556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:10:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576174247;
-	bh=OBeMstB7/3kVrbQjqXG2vjx2xBj7BRaI8jToPPCTYZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LRgs5Mx/RoquRDFYzKfi9CmoZ/XuHJVCNPma1pkN5BZlCJac1bBtnsHwtL6veVom6
-	 7qZBAbnl4vx09TftvWYFHDioqOxzf9F7pnItkfYp1KJCrXGD2jU4/03kbrW/xtOitK
-	 UClqg/hUNt9UxhxBMOZ+iHGtxRJDpiUKXl3NUn9c=
+	by mail.kernel.org (Postfix) with ESMTP id BF50F21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LEKz4gfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfLLSKq (ORCPT
+        id S1730312AbfLLSNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:10:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40919 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730080AbfLLSKq (ORCPT
+        Thu, 12 Dec 2019 13:13:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41574 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730080AbfLLSNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:10:46 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so3762073wrn.7;
-        Thu, 12 Dec 2019 10:10:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2FkS+4Qqd9YB/yfl4AmGYyT+drz3UF0FpODz0HkSGMA=;
-        b=kMu3mkIB9WF7D/Qb9hukRycItKGl+K1c+5JayfLVoAE2XYyVLHmoWw6XNsuNXC1pGx
-         1JbhcA5KJH+PjnjTVkgDbHVhPjgeDC0MF3XO86LNY0OjMANlQMgmPGcN+PnXo3B5T3GI
-         5eG6LHPQNAPiHVDagE1mPFDBPyfcOMcnCwiW/elYnCAhOtNjp9Q6ZyDo4V+4hlaeERnr
-         57DGST1uhhJ48lLqwzmf+aA3/048QvNRVc+KRQ/qTqEXua1Y5yaXhflYy2m5Im3BDiXg
-         nGwldeFnOf0mkf4I+VCs3uEHjvNI9JIhDJFziVsS9C1a9i1ifoWZRWjeYVoNcpWkqSLJ
-         0m2g==
-X-Gm-Message-State: APjAAAWWoB9qbLaxvdNWU00wtKqYN4s5iXAACPhl8kwO9fULLyaxkDh0
-        jOEEy/qslg5q3/rf58GsW5E=
-X-Google-Smtp-Source: APXvYqw/uME6tOeL7OUNHpp0730NBNHkdBcAqsk97DSNHM6GFRhnhLP9/9ujUjhyVbAVN3av+4I7DA==
-X-Received: by 2002:a5d:4d0e:: with SMTP id z14mr7540381wrt.208.1576174243640;
-        Thu, 12 Dec 2019 10:10:43 -0800 (PST)
-Received: from debian (122.163.200.146.dyn.plus.net. [146.200.163.122])
-        by smtp.gmail.com with ESMTPSA id n189sm6278387wme.33.2019.12.12.10.10.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 10:10:43 -0800 (PST)
-Date:   Thu, 12 Dec 2019 18:10:41 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Paul Durrant <pdurrant@amazon.com>
-Cc:     netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH net] xen-netback: avoid race that can lead to NULL
- pointer dereference
-Message-ID: <20191212181041.mjuoy4el6h2jedhv@debian>
-References: <20191212123723.21548-1-pdurrant@amazon.com>
+        Thu, 12 Dec 2019 13:13:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=G49Rl0ofxGDjV0ebu1h/WHiySZFXkCT6JdTKwgc+3Ho=; b=LEKz4gfOoesGVprlJRemg+jlu
+        y3BHsx4zmfnfmGq4f4UDn2GYw3qZGWH1JLLTPtwCy/D5xPR7U3a4MKAnGCfWv3IS+ubNJyrqnIbqt
+        tTGPNK+AK0F8W7QxE7aNPMK6bWPFA2WulJJeoH5Br2wUJJE3442kCY4BTUKRM18l9QziV8MQjbgDN
+        LRaZ046/THnA0MnX7NKNXa4TrGTJvWFN+Vc89RUb5J5EBJENodCWnRHzP5+rVDhtas/y6Vlbi8xyB
+        X608T2PTboYMdcL3cLbijTp+075vI7BlqU/6h/RwSYjZGbLLf4vdklpfZCaCsdLjIA/VQE8WaeUzt
+        g3nIla6iw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifSxS-0006Ii-Ow; Thu, 12 Dec 2019 18:13:02 +0000
+Date:   Thu, 12 Dec 2019 10:13:02 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] fs: introduce is_dot_or_dotdot helper for cleanup
+Message-ID: <20191212181302.GT32169@bombadil.infradead.org>
+References: <1575979801-32569-1-git-send-email-yangtiezhu@loongson.cn>
+ <20191210191912.GA99557@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212123723.21548-1-pdurrant@amazon.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191210191912.GA99557@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:37:23PM +0000, Paul Durrant wrote:
-> Commit 2ac061ce97f4 ("xen/netback: cleanup init and deinit code")
-> introduced a problem. In function xenvif_disconnect_queue(), the value of
-> queue->rx_irq is zeroed *before* queue->task is stopped. Unfortunately that
-> task may call notify_remote_via_irq(queue->rx_irq) and calling that
-> function with a zero value results in a NULL pointer dereference in
-> evtchn_from_irq().
+On Tue, Dec 10, 2019 at 11:19:13AM -0800, Eric Biggers wrote:
+> > +static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
+> > +{
+> > +	if (unlikely(name[0] == '.')) {
+> > +		if (len < 2 || (len == 2 && name[1] == '.'))
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
 > 
-> This patch simply re-orders things, stopping all tasks before zero-ing the
-> irq values, thereby avoiding the possibility of the race.
-> 
-> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
+> This doesn't handle the len=0 case.  Did you check that none of the users pass
+> in zero-length names?  It looks like fscrypt_fname_disk_to_usr() can, if the
+> directory entry on-disk has a zero-length name.  Currently it will return
+> -EUCLEAN in that case, but with this patch it may think it's the name ".".
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+Trying to wrench this back on track ...
+
+fscrypt_fname_disk_to_usr is called by:
+
+fscrypt_get_symlink():
+       if (cstr.len == 0)
+                return ERR_PTR(-EUCLEAN);
+ext4_readdir():
+	Does not currently check de->name_len.  I believe this check should
+	be added to __ext4_check_dir_entry() because a zero-length directory
+	entry can affect both encrypted and non-encrypted directory entries.
+dx_show_leaf():
+	Same as ext4_readdir().  Should probably call ext4_check_dir_entry()?
+htree_dirblock_to_tree():
+	Would be covered by a fix to ext4_check_dir_entry().
+f2fs_fill_dentries():
+	if (de->name_len == 0) {
+		...
+ubifs_readdir():
+	Does not currently check de->name_len.  Also affects non-encrypted
+	directory entries.
+
+So of the six callers, two of them already check the dirent length for
+being zero, and four of them ought to anyway, but don't.  I think they
+should be fixed, but clearly we don't historically check for this kind
+of data corruption (strangely), so I don't think that's a reason to hold
+up this patch until the individual filesystems are fixed.
