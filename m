@@ -2,110 +2,96 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4914C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB3C2D0C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3047214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9432A2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lP5Q5crX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYYGYzYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfLLAaP (ORCPT
+        id S1727387AbfLLAaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:30:15 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37183 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfLLAaP (ORCPT
+        Wed, 11 Dec 2019 19:30:20 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46660 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727185AbfLLAaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:30:15 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so261580plz.4
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 16:30:15 -0800 (PST)
+        Wed, 11 Dec 2019 19:30:19 -0500
+Received: by mail-lj1-f194.google.com with SMTP id z17so176066ljk.13;
+        Wed, 11 Dec 2019 16:30:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=98MiLyb51h/Cn9dLTiDsE8vJncDIeF6YECGtn7W0cKg=;
-        b=lP5Q5crX7/86Q1Xp9XhlJT2FRQD7zC9MxT79L9+amXZP+PhH3+YyDU+ctYKmPb17dW
-         Q2cO/iO/ITwDzdv1X2LTcZl2EBQL0lUpWBssaHesdTeOEJ7ZFWYHQqJRR+tUg4n+Calt
-         iNFRm8QOAzdf4KF96xSvwJznLTkB4VYX8ZP3hfFaqjDjBiL6PkseF3kJB/r2Y8gU1TIi
-         UlimAMy4UwP96pqrj1AMt5GHymW2cJwEa9U3nOF/qWGj3RAXjQ2hnCRvMWvmtZEvSp5B
-         FMpsl4O4HQMYL6cr4l/B9Kizp0uceT4htzL1ROd3IO0a5ZjWDA1skCCReslvqApFuwTR
-         6J+Q==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mgVjPBpyfVTYKp7+63M0bjTwmbLNn/Kfsk0p43t6uBU=;
+        b=PYYGYzYSWKV2PqQB4n1wRuprl+RhHezanrtZ6Rw2jHwXb3x297I9nIlvtZfTyrxDkI
+         Miu9HWz020yOrx5E3uZo23k9Ogd5jnflKCZr0vN1oXX2FYAubYOAtjuOmgMHbJ/qrHbD
+         drSMxC/j+dhZ4qEWLFJJ2X8dN1mOO1oGUiapO5xGN6AFjyLUApWHyvwd/2za5SGqe4ZI
+         sBhDaGH6L3V6puhmLDGwAUwWmluqqUEZz6/yTQxCWpNDQUZXH8N20qvv4P8RSwLkterD
+         t3+qkkJH0u03n+0dmrAAfexVFz/WQ5bCR45uzaCjZad7FBaH5fw1W38Uwe2sHU+7FutG
+         yhEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=98MiLyb51h/Cn9dLTiDsE8vJncDIeF6YECGtn7W0cKg=;
-        b=qcdl1+ev45sWQCmR0+xPgdCqicyvojdJS/7pSkSZYsms8jgBjn3NWWZRvp/P2tsxBQ
-         iw5/fcVLVHmZSO8j1tx3F4/Xo4W8oqxHoRmriAx+v/kDXAgmBjHcDUUSaGrZAAvRks6l
-         O8G5bKpjSqSkqp385tiZFC4micuNe54kdvr4Q6GNhNzb1YoRgCqpPpv6ehhuteqlenTl
-         IHtQLdMx+UIyg1yqDE99oJAktuuCTucUwtLoJXruflO7lv9E4bnkqytwFs6VL43U9f7r
-         IjaMjG7DwQ7WYH1eBdFNxONiGF58+Sjntmi+htur6sByDkdPX3MyDRPA+4ItU6yv2vJm
-         sETg==
-X-Gm-Message-State: APjAAAWSfvtIy4GvpNqibtFwwy7YCEIs3HorDVjXRNWnA6FEguDRZXPa
-        d7UYeFuhDl/p8npOeu2damwW9Oz7nShmrvwhbu6TdQ==
-X-Google-Smtp-Source: APXvYqzq6Vm4MF0LJmgPetQ0HfLygKQDroi15h3w98cajYBED64kJb4iyOD59iDuYqSx2M7otcQUFs5SP10L1YECnr4=
-X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr6600338plm.232.1576110614370;
- Wed, 11 Dec 2019 16:30:14 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mgVjPBpyfVTYKp7+63M0bjTwmbLNn/Kfsk0p43t6uBU=;
+        b=NkihYS5gHaX5ajwTrrhtlCL8b6epQFeBygHJlxyJd/S8TI38nIn4ftlQOG3VJZdcO5
+         FBuZhlQX9UUWLJnM7nPMqYJKm7uID0lcxXPu2u4lj4AyAGkIhJZRHzhJylCm4Wsp7c3y
+         gWs/i+2nkb7Ke5NEfUlkdyP//DEdLMC2KxEyD2LyDAlziw79SpIMx/WAKftE+N4mOPL6
+         PfzWMcF/StEt1jtxYNPP9AGcoqqPHRVdRIa8q/5MZ9zrO37ud5hwE4MtyRLnDchYiuVx
+         hlMmn8QWEvnnXCvdQhD/a+Pud5hTB+BoESahbv0XPxq5tnCFAUH2c39ks6eGI6UiNnQk
+         5gbg==
+X-Gm-Message-State: APjAAAX9yhm+R+RGmCXjJu6Jc76FjH1lJ62++fO83tPMZquYiYAX1cU5
+        txVWyHzqQYIe49bl14fbnPU=
+X-Google-Smtp-Source: APXvYqwO5foLVVJytsyxiKCrekNCooOHh4aENG+4C4O+uBUNnZwq8OmWKehIm1Ym44jZkUOg8dpR/g==
+X-Received: by 2002:a2e:3619:: with SMTP id d25mr3992053lja.231.1576110617323;
+        Wed, 11 Dec 2019 16:30:17 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id b14sm1946255lff.68.2019.12.11.16.30.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 16:30:16 -0800 (PST)
+Subject: Re: [PATCH v2 5/9] input: elants: refactor
+ elants_i2c_execute_command()
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <7d211bcab8d649f70e5bd324585dc383592d4187.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ce088d14-5b12-2acc-56c6-93113abba4b0@gmail.com>
+Date:   Thu, 12 Dec 2019 03:30:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191211192742.95699-1-brendanhiggins@google.com>
- <20191211192742.95699-8-brendanhiggins@google.com> <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
-In-Reply-To: <CACPK8XctCb9Q2RaFVHEDuWxKDXpCWMWs-+vnKZ=SeTa3xRnT_g@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 11 Dec 2019 16:30:03 -0800
-Message-ID: <CAFd5g45MFYMK-eZWPC5fhm2OkynUXKfArUVhbanYVH+qKRUwPg@mail.gmail.com>
-Subject: Re: [PATCH v1 7/7] fsi: aspeed: add unspecified HAS_IOMEM dependency
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Andrew Jeffery <andrew@aj.id.au>, Jeremy Kerr <jk@ozlabs.org>,
-        Alistar Popple <alistair@popple.id.au>,
-        Eddie James <eajames@linux.ibm.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>, linux-fsi@lists.ozlabs.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7d211bcab8d649f70e5bd324585dc383592d4187.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 4:12 PM Joel Stanley <joel@jms.id.au> wrote:
->
-> On Wed, 11 Dec 2019 at 19:28, Brendan Higgins <brendanhiggins@google.com> wrote:
-> >
-> > Currently CONFIG_FSI_MASTER_ASPEED=y implicitly depends on
-> > CONFIG_HAS_IOMEM=y; consequently, on architectures without IOMEM we get
-> > the following build error:
-> >
-> > ld: drivers/fsi/fsi-master-aspeed.o: in function `fsi_master_aspeed_probe':
-> > drivers/fsi/fsi-master-aspeed.c:436: undefined reference to `devm_ioremap_resource'
-> >
-> > Fix the build error by adding the unspecified dependency.
-> >
-> > Reported-by: Brendan Higgins <brendanhiggins@google.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Nice. I hit this when attempting to force on CONFIG_COMPILE_TEST in
-> order to build some ARM drivers under UM. Do you have plans to fix
-> that too?
+11.12.2019 19:03, Michał Mirosław пишет:
+> Apply some DRY-ing to elants_i2c_execute_command() callers.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> ---
 
-The only broken configs I found for UML are all listed on the cover
-letter of this patch. I think fixing COMPILE_TEST on UM could be
-worthwhile. Did you see any brokenness other than what I mentioned on
-the cover letter?
+Could you please explain why this change is needed?
 
-> Do you want to get this in a fix for 5.5?
-
-Preferably, yes.
-
-> Acked-by: Joel Stanley <joel@jms.id.au>
-
-Thanks!
+[snip]
