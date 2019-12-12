@@ -2,129 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E771EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49021C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE722206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576173420;
-	bh=mQr74Oon+jmF1sDfAH2WpAQruJlKtUgQoC3ON7VL6b4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vWE/KhuwTWo22lnwqu0JSPWhbmDbl/1JzfzRGQsChBEUngIxsxez4AsQrgMGWmhRg
-	 BPqPBGj5PqZOw6QRdsjWeumOj5+faE6zujrf+MsjBl895Je8GTYXia69rXjGzdHNA2
-	 SSM6huUTjU+ianXWv3LBaQgelAEUD+o0fM6T5rHc=
+	by mail.kernel.org (Postfix) with ESMTP id 27FB6206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P/NXCOyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbfLLR47 (ORCPT
+        id S1730278AbfLLR5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:56:59 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33537 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbfLLR47 (ORCPT
+        Thu, 12 Dec 2019 12:57:21 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40525 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730097AbfLLR5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:56:59 -0500
-Received: by mail-lj1-f193.google.com with SMTP id 21so3300021ljr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:56:58 -0800 (PST)
+        Thu, 12 Dec 2019 12:57:21 -0500
+Received: by mail-io1-f67.google.com with SMTP id x1so3728562iop.7
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:57:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qtt9q6QTWhtx+uAQaSa9SaxP9utyh4MwkS3b1QBorDM=;
-        b=OOXv31QnIKHP+WN0REsqiLUpZrI6yxWjWJ/GvuSup3OYLi1us4yUSocn6DI/axDV0m
-         6GK7jXK+6k7LpPebQoPCRcocvjkW9omBDzxT+Lm4LYfIKGy7sKkeu15HX8MNjs/xu+xP
-         KjLl5e+iu8ZQnjJY5qMbfJqikj0qvnk6CZ3uo=
+        bh=Z3b25UQSnY6IqzYufZw5HPv7RWsFnuJ1qSwiqH0n/5k=;
+        b=P/NXCOyuvKPRWV08VvBA1CWwjXOq2454qr5DFs1i0dx4F3LwmHgj/7p/j/+AGA99YD
+         XIWPe87cEztItjq6Zn8pXyHQMZzUEyk8kqXBqi68MgB1GzmECBjHyMdn1YF8qh4niHqF
+         15iEyVZAXPani4kohcMWSIPOP56G3yUYSGRJL25s3s84BNsfC5kk8KqEHY45RIJQ+km+
+         7nHZhB/fWqMWEC6MkyRtbCJy0SemmaaZZQ7fv7RUOd6VaANEf7I7bBZlkcwJwTtSaJyL
+         vQnVIlgojZJ3h4eqkao2clnBKHHZBF/oNu3jwsKJCm7C8CENNAUPifuciLGZ/2ZT8P21
+         DDpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qtt9q6QTWhtx+uAQaSa9SaxP9utyh4MwkS3b1QBorDM=;
-        b=JykLmIDteNxG67bcq6RPaIWegfnLOjeDSMEmz1Sfhn9b1Oi08QcUZK9LLw/nfxhdP1
-         cDw/VPPcqpTMsUjqNo0y5cbTWc4vPGzz8IYj0qiuaaZEWSJlklVllbe+tug7keHsNBsn
-         J1CyNGe5NU1qiqyLi5K9CKqIpm9bhWbvX0PRIlETNBvRi3kgpvFjCk3qb3XG3yCQEDnF
-         fO5m+gx0IbnfFeUAjpR/cMhjvj7fsm1slPamK2OSl/pY79d9l1dgVKQbsQt+zFACah04
-         sCXzG05aTmE2ME6asj3/dNPgPLhiPeKHrM6heW+Z9wP80VfoR5ufIbf9xBZmQUu4G9aE
-         KeSw==
-X-Gm-Message-State: APjAAAWmEq064X223Wm91e2GYZ8VyqNudtgjAWzmG87/2wLM+Eo0G8e2
-        KfbC8hRJFJutiAqtKGIuKsooDt03Lis=
-X-Google-Smtp-Source: APXvYqwjb3FKAH3cBZG+P3WS/7AgsmIss7+XRjTF5YpAHnwMv16gWfjWmGTKvDV4ptWqdC7+qLWazA==
-X-Received: by 2002:a2e:920b:: with SMTP id k11mr6484264ljg.111.1576173417145;
-        Thu, 12 Dec 2019 09:56:57 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id g14sm3430908ljj.37.2019.12.12.09.56.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 09:56:56 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id k8so3279472ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:56:56 -0800 (PST)
-X-Received: by 2002:a2e:99d0:: with SMTP id l16mr6857860ljj.1.1576173415852;
- Thu, 12 Dec 2019 09:56:55 -0800 (PST)
+        bh=Z3b25UQSnY6IqzYufZw5HPv7RWsFnuJ1qSwiqH0n/5k=;
+        b=Vxj6ybZ+4/uyh5Q9pnyfCShL72QBWpImRZg2f6OIs+acBXq1WK9bUVviIxrAiRmgeh
+         HFVxH8jCn/vM1JNGhHjM0JjwUaEmpvMWMttaxcmm0rk1kQP+YAHygElBLLhg+ko2f8yO
+         6mcZyWWtmorvGaEJmtfYsgWIxEWt8+IAmzwHOh6ugcc68EWywTCl2cGl3P45niFupTWS
+         NeZfq7Oe7m27i2JGEWsueBo+BygpB5sFuijgDMtplenKvjncCrGnph7DeClTTGrGn82C
+         CHt13av41w3HumbbfJkB29o2gPXrs3iVoQjyGXPMgjkSKJdB/Fz5tl8Ss6S5TgKhXy2H
+         vtVw==
+X-Gm-Message-State: APjAAAXnvujGsFlt9s/0QFPXYY5fOhBPAet58WEbjhwotmEXAD1mQAlP
+        jFxiUcJ5GCuGBBYKcnnhxbKhp0gVwQ03xQ9TOquauQ==
+X-Google-Smtp-Source: APXvYqyPE6NbezzK+SCpWx81FOcItGOWVU3L02OQJNEvkysZZsXSDO4rXcsGBPHVc3pNcmN4ZTMpi09J8E7N8GzXb0A=
+X-Received: by 2002:a5e:9b15:: with SMTP id j21mr3746698iok.108.1576173439923;
+ Thu, 12 Dec 2019 09:57:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20191212145042.12694-1-labbott@redhat.com> <CAOi1vP9E2yLeFptg7o99usEi=x3kf=NnHYdURXPhX4vTXKCTCQ@mail.gmail.com>
- <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com>
-In-Reply-To: <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 12 Dec 2019 09:56:39 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
-Message-ID: <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
-Subject: Re: [PATCH] vfs: Don't reject unknown parameters
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000008e989005998578dc"
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+ <20191128014016.4389-12-sean.j.christopherson@intel.com> <20191212122646.GE4991@zn.tnic>
+ <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com> <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
+ <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com> <20191212174357.GE3163@linux.intel.com>
+ <52dd758d-a590-52a6-4248-22d6852b75cd@redhat.com> <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
+In-Reply-To: <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 12 Dec 2019 09:57:08 -0800
+Message-ID: <CALMp9eRAYj=dKDtnPymkUA_OOMv+9a4WdPNt4hdpFtBgzwNA9w@mail.gmail.com>
+Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using VMX_FEATURES_*
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000008e989005998578dc
-Content-Type: text/plain; charset="UTF-8"
+On Thu, Dec 12, 2019 at 9:53 AM Liran Alon <liran.alon@oracle.com> wrote:
 
-On Thu, Dec 12, 2019 at 9:47 AM Laura Abbott <labbott@redhat.com> wrote:
->
-> Good point, I think I missed how that code flow worked for printing
-> out the error. I debated putting in a dummy parse_param but I
-> figured that squashfs wouldn't be the only fs that didn't take
-> arguments (it's in the minority but certainly not the only one).
+> Why should CPU VMX features be treated differently than standard CPUID deduced features?
 
-I think printing out the error part is actually fine - it would act as
-a warning for invalid parameters like this.
+Do we have the right Intel people on the recipient list to answer this
+question? Presumably, Intel felt that this information should be
+available in supervisor mode only.
 
-So I think a dummy parse_param that prints out a warning is likely the
-right thing to do.
-
-Something like the attached, perhaps? Totally untested.
-
-               Linus
-
---0000000000008e989005998578dc
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k430y16a0>
-X-Attachment-Id: f_k430y16a0
-
-IGZzL3NxdWFzaGZzL3N1cGVyLmMgfCA5ICsrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDkgaW5z
-ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2ZzL3NxdWFzaGZzL3N1cGVyLmMgYi9mcy9zcXVhc2hm
-cy9zdXBlci5jCmluZGV4IDBjYzRjZWVjMDU2Mi4uZmJkMWUwNWIzOWFhIDEwMDY0NAotLS0gYS9m
-cy9zcXVhc2hmcy9zdXBlci5jCisrKyBiL2ZzL3NxdWFzaGZzL3N1cGVyLmMKQEAgLTM1NSw5ICsz
-NTUsMTggQEAgc3RhdGljIGludCBzcXVhc2hmc19yZWNvbmZpZ3VyZShzdHJ1Y3QgZnNfY29udGV4
-dCAqZmMpCiAJcmV0dXJuIDA7CiB9CiAKKy8qIFByaW50IHRoZSB3YXJuaW5nLCBidXQgaWdub3Jl
-IGl0IGFzIGFuIGVycm9yICovCitzdGF0aWMgaW50IHNxdWFzaGZzX3BhcnNlX3BhcmFtKHN0cnVj
-dCBmc19jb250ZXh0ICpmYywgc3RydWN0IGZzX3BhcmFtZXRlciAqcGFyYW0pCit7CisJaW52YWxm
-KGZjLCAiJXM6IFVua25vd24gcGFyYW1ldGVyICclcyciLAorCQlmYy0+ZnNfdHlwZS0+bmFtZSwg
-cGFyYW0tPmtleSk7CisJcmV0dXJuIDA7Cit9CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZnNfY29u
-dGV4dF9vcGVyYXRpb25zIHNxdWFzaGZzX2NvbnRleHRfb3BzID0gewogCS5nZXRfdHJlZQk9IHNx
-dWFzaGZzX2dldF90cmVlLAogCS5yZWNvbmZpZ3VyZQk9IHNxdWFzaGZzX3JlY29uZmlndXJlLAor
-CS5wYXJzZV9wYXJhbQk9IHNxdWFzaGZzX3BhcnNlX3BhcmFtLAogfTsKIAogc3RhdGljIGludCBz
-cXVhc2hmc19pbml0X2ZzX2NvbnRleHQoc3RydWN0IGZzX2NvbnRleHQgKmZjKQo=
---0000000000008e989005998578dc--
+Sean?
