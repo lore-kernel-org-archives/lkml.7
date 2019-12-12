@@ -2,96 +2,125 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8DEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB5EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FB9206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055192253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ceEoBBgQ";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VfHpLinq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="lk6Af0r5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbfLLSiM (ORCPT
+        id S1730671AbfLLSiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:38:12 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:32894
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730427AbfLLShB (ORCPT
+        Thu, 12 Dec 2019 13:38:20 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:21723 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730427AbfLLSiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:37:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576175820;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=/f/uwcycvkqHfz6rQ6bCQ07NgIkbE8y3JfXx2nqrEJw=;
-        b=ceEoBBgQZy0D3uWe2Re7QDHECgI/rCAyyjrzU9oIl6JiyotDDSHKUhccVIV3E8H4
-        Q5yC9/0zBjq1hi2CjMLTIhPk6M+guAPgrdrIXMyanRlo0tIWKl7tO5ZZrUwlnj5NPEF
-        SBaWDTgFvppo4Wm+AgKBSp5PB5IUnvmqjaaU6kI8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576175820;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=/f/uwcycvkqHfz6rQ6bCQ07NgIkbE8y3JfXx2nqrEJw=;
-        b=VfHpLinqlgaZmb3+bA1YQ9qDgJCDJwKVsXhBweWJnjijaHvpOP5GEU/aum8+207+
-        PFwy0gWQJtEwjVBdboTMqID7K2CuCSJOFRY/mPNviQ5F8GcxWvwq7lbESNbAi67nMsK
-        eIQhjeddv4EUzSgbkE+L3CS536BpSrmx08EHEcJA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1E98EC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     bjorn.anderssen@linaro.org, saiprakash.ranjan@codeaurora.org,
-        agross@kernel.org, swboyd@chromium.org
-Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 04/17] firmware: qcom_scm-64: Make SMC macros less magical
-Date:   Thu, 12 Dec 2019 18:37:00 +0000
-Message-ID: <0101016efb665f0c-e7038f1c-4911-4bb2-ae59-f5467f47ddf9-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576175807-11775-1-git-send-email-eberman@codeaurora.org>
-References: <1576175807-11775-1-git-send-email-eberman@codeaurora.org>
-X-SES-Outgoing: 2019.12.12-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Thu, 12 Dec 2019 13:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1576175900; x=1607711900;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Yzq8zYld7NGqoSLiavkVyh+2krjFk621+a8Vx86muSs=;
+  b=lk6Af0r5QHNPnZywdik5aVsJ5U402Z60vT/4ZDvMsnSsw3CvOLpHJxzu
+   K686/z07AH7xvJamJH/zlRFF/rJIcHVEaNKO3MTSAtrSvIFzRyVaxO/xe
+   TC+8iqYnkYeE6oyOBHsxe+EhpHTpueBXrCvznyNI87D7+ykSa7iKVeAks
+   OhbLb5jcnBS5Du2OplJevFlD3s9iOTmnBRUX0pd6yjv4Zs61S4c3nLnAA
+   YtDur1Fcq+91GOvm2Dcfoq82cRvteyC/KAkxiysXvI5/++Hkn27/FyypA
+   ZrcjXDcUdS36aO6BEhMcmzMgjuor58GsDzpTWKz4XJjcoFWJyEURq61uz
+   A==;
+IronPort-SDR: b1+aXZ0u+ZtqMHzrn0UtVKKE4WBEFJIXMOpotz+lXEQ7bCS7aiUDbf+4AUTGd0lk6fouvBgVbS
+ XR7rrxL4yNF9ORM5H6hFSgywrfJ1zQnhVOIuj70h90ahXa4ZWWNdxlfilSW/MZv7bhgfesA7Ls
+ pWi1Pf6Nk700v3vcP1eY5ogedFtyhhCWIVsep9+sSJy+6qw/xcnzEE+QI8tNSbpya5U4hceeeZ
+ RqnL0WxQOr+/KxNXJs6HUkSmxSlPAdh8sYmaDPEzXmF/760+XWkEZFARbqiHquJ/6BsJBMpjUx
+ sGw=
+X-IronPort-AV: E=Sophos;i="5.69,306,1571673600"; 
+   d="scan'208";a="129654454"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Dec 2019 02:38:19 +0800
+IronPort-SDR: h7N+v+recdJeZQ+8I9uh2pthv01QyUGCqOzB+zAKHySt+TYWGYTCZjttLbnxnoNF5Y+TRBUAvS
+ NIplnhOhg/77XBSKxkLZcmPkG39x8uUCSEYs1Z5d9DcVvuvoCrtTgntEdyWVZ3qZvTMvPehNEr
+ Qdydgebxd2jt1VCmudxkulkKK0up/evQt8QAZSABo8K153IfqgSh1+/7qXr7/EYS2sCHR0+3s7
+ h9YwuiiQFxZH8i6h8BN56U8M25Sco4oUOoKutKHqcUSwQd4o9wCmlbLYMBj9/z/hSRaZfvFJf6
+ Z+nnqP4Gfus4rQdDptKnYKjx
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:32:52 -0800
+IronPort-SDR: TPgPTPQlHtvgIqj7eK2+O+Gg7txK7Lf/sg7RxKrMHrZnCyjUL7PaTX1kLoGO2r1Jv9yXoOoYIw
+ 53KvuTynalDHC4MQPD5z75DqS42pwnELCFtSTSVdf/P1awUo+DD9ZJu+dRYckR2oW0dAYWWt3n
+ 0inWPL5vYCtjpSsTl1cuNlY0UEGzL5L2MiUmhH8CJg7z+SXOB1cYcHReT3Ew0utcM8wsMKdTzl
+ UOnCm0V712HkojiW0BUmeEvqIMHn+NGB2lNDfRFrePjpFJFNbrARDxwiTcI3jJwueYYQIO+vVR
+ ef8=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 12 Dec 2019 10:38:17 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>
+Subject: [PATCH 0/2] New zonefs file system
+Date:   Fri, 13 Dec 2019 03:38:14 +0900
+Message-Id: <20191212183816.102402-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improve understandability of SMC macros by reversing the logic as they
-are all functions of how many arguments can be shoved in registers and
-how many SCM arguments are supported.
+zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
-There aren't 4 register arguments because are 7 arguments that go into a
-buffer - there are up to 7 arguments that are overflowed into a buffer
-because only 4 registers are allocated for arguments.
+zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Elliot Berman <eberman@codeaurora.org>
----
- drivers/firmware/qcom_scm-64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+zonefs IO management implementation uses the new iomap generic code.
 
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index 976c2b9..3101f36 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -58,9 +58,9 @@ static DEFINE_MUTEX(qcom_scm_lock);
- #define QCOM_SCM_EBUSY_WAIT_MS 30
- #define QCOM_SCM_EBUSY_MAX_RETRY 20
- 
--#define SCM_SMC_N_EXT_ARGS 7
--#define SCM_SMC_FIRST_EXT_IDX 3
--#define SCM_SMC_N_REG_ARGS (MAX_QCOM_SCM_ARGS - SCM_SMC_N_EXT_ARGS + 1)
-+#define SCM_SMC_N_REG_ARGS	4
-+#define SCM_SMC_FIRST_EXT_IDX	(SCM_SMC_N_REG_ARGS - 1)
-+#define SCM_SMC_N_EXT_ARGS	(MAX_QCOM_SCM_ARGS - SCM_SMC_N_REG_ARGS + 1)
- 
- static void __scm_smc_do_quirk(const struct qcom_scm_desc *desc,
- 			       struct arm_smccc_res *res, u32 fn_id,
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  150 ++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1158 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  169 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 1503 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.23.0
 
