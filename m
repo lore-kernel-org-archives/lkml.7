@@ -2,101 +2,132 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF80DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CE9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCB6222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6722073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:13:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfLLANB (ORCPT
+        id S1727316AbfLLANd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:13:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:53048 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfLLANA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:13:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4E121FB;
-        Wed, 11 Dec 2019 16:12:59 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025913F52E;
-        Wed, 11 Dec 2019 16:12:56 -0800 (PST)
-Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
-To:     Vicente Bergas <vicencb@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?Q?Stefan_M=c3=a4tje?= <stefan.maetje@esd.eu>,
-        linux-arm-kernel@lists.infradead.org
-References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
-Date:   Thu, 12 Dec 2019 00:12:56 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 11 Dec 2019 19:13:33 -0500
+Received: from smtprelay0080.hostedemail.com ([216.40.44.80]:34102 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727067AbfLLANd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:13:33 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B768C2839;
+        Thu, 12 Dec 2019 00:13:31 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: map45_5862a42f9f662
+X-Filterd-Recvd-Size: 4204
+Received: from XPS-9350 (unknown [66.178.38.77])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 12 Dec 2019 00:13:26 +0000 (UTC)
+Message-ID: <6202bccc888809dcb76ea6ba8c0a87d138ce1bbd.camel@perches.com>
+Subject: Re: get_maintainer.pl produces non-deterministic results
+From:   Joe Perches <joe@perches.com>
+To:     Vegard Nossum <vegard.nossum@gmail.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Date:   Wed, 11 Dec 2019 16:12:44 -0800
+In-Reply-To: <CAOMGZ=FhJjQcv-49gQyAYkXW1LhtYcgis8rKASMo_dDKQ+dMkw@mail.gmail.com>
+References: <CACT4Y+YcCW=xwys6tvhOLXiND=2Cwe-NFkn0MDKHi=8HdGWppg@mail.gmail.com>
+         <4f3e350d0fcef89e25350f7d68ea96f33dc4e3f0.camel@perches.com>
+         <CAOMGZ=FhJjQcv-49gQyAYkXW1LhtYcgis8rKASMo_dDKQ+dMkw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vicente,
+On Wed, 2019-12-11 at 07:41 +0100, Vegard Nossum wrote:
+> On Wed, 11 Dec 2019 at 01:02, Joe Perches <joe@perches.com> wrote:
+> > On Tue, 2019-12-10 at 14:47 +0100, Dmitry Vyukov wrote:
+> > > Hi Joe,
+> > > 
+> > > scripts/get_maintainer.pl fs/proc/task_mmu.c
+> > > non-deterministically gives me from 13 to 16 results, different number
+> > > every time (on upstream 6794862a). Perl v5.28.1. Michael confirmed
+> > > this with v5.28.2.
+> > > Vergard suggested to check PERL_HASH_SEED=0. Indeed it fixes
+> > > non-determinism. But I guess it's not the right solution, there should
+> > > be some logical problem.
+> > > My perl-fo is weak, I appreciate if somebody with proper perl-fo takes a look.
+> > > 
+> > > Thanks
+> > 
+> > https://lkml.org/lkml/2017/7/13/789
+> 
+> Right, so you can make it reproducible if you add a tie-break to the sorting:
+> 
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index 34085d146fa2c..109d9fb134dad 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -2179,7 +2179,7 @@ sub vcs_assign {
+>      $hash{$_}++ for @lines;
+> 
+>      # sort -rn
+> -    foreach my $line (sort {$hash{$b} <=> $hash{$a}} keys %hash) {
+> +    foreach my $line (sort {$hash{$b} <=> $hash{$a} || $a cmp $b} keys %hash) {
+>         my $sign_offs = $hash{$line};
+>         my $percent = $sign_offs * 100 / $divisor;
+> 
+> This would actually favour names that start with early letters (A, B,
+> ...) over late letters (..., Y, Z), which might also be a bad thing. I
+> think to fix that you could include everybody who has the same number
+> of signoffs at the cutoff:
+> 
+> diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+> index 34085d146fa2c..80d3ed2ee6d70 100755
+> --- a/scripts/get_maintainer.pl
+> +++ b/scripts/get_maintainer.pl
+> @@ -2179,7 +2179,8 @@ sub vcs_assign {
+>      $hash{$_}++ for @lines;
+> 
+>      # sort -rn
+> -    foreach my $line (sort {$hash{$b} <=> $hash{$a}} keys %hash) {
+> +    my $prev_sign_offs = -1;
+> +    foreach my $line (sort {$hash{$b} <=> $hash{$a} || $a cmp $b} keys %hash) {
+>         my $sign_offs = $hash{$line};
+>         my $percent = $sign_offs * 100 / $divisor;
+> 
+> @@ -2187,7 +2188,7 @@ sub vcs_assign {
+>         next if (ignore_email_address($line));
+>         $count++;
+>         last if ($sign_offs < $email_git_min_signatures ||
+> -                $count > $email_git_max_maintainers ||
+> +                ($prev_sign_offs != $sign_offs && $count >
+> $email_git_max_maintainers) ||
+>                  $percent < $email_git_min_percent);
+>         push_email_address($line, '');
+>         if ($output_rolestats) {
+> @@ -2196,6 +2197,8 @@ sub vcs_assign {
+>         } else {
+>             add_role($line, $role);
+>         }
+> +
+> +       $prev_sign_offs = $sign_offs;
+>      }
+>  }
+> 
+> These patches are probably horribly whitespace damaged, hopefully you
+> get the gist of it though...
 
-On 2019-12-11 11:38 pm, Vicente Bergas wrote:
-> Hi,
-> since v5.5-rc1 the google kevin chromebook does not boot.
-> Git bisect reports 5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled() 
-> unnecessary locking
-> as the first bad commit.
-> 
-> In order to revert it from v5.5-rc1 i had to also revert some dependencies:
-> 5e0c21c75e8c08375a69710527e4a921b897cb7e
-> aff5d0552da4055da3faa27ee4252e48bb1f5821
-> 35efea32b26f9aacc99bf07e0d2cdfba2028b099
-> 687aaf386aeb551130f31705ce40d1341047a936
-> 72ea91afbfb08619696ccde610ee4d0d29cf4a1d
-> 87e90283c94c76ee11d379ab5a0973382bbd0baf
-> After reverting all of this, still no luck.
-> So, either the results of git bisect are not to be trusted, or
-> there are more bad commits.
-> 
-> By "does not boot" i mean that the display fails to start and
-> the display is the only output device, so debugging is quite difficult.
+I get the gist, but I think it's also not particularly important
+to be repeatable.  I think it's more important to get more pattern
+coverage of the MAINTAINERS file as that is more important than
+any use of git history.
 
-Assuming it's a manifestation of the same PCI breakage that Enric and 
-Lorenzo figured out, there's a proposed fix here: 
-https://lkml.org/lkml/2019/12/11/199
 
-Robin.
-
-> v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
-> # CONFIG_PCI is not set
-> 
-> Regards,
->   Vicente.
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
