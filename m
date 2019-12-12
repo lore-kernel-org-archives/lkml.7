@@ -2,114 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494A9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98348C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8222527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A1C2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:31:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oa9rL5G/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfLLQbZ (ORCPT
+        id S1729939AbfLLQbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:31:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:52732 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbfLLQbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:31:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F407B30E;
-        Thu, 12 Dec 2019 08:31:23 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEEFD3F6CF;
-        Thu, 12 Dec 2019 08:31:22 -0800 (PST)
-Date:   Thu, 12 Dec 2019 16:31:20 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
-Subject: Re: [PATCH] arm64: Introduce ISAR6 CPU ID register
-Message-ID: <20191212163120.GH46910@lakrids.cambridge.arm.com>
-References: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
- <20191212144633.GE46910@lakrids.cambridge.arm.com>
- <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
+        Thu, 12 Dec 2019 11:31:53 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36466 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729857AbfLLQbx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:31:53 -0500
+Received: by mail-qt1-f194.google.com with SMTP id h12so248187qto.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:31:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5nxGnUdtw58bWHogUzbvsjBU/PDGHKaobG6uElnGLno=;
+        b=oa9rL5G/dbfnIV/LzrzoNnyRhtYmlptMoi+t69zugwSNSWgp9blS+XEl+9/0hsU8g4
+         wEvlkxhrXfv//LqB2RXF1LitoGfhsbCkWj/Z5CkEmM96cg+UQbdGImwjCbcHoIJMMNj+
+         sljAkxcEM8qhYEWlMb93V1Xx85g7RTRnV35Wu3xroUX1iVIdvJLWKvrBy79W0q0hUiVi
+         X3/dugi+HFn6kRO6XlCj5Wu2KE6/5NrV285cbLrOGt6N6OYzb6ULcMDIc/F6pZ2s7ZbE
+         VSVXgaZMKyImgmEl28wIXQzlvsJ5qIjNjk1tyKd4jJLcuPBrdarAFLv/PrC8tUBEusL0
+         wt2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5nxGnUdtw58bWHogUzbvsjBU/PDGHKaobG6uElnGLno=;
+        b=leGPUeJFxlhlt5R3+DOsH3w/6asCcKpi8u9kYnyL1sVr7X/v/r3pjyw1AIU3pHlV5I
+         SRX2zfh/5Py6kbSz4neDAc6tJzDQYCkFXndiGxTV4OZqjegOtxuZaBt7ZyechzkiUJiV
+         SquEiu2Omqs7R/4H4qzqHFmtYSO+QT3Gy4iQ8bg3J066fh4j1ArFr7iLznCkW5yQLz75
+         3lYNm3ZmlBV1Y/k+SWCdI2T1xruKrqRLr8ciXZS+A7E/Ru/M2bSpCxTeURpLZvEWG01+
+         4ckLqvwFFIvxibGlnlDcUIQ250rBLUDNe/XTcq5nzMTnvl5ay2t9Y90c6ao2YEV2H9If
+         2JFA==
+X-Gm-Message-State: APjAAAUBu3NORN0/SOWrvbRAYyE1T1Ln+035Ti/K63wwbxaaXnj2d3X2
+        NMm6tCmABprV/B82rd978lsy5Q==
+X-Google-Smtp-Source: APXvYqyfo7q7u1Qo2RWrsYPgxg4cCPsnEGuVFjYRp2T2M/zKAnej0anX24hFu358xW7EyeiV/RdLyw==
+X-Received: by 2002:ac8:3177:: with SMTP id h52mr8535747qtb.264.1576168311701;
+        Thu, 12 Dec 2019 08:31:51 -0800 (PST)
+Received: from ?IPv6:2620:0:1004:a:6e2b:60f7:b51b:3b04? ([2620:0:1004:a:6e2b:60f7:b51b:3b04])
+        by smtp.gmail.com with ESMTPSA id t38sm2355441qta.78.2019.12.12.08.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 08:31:51 -0800 (PST)
+Subject: Re: [PATCH v4 2/2] kvm: Use huge pages for DAX-backed files
+To:     David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+References: <20191211213207.215936-1-brho@google.com>
+ <20191211213207.215936-3-brho@google.com>
+ <eb9ef218-1bbc-83e6-ec84-c6aae245e62b@redhat.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <c203f44c-d5b0-429d-0c13-5723c09ec243@google.com>
+Date:   Thu, 12 Dec 2019 11:31:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be707b09-6469-d12f-07d5-50d574dc7284@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <eb9ef218-1bbc-83e6-ec84-c6aae245e62b@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:22:13PM +0000, Suzuki Kuruppassery Poulose wrote:
-> On 12/12/2019 14:46, Mark Rutland wrote:
-> > On Thu, Dec 12, 2019 at 03:44:23PM +0530, Anshuman Khandual wrote:
-> > > +#define ID_ISAR6_JSCVT_SHIFT		0
-> > > +#define ID_ISAR6_DP_SHIFT		4
-> > > +#define ID_ISAR6_FHM_SHIFT		8
-> > > +#define ID_ISAR6_SB_SHIFT		12
-> > > +#define ID_ISAR6_SPECRES_SHIFT		16
-> > > +#define ID_ISAR6_BF16_SHIFT		20
-> > > +#define ID_ISAR6_I8MM_SHIFT		24
-> > 
-> > > @@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
-> > >   	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
-> > >   	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
-> > >   	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
-> > 
-> > > +	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
-> > 
-> > Using ftr_generic_32bits exposes the lowest-common-denominator for all
-> > 4-bit fields in the register, and I don't think that's the right thing
-> > to do here, because:
-> > 
-> > * We have no idea what ID_ISAR6 bits [31:28] may mean in future.
-> > 
-> > * AFAICT, the instructions described by ID_ISAR6.SPECRES (from the
-> >    ARMv8.0-PredInv extension) operate on the local PE and are not
-> >    broadcast. To make those work as a guest expects, the host will need
-> >    to do additional things (e.g. to preserve that illusion when a vCPU is
-> >    migrated from one pCPU to another and back).
-> > 
-> > Given that, think we should add an explicit ftr_id_isar6 which only
-> > exposes the fields that we're certain are safe to expose to a guest
-> > (i.e. without SPECRES).
+On 12/12/19 7:22 AM, David Hildenbrand wrote:
+>> +	/*
+>> +	 * Our caller grabbed the KVM mmu_lock with a successful
+>> +	 * mmu_notifier_retry, so we're safe to walk the page table.
+>> +	 */
+>> +	switch (dev_pagemap_mapping_shift(hva, current->mm)) {
+>> +	case PMD_SHIFT:
+>> +	case PUD_SIZE:
 > 
-> Agree. Thanks for pointing this out. I recommended the usage of
-> generic_32bits table without actually looking at the feature
-> definitions.
+> Shouldn't this be PUD_SHIFT?
+> 
+> But I agree with Paolo, that this is simply
+> 
+> return dev_pagemap_mapping_shift(hva, current->mm) > PAGE_SHIFT;
 
-No worries; this is /really/ easy to miss!
+Yes, good call.  I'll fix that in the next version.
 
-Looking again, comparing to ARM DDI 0487E.a, there are a few other
-things we should probably sort out:
-
-* ID_DFR0 fields need more thought; we should limit what we expose here.
-  I don't think it's valid for us to expose TraceFilt, and I suspect we
-  need to add capping for debug features we currently emulate.
-
-* ID_ISAR0[31:28] are RES0 in ARMv8, Reserved/UNK in ARMv7.
-  We should probably ftr_id_isar0 so we can hide those bits.
-
-* ID_ISAR5[23:10] are RES0
-  We handle this already! :)
-
-* ID_MMFR4.SpecSEI should be trated as higher safe.
-  We should update ftr_id_mmfr4 to handle this and other fields.
-
-* ID_PFR0 is missing DIT and CSV2
-  We should probably add these (but neither RAS not AMU).
-
-* ID_PFR2 is missing
-  We should probably add this for SSBS and CSV3.
-
-Thanks,
-Mark.
