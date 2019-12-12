@@ -2,63 +2,82 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8675EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A8CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63CE32073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8F021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZwaDYbcv";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="NsLPmDQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfLLGIX (ORCPT
+        id S1727979AbfLLGIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:08:23 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:54204 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726784AbfLLGIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:08:23 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1ifHe9-0003qw-8Q; Thu, 12 Dec 2019 14:08:21 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1ifHe6-0002vB-W1; Thu, 12 Dec 2019 14:08:19 +0800
-Date:   Thu, 12 Dec 2019 14:08:18 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, sfr@canb.auug.org.au
-Subject: Re: [PATCH 1/2] crypto: arm/curve25519 - add arch-specific key
- generation function
-Message-ID: <20191212060818.w4orbhieq66btymf@gondor.apana.org.au>
-References: <20191211102455.7b55218e@canb.auug.org.au>
- <20191211092640.107621-1-Jason@zx2c4.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211092640.107621-1-Jason@zx2c4.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Thu, 12 Dec 2019 01:08:34 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:60456
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726784AbfLLGIe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:08:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576130913;
+        h=From:To:Cc:Subject:Date:Message-Id;
+        bh=Msv++6Uc9+j+ovRizdCpCJpui0/hXtGDn0hO1MZQkrU=;
+        b=ZwaDYbcvEsy+DFDpkuRA/7ulcnIspIwCKOoCicOTgjnG4BabNwVOtjG5G8fey8iL
+        qNXSRmFwox7jZVJYIpoHWQIjO681w49bj3B+ssprihr8dGSQ9GhpLXUdFvm5zWFz/Le
+        JN5nGMSmyejgZAlgWT+Jft4ZQnTi5uRnqdrXhXI0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576130913;
+        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
+        bh=Msv++6Uc9+j+ovRizdCpCJpui0/hXtGDn0hO1MZQkrU=;
+        b=NsLPmDQ0cIwLXksQnyQ+gX1Idx6qNizULcgOnM45Q33D2cBPX/w1uoTYdjjO3uOu
+        OPliurc4JbKVFhgGVgM4wdkXk09ByPsOvaJLalStOe8QPLMKlyfepSXtrtwePusBttX
+        AY3htGBp/hSkZPb1fpPEdL8P1X7GuiS7q0PvUWAA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E68BC433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
+        johan.hedberg@gmail.com
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree bindings for QCA6390
+Date:   Thu, 12 Dec 2019 06:08:33 +0000
+Message-ID: <0101016ef8b923cf-ef36a521-9c4b-4360-842d-d641e0eaaf0e-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.17.1
+X-SES-Outgoing: 2019.12.12-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 10:26:39AM +0100, Jason A. Donenfeld wrote:
-> Somehow this was forgotten when Zinc was being split into oddly shaped
-> pieces, resulting in linker errors. The x86_64 glue has a specific key
-> generation implementation, but the Arm one does not. However, it can
-> still receive the NEON speedups by calling the ordinary DH function
-> using the base point.
-> 
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
->  arch/arm/crypto/curve25519-glue.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+Add compatible string for the Qualcomm QCA6390 Bluetooth controller
 
-Patch applied.  Thanks.
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+---
+ Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+index 68b67d9db63a..87b7f9d22414 100644
+--- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+@@ -10,6 +10,7 @@ device the slave device is attached to.
+ Required properties:
+  - compatible: should contain one of the following:
+    * "qcom,qca6174-bt"
++   * "qcom,qca6390-bt"
+    * "qcom,wcn3990-bt"
+    * "qcom,wcn3998-bt"
+ 
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+
