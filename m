@@ -2,101 +2,99 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4E4C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D72C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D637921655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576159217;
-	bh=w6j7nt8EVQhGqeeabig/3mMtxBUSwyE1b0/3qRLnlMY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nriDg5UfADZ252AdjWJutXXbgyWdqw0ibocT0IrNn7RakjfkAWdrY0XuHduZ5ZHB+
-	 4A/D93IP9+QoKQkln+Irwp9Jhxxq3ilRK0AW/jPpJPd3Axp3U4D0B32SlvcXpWs/oI
-	 I45bXeurF0JWcRVqbous4k2t/GO0UBDr1c3mpVAw=
+	by mail.kernel.org (Postfix) with ESMTP id 264B521655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfLLOAQ (ORCPT
+        id S1729596AbfLLOBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729524AbfLLOAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:00:16 -0500
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922A021655;
-        Thu, 12 Dec 2019 14:00:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576159215;
-        bh=w6j7nt8EVQhGqeeabig/3mMtxBUSwyE1b0/3qRLnlMY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rmi1gkkd4I+2394B3wixXdiXO3A3D0r2w2dH7yVZGFDe1Z8I0ja30fsJ2t8IZ+rCh
-         Duh2X+pXYS65dQtBq5brAD93r3mic178CAaeGzI1CbWc5IyIJ4BKhxWIqg+jTrDGWr
-         HUvkRctVRdbDGf5w3EXNugc6xO4/q/zWl++5AmOk=
-Received: by mail-qk1-f173.google.com with SMTP id r14so1618225qke.13;
-        Thu, 12 Dec 2019 06:00:15 -0800 (PST)
-X-Gm-Message-State: APjAAAWpxBDC38pzafU1+iiYfc2q4ZKd66/w08OALT6gF81m3mqlQhTz
-        MTgHxZ5Vg2XRB2MSw7gF2TGcwbP7BhM/0X59WQ==
-X-Google-Smtp-Source: APXvYqylVaRXooiFXE5LLn2gb6i2E8GDU2gD9ANvwzpoLnrIk+YG9DZFfJ8BliPuj1AETH76SC8tJJD1gjvt1ijX7t4=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr8219015qkg.152.1576159214753;
- Thu, 12 Dec 2019 06:00:14 -0800 (PST)
+        Thu, 12 Dec 2019 09:01:53 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:37145 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729567AbfLLOBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:01:52 -0500
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N3bGP-1hfdeO18S3-010ZSZ for <linux-kernel@vger.kernel.org>; Thu, 12 Dec
+ 2019 15:01:51 +0100
+Received: by mail-qt1-f173.google.com with SMTP id g17so2315588qtp.11
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:01:51 -0800 (PST)
+X-Gm-Message-State: APjAAAWSqAZrBsQ9UD4HBo9CvGM4XmWYrmfqY3SsMOBKvF26xm0oZ8vA
+        lEHz0kuFww9625o1H9hefxtlTLAYSHy/O06Yvqc=
+X-Google-Smtp-Source: APXvYqzkeOEKDJDD9e0FU+o99pAokx+dAi91wJshp+kRii5ICBk5AliiSF00Tg1aRGR0INJ1C0cMEe+m5Gc1ISGhKoE=
+X-Received: by 2002:ac8:768d:: with SMTP id g13mr7485750qtr.7.1576159310220;
+ Thu, 12 Dec 2019 06:01:50 -0800 (PST)
 MIME-Version: 1.0
-References: <1575965693-30395-1-git-send-email-frowand.list@gmail.com>
- <20191211201856.GA21857@bogus> <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
-In-Reply-To: <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 12 Dec 2019 08:00:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
-Message-ID: <CAL_JsqL_0UUrjPG3G4vzO5fzzREV4tr5Y+ykRxzU+Cqz4_YgdQ@mail.gmail.com>
-Subject: Re: [PATCH] of: refcount leak when phandle_cache entry replaced
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org,
+References: <20191212135815.4176658-1-arnd@arndb.de>
+In-Reply-To: <20191212135815.4176658-1-arnd@arndb.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Dec 2019 15:01:34 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a32xAmiJpH0=EFUqbzkJz=MrFzZz1J2n9thqXQUGzRMKA@mail.gmail.com>
+Message-ID: <CAK8P3a32xAmiJpH0=EFUqbzkJz=MrFzZz1J2n9thqXQUGzRMKA@mail.gmail.com>
+Subject: Re: [PATCH] x86/platform/uv: avoid unused variable warning
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Mike Travis <mike.travis@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:DTL9TI+LraeThV8ca41FrvKST6QYipTVazU1t0HfFsO7HsnsRiB
+ HBiosEFylsaB621EPnyZIqa0kM8lzzknQ77uzO5PU5HmFqPQDCQlSr52GQCsMorpOoIFXH/
+ 3EXPLzoUdhWeLlpsc8XTuhKqCIXULNMqfmGvZgnlzbLb1G8umFaD03qMmRu5IBFH8PbP5LI
+ RV6b0BmaRN2mpXGtU9rVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uYM0kjdZxN0=:XLhZMhzOrBfbsxAFrJJZ3K
+ C6+DrEzBm7OcTfCJQkVGJU7M9DCi3ZvcXlBP0O+WmIoayDuALHQUzR4xGcXcvi0HR+noog6Cj
+ jecB8svGdvyBsBO4FFiQmMNaAGMMdEYWeC4Ysai0X3BwY+3KGdlpWh4A71gPV65B4pWS+x9Nx
+ KVByLoOuoxaPPerP6Ji87ZZ7JaRFx1Omo7IXAx4TEAKdHy+H6kfM3bYelaWc+iJ/gvVOIb8ik
+ IJudmEICJx6XvJjcy1zfd2J56Ijh3H+FR9s4WIFA4naT4upYKQgHLg4fRzRuP9L+YMn6alVZ0
+ HqMOSo/8gjLn8yrqNt5oHqcbV0O17dckDDlBOYl5URNc3nk8b2a+1TRJ91+RTUMki0DmK5xD8
+ pSfkLsJI4jZPrUE3AmzndyOp/eVcp7mcKHTUN6v9pMlaRyyvAQi4qV2gPQnxRS6kUW2BqdcTj
+ OHp0n5L9nGJP73IkDXSMXgRlZcbr8ElUqVSqSHrIyne1+0tl/weRvncym7BnnVR07kYdSAJ8e
+ qYYA+L8Rfwh3YsHXyPGQ7wKhCGMqcSMgZ3DcqUEnAFhsbG0X8D7epwcrzXrsXhc+F03q9TYE8
+ S4Ii/mh6trZypjpHmpkR54hywqNpeANISOytPVZwnvGRKT3obn5FdZNvvAoE3edpBrhbsoilW
+ zakw4nY+xYIbj91/Ej8vmnAwfy5GOw4Znvb4YW7hpuMSm6jYlFB2lvOHicQnyfjNebLDfeRZv
+ HR6yOhZtbnfykLzdLXuZufJEYFGhgKVylKIQ4ui8BsXQ8k4ZHC9g/tSqO5nBkE336vw8DX68L
+ w3i99MEYOlSNPQ3h3RTvvE97yBrk27amk+2SJB0pENXVEWG7YJM0rSmj55s7GLEuQTBDRq5KY
+ rsZwLdwSDLFJ3ioFqhsw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 5:17 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Thu, Dec 12, 2019 at 2:58 PM Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On 12/11/19 2:18 PM, Rob Herring wrote:
-> > On Tue, 10 Dec 2019 02:14:53 -0600, frowand.list@gmail.com wrote:
-> >> From: Frank Rowand <frank.rowand@sony.com>
-> >>
-> >> of_find_node_by_phandle() does not do an of_node_put() of the existing
-> >> node in a phandle cache entry when that node is replaced by a new node.
-> >>
-> >> Reported-by: Rob Herring <robh+dt@kernel.org>
-> >> Fixes: b8a9ac1a5b99 ("of: of_node_get()/of_node_put() nodes held in phandle cache")
-> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> >> ---
-> >>
-> >> Checkpatch will warn about a line over 80 characters.  Let me know
-> >> if that bothers you.
-> >>
-> >>  drivers/of/base.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >>
-> >
-> > Applied, thanks.
-> >
-> > Rob
-> >
+> When CONFIG_PROC_FS is disabled, the compiler warns about an
+> unused variable:
 >
-> If the rework patch of the cache that you posted shortly after accepting
-> my patch, then my patch becomes not needed and is just extra noise in the
-> history.  Once your patch finishes review (I am assuming it probably
-> will), then my patch should be reverted.
+> arch/x86/kernel/apic/x2apic_uv_x.c: In function 'uv_setup_proc_files':
+> arch/x86/kernel/apic/x2apic_uv_x.c:1546:8: error: unused variable 'name' [-Werror=unused-variable]
+>   char *name = hubless ? "hubless" : "hubbed";
+>
+> Simplify the code so this variable is no longer needed.
+>
+> Fixes: 8785968bce1c ("x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-The question is what to backport: nothing, this patch or mine? My
-thought was to apply this mainly to backport. If you're fine with
-nothing or mine, then we can drop it. I'm a bit nervous marking mine
-for stable.
+I noticed a second too late that this loses the oemid procfs file (annoyingly
+I did not get a warning because gcc ignores unused static const variables)
 
-Rob
+Please wait for v2.
+
+        Arnd
