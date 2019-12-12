@@ -2,122 +2,97 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	SUBJ_ALL_CAPS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E893AC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CF1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E102173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABBA21556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:00:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTIUzGYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbfLLU6n (ORCPT
+        id S1730997AbfLLVA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:58:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34703 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730895AbfLLU6n (ORCPT
+        Thu, 12 Dec 2019 16:00:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34828 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730779AbfLLVA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:58:43 -0500
-Received: from [82.43.126.140] (helo=[192.168.0.10])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1ifVXl-0007y4-Ib; Thu, 12 Dec 2019 20:58:41 +0000
-Subject: Re: drm/i915: Use the i915_device name for identifying our, request
- fences
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Venkata Sandeep Dhanalakota <venkata.s.dhanalakota@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1d2c3c9d-5f11-db41-68ef-61ff9ec601cb@canonical.com>
- <157618313562.7396.11949995525623174493@skylake-alporthouse-com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <820d0c95-dbd2-3ccf-eeed-ea70d4f5342f@canonical.com>
-Date:   Thu, 12 Dec 2019 20:58:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 16:00:58 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g17so4292949wro.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:00:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=CHC7FV6CIEHq8S+8jI61ulqchrwWHIcBae3UB47SF/w=;
+        b=jTIUzGYKVcMgBpicgM0ZJXDLpERq1iE3VTnCWgL/3zjWyHVs/h1IwePHVxhlJ9W3OB
+         /Bzew4TSzuk1btfHnRJP1K3G5+7VM3/d+B5XRuhO+lUHSBZUT2GPAUKGq5eWg+x/xITE
+         8/6D5i1UwnLOXCMYu2WyHGvlvAX+owd1p3rczutjAMWwo3/uew2ChVuRop7Nbo8asif/
+         OqieWwOKGEXCY0qRaxrOYu6Rd9ypLW48HYeInyAhowUyeyXIJ/UBqfydqGXhEanlhTpT
+         mAtpzQIuX6Px7Y3Vf98a0nBAdykFY6AMHjw/nONIIBSuLr5XC11MIT3yirXrP4OsrSSR
+         Q7WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=CHC7FV6CIEHq8S+8jI61ulqchrwWHIcBae3UB47SF/w=;
+        b=tqeUj7kth9JuSXFZzP7thRMyjjLtrV7dG9Tu3T4KhQaioYHCF1XLESFR+d5k4hlNVH
+         SZu7mKwnBy76/eBoOQdYuvfVy9nTpP2L28PObuE2kbxZ5jqIpnYF+4aQvcCwZKWweFlt
+         0zhAUKF7VfuWCutA5quAZAjntotrGJLN7TLVC2E5SrXGJ34GnQKMVAT0OlnYqc4/gazm
+         3Eku/gzyeaIV2+F9OxNDdaUA24oGkiO0WOTcSbWzerhIiJYtW3FDnByWzT8y7bbiVlDV
+         m5PlkoxfUccQqbAty9PqipP1TFnXK9XUK0hYOqOuJTlcCo8B6pSXv6ApqzzXp5T+EylD
+         9LRg==
+X-Gm-Message-State: APjAAAVe5ECqR26keleAm4YLAf+T4TLpvfvgNxChiNPUaIcdJXkZSprO
+        GUWKZeEXTYbynd8Cd0TBduCkrOU=
+X-Google-Smtp-Source: APXvYqwysq+8lJjhJmKxq5ex+G2XRwfIKg/0HWSF+kY6sGGYu1j9kuYmyEfw04aRFS3tC3wO7K7iNw==
+X-Received: by 2002:adf:e6c5:: with SMTP id y5mr8304942wrm.210.1576184456181;
+        Thu, 12 Dec 2019 13:00:56 -0800 (PST)
+Received: from avx2 ([46.53.254.212])
+        by smtp.gmail.com with ESMTPSA id m7sm7484135wma.39.2019.12.12.13.00.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 13:00:55 -0800 (PST)
+Date:   Fri, 13 Dec 2019 00:00:52 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ 
+Message-ID: <20191212210052.GA8906@avx2>
 MIME-Version: 1.0
-In-Reply-To: <157618313562.7396.11949995525623174493@skylake-alporthouse-com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 20:38, Chris Wilson wrote:
-> Quoting Colin Ian King (2019-12-12 19:53:33)
->> Hi,
->>
->> Static analysis with Coverity has picked up an issue with the following
->> commit:
->>
->> commit 65c29dbb19b2451990c5c477fef7ada3b8218f05
->> Author: Chris Wilson <chris@chris-wilson.co.uk>
->> Date:   Wed Dec 11 15:02:04 2019 +0000
->>
->>     drm/i915: Use the i915_device name for identifying our request fences
->>
->> In source drivers/gpu/drm/i915/i915_request.c and function
->> i915_fence_get_timeline_name there is the following:
->>
->>         return to_request(fence)->gem_context->name ?: "[" DRIVER_NAME "]";
->>
->> However name is an array: char name[TASK_COMM_LEN + 8], so it can never
->> be null, so the ternary operator will always return name and will never
->> reaturn "[" DRIVER_NAME "]".  Should it instead be checking if name[0]
->> is '\0' instead?
+> We could move the kernel to C++ and write:
 > 
-> It's older than that patch, we made it a char[] some time ago. There's a
-> patch pending to make it conditional on ce->gem_context instead.
-> -Chris
+> 	std::remove_volatile<typeof(p)>::type __p = (p);
 > 
-Ah, thanks for looking into that.
+> /me runs like hell...
 
-Colin
+Did you just said I can send "struct sched_domain::private" and
+"struct wait_queue_entry::private" rename?
+:^)
+
+Doable but not until C++20. constinit and designated initializers are
+pretty mandatory.
+
+Debian GNU/Linux 8 debian88 ttyS0
+
+debian88 login: root
+Password:
+Last login: Thu Sep 19 01:04:29 +03 2019 on tty1
+Linux debian88 5.3.0+ #1 SMP PREEMPT Thu Sep 19 01:02:26 +03 2019 x86_64
+root@debian88:~# cat /proc/$(pgrep sshd)/stack
+[<0>] _ZL9do_selectiP11fd_set_bitsP10timespec64+0x5ac/0x750
+[<0>] _Z15core_sys_selectiP15__kernel_fd_setS0_S0_P10timespec64+0x143/0x260
+[<0>] __x64_sys_select+0xa7/0xf0
+[<0>] do_syscall_64+0x3b/0xe7
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
