@@ -2,325 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A92C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F2FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B1620663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C8B24679
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VxL13QJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfLLLu4 (ORCPT
+        id S1729084AbfLLLwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:50:56 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40554 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfLLLuz (ORCPT
+        Thu, 12 Dec 2019 06:52:09 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:42258 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfLLLwJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:50:55 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 85D7D28D64B
-Subject: Re: [PATCH RESEND 2/4] drm: bridge: anx7688: Add anx7688 bridge
- driver support.
-To:     Hsin-Yi Wang <hsinyi@chromium.org>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        p.zabel@pengutronix.de, Matthias Brugger <mbrugger@suse.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-References: <20191211061911.238393-1-hsinyi@chromium.org>
- <20191211061911.238393-3-hsinyi@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <cf782b68-ff86-4f48-85ce-301cccbfb80b@collabora.com>
-Date:   Thu, 12 Dec 2019 12:50:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 06:52:09 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBk7d0092536;
+        Thu, 12 Dec 2019 11:51:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=QYEt3ZHHvwyo7hQcDmCsE+2gnaQbCn7M898TjPIxqIY=;
+ b=VxL13QJJ9Of4N03WEBOiXN7ilSvi6qi6PSIqU3S7oZ30BCKJzeXcjF+x7JwDl0a8+Ycc
+ O7ZrrIzcCA4TBPFXa1fJpuDVUPtkHwCLVKDe55yi93nrYYf1t4/SS3+TdDBzURQ7Q1Mn
+ gpsu0BL1YSMUCjPPLnLDuauwG1/PFXgEsOzo821C6qDPij+YrHGsBIq5H3I8XZcVFTaV
+ t6sHGaU/syEJVTXAXRo5NpETL4woyC7vxMd76uzIYK8AezMPk1LdzvmQITAa5097xgzN
+ Sik1lO6nz7wmtcd4D//EFSgE3jCvQDS2sC4MRjwbxVlz5YHDbhCL3XcuZWnOvnELZAIi bw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2wr4qrte1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:51:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBnDlu054722;
+        Thu, 12 Dec 2019 11:51:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wums91y16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 11:51:48 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCBpiHo024067;
+        Thu, 12 Dec 2019 11:51:44 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 03:51:43 -0800
+Date:   Thu, 12 Dec 2019 14:51:34 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
+ v4l2_async_notifier_cleanup in remove
+Message-ID: <20191212115134.GA1895@kadam>
+References: <20191209085828.16183-1-hslester96@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191211061911.238393-3-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191209085828.16183-1-hslester96@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Yi,
-
-On 11/12/19 7:19, Hsin-Yi Wang wrote:
-> From: Nicolas Boichat <drinkcat@chromium.org>
+On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
+> All drivers in imx call v4l2_async_notifier_cleanup() after unregistering
+> the notifier except this driver.
+> This should be a miss and we need to add the call to fix it.
 > 
-> ANX7688 is a HDMI to DP converter (as well as USB-C port controller),
-> that has an internal microcontroller.
-> 
-> The only reason a Linux kernel driver is necessary is to reject
-> resolutions that require more bandwidth than what is available on
-> the DP side. DP bandwidth and lane count are reported by the bridge
-> via 2 registers on I2C.
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 > ---
-
-Although I am not a drm expert I did an initial review of this patch before
-sending and looks good to me now. Also I just tested with current mainline on my
-ELM device and I am happy to have display now, so thanks for sending this upstream:
-
-Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
->  drivers/gpu/drm/bridge/Kconfig            |   9 +
->  drivers/gpu/drm/bridge/Makefile           |   1 +
->  drivers/gpu/drm/bridge/analogix-anx7688.c | 202 ++++++++++++++++++++++
->  3 files changed, 212 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/analogix-anx7688.c
+>  drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 34362976cd6f..1f3fc6bec842 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -16,6 +16,15 @@ config DRM_PANEL_BRIDGE
->  menu "Display Interface Bridges"
->  	depends on DRM && DRM_BRIDGE
+> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
+> index 99166afca071..2bfa85bb84e7 100644
+> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
+> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
+> @@ -1105,6 +1105,7 @@ static int mipi_csis_remove(struct platform_device *pdev)
+>  	mipi_csis_debugfs_exit(state);
+>  	v4l2_async_unregister_subdev(&state->mipi_sd);
+>  	v4l2_async_notifier_unregister(&state->subdev_notifier);
+> +	v4l2_async_notifier_cleanup(&state->subdev_notifier);
 >  
-> +config DRM_ANALOGIX_ANX7688
-> +	tristate "Analogix ANX7688 bridge"
-> +	select DRM_KMS_HELPER
-> +	select REGMAP_I2C
-> +	---help---
-> +	  ANX7688 is a transmitter to support DisplayPort over USB-C for
-> +	  smartphone and tablets.
-> +	  This driver only supports the HDMI to DP component of the chip.
-> +
->  config DRM_ANALOGIX_ANX78XX
->  	tristate "Analogix ANX78XX bridge"
->  	select DRM_KMS_HELPER
-> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> index 4934fcf5a6f8..7a1e0ec032e6 100644
-> --- a/drivers/gpu/drm/bridge/Makefile
-> +++ b/drivers/gpu/drm/bridge/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_DRM_ANALOGIX_ANX7688) += analogix-anx7688.o
->  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
->  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
->  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx7688.c b/drivers/gpu/drm/bridge/analogix-anx7688.c
-> new file mode 100644
-> index 000000000000..baaed48d6201
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/analogix-anx7688.c
-> @@ -0,0 +1,202 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ANX7688 HDMI->DP bridge driver
-> + *
-> + * Copyright 2016 Google LLC
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <drm/drm_bridge.h>
-> +
-> +/* Register addresses */
-> +#define VENDOR_ID_REG 0x00
-> +#define DEVICE_ID_REG 0x02
-> +
-> +#define FW_VERSION_REG 0x80
-> +
-> +#define DP_BANDWIDTH_REG 0x85
-> +#define DP_LANE_COUNT_REG 0x86
-> +
-> +#define VENDOR_ID 0x1f29
-> +#define DEVICE_ID 0x7688
-> +
-> +/* First supported firmware version (0.85) */
-> +#define MINIMUM_FW_VERSION 0x0085
-> +
-> +struct anx7688 {
-> +	struct drm_bridge bridge;
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +
-> +	bool filter;
-> +};
-> +
-> +static inline struct anx7688 *bridge_to_anx7688(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct anx7688, bridge);
-> +}
-> +
-> +static bool anx7688_bridge_mode_fixup(struct drm_bridge *bridge,
-> +				      const struct drm_display_mode *mode,
-> +				      struct drm_display_mode *adjusted_mode)
-> +{
-> +	struct anx7688 *anx7688 = bridge_to_anx7688(bridge);
-> +	u8 regs[2];
-> +	u8 dpbw, lanecount;
-> +	int totalbw, requiredbw;
-> +	int ret;
-> +
-> +	if (!anx7688->filter)
-> +		return true;
-> +
-> +	/* Read both regs 0x85 (bandwidth) and 0x86 (lane count). */
-> +	ret = regmap_bulk_read(anx7688->regmap, DP_BANDWIDTH_REG, regs, 2);
-> +	if (ret < 0) {
-> +		dev_err(&anx7688->client->dev,
-> +			"Failed to read bandwidth/lane count\n");
-> +		return false;
-> +	}
-> +	dpbw = regs[0];
-> +	lanecount = regs[1];
-> +
-> +	/* Maximum 0x19 bandwidth (6.75 Gbps Turbo mode), 2 lanes */
-> +	if (dpbw > 0x19 || lanecount > 2) {
-> +		dev_err(&anx7688->client->dev,
-> +			"Invalid bandwidth/lane count (%02x/%d)\n",
-> +			dpbw, lanecount);
-> +		return false;
-> +	}
-> +
-> +	/* Compute available bandwidth (kHz) */
-> +	totalbw = dpbw * lanecount * 270000 * 8 / 10;
-> +
-> +	/* Required bandwidth (8 bpc, kHz) */
-> +	requiredbw = mode->clock * 8 * 3;
-> +
-> +	dev_dbg(&anx7688->client->dev,
-> +		"DP bandwidth: %d kHz (%02x/%d); mode requires %d Khz\n",
-> +		totalbw, dpbw, lanecount, requiredbw);
-> +
-> +	if (totalbw == 0) {
-> +		dev_warn(&anx7688->client->dev,
-> +			 "Bandwidth/lane count are 0, not rejecting modes\n");
-> +		return true;
-> +	}
-> +
-> +	return totalbw >= requiredbw;
-> +}
-> +
-> +static const struct drm_bridge_funcs anx7688_bridge_funcs = {
-> +	.mode_fixup	= anx7688_bridge_mode_fixup,
-> +};
-> +
-> +static const struct regmap_config anx7688_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +};
-> +
-> +static int anx7688_i2c_probe(struct i2c_client *client,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct anx7688 *anx7688;
-> +	struct device *dev = &client->dev;
-> +	int ret;
-> +	u8 buffer[4];
-> +	u16 vendor, device, fwversion;
-> +
-> +	anx7688 = devm_kzalloc(dev, sizeof(*anx7688), GFP_KERNEL);
-> +	if (!anx7688)
-> +		return -ENOMEM;
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +	anx7688->bridge.of_node = client->dev.of_node;
-> +#endif
-> +
-> +	anx7688->client = client;
-> +	i2c_set_clientdata(client, anx7688);
-> +
-> +	anx7688->regmap =
-> +		devm_regmap_init_i2c(client, &anx7688_regmap_config);
-> +
-> +	/* Read both vendor and device id (4 bytes). */
-> +	ret = regmap_bulk_read(anx7688->regmap, VENDOR_ID_REG, buffer, 4);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to read chip vendor/device id\n");
-> +		return ret;
-> +	}
-> +
-> +	vendor = (u16)buffer[1] << 8 | buffer[0];
-> +	device = (u16)buffer[3] << 8 | buffer[2];
-> +	if (vendor != VENDOR_ID || device != DEVICE_ID) {
-> +		dev_err(dev, "Invalid vendor/device id %04x/%04x\n",
-> +			vendor, device);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = regmap_bulk_read(anx7688->regmap, FW_VERSION_REG, buffer, 2);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to read firmware version\n");
-> +		return ret;
-> +	}
-> +
-> +	fwversion = (u16)buffer[0] << 8 | buffer[1];
-> +	dev_info(dev, "ANX7688 firwmare version %02x.%02x\n",
-> +		 buffer[0], buffer[1]);
-> +
-> +	/* FW version >= 0.85 supports bandwidth/lane count registers */
-> +	if (fwversion >= MINIMUM_FW_VERSION) {
-> +		anx7688->filter = true;
-> +	} else {
-> +		/* Warn, but not fail, for backwards compatibility. */
-> +		dev_warn(dev,
-> +			 "Old ANX7688 FW version (%02x.%02x), not filtering\n",
-> +			 buffer[0], buffer[1]);
-> +	}
-> +
-> +	anx7688->bridge.funcs = &anx7688_bridge_funcs;
-> +	drm_bridge_add(&anx7688->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static int anx7688_i2c_remove(struct i2c_client *client)
-> +{
-> +	struct anx7688 *anx7688 = i2c_get_clientdata(client);
-> +
-> +	drm_bridge_remove(&anx7688->bridge);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct i2c_device_id anx7688_id[] = {
-> +	{ "anx7688", 0 },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, anx7688_id);
-> +
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id anx7688_match_table[] = {
-> +	{ .compatible = "analogix,anx7688", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, anx7688_match_table);
-> +#endif
-> +
-> +static struct i2c_driver anx7688_driver = {
-> +	.driver = {
-> +		   .name = "anx7688",
-> +		   .of_match_table = of_match_ptr(anx7688_match_table),
-> +		  },
-> +	.probe = anx7688_i2c_probe,
-> +	.remove = anx7688_i2c_remove,
-> +	.id_table = anx7688_id,
-> +};
-> +
-> +module_i2c_driver(anx7688_driver);
-> +
-> +MODULE_DESCRIPTION("ANX7688 SlimPort Transmitter driver");
-> +MODULE_AUTHOR("Nicolas Boichat <drinkcat@chromium.org>");
-> +MODULE_LICENSE("GPL v2");
-> 
+
+In this case the "state->subdev_notifier" was never initialized or used
+so both v4l2_async_notifier_unregister() and v4l2_async_notifier_cleanup()
+are no-ops.
+
+We should just delete "subdev_notifier".
+
+regards,
+dan carpenter
+
