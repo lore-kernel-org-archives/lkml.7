@@ -2,38 +2,38 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A34C04E30
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D034A21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B55E821655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbfLLDkW (ORCPT
+        id S1727916AbfLLDkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:40:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58618 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 22:40:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58662 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727791AbfLLDkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:40:09 -0500
+        id S1727783AbfLLDkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:40:08 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 578A8AF65;
-        Thu, 12 Dec 2019 03:40:08 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id E4FFBAD7B;
+        Thu, 12 Dec 2019 03:40:06 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        sales@fdhisi.com
-Subject: [RFC 24/25] WIP: leds: tm1628: Prepare FD628 keys
-Date:   Thu, 12 Dec 2019 04:39:51 +0100
-Message-Id: <20191212033952.5967-25-afaerber@suse.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [RFC 21/25] arm64: dts: realtek: rtd1295-xnano-x5: Add display to FD628
+Date:   Thu, 12 Dec 2019 04:39:48 +0100
+Message-Id: <20191212033952.5967-22-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
 References: <20191212033952.5967-1-afaerber@suse.de>
@@ -45,27 +45,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend definition with key input lines.
+Add a child node for 4-digit 7-segment display.
 
-Cc: sales@fdhisi.com
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- drivers/leds/leds-tm1628.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/leds/leds-tm1628.c b/drivers/leds/leds-tm1628.c
-index 410f34234811..2caf1e63fc90 100644
---- a/drivers/leds/leds-tm1628.c
-+++ b/drivers/leds/leds-tm1628.c
-@@ -669,6 +669,8 @@ static const struct tm1628_info fd628_info = {
- 	.seg_mask = GENMASK(14, 12) | GENMASK(10, 1),
- 	.modes = tm1628_modes,
- 	.default_mode = 3,
-+	.k_mask = GENMASK(2, 1),
-+	.ks_mask = GENMASK(10, 1),
- 	.pwm_map = tm1628_pwm_map,
- 	.default_pwm = 0,
- };
+diff --git a/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts b/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
+index 9d678b300c7b..07de95427874 100644
+--- a/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
++++ b/arch/arm64/boot/dts/realtek/rtd1295-xnano-x5.dts
+@@ -47,6 +47,10 @@
+ 			#address-cells = <2>;
+ 			#size-cells = <0>;
+ 
++			display@0,8 {
++				reg = <0 8>, <0 7>, <0 6>, <0 5>;
++			};
++
+ 			apps@1,4 {
+ 				reg = <1 4>;
+ 				color = <LED_COLOR_ID_WHITE>;
 -- 
 2.16.4
 
