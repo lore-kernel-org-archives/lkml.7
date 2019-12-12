@@ -2,209 +2,141 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CBEC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2CCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547D8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:25:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PfLS7ZDa"
+	by mail.kernel.org (Postfix) with ESMTP id C076422527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbfLLQZ0 (ORCPT
+        id S1729932AbfLLQZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:25:26 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729900AbfLLQZZ (ORCPT
+        Thu, 12 Dec 2019 11:25:29 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:33939 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbfLLQZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:25:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5ym7vw3z3DT5dHcMe5oQGJ3WMFY3uciLjfIk0+QK1sA=; b=PfLS7ZDabCsQBe10ZYCmy7Osh
-        eqmh4JYgXMuOmtCehw5ozo+E64CVbOv6Icbl5HqfKCskSuk04WkMVA3T44CQ31gdWT27SMCl+Ibxa
-        Hg0i+j3HiOK2geKcqFUSpLeYmygBNqnPb9dPU5UG3SkPATsGN1yDxr8VNAmBlpj+5Hrzy/d4qzuDl
-        PkJPDAQf+YnepNxOGLhslNixbuae+XIHu6twlPE0II4IcdMSFvShejsazWRhxkRs+chcRU94DJbLx
-        RyjtpaHan8fEJK10suehHhxSO+KSahCInE6RnI3+B49Pt4GBbxS0f8/yvHFGEyS6ZtbhkeKeAPps0
-        OUqGvLygA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifRH0-0003e6-OW; Thu, 12 Dec 2019 16:25:06 +0000
-Date:   Thu, 12 Dec 2019 08:25:06 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        Steffen Maier <maier@linux.ibm.com>,
-        linux-scsi@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-block@vger.kernel.org
-Subject: Re: [PATCH 02/24] compat: scsi: sg: fix v3 compat read/write
- interface
-Message-ID: <20191212162506.GA27991@infradead.org>
-References: <20191211204306.1207817-1-arnd@arndb.de>
- <20191211204306.1207817-3-arnd@arndb.de>
+        Thu, 12 Dec 2019 11:25:27 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifRHH-0006AE-6g; Thu, 12 Dec 2019 17:25:23 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1ifRHG-0007WR-Md; Thu, 12 Dec 2019 17:25:22 +0100
+Date:   Thu, 12 Dec 2019 17:25:22 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl: Enable egalax touch screen
+Message-ID: <20191212162522.irg6pg4fhgxwkp53@pengutronix.de>
+References: <20191212160220.2265521-1-sjoerd.simons@collabora.co.uk>
+ <20191212160722.wgqjeeknvm257hwi@pengutronix.de>
+ <e9c3d1d5f8b57d92e5823f74762a2de2b20f8e88.camel@collabora.co.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211204306.1207817-3-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <e9c3d1d5f8b57d92e5823f74762a2de2b20f8e88.camel@collabora.co.uk>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:24:04 up 27 days,  7:42, 37 users,  load average: 0.03, 0.03,
+ 0.05
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 09:42:36PM +0100, Arnd Bergmann wrote:
-> In the v5.4 merge window, a cleanup patch from Al Viro conflicted
-> with my rework of the compat handling for sg.c read(). Linus Torvalds
-> did a correct merge but pointed out that the resulting code is still
-> unsatisfactory.
+On 19-12-12 17:22, Sjoerd Simons wrote:
+> On Thu, 2019-12-12 at 17:07 +0100, Marco Felsch wrote:
+> > Hi Sjoerd,
+> > 
+> > On 19-12-12 17:02, Sjoerd Simons wrote:
+> > > Sabrelite boards can have an lvds screen attached with a built-in
+> > > i2c touch
+> > > screen. Enable this in the dtsi.
+> > 
+> > Can this be any screen available on the market?
 > 
-> I later noticed that the sg_new_read() function still gets the compat
-> mode wrong, when the 'count' argument is large enough to pass a
-> compat_sg_io_hdr object, but not a nativ sg_io_hdr.
+> I guess i should have been more clear here; This is the touchscreen in
+> the hannstar display (already part of the dts) that was sold as an
+> accessoiry to the sabrelite.
+
+That is more clear =) Pls can you add this to the commit message?
+
 > 
-> To address both of these, move the definition of compat_sg_io_hdr
-> into a scsi/sg.h to make it visible to sg.c and rewrite the logic
-> for reading req_pack_id as well as the size check to a simpler
-> version that gets the expected results.
+> Same as the screen that can be used on the boundary nitrogen6 boards
+> (which do have the touch part already enabled in the dts)
 > 
-> Fixes: c35a5cfb4150 ("scsi: sg: sg_read(): simplify reading ->pack_id of userland sg_io_hdr_t")
-> Fixes: 98aaaec4a150 ("compat_ioctl: reimplement SG_IO handling")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  block/scsi_ioctl.c |  29 +----------
->  drivers/scsi/sg.c  | 125 +++++++++++++++++++++------------------------
->  include/scsi/sg.h  |  30 +++++++++++
->  3 files changed, 89 insertions(+), 95 deletions(-)
+> > 
+> > > Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> > > ---
+> > > 
+> > >  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > index 8468216dae9b..382b127b2251 100644
+> > > --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> > > @@ -416,6 +416,14 @@ &i2c3 {
+> > >  	pinctrl-names = "default";
+> > >  	pinctrl-0 = <&pinctrl_i2c3>;
+> > >  	status = "okay";
+> > > +
+> > > +	touchscreen@4 {
+> > > +		compatible = "eeti,egalax_ts";
+> > > +		reg = <0x04>;
+> > > +		interrupt-parent = <&gpio1>;
+> > > +		interrupts = <9 IRQ_TYPE_EDGE_FALLING>;
+> > > +		wakeup-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
+> > 
+> > The wakeup-gpio and the irq-line are sharing the same gpio line?
+
+Lastly should we add a own pinctrl entry for the touchscreen?
+
+Regards,
+  Marco
+
+> > 
+> > Regards,
+> >   Marco 
+> > 
+> > > +	};
+> > >  };
+> > >  
+> > >  &iomuxc {
+> > > -- 
+> > > 2.24.0
+> > > 
+> > > 
+> > > 
+> -- 
+> Sjoerd Simons
+> Collabora Ltd.
 > 
-> diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-> index 650bade5ea5a..b61dbf4d8443 100644
-> --- a/block/scsi_ioctl.c
-> +++ b/block/scsi_ioctl.c
-> @@ -20,6 +20,7 @@
->  #include <scsi/scsi.h>
->  #include <scsi/scsi_ioctl.h>
->  #include <scsi/scsi_cmnd.h>
-> +#include <scsi/sg.h>
->  
->  struct blk_cmd_filter {
->  	unsigned long read_ok[BLK_SCSI_CMD_PER_LONG];
-> @@ -550,34 +551,6 @@ static inline int blk_send_start_stop(struct request_queue *q,
->  	return __blk_send_generic(q, bd_disk, GPCMD_START_STOP_UNIT, data);
->  }
->  
-> -#ifdef CONFIG_COMPAT
-> -struct compat_sg_io_hdr {
-> -	compat_int_t interface_id;	/* [i] 'S' for SCSI generic (required) */
-> -	compat_int_t dxfer_direction;	/* [i] data transfer direction  */
-> -	unsigned char cmd_len;		/* [i] SCSI command length ( <= 16 bytes) */
-> -	unsigned char mx_sb_len;	/* [i] max length to write to sbp */
-> -	unsigned short iovec_count;	/* [i] 0 implies no scatter gather */
-> -	compat_uint_t dxfer_len;	/* [i] byte count of data transfer */
-> -	compat_uint_t dxferp;		/* [i], [*io] points to data transfer memory
-> -						or scatter gather list */
-> -	compat_uptr_t cmdp;		/* [i], [*i] points to command to perform */
-> -	compat_uptr_t sbp;		/* [i], [*o] points to sense_buffer memory */
-> -	compat_uint_t timeout;		/* [i] MAX_UINT->no timeout (unit: millisec) */
-> -	compat_uint_t flags;		/* [i] 0 -> default, see SG_FLAG... */
-> -	compat_int_t pack_id;		/* [i->o] unused internally (normally) */
-> -	compat_uptr_t usr_ptr;		/* [i->o] unused internally */
-> -	unsigned char status;		/* [o] scsi status */
-> -	unsigned char masked_status;	/* [o] shifted, masked scsi status */
-> -	unsigned char msg_status;	/* [o] messaging level data (optional) */
-> -	unsigned char sb_len_wr;	/* [o] byte count actually written to sbp */
-> -	unsigned short host_status;	/* [o] errors from host adapter */
-> -	unsigned short driver_status;	/* [o] errors from software driver */
-> -	compat_int_t resid;		/* [o] dxfer_len - actual_transferred */
-> -	compat_uint_t duration;		/* [o] time taken by cmd (unit: millisec) */
-> -	compat_uint_t info;		/* [o] auxiliary information */
-> -};
-> -#endif
-> -
->  int put_sg_io_hdr(const struct sg_io_hdr *hdr, void __user *argp)
->  {
->  #ifdef CONFIG_COMPAT
-> diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
-> index 160748ad9c0f..985546aac236 100644
-> --- a/drivers/scsi/sg.c
-> +++ b/drivers/scsi/sg.c
-> @@ -198,6 +198,7 @@ static void sg_device_destroy(struct kref *kref);
->  
->  #define SZ_SG_HEADER sizeof(struct sg_header)
->  #define SZ_SG_IO_HDR sizeof(sg_io_hdr_t)
-> +#define SZ_COMPAT_SG_IO_HDR sizeof(struct compat_sg_io_hdr)
 
-I'd rather not add more defines like this.  The raw sizeof is
-much more readable and obvious.
-
->  
-> +	if (count < SZ_SG_HEADER)
-> +		goto unknown_id;
-> +
-> +	/* negative reply_len means v3 format, otherwise v1/v2 */
-> +	if (get_user(reply_len, &old_hdr->reply_len))
-> +		return -EFAULT;
-> +	if (reply_len >= 0)
-> +		return get_user(*pack_id, &old_hdr->pack_id);
-> +
-> +	if (in_compat_syscall() && count >= SZ_COMPAT_SG_IO_HDR) {
-> +		struct compat_sg_io_hdr __user *hp = buf;
-> +		return get_user(*pack_id, &hp->pack_id);
-> +	}
-> +
-> +	if (count >= SZ_SG_IO_HDR) {
-> +		struct sg_io_hdr __user *hp = buf;
-> +		return get_user(*pack_id, &hp->pack_id);
-> +	}
-> +
-> +unknown_id:
-> +	/* no valid header was passed, so ignore the pack_id */
-> +	*pack_id = -1;
-> +	return 0;
-> +}
-
-I find the structure here a little confusing, as it doesn't follow
-the normal flow.  What do you think of:
-
-	if (count >= SZ_SG_HEADER) {
-		if (get_user(reply_len, &old_hdr->reply_len))
-			return -EFAULT;
-
-		/* negative reply_len means v3 format, otherwise v1/v2 */
-		if (reply_len >= 0)
-			return get_user(*pack_id, &old_hdr->pack_id);
-
-		if (in_compat_syscall() {
-			if (count >= SZ_COMPAT_SG_IO_HDR) {
-				struct compat_sg_io_hdr __user *hp = buf;
-
-				return get_user(*pack_id, &hp->pack_id);
-			}
-		} else {
-			if (count >= SZ_SG_IO_HDR) {
-				struct sg_io_hdr __user *hp = buf;
-
-				return get_user(*pack_id, &hp->pack_id);
-			}
-		}
-	}
-
-	/* no valid header was passed, so ignore the pack_id */
-	*pack_id = -1;
-	return 0;
-}
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
