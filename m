@@ -2,70 +2,153 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91347C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B84E2073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADAB2253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbfLLUjF convert rfc822-to-8bit (ORCPT
+        id S1730863AbfLLUja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:39:05 -0500
-Received: from mail.fireflyinternet.com ([109.228.58.192]:52548 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726814AbfLLUjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:39:05 -0500
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 19560382-1500050 
-        for multiple; Thu, 12 Dec 2019 20:38:54 +0000
-Content-Type: text/plain; charset="utf-8"
+        Thu, 12 Dec 2019 15:39:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:60094 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726814AbfLLUja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 15:39:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44702328;
+        Thu, 12 Dec 2019 12:39:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 855263F718;
+        Thu, 12 Dec 2019 12:39:28 -0800 (PST)
+Date:   Thu, 12 Dec 2019 20:39:27 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Vicente Bergas <vicencb@gmail.com>
+Cc:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Stefan =?iso-8859-1?Q?M=E4tje?= <stefan.maetje@esd.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
+Message-ID: <20191212203925.GH24359@e119886-lin.cambridge.arm.com>
+References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
+ <166f0016-7061-be5c-660d-0499f74e8697@arm.com>
+ <20191212005254.GE24359@e119886-lin.cambridge.arm.com>
+ <CAFqH_50pJVQT3uqtpVgqn4ijfdPMzHoE1ns_KARH+_cKe+3NRg@mail.gmail.com>
+ <792cf6ab-26c4-40a4-90b0-a99e620548f4@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Colin Ian King <colin.king@canonical.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <1d2c3c9d-5f11-db41-68ef-61ff9ec601cb@canonical.com>
-Cc:     Venkata Sandeep Dhanalakota <venkata.s.dhanalakota@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1d2c3c9d-5f11-db41-68ef-61ff9ec601cb@canonical.com>
-Message-ID: <157618313562.7396.11949995525623174493@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: re: drm/i915: Use the i915_device name for identifying our, request fences
-Date:   Thu, 12 Dec 2019 20:38:55 +0000
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <792cf6ab-26c4-40a4-90b0-a99e620548f4@gmail.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Colin Ian King (2019-12-12 19:53:33)
-> Hi,
+On Thu, Dec 12, 2019 at 07:40:06PM +0100, Vicente Bergas wrote:
+> On Thursday, December 12, 2019 3:16:25 PM CET, Enric Balletbo Serra wrote:
+> > Hi Vicente,
+> > 
+> > Missatge de Andrew Murray <andrew.murray@arm.com> del dia dj., 12 de
+> > des. 2019 a les 1:53:
+> > > 
+> > > On Thu, Dec 12, 2019 at 12:12:56AM +0000, Robin Murphy wrote:
+> > > > Hi Vicente,
+> > > > 
+> > > > On 2019-12-11 11:38 pm, Vicente Bergas wrote:
+> > > > > Hi,
+> > > > > since v5.5-rc1 the google kevin chromebook does not boot.
+> > > > > Git bisect reports 5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled()
+> > > > > unnecessary locking
+> > > > > as the first bad commit.
+> > > > > 
+> > > > > In order to revert it from v5.5-rc1 i had to also revert
+> > > > > some dependencies:
+> > > > > 5e0c21c75e8c08375a69710527e4a921b897cb7e
+> > > > > aff5d0552da4055da3faa27ee4252e48bb1f5821
+> > > > > 35efea32b26f9aacc99bf07e0d2cdfba2028b099
+> > > > > 687aaf386aeb551130f31705ce40d1341047a936
+> > > > > 72ea91afbfb08619696ccde610ee4d0d29cf4a1d
+> > > > > 87e90283c94c76ee11d379ab5a0973382bbd0baf
+> > > > > After reverting all of this, still no luck.
+> > > > > So, either the results of git bisect are not to be trusted, or
+> > > > > there are more bad commits.
+> > > > > 
+> > > > > By "does not boot" i mean that the display fails to start and
+> > > > > the display is the only output device, so debugging is quite difficult.
+> > > > 
+> > 
+> > Another issue that is affecting current mainline for kevin is fixed
+> > with [1]. As usual, I have a tracking branch for 5.5 for different
+> > Chromebooks with some not yet merged patches that makes things work
+> > while are not fixed [2]. For kevin only the mentioned ASoC patch [1]
+> > and the pcie fix [3] should be needed. Other than that display is
+> > working for me on Kevin.
+> > 
+> > Cheers,
+> >  Enric
+> > 
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?h=for-5.5&id=4bf2e385aa59c2fae5f880aa25cfd2b470109093
+> > [2] https://gitlab.collabora.com/eballetbo/linux/commits/topic/chromeos/somewhat-stable-5.5
+> > [3]  https://lkml.org/lkml/2019/12/11/199
+> > 
+> > > > Assuming it's a manifestation of the same PCI breakage that Enric and
+> > > > Lorenzo figured out, there's a proposed fix here:
+> > > > https://lkml.org/lkml/2019/12/11/199
+> > > 
+> > > It's likely that any PCI driver that uses PCI IO with that controller will
+> > > suffer the same fate.
+> > > 
+> > > Vicente - can you try the patch that has been proposed and verify it fixes
+> > > the issue for you?
+> > > 
+> > > Thanks,
+> > > 
+> > > Andrew Murray
+> > > 
+> > > > 
+> > > > Robin.
+> > > > 
+> > > > > v5.5-rc1 as is (reverting no commits at all) works fine when
+> > > > > disabling PCI:
+> > > > > # CONFIG_PCI is not set
+> > > > > 
+> > > > > Regards,
+> > > > >   Vicente.
 > 
-> Static analysis with Coverity has picked up an issue with the following
-> commit:
-> 
-> commit 65c29dbb19b2451990c5c477fef7ada3b8218f05
-> Author: Chris Wilson <chris@chris-wilson.co.uk>
-> Date:   Wed Dec 11 15:02:04 2019 +0000
-> 
->     drm/i915: Use the i915_device name for identifying our request fences
-> 
-> In source drivers/gpu/drm/i915/i915_request.c and function
-> i915_fence_get_timeline_name there is the following:
-> 
->         return to_request(fence)->gem_context->name ?: "[" DRIVER_NAME "]";
-> 
-> However name is an array: char name[TASK_COMM_LEN + 8], so it can never
-> be null, so the ternary operator will always return name and will never
-> reaturn "[" DRIVER_NAME "]".  Should it instead be checking if name[0]
-> is '\0' instead?
+> Hi Robin, Andrew and Enric,
+> thank you all for the quick responses!
+> I can confirm that patch [3] fixes the issue reported in this email and
+> that [1] fixes the other issue reported on the other email.
 
-It's older than that patch, we made it a char[] some time ago. There's a
-patch pending to make it conditional on ce->gem_context instead.
--Chris
+Pleased to hear this is working for you now.
+
+Are you happy to give a tested-by tag for [3]?
+
+Thanks,
+
+Andrew Murray
+
+> 
+> Regards,
+>  Vicenç.
+> 
