@@ -2,167 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FE2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC8CC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C0F208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0122922B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:35:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jW6qL+4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfLLBeW (ORCPT
+        id S1727558AbfLLBfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:34:22 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7218 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727351AbfLLBeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:34:22 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C297EAAC34B986444FA1;
-        Thu, 12 Dec 2019 09:34:20 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
- 09:34:15 +0800
-Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
- condition
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "brouer@redhat.com" <brouer@redhat.com>
-CC:     "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
-        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
-        Li Rongqing <lirongqing@baidu.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        <mhocko@kernel.org>, <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <bhelgaas@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
- <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
- <20191211194933.15b53c11@carbon>
- <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
-Date:   Thu, 12 Dec 2019 09:34:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Wed, 11 Dec 2019 20:35:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35071 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbfLLBfu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 20:35:50 -0500
+Received: by mail-pg1-f196.google.com with SMTP id l24so279712pgk.2;
+        Wed, 11 Dec 2019 17:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=znCe39Owfk1VXhozOlUo6vxKkddw4NBtn45wfJK96z0=;
+        b=jW6qL+4ILoTg4t3OzSI3WHrW0oqCXiRsmJ7gaLZ0giHJ5cotlWNFXFMYpF7M4+hOnR
+         Ab+sembKor1W+psbh2HCfAcME+BBqDgApocn60SQKjtBymlKUEr89OUfKjoethO+p/zw
+         zpkyIvMpDvHnPSfhmisQfdY7Xr3xsKWDxtif+OeXI5W62Gm08TNWENYpoUonSF0iR7rO
+         crUjH5+5zLSFRCxUvsU3Q05c6hEX5/jtALj5TaTWLzYZNg55uH8xC/Xv8nclVW5HIEO6
+         kzqQF7fbBrTvzHbQpuMINQxlUcvrhU/wd8E6VTB3EQ/1cuLXZoMqhJRCfZDrRxPtLd6H
+         dH9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=znCe39Owfk1VXhozOlUo6vxKkddw4NBtn45wfJK96z0=;
+        b=gdfg/BoZXwtSEyCbE4IvFO+u3ic8bRNSzvzyzf7m+hh6F5bbaDDDe+9qeyFUgU9afj
+         VHcfKQ6ID9aNW+MpYaZIKCYnWokuB0eLgN6Umz767Blj+8ZB3YStobDgyNYImVjNHJ5b
+         T7FxqHE7o8BR5LEpqIJmaztreObwWEUOFFpg6mkQZLxtMEsiYsDVwBGtSFszU/aOy54T
+         DDqqtpMZFjFvWsNqLgPtL5/dQ2yifK9y1zLrE1FvDtlE4cIbC/xMp/ne71XHhFdg6pwp
+         nKm+Wc5Z+85u53bzxeIdKjyfZCgzMweu4ksltAkHgCDwXu8oHMldxQC6+wS4Hqs6btvf
+         bosA==
+X-Gm-Message-State: APjAAAVOHS0qDQ9719AKTv7Rb8EktqKDSxd/vBJQNUtBlM/JZaBnAOe6
+        j8JGwbENSZmtQuqilMCw8nw=
+X-Google-Smtp-Source: APXvYqwmvOirvSuQ3HmC5UtijHoPuiSMrq4OVmDe2Pt4j1ceZwwDhwL0pTEu3D7UZsvT/UsnYMztHw==
+X-Received: by 2002:a63:1b54:: with SMTP id b20mr7587104pgm.312.1576114549630;
+        Wed, 11 Dec 2019 17:35:49 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i2sm4219838pgi.94.2019.12.11.17.35.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 17:35:48 -0800 (PST)
+Subject: Re: [PATCH 1/2] watchdog: mtx-1: Drop au1000.h header inclusion
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-watchdog@vger.kernel.org
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>,
+        Denis Efremov <efremov@linux.com>
+References: <20191211210204.31579-1-f.fainelli@gmail.com>
+ <20191211210204.31579-2-f.fainelli@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <21b7be75-db61-3b14-c57c-04af0b78b347@roeck-us.net>
+Date:   Wed, 11 Dec 2019 17:35:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20191211210204.31579-2-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC Michal, Peter, Greg and Bjorn
-Because there has been disscusion about where and how the NUMA_NO_NODE
-should be handled before.
-
-On 2019/12/12 5:24, Saeed Mahameed wrote:
-> On Wed, 2019-12-11 at 19:49 +0100, Jesper Dangaard Brouer wrote:
->> On Sat, 7 Dec 2019 03:52:41 +0000
->> Saeed Mahameed <saeedm@mellanox.com> wrote:
->>
->>> I don't think it is correct to check that the page nid is same as
->>> numa_mem_id() if pool is NUMA_NO_NODE. In such case we should allow
->>> all
->>> pages to recycle, because you can't assume where pages are
->>> allocated
->>> from and where they are being handled.
->>
->> I agree, using numa_mem_id() is not valid, because it takes the numa
->> node id from the executing CPU and the call to __page_pool_put_page()
->> can happen on a remote CPU (e.g. cpumap redirect, and in future
->> SKBs).
->>
->>
->>> I suggest the following:
->>>
->>> return !page_pfmemalloc() && 
->>> ( page_to_nid(page) == pool->p.nid || pool->p.nid == NUMA_NO_NODE
->>> );
->>
->> Above code doesn't generate optimal ASM code, I suggest:
->>
->>  static bool pool_page_reusable(struct page_pool *pool, struct page
->> *page)
->>  {
->> 	return !page_is_pfmemalloc(page) &&
->> 		pool->p.nid != NUMA_NO_NODE &&
->> 		page_to_nid(page) == pool->p.nid;
->>  }
->>
+On 12/11/19 1:02 PM, Florian Fainelli wrote:
+> Including au1000.h from the machine specific header directory prevents
+> this driver from being built on any other platforms (MIPS included).
+> Since we do not use any definitions, drop it.
 > 
-> this is not equivalent to the above. Here in case pool->p.nid is
-> NUMA_NO_NODE, pool_page_reusable() will always be false.
+> Reported-by: Denis Efremov <efremov@linux.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   drivers/watchdog/mtx-1_wdt.c | 2 --
+>   1 file changed, 2 deletions(-)
 > 
-> We can avoid the extra check in data path.
-> How about avoiding NUMA_NO_NODE in page_pool altogether, and force
-> numa_mem_id() as pool->p.nid when user requests NUMA_NO_NODE at page
-> pool init, as already done in alloc_pages_node(). 
-
-That means we will not support page reuse migragtion for NUMA_NO_NODE,
-which is not same semantic that alloc_pages_node() handle NUMA_NO_NODE,
-because alloc_pages_node() will allocate the page based on the node
-of the current running cpu.
-
-Also, There seems to be a wild guessing of the node id here, which has
-been disscussed before and has not reached a agreement yet.
-
-> 
-> which will imply recycling without adding any extra condition to the
-> data path.
-> 
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index a6aefe989043..00c99282a306 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -28,6 +28,9 @@ static int page_pool_init(struct page_pool *pool,
->  
->         memcpy(&pool->p, params, sizeof(pool->p));
->  
-> +	/* overwrite to allow recycling.. */
-> +       if (pool->p.nid == NUMA_NO_NODE) 
-> +               pool->p.nid = numa_mem_id(); 
-> +
-> 
-> After a quick look, i don't see any reason why to keep NUMA_NO_NODE in
-> pool->p.nid.. 
-> 
-> 
->> I have compiled different variants and looked at the A
->> SM code generated
->> by GCC.  This seems to give the best result.
->>
->>
->>> 1) never recycle emergency pages, regardless of pool nid.
->>> 2) always recycle if pool is NUMA_NO_NODE.
->>
->> Yes, this defines the semantics, that a page_pool configured with
->> NUMA_NO_NODE means skip NUMA checks.  I think that sounds okay...
->>
->>
->>> the above change should not add any overhead, a modest branch
->>> predictor will handle this with no effort.
->>
->> It still annoys me that we keep adding instructions to this code
->> hot-path (I counted 34 bytes and 11 instructions in my proposed
->> function).
->>
->> I think that it might be possible to move these NUMA checks to
->> alloc-side (instead of return/recycles side as today), and perhaps
->> only
->> on slow-path when dequeuing from ptr_ring (as recycles that call
->> __page_pool_recycle_direct() will be pinned during NAPI).  But lets
->> focus on a smaller fix for the immediate issue...
->>
-> 
-> I know. It annoys me too, but we need recycling to work in production :
-> where rings/napi can migrate and numa nodes can be NUMA_NO_NODE :-(.
-> 
+> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
+> index 25a92857b217..aeca22f7450e 100644
+> --- a/drivers/watchdog/mtx-1_wdt.c
+> +++ b/drivers/watchdog/mtx-1_wdt.c
+> @@ -41,8 +41,6 @@
+>   #include <linux/uaccess.h>
+>   #include <linux/gpio/consumer.h>
+>   
+> -#include <asm/mach-au1x00/au1000.h>
+> -
+>   #define MTX1_WDT_INTERVAL	(5 * HZ)
+>   
+>   static int ticks = 100 * HZ;
 > 
 
+Given that this is nothing but yet another gpio watchdog driver, I'd
+personally rather have it merged with gpio_wdt.c. On a higher level,
+cleaning up old-style watchdog drivers, without converting them to
+using the watchdog core, is a waste of time.
+
+Wim, should we make it a policy to reject patches into old-style drivers
+unless they fix a real bug ? It is getting a pain to have to review those
+patches.
+
+Thanks,
+Guenter
