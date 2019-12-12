@@ -2,171 +2,90 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7A7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF35C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C48C24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9C524658
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:02:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576130522;
+	bh=NO9m42cW/b/BbBvcGzyWKOv1cE/P07W3l66y4FInuOA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=dTRjb3Ubq0kVkxuXbWiFwTQ+GGX3/EPgrdsMSkp6myBOaKlsUSqiBd4eMl1r/7C3d
+	 bbLdTI+D5t0P1qpuIQeM8aauyBXctXbtMWzW0Yrm+ghjrUbJwS8zgppTEFDWCBw+HL
+	 xnRUc70HdGHDo5iPUe/q9lnyHdPPh1fGtzHY0P94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfLLGBx (ORCPT
+        id S1727927AbfLLGCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:01:53 -0500
-Received: from smtp.h3c.com ([60.191.123.50]:7510 "EHLO h3cspam02-ex.h3c.com"
+        Thu, 12 Dec 2019 01:02:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfLLGBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:01:52 -0500
-Received: from DAG2EX10-IDC.srv.huawei-3com.com ([10.8.0.73])
-        by h3cspam02-ex.h3c.com with ESMTPS id xBC60hJq043933
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 14:00:43 +0800 (GMT-8)
-        (envelope-from li.kai4@h3c.com)
-Received: from DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) by
- DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 12 Dec 2019 14:00:45 +0800
-Received: from BJHUB01-EX.srv.huawei-3com.com (10.63.20.169) by
- DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
- (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1713.5
- via Frontend Transport; Thu, 12 Dec 2019 14:00:45 +0800
-Received: from RDVDI-L14391V.h3c.huawei-3com.com (10.125.108.72) by
- rndsmtp.h3c.com (10.63.20.174) with Microsoft SMTP Server id 14.3.408.0; Thu,
- 12 Dec 2019 14:00:36 +0800
-From:   Kai Li <li.kai4@h3c.com>
-To:     <mark@fasheh.com>, <jlbec@evilplan.org>,
-        <joseph.qi@linux.alibaba.com>, <chge@linux.alibaba.com>
-CC:     <ocfs2-devel@oss.oracle.com>, <linux-kernel@vger.kernel.org>,
-        Kai Li <li.kai4@h3c.com>
-Subject: [PATCH v2] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
-Date:   Thu, 12 Dec 2019 14:00:00 +0800
-Message-ID: <20191212060000.930-1-li.kai4@h3c.com>
-X-Mailer: git-send-email 2.24.0.windows.2
+        id S1726775AbfLLGCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:02:01 -0500
+Received: from paulmck-ThinkPad-P72.home (199-192-87-166.static.wiline.com [199.192.87.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A63F724656;
+        Thu, 12 Dec 2019 06:02:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576130520;
+        bh=NO9m42cW/b/BbBvcGzyWKOv1cE/P07W3l66y4FInuOA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=E0uFtmRXSBVlI1RcyyNz/6sv9u/zPh/p7GN5DY2KmyydUz9M1Zhl1mGzvopFHNOa/
+         7IIrL6QcFn1mmU3QdtlGEeuDMs8U5NQDTunxc1W+VV6PpVv4GNfIScdm2J8isSYbJr
+         fxupr4VqlnUVBNfAm1+nCVp5dh0sw1j8IGWAZc9g=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 506C435203A1; Wed, 11 Dec 2019 22:02:00 -0800 (PST)
+Date:   Wed, 11 Dec 2019 22:02:00 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Subject: Re: linux-next: build warning after merge of the rcu tree
+Message-ID: <20191212060200.GW2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191212160622.021517d3@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.125.108.72]
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com xBC60hJq043933
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212160622.021517d3@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If journal is dirty when mount, it will be replayed but jbd2 sb
-log tail cannot be updated to mark a new start because
-journal->j_flag has already been set with JBD2_ABORT first
-in journal_init_common. When a new transaction is committed, it
-will be recored in block 1 first(journal->j_tail is set to 1 in
-journal_reset).If emergency restart happens again before journal
-super block is updated unfortunately, the new recorded trans will
-not be replayed in the next mount.
+On Thu, Dec 12, 2019 at 04:06:22PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the rcu (I think) tree, today's linux-next build (x86_64
+> allnoconfig) produced this warning:
+> 
+> kernel/time/timer.c: In function 'schedule_timeout':
+> kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   969 |   long diff = timer->expires - expires;
+>       |               ~~~~~^~~~~~~~~
+> 
+> Introduced by (bisected to) commit
+> 
+>   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
+> 
+> x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
 
-The following steps describe this procedure in detail.
-1. mount and touch some files
-2. these transactions are committed to journal area but not checkpointed
-3. emergency restart
-4. mount again and its journals are replayed
-5. journal super block's first s_start is 1, but its s_seq is not updated
-6. touch a new file and its trans is committed but not checkpointed
-7. emergency restart again
-8. mount and journal is dirty, but trans committed in 6 will not be
-replayed.
+Well, if the timer is pending, then ->expires has to have been
+initialized, but off where the compiler cannot see it, such as during a
+previous call to __mod_timer().  And the change may have made it harder
+for the compiler to see all of these relationships, but...
 
-This exception happens easily when this lun is used by only one node. If it
-is used by multi-nodes, other node will replay its journal and its
-journal super block will be updated after recovery like what this patch
-does.
+I don't see this warning with gcc version 7.4.0.  Just out of curiosity,
+what are you running, Stephen?
 
-ocfs2_recover_node->ocfs2_replay_journal.
+Eric, any thoughts for properly educating the compiler on this one?
 
-The following jbd2 journal can be generated by touching a new file after
-journal is replayed, and seq 15 is the first valid commit, but first seq
-is 13 in journal super block.
-logdump:
-Block 0: Journal Superblock
-Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
-Blocksize: 4096   Total Blocks: 32768   First Block: 1
-First Commit ID: 13   Start Log Blknum: 1
-Error: 0
-Feature Compat: 0
-Feature Incompat: 2 block64
-Feature RO compat: 0
-Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
-FS Share Cnt: 1   Dynamic Superblk Blknum: 0
-Per Txn Block Limit    Journal: 0    Data: 0
-
-Block 1: Journal Commit Block
-Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
-
-Block 2: Journal Descriptor
-Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
-No. Blocknum        Flags
- 0. 587             none
-UUID: 00000000000000000000000000000000
- 1. 8257792         JBD2_FLAG_SAME_UUID
- 2. 619             JBD2_FLAG_SAME_UUID
- 3. 24772864        JBD2_FLAG_SAME_UUID
- 4. 8257802         JBD2_FLAG_SAME_UUID
- 5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
-...
-Block 7: Inode
-Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
-FS Generation: 2839773110 (0xa9437fb6)
-CRC32: 00000000   ECC: 0000
-Type: Regular   Attr: 0x0   Flags: Valid
-Dynamic Features: (0x1) InlineData
-User: 0 (root)   Group: 0 (root)   Size: 7
-Links: 1   Clusters: 0
-ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
-mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
-dtime: 0x0 -- Thu Jan  1 08:00:00 1970
-...
-Block 9: Journal Commit Block
-Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
-
-The following is jouranl recovery log when recovering the upper jbd2
-journal when mount again.
-syslog:
-[ 2265.648622] ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
-[ 2265.649695] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
-[ 2265.650407] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
-[ 2265.650409] fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
-[ 2265.650410] fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
-
-Due to first commit seq 13 recorded in journal super is not consistent
-with the value recorded in block 1(seq is 14), journal recovery will be
-terminated before seq 15 even though it is an unbroken commit, inode
-8257802 is a new file and it will be lost.
-
-Signed-off-by: Kai Li <li.kai4@h3c.com>
----
- fs/ocfs2/journal.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
-index 1afe57f425a0..5c7a489f47b0 100644
---- a/fs/ocfs2/journal.c
-+++ b/fs/ocfs2/journal.c
-@@ -1066,6 +1066,15 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
- 
- 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
- 
-+	if (replayed) {
-+		mlog(ML_NOTICE, "journal recovery complete");
-+		jbd2_journal_lock_updates(journal->j_journal);
-+		status = jbd2_journal_flush(journal->j_journal);
-+		jbd2_journal_unlock_updates(journal->j_journal);
-+		if (status < 0)
-+			mlog_errno(status);
-+	}
-+
- 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
- 	if (status < 0) {
- 		mlog_errno(status);
--- 
-2.24.0.windows.2
-
+							Thanx, Paul
