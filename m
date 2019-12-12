@@ -2,93 +2,100 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F188EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62AAC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91E524654
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143500;
-	bh=SidbvmX5t6LEaUN6JXnQ2yo6CFD03274DsoxxKvVhoI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d1/kAKPHrJ2rHIOe8N79pVpT5JCOPUCC7UGfEeh/lRXXUJJAhqI2dKnj/PoSbF378
-	 kyPCh1ghB2UKQ3bg51/T3CfuBp23iYOz7QjfXgKN5EFu5FMrIiqGM0/+NraY7xlyLd
-	 wcPMJSjafSu8i1TmtGKngSD0PHpczFCnfnCULl3o=
+	by mail.kernel.org (Postfix) with ESMTP id 7B5332173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DMyWdFLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfLLJiT (ORCPT
+        id S1728483AbfLLJiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:38:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfLLJiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:38:18 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF78622527;
-        Thu, 12 Dec 2019 09:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143498;
-        bh=SidbvmX5t6LEaUN6JXnQ2yo6CFD03274DsoxxKvVhoI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CI4uiW3P7Knc0985DLT5n5hT2J3P3cjQ4dO0vmlVPcdZNAYm5qsxDR5aF9EVAVZl2
-         Z/20Tjp2uTlbG9m7z05WHRwUkNEvyqksaJSHx84Vmrz1F3POty465Zji8yzv3+axOs
-         ZzBQ3/Iv9MCZ/YEr95IEoj55S+XYtKkvvsuDl96I=
-Date:   Thu, 12 Dec 2019 10:37:02 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.4 00/92] 5.4.3-stable review
-Message-ID: <20191212093702.GI1378792@kroah.com>
-References: <20191211150221.977775294@linuxfoundation.org>
- <CA+G9fYsnFnAimAAusrOYtOphC9fnXbwjvi1St0hQFdHKbVZdgg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYsnFnAimAAusrOYtOphC9fnXbwjvi1St0hQFdHKbVZdgg@mail.gmail.com>
+        Thu, 12 Dec 2019 04:38:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44256 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfLLJiX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:38:23 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q10so1919235wrm.11;
+        Thu, 12 Dec 2019 01:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PJeytsvwWl8WuLPzmu0cCUjnyOYJkNJeR/9gq40ppbo=;
+        b=DMyWdFLAd0oSrDo/7o7GHv5/qmtTOadoKRpRyh9IpsxYB89dXMwRt0URuqKY6rxZgn
+         pmOs9Io5xGpRe3EuVgIosLG2ZqInU/MhWczvBHKrUWV815EelswDFsQR4h5BDwhaZ2gQ
+         4Ttjg3Nfi734kcgMcfTcnQTbQKXj42Fye0OR1gAQbIvvEU7YCyN6el+/5E7hiYUCmkmI
+         q/9nKJ1Ps3/vBRT68uN8AER0s0oddiC2ID1twFgY830pqGtfEJNQ+JK/oz8mQJyR1K5P
+         zAdXkONR+turs0PtjQ4qWVVuJNaktLDtkzTFfK6xFmdPUgQEuPbqGMVIldSfjwOANTEb
+         eEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PJeytsvwWl8WuLPzmu0cCUjnyOYJkNJeR/9gq40ppbo=;
+        b=dYBd9jx8Gr/ufn4KSLl1Y2UwXPViKTQziuKTxsJ7roVglDlI4W4gAnWF+WROfLP0aI
+         TKg1yznx4x7ddN1sYdo092EvxVngbwMg0RDTny09EMhkR6IWz4ZwomMukPw61fmSrCLY
+         5J8gwqAftjmzjUOBPHm/Qb8UFYXHhHhJLnBODSWRz5lVEOMQYTgilRwLujT+py5n+RKL
+         IjuwjzguyV53dIPKTwYnkDcqaQzEwqTOypLOa5CPhPsSnlNbsRZ3b744yS2WOAlXUnWS
+         O1BRg+nRmHRzfcJrlNdfk+A/fvTAqSGvNvd6F7bCK2DGteqId/kJzO3iEE+TU0cmq68v
+         NpdA==
+X-Gm-Message-State: APjAAAX0Nl4NJ168vsVmFUnzBWPhJ8hTtlz5M0JYS1Jm2ukk1VR4DTLU
+        61wPoulz/w6mm34kNt17vcM=
+X-Google-Smtp-Source: APXvYqxBft0ox471wo2hPqnx5cF4GFUbvKznwBqqUsy8EOeJGfouxM6c+SNTbbCaZxvK/amYUNZ+yA==
+X-Received: by 2002:adf:f802:: with SMTP id s2mr5156241wrp.201.1576143501205;
+        Thu, 12 Dec 2019 01:38:21 -0800 (PST)
+Received: from linux-691t.suse.de ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id z8sm5471508wrq.22.2019.12.12.01.38.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 01:38:20 -0800 (PST)
+From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-efi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+Subject: [PATCH 0/2] efi: cosmetic patches for the error messages when loading certificates
+Date:   Thu, 12 Dec 2019 17:38:10 +0800
+Message-Id: <20191212093812.10518-1-jlee@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:58:56AM +0530, Naresh Kamboju wrote:
-> On Wed, 11 Dec 2019 at 20:39, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.4.3 release.
-> > There are 92 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+When loading certificates list from EFI variables, the error
+message and efi status code always be emitted to dmesg. It looks
+ugly:
 
-Thanks for testing all of these and letting me know.
+[    2.335031] Couldn't get size: 0x800000000000000e
+[    2.335032] Couldn't get UEFI MokListRT 
+[    2.339985] Couldn't get size: 0x800000000000000e
+[    2.339987] Couldn't get UEFI dbx list
 
-greg k-h
+This cosmetic patch set moved the above messages to the error
+handling code path. And, it adds a function to transfer EFI status
+code to string to improve the readability of debug log. The function
+can also be used in other EFI log.
+
+Lee, Chun-Yi (2):
+  efi: add a function for transferring status to string
+  efi: show error messages only when loading certificates is failed
+
+ include/linux/efi.h                           | 26 +++++++++++++++++
+ security/integrity/platform_certs/load_uefi.c | 41 ++++++++++++++-------------
+ 2 files changed, 48 insertions(+), 19 deletions(-)
+
+-- 
+2.16.4
+
