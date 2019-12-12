@@ -2,138 +2,112 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E052C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1A021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01E752253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:46:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOflsHDm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X8NY5D0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbfLLXnp (ORCPT
+        id S1731379AbfLLXqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:43:45 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38120 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfLLXnp (ORCPT
+        Thu, 12 Dec 2019 18:46:21 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34703 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfLLXqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:43:45 -0500
-Received: by mail-lj1-f195.google.com with SMTP id k8so589632ljh.5;
-        Thu, 12 Dec 2019 15:43:44 -0800 (PST)
+        Thu, 12 Dec 2019 18:46:20 -0500
+Received: by mail-pf1-f195.google.com with SMTP id l127so344160pfl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:46:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=llnJRA9ns4b0CgqcafqmnEc5Pr659qyL9gQOjNeNfGU=;
-        b=jOflsHDmIQBDdVSHvbaweA1EQ3DVIE7zAH2lnkXZ9PWYZ9HxEr1bwQ2B3LIz3cQkj8
-         5ajqKCzpnGp0P5xaX7om9NCPUzXf1z19KlkLvhGGW/wrDlPbm0uybn0LsCyfxVKwqD0b
-         pVHR1ZsLnmLNDGN7WzhRXK5IlLDtsD0c+E2GjZ8zf4G4YYGLVdS88FJBSWYNX7P1zn0N
-         b0K2Gxazto6cvfK7Sbzq1WoZmI0h4s8JqgZ2b4QhA4fS3Xn1QpE6OpeSoULQIeKWhdLF
-         oiGsVLNRQul4uLfWb6P7LnMh8sKkov0Tsr7crq1xo84INbsLdkl1noH+IGa2N3jsM1A1
-         OVMw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eIHQNr9eba5L4XlIbOyWJRxI2gHfserq4iuA29IFaDM=;
+        b=X8NY5D0iToa7JChnlhDAEszCIxTzy3LeWj/cfBf7BkV8CYiBtUDe0n81/4Gs32p8ai
+         wl+gKwVYoOCPR/C1Q0o8ibrQett7r8j3amhvEjrlim8MYysj3YsObaDwTuD1EQeddqbc
+         qfro0Tk+k3ZN4+MYsTiR5ECdbZGpWUBMB7A4VCGFV/Ku8wvYMmZGCmzWqxZ3z+ysaOc/
+         ij/ms0WrKYveYecgTzJE4830I3L1LUDmFY5Dxq37WZ+KepfZW3h5LzWTp1iu8PiZ4W9a
+         UuKaTJjjdUAFfirNmhXU7vnFVev0Jh9gYV4t2bRrHaLCTdKFfwXA6EXf63Sw4nbgSN9Q
+         ejrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=llnJRA9ns4b0CgqcafqmnEc5Pr659qyL9gQOjNeNfGU=;
-        b=LDG14HzTjq5xubIVqWQ/cFVzZ8u608UBKjw2iVJEzbUWeGjtp2nBVkrBppBWU9r2yd
-         NfdPYgqYdVwGTuIU+/9EjIVbhepQ4557cQEfIBkHsR7rOIxsezD5lu6yeuRv+duL8oHf
-         jx0g0KsJ7hovpLzJxej4/TA204R1OgvvaRUGjiREhzR9w47/GZ/LMVVZdlav2mhMcQK6
-         A1vgImOu6UT4aD92JnEHzgVE390pjgXlEhzs29buRYi4MhRcReN6l4s2mxdOXyj9YPmU
-         ENomp++kQeX2Vw7gHotak8Uucn/Uly/KWDW0tHVjwTIh0QMnH2fP6tA40PWezX9AWAtM
-         vOJw==
-X-Gm-Message-State: APjAAAWwoO15D0XQhhb5xyJJBqv2iXD09u9cb7i4RVz/kpBTFtHWTi+f
-        PA7G1lbzE4wVKUYUpcgwu21JPIjV
-X-Google-Smtp-Source: APXvYqzMRksYFdMZ+d2JmQuiTEFeJD4QSonsGbSzTlsp0xzCIZMphd+r9yOJ7yLZFpxDmp8Vt3w1PQ==
-X-Received: by 2002:a2e:9157:: with SMTP id q23mr7861331ljg.196.1576194223190;
-        Thu, 12 Dec 2019 15:43:43 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id n30sm4043560lfi.54.2019.12.12.15.43.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 15:43:42 -0800 (PST)
-Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
- state
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191212233428.14648-1-digetx@gmail.com>
- <20191212233428.14648-4-digetx@gmail.com>
-Message-ID: <60d798b5-4cc6-d285-b244-cc5b77aa5a71@gmail.com>
-Date:   Fri, 13 Dec 2019 02:43:41 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eIHQNr9eba5L4XlIbOyWJRxI2gHfserq4iuA29IFaDM=;
+        b=ucnxWLr8d7nnsytW6ZBq/kAGcmyfEhSwWIHbUAhAt0UUE8t9RvZVugm2RdBuTV53Gk
+         kgiZAyTXPgfqt5Zal0dsEA6Q5smk0kLMzCa+Bxbnz/vPJ/Z9WzjZlEdEBX3fzXERrUkq
+         2jdaWBf5ZJ1kMb4xl8r18bZWXwZcfOolPfocT8STnCWPU9mWfKRA1XKjdA8z5cOzCQ1l
+         TJYinU5eLT6iQTj/Eg/nTzmcl8fLwXcsPG32wozY7wHC7AnP5a8JPpjLay3UGzv3aANr
+         75nnUUj6/TL5Waxrl/QUnu/BPtrh9maD0R21A6a2HJ6mwLlhIwUqubMDZ68nDw99fDHf
+         hJig==
+X-Gm-Message-State: APjAAAXMlAZXalfzqYpM/Cx0R0lPmJbydGeQH8C8kZ8uSYe2ELtWWrZC
+        XWV1VyhJOKDIESbReE2xUvdKXWCbz/0=
+X-Google-Smtp-Source: APXvYqyUAxx1/zJ6on6c1Dj9UNuN3zylY3ZgaoNYxmxea1rF+cz0ibCIgbQEAcmHbeEwobHtnzm+/Q==
+X-Received: by 2002:a63:f814:: with SMTP id n20mr13440185pgh.318.1576194380117;
+        Thu, 12 Dec 2019 15:46:20 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v16sm8442495pfn.77.2019.12.12.15.46.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 15:46:19 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:46:17 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, swboyd@chromium.org, stephan@gerhold.net,
+        olof@lixom.net, Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] drivers: thermal: tsens: Work with old DTBs
+Message-ID: <20191212234617.GS3143381@builder>
+References: <cover.1576146898.git.amit.kucheria@linaro.org>
+ <cea3317c5d793db312064d68b261ad420a4a81b1.1576146898.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191212233428.14648-4-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cea3317c5d793db312064d68b261ad420a4a81b1.1576146898.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.12.2019 02:34, Dmitry Osipenko пишет:
-> I noticed that sometime I2C clock is kept enabled during suspend-resume.
-> This happens because runtime PM defers dynamic suspension and thus it may
-> happen that runtime PM is in active state when system enters into suspend.
-> In particular I2C controller that is used for CPU's DVFS is often kept ON
-> during suspend because CPU's voltage scaling happens quite often.
-> 
-> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
-> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
-> suspend/resume in the NOIRQ phase which is used for the system-level
-> suspend/resume of the driver.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index b3ecdd87e91f..d309a314f4d6 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
->  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
->  {
->  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
-> +	int err;
->  
->  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
->  
-> +	err = pm_runtime_force_suspend(dev);
-> +	if (err < 0)
-> +		return err;
-> +
->  	return 0;
->  }
->  
-> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
->  	if (err)
->  		return err;
->  
-> +	err = pm_runtime_force_resume(dev);
-> +	if (err < 0)
-> +		return err;
-> +
->  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
->  
->  	return 0;
-> 
+On Thu 12 Dec 02:38 PST 2019, Amit Kucheria wrote:
 
-It just occurred to me that this patch needs to marked as fixes for the
-"i2c: tegra: Move suspend handling to NOIRQ phase" patch because it
-broke runtime PM enable-refcount by disabling clock/pinmux on resume
-from suspend. For now I'll wait for the review comments. Please review,
-thanks in advance.
+> In order for the old DTBs to continue working, the new interrupt code
+> must not return an error if interrupts are not defined. Don't return an
+> error in case of -ENXIO.
+> 
+> Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
+> Suggested-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> ---
+>  drivers/thermal/qcom/tsens.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> index 015e7d2015985..0e7cf52369326 100644
+> --- a/drivers/thermal/qcom/tsens.c
+> +++ b/drivers/thermal/qcom/tsens.c
+> @@ -110,6 +110,9 @@ static int tsens_register(struct tsens_priv *priv)
+>  	irq = platform_get_irq_byname(pdev, "uplow");
+>  	if (irq < 0) {
+>  		ret = irq;
+> +		/* For old DTs with no IRQ defined */
+> +		if (irq == -ENXIO)
+> +			ret = 0;
+>  		goto err_put_device;
+>  	}
+>  
+> -- 
+> 2.20.1
+> 
