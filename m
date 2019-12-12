@@ -2,134 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6DFC2D0CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70567C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3628B2465B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143508;
-	bh=cYCuMCFTyNXD7PUxwYw2ckoA49kvU1ho0ahRRcF6HIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P2djVh3qUyKJ3qIOZyjyjaJxpNTa5NRXcVnKl9oBwHjn8LNDTP4b06SCCbYLjBXDV
-	 FkScWg2br02a8Gb4mWvWMh8smHi4zWgAzwwyJJkFCrRqavegQmqxmE7WDLaw2OzMKJ
-	 FJUrhdTvxkywT+t3CApRGcCZPfgh1OzZCuX3mcPY=
+	by mail.kernel.org (Postfix) with ESMTP id 4538724654
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aG/ggsb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfLLJi1 (ORCPT
+        id S1728521AbfLLJib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:38:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728484AbfLLJiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:38:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDA92465A;
-        Thu, 12 Dec 2019 09:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143504;
-        bh=cYCuMCFTyNXD7PUxwYw2ckoA49kvU1ho0ahRRcF6HIk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OaPvK91qW6c2n7oIv7S0D+PgS7UheRojABAkgJDWgwyOq3RHz2v8hEFPwYiu/mAAb
-         xImda4KEY6GhDVxE/32eCEy03sMz4fGVXBsO6DkYwTbZ+bz5thnAjLJOqxgumJFaRp
-         MC8TkQ/YjsBOsaDaDGfIwuFIQzW+eY0PnD6rf4GI=
-Date:   Thu, 12 Dec 2019 10:34:33 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Nguyen Viet Dung <dung.nguyen.aj@renesas.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 121/243] ASoC: rsnd: tidyup registering method for
- rsnd_kctrl_new()
-Message-ID: <20191212093433.GE1378792@kroah.com>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150347.300543701@linuxfoundation.org>
- <20191211225937.nnu6kvvbyexfrahr@toshiba.co.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211225937.nnu6kvvbyexfrahr@toshiba.co.jp>
+        Thu, 12 Dec 2019 04:38:31 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38034 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728501AbfLLJia (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:38:30 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so1697200wmi.3;
+        Thu, 12 Dec 2019 01:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=vG57Kuf3pSbWVOwsmxHL99j6Lgk8c1t98uCSolv4vBY=;
+        b=aG/ggsb+9rAPBe/tSEdowA1xQqx18aYDlDROOtTEjg4OtF6f3rOa9Ym3VCiCdwz2ef
+         TyIZyGJ7RLr0R7t97Syy5kbIIzTUf7j3xeTSzm0nebAT4qRjgpAWLTLbra8KGdADmu1M
+         rjSpJyZB0wCFdBBPB2ATCxOmqT1vsasaU4I/JNBfVIFPguob5UMTWKJR8DDnFI2tx9DG
+         91hORI0/fOe/7y5mfJUogSvK7ZoE0aLvCmq7IpH8oXweRhZOxqJQG7ZVwewip3pZ5RrK
+         aAA1VUd0tNtQEmDN1Kv7qVWHiROYjVDtV4b+5kJXCVjvqurU96k1g4Rc0udgsPVz+141
+         KsxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=vG57Kuf3pSbWVOwsmxHL99j6Lgk8c1t98uCSolv4vBY=;
+        b=acIeUG8vKjqzODOv9IA8C0ik+IkQBqykVPx/0yKjA23cVwzHNuAyCybNNVvEjHzxJH
+         ldiqsAAelmc+VlnVf/CV8Pr4w6NGRxGSmVPoN1SE2wysm4FkCckvHbUP5z39st+8M8q+
+         JxavjUU4nS6BermkE6sFL5yak/ewNjGrICY5wGYbIBYUe40L1af60CjbzwoXFf9DIp3A
+         LkQyB48MYoOWTyCtWhRol6kNbzHtF+CXavs0lMI99hh3VF+39GGSGw85ZNwGoCHUCtDR
+         0D0aAACKmSq/rkughQByX4I2rDF3AWbhPvJOhn8prqDVmHbCTLYD4pmLafxuLVMQCcFB
+         Zg3Q==
+X-Gm-Message-State: APjAAAXH8rQUIvxvI66KSWbmhM2dVDSgrZC3GopeQiP6ahBKDzD7Y0zK
+        yiJZgJ0PxAClAiHfjL+sptw=
+X-Google-Smtp-Source: APXvYqwLDb+l30V/1iZNd89lIDmqGBqTOCiHxXD83bqzQ52GzAg5J93583tp3e2DcaYl+py1p9xdxA==
+X-Received: by 2002:a1c:1941:: with SMTP id 62mr1705929wmz.111.1576143508263;
+        Thu, 12 Dec 2019 01:38:28 -0800 (PST)
+Received: from linux-691t.suse.de ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id z8sm5471508wrq.22.2019.12.12.01.38.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 01:38:27 -0800 (PST)
+From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-efi@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Lee, Chun-Yi" <jlee@suse.com>
+Subject: [PATCH 1/2] efi: add a function for transferring status to string
+Date:   Thu, 12 Dec 2019 17:38:11 +0800
+Message-Id: <20191212093812.10518-2-jlee@suse.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191212093812.10518-1-jlee@suse.com>
+References: <20191212093812.10518-1-jlee@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 07:59:37AM +0900, Nobuhiro Iwamatsu wrote:
-> Hi,
-> 
-> On Wed, Dec 11, 2019 at 04:04:43PM +0100, Greg Kroah-Hartman wrote:
-> > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > 
-> > [ Upstream commit 9c698e8481a15237a5b1db5f8391dd66d59e42a4 ]
-> > 
-> > Current rsnd dvc.c is using flags to avoid duplicating register for
-> > MIXer case. OTOH, commit e894efef9ac7 ("ASoC: core: add support to card
-> > rebind") allows to rebind sound card without rebinding all drivers.
-> > 
-> > Because of above patch and dvc.c flags, it can't re-register kctrl if
-> > only sound card was rebinded, because dvc is keeping old flags.
-> > (Of course it will be no problem if rsnd driver also be rebinded,
-> > but it is not purpose of above patch).
-> > 
-> > This patch checks current card registered kctrl when registering.
-> > In MIXer case, it can avoid duplicate register if card already has same
-> > kctrl. In rebind case, it can re-register kctrl because card registered
-> > kctl had been removed when unbinding.
-> > 
-> > This patch is updated version of commit b918f1bc7f1ce ("ASoC: rsnd: DVC
-> > kctrl sets once")
-> > 
-> > Reported-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
-> > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> > Tested-by: Nguyen Viet Dung <dung.nguyen.aj@renesas.com>
-> > Cc: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> This commit also requires the following commit:
-> 
-> commit 7aea8a9d71d54f449f49e20324df06341cc18395
-> Author: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Date:   Fri Feb 1 16:49:30 2019 +0900
-> 
->     ASoC: rsnd: fixup MIX kctrl registration
-> 
->     Renesas sound device has many IPs and many situations.
->     If platform/board uses MIXer, situation will be more complex.
->     To avoid duplicate DVC kctrl registration when MIXer was used,
->     it had original flags.
->     But it was issue when sound card was re-binded, because
->     no one can't cleanup this flags then.
-> 
->     To solve this issue, commit 9c698e8481a15237a ("ASoC: rsnd: tidyup
->     registering method for rsnd_kctrl_new()") checks registered
->     card->controls, because if card was re-binded, these were cleanuped
->     automatically. This patch could solve re-binding issue.
->     But, it start to avoid MIX kctrl.
-> 
->     To solve these issues, we need below.
->     To avoid card re-binding issue: check registered card->controls
->     To avoid duplicate DVC registration: check registered rsnd_kctrl_cfg
->     To allow multiple MIX registration: check registered rsnd_kctrl_cfg
->     This patch do it.
-> 
->     Fixes: 9c698e8481a15237a ("ASoC: rsnd: tidyup registering method for rsnd_kctrl_new()")
->     Reported-by: Jiada Wang <jiada_wang@mentor.com>
->     Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->     Tested-By: Jiada Wang <jiada_wang@mentor.com>
->     Signed-off-by: Mark Brown <broonie@kernel.org>
-> 
-> 
-> Please apply this to 4.19.y and 4.14.y.
+This function can be used to transfer EFI status code to string
+to improve the readability of debug log.
 
-Now queued up, thanks!
+Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+---
+ include/linux/efi.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-greg k-h
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index d87acf62958e..08daf4cdd807 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -42,6 +42,32 @@
+ #define EFI_ABORTED		(21 | (1UL << (BITS_PER_LONG-1)))
+ #define EFI_SECURITY_VIOLATION	(26 | (1UL << (BITS_PER_LONG-1)))
+ 
++#define EFI_STATUS_STR(_status) \
++	case EFI_##_status: \
++		return "EFI_" __stringify(_status);
++
++static inline char *
++efi_status_to_str(unsigned long status)
++{
++	switch (status) {
++	EFI_STATUS_STR(SUCCESS)
++	EFI_STATUS_STR(LOAD_ERROR)
++	EFI_STATUS_STR(INVALID_PARAMETER)
++	EFI_STATUS_STR(UNSUPPORTED)
++	EFI_STATUS_STR(BAD_BUFFER_SIZE)
++	EFI_STATUS_STR(BUFFER_TOO_SMALL)
++	EFI_STATUS_STR(NOT_READY)
++	EFI_STATUS_STR(DEVICE_ERROR)
++	EFI_STATUS_STR(WRITE_PROTECTED)
++	EFI_STATUS_STR(OUT_OF_RESOURCES)
++	EFI_STATUS_STR(NOT_FOUND)
++	EFI_STATUS_STR(ABORTED)
++	EFI_STATUS_STR(SECURITY_VIOLATION)
++	}
++
++	return "";
++}
++
+ typedef unsigned long efi_status_t;
+ typedef u8 efi_bool_t;
+ typedef u16 efi_char16_t;		/* UNICODE character */
+-- 
+2.16.4
+
