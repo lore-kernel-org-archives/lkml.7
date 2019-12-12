@@ -2,208 +2,254 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE81C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB1BC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6737C21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CB821655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XiZKyVtF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="DzhFO2Cz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfLLOEA (ORCPT
+        id S1729668AbfLLOEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:04:00 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46529 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbfLLOD7 (ORCPT
+        Thu, 12 Dec 2019 09:04:42 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:57540 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729612AbfLLOEm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:03:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z7so2816795wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YadRPUKRq+F+OfrkUFp7sfL3GGaSi5RtCx1mrcXaajw=;
-        b=XiZKyVtF24JXNcMYL8Xwe6LFXRC5rGLAOXIUebbHSaeHrG07WKUNr8RJwQ823LolID
-         XnFR2jJK+OvfWeKwOzAJUnPI+UDjOIOAgaUxlmeNOgEYTjulFbraIKmKbxd3ld4BJepg
-         G8B4irn4mFBPM4Zu1GzyaWBuarsTxkULoMSdz25SJyyVexc+thf8CLbZtfVE9FbRTaOh
-         07zSU07GZuRh33XLh0EaBWoqfCLw6SwC7WrBpEUnaHaZ6x4A62aUKnANPqKliM4Y0vez
-         uxK2fzumLw0PuinGG6OouRcXDf86rYM3J9sV+PomXgyY3qXZ+pLRC39ja+f/oDQUrtUn
-         HCsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YadRPUKRq+F+OfrkUFp7sfL3GGaSi5RtCx1mrcXaajw=;
-        b=aKt/eXsAQ383C2T7geCM9PiKarY/qJG/Uw+yWkmZkySnCmCBQ4i6kmP0M0pkw21/I+
-         t5Me2RlcaBYWMtTLJR8KB6WePatUxJi60Ekz9JSxym9dIyHQSrBBMrdcJbJmGORWDuV9
-         utTr7M0LBYZW6hVjON4MNlcVv7gikBbZc5Y5wpIIZosapwXB3AR1331XUH8fWYIcOzhq
-         9exedCVLJdYobliuAcq9HvelBjkJb3W78NKMh5mPEOZWV/5jzwKtM48NataMRYx7yDNF
-         4W07x9vcwnX1Yb3Y9Vng7tnrtGzJy8pzUXNKAVAUB+oWrO0SVWq05kcDZBMp2sQUcZMK
-         O8HQ==
-X-Gm-Message-State: APjAAAUhd+GgaOqEKW9LqCe4HHQATZ0Um4g93BjQw2eZvH0dqdiZqmA2
-        GwxmtcKcgt3T2qxaFaS6tZZ+DdDygo6w55TuKjzscg==
-X-Google-Smtp-Source: APXvYqyP/fsTNrCsT+L04hV7mtxjhyRS7l6whdWu7iB4pHI+wGkJkmQ7EMGzQOTq1HesEWkup/WBxhYzqcz5ap1GBSE=
-X-Received: by 2002:a5d:6652:: with SMTP id f18mr6737640wrw.246.1576159437310;
- Thu, 12 Dec 2019 06:03:57 -0800 (PST)
-MIME-Version: 1.0
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com> <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22> <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
- <20191202191146.79e6368c@why> <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
- <b7043e932211911a81383274e0cc983d@www.loen.fr> <1576127609.27185.8.camel@mtkswgap22>
- <a5982b8ed10440eef14c04df6e6060b6@www.loen.fr>
-In-Reply-To: <a5982b8ed10440eef14c04df6e6060b6@www.loen.fr>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 12 Dec 2019 15:03:42 +0100
-Message-ID: <CAKv+Gu9YhkzpKbrxa=xDOkS6=kZSMaidor_4DqGY6f1M0tO7kQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Neal Liu <neal.liu@mediatek.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
+        Thu, 12 Dec 2019 09:04:42 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id F285A3F6E0;
+        Thu, 12 Dec 2019 15:04:38 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=DzhFO2Cz;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Q3s48xuWPFsv; Thu, 12 Dec 2019 15:04:33 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 2F78D3F617;
+        Thu, 12 Dec 2019 15:04:30 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 13DC43621B7;
+        Thu, 12 Dec 2019 15:04:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1576159470; bh=+81VifpPufQx1Ghf7UgamHghIAtblxqdt1z4rpeKwjw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DzhFO2Czsj4dlxMRNekZ5HARyubeVf/Z0IFsk9SHs7ghuuNJfX/lCADJRkbNKu9Xc
+         chbNsFXIChLsKn2EMmrTWPks59Fk6Fc5P78vIRgrPvZQpWVKd2JOGzA2NNOUv4e8Ig
+         IMiWhXAy3y1WXfta2R8hBYxsV4ji02fQFhFx/csY=
+Subject: Re: [PATCH v16 11/25] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     Steven Price <steven.price@arm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Zong Li <zong.li@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?Q3J5c3RhbCBHdW8gKOmDreaZtik=?= <crystal.guo@mediatek.com>,
-        Will Deacon <will@kernel.org>, Lars Persson <lists@bofh.nu>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20191206135316.47703-1-steven.price@arm.com>
+ <20191206135316.47703-12-steven.price@arm.com>
+ <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
+ <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
+ <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <16b2ecbc-316a-33f8-ace2-e54cd8001b24@shipmail.org>
+Date:   Thu, 12 Dec 2019 15:04:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 12:45, Marc Zyngier <maz@kernel.org> wrote:
+On 12/12/19 2:15 PM, Steven Price wrote:
+> On 12/12/2019 11:33, Thomas Hellström (VMware) wrote:
+>> On 12/12/19 12:23 PM, Thomas Hellström (VMware) wrote:
+>>> On 12/6/19 2:53 PM, Steven Price wrote:
+>>>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+>>>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+>>>> no users. We're about to add users so reintroduce them, along with
+>>>> p4d_entry() as we now have 5 levels of tables.
+>>>>
+>>>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+>>>> PUD-sized transparent hugepages") already re-added pud_entry() but 
+>>>> with
+>>>> different semantics to the other callbacks. Since there have never
+>>>> been upstream users of this, revert the semantics back to match the
+>>>> other callbacks. This means pud_entry() is called for all entries, not
+>>>> just transparent huge pages.
 >
-> On 2019-12-12 05:13, Neal Liu wrote:
-> > On Tue, 2019-12-03 at 11:17 +0000, Marc Zyngier wrote:
-> >> On 2019-12-03 04:16, Florian Fainelli wrote:
-> >> > On 12/2/2019 11:11 AM, Marc Zyngier wrote:
-> >> >> On Mon, 2 Dec 2019 16:12:09 +0000
-> >> >> Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
-> >> >>
-> >> >>> (adding some more arm64 folks)
-> >> >>>
-> >> >>> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com>
-> >> >>> wrote:
-> >> >>>>
-> >> >>>> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
-> >> >>>>> Hi Neal,
-> >> >>>>>
-> >> >>>>> On Wed, Nov 27, 2019 at 3:23 PM Neal Liu
-> >> <neal.liu@mediatek.com>
-> >> >>>>> wrote:
-> >> >>>>>>
-> >> >>>>>> For MediaTek SoCs on ARMv8 with TrustZone enabled,
-> >> peripherals
-> >> >>>>>> like
-> >> >>>>>> entropy sources is not accessible from normal world (linux)
-> >> and
-> >> >>>>>> rather accessible from secure world (ATF/TEE) only. This
-> >> driver
-> >> >>>>>> aims
-> >> >>>>>> to provide a generic interface to ATF rng service.
-> >> >>>>>>
-> >> >>>>>
-> >> >>>>> I am working on several SoCs that also will need this kind of
-> >> >>>>> driver
-> >> >>>>> to get entropy from Arm trusted firmware.
-> >> >>>>> If you intend to make this a generic interface, please clean
-> >> up
-> >> >>>>> the
-> >> >>>>> references to MediaTek and give it a more generic name. For
-> >> >>>>> example
-> >> >>>>> "Arm Trusted Firmware random number driver".
-> >> >>>>>
-> >> >>>>> It will also be helpful if the SMC call number is
-> >> configurable.
-> >> >>>>>
-> >> >>>>> - Lars
-> >> >>>>
-> >> >>>> Yes, I'm trying to make this to a generic interface. I'll try
-> >> to
-> >> >>>> make
-> >> >>>> HW/platform related dependency to be configurable and let it
-> >> more
-> >> >>>> generic.
-> >> >>>> Thanks for your suggestion.
-> >> >>>>
-> >> >>>
-> >> >>> I don't think it makes sense for each arm64 platform to expose
-> >> an
-> >> >>> entropy source via SMC calls in a slightly different way, and
-> >> model
-> >> >>> it
-> >> >>> as a h/w driver. Instead, we should try to standardize this, and
-> >> >>> perhaps expose it via the architectural helpers that already
-> >> exist
-> >> >>> (get_random_seed_long() and friends), so they get plugged into
-> >> the
-> >> >>> kernel random pool driver directly.
-> >> >>
-> >> >> Absolutely. I'd love to see a standard, ARM-specified,
-> >> virtualizable
-> >> >> RNG that is abstracted from the HW.
-> >> >
-> >> > Do you think we could use virtio-rng on top of a modified
-> >> virtio-mmio
-> >> > which instead of being backed by a hardware mailbox, could use
-> >> > hvc/smc
-> >> > calls to signal writes to shared memory and get notifications via
-> >> an
-> >> > interrupt? This would also open up the doors to other virtio uses
-> >> > cases
-> >> > beyond just RNG (e.g.: console, block devices?). If this is
-> >> > completely
-> >> > stupid, then please disregard this comment.
-> >>
-> >> The problem with a virtio device is that it is a ... device. What we
-> >> want
-> >> is to be able to have access to an entropy source extremely early in
-> >> the
-> >> kernel life, and devices tend to be available pretty late in the
-> >> game.
-> >> This means we cannot plug them in the architectural helpers that Ard
-> >> mentions above.
-> >>
-> >> What you're suggesting looks more like a new kind of virtio
-> >> transport,
-> >> which is interesting, in a remarkably twisted way... ;-)
-> >>
-> >> Thanks,
-> >>
-> >>          M.
-> >
-> > In conclusion, is it helpful that hw_random has a generic interface
-> > to
-> > add device randomness by talking to hwrng which is implemented in the
-> > firmware or the hypervisor?
-> > For most chip vendors, I think the answer is yes. We already prepared
-> > a
-> > new patchset and need you agree with this idea.
+> When I wrote that there were no upstream users, which sadly shows how
+> long ago that was :(
 >
-> As long as it is a *unified* interface, I'm all for that.
+>>> Actually, there are two users of pud_entry(), in hmm.c and since 
+>>> 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic 
+>>> and requires no attention but the one in hmm.c is probably largely 
+>>> untested, and seems to assume it was called outside of the spinlock.
+>>>
+>>> The problem with the current patch is that the hmm pud_entry will 
+>>> traverse also pmds, so that will be done twice now.
+>>>
+>>> In another thread we were discussing a means of rerunning the level 
+>>> (in case of a race), or continuing after a level, based on the 
+>>> return value after the callback. The change was fairly invasive,
+>>>
+>> Hmm. Forgot to remove the above text that appears twice. :(. The 
+>> correct one is inline below.
+>>
+>>>
+>>>> Tested-by: Zong Li <zong.li@sifive.com>
+>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>> ---
+>>>>   include/linux/pagewalk.h | 19 +++++++++++++------
+>>>>   mm/pagewalk.c            | 27 ++++++++++++++++-----------
+>>>>   2 files changed, 29 insertions(+), 17 deletions(-)
+>>>>
+>>>> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+>>>> index 6ec82e92c87f..06790f23957f 100644
+>>>> --- a/include/linux/pagewalk.h
+>>>> +++ b/include/linux/pagewalk.h
+>>>> @@ -8,15 +8,15 @@ struct mm_walk;
+>>>>     /**
+>>>>    * mm_walk_ops - callbacks for walk_page_range
+>>>> - * @pud_entry:        if set, called for each non-empty PUD 
+>>>> (2nd-level) entry
+>>>> - *            this handler should only handle pud_trans_huge() puds.
+>>>> - *            the pmd_entry or pte_entry callbacks will be used for
+>>>> - *            regular PUDs.
+>>>> - * @pmd_entry:        if set, called for each non-empty PMD 
+>>>> (3rd-level) entry
+>>>> + * @pgd_entry:        if set, called for each non-empty PGD 
+>>>> (top-level) entry
+>>>> + * @p4d_entry:        if set, called for each non-empty P4D entry
+>>>> + * @pud_entry:        if set, called for each non-empty PUD entry
+>>>> + * @pmd_entry:        if set, called for each non-empty PMD entry
+>>>>    *            this handler is required to be able to handle
+>>>>    *            pmd_trans_huge() pmds.  They may simply choose to
+>>>>    *            split_huge_page() instead of handling it explicitly.
+>>>> - * @pte_entry:        if set, called for each non-empty PTE 
+>>>> (4th-level) entry
+>>>> + * @pte_entry:        if set, called for each non-empty PTE 
+>>>> (lowest-level)
+>>>> + *            entry
+>>>>    * @pte_hole:        if set, called for each hole at all levels
+>>>>    * @hugetlb_entry:    if set, called for each hugetlb entry
+>>>>    * @test_walk:        caller specific callback function to 
+>>>> determine whether
+>>>> @@ -27,8 +27,15 @@ struct mm_walk;
+>>>>    * @pre_vma:            if set, called before starting walk on a 
+>>>> non-null vma.
+>>>>    * @post_vma:           if set, called after a walk on a non-null 
+>>>> vma, provided
+>>>>    *                      that @pre_vma and the vma walk succeeded.
+>>>> + *
+>>>> + * p?d_entry callbacks are called even if those levels are folded 
+>>>> on a
+>>>> + * particular architecture/configuration.
+>>>>    */
+>>>>   struct mm_walk_ops {
+>>>> +    int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+>>>> +             unsigned long next, struct mm_walk *walk);
+>>>> +    int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+>>>> +             unsigned long next, struct mm_walk *walk);
+>>>>       int (*pud_entry)(pud_t *pud, unsigned long addr,
+>>>>                unsigned long next, struct mm_walk *walk);
+>>>>       int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+>>>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>>>> index ea0b9e606ad1..c089786e7a7f 100644
+>>>> --- a/mm/pagewalk.c
+>>>> +++ b/mm/pagewalk.c
+>>>> @@ -94,15 +94,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned 
+>>>> long addr, unsigned long end,
+>>>>           }
+>>>>             if (ops->pud_entry) {
+>>>> -            spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+>>>> -
+>>>> -            if (ptl) {
+>>>> -                err = ops->pud_entry(pud, addr, next, walk);
+>>>> -                spin_unlock(ptl);
+>>>> -                if (err)
+>>>> -                    break;
+>>>> -                continue;
+>>>> -            }
+>>>> +            err = ops->pud_entry(pud, addr, next, walk);
+>>>> +            if (err)
+>>>> +                break;
+>>>
+>>> Actually, there are two current users of pud_entry(), in hmm.c and 
+>>> since 5.5rc1 also mapping_dirty_helpers.c. The latter one is 
+>>> unproblematic and requires no attention but the one in hmm.c is 
+>>> probably largely untested, and seems to assume it was called outside 
+>>> of the spinlock.
 >
+> Thanks for pointing that out, I guess the simplest fix would be to
+> squash in something like the below which should restore the old
+> behaviour for hmm.c without affecting others.
+>
+> Steve 
+
+I'm not fully sure that the old behaviour is the correct one, but definitely hmm's pud_entry needs some fixing.
+I'm more concerned with the pagewalk code. With your patch it actually splits all huge puds present in the page-table
+on each page walk which is not what we want.
+
+One idea would be to add a new member to struct_mm_walk:
+
+enum page_walk_ret_action {
+	ACTION_SUBTREE = 0,
+	ACTION_CONTINUE = 1,
+	ACTION_AGAIN = 2 /* Only for levels that thave p?d_unstable */
+};
+
+struct mm_walk {
+	...
+	enum page_walk_ret_action action; /* or perhaps as an enum */
+};
 
 
-Yeah, but I'm not sure it makes sense to model it as a device like
-this. It would be nice if we could tie this into the ARM SMCCC
-discovery, and use the SMC calls to back arch_get_random_seed_long()
-[provided we fix the braindead way in which that is being used today
-in the interrupt code]
+if (ops->pud_entry) {
+	walk->action = ACTION_SUBTREE;
+	...
+	...
+	...
+	if (walk->action == ACTION_AGAIN)  /* Callback tried to split huge entry, but failed */
+		goto again;
+	else if (walk->action == ACTION_CONTINUE) /* Done with this subtree. Probably huge entry handled. */
+		continue;
+	/* ACTION_SUBTREE falls through */
+}
+
+we discussed something similar before on linux-mm, but the idea then was to redefine
+the positive return value of the callback to the action, but that meant changing those existing callbacks that relied on
+a positive return value. The above would be helpful also for pmd_entry.
+
+/Thomas
+
+
+
+
