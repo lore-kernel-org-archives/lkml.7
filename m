@@ -2,136 +2,120 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FB4C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB04DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C972A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB752214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hUZYD0Xw"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SYROU9ET"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731143AbfLLXXx (ORCPT
+        id S1731160AbfLLX35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:23:53 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:32851 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730827AbfLLXXw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:23:52 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y206so294177pfb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:23:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R1FesrMsNLhrmJsi/HIXYAEi1VeJJ7kHlJczvqulZYg=;
-        b=hUZYD0Xwf0RYw3e73Cga+16ykn54AOG9sWN+DWGevEMxHxPa2bBl6Xdr0x4tYA5bgJ
-         OcC8IgpVDelltxGAHytKr02PtODdaXeBVHJqnpg6PHC5hD3VeKQ51r85eEHqgWtwn3AY
-         sicScLXK+vHXGHprq8ERYZFU/bzvOaBiPYKX6/VbDOEMnrdmeLtpBJh/Lk0MR9G9qrTG
-         rsjih5wtjcwj6dN3CSWXLi9zi0NEvk1GwjX7in6lOiAoUnJZu0EQy0mutC9JawuF5mOj
-         VOlViIk5W/VDERh6tOBqpangXFKU13sefvq68cAdVEKHoSxLLfBv1PMiEAxgDWDVGRqO
-         JTuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R1FesrMsNLhrmJsi/HIXYAEi1VeJJ7kHlJczvqulZYg=;
-        b=b2h8+kf01+bomCljAHf9MHyz87Epsc7njJzH4Tx6aQPWLM2/UoowXwKhHJFzdCStcF
-         erUXvLnVTeS9oDmzIy+UDffItwR+Jr9NHUxJsc15bj1uakDbMHrlfv5azHrR6hsT5TL7
-         N8kx0ujmAtWDnAwa7Q+CmIFV6FzAdNP0Gtu2B+tyVkw2tyN3atWHRYEfFAteW6SWxAx+
-         SMRZXi9d7LI84/yJpmlQJW/YHd/j8AVHTiV5yJg7kNzFwaAenurm90/m4w2y5aztn5Me
-         iscRhV/i6fsxuw/zOVW1b8wBTZ3AxmonrlJMATT+lh01NRU2tn8A9n/ru0AN6tQbHDk6
-         2HRw==
-X-Gm-Message-State: APjAAAWmOtVmPLgmyOJY0NdbAY8unTV/6bn9dBtx5uhQVuyVXL8ZAImb
-        NhVa76x6JSJV7ae3Aw3wgsXkiQ==
-X-Google-Smtp-Source: APXvYqy9/uRn0x+YeAKOgcxDnFG2QjQvadTqueYdtexhXSUlY/gHDWcdl5/u4PQl/qA5JD49AvuZMA==
-X-Received: by 2002:aa7:9988:: with SMTP id k8mr12254965pfh.200.1576193031952;
-        Thu, 12 Dec 2019 15:23:51 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id a26sm8739052pfo.5.2019.12.12.15.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 15:23:51 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:23:49 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] usb: dwc3: qcom: Remove useless compatible strings from
- the match table
-Message-ID: <20191212232349.GR3143381@builder>
-References: <20191212132122.1.I85a23bdcff04dbce48cc46ddb8f1ffe7a51015eb@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212132122.1.I85a23bdcff04dbce48cc46ddb8f1ffe7a51015eb@changeid>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Thu, 12 Dec 2019 18:29:57 -0500
+Received: from mout.gmx.net ([212.227.15.19]:42837 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731007AbfLLX35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 18:29:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1576193386;
+        bh=gtNiGOMaG+hrEDMSnjfH4TheHPrFaKjLS4DfvxSWQJ4=;
+        h=X-UI-Sender-Class:From:To:CC:In-reply-to:Subject:Reply-to:
+         References:Date;
+        b=SYROU9ETIvP5wm/aUkZXv30zCbFjChykztWSkke0CbCHwhC53OxPu1rkVmkikl+qi
+         hih6PfRlB4qoDBhJmywBm2O1F51TtXsvyN7cvTJ5Bc3jbeq7sOf50M+8W9Wi4KdlYU
+         hKqhurSuymWjvsSn1nwL7CMw0cyd/IpLAjX7HFbY=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from corona.crabdance.com ([173.228.106.20]) by mail.gmx.com
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1N3se2-1hfmIb1iwi-00zjUB; Fri, 13 Dec 2019 00:29:46 +0100
+Received: by corona.crabdance.com (Postfix, from userid 1001)
+        id E09FC6E85603; Thu, 12 Dec 2019 15:28:59 -0800 (PST)
+From:   Stefan Schaeckeler <schaecsn@gmx.net>
+To:     amit.kucheria@verdurent.com
+CC:     heiko@sntech.de, linux-pm@vger.kernel.org,
+        daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org,
+        edubezval@gmail.com, linux-rockchip@lists.infradead.org,
+        rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
+In-reply-to: <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
+        (message from Amit Kucheria on Thu, 12 Dec 2019 13:58:52 +0530)
+Subject: Re: [RESEND PATCH] thermal: rockchip: enable hwmon
+Reply-to: schaecsn@gmx.net
+Content-Type: text/plain
+References: <20191212061702.BFE2D6E85603@corona.crabdance.com> <CAHLCerOHjAEEA1BpUqPdZvFwHMy11SqC+ZtjdFyManu7iOpBXA@mail.gmail.com>
+Message-Id: <20191212232859.E09FC6E85603@corona.crabdance.com>
+Date:   Thu, 12 Dec 2019 15:28:59 -0800 (PST)
+X-Provags-ID: V03:K1:DwsCsXOuYOhJw8V89QklRZ9osgYgHSIQVBXq4pgiRwhkFFmltBi
+ 3kcHnOCi6FRrCnoXmJm90yFyU6q+EVM3zS/paOZUwCbEjkicKJDTl5vaAIgAP+dE0J7/f13
+ TI34F5ggu2CqpTP5XDijGLe2GuipTAa5rtvO4v9gt5QK1hGJHu3pZlAzlPrN6TKfVizJ/Qk
+ vSBkzo1D2fH+o/uW3R1dw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B/jaoG6pxyc=:m7iFg/yWoVMNeBlPMGdFNd
+ PY6SNewXxM1s6K5Arb8uvuHEQdAP18gNudbqORo5F23TWR/WJUxzA1UtNu3AII2JRXnco1yP9
+ 34E6Cnm1PP53ryOE+uq9HjbrpfehMMscaG3MZBNMcc3Zgn4Rc18fRsL0hsO+u9XL3fe23yKPJ
+ OZZYBvMynzgA3u5ysEcRwA1vn+2hG0dszBEIt4cpfY7+4hDY+90iNpVbakRPsbyZzRpTGNWoU
+ 6p0WD3BrfWNXLocPrjW9RhCzWYIQPprmNYmQVuVkygvF6If4z7EREYIvVgZ/CJoCxpqAp4WZ7
+ Ox6lH2ZuCxJJMLctljuOsNdsYy3sG6hw61KDw95Qr6Ls45uoo67LD0WGXX0oC+5shUeWS4TYu
+ 9xmPTJG4koOIMz/3EZb7W8D9tdqmtwS6ciXJ2vPyLEUTA7TvPqITm4XBGHFsQRnKnvZP3MX4J
+ JCXVRtf0xCZcSjtiYScV271xpHQSB4vXpresTWxFQz5KcfDt0CxsMPnNzKw5F0WKkg5C7Oikp
+ CZtwRerVP3yiYk3Gg6LasW4esN+RGOSMbA4m+UE2Ywr3fghXsw+oSq8KlRk964qrl+1FnESta
+ HajOPrIF+/KNsyIXh+PCM5v2DczQcrQ6zQ1uciBHmqO5oZjPT6er2HCYpiOoMxGXoJxaOdt/C
+ sdLuC5tK6PSfZgVTdZDu0WJrshGUnGlUpRYdqdIG76bKFFd0kHFVJYfoP5TW3IF6h2DXwBTrv
+ qKZf74Qv0jYdYI52FcCW1fqhcRs77Dp6c7+vmK1yrbRfPkzFWmajQ+4/7qY5geIMgf1lAg/11
+ 3nVXSxdV0CBKiFTHI2fexaxrM7FFym7dcx/4yYFRbq4AIzmuBn9x0a5EHn5Gob5N08nhJRY+2
+ nU4ZvtXJ9bS0wD7w6dEzdUMoIQrYBraeg3quxdz0Uy1kVR+uznUXu9X4hpjKd5QOvNCrX1l2t
+ TxKRoc8STqNtg53tX5ZbckBNykUlx3ys7hB4MFwBhJymQ6tRuvq14HTve65dhAjozMZ/EVX3F
+ DPww8RJdp91u9nJGV68FU10GcQlq4uFG5lqYTkFCPonxAVMu5MD0RYvHb/bj9AU8vwadn2h9h
+ pL87dBWLNCJOeeJz50kSTPAD9zvDj2J0lei3KhX4GLeLCzjcPQGmonkOMrfGAZw6nLpDzfvPC
+ GFQwe7yvcIdSSF3XammtNlbqWI7GBvu9JKcHXHpCMw33JgV0IuYVhs0DlEFx2slndXIJ3VoDr
+ 4Xxp4DHhycRuYKL89sd0EIbC6e8RzRIE1VqN8Ct1D7sTpr83r5BivjKLwxBI=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 12 Dec 13:21 PST 2019, Douglas Anderson wrote:
+Hello Amit,
 
-> The of match table in dwc3-qcom.c had an entry per Qualcomm SoC known
-> to have dwc3.  That's not needed.  Here's why:
-> 
-> 1. The bindings specify that the compatible string in the device tree
->    should contain the SoC-specific compatible string followed by the
->    string "qcom,dwc3".
-> 
-> 2. All known Qualcomm SoC dts files (confirmed via git grep in
->    mainline Linux) using dwc3 follow the rules and do, in fact,
->    contain the SoC-specific compatible string followed by the string
->    "qcom,dwc3".
-> 
-> 3. The source code does nothing special with the per-SoC strings--they
->    are only used to match the node.
-> 
-> Let's remove the extra strings from the table.  Doing so will avoid
-> the need to land future useless patches [1] that do nothing more than
-> add yet more strings to the table.
-> 
-> NOTE: if later we _do_ find some SoC-specific quirk we need to handle
-> in the code we can add back a subset of these strings.  At the time we
-> will probably also add some data in the match table to make it easier
-> to generalize this hypothetical quirk across all the SoCs it affects.
-> 
-> [1] https://lore.kernel.org/r/1574940787-1004-2-git-send-email-sanm@codeaurora.org
-> 
+> On Thu, Dec 12, 2019 at 11:47 AM Stefan Schaeckeler <schaecsn@gmx.net> w=
+rote:
+> >
+> > By default, of-based thermal drivers do not enable hwmon.
+> > Explicitly enable hwmon for both, the soc and gpu temperature
+> > sensor.
+>
+> Is there any reason you need to expose this in hwmon?
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Why hwmon:
 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/usb/dwc3/dwc3-qcom.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 261af9e38ddd..72e867e02a1c 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -751,9 +751,6 @@ static const struct dev_pm_ops dwc3_qcom_dev_pm_ops = {
->  
->  static const struct of_device_id dwc3_qcom_of_match[] = {
->  	{ .compatible = "qcom,dwc3" },
-> -	{ .compatible = "qcom,msm8996-dwc3" },
-> -	{ .compatible = "qcom,msm8998-dwc3" },
-> -	{ .compatible = "qcom,sdm845-dwc3" },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, dwc3_qcom_of_match);
-> -- 
-> 2.24.1.735.g03f4e72817-goog
-> 
+The soc embedds temperature sensors and hwmon is the standard way to expos=
+e
+sensors.
+
+Sensors exposed by hwmon are automagically found by userland clients. User=
+s
+want to run sensors(1) and expect them to show up.
+
+
+Why in rockchip_thermal.c:
+
+drivers/thermal/ provides a high-level hwmon api in thermal_hwmon.[hc] whi=
+ch is
+used by at least these thermal drivers: rcar_gen3_thermal.c, rcar_thermal.=
+c,
+st/stm_thermal.c, and broadcom/bcm2835_thermal.c. I want to hook up
+rockchip_thermal.c exactly the same way.
+
+Apparently, other architectures hook up the cpu temperature sensors to hwm=
+on
+elsewhere. Most seem to do this in hwmon/, e.g. hwmon/coretemp.c. These dr=
+ivers
+are written from scratch. Utilizing thermal_hwmon.[ch] for chips which hav=
+e
+already drivers in drivers/thermal/ seems to be more elegant.
+
+ Stefan
