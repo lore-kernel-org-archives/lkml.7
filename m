@@ -6,20 +6,20 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51737C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62DEC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3597421556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19272253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:14:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730367AbfLLSOh (ORCPT
+        id S1730375AbfLLSOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:14:37 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:56756 "EHLO
+        Thu, 12 Dec 2019 13:14:40 -0500
+Received: from isilmar-4.linta.de ([136.243.71.142]:56804 "EHLO
         isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730293AbfLLSOg (ORCPT
+        with ESMTP id S1730346AbfLLSOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:14:36 -0500
+        Thu, 12 Dec 2019 13:14:37 -0500
 X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
@@ -28,10 +28,10 @@ X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id DB169200A94;
-        Thu, 12 Dec 2019 18:14:33 +0000 (UTC)
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 7C628200A95;
+        Thu, 12 Dec 2019 18:14:34 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id 62F5D20B70; Thu, 12 Dec 2019 19:14:30 +0100 (CET)
+        id 4A81C20B74; Thu, 12 Dec 2019 19:14:31 +0100 (CET)
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -39,9 +39,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] init: use do_mount() instead of ksys_mount()
-Date:   Thu, 12 Dec 2019 19:14:20 +0100
-Message-Id: <20191212181422.31033-4-linux@dominikbrodowski.net>
+Subject: [PATCH 5/5] fs: remove ksys_dup()
+Date:   Thu, 12 Dec 2019 19:14:22 +0100
+Message-Id: <20191212181422.31033-6-linux@dominikbrodowski.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191212181422.31033-1-linux@dominikbrodowski.net>
 References: <20191212181422.31033-1-linux@dominikbrodowski.net>
@@ -52,125 +52,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In prepare_namespace(), do_mount() can be used instead of ksys_mount()
-as the first and third argument are const strings in the kernel, the
-second and fourth argument are passed through anyway, and the fifth
-argument is NULL.
-
-In do_mount_root(), ksys_mount() is called with the first and third
-argument being already kernelspace strings, which do not need to be
-copied over from userspace to kernelspace (again). The second and
-fourth arguments are passed through to do_mount() anyway. The fifth
-argument, while already residing in kernelspace, needs to be put into
-a page of its own. Then, do_mount() can be used instead of
-ksys_mount().
-
-Once this is done, there are no in-kernel users to ksys_mount() left,
-which can therefore be removed.
+ksys_dup() is used only at one place in the kernel, namely to duplicate
+fd 0 of /dev/console to stdout and stderr. The same functionality can be
+achieved by using functions already available within the kernel namespace.
 
 Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
 ---
- fs/namespace.c           | 10 ++--------
- include/linux/syscalls.h |  2 --
- init/do_mounts.c         | 28 ++++++++++++++++++++++------
- 3 files changed, 24 insertions(+), 16 deletions(-)
+ fs/file.c                |  7 +------
+ include/linux/syscalls.h |  1 -
+ init/main.c              | 26 ++++++++++++++++++++------
+ 3 files changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 2fd0c8bcb8c1..be601d3a8008 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3325,8 +3325,8 @@ struct dentry *mount_subtree(struct vfsmount *m, const char *name)
+diff --git a/fs/file.c b/fs/file.c
+index 3da91a112bab..2f4fcf985079 100644
+--- a/fs/file.c
++++ b/fs/file.c
+@@ -960,7 +960,7 @@ SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)
+ 	return ksys_dup3(oldfd, newfd, 0);
  }
- EXPORT_SYMBOL(mount_subtree);
  
--int ksys_mount(const char __user *dev_name, const char __user *dir_name,
--	       const char __user *type, unsigned long flags, void __user *data)
-+SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
-+		char __user *, type, unsigned long, flags, void __user *, data)
+-int ksys_dup(unsigned int fildes)
++SYSCALL_DEFINE1(dup, unsigned int, fildes)
  {
- 	int ret;
- 	char *kernel_type;
-@@ -3359,12 +3359,6 @@ int ksys_mount(const char __user *dev_name, const char __user *dir_name,
+ 	int ret = -EBADF;
+ 	struct file *file = fget_raw(fildes);
+@@ -975,11 +975,6 @@ int ksys_dup(unsigned int fildes)
  	return ret;
  }
  
--SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
--		char __user *, type, unsigned long, flags, void __user *, data)
+-SYSCALL_DEFINE1(dup, unsigned int, fildes)
 -{
--	return ksys_mount(dev_name, dir_name, type, flags, data);
+-	return ksys_dup(fildes);
 -}
 -
- /*
-  * Create a kernel mount representation for a new, prepared superblock
-  * (specified by fs_fd) and attach to an open_tree-like file descriptor.
+ int f_dupfd(unsigned int from, struct file *file, unsigned flags)
+ {
+ 	int err;
 diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index d0391cc2dae9..5262b7a76d39 100644
+index 5262b7a76d39..2960dedcfde8 100644
 --- a/include/linux/syscalls.h
 +++ b/include/linux/syscalls.h
-@@ -1231,8 +1231,6 @@ asmlinkage long sys_ni_syscall(void);
-  * the ksys_xyzyyz() functions prototyped below.
+@@ -1232,7 +1232,6 @@ asmlinkage long sys_ni_syscall(void);
   */
  
--int ksys_mount(const char __user *dev_name, const char __user *dir_name,
--	       const char __user *type, unsigned long flags, void __user *data);
  int ksys_umount(char __user *name, int flags);
- int ksys_dup(unsigned int fildes);
+-int ksys_dup(unsigned int fildes);
  int ksys_chroot(const char __user *filename);
-diff --git a/init/do_mounts.c b/init/do_mounts.c
-index 43f6d098c880..f55cbd9cb818 100644
---- a/init/do_mounts.c
-+++ b/init/do_mounts.c
-@@ -387,12 +387,25 @@ static void __init get_fs_names(char *page)
- 	*s = '\0';
- }
+ ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
+ int ksys_chdir(const char __user *filename);
+diff --git a/init/main.c b/init/main.c
+index 2cd736059416..ec3a1463ac69 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -93,6 +93,7 @@
+ #include <linux/rodata_test.h>
+ #include <linux/jump_label.h>
+ #include <linux/mem_encrypt.h>
++#include <linux/file.h>
  
--static int __init do_mount_root(char *name, char *fs, int flags, void *data)
-+static int __init do_mount_root(const char *name, const char *fs,
-+				 const int flags, const void *data)
+ #include <asm/io.h>
+ #include <asm/bugs.h>
+@@ -1157,13 +1158,26 @@ static int __ref kernel_init(void *unused)
+ 
+ void console_on_rootfs(void)
  {
- 	struct super_block *s;
--	int err = ksys_mount(name, "/root", fs, flags, data);
--	if (err)
--		return err;
-+	char *data_page;
-+	struct page *p;
-+	int ret;
+-	/* Open the /dev/console as stdin, this should never fail */
+-	if (ksys_open((const char __user *) "/dev/console", O_RDWR, 0) < 0)
+-		pr_err("Warning: unable to open an initial console.\n");
++	struct file *file;
++	unsigned int i;
 +
-+	/* do_mount() requires a full page as fifth argument */
-+	p = alloc_page(GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
++	/* Open /dev/console in kernelspace, this should never fail */
++	file = filp_open("/dev/console", O_RDWR, 0);
++	if (!file)
++		goto err_out;
 +
-+	data_page = page_address(p);
-+	strncpy(data_page, data, PAGE_SIZE - 1);
++	/* create stdin/stdout/stderr, this should never fail */
++	for (i = 0; i < 3; i++) {
++		if (f_dupfd(i, file, 0) != i)
++			goto err_out;
++	}
 +
-+	ret = do_mount(name, "/root", fs, flags, data_page);
-+	if (ret)
-+		goto out;
++	return;
  
- 	ksys_chdir("/root");
- 	s = current->fs->pwd.dentry->d_sb;
-@@ -402,7 +415,10 @@ static int __init do_mount_root(char *name, char *fs, int flags, void *data)
- 	       s->s_type->name,
- 	       sb_rdonly(s) ? " readonly" : "",
- 	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
--	return 0;
-+
-+out:
-+	put_page(p);
-+	return ret;
+-	/* create stdout/stderr */
+-	(void) ksys_dup(0);
+-	(void) ksys_dup(0);
++err_out:
++	/* no panic -- this might not be fatal */
++	pr_err("Warning: unable to open an initial console.\n");
++	return;
  }
  
- void __init mount_block_root(char *name, int flags)
-@@ -671,7 +687,7 @@ void __init prepare_namespace(void)
- 	mount_root();
- out:
- 	devtmpfs_mount();
--	ksys_mount(".", "/", NULL, MS_MOVE, NULL);
-+	do_mount(".", "/", NULL, MS_MOVE, NULL);
- 	ksys_chroot(".");
- }
- 
+ static noinline void __init kernel_init_freeable(void)
 -- 
 2.24.1
 
