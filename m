@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D4EC2D0CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0C8C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6FA214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A242077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IUVN9KAQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gxmcLDH2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfLLIWV (ORCPT
+        id S1728801AbfLLIWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:22:21 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8609 "EHLO
+        Thu, 12 Dec 2019 03:22:43 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8610 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbfLLIT2 (ORCPT
+        with ESMTP id S1728305AbfLLIT1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:19:28 -0500
+        Thu, 12 Dec 2019 03:19:27 -0500
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5df1f8020001>; Thu, 12 Dec 2019 00:19:14 -0800
+        id <B5df1f8020002>; Thu, 12 Dec 2019 00:19:14 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Thu, 12 Dec 2019 00:19:21 -0800
 X-PGP-Universal: processed;
         by hqpgpgate101.nvidia.com on Thu, 12 Dec 2019 00:19:21 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
- 2019 08:19:20 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 12 Dec 2019 08:19:20 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 12 Dec
+ 2019 08:19:18 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 12 Dec 2019 08:19:18 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5df1f8080002>; Thu, 12 Dec 2019 00:19:20 -0800
+        id <B5df1f8060003>; Thu, 12 Dec 2019 00:19:18 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -69,12 +69,10 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        <stable@vger.kernel.org>
-Subject: [PATCH v10 17/25] media/v4l2-core: set pages dirty upon releasing DMA buffers
-Date:   Thu, 12 Dec 2019 00:19:09 -0800
-Message-ID: <20191212081917.1264184-18-jhubbard@nvidia.com>
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v10 02/25] mm/gup: move try_get_compound_head() to top, fix minor issues
+Date:   Thu, 12 Dec 2019 00:18:54 -0800
+Message-ID: <20191212081917.1264184-3-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191212081917.1264184-1-jhubbard@nvidia.com>
 References: <20191212081917.1264184-1-jhubbard@nvidia.com>
@@ -83,56 +81,86 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1576138755; bh=icmjko9fP8b/hMTtebs5M97o7j6aV8LjauIhhN3vqys=;
+        t=1576138755; bh=JKnh6awNMnXx+WkfJCjCpP/dD2pEJJn8AxQ3IWMhLGw=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=IUVN9KAQc/ua1UftCrMfxs6ic7rqDuo8saHSK0rOnt8QFL+p5U7xnLO4OWTcsJQ5g
-         KzAB96enaN31aXkS8+f71s9ylBvpflj1Dqjmts4ESEaJJy4ux9T5NBoVJxTE30UJPs
-         fgC5KcMrbPVqAbqApWQ6+6ZucWPambwU3ugVL5mUUZmTYOwjcfbPvc1RIp4ZSzno/g
-         95r3b/nua4VtY9hfFkWlDb4dIk6iWLOAPp9gTV3VcjoHFq6FUkXVU4hLY+rLUDmpy2
-         4BE8dgFLltoDsFS8fkBUbZUu/l4SUpoywark/5N9ORkKdUqAC2/X8rAJiToa+HjSur
-         ihYzAG+jFQ+sg==
+        b=gxmcLDH24QYW/bRTfUutV80ebVXUWcVOgjFST78ubOajjqfcImb6wcL10E0yScFV9
+         OoQxmVO3iHhyHIPF7GClZG+GqSH/+MKl71KyHvoeT553u3ikDmjBV/qHzFMrtYqDCx
+         C+7ncvIh8amz6LicWGev/AEHphB8cSXLFW6hVofI2hnuGLAluGSJgRmQfoywxFir+K
+         vMFxM3P8yTB3nZvx+VpJ9InwyB27Ib2zyu4eVLtYnMiU1nwmx5CwZAzl5cxvNCi0qy
+         EWWxnXKJpx+f3CBYgfZIxHYKjltfIjU22F1j+uIPufucdMNuZUuPLY4O57qU4s+XrA
+         0JupnX/tvIk+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After DMA is complete, and the device and CPU caches are synchronized,
-it's still required to mark the CPU pages as dirty, if the data was
-coming from the device. However, this driver was just issuing a
-bare put_page() call, without any set_page_dirty*() call.
+An upcoming patch uses try_get_compound_head() more widely,
+so move it to the top of gup.c.
 
-Fix the problem, by calling set_page_dirty_lock() if the CPU pages
-were potentially receiving data from the device.
+Also fix a tiny spelling error and a checkpatch.pl warning.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: <stable@vger.kernel.org>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/gup.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2=
--core/videobuf-dma-sg.c
-index 66a6c6c236a7..28262190c3ab 100644
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
- 	BUG_ON(dma->sglen);
+diff --git a/mm/gup.c b/mm/gup.c
+index f764432914c4..3ecce297a47f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -29,6 +29,21 @@ struct follow_page_context {
+ 	unsigned int page_mask;
+ };
 =20
- 	if (dma->pages) {
--		for (i =3D 0; i < dma->nr_pages; i++)
-+		for (i =3D 0; i < dma->nr_pages; i++) {
-+			if (dma->direction =3D=3D DMA_FROM_DEVICE)
-+				set_page_dirty_lock(dma->pages[i]);
- 			put_page(dma->pages[i]);
-+		}
- 		kfree(dma->pages);
- 		dma->pages =3D NULL;
++/*
++ * Return the compound head page with ref appropriately incremented,
++ * or NULL if that failed.
++ */
++static inline struct page *try_get_compound_head(struct page *page, int re=
+fs)
++{
++	struct page *head =3D compound_head(page);
++
++	if (WARN_ON_ONCE(page_ref_count(head) < 0))
++		return NULL;
++	if (unlikely(!page_cache_add_speculative(head, refs)))
++		return NULL;
++	return head;
++}
++
+ /**
+  * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned p=
+ages
+  * @pages:  array of pages to be maybe marked dirty, and definitely releas=
+ed.
+@@ -1807,20 +1822,6 @@ static void __maybe_unused undo_dev_pagemap(int *nr,=
+ int nr_start,
  	}
+ }
+=20
+-/*
+- * Return the compund head page with ref appropriately incremented,
+- * or NULL if that failed.
+- */
+-static inline struct page *try_get_compound_head(struct page *page, int re=
+fs)
+-{
+-	struct page *head =3D compound_head(page);
+-	if (WARN_ON_ONCE(page_ref_count(head) < 0))
+-		return NULL;
+-	if (unlikely(!page_cache_add_speculative(head, refs)))
+-		return NULL;
+-	return head;
+-}
+-
+ #ifdef CONFIG_ARCH_HAS_PTE_SPECIAL
+ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 			 unsigned int flags, struct page **pages, int *nr)
 --=20
 2.24.0
 
