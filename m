@@ -2,141 +2,161 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC493C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904D0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C68F2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609C121556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:33:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XDtYfaI7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gpQRyl32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbfLLWcW (ORCPT
+        id S1731095AbfLLWdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:32:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39051 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730809AbfLLWcW (ORCPT
+        Thu, 12 Dec 2019 17:33:35 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42618 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730953AbfLLWde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:32:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576189941;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jcJp5d02ffhslABjm0JRL5WxPWI1YxxsBS3tQ0tjUug=;
-        b=XDtYfaI74YB1jl9e6Ye8GjQN4x86M+iUMiKEw0sG9mkgX/UDJIEMfeb6VZcJunMMW6T0tl
-        gQGfop+00QPxlxipicXXiaFiEDcjgjuhWkcTXJIpyDWkhAa51Vq7NJ1kPtZbPNuWmoI2ev
-        HxQAL7iCm17MxW+3+tU+zE0RIakzeSI=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-jsWde_DON_Ce3oDUDmjC4A-1; Thu, 12 Dec 2019 17:32:18 -0500
-X-MC-Unique: jsWde_DON_Ce3oDUDmjC4A-1
-Received: by mail-qt1-f198.google.com with SMTP id x8so496452qtq.14
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 14:32:18 -0800 (PST)
+        Thu, 12 Dec 2019 17:33:34 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y19so462687lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 14:33:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uNFsQyJIBMP610s+itpyeXuJ5AUNsir6dpBt7MH9KCs=;
+        b=gpQRyl32JgLNoYvplD3NJnHKCMfmAtJwwP/Uje32i2vycfQId3lC7NGwJ02bPHxkPl
+         416/v8p3WKzukSO9ASd6S83IL+etsV7SDfX6Ei4AfcyKmGzdpQkTC6K6780v/HUGj3RR
+         iLUfie1VoKjVKeIGJT87YTn0GXTHkKQi7NqNy/9KSjErrhDPtSknZgkYNBhXB0T/pE2d
+         y0moZcvaKx6gmRQ4SegnrlCg+6OhLNIwi27yH3HnFB8LmmmZPhmcqxjFh1dxsy+5pV7P
+         i2pAe++sZ0c+QzV1r+3l8WmQ8Y9hGv/sFjnVAC/HxIM+9lEQVAmXNGxNi5Vh7wSJ4bDW
+         WWFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jcJp5d02ffhslABjm0JRL5WxPWI1YxxsBS3tQ0tjUug=;
-        b=pCP0DNuhWIXdp6yJQ0hQ+ejtvMeRIdloUrB+acJT8g4BdM16CXsaOCasrHGCvrZHgk
-         iP8pNpxxlsUAslfzBb6cR7dK5901x4vFL7GScEOUXwWQNRanen2ZotbGSK/yEIdOa7v3
-         BOJwnADbnh0ZGfi6nrG2BPzb8jYwUpSDvnHNLjkIFw63KT1tWoU52707D/VQi0C5Bea/
-         3XvW8tjDLYmZtyHg/FSzsnV43gzVk4b8bVAwfio8aSrumcnyi5n2zJDCVrH+V1C63JIe
-         RTdgDL2g1kYPIDG+kNFI+j6Vv5uBWKG8Ne+8x15b50I17wP9jI9B0ySD2ZQVFnPCnHkY
-         8Xrg==
-X-Gm-Message-State: APjAAAVC6QEeOR2Sk++RK1KTPM9qXrz4cgL+Xq8HlG6AuNClhyW5YoZn
-        3qZoNl49mPYTBe2W673fmoXQo08DIdu4n7i5uUFcio7Kt8QjIYY8y54ejOL3mFgHAvhClJwk+IL
-        eUh8Q0zRtLfpXx/L7KzQq+i+3
-X-Received: by 2002:a0c:acc2:: with SMTP id n2mr10517807qvc.225.1576189937882;
-        Thu, 12 Dec 2019 14:32:17 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxPTmOy4ajO0DxlZVi3iwrbQ6XXtLuFR20j6ai74yyPPLB1q/GpEEJj/ZsbDHyyFh1kYXNvbA==
-X-Received: by 2002:a0c:acc2:: with SMTP id n2mr10517773qvc.225.1576189937490;
-        Thu, 12 Dec 2019 14:32:17 -0800 (PST)
-Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id a24sm2155877qkl.82.2019.12.12.14.32.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 14:32:16 -0800 (PST)
-Subject: Re: [PATCH] vfs: Handle file systems without ->parse_params better
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>
-References: <20191212213604.19525-1-labbott@redhat.com>
- <20191212214724.GL4203@ZenIV.linux.org.uk>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <27e4379a-baae-4dbb-1fcf-c4a92fcde341@redhat.com>
-Date:   Thu, 12 Dec 2019 17:32:15 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uNFsQyJIBMP610s+itpyeXuJ5AUNsir6dpBt7MH9KCs=;
+        b=BBs0/lFB6p3dCMgSXYnkKOk9L+7zWwB+4nr/X+J8gzoeg/mGa7DWF3r6M1ncK5E8Kv
+         NS9hEVbuZ7Cc9yvsrbny9XKiKvSJNPFw5RI6q78Y7I/s2gf+W8GbSyJX6q/bx2uYyjWD
+         wyC3b23qyvAaXKjK32/IMTl0BM7XXq6h/7x2Xvfb3x4ZFnmySuwceIyvJQZO/JVYbfkR
+         mWLzsgWHI+LwUQrfD0aVRF4ujcN8fEwsov6q9g/nZfgUudjmqgTHY+QZ16XebKBcyPqw
+         Y18cvhTFoGwyncIJAglzobbo/eSl7EYU9zTAGpdYYFo7cJu3iTzNxbh0KpR/2Gm0LZy+
+         XIAQ==
+X-Gm-Message-State: APjAAAXUvPB5lb8eTnet0B0uzUVPEHC4uZea14kLx8TPK/nkLHVcfMhn
+        fbIoHJ7lO4dD3XeiBc1LYpugw1+Ga8YzrlXGcMvhDg==
+X-Google-Smtp-Source: APXvYqxBNleWcBiVw8vm+KLiN9cqlOqFb4vt8UFlmyhiMj4gyQ/eihgXoJiUMkAfFT3r7gvQyvk8XyGDODnEWS6zG6M=
+X-Received: by 2002:ac2:55a8:: with SMTP id y8mr6997366lfg.117.1576190012878;
+ Thu, 12 Dec 2019 14:33:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212214724.GL4203@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191209052119.32072-1-linux@roeck-us.net> <20191209052119.32072-2-linux@roeck-us.net>
+In-Reply-To: <20191209052119.32072-2-linux@roeck-us.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 23:33:21 +0100
+Message-ID: <CACRpkdYjidQHB0=S_brDxH3k+qJ2mfXCTF9A3SVZkPvBaVg6JQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] hwmon: Driver for temperature sensors on SATA drives
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 4:47 PM, Al Viro wrote:
-> On Thu, Dec 12, 2019 at 04:36:04PM -0500, Laura Abbott wrote:
->> @@ -141,14 +191,19 @@ int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param)
->>   		 */
->>   		return ret;
->>   
->> -	if (fc->ops->parse_param) {
->> -		ret = fc->ops->parse_param(fc, param);
->> -		if (ret != -ENOPARAM)
->> -			return ret;
->> -	}
->> +	parse_param = fc->ops->parse_param;
->> +	if (!parse_param)
->> +		parse_param = fs_generic_parse_param;
->> +
->> +	ret = parse_param(fc, param);
->> +	if (ret != -ENOPARAM)
->> +		return ret;
->>   
->> -	/* If the filesystem doesn't take any arguments, give it the
->> -	 * default handling of source.
->> +	/*
->> +	 * File systems may have a ->parse_param function but rely on
->> +	 * the top level to parse the source function. File systems
->> +	 * may have their own source parsing though so this needs
->> +	 * to come after the call to parse_param above.
->>   	 */
->>   	if (strcmp(param->key, "source") == 0) {
->>   		if (param->type != fs_value_is_string)
->> -- 
->> 2.21.0
-> 
-> No.  Please, get rid of the boilerplate.  About 80% of that thing
-> is an absolutely pointless dance around "but we need that to call
-> fs_parse()".  We do *NOT* need to call fs_parse() here.  We do
-> not need a struct fs_parameter_description instance.  We do not
-> need struct fs_parameter_spec instances.  We do not need a magical
-> global constant.  And I'm not entirely convinced that we need
-> to make fs_generic_parse_param() default - filesystems that
-> want this behaviour can easily ask for it.  A sane default is
-> to reject any bogus options.
-> 
+Hi Guenther,
 
-Well the existing behavior was to silently ignore options by
-default so this was an attempt to preserve that behavior for
-everything rather than keep hitting user visible bugs. I'd
-rather not have to deal this this for each file system.
+needless to say I am a big fan of this patch, so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> I would call it ignore_unknowns_parse_param(), while we are at it.
-> 
+It's a nice addition with the SCT command, I never
+figured that part out. Also nice how you register the
+scsi class interface I never saw that before, it makes it
+a very neat plug-in.
 
+The comments are more discussion points on how to
+(maybe) take it further after this.
 
+On Mon, Dec 9, 2019 at 6:21 AM Guenter Roeck <linux@roeck-us.net> wrote:
+
+> If the drive supports SCT transport and reports temperature limits,
+> those are reported as well.
+
+If I understand the patch correctly it will prefer to use
+SCT transport to read the temperature, and only fall back
+to the SMART attributes if this is not working, so I guess the
+commit message should state the heuristics used here.
+
+> +++ b/Documentation/hwmon/satatemp.rst
+
+Excellent doc.
+
+> + * If the SCT Command Transport feature set is not available, drive temperatures
+> + * may be readable through SMART attributes. Since SMART attributes are not well
+> + * defined, this method is only used as fallback mechanism.
+
+So this maybe cut/paste to commit message as well so people understand
+the commit fully.
+
+> +       for (i = 0; i < ATA_MAX_SMART_ATTRS; i++) {
+> +               u8 *attr = buf + i * 12;
+> +               int id = attr[2];
+> +
+> +               if (!id)
+> +                       continue;
+> +
+> +               if (id == SMART_TEMP_PROP_190) {
+> +                       temp_raw = attr[7];
+> +                       have_temp = true;
+> +               }
+> +               if (id == SMART_TEMP_PROP_194) {
+> +                       temp_raw = attr[7];
+> +                       have_temp = true;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (have_temp) {
+> +               *temp = temp_raw * 1000;
+> +               return 0;
+> +       }
+
+This looks like it will work fine, I had some heuristics to determine
+the vendor-specific max/min temperatures in property 194 in my
+patch, but I can certainly add that back in later.
+
+> +static const struct hwmon_channel_info *satatemp_info[] = {
+> +       HWMON_CHANNEL_INFO(chip,
+> +                          HWMON_C_REGISTER_TZ),
+
+I suppose this means I will also have a temperature zone as
+I want :D
+
+When I read the comments from the previous thread I got the
+impression the SCSI people wanted me to use something like
+the SCT transport and the hook in the SMART thing in the
+libata back-end specifically for [S]ATA in response to the
+SCT read log command.
+
+In  drivers/ata/libata-scsi.c I suppose.
+
+I guess one thing doesn't exclude the other though.
+
+We can attempt to move the code for [S]ATA over to libata
+at some point and respond to the SCT read log command
+from within the library in that case.
+
+I don't understand if that means the SCT read log also works
+on some SCSI drives, or if it is just a slot-in thing for
+ATA translation that has no meaning on SCSI drives.
+But that can be resolved by people who want to use this
+for SCSI drives and not by us.
+
+Yours,
+Linus Walleij
