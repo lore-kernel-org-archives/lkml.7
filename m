@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1A6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB88C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F412173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B380B2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ABuTfH8H"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k6uYh5bU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfLLN4N (ORCPT
+        id S1729608AbfLLN4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:56:13 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40770 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729485AbfLLN4F (ORCPT
+        Thu, 12 Dec 2019 08:56:16 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56958 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729583AbfLLN4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:56:05 -0500
+        Thu, 12 Dec 2019 08:56:13 -0500
 Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtqSw063125;
-        Thu, 12 Dec 2019 07:55:52 -0600
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDu0cx130447;
+        Thu, 12 Dec 2019 07:56:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576158952;
-        bh=/VjfGP3WRkp95PceeWAWMC/LGOv+vDTnn9JLhZJ8NM4=;
+        s=ti-com-17Q1; t=1576158960;
+        bh=Nf2gNb/jS/G6cUNn8sWiq6/8AS6dlAnuvnEznHwOdRM=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ABuTfH8HNFdORfuhcBqXcsaqeQmzQvcV/Q9Ok0dDxOkbf2JsUpcFq8HtX/18ok+Jf
-         LFENwjNTmAr+Cxw6xLoZNRLgucxKnqGfma3cSum7Hy/8pLl1Vu/FWwSuCWPFI+0BIC
-         4I3eQPPF5PNOJciIP6uCEwew1yiihdZgUhhXS6+g=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtqeb116351;
-        Thu, 12 Dec 2019 07:55:52 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        b=k6uYh5bU2/zzgvk7pRIgiuqGcu8mz94qs7oiyHD8Ih1TVnUuBzZR0/ZYEYBOLJvD3
+         XJeSkDnN29o+7pHzUZrULOcrPZZzPRix0f7nPfoUaU7u0oBzHz/PcxY6r1NFHfrijW
+         JfD2AOjbCNWzyhkgJ82tPVSPrQBpJD3NkuEks8nE=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDu071116442;
+        Thu, 12 Dec 2019 07:56:00 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 07:55:51 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 07:55:59 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 07:55:51 -0600
+ Frontend Transport; Thu, 12 Dec 2019 07:55:59 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqS048444;
-        Thu, 12 Dec 2019 07:55:48 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqU048444;
+        Thu, 12 Dec 2019 07:55:56 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <nsaenzjulienne@suse.de>,
         <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -58,9 +58,9 @@ CC:     <vkoul@kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-rpi-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 2/9] spi: bcm2835: Release the DMA channel if probe fails after dma_init
-Date:   Thu, 12 Dec 2019 15:55:43 +0200
-Message-ID: <20191212135550.4634-3-peter.ujfalusi@ti.com>
+Subject: [PATCH 4/9] spi: img-spfi: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Thu, 12 Dec 2019 15:55:45 +0200
+Message-ID: <20191212135550.4634-5-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191212135550.4634-1-peter.ujfalusi@ti.com>
 References: <20191212135550.4634-1-peter.ujfalusi@ti.com>
@@ -73,43 +73,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DMA channel was not released if either devm_request_irq() or
-devm_spi_register_controller() failed.
+dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+eating up the error code.
+
+By using dma_request_chan() directly the driver can support deferred
+probing against DMA.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/spi/spi-bcm2835.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-img-spfi.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index fb61a620effc..662d55e9f21d 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1327,20 +1327,22 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
- 			       dev_name(&pdev->dev), ctlr);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not request IRQ: %d\n", err);
--		goto out_clk_disable;
-+		goto out_dma_release;
- 	}
+diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
+index f4a8f470aecc..8543f5ed1099 100644
+--- a/drivers/spi/spi-img-spfi.c
++++ b/drivers/spi/spi-img-spfi.c
+@@ -666,8 +666,22 @@ static int img_spfi_probe(struct platform_device *pdev)
+ 	master->unprepare_message = img_spfi_unprepare;
+ 	master->handle_err = img_spfi_handle_err;
  
- 	err = devm_spi_register_controller(&pdev->dev, ctlr);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not register SPI controller: %d\n",
- 			err);
--		goto out_clk_disable;
-+		goto out_dma_release;
- 	}
- 
- 	bcm2835_debugfs_create(bs, dev_name(&pdev->dev));
- 
- 	return 0;
- 
-+out_dma_release:
-+	bcm2835_dma_release(ctlr, bs);
- out_clk_disable:
- 	clk_disable_unprepare(bs->clk);
- out_controller_put:
+-	spfi->tx_ch = dma_request_slave_channel(spfi->dev, "tx");
+-	spfi->rx_ch = dma_request_slave_channel(spfi->dev, "rx");
++	spfi->tx_ch = dma_request_chan(spfi->dev, "tx");
++	if (IS_ERR(spfi->tx_ch)) {
++		ret = PTR_ERR(spfi->tx_ch);
++		spfi->tx_ch = NULL;
++		if (ret == -EPROBE_DEFER)
++			goto disable_pm;
++	}
++
++	spfi->rx_ch = dma_request_chan(spfi->dev, "rx");
++	if (IS_ERR(spfi->rx_ch)) {
++		ret = PTR_ERR(spfi->rx_ch);
++		spfi->rx_ch = NULL;
++		if (ret == -EPROBE_DEFER)
++			goto disable_pm;
++	}
++
+ 	if (!spfi->tx_ch || !spfi->rx_ch) {
+ 		if (spfi->tx_ch)
+ 			dma_release_channel(spfi->tx_ch);
 -- 
 Peter
 
