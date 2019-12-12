@@ -2,121 +2,99 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F2FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655B7C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34C8B24679
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3283D214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VxL13QJJ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dVS8H5UB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbfLLLwJ (ORCPT
+        id S1729101AbfLLLwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:52:09 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:42258 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726492AbfLLLwJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:52:09 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBk7d0092536;
-        Thu, 12 Dec 2019 11:51:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=QYEt3ZHHvwyo7hQcDmCsE+2gnaQbCn7M898TjPIxqIY=;
- b=VxL13QJJ9Of4N03WEBOiXN7ilSvi6qi6PSIqU3S7oZ30BCKJzeXcjF+x7JwDl0a8+Ycc
- O7ZrrIzcCA4TBPFXa1fJpuDVUPtkHwCLVKDe55yi93nrYYf1t4/SS3+TdDBzURQ7Q1Mn
- gpsu0BL1YSMUCjPPLnLDuauwG1/PFXgEsOzo821C6qDPij+YrHGsBIq5H3I8XZcVFTaV
- t6sHGaU/syEJVTXAXRo5NpETL4woyC7vxMd76uzIYK8AezMPk1LdzvmQITAa5097xgzN
- Sik1lO6nz7wmtcd4D//EFSgE3jCvQDS2sC4MRjwbxVlz5YHDbhCL3XcuZWnOvnELZAIi bw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wr4qrte1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 11:51:49 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCBnDlu054722;
-        Thu, 12 Dec 2019 11:51:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2wums91y16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 11:51:48 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCBpiHo024067;
-        Thu, 12 Dec 2019 11:51:44 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 12 Dec 2019 03:51:43 -0800
-Date:   Thu, 12 Dec 2019 14:51:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] media: imx7-mipi-csis: Add the missed
- v4l2_async_notifier_cleanup in remove
-Message-ID: <20191212115134.GA1895@kadam>
-References: <20191209085828.16183-1-hslester96@gmail.com>
+        Thu, 12 Dec 2019 06:52:13 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:41755 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbfLLLwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 06:52:11 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YXGJ2qdGz9sPK;
+        Thu, 12 Dec 2019 22:52:04 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576151529;
+        bh=pQx0Hn9VwNLWs+av3Y7yIbP9UhlN3gaBjg53IUB7FOY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dVS8H5UBT3DT1URweU/fcAirs7m9wmDanPXZGLx3ZDie2r4yawSyVX/F24SI6VouN
+         GkDywmopFogv11mxprxZ7SwWURh+WIhX2GccEf2Rtkellz3xoNTy/deoDuwcF4/JH7
+         XRs3KPPTJH0HZpTfTbcC9FrV/gdlk+fBLYgxz/ABaSJHCwDKQUA6cvdSExBFwag0xA
+         N6L2n32CzxmvpCPUikkk7qTMhw962qIlWE4Ily9oGCt7qteQcC49L+HfcRSQExseJo
+         K4GomS2ji1C56tD/QaoV43+I94K31Phr/UH1KHlq4uey0uMrnihJw/tTlllrJCtgxd
+         cm5ey8N/EXlIQ==
+Date:   Thu, 12 Dec 2019 22:52:02 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Subject: linux-next: Fixes tag needs some work in the drm-fixes tree
+Message-ID: <20191212225202.04d0d0e7@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191209085828.16183-1-hslester96@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1912120089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9468 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1912120089
+Content-Type: multipart/signed; boundary="Sig_/oCbuhG6LIC_mZCajeFNESo1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 09, 2019 at 04:58:28PM +0800, Chuhong Yuan wrote:
-> All drivers in imx call v4l2_async_notifier_cleanup() after unregistering
-> the notifier except this driver.
-> This should be a miss and we need to add the call to fix it.
-> 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/staging/media/imx/imx7-mipi-csis.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/staging/media/imx/imx7-mipi-csis.c b/drivers/staging/media/imx/imx7-mipi-csis.c
-> index 99166afca071..2bfa85bb84e7 100644
-> --- a/drivers/staging/media/imx/imx7-mipi-csis.c
-> +++ b/drivers/staging/media/imx/imx7-mipi-csis.c
-> @@ -1105,6 +1105,7 @@ static int mipi_csis_remove(struct platform_device *pdev)
->  	mipi_csis_debugfs_exit(state);
->  	v4l2_async_unregister_subdev(&state->mipi_sd);
->  	v4l2_async_notifier_unregister(&state->subdev_notifier);
-> +	v4l2_async_notifier_cleanup(&state->subdev_notifier);
->  
+--Sig_/oCbuhG6LIC_mZCajeFNESo1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In this case the "state->subdev_notifier" was never initialized or used
-so both v4l2_async_notifier_unregister() and v4l2_async_notifier_cleanup()
-are no-ops.
+Hi all,
 
-We should just delete "subdev_notifier".
+n commit
 
-regards,
-dan carpenter
+  64d17f25dcad ("drm/nouveau: Fix drm-core using atomic code-paths on pre-n=
+v50 hardware")
 
+Fixes tag
+
+  Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=3D1706557
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+I haven't seen a Fixes tag with a bug URL before, they usually reference
+the buggy commit.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oCbuhG6LIC_mZCajeFNESo1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3yKeIACgkQAVBC80lX
+0Gx7OwgAi97JtVQ8Ok7s9cphYws5Mo8MnUQVlRIG5zkbVjeOK7UcVYjWvAFU/YdW
+Kvz1yC12va5kcSZycsE24KvVPOY8+sxJYb/asbqg+xZzcG/hpdUlv0aUCb/4Ch2I
+lxBkcAz7pnb/r6Mccfgxgv6hbUCxuaNmySNJuDEXNWRURFKIvKsPQDBdfX+ZAeoK
+1pij0d0SFR0zM3G1IEJ9+C7UwDoQWFqjVmqwluEu9C/zTR9pGQN2L5Lq5MUdHY7B
+YhJoXlOf/3U9FZxHnKVOSrFIQePYPAgZhs4a4xtDD0IlqUfY72v9Ryi5G1h2VVv1
+R5ZcakJSEzTsSjR+TWOohEOKIbiwIw==
+=NdW3
+-----END PGP SIGNATURE-----
+
+--Sig_/oCbuhG6LIC_mZCajeFNESo1--
