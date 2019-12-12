@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44565C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D41C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19DAB2467F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08672464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Mp5zn8V3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hvJhHLwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbfLLN4V (ORCPT
+        id S1729599AbfLLN4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:56:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49768 "EHLO
+        Thu, 12 Dec 2019 08:56:15 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49742 "EHLO
         fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729583AbfLLN4S (ORCPT
+        with ESMTP id S1729429AbfLLN4L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:56:18 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDu3Fc122268;
-        Thu, 12 Dec 2019 07:56:03 -0600
+        Thu, 12 Dec 2019 08:56:11 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtuq9122218;
+        Thu, 12 Dec 2019 07:55:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1576158964;
-        bh=HGBMZDd/fXGaR9XHTtH6bBkw3hSH9Gfrrw4s8QFXfZY=;
+        s=ti-com-17Q1; t=1576158956;
+        bh=IBaNIEvB7cLy+PukAGb/PB35woOhPXfCWf9nooovf4U=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Mp5zn8V3y+JCkRTFQX9D4mJyoF/9IMo/SZliZ6Q1ilN0xwg9nT0LtLs/homGizKXQ
-         NGxV+c73C2myeHlpqiY1BSJI5kQIhTC0hRNK2WJqYyqkybZzwaerhv8U+ZQmySjAKt
-         JBi65Q7mlbFzS5dy/sxwtQWmhwUe0WyXaJHXfO0k=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCDu3jh019465
+        b=hvJhHLwWXHgDXi8I2PKoplyV4NlRhLSYaKZSD5ecFI12PY000rSxd80+xnDLjX3/j
+         R76TQfyc7cdegWYRwFYOAWUCOnEnWnBP5KHIgtJijGpSU54xAzMIbJ2KUNyDSJnZ5u
+         2WCe2sL51i1kmpO1+tkP9wImu9aiKsxfFq4A8Y38=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xBCDtu6s044382
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 12 Dec 2019 07:56:03 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 12 Dec 2019 07:55:56 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 12
- Dec 2019 07:56:03 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ Dec 2019 07:55:55 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 12 Dec 2019 07:56:03 -0600
+ Frontend Transport; Thu, 12 Dec 2019 07:55:55 -0600
 Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqV048444;
-        Thu, 12 Dec 2019 07:55:59 -0600
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xBCDtdqT048444;
+        Thu, 12 Dec 2019 07:55:52 -0600
 From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
 To:     <broonie@kernel.org>, <nsaenzjulienne@suse.de>,
         <f.fainelli@gmail.com>, <rjui@broadcom.com>,
@@ -59,9 +59,9 @@ CC:     <vkoul@kernel.org>, <linux-spi@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-rpi-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 5/9] spi: mxs: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Thu, 12 Dec 2019 15:55:46 +0200
-Message-ID: <20191212135550.4634-6-peter.ujfalusi@ti.com>
+Subject: [PATCH 3/9] spi: bcm2835: Use dma_request_chan() instead dma_request_slave_channel()
+Date:   Thu, 12 Dec 2019 15:55:44 +0200
+Message-ID: <20191212135550.4634-4-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191212135550.4634-1-peter.ujfalusi@ti.com>
 References: <20191212135550.4634-1-peter.ujfalusi@ti.com>
@@ -82,27 +82,90 @@ probing against DMA.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/spi/spi-mxs.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-bcm2835.c | 34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/spi/spi-mxs.c b/drivers/spi/spi-mxs.c
-index 996c1c8a9c71..dce85ee07cd0 100644
---- a/drivers/spi/spi-mxs.c
-+++ b/drivers/spi/spi-mxs.c
-@@ -590,10 +590,10 @@ static int mxs_spi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_master_free;
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 662d55e9f21d..69df79914504 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -888,8 +888,8 @@ static void bcm2835_dma_release(struct spi_controller *ctlr,
+ 	}
+ }
  
--	ssp->dmach = dma_request_slave_channel(&pdev->dev, "rx-tx");
--	if (!ssp->dmach) {
-+	ssp->dmach = dma_request_chan(&pdev->dev, "rx-tx");
-+	if (IS_ERR(ssp->dmach)) {
- 		dev_err(ssp->dev, "Failed to request DMA\n");
--		ret = -ENODEV;
-+		ret = PTR_ERR(ssp->dmach);
- 		goto out_master_free;
+-static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+-			     struct bcm2835_spi *bs)
++static int bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
++			    struct bcm2835_spi *bs)
+ {
+ 	struct dma_slave_config slave_config;
+ 	const __be32 *addr;
+@@ -900,19 +900,24 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ 	addr = of_get_address(ctlr->dev.of_node, 0, NULL, NULL);
+ 	if (!addr) {
+ 		dev_err(dev, "could not get DMA-register address - not using dma mode\n");
+-		goto err;
++		/* Fall back to interrupt mode */
++		return 0;
+ 	}
+ 	dma_reg_base = be32_to_cpup(addr);
+ 
+ 	/* get tx/rx dma */
+-	ctlr->dma_tx = dma_request_slave_channel(dev, "tx");
+-	if (!ctlr->dma_tx) {
++	ctlr->dma_tx = dma_request_chan(dev, "tx");
++	if (IS_ERR(ctlr->dma_tx)) {
+ 		dev_err(dev, "no tx-dma configuration found - not using dma mode\n");
++		ret = PTR_ERR(ctlr->dma_tx);
++		ctlr->dma_tx = NULL;
+ 		goto err;
+ 	}
+-	ctlr->dma_rx = dma_request_slave_channel(dev, "rx");
+-	if (!ctlr->dma_rx) {
++	ctlr->dma_rx = dma_request_chan(dev, "rx");
++	if (IS_ERR(ctlr->dma_rx)) {
+ 		dev_err(dev, "no rx-dma configuration found - not using dma mode\n");
++		ret = PTR_ERR(ctlr->dma_rx);
++		ctlr->dma_rx = NULL;
+ 		goto err_release;
  	}
  
+@@ -997,7 +1002,7 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ 	/* all went well, so set can_dma */
+ 	ctlr->can_dma = bcm2835_spi_can_dma;
+ 
+-	return;
++	return 0;
+ 
+ err_config:
+ 	dev_err(dev, "issue configuring dma: %d - not using DMA mode\n",
+@@ -1005,7 +1010,14 @@ static void bcm2835_dma_init(struct spi_controller *ctlr, struct device *dev,
+ err_release:
+ 	bcm2835_dma_release(ctlr, bs);
+ err:
+-	return;
++	/*
++	 * Only report error for deferred probing, otherwise fall back to
++	 * interrupt mode
++	 */
++	if (ret != -EPROBE_DEFER)
++		ret = 0;
++
++	return ret;
+ }
+ 
+ static int bcm2835_spi_transfer_one_poll(struct spi_controller *ctlr,
+@@ -1317,7 +1329,9 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ 
+ 	clk_prepare_enable(bs->clk);
+ 
+-	bcm2835_dma_init(ctlr, &pdev->dev, bs);
++	err = bcm2835_dma_init(ctlr, &pdev->dev, bs);
++	if (err)
++		goto out_clk_disable;
+ 
+ 	/* initialise the hardware with the default polarities */
+ 	bcm2835_wr(bs, BCM2835_SPI_CS,
 -- 
 Peter
 
