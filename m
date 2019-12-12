@@ -2,120 +2,98 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F295C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F80AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BC7208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C6D208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:18:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzoy0jSI"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="hHpBpD+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfLLCRP (ORCPT
+        id S1727761AbfLLCSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:17:15 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35884 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfLLCRO (ORCPT
+        Wed, 11 Dec 2019 21:18:30 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45523 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727689AbfLLCS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:17:14 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so425665ljg.3;
-        Wed, 11 Dec 2019 18:17:12 -0800 (PST)
+        Wed, 11 Dec 2019 21:18:29 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so828979otp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 18:18:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KdekJit4TR3IPCfvOdjWaldHsRv3CP6xyOWik6J728U=;
-        b=Gzoy0jSIMfRnlkLFprOT/8bSftgaE1XGMH2S11/bQyAYAgPyGLv7UfA3to2mBC9ahw
-         lasT8Xz3//jxRU/sg1UwEqg/4uO/pMXddC8R6YpL2xv3nsNj/3Y2vkY7uXyAsAgJStyQ
-         hejzY/DNisbA6BelKCv50AYKV8pkdocUm84rCnjpy/22lN4Bl5cdV0ea7n3hD9dh1gf/
-         129rWL67ghxxsR7YAyw5UNsWuHCfbxHZmoweiwrnS20wIiWM5FN6Hnj9bclUIFxemkA9
-         DRct4rFSvRA+zbkw7T2j7ectI//ARXOvmkDeG002BMved3WIj+FEXxsUKt0FCxl+J+KN
-         LnaQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fPsu8XmzlYK8Y32ptaZLTsIwREbpto/xHjCbnxTIgwQ=;
+        b=hHpBpD+jolyXkfvnd+Bw0vywrP0DCPLUgI2ACbOE2xZxt8vvxkZ3aG6AIWdf7cyFTF
+         Z8w0WJEkiYZbZbqjciHdvUvMn3mBE9ONALf+pKjRX3Xzpy//aCDvfQFyqCYjiwEkWZmk
+         AyFr8LRX7Ek+LInXFAcPEMifXMUcr1sEmGTKSCsTiE2PBEBFje3mmLb8hK30IWnc+wR1
+         cr+fENqt8ryUl05GWGUQAP08hGFBcKQ0+rXLMdIPGlKZJ7cr3oVhte9sIoyUaKCdJAgx
+         UcytK+eqnNpseRPMCM8MtNRHBQgGYJRpEJu2HD4sSQDQurlCBMI8/FbLGK5oQ13t0Lgc
+         VMrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KdekJit4TR3IPCfvOdjWaldHsRv3CP6xyOWik6J728U=;
-        b=QDwQHfcpAF9FIXvPKhtMLNEc+xYvd3Y9ijVmHDrCZQ8QOYZqQt9E1KhoouyLdoRTfJ
-         6K50VjOjbwk6zGh08tw/iS9JI/5H/h9RN42xd9ePVlHpprCge3x03vCrsktUL/6KNREH
-         waZ6vRaXh6IHI7J7RMSfqdOixgpw/2h6N4SCeIeAz9Ysx6MPiohyPkvGNI7bY6JFOzbR
-         QX58gmosK1qiNR+OPcybFPdcRvLdhHkdq914dVgDqKqAEZttLn6TFZGIUfZvOzpdhMZH
-         fm3wUovhRGwW3vzMQMzlys2ozBX9euw0BT3QMvDCtrcUJKaltoUgDKzBHDHrV5lLIk5z
-         3xFg==
-X-Gm-Message-State: APjAAAXl0rjboEGAF+0Xq/BQkrZ+Ya+lZGwQaV75pN7bP8FzYQm+21mw
-        gpX3myxT/ASGnGxONBm+zzs=
-X-Google-Smtp-Source: APXvYqxocQ3Qzqf1VktbMSvmfBoQQJvSlcA7ebJXnc2n/qMpwM8OtMrx9qViLmWIbhcJSRtMR7Gk2w==
-X-Received: by 2002:a05:651c:111a:: with SMTP id d26mr3878082ljo.153.1576117032279;
-        Wed, 11 Dec 2019 18:17:12 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u21sm2041632ljl.93.2019.12.11.18.17.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 18:17:11 -0800 (PST)
-Subject: Re: [PATCH v3 09/15] ASoC: tegra: Add fallback for audio mclk
-To:     Mark Brown <broonie@kernel.org>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, allison@lohutok.net,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, alexios.zavras@intel.com,
-        alsa-devel@alsa-project.org
-References: <1575600535-26877-1-git-send-email-skomatineni@nvidia.com>
- <1575600535-26877-10-git-send-email-skomatineni@nvidia.com>
- <20191209164027.GG5483@sirena.org.uk>
- <7fe879fd-dae3-1e64-1031-cd9f00e31552@gmail.com>
- <20191209204735.GK5483@sirena.org.uk>
- <560185d9-32fd-a85e-5feb-105f79b953c6@gmail.com>
- <20191210185933.GJ6110@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <17cb9e87-e1bd-93a0-aa9c-0f30c2263ec0@gmail.com>
-Date:   Thu, 12 Dec 2019 05:17:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fPsu8XmzlYK8Y32ptaZLTsIwREbpto/xHjCbnxTIgwQ=;
+        b=X5A3mwVg4c4mKYA5u5FNi9dAyj8rl5nccSqZI+1HfAsnBzarix8ixrZlXR6WWApRwd
+         peQC4mzd4VbJw10aczfO3/nlUWjuK75+qUx6VYM/m1kVrpN7d6keMX5YdKURPqYlqUsB
+         9I0EjGXjvbIqeWB1mRUApGewZnus/XFmT4b6RzlZq8lexwW+K3GeiYFe6vEDrFiD7qkT
+         cMO+3aNmV8ezmwmjiewFwdzOJizUANVCExqnbK9r/Oj9Mrt1EFGJ+FNFtCURz616vF8Z
+         Sa4ptGgOtV6o3vosofYY8gWnEnkn4Ju2M3reXPs5y+EKHIaFuDwutgTQ7yWxAnFqzn+M
+         lNZg==
+X-Gm-Message-State: APjAAAVsNJ6dvvINWi+oLpotbalABAhlX8iddATIuZYUE9hBU7nnBYfF
+        MlviEgVyBpAV3Voe0qDH5csLhRT9aaVb2KDzhXNvUA==
+X-Google-Smtp-Source: APXvYqzwryCWAY6+cdtnheUjR8VU/s/FHdoPKfFKkJwCWIw+ekq+u0gj4D0WpI79MMEUyl/kYcj1karou9SKRNbisD4=
+X-Received: by 2002:a9d:4789:: with SMTP id b9mr4976910otf.247.1576117108678;
+ Wed, 11 Dec 2019 18:18:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191210185933.GJ6110@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191211231758.22263-1-jsnitsel@redhat.com> <20191211235455.24424-1-jsnitsel@redhat.com>
+ <CAPcyv4j_FJ9teSyfodCjXs5Wz2Pj7BjqKX6Mx53OtPnVu0mjGA@mail.gmail.com>
+In-Reply-To: <CAPcyv4j_FJ9teSyfodCjXs5Wz2Pj7BjqKX6Mx53OtPnVu0mjGA@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 11 Dec 2019 18:18:17 -0800
+Message-ID: <CAPcyv4jUz9X-eyf7M78dfS-7pzi4Xqs+LdpUSD=eoeQjd1kxug@mail.gmail.com>
+Subject: Re: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
+To:     Jerry Snitselaar <jsnitsel@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Bundy <christianbundy@fraction.io>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        stable <stable@vger.kernel.org>, linux-integrity@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.12.2019 21:59, Mark Brown пишет:
-> On Tue, Dec 10, 2019 at 09:24:43PM +0300, Dmitry Osipenko wrote:
-> 
->> In some cases it could be painful to maintain device-tree compatibility
->> for platforms like NVIDIA Tegra SoCs because hardware wasn't modeled
->> correctly from the start.
-> 
->> I agree that people should use relevant device-trees. It's quite a lot
->> of hassle to care about compatibility for platforms that are permanently
->> in a development state. It could be more reasonable to go through the
->> pain if kernel required a full-featured device tree for every SoC from
->> the start.
-> 
-> We absolutely should support the newer kernel with older device tree
-> case, what's less clear to me is the new device tree with old kernel
-> which is applying LTS updates case.  That does seem incredibly
-> specialist - I'd honestly never heard of people doing that before this
-> thread.
-> 
+On Wed, Dec 11, 2019 at 6:15 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, Dec 11, 2019 at 3:56 PM Jerry Snitselaar <jsnitsel@redhat.com> wrote:
+> >
+> > Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
+> > issuing commands to the tpm during initialization, just reserve the
+> > chip after wait_startup, and release it when we are ready to call
+> > tpm_chip_register.
+> >
+> > Cc: Christian Bundy <christianbundy@fraction.io>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Peter Huewe <peterhuewe@gmx.de>
+> > Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
+> > Cc: stable@vger.kernel.org
+> > Cc: linux-integrity@vger.kernel.org
+> > Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit()")
+> > Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's")
+>
+> Ugh, sorry, I guess this jinxed it. This patch does not address the
+> IRQ storm on the platform I reported earlier.
 
-There was a precedent in the past [1].
-
-[1] https://lkml.org/lkml/2018/8/20/497
+Are the reverts making their way upstream?
