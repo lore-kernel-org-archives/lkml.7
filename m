@@ -2,108 +2,131 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC958C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAE0C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0D4206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4465D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mVksRyZy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfLLCoe (ORCPT
+        id S1727872AbfLLCpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:44:34 -0500
-Received: from mga01.intel.com ([192.55.52.88]:5564 "EHLO mga01.intel.com"
+        Wed, 11 Dec 2019 21:45:20 -0500
+Received: from ozlabs.org ([203.11.71.1]:45305 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbfLLCoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:44:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 18:44:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,304,1571727600"; 
-   d="scan'208";a="225754041"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 18:44:31 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] iommu/vt-d bad RMRR workarounds
-To:     Barret Rhoden <brho@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Yian Chen <yian.chen@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>
-References: <20191211194606.87940-1-brho@google.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <35f49464-0ce5-9998-12a0-624d9683ea18@linux.intel.com>
-Date:   Thu, 12 Dec 2019 10:43:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        id S1727756AbfLLCpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:45:20 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YJ7K2HDXz9sPL;
+        Thu, 12 Dec 2019 13:45:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576118717;
+        bh=k5K3z4pR/6kRfzSrFFFQbpNvkWUM7O/Rpu0gsbd+/sU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mVksRyZyLywzo/o5OV4zsssqsJpLPX3l0SQeiV9xcURBWWYk+gn1mE+RDSEmpU5Yj
+         JL0xe/s4NZM574NKhyR7WcCZd/VOllpj1vsuZnjzQkAMbDi7GFJOmkbiJd5e9GHCfF
+         Aqlx3D4MJ/XegZD7FZN6QxG/3ReB8OeM3RyoUPoctXpDLdiBFHy64ig6AZsNSnTp0Y
+         KkdexpMkZ+Th5Hc6XEQJen+GKwL4no9sBZyKFhddV186ytJHvCWeIYNFCFUJlQgMr9
+         4E9LUcje4CXQQHGQvDAn+50uOEkSOehySnNPvoMPxxMmFVeb6JwFqaEz4tykXAvRpl
+         bswtvl92eLypg==
+Date:   Thu, 12 Dec 2019 13:45:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the rcu tree
+Message-ID: <20191212134516.3b5f4a4e@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191211194606.87940-1-brho@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/0UV9VL474PMc.NDmqJoHEA8";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/0UV9VL474PMc.NDmqJoHEA8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 12/12/19 3:46 AM, Barret Rhoden via iommu wrote:
-> I can imagine a bunch of ways around this.
-> 
-> One option is to hook in a check for buggy RMRRs in intel-iommu.c.  If
-> the base and end are 0, just ignore the entry.  That works for my
-> specific buggy DMAR entry.  There might be other buggy entries out
-> there.  The docs specify some requirements on the base and end (called
-> limit) addresses.
-> 
-> Another option is to change the sanity check so that unmapped ranges are
-> considered OK.  That would work for my case, but only because we're
-> hiding the firmware bug: my DMAR has a bad RMRR that happens to fall into a
-> reserved or non-existent range.  The downside here is that we'd
-> presumably be setting up an IOMMU mapping for this bad RMRR.  But at
-> least it's not pointing to any RAM we're using.  (That's actually what
-> goes on in the current, non-kexec case for me.  Phys page 0 is marked
-> RESERVED, and I have an RMRR that points to it.)  This option also would
-> cover any buggy firmwares that use an actual RMRR that pointed to memory
-> that was omitted from the e820 map.
-> 
-> A third option: whenever the RMRR sanity check fails, just ignore it and
-> return 0.  Don't set up the rmrru.  Right now, we completely abort DMAR
-> processing.  If there was an actual device that needed to poke this
-> memory that failed the sanity check (meaning, not RESERVED, currently),
-> then we're already in trouble; that device could clobber RAM, right?  If
-> we're going to use the IOMMU, I'd rather the device be behind an IOMMU
-> with*no*  mapping for the region, so it couldn't clobber whatever we
-> happened to put in that location.
-> 
-> I actually think all three options are reasonable ideas independently of
-> one another.  This patchset that does all three.  Please take at least
-> one of them.  =)  (May require a slight revision if you don't take all
-> of them).
+Hi all,
 
-The VT-d spec defines the BIOS considerations about RMRR in section 8.4:
+After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-"
-BIOS must report the RMRR reported memory addresses as reserved (or as
-EFI runtime) in the system memory map returned through methods such as
-INT15, EFI GetMemoryMap etc.
-"
+drivers/misc/watch_queue.c: In function 'watch_queue_set_filter':
+drivers/misc/watch_queue.c:526:2: error: implicit declaration of function '=
+rcu_swap_protected' [-Werror=3Dimplicit-function-declaration]
+  526 |  rcu_swap_protected(wqueue->filter, wfilter,
+      |  ^~~~~~~~~~~~~~~~~~
 
-So we should treat it as firmware bug if the RMRR range is not mapped as
-RESERVED in the system memory map table.
+Caused by commit
 
-As for how should the driver handle this case, ignoring buggy RMRR with
-a warning message might be a possible choice.
+  af8c9224182e ("rcu: Remove rcu_swap_protected()")
 
-Best regards,
-baolu
+interacting with commit
+
+  fe78d401ca6b ("General notification queue with user mmap()'able ring buff=
+er")
+
+from the keys tree.
+
+I have added the following merge fix patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 12 Dec 2019 13:37:52 +1100
+Subject: [PATCH] rcu: fix up for "Remove rcu_swap_protected()"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/misc/watch_queue.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/misc/watch_queue.c b/drivers/misc/watch_queue.c
+index b3fc59b4ef6c..a4a77ec977ac 100644
+--- a/drivers/misc/watch_queue.c
++++ b/drivers/misc/watch_queue.c
+@@ -523,8 +523,8 @@ static long watch_queue_set_filter(struct inode *inode,
+ 	kfree(tf);
+ set:
+ 	inode_lock(inode);
+-	rcu_swap_protected(wqueue->filter, wfilter,
+-			   lockdep_is_held(&inode->i_rwsem));
++	wfilter =3D rcu_replace_pointer(wqueue->filter, wfilter,
++				      lockdep_is_held(&inode->i_rwsem));
+ 	inode_unlock(inode);
+ 	if (wfilter)
+ 		kfree_rcu(wfilter, rcu);
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0UV9VL474PMc.NDmqJoHEA8
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xqbwACgkQAVBC80lX
+0Gzfxgf/UmzYVrv9LVLeuFtFsbDUbp9ZL3sn+amw2q8iPpFqw08HCSeS4cjDYMd5
+0t05wMDIj6mKqlzJtricpN5Gxzdx25MJgpqcQsDdktF9N1uErK6ZVXQ43bihTH6e
+6BrfPj2/X8sN2dU5NFervkLN+BWo6S6s1C8VkhRncEPHFfu2ymePZw42Ii2v9DCg
+5gn1uhatUR3NwyEJXuD/6bFFxOO4FO3bReZzsRlFzcyhNx87OTX56D8pUPOAkT1o
+y+PW6ZqWIPi5E2tb2CaBjKy9B4IFSs5C5l6krs779uRVx6vcigC2Ik/bc+G8l8E8
+1oiuXSJbjGZ+G2fn4ht6od8WXDc3jw==
+=FoR4
+-----END PGP SIGNATURE-----
+
+--Sig_/0UV9VL474PMc.NDmqJoHEA8--
