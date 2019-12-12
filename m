@@ -2,54 +2,73 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F39DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE604C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA2E22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21D321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QfnX5jsy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfLLXdM (ORCPT
+        id S1731184AbfLLXfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:33:12 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39420 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731184AbfLLXdL (ORCPT
+        Thu, 12 Dec 2019 18:35:11 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41134 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfLLXfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:33:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id a11so432208iot.6
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:33:10 -0800 (PST)
+        Thu, 12 Dec 2019 18:35:11 -0500
+Received: by mail-lj1-f193.google.com with SMTP id h23so560995ljc.8;
+        Thu, 12 Dec 2019 15:35:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XMALgHPkuh/fgX4dtGxJeHepiAw93SnZTTwx7ykLGlQ=;
+        b=QfnX5jsyZ8lubfRzxTxq9S2tkfhBYifEb0P7UlQDoJfwDk9huYZBDC/dhUHTZtsvrm
+         fxiQ4hI1mh72QHk7LlrwTKdPolHMOd8DWZFs3Gjr7Wm83wOnfUGQ/mOEiBzUWc35WnS7
+         WLt2/a+yR0tblDb/7MJ5L9zhOcAb/xFdq+2bIBo21UOAjHB7/R5cMcp268Su2ItH34Gb
+         ya4X5ki8ZSn7joTOMfCip3SuvGf28oMk8BOsk+zhVsfGy9Z3v/Ag8HEDPDGinU2h5JnP
+         gM3cil67sgQvwDxx7lH/IgZULJOWvBnAg62Uhq57/ZVpUbiej0JavdzN5UlW3yKNcnyJ
+         VWMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=uPmT7H1u4tQQr91gsmUmlGu51pKPCSerupF0+mBYR+A=;
-        b=JgfECBJtOzwfMy7YYTizMre3IoGrBKKoprPhS7g7+18NhogZaY2zxcbaNIee/mki+9
-         0LJwdfPJURCdkSGa5kCUzY3iXmI+ubNv+sNlQIopOorRBiOxzvXpPl8b37pJ6FNwZ2iK
-         YcaphSg3w9+IvuR6eOow9HfigP156dxLGhAq+MlR6rb2szNoOXbAXWCW8qSrwvNhRrKn
-         TgCWT8sg7FZtjpgUEdy94r6Bcfz7OoUt9aOmp9hs3Jwi0ROF4FBrDCbyATTHPfYI8Azr
-         p1X2OGRsCLR/uyGHu9zIc2ygFgRR7ow9Onl17SbCDEf1VjwptwAuXU+m8ADCZVVDMlyi
-         /ZGg==
-X-Gm-Message-State: APjAAAXcsAjTcprhChvdwHnKi80PqH2SgNN860ozFjAjs+Hrcl8OlXg2
-        McwmDCndjirYqlt/qhgfOo0S7aCQVBwolaXjUhiC69eGOFxR
-X-Google-Smtp-Source: APXvYqxRonIBYq3QlOSfLTDmRhr3h1LOT5KDkHtrZySgylant5xgPnByJCRl6xs7oY/bbF7kt3LOHlPciackUCos0rlrM+RWe26+
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XMALgHPkuh/fgX4dtGxJeHepiAw93SnZTTwx7ykLGlQ=;
+        b=MGr2MfnBwKFl1RhKyq+yKhz9DDgLUpEdhulpF36N7nOkx/vEr2Fj2OaqLag+Ytic3k
+         vlU6rTetDsN6MCQRMq0GHTxUDR7pI2tmIsd4sMx1J9y63RkzH+bP1uac4oOt0ks+3g3L
+         23+UGui+Sg0rduOUgUytCnwZ7OggLt23fOC8LRiynC10c7CvDTWc9zxeVgQTGzrtgXoj
+         LdVdh3xDfJVwEw90bzRvXswMmj9/oBoIQ8Gltxo5DBEL7Vaejh/SaQkgZ1FL6sZj9ouG
+         +qcO35iKvQ1oNuHuJ2jXEevp41FvWIIlsUnYB+l5Jdybi10+QuvHYEnhpFyOOvz4TkPG
+         Uk1Q==
+X-Gm-Message-State: APjAAAXFEpyuRZTdA7yl6QW7wynxiWfQ353rWVynjUf0LB5TUkPw3YFy
+        tG9SyzmecyaqbaFRNLIy9g4IVNX0
+X-Google-Smtp-Source: APXvYqzOkTzeUocyxGe+AF2eb/2k7WrtEVpeY/sda04q044UYULGzf4YqlfV1F766iRQO75k7/73fg==
+X-Received: by 2002:a2e:844e:: with SMTP id u14mr7642965ljh.183.1576193708812;
+        Thu, 12 Dec 2019 15:35:08 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id q27sm3764283ljm.25.2019.12.12.15.35.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 15:35:08 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Tegra I2C: Support atomic transfers and correct suspend/resume
+Date:   Fri, 13 Dec 2019 02:34:25 +0300
+Message-Id: <20191212233428.14648-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:7606:: with SMTP id r6mr10592785ilc.120.1576193590352;
- Thu, 12 Dec 2019 15:33:10 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:33:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000ce4b105998a2b08@google.com>
-Subject: KCSAN: data-race in add_timer / timer_clear_idle (2)
-From:   syzbot <syzbot+c051abeff5e2e8ac40f0@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, elver@google.com,
-        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
-        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,63 +76,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-syzbot found the following crash on:
+This patchset adds support for atomic transfers which are required for
+shutting down machine properly. Secondly, a (not)suspending I2C is fixed
+by this small series as well.
 
-HEAD commit:    ef798c30 x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=156e052ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8077a73bd604a9d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=c051abeff5e2e8ac40f0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Changelog:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+v1: The "i2c: tegra: Support atomic transfers" previously was sent out as
+    a separate patch, but later I spotted that suspend/resume doesn't
+    work properly. The "i2c: tegra: Fix suspending in active runtime PM
+    state" patch depends on the atomic patch because there is a need to
+    active IRQ-safe mode for the runtime PM by both patches.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c051abeff5e2e8ac40f0@syzkaller.appspotmail.com
+    I fixed a missed doc-comment of the newly added "is_curr_atomic_xfer"
+    structure field and added additional comment that explains why IRQ needs
+    to be disabled for the atomic transfer in the "Support atomic transfers"
+    patch.
 
-==================================================================
-BUG: KCSAN: data-race in add_timer / timer_clear_idle
+    Lastly, I added a minor "i2c: tegra: Rename .." patch that helps to
+    follow driver's code.
 
-read to 0xffff88812be1b6e4 of 1 bytes by task 23 on cpu 1:
-  forward_timer_base kernel/time/timer.c:892 [inline]
-  __mod_timer kernel/time/timer.c:1009 [inline]
-  mod_timer kernel/time/timer.c:1100 [inline]
-  add_timer+0x3a6/0x550 kernel/time/timer.c:1136
-  __queue_delayed_work+0x13b/0x1d0 kernel/workqueue.c:1649
-  queue_delayed_work_on+0xf3/0x110 kernel/workqueue.c:1674
-  queue_delayed_work include/linux/workqueue.h:509 [inline]
-  batadv_mcast_start_timer net/batman-adv/multicast.c:71 [inline]
-  batadv_mcast_mla_update+0x11ad/0x19e0 net/batman-adv/multicast.c:949
-  process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-  worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
+Dmitry Osipenko (3):
+  i2c: tegra: Support atomic transfers
+  i2c: tegra: Rename I2C_PIO_MODE_MAX_LEN to I2C_PIO_MODE_PREFERRED_LEN
+  i2c: tegra: Fix suspending in active runtime PM state
 
-write to 0xffff88812be1b6e4 of 1 bytes by task 0 on cpu 0:
-  timer_clear_idle+0x42/0x50 kernel/time/timer.c:1675
-  tick_nohz_restart_sched_tick kernel/time/tick-sched.c:839 [inline]
-  __tick_nohz_idle_restart_tick+0x36/0x1b0 kernel/time/tick-sched.c:1140
-  tick_nohz_idle_exit+0x1af/0x1e0 kernel/time/tick-sched.c:1181
-  do_idle+0xb1/0x280 kernel/sched/idle.c:276
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
-  rest_init+0xec/0xf6 init/main.c:452
-  arch_call_rest_init+0x17/0x37
-  start_kernel+0x838/0x85e init/main.c:786
-  x86_64_start_reservations+0x29/0x2b arch/x86/kernel/head64.c:490
-  x86_64_start_kernel+0x72/0x76 arch/x86/kernel/head64.c:471
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+ drivers/i2c/busses/i2c-tegra.c | 113 +++++++++++++++++++++++++++++----
+ 1 file changed, 101 insertions(+), 12 deletions(-)
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-==================================================================
+-- 
+2.24.0
 
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
