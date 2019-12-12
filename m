@@ -2,113 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12848C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEDEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADAA2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:57:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576166220;
-	bh=1fnK8LgksOrHrdqaYabh7/int3goUCAe49tliiuirfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yY4yLBI2wquMgd/YQJxAOZmDVesKUxEogpnY7664ngqvesQW9liXoilq1uTWWgK8s
-	 BF7ctPklfgjlZSdY9RYSdSxnzNUjR1CbOyVxHwtYyrYF6QafW+ot78QXVwbgtsopFm
-	 okPCeFn5rozyOLGg3iNz0fkyrwOzWRXIepjl2OXM=
+	by mail.kernel.org (Postfix) with ESMTP id BEF5D205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eKGtPQFU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfLLP47 (ORCPT
+        id S1729726AbfLLP5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:56:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:51592 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbfLLP47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:56:59 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9554D30E;
-        Thu, 12 Dec 2019 07:56:58 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 146313F6CF;
-        Thu, 12 Dec 2019 07:56:57 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:56:56 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-Subject: Re: Regulator probe on demand (or circular dependencies)
-Message-ID: <20191212155656.GE4310@sirena.org.uk>
-References: <23236201-a387-7257-35a4-ee4ed2f6bfd0@ideasonboard.com>
- <20191209163755.GF5483@sirena.org.uk>
- <fb87c957-40e8-587e-5789-33b740f8326d@ideasonboard.com>
+        Thu, 12 Dec 2019 10:57:24 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35579 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729557AbfLLP5Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:57:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576166243;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rRNrufMF5ZmcT+/5HZMlWib9qPtBnpXc+naU09rmhxc=;
+        b=eKGtPQFUT0VBuUCexDwHiwsQrTlAnT5/gYDHwF+eydduyyF0vYDlw4iigBGNI8mwyby9UA
+        WRhOtDoW0deEh+6l4c2QC5DVAoB6GTWANrb5raXHOKd5TXeGtQ0bRHb4CjnPELAiK8vDav
+        8/jAIm+ukJf5TlaMvWi6PcQwgLRzYpE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-253-dQJico3HN1WsHV7UBQ8DOg-1; Thu, 12 Dec 2019 10:57:16 -0500
+X-MC-Unique: dQJico3HN1WsHV7UBQ8DOg-1
+Received: by mail-wr1-f70.google.com with SMTP id u12so1196699wrt.15
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:57:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rRNrufMF5ZmcT+/5HZMlWib9qPtBnpXc+naU09rmhxc=;
+        b=NR1IXo+pPTh871+f4oJ4CzZ2PCKKc4KSUXnHaIBTil6SCJbsq58ZgXHzkBAKnlq9jw
+         jSR8IPv7Qfy6TME0TfHX31Ev5akt530rZAUBtdTYS0u3xmYVhthFMB7qtjiWeA65HjT4
+         EP6yK39a6gxDTGw6M2ASMjvluQsI1mifUEGLtwnIfF2kiT7vGrHsuhViliv+UpZvL9vf
+         WZj44gxhcOCKR31lbumZuiX+AONF13f6zFI3PCexckhgXoszoeGmaVNV1IHTaDF1CFq1
+         r5VZpVOtvmpaDk5xnLa+cM5xUmWNdSq5iWtCmeHIn9BV9+ibamhg9x5Zt2lLncuqFAuk
+         uKRQ==
+X-Gm-Message-State: APjAAAXvP9bdl0LlBeG9S0VEUo9cPv+0VzFQ4mkhWQz/lVi7aFLD8ITw
+        PYU9EFuzSjrDe7UHtK4nKATwobYEn+y2npQszxixQjWhnKhL1gXTdyF6vH0Wt0n4PGRcBRgf7BY
+        Je4jlV27ldq0XfXD40RO4WbiO
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr7226941wrm.284.1576166235413;
+        Thu, 12 Dec 2019 07:57:15 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxCcJblbdBpu6fVRmTMMxd9YCps91vlO3a/KrWqDMJ5D1GjIwC7bcnVpKVuMe+qGktQ2LnvbA==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr7226922wrm.284.1576166235182;
+        Thu, 12 Dec 2019 07:57:15 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
+        by smtp.gmail.com with ESMTPSA id s10sm6451431wrw.12.2019.12.12.07.57.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 07:57:14 -0800 (PST)
+Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
+ VMX_FEATURES_*
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
+ <20191128014016.4389-12-sean.j.christopherson@intel.com>
+ <20191212122646.GE4991@zn.tnic>
+ <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
+ <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
+Date:   Thu, 12 Dec 2019 16:57:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
-Content-Disposition: inline
-In-Reply-To: <fb87c957-40e8-587e-5789-33b740f8326d@ideasonboard.com>
-X-Cookie: We have DIFFERENT amounts of HAIR --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/12/19 16:52, Liran Alon wrote:
+>>> virt_apic_accesses	-> vapic
+>> apicv
+> Frankly, I dislike APICv terminology. I prefer to enumerate the
+> various VMX features which are collectively called APICv by KVM. 
+> APICv currently represents in KVM terminology the combination of
+> APIC-register virtualization, virtual-interrupt-delivery and
+> posted-interrupts (See cpu_has_vmx_apicv()).
+> 
+> In fact, the coupling of “enable_apicv” module parameter have made me
+> multiple times to need to disable entire APICv features when there
+> for example was only a bug in posted-interrupts.
+> 
+> Even you got confused as virtualize-apic-access is not part of KVM’s
+> APICv terminology but rather it’s enablement depend on
+> flexpriority_enabled (See cpu_need_virtualize_apic_accesses()). i.e.
+> It can be used for faster intercept handling of accesses to guest
+> xAPIC MMIO page.
 
---u5E4XgoOPWr4PD9E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Right, I got confused with APIC-register virtualization.  Virtualize
+APIC accesses is another one I wouldn't bother putting in /proc/cpuinfo,
+since it's usually present together with flexpriority.
 
-On Wed, Dec 11, 2019 at 10:42:43PM +0000, Kieran Bingham wrote:
-> On 09/12/2019 16:37, Mark Brown wrote:
+Paolo
 
-> >>  - is there anything I can do here within regulator_dev_lookup() to
-> >>    attempt creating the regulator_dev 'on-demand' when
-> >>    of_find_regulator_by_node(node) returns empty? (or is that crazy, and
-> >>    just a rabbit-hole?)
-
-> > This seems like a terrible idea, you'll have a half baked regulator in
-
-> Ohh eep, I just re-read my description, and I don't think I described my
-> intention very well at all. (or at all!)
-
-> I wouldn't want to have just a half baked struct regulator_dev on it's
-> own ... I was more wondering if we can kick the core driver framework to
-> fully probe this regulator (which would thus create the required
-> regulator_dev structures). It was more a question of can we guide the
-> core driver framework that it really needs to probe this device
-> immediately ...
-
-Oh, I see.  Last time I looked at this in any detail the driver core did
-probe things pretty much immediately when it got a new driver to match a
-device (or vice versa), some existing MFDs rely on that.
-
-> I was sort of wondering if something like this could optimise away some
-> of the -EPROBE_DEFER iterations at a more global level, but I don't know
-> how or if that would work anyway.
-
-In theory someone could try to do some sort of sorting with the DT
-graph, people keep talking about it but nobody's done anything that I'm
-aware of.
-
---u5E4XgoOPWr4PD9E
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3yY0cACgkQJNaLcl1U
-h9Ccnwf/Zt+s1/jHa0s+zui6lpM6t0BkffH9abuTMNz+8nOSjEcI+IqxOJOyVglO
-gc1BBImmb6yEghdfzsfO13RGQwiRRApOz9SN2yLQW2jkvAeSIcfNm6hpqYYr12Vn
-jSSayzKo4E/qciIxRdulZ9bzhtK7yf7ADU7M0eKrVVayJh8wvTxOPWsUpUIGYCG3
-9Ts8ZXb6W18i9lthckJjTPc01Tm7c1UWs6cEs6D4QbkvLCWEUCPB0h/unH1JlrPH
-vowIKCEZgzEpacCLnb89u9yqbAUqludWSSt59ImcQw3JKDop5NH7JHbvjUzQXDI6
-E6UF7w/0C74tUzExKKiBlucg2VDOBw==
-=afJG
------END PGP SIGNATURE-----
-
---u5E4XgoOPWr4PD9E--
