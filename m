@@ -2,126 +2,279 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EB0C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA1FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E845B21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D06121655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqznNKDF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RmMDPPQj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfLLRbG (ORCPT
+        id S1730189AbfLLRbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:31:06 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43093 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730061AbfLLRbF (ORCPT
+        Thu, 12 Dec 2019 12:31:42 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35891 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730162AbfLLRbm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:31:05 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a13so3168813ljm.10;
-        Thu, 12 Dec 2019 09:31:03 -0800 (PST)
+        Thu, 12 Dec 2019 12:31:42 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r19so3195609ljg.3;
+        Thu, 12 Dec 2019 09:31:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pwcDuyQ5H/LeRcpzHWQQ5LPkKEAPYr1LrdRtOV1GNCg=;
-        b=fqznNKDF+97BNXhX0xT1avM+7NbUfhXB8lgQUji0tZcAqYWaZxoGnbFjs0dy521YOc
-         sfk8GSXNgI2dQkBlBPgZWSALhTs5K0s/jsAzKmjuLXw+9bkhTYTuhPbS7XtX6xyjQ1pL
-         u/CMyxQGDWiApJeiYWtF2lmMs3nN92pw9ItmSg2SYehR6+nuvf489VENLcGI7W8DJy4C
-         8/R+0xPPWBI2rghv+zJUDpgApdgBz+kGaYPCURhKoMGgIWJyvEqNcpryKduNKVExeHXq
-         zr3gK5Be7c4xIaSZLj9qptQ3LUxBFRxrvnB2IrhCgm8kxTcumf2m3rjQgGxeQNLCyCXP
-         qGZA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oGsvTQEy/RBQXjMjGG41MqumsiVigoFMqEdJYu2rJvg=;
+        b=RmMDPPQjFnDduo/ja4oiNR9uvy57bclI0nxhkskq+2ymRGCioVhrJuYAknL7NmPbBV
+         geHAdpqc9EQNG2WKBCC+4v0hNwB/tcpQWJy6Oy2+Jnoim+yJCc+ABmgz90+cSNPZrHh/
+         06iywjOQVcI+RkOyn7/N20/PhkXpN89TSdauu3cTnNrdDh6o3PFwJYtrGedYtI3zySmm
+         nob7ljG3jqjUBJYH4cK2j2595Zyv/Mr1ETY6HuF/XlcuDyfNH9KUg+dmoX6l2ApWmgI1
+         zpCGd4woLTjxDSY8d5XVwP+ZHuTfvSl94GQEWVIpxJH5np7gHead3D2444XYvVi4fKy2
+         TmLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pwcDuyQ5H/LeRcpzHWQQ5LPkKEAPYr1LrdRtOV1GNCg=;
-        b=T6y1urimeHuTCNpC9lD/dAZE9H5kuKr2DD168rh8DuLgX74FlIeq4ZxgkaJY5lbkXp
-         HE7dVNIVR7jDpVDMIpc9+ca3zW55+KMZWEHQKYUeLuwL+lhD4y+iq7d8ZmKfH+3rB8xH
-         XkiiGIlhnRAMhZAd+CBJi7mVojrt4fF/RAjOGBndbzDlimX2gRy6Qp5vjDazObiVGueX
-         Nf//t5nVQ79+JFJsI3e12JwXNgSDNN0a8V48eKddB1oz42xuyhujTRwFLdPgfnfdX6mY
-         0FT2FgvTQ1JnoYfx8bG+dyzH5959LsNEPGnPekCf6WYolhd7st0xcpOqkUN2z38FvtwN
-         tVKw==
-X-Gm-Message-State: APjAAAWJf/VM0KHrwW0efBUxIi7aOAF/rRnKKve8MIm3mqKDh8oV7XyT
-        vWzpgnG1s9CF/HhnBM2jjz9Wjhp1/Y95VFLezyn5saGs
-X-Google-Smtp-Source: APXvYqxAjspAhxct45txPMuGxP8n581H7r4DjRSv0XoxKkAFeCDgWkvoP6X0+farZhsuWhWNpr1lDrirmmNr7wPsxZA=
-X-Received: by 2002:a2e:8606:: with SMTP id a6mr6723056lji.119.1576171862453;
- Thu, 12 Dec 2019 09:31:02 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oGsvTQEy/RBQXjMjGG41MqumsiVigoFMqEdJYu2rJvg=;
+        b=ZWec56Qn9iZ1a9nQkdP1XLlBzMLUCkAg6YOlbuhEJ5p8ugv8RJLh673QwOmLwBFb9H
+         qPhcIDB4hSZhCN5eG5pw1rC4zl4UvugsSf61X1U3tG+AyfTTs4E5rds1HzP3ioItBm1m
+         qBZLBe66ViNdB6gRxfk0iQUP/Q6Kxh7u3ZwfQnNhq+KZ0A+nn/Jt3BppPkbjK16KMmoB
+         DgAPxu4ZLj0J/QNWDFpGAyp5jIA6LapfvecuhkFTcXtgYEMvir50Q+ONY3jY9fOdIArW
+         X6iVEWk5pxXn5lqTN3yQGnR36hY05SrM/PHcmONzYbLGcfkEDhvjwcAms9mhxxrCoxIm
+         1S5A==
+X-Gm-Message-State: APjAAAVnwuFmbI3RPJnfYycFEevbGRG59tBQWiIVWeh9OElCNHhFLPMO
+        HTCZttowyUFHaR09dzwjsUdvmJRL
+X-Google-Smtp-Source: APXvYqyIm3f+OC3laK1GIKYGmlQgfSWLC3opWbyHkD84OxuNLtZqK0SvUeCm12YnfXoUCUNbdORHww==
+X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr6631586ljc.76.1576171898711;
+        Thu, 12 Dec 2019 09:31:38 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id u20sm3333264lju.34.2019.12.12.09.31.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 09:31:37 -0800 (PST)
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191210014011.21987-1-digetx@gmail.com>
+ <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+ <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com>
+ <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
+ <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com>
+ <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
+ <CAPDyKFq26Wcd9f3VJ1afxv9TVDJQu4wi+yLS-4Pi1bYnFLyWsg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <2495b666-58d1-2aab-d4db-240691cf5884@gmail.com>
+Date:   Thu, 12 Dec 2019 20:31:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20191127142707.GB2889@paulmck-ThinkPad-P72> <20191129182823.8710-1-sjpark@amazon.de>
- <CAEjAshoczVRTavYmEb82xh+aJzQ30sKJRTuj=os7nZfFQ3AFfg@mail.gmail.com>
-In-Reply-To: <CAEjAshoczVRTavYmEb82xh+aJzQ30sKJRTuj=os7nZfFQ3AFfg@mail.gmail.com>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Thu, 12 Dec 2019 18:30:35 +0100
-Message-ID: <CAEjAshoe3HunF4=0LQduZ=QW3mFQVNZQY6xXYJ1TwA1byMrGDQ@mail.gmail.com>
-Subject: Re: [PATCH] docs/memory-barriers.txt.kokr: Minor wordsmith
-To:     Jonathan Corbet <corbet@lwn.net>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Will Deacon <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+In-Reply-To: <CAPDyKFq26Wcd9f3VJ1afxv9TVDJQu4wi+yLS-4Pi1bYnFLyWsg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gSm9uLA0KDQpPbiBGcmksIERlYyA2LCAyMDE5IGF0IDY6MjEgUE0gU2VvbmdKYWUgUGFy
-ayA8c2ozOC5wYXJrQGdtYWlsLmNvbT4gd3JvdGU6DQo+DQo+IEhlbGxvIEpvbiBhbmQgUGF1bCwN
-Cj4NCj4gT24gRnJpLCBOb3YgMjksIDIwMTkgYXQgNzoyOSBQTSBTZW9uZ0phZSBQYXJrIDxzajM4
-LnBhcmtAZ21haWwuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFzIHN1Z2dlc3RlZCBieSBQYXVsLCBJ
-IGdvdCBhIHJldmlldyBmcm9tIGFub3RoZXIgS29yZWFuIGhhY2tlciBZdW5qYWUuDQo+ID4gIEZy
-b20gdGhlIHJldmlldywgSSBnb3Qgbm90IG9ubHkgJ1Jldmlld2VkLWJ5OicgdGFncywgYnV0IGFs
-c28gZm91bmQgYQ0KPiA+IGZldyBtaW5vciBuaXRzLiAgU28gSSBtYWRlIGEgc2Vjb25kIHZlcnNp
-b24gb2YgdGhlIHBhdGNoc2V0IGJ1dCBqdXN0DQo+ID4gcmVhbGl6ZWQgdGhhdCB0aGUgZmlyc3Qg
-dmVyc2lvbiBoYXMgYWxyZWFkeSBzZW50IHRvIExpbnVzLiAgSSB0aGVyZWZvcmUNCj4gPiBzZW5k
-IG9ubHkgdGhlIG5pdCBmaXhlcyBhcyBhbm90aGVyIHBhdGNoLg0KPg0KPiBNYXkgSSBhc2sgeW91
-ciBjb21tZW50cz8NCg0KTWF5IEkgYXNrIHlvdXIgY29tbWVudHM/DQoNCg0KVGhhbmtzLA0KU2Vv
-bmdKYWUgUGFyaw0KDQo+DQo+DQo+IFRoYW5rcywNCj4gU2VvbmdKYWUgUGFyaw0KPg0KPiA+DQo+
-ID4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gPjggLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+IGRvY3MvbWVtb3J5LWJhcnJpZXJzLnR4dC5rb2tyOiBN
-aW5vciB3b3Jkc21pdGgNCj4gPg0KPiA+IFRoaXMgY29tbWl0IGZpeGVzIGEgY291cGxlIG9mIG1p
-bm9yIG5pdHMgaW4gdGhlIEtvcmVhbiB0cmFuc2xhdGlvbiBvZg0KPiA+ICdtZW1vcnktYmFycmll
-cnMudHh0Jy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNlb25nSmFlIFBhcmsgPHNqcGFya0Bh
-bWF6b24uZGU+DQo+ID4gUmV2aWV3ZWQtYnk6IFl1bmphZSBMZWUgPGx5ajc2OTRAZ21haWwuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL3RyYW5zbGF0aW9ucy9rb19LUi9tZW1vcnkt
-YmFycmllcnMudHh0IHwgNCArKy0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi90
-cmFuc2xhdGlvbnMva29fS1IvbWVtb3J5LWJhcnJpZXJzLnR4dCBiL0RvY3VtZW50YXRpb24vdHJh
-bnNsYXRpb25zL2tvX0tSL21lbW9yeS1iYXJyaWVycy50eHQNCj4gPiBpbmRleCBhOGQyNmRmOTM2
-MGIuLjI5ZTc2YTczYWU1OSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL3RyYW5zbGF0
-aW9ucy9rb19LUi9tZW1vcnktYmFycmllcnMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi90
-cmFuc2xhdGlvbnMva29fS1IvbWVtb3J5LWJhcnJpZXJzLnR4dA0KPiA+IEBAIC0yNDEzLDcgKzI0
-MTMsNyBAQCBf7JWK7Iq164uI64ukXy4NCj4gPiAg7JWM6rOgIOyeiOuKlCwgLSBpbmIoKSDrgpgg
-d3JpdGVsKCkg6rO8IOqwmeydgCAtIOyggeygiO2VnCDslaHshLjsiqQg66Oo7Yu07J2EIO2Gte2V
-tCDsnbTro6jslrTsoLjslbzrp4wNCj4gPiAg7ZWp64uI64ukLiAg7J206rKD65Ok7J2AIOuMgOu2
-gOu2hOydmCDqsr3smrDsl5DripQg66qF7Iuc7KCBIOuplOuqqOumrCDrsLDrpqzslrQg7JmAIO2V
-qOq7mCDsgqzsmqnrkKAg7ZWE7JqU6rCADQo+ID4gIOyXhuyKteuLiOuLpOunjCwg7JmE7ZmU65Cc
-IOuplOuqqOumrCDslaHshLjsiqQg7IaN7ISx7Jy866GcIEkvTyDrqZTrqqjrpqwg7JyI64+E7Jqw
-66Gc7J2YIOywuOyhsOulvCDsnITtlbQNCj4gPiAt7JWh7IS47IqkIO2VqOyImOqwgCDsgqzsmqnr
-kJzri6TrqbQg7Iic7ISc66W8IOqwleygnO2VmOq4sCDsnITtlbQgX21hZGF0b3J5XyDrqZTrqqjr
-pqwg67Cw66as7Ja06rCADQo+ID4gK+yVoeyEuOyKpCDtlajsiJjqsIAg7IKs7Jqp65Cc64uk66m0
-IOyInOyEnOulvCDqsJXsoJztlZjquLAg7JyE7ZW0IF9tYW5kYXRvcnlfIOuplOuqqOumrCDrsLDr
-pqzslrTqsIANCj4gPiAg7ZWE7JqU7ZWp64uI64ukLg0KPiA+DQo+ID4gIOuNlCDrp47snYAg7KCV
-67O066W8IOychO2VtOyEoCBEb2N1bWVudGF0aW9uL2RyaXZlci1hcGkvZGV2aWNlLWlvLnJzdCDr
-pbwg7LC46rOg7ZWY7Iut7Iuc7JikLg0KPiA+IEBAIC0yNTI4LDcgKzI1MjgsNyBAQCBJL08g7JWh
-7IS47Iqk66W8IO2Gte2VnCDso7zrs4DsnqXsuZjsmYDsnZgg7Ya17Iug7J2AIOyVhO2CpO2Fjeyz
-kOyZgCDquLDquLDsl5ANCj4gPiAgICAgICAgIOydtOqyg+uTpOydgCByZWFkWCgpIOyZgCB3cml0
-ZVgoKSDrnpEg67mE7Iq37ZWY7KeA66eMLCDrjZQg7JmE7ZmU65CcIOuplOuqqOumrCDsiJzshJwN
-Cj4gPiAgICAgICAgIOuztOyepeydhCDsoJzqs7Xtlanri4jri6QuICDqtazssrTsoIHsnLzroZws
-IOydtOqyg+uTpOydgCDsnbzrsJjsoIEg66mU66qo66asIOyVoeyEuOyKpOuCmCBkZWxheSgpDQo+
-ID4gICAgICAgICDro6jtlIQgKOyYiDrslZ7snZggMi01IO2VreuqqSkg7JeQIOuMgO2VtCDsiJzs
-hJzrpbwg67O07J6l7ZWY7KeAIOyViuyKteuLiOuLpOunjCDrlJTtj7TtirggSS9PDQo+ID4gLSAg
-ICAgICDquLDriqXsnLzroZwg66ek7ZWR65CcIF9faW9tZW0g7Y+s7J247YSw7JeQIOuMgO2VtCDr
-j5nsnpHtlaAg65WMLCDqsJnsnYAgQ1BVIOyTsOugiOuTnOyXkCDsnZjtlbQNCj4gPiArICAgICAg
-IOq4sOuKpeycvOuhnCDrp6TtlZHrkJwgX19pb21lbSDtj6zsnbjthLDsl5Ag64yA7ZW0IOuPmeye
-ke2VoCDrlYwsIOqwmeydgCBDUFUg7JOw66CI65Oc7JeQIOydmO2VnA0KPiA+ICAgICAgICAg6rCZ
-7J2AIOyjvOuzgOyepey5mOuhnOydmCDslaHshLjsiqTsl5DripQg7Iic7ISc6rCAIOunnuy2sOyn
-iCDqsoPsnbQg67O07J6l65Cp64uI64ukLg0KPiA+DQo+ID4gICAoKikgcmVhZHNYKCksIHdyaXRl
-c1goKToNCj4gPiAtLQ0KPiA+IDIuMTcuMg0KPiA+DQo=
+12.12.2019 18:07, Ulf Hansson пишет:
+> On Thu, 12 Dec 2019 at 15:23, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> 11.12.2019 19:29, Dmitry Osipenko пишет:
+>>> 11.12.2019 19:10, Ulf Hansson пишет:
+>>>> On Wed, 11 Dec 2019 at 16:46, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>>
+>>>>> Hello Ulf,
+>>>>>
+>>>>> 11.12.2019 11:11, Ulf Hansson пишет:
+>>>>>> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>>>>
+>>>>>>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+>>>>>>> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+>>>>>>> In a result high-speed mode isn't enabled for the WiFi card and this
+>>>>>>> results in a malfunctioning SDIO communication.
+>>>>>>
+>>>>>> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR_SPEED?
+>>>>>
+>>>>> Yes, the SDIO_SPEED_SHS bit is set.
+>>>>>
+>>>>>>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+>>>>>>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>>>>>>>
+>>>>>>> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+>>>>>>> the problem, let's do the same in upstream.
+>>>>>>>
+>>>>>>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+>>>>>>> which overrides card's info for the TI wl1251 WiFi.
+>>>>>>
+>>>>>> This is a temporary solution and should be replaced by doing the DT
+>>>>>> parsing during
+>>>>>>
+>>>>>> So, yes, let's see if we can use a card quirk instead. That's the first option.
+>>>>>>
+>>>>>> A second option is simply to parse the DT subnode for a new DT
+>>>>>> property during mmc_sdio_init_card(). Along the lines of what we do
+>>>>>> for the broken-hpi DT binding for eMMC.
+>>>>>
+>>>>> Let's try the first option. My understanding is that the problem affects
+>>>>> only the specific model of the WiFi chip and it's not a board-specific
+>>>>> problem. I'll add Broadcom driver people to CC for the next version of
+>>>>> the patch, maybe they'll have something to say.
+>>>>
+>>>> Okay, sounds reasonable. By looking at your latest attempt for a fix,
+>>>> I have two minor nitpicks, otherwise it looks good.
+>>>>
+>>>> The nitpicks:
+>>>> I suggest to rename MMC_QUIRK_HIGH_SPEED_CARD to MMC_QUIRK_HIGH_SPEED
+>>>> and mmc_card_need_high_speed_toggle() to mmc_card_quirk_hs().
+>>>
+>>> I'll take it into account, thanks.
+>>
+>> Looks like I managed to figure out what's really going on:
+>>
+>>   1. The BCM4329 doc clearly states that High Speed is supported, see
+>> page 49 (Section 11: WLAN Interfaces, SDIO v1.2)
+>>
+>> https://www.cypress.com/file/298626/download
+>>
+>>   2. I googled for performance results of the BCM4329 SDIO WiFi and came
+>> to a conclusion that ~40 Mbit/s is a realistic maximum of the WiFi-data
+>> throughput for NVIDIA Tegra20 boards due to antenna configuration
+>> limitations and whatever.
+> 
+> Okay.
+> 
+>>
+>>   3. The Tegra's SDHCI clock is pre-configured to 48MHz at the time of
+>> kernel's boot-up.
+>>
+>>   4. IIUC, the maximum clock rate for the legacy SD signaling mode is
+>> ~25MHz and that is more than enough for a 4-lane SDIO data-bus that
+>> allows up to 100 Mbit/s for the WiFi which is capped to 40 Mbit/s anyways.
+> 
+> Yes, I see.
+> 
+>>
+>>   5. Apparently MMC core doesn't limit the clock rate for the Normal
+>> Speed cards.
+> 
+> It should, else it's a bug (I would be really surprised if that's the
+> case, but who knows).
+> 
+>>
+>>
+>> So, I added "max-frequency = <25000000>;" to the SDHCI node of the
+>> board's device-tree and ta-da! WiFi works absolutely fine without the
+>> quirk! Thus the SDIO card quirk isn't really needed and I'm dropping it
+>> for now.
+>>
+>> Ulf, do you know if it's a bug or a feature of the MMC core that it
+>> doesn't limit clock rate for the Normal Speed cards?
+> 
+> It should limit the speed, else it's a bug. Can you perhaps check what
+> the requested clock rate is via some debug prints in the host ops
+> ->set_ios()? And also what the real rate becomes after dividers.
+> 
+> If it's not a bug in the core, I suspect that there may be generic
+> problem dealing with initialization frequencies for sdhci-tegra.
+> 
+> For example, mmc_rescan_try_freq() tries to initialize the SDIO card
+> at 400KHz, then 300, then 200 then 100 (in that order, and note
+> *KHz*). When a frequency is successful, initialization continues and
+> later on the clock rate should be increased to 25MHz, for legacy speed
+> mode.
+
+I made the following change:
+
+diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+index ebb387aa5158..d37b61223290 100644
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -372,12 +372,16 @@ static unsigned mmc_sdio_get_max_clock(struct
+mmc_card *card)
+                 * mandatory.
+                 */
+                max_dtr = 50000000;
++               dev_err(mmc_dev(card->host), "fixed max_dtr %u\n", max_dtr);
+        } else {
+                max_dtr = card->cis.max_dtr;
++               dev_err(mmc_dev(card->host), "card max_dtr %u\n", max_dtr);
+        }
+
+-       if (card->type == MMC_TYPE_SD_COMBO)
++       if (card->type == MMC_TYPE_SD_COMBO) {
+                max_dtr = min(max_dtr, mmc_sd_get_max_clock(card));
++               dev_err(mmc_dev(card->host), "combo max_dtr %u\n", max_dtr);
++       }
+
+        return max_dtr;
+ }
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 7bc950520fd9..3833be5ceeb5 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -730,6 +730,8 @@ static void tegra_sdhci_set_clock(struct sdhci_host
+*host, unsigned int clock)
+        struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+        unsigned long host_clk;
+
++       dev_err(mmc_dev(host->mmc), "%s %u\n", __func__, clock);
++
+        if (!clock)
+                return sdhci_set_clock(host, clock);
+---
+
+and got the following log:
+
+ sdhci-pltfm: SDHCI platform and OF driver helper
+ sdhci-tegra c8000000.sdhci: allocated mmc-pwrseq
+ mmc0: Missing autocal timeout 3v3-pad drvs
+ mmc0: Missing autocal timeout 3v3-pad drvs
+ mmc0: Missing autocal timeout 1v8-pad drvs
+ mmc0: Missing autocal timeout 1v8-pad drvs
+ mmc0: Invalid maximum block size, assuming 512 bytes
+ sdhci-tegra c8000000.sdhci: tegra_sdhci_set_clock 0
+ sdhci-tegra c8000000.sdhci: tegra_sdhci_set_clock 843750
+ mmc0: SDHCI controller on c8000000.sdhci [c8000000.sdhci] using ADMA
+ mmc0: queuing unknown CIS tuple 0x80 (50 bytes)
+ mmc0: queuing unknown CIS tuple 0x80 (7 bytes)
+ mmc0: queuing unknown CIS tuple 0x80 (7 bytes)
+ mmc0: queuing unknown CIS tuple 0x02 (1 bytes)
+ sdhci-tegra c8000000.sdhci: card max_dtr 50000000
+ sdhci-tegra c8000000.sdhci: tegra_sdhci_set_clock 50000000
+ mmc0: new SDIO card at address 0001
+ brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4329-sdio for chip
+BCM4329/32
+ ...
+
+which tells that MMC core doesn't limit Normal Speed, assuming that card
+reports an adequate max_dtr value.
+
+The following MMC core change works:
+
+diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
+index ebb387aa5158..da1e28892831 100644
+--- a/drivers/mmc/core/sdio.c
++++ b/drivers/mmc/core/sdio.c
+@@ -373,7 +373,7 @@ static unsigned mmc_sdio_get_max_clock(struct
+mmc_card *card)
+                 */
+                max_dtr = 50000000;
+        } else {
+-               max_dtr = card->cis.max_dtr;
++               max_dtr = min(card->cis.max_dtr, 25000000u);
+        }
+
+        if (card->type == MMC_TYPE_SD_COMBO)
+
