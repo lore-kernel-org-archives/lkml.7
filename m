@@ -2,88 +2,174 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDEEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA133C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BB2214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:05:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F005214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:05:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="hTdYUuX/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RQ1aCrQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfLLIF1 (ORCPT
+        id S1728197AbfLLIFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:05:27 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:44517 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbfLLIF0 (ORCPT
+        Thu, 12 Dec 2019 03:05:35 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33850 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728151AbfLLIFf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:05:26 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w5so680200pjh.11
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:05:26 -0800 (PST)
+        Thu, 12 Dec 2019 03:05:35 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m6so1218435ljc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 00:05:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fp5LYGJKEkfg5yRhHzvHzf1OfDrIgPebJ2E+jZMHJ24=;
-        b=hTdYUuX/LFg7Pd3ilOvSYz4/ctywOUxqVSTtzhmLSq780UIf98CB3GtH7Uwu3bnbvh
-         DITwUpWZIs0dn/iUvBgQBpCaL64gO92pHN0XqOeyR9dJsic2Rq8t9qMnPzHPWyX0Mxp+
-         s/kD0cxw6ZazoIexIu/KZ9cozucV2BUUhG+01SqZrrpte46ijpJvLGK34Re47P9lQQzw
-         QIHUNEVGMJ7/XO7ZlWvS9a4R2E6sCFylFiUV/HyCyyIni4Nb4edEXTqWdkslx7lxvdAT
-         ZEjJI3iVhdmuAfbERpo3BvtwcBywWWHqI4qRDgan0odwXbfVYlSZWsFCDdH0vfxTj7r+
-         EjAQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D5CdL72oAGFzvBY6QtxAW/opFYUrS0DCzRtDcLARPlM=;
+        b=RQ1aCrQt71scdxmVYOs2+irsGBO5mXSKza7aFK6gEHkMShYqAzp3Af4m8OgE7nr9do
+         BJ4cxPCyx9FNdHcrgGZsI7CNzBwLEfhCtNnq3C6+MGvk3TuAlDcX4U7H5qHgjssSVGlv
+         oaT8SX3p3JhPmB+dPkYoOIg+J/1mM936nKSLZqt0Y0owt6igrVdNc4x58M4DFS7ph3JZ
+         St3jtX7Vh0Z/Z1ZffIHG1AUZem7ldcu+fkwlsSzSOWK8w9FneZEl78Mf2Pxx/MqZshe2
+         EXw1ZEE5bblU4EzHGmfpQjLtvLb792Ntlh/0wkS/48iYQWQdqUxnp97ZsmzmkX6bvEgg
+         4dBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fp5LYGJKEkfg5yRhHzvHzf1OfDrIgPebJ2E+jZMHJ24=;
-        b=RP4YcFLDUu0Frz3Y7mZacOozmdK8LQy5zvyGnizvXpIrPXyeBHjzH7dhobNKnPh5E5
-         Ol7eAbbGEuMMmiphFjJZlO4LbWECyT/oLHQ8o41mcYgxZg4PELmoeNa62lL2kpoBPOE6
-         duDK99Hc1iwm78J/RDT6tUR96+IN3ArdmrwBvUU3EcreEa7L8AJID/Lz3cvyTY4TEBvE
-         2HG0fSzxzcwzGg3069EfKKO0bGdX60Thi54EwknfxqnRRJO/chKYsrbIXGS98Ich3Bsr
-         wQjPze/s9IaYIA5wnSzwtDpnTuCbEZqh+RZ6yIHd1nzcdUscppSPyiuKEkwxIF2ZYeq3
-         okAg==
-X-Gm-Message-State: APjAAAX2715qO42deEKrMinOjoH2xIySOiOhN3PiRRr/DWfqXJZH/jHN
-        BHqHwdEymMRf/9N/awQEBNXAkg==
-X-Google-Smtp-Source: APXvYqzgtaUqbQwoRjMvL+XzEm1CG7mK1gKpaRv8+pqOZ54pcrwGWB4YlSELs5ekSKZbvnw0qJXgQw==
-X-Received: by 2002:a17:902:7797:: with SMTP id o23mr8079385pll.149.1576137925667;
-        Thu, 12 Dec 2019 00:05:25 -0800 (PST)
-Received: from debian ([122.174.90.102])
-        by smtp.gmail.com with ESMTPSA id 83sm5739611pgh.12.2019.12.12.00.05.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 00:05:24 -0800 (PST)
-Date:   Thu, 12 Dec 2019 13:35:18 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191212080518.GA2657@debian>
-References: <20191211150221.153659747@linuxfoundation.org>
- <20191212065214.GA3747@debian>
- <20191212074124.GA1368279@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D5CdL72oAGFzvBY6QtxAW/opFYUrS0DCzRtDcLARPlM=;
+        b=WoaNOXVNgSIrhiruxdUxdJlzmAB9LLusqCv7Edm0bOJYdsoDoTTiidVU6/JKL6IdEc
+         /RchZBP2EFOf681gi94HzVGjAKeHHfxf1zKoq39NVzbXBpBSg5xs7fERE9h3ekcNdcog
+         HUPqKjJ8ISKksf31uCwdzjHoRNaMRBCT1CCcpVHFKrQvF6dmVN2BOwNLPZL70qm53N6u
+         Qvi+4mhSMm16VZlslvbFkX/CYgwirTkV6EzztrsxwYxcU/7qxehnTTThbBbzHP9sCcN0
+         syzh9U9fRgz7A73C+dxbekbfduWPoLj1gkvLyWneJMII7ukNuevFf3QV3kz8H9p05lQy
+         nGlA==
+X-Gm-Message-State: APjAAAWIGB/VpEMZYdJ8JoDrzA/307MyiQozlygCW54QD4DuQbxFMht3
+        7mIMXM/pF0ctPFVbJ2gr+QutITiQTfPaBfSC9A3L6A==
+X-Google-Smtp-Source: APXvYqyJ91Gn19rm2vbXdmqFvecFunxEEmuukfA/2HLCASaiDbzlXeysBPII1SPb5zskNnpuKg/gJwiqCSQ0Kw4J9J4=
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr5216093lji.214.1576137932881;
+ Thu, 12 Dec 2019 00:05:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212074124.GA1368279@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191204200623.198897-1-joshdon@google.com> <CAKfTPtBZUUtJ=ZvQOWmKx_1zUXtNoqcS0M85ouQmgi36xzfM2A@mail.gmail.com>
+ <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com>
+In-Reply-To: <CABk29NsCjgMVf-xrhpyzFBTpyTvyWxZc4RJSarnHVzdOXyVPMw@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 12 Dec 2019 09:05:21 +0100
+Message-ID: <CAKfTPtCJGT0axT5=E=hLWtMav_kLGVFrSvjZS8+cfvjYS72vqQ@mail.gmail.com>
+Subject: Re: [PATCH v2] sched/fair: Do not set skip buddy up the sched hierarchy
+To:     Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:41:24AM +0100, Greg Kroah-Hartman wrote:
-> Are these things new to this release, or have they always been there?
-Normally these are not new things. it has been there.
+Hi Josh,
 
---
-software engineer
-rajagiri school of engineering and technology
+On Fri, 6 Dec 2019 at 23:13, Josh Don <joshdon@google.com> wrote:
+>
+> Hi Vincent,
+>
+> Thanks for taking a look.
+>
+> > There is a mismatch between the author Venkatesh Pallipadi and the
+> > signoff Josh Don
+> > If Venkatesh is the original author and you have then done some
+> > modifications, your both signed-off should be there
+>
+> Venkatesh no longer works at Google, so I don't have a way to get in
+> touch with him.  Is my signed-off insufficient for this case?
+
+Maybe you can add a Co-developed-by tag to reflect your additional changes
+I guess that as long as you agree with the DCO, it's ok :
+https://www.kernel.org/doc/html/v5.4/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+
+Ingo, Peter, what do you think ?
 
 
+>
+>
+> On Thu, Dec 5, 2019 at 11:57 PM Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+> >
+> > Hi Josh,
+> >
+> > On Wed, 4 Dec 2019 at 21:06, Josh Don <joshdon@google.com> wrote:
+> > >
+> > > From: Venkatesh Pallipadi <venki@google.com>
+> > >
+> > > Setting skip buddy all the way up the hierarchy does not play well
+> > > with intra-cgroup yield. One typical usecase of yield is when a
+> > > thread in a cgroup wants to yield CPU to another thread within the
+> > > same cgroup. For such a case, setting the skip buddy all the way up
+> > > the hierarchy is counter-productive, as that results in CPU being
+> > > yielded to a task in some other cgroup.
+> > >
+> > > So, limit the skip effect only to the task requesting it.
+> > >
+> > > Signed-off-by: Josh Don <joshdon@google.com>
+> >
+> > There is a mismatch between the author Venkatesh Pallipadi and the
+> > signoff Josh Don
+> > If Venkatesh is the original author and you have then done some
+> > modifications, your both signed-off should be there
+> >
+> > Apart from that, the change makes sense to me
+> >
+> > > ---
+> > > v2: Only clear skip buddy on the current cfs_rq
+> > >
+> > >  kernel/sched/fair.c | 18 +++++++++++-------
+> > >  1 file changed, 11 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 08a233e97a01..0b7a1958ad52 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -4051,13 +4051,10 @@ static void __clear_buddies_next(struct sched_entity *se)
+> > >
+> > >  static void __clear_buddies_skip(struct sched_entity *se)
+> > >  {
+> > > -       for_each_sched_entity(se) {
+> > > -               struct cfs_rq *cfs_rq = cfs_rq_of(se);
+> > > -               if (cfs_rq->skip != se)
+> > > -                       break;
+> > > +       struct cfs_rq *cfs_rq = cfs_rq_of(se);
+> > >
+> > > +       if (cfs_rq->skip == se)
+> > >                 cfs_rq->skip = NULL;
+> > > -       }
+> > >  }
+> > >
+> > >  static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+> > > @@ -6552,8 +6549,15 @@ static void set_next_buddy(struct sched_entity *se)
+> > >
+> > >  static void set_skip_buddy(struct sched_entity *se)
+> > >  {
+> > > -       for_each_sched_entity(se)
+> > > -               cfs_rq_of(se)->skip = se;
+> > > +       /*
+> > > +        * One typical usecase of yield is when a thread in a cgroup
+> > > +        * wants to yield CPU to another thread within the same cgroup.
+> > > +        * For such a case, setting the skip buddy all the way up the
+> > > +        * hierarchy is counter-productive, as that results in CPU being
+> > > +        * yielded to a task in some other cgroup. So, only set skip
+> > > +        * for the task requesting it.
+> > > +        */
+> > > +       cfs_rq_of(se)->skip = se;
+> > >  }
+> > >
+> > >  /*
+> > > --
+> > > 2.24.0.393.g34dc348eaf-goog
+> > >
