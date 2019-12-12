@@ -2,276 +2,178 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A14DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5E8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4679F20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:31:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcAgN61D"
+	by mail.kernel.org (Postfix) with ESMTP id 2A81A20663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729206AbfLLMa7 (ORCPT
+        id S1729231AbfLLMcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:30:59 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41873 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729093AbfLLMa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:30:59 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s18so688250pfd.8;
-        Thu, 12 Dec 2019 04:30:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4IpPdaRaBlrxsdfzzqnbETQyqh0ur53iOvEIsIm5ezM=;
-        b=AcAgN61DleKY64oDzbwDWOMEtB/55CO5gZrYhVRJ5x3464AyXyxVMD4ty3WUYSZnWs
-         BrOL5Gw2VerKzoylEPizRHBgkEmVMUH3jNUhFyASl/F3SlU0jcDmKV7gXeQEeCJzVC3Q
-         HxENLUkDcUaFQzjfW9OhFLF0FMrZRLQJ0v9OncQVEDmN7doCsZYDaBRCADan9iRmQbjr
-         KCWdDJcgR9gAmn65ChnBOqY+pjX6pbO7mlsHx9q3cd4I1F/v1EtdvVswyQMCI48rB8V3
-         m+0VarsAJ5m5wHuFm7oNAGE+S4oi7nSQSeh08P9vSavlVnc1KJEd0PQtKHGcwdQLhp34
-         dFoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4IpPdaRaBlrxsdfzzqnbETQyqh0ur53iOvEIsIm5ezM=;
-        b=KD3vLJIdcJXp44eQhRokBrF9kcetSh9IHMmmo55OQ/Gf0kjorMjdWDHsczy+YFMS2N
-         5H4WkEPKOmcapnsjFdatB8jJuPnh9NrQ9DXgNyP/rlqNWJfrWLtLPCO/8h2u0GWCLID7
-         vW5Z+/IRUh0fMDOrBSQ8v9fwzwGfEXi1KQY0LhooCgIX9hUgZUbEzxyE/bGaoo5NFAhd
-         wBl+eBWjh0sS4JIRr0jAZCitH80PkBBxxLGeLIj3aL4C6F+JJV8QyXE4JvbnG6QcVLbg
-         Jz/wig1cPMXTdyLvteK2Prmq6YXk375RhEi2XZOUzf9jLz4QRS1cJfAcwjzQZ3dPMAn/
-         TL/g==
-X-Gm-Message-State: APjAAAXyiLLyCXK1eNfwbhgG/1jgqR0QCwwilnNi0zd48HhiWb3FUhtP
-        IP+a2pP6/2z1m+a1ZhnwPJg=
-X-Google-Smtp-Source: APXvYqzv8negx1JyPnWHMpPN4IjBEJxJaDFuRdfZDd26K615ZE1ly6bhrJWbhIw8M3xRETIaDjcdVg==
-X-Received: by 2002:a63:1b54:: with SMTP id b20mr10039407pgm.312.1576153858182;
-        Thu, 12 Dec 2019 04:30:58 -0800 (PST)
-Received: from cnn ([2402:3a80:457:6a63:7070:9118:7874:2897])
-        by smtp.gmail.com with ESMTPSA id k6sm6937248pfi.119.2019.12.12.04.30.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 12 Dec 2019 04:30:57 -0800 (PST)
-Date:   Thu, 12 Dec 2019 18:00:50 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     sdasari@fb.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH v4 2/2] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191212123050.GA8443@cnn>
-References: <20191211202620.GA31628@cnn>
- <78c346a0-217c-4216-b16a-498f80e7303a@www.fastmail.com>
+        Thu, 12 Dec 2019 07:32:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53394 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729092AbfLLMcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:32:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1D740AC35;
+        Thu, 12 Dec 2019 12:32:07 +0000 (UTC)
+Message-ID: <0a3e22d627a70cb60237c811b5874b9a4413329f.camel@suse.de>
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Robin Murphy <robin.murphy@arm.com>, andrew.murray@arm.com,
+        maz@kernel.org, linux-kernel@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Solarflare linux maintainers <linux-net-drivers@solarflare.com>,
+        Edward Cree <ecree@solarflare.com>,
+        Martin Habets <mhabets@solarflare.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
+        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        jeremy.linton@arm.com, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.con>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, kexec@lists.infradead.org,
+        linux-nfs@vger.kernel.org
+Date:   Thu, 12 Dec 2019 13:31:57 +0100
+In-Reply-To: <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
+References: <20191203114743.1294-1-nsaenzjulienne@suse.de>
+         <20191203114743.1294-8-nsaenzjulienne@suse.de>
+         <70c6b704-a12a-fb44-e93f-a6db12ed928f@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-FrLm7Huzs2OM/GGn8vDZ"
+User-Agent: Evolution 3.34.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78c346a0-217c-4216-b16a-498f80e7303a@www.fastmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:39:59AM +1030, Andrew Jeffery wrote:
-> 
-> 
-> On Thu, 12 Dec 2019, at 06:56, Manikandan Elumalai wrote:
-> > The Yosemite V2 is a facebook multi-node server
-> > platform that host four OCP server. The BMC
-> > in the Yosemite V2 platform based on AST2500 SoC.
-> > 
-> > This patch adds linux device tree entry related to
-> > Yosemite V2 specific devices connected to BMC SoC.
-> > 
-> > --- Reviews summary
-> > --- v4[2/2] - Spell and contributor name correction.
-> > ---         - License identifier changed to GPL-2.0-or-later.
-> > ---         - aspeed-gpio.h removed.
-> > ---         - FAN2 tacho channel changed.
-> > ---      v4 - Bootargs removed.
-> > ---         - Reviewed-by: Vijay Khemka <vkhemka@fb.com>
-> > ---      v3 - Uart1 Debug removed .
-> > ---         - Acked-by:Andrew Jeffery <andrew@aj.id.au>
-> 
-> You need to put the Reviewed-by / Acked-by tags down below your Signed-off-by. That
-> way we know that the patch is still ready to go (and they appear in patchwork - you can
-> (currently) see that they're missing[1]).
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-aspeed/list/?series=147912&state=%2A&archive=both
->
-  Thanks for your patience on explaining the procedure for newbies like me . There is change in dts for FAN2 tacho channel needs to review. I will resumit again. 
-> Andrew
-> 
-> > ---      v2 - LPC and VUART removed .
-> > ---      v1 - Initial draft.
-> > 
-> > Signed-off-by: Manikandan Elumalai <manikandan.hcl.ers.epl@gmail.com>
-> > ---
-> >  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 148 +++++++++++++++++++++
-> >  1 file changed, 148 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
-> > b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> > new file mode 100644
-> > index 0000000..ffd7f4c
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-> > @@ -0,0 +1,148 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +// Copyright (c) 2018 Facebook Inc.
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "aspeed-g5.dtsi"
-> > +/ {
-> > +	model = "Facebook Yosemitev2 BMC";
-> > +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-> > +	aliases {
-> > +		serial4 = &uart5;
-> > +	};
-> > +	chosen {
-> > +		stdout-path = &uart5;
-> > +	};
-> > +
-> > +	memory@80000000 {
-> > +		reg = <0x80000000 0x20000000>;
-> > +	};
-> > +
-> > +	iio-hwmon {
-> > +		// VOLATAGE SENSOR
-> > +		compatible = "iio-hwmon";
-> > +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-> > +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-> > +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-> > +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-> > +	};
-> > +};
-> > +
-> > +&fmc {
-> > +	status = "okay";
-> > +	flash@0 {
-> > +		status = "okay";
-> > +		m25p,fast-read;
-> > +#include "openbmc-flash-layout.dtsi"
-> > +	};
-> > +};
-> > +
-> > +&spi1 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_spi1_default>;
-> > +	flash@0 {
-> > +		status = "okay";
-> > +		m25p,fast-read;
-> > +		label = "pnor";
-> > +	};
-> > +};
-> > +
-> > +&uart5 {
-> > +	// BMC Console
-> > +	status = "okay";
-> > +};
-> > +
-> > +&mac0 {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_rmii1_default>;
-> > +	use-ncsi;
-> > +};
-> > +
-> > +&adc {
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_adc0_default
-> > +			&pinctrl_adc1_default
-> > +			&pinctrl_adc2_default
-> > +			&pinctrl_adc3_default
-> > +			&pinctrl_adc4_default
-> > +			&pinctrl_adc5_default
-> > +			&pinctrl_adc6_default
-> > +			&pinctrl_adc7_default
-> > +			&pinctrl_adc8_default
-> > +			&pinctrl_adc9_default
-> > +			&pinctrl_adc10_default
-> > +			&pinctrl_adc11_default
-> > +			&pinctrl_adc12_default
-> > +			&pinctrl_adc13_default
-> > +			&pinctrl_adc14_default
-> > +			&pinctrl_adc15_default>;
-> > +};
-> > +
-> > +&i2c8 {
-> > +	//FRU EEPROM
-> > +	status = "okay";
-> > +	eeprom@51 {
-> > +		compatible = "atmel,24c64";
-> > +		reg = <0x51>;
-> > +		pagesize = <32>;
-> > +	};
-> > +};
-> > +
-> > +&i2c9 {
-> > +	//INLET & OUTLET TEMP
-> > +	status = "okay";
-> > +	tmp421@4e {
-> > +		compatible = "ti,tmp421";
-> > +		reg = <0x4e>;
-> > +	};
-> > +	tmp421@4f {
-> > +		compatible = "ti,tmp421";
-> > +		reg = <0x4f>;
-> > +	};
-> > +};
-> > +
-> > +&i2c10 {
-> > +	//HSC
-> > +	status = "okay";
-> > +	adm1278@40 {
-> > +		compatible = "adi,adm1278";
-> > +		reg = <0x40>;
-> > +	};
-> > +};
-> > +
-> > +&i2c11 {
-> > +	//MEZZ_TEMP_SENSOR
-> > +	status = "okay";
-> > +	tmp421@1f {
-> > +		compatible = "ti,tmp421";
-> > +		reg = <0x1f>;
-> > +	};
-> > +};
-> > +
-> > +&i2c12 {
-> > +	//MEZZ_FRU
-> > +	status = "okay";
-> > +	eeprom@51 {
-> > +		compatible = "atmel,24c64";
-> > +		reg = <0x51>;
-> > +		pagesize = <32>;
-> > +	};
-> > +};
-> > +
-> > +&pwm_tacho {
-> > +	//FSC
-> > +	status = "okay";
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> > +	fan@0 {
-> > +		reg = <0x00>;
-> > +		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-> > +	};
-> > +	fan@1 {
-> > +		reg = <0x01>;
-> > +		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-> > +	};
-> > +};
-> > -- 
-> > 2.7.4
-> > 
-> >
+
+--=-FrLm7Huzs2OM/GGn8vDZ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Robin,
+
+On Thu, 2019-12-05 at 17:48 +0000, Robin Murphy wrote:
+> On 03/12/2019 11:47 am, Nicolas Saenz Julienne wrote:
+> > Some users need to make sure their rounding function accepts and return=
+s
+> > 64bit long variables regardless of the architecture. Sadly
+> > roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> > out ilog2() already handles 32/64bit calculations properly, and being
+> > the building block to the round functions we can rework them as a
+> > wrapper around it.
+>=20
+> Neat! Although all the additional ULL casts this introduces seem=20
+> somewhat unwelcome - I suppose the (1ULL << (ilog2(n))) makes it=20
+> effectively always return unsigned long long now. Might it make sense to=
+=20
+> cast the return value to typeof(n) to avoid this slightly non-obvious=20
+> behaviour (and the associated churn)?
+
+It might alleviate some of the churn alright but I don't think a cast is re=
+ally
+going to make the behaviour more obvious. Say your expression is a big mess=
+,
+you'll have to analyze it to infer the output type, keeping in mind things =
+like
+integer promotion. See this example, 'params->nelem_hint' and
+'params->min_size' are u16:
+
+	diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+	index bdb7e4cadf05..70908678c7a8 100644
+	--- a/lib/rhashtable.c
+	+++ b/lib/rhashtable.c
+	@@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhas=
+htable_params *params)
+
+		if (params->nelem_hint)
+			retsize =3D max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
+	-                             (unsigned long)params->min_size);
+	+                             (unsigned long long)params->min_size);
+		else
+			retsize =3D max(HASH_DEFAULT_SIZE,
+				      (unsigned long)params->min_size);
+
+With a cast the patch will look like this:
+
+	diff --git a/lib/rhashtable.c b/lib/rhashtable.c
+	index bdb7e4cadf05..70908678c7a8 100644
+	--- a/lib/rhashtable.c
+	+++ b/lib/rhashtable.c
+	@@ -950,7 +950,7 @@ static size_t rounded_hashtable_size(const struct rhas=
+htable_params *params)
+
+		if (params->nelem_hint)
+			retsize =3D max(roundup_pow_of_two(params->nelem_hint * 4 / 3),
+	-                             (unsigned long)params->min_size);
+	+                             (int)params->min_size);
+		else
+			retsize =3D max(HASH_DEFAULT_SIZE,
+				      (unsigned long)params->min_size);
+
+To me it's even less obvious than with a fixed ULL.
+
+My intuition tells me to keep it as similar as the old behaviour, at the
+expense of the extra churn (which is not that different from the current st=
+atus
+quo anyway). That said, I'll be happy to change it.
+
+Regards,
+Nicolas
+
+
+--=-FrLm7Huzs2OM/GGn8vDZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3yMz0ACgkQlfZmHno8
+x/50Nwf8DZv64TadvwE8CB4bWgsqMtbiu/fef5NUbUYuFUED8TIdE3BewSgcKkjR
+UcmnTnVxq9m204FNfGnEcHAS2TjDnv2GvkRDGKIAoXt2ewgnMSoS5cwHJrHfHLr9
+KX2ULSnGQqqtWEYGUe9h/hzd1mfC0gun3Mqafs1lQD7h2XeckKMt0iEa/WtfYGnP
+8UJbPU5wHnCJwEbQHCtc+mV/kcQfh+3u5OHh3O4KQHcBo5TJVJovpZ6jBV4uBV1G
+ePj2s84UCGZcXy1ZuwV2g32zpn8RgDXDWmdEgJ3hi1bTYZZzG4YQc2sTpjidvRB7
+86UCrw4pWQ/M0pNf1UdlDlf+jz7Njw==
+=1uX6
+-----END PGP SIGNATURE-----
+
+--=-FrLm7Huzs2OM/GGn8vDZ--
+
