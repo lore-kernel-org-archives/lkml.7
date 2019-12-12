@@ -2,238 +2,178 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D996C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B5AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE7E206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:10:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N4qCEueC"
+	by mail.kernel.org (Postfix) with ESMTP id 93025206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbfLLKKr (ORCPT
+        id S1728489AbfLLKNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:10:47 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:38538 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbfLLKKr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:10:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=cyHBd48uymSk+HX6YSv2rvFf3J2j8QaEFcl33tEALdE=; b=N4qCEueCWcdZtRUbvlyVh9ZNP
-        lrj8J1pNZhcMlaYy8vmD5JD90MgRyGhnk51G8izKkUm7AmcEVZj3LUolC+DV4l025qznUvwEBVwur
-        6hIqssj+0/BOUZTDyGmvVcRuuoIUu72pIuWnBxzxoX28U+c9a+nM5CvG8D17d6FRGvplmcamOHeJQ
-        uJWV6s2ASY8FXShBTPXJG0eKsItLD/A0zEeGlIPctzvBlO8AV/KOdQRbExpJeShpKJtSAKzx3iB4x
-        cT7uutJJHizOeLeHgEHVB8IDNvdYBuI9phlIUtUJ5gJgtUgBCis1UCUO0uOxInlbjeyrAsgxdQ8ng
-        aq0yiDyfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifLQY-0007AL-Vk; Thu, 12 Dec 2019 10:10:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B579C305FEE;
-        Thu, 12 Dec 2019 11:09:11 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 005FB2012196F; Thu, 12 Dec 2019 11:10:31 +0100 (CET)
-Date:   Thu, 12 Dec 2019 11:10:31 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Phil Auld <pauld@redhat.com>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v4] sched/core: Preempt current task in favour of bound
- kthread
-Message-ID: <20191212101031.GV2827@hirez.programming.kicks-ass.net>
-References: <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121132937.GW4114@hirez.programming.kicks-ass.net>
- <20191209165122.GA27229@linux.vnet.ibm.com>
- <20191209231743.GA19256@dread.disaster.area>
- <20191210054330.GF27253@linux.vnet.ibm.com>
- <20191210172307.GD9139@linux.vnet.ibm.com>
- <20191211173829.GB21797@linux.vnet.ibm.com>
- <20191211224617.GE19256@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211224617.GE19256@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 12 Dec 2019 05:13:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:41010 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbfLLKNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:13:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CCA2328;
+        Thu, 12 Dec 2019 02:13:44 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.199])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 03A913F6CF;
+        Thu, 12 Dec 2019 02:13:39 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH] arm64: Introduce ISAR6 CPU ID register
+Date:   Thu, 12 Dec 2019 15:44:23 +0530
+Message-Id: <1576145663-9909-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:46:17AM +1100, Dave Chinner wrote:
-> On Wed, Dec 11, 2019 at 11:08:29PM +0530, Srikar Dronamraju wrote:
-> > A running task can wake-up a per CPU bound kthread on the same CPU.
-> > If the current running task doesn't yield the CPU before the next load
-> > balance operation, the scheduler would detect load imbalance and try to
-> > balance the load. However this load balance would fail as the waiting
-> > task is CPU bound, while the running task cannot be moved by the regular
-> > load balancer. Finally the active load balancer would kick in and move
-> > the task to a different CPU/Core. Moving the task to a different
-> > CPU/core can lead to loss in cache affinity leading to poor performance.
-> > 
-> > This is more prone to happen if the current running task is CPU
-> > intensive and the sched_wake_up_granularity is set to larger value.
-> > When the sched_wake_up_granularity was relatively small, it was observed
-> > that the bound thread would complete before the load balancer would have
-> > chosen to move the cache hot task to a different CPU.
-> > 
-> > To deal with this situation, the current running task would yield to a
-> > per CPU bound kthread, provided kthread is not CPU intensive.
-> 
-> So a question for you here: when does the workqueue worker pre-empt
-> the currently running task? Is it immediately? Or when a time-slice
-> of the currently running task runs out?
-> 
-> We don't want queued work immediately pre-empting the task that
-> queued the work - the queued work is *deferred* work that should be
-> run _soon_ but we want the currently running task to finish what it
-> is doing first if possible. 
+This adds basic building blocks required for ISAR6 CPU ID register which
+identifies support for various instruction implementation on AArch32 state.
 
-Good point, something to maybe try (Srikar?) is making tick preemption
-more agressive for such tasks.
-
-The below extends the previous patch to retain the set_next_buddy() on
-wakeup, but does not make the actual preemption more agressive.
-
-Then it 'fixes' the tick preemption to better align with the actual
-scheduler pick (ie. consider the buddy hints).
-
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: James Morse <james.morse@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: kvmarm@lists.cs.columbia.edu
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- kernel/sched/core.c  |  3 +++
- kernel/sched/fair.c  | 26 +++++++++++++++++++-------
- kernel/sched/sched.h |  3 ++-
- 3 files changed, 24 insertions(+), 8 deletions(-)
+ arch/arm64/include/asm/cpu.h    | 1 +
+ arch/arm64/include/asm/sysreg.h | 9 +++++++++
+ arch/arm64/kernel/cpufeature.c  | 7 ++++++-
+ arch/arm64/kernel/cpuinfo.c     | 1 +
+ arch/arm64/kvm/sys_regs.c       | 2 +-
+ 5 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..75738b136ea7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2560,6 +2560,9 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 	success = 1;
- 	cpu = task_cpu(p);
+diff --git a/arch/arm64/include/asm/cpu.h b/arch/arm64/include/asm/cpu.h
+index d72d995..b4a4053 100644
+--- a/arch/arm64/include/asm/cpu.h
++++ b/arch/arm64/include/asm/cpu.h
+@@ -39,6 +39,7 @@ struct cpuinfo_arm64 {
+ 	u32		reg_id_isar3;
+ 	u32		reg_id_isar4;
+ 	u32		reg_id_isar5;
++	u32		reg_id_isar6;
+ 	u32		reg_id_mmfr0;
+ 	u32		reg_id_mmfr1;
+ 	u32		reg_id_mmfr2;
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 6db3a9b..4fd3327 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -146,6 +146,7 @@
+ #define SYS_ID_ISAR4_EL1		sys_reg(3, 0, 0, 2, 4)
+ #define SYS_ID_ISAR5_EL1		sys_reg(3, 0, 0, 2, 5)
+ #define SYS_ID_MMFR4_EL1		sys_reg(3, 0, 0, 2, 6)
++#define SYS_ID_ISAR6_EL1		sys_reg(3, 0, 0, 2, 7)
  
-+	if (is_per_cpu_kthread(p))
-+		wake_flags |= WF_KTHREAD;
+ #define SYS_MVFR0_EL1			sys_reg(3, 0, 0, 3, 0)
+ #define SYS_MVFR1_EL1			sys_reg(3, 0, 0, 3, 1)
+@@ -683,6 +684,14 @@
+ #define ID_ISAR5_AES_SHIFT		4
+ #define ID_ISAR5_SEVL_SHIFT		0
+ 
++#define ID_ISAR6_JSCVT_SHIFT		0
++#define ID_ISAR6_DP_SHIFT		4
++#define ID_ISAR6_FHM_SHIFT		8
++#define ID_ISAR6_SB_SHIFT		12
++#define ID_ISAR6_SPECRES_SHIFT		16
++#define ID_ISAR6_BF16_SHIFT		20
++#define ID_ISAR6_I8MM_SHIFT		24
 +
- 	/*
- 	 * Ensure we load p->on_rq _after_ p->state, otherwise it would
- 	 * be possible to, falsely, observe p->on_rq == 0 and get stuck
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 08a233e97a01..78e681c8c19a 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4126,6 +4126,9 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
- 		update_min_vruntime(cfs_rq);
- }
- 
-+static struct sched_entity *
-+__pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr);
-+
- /*
-  * Preempt the current task with a newly woken task if needed:
+ #define MVFR0_FPROUND_SHIFT		28
+ #define MVFR0_FPSHVEC_SHIFT		24
+ #define MVFR0_FPSQRT_SHIFT		20
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index f344cea..3b9ac8b 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -346,7 +346,7 @@ static const struct arm64_ftr_bits ftr_zcr[] = {
+  * Common ftr bits for a 32bit register with all hidden, strict
+  * attributes, with 4bit feature fields and a default safe value of
+  * 0. Covers the following 32bit registers:
+- * id_isar[0-4], id_mmfr[1-3], id_pfr1, mvfr[0-1]
++ * id_isar[0-4, 6], id_mmfr[1-3], id_pfr1, mvfr[0-1]
   */
-@@ -4156,13 +4159,13 @@ check_preempt_tick(struct cfs_rq *cfs_rq, struct sched_entity *curr)
- 	if (delta_exec < sysctl_sched_min_granularity)
- 		return;
+ static const struct arm64_ftr_bits ftr_generic_32bits[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, 28, 4, 0),
+@@ -399,6 +399,7 @@ static const struct __ftr_reg_entry {
+ 	ARM64_FTR_REG(SYS_ID_ISAR4_EL1, ftr_generic_32bits),
+ 	ARM64_FTR_REG(SYS_ID_ISAR5_EL1, ftr_id_isar5),
+ 	ARM64_FTR_REG(SYS_ID_MMFR4_EL1, ftr_id_mmfr4),
++	ARM64_FTR_REG(SYS_ID_ISAR6_EL1, ftr_generic_32bits),
  
--	se = __pick_first_entity(cfs_rq);
-+	se = __pick_next_entity(cfs_rq, NULL);
- 	delta = curr->vruntime - se->vruntime;
+ 	/* Op1 = 0, CRn = 0, CRm = 3 */
+ 	ARM64_FTR_REG(SYS_MVFR0_EL1, ftr_generic_32bits),
+@@ -603,6 +604,7 @@ void __init init_cpu_features(struct cpuinfo_arm64 *info)
+ 		init_cpu_ftr_reg(SYS_ID_ISAR3_EL1, info->reg_id_isar3);
+ 		init_cpu_ftr_reg(SYS_ID_ISAR4_EL1, info->reg_id_isar4);
+ 		init_cpu_ftr_reg(SYS_ID_ISAR5_EL1, info->reg_id_isar5);
++		init_cpu_ftr_reg(SYS_ID_ISAR6_EL1, info->reg_id_isar6);
+ 		init_cpu_ftr_reg(SYS_ID_MMFR0_EL1, info->reg_id_mmfr0);
+ 		init_cpu_ftr_reg(SYS_ID_MMFR1_EL1, info->reg_id_mmfr1);
+ 		init_cpu_ftr_reg(SYS_ID_MMFR2_EL1, info->reg_id_mmfr2);
+@@ -756,6 +758,8 @@ void update_cpu_features(int cpu,
+ 					info->reg_id_isar4, boot->reg_id_isar4);
+ 		taint |= check_update_ftr_reg(SYS_ID_ISAR5_EL1, cpu,
+ 					info->reg_id_isar5, boot->reg_id_isar5);
++		taint |= check_update_ftr_reg(SYS_ID_ISAR6_EL1, cpu,
++					info->reg_id_isar6, boot->reg_id_isar6);
  
- 	if (delta < 0)
- 		return;
- 
--	if (delta > ideal_runtime)
-+	if (delta > ideal_runtime) // maybe frob this too ?
- 		resched_curr(rq_of(cfs_rq));
- }
- 
-@@ -4210,7 +4213,7 @@ wakeup_preempt_entity(struct sched_entity *curr, struct sched_entity *se);
-  * 4) do not run the "skip" process, if something else is available
-  */
- static struct sched_entity *
--pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
-+__pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
- {
- 	struct sched_entity *left = __pick_first_entity(cfs_rq);
- 	struct sched_entity *se;
-@@ -4255,8 +4258,14 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
- 	if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
- 		se = cfs_rq->next;
- 
--	clear_buddies(cfs_rq, se);
-+	return se;
-+}
- 
-+static struct sched_entity *
-+pick_next_entity(struct cfs_rq *cfs_rq, struct sched_entity *curr)
-+{
-+	struct sched_entity *se = __pick_next_entity(cfs_rq, curr);
-+	clear_buddies(cfs_rq, se);
- 	return se;
- }
- 
-@@ -6565,7 +6574,7 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
- 	struct sched_entity *se = &curr->se, *pse = &p->se;
- 	struct cfs_rq *cfs_rq = task_cfs_rq(curr);
- 	int scale = cfs_rq->nr_running >= sched_nr_latency;
--	int next_buddy_marked = 0;
-+	int wpe, next_buddy_marked = 0;
- 
- 	if (unlikely(se == pse))
- 		return;
-@@ -6612,14 +6621,17 @@ static void check_preempt_wakeup(struct rq *rq, struct task_struct *p, int wake_
- 	find_matching_se(&se, &pse);
- 	update_curr(cfs_rq_of(se));
- 	BUG_ON(!pse);
--	if (wakeup_preempt_entity(se, pse) == 1) {
-+	wpe = wakeup_preempt_entity(se, pse);
-+	if (wpe >= !(wake_flags & WF_KTHREAD)) {
  		/*
- 		 * Bias pick_next to pick the sched entity that is
- 		 * triggering this preemption.
- 		 */
- 		if (!next_buddy_marked)
- 			set_next_buddy(pse);
--		goto preempt;
-+
-+		if (wpe == 1)
-+			goto preempt;
- 	}
+ 		 * Regardless of the value of the AuxReg field, the AIFSR, ADFSR, and
+@@ -834,6 +838,7 @@ static u64 __read_sysreg_by_encoding(u32 sys_id)
+ 	read_sysreg_case(SYS_ID_ISAR3_EL1);
+ 	read_sysreg_case(SYS_ID_ISAR4_EL1);
+ 	read_sysreg_case(SYS_ID_ISAR5_EL1);
++	read_sysreg_case(SYS_ID_ISAR6_EL1);
+ 	read_sysreg_case(SYS_MVFR0_EL1);
+ 	read_sysreg_case(SYS_MVFR1_EL1);
+ 	read_sysreg_case(SYS_MVFR2_EL1);
+diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
+index 10121f5..6005d38 100644
+--- a/arch/arm64/kernel/cpuinfo.c
++++ b/arch/arm64/kernel/cpuinfo.c
+@@ -362,6 +362,7 @@ static void __cpuinfo_store_cpu(struct cpuinfo_arm64 *info)
+ 		info->reg_id_isar3 = read_cpuid(ID_ISAR3_EL1);
+ 		info->reg_id_isar4 = read_cpuid(ID_ISAR4_EL1);
+ 		info->reg_id_isar5 = read_cpuid(ID_ISAR5_EL1);
++		info->reg_id_isar6 = read_cpuid(ID_ISAR6_EL1);
+ 		info->reg_id_mmfr0 = read_cpuid(ID_MMFR0_EL1);
+ 		info->reg_id_mmfr1 = read_cpuid(ID_MMFR1_EL1);
+ 		info->reg_id_mmfr2 = read_cpuid(ID_MMFR2_EL1);
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 7dadd24..a6b8ca1 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1424,7 +1424,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 	ID_SANITISED(ID_ISAR4_EL1),
+ 	ID_SANITISED(ID_ISAR5_EL1),
+ 	ID_SANITISED(ID_MMFR4_EL1),
+-	ID_UNALLOCATED(2,7),
++	ID_SANITISED(ID_ISAR6_EL1),
  
- 	return;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 280a3c735935..2ee86ef51001 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1643,7 +1643,8 @@ static inline int task_on_rq_migrating(struct task_struct *p)
-  */
- #define WF_SYNC			0x01		/* Waker goes to sleep after wakeup */
- #define WF_FORK			0x02		/* Child wakeup after fork */
--#define WF_MIGRATED		0x4		/* Internal use, task got migrated */
-+#define WF_MIGRATED		0x04		/* Internal use, task got migrated */
-+#define WF_KTHREAD		0x08
- 
- /*
-  * To aid in avoiding the subversion of "niceness" due to uneven distribution
+ 	/* CRm=3 */
+ 	ID_SANITISED(MVFR0_EL1),
+-- 
+2.7.4
+
