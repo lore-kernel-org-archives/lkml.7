@@ -2,192 +2,108 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD9AC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC958C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA1420836
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="p/udZ5qz"
+	by mail.kernel.org (Postfix) with ESMTP id AA0D4206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfLLCmQ (ORCPT
+        id S1727821AbfLLCoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:42:16 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:36192 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727711AbfLLCmO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:42:14 -0500
-X-UUID: 49be14c84ce946e7bee7f3ddfcb08bfd-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=gJIOv/AINP2oPlEBoJSoZwQ465CauMnNdU2csE2E0pQ=;
-        b=p/udZ5qzlT3hsQp2FKfl+yyH3SpbVDOZff2q+fT1lrBOubbryXhWiPeIb1KdZktoxUBluYDjuwyxzCe6SYYgm36xXQBMC8FOPRGYkDI6UCoreaKJeUy0kolXBEOgGWtHNVm/vMGeCWhrQ4L+8DmTRMefcfVqGVahj7MH+wODNOY=;
-X-UUID: 49be14c84ce946e7bee7f3ddfcb08bfd-20191212
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1591258915; Thu, 12 Dec 2019 10:42:08 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 10:41:07 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 10:42:03 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Biao Huang <biao.huang@mediatek.com>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>
-Subject: [PATCH 1/2] net-next: stmmac: mediatek: add more suuport for RMII
-Date:   Thu, 12 Dec 2019 10:41:44 +0800
-Message-ID: <20191212024145.21752-2-biao.huang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191212024145.21752-1-biao.huang@mediatek.com>
-References: <20191212024145.21752-1-biao.huang@mediatek.com>
+        Wed, 11 Dec 2019 21:44:34 -0500
+Received: from mga01.intel.com ([192.55.52.88]:5564 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbfLLCoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:44:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 18:44:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,304,1571727600"; 
+   d="scan'208";a="225754041"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 18:44:31 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] iommu/vt-d bad RMRR workarounds
+To:     Barret Rhoden <brho@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Yian Chen <yian.chen@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>
+References: <20191211194606.87940-1-brho@google.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <35f49464-0ce5-9998-12a0-624d9683ea18@linux.intel.com>
+Date:   Thu, 12 Dec 2019 10:43:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: C35C7151B8083C092FE073C2C47996ED59A6B3EF44C7EEC93DB7245D0F38379A2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191211194606.87940-1-brho@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TVQyNzEyIFNvQyBjYW4gcHJvdmlkZSB0aGUgcm1paSByZWZlcmVuY2UgY2xvY2ssIGFuZCB0aGUg
-Y2xvY2sNCndpbGwgb3V0cHV0IGZyb20gVFhDIHBpbiBvbmx5LCB3aGljaCBtZWFucyByZWZfY2xr
-IHBpbiBvZiBleHRlcm5hbA0KUEhZIHNob3VsZCBjb25uZWN0IHRvIFRYQyBwaW4gaW4gdGhpcyBj
-YXNlLg0KQWRkIGNvcnJlc3BvbmRpbmcgY2xvY2sgYW5kIHRpbWluZyBzZXR0aW5ncy4NCg0KU2ln
-bmVkLW9mZi1ieTogQmlhbyBIdWFuZyA8Ymlhby5odWFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiAu
-Li4vZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtbWVkaWF0ZWsuYyAgfCA4NSArKysrKysr
-KysrKysrLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDYwIGluc2VydGlvbnMoKyksIDI1IGRlbGV0
-aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1t
-YWMvZHdtYWMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L3N0bWljcm8vc3RtbWFj
-L2R3bWFjLW1lZGlhdGVrLmMNCmluZGV4IGJkYjgwNDIxYWNhYy4uYWYyNDk1NGM3NjU0IDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtbWVkaWF0
-ZWsuYw0KKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvc3RtaWNyby9zdG1tYWMvZHdtYWMtbWVk
-aWF0ZWsuYw0KQEAgLTUxLDEwICs1MSwxMiBAQCBzdHJ1Y3QgbWVkaWF0ZWtfZHdtYWNfcGxhdF9k
-YXRhIHsNCiAJY29uc3Qgc3RydWN0IG1lZGlhdGVrX2R3bWFjX3ZhcmlhbnQgKnZhcmlhbnQ7DQog
-CXN0cnVjdCBtYWNfZGVsYXlfc3RydWN0IG1hY19kZWxheTsNCiAJc3RydWN0IGNsa19idWxrX2Rh
-dGEgKmNsa3M7DQorCXN0cnVjdCBjbGsgKm1hY19ybWlpX2NsazsNCiAJc3RydWN0IGRldmljZV9u
-b2RlICpucDsNCiAJc3RydWN0IHJlZ21hcCAqcGVyaV9yZWdtYXA7DQogCXN0cnVjdCBkZXZpY2Ug
-KmRldjsNCiAJcGh5X2ludGVyZmFjZV90IHBoeV9tb2RlOw0KKwlib29sIHJtaWlfY2xrX2Zyb21f
-bWFjOw0KIAlib29sIHJtaWlfcnhjOw0KIH07DQogDQpAQCAtNzgsNiArODAsNyBAQCBzdGF0aWMg
-Y29uc3QgY2hhciAqIGNvbnN0IG10MjcxMl9kd21hY19jbGtfbFtdID0gew0KIA0KIHN0YXRpYyBp
-bnQgbXQyNzEyX3NldF9pbnRlcmZhY2Uoc3RydWN0IG1lZGlhdGVrX2R3bWFjX3BsYXRfZGF0YSAq
-cGxhdCkNCiB7DQorCWludCBybWlpX2Nsa19mcm9tX21hYyA9IHBsYXQtPnJtaWlfY2xrX2Zyb21f
-bWFjID8gUk1JSV9DTEtfU1JDX0lOVEVSTkFMIDogMDsNCiAJaW50IHJtaWlfcnhjID0gcGxhdC0+
-cm1paV9yeGMgPyBSTUlJX0NMS19TUkNfUlhDIDogMDsNCiAJdTMyIGludGZfdmFsID0gMDsNCiAN
-CkBAIC04Nyw3ICs5MCw3IEBAIHN0YXRpYyBpbnQgbXQyNzEyX3NldF9pbnRlcmZhY2Uoc3RydWN0
-IG1lZGlhdGVrX2R3bWFjX3BsYXRfZGF0YSAqcGxhdCkNCiAJCWludGZfdmFsIHw9IFBIWV9JTlRG
-X01JSTsNCiAJCWJyZWFrOw0KIAljYXNlIFBIWV9JTlRFUkZBQ0VfTU9ERV9STUlJOg0KLQkJaW50
-Zl92YWwgfD0gKFBIWV9JTlRGX1JNSUkgfCBybWlpX3J4Yyk7DQorCQlpbnRmX3ZhbCB8PSAoUEhZ
-X0lOVEZfUk1JSSB8IHJtaWlfcnhjIHwgcm1paV9jbGtfZnJvbV9tYWMpOw0KIAkJYnJlYWs7DQog
-CWNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJOg0KIAljYXNlIFBIWV9JTlRFUkZBQ0VfTU9E
-RV9SR01JSV9UWElEOg0KQEAgLTE3MywzNSArMTc2LDUwIEBAIHN0YXRpYyBpbnQgbXQyNzEyX3Nl
-dF9kZWxheShzdHJ1Y3QgbWVkaWF0ZWtfZHdtYWNfcGxhdF9kYXRhICpwbGF0KQ0KIAkJZGVsYXlf
-dmFsIHw9IEZJRUxEX1BSRVAoRVRIX0RMWV9SWENfSU5WLCBtYWNfZGVsYXktPnJ4X2ludik7DQog
-CQlicmVhazsNCiAJY2FzZSBQSFlfSU5URVJGQUNFX01PREVfUk1JSToNCi0JCS8qIHRoZSBybWlp
-IHJlZmVyZW5jZSBjbG9jayBpcyBmcm9tIGV4dGVybmFsIHBoeSwNCi0JCSAqIGFuZCB0aGUgcHJv
-cGVydHkgInJtaWlfcnhjIiBpbmRpY2F0ZXMgd2hpY2ggcGluKFRYQy9SWEMpDQotCQkgKiB0aGUg
-cmVmZXJlbmNlIGNsayBpcyBjb25uZWN0ZWQgdG8uIFRoZSByZWZlcmVuY2UgY2xvY2sgaXMgYQ0K
-LQkJICogcmVjZWl2ZWQgc2lnbmFsLCBzbyByeF9kZWxheS9yeF9pbnYgYXJlIHVzZWQgdG8gaW5k
-aWNhdGUNCi0JCSAqIHRoZSByZWZlcmVuY2UgY2xvY2sgdGltaW5nIGFkanVzdG1lbnQNCi0JCSAq
-Lw0KLQkJaWYgKHBsYXQtPnJtaWlfcnhjKSB7DQotCQkJLyogdGhlIHJtaWkgcmVmZXJlbmNlIGNs
-b2NrIGZyb20gb3V0c2lkZSBpcyBjb25uZWN0ZWQNCi0JCQkgKiB0byBSWEMgcGluLCB0aGUgcmVm
-ZXJlbmNlIGNsb2NrIHdpbGwgYmUgYWRqdXN0ZWQNCi0JCQkgKiBieSBSWEMgZGVsYXkgbWFjcm8g
-Y2lyY3VpdC4NCi0JCQkgKi8NCi0JCQlkZWxheV92YWwgfD0gRklFTERfUFJFUChFVEhfRExZX1JY
-Q19FTkFCTEUsICEhbWFjX2RlbGF5LT5yeF9kZWxheSk7DQotCQkJZGVsYXlfdmFsIHw9IEZJRUxE
-X1BSRVAoRVRIX0RMWV9SWENfU1RBR0VTLCBtYWNfZGVsYXktPnJ4X2RlbGF5KTsNCi0JCQlkZWxh
-eV92YWwgfD0gRklFTERfUFJFUChFVEhfRExZX1JYQ19JTlYsIG1hY19kZWxheS0+cnhfaW52KTsN
-Ci0JCX0gZWxzZSB7DQotCQkJLyogdGhlIHJtaWkgcmVmZXJlbmNlIGNsb2NrIGZyb20gb3V0c2lk
-ZSBpcyBjb25uZWN0ZWQNCi0JCQkgKiB0byBUWEMgcGluLCB0aGUgcmVmZXJlbmNlIGNsb2NrIHdp
-bGwgYmUgYWRqdXN0ZWQNCi0JCQkgKiBieSBUWEMgZGVsYXkgbWFjcm8gY2lyY3VpdC4NCisJCWlm
-IChwbGF0LT5ybWlpX2Nsa19mcm9tX21hYykgew0KKwkJCS8qIGNhc2UgMTogbWFjIHByb3ZpZGVz
-IHRoZSBybWlpIHJlZmVyZW5jZSBjbG9jaywNCisJCQkgKiBhbmQgdGhlIGNsb2NrIG91dHB1dCB0
-byBUWEMgcGluLg0KKwkJCSAqIFRoZSBlZ3Jlc3MgdGltaW5nIGNhbiBiZSBhZGp1c3RlZCBieSBH
-VFhDIGRlbGF5IG1hY3JvIGNpcmN1aXQuDQorCQkJICogVGhlIGluZ3Jlc3MgdGltaW5nIGNhbiBi
-ZSBhZGp1c3RlZCBieSBUWEMgZGVsYXkgbWFjcm8gY2lyY3VpdC4NCiAJCQkgKi8NCiAJCQlkZWxh
-eV92YWwgfD0gRklFTERfUFJFUChFVEhfRExZX1RYQ19FTkFCTEUsICEhbWFjX2RlbGF5LT5yeF9k
-ZWxheSk7DQogCQkJZGVsYXlfdmFsIHw9IEZJRUxEX1BSRVAoRVRIX0RMWV9UWENfU1RBR0VTLCBt
-YWNfZGVsYXktPnJ4X2RlbGF5KTsNCiAJCQlkZWxheV92YWwgfD0gRklFTERfUFJFUChFVEhfRExZ
-X1RYQ19JTlYsIG1hY19kZWxheS0+cnhfaW52KTsNCisNCisJCQlkZWxheV92YWwgfD0gRklFTERf
-UFJFUChFVEhfRExZX0dUWENfRU5BQkxFLCAhIW1hY19kZWxheS0+dHhfZGVsYXkpOw0KKwkJCWRl
-bGF5X3ZhbCB8PSBGSUVMRF9QUkVQKEVUSF9ETFlfR1RYQ19TVEFHRVMsIG1hY19kZWxheS0+dHhf
-ZGVsYXkpOw0KKwkJCWRlbGF5X3ZhbCB8PSBGSUVMRF9QUkVQKEVUSF9ETFlfR1RYQ19JTlYsIG1h
-Y19kZWxheS0+dHhfaW52KTsNCisJCX0gZWxzZSB7DQorCQkJLyogY2FzZSAyOiB0aGUgcm1paSBy
-ZWZlcmVuY2UgY2xvY2sgaXMgZnJvbSBleHRlcm5hbCBwaHksDQorCQkJICogYW5kIHRoZSBwcm9w
-ZXJ0eSAicm1paV9yeGMiIGluZGljYXRlcyB3aGljaCBwaW4oVFhDL1JYQykNCisJCQkgKiB0aGUg
-cmVmZXJlbmNlIGNsayBpcyBjb25uZWN0ZWQgdG8uIFRoZSByZWZlcmVuY2UgY2xvY2sgaXMgYQ0K
-KwkJCSAqIHJlY2VpdmVkIHNpZ25hbCwgc28gcnhfZGVsYXkvcnhfaW52IGFyZSB1c2VkIHRvIGlu
-ZGljYXRlDQorCQkJICogdGhlIHJlZmVyZW5jZSBjbG9jayB0aW1pbmcgYWRqdXN0bWVudA0KKwkJ
-CSAqLw0KKwkJCWlmIChwbGF0LT5ybWlpX3J4Yykgew0KKwkJCQkvKiB0aGUgcm1paSByZWZlcmVu
-Y2UgY2xvY2sgZnJvbSBvdXRzaWRlIGlzIGNvbm5lY3RlZA0KKwkJCQkgKiB0byBSWEMgcGluLCB0
-aGUgcmVmZXJlbmNlIGNsb2NrIHdpbGwgYmUgYWRqdXN0ZWQNCisJCQkJICogYnkgUlhDIGRlbGF5
-IG1hY3JvIGNpcmN1aXQuDQorCQkJCSAqLw0KKwkJCQlkZWxheV92YWwgfD0gRklFTERfUFJFUChF
-VEhfRExZX1JYQ19FTkFCTEUsICEhbWFjX2RlbGF5LT5yeF9kZWxheSk7DQorCQkJCWRlbGF5X3Zh
-bCB8PSBGSUVMRF9QUkVQKEVUSF9ETFlfUlhDX1NUQUdFUywgbWFjX2RlbGF5LT5yeF9kZWxheSk7
-DQorCQkJCWRlbGF5X3ZhbCB8PSBGSUVMRF9QUkVQKEVUSF9ETFlfUlhDX0lOViwgbWFjX2RlbGF5
-LT5yeF9pbnYpOw0KKwkJCX0gZWxzZSB7DQorCQkJCS8qIHRoZSBybWlpIHJlZmVyZW5jZSBjbG9j
-ayBmcm9tIG91dHNpZGUgaXMgY29ubmVjdGVkDQorCQkJCSAqIHRvIFRYQyBwaW4sIHRoZSByZWZl
-cmVuY2UgY2xvY2sgd2lsbCBiZSBhZGp1c3RlZA0KKwkJCQkgKiBieSBUWEMgZGVsYXkgbWFjcm8g
-Y2lyY3VpdC4NCisJCQkJICovDQorCQkJCWRlbGF5X3ZhbCB8PSBGSUVMRF9QUkVQKEVUSF9ETFlf
-VFhDX0VOQUJMRSwgISFtYWNfZGVsYXktPnJ4X2RlbGF5KTsNCisJCQkJZGVsYXlfdmFsIHw9IEZJ
-RUxEX1BSRVAoRVRIX0RMWV9UWENfU1RBR0VTLCBtYWNfZGVsYXktPnJ4X2RlbGF5KTsNCisJCQkJ
-ZGVsYXlfdmFsIHw9IEZJRUxEX1BSRVAoRVRIX0RMWV9UWENfSU5WLCBtYWNfZGVsYXktPnJ4X2lu
-dik7DQorCQkJfQ0KKwkJCS8qIHR4X2ludiB3aWxsIGludmVyc2UgdGhlIHR4IGNsb2NrIGluc2lk
-ZSBtYWMgcmVsYXRlaXZlIHRvDQorCQkJICogcmVmZXJlbmNlIGNsb2NrIGZyb20gZXh0ZXJuYWwg
-cGh5LA0KKwkJCSAqIGFuZCB0aGlzIGJpdCBpcyBsb2NhdGVkIGluIHRoZSBzYW1lIHJlZ2lzdGVy
-IHdpdGggZmluZS10dW5lDQorCQkJICovDQorCQkJaWYgKG1hY19kZWxheS0+dHhfaW52KQ0KKwkJ
-CQlmaW5lX3ZhbCA9IEVUSF9STUlJX0RMWV9UWF9JTlY7DQogCQl9DQotCQkvKiB0eF9pbnYgd2ls
-bCBpbnZlcnNlIHRoZSB0eCBjbG9jayBpbnNpZGUgbWFjIHJlbGF0ZWl2ZSB0bw0KLQkJICogcmVm
-ZXJlbmNlIGNsb2NrIGZyb20gZXh0ZXJuYWwgcGh5LA0KLQkJICogYW5kIHRoaXMgYml0IGlzIGxv
-Y2F0ZWQgaW4gdGhlIHNhbWUgcmVnaXN0ZXIgd2l0aCBmaW5lLXR1bmUNCi0JCSAqLw0KLQkJaWYg
-KG1hY19kZWxheS0+dHhfaW52KQ0KLQkJCWZpbmVfdmFsID0gRVRIX1JNSUlfRExZX1RYX0lOVjsN
-CiAJCWJyZWFrOw0KIAljYXNlIFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSToNCiAJY2FzZSBQSFlf
-SU5URVJGQUNFX01PREVfUkdNSUlfVFhJRDoNCkBAIC0yNzgsNiArMjk2LDcgQEAgc3RhdGljIGlu
-dCBtZWRpYXRla19kd21hY19jb25maWdfZHQoc3RydWN0IG1lZGlhdGVrX2R3bWFjX3BsYXRfZGF0
-YSAqcGxhdCkNCiAJbWFjX2RlbGF5LT50eF9pbnYgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wocGxh
-dC0+bnAsICJtZWRpYXRlayx0eGMtaW52ZXJzZSIpOw0KIAltYWNfZGVsYXktPnJ4X2ludiA9IG9m
-X3Byb3BlcnR5X3JlYWRfYm9vbChwbGF0LT5ucCwgIm1lZGlhdGVrLHJ4Yy1pbnZlcnNlIik7DQog
-CXBsYXQtPnJtaWlfcnhjID0gb2ZfcHJvcGVydHlfcmVhZF9ib29sKHBsYXQtPm5wLCAibWVkaWF0
-ZWsscm1paS1yeGMiKTsNCisJcGxhdC0+cm1paV9jbGtfZnJvbV9tYWMgPSBvZl9wcm9wZXJ0eV9y
-ZWFkX2Jvb2wocGxhdC0+bnAsICJtZWRpYXRlayxybWlpLWNsay1mcm9tLW1hYyIpOw0KIA0KIAly
-ZXR1cm4gMDsNCiB9DQpAQCAtMjg3LDYgKzMwNiwxNiBAQCBzdGF0aWMgaW50IG1lZGlhdGVrX2R3
-bWFjX2Nsa19pbml0KHN0cnVjdCBtZWRpYXRla19kd21hY19wbGF0X2RhdGEgKnBsYXQpDQogCWNv
-bnN0IHN0cnVjdCBtZWRpYXRla19kd21hY192YXJpYW50ICp2YXJpYW50ID0gcGxhdC0+dmFyaWFu
-dDsNCiAJaW50IGksIG51bSA9IHZhcmlhbnQtPm51bV9jbGtzOw0KIA0KKwlwbGF0LT5tYWNfcm1p
-aV9jbGsgPSBOVUxMOw0KKwlpZiAocGxhdC0+cGh5X21vZGUgPT0gUEhZX0lOVEVSRkFDRV9NT0RF
-X1JNSUkgJiYNCisJICAgIHBsYXQtPnJtaWlfY2xrX2Zyb21fbWFjKSB7DQorCQlwbGF0LT5tYWNf
-cm1paV9jbGsgPSBkZXZtX2Nsa19nZXQocGxhdC0+ZGV2LCAicm1paV9pbnRlcm5hbCIpOw0KKwkJ
-aWYgKElTX0VSUihwbGF0LT5tYWNfcm1paV9jbGspKSB7DQorCQkJZGV2X2VycihwbGF0LT5kZXYs
-ICJGYWlsZWQgdG8gZ2V0IHJlZmVyZW5jZSBjbGsgZnJvbSBNQUNcbiIpOw0KKwkJCXJldHVybiBQ
-VFJfRVJSKHBsYXQtPm1hY19ybWlpX2Nsayk7DQorCQl9DQorCX0NCisNCiAJcGxhdC0+Y2xrcyA9
-IGRldm1fa2NhbGxvYyhwbGF0LT5kZXYsIG51bSwgc2l6ZW9mKCpwbGF0LT5jbGtzKSwgR0ZQX0tF
-Uk5FTCk7DQogCWlmICghcGxhdC0+Y2xrcykNCiAJCXJldHVybiAtRU5PTUVNOw0KQEAgLTMyNyw2
-ICszNTYsOSBAQCBzdGF0aWMgaW50IG1lZGlhdGVrX2R3bWFjX2luaXQoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldiwgdm9pZCAqcHJpdikNCiAJCXJldHVybiByZXQ7DQogCX0NCiANCisJaWYg
-KHBsYXQtPm1hY19ybWlpX2NsaykNCisJCWNsa19wcmVwYXJlX2VuYWJsZShwbGF0LT5tYWNfcm1p
-aV9jbGspOw0KKw0KIAlwbV9ydW50aW1lX2VuYWJsZSgmcGRldi0+ZGV2KTsNCiAJcG1fcnVudGlt
-ZV9nZXRfc3luYygmcGRldi0+ZGV2KTsNCiANCkBAIC0zMzgsNiArMzcwLDkgQEAgc3RhdGljIHZv
-aWQgbWVkaWF0ZWtfZHdtYWNfZXhpdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCB2b2lk
-ICpwcml2KQ0KIAlzdHJ1Y3QgbWVkaWF0ZWtfZHdtYWNfcGxhdF9kYXRhICpwbGF0ID0gcHJpdjsN
-CiAJY29uc3Qgc3RydWN0IG1lZGlhdGVrX2R3bWFjX3ZhcmlhbnQgKnZhcmlhbnQgPSBwbGF0LT52
-YXJpYW50Ow0KIA0KKwlpZiAocGxhdC0+bWFjX3JtaWlfY2xrKQ0KKwkJY2xrX2Rpc2FibGVfdW5w
-cmVwYXJlKHBsYXQtPm1hY19ybWlpX2Nsayk7DQorDQogCWNsa19idWxrX2Rpc2FibGVfdW5wcmVw
-YXJlKHZhcmlhbnQtPm51bV9jbGtzLCBwbGF0LT5jbGtzKTsNCiANCiAJcG1fcnVudGltZV9wdXRf
-c3luYygmcGRldi0+ZGV2KTsNCi0tIA0KMi4xOC4wDQo=
+Hi,
 
+On 12/12/19 3:46 AM, Barret Rhoden via iommu wrote:
+> I can imagine a bunch of ways around this.
+> 
+> One option is to hook in a check for buggy RMRRs in intel-iommu.c.  If
+> the base and end are 0, just ignore the entry.  That works for my
+> specific buggy DMAR entry.  There might be other buggy entries out
+> there.  The docs specify some requirements on the base and end (called
+> limit) addresses.
+> 
+> Another option is to change the sanity check so that unmapped ranges are
+> considered OK.  That would work for my case, but only because we're
+> hiding the firmware bug: my DMAR has a bad RMRR that happens to fall into a
+> reserved or non-existent range.  The downside here is that we'd
+> presumably be setting up an IOMMU mapping for this bad RMRR.  But at
+> least it's not pointing to any RAM we're using.  (That's actually what
+> goes on in the current, non-kexec case for me.  Phys page 0 is marked
+> RESERVED, and I have an RMRR that points to it.)  This option also would
+> cover any buggy firmwares that use an actual RMRR that pointed to memory
+> that was omitted from the e820 map.
+> 
+> A third option: whenever the RMRR sanity check fails, just ignore it and
+> return 0.  Don't set up the rmrru.  Right now, we completely abort DMAR
+> processing.  If there was an actual device that needed to poke this
+> memory that failed the sanity check (meaning, not RESERVED, currently),
+> then we're already in trouble; that device could clobber RAM, right?  If
+> we're going to use the IOMMU, I'd rather the device be behind an IOMMU
+> with*no*  mapping for the region, so it couldn't clobber whatever we
+> happened to put in that location.
+> 
+> I actually think all three options are reasonable ideas independently of
+> one another.  This patchset that does all three.  Please take at least
+> one of them.  =)  (May require a slight revision if you don't take all
+> of them).
+
+The VT-d spec defines the BIOS considerations about RMRR in section 8.4:
+
+"
+BIOS must report the RMRR reported memory addresses as reserved (or as
+EFI runtime) in the system memory map returned through methods such as
+INT15, EFI GetMemoryMap etc.
+"
+
+So we should treat it as firmware bug if the RMRR range is not mapped as
+RESERVED in the system memory map table.
+
+As for how should the driver handle this case, ignoring buggy RMRR with
+a warning message might be a possible choice.
+
+Best regards,
+baolu
