@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509EBC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59769C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190D122B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5CD2464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576145101;
-	bh=11rEOhYWnjVXqpyH3rGRJQkaEsv5c1B3E0SRgOsOeYk=;
+	s=default; t=1576145128;
+	bh=L2H9eq8pC7K4HaH1T4Q10TccCc43XUdeO6k9HfYmDFg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MBKTk6hKMZID3m7s2vzapHRyL51o4MKl32LnO8X5VgCkQtqyb3rkTjgfUKD/emYua
-	 JoT+vMVGrPuwvl1yisOTwxl/Z1DgOWVTDoX5WHa8Kg9knLbmhvtCjngu+yLflWl2F2
-	 Mbvw9p2FdGgcwFMtMxPodBnV6urIELWlqnRRhVOA=
+	b=c1iYJAwmTL/COFamheXC9iIFsD3MzK6LvhnM1s5hElkUkwej51YfwojXxJaA7C4Fs
+	 1qbGEAILApUpL1/fOKPcmI2/yA45JM5Bx6Kih/6lh98Ey9XhiPOqibhwEzKNWzFjmn
+	 SJizErPv5ZcKv8INcKR5WzdWsS6E1T/ofRDsLRR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbfLLKFA (ORCPT
+        id S1728533AbfLLKF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:05:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53564 "EHLO mail.kernel.org"
+        Thu, 12 Dec 2019 05:05:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfLLKFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:05:00 -0500
+        id S1728423AbfLLKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:05:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0485D20663;
-        Thu, 12 Dec 2019 10:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0ABF20663;
+        Thu, 12 Dec 2019 10:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576145099;
-        bh=11rEOhYWnjVXqpyH3rGRJQkaEsv5c1B3E0SRgOsOeYk=;
+        s=default; t=1576145126;
+        bh=L2H9eq8pC7K4HaH1T4Q10TccCc43XUdeO6k9HfYmDFg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=noXV4RI8bGZncabj3M23nHzJmczfIsPuT0DMvclGhHTYujzZ468c7W4fzED91NG/O
-         509vWpy/Ko2CkyUcjMfgtR18AKu33FItXt2Yuahi09T0JPI+bYnQ5znkC/cY6Q8fEG
-         S1ee1hcrdVkEtRGkKou8aJ101ygFliPVjM4dW/oc=
-Date:   Thu, 12 Dec 2019 11:04:56 +0100
+        b=EDOc2ZGUt/abj6G/lXs+5IE1nNhJXDIZPphShyoCpUad4moXA7a9ydRDdwuMHnBrg
+         egoxdBmP/73w0Q0dkNqwxUKNm6vQrwmGoxgQAAEY6USgr26DroMBXEOw53x4Uw3KSA
+         m4jUcjrv1UHUdIMSbX9vksSBkPpnmh25NmJcZM6o=
+Date:   Thu, 12 Dec 2019 11:05:24 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191212100456.GB1470066@kroah.com>
-References: <20191211150221.153659747@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+Message-ID: <20191212100524.GC1470066@kroah.com>
+References: <20191211150339.185439726@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211150221.153659747@linuxfoundation.org>
+In-Reply-To: <20191211150339.185439726@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.16 release.
-> There are 105 patches in this series, all will be posted as a response
+On Wed, Dec 11, 2019 at 04:02:42PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.89 release.
+> There are 243 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -68,10 +68,12 @@ On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
 > and the diffstat can be found below.
 
-I have pushed out -rc2 with a number of additional fixes:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc2.gz
+I have pushed out -rc2 with a bunch of fixes for existing issues, and
+some new fixes:
+ 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc2.gz
+
