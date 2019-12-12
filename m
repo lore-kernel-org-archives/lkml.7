@@ -2,101 +2,217 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC908C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE64AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A650D206C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4B2206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FG29BMip"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h4+/GDMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbfLLStJ (ORCPT
+        id S1730578AbfLLSt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:49:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52096 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730454AbfLLStJ (ORCPT
+        Thu, 12 Dec 2019 13:49:29 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:54978 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730261AbfLLSt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:49:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576176548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qpXCGeo7xgW2LT0AqWyUEsSRJ1ASgG9iQOrS7V8eA/g=;
-        b=FG29BMip5qUvXiqlLjmDcXe2y2OEG+l34URyI0N1PrHAxTwms8QV7AgTt4c++E5hIkTRJN
-        cGDI5ISuv41WoUD2tr+YZEJEts2MSIknmLRKFJE6OllSveE131t+OIibLTNYjPNXm/fA2w
-        bL1RGTU3wHbb2rj0UcVNximIlv5QomQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-214-XWVqn2iyPxqbWS4-CexswA-1; Thu, 12 Dec 2019 13:49:04 -0500
-X-MC-Unique: XWVqn2iyPxqbWS4-CexswA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D582911E9;
-        Thu, 12 Dec 2019 18:49:03 +0000 (UTC)
-Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8880310013A1;
-        Thu, 12 Dec 2019 18:49:01 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 12:48:59 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: mmotm 2019-12-10-19-14 uploaded (objtool: func() falls through)
-Message-ID: <20191212184859.zjj2ycfkvpcns5bk@treble>
-References: <20191211031432.iyKVQ6m9n%akpm@linux-foundation.org>
- <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <07777464-b9d8-ff1d-41d9-f62cc44f09f3@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 12 Dec 2019 13:49:29 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCInLfG071241;
+        Thu, 12 Dec 2019 18:49:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=N7OiLiDxfNSz8gMex3+M5cE14OOq9s6Ys8OUR2rcXG0=;
+ b=h4+/GDMX/2KD7HPS7BFf5+6UKN6o+9IWmTFi+k9Z6KG9JJbhOewEUD7LrywEX0LB4p23
+ c5eapsksQpZi9Z36/2MoZXDsrHTfHydK7mQcOhlQ5TlcMoBs8JR5n4hX3oZ6H+g4WTL8
+ +P60cHjiyp64AxjiAlfzM9g4DDqOL7SeryuvFwMcfrT5U+5nSr8OkkNIpuiVtYghHTOu
+ BEgYZa/HboQBJQ6ZaA/vwRg5RVB8JbbJL/LHOsMSNNHtEbvfCUa2NvRyruO9HrRuVguq
+ Xpaq4DGvC/ViSZN5kEGxdr/fkNUJMZBdMETE753mmiudW7D2bDVb5GSo161AnxwLK9Ag Dw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2wr4qrvtsq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:49:21 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCIiCUX192075;
+        Thu, 12 Dec 2019 18:47:20 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2wumu4htc3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:47:20 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xBCIlIhc002062;
+        Thu, 12 Dec 2019 18:47:19 GMT
+Received: from [192.168.14.112] (/109.65.223.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 10:47:18 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20191212182238.46535-3-brho@google.com>
+Date:   Thu, 12 Dec 2019 20:47:13 +0200
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
+References: <20191212182238.46535-1-brho@google.com>
+ <20191212182238.46535-3-brho@google.com>
+To:     Barret Rhoden <brho@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:31:08AM -0800, Randy Dunlap wrote:
-> On 12/10/19 7:14 PM, Andrew Morton wrote:
-> > The mm-of-the-moment snapshot 2019-12-10-19-14 has been uploaded to
-> > 
-> >    http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > mmotm-readme.txt says
-> > 
-> > README for mm-of-the-moment:
-> > 
-> > http://www.ozlabs.org/~akpm/mmotm/
-> > 
-> > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > more than once a week.
-> > 
-> > You will need quilt to apply these patches to the latest Linus release (5.x
-> > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > http://ozlabs.org/~akpm/mmotm/series
-> > 
-> > The file broken-out.tar.gz contains two datestamp files: .DATE and
-> > .DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
-> > followed by the base kernel version against which this patch series is to
-> > be applied.
-> 
-> on x86_64:
-> 
-> drivers/hwmon/f71882fg.o: warning: objtool: f71882fg_update_device() falls through to next function show_pwm_auto_point_temp_hyst()
-> drivers/ide/ide-probe.o: warning: objtool: hwif_register_devices() falls through to next function hwif_release_dev()
-> drivers/ide/ide-probe.o: warning: objtool: ide_host_remove() falls through to next function ide_disable_port()
 
-Randy, can you share the .o files?
 
--- 
-Josh
+> On 12 Dec 2019, at 20:22, Barret Rhoden <brho@google.com> wrote:
+>=20
+> This change allows KVM to map DAX-backed files made of huge pages with
+> huge mappings in the EPT/TDP.
+
+This change isn=E2=80=99t only relevant for TDP. It also affects when =
+KVM use shadow-paging.
+See how FNAME(page_fault)() calls transparent_hugepage_adjust().
+
+>=20
+> DAX pages are not PageTransCompound.  The existing check is trying to
+> determine if the mapping for the pfn is a huge mapping or not.
+
+I would rephrase =E2=80=9CThe existing check is trying to determine if =
+the pfn
+is mapped as part of a transparent huge-page=E2=80=9D.
+
+> For
+> non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
+
+This is not related to hugetlbfs but rather THP.
+
+> For DAX, we can check the page table itself.
+>=20
+> Note that KVM already faulted in the page (or huge page) in the host's
+> page table, and we hold the KVM mmu spinlock.  We grabbed that lock in
+> kvm_mmu_notifier_invalidate_range_end, before checking the mmu seq.
+>=20
+> Signed-off-by: Barret Rhoden <brho@google.com>
+
+I don=E2=80=99t think the right place to change for this functionality =
+is transparent_hugepage_adjust()
+which is meant to handle PFNs that are mapped as part of a transparent =
+huge-page.
+
+For example, this would prevent mapping DAX-backed file page as 1GB.
+As transparent_hugepage_adjust() only handles the case (level =3D=3D =
+PT_PAGE_TABLE_LEVEL).
+
+As you are parsing the page-tables to discover the page-size the PFN is =
+mapped in,
+I think you should instead modify kvm_host_page_size() to parse =
+page-tables instead
+of rely on vma_kernel_pagesize() (Which relies on =
+vma->vm_ops->pagesize()) in case
+of is_zone_device_page().
+The main complication though of doing this is that at this point you =
+don=E2=80=99t yet have the PFN
+that is retrieved by try_async_pf(). So maybe you should consider =
+modifying the order of calls
+in tdp_page_fault() & FNAME(page_fault)().
+
+-Liran
+
+> ---
+> arch/x86/kvm/mmu/mmu.c | 31 +++++++++++++++++++++++++++----
+> 1 file changed, 27 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 7269130ea5e2..ea8f6951398b 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -3328,6 +3328,30 @@ static void direct_pte_prefetch(struct kvm_vcpu =
+*vcpu, u64 *sptep)
+> 	__direct_pte_prefetch(vcpu, sp, sptep);
+> }
+>=20
+> +static bool pfn_is_huge_mapped(struct kvm *kvm, gfn_t gfn, kvm_pfn_t =
+pfn)
+> +{
+> +	struct page *page =3D pfn_to_page(pfn);
+> +	unsigned long hva;
+> +
+> +	if (!is_zone_device_page(page))
+> +		return PageTransCompoundMap(page);
+> +
+> +	/*
+> +	 * DAX pages do not use compound pages.  The page should have =
+already
+> +	 * been mapped into the host-side page table during =
+try_async_pf(), so
+> +	 * we can check the page tables directly.
+> +	 */
+> +	hva =3D gfn_to_hva(kvm, gfn);
+> +	if (kvm_is_error_hva(hva))
+> +		return false;
+> +
+> +	/*
+> +	 * Our caller grabbed the KVM mmu_lock with a successful
+> +	 * mmu_notifier_retry, so we're safe to walk the page table.
+> +	 */
+> +	return dev_pagemap_mapping_shift(hva, current->mm) > PAGE_SHIFT;
+> +}
+> +
+> static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+> 					gfn_t gfn, kvm_pfn_t *pfnp,
+> 					int *levelp)
+> @@ -3342,8 +3366,8 @@ static void transparent_hugepage_adjust(struct =
+kvm_vcpu *vcpu,
+> 	 * here.
+> 	 */
+> 	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> -	    !kvm_is_zone_device_pfn(pfn) && level =3D=3D =
+PT_PAGE_TABLE_LEVEL &&
+> -	    PageTransCompoundMap(pfn_to_page(pfn))) {
+> +	    level =3D=3D PT_PAGE_TABLE_LEVEL &&
+> +	    pfn_is_huge_mapped(vcpu->kvm, gfn, pfn)) {
+> 		unsigned long mask;
+>=20
+> 		/*
+> @@ -5957,8 +5981,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct =
+kvm *kvm,
+> 		 * mapping if the indirect sp has level =3D 1.
+> 		 */
+> 		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> -		    !kvm_is_zone_device_pfn(pfn) &&
+> -		    PageTransCompoundMap(pfn_to_page(pfn))) {
+> +		    pfn_is_huge_mapped(kvm, sp->gfn, pfn)) {
+> 			pte_list_remove(rmap_head, sptep);
+>=20
+> 			if (kvm_available_flush_tlb_with_range())
+> --=20
+> 2.24.0.525.g8f36a354ae-goog
+>=20
 
