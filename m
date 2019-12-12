@@ -2,107 +2,124 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD2DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ADCC00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B630321655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576171166;
-	bh=N8mhtSMLeEYjIp8ID5qUMzhNvTk/aPYyWjeD9bG0b6c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zCp5+9sMqq9RykvVOacay/Xp5xYpeELm/VTrxckUgQIw2r+suDt1XzqSI2W38G378
-	 DOot43MVQm0Es3XKxdJHCl17tSgSvUd+bTdq3bAA6UXDyJ8DZ0EqIhfEZpmvfymJwg
-	 7d9aF6f6Z9ocnuW6/eyoUb368IU8dJhfZFd8EHKc=
+	by mail.kernel.org (Postfix) with ESMTP id 78AFF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbfLLRTZ (ORCPT
+        id S1730110AbfLLRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:19:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:54264 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbfLLRTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:19:25 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C24430E;
-        Thu, 12 Dec 2019 09:19:24 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF2B83F6CF;
-        Thu, 12 Dec 2019 09:19:23 -0800 (PST)
-Date:   Thu, 12 Dec 2019 17:19:22 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC 04/25] spi: gpio: Implement LSB First bitbang support
-Message-ID: <20191212171922.GM4310@sirena.org.uk>
-References: <20191212033952.5967-1-afaerber@suse.de>
- <20191212033952.5967-5-afaerber@suse.de>
- <CAMuHMdWdxJ9AaWhyCW-u8fCpXSDCPd-D6Dx129SF5nRssZsK=g@mail.gmail.com>
- <9b4b6287-c1d9-1b41-88a8-7ac9fe222642@suse.de>
+        Thu, 12 Dec 2019 12:22:18 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:58995 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730088AbfLLRWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:22:18 -0500
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mj8eD-1i3LX32Hp7-00fE1F; Thu, 12 Dec 2019 18:22:16 +0100
+Received: by mail-qk1-f170.google.com with SMTP id w127so2219464qkb.11;
+        Thu, 12 Dec 2019 09:22:16 -0800 (PST)
+X-Gm-Message-State: APjAAAV3JJfgqfCWg55UnQ4BYdJLe4Y7djylzfe0312Fm5kJuSQb2+vU
+        EomzlytEcYFXwuk/UKdSUAHizRE4NTV7OZE/n4Y=
+X-Google-Smtp-Source: APXvYqz76ALLRIJrqi+qSs7WB11jyOhj3HEjIAoyxGME6zc4jj521Lx7pQv8mFjzWan8um1MNJW2peDA5RFrLV5hGTA=
+X-Received: by 2002:a37:84a:: with SMTP id 71mr8936277qki.138.1576171335225;
+ Thu, 12 Dec 2019 09:22:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EOHJn1TVIJfeVXv2"
-Content-Disposition: inline
-In-Reply-To: <9b4b6287-c1d9-1b41-88a8-7ac9fe222642@suse.de>
-X-Cookie: We have DIFFERENT amounts of HAIR --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-21-arnd@arndb.de>
+ <20191212162947.GC27991@infradead.org>
+In-Reply-To: <20191212162947.GC27991@infradead.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 12 Dec 2019 18:21:58 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a26-6ttEdcnJQX2PtCcY_PPDV1UFK8CTogd7uDOm3iu9w@mail.gmail.com>
+Message-ID: <CAK8P3a26-6ttEdcnJQX2PtCcY_PPDV1UFK8CTogd7uDOm3iu9w@mail.gmail.com>
+Subject: Re: [PATCH 20/24] compat_ioctl: move HDIO ioctl handling into drivers/ide
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        IDE-ML <linux-ide@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:D7jHZfHVOQ7tAIyJwnkf58cg53tIgVu/C17Q6iZNRGfT3olvpS5
+ VkwOgmnp7/GbbfpknbF9wc+dxx2kVxKfCrlR8pPVyxHhJ/C4COjkXg+zjsJVff6jkxhD1Oi
+ Q6yOj0XGzOlpLOL7KrzOIp+oOQwJzT1Z3ZhnGy5c7gNa4oXuD8CmWB8xIVMSI/rfgVjqSMs
+ p5XMLwAgW8K4MbmjCYcIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FU1A32JE3M4=:aYSHuAm6vjlM6cxi7EHjV+
+ HPpc5PxdE0EWflUOE3+3Jiukcq36kzIyZ9ilVdYgDh0tp1p298UqNhpjRJGuWVG82D1543cwD
+ IvqC5Hf0mI2tQ6ntUGILMqaDPIox+ssjChH7ug3YTOQiL9SQWeFRmW4Fyy7ct0AhtrQig5nny
+ AgHqQ5aM9d57bTiO3TUrqLEAJAAFH2wGb25f7cz8VW0gXW+paGBR/MDMHB1tJs7DrKA04ZVp8
+ HwoX2RLA9YtAo3Zmq3H43rQzZ4TPPHv6xFv2p9z/Ufyvo9bmGqeKyksWBlKjf2m5YTGH9wn89
+ liMMJzHrq5K8ZHiFBY8JJXG2wNeoXcHjpsA77DefhgadbF2eBSTXggvxGIY4uyZRNbr7UZjOh
+ TfUxF+vsf1KDuedgSEYByWnQ8gKz5ofJXNG2Zm6m3MoMhygxidrGvb2Hpaj+4TBTRBPDcfcsj
+ 3Q2n8DtaWo8Gh0zAtUhRBcSyI784D/j8taVKuDVbpsv/dljjym11vMKKukU9dX7axlpu80krn
+ exIRhuXIUhHeYIFZNTKbaQ1LDz9kuhY05nE3Fpx7Wv4c1knRcNnvrhPjJ7vZIhoWlR9x6KAw+
+ wa8znN9ZPNnO5XsEc0Gddh3MyhR6W3KjgdMKjUOM/R7kxq9EQ4Qj/u64ZHbji3lvLoiCeWbdm
+ +Qk2DuUDoJGlgg2g936llFiE5kJWr0jvT8fGhZ56TWsGEqkfC6LT3dsmDpGShMCmsrAPuR3AF
+ seuNajI82RFFWX1fqJcsEaL7o3gOiJkAX/BHC6rPRRMBmjTRjwUpXj6YQwX7fG/UYNgUoQYkh
+ 6skkPp6ZmW1AHXrf8z6LY59JqRSWY1OZ8nNr8lg7+4cH+Fk/6KrooRg7YBzMVQ6YAGioiYKmT
+ gZAZld80yuJIv1ImIHpA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Dec 12, 2019 at 5:29 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> > +static int put_user_long(long val, unsigned long arg)
+> > +{
+> > +#ifdef CONFIG_COMPAT
+> > +     if (in_compat_syscall())
+> > +             return put_user(val, (compat_long_t __user *)compat_ptr(arg));
+> > +#endif
+> > +     return put_user(val, (long __user *)arg);
+> > +}
+>
+> We had this
+>
+> #ifdef CONFIG_COMPAT
+>         if (in_compat_syscall())
+>                 ...
+>         ...
+> #endif
+>
+> patter quite frequently.  Can we define a in_compat_syscall stub
+> and make sure compat_ptr and the compat_* types are available available
+> to clean this up a bit?
 
---EOHJn1TVIJfeVXv2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+in_compat_syscall() already has a reasonable stub, what was missing
+when I created this series is the compat_long_t definition and
+the compat_ptr() helper.
 
-On Thu, Dec 12, 2019 at 04:14:59PM +0100, Andreas F=E4rber wrote:
-> Am 12.12.19 um 09:40 schrieb Geert Uytterhoeven:
-> > On Thu, Dec 12, 2019 at 4:41 AM Andreas F=E4rber <afaerber@suse.de> wro=
-te:
-> >> Add support for slave DT property spi-lsb-first, i.e., SPI_LSB_FIRST m=
-ode.
+With patch 01/24, we can rely on the types, but I still need to add
+a generic compat_ptr() implementation for non-s390 to remove the
+#ifdef here.
 
-> >> Duplicate the inline helpers bitbang_txrx_be_cpha{0,1} as LE versions.
-> >> Make checkpatch.pl happy by changing "unsigned" to "unsigned int".
+That is probably a good idea anyway, it just needs a bit of testing.
+The last time I tried this, I ran into problems with the order of compat
+header inclusions on some architectures.
 
-Separate patch for this?
+I've made a prototype now, will see how it goes.
 
-> So from that angle I don't see a better way than either duplicating the
-> functions or using some macro magic to #include the header twice. If we
-> wanted to go down that path, we could probably de-duplicate the existing
-> two functions, too, but I was trying to err on the cautious side, since
-> I don't have setups to test all four code paths myself (and a ton of
-> more relevant but less fun patches to flush out ;)).
+> > -     if (NULL == (void *) arg) {
+> > +     if (NULL == argp) {
+>
+>         if (!argp) {
+>
+> ?
 
-Yeah, I don't think there's any great options here with the potential
-performance issues - probably the nicest thing would be to autogenerate
-lots of variants but I think that's far more trouble than it's worth.
+changed now.
 
---EOHJn1TVIJfeVXv2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ydpkACgkQJNaLcl1U
-h9Crxwf9Hh/o+0lRcCax6Pd2t3iPgF+uG4xJ6LUUNfzNsOdYWHhRoEJC3NQAdbh+
-erqhW4a1HuHtkFy9hM1gCLsfRyr9eA3x0+xVgj9WsbOe11mebr08oS+BaPHU2yUT
-4XgXr/Fyi1s2x6q3R9C48jEGRyKy6nCKC9Lkh8dXitfznpmufSAEKzkYxZLo8hPs
-At9L7La3QdwGjOTgHJ0DZD9Q6gQpsjhzWA8fkgHwzwjGsaw6pZair0XkaBPcg3/q
-xyZyIzQejgHy5DhWRg9m+WSsoARvtMwSGv+061AOmafWOPBgAWM2z1wCH/+F0jqM
-q/B0X6vyCHo7spdDxq+dhgsXrkrcBQ==
-=OqPq
------END PGP SIGNATURE-----
-
---EOHJn1TVIJfeVXv2--
+      Arnd
