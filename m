@@ -2,137 +2,74 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45484C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DFDC2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2641A214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AD6227BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:07:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576148822;
+	bh=Y0loDw+uKFeN7cf78aOvQigklGH6Ys0zQRFUm0ZVYuQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KBdiUiQ/q60lw9Lqs3xq1V5GcN6u5Hmb9GwSW7ZaNBEiI8HPjxXZMm8dCe5yY3eFm
+	 XkIHJbg1KHUS24oqjTZXkQ2pCDMw8Zt3sMiXrLQmpsVegi+Jma0nCcv2yGZetGRS1t
+	 hQRaWlhgHrT4R8IB5cw7eXDHMfXsIToCUyg97fFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfLLLFi (ORCPT
+        id S1728872AbfLLLHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:05:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:42710 "EHLO foss.arm.com"
+        Thu, 12 Dec 2019 06:07:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbfLLLFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:05:37 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3911328;
-        Thu, 12 Dec 2019 03:05:36 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4693E3F718;
-        Thu, 12 Dec 2019 03:05:35 -0800 (PST)
-Date:   Thu, 12 Dec 2019 11:05:31 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-Message-ID: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
-In-Reply-To: <20191211201725.GA30513@google.com>
-References: <20191211201725.GA30513@google.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S1728613AbfLLLHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 06:07:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F3D2067C;
+        Thu, 12 Dec 2019 11:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576148820;
+        bh=Y0loDw+uKFeN7cf78aOvQigklGH6Ys0zQRFUm0ZVYuQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Tuv5lWkKG9kriUxqdbH5FxuUH9XO3guojzxKaKZd+KUI1T8MVOL6B7LBUfWoPhe8H
+         q84SwjIt4mJwXWZkE0CpFYt/x6lDVIea1uiurG7NAuwJ8Pu+KH2rKSMhpch/OAKHXg
+         wyJnS0ybv0P5RM2PSrgZnTk48ns+Ht87FPCFyNbU=
+Date:   Thu, 12 Dec 2019 12:06:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-serial@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Hyunki Koo <kkoos00@naver.com>,
+        HYUN-KI KOO <hyunki00.koo@samsung.com>,
+        Shinbeom Choi <sbeom.choi@samsung.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/10] tty: serial: samsung.h: fix up minor comment issues
+Message-ID: <20191212110658.GA1490894@kroah.com>
+References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
+ <20191210143706.3928480-3-gregkh@linuxfoundation.org>
+ <20191210151204.GH11222@pi3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191210151204.GH11222@pi3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/12/2019 20:17, Bjorn Helgaas wrote:
-
-Hi Bjorn,
-
-> On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
->> On Tue, 10 Dec 2019 08:41:15 -0600
->> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
->>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
->>>>
->>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
->>>> prominently config space accesses to not existing BDFs being answered
->>>> with a bus abort, resulting in an SError.  
->>>
->>> Can we tease this apart a little more?  Linux doesn't program all the
->>> bits that control error signaling, so even on hardware that works
->>> perfectly, much of this behavior is determined by what firmware did.
->>> I wonder if Linux could be more careful about this.
->>>
->>> "Bus abort" is not a term used in PCIe.
->>
->> Yes, sorry, that was my sloppy term, also aiming more at the CPU
->> side of the bus, between the cores and the RC.
->>
->>>  IIUC, a config read to a
->>> device that doesn't exist should terminate with an Unsupported Request
->>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
->>
->> Yes, that's what Lorenzo mentioned as well.
->>
->>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
->>> Figures 6-2 and 6-3 show how it should be handled and when it should
->>> be signaled as a system error.  In case you don't have a copy of the
->>> spec, I extracted those two figures and put them at [1].
->>
->> Thanks for that.
->> So in the last few months we tossed several ideas around how to
->> work-around this without kernel intervention, all of them turned out
->> to be not working. There are indeed registers in the RC that
->> influence error reporting to the CPU side, but even if we could
->> suppress (or catch) the SError, we can't recover and fixup the read
->> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
->> understood this, there are gates missing which are supposed to
->> translate this specific UR into a valid "all-1s" response.
+On Tue, Dec 10, 2019 at 04:12:04PM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Dec 10, 2019 at 03:36:59PM +0100, Greg Kroah-Hartman wrote:
+> > checkpatch found some minor issues with comments in samsung.h, so fix
+> > that up.
+> >
 > 
-> But the commit log says firmware scanned the bus (catching the
-> SErrors).  Shouldn't Linux be able to catch them the same way?
+> No, you remove this header two patches later. No point to fix checkpatch
+> issues here.
 
-Not really. The scanning is done by the SCP management processor, which is a Cortex-M class core on the same bus. So it's a simple, single core running very early after power-on, when the actual AP cores are still off. The SError handler is set to just increase a value, then to return. This value is then checked before and after a config space access for a given
-BDF: https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
+It's nice to delete "clean" files :)
 
-On the AP cores that run Linux later on this is quite different: The SError is asynchronous, imprecise (inexact) and has no syndrome information. That means we can't attribute this anymore to the faulting instruction, we don't even know if it happened due to this config space access. The CPU might have executed later instructions already, so the state is broken at this point. SError basically means: the system is screwed up.
-Because this is quite common for SErrors, we don't even allow to register SError handlers in arm64 Linux.
-
-So even if we could somehow handle this is in Linux, it would be a much greater and intrusive hack, so I'd rather stick with this version.
- 
-> The "all-1s" response directly from hardware is typical of most
-> platforms, but I don't think it's strictly required by the PCIe spec
-> and I don't think it's absolutely essential even to Linux.  If you can
-> catch the SErrors, isn't there a way for software to fabricate that
-> all-1s data and continue after the read?
-
-That was an idea we had as well, but due to the points mentioned above this is not possible.
-
->>> Even ECAM compliance is not really minor -- if this controller were
->>> fully compliant with the spec, you would need ZERO Linux changes to
->>> support it.  Every quirk like this means additional maintenance
->>> burden, and it's not just a one-time thing.  It means old kernels that
->>> *should* "just work" on your system will not work unless somebody
->>> backports the quirk.
->>
->> I am well aware of that, and we had quite some discussions
->> internally, with quite some opposition.  ...
-> 
-> The main point is that *future* silicon should be designed to avoid
-> this issue.  I hope at least that part was not controversial.
-
-Yes, the design goal was to be completely standards (SBSA, ACPI, ECAM) compliant, it was just the usual "things happen" that wasn't spotted in time.
-
-> If we want to take advantage of the generic PCI code supplied by
-> Linux, we have to expect that the hardware will play by the rules of
-> PCI.
-
-You don't need to convince me ;-), but I think the lesson has been learned.
-
-Cheers,
-Andre.
