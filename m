@@ -2,108 +2,144 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367FFC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8DFC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF5B24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840B82253D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576169489;
-	bh=ha1oJ+XfdAiiI+ZLka5cmqHdgxJHJMMpmkdWe3C2Rs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OlzZW/LgMx2OiDsr+NVn+ieaaUcgSxwEzH5TIyth6klN1MO8AVgnWgaLK8mi5da6N
-	 b5sgXV5CQ4WlEzYSkHkQ5ZUB+JIjikk9vlb9jqT8tG19OzNTehiRpKgM6TwfuA3ZY/
-	 PWDrXWT98JLp9IXebFhPumroXM3XO5ORW11HSXDg=
+	s=default; t=1576169498;
+	bh=OTgNoShvczWigPHfi27mmifYw0Tx76wnXRDeBIbcfQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YDfEYPUUVTq3jGVo4LFdRzR2VSd/5/55E9MPB/S/7/Kaai+fiA3I9xI0wHGrHDr14
+	 jusEiJv/NVNvO6MjsmxHCDNGm5Ctcx8MeTMfjlZjNSfxD5yi35ffJt2n2BcnEdVqNh
+	 Semp4nB3+IxLvomJJxJmcaRXqPqFThdhG3BOuwuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfLLQv2 (ORCPT
+        id S1730017AbfLLQvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:51:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:53290 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729804AbfLLQv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:51:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3E3630E;
-        Thu, 12 Dec 2019 08:51:26 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 431F63F6CF;
-        Thu, 12 Dec 2019 08:51:26 -0800 (PST)
-Date:   Thu, 12 Dec 2019 16:51:24 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "andrew@aj.id.au" <andrew@aj.id.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>
-Subject: Re: [PATCH v3 3/6] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Message-ID: <20191212165124.GJ4310@sirena.org.uk>
-References: <20191129172537.31410-1-m.felsch@pengutronix.de>
- <20191129172537.31410-4-m.felsch@pengutronix.de>
- <20191204134631.GT1998@sirena.org.uk>
- <20191210094144.mxximpuouchy3fqu@pengutronix.de>
- <AM5PR1001MB099497419E4DCA69D424EC35805A0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20191211170918.q7kqkd4lrwwp7jl3@pengutronix.de>
- <20191212161019.GF4310@sirena.org.uk>
- <20191212162152.5uu3feacduetysq7@pengutronix.de>
+        Thu, 12 Dec 2019 11:51:37 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35977 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729804AbfLLQvh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:51:37 -0500
+Received: by mail-ot1-f66.google.com with SMTP id i4so2664973otr.3;
+        Thu, 12 Dec 2019 08:51:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XsNHcoXojvn1TcE1nuLVaSYl2O55IiSy7eZOYf0Q2mU=;
+        b=Ds8tcD/+8UTS2Exjg55SdWLE7JLnsXy1P/UhYBqeupvZm8P1Xy2TWOUN1dKYX9lr3b
+         xHIsBrck2o98fB4G/dgrdiSiVQLNtzfRVPDdpBD1hZtaR9pnuocg2AO3IVyFUDM2nmoK
+         1rYKhT8Jn0hMFfOdBY+QFHe9uy7Pqa63TGXD+/9zW/lYKfu0royzLWCtQPDfZnpuHsBR
+         9KlkUtppp026NWi9INKbCX0bq3Gy4BQcI3bWyBBQWhFQ/rj0o/I6yiQl1/pOTgZ6gPqc
+         TMD7IxPa1r561L9IJpAUeFeXEQeM5VC8mwRQqsMAXAXYiyZa7pJdUQA89lnufOryztq2
+         qSZQ==
+X-Gm-Message-State: APjAAAXazOKePaWNZGyv4CiZ97K3ZwZHDF+3MvUYkIyfNyYVCIukOm07
+        0ryQBh8aYHSd6IS0asoM6uUfXl7PVtuGr5HZOdvpdA==
+X-Google-Smtp-Source: APXvYqxE+Jl9B/h8Hy01Gvlb4q+48YkA/CIUasZspMNTMfDGUXyoTeLzs+Hy/f0FzbkiwnpuyYygly7gpJmsAesQuDE=
+X-Received: by 2002:a05:6830:95:: with SMTP id a21mr8624849oto.167.1576169496091;
+ Thu, 12 Dec 2019 08:51:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZG+WKzXzVby2T9Ro"
-Content-Disposition: inline
-In-Reply-To: <20191212162152.5uu3feacduetysq7@pengutronix.de>
-X-Cookie: We have DIFFERENT amounts of HAIR --
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2691942.bH9KnLg61H@kreacher>
+In-Reply-To: <2691942.bH9KnLg61H@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 12 Dec 2019 17:51:25 +0100
+Message-ID: <CAJZ5v0hy1ERxCjVsYN0wtxbWxJOXhCg_MeTEPONqRs_YE53Bgg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU offline
+To:     Linux PM <linux-pm@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Dec 11, 2019 at 11:28 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> The scheduler code calling cpufreq_update_util() may run during CPU
+> offline on the target CPU after the IRQ work lists have been flushed
+> for it, so the target CPU should be prevented from running code that
+> may queue up an IRQ work item on it at that point.
+>
+> Unfortunately, that may not be the case if dvfs_possible_from_any_cpu
+> is set for at least one cpufreq policy in the system, because that
+> allows the CPU going offline to run the utilization update callback
+> of the cpufreq governor on behalf of another (online) CPU in some
+> cases.
+>
+> If that happens, the cpufreq governor callback may queue up an IRQ
+> work on the CPU running it, which is going offline, and the IRQ work
+> will not be flushed after that point.  Moreover, that IRQ work cannot
+> be flushed until the "offlining" CPU goes back online, so if any
+> other CPU calls irq_work_sync() to wait for the completion of that
+> IRQ work, it will have to wait until the "offlining" CPU is back
+> online and that may not happen forever.  In particular, a system-wide
+> deadlock may occur during CPU online as a result of that.
+>
+> The failing scenario is as follows.  CPU0 is the boot CPU, so it
+> creates a cpufreq policy and becomes the "leader" of it
+> (policy->cpu).  It cannot go offline, because it is the boot CPU.
+> Next, other CPUs join the cpufreq policy as they go online and they
+> leave it when they go offline.  The last CPU to go offline, say CPU3,
+> may queue up an IRQ work while running the governor callback on
+> behalf of CPU0 after leaving the cpufreq policy because of the
+> dvfs_possible_from_any_cpu effect described above.  Then, CPU0 is
+> the only online CPU in the system and the stale IRQ work is still
+> queued on CPU3.  When, say, CPU1 goes back online, it will run
+> irq_work_sync() to wait for that IRQ work to complete and so it
+> will wait for CPU3 to go back online (which may never happen even
+> in principle), but (worse yet) CPU0 is waiting for CPU1 at that
+> point too and a system-wide deadlock occurs.
+>
+> To address this problem notice that CPUs which cannot run cpufreq
+> utilization update code for themselves (for example, because they
+> have left the cpufreq policies that they belonged to), should also
+> be prevented from running that code on behalf of the other CPUs that
+> belong to a cpufreq policy with dvfs_possible_from_any_cpu set and so
+> in that case the cpufreq_update_util_data pointer of the CPU running
+> the code must not be NULL as well as for the CPU which is the target
+> of the cpufreq utilization update in progress.
+>
+> Accordingly, change cpufreq_this_cpu_can_update() into a regular
+> function in kernel/sched/cpufreq.c (instead of a static inline in a
+> header file) and make it check the cpufreq_update_util_data pointer
+> of the local CPU if dvfs_possible_from_any_cpu is set for the target
+> cpufreq policy.
+>
+> Also update the schedutil governor to do the
+> cpufreq_this_cpu_can_update() check in the non-fast-switch
+> case too to avoid the stale IRQ work issues.
+>
+> Fixes: 99d14d0e16fa ("cpufreq: Process remote callbacks from any CPU if the platform permits")
+> Link: https://lore.kernel.org/linux-pm/20191121093557.bycvdo4xyinbc5cb@vireshk-i7/
+> Reported-by: Anson Huang <anson.huang@nxp.com>
+> Cc: 4.14+ <stable@vger.kernel.org> # 4.14+
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>
+> Peter,
+>
+> The reason why I want to address the issue this way is because IMO
+> the right place to do the check is the cpufreq governor.  Governors
+> that don't use cpufreq_this_cpu_can_update() at all don't need to
+> worry as well as governors that don't use IRQ works.
+>
+> The cpufreq governor is given an opportunity to update the frequency
+> of the CPU and it needs to decide whether or not to really do that.
+>
+> Please let me know if you have any concerns.
 
---ZG+WKzXzVby2T9Ro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Dec 12, 2019 at 05:21:53PM +0100, Marco Felsch wrote:
-
-> "... what's driving the input ..":
-> Sorry I didn't get you here. What did you mean? The input is driven by
-> the host. This can be any gpio line and in my case it is a gpio line
-> driven by the soc-hw during a suspend operation.
-
-Something needs to say what that thing is, especially if it's runtime
-controllable.  In your case from the point of view of software there is
-actually no enable control so we shouldn't be providing an enable
-operation to the framework.
-
---ZG+WKzXzVby2T9Ro
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ycAwACgkQJNaLcl1U
-h9B0+Af/VqUSeJpE19kobOJNyxukShzWkjvn9zBGGTGch6WlXuTTNWPT3to6NmBZ
-h9MnIKzpjLfRlv6iAlnWJRxzMh5yeAZv7BBOwdqpO+pLwsJ/xcTpcT8IEqioaIYx
-Vgq3TQKDv5I9NJoz33MUu6RZ/FwFcPx7rF+9Hs/O43gAjeQy4EW4o25ZTqSJivZe
-BXocX/5YTPwTuFBpYbLLvu0YX/joFGU50yiN3IcMPUMWkf8My0aSD5FjWZDTZD07
-+KMKZi5qHkLZ1icKON2BhiYDMNH69+ormalcBZMrXiS7rVeoIGQ+d4ox2l+Osieq
-J3w1vPOljnw05pXWu43tWEgA2h9ung==
-=OQvA
------END PGP SIGNATURE-----
-
---ZG+WKzXzVby2T9Ro--
+Given the response so far this doesn't seem to be controversial, so
+I'm going to queue it up for 5.5.
