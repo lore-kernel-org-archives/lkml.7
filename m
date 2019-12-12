@@ -2,101 +2,99 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB49C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2751C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA012077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="GdElbodE"
+	by mail.kernel.org (Postfix) with ESMTP id AA81D22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:41:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576158117;
+	bh=eKIpRDx+zfn9tjbkvPcwD44F+RZgeuddmRcdxODecF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A6qZ2reWCH/OtS1jr/NzGs9Tb6PeeEUnnypGna+V5psz7QoqyIV1kak9Z7IGyz7Kl
+	 45Erz8f2vdV1WzjTZkyT9AVJf5C5SEkHw/JRMj3kgmtTmDtxV8f4OZItzbYtweiz1F
+	 B1LrVjbhUSK0u0wkwAK5lFwoGK1I1G1D8yuEKSEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbfLLNlT (ORCPT
+        id S1729535AbfLLNl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:41:19 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:43783 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729429AbfLLNlS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:41:18 -0500
-Received: by mail-pj1-f66.google.com with SMTP id g4so1048207pjs.10
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 05:41:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=K1dcdOatOeVeFsIQxT5aEB0ANkvhzz2V9qjht9zfLUs=;
-        b=GdElbodEdxjlTrBwa3I6J+sEs4W2s8EoeCX3lxYPy4O5JSwTyZcODXGJSRA1xj4/Th
-         5RtnvwUWSB2afNeAL6+3jSXcezJ6aTZ2Ul1yCG9FnmvdgLq0A/BabGqxJQXU4aLQibFm
-         sZaLkJC5i3jZy2lEJbSUwiAQSB4z7dLoQktt4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=K1dcdOatOeVeFsIQxT5aEB0ANkvhzz2V9qjht9zfLUs=;
-        b=eq/l1C0NSGLFX431zY8p6/F3eEK/yFATW6GMrSWpxbwcprNf7FZQCnI/aE6YyAwh46
-         JU8/l4wKRZOejQG1yUno2sCXNg/WqXlqs7VJLWaT5FIa73dxvcWn5Uf3/9TJlFkGd2U6
-         BEbUvB1adY/wbNLh07Elry3pP8YWirtohaWc3uS7k2mV50Kj7/MJoIiM86UueVKnePz6
-         PHKPViUznnQtTZge2/w7uU7Cpufb0SpwhvA5NI5I2S4aGMBYRLqLrwV8KzqyFxfzgRh2
-         89ljzP8nho2LVcB6/c/xsiMWm3xE4Hb2+/TbAjRQpjZY5O98BZHGeDRvShCwbq09h2ix
-         Pnow==
-X-Gm-Message-State: APjAAAVGQ9nBzlJo388+sEdWWtFQcHWLSt//n69ENklxQh2b55dbkakt
-        h7f1byYcBOtUNe3f0OYrCfR00Q==
-X-Google-Smtp-Source: APXvYqzPs6Cbt1MwcGO7Ifn/65S78x+5CnY2vxScmtjpazHyalO6+YCcj2OzBuBrETruOG5iKaL2pw==
-X-Received: by 2002:a17:902:9885:: with SMTP id s5mr9457771plp.217.1576158078207;
-        Thu, 12 Dec 2019 05:41:18 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-b116-2689-a4a9-76f8.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b116:2689:a4a9:76f8])
-        by smtp.gmail.com with ESMTPSA id i68sm7464966pfe.173.2019.12.12.05.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 05:41:17 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <414293e0-3b75-8e78-90d8-2c14182f3739@c-s.fr>
-References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <414293e0-3b75-8e78-90d8-2c14182f3739@c-s.fr>
-Date:   Fri, 13 Dec 2019 00:41:14 +1100
-Message-ID: <87tv65br0l.fsf@dja-thinkpad.axtens.net>
+        Thu, 12 Dec 2019 08:41:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729418AbfLLNl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:41:56 -0500
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A722077B;
+        Thu, 12 Dec 2019 13:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576158115;
+        bh=eKIpRDx+zfn9tjbkvPcwD44F+RZgeuddmRcdxODecF4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EDAQC728DMmhZg3qL4jAR538yfhDTJ0lm6Kf+9fpYSdnhWz7nT0DicXenTE+nLnrb
+         i1+Eho4lCWrAClTzN+L7XkHJhwcfQEaR44cPTD94jsd6VNWM8bLU3/CT2cVXi3lhKj
+         6+uVNGLXoeQK6BaGmxNf4SBFFt3MJgYTS0p68kJs=
+Date:   Thu, 12 Dec 2019 15:41:52 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Gal Pressman <galpress@amazon.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Max Hirsch <max.hirsch@gmail.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danit Goldberg <danitg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dag Moxnes <dag.moxnes@oracle.com>,
+        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
+Message-ID: <20191212134152.GB67461@unreal>
+References: <20191211111628.2955-1-max.hirsch@gmail.com>
+ <20191211162654.GD6622@ziepe.ca>
+ <20191212084907.GU67461@unreal>
+ <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
-
-I think I've covered everything you've mentioned in the v3 I'm about to
-send, except for:
-
->> +	/* mark early shadow region as RO and wipe */
->> +	pte = __pte(__pa(kasan_early_shadow_page) |
->> +		    pgprot_val(PAGE_KERNEL_RO) | _PAGE_PTE);
+On Thu, Dec 12, 2019 at 02:10:12PM +0200, Gal Pressman wrote:
+> On 12/12/2019 10:49, Leon Romanovsky wrote:
+> > On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
+> >> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
+> >>> When running checkpatch on cma.c the following error was found:
+> >>
+> >> I think checkpatch will complain about your patch, did you run it?
+> >
+> > Jason, Doug
+> >
+> > I would like to ask to refrain from accepting checkpatch.pl patches
+> > which are not part of other large submission. Such standalone cleanups
+> > do more harm than actual benefit from them for old and more or less
+> > stable code (e.g. RDMA-CM).
 >
-> Any reason for _PAGE_PTE being required here and not being included in 
-> PAGE_KERNEL_RO ?
+> Sounds like a great approach to prevent new developers from contributing code.
+> You have to start somewhere and checkpatch patches are a good entry point for
+> such developers, discouraging them will only hurt us in the long term.
 
-I'm not 100% sure quite what you mean here. I think you're asking: why
-do we need to supply _PAGE_PTE here, shouldn't PAGE_KERNEL_RO set that
-bit or cover that case?
+We have staging tree where new developer can train their checkpatch patches.
 
-_PAGE_PTE is defined by section 5.7.10.2 of Book III of ISA 3.0: bit 1
-(linux bit 62) is 'Leaf (entry is a PTE)' I originally had this because
-it was set in Balbir's original implementation, but the bit is also set
-by pte_mkpte which is called in set_pte_at, so I also think it's right
-to set it.
+What about fixing smatch and sparse errors? It doesn't require HW for
+that and much better entry point for the new developers.
 
-I don't know why it's not included in the permission classes; I suspect
-it's because it's not conceptually a permission, it's set and cleared in
-things like swp entry code.
+>
+> Linus had an interesting post on the subject:
+> https://lkml.org/lkml/2004/12/20/255
 
-Does that answer your question?
+We are in 2019 and our opinions, Linus's back 15 years ago and mine can be different.
 
-Regards,
-Daniel
+Thanks
