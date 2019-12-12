@@ -2,148 +2,189 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609DEC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B582AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D8A21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8223D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TY4Lnbel"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="IYiKKJ59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfLLQpW (ORCPT
+        id S1729957AbfLLQpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:45:22 -0500
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:16361 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729101AbfLLQpV (ORCPT
+        Thu, 12 Dec 2019 11:45:38 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.1]:34732 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729101AbfLLQpi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:45:21 -0500
+        Thu, 12 Dec 2019 11:45:38 -0500
+Received: from [85.158.142.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-a.eu-central-1.aws.symcld.net id F0/E5-12484-DAE62FD5; Thu, 12 Dec 2019 16:45:33 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGJsWRWlGSWpSXmKPExsWSoc9grrs271O
+  swc9maYv5R86xWqyaupPF4v7Xo4wWU/4sZ7LYPP8Po8XlXXPYLD7susps0br3CLsDh8emVZ1s
+  Hneu7WHz6P9r4PF5k1wASxRrZl5SfkUCa8b2xVIF+3krnnQuZmlgPMjVxcjFwSiwlFli3u5Jz
+  BDOMRaJPZcuQjmbGSV+9/5kA3FYBE4wS0y7M4cFxBESmMYksfL+bmYI5yGjxJ0zq4AcTg42AQ
+  uJyScegLWICHxmlFiz6QgjiMMs8JpRYmPnNlaQKmEBP4npa/6zgNgiAgESv9ZvZoSwjSSmbH7
+  BBmKzCKhK/PnSyA5i8wokSkxfsQUsLiSQJzHvwASwOKeArUTbzP9gmxkFZCW+NK4Gs5kFxCVu
+  PZnPBGJLCAhILNlznhnCFpV4+fgfK0R9qsTJphuMEHEdibPXn0DZShLz5h6BsmUlLs3vhrJ9J
+  R7unMgOU396zR6ouIXEku5WoF84gGwViX+HKiHCBRJn9q6GOkFNYsr6T1AnyEjs7OkGB5CEwG
+  YWiWUftjBPYNSfheRsCFtHYsHuT2wQtrbEsoWvmWeBg0JQ4uTMJywLGFlWMVomFWWmZ5TkJmb
+  m6BoaGOgaGhrrGusaGZjpJVbpJuqlluomp+aVFCUCZfUSy4v1iitzk3NS9PJSSzYxApNYSiHz
+  uR2M7d/e6h1ilORgUhLlncDzKVaILyk/pTIjsTgjvqg0J7X4EKMMB4eSBK9TLlBOsCg1PbUiL
+  TMHmFBh0hIcPEoivNtA0rzFBYm5xZnpEKlTjLocE17OXcQsxJKXn5cqJc7LBFIkAFKUUZoHNw
+  KW3C8xykoJ8zIyMDAI8RSkFuVmlqDKv2IU52BUEua9DTKFJzOvBG7TK6AjmICOMIwEO6IkESE
+  l1cAkI5WlxXZFsbpK9+lp6YztVxamLF4S+fGbpbTeobMdufOc/6cVpqhFKPxtEzvC/Ova0gn9
+  KxRn3Pt78NOEPOccvV/WG88eSUmZ6uDg/vWIh0V72VONV4H5ljsnzayoPpjzI59bu+DkTbagF
+  Qm5xxXFU/jqVPYv/6T0Mmzzy5XCu8svvNVum16dWzbPQ3la98NPd3o1/3fnV675ev2mhuasRX
+  /Kul7elr3ZZPJ/zowrjeahaxW5DHxF0nK5o8RMlHenT16/a2fDivi9ihyTDEqFY4+/+G7zcpX
+  mIu8rK1j3VNypqPtlv2nj6toAL5EDT1KWhdoFN6mFX59W7KyR8JivZlqLSOnUN+ealouI/3BQ
+  YinOSDTUYi4qTgQAAABMk2kEAAA=
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-14.tower-223.messagelabs.com!1576169132!291399!1
+X-Originating-IP: [104.47.0.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27810 invoked from network); 12 Dec 2019 16:45:33 -0000
+Received: from mail-he1eur01lp2055.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.55)
+  by server-14.tower-223.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Dec 2019 16:45:33 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hz4Ug4cJ4xKQ2b3lEY3/s8pdnO0/SpF777zpQkfLzR0hoVaVaKusJhZvoDJZExFxjGSvG/5Wd8DxdGGJVmpC6VHNOvBYVKbPS9v6URIJZQycM0SW0LngFmi0cMTtJRzMYFeik6iaI9d820zCn5JVVlKgm+NF6Mm6Ccsxty0wjyidoCMJAyY0AJH/0jfY9ojnAVy5bTUpgmOrVFCZ8rnSgiFcGuymZ2AkK0OyvHdisBesg5tHudtM8C63z5dlSEKVSk2252V2krzvE2SOuM0pdrmrUIa1jyIskF1flfhzIREhmLj+4mOaEMg3rUu7BQU3ttz/F1X7t+07ahT5fohVjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1tbaUEAIMGmN5GB1W1iTz6LxsSJeR9OwZ0vE7wlKIQ=;
+ b=GowawS/DUigj4LatDT8fPTAOq/lkJO3bAAnHa/uFbA8NUe1A8gwYA237uEudeFMp/8XwE3iQbeQ6WNdFmAlsEHsVWi0HqHcTBfTCtLuL0CENw9b2i2d+A4vtCkorS7pps+TSKILDfqeyqYnC6tXDp5L07Bvix3ixO/PYGhzC2tl1TUvXgCYdLdTiyhdEA5ovirM2WTsdW9M8iWbDxFEjjr0WtoEFBpV4mBIzZ5kRol84trbusiRGAVZFjOnxkzffe3LOE3lGCHkNB3uDLEOntW9QyzHYvhnkCoRt4K4VrfvZuAn6WnQiJ1ASWkj/k5HIHQzMT+iWFn6JEBQXMRknnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1576169120; x=1607705120;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Q4fvjeu1aqmfd6VU/cDsiWvNL14gKjO/yRAp6rTkPnE=;
-  b=TY4LnbelNm2CmIOfzADKFFiFLMbGe4YDoP/4VgLx97yhj4Me2lcN6+Sh
-   OfKnjdPSwbRWVDc12BRT1bBwYzxCJDPNh31aKMkiaEiCAud/hNr1lupdI
-   JSwKA1BS6TpRUqE2Ur+yIITRjgcs6NIdMmHHHvSBh49i1qDsxTtZ/Ae5o
-   o=;
-IronPort-SDR: M18wUbes8M29HhxSgi97zPXZ2WQ+GRf5VcpyaH/f7P28ymXVVZGAaMstDVmh2k+BERxIyYlyuC
- iTvnRxgbVxXg==
-X-IronPort-AV: E=Sophos;i="5.69,306,1571702400"; 
-   d="scan'208";a="8297589"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 12 Dec 2019 16:45:19 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id A7D2BA267B;
-        Thu, 12 Dec 2019 16:45:17 +0000 (UTC)
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 16:45:16 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D32EUC003.ant.amazon.com (10.43.164.24) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 12 Dec 2019 16:45:15 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Thu, 12 Dec 2019 16:45:15 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.com>
-To:     "jandryuk@gmail.com" <jandryuk@gmail.com>
-CC:     xen-devel <xen-devel@lists.xenproject.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Wei Liu <wei.liu@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
- related code
-Thread-Topic: [Xen-devel] [PATCH net-next] xen-netback: get rid of old udev
- related code
-Thread-Index: AQHVsPOiKWT/MKpGekOkpRko3pMZ46e2sWUAgAAApYA=
-Date:   Thu, 12 Dec 2019 16:45:15 +0000
-Message-ID: <34de94e87020467fac84434194809894@EX13D32EUC003.ant.amazon.com>
-References: <20191212135406.26229-1-pdurrant@amazon.com>
- <CAKf6xptNRAuvjqzqFwbPmetYsTdPOMgTT0AWEouwjsHq1iCV6w@mail.gmail.com>
-In-Reply-To: <CAKf6xptNRAuvjqzqFwbPmetYsTdPOMgTT0AWEouwjsHq1iCV6w@mail.gmail.com>
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1tbaUEAIMGmN5GB1W1iTz6LxsSJeR9OwZ0vE7wlKIQ=;
+ b=IYiKKJ59mwkxv4RIXboSfSlYF/18FJi69THXakR70ZnrV2UyQC3E6xZ7BQee+ANi8mJsVxdVeql3KmbQv304R2xnajlIK8UlO7kBpoibVpOU7qX8fC5p8Fs4UjgplC4xhRydotW/Z5ETkzwY8cWMHrkK1oOUQ/g5f+/+9iyD5ZA=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM (10.169.155.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Thu, 12 Dec 2019 16:45:31 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2516.019; Thu, 12 Dec 2019
+ 16:45:30 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio bindings
+Thread-Topic: [RESEND PATCH v3 1/3] dt-bindings: mfd: da9062: add gpio
+ bindings
+Thread-Index: AQHVsQXYilpEQfTcWk63d+ryMHDRiae2r+9Q
+Date:   Thu, 12 Dec 2019 16:45:30 +0000
+Message-ID: <AM5PR1001MB099436D8D63BD2D22B9076A180550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-2-m.felsch@pengutronix.de>
+In-Reply-To: <20191212160413.15232-2-m.felsch@pengutronix.de>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.122]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53230847-73b4-4c48-d83b-08d77f22b304
+x-ms-traffictypediagnostic: AM5PR1001MB1043:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB1043B3ADDB62A12B433206D6A7550@AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(366004)(37524003)(189003)(199004)(54534003)(8676002)(4326008)(110136005)(316002)(54906003)(81156014)(81166006)(2906002)(8936002)(86362001)(55016002)(55236004)(66476007)(9686003)(7696005)(71200400001)(5660300002)(66446008)(66946007)(64756008)(186003)(76116006)(33656002)(53546011)(52536014)(26005)(66556008)(6506007)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1043;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gs/Huy8hwVKfVNAyaXI308uMFVY8oZ+iHXTuzmGeANvhBoKO2RRwpP7I64nK5i/OY+OBNwDVkTilyz5UzzV9rGTHKVIker8ygWeFy7c/517+pEAKfYjVE/Q9VXtQMM6dfUQxOsv4DUo1sMF6MOrtMaxFbSyIG2z0qa/IgVqYHcKSh4BJPU3ZH627Q5XktsSlG1FVUp8N4E7fqYb/9b0d+2LvFiuZxg3yaDPmARKFr4ZMkHBlXJbamW6Hhhr6buAWb+rL7QjtMoME3miQx2XQGRcjlRK5J1/EyheQh2/GjCOPtBE1XJDeWIbWyinbrj1CemPb7gp6YkXHZp0IUOACqm34e8b9T+hHQzaTTy3fr+/iA3Nj/1nLnWU1rH1fxyHO34o5VM4UcIfkn0wqNkxxXOKkhvryXEdntA3Gu/ukCSE4zvbsBxpIyFOtVmWZkRVEQJ1vygT27kuMYay7LDoXpWzaJfOkr/GHoZa4r9Wn8CSCG0wVXLwAlSiVRdESG23yCzNSSgYT4QOXAdaJExng/w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53230847-73b4-4c48-d83b-08d77f22b304
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 16:45:30.4469
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a4uRde/a0xhO3j5LR0yblSBH4s5k3YRuvDWW1JPksHHhj4/YNy9H2G/s6SFpjQ3HnsWhZvuXGcuGTUQHXd4IMfAGYx3rwQv8qxvBhQouMe4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBqYW5kcnl1a0BnbWFpbC5jb20g
-PGphbmRyeXVrQGdtYWlsLmNvbT4NCj4gU2VudDogMTIgRGVjZW1iZXIgMjAxOSAxNjozMg0KPiBU
-bzogRHVycmFudCwgUGF1bCA8cGR1cnJhbnRAYW1hem9uLmNvbT4NCj4gQ2M6IHhlbi1kZXZlbCA8
-eGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnPjsgbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsN
-Cj4gb3BlbiBsaXN0IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgV2VpIExpdSA8d2Vp
-LmxpdUBrZXJuZWwub3JnPjsNCj4gRGF2aWQgUy4gTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0
-Pg0KPiBTdWJqZWN0OiBSZTogW1hlbi1kZXZlbF0gW1BBVENIIG5ldC1uZXh0XSB4ZW4tbmV0YmFj
-azogZ2V0IHJpZCBvZiBvbGQgdWRldg0KPiByZWxhdGVkIGNvZGUNCj4gDQo+IE9uIFRodSwgRGVj
-IDEyLCAyMDE5IGF0IDg6NTYgQU0gUGF1bCBEdXJyYW50IDxwZHVycmFudEBhbWF6b24uY29tPiB3
-cm90ZToNCj4gPg0KPiA+IEluIHRoZSBwYXN0IGl0IHVzZWQgdG8gYmUgdGhlIGNhc2UgdGhhdCB0
-aGUgWGVuIHRvb2xzdGFjayByZWxpZWQgdXBvbg0KPiA+IHVkZXYgdG8gZXhlY3V0ZSBiYWNrZW5k
-IGhvdHBsdWcgc2NyaXB0cy4gSG93ZXZlciB0aGlzIGhhcyBub3QgYmVlbiB0aGUNCj4gPiBjYXNl
-IGZvciBtYW55IHJlbGVhc2VzIG5vdyBhbmQgcmVtb3ZhbCBvZiB0aGUgYXNzb2NpYXRlZCBjb2Rl
-IGluDQo+ID4geGVuLW5ldGJhY2sgc2hvcnRlbnMgdGhlIHNvdXJjZSBieSBtb3JlIHRoYW4gMTAw
-IGxpbmVzLCBhbmQgcmVtb3ZlcyBtdWNoDQo+ID4gY29tcGxleGl0eSBpbiB0aGUgaW50ZXJhY3Rp
-b24gd2l0aCB0aGUgeGVuc3RvcmUgYmFja2VuZCBzdGF0ZS4NCj4gPg0KPiA+IE5PVEU6IHhlbi1u
-ZXRiYWNrIGlzIHRoZSBvbmx5IHhlbmJ1cyBkcml2ZXIgdG8gaGF2ZSBhIGZ1bmN0aW9uYWwNCj4g
-dWV2ZW50KCkNCj4gPiAgICAgICBtZXRob2QuIFRoZSBvbmx5IG90aGVyIGRyaXZlciB0byBoYXZl
-IGEgbWV0aG9kIGF0IGFsbCBpcw0KPiA+ICAgICAgIHB2Y2FsbHMtYmFjaywgYW5kIGN1cnJlbnRs
-eSBwdmNhbGxzX2JhY2tfdWV2ZW50KCkgc2ltcGx5IHJldHVybnMNCj4gMC4NCj4gPiAgICAgICBI
-ZW5jZSB0aGlzIHBhdGNoIGFsc28gZmFjaWxpdGF0ZXMgZnVydGhlciBjbGVhbnVwLg0KPiA+DQo+
-ID4gU2lnbmVkLW9mZi1ieTogUGF1bCBEdXJyYW50IDxwZHVycmFudEBhbWF6b24uY29tPg0KPiA+
-IC0tLQ0KPiA+IENjOiBXZWkgTGl1IDx3ZWkubGl1QGtlcm5lbC5vcmc+DQo+ID4gQ2M6ICJEYXZp
-ZCBTLiBNaWxsZXIiIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJz
-L25ldC94ZW4tbmV0YmFjay9jb21tb24uaCB8ICAxMSAtLS0NCj4gPiAgZHJpdmVycy9uZXQveGVu
-LW5ldGJhY2sveGVuYnVzLmMgfCAxMjUgKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-PiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlvbnMoKyksIDEyMiBkZWxldGlvbnMoLSkN
-Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC94ZW4tbmV0YmFjay9jb21tb24uaCBi
-L2RyaXZlcnMvbmV0L3hlbi0NCj4gbmV0YmFjay9jb21tb24uaA0KPiA+IGluZGV4IDA1ODQ3ZWI5
-MWExYi4uZTQ4ZGEwMDRjMWEzIDEwMDY0NA0KPiANCj4gPHNuaXA+DQo+IA0KPiA+IC1zdGF0aWMg
-aW5saW5lIHZvaWQgYmFja2VuZF9zd2l0Y2hfc3RhdGUoc3RydWN0IGJhY2tlbmRfaW5mbyAqYmUs
-DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVudW0geGVuYnVz
-X3N0YXRlIHN0YXRlKQ0KPiA+IC17DQo+ID4gLSAgICAgICBzdHJ1Y3QgeGVuYnVzX2RldmljZSAq
-ZGV2ID0gYmUtPmRldjsNCj4gPiAtDQo+ID4gLSAgICAgICBwcl9kZWJ1ZygiJXMgLT4gJXNcbiIs
-IGRldi0+bm9kZW5hbWUsIHhlbmJ1c19zdHJzdGF0ZShzdGF0ZSkpOw0KPiA+IC0gICAgICAgYmUt
-PnN0YXRlID0gc3RhdGU7DQo+ID4gLQ0KPiA+IC0gICAgICAgLyogSWYgd2UgYXJlIHdhaXRpbmcg
-Zm9yIGEgaG90cGx1ZyBzY3JpcHQgdGhlbiBkZWZlciB0aGUNCj4gPiAtICAgICAgICAqIGFjdHVh
-bCB4ZW5idXMgc3RhdGUgY2hhbmdlLg0KPiA+IC0gICAgICAgICovDQo+ID4gLSAgICAgICBpZiAo
-IWJlLT5oYXZlX2hvdHBsdWdfc3RhdHVzX3dhdGNoKQ0KPiA+IC0gICAgICAgICAgICAgICB4ZW5i
-dXNfc3dpdGNoX3N0YXRlKGRldiwgc3RhdGUpOw0KPiANCj4gaGF2ZV9ob3RwbHVnX3N0YXR1c193
-YXRjaCBwcmV2ZW50cyB4ZW4tbmV0YmFjayBmcm9tIHN3aXRjaGluZyB0bw0KPiBjb25uZWN0ZWQg
-c3RhdGUgdW5sZXNzIHRoZSB0aGUgYmFja2VuZCBzY3JpcHRzIGhhdmUgd3JpdHRlbg0KPiAiaG90
-cGx1Zy1zdGF0dXMiICJzdWNjZXNzIi4gIEkgaGFkIGFsd2F5cyB0aG91Z2h0IHRoYXQgd2FzIGlu
-dGVudGlvbmFsDQo+IHNvIHRoZSBmcm9udGVuZCBkb2Vzbid0IGNvbm5lY3Qgd2hlbiB0aGUgYmFj
-a2VuZCBpcyB1bmNvbm5lY3RlZC4gIGkuZS4NCj4gaWYgdGhlIGJhY2tlbmQgc2NyaXB0cyBmYWls
-cywgaXQgd3JpdGVzICJob3RwbHVnLXN0YXR1cyIgImVycm9yIiBhbmQNCj4gdGhlIGZyb250ZW5k
-IGRvZXNuJ3QgY29ubmVjdC4NCj4gDQo+IFRoYXQgYmVoYXZpb3IgaXMgaW5kZXBlbmRlbnQgb2Yg
-dXNpbmcgdWRldiB0byBydW4gdGhlIHNjcmlwdHMuICBJJ20NCj4gbm90IG9wcG9zZWQgdG8gcmVt
-b3ZpbmcgaXQsIGJ1dCBJIHRoaW5rIGl0IGF0IGxlYXN0IHdhcnJhbnRzDQo+IG1lbnRpb25pbmcg
-aW4gdGhlIGNvbW1pdCBtZXNzYWdlLg0KDQpUcnVlLCBidXQgaXQncyBwcm9iYWJseSByZWxhdGVk
-LiBUaGUgbmV0YmFjayBwcm9iZSB3b3VsZCBwcmV2aW91c2x5IGtpY2sgdWRldiwgdGhlIGhvdHBs
-dWcgc2NyaXB0IHdvdWxkIHRoZW4gcnVuLCBhbmQgdGhlbiB0aGUgc3RhdGUgd291bGQgZ28gY29u
-bmVjdGVkLiBJIHRoaW5rLCBiZWNhdXNlIHRoZSBob3RwbHVnIGlzIGludm9rZWQgZGlyZWN0bHkg
-YnkgdGhlIHRvb2xzdGFjayBub3csIHRoZXNlIHRoaW5ncyByZWFsbHkgb3VnaHQgbm90IHRvIGJl
-IHRpZWQgdG9nZXRoZXIuIFRCSCBJIGNhbid0IHNlZSBhbnkgaGFybSBpbiB0aGUgZnJvbnRlbmQg
-c2VlaW5nIHRoZSBuZXR3b3JrIGNvbm5lY3Rpb24gYmVmb3JlIHRoZSBiYWNrZW5kIHBsdW1iaW5n
-IGlzIGRvbmUuLi4gSWYgdGhlIGZyb250ZW5kIHNob3VsZCBoYXZlIGFueSBzb3J0IG9mIGluZGlj
-YXRpb24gb2Ygd2hldGhlciB0aGUgYmFja2VuZCBpcyBwbHVtYmVkIG9yIG5vdCB0aGVuIElNTyBp
-dCBvdWdodCB0byBiZSBhcyBhIHZpcnR1YWwgY2Fycmllci9saW5rIHN0YXR1cywgYmVjYXVzZSB1
-bnBsdW1iaW5nIGFuZCByZS1wbHVtYmluZyBjb3VsZCBiZSBkb25lIGF0IGFueSB0aW1lIHJlYWxs
-eSB3aXRob3V0IGFueSBuZWVkIGZvciB0aGUgc2hhcmVkIHJpbmcgdG8gZ28gYXdheSAoYW5kIGlu
-IGZhY3QgSSB3aWxsIGJlIGZvbGxvd2luZyB1cCBhdCBzb21lIHBvaW50IHdpdGggYSBwYXRjaCB0
-byBhbGxvdyB1bmJpbmQgYW5kIHJlLWJpbmQgb2YgbmV0YmFjaykuDQoNCkknbGwgZWxhYm9yYXRl
-IGluIHRoZSBjb21taXQgbWVzc2FnZSBhcyB5b3Ugc3VnZ2VzdCA6LSkNCg0KQ2hlZXJzLA0KDQog
-IFBhdWwNCg0KPiANCj4gUmVnYXJkcywNCj4gSmFzb24NCg==
+On 12 December 2019 16:04, Marco Felsch wrote:
+
+> Add gpio device documentation to make the da9062 gpios available for
+> users.
+>=20
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+> ---
+> Changelog:
+>=20
+> v2:
+> - remove sub-node documentation
+> - squash gpio properties into mfd documentation
+> ---
+>  Documentation/devicetree/bindings/mfd/da9062.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> b/Documentation/devicetree/bindings/mfd/da9062.txt
+> index edca653a5777..089a28bc77a4 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> @@ -13,6 +13,7 @@ da9062-rtc              :               : Real-Time Clo=
+ck
+>  da9062-onkey            :               : On Key
+>  da9062-watchdog         :               : Watchdog Timer
+>  da9062-thermal          :               : Thermal
+> +da9062-gpio             :               : GPIOs
+>=20
+>  The DA9061 PMIC consists of:
+>=20
+> @@ -38,6 +39,15 @@ Required properties:
+>  See Documentation/devicetree/bindings/interrupt-controller/interrupts.tx=
+t for
+>  further information on IRQ bindings.
+>=20
+> +Optional properties:
+> +
+> +- gpio-controller : Marks the device as a gpio controller.
+> +- #gpio-cells     : Should be two. The first cell is the pin number and =
+the
+> +                    second cell is used to specify the gpio polarity.
+> +
+> +See Documentation/devicetree/bindings/gpio/gpio.txt for further informat=
+ion
+> on
+> +GPIO bindings.
+> +
+>  Sub-nodes:
+>=20
+>  - regulators : This node defines the settings for the LDOs and BUCKs.
+> --
+> 2.20.1
