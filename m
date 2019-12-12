@@ -2,111 +2,548 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3722DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EC2C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027A72077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IG/SDE+G";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IG/SDE+G"
+	by mail.kernel.org (Postfix) with ESMTP id 3E1E22073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfLLTvI (ORCPT
+        id S1730725AbfLLTw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:51:08 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51332 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730284AbfLLTvH (ORCPT
+        Thu, 12 Dec 2019 14:52:27 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:33067 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730284AbfLLTw0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:51:07 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 6EE618EE18E;
-        Thu, 12 Dec 2019 11:51:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576180266;
-        bh=VicjdT418xSLEpNgSSEEdl15cSxj3tKlnApHKIrDh68=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IG/SDE+G+Bh6jjYVnBW+sLkyO5teFK/h0FPv+4TWLLOcKx7TLgQMhVZRY3vMKYyQX
-         FvwQE56nzinL+1heBDNryWQpdItqt+TggX5OlOL1Ju5wT7ZQDQ0baEDj2ZYFSjBOir
-         dPiOQbfSKqDf5lD0N5oaxNRrwg2H5kvF39CtdAAE=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Ddk6vEX5Wprp; Thu, 12 Dec 2019 11:51:06 -0800 (PST)
-Received: from [9.232.197.95] (unknown [129.33.253.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 2757B8EE0C7;
-        Thu, 12 Dec 2019 11:51:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1576180266;
-        bh=VicjdT418xSLEpNgSSEEdl15cSxj3tKlnApHKIrDh68=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IG/SDE+G+Bh6jjYVnBW+sLkyO5teFK/h0FPv+4TWLLOcKx7TLgQMhVZRY3vMKYyQX
-         FvwQE56nzinL+1heBDNryWQpdItqt+TggX5OlOL1Ju5wT7ZQDQ0baEDj2ZYFSjBOir
-         dPiOQbfSKqDf5lD0N5oaxNRrwg2H5kvF39CtdAAE=
-Message-ID: <1576180263.10287.4.camel@HansenPartnership.com>
-Subject: Re: [PATCH =v2 3/3] tpm: selftest: cleanup after unseal with wrong
- auth/policy test
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Tadeusz Struk <tadeusz.struk@intel.com>,
-        jarkko.sakkinen@linux.intel.com
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
-        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
-        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
-Date:   Thu, 12 Dec 2019 14:51:03 -0500
-In-Reply-To: <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1>
-References: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
-         <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 12 Dec 2019 14:52:26 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <rjones@gateworks.com>)
+        id 1ifUkF-0003ji-Op; Thu, 12 Dec 2019 20:07:31 +0000
+From:   Robert Jones <rjones@gateworks.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Tim Harvey <tharvey@gateworks.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH v2] ARM: dts: imx: Add GW5907 board support
+Date:   Thu, 12 Dec 2019 11:52:12 -0800
+Message-Id: <20191212195212.30433-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.9.2
+In-Reply-To: <20191205220825.22915-1-rjones@gateworks.com>
+References: <20191205220825.22915-1-rjones@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-12-12 at 09:48 -0800, Tadeusz Struk wrote:
-> Unseal with wrong auth or wrong policy test affects DA lockout
-> and eventually causes the tests to fail with:
-> "ProtocolError: TPM_RC_LOCKOUT: rc=0x00000921"
-> when the tests run multiple times.
-> Send tpm clear command after the test to reset the DA counters.
-> 
-> Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
-> ---
->  tools/testing/selftests/tpm2/test_smoke.sh |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/tpm2/test_smoke.sh
-> b/tools/testing/selftests/tpm2/test_smoke.sh
-> index cb54ab637ea6..8155c2ea7ccb 100755
-> --- a/tools/testing/selftests/tpm2/test_smoke.sh
-> +++ b/tools/testing/selftests/tpm2/test_smoke.sh
-> @@ -3,3 +3,8 @@
->  
->  python -m unittest -v tpm2_tests.SmokeTest
->  python -m unittest -v tpm2_tests.AsyncTest
-> +
-> +CLEAR_CMD=$(which tpm2_clear)
-> +if [ -n $CLEAR_CMD ]; then
-> +	tpm2_clear -T device
-> +fi
+The Gateworks GW5907 is an IMX6 SoC based single board computer with:
+ - IMX6Q or IMX6DL
+ - 32bit DDR3 DRAM
+ - FEC GbE Phy
+ - bi-color front-panel LED
+ - 256MB NAND boot device
+ - Gateworks System Controller (hwmon, pushbutton controller, EEPROM)
+ - Digital IO expander (pca9555)
+ - Joystick 12bit adc (ads1015)
 
-TPM2_Clear reprovisions the SPS ... that would make all currently
-exported TPM keys go invalid.  I know these tests should be connected
-to a vTPM, so doing this should be safe, but if this accidentally got
-executed on your laptop all TPM relying functions would be disrupted,
-which doesn't seem to be the best thing to hard wire into a test.
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Signed-off-by: Robert Jones <rjones@gateworks.com>
+---
 
-What about doing a TPM2_DictionaryAttackLockReset instead, which is the
-least invasive route to fixing the problem ... provided you know what
-the lockout authorization is.
+Changes in v2:
+ - Generalized node names
+ - Removed unnecessary labels
+ - Expanded patch subject
+ - Removed undocumented compatible string in dts**
 
-James
+** I realize that the "gw,ventana" still exists here, but that cant be removed
+without breaking a conditional check in arch/arm/mach-imx/mach-imx6q.cq
+
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/imx6dl-gw5907.dts   |  14 ++
+ arch/arm/boot/dts/imx6q-gw5907.dts    |  14 ++
+ arch/arm/boot/dts/imx6qdl-gw5907.dtsi | 399 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 429 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5907.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8784115..1c58d11 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -418,6 +418,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw560x.dtb \
+ 	imx6dl-gw5903.dtb \
+ 	imx6dl-gw5904.dtb \
++	imx6dl-gw5907.dtb \
+ 	imx6dl-gw5910.dtb \
+ 	imx6dl-gw5912.dtb \
+ 	imx6dl-gw5913.dtb \
+@@ -492,6 +493,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw560x.dtb \
+ 	imx6q-gw5903.dtb \
+ 	imx6q-gw5904.dtb \
++	imx6q-gw5907.dtb \
+ 	imx6q-gw5910.dtb \
+ 	imx6q-gw5912.dtb \
+ 	imx6q-gw5913.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-gw5907.dts b/arch/arm/boot/dts/imx6dl-gw5907.dts
+new file mode 100644
+index 0000000..7d9fe47
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-gw5907.dts
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Gateworks Corporation
++ */
++
++/dts-v1/;
++
++#include "imx6dl.dtsi"
++#include "imx6qdl-gw5907.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5907";
++	compatible = "gw,ventana", "fsl,imx6dl";
++};
+diff --git a/arch/arm/boot/dts/imx6q-gw5907.dts b/arch/arm/boot/dts/imx6q-gw5907.dts
+new file mode 100644
+index 0000000..63e0bef
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-gw5907.dts
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Gateworks Corporation
++ */
++
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-gw5907.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW5907";
++	compatible = "gw,ventana", "fsl,imx6q";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5907.dtsi b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+new file mode 100644
+index 0000000..0bdebdd
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-gw5907.dtsi
+@@ -0,0 +1,399 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Gateworks Corporation
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	/* these are used by bootloader for disabling nodes */
++	aliases {
++		led0 = &led0;
++		led1 = &led1;
++		nand = &gpmi;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
++	};
++
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led0: user1 {
++			label = "user1";
++			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		led1: user2 {
++			label = "user2";
++			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
++			default-state = "off";
++		};
++	};
++
++	memory@10000000 {
++		device_type = "memory";
++		reg = <0x10000000 0x20000000>;
++	};
++
++	pps {
++		compatible = "pps-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pps>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		status = "okay";
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_5p0v: regulator-5p0v {
++		compatible = "regulator-fixed";
++		regulator-name = "5P0V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	status = "okay";
++};
++
++&hdmi {
++	ddc-i2c-bus = <&i2c3>;
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	gpio@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	eeprom@51 {
++		compatible = "atmel,24c02";
++		reg = <0x51>;
++		pagesize = <16>;
++	};
++
++	eeprom@52 {
++		compatible = "atmel,24c02";
++		reg = <0x52>;
++		pagesize = <16>;
++	};
++
++	eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++		pagesize = <16>;
++	};
++
++	rtc@68 {
++		compatible = "dallas,ds1672";
++		reg = <0x68>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	gpio@20 {
++		compatible = "nxp,pca9555";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	adc@48 {
++		compatible = "ti,ads1015";
++		reg = <0x48>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		channel@4 {
++			reg = <4>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@5 {
++			reg = <5>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++
++		channel@6 {
++			reg = <6>;
++			ti,gain = <0>;
++			ti,datarate = <5>;
++		};
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
++	status = "disabled";
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
++	status = "disabled";
++};
++
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>; /* MX6_DIO3 */
++	status = "disabled";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
++&iomuxc {
++	pinctrl_enet: enetgrp {
++		fsl,pins = <
++			MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b0b0
++			MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b0b0
++			MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b0b0
++			MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b0b0
++			MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b0b0
++			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b0b0
++			MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b0b0
++			MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b0b0
++			MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b0b0
++			MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b0b0
++			MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b0b0
++			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b0b0
++			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++			MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++			MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++			MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x1b0b0
++		>;
++	};
++
++	pinctrl_gpio_leds: gpioledsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
++			MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
++		>;
++	};
++
++	pinctrl_gpmi_nand: gpminandgrp {
++		fsl,pins = <
++			MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
++			MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
++			MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
++			MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
++			MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
++			MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
++			MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
++			MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
++			MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
++			MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
++			MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
++			MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
++			MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
++			MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
++			MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
++			MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04		0x0001b0b0
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++			MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
++			MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x1b0b0
++			MX6QDL_PAD_GPIO_19__GPIO4_IO05		0x1b0b0
++		>;
++	};
++
++	pinctrl_pcie: pciegrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
++		>;
++	};
++
++	pinctrl_pps: ppsgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm3: pwm3grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_pwm4: pwm4grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD3_DAT7__UART1_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD3_DAT6__UART1_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++			MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
++			MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_uart5: uart5grp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++			MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++		>;
++	};
++
++	pinctrl_usbotg: usbotggrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++			MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0
++		>;
++	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
++		>;
++	};
++};
+-- 
+2.9.2
 
