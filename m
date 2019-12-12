@@ -2,104 +2,75 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14A9C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70430C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CC92067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:32:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JHNgQG4J"
+	by mail.kernel.org (Postfix) with ESMTP id 43FE42067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfLLKcx (ORCPT
+        id S1728810AbfLLKdI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:32:53 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41146 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfLLKcw (ORCPT
+        Thu, 12 Dec 2019 05:33:08 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:45993 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728573AbfLLKdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:32:52 -0500
-Received: by mail-lf1-f67.google.com with SMTP id m30so1281745lfp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VWL9+V2LMiT9o2FJLi3yEGGm0mbcqGKTZCNZjA3DyVQ=;
-        b=JHNgQG4JaflzNKZS6SjnLq+BGIY0xKcrhawJ4qSCLadAe7hUlYSTTM6yg9Y3InFPme
-         65GvyKU8ZgeTTvHCUQpLz3gdVifxv2sx5EB0maUrWRtmXnyQeQ2RzH4e6AwIIFn/Ocv0
-         HbafD0hIdo8H/uCHiT0TBp2VElIGTB/axXoF4ZoG9VakftAWgZS11IgoT8MI8CaJ2S5P
-         2tfrszsvlyNzhBe6mtgHXMJKQChMyGr5KV9reluXUNs2LuGTjNveZegBli/WGzmT/qJ3
-         sLkdgkiLdb9gNFrmBa8EmK7AzxkqHOHCD9MBb052/a9h6FU3fjQSTfjAoXXWV9ze1b1q
-         ZwyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VWL9+V2LMiT9o2FJLi3yEGGm0mbcqGKTZCNZjA3DyVQ=;
-        b=OwoM1THGcDwLYmC9oTeiLIm8cOyNP1LpQ8i0+cTn121uMXbML1AJahyPo+D7pfYzeo
-         uACcvJj3wAmCAdQ+wFEW/5xlC0q0rhYxT359N6h0+ooPADnQSKl2RKiTuuUSVwk9hSSz
-         UBSm2y7HMLj/TXvKMdmu9ph9gliIivtGsKQgLlLicd/sEmanWp2vE+DYlCKGewZ1f6wQ
-         UJvrwhpp5NtcZxCM8ZntC/i2MEmFQc0lX+D0Okkh55QIjISgga1stodrQpN02BptV3vU
-         6oqVTJZxVoegpotz1e5p/fgM/Ras0b1WPreOvo5MDULpdF3CuLR32YU77vc84yXpqBk7
-         24jA==
-X-Gm-Message-State: APjAAAW/PpAevX8Kz5hWiITxj0LYFutTWS0xB4VBtWZ5RujpvVdXQRAI
-        KdtbxnHOFdwYLZgDia9kqWZXIzMyRFx8m9oy7UUuu3vDmP8=
-X-Google-Smtp-Source: APXvYqywDQNwDMe4Gb7wNrl8nlViHTFAYbbKR8mGbYLzjghxmd/DxWHrpL44HVqLtiyMfWxK6a/Gv0MgTOUFix3M9V4=
-X-Received: by 2002:a19:c0b:: with SMTP id 11mr5269617lfm.135.1576146770206;
- Thu, 12 Dec 2019 02:32:50 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1574871463.git.nishadkamdar@gmail.com> <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
-In-Reply-To: <5a7ed2e4b58ba7ff2f0638a2435a3a1e1c62c9f6.1574871463.git.nishadkamdar@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 12 Dec 2019 11:32:39 +0100
-Message-ID: <CACRpkdaDaM6wSfeeo6NARC0VibLMWWDDsN2LbLRooih3uGTvog@mail.gmail.com>
-Subject: Re: [PATCH 4/5] pinctrl: sh-pfc: Use the correct style for SPDX
- License Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>
-Cc:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Dec 2019 05:33:08 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 25707CECE2;
+        Thu, 12 Dec 2019 11:42:17 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH v1 2/2] dt-bindings: net: bluetooth: Add device tree
+ bindings for QCA6390
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
+Date:   Thu, 12 Dec 2019 11:33:06 +0100
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <24B540FF-C627-4DF9-9077-247A4A6A3605@holtmann.org>
+References: <0101016ef8b923bc-5760b40c-1968-4992-9186-8e3965207236-000000@us-west-2.amazonses.com>
+To:     Rocky Liao <rjliao@codeaurora.org>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 5:46 PM Nishad Kamdar <nishadkamdar@gmail.com> wrote:
+Hi Rocky,
 
-> This patch corrects the SPDX License Identifier style in
-> header files related to Reneses Soc pinctrl driver.
-> It assigns explicit block comment for the SPDX License Identifier.
->
-> Changes made by using a script provided by Joe Perches here:
-> https://lkml.org/lkml/2019/2/7/46.
->
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> Add compatible string for the Qualcomm QCA6390 Bluetooth controller
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+> Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 1 +
+> 1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> index 68b67d9db63a..87b7f9d22414 100644
+> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
+> @@ -10,6 +10,7 @@ device the slave device is attached to.
+> Required properties:
+>  - compatible: should contain one of the following:
+>    * "qcom,qca6174-bt"
+> +   * "qcom,qca6390-bt"
+>    * "qcom,wcn3990-bt"
+>    * "qcom,wcn3998-bt"
 
-I leave it to Geert to decide if he wants to pick this up for
-sh-pfc or not.
+now I am confused. Is this a DT platform or ACPI or both?
 
-Yours,
-Linus Walleij
+Regards
+
+Marcel
+
