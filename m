@@ -2,172 +2,86 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E547EC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A2CC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCAA1214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA222173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143470;
-	bh=1UbJime92fgiQai5OBa/ARW+fzto6em60n1wHxyL37E=;
+	s=default; t=1576143497;
+	bh=UlUP+r0l6vL+p/u4gySp7aVL3E71ArRcpUychAwWhPs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AH9MXpCYG6kK3tVnTQJUPTV10JVem5Fu8Mn+Cz3GUIQz3XB0nJypQc5RrhabWJC+z
-	 Hf0rgigSdvXm7LRBpCpjWhdPzyhBVxLFaAdfY5soiUm2gBs+upmDRS4HOW4fOVtYKj
-	 C9bvHX12CRAysSNdDhli1RdbTDqhTzoyrezKbkI8=
+	b=ZM9K1N2ukEQr2F7WhCDTEmzxGqx+a15euFNWdPswXe+kuz60FG+y/HluAHOrUR9/5
+	 R3H1jofliQwV+t7Svll7kpVsXDJaItVlpQtoDp2CpJWhtslkx1yRrfM4tjfnwVNoJ6
+	 H+i21xNMZ4ygIP2ca90I5aHh90SpGJrJyttG+Jew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfLLJht (ORCPT
+        id S1728458AbfLLJiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
+        Thu, 12 Dec 2019 04:38:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728230AbfLLJht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:37:49 -0500
+        id S1728230AbfLLJiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:38:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9197214D8;
-        Thu, 12 Dec 2019 09:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BDF8214D8;
+        Thu, 12 Dec 2019 09:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143468;
-        bh=1UbJime92fgiQai5OBa/ARW+fzto6em60n1wHxyL37E=;
+        s=default; t=1576143495;
+        bh=UlUP+r0l6vL+p/u4gySp7aVL3E71ArRcpUychAwWhPs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M2uhryCd/EHL5avccZQ8J/lQFMrxqke8cKJnexeBGO4KepHb2ZyoSAgUAvFk1nXCm
-         NKn5Y/gOqciQjVXgnhzMI+FumFBXnz7nvRz1fn7Qu5pYh2P/j2bCNFfGEUo0GZlK9O
-         eh7HoylvOTxJIFByqMlsR5AqhOuSWuV5ZSsp4LoM=
-Date:   Thu, 12 Dec 2019 10:33:49 +0100
+        b=MS++4ttC54jH1jDF73vhXP7cwgJukDkqynlvmzwMOFuwjrkAY/YPZ0anugF7/ks+J
+         qOOOH7gasOLJoKZ+WRP1eDTN9eTKA7MCWBSrJOexedi4ylfH+cSZ8IMRsZlQ15jb2p
+         8omnUul+tj3HzSjfLixGhVnRHSDh1yzPF+15oSCU=
+Date:   Thu, 12 Dec 2019 10:36:45 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 077/243] iomap: dio data corruption and spurious
- errors when pipes fill
-Message-ID: <20191212093349.GD1378792@kroah.com>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150344.304750036@linuxfoundation.org>
- <20191211235025.xukuecbyuub6hakt@toshiba.co.jp>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/92] 5.4.3-stable review
+Message-ID: <20191212093645.GH1378792@kroah.com>
+References: <20191211150221.977775294@linuxfoundation.org>
+ <0253e33d-afa5-3dda-95d5-220535537eb4@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211235025.xukuecbyuub6hakt@toshiba.co.jp>
+In-Reply-To: <0253e33d-afa5-3dda-95d5-220535537eb4@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:50:25AM +0900, Nobuhiro Iwamatsu wrote:
-> On Wed, Dec 11, 2019 at 04:03:59PM +0100, Greg Kroah-Hartman wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
+On Wed, Dec 11, 2019 at 07:48:28PM -0700, shuah wrote:
+> On 12/11/19 8:04 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.3 release.
+> > There are 92 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > [ Upstream commit 4721a6010990971440b4ffefbdf014976b8eda2f ]
+> > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+> > Anything received after that time might be too late.
 > > 
-> > When doing direct IO to a pipe for do_splice_direct(), then pipe is
-> > trivial to fill up and overflow as it can only hold 16 pages. At
-> > this point bio_iov_iter_get_pages() then returns -EFAULT, and we
-> > abort the IO submission process. Unfortunately, iomap_dio_rw()
-> > propagates the error back up the stack.
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > and the diffstat can be found below.
 > > 
-> > The error is converted from the EFAULT to EAGAIN in
-> > generic_file_splice_read() to tell the splice layers that the pipe
-> > is full. do_splice_direct() completely fails to handle EAGAIN errors
-> > (it aborts on error) and returns EAGAIN to the caller.
+> > thanks,
 > > 
-> > copy_file_write() then completely fails to handle EAGAIN as well,
-> > and so returns EAGAIN to userspace, having failed to copy the data
-> > it was asked to.
+> > greg k-h
 > > 
-> > Avoid this whole steaming pile of fail by having iomap_dio_rw()
-> > silently swallow EFAULT errors and so do short reads.
-> > 
-> > To make matters worse, iomap_dio_actor() has a stale data exposure
-> > bug bio_iov_iter_get_pages() fails - it does not zero the tail block
-> > that it may have been left uncovered by partial IO. Fix the error
-> > handling case to drop to the sub-block zeroing rather than
-> > immmediately returning the -EFAULT error.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > 
-> 
-> 
-> This commit also seems to require the following 2 commits:
-> 
-> commit 8f67b5adc030553fbc877124306f3f3bdab89aa8
-> Author: Darrick J. Wong <darrick.wong@oracle.com>
-> Date:   Sun Dec 2 08:38:07 2018 -0800
-> 
->     iomap: partially revert 4721a601099 (simulated directio short read on EFAULT)
-> 
->     In commit 4721a601099, we tried to fix a problem wherein directio reads
->     into a splice pipe will bounce EFAULT/EAGAIN all the way out to
->     userspace by simulating a zero-byte short read.  This happens because
->     some directio read implementations (xfs) will call
->     bio_iov_iter_get_pages to grab pipe buffer pages and issue asynchronous
->     reads, but as soon as we run out of pipe buffers that _get_pages call
->     returns EFAULT, which the splice code translates to EAGAIN and bounces
->     out to userspace.
-> 
->     In that commit, the iomap code catches the EFAULT and simulates a
->     zero-byte read, but that causes assertion errors on regular splice reads
->     because xfs doesn't allow short directio reads.  This causes infinite
->     splice() loops and assertion failures on generic/095 on overlayfs
->     because xfs only permit total success or total failure of a directio
->     operation.  The underlying issue in the pipe splice code has now been
->     fixed by changing the pipe splice loop to avoid avoid reading more data
->     than there is space in the pipe.
-> 
->     Therefore, it's no longer necessary to simulate the short directio, so
->     remove the hack from iomap.
-> 
->     Fixes: 4721a601099 ("iomap: dio data corruption and spurious errors when pipes fill")
->     Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
->     Ranted-by: Amir Goldstein <amir73il@gmail.com>
->     Reviewed-by: Christoph Hellwig <hch@lst.de>
->     Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> i
-> commit 17614445576b6af24e9cf36607c6448164719c96
-> Author: Darrick J. Wong <darrick.wong@oracle.com>
-> Date:   Fri Nov 30 10:37:49 2018 -0800
-> 
->     splice: don't read more than available pipe space
-> 
->     In commit 4721a601099, we tried to fix a problem wherein directio reads
->     into a splice pipe will bounce EFAULT/EAGAIN all the way out to
->     userspace by simulating a zero-byte short read.  This happens because
->     some directio read implementations (xfs) will call
->     bio_iov_iter_get_pages to grab pipe buffer pages and issue asynchronous
->     reads, but as soon as we run out of pipe buffers that _get_pages call
->     returns EFAULT, which the splice code translates to EAGAIN and bounces
->     out to userspace.
-> 
->     In that commit, the iomap code catches the EFAULT and simulates a
->     zero-byte read, but that causes assertion errors on regular splice reads
->     because xfs doesn't allow short directio reads.
-> 
->     The brokenness is compounded by splice_direct_to_actor immediately
->     bailing on do_splice_to returning <= 0 without ever calling ->actor
->     (which empties out the pipe), so if userspace calls back we'll EFAULT
->     again on the full pipe, and nothing ever gets copied.
-> 
->     Therefore, teach splice_direct_to_actor to clamp its requests to the
->     amount of free space in the pipe and remove the simulated short read
->     from the iomap directio code.
-> 
->     Fixes: 4721a601099 ("iomap: dio data corruption and spurious errors when pipes fill")
->     Reported-by: Murphy Zhou <jencce.kernel@gmail.com>
->     Ranted-by: Amir Goldstein <amir73il@gmail.com>
->     Reviewed-by: Christoph Hellwig <hch@lst.de>
->     Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-Sasha has queued these up already, thanks.
+Thanks for testing all of these and letting me know.
 
 greg k-h
