@@ -3,105 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D025C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAD2C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335E6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5DFD214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iZzwEIDi"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uBvEJvm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfLLPqr (ORCPT
+        id S1729535AbfLLPsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:46:47 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45638 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729276AbfLLPqq (ORCPT
+        Thu, 12 Dec 2019 10:48:22 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33622 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729013AbfLLPsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:46:46 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so3206974wrj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:46:45 -0800 (PST)
+        Thu, 12 Dec 2019 10:48:22 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d139so3913562wmd.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:48:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kxsBMZ6WbR7V0yuuMk21Fb3OoOTmsXkSh9qn9LWUugE=;
-        b=iZzwEIDi+TWzVINbxcfauAo67Jg2SQE1ZRriGcl+mSfqJ16DT6GTCr7SuTscMzxf0g
-         /MVW0kE+2YtToTVoueMbRn7oC9wcWfS3q1DyjlAJnRNYZOfwz6pexJuXxJmA/hMOTubK
-         mYWDx+co4CVm1qN2NfCTma8estYI7icXwCc+KDtLTKprfYpRAJ4+vAUpOAwJmgkGPZZ1
-         8KCk521yBqYveb1kzxJyB110rA/yOSyjbABKc44fk/W8P73+/wBpWA6RRBuMQUWCyGzr
-         D+5lPVORNXw1IIPMkn+m2L/TNS9LrbTycWBwwTb/cQVyzhxj/nryOWJTINkLXiFojFEg
-         38EA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=ZSDD0/glpJ1MgC2m3fsC6RmNqv5qfMCzBU/Ws2SvIi8=;
+        b=uBvEJvm6xdv/CK4SU85EVr9Mxaq6c28Tocn0XUIdJ+tDyPSZrt0IRxbFwAAZ62yiW5
+         9KQVcubwDSY+6CA8hl1fFj9eJov2sRbL/5ESoQ/0bw8vPsA8+jUb149QEZlxiuaHM6gO
+         xfkZyTDKaqE4d4r+JCCuwBQv5GWOYOFYudxnuQu6fjI/B0PJXfRn/Ehp46d3CgXQXCiK
+         gbIwUpYQ3S+yRiAnpcjUPo8nO5nRZFvC9OK58nUPRUiv//D0JhQBh+VSvn4UN2UHfPTp
+         R8xFcowCLsIU3cJ/DPXOlSpTfYNh12UTR1/DeTmqbb1LcZYE2U5lMvCreTJgZ3l4ZzUY
+         o+PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kxsBMZ6WbR7V0yuuMk21Fb3OoOTmsXkSh9qn9LWUugE=;
-        b=FffwqqwZnJzwd+45SpWJkfrgtanXt06AuCTjpEUJ/6Ddk342ygOLciqwxvpL4K7gXq
-         2A8TINUNlyhGlhSqhPrt/EMnMIzW2A0A6Qls4DoDVgdf2YoZbiiIpZSdUrxWfKTa+4Df
-         2cDPmnXnRWhGIkqXLzzdkdT1X1Hb/8zV0iqBPwveCz5walNlJu5wraAgp0+fErZVlKaw
-         S0XtQEinWp/d4WDU45WGwPXdfvX2oYfmj8qn3crv29xR54Cow0wcLHoIkmSMLrMryELG
-         WrTHAaeq1yKkVWxKmrlJdAvnhTJ4cQfdIojSMOeLvncauAW6K5QtLOdrkiAUrMQb+F5C
-         /HSQ==
-X-Gm-Message-State: APjAAAVC7oAZzoX8l3GXIuuvstZO/9kRmyZqPPrF2q1CAiCegr36qeQ1
-        FRKYKSHPb45n8GgzzoWG6w5pnOiBS9OdrPFrMhKz+Q==
-X-Google-Smtp-Source: APXvYqwMRwhuu8E+XbLgvlzzM2FTbIs/x7tJxkkEb6lo21GfuTVfgXBGocjpi9FnOde8dYUZjcASFfH232/ywUAOEEA=
-X-Received: by 2002:a5d:6652:: with SMTP id f18mr7281055wrw.246.1576165604385;
- Thu, 12 Dec 2019 07:46:44 -0800 (PST)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=ZSDD0/glpJ1MgC2m3fsC6RmNqv5qfMCzBU/Ws2SvIi8=;
+        b=kG2ILE1MSMrBf50/PpQCO9cBb+elVsUxtK0cfF11x30lnrR4r9JM5pDCn+Gyvm0feS
+         8qbNI7dxHWpinUxRnNo+HxrXfMcAOnsBVPGkDtNl+QPuNT2RyUJLKk9zNqm4rZCMcZI/
+         nNGi5Br5WPIflW7iggXHK7FayDVtk8c6yuK1l6kKTPBoWkNO+aJfVyhtOPZOCHXLBsI6
+         kwlPOESo5tWbZaKEonFw62bqmwi81OwVK2d6n4MpP4D7Zunx6/IwBgYXT5bXaTGq4wov
+         y5zifgNMV3xBlcyK6R4eScdSFg0hIyez6Um8ZuE/zvCOcimJpf1J+KvSM7ekz1R1byIT
+         GARQ==
+X-Gm-Message-State: APjAAAVXj1mr6wpRfQt6A0K82VCSOV/ypVNO1kFRitcr5wsC/NJ2g6pf
+        8LgaBRAiFJKcllGZv6906Ie8JwC/AMM=
+X-Google-Smtp-Source: APXvYqwXq66n5SLrBk1VKsZ4xywwLs9fJTHh0tdpXlZ2eIUT6PJDbAVb67zUzRsHvrqVeSqYp7yuWg==
+X-Received: by 2002:a1c:3141:: with SMTP id x62mr7208553wmx.18.1576165700213;
+        Thu, 12 Dec 2019 07:48:20 -0800 (PST)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id b17sm6464442wrp.49.2019.12.12.07.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 07:48:19 -0800 (PST)
+References: <20191208180525.1076152-1-martin.blumenstingl@googlemail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] ARM: dts: meson: clock updates
+In-reply-to: <20191208180525.1076152-1-martin.blumenstingl@googlemail.com>
+Date:   Thu, 12 Dec 2019 16:48:18 +0100
+Message-ID: <1j8snhbl4t.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-References: <20191203004043.174977-1-matthewgarrett@google.com>
- <CALCETrWUYapn=vTbKnKFVQ3Y4vG0qHwux0ym_To2NWKPew+vrw@mail.gmail.com>
- <CACdnJuv50s61WPMpHtrF6_=q3sCXD_Tm=30mtLnR_apjV=gjQg@mail.gmail.com>
- <CALCETrWZwN-R=He2s1DLet8iOxB_AbuSGOJ3y7zW=qUmx33C=A@mail.gmail.com> <CACdnJuvTR2r_myJX2bQ8XTDw_HxM-EgqhVLaUJVCa+VQS+6Qrg@mail.gmail.com>
-In-Reply-To: <CACdnJuvTR2r_myJX2bQ8XTDw_HxM-EgqhVLaUJVCa+VQS+6Qrg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 12 Dec 2019 16:46:32 +0100
-Message-ID: <CAKv+Gu-7H7AmMGk8_safU83KZZiJJpQ4X+o7V9Pv24AOh3g5ug@mail.gmail.com>
-Subject: Re: [PATCH] [EFI,PCI] Allow disabling PCI busmastering on bridges
- during boot
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        linux-efi <linux-efi@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Dec 2019 at 20:56, Matthew Garrett <mjg59@google.com> wrote:
->
-> On Wed, Dec 4, 2019 at 11:50 AM Andy Lutomirski <luto@amacapital.net> wrote:
->
-> > Wouldn't it also be applicable in the much simpler case where the
-> > firmware hands over control with no IOMMU configured but also with the
-> > busmastering bit cleared.  Does firmware do this?  Does the kernel
-> > currently configure the iOMMU before enabling busmastering?
->
-> We already handle this case - the kernel doesn't activate busmastering
-> until after it does IOMMU setup.
 
-Build issues aside (which we already handled off list), I think we
-should consider the following concerns I have about this patch:
-- make it work on ARM (already done)
-- make the cmdline option an efi=xxx one, this makes it obvious which
-context this is active in
-- I would prefer it if we could make it more obvious that this affects
-PCI DMA only, other masters are unaffected by any of this.
-- I don't think the presence of the IOMMU is entirely relevant - even
-in the absence of an IOMMU, I would prefer bus mastering to be
-disabled until the OS driver takes control. This is already part of
-the EFI<->handover contract, but it makes sense to have this on top
-just in case.
-- What about integrated masters? On the systems I have access to,
-there are a lot of DMA capable endpoints that sit on bus 0 without any
-root port or PCI bridge in between
-- Should we treat GOP producers differently? Or perhaps only if the
-efifb address is known to be carved out of system memory?
+On Sun 08 Dec 2019 at 19:05, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
-If we come up with a good story here in terms of policy, we may be
-able to enable this by default, which would be a win imo.
+> This series moves the XTAL clock out of the main (HHI) clock controller
+> because it's an actual dedicated crystal on the PCBs.
+>
+> The last two patches add the DDR clock controller whose output is used
+> as input for some of the audio clocks.
+>
+>
+> Dependencies:
+> - patch #1 has a runtime dependency on my other series:
+>   "provide the XTAL clock via OF on Meson8/8b/8m2" [0]
+>   Jerome has already queued this for v5.6
+> - patches #2 and #3 have a compile time dependency on my other series:
+>   "add the DDR clock controller on Meson8 and Meson8b" [1]
+>   Jerome has already queued this for v5.6, but you need an immutable
+>   tag for the dt-bindings
+
+Bindings tag clk-meson-dt-v5.6-1 available with the necessary ids
+branch v5.6/drivers with the actual driver changes
+
+>
+>
+> Jerome: can you please rebase the v5.6/dt branch tomorrow on top of
+> v5.6-rc1 and provide a tag so Kevin can apply this series?
+>
+>
+> [0] https://patchwork.kernel.org/cover/11248377/
+> [1] https://patchwork.kernel.org/cover/11248423/
+>
+>
+> Martin Blumenstingl (3):
+>   ARM: dts: meson: provide the XTAL clock using a fixed-clock
+>   ARM: dts: meson8: add the DDR clock controller
+>   ARM: dts: meson8b: add the DDR clock controller
+>
+>  arch/arm/boot/dts/meson.dtsi           |  7 +++++++
+>  arch/arm/boot/dts/meson6.dtsi          |  7 -------
+>  arch/arm/boot/dts/meson8.dtsi          | 24 +++++++++++++++++-------
+>  arch/arm/boot/dts/meson8b-ec100.dts    |  2 +-
+>  arch/arm/boot/dts/meson8b-mxq.dts      |  2 +-
+>  arch/arm/boot/dts/meson8b-odroidc1.dts |  2 +-
+>  arch/arm/boot/dts/meson8b.dtsi         | 24 +++++++++++++++++-------
+>  7 files changed, 44 insertions(+), 24 deletions(-)
+
