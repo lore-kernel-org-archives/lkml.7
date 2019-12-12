@@ -2,193 +2,147 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA997C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847EBC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F4220663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576151163;
-	bh=cQ39RzfQkmMJBisMwp45gNWZYd9PguovUj49XUd5Qdo=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=Gx+kfWcHkCPumsjQxJjN2xdolFybHoffzRLJNKby9ZpUyysuhLGv5chmflhQ4YiYp
-	 YRAtyfIKf6v1W+50bh97WJDhrpJeq+52+eIhTmnZ0ZS80zIxp/FRy/SjCWIUPFkwZ4
-	 LIKz88zbB9ioQb0lFulE5uzFxow/LK9aYwuSX2NQ=
+	by mail.kernel.org (Postfix) with ESMTP id 554F820663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:46:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DJ6YaoPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729082AbfLLLqC (ORCPT
+        id S1729097AbfLLLqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:46:02 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:45044 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726492AbfLLLqC (ORCPT
+        Thu, 12 Dec 2019 06:46:07 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:33691 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726492AbfLLLqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:46:02 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1ifMuq-0000Vg-Vq; Thu, 12 Dec 2019 12:45:57 +0100
-To:     Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v5 3/3] hwrng: add mtk-sec-rng driver
-X-PHP-Originating-Script: 0:main.inc
+        Thu, 12 Dec 2019 06:46:06 -0500
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id BA1B3725;
+        Thu, 12 Dec 2019 06:46:04 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Thu, 12 Dec 2019 06:46:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ol6RFW
+        OIya20JlX27c+UNzAio0bqaxzpviWh9kgvntk=; b=DJ6YaoPVWBLH9EEVX9M3nl
+        vfkaWhkcS2rur+gAlk5xib9TIW3fmqG6zrLqaxS9hUgnRlm1EYzMyMGdmI0j3qc7
+        7J7PlEnw43gLOuXw+MA3o1JhEsgz3yZ/Dmk28dytHyB3e6oEu1YwXJZZfdWAC8Sk
+        I8Uaqw1McwM+wDSJmJCb9Bzg7wbhakAX/1cEggCX2Z+1D9iy5AGikL/bVi1kFt6X
+        kVMusyPqV7xISsjTBU1QgAoiCswm5+VEv3Rjs5Zl3AObQA/NT+XHXyFfiEiNYq+M
+        E7sG528MDORuTIRQoy47HU+vWOMgyw5p+nesS1WGcc533oWVq8KGKSC8SLFv5wng
+        ==
+X-ME-Sender: <xms:fCjyXVhT38A60yl56bzcPmJ0Pm_1zcvVYvsVweVdMPdVcVFVuZ4r3Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeljedgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucfkphepledurdeihedrfeegrdef
+    feenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslh
+    gvthhhihhnghhslhgrsgdrtghomhenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:fCjyXQeu4fJb78qZjQ-MgGvc0yTc7mv1Uym0BXewvvrTH7dcafIoBw>
+    <xmx:fCjyXSkX9HZGrOdrMpCPmxFzUdPAZ5SjgQyOlEJE1i5tPq6PFN_3NA>
+    <xmx:fCjyXSrAQlmxHNpeMew9dUyAqHw66-S8HK3FECeeT95qyhMQGSZ5WQ>
+    <xmx:fCjyXZiELqMSNaWzBNwmVM3tb8uS-9f7LHVsLf-JcCBaIoOEBpVbvw>
+Received: from mail-itl (ip5b412221.dynamic.kabel-deutschland.de [91.65.34.33])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2AF1F80059;
+        Thu, 12 Dec 2019 06:46:03 -0500 (EST)
+Date:   Thu, 12 Dec 2019 12:45:59 +0100
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Suwan Kim <suwan.kim027@gmail.com>
+Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] usbip: Fix receive error in vhci-hcd when using
+ scatter-gather
+Message-ID: <20191212114559.GW11116@mail-itl>
+References: <20191212052841.6734-1-suwan.kim027@gmail.com>
+ <20191212052841.6734-2-suwan.kim027@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Dec 2019 11:45:56 +0000
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?Q?Crystal_Guo_=28=E9=83=AD?= =?UTF-8?Q?=E6=99=B6=29?= 
-        <crystal.guo@mediatek.com>, Will Deacon <will@kernel.org>,
-        Lars Persson <lists@bofh.nu>,
-        <linux-arm-kernel@lists.infradead.org>
-In-Reply-To: <1576127609.27185.8.camel@mtkswgap22>
-References: <1574864578-467-1-git-send-email-neal.liu@mediatek.com>
- <1574864578-467-4-git-send-email-neal.liu@mediatek.com>
- <CADnJP=uhD=J2NrpSwiX8oCTd-u_q05=HhsAV-ErCsXNDwVS0rA@mail.gmail.com>
- <1575027046.24848.4.camel@mtkswgap22>
- <CAKv+Gu_um7eRYXbieW7ogDX5mmZaxP7JQBJM9CajK+6CsO5RgQ@mail.gmail.com>
- <20191202191146.79e6368c@why>
- <299029b0-0689-c2c4-4656-36ced31ed513@gmail.com>
- <b7043e932211911a81383274e0cc983d@www.loen.fr>
- <1576127609.27185.8.camel@mtkswgap22>
-Message-ID: <a5982b8ed10440eef14c04df6e6060b6@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: neal.liu@mediatek.com, f.fainelli@gmail.com, ard.biesheuvel@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, herbert@gondor.apana.org.au, wsd_upstream@mediatek.com, catalin.marinas@arm.com, sean.wang@kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-crypto@vger.kernel.org, mpm@selenic.com, matthias.bgg@gmail.com, crystal.guo@mediatek.com, will@kernel.org, lists@bofh.nu, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="R7Dyui215VKdTDYA"
+Content-Disposition: inline
+In-Reply-To: <20191212052841.6734-2-suwan.kim027@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 05:13, Neal Liu wrote:
-> On Tue, 2019-12-03 at 11:17 +0000, Marc Zyngier wrote:
->> On 2019-12-03 04:16, Florian Fainelli wrote:
->> > On 12/2/2019 11:11 AM, Marc Zyngier wrote:
->> >> On Mon, 2 Dec 2019 16:12:09 +0000
->> >> Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
->> >>
->> >>> (adding some more arm64 folks)
->> >>>
->> >>> On Fri, 29 Nov 2019 at 11:30, Neal Liu <neal.liu@mediatek.com>
->> >>> wrote:
->> >>>>
->> >>>> On Fri, 2019-11-29 at 18:02 +0800, Lars Persson wrote:
->> >>>>> Hi Neal,
->> >>>>>
->> >>>>> On Wed, Nov 27, 2019 at 3:23 PM Neal Liu 
->> <neal.liu@mediatek.com>
->> >>>>> wrote:
->> >>>>>>
->> >>>>>> For MediaTek SoCs on ARMv8 with TrustZone enabled, 
->> peripherals
->> >>>>>> like
->> >>>>>> entropy sources is not accessible from normal world (linux) 
->> and
->> >>>>>> rather accessible from secure world (ATF/TEE) only. This 
->> driver
->> >>>>>> aims
->> >>>>>> to provide a generic interface to ATF rng service.
->> >>>>>>
->> >>>>>
->> >>>>> I am working on several SoCs that also will need this kind of
->> >>>>> driver
->> >>>>> to get entropy from Arm trusted firmware.
->> >>>>> If you intend to make this a generic interface, please clean 
->> up
->> >>>>> the
->> >>>>> references to MediaTek and give it a more generic name. For
->> >>>>> example
->> >>>>> "Arm Trusted Firmware random number driver".
->> >>>>>
->> >>>>> It will also be helpful if the SMC call number is 
->> configurable.
->> >>>>>
->> >>>>> - Lars
->> >>>>
->> >>>> Yes, I'm trying to make this to a generic interface. I'll try 
->> to
->> >>>> make
->> >>>> HW/platform related dependency to be configurable and let it 
->> more
->> >>>> generic.
->> >>>> Thanks for your suggestion.
->> >>>>
->> >>>
->> >>> I don't think it makes sense for each arm64 platform to expose 
->> an
->> >>> entropy source via SMC calls in a slightly different way, and 
->> model
->> >>> it
->> >>> as a h/w driver. Instead, we should try to standardize this, and
->> >>> perhaps expose it via the architectural helpers that already 
->> exist
->> >>> (get_random_seed_long() and friends), so they get plugged into 
->> the
->> >>> kernel random pool driver directly.
->> >>
->> >> Absolutely. I'd love to see a standard, ARM-specified, 
->> virtualizable
->> >> RNG that is abstracted from the HW.
->> >
->> > Do you think we could use virtio-rng on top of a modified 
->> virtio-mmio
->> > which instead of being backed by a hardware mailbox, could use
->> > hvc/smc
->> > calls to signal writes to shared memory and get notifications via 
->> an
->> > interrupt? This would also open up the doors to other virtio uses
->> > cases
->> > beyond just RNG (e.g.: console, block devices?). If this is
->> > completely
->> > stupid, then please disregard this comment.
->>
->> The problem with a virtio device is that it is a ... device. What we
->> want
->> is to be able to have access to an entropy source extremely early in
->> the
->> kernel life, and devices tend to be available pretty late in the 
->> game.
->> This means we cannot plug them in the architectural helpers that Ard
->> mentions above.
->>
->> What you're suggesting looks more like a new kind of virtio 
->> transport,
->> which is interesting, in a remarkably twisted way... ;-)
->>
->> Thanks,
->>
->>          M.
->
-> In conclusion, is it helpful that hw_random has a generic interface 
-> to
-> add device randomness by talking to hwrng which is implemented in the
-> firmware or the hypervisor?
-> For most chip vendors, I think the answer is yes. We already prepared 
-> a
-> new patchset and need you agree with this idea.
 
-As long as it is a *unified* interface, I'm all for that.
+--R7Dyui215VKdTDYA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] usbip: Fix receive error in vhci-hcd when using
+ scatter-gather
 
-Thanks,
+On Thu, Dec 12, 2019 at 02:28:40PM +0900, Suwan Kim wrote:
+> When vhci uses SG and receives data whose size is smaller than SG
+> buffer size, it tries to receive more data even if it acutally
+> receives all the data from the server. If then, it erroneously adds
+> error event and triggers connection shutdown.
+>=20
+> vhci-hcd should check if it received all the data even if there are
+> more SG entries left. So, check if it receivces all the data from
+> the server in for_each_sg() loop.
+>=20
+> Fixes: ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub dr=
+iver")
+> Reported-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab=
+=2Ecom>
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+
+> ---
+>  drivers/usb/usbip/usbip_common.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/usb/usbip/usbip_common.c b/drivers/usb/usbip/usbip_c=
+ommon.c
+> index 6532d68e8808..e4b96674c405 100644
+> --- a/drivers/usb/usbip/usbip_common.c
+> +++ b/drivers/usb/usbip/usbip_common.c
+> @@ -727,6 +727,9 @@ int usbip_recv_xbuff(struct usbip_device *ud, struct =
+urb *urb)
+> =20
+>  			copy -=3D recv;
+>  			ret +=3D recv;
+> +
+> +			if (!copy)
+> +				break;
+>  		}
+> =20
+>  		if (ret !=3D size)
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+
+--R7Dyui215VKdTDYA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl3yKHgACgkQ24/THMrX
+1ywSWwf/aXnourZh6+z8Levd5Q3SYBwIJXKYM9bNFOW1KwgCtYhhjVKYKVpkMh0v
+dsn9QNc3Is5A0bp+zfgsqskyDLCJYbtT7nq5UIdSd4xKID0oa6nlz1ODmgfducTI
+HTJ3jCyYoscaJZhCBkMSv0hcnoJQMAta+yr9qZJkYh/E5LnA5yErl8o6juSJ+E7g
+624+4ZHwgYIopr+fFSyD51c42dhrciu4j2C6URNhhJRMVqann/jvQZHT6eaBWfzt
+Uz0o3vfRLg5rBoU7luV2tTqPJOCve7Q+/CGUdawOIqRXs1FqnePq46r9T3VS5T3u
+0rWwX0nGquiKG6pYh/myHMobV2JuCA==
+=UnQt
+-----END PGP SIGNATURE-----
+
+--R7Dyui215VKdTDYA--
