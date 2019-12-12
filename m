@@ -2,114 +2,70 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17974C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CACC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25632077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI6lajdc"
+	by mail.kernel.org (Postfix) with ESMTP id 4137F214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576116070;
+	bh=mrLm7hWWGdtEPq9cGYIvyHV5bCojU9MeN4AkSl1wgng=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kDP70NM10JV/yI94wdfCAzAPByMw2zDBo8dIrC3jsIP1ullMdxFLPCk8J+uE6MTD5
+	 4u54d/7NS+CytT791wLZ8/SYaaPsHJRfj3hA52EDfAltzxg1WuSfRXHjraIpflBH7d
+	 Jg1ECNuxONJ3OaHnRgFPA/vnTeQQxpH0gIbrkXuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbfLLB6n (ORCPT
+        id S1727602AbfLLCBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:58:43 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38859 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfLLB6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:58:42 -0500
-Received: by mail-lj1-f196.google.com with SMTP id k8so382231ljh.5;
-        Wed, 11 Dec 2019 17:58:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tIX439an0mvSSKUZP4UoZM6AftaCewaB/Dw94KbRNQw=;
-        b=cI6lajdchoiQCB0ZPJFKLDWjbXTKkewcnAA2vt0UpdVGrexxMyMDTsKROrMhQHeN3Q
-         mEYQlAG0yFtsx8u4aRBKGMKIvy1+TMeXs11Rwl8sHR68uS3P6hQOy8+rhvetoHQGe9T8
-         1MHG1ZwzevLOBtSLxWFhbBimeAth3fVIFTdtR14V1PeZPalL/vXu4Zo7T/gYHQC8TYFZ
-         UEvghfhhyuyvsHZPx9Y5VAwUdRqq+LBq1ODPrD6gBB2rI+d1JXqS/rP9nX0OUpmFZGq+
-         XDftqxyefM8oLqSSs56ivfUH4y3N7wdT4p5mk4wwyi50oPm3dNkS3eLcObO6C0DyOysA
-         HHEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tIX439an0mvSSKUZP4UoZM6AftaCewaB/Dw94KbRNQw=;
-        b=lFZBZIW/h7khWX2NQYt7S8a45x3G6h/QbK2Pg8qAMYMK08IHLFVQljOsFS+E+XrA0n
-         fUt1pZ3F8CgUh/TczX5Y1/PVz0B1DoQndcK/zrT9A9wNECVjUCb+DrTWWWJShrTui7D8
-         aeliu33BUji9pEkSFnSWIECTCpHkF+hfS0gI96AJHac9w/MGxStxCWGv2egXc+ohIn8t
-         EXLxbfoNWcnZP/9D2DYC7zaHEM1zQq8ylvPqT75qHZxGOnfMppH4WBF4c07dfd5fB+YB
-         0v6jrLQCv5LC8nrrZTKPRE0Q9Z+h0izkL63D7+nRHs/Yz4jrKXpJjtdEtIy3Mr74zJEY
-         Ydyw==
-X-Gm-Message-State: APjAAAUUZRLIpoNA9MpDFjr7oWpB6+xZl6MM4BZcNF453sXkVMcccMmS
-        Kh/Xcizg7Amo8OJVkUCo3snKiloT
-X-Google-Smtp-Source: APXvYqx4UOyMZoR302qC575ORpINoBpp4YP/1VBKp22kXDTTp1mMbo3doeHAENR3csP22uTGPLfFVA==
-X-Received: by 2002:a2e:9b8f:: with SMTP id z15mr4292823lji.20.1576115919796;
-        Wed, 11 Dec 2019 17:58:39 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id f11sm2337887lfa.9.2019.12.11.17.58.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 17:58:39 -0800 (PST)
-Subject: Re: [PATCH v8 00/19] Consolidate and improve NVIDIA Tegra CPUIDLE
- driver(s)
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191203004116.11771-1-digetx@gmail.com>
- <20191211085120.GX28289@pdeschrijver-desktop.Nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <804e46c7-1c39-926a-6624-924739433638@gmail.com>
-Date:   Thu, 12 Dec 2019 04:58:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 11 Dec 2019 21:01:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbfLLCBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:01:08 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 232722077B;
+        Thu, 12 Dec 2019 02:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576116068;
+        bh=mrLm7hWWGdtEPq9cGYIvyHV5bCojU9MeN4AkSl1wgng=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LXZxgE+DKBG/qoOnEiDBqi4cB+vAa9DF8tMqPwcCv5iE6Ri8KD/kKZVKAZ4gc/KaO
+         1cIi+UK0BKN4kCPeqHDRoonl+3TlmTJpancmus5GZz0xxy25tzYq4bCZLs7EZ7bXjb
+         OTITqe06Wl/qWRvaJfI/Z2WK1j8xUftOiF2565ag=
+Date:   Thu, 12 Dec 2019 10:00:56 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3] arm64: dts: ls1028a: fix reboot node
+Message-ID: <20191212020055.GB15858@dragon>
+References: <20191211171145.14736-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20191211085120.GX28289@pdeschrijver-desktop.Nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211171145.14736-1-michael@walle.cc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.12.2019 11:51, Peter De Schrijver пишет:
-> On Tue, Dec 03, 2019 at 03:40:57AM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This series does the following:
->>
->>   1. Unifies Tegra20/30/114 drivers into a single driver and moves it out
->>      into common drivers/cpuidle/ directory.
->>
->>   2. Enables CPU cluster power-down idling state on Tegra30.
->>
->> In the end there is a quite nice clean up of the Tegra CPUIDLE drivers
->> and of the Tegra's arch code in general. Please review, thanks!
->>
+On Wed, Dec 11, 2019 at 06:11:45PM +0100, Michael Walle wrote:
+> The reboot register isn't located inside the DCFG controller, but in its
+> own RST controller. Fix it.
 > 
-> Acked-By Peter De Schrijver <pdeschrijver@nvidia.com> for the series.
-> 
-> Peter.
-> 
+> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Thank you very much! Will be awesome if you could take a look at the
-cpufreq patches as well [1].
+You missed Leo's ACK on v2?  I added it and applied the patch.
 
-There are also some other older unreviewed clk patches on the list that
-I'd want you to take a look. I'll revisit and re-send them soon. Maybe
-will add the PLLX LP1 patches [2] into cpufreq series.
-
-[1] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=143592
-
-[2] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=139741
+Shawn
