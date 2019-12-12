@@ -2,204 +2,188 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0CBC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB5EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 823E121556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BF321556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576179256;
+	bh=DSjzqa57tXjDkk2/y8MiZfkoGkXE5LuVpeVYvGkAzAw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AirQq//5lvA5MRx3l0A+hiKTl5FXOKk387e9zvRwDLr7sKOgo9GVa6WfS/42Wg79t
+	 cNGr7eBFSnRrrqlosHdI6Fg567P7haydWGUxovCl2kAnT1eOzzG1pWAPSN+PY4xvw+
+	 T+KQKiVWKz/7V4XPr8bl+x8RvnQVtVQYajarYWF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbfLLTbx (ORCPT
+        id S1730612AbfLLTeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:31:53 -0500
-Received: from mga02.intel.com ([134.134.136.20]:18136 "EHLO mga02.intel.com"
+        Thu, 12 Dec 2019 14:34:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730349AbfLLTbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:31:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 11:31:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="226036387"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 12 Dec 2019 11:31:52 -0800
-Received: from [10.251.19.65] (kliang2-mobl.ccr.corp.intel.com [10.251.19.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730284AbfLLTeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:34:08 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id EB99258043A;
-        Thu, 12 Dec 2019 11:31:50 -0800 (PST)
-Subject: Re: [PATCH v3 0/2] perf x86: Exposing IO stack to IO PMON mapping
- through sysfs
-To:     roman.sudarikov@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, bgregg@netflix.com, ak@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com
-References: <20191212150440.11377-1-roman.sudarikov@linux.intel.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <c2e6236f-5e99-a159-8dae-54c59e1ffe10@linux.intel.com>
-Date:   Thu, 12 Dec 2019 14:31:49 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 4714C21556;
+        Thu, 12 Dec 2019 19:34:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576179247;
+        bh=DSjzqa57tXjDkk2/y8MiZfkoGkXE5LuVpeVYvGkAzAw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bagGZkrK6wzLHJnf7BiRRpPhzPo5i+riIBOcS9DBGw4Oq1ZBQzyhZGBHdGOlcaaTg
+         WGFTIePbWzElznEfxHo/Qop3TWvFTUmiuMWZ2jloSXdTrYnKxApvRPSNaFF+bcowVa
+         2obC/XfXaO4qVL9xjg4eYXE4cX3X0COaAkN7hatc=
+Date:   Thu, 12 Dec 2019 19:34:01 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212193401.GB19020@willie-the-truck>
+References: <87blslei5o.fsf@mpe.ellerman.id.au>
+ <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212150440.11377-1-roman.sudarikov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
+On Thu, Dec 12, 2019 at 10:43:05AM -0800, Linus Torvalds wrote:
+> On Thu, Dec 12, 2019 at 10:06 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > I'm currently trying to solve the issue by removing volatile from the bitop
+> > function signatures
+> 
+> I really think that's the wrong thing to do.
+> 
+> The bitop signature really should be "volatile" (and it should be
+> "const volatile" for test_bit, but I'm not sure anybody cares).
 
-On 12/12/2019 10:04 AM, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> 
-> The previous version can be found at:
-> v2: https://lkml.org/lkml/2019/12/10/185
->
+Agreed on the "const" part, although I do think the "volatile" aspect has
+nasty side-effects despite being a visual indicator that we're eliding
+locks. More below.
 
-If you have to provide next version to address other issues, please use 
-canonical form to provide a link. For example,
+> Exactly because it's simply valid to say "hey, my data is volatile,
+> but do an atomic test of this bit". So it might be volatile in the
+> caller.
 
-https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
+That's fair, although the cases I've run into so far for the bitops are
+usually just that the functions have been wrapped, and volatile could easily
+be dropped from the caller as well (e.g. assign_bit(), __node_clear(),
+linkmode_test_bit()).
 
-"20191210091451.6054-1-roman.sudarikov@linux.intel.com" is the 
-Message-ID of V2 patch set, which can help maintainers or reviewers to 
-locate the patch set quickly.
+> Now, I generally frown on actual volatile data structures - because
+> the data structure volatility often depends on _context_. The same
+> data might be volatile in one context (when you do some optimistic
+> test on it without locking), but 100% stable in another (when you do
+> have a lock).
 
-> Changes in this revision are:
-> v2 -> v3:
-> - Addressed comments from Peter and Kan
-> 
+There are cases in driver code where it looks as though data members are
+being declared volatile specifically because of the bitops type signatures
+(e.g. 'wrapped' in 'struct mdp5_mdss', 'context_flag' in 'struct
+drm_device', 'state' in 'struct s2io_nic'). Yeah, it's bogus, but I think
+that having the modifier in the function signature is still leading people
+astray.
 
-Please specify which comments are addressed and how are they addressed 
-next time. So we can focus on the updated codes.
+> So I don't want to see "volatile" on data definitions ("jiffies" being
+> the one traditional exception), but marking things volatile in code
+> (because you know you're working with unlocked data) and then passing
+> them down to various helper functions - including the bitops ones - is
+> quite traditional and accepted.
+> 
+> In other words, 'volatile" should be treated the same way "const" is
+> largely treated in C.
+> 
+> A pointer to "const" data doesn't mean that the data is read-only, or
+> that it cannot be modified _elsewhere_, it means that within this
+> particular context and this copy of the pointer we promise not to
+> write to it.
+> 
+> Similarly, a pointer to "volatile" data doesn't mean that the data
+> might not be stable once you take a lock, for example. So it's ok to
+> have volatile pointers even if the data declaration itself isn't
+> volatile - you're stating something about the context, not something
+> fundamental about the data.
+> 
+> And in the context of the bit operations, "volatile" is the correct thing
+> to do.
 
-Except the change log issue, the patch set looks good to me.
+The root of my concern in all of this, and what started me looking at it in
+the first place, is the interaction with 'typeof()'. Inheriting 'volatile'
+for a pointer means that local variables in macros declared using typeof()
+suddenly start generating *hideous* code, particularly when pointless stack
+spills get stackprotector all excited. Even if we simplify READ_ONCE() back
+to its old incantation, the acquire/release accessors will have the exact
+same issues on architectures that implement them.
 
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+For example, consider this code on arm64:
 
+void ool_store_release(unsigned long *ptr, unsigned long val)
+{
+	smp_store_release(ptr, val);
+}
 
-> The previous version can be found at:
-> v1: https://lkml.org/lkml/2019/11/26/447
-> 
-> Changes in this revision are:
-> v1 -> v2:
-> - Fixed process related issues;
-> - This patch set includes kernel support for IIO stack to PMON mapping;
-> - Stephane raised concerns regarding output format which may require
-> code changes in the user space part of the feature only. We will continue
-> output format discussion in the context of user space update.
-> 
-> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-> significant changes in the integrated I/O (IIO) architecture. The new
-> solution introduces IIO stacks which are responsible for managing traffic
-> between the PCIe domain and the Mesh domain. Each IIO stack has its own
-> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-> or various built-in accelerators. IIO PMON blocks allow concurrent
-> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
-> 
-> Software is supposed to program required perf counters within each IIO
-> stack and gather performance data. The tricky thing here is that IIO PMON
-> reports data per IIO stack but users have no idea what IIO stacks are -
-> they only know devices which are connected to the platform.
-> 
-> Understanding IIO stack concept to find which IIO stack that particular
-> IO device is connected to, or to identify an IIO PMON block to program
-> for monitoring specific IIO stack assumes a lot of implicit knowledge
-> about given Intel server platform architecture.
-> 
-> This patch set introduces:
-> 1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
->     through sysfs-backend;
-> 2. A new --iiostat mode in perf stat to provide I/O performance metrics
->     per I/O device.
-> 
-> Usage examples:
-> 
-> 1. List all devices below IIO stacks
->    ./perf stat --iiostat=show
-> 
-> Sample output w/o libpci:
-> 
->      S0-RootPort0-uncore_iio_0<00:00.0>
->      S1-RootPort0-uncore_iio_0<81:00.0>
->      S0-RootPort1-uncore_iio_1<18:00.0>
->      S1-RootPort1-uncore_iio_1<86:00.0>
->      S1-RootPort1-uncore_iio_1<88:00.0>
->      S0-RootPort2-uncore_iio_2<3d:00.0>
->      S1-RootPort2-uncore_iio_2<af:00.0>
->      S1-RootPort3-uncore_iio_3<da:00.0>
-> 
-> Sample output with libpci:
-> 
->      S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
->      S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
->      S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
->      S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
->      S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
->      S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
-> 
-> 2. Collect metrics for all I/O devices below IIO stack
-> 
->    ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      357708+0 records in
->      357707+0 records out
->      375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
-> 
->    Performance counter stats for 'system wide':
-> 
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      00:00.0                    0                    0                    0                    0
->      81:00.0                    0                    0                    0                    0
->      18:00.0                    0                    0                    0                    0
->      86:00.0                    0                    0                    0                    0
->      88:00.0                    0                    0                    0                    0
->      3b:00.0                    3                    0                    0                    0
->      3c:03.0                    3                    0                    0                    0
->      3d:00.0                    3                    0                    0                    0
->      af:00.0                    0                    0                    0                    0
->      da:00.0               358559                   44                    0                   22
-> 
->      215.383783574 seconds time elapsed
-> 
-> 
-> 3. Collect metrics for comma separted list of I/O devices
-> 
->    ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
->      381555+0 records in
->      381554+0 records out
->      400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
-> 
->    Performance counter stats for 'system wide':
-> 
->       device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
->      da:00.0               382462                   47                    0                   23
-> 
->      374.045775505 seconds time elapsed
-> 
-> 
-> Roman Sudarikov (2):
->    perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
->    perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
->      platform
-> 
->   arch/x86/events/intel/uncore.c       |  39 ++++++-
->   arch/x86/events/intel/uncore.h       |  10 +-
->   arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
->   3 files changed, 208 insertions(+), 3 deletions(-)
-> 
-> 
-> base-commit: 219d54332a09e8d8741c1e1982f5eae56099de85
-> 
+This compiles to a single instruction plus return, which is what we want:
+
+0000000000000000 <ool_store_release>:
+   0:   c89ffc01        stlr    x1, [x0]
+   4:   d65f03c0        ret
+
+Now, see what happens if we make the 'ptr' argument volatile:
+
+void ool_store_release(volatile unsigned long *ptr, unsigned long val)
+{
+	smp_store_release(ptr, val);
+}
+
+0000000000000000 <ool_store_release>:
+   0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
+   4:   90000002        adrp    x2, 0 <__stack_chk_guard>
+   8:   91000042        add     x2, x2, #0x0
+   c:   910003fd        mov     x29, sp
+  10:   f9400043        ldr     x3, [x2]
+  14:   f9000fa3        str     x3, [x29, #24]
+  18:   d2800003        mov     x3, #0x0                        // #0
+  1c:   c89ffc01        stlr    x1, [x0]
+  20:   f9400fa1        ldr     x1, [x29, #24]
+  24:   f9400040        ldr     x0, [x2]
+  28:   ca000020        eor     x0, x1, x0
+  2c:   b5000060        cbnz    x0, 38 <ool_store_release+0x38>
+  30:   a8c27bfd        ldp     x29, x30, [sp], #32
+  34:   d65f03c0        ret
+  38:   94000000        bl      0 <__stack_chk_fail>
+
+It's a mess, and fixing READ_ONCE() doesn't help this case, which is why
+I was looking at getting rid of volatile where it's not strictly needed.
+I'm certainly open to other suggestions, I just haven't managed to think
+of anything else.
+
+Will
