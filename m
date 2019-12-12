@@ -2,146 +2,94 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C13FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5DCC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2A1214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACDF2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtm9D6o+"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Fg+X3WpD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730325AbfLLSTG (ORCPT
+        id S1730355AbfLLSUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:19:06 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45320 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730034AbfLLSTF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:19:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so1548026pgk.12;
-        Thu, 12 Dec 2019 10:19:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=rgR8f1oUjZUBATiXVQBzGKim6OO45u2oQD6/qlDZ5vY=;
-        b=Wtm9D6o+Rw8Z/2kp4hHqYDHWqiMHjwhwJqZhBTWYSHV2QpyziCmhpYw+iNK0EgzI3H
-         zGleLoIAO28mM3cOv19mKVDWUK61FVVwzzD3+6kbxOz+BfeHEKNahCUGnzcKrhOEXE+2
-         aB/nCzugj9ZsvFyd+DPg/5v0DWreTLMC4vnEjGuYeg6Qyq3FlQrMI9sYVRBvRaVuWBDc
-         e7sWjrPaysRzCNwpT/Y3OlICwSLUIgfRSM0eBOzYeA9WtZE3B87GJQT/f5eRnyPcTcYU
-         Ig0qqPA6T1itDrUh/ZAm6nxFSZ3FSEXMYYWNjaTehaci/dCW3SrZZeqUJpfOQcp9jGgA
-         SXLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=rgR8f1oUjZUBATiXVQBzGKim6OO45u2oQD6/qlDZ5vY=;
-        b=boczkkHJLJ8eypLPeFv6fT8IUU/RFnDjb8f3KQH+dQkFwOc6hdRDlbREiYufvZUGFm
-         Uc5k0syikhLMU4p/3vY0pWVaKIoDwP1ko30IuODX7qLOGlKx6Fgkjc9HxkTaidZ7Dkb1
-         0CkoFCmu/ZKajrEobfkAcq2embesjRHEJRKwEaCUJ7BLLLnd5lrYJTaxbbVUf9j5/HQA
-         +KwvhezNPPWgn8IxnneW/yzt9l1UvmsM8k5Jf/2L+zJlFF/TZu7iM98hMokj1+mm7WXp
-         A/9RbzdLraEO8iVpQVSWWgA2NasRV4EGTrDYzzSEYFHcylY8uAbxLBrVt8VD2Pz1HYam
-         /Rzw==
-X-Gm-Message-State: APjAAAUaxv9vH+YGNjoC+2RyCpmjaCCnwa58RXiNe8cEiKMSkwrB4GkJ
-        JVufobTpzPmI2R5X/COcLpygKr80
-X-Google-Smtp-Source: APXvYqxQtpo2SEZbeVIFNPFPIA35uoCJcj9XN/Bo4jPUjDncYiMyW5uqrgD6u/nV/eD4veoZsq1Ccg==
-X-Received: by 2002:a63:fd10:: with SMTP id d16mr11817204pgh.177.1576174744975;
-        Thu, 12 Dec 2019 10:19:04 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d14sm6702804pjz.12.2019.12.12.10.19.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 10:19:04 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:19:02 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-watchdog@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>,
-        Denis Efremov <efremov@linux.com>
-Subject: Re: [PATCH 1/2] watchdog: mtx-1: Drop au1000.h header inclusion
-Message-ID: <20191212181902.GA31779@roeck-us.net>
-References: <20191211210204.31579-1-f.fainelli@gmail.com>
- <20191211210204.31579-2-f.fainelli@gmail.com>
- <21b7be75-db61-3b14-c57c-04af0b78b347@roeck-us.net>
- <3fdc99fa-f75c-33d4-e1c4-ec8ad185e2cd@gmail.com>
+        Thu, 12 Dec 2019 13:20:02 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:44930 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730168AbfLLSUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:20:01 -0500
+Received: from zn.tnic (p200300EC2F0A5A0010289BED6992E3B4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:1028:9bed:6992:e3b4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E054F1EC0CF2;
+        Thu, 12 Dec 2019 19:19:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576174800;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=x5mt3r12Tts+nYmDdCkFyw/k0XG+AEctVRLj3FhJsXw=;
+        b=Fg+X3WpDaehpIoSZ3uWhY53LeiHccCwa6Q2r81vWJ72MY4EtE8JXhUKeBkmQe8o/hqC6tB
+        vS5BR3qVfq4vnKYdXvUrqlk9IvCHPHvr2wAF0l0StcjWWYnfWQ92Ch4Wkr4Ma9jqJi6cvN
+        qAEt6sA4z1iA0J31l9aVJM66CnYaNas=
+Date:   Thu, 12 Dec 2019 19:19:52 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v4 01/19] x86/msr-index: Clean up bit defines for
+ IA32_FEATURE_CONTROL MSR
+Message-ID: <20191212181952.GG4991@zn.tnic>
+References: <20191128014016.4389-2-sean.j.christopherson@intel.com>
+ <201912010347.7tMb4moN%lkp@intel.com>
+ <20191202190633.GG4063@linux.intel.com>
+ <20191212092509.GB4991@zn.tnic>
+ <20191212174801.GF3163@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3fdc99fa-f75c-33d4-e1c4-ec8ad185e2cd@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191212174801.GF3163@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 07:38:29PM -0800, Florian Fainelli wrote:
-> 
-> 
-> On 12/11/2019 5:35 PM, Guenter Roeck wrote:
-> > On 12/11/19 1:02 PM, Florian Fainelli wrote:
-> >> Including au1000.h from the machine specific header directory prevents
-> >> this driver from being built on any other platforms (MIPS included).
-> >> Since we do not use any definitions, drop it.
-> >>
-> >> Reported-by: Denis Efremov <efremov@linux.com>
-> >> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> >> ---
-> >>   drivers/watchdog/mtx-1_wdt.c | 2 --
-> >>   1 file changed, 2 deletions(-)
-> >>
-> >> diff --git a/drivers/watchdog/mtx-1_wdt.c b/drivers/watchdog/mtx-1_wdt.c
-> >> index 25a92857b217..aeca22f7450e 100644
-> >> --- a/drivers/watchdog/mtx-1_wdt.c
-> >> +++ b/drivers/watchdog/mtx-1_wdt.c
-> >> @@ -41,8 +41,6 @@
-> >>   #include <linux/uaccess.h>
-> >>   #include <linux/gpio/consumer.h>
-> >>   -#include <asm/mach-au1x00/au1000.h>
-> >> -
-> >>   #define MTX1_WDT_INTERVAL    (5 * HZ)
-> >>     static int ticks = 100 * HZ;
-> >>
-> > 
-> > Given that this is nothing but yet another gpio watchdog driver, I'd
-> > personally rather have it merged with gpio_wdt.c. On a higher level,
-> > cleaning up old-style watchdog drivers, without converting them to
-> > using the watchdog core, is a waste of time.
-> 
-> If that makes you feel any better, I was not planning on going further
-> than that, and yes, removing this driver and using gpio_wdt.c would be
-> the way to go, this driver greatly predates gpio_wdt.c and I have since
-> then not had access to my MTX-1 platforms which is why this did not
-> happen. We can attempt a "blind conversion" without testing, but what
-> good would that make, not sure.
-> 
+On Thu, Dec 12, 2019 at 09:48:01AM -0800, Sean Christopherson wrote:
+> I caught all the tools updates and addressed them in patch 03/19, "tools
+> arch x86: Sync msr-index.h from kernel sources".  Do you want those changes
+> folded into the rename itself?
 
-It sounds like this is a purely cosmetical change to improve test build
-coverage for a more or less obsolete driver. No, that doesn't make me feel
-better; I get way too many of those lately. Worse, some of those test build
-"improvements" actually end up breaking real builds, which then costs me
-and others even more time to track down.
+Nah, it's ok as it is.
 
-We should really discourage that. Is there some challenge going on somewhere,
-along the line of "improve test build coverage" ?
+Thx.
 
-Guenter
+-- 
+Regards/Gruss,
+    Boris.
 
-> > 
-> > Wim, should we make it a policy to reject patches into old-style drivers
-> > unless they fix a real bug ? It is getting a pain to have to review those
-> > patches.
-> > 
-> > Thanks,
-> > Guenter
-> 
-> -- 
-> Florian
+https://people.kernel.org/tglx/notes-about-netiquette
