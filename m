@@ -2,254 +2,162 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB1BC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEEEC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44CB821655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="DzhFO2Cz"
+	by mail.kernel.org (Postfix) with ESMTP id 1384B21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:04:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbfLLOEm (ORCPT
+        id S1729677AbfLLOEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:04:42 -0500
-Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:57540 "EHLO
-        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbfLLOEm (ORCPT
+        Thu, 12 Dec 2019 09:04:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:58067 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729547AbfLLOEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:04:42 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id F285A3F6E0;
-        Thu, 12 Dec 2019 15:04:38 +0100 (CET)
-Authentication-Results: pio-pvt-msa2.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=DzhFO2Cz;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Q3s48xuWPFsv; Thu, 12 Dec 2019 15:04:33 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 2F78D3F617;
-        Thu, 12 Dec 2019 15:04:30 +0100 (CET)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 13DC43621B7;
-        Thu, 12 Dec 2019 15:04:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1576159470; bh=+81VifpPufQx1Ghf7UgamHghIAtblxqdt1z4rpeKwjw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=DzhFO2Czsj4dlxMRNekZ5HARyubeVf/Z0IFsk9SHs7ghuuNJfX/lCADJRkbNKu9Xc
-         chbNsFXIChLsKn2EMmrTWPks59Fk6Fc5P78vIRgrPvZQpWVKd2JOGzA2NNOUv4e8Ig
-         IMiWhXAy3y1WXfta2R8hBYxsV4ji02fQFhFx/csY=
-Subject: Re: [PATCH v16 11/25] mm: pagewalk: Add p4d_entry() and pgd_entry()
-To:     Steven Price <steven.price@arm.com>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Zong Li <zong.li@sifive.com>, Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
+        Thu, 12 Dec 2019 09:04:48 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MnWx3-1hyxRR0wyr-00jZT4; Thu, 12 Dec 2019 15:04:20 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mike Travis <mike.travis@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20191206135316.47703-1-steven.price@arm.com>
- <20191206135316.47703-12-steven.price@arm.com>
- <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
- <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
- <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <16b2ecbc-316a-33f8-ace2-e54cd8001b24@shipmail.org>
-Date:   Thu, 12 Dec 2019 15:04:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Christoph Hellwig <hch@infradead.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Justin Ernst <justin.ernst@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/platform/uv: avoid unused variable warning
+Date:   Thu, 12 Dec 2019 15:03:57 +0100
+Message-Id: <20191212140419.315264-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Provags-ID: V03:K1:xM0uqZr408u8v1eBM37k4OWvemqZEVo56Zeor5mvcWZmUqaGS/N
+ rp7miPPJEEw2z2rhDcFr64f+PswFnItkjVLoEcoCy3Sf4YEaK8GSNGN4ft4AzaBCD/2TxKf
+ uY6+hnmNRu+COxLEqhNjK3Yjhb29CvHiNcJURn1BynstdGNOqQgepnB2komWcqDaTD202tl
+ cQxYRwh+VDrXjvyav5vEw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hjjuQndz3YI=:0OyZ9O/LRsulaDG9L2UeJj
+ stMrjmFNMBbwVdmQeExisj9/9tcZyKfCumIPtU58wMWyQqCXLTNsmwnU+tGEGTMdrwFftwdj9
+ DDan7ylswG1dr5a+N7cE7GEtYsPRnGDsbq1Px/8iYI4aVkC8dubuRXqebMuKF075Kl6sEe2ns
+ s11pOmum7A8KHGzU+n96/pBOh3GrQy3oWAjutb9mg6XLiXnYSEDa6Eul8iKyaPbOC1skEfUE1
+ Z6AUxEODiGqAw75xMsUi6Aoj3DGzsVts3WWbPRj1w5/xDIoGfstvBFybZ9uC80Md3R9quwowf
+ Spen7aZTNJFBsrx/GeUP4wbQBLwaUT7mkWx8L7RfjV9MmvpOVFy6nIB4pE3gdxwFfapT+3Gbb
+ 2pUPucKb3E8FxJ9ZSaTpY6VC7JbdvIIo+p2fZ84Co6cNR5EbQqd2XFVzb42gUWWCrAZegjC8l
+ 4HQiWhXsa4YgUN0q6WIIWt+NoAWLgRIcRRspY5P7f/EbPoyLihChFYbviq4TfKsu2DZeRKYro
+ duMC2mk6upVie3gix98IsJArP1dxwVZlmvDoJ/ZHDTQUTCqy2SuXatGNISgY9SsVFuEFHXS6L
+ PbqD3e3ydiZ7aZ1upciX6NjUnVctIF7sY86+4P5nNUcrJALR3/8KcWmALFsuBno9Ivs4wncSa
+ ui6Y3vTjpLesito4UpchfpX1L7qzrQlrv8t7/Rt/J+TzlWTt7BixApUFmcAol1jcbA4VeORKG
+ RmC/FCnoR/Z+4HZjTJ7UGp/7UKoB+/Uji36bGiG30aWfyxL39s4QyuEEGS13UB+/PuA2Rev6/
+ id2J8nhqZ1APdGBMlf6oNSUS9TpNO2hGd4+UxaWnfvbu1F4vDhMh6NQyW5ISdzEz3sx+Pl4Hw
+ AFD0JvcIDyJYpqG1+eEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 2:15 PM, Steven Price wrote:
-> On 12/12/2019 11:33, Thomas Hellström (VMware) wrote:
->> On 12/12/19 12:23 PM, Thomas Hellström (VMware) wrote:
->>> On 12/6/19 2:53 PM, Steven Price wrote:
->>>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
->>>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
->>>> no users. We're about to add users so reintroduce them, along with
->>>> p4d_entry() as we now have 5 levels of tables.
->>>>
->>>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
->>>> PUD-sized transparent hugepages") already re-added pud_entry() but 
->>>> with
->>>> different semantics to the other callbacks. Since there have never
->>>> been upstream users of this, revert the semantics back to match the
->>>> other callbacks. This means pud_entry() is called for all entries, not
->>>> just transparent huge pages.
->
-> When I wrote that there were no upstream users, which sadly shows how
-> long ago that was :(
->
->>> Actually, there are two users of pud_entry(), in hmm.c and since 
->>> 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic 
->>> and requires no attention but the one in hmm.c is probably largely 
->>> untested, and seems to assume it was called outside of the spinlock.
->>>
->>> The problem with the current patch is that the hmm pud_entry will 
->>> traverse also pmds, so that will be done twice now.
->>>
->>> In another thread we were discussing a means of rerunning the level 
->>> (in case of a race), or continuing after a level, based on the 
->>> return value after the callback. The change was fairly invasive,
->>>
->> Hmm. Forgot to remove the above text that appears twice. :(. The 
->> correct one is inline below.
->>
->>>
->>>> Tested-by: Zong Li <zong.li@sifive.com>
->>>> Signed-off-by: Steven Price <steven.price@arm.com>
->>>> ---
->>>>   include/linux/pagewalk.h | 19 +++++++++++++------
->>>>   mm/pagewalk.c            | 27 ++++++++++++++++-----------
->>>>   2 files changed, 29 insertions(+), 17 deletions(-)
->>>>
->>>> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
->>>> index 6ec82e92c87f..06790f23957f 100644
->>>> --- a/include/linux/pagewalk.h
->>>> +++ b/include/linux/pagewalk.h
->>>> @@ -8,15 +8,15 @@ struct mm_walk;
->>>>     /**
->>>>    * mm_walk_ops - callbacks for walk_page_range
->>>> - * @pud_entry:        if set, called for each non-empty PUD 
->>>> (2nd-level) entry
->>>> - *            this handler should only handle pud_trans_huge() puds.
->>>> - *            the pmd_entry or pte_entry callbacks will be used for
->>>> - *            regular PUDs.
->>>> - * @pmd_entry:        if set, called for each non-empty PMD 
->>>> (3rd-level) entry
->>>> + * @pgd_entry:        if set, called for each non-empty PGD 
->>>> (top-level) entry
->>>> + * @p4d_entry:        if set, called for each non-empty P4D entry
->>>> + * @pud_entry:        if set, called for each non-empty PUD entry
->>>> + * @pmd_entry:        if set, called for each non-empty PMD entry
->>>>    *            this handler is required to be able to handle
->>>>    *            pmd_trans_huge() pmds.  They may simply choose to
->>>>    *            split_huge_page() instead of handling it explicitly.
->>>> - * @pte_entry:        if set, called for each non-empty PTE 
->>>> (4th-level) entry
->>>> + * @pte_entry:        if set, called for each non-empty PTE 
->>>> (lowest-level)
->>>> + *            entry
->>>>    * @pte_hole:        if set, called for each hole at all levels
->>>>    * @hugetlb_entry:    if set, called for each hugetlb entry
->>>>    * @test_walk:        caller specific callback function to 
->>>> determine whether
->>>> @@ -27,8 +27,15 @@ struct mm_walk;
->>>>    * @pre_vma:            if set, called before starting walk on a 
->>>> non-null vma.
->>>>    * @post_vma:           if set, called after a walk on a non-null 
->>>> vma, provided
->>>>    *                      that @pre_vma and the vma walk succeeded.
->>>> + *
->>>> + * p?d_entry callbacks are called even if those levels are folded 
->>>> on a
->>>> + * particular architecture/configuration.
->>>>    */
->>>>   struct mm_walk_ops {
->>>> +    int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
->>>> +             unsigned long next, struct mm_walk *walk);
->>>> +    int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
->>>> +             unsigned long next, struct mm_walk *walk);
->>>>       int (*pud_entry)(pud_t *pud, unsigned long addr,
->>>>                unsigned long next, struct mm_walk *walk);
->>>>       int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
->>>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
->>>> index ea0b9e606ad1..c089786e7a7f 100644
->>>> --- a/mm/pagewalk.c
->>>> +++ b/mm/pagewalk.c
->>>> @@ -94,15 +94,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned 
->>>> long addr, unsigned long end,
->>>>           }
->>>>             if (ops->pud_entry) {
->>>> -            spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
->>>> -
->>>> -            if (ptl) {
->>>> -                err = ops->pud_entry(pud, addr, next, walk);
->>>> -                spin_unlock(ptl);
->>>> -                if (err)
->>>> -                    break;
->>>> -                continue;
->>>> -            }
->>>> +            err = ops->pud_entry(pud, addr, next, walk);
->>>> +            if (err)
->>>> +                break;
->>>
->>> Actually, there are two current users of pud_entry(), in hmm.c and 
->>> since 5.5rc1 also mapping_dirty_helpers.c. The latter one is 
->>> unproblematic and requires no attention but the one in hmm.c is 
->>> probably largely untested, and seems to assume it was called outside 
->>> of the spinlock.
->
-> Thanks for pointing that out, I guess the simplest fix would be to
-> squash in something like the below which should restore the old
-> behaviour for hmm.c without affecting others.
->
-> Steve 
+When CONFIG_PROC_FS is disabled, the compiler warns about an
+unused variable:
 
-I'm not fully sure that the old behaviour is the correct one, but definitely hmm's pud_entry needs some fixing.
-I'm more concerned with the pagewalk code. With your patch it actually splits all huge puds present in the page-table
-on each page walk which is not what we want.
+arch/x86/kernel/apic/x2apic_uv_x.c: In function 'uv_setup_proc_files':
+arch/x86/kernel/apic/x2apic_uv_x.c:1546:8: error: unused variable 'name' [-Werror=unused-variable]
+  char *name = hubless ? "hubless" : "hubbed";
 
-One idea would be to add a new member to struct_mm_walk:
+Simplify the code so this variable is no longer needed.
 
-enum page_walk_ret_action {
-	ACTION_SUBTREE = 0,
-	ACTION_CONTINUE = 1,
-	ACTION_AGAIN = 2 /* Only for levels that thave p?d_unstable */
-};
+Fixes: 8785968bce1c ("x86/platform/uv: Add UV Hubbed/Hubless Proc FS Files")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 43 +++++-------------------------
+ 1 file changed, 6 insertions(+), 37 deletions(-)
 
-struct mm_walk {
-	...
-	enum page_walk_ret_action action; /* or perhaps as an enum */
-};
-
-
-if (ops->pud_entry) {
-	walk->action = ACTION_SUBTREE;
-	...
-	...
-	...
-	if (walk->action == ACTION_AGAIN)  /* Callback tried to split huge entry, but failed */
-		goto again;
-	else if (walk->action == ACTION_CONTINUE) /* Done with this subtree. Probably huge entry handled. */
-		continue;
-	/* ACTION_SUBTREE falls through */
-}
-
-we discussed something similar before on linux-mm, but the idea then was to redefine
-the positive return value of the callback to the action, but that meant changing those existing callbacks that relied on
-a positive return value. The above would be helpful also for pmd_entry.
-
-/Thomas
-
-
-
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index d5b51a740524..ad53b2abc859 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -1493,65 +1493,34 @@ static void check_efi_reboot(void)
+ }
+ 
+ /* Setup user proc fs files */
+-static int proc_hubbed_show(struct seq_file *file, void *data)
++static int __maybe_unused proc_hubbed_show(struct seq_file *file, void *data)
+ {
+ 	seq_printf(file, "0x%x\n", uv_hubbed_system);
+ 	return 0;
+ }
+ 
+-static int proc_hubless_show(struct seq_file *file, void *data)
++static int __maybe_unused proc_hubless_show(struct seq_file *file, void *data)
+ {
+ 	seq_printf(file, "0x%x\n", uv_hubless_system);
+ 	return 0;
+ }
+ 
+-static int proc_oemid_show(struct seq_file *file, void *data)
++static int __maybe_unused proc_oemid_show(struct seq_file *file, void *data)
+ {
+ 	seq_printf(file, "%s/%s\n", oem_id, oem_table_id);
+ 	return 0;
+ }
+ 
+-static int proc_hubbed_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, proc_hubbed_show, (void *)NULL);
+-}
+-
+-static int proc_hubless_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, proc_hubless_show, (void *)NULL);
+-}
+-
+-static int proc_oemid_open(struct inode *inode, struct file *file)
+-{
+-	return single_open(file, proc_oemid_show, (void *)NULL);
+-}
+-
+-/* (struct is "non-const" as open function is set at runtime) */
+-static struct file_operations proc_version_fops = {
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
+-
+-static const struct file_operations proc_oemid_fops = {
+-	.open		= proc_oemid_open,
+-	.read		= seq_read,
+-	.llseek		= seq_lseek,
+-	.release	= single_release,
+-};
+-
+ static __init void uv_setup_proc_files(int hubless)
+ {
+ 	struct proc_dir_entry *pde;
+-	char *name = hubless ? "hubless" : "hubbed";
+ 
+ 	pde = proc_mkdir(UV_PROC_NODE, NULL);
+-	proc_create("oemid", 0, pde, &proc_oemid_fops);
+-	proc_create(name, 0, pde, &proc_version_fops);
++	proc_create_single("oemid", 0, pde, proc_oemid_show);
+ 	if (hubless)
+-		proc_version_fops.open = proc_hubless_open;
++		proc_create_single("hubless", 0, pde, proc_hubless_show);
+ 	else
+-		proc_version_fops.open = proc_hubbed_open;
++		proc_create_single("hubbed", 0, pde, proc_hubbed_show);
+ }
+ 
+ /* Initialize UV hubless systems */
+-- 
+2.20.0
 
