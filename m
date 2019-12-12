@@ -2,80 +2,109 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41445C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B097C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3C72173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51E621655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T0lQ3L5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfLLLPi (ORCPT
+        id S1728935AbfLLLRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:15:38 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:56963 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbfLLLPh (ORCPT
+        Thu, 12 Dec 2019 06:17:33 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40288 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728458AbfLLLRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:15:37 -0500
-Received: from orion.localdomain ([77.9.34.244]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAxLT-1iZ0ev044X-00BOiC; Thu, 12 Dec 2019 12:15:36 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     info@metux.net, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/x86: pcengines-apu2: fix simswap gpio assignment
-Date:   Thu, 12 Dec 2019 12:15:07 +0100
-Message-Id: <20191212111507.14365-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:V1Saik6Dq+VQNBC8ix5ah6wHx0KOYSzmu6tS9ECL1lNFBVQy8YA
- EkGB25WSVG5I/5JuQ5FmC5KVRPEkK38wtYNZY6wl8n6zQO3qabJWYlgFE993oRslxgXzjz1
- 76d2QBr75dUm0bj8MV8wkee+mqgJKt0Bks8nO7F2YJMslEfafw1VZe/YGKHWxFWSUzJrsyD
- xCuqNqExSLt09dkBp+H0w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M2bPAAyHAJU=:fftKP6nTrbbjZqOqWf7xUw
- GqU5LKvKKc4RF8XNN4lsuaiRysxTfVMZTI7TWBE7GL5WKJeQtu/sKIoM0ctSfPJ4DbmEb0rz7
- xZYO/d/vhn26Q+9CP8Nt3X+6O9JEKK4NnfslFTPPPbILyYIRqkxVQF8MOanliFpDq3e722qVE
- RE9Um8fjyVJS4YWPqEU25vw1LhXL1x2fWYIyF7G+XLgnmYDleuWerEAZy6WtrNIywvSLc0WbY
- 2St0AwGXObds++yr5lcXS/VU0SkdZpG5sNJ3RuhhKpUqap5d2M5L3jtLHduD0QXXe+oP/9iHA
- l5voR3GshDe1aiSMlAoiaqPhEJJ54uUMs6DOXUeXtb037JzqN7qL8JwGQWh/8P1Ce6MAuOawb
- bZEkNfRL01nvfMwwLoFRdmgOL1VmThaAe6FA7BPij2ldC0GDxiavuBjLMITaM1NX8UJfXSUGq
- 5ZnuK1uTlogyVKL7APNUCsVvfE2xqUN7vIBCcRsAKt6+EueSnGI+URobf0bUB2atDIwzOD1cf
- zAFHeD707RVQnImNWsBYfcrB/ucGi9j2BZSxTnQTcMnV3CD3IU7S33LgXEDixFVWqkuhCJLrU
- z9Adq62qAL7xGB8eazq3MN0GOScqCPOftISK/Rw8ZqA9JhVhYq3WkRWGFgO/3xsJfIVo0fLqk
- RaZT+aI2EGoS5MvVqjFqTF1nqDVNAYJgLIhuyiEvd5Ej8xpq4DWfBnsmSnPpn/gikCx9wEYeX
- Y41bT6PCq4IvgHsIfUJqnFv3Zw5WkECUQj5HvBz8iq7aba6oNQ0n/e/lgHzTDggDehTXjV5O8
- ytrun2zAuaWDtdTm3CXxUuIyODQYU8ATKBkE9yr9WI7ThY+Kxx6mjipG3r+z6K6X17IYZwhLv
- BduCr0SdBxZ46vmmbzuQ==
+        Thu, 12 Dec 2019 06:17:32 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k25so985384pgt.7;
+        Thu, 12 Dec 2019 03:17:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GwuLqIZzMSkOgjShx1lhBWPcILFbSLlfNnhrbVgefE8=;
+        b=T0lQ3L5iAI1ysbK3n+jcnIhZs625Cviqe02IiaQKf5uDK2UOmBrtepr051nyFSZMce
+         KLMa23/5U6kq5UB89aVOZeHr3DPcVsW3CvHjRCRbl9uSKUmLLzsej6873kdDe0fHWO9/
+         lKhY1TL8AQgHCw9Mut/ySlPxG0L8L6LY2Z2ulDixwq8BCngQe5kCdd7ywZjJCD4xMn+E
+         G8nWmuzPd50TgpjabmwZIJynLdiW+pdb0p9PXdqeFGbXaLlj0dDK39HATzi7/SniuPQU
+         S6UIOKSFiPLcD9zULwzy1B44JH35PQjyaJvLQvLdcdQ7bXVzu1+rXHzrmXtHW1fJOEsB
+         5vXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GwuLqIZzMSkOgjShx1lhBWPcILFbSLlfNnhrbVgefE8=;
+        b=AxcipjPoZnucCCUyTjIMyOnYnreYxC5vtVyuL//GyNMRz4c15ziS7RvnkQE/o2VXKH
+         JSdNGrcQTZG30HxtUucqWl9khZHbKHrGceMiPgtrydSrLN1a1ugZ0t3QrS5HuGBwDsox
+         37o1Qs1wAH1f1DrmVU/cE0r3H0PrxSiAblzWO0ZH76aHAQOnjta/SncQnFEizx3ET9X/
+         12/e1IDMZ3JMr2gBrOMn7UYnc2tVuG29a7zsC4evT9G+NKeCKofMSAwEniiTh6sgnh0J
+         r1sBW9EYdqgf6EiSQAnAXnh7fzVDqtry7KVAY1JGqRrEMMGuJoBngV/MaSajwnFV0PF3
+         1JHg==
+X-Gm-Message-State: APjAAAVwlRxNkirpvOs5SgeRdeVu4CGiCFrSH0EXNQzFGbIYfeKhM3Dt
+        d7XHsJ89rJgrgFyV3KaXqp7qQV2/mu0=
+X-Google-Smtp-Source: APXvYqySpp0KjfkLQ1L1Nlzel5FRtxQVjK6BM+YDEy/cozoJZkSWBwdQwFSnHk63JVYsxyH5gaN6fg==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr9255362pfi.131.1576149452097;
+        Thu, 12 Dec 2019 03:17:32 -0800 (PST)
+Received: from [10.231.110.95] ([125.29.25.186])
+        by smtp.gmail.com with ESMTPSA id y38sm6535280pgk.33.2019.12.12.03.17.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 12 Dec 2019 03:17:31 -0800 (PST)
+Subject: Re: [PATCH] of: refcount leak when phandle_cache entry replaced
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1575965693-30395-1-git-send-email-frowand.list@gmail.com>
+ <20191211201856.GA21857@bogus>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <486ce60c-8a74-7baf-1054-c81c83e79e56@gmail.com>
+Date:   Thu, 12 Dec 2019 05:17:29 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191211201856.GA21857@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mapping entry has to hold the gpio line index instead of
-controller's register number.
+On 12/11/19 2:18 PM, Rob Herring wrote:
+> On Tue, 10 Dec 2019 02:14:53 -0600, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> of_find_node_by_phandle() does not do an of_node_put() of the existing
+>> node in a phandle cache entry when that node is replaced by a new node.
+>>
+>> Reported-by: Rob Herring <robh+dt@kernel.org>
+>> Fixes: b8a9ac1a5b99 ("of: of_node_get()/of_node_put() nodes held in phandle cache")
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> Checkpatch will warn about a line over 80 characters.  Let me know
+>> if that bothers you.
+>>
+>>  drivers/of/base.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+> 
+> Applied, thanks.
+> 
+> Rob
+> 
 
-Fixes: 5037d4ddda31c2dbbb018109655f61054b1756dc
+If the rework patch of the cache that you posted shortly after accepting
+my patch, then my patch becomes not needed and is just extra noise in the
+history.  Once your patch finishes review (I am assuming it probably
+will), then my patch should be reverted.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/platform/x86/pcengines-apuv2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index 48b112b4f0b0..c32daf087640 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -95,7 +95,7 @@ static struct gpiod_lookup_table gpios_led_table = {
- 				NULL, 1, GPIO_ACTIVE_LOW),
- 		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED3,
- 				NULL, 2, GPIO_ACTIVE_LOW),
--		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_REG_SIMSWAP,
-+		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_SIMSWAP,
- 				NULL, 3, GPIO_ACTIVE_LOW),
- 	}
- };
--- 
-2.11.0
-
+-Frank
