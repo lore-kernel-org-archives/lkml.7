@@ -2,70 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CACC2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AF5C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4137F214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576116070;
-	bh=mrLm7hWWGdtEPq9cGYIvyHV5bCojU9MeN4AkSl1wgng=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kDP70NM10JV/yI94wdfCAzAPByMw2zDBo8dIrC3jsIP1ullMdxFLPCk8J+uE6MTD5
-	 4u54d/7NS+CytT791wLZ8/SYaaPsHJRfj3hA52EDfAltzxg1WuSfRXHjraIpflBH7d
-	 Jg1ECNuxONJ3OaHnRgFPA/vnTeQQxpH0gIbrkXuU=
+	by mail.kernel.org (Postfix) with ESMTP id B479D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:02:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfLLCBJ (ORCPT
+        id S1727665AbfLLCCU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:01:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbfLLCBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:01:08 -0500
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 232722077B;
-        Thu, 12 Dec 2019 02:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576116068;
-        bh=mrLm7hWWGdtEPq9cGYIvyHV5bCojU9MeN4AkSl1wgng=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LXZxgE+DKBG/qoOnEiDBqi4cB+vAa9DF8tMqPwcCv5iE6Ri8KD/kKZVKAZ4gc/KaO
-         1cIi+UK0BKN4kCPeqHDRoonl+3TlmTJpancmus5GZz0xxy25tzYq4bCZLs7EZ7bXjb
-         OTITqe06Wl/qWRvaJfI/Z2WK1j8xUftOiF2565ag=
-Date:   Thu, 12 Dec 2019 10:00:56 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3] arm64: dts: ls1028a: fix reboot node
-Message-ID: <20191212020055.GB15858@dragon>
-References: <20191211171145.14736-1-michael@walle.cc>
+        Wed, 11 Dec 2019 21:02:20 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2534 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727584AbfLLCCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:02:20 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 31B2679CAB7D093DF318;
+        Thu, 12 Dec 2019 10:02:17 +0800 (CST)
+Received: from dggeme765-chm.china.huawei.com (10.3.19.111) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 12 Dec 2019 10:02:16 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme765-chm.china.huawei.com (10.3.19.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 12 Dec 2019 10:02:16 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Thu, 12 Dec 2019 10:02:16 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH 6/6] KVM: Fix some writing mistakes
+Thread-Topic: [PATCH 6/6] KVM: Fix some writing mistakes
+Thread-Index: AdWwj3wg8ae1y0yjTKygu5joUnhHkg==
+Date:   Thu, 12 Dec 2019 02:02:16 +0000
+Message-ID: <64b60a489d1f405285781a6105a06f2d@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211171145.14736-1-michael@walle.cc>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 06:11:45PM +0100, Michael Walle wrote:
-> The reboot register isn't located inside the DCFG controller, but in its
-> own RST controller. Fix it.
-> 
-> Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
-> Signed-off-by: Michael Walle <michael@walle.cc>
+Sean Christopherson wrote:
+>On Wed, Dec 11, 2019 at 02:26:25PM +0800, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
+>> 
+>> Fix some writing mistakes in the comments.
+>> 
+>> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+>> ---
+>>  	 * This context will save all necessary information to walk page tables
+>> -	 * of the an L2 guest. This context is only initialized for page table
+>> +	 * of the L2 guest. This context is only initialized for page table
+>
+>I'd whack "the" instead of "and", i.e. ...walk page tables of an L2 guest, as KVM isn't limited to just one L2 guest.
 
-You missed Leo's ACK on v2?  I added it and applied the patch.
+I'd change this.
 
-Shawn
+>>  	 * walking and not for faulting since we never handle l2 page faults 
+>> on
+>
+>While you're here, want to change "l2" to "L2"?
+
+I do nothing here. :)
+
+>>  	 * the host.
+>>  	 */
+>> check_user_page_hwpoison(unsigned long addr)
+>>  /*
+>>   * The fast path to get the writable pfn which will be stored in @pfn,
+>>   * true indicates success, otherwise false is returned.  It's also 
+>> the
+>> - * only part that runs if we can are in atomic context.
+>> + * only part that runs if we can in atomic context.
+>
+>This should remove "can" instead of "are", i.e. ...part that runs if we are in atomic context.  The comment is calling out that hva_to_pfn() will return immediately if hva_to_pfn_fast() and the kernel is atomic context.
+>
+
+Many thanks for your explanation, I would change this too. And many thanks for your review.
