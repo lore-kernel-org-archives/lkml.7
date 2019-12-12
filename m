@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EE6C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CF5C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0BD21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D722077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T7BwW0N9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QoBqMUOx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbfLLTg3 (ORCPT
+        id S1730767AbfLLTgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:36:29 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36055 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730717AbfLLTgZ (ORCPT
+        Thu, 12 Dec 2019 14:36:40 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42262 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730709AbfLLTgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:36:25 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so1504871pjc.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:36:24 -0800 (PST)
+        Thu, 12 Dec 2019 14:36:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id s64so27460pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 11:36:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I/PREmgXNFnXrCjIoeu5i0RRy2A/HbW6IGnfPCXczl8=;
-        b=T7BwW0N92zCoHek8Miu1pfCKC9fml6uE1NVnvPqt0NoWdvtGNsju43eyhF+BUXyrpd
-         0Rq1kbOCLHJIYBNcoTT6xDnXxN6xmzlWnf88Z71Sp+s3OYB4Sivya/1b/eVKQvjjgWPt
-         wNVHABAq0b1OtbRxNVufqPAwho5y16plDn0y4=
+        bh=FfAfV2+dsySPHR+abNSiNfNBu7y5s9v7tjVQ+45n3gY=;
+        b=QoBqMUOxLY4ED/l7B+oCFOBf+NC2F4Nt+Vsusi9OX/0Z5cklqBhkosiOz0t1NTT6gp
+         KJj3yjG9QKCiHlK2WPEr1Nk2FhX+5887LtVji2BSaE+TfAkIkAN7H5i0vwt65vTJKbFP
+         zHq8Ldkeecd1AoWRNu0rfpYuxV0v6Ozefm0ig=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I/PREmgXNFnXrCjIoeu5i0RRy2A/HbW6IGnfPCXczl8=;
-        b=rjfryO9VH3KNwDErfyW/nXhk6/gYIo7yoeZ2RTCT4jRVz4SXbJA4e1+TR2HmsagRAd
-         aHvpOVnfY0oafbl4whyoggl4GQ0rNq3agtSoJ25DdQhrXcPN7gV7dLafGzwBizjkUD/D
-         VhyHIjArGX+7G/WyZwpTaPaUY949NQGf/yRy2TkNyg3ZI8sqAjNlS0qYkV+yTlsc/bcl
-         gx5kin2NyRDzaFoH7WYAfNJp6Y7nKxw23xduiZKRTrtYBC6YqQ21S+dWpqKwMnoAlUDq
-         +V2oCyMB7Woxo4dPMn9756sTsi3F74lhFVY04C9rsfDxTCl/H6lyZkYuEJmAvogIHEEP
-         ZkVg==
-X-Gm-Message-State: APjAAAWvF90FULgvbQBFeITnECbu+2aQo3wKD6U0Df6QmNDbC5GaEQni
-        /kUFvrPLVFTBy3Sr9iEHQczKY4gHy51I6A==
-X-Google-Smtp-Source: APXvYqxRviElYQ2WA06uHTXpvSGeaTso4kQnAEIIpHNJETMQIyHgH1+LsV+muNtwvYIJnfvf+ujIIg==
-X-Received: by 2002:a17:902:6b0a:: with SMTP id o10mr11105366plk.15.1576179384001;
-        Thu, 12 Dec 2019 11:36:24 -0800 (PST)
+        bh=FfAfV2+dsySPHR+abNSiNfNBu7y5s9v7tjVQ+45n3gY=;
+        b=Wq7fTRpJxRYbaLP+zAi/yc6J/k7bEbQgSkO00P/Et031Xhn2giNM94jvFptR42lROA
+         upWUXfuVjmf6NNg4fOgOckDgRxLlVWD/kSTLkXkgUqzJ+lAop6WFNcuMr/iYC/f5BwIY
+         izQZryGUQ3RmVfG80BvkKDmOtt/XteXa+0tdKlvoDxY5iUM537Z2sq+TXmtwvOCmXyHm
+         eHqBE+x4QvcKTwkuyfyzh94Oxx2uJmXMrZ2A+LT/ugQ8ddav/5dJ4yoIsLPbMua72Ew2
+         bq16v06ZTsEN+Rfl4fiH7sXp3IR3OgmivtGJGkMcT8Sci9S13x1sgG0pnTDHQ8LKP20B
+         IOeA==
+X-Gm-Message-State: APjAAAUgq1LqJtJtuhJDPT2c1YKM/mmsSPGTNurNl7rs549IVinb4RTg
+        PwGT6bWHKi5yt1G7fy4JldeSEw==
+X-Google-Smtp-Source: APXvYqzCyM5fNIUXeHJH6Zo7kmXsKO386Rs5A2F6EB4wmrvUefzkPU4jf92aWkOKvZhLIhe1VWl6Lw==
+X-Received: by 2002:a62:3784:: with SMTP id e126mr11735660pfa.228.1576179382933;
+        Thu, 12 Dec 2019 11:36:22 -0800 (PST)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.23
+        by smtp.gmail.com with ESMTPSA id m34sm7568302pgb.26.2019.12.12.11.36.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 11:36:23 -0800 (PST)
+        Thu, 12 Dec 2019 11:36:22 -0800 (PST)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -62,13 +62,12 @@ Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
         Amit Kucheria <amit.kucheria@linaro.org>,
         Maulik Shah <mkshah@codeaurora.org>,
         Douglas Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 7/7] arm64: dts: qcom: sc7180: Use 'ranges' in arm,armv7-timer-mem node
-Date:   Thu, 12 Dec 2019 11:35:43 -0800
-Message-Id: <20191212113540.7.Ia9bd3fca24ad34a5faaf1c3e58095c74b38abca1@changeid>
+Subject: [PATCH 6/7] arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+Date:   Thu, 12 Dec 2019 11:35:42 -0800
+Message-Id: <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
 X-Mailer: git-send-email 2.24.1.735.g03f4e72817-goog
 In-Reply-To: <20191212193544.80640-1-dianders@chromium.org>
 References: <20191212193544.80640-1-dianders@chromium.org>
@@ -79,119 +78,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running `make dtbs_check` yells:
+The bindings for the QMP PHY are truly strange.  I believe (?) that
+they may have originated because with PCIe each lane is treated as a
+different PHY and the same PHY driver is used for a whole bunch of
+things (incluidng PCIe).
 
-  arch/arm64/boot/dts/qcom/sc7180-idp.dt.yaml: timer@17c20000: #size-cells:0:0: 1 was expected
+In any case, now that we have "make dtbs_check", we find that having
+the outer node named "phy" triggers the
+"schemas/phy/phy-provider.yaml" schema, yelling about:
 
-It appears that someone was trying to assert the fact that sub-nodes
-describing frames would never have a size that's more than 32-bits
-big.  That's certainly true in the case of sc7180.
+  phy@88e9000: '#phy-cells' is a required property
 
-I guess this is a hint that it's time to do the thing that nobody
-seems to do but that "writing-bindings.txt" says we should all do.
-Specifically it says: "DO use non-empty 'ranges' to limit the size of
-child buses/devices".  That means we should probably limit the
+Let's call the outer node the "phy-wrapper" and the inner node the
+"phy" to make dtbs_check happy.
 
-I believe that this patch is the way to do it and there should be no
-bad side effects here.  I believe that since we're far enough down
-(not trying to describe an actual device, just some sub-pieces) that
-this won't cause us to run into the problems that caused us to
-increase the soc-level #address-cells and #size-cells to 2 in sdm845
-in commit bede7d2dc8f3 ("arm64: dts: qcom: sdm845: Increase address
-and size cells for soc").
-
-I can at least confirm that "arch_mem_timer" seems to keep getting
-interrupts in "/proc/interrupts" after this change.
-
-Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
+Fixes: 0b766e7fe5a2 ("arm64: dts: qcom: sc7180: Add USB related nodes")
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 36 ++++++++++++++--------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index c671f0719d42..336cf65bdcc2 100644
+index 9766867abc88..c671f0719d42 100644
 --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1206,59 +1206,59 @@ watchdog@17c10000 {
+@@ -992,7 +992,7 @@ usb_1_hsphy: phy@88e3000 {
+ 			nvmem-cells = <&qusb2p_hstx_trim>;
  		};
  
- 		timer@17c20000{
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x17c21000 0x10000>;
- 			compatible = "arm,armv7-timer-mem";
- 			reg = <0 0x17c20000 0 0x1000>;
+-		usb_1_qmpphy: phy@88e9000 {
++		usb_1_qmpphy: phy-wrapper@88e9000 {
+ 			compatible = "qcom,sc7180-qmp-usb3-phy";
+ 			reg = <0 0x088e9000 0 0x18c>,
+ 			      <0 0x088e8000 0 0x38>;
+@@ -1013,7 +1013,7 @@ usb_1_qmpphy: phy@88e9000 {
+ 				 <&gcc GCC_USB3_PHY_PRIM_BCR>;
+ 			reset-names = "phy", "common";
  
--			frame@17c21000 {
-+			frame@0 {
- 				frame-number = <0>;
- 				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c21000 0 0x1000>,
--				      <0 0x17c22000 0 0x1000>;
-+				reg = <0x0000 0x1000>,
-+				      <0x1000 0x1000>;
- 			};
- 
--			frame@17c23000 {
-+			frame@2000 {
- 				frame-number = <1>;
- 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c23000 0 0x1000>;
-+				reg = <0x2000 0x1000>;
- 				status = "disabled";
- 			};
- 
--			frame@17c25000 {
-+			frame@4000 {
- 				frame-number = <2>;
- 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c25000 0 0x1000>;
-+				reg = <0x4000 0x1000>;
- 				status = "disabled";
- 			};
- 
--			frame@17c27000 {
-+			frame@6000 {
- 				frame-number = <3>;
- 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c27000 0 0x1000>;
-+				reg = <0x6000 0x1000>;
- 				status = "disabled";
- 			};
- 
--			frame@17c29000 {
-+			frame@8000 {
- 				frame-number = <4>;
- 				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c29000 0 0x1000>;
-+				reg = <0x8000 0x1000>;
- 				status = "disabled";
- 			};
- 
--			frame@17c2b000 {
-+			frame@a000 {
- 				frame-number = <5>;
- 				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c2b000 0 0x1000>;
-+				reg = <0xa000 0x1000>;
- 				status = "disabled";
- 			};
- 
--			frame@17c2d000 {
-+			frame@c000 {
- 				frame-number = <6>;
- 				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0 0x17c2d000 0 0x1000>;
-+				reg = <0xc000 0x1000>;
- 				status = "disabled";
- 			};
- 		};
+-			usb_1_ssphy: lanes@88e9200 {
++			usb_1_ssphy: phy@88e9200 {
+ 				reg = <0 0x088e9200 0 0x128>,
+ 				      <0 0x088e9400 0 0x200>,
+ 				      <0 0x088e9c00 0 0x218>,
 -- 
 2.24.1.735.g03f4e72817-goog
 
