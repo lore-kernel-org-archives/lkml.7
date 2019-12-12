@@ -2,116 +2,178 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B6AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9ECC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7109D22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:18:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RxxXcjFL"
+	by mail.kernel.org (Postfix) with ESMTP id 46AF92173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfLLHSP (ORCPT
+        id S1728129AbfLLHSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:18:15 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44108 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728087AbfLLHSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:18:15 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w5so630493pjh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:18:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JgfDuTWeBak9bVM7ZWNPsBAm3+sYB1fLtoFMjb0Fxdw=;
-        b=RxxXcjFLgonLF4fmVQ9Uh8NGPA48JCLXcBG419PPiBNe6e/fN4bT3KGOPvAsCdib1s
-         CV7whYpnFFggopMXHXah8xrpY8aY0pwmZyDzR08smFDcAuwxKR2Sa4xjVGgiJxBQSm6Z
-         5i9ViaE59/8nrQrcp9mRVH41oPVaQcU8Qr9ZPo2HUPw7SVcP/osuBNIHgu/RtPlKNbX/
-         6yxBEheHDeIB/oaTQP6sATllHhzDBVffb30K27VGcaJsenKqYw9gcYYxM41KUnIxeoaZ
-         V2bCnEheP3IyYIt7YqG/Z8nuhlfHRZ1oqmKawJHvW0upRhf0JvSBVVrFJPefVm2vbB3O
-         4qFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JgfDuTWeBak9bVM7ZWNPsBAm3+sYB1fLtoFMjb0Fxdw=;
-        b=YbxewuN3ITYrfPavEyO/nVsoMX4WCUu5kw6mkqZfmImvKWrhKBnG1gBjTB/0wJTqJj
-         61etvLp8oetOEnDylny7u1rTHSWi2mMuY4OT6YS7DaqtSEStoWZCBsQkdUgsiTFGhiuH
-         I7NydW28yC69mjGgLWxZccNSSuqFU0qGjjBoT9087VrsAnOgi3ubemBRF62rFfMxpmU6
-         SaSTE81syZJfLyb19Jz0zAnQySFQQZetRoKCBOqfmB5TTR8HiT2R21wMlxcm1rVxOTbT
-         P1BwMwWHIMOvPbIaAk9MmY8BjBp4hpU8UlI4omZbgls+DUX/mfI7AA41GGPV+Ep2arBC
-         98Kg==
-X-Gm-Message-State: APjAAAXisaZlZigihLRy0UtC812AmTrWsddcAclo3j4Ec+LlxSf1uGGn
-        kyqL0ZONGVMSATAOFk2dol/C3Q==
-X-Google-Smtp-Source: APXvYqy+m0lCq/UpeupyAuDYMkcEh9rkfCM4GG+6qHKYU/CjEuXA+ig6axKgP0DJrVQrHbcsf678BA==
-X-Received: by 2002:a17:90a:2808:: with SMTP id e8mr8279272pjd.63.1576135094383;
-        Wed, 11 Dec 2019 23:18:14 -0800 (PST)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id i127sm5601071pfc.55.2019.12.11.23.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 23:18:13 -0800 (PST)
-Date:   Wed, 11 Dec 2019 23:18:11 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     robdclark@gmail.com, sean@poorly.run, robh+dt@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch, jcrouse@codeaurora.org,
-        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] drm/msm/a4xx: set interconnect bandwidth vote
-Message-ID: <20191212071811.GN3143381@builder>
-References: <20191122012645.7430-1-masneyb@onstation.org>
- <20191122012645.7430-5-masneyb@onstation.org>
+        Thu, 12 Dec 2019 02:18:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57134 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728043AbfLLHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 02:18:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 92C27AD95;
+        Thu, 12 Dec 2019 07:18:48 +0000 (UTC)
+Subject: Re: [BUG] Xen-ballooned memory never returned to domain after
+ partial-free
+To:     Nicholas Tsirakis <niko.tsirakis@gmail.com>,
+        boris.ostrovsky@oracle.com
+Cc:     xen-devel <xen-devel@lists.xenproject.org>,
+        linux-kernel@vger.kernel.org
+References: <CAFqpmVJ90bAV4vasH1Z0DcTUjT7asCJFPeJBxtxGZwAhTVP7=w@mail.gmail.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <b02d053f-1b07-bd4f-20fc-9a26106145d1@suse.com>
+Date:   Thu, 12 Dec 2019 08:18:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191122012645.7430-5-masneyb@onstation.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAFqpmVJ90bAV4vasH1Z0DcTUjT7asCJFPeJBxtxGZwAhTVP7=w@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------FA289E34BBAF792FD09929E5"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21 Nov 17:26 PST 2019, Brian Masney wrote:
+This is a multi-part message in MIME format.
+--------------FA289E34BBAF792FD09929E5
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Set the two interconnect paths for the GPU to maximum speed for now to
-> work towards getting the GPU working upstream. We can revisit a later
-> time to optimize this for battery life.
+On 11.12.19 23:08, Nicholas Tsirakis wrote:
+> Hello,
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> The issue I'm seeing is that pages of previously-xenballooned memory are getting
+> trapped in the balloon on free, specifically when they are free'd in batches
+> (i.e. not all at once). The first batch is restored to the domain properly, but
+> subsequent frees are not.
+> 
+> Truthfully I'm not sure if this is a bug or not, but the behavior I'm seeing
+> doesn't seem to make sense. Note that this "bug" is in the balloon driver, but
+> the behavior is seen when using the gnttab API, which utilizes the balloon in
+> the background.
+> 
+> ------------------------------------------------------------------------------
+> 
+> This issue is better illustrated as an example, seen below. Note that the file
+> in question is drivers/xen/balloon.c:
+> 
+> Kernel version: 4.19.*, code seems consistent on master as well
+> Relevant configs:
+>      - CONFIG_MEMORY_HOTPLUG not set
+>      - CONFIG_XEN_BALLOON_MEMORY_HOTPLUG not set
+> 
+> * current_pages = # of pages assigned to domain
+> * target_pages = # of pages we want assigned to domain
+> * credit = target - current
+> 
+> Start with current_pages/target_pages = 20 pages
+> 
+> 1. alloc 5 pages with gnttab_alloc_pages(). current_pages = 15, credit = 5.
+> 2. alloc 3 pages with gnttab_alloc_pages(). current_pages = 12, credit = 8.
+> 3. some time later, free the last 3 pages with gnttab_free_pages().
+> 4. 3 pages go back to balloon and balloon worker is scheduled since credit > 0.
+>      * Relevant part of balloon worker shown below:
+> 
+>      do {
+>          ...
+> 
+>          credit = current_credit();
+> 
+>          if (credit > 0) {
+>              if (balloon_is_inflated())
+>                  state = increase_reservation(credit);
+>              else
+>                  state = reserve_additional_memory();
+>          }
+> 
+>          ...
+> 
+>      } while (credit && state == BP_DONE);
+> 
+> 5. credit > 0 and the balloon contains 3 pages, so run increase_reservation. 3
+>     pages are restored to domain, correctly. current_pages = 15, credit = 5.
+> 6. at this point credit is still > 0, so we loop again.
+> 7. this time, the balloon has 0 pages, so we call reserve_additional_memory,
+>     seen below. note that CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is disabled, so this
+>     funciton is very sparse.
+> 
+>      static enum bp_state reserve_additional_memory(void)
+>      {
+>          balloon_stats.target_pages = balloon_stats.current_pages;
+>          return BP_ECANCELED;
+>      }
+> 
+> 8. now target = current = 15, which drops our credit down to 0.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+And I think this is the problem. We want here:
 
-> ---
->  drivers/gpu/drm/msm/adreno/a4xx_gpu.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> index b01388a9e89e..253d8d85daad 100644
-> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> @@ -591,6 +591,14 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
->  		goto fail;
->  	}
->  
-> +	/*
-> +	 * Set the ICC path to maximum speed for now by multiplying the fastest
-> +	 * frequency by the bus width (8). We'll want to scale this later on to
-> +	 * improve battery life.
-> +	 */
-> +	icc_set_bw(gpu->icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
-> +	icc_set_bw(gpu->ocmem_icc_path, 0, Bps_to_icc(gpu->fast_rate) * 8);
-> +
->  	return gpu;
->  
->  fail:
-> -- 
-> 2.21.0
-> 
+     balloon_stats.target_pages = balloon_stats.current_pages +
+                                  balloon_stats.target_unpopulated;
+
+This should fix it. Thanks for the detailed analysis!
+
+Does the attached patch work for you?
+
+And are you fine with the "Reported-by:" added?
+
+
+Juergen
+
+--------------FA289E34BBAF792FD09929E5
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-xen-balloon-fix-ballooned-page-accounting-without-ho.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename*0="0001-xen-balloon-fix-ballooned-page-accounting-without-ho.pa";
+ filename*1="tch"
+
+From 7cf6cf2b94ee11002dab439fb4ed5c7dcc1a971b Mon Sep 17 00:00:00 2001
+From: Juergen Gross <jgross@suse.com>
+Date: Thu, 12 Dec 2019 08:12:26 +0100
+Subject: [PATCH] xen/balloon: fix ballooned page accounting without hotplug
+ enabled
+
+When CONFIG_XEN_BALLOON_MEMORY_HOTPLUG is not defined
+reserve_additional_memory() will set balloon_stats.target_pages to a
+wrong value in case there are still some ballooned pages allocated via
+alloc_xenballooned_pages().
+
+This will result in balloon_process() no longer be triggered when
+ballooned pages are freed in batches.
+
+Reported-by: Nicholas Tsirakis <niko.tsirakis@gmail.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
+---
+ drivers/xen/balloon.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 4f2e78a5e4db..0c142bcab79d 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -394,7 +394,8 @@ static struct notifier_block xen_memory_nb = {
+ #else
+ static enum bp_state reserve_additional_memory(void)
+ {
+-	balloon_stats.target_pages = balloon_stats.current_pages;
++	balloon_stats.target_pages = balloon_stats.current_pages +
++				     balloon_stats.target_unpopulated;
+ 	return BP_ECANCELED;
+ }
+ #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */
+-- 
+2.16.4
+
+
+--------------FA289E34BBAF792FD09929E5--
