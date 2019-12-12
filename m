@@ -2,104 +2,154 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E94FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A56FC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7412A2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5718214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJlWk2d8"
+	dkim=pass (1024-bit key) header.d=cypress.com header.i=@cypress.com header.b="MeNc3TEZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfLLCGW (ORCPT
+        id S1727689AbfLLCIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:06:22 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45469 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfLLCGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:06:22 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so287073pgk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 18:06:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Z8uVJuk9Rij22sABZy2BWSypOjcfhaayG9+6fPbQbo4=;
-        b=kJlWk2d8oy9p5Y0PRDaFDUDjrYDaNJqrDSBo/7NW3RUFN0wawvqDXTJf+eYArOA1KS
-         L4U0DzZxi66nDk6Rqk8bZ2i8fLsH4TorrtqhtGiK83RQ8OJIPE4Igae1H82+RoBfHtxc
-         KhPChDpzklLsHIWQtFhmd66zg8Vk6EYmbQNj2yHokXqXzgwkIPc2GX+irfLUGz6jV7kX
-         ZM9IRXqS2A36l1VOeJjFWyEqcon+NEUR/IYh2ITZfvVrXExLSMMoyWNenGh4ebbZi0L0
-         JUAP+U6BxU+R70W7ojw9TnGVnOzt7ODDIzjGV/AN/Y9rymQVRAoXYtslGduK7r2Nameh
-         MwxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z8uVJuk9Rij22sABZy2BWSypOjcfhaayG9+6fPbQbo4=;
-        b=KJZP7ULBeltXeUrGX4JdSfVSFiK4Eqoyz87Yi5FAEGT8lBOO04mqKjUVbjblWjEh3m
-         jdw81bZhyeimsb3zbdmn/M4Ff4kOI6b8pBEzRWIDZ/CaV9ApnKGZNTLeXmt75QZd+JG3
-         vAVlyQuW1Xn/gwva3YTc7rydPRYSFxiwh23ScCVOCc5IZqUkYaOvCrdH3traS753ghAA
-         rKE1LzDJxrD+XmXlH573HPmbAIqpEkxhfWV8SfspbvoEjPjSlQmXX9gxD3j2vYIO3iFz
-         XDhvzVtbmxISjGwMERNbPVEeW9WWeSTASSmPDcqZErwXTGgMA8jbRjNG4e6riSiYH9i/
-         1Upg==
-X-Gm-Message-State: APjAAAV0mxjnPxgKmAlNB5DRFVYb2meJAOz5gwdsY5N0hNc2K5M0mAXd
-        9IeqYRtHxOWUq4RAeIYkVGhViqawy0oZpXkobWujxQ==
-X-Google-Smtp-Source: APXvYqwMuQVtQeasph6V25QIqqP76VeDN8XIyJ4UupJQ3Egb1/mmDEEURWdiUS8rqAYz+CzRrEM4bFbeFjrv7MR5Aew=
-X-Received: by 2002:a63:597:: with SMTP id 145mr7496590pgf.384.1576116381498;
- Wed, 11 Dec 2019 18:06:21 -0800 (PST)
+        Wed, 11 Dec 2019 21:08:35 -0500
+Received: from mail-eopbgr700134.outbound.protection.outlook.com ([40.107.70.134]:33632
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726793AbfLLCIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:08:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JnCa0IwCKm0L1if1AHGFMp8TSdFK5gz/3E/1YZafDSWjXtfdlSfzOh9n7cVzIJwUTVItfomJBik4cagTwdxvHYuX0O1F4YGBFucAl0i5RvyUW0qocm2/Y56eOD9pWtViwoCx9XU007jikyWbe80+DwK1LO8KQ6DI1GF2wdTkkPxHbACsyxZ4vT3rHE6bsgq2hzUP2GzzP3OMHO1nbzntYVCwhwbzoCHnBs5PDYLxDvKlk5hsUZIhHquuXV36zM0q/W+j4OUiUsJ3ypD8mjLcjeRi/q7VyeTod0GBA+4F5nkRxpJBkxQI/2/i85LN1qEZH9O3B9GF0G/ig+zm+9DqLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/v2eXSfOQhx0zlPwFdzUO+mmPI4Y811QrahK7QUrrgU=;
+ b=Vr/+ALtm+f3tf7PPT/Pk6ueM194m8zr4UC98JglFFwOyW9GadPC0HS6DVLSREd5QVeyVdqwlM5ETEi1Ph3C/2qHaxo+szfWkJj3t0ex0zt2mY47ry2dVKcasVPz6gb1JXSyaUg7tBcfR+pn9iQ489yI8vYtBOeyKE3mV4YVQuIuyKeTKqtKgvwj60enyKaAhAwA+QCnNPSNqU6sGyi7d50RgkqvPkcN6/LgGigdFnVX6oCpVgS+NGfhW2b6QRBYAMpLOHxVodGAQdkWrmOUvYF0qSf7APQtm6n7O1Za/U4f5+t9mnHoHcYeo9VcY5teH9RkHuOY2fFAYPSKxXprIgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cypress.com; dmarc=pass action=none header.from=cypress.com;
+ dkim=pass header.d=cypress.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cypress.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/v2eXSfOQhx0zlPwFdzUO+mmPI4Y811QrahK7QUrrgU=;
+ b=MeNc3TEZTlVdilvsnpQShQWw09eHTMgAK4Oj3rcaoBrbv8oJcp2eVHPndcxHhkB97KvnJk31OAZbxPzM5B8QX3wM5zusrXyT106BMobR6lDTiVRmVJzS+diGfc9w6W8qW8ndtkJ3rPhmgWD3BDtoM/YZjeKIa+4UIBBXkAkeWFI=
+Received: from CY4PR06MB2342.namprd06.prod.outlook.com (10.169.185.149) by
+ CY4PR06MB2744.namprd06.prod.outlook.com (10.173.43.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2516.12; Thu, 12 Dec 2019 02:07:52 +0000
+Received: from CY4PR06MB2342.namprd06.prod.outlook.com
+ ([fe80::4930:d9e2:2f15:868d]) by CY4PR06MB2342.namprd06.prod.outlook.com
+ ([fe80::4930:d9e2:2f15:868d%3]) with mapi id 15.20.2538.016; Thu, 12 Dec 2019
+ 02:07:52 +0000
+From:   Chi-Hsien Lin <Chi-Hsien.Lin@cypress.com>
+To:     Soeren Moch <smoch@web.de>, Kalle Valo <kvalo@codeaurora.org>,
+        Heiko Stuebner <heiko@sntech.de>
+CC:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Wright Feng <Wright.Feng@cypress.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "brcm80211-dev-list.pdl@broadcom.com" 
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/9] brcmfmac: fix rambase for 4359/9
+Thread-Topic: [PATCH v2 3/9] brcmfmac: fix rambase for 4359/9
+Thread-Index: AQHVsH4n+6PxY2w0LUCHnMkA6uGdW6e1wOcA
+Date:   Thu, 12 Dec 2019 02:07:52 +0000
+Message-ID: <cdb13e17-64b5-8b58-db66-6827b86dbf39@cypress.com>
+References: <20191211235253.2539-1-smoch@web.de>
+ <20191211235253.2539-4-smoch@web.de>
+In-Reply-To: <20191211235253.2539-4-smoch@web.de>
+Reply-To: Chi-Hsien Lin <Chi-Hsien.Lin@cypress.com>
+Accept-Language: en-US, zh-TW
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [61.222.14.99]
+user-agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+x-clientproxiedby: BYAPR03CA0010.namprd03.prod.outlook.com
+ (2603:10b6:a02:a8::23) To CY4PR06MB2342.namprd06.prod.outlook.com
+ (2603:10b6:903:13::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chi-Hsien.Lin@cypress.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1209edcc-b422-4b3f-e9c3-08d77ea817ef
+x-ms-traffictypediagnostic: CY4PR06MB2744:|CY4PR06MB2744:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR06MB274429DDADD63295C4A99045BB550@CY4PR06MB2744.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:972;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(366004)(136003)(376002)(189003)(199004)(26005)(2906002)(31696002)(71200400001)(110136005)(186003)(66946007)(2616005)(86362001)(31686004)(316002)(3450700001)(52116002)(5660300002)(54906003)(8676002)(6512007)(478600001)(53546011)(6506007)(4326008)(6486002)(66446008)(66556008)(81156014)(36756003)(64756008)(81166006)(8936002)(66476007)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR06MB2744;H:CY4PR06MB2342.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cypress.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mapK05taLiXxdvnoUHgjkzvAZVaIBGd+BokBMic+pLMYMvSPBAOH57bQH8q/NbGXdd8aXN+pjMt+u9itPAAi0q1K263b/cjCdK7Q4hEtmLLEIPyoFBZ4leX6pLNS0JkQjEcSmTz2G6J32y3hyK1x7bT5Q04s6UNn/3x3Q8wnRqRhGLpULMYs8GzmxuCu3BNLsdFItwgKOEa6RswzbIkTY6PUn+zXh5e9mRLulWGeuoNfu3zQ8Gfgpg2vs8BH6kNWIUMT3EfVjK/jAScnW2tnp0Mn5JK6tDUOBRlhFgAl0kwavP5wkbLnkijbJpa4EoWN3F0243Civyz79IKpcYq8T96b0pvyKTPigmoRaL9FsBC5g0la2E5JzeoaW3y0UW1buJzf/8iPCBACmVLUpQFgryHLamA3vM5xSADtCp/EUoae7db6uEawimaqjmsHp9eV
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7C4EC26E46EA7949B54C07F878B62F7B@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191211163310.4788-1-sj38.park@gmail.com> <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
- <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com> <CAFd5g4649_C0tSy3W-KzN05Y8K5zZtGUGVYFA9iAKvaXsPentw@mail.gmail.com>
-In-Reply-To: <CAFd5g4649_C0tSy3W-KzN05Y8K5zZtGUGVYFA9iAKvaXsPentw@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 11 Dec 2019 18:06:10 -0800
-Message-ID: <CAFd5g46X4P7dfJWVw9hdvhVupanuZU-_KWGzostRy_e1Z=P1Og@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Fix nits in the kunit
-To:     SeongJae Park <sj38.park@gmail.com>
-Cc:     shuah <shuah@kernel.org>, SeongJae Park <sjpark@amazon.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: cypress.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1209edcc-b422-4b3f-e9c3-08d77ea817ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 02:07:52.1327
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 011addfc-2c09-450d-8938-e0bbc2dd2376
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ol8CgijY4n+EtmltmOL5X8/UBbu6enaC00H1jjrQn9dvMTCnVarYM25HtnmgWabT20anLWcW9/ne+Yr9uLecPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR06MB2744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 9:45 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Wed, Dec 11, 2019 at 9:40 AM SeongJae Park <sj38.park@gmail.com> wrote:
-> >
-> > On Wed, Dec 11, 2019 at 6:22 PM shuah <shuah@kernel.org> wrote:
-> > >
-> > > On 12/11/19 9:33 AM, SeongJae Park wrote:
-> > > > May I ask some comments?
-
-SeongJae,
-
-I reviewed and tested all your patches. Everything looks good to me
-with one minor caveat: I tried applying your patches on
-kselftest/fixes[1] and got the following error:
-
-error: patch failed: Documentation/dev-tools/kunit/start.rst:21
-error: Documentation/dev-tools/kunit/start.rst: patch does not apply
-Patch failed at 0005 kunit: Rename 'kunitconfig' to '.kunitconfig'
-
-I think the merge conflict is fairly straightforward, but it would
-still probably make Shuah's life easier if you rebased your patches.
-
-Cheers!
-
-P.S. Thanks for the patch adding the test case for test the build_dir
-thing. I really appreciate that!
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=fixes
+DQoNCk9uIDEyLzEyLzIwMTkgNzo1MiwgU29lcmVuIE1vY2ggd3JvdGU6DQo+IE5ld2VyIDQzNTkg
+Y2hpcCByZXZpc2lvbnMgbmVlZCBhIGRpZmZlcmVudCByYW1iYXNlIGFkZHJlc3MuDQo+IFRoaXMg
+Zml4ZXMgZmlybXdhcmUgZG93bmxvYWQgb24gc3VjaCBkZXZpY2VzIHdoaWNoIGZhaWxzIG90aGVy
+d2lzZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFNvZXJlbiBNb2NoIDxzbW9jaEB3ZWIuZGU+DQpB
+Y2tlZC1ieTogQ2hpLUhzaWVuIExpbiA8Y2hpLWhzaWVuLmxpbkBjeXByZXNzLmNvbT4NCg0KPiAt
+LS0NCj4gY2hhbmdlcyBpbiB2Mjogbm9uZQ0KPiANCj4gQ2M6IEthbGxlIFZhbG8gPGt2YWxvQGNv
+ZGVhdXJvcmEub3JnPg0KPiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4NCj4g
+Q2M6IEFyZW5kIHZhbiBTcHJpZWwgPGFyZW5kLnZhbnNwcmllbEBicm9hZGNvbS5jb20+DQo+IENj
+OiBGcmFua3kgTGluIDxmcmFua3kubGluQGJyb2FkY29tLmNvbT4NCj4gQ2M6IEhhbnRlIE1ldWxl
+bWFuIDxoYW50ZS5tZXVsZW1hbkBicm9hZGNvbS5jb20+DQo+IENjOiBDaGktSHNpZW4gTGluIDxj
+aGktaHNpZW4ubGluQGN5cHJlc3MuY29tPg0KPiBDYzogV3JpZ2h0IEZlbmcgPHdyaWdodC5mZW5n
+QGN5cHJlc3MuY29tPg0KPiBDYzogbGludXgtd2lyZWxlc3NAdmdlci5rZXJuZWwub3JnDQo+IENj
+OiBicmNtODAyMTEtZGV2LWxpc3QucGRsQGJyb2FkY29tLmNvbQ0KPiBDYzogYnJjbTgwMjExLWRl
+di1saXN0QGN5cHJlc3MuY29tDQo+IENjOiBuZXRkZXZAdmdlci5rZXJuZWwub3JnDQo+IENjOiBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LXJvY2tjaGlw
+QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcN
+Cj4gLS0tDQo+ICAgZHJpdmVycy9uZXQvd2lyZWxlc3MvYnJvYWRjb20vYnJjbTgwMjExL2JyY21m
+bWFjL2NoaXAuYyB8IDMgKystDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
+MSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3dpcmVsZXNzL2Jy
+b2FkY29tL2JyY204MDIxMS9icmNtZm1hYy9jaGlwLmMgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9i
+cm9hZGNvbS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5jDQo+IGluZGV4IDBiNWZiZTVkODI3MC4u
+YmFmNzJlMzk4NGZjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9icm9hZGNv
+bS9icmNtODAyMTEvYnJjbWZtYWMvY2hpcC5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNz
+L2Jyb2FkY29tL2JyY204MDIxMS9icmNtZm1hYy9jaGlwLmMNCj4gQEAgLTcxMiw3ICs3MTIsNiBA
+QCBzdGF0aWMgdTMyIGJyY21mX2NoaXBfdGNtX3JhbWJhc2Uoc3RydWN0IGJyY21mX2NoaXBfcHJp
+diAqY2kpDQo+ICAgCWNhc2UgQlJDTV9DQ180MzU2OV9DSElQX0lEOg0KPiAgIAljYXNlIEJSQ01f
+Q0NfNDM1NzBfQ0hJUF9JRDoNCj4gICAJY2FzZSBCUkNNX0NDXzQzNThfQ0hJUF9JRDoNCj4gLQlj
+YXNlIEJSQ01fQ0NfNDM1OV9DSElQX0lEOg0KPiAgIAljYXNlIEJSQ01fQ0NfNDM2MDJfQ0hJUF9J
+RDoNCj4gICAJY2FzZSBCUkNNX0NDXzQzNzFfQ0hJUF9JRDoNCj4gICAJCXJldHVybiAweDE4MDAw
+MDsNCj4gQEAgLTcyMiw2ICs3MjEsOCBAQCBzdGF0aWMgdTMyIGJyY21mX2NoaXBfdGNtX3JhbWJh
+c2Uoc3RydWN0IGJyY21mX2NoaXBfcHJpdiAqY2kpDQo+ICAgCWNhc2UgQlJDTV9DQ180MzY2X0NI
+SVBfSUQ6DQo+ICAgCWNhc2UgQlJDTV9DQ180MzY2NF9DSElQX0lEOg0KPiAgIAkJcmV0dXJuIDB4
+MjAwMDAwOw0KPiArCWNhc2UgQlJDTV9DQ180MzU5X0NISVBfSUQ6DQo+ICsJCXJldHVybiAoY2kt
+PnB1Yi5jaGlwcmV2IDwgOSkgPyAweDE4MDAwMCA6IDB4MTYwMDAwOw0KPiAgIAljYXNlIENZX0ND
+XzQzNzNfQ0hJUF9JRDoNCj4gICAJCXJldHVybiAweDE2MDAwMDsNCj4gICAJZGVmYXVsdDoNCj4g
+LS0NCj4gMi4xNy4xDQo+IA0KPiAuDQo+IA0K
