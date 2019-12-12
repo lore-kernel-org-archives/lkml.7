@@ -2,76 +2,118 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D595FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D8C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24242173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE3E22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kmM4+iiu";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Pl8nwW5Y"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cJ10Yye5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfLLTpJ (ORCPT
+        id S1730698AbfLLTp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:45:09 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:50554
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730284AbfLLTpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:45:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576179908;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
-        bh=eQxrK8Iw23uSBOiCp/yidrRTawxLunZnrXI4AtGvRN8=;
-        b=kmM4+iiuXzCz2sueL2jv0+TXTB390Tqs2792/h/RdYEVoWV7JwaSEBTeqxBK98oZ
-        WtQfRQw4Q+sqxpSt7CDHeYF1DhdUaDO0CFrNxQh7wVQzUq/jU2/x9ARG0dNbtdyQqYe
-        rsScXiVTufva5gvgP3PSp2RYgL4p1ydIbBIC+Qzk=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576179908;
-        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
-        bh=eQxrK8Iw23uSBOiCp/yidrRTawxLunZnrXI4AtGvRN8=;
-        b=Pl8nwW5Ya+d3N3VA5qCjysPpYh23dMxfCF1/3RovGlW3OPqazIshzFsUxXXUz7Gn
-        0YDQAd/CUC7qKsTQI2PuBbYfHI/lvkNELwyHwqc/Cm6a0ofBfRPcj0oMKawiLm8xKRb
-        7iwjENbDNgTkjLrLUvwaLfdFRRkLHEkKWf6dXwxY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99458C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-Date:   Thu, 12 Dec 2019 19:45:08 +0000
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 11/18] firmware: qcom_scm-32: Use SMC arch wrappers
-Message-ID: <0101016efba4bff6-afac982d-5c34-4c5d-a383-05522db4d45f-000000@us-west-2.amazonses.com>
-References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org>
- <1573593774-12539-12-git-send-email-eberman@codeaurora.org>
- <5dcf45bd.1c69fb81.297bb.9cb9@mx.google.com>
+        Thu, 12 Dec 2019 14:45:58 -0500
+Received: from rere.qmqm.pl ([91.227.64.183]:30833 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730284AbfLLTp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:45:58 -0500
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Ykmy0dwcz60;
+        Thu, 12 Dec 2019 20:45:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1576179956; bh=jQ54pf6Th0HMTAdiqavUkKS8KHekP4LdV0jt9P6GhmA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cJ10Yye52Jy3s5WTedkN4QYJjfdfYtDvYAKQX++zujaW2I/dQukY/cerW+mtAIJez
+         Ze5SSQTe9EmVadx2m4iIJYNfxgwxUm1AglT8uK2sTyXJ8nIeRMhG0R9+8jBT8WBdda
+         XTIRu3Ri/jdMVjpuC96eEvtdRS1pScGgd93BpAwa7LOroKqjFCrXhRClPHNrYYnoNw
+         JfV1OrI5ihkD6xqtxksZJiMwnqHHtd3RxMAEWk7Ep/Ezi8QLLNMiHwsF8q9ckVipWE
+         N/QcAAhLbaaXjmpK3iyMJG/8W5zjlka3rU5H+zRYeXhHjTZuOAUkm72uli5HNqy3T+
+         QUUEe9em67cvw==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.101.4 at mail
+Date:   Thu, 12 Dec 2019 20:45:52 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>,
+        Scott Liu <scott.liu@emc.com.tw>
+Subject: Re: [PATCH v2 2/9] input: elants: support old touch report format
+Message-ID: <20191212194552.GA22553@qmqm.qmqm.pl>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
+ <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5dcf45bd.1c69fb81.297bb.9cb9@mx.google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-SES-Outgoing: 2019.12.12-54.240.27.11
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 04:41:32PM -0800, Stephen Boyd wrote:
-> Nice. Can this come earlier in the series?
+On Thu, Dec 12, 2019 at 03:54:13AM +0300, Dmitry Osipenko wrote:
+> 11.12.2019 19:03, Michał Mirosław пишет:
+> > Support ELAN touchpad sensor with older firmware as found on eg. Asus
+> > Transformer Pads.
+[...]
+> > @@ -814,8 +817,16 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
+> >  			pos = &buf[FW_POS_XY + i * 3];
+> >  			x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
+> >  			y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
+> > -			p = buf[FW_POS_PRESSURE + i];
+> > -			w = buf[FW_POS_WIDTH + i];
+> > +			if (report_len == PACKET_SIZE_OLD) {
+> > +				w = buf[FW_POS_WIDTH + i / 2];
+> > +				w >>= 4 * (~i & 1);	// little-endian-nibbles
+> > +				w |= w << 4;
+> > +				w |= !w;
+> > +				p = w;
+> 
+> Did you copy this from the downstream driver as-is? I'm looking at the
+> Nexus 7 driver and it does the following for older format:
+> 
+> u8 size_idx[] = { 35, 35, 36, 36, 37, 37, 38, 38, 39, 39 };
+> unsigned int s;
+> 
+> if (i & 1)
+> 	s = buf[size_idx[i]];
+> else
+> 	s = buf[size_idx[i]] / 16;
+> 
+> w = s & 0xf;
+> p = s * 16;
 
-This patch is the first in this series that applies only to qcom_scm-32.
-Patches 1-5 were some common changes, 6-10 clean up qcom_scm-64, 11-15
-clean up qcom_scm-32, and 16-18 merges the two. I'd rather not move this
-patch earlier in the series as it breaks that organization of patches.
+This is the same thing modulo (w), which is scaled here to declared axis
+range (1-255 from 0-15, assuming 0 means "no touch" so it should not occur).
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+OTOH, I admit, that I don't have any software that can verify those
+settings. It might be that eg. one of MT_PRESSURE or MT_TOUCH_MAJOR axes
+should be dropped in this case, but with no docs I can't be sure what
+the reported values really are.
+
+This is from the original (GPL) code dump labeled 'Asus 10_6_1_27_5':
+
+|  touch_size = ((i & 0x01) ? buf[size_index[i]] : (buf[size_index[i]] >> 4)) & 0x0F;
+|  if(touch_size == 0) touch_size = 1;
+|  if (touch_size <= 7)
+|      touch_size = touch_size << 5;
+|  else
+|      touch_size = 255;
+|    
+|    input_report_abs(idev, ABS_MT_TOUCH_MAJOR, touch_size);
+|    input_report_abs(idev, ABS_MT_PRESSURE, touch_size);
+
+
+Best Regards,
+Michał Mirosław
