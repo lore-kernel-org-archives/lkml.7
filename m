@@ -2,161 +2,98 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE01FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADA4C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92275205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:11:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KwSUHEkK"
+	by mail.kernel.org (Postfix) with ESMTP id CE7DD22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576170692;
+	bh=FK2yOsSyQfMs4eXrT8hrQLj4Oc3K4kFlXdl+1sElDUg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CTmTPZ7fCqEtDh5V4FLrLZuZ2uop7ei4i2X2Fr8XWL+ZZJV+qlP1B9VqJl3XQomV2
+	 8n3Z57rLG2BOPwc5PbGPDmREDm4vVH69NEZhTTe7KbU6TtKU+SS5liqDdaKefbvvAh
+	 P21LQWRgy01rN6OODhKoC2kJUpLiDP5HTl8aLVaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfLLRL0 (ORCPT
+        id S1730086AbfLLRLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:11:26 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:33951 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730014AbfLLRL0 (ORCPT
+        Thu, 12 Dec 2019 12:11:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46059 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730014AbfLLRLa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:11:26 -0500
-Received: by mail-qv1-f68.google.com with SMTP id o18so1255897qvf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:11:25 -0800 (PST)
+        Thu, 12 Dec 2019 12:11:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d20so3095279ljc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:11:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O8i/P7PW2Hmf7if5w9WzMo01jNRINdPJBRjB9gK59EQ=;
-        b=KwSUHEkKFnQJl6ziISrvsigGagqLvOmVERDG6DUYWMqZR+pR+SlGTc4CfEoM4oKLga
-         5znnUebLqUXbHjT5ebLhMIGPf5Rq4o1M2fI9H1eLh0llknAWtN2bOGIfcD9HkfGQTw/K
-         It0FKvAouyzEKkl6ZmqP+ELrCB69SXBTK+T5sYtzPxGwIBPt9EH71nss5ZPd7+UwtSNG
-         1IpNsZnrk4f1B2KtLPOKkILRTAVLpOdV8vs8pYsGYJQ3aR1nHpiYppyu45qEfGZ83hxW
-         M5QI2jQ3BhnLPS8nbx/NTKSKXakHPBAzSXWBqdjrhlW581Rdw0rvowt/bvyC7HHQz9zA
-         BFKA==
+        bh=ICBZ+2Sd9tfmFcrdW3O7fc/UNhWSUyLmfpG5i/hGM7E=;
+        b=f0VHPW2Bi/XQejHvGiWUPZHd0FPLqv5MeDX2LcpZSX2vPAG4qO3a/uQ86y5r9XZG84
+         Mf2Vm6TfzrZ7/CGmCKCU8WVBw931mlrGteN6eiLSnHarrlxNaQWvqZEaEr4b9rAl3Ut0
+         HhzUgFepqD4KQguWxjBcAy40sBWj37ZYsmiog=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O8i/P7PW2Hmf7if5w9WzMo01jNRINdPJBRjB9gK59EQ=;
-        b=a2oKHGmXY9sKUJ/x8En98kuccx06YosvzEKoQCBWSMFvET7bWUTmJnY/lIz1vFNz46
-         5SswFqXFGLvKMtGQhCYszhBu3PjlaOaSGJ5e4MzeNP0VwLOqkVbzKH099lRp45xjXCZc
-         OmzibsowWZRgs1vJjF6bPlLx0XW9gBPsMs3xbJOsbDTN2Trz+Bf3SXyjav3Q4YajZ+1j
-         U5XrjrThrQY68nQXPytq803RBzSXfLRy3Uk3WaniDI67/Hc0gWStuHphwBq1kpJnku2n
-         SB4lPErvoGdZS1jgTPPgmDSXHkyNbCfXBSuPc7lDsPyCfSCXcBqyKLWAyedG8QPTOCZl
-         YOkA==
-X-Gm-Message-State: APjAAAX4YlDHo3Uc+5U2zQNoxT1ncAlj05nFLS/g4RTBLqO2OcWXhIDo
-        PxNK6Ld5d1dSReNTlPj8pmhoCmr0p7fnrrCXRankYg==
-X-Google-Smtp-Source: APXvYqzQk46Y6eeg2hH2s6F7jP6tW8AHVwnJZaLYT6r1Wf5ecobjIj6/5wKC5s9XcEf0+8Tie52rAjaWCUQE/ZryatY=
-X-Received: by 2002:ad4:4b08:: with SMTP id r8mr9321668qvw.250.1576170684921;
- Thu, 12 Dec 2019 09:11:24 -0800 (PST)
+        bh=ICBZ+2Sd9tfmFcrdW3O7fc/UNhWSUyLmfpG5i/hGM7E=;
+        b=jTvTdImITlPRJUQnK+ZRBWjnOPBMpn/Oa0iHqnoYN2jI8fSXujkhr51BeVt6Gc2NJa
+         c7JQgAgrkZyyO907SO0NoWRK6h0s95gxKEe/7HWXVZifxxDuOz7uqbqwXJatv8iysuXP
+         DrcirY7lj2sUnjTz+o5VVL6zfb3cxhvsZQQ8iKEHlqhMbwNCloUy0f05XuOmN6ghjDaP
+         +UpYvk4rMpbDrW/2VIibyzwLI0mGF1EPJ7SYDDeYpdSAqEoULRQvTnz1/J+rtKhWQE1H
+         LbWNjxV8T29QZhrPgG1ho30nrS1zfKqtMm96GSfRu/UT9R/5EnExIRyWi9VORC6SHaN6
+         5zpg==
+X-Gm-Message-State: APjAAAX2hSuxZ0A78JeuXSlThyLhqBnrvSj07TtTlUsPs02K5R4S6BmP
+        kZqBnUGehH6RIdR8KrZoCrEBOuxRXic=
+X-Google-Smtp-Source: APXvYqxoZ5LNdSLA3NmM82USBtfJpEa4Qv3aE9925vhEHnI4dDxR77UmHDaLoJyAtosXqgnUM2oYFA==
+X-Received: by 2002:a2e:9694:: with SMTP id q20mr6552400lji.248.1576170687942;
+        Thu, 12 Dec 2019 09:11:27 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id m21sm3212004lfh.53.2019.12.12.09.11.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 09:11:27 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id r19so3127273ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:11:26 -0800 (PST)
+X-Received: by 2002:a2e:9ad8:: with SMTP id p24mr6730555ljj.148.1576170686344;
+ Thu, 12 Dec 2019 09:11:26 -0800 (PST)
 MIME-Version: 1.0
-References: <20191211204753.242298-1-pomonis@google.com> <20191211204753.242298-3-pomonis@google.com>
- <87eex9c20c.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87eex9c20c.fsf@vitty.brq.redhat.com>
-From:   Marios Pomonis <pomonis@google.com>
-Date:   Thu, 12 Dec 2019 09:11:14 -0800
-Message-ID: <CAKXAmdjmYzY=eQUpt2f7J6OLBozAjg=pgEgkFXEVDudH4-EydQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/13] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data()
- from Spectre-v1/L1TF attacks
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Finco <nifi@google.com>, Andrew Honig <ahonig@google.com>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        rkrcmar@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
+References: <20191212135724.331342-1-linux@dominikbrodowski.net>
+In-Reply-To: <20191212135724.331342-1-linux@dominikbrodowski.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 12 Dec 2019 09:11:10 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgQRXLjXC5YxJd1VHoGpMB6wg=2XaLj1FgH=H+bP8=fDQ@mail.gmail.com>
+Message-ID: <CAHk-=wgQRXLjXC5YxJd1VHoGpMB6wg=2XaLj1FgH=H+bP8=fDQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] use do_mount() instead of ksys_mount()
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 1:43 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Thu, Dec 12, 2019 at 5:59 AM Dominik Brodowski
+<linux@dominikbrodowski.net> wrote:
 >
-> Marios Pomonis <pomonis@google.com> writes:
->
-> > This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
-> > and kvm_hv_msr_set_crash_data().
-> > These functions contain index computations that use the
-> > (attacker-controlled) MSR number.
->
-> Just to educate myself,
->
-> in both cases 'index' is equal to 'msr - HV_X64_MSR_CRASH_P0' where
-> 'msr' is constrained:
->   case HV_X64_MSR_CRASH_P0 ... HV_X64_MSR_CRASH_P4:
->          ....
->
-> and moreover, kvm_hv_{get,set}_msr_common() is only being called for a
-> narrow set of MSRs. How can an atacker overcome these limitations?
->
-This attack scenario relies on speculative execution. Practically, one
-could train the branch predictors involved to speculatively execute
-this path even if the adversary-supplied MSR number does not fall into
-the legitimate range. The adversary-supplied MSR number however is
-going to be used when -speculatively- computing the index of the array
-thus allowing an attacker to load normally illegitimate memory values
-in the L1 cache.
-> >
-> > Fixes: commit e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
-> >
-> > Signed-off-by: Nick Finco <nifi@google.com>
-> > Signed-off-by: Marios Pomonis <pomonis@google.com>
-> > Reviewed-by: Andrew Honig <ahonig@google.com>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  arch/x86/kvm/hyperv.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> > index 23ff65504d7e..26408434b9bc 100644
-> > --- a/arch/x86/kvm/hyperv.c
-> > +++ b/arch/x86/kvm/hyperv.c
-> > @@ -809,11 +809,12 @@ static int kvm_hv_msr_get_crash_data(struct kvm_vcpu *vcpu,
-> >                                    u32 index, u64 *pdata)
-> >  {
-> >       struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-> > +     size_t size = ARRAY_SIZE(hv->hv_crash_param);
-> >
-> > -     if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-> > +     if (WARN_ON_ONCE(index >= size))
-> >               return -EINVAL;
-> >
-> > -     *pdata = hv->hv_crash_param[index];
-> > +     *pdata = hv->hv_crash_param[array_index_nospec(index, size)];
-> >       return 0;
-> >  }
-> >
-> > @@ -852,11 +853,12 @@ static int kvm_hv_msr_set_crash_data(struct kvm_vcpu *vcpu,
-> >                                    u32 index, u64 data)
-> >  {
-> >       struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-> > +     size_t size = ARRAY_SIZE(hv->hv_crash_param);
-> >
-> > -     if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-> > +     if (WARN_ON_ONCE(index >= size))
-> >               return -EINVAL;
-> >
-> > -     hv->hv_crash_param[index] = data;
-> > +     hv->hv_crash_param[array_index_nospec(index, size)] = data;
-> >       return 0;
-> >  }
->
-> --
-> Vitaly
->
+> This small series replaces all in-kernel calls to the
+> userspace-focused wrapper ksys_mount() with calls to
+> the kernel-centric do_mount().
 
+If you fix the pointless cast I pointed out, and put it in a git
+branch, I'll pull it.
 
--- 
-Marios Pomonis
-Software Engineer, Security
-GCP Platform Security
-US-KIR-6THC
+In fact, just do both series in the same branch, they do conceptually
+the same thing, after all.
+
+             Linus
