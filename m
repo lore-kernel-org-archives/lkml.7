@@ -2,80 +2,85 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD150C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C79BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89326214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95E6214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Rb/kVlm9"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZSWj6tvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfLLWuE (ORCPT
+        id S1731199AbfLLWwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:50:04 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34926 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730707AbfLLWuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:50:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z35C5KvkFaXtsq++gd9LaBNy9EzUqvGOEvfQ9q1Iyc4=; b=Rb/kVlm9RYoH32rjzoL52rvrg
-        M2Twe3ZUJ3oXF/D0iJVdUsuck4FS55+heBLF1NVhwdy0tHkXqxZDXDNjdqlxHZq94RkbDpJi9zROy
-        wJoCmdFcutxOiUIwj0LO1YbFadXXVxA2GDKhc7ryl2C/dcbnUj8KBLWTlP+m5tUdugfv/M/MooSC5
-        QWW5oxFK7b0+nXYfm9cYtpWhIzB8tLRuDPd22eZ3KevnVqpKV8zguHgf0L3K7iSvi3N4ZyADDcKKq
-        LVzdawisvEftVlNLbZNQWPjq+HzIKtHtHkNHmJZJTQszrq3xZnjnP5/gVtUduxrhQI5P1gCmHC+N6
-        D0lOzzmHQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifXHW-0006uZ-He; Thu, 12 Dec 2019 22:50:02 +0000
-Subject: Re: [PATCHv2] vfs: Handle file systems without ->parse_params better
-To:     Laura Abbott <labbott@redhat.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        David Howells <dhowells@redhat.com>
-Cc:     Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>
-References: <20191212224139.15970-1-labbott@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fae0b08a-17ac-385b-5f2f-b63ceeeae89a@infradead.org>
-Date:   Thu, 12 Dec 2019 14:50:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 17:52:19 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54072 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730707AbfLLWwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 17:52:18 -0500
+Received: from zn.tnic (p200300EC2F0A5A00B4F8B0259BBDD02E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:b4f8:b025:9bbd:d02e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 722BD1EC0B73;
+        Thu, 12 Dec 2019 23:52:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1576191137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=I+6z30f30I6nzK22n10S/qvVdimFKEIApG864hhwozE=;
+        b=ZSWj6tvEbRghIKYhiFRQxD/CUxOZbYtFakqG/F3cprL57n4lXuwuZnOHq66hSdODVIQQsx
+        x728844ttPnfBk5OioQWoQro+7bmd4+2RYDruiXWM28VqLE2OErRq0AdPH6eFlY2l2f3KC
+        g6Ka0lr2wOGG1/FMtAZgFYsGwROrmtw=
+Date:   Thu, 12 Dec 2019 23:52:10 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/cpufeatures: Add feature flag for fast short rep
+ movsb
+Message-ID: <20191212225210.GA22094@zn.tnic>
+References: <20191212214908.20185-1-tony.luck@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191212224139.15970-1-labbott@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20191212214908.20185-1-tony.luck@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-typo:
+On Thu, Dec 12, 2019 at 01:49:08PM -0800, Tony Luck wrote:
+> From the Intel Optimization Reference Manual:
+> 
+> 3.7.6.1 Fast Short REP MOVSB
+> Beginning with processors based on Ice Lake Client microarchitecture,
+> REP MOVSB performance of short operations is enhanced. The enhancement
+> applies to string lengths between 1 and 128 bytes long.  Support for
+> fast-short REP MOVSB is enumerated by the CPUID feature flag: CPUID
+> [EAX=7H, ECX=0H).EDX.FAST_SHORT_REP_MOVSB[bit 4] = 1. There is no change
+> in the REP STOS performance.
+> 
+> Add an X86_FEATURE_FSRM flag for this.
+> 
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+> 
+> Net effect of this patch is just to make "fsrm" appear in the
+> flags section of /proc/cpuinfo. Maybe someone can look into whether
+> we should make copy routines that use "rep movsb" check for this
+> flag to optimize copies on older CPUs that don't have it?
 
-On 12/12/19 2:41 PM, Laura Abbott wrote:
-> +/**
-> + * ignore_unknowns_parse_param - ->parse_param function for a file system that
+We can then add the feature flag too. Just showing it in /proc/cpuinfo
+without any users is kinda pointless...
 
-      ignore_unknown_parse_param
-
-> + * takes no arguments
-> + * @fc: The filesystem context
-> + * @param: The parameter.
-> + */
-> +static int ignore_unknown_parse_param(struct fs_context *fc, struct fs_parameter *param)
-
-thanks.
 -- 
-~Randy
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
