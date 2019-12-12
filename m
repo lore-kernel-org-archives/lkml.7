@@ -2,104 +2,138 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB7FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CD9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A10721655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1A021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="RndbV6MA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOflsHDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731311AbfLLXm3 (ORCPT
+        id S1731365AbfLLXnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:42:29 -0500
-Received: from perceval.ideasonboard.com ([213.167.242.64]:56574 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfLLXm2 (ORCPT
+        Thu, 12 Dec 2019 18:43:45 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38120 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfLLXnp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:42:28 -0500
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2E677A2B;
-        Fri, 13 Dec 2019 00:42:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1576194146;
-        bh=Zigp7SWN2m4H6YUkBIdGVKmC/isQiYmdYdZtzt8Jztk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RndbV6MA+dGWmvZ8wzqXHSiv1XkHg7/dIXqIHfZSjpsohZe7cAXRD4W7DRtNJD5gq
-         TAoQleBsM/vUVrxVAWvJ4bd1I49mwSPfuqw8FZRBq3naYfcCwFG5mnizDN/yy62WUT
-         icU0UJEstnAAbSa74Yss0oOgUmaBCzv4t9St5zs8=
-Date:   Fri, 13 Dec 2019 01:42:16 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: omap3isp: add checks for devm_regulator_get
-Message-ID: <20191212234216.GE4892@pendragon.ideasonboard.com>
-References: <20191210091428.23448-1-hslester96@gmail.com>
+        Thu, 12 Dec 2019 18:43:45 -0500
+Received: by mail-lj1-f195.google.com with SMTP id k8so589632ljh.5;
+        Thu, 12 Dec 2019 15:43:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=llnJRA9ns4b0CgqcafqmnEc5Pr659qyL9gQOjNeNfGU=;
+        b=jOflsHDmIQBDdVSHvbaweA1EQ3DVIE7zAH2lnkXZ9PWYZ9HxEr1bwQ2B3LIz3cQkj8
+         5ajqKCzpnGp0P5xaX7om9NCPUzXf1z19KlkLvhGGW/wrDlPbm0uybn0LsCyfxVKwqD0b
+         pVHR1ZsLnmLNDGN7WzhRXK5IlLDtsD0c+E2GjZ8zf4G4YYGLVdS88FJBSWYNX7P1zn0N
+         b0K2Gxazto6cvfK7Sbzq1WoZmI0h4s8JqgZ2b4QhA4fS3Xn1QpE6OpeSoULQIeKWhdLF
+         oiGsVLNRQul4uLfWb6P7LnMh8sKkov0Tsr7crq1xo84INbsLdkl1noH+IGa2N3jsM1A1
+         OVMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=llnJRA9ns4b0CgqcafqmnEc5Pr659qyL9gQOjNeNfGU=;
+        b=LDG14HzTjq5xubIVqWQ/cFVzZ8u608UBKjw2iVJEzbUWeGjtp2nBVkrBppBWU9r2yd
+         NfdPYgqYdVwGTuIU+/9EjIVbhepQ4557cQEfIBkHsR7rOIxsezD5lu6yeuRv+duL8oHf
+         jx0g0KsJ7hovpLzJxej4/TA204R1OgvvaRUGjiREhzR9w47/GZ/LMVVZdlav2mhMcQK6
+         A1vgImOu6UT4aD92JnEHzgVE390pjgXlEhzs29buRYi4MhRcReN6l4s2mxdOXyj9YPmU
+         ENomp++kQeX2Vw7gHotak8Uucn/Uly/KWDW0tHVjwTIh0QMnH2fP6tA40PWezX9AWAtM
+         vOJw==
+X-Gm-Message-State: APjAAAWwoO15D0XQhhb5xyJJBqv2iXD09u9cb7i4RVz/kpBTFtHWTi+f
+        PA7G1lbzE4wVKUYUpcgwu21JPIjV
+X-Google-Smtp-Source: APXvYqzMRksYFdMZ+d2JmQuiTEFeJD4QSonsGbSzTlsp0xzCIZMphd+r9yOJ7yLZFpxDmp8Vt3w1PQ==
+X-Received: by 2002:a2e:9157:: with SMTP id q23mr7861331ljg.196.1576194223190;
+        Thu, 12 Dec 2019 15:43:43 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id n30sm4043560lfi.54.2019.12.12.15.43.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 15:43:42 -0800 (PST)
+Subject: Re: [PATCH v1 3/3] i2c: tegra: Fix suspending in active runtime PM
+ state
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191212233428.14648-1-digetx@gmail.com>
+ <20191212233428.14648-4-digetx@gmail.com>
+Message-ID: <60d798b5-4cc6-d285-b244-cc5b77aa5a71@gmail.com>
+Date:   Fri, 13 Dec 2019 02:43:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20191212233428.14648-4-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191210091428.23448-1-hslester96@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuhong,
-
-(CC'ing Sakari Ailus)
-
-Thank you for the patch.
-
-On Tue, Dec 10, 2019 at 05:14:28PM +0800, Chuhong Yuan wrote:
-> The driver misses checks for devm_regulator_get().
-> Add checks to fix it.
+13.12.2019 02:34, Dmitry Osipenko пишет:
+> I noticed that sometime I2C clock is kept enabled during suspend-resume.
+> This happens because runtime PM defers dynamic suspension and thus it may
+> happen that runtime PM is in active state when system enters into suspend.
+> In particular I2C controller that is used for CPU's DVFS is often kept ON
+> during suspend because CPU's voltage scaling happens quite often.
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> Note: we marked runtime PM as IRQ-safe during the driver's probe in the
+> "Support atomic transfers" patch, thus it's okay to enforce runtime PM
+> suspend/resume in the NOIRQ phase which is used for the system-level
+> suspend/resume of the driver.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/media/platform/omap3isp/isp.c | 9 +++++++++
+>  drivers/i2c/busses/i2c-tegra.c | 9 +++++++++
 >  1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
-> index 327c5716922a..ef3502182c3a 100644
-> --- a/drivers/media/platform/omap3isp/isp.c
-> +++ b/drivers/media/platform/omap3isp/isp.c
-> @@ -2312,7 +2312,16 @@ static int isp_probe(struct platform_device *pdev)
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index b3ecdd87e91f..d309a314f4d6 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -1790,9 +1790,14 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+>  {
+>  	struct tegra_i2c_dev *i2c_dev = dev_get_drvdata(dev);
+> +	int err;
 >  
->  	/* Regulators */
->  	isp->isp_csiphy1.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy1");
-> +	if (IS_ERR(isp->isp_csiphy1.vdd)) {
-> +		ret = PTR_ERR(isp->isp_csiphy1.vdd);
-> +		goto error;
-> +	}
+>  	i2c_mark_adapter_suspended(&i2c_dev->adapter);
+>  
+> +	err = pm_runtime_force_suspend(dev);
+> +	if (err < 0)
+> +		return err;
 > +
->  	isp->isp_csiphy2.vdd = devm_regulator_get(&pdev->dev, "vdd-csiphy2");
-> +	if (IS_ERR(isp->isp_csiphy2.vdd)) {
-> +		ret = PTR_ERR(isp->isp_csiphy2.vdd);
-> +		goto error;
-> +	}
-
-Those regulators are currently checked at runtime in
-omap3isp_csiphy_acquire(). The check is incorrect as it checks for NULL
-while vdd would contain an ERR_PTR, so there's a real issue. However,
-not all platforms support the CSI-2 receivers, and only omap3-n950.dts
-and omap3-n9.dts provide the regulators. They thus need to be kept
-optional.
-
-Would you like to provide another patch that fixes the checks in
-omap3isp_csiphy_acquire() ?
-
+>  	return 0;
+>  }
 >  
->  	/* Clocks
->  	 *
+> @@ -1813,6 +1818,10 @@ static int __maybe_unused tegra_i2c_resume(struct device *dev)
+>  	if (err)
+>  		return err;
+>  
+> +	err = pm_runtime_force_resume(dev);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	i2c_mark_adapter_resumed(&i2c_dev->adapter);
+>  
+>  	return 0;
+> 
 
--- 
-Regards,
-
-Laurent Pinchart
+It just occurred to me that this patch needs to marked as fixes for the
+"i2c: tegra: Move suspend handling to NOIRQ phase" patch because it
+broke runtime PM enable-refcount by disabling clock/pinmux on resume
+from suspend. For now I'll wait for the review comments. Please review,
+thanks in advance.
