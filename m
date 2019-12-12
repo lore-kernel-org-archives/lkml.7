@@ -2,96 +2,193 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBB3C2D0C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E2BC2D0C5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9432A2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PYYGYzYS"
+	by mail.kernel.org (Postfix) with ESMTP id D14FC21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfLLAaU (ORCPT
+        id S1727313AbfLLAdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:30:20 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46660 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727185AbfLLAaT (ORCPT
+        Wed, 11 Dec 2019 19:33:14 -0500
+Received: from sender4-op-o11.zoho.com ([136.143.188.11]:17124 "EHLO
+        sender4-op-o11.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfLLAdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:30:19 -0500
-Received: by mail-lj1-f194.google.com with SMTP id z17so176066ljk.13;
-        Wed, 11 Dec 2019 16:30:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=mgVjPBpyfVTYKp7+63M0bjTwmbLNn/Kfsk0p43t6uBU=;
-        b=PYYGYzYSWKV2PqQB4n1wRuprl+RhHezanrtZ6Rw2jHwXb3x297I9nIlvtZfTyrxDkI
-         Miu9HWz020yOrx5E3uZo23k9Ogd5jnflKCZr0vN1oXX2FYAubYOAtjuOmgMHbJ/qrHbD
-         drSMxC/j+dhZ4qEWLFJJ2X8dN1mOO1oGUiapO5xGN6AFjyLUApWHyvwd/2za5SGqe4ZI
-         sBhDaGH6L3V6puhmLDGwAUwWmluqqUEZz6/yTQxCWpNDQUZXH8N20qvv4P8RSwLkterD
-         t3+qkkJH0u03n+0dmrAAfexVFz/WQ5bCR45uzaCjZad7FBaH5fw1W38Uwe2sHU+7FutG
-         yhEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mgVjPBpyfVTYKp7+63M0bjTwmbLNn/Kfsk0p43t6uBU=;
-        b=NkihYS5gHaX5ajwTrrhtlCL8b6epQFeBygHJlxyJd/S8TI38nIn4ftlQOG3VJZdcO5
-         FBuZhlQX9UUWLJnM7nPMqYJKm7uID0lcxXPu2u4lj4AyAGkIhJZRHzhJylCm4Wsp7c3y
-         gWs/i+2nkb7Ke5NEfUlkdyP//DEdLMC2KxEyD2LyDAlziw79SpIMx/WAKftE+N4mOPL6
-         PfzWMcF/StEt1jtxYNPP9AGcoqqPHRVdRIa8q/5MZ9zrO37ud5hwE4MtyRLnDchYiuVx
-         hlMmn8QWEvnnXCvdQhD/a+Pud5hTB+BoESahbv0XPxq5tnCFAUH2c39ks6eGI6UiNnQk
-         5gbg==
-X-Gm-Message-State: APjAAAX9yhm+R+RGmCXjJu6Jc76FjH1lJ62++fO83tPMZquYiYAX1cU5
-        txVWyHzqQYIe49bl14fbnPU=
-X-Google-Smtp-Source: APXvYqwO5foLVVJytsyxiKCrekNCooOHh4aENG+4C4O+uBUNnZwq8OmWKehIm1Ym44jZkUOg8dpR/g==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr3992053lja.231.1576110617323;
-        Wed, 11 Dec 2019 16:30:17 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id b14sm1946255lff.68.2019.12.11.16.30.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 16:30:16 -0800 (PST)
-Subject: Re: [PATCH v2 5/9] input: elants: refactor
- elants_i2c_execute_command()
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Wed, 11 Dec 2019 19:33:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1576110779; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=X03i3V/8EUcM4luIhZRpY/0odgc75H4FDcR6CcpcWIyBuQ4f6rr08GUvv0bfI/UA9GvqiJinK18u9ID0gk0yJ20jws6uLu1DVLoOTYHCkyHxyfaYACg2rtZZO+CV8tCuLXoPbz3u9NyTc7eyz9AWjLLwMTzxORygeif2v1g9ens=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1576110779; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=52I5t2+RJ1d8gIfMJ4FqE43LzPcw+pznymfSad4xjbk=; 
+        b=UTy/00hBxJFLgKpMC2jspMD9+G+mxdNxljNzSH6woTSn5TO4M3YQUoLxQYmRijQ1AsBgol8hrvScE94rdtCuH+0XG4+6j6loVv49ts4KeL5JmUnt7csCXGjVhNrm1d6ERSjJVyb2vwAV4sU5v2M+gBliWzROWzEvmyyGDRVcn9A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=dlrobertson.com;
+        spf=pass  smtp.mailfrom=dan@dlrobertson.com;
+        dmarc=pass header.from=<dan@dlrobertson.com> header.from=<dan@dlrobertson.com>
+Received: from nessie (pool-173-73-58-202.washdc.fios.verizon.net [173.73.58.202]) by mx.zohomail.com
+        with SMTPS id 1576110778099739.3714501720381; Wed, 11 Dec 2019 16:32:58 -0800 (PST)
+Date:   Thu, 12 Dec 2019 00:17:35 +0000
+From:   Dan Robertson <dan@dlrobertson.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <7d211bcab8d649f70e5bd324585dc383592d4187.1576079249.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <ce088d14-5b12-2acc-56c6-93113abba4b0@gmail.com>
-Date:   Thu, 12 Dec 2019 03:30:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 2/2] iio: (bma400) add driver for the BMA400
+Message-ID: <20191212001735.GA4667@nessie>
+References: <20191211010308.1525-1-dan@dlrobertson.com>
+ <20191211010308.1525-3-dan@dlrobertson.com>
+ <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <7d211bcab8d649f70e5bd324585dc383592d4187.1576079249.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdAJwMkPZQLLQrOk4HABjG-parEOmH8S-6kU+zyYnnfww@mail.gmail.com>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.12.2019 19:03, Michał Mirosław пишет:
-> Apply some DRY-ing to elants_i2c_execute_command() callers.
+On Wed, Dec 11, 2019 at 03:21:56PM +0200, Andy Shevchenko wrote:
+> On Wed, Dec 11, 2019 at 3:20 AM Dan Robertson <dan@dlrobertson.com> wrote:
+> >
+> > Add a IIO driver for the Bosch BMA400 3-axes ultra-low power accelerometer.
+> > The driver supports reading from the acceleration and temperature
+> > registers. The driver also supports reading and configuring the output data
+> > rate, oversampling ratio, and scale.
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
+> > +#define BMA400_LP_OSR_SHIFT         0x05
+> > +#define BMA400_NP_OSR_SHIFT         0x04
+> > +#define BMA400_SCALE_SHIFT          0x06
+> 
+> I'm not sure why this is being defined as hex number instead of plain decimal...
 
-Could you please explain why this change is needed?
+Sounds good.
 
-[snip]
+> > +#define BMA400_TWO_BITS_MASK        GENMASK(1, 0)
+> > +#define BMA400_LP_OSR_MASK          GENMASK(6, BMA400_LP_OSR_SHIFT)
+> > +#define BMA400_NP_OSR_MASK          GENMASK(5, BMA400_NP_OSR_SHIFT)
+> > +#define BMA400_ACC_ODR_MASK         GENMASK(3, 0)
+> > +#define BMA400_ACC_SCALE_MASK       GENMASK(7, BMA400_SCALE_SHIFT)
+> 
+> And here simple better to put same numbers. It will help to read.
+
+Do you mean for the shift or for the mask?
+
+> > +const struct regmap_config bma400_regmap_config = {
+> > +       .reg_bits = 8,
+> > +       .val_bits = 8,
+> > +       .max_register = BMA400_CMD_REG,
+> > +       .cache_type = REGCACHE_RBTREE,
+> > +       .writeable_reg = bma400_is_writable_reg,
+> > +       .volatile_reg = bma400_is_volatile_reg,
+> > +};
+> > +EXPORT_SYMBOL(bma400_regmap_config);
+> 
+> I'm not sure I got the idea why this one is being exported.
+
+It needs to be exported so that it can be used in the bma400_i2c module and the
+future bma400_spi module. In theory, if we _really_ do not want to export this,
+then we can define separate regmap configs in each of the bma400_i2c and
+(future) bma400_spi modules, but then we would have to export the is_volitile_reg
+and is_writable_reg functions. As a result, I do not see any benefits to that
+method over exporting the config, but I could be convinced otherwise.
+
+> > +               if (odr < BMA400_ACC_ODR_MIN_RAW ||
+> > +                   odr > BMA400_ACC_ODR_MAX_RAW) {
+> 
+> One line?
+
+It is too long if I simplify to one line.
+
+> > +               if (uhz || hz % BMA400_ACC_ODR_MIN_WHOLE_HZ)
+> > +                       return -EINVAL;
+> > +
+> > +               val = hz / BMA400_ACC_ODR_MIN_WHOLE_HZ;
+> > +               idx = __ffs(val);
+> > +
+> 
+> > +               if (val ^ BIT(idx))
+> 
+> Seems like funny way of checking is_power_of_2(). But it's up to maintainers.
+> And your variant may even be better here (in code generation perspective)...
+> 
+> However, the whole idea here is, IIUC, to have something like
+> 
+>   hz = 2^idx * BMA400_ACC_ODR_MIN_WHOLE_HZ
+> 
+> I think you may do it without divisions, i.e. call __ffs() first and then do
+>    idx = __ffs(...);
+>    val = hz >> idx;
+>    if (val != BMA400_ACC_ODR_MIN_WHOLE_HZ)
+>     return -EINVAL;
+> 
+> or something like above.
+
+It would be more obvious what is being done here with is_power_of_two. I'll
+revisit this function with your suggestions. If I can make it simpler, I'll
+go this route.
+
+> 
+> > +                       return -EINVAL;
+> 
+> ...
+> 
+> > +       odr = (~BMA400_ACC_ODR_MASK & val) | idx;
+> 
+> I'm wondering why Yoda style is being used here.
+
+I guess I think like Yoda :) I can update this. I typically do prefer
+new_mask | old_mask, but I do not feel too strongly about it.
+
+> > +static void bma400_accel_scale_from_raw(int raw, unsigned int *val)
+> > +{
+> > +       *val = BMA400_SCALE_MIN * (1 << raw);
+> 
+> Isn't it the same as
+>     *val = BMA400_SCALE_MIN << raw;
+> ?
+
+Yes. Good catch. Not sure what I was thinking :)
+
+> 
+> > +               return -EINVAL;
+> 
+> ...
+> 
+> > +       ret = regmap_read(data->regmap, BMA400_ACC_CONFIG0_REG, &val);
+> > +       if (ret < 0)
+> 
+> I'm wondering if in all of these regmap_read()...
+> 
+> > +               return ret;
+> 
+> > +       ret = regmap_write(data->regmap, BMA400_ACC_CONFIG0_REG,
+> > +                          mode | (val & ~BMA400_TWO_BITS_MASK));
+> > +       if (ret < 0) {
+> 
+> ...and regmap_write() calls you ever can get a positive returned code.
+
+From the regmap_read/regmap_write docs:
+
+> * A value of zero will be returned on success, a negative errno will
+> * be returned in error cases.
+
+So I assume ret <= 0
+
+Cheers,
+
+ - Dan
+
