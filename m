@@ -2,122 +2,169 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116A7C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BDFC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6132073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD7342073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="O7qKrYCh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fdFYNx5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbfLLQNf (ORCPT
+        id S1729798AbfLLQPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:13:35 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60832 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbfLLQNf (ORCPT
+        Thu, 12 Dec 2019 11:15:49 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34190 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729247AbfLLQPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:13:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9JV0lxxuv671N8NKDdLe7T2sZ0c3sP/gDG4QJmH6v6I=; b=O7qKrYCh4SxHNiVfo4LTPQ/DO
-        U+hCmjmuk4IQ799vwQ5um1611eJpj4PQUb0cYEaKZ3rK4kc+wExWFpX3srZwyNIXinvP6MUDHjboi
-        UK8o1uGU/IawIuph3RM1AW/yuZNyJgaLtI79uSPqOe2WyPGOR6JbXnMSuuFCTw1jgLmEWJJ8xYfB3
-        WtQgpsG9evG8UM4mL1Zl5IdFe7K+o0h+AmcI9zk/lA1p1RQ8dP3MK0XWOF3K+fsP4Z7uCGyeKif6w
-        y2yCqfK/88wBNjaoxW2R44hknsK857fuLorjm86sNhCDC6AWEulFIpsSytQR54FB2g0aBo/vZd4uL
-        bOHnjSs4A==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:40386)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ifR5f-0007lu-IU; Thu, 12 Dec 2019 16:13:23 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ifR5c-0006wl-IL; Thu, 12 Dec 2019 16:13:20 +0000
-Date:   Thu, 12 Dec 2019 16:13:20 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-Message-ID: <20191212161320.GK25745@shell.armlinux.org.uk>
-References: <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
- <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
- <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
- <20191211222829.GV50317@dtor-ws>
- <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
- <20191212141747.GI25745@shell.armlinux.org.uk>
- <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
- <20191212144616.GJ25745@shell.armlinux.org.uk>
- <d2595721-b5cb-d268-d6bd-bc794c07aacc@free.fr>
+        Thu, 12 Dec 2019 11:15:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r11so1392479pgf.1;
+        Thu, 12 Dec 2019 08:15:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
+         :content-transfer-encoding;
+        bh=68gsX21jtww7BTikHhzN0eWHN8+olb+7I9zctus38OA=;
+        b=fdFYNx5VvbRzbMylzz0W2hyLknNtYLVLuq9VVIYIN/ammuCZG4BusZ5TKn4lYkLd9N
+         LywSfQARrv/gSZse1tUoK7YSqwUcP0dDpiuFwNXZTvcwc7o81ZTw2z9Y5EMVLiBmeY/u
+         5hqNuqPHA2/k3hd6YXb+yRRis8flHe/GeI8PjXu01/h5YYUPIEhaUrhbW7ZuVvicnmSm
+         JltOuqzl0owoerYQ3Ir23td2KzFNk6yVDKXwyiQxfi750v0W9eYiYiswt92X+I4Bfgyb
+         cM55S2Wtvoruq/CFIV+EI1Q6dwPnUJ9Ury3N3rlyRCdqMw4FAPIqm5Kw+mKTpy5/9EzX
+         hrmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :in-reply-to:content-transfer-encoding;
+        bh=68gsX21jtww7BTikHhzN0eWHN8+olb+7I9zctus38OA=;
+        b=n5B9M3L/hpf2p1/zhDonBb4pGAaYBHoSIZjigoUen1ObkBNqP8cnSa+LOLq2HBXZTe
+         CXhTfR5oL703XhfygB0cy2x8WEfnRDWyhnJtYwRRxRRsdkOXr+uCYF9Z5ZXHnqpJWJhP
+         vvCG/3Iqq4sd2g5p+LjfdxvGmun0K3crYtnb1oWEhexyJJBgvzgqzmVbHPx95/OqF/g/
+         62x37nxaX2QOI10zsU+u5WvflOjcjGv/2VnfCzN1zSgaKjfiQP91Yx1D+8cggOeIBcxw
+         MNEYu3PxYXsoUJeCJP3/tM6GYlSjd6NdjPLV7NqF2yoAxlb5xbWPelRU+YK73l7Ym6EK
+         OUkQ==
+X-Gm-Message-State: APjAAAWCRZ2HN6NXWK2kxVhzAYBmFKGETEODvrT7pW9KlCLMQkkJZWyS
+        HrJ00vuBXwu5maNzNEh+4cA=
+X-Google-Smtp-Source: APXvYqzAhBSsqgXIB3EREPb06Ubmyza9cZ//120noUYsHwdj8039lOqC3PCyzCpO/LKrVcBD667fqw==
+X-Received: by 2002:a63:9d85:: with SMTP id i127mr10794603pgd.186.1576167348060;
+        Thu, 12 Dec 2019 08:15:48 -0800 (PST)
+Received: from localhost.localdomain ([12.176.148.120])
+        by smtp.gmail.com with ESMTPSA id i4sm6459079pjd.19.2019.12.12.08.15.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 12 Dec 2019 08:15:47 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
+Cc:     jgross@suse.com, axboe@kernel.dk, sjpark@amazon.com,
+        konrad.wilk@oracle.com, pdurrant@amazon.com,
+        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: Re: [Xen-devel] [PATCH v7 2/3] xen/blkback: Squeeze page pools if a memory pressure is detected
+Date:   Thu, 12 Dec 2019 17:15:37 +0100
+Message-Id: <20191212161537.10756-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d2595721-b5cb-d268-d6bd-bc794c07aacc@free.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191212152317.GE11756@Air-de-Roger> (raw)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 04:51:25PM +0100, Marc Gonzalez wrote:
-> On 12/12/2019 15:46, Russell King - ARM Linux admin wrote:
-> 
-> > However, please don't call this __clk_put().
-> > git grep __clk_put will tell you why.  Thanks.
-> 
-> $ git grep __clk_put
-> drivers/clk/clk-devres.c:static void __clk_put(struct device *dev, void *data)
-> drivers/clk/clk-devres.c:               if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
-> drivers/clk/clk.c:void __clk_put(struct clk *clk)
-> drivers/clk/clk.h:void __clk_put(struct clk *clk);
-> drivers/clk/clk.h:static inline void __clk_put(struct clk *clk) { }
-> drivers/clk/clkdev.c:   __clk_put(clk);
-> 
-> I see. I will s/__clk_put/my_clk_put/ in my proposal.
-> 
-> Out of curiosity...
-> 
-> $ git grep __clk_put v2.6.29-rc1
-> v2.6.29-rc1:arch/arm/common/clkdev.c:   __clk_put(clk);
-> v2.6.29-rc1:arch/arm/mach-ep93xx/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-> v2.6.29-rc1:arch/arm/mach-integrator/include/mach/clkdev.h:static inline void __clk_put(struct clk *clk)
-> v2.6.29-rc1:arch/arm/mach-pxa/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-> v2.6.29-rc1:arch/arm/mach-realview/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-> v2.6.29-rc1:arch/arm/mach-versatile/include/mach/clkdev.h:#define __clk_put(clk) do { } while (0)
-> 
-> Genesis seems to be 0318e693d3a56
-> 
-> The clkdev API expected platforms to export a __clk_put method?
+On Thu, 12 Dec 2019 16:23:17 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
 
-Along with __clk_get(), these were the interfaces from the cross-
-platform clkdev code to the clk API implementation specific code.
-__clk_get() no longer exists as its uses were eliminated, but
-__clk_put() remains.
+> > On Thu, 12 Dec 2019 12:42:47 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+> > > > On the slow block device
+> > > > ------------------------
+> > > > 
+> > > >     max_pgs   Min       Max       Median     Avg    Stddev
+> > > >     0         38.7      45.8      38.7       40.12  3.1752165
+> > > >     1024      38.7      45.8      38.7       40.12  3.1752165
+> > > >     No difference proven at 95.0% confidence
+> > > > 
+> > > > On the fast block device
+> > > > ------------------------
+> > > > 
+> > > >     max_pgs   Min       Max       Median     Avg    Stddev
+> > > >     0         417       423       420        419.4  2.5099801
+> > > >     1024      414       425       416        417.8  4.4384682
+> > > >     No difference proven at 95.0% confidence
+> > > 
+> > > This is intriguing, as it seems to prove that the usage of a cache of
+> > > free pages is irrelevant performance wise.
+> > > 
+> > > The pool of free pages was introduced long ago, and it's possible that
+> > > recent improvements to the balloon driver had made such pool useless,
+> > > at which point it could be removed instead of worked around.
+> > 
+> > I guess the grant page allocation overhead in this test scenario is really
+> > small.  In an absence of memory pressure, fragmentation, and NUMA imbalance,
+> > the latency of the page allocation ('get_page()') is very short, as it will
+> > success in the fast path.
+> 
+> The allocation of the pool of free pages involves more than get_page,
+> it uses gnttab_alloc_pages which in the worse case will allocate a
+> page and balloon it out issuing one hypercall.
+> 
+> > Few years ago, I once measured the page allocation latency on my machine.
+> > Roughly speaking, it was about 1us in best case, 100us in worst case, and 5us
+> > in average.  Please keep in mind that the measurement was not designed and
+> > performed in serious way.  Thus the results could have profile overhead in it,
+> > though.  While keeping that in mind, let's simply believe the number and ignore
+> > the latency of the block layer, blkback itself (including the grant
+> > mapping), and anything else including context switch, cache miss, but the
+> > allocation.  In other words, suppose that the grant page allocation is only one
+> > source of the overhead.  It will be able to achieve 1 million IOPS (4KB *
+> > 1MIOPS = 4 GB/s) in the best case, 200 thousand IOPS (800 MB/s) in average, and
+> > 10 thousand IOPS (40 MB/s) in worst case.  Based on this coarse calculation, I
+> > think the test results is reasonable.
+> > 
+> > This also means that the effect of the blkback's free pages pool might be
+> > visible under page allocation fast path failure situation.  Nevertheless, it
+> > would be also hard to measure that in micro level unless the measurement is
+> > well designed and controlled.
+> > 
+> > > 
+> > > Do you think you could perform some more tests (as pointed out above
+> > > against the block device to skip the fs overhead) and report back the
+> > > results?
+> > 
+> > To be honest, I'm not sure whether additional tests are really necessary,
+> > because I think the `dd` test and the results explanation already makes some
+> > sense and provide the minimal proof of the concept.  Also, this change is a
+> > fallback for the memory pressure situation, which is an error path in some
+> > point of view.  Such errorneous situation might not happen frequently and if
+> > the situation is not solved in short time, something much worse (e.g., OOM kill
+> > of the user space xen control processes) than temporal I/O performance
+> > degradation could happen.  Thus, I'm not sure whether such detailed performance
+> > measurement is necessary for this rare error handling change.
+> 
+> Right, my main concern is that we seem to be adding duck tape so
+> things don't fall apart, but if such cache is really not beneficial
+> from a performance PoV I would rather see it go away than adding more
+> stuff to it in order to workaround corner cases like memory
+> starvation.
 
-It's quite logical if you read the patch which your above commit ID
-references.
+Right, if the cache is really giving no benefit, it would be much better to
+simply remove it.  However, as mentioned before, I'm not sure whether it is
+useless at all.  Maybe we could do some more detailed test to know that, but it
+would be an out of scope of this patch.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> 
+> Anyway, I guess we can take such change, but long term we need to look
+> into fixing grants to not use ballooned pages, and figure out if the
+> blkback free page cache is really useful or not.
+
+Totally agreed.
+
+
+Thanks,
+SeongJae Park
+
+> 
+> Thanks, Roger.
+> 
