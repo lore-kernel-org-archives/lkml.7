@@ -2,88 +2,96 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E258C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F7EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD5A21556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="GfeDyCoT"
+	by mail.kernel.org (Postfix) with ESMTP id E00D921556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576177663;
+	bh=ANPuit8CUGvpyOSxrfqaVoP/O11me6aRM0Z9C3p/CxM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZX41pdYVzxWuXjS9i0Kg+Q37Dv1lB03drFPyhNwwVxOqgkM1Pf4tz2RdDePNp/lzz
+	 V93WfhL6h9hXRpi4MHx8NIcZ5GrYKK4AstCSy+Q9ad5fBLGbb8B4H5gGg4kz3Yj3UA
+	 8cheEg2qEXyiS+f/fEgUf9Xj5eBTDXxIeJ7qIxyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbfLLTHF (ORCPT
+        id S1730543AbfLLTHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:07:05 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:35121 "EHLO frisell.zx2c4.com"
+        Thu, 12 Dec 2019 14:07:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbfLLTHE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:07:04 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 58c28a01;
-        Thu, 12 Dec 2019 18:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=Gap4hyb3YJho4i7tIDDW6ea2M7E=; b=GfeDyC
-        oTdom0f29bx7WQEfihXhBCQdSLOdasAvB0dalfeNHjtmMQm89xwF6KrDQJ3gwZ7l
-        chCkqbktrtUApPCE84fiRUalcI0PiIzvLmdGXpFf7Ao2wC9WKvbmdP8tRA75jhPI
-        jENw/TCtpC1ZR/yxQiEhJhRUGS+2rJV0+KVyRr03hmhfUNQQPrTsYAKlN15U9XPN
-        /CUYpZImVbfa7nFvkLjUTpwcUgXo6u3GQ01mcwPQeAicwi85FWduCEkPhz5MrEqc
-        kwFw5NPSSUh6VoY6raDbQuEwkyoRRX0XCAzZt2PTCqda7bHQpbDwFeJJtHZNBhvU
-        HCkuKEDj7IddxaFw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c4395c53 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 12 Dec 2019 18:11:13 +0000 (UTC)
-Received: by mail-ot1-f45.google.com with SMTP id d17so3124526otc.0;
-        Thu, 12 Dec 2019 11:07:02 -0800 (PST)
-X-Gm-Message-State: APjAAAWc+kkh3Do9yUbgNuTwjg8nQS9x2Y06mD2aMiT6DsD0xJxw29Gb
-        rizHw9CJtC5OkAc2qIgFrmc+bGxMEYmOGgEv7HM=
-X-Google-Smtp-Source: APXvYqxCKAGJ2V7i7Z038u/aSejmowoq1mmb2+5F30wgv9JmKhhntQi57wRLGO7+Adc9XeyCGdQX/971aGYA9LxcTVo=
-X-Received: by 2002:a05:6830:1b6a:: with SMTP id d10mr10174984ote.52.1576177621494;
- Thu, 12 Dec 2019 11:07:01 -0800 (PST)
+        id S1730338AbfLLTHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:07:41 -0500
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A983F21556;
+        Thu, 12 Dec 2019 19:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576177660;
+        bh=ANPuit8CUGvpyOSxrfqaVoP/O11me6aRM0Z9C3p/CxM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cFbL/N62GrrXsrO2zofuHlY4+fwwWdtZJfItGnjsbRY1qjtFMWpj1y9WZtpRF3PDv
+         lDqtzDjhimb0EYmft7jiZihhHa0EtEdHBOjsSfrNxwfzM3LN+28Dy6t0dvrLL7HiSN
+         MXDvbQl5mPhf46ocXbA5s9hluonthbOTZyIPBtwU=
+Received: by mail-qt1-f171.google.com with SMTP id g17so70405qtp.11;
+        Thu, 12 Dec 2019 11:07:40 -0800 (PST)
+X-Gm-Message-State: APjAAAUqokheDyr01YB6muHHQdyxYq2qLn+n4VBsOgxwxzi52Zo4SJ39
+        vNDOpJ12JeOUvumuOempH1yKCoMf5TSUmTOMQg==
+X-Google-Smtp-Source: APXvYqxPd7u2BVtzEcJMszwB++LSELwIU5oN4rc6uLt/0iXtkRbuFYfXjWly+Op56BYv8RBb77vw/SpXprWPBF1drRc=
+X-Received: by 2002:ac8:1c4e:: with SMTP id j14mr9145655qtk.300.1576177659861;
+ Thu, 12 Dec 2019 11:07:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20191212091527.35293-1-yuehaibing@huawei.com> <20191212.105258.579549471896891617.davem@davemloft.net>
-In-Reply-To: <20191212.105258.579549471896891617.davem@davemloft.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 12 Dec 2019 20:06:50 +0100
-X-Gmail-Original-Message-ID: <CAHmME9osYEbi1BDmJL=4N+A1rbb7_MPqVijogHSFhU39rRCbdw@mail.gmail.com>
-Message-ID: <CAHmME9osYEbi1BDmJL=4N+A1rbb7_MPqVijogHSFhU39rRCbdw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: Remove unused including <linux/version.h>
-To:     David Miller <davem@davemloft.net>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        WireGuard mailing list <wireguard@lists.zx2c4.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
+References: <20191211150021.20125-1-benjamin.gaignard@st.com>
+ <CAL_JsqJKWoX_kY2kSieOA-wXO5xKtDbhXPMCjg-d4FHHEvOmHg@mail.gmail.com> <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
+In-Reply-To: <60921a82-9241-9c6e-0a17-0bd93dc52978@st.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 12 Dec 2019 13:07:28 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
+Message-ID: <CAL_JsqLboOKoJ0SjjS_AFkibdHzVo4tK3Z2xSUxVNBrdt5UEsQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pwm: fix nodename pattern
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
-
-On Thu, Dec 12, 2019 at 7:53 PM David Miller <davem@davemloft.net> wrote:
+On Thu, Dec 12, 2019 at 2:16 AM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
 >
-> From: YueHaibing <yuehaibing@huawei.com>
-> Date: Thu, 12 Dec 2019 09:15:27 +0000
 >
-> > Remove including <linux/version.h> that don't need it.
+> On 12/11/19 8:52 PM, Rob Herring wrote:
+> > On Wed, Dec 11, 2019 at 9:00 AM Benjamin Gaignard
+> > <benjamin.gaignard@st.com> wrote:
+> >> Typical pwm nodes should be named pwm@xxx.
+> >> The pattern shouldn't match nodes named pwm-xxx to avoid
+> >> conflicts with pinmux or pwm-fan nodes.
+> > It only matches pwm-$(a-hex-number), not any string, so that shouldn't
+> > be a problem. This is needed for things like GPIO based devices (not
+> > just PWMs) which don't have any address.
 > >
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > Pinmux nodes are going to need to adopt some sort of standard pattern
+> > we can match on.
+> I have push a patch to stop using '@' and '_' in pinmux groups names:
+> https://lore.kernel.org/patchwork/patch/1162591/
+> It remove the warnings when compiling the devicetre with W=12 but pwm.yaml
+> complain because pwm pinmux is named pwm-1.
 >
-> Appropriate subject line for this should have been:
->
->         Subject: [PATCH net-next] wireguard: Remove unused include <linux/version.h>
->
-> 'net' is too broad a subsystem prefix as it basically encompases half of the
-> entire kernel tree.  When people look at the git shortlog output you need to
-> be specific enough that people can tell what touches what.
+> How can I solve these issues at the same time ?
 
-I have these fixed up how you like in the wireguard-linux.git repo,
-and I'll submit these in a series to net-next next week all together.
+Name the nodes *-pins or *-pins-[0-9]. You're probably going to need
+some pattern anyways when you do a pinmux schema.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/wireguard-linux.git/log
-
-Jason
+Rob
