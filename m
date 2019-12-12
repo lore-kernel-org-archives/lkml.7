@@ -2,71 +2,71 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BADC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75772C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72BAB22B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C90022B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpgyiScd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XzL4zvtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbfLLDlY (ORCPT
+        id S1728068AbfLLDl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:41:24 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36895 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbfLLDlR (ORCPT
+        Wed, 11 Dec 2019 22:41:27 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36282 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbfLLDlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:41:17 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so434460plz.4;
-        Wed, 11 Dec 2019 19:41:17 -0800 (PST)
+        Wed, 11 Dec 2019 22:41:16 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x184so18376pfb.3;
+        Wed, 11 Dec 2019 19:41:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4j/BNKRlewbTZY6Tn+4kCkBB0v/Ns2SFq09MYMQcabY=;
-        b=lpgyiScdwTkvwVVhmm1sEW8ByjXMAc6FSQb0Y9Cuz25nbr6sKbLClZj9ZtK7jffWCb
-         6zisIJome+lcE3gbVZc1Mc5pSTeAYZYuEbR6+gNfbHEuc8FfjmxCkad8cH377O2A/tu1
-         MOwwCCRcdn9++q/kF2wPsdGKQSJ2dXAjqYMZq584W0mdMWtw7aw/WSJAWW192dHLA/WX
-         UGOiiqL9dBNhhjS7EomR2u+g9hywhn06SQRnrtAGVQ3ufERNYypT8uDTmkQnz12HN5xZ
-         vH7nq92R6dvquTb25QIPxB3+jKaN2fj/T0A2vNn8672ycX0yHmdoR/ET8sqRckUqzpl/
-         4KZA==
+        bh=NNJRAqaJkIWqzb/CDYmRxXBROHXJp/Yh+I0Y5YIDqcA=;
+        b=XzL4zvtON3SJjV67Du5v350P8/7FJ/PyOulNP8NGx7sjDPm/eMdgZ5aFptTFmkx/ot
+         iXylgJHrQxf+TWGDeid14IdObz8Bem6FXZd1SxBSqfWFQCb7FxaRLLxbQGr9SwHgKWhP
+         KdV5oufe+8EanvUa7wekoM0bqZ70XnnbSZzHWPvd7JNZ5o1dtAaTgPt90jac6Gc+oYoO
+         Nj7TMPBJwiDkBX1RghnBLgzAan1tlpfD9x/GnYGJ2w9BkTTyBZ+8fb3L6RUsRqgCTfHg
+         K0auzeKc2pmDxl7oLwKxmRTPmQX/zwXUzFTICdLrEth7DqjFlRdFL3dIdeG9GAWV9vj6
+         JyTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4j/BNKRlewbTZY6Tn+4kCkBB0v/Ns2SFq09MYMQcabY=;
-        b=WYJbco6pW2g3q4mL2xN0uGnyFlouhbQPAmUaId9wRSlmxdUl51XUFkKPyB4c0usGn2
-         CQVuYWR2cXDljeCJSctQ+cCpjfb9TmscOqEDNHlAhG8+x+aHd1dZUA43uSRDwepk4JTU
-         0yDS7P/rpdnWdZ0bC+OJp+tF+xw5BaDqMfI7FhD4kIaQGl/TcdDeeTeRNMHkGQFCwksy
-         hXK/7ZDBIQ4imbIk0au8caQk2oEYoxbYphF2uTdhQpHsLVeFhi4f9k3BcoFo9TWMcKyW
-         VlRNI7iVFowaSsoMenyjhLk+LyHMNidijJbXX7MHlR3l0felFThXP86Xc7zos1phuCi4
-         mC7g==
-X-Gm-Message-State: APjAAAVDXzz2S7WuHq3TQxxlkgNzWxEPcaFPj7yfbY4v6iVMBAQJDDv/
-        J8Zx4DZ1wosWxA8tgiHisw+pgLUA
-X-Google-Smtp-Source: APXvYqxEwGg2thh6NMzq1q4wPI2YTANpsvANqOzYXfitskldBlXcUU8xQ+a4OrJ6hR2BSu8f2hJZzw==
-X-Received: by 2002:a17:902:8f85:: with SMTP id z5mr7232663plo.43.1576122077030;
-        Wed, 11 Dec 2019 19:41:17 -0800 (PST)
+        bh=NNJRAqaJkIWqzb/CDYmRxXBROHXJp/Yh+I0Y5YIDqcA=;
+        b=tdl/BYqqJj+oOFtDfD7m9x0bLydLgpcfp7bwL/YTv4zqRJ/Y5a8uWhPxke40ug/9mh
+         Am0r191/T4BzYZ9HRWCNz7xceEcBN5c7J9nh7vdJ/Jwg49OIX0nhGu7qZfIVlhR5iq75
+         jadAM8ZXCsN/EYyaC8Z9FbrNr6n5GdEGk4EkXcAsFwj+XPApYtKwn9RcqrTjyvaR4R73
+         oblhxBMiMLcmk6zvRvT8y8R1rD9RiOek+X5T6b2zAcacgi/GxgBtOt7TJqPhk+wHpCU5
+         r1v6HhkZTBk06RuYPkBc5sC1So6r0kBu0eeQdjPHRTaLQRC05XMNDoLrtg1vZdJsBakB
+         7Ivw==
+X-Gm-Message-State: APjAAAXhm5BsNQr/OdBxCgTYwifodHw2kKOSBmUoxPnhUzEXcvj51e9e
+        QghYBQZBFyD4j0D3jeAb+os=
+X-Google-Smtp-Source: APXvYqyprN+MjMJDTS3ElcuGi/RIB3mFwl4y/IiDsVy9I/762s5r1fTtbCzJx/qNXFhdIqa/qSPGHA==
+X-Received: by 2002:a62:e318:: with SMTP id g24mr7517493pfh.218.1576122075080;
+        Wed, 11 Dec 2019 19:41:15 -0800 (PST)
 Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id z10sm4690022pfa.184.2019.12.11.19.41.16
+        by smtp.gmail.com with ESMTPSA id i13sm4383122pgr.48.2019.12.11.19.41.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 19:41:16 -0800 (PST)
-Subject: Re: [PATCH 0/2] watchdog: mtx-1: Relax build dependencies
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Denis Efremov <efremov@linux.com>,
-        linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>
-References: <20191211210204.31579-1-f.fainelli@gmail.com>
- <1a3eb533-b273-f903-ccaf-fdeaea9da51a@linux.com>
- <87f90857-633f-2437-4a26-a3b3dd7ea7c7@roeck-us.net>
+        Wed, 11 Dec 2019 19:41:14 -0800 (PST)
+Subject: Re: [PATCH net-next 1/6] net: dsa: mt7530: Refine message in Kconfig
+To:     Landen Chao <landen.chao@mediatek.com>, andrew@lunn.ch,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com
+Cc:     devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, sean.wang@mediatek.com, opensource@vdorst.com,
+        frank-w@public-files.de
+References: <cover.1575914275.git.landen.chao@mediatek.com>
+ <6ecf6cbf38223f35854bc361c2eefa1d85c724d2.1575914275.git.landen.chao@mediatek.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Autocrypt: addr=f.fainelli@gmail.com; keydata=
  mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
@@ -122,15 +122,15 @@ Autocrypt: addr=f.fainelli@gmail.com; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9qfUATKC9NgZjRvBztfqy4
  a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
-Message-ID: <a2d8109b-44cf-3d22-0c0d-cf766afe2e70@gmail.com>
-Date:   Wed, 11 Dec 2019 19:41:16 -0800
+Message-ID: <96e2b00c-d70d-9aca-95c6-33186c836392@gmail.com>
+Date:   Wed, 11 Dec 2019 19:41:10 -0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <87f90857-633f-2437-4a26-a3b3dd7ea7c7@roeck-us.net>
+In-Reply-To: <6ecf6cbf38223f35854bc361c2eefa1d85c724d2.1575914275.git.landen.chao@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -138,29 +138,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 12/11/2019 5:39 PM, Guenter Roeck wrote:
-> On 12/11/19 3:46 PM, Denis Efremov wrote:
->> Hi,
->>
->> Thanks for the fix.
->> I tested the compilation with these patches.
->> You can add my:
->> Tested-by: Denis Efremov <efremov@linux.com>
->>
->> Look like this error could be fixed the same way:
->> In file included from drivers/watchdog/ar7_wdt.c:29:
->> ./arch/mips/include/asm/mach-ar7/ar7.h: In function ‘ar7_is_titan’:
->> ./arch/mips/include/asm/mach-ar7/ar7.h:111:24: error: implicit
->> declaration of function ‘KSEG1ADDR’; did you mean ‘CKSEG1ADDR’?
->> [-Werror=implicit-function-declaration]
->>
+On 12/10/2019 12:14 AM, Landen Chao wrote:
+> Refine message in Kconfig with fixing typo and an explicit MT7621 support.
 > 
-> This is yet another old-style watchdog driver which should be left alone
-> unless it has a bug that needs to be fixed. Really, if anyone out there
-> is still using this driver, converting it to use the watchdog core
-> would make much more sense.
+> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 
-AR7 is still largely available, so we might be able to get some people
-within the OpenWrt community to give a watchdog modernization patch a try.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
