@@ -2,85 +2,149 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8110BC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EE6C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D04C20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FF620652
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qp/yQsrH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfLLBrg (ORCPT
+        id S1727504AbfLLBuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:47:36 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:46061 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbfLLBrg (ORCPT
+        Wed, 11 Dec 2019 20:50:17 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30246 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727473AbfLLBuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:47:36 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xBC1lLY7028248, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCAS11.realtek.com.tw[172.21.6.12])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xBC1lLY7028248
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Dec 2019 09:47:21 +0800
-Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
- RTITCAS11.realtek.com.tw (172.21.6.12) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Thu, 12 Dec 2019 09:47:21 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 12 Dec 2019 09:47:21 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::7d15:f8ee:cfc7:88ce]) by
- RTEXMB04.realtek.com.tw ([fe80::7d15:f8ee:cfc7:88ce%6]) with mapi id
- 15.01.1779.005; Thu, 12 Dec 2019 09:47:21 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     "straube.linux@gmail.com" <straube.linux@gmail.com>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/6] rtlwifi: convert rtl8192{ce,cu,de} to use generic functions
-Thread-Topic: [PATCH 0/6] rtlwifi: convert rtl8192{ce,cu,de} to use generic
- functions
-Thread-Index: AQHVsDpzfsqbYxD/WEOoQ833A6RTfKe1NZ6A
-Date:   Thu, 12 Dec 2019 01:47:21 +0000
-Message-ID: <1576115241.2733.1.camel@realtek.com>
-References: <20191211154755.15012-1-straube.linux@gmail.com>
-In-Reply-To: <20191211154755.15012-1-straube.linux@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.95]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EB2C6ECAB6231E48B97459A61CA72D91@realtek.com>
-Content-Transfer-Encoding: base64
+        Wed, 11 Dec 2019 20:50:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576115415;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=zOCpd5dg0eh5r36GlPBDFDvAydvpE/EG+PVXZHD/BXE=;
+        b=Qp/yQsrHMx2u4rVS/8qDEXIPiy6MiYQmgEUUzLJvUnqIav3uJq4PF9PVJgsQwSJBQRPKPa
+        t+haXk/dMTKa5C7jXtQp30GRVhz8WG2z7ZPmq21pBtlPSThKpXQ6kr+XXIbXe7+OxCfbwS
+        f7s9fA3fcy44gbt7burrY28ANKnoUBw=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-58-sttKlC52PvS_guy4nrxQrw-1; Wed, 11 Dec 2019 20:50:12 -0500
+X-MC-Unique: sttKlC52PvS_guy4nrxQrw-1
+Received: by mail-qk1-f198.google.com with SMTP id a6so429677qkl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 17:50:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=zOCpd5dg0eh5r36GlPBDFDvAydvpE/EG+PVXZHD/BXE=;
+        b=EzplPijVGlz/VAMfKNz2zZaB102XG948D3PRNMx8FEqteHOcRuzvj2e7bMY7H+18bO
+         vyzscmfXomGAK2HN8zfb/MraS/lkUWGQQ7tACdYi8+i/APkQ94W27JWc56PhTJCyuDJ9
+         W51GT5ASXywgjXWqoBk+Syh4rzuVjzTHdxOrbiV9vXceKSHZ63vtFJgMu/P4vplH1Nvj
+         wZKoHQanxJRTZEZqlHTQ77WsI0HCQh19a4AdB4Mg/oz6qyiK3Fd2Djr/7CZI3eKP0uzj
+         8wh7ybqlrsP1AuE4rDlmqioIlz3GXV8E/Ry6Bks6oiZdEnHvjGQGwBWUO7gi9f8jXD2q
+         wqNQ==
+X-Gm-Message-State: APjAAAUqqe6o1bx1XxVaRs7TDvm4W6+IGWE2L8lmJYqawucvFTAJiRKt
+        0bSNMN60MsleNpgrudg3glijP6IeyfVoe04LnjqRFOd4+b73Euby+FHUMOilcVvCdT7VxGBju59
+        +pypeKSxh5B+pN9P1AWLLiM5e
+X-Received: by 2002:a37:92c5:: with SMTP id u188mr5637353qkd.200.1576115411215;
+        Wed, 11 Dec 2019 17:50:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxfbRkU1ye8MmdMrabMR9H2moF0xl9FH3NmkfIwiVFtmXM1Vy3Vd2+hTWAPFImOsUzGrtoiAg==
+X-Received: by 2002:a37:92c5:: with SMTP id u188mr5637331qkd.200.1576115410806;
+        Wed, 11 Dec 2019 17:50:10 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id x16sm1263627qki.110.2019.12.11.17.50.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2019 17:50:09 -0800 (PST)
+Date:   Wed, 11 Dec 2019 18:49:52 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
+Message-ID: <20191212014952.vlrmxrk2cebwxjnp@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191211014015.7898-1-baolu.lu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTEyLTExIGF0IDE2OjQ3ICswMTAwLCBNaWNoYWVsIFN0cmF1YmUgd3JvdGU6
-DQo+IFRoaXMgc2VyaWVzIGNvbnZlcnRzIHRoZSBkcml2ZXJzIHJ0bDgxOTJ7Y2UsY3UsZGV9IHRv
-IHVzZSB0aGUgZ2VuZXJpYw0KPiBmdW5jdGlvbnMgcnRsX3F1ZXJ5X3J4cHdycGVyY2VudGFnZSBh
-bmQgcnRsX3NpZ25hbF9zY2FsZV9tYXBwaW5nLg0KPiANCj4gTWljaGFlbCBTdHJhdWJlICg2KToN
-Cj4gwqAgcnRsd2lmaTogcnRsODE5MmNlOiB1c2UgZ2VuZXJpYyBydGxfcXVlcnlfcnhwd3JwZXJj
-ZW50YWdlDQo+IMKgIHJ0bHdpZmk6IHJ0bDgxOTJjdTogdXNlIGdlbmVyaWMgcnRsX3F1ZXJ5X3J4
-cHdycGVyY2VudGFnZQ0KPiDCoCBydGx3aWZpOiBydGw4MTkyZGU6IHVzZSBnZW5lcmljIHJ0bF9x
-dWVyeV9yeHB3cnBlcmNlbnRhZ2UNCj4gwqAgcnRsd2lmaTogcnRsODE5MmNlOiB1c2UgZ2VuZXJp
-YyBydGxfc2lnbmFsX3NjYWxlX21hcHBpbmcNCj4gwqAgcnRsd2lmaTogcnRsODE5MmN1OiB1c2Ug
-Z2VuZXJpYyBydGxfc2lnbmFsX3NjYWxlX21hcHBpbmcNCj4gwqAgcnRsd2lmaTogcnRsODE5MmRl
-OiB1c2UgZ2VuZXJpYyBydGxfc2lnbmFsX3NjYWxlX21hcHBpbmcNCj4gDQo+IMKgLi4uL3dpcmVs
-ZXNzL3JlYWx0ZWsvcnRsd2lmaS9ydGw4MTkyY2UvdHJ4LmPCoMKgfCA0OCArKy0tLS0tLS0tLS0t
-LS0tLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjdS9tYWMuY8Kg
-wqB8IDQ5ICsrLS0tLS0tLS0tLS0tLS0tLS0NCj4gwqAuLi4vd2lyZWxlc3MvcmVhbHRlay9ydGx3
-aWZpL3J0bDgxOTJkZS90cnguY8KgwqB8IDQ3ICsrLS0tLS0tLS0tLS0tLS0tLQ0KPiDCoDMgZmls
-ZXMgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKSwgMTMwIGRlbGV0aW9ucygtKQ0KPiANCg0KRm9y
-IGFsbCBwYXRjaGVzOg0KQWNrZWQtYnk6IFBpbmctS2UgU2hpaCA8cGtzaGloQHJlYWx0ZWsuY29t
-Pg0KDQpDdXJpb3VzbHkuIEhvdyBjYW4geW91IGZpbmQgdGhlc2UgZnVuY3Rpb24gYXJlIGlkZW50
-aWNhbD8NCg0KDQo=
+On Wed Dec 11 19, Lu Baolu wrote:
+>If the default DMA domain of a group doesn't fit a device, it
+>will still sit in the group but use a private identity domain.
+>When map/unmap/iova_to_phys come through iommu API, the driver
+>should still serve them, otherwise, other devices in the same
+>group will be impacted. Since identity domain has been mapped
+>with the whole available memory space and RMRRs, we don't need
+>to worry about the impact on it.
+>
+>Link: https://www.spinics.net/lists/iommu/msg40416.html
+>Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced with private")
+>Cc: stable@vger.kernel.org # v5.3+
+>Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
+
+>---
+> drivers/iommu/intel-iommu.c | 8 --------
+> 1 file changed, 8 deletions(-)
+>
+>diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>index 0c8d81f56a30..b73bebea9148 100644
+>--- a/drivers/iommu/intel-iommu.c
+>+++ b/drivers/iommu/intel-iommu.c
+>@@ -5478,9 +5478,6 @@ static int intel_iommu_map(struct iommu_domain *domain,
+> 	int prot = 0;
+> 	int ret;
+>
+>-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>-		return -EINVAL;
+>-
+> 	if (iommu_prot & IOMMU_READ)
+> 		prot |= DMA_PTE_READ;
+> 	if (iommu_prot & IOMMU_WRITE)
+>@@ -5523,8 +5520,6 @@ static size_t intel_iommu_unmap(struct iommu_domain *domain,
+> 	/* Cope with horrid API which requires us to unmap more than the
+> 	   size argument if it happens to be a large-page mapping. */
+> 	BUG_ON(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level));
+>-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>-		return 0;
+>
+> 	if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
+> 		size = VTD_PAGE_SIZE << level_to_offset_bits(level);
+>@@ -5556,9 +5551,6 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+> 	int level = 0;
+> 	u64 phys = 0;
+>
+>-	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>-		return 0;
+>-
+> 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+> 	if (pte)
+> 		phys = dma_pte_addr(pte);
+>-- 
+>2.17.1
+>
+
