@@ -2,130 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B5DC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F83C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1DE20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDB020663
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GGQjyQxl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPJQrSyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfLLM0y (ORCPT
+        id S1729180AbfLLM23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:26:54 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:47930 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbfLLM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:26:53 -0500
-Received: from zn.tnic (p200300EC2F0A5A00CC48E6B3BEAE7272.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5a00:cc48:e6b3:beae:7272])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E6341EC0CF2;
-        Thu, 12 Dec 2019 13:26:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1576153611;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=4nnUQORr01dv2OD8c5wfMXkKjRS70BcFeDE2vIOENyE=;
-        b=GGQjyQxlr2BIjMsm/DkgrYML2PlbdeQ23AAj8AL8zZsLdEGFpqWklMdrOSA1p6kXHl+0TD
-        4PVP3GRB/BU+2Op9INl4DrlIzJ+CHVnIuFZKeWSOLRXXKPlcR5QLp51FWpJ2Z1kEbJ5f/a
-        PRoHbEAVfhpA3Ic5/DUpTCVH6h3re90=
-Date:   Thu, 12 Dec 2019 13:26:46 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
- VMX_FEATURES_*
-Message-ID: <20191212122646.GE4991@zn.tnic>
-References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
- <20191128014016.4389-12-sean.j.christopherson@intel.com>
+        Thu, 12 Dec 2019 07:28:29 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40097 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbfLLM22 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:28:28 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 6so291256oix.7;
+        Thu, 12 Dec 2019 04:28:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Y9iHDYGIFVGjHT5t86r21P03HUM56r+DzbAOwdCIy0=;
+        b=DPJQrSypuwzJDFhhvWXFStMNHtDK4kRMnhohRqhhatDVu9ZRXwM9/nQYrdW0mL2KzZ
+         VUXVsBWblyD4X7mfsXhoKHR6c84+0fUc43IevkvAgFsE63KeEbBzHzeh65kZavFfpHDa
+         Rs7HDhqV97tQTXQ03MP7757pq6cqcVGmQul9g1XOJgBta4Zy2BlZvinSeZSTQiKXbahp
+         A0ikDora4rH7jVEyZFiEUHo65KK3iK+qwwAiOS52bh3HCtGTXUEi8WNsse5XHhttHd2J
+         3zrJW06o4wXd1wY8f1xmJhMaI8pRcHU1vYBJpndhclVw++Gx6tt5qg1gzhj2s3XwM06w
+         C56w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Y9iHDYGIFVGjHT5t86r21P03HUM56r+DzbAOwdCIy0=;
+        b=WqWpkyZAZULDQzKhhyCaGGBslYLzKRt0sxNpci955O89UB2U1uJ5367Pu68kS4iVLZ
+         PFJpk+sMxe7gi6vcH21RcwLsSUK7U8mkFiAIUWAsDThErU0hcecJu19QbB9Kptj2q7xQ
+         /oJr8HbXca/weFBWSJG3w1Yv8FXo+3PQG4GkssmVmiLMfphkl8ynI3EBFRgYMSVhTH70
+         FywWkegkgqicIabV+cxQPmHeKgNFlPsZedM6ldJnqX1dEIe4bSNNQ+G6ofPPmc7x0FUM
+         6tZo+mLZ9qA87cFXzBYNy+RQ+VBcZJ5l9kbhwhh2eJvojvz1aavhJih4LPu55fx8rgy6
+         +NDw==
+X-Gm-Message-State: APjAAAXIttvs21RdUchcJDnBzkDclvPxCh6TmTHNRC44aBYkcvTFkPAl
+        a6rMcq76LK0umsqkoaPni8KBb0nN3X/ChRHbrXg=
+X-Google-Smtp-Source: APXvYqwaEQwiecwpvxxqqhQAiSr5hflX5ePMX5oN5FvbSb4Y/nShYsYdSRVg1zBpGo5ZeTc04K0P1SRIsSeQTdK1BEE=
+X-Received: by 2002:aca:b04:: with SMTP id 4mr4598119oil.151.1576153707873;
+ Thu, 12 Dec 2019 04:28:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191128014016.4389-12-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191211111628.2955-1-max.hirsch@gmail.com> <20191211162654.GD6622@ziepe.ca>
+ <20191212084907.GU67461@unreal> <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
+In-Reply-To: <e5123cbb-9871-d9c3-62e9-5b3172d1adf8@amazon.com>
+From:   Max Hirsch <max.hirsch@gmail.com>
+Date:   Thu, 12 Dec 2019 07:28:19 -0500
+Message-ID: <CADgTo8_mD6Z7WuA7wdEwh+7AR8YOy8nfJeaa2RbEAeftLGod7g@mail.gmail.com>
+Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
+To:     Gal Pressman <galpress@amazon.com>
+Cc:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danit Goldberg <danitg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dag Moxnes <dag.moxnes@oracle.com>,
+        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 27, 2019 at 05:40:08PM -0800, Sean Christopherson wrote:
-> Add support for generating VMX feature names in capflags.c and use the
-> resulting x86_vmx_flags to print the VMX flags in /proc/cpuinfo.  Don't
-> print VMX flags if no bits are set in word 0, which holds Pin Controls.
-> Pin Control's INTR and NMI exiting are fundamental pillars of VMX, if
-> they are not supported then the CPU is broken, it does not actually
-> support VMX, or the kernel wasn't built with support for the target CPU.
-> 
-> Print the features in a dedicated "vmx flags" line to avoid polluting
-> the common "flags" and to avoid having to prefix all flags with "vmx_",
-> which results in horrendously long names.
-> 
-> Keep synthetic VMX flags in cpufeatures to preserve /proc/cpuinfo's ABI
-> for those flags.  This means that "flags" and "vmx flags" will have
-> duplicate entries for tpr_shadow (virtual_tpr), vnmi (virtual_nmis),
-> ept, flexpriority, vpid and ept_ad, but caps the pollution of "flags" at
-> those six VMX features.  The vendor specific code that populates the
-> synthetic flags will be consolidated in a future patch to futher
-								^
+I am happy to make a larger/functional change. From what I read,
+desired patch scope is proportional to linux community involvement but
+if that not how you guys do the infiniband driver that fine. Whats a
+feature you guys want but no one is working on yet, or rather where is
+such a list kept?
 
-further
-
-> +#ifdef CONFIG_X86_VMX_FEATURE_NAMES
-> +	if (cpu_has(c, X86_FEATURE_VMX) && c->vmx_capability[0]) {
-> +		seq_puts(m, "\nvmx flags\t:");
-> +		for (i = 0; i < 32*NVMXINTS; i++) {
-> +			if (test_bit(i, (unsigned long *)c->vmx_capability) &&
-> +			    x86_vmx_flags[i] != NULL)
-> +				seq_printf(m, " %s", x86_vmx_flags[i]);
-> +		}
-> +	}
-> +#endif
-
-Oh well, some could be shorter:
-
-vmx flags       : virtual_nmis preemption_timer invvpid ept_x_only ept_ad ept_1gb flexpriority tsc_offsetting virtual_tpr mtf virt_apic_accesses ept vpid unrestricted_guest ple shadow_vmcs pml mode_based_ept_exec
-
-virtual_nmis		-> vnmis
-preemption_timer	-> preempt_tmr
-flexpriority		-> flexprio
-tsc_offsetting		-> tsc_ofs
-virtual_tpr		-> vtpr
-virt_apic_accesses	-> vapic
-unrestricted_guest	-> unres_guest
-
-and so on. Those are just my examples - I betcha the SDM is more
-creative here with abbreviations. But you guys are going to grep for
-them. If it were me, I'd save on typing. :-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+On Thu, Dec 12, 2019 at 7:10 AM Gal Pressman <galpress@amazon.com> wrote:
+>
+> On 12/12/2019 10:49, Leon Romanovsky wrote:
+> > On Wed, Dec 11, 2019 at 12:26:54PM -0400, Jason Gunthorpe wrote:
+> >> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
+> >>> When running checkpatch on cma.c the following error was found:
+> >>
+> >> I think checkpatch will complain about your patch, did you run it?
+> >
+> > Jason, Doug
+> >
+> > I would like to ask to refrain from accepting checkpatch.pl patches
+> > which are not part of other large submission. Such standalone cleanups
+> > do more harm than actual benefit from them for old and more or less
+> > stable code (e.g. RDMA-CM).
+>
+> Sounds like a great approach to prevent new developers from contributing code.
+> You have to start somewhere and checkpatch patches are a good entry point for
+> such developers, discouraging them will only hurt us in the long term.
+>
+> Linus had an interesting post on the subject:
+> https://lkml.org/lkml/2004/12/20/255
