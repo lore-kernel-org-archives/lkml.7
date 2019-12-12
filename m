@@ -2,113 +2,91 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F19C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3E5C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700B9214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 597812173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576169597;
+	bh=UCTY2ZJGNyXtFJsvZsGLGckBUYZTr5/2T6PFOCKC8bc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Be4LwJ5SOeHet9E+jf0xlIULVI5a6H8fqFG2nfLD/GyvcguYIKyW0IppOXlJPwBa6
+	 oiiktUdkA2XoTpxpWhKGPyjwR7OG7HH178RJiky9zsWvlQ3KoOvBHiWrPb8WGfGqfJ
+	 rvhDACymceaEgwH8GW1lVh2By27lLIWR/p9WxP7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbfLLQwz (ORCPT
+        id S1730026AbfLLQxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:52:55 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:52702 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729927AbfLLQwz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:52:55 -0500
-Received: (qmail 2315 invoked by uid 2102); 12 Dec 2019 11:52:54 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Dec 2019 11:52:54 -0500
-Date:   Thu, 12 Dec 2019 11:52:54 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <hverkuil@xs4all.nl>,
-        <jrdr.linux@gmail.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        <linux-media@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, <mchehab@kernel.org>,
-        <rfontana@redhat.com>
-Subject: Re: general protection fault in usb_set_interface
-In-Reply-To: <Pine.LNX.4.44L0.1912101513580.1647-100000@iolanthe.rowland.org>
-Message-ID: <Pine.LNX.4.44L0.1912121146090.1352-100000@iolanthe.rowland.org>
+        Thu, 12 Dec 2019 11:53:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:53366 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729961AbfLLQxQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:53:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 884F830E;
+        Thu, 12 Dec 2019 08:53:13 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0452F3F6CF;
+        Thu, 12 Dec 2019 08:53:12 -0800 (PST)
+Date:   Thu, 12 Dec 2019 16:53:11 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, gregkh@linuxfoundation.org,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        guennadi.liakhovetski@linux.intel.com, tglx@linutronix.de,
+        patches@opensource.cirrus.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: wm8962: fix lambda value
+Message-ID: <20191212165311.GK4310@sirena.org.uk>
+References: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
+ <20191212164835.GD10451@ediswmail.ad.cirrus.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ogUXNSQj4OI1q3LQ"
+Content-Disposition: inline
+In-Reply-To: <20191212164835.GD10451@ediswmail.ad.cirrus.com>
+X-Cookie: We have DIFFERENT amounts of HAIR --
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[CC: list trimmed slightly -- including syzkaller-bugs]
 
-On Thu, 12 Dec 2019, Andrey Konovalov wrote:
+--ogUXNSQj4OI1q3LQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yes, the patch failed due to msleep() being undefined in that source
-> file. I'm not sure why syzbot didn't send a response. Could you try 
-> resending the patch as the reply to that other syzbot report?
+On Thu, Dec 12, 2019 at 04:48:35PM +0000, Charles Keepax wrote:
+> On Wed, Dec 11, 2019 at 07:57:22PM +0800, Shengjiu Wang wrote:
+> > According to user manual, it is required that FLL_LAMBDA > 0
+> > in all cases (Integer and Franctional modes).
 
-This isn't literally a reply to the other syzbot report because I no 
-longer have any copies of it in my mailbox.  But it uses the same To: 
-and Subject: lines, so hopefully it will be okay.
+> How well tested is this change, and is it addressing an issue you
+> have observed? I agree this does better fit the datasheet just a
+> little nervous as its an older part that has seen a lot of usage.
 
-This version of the patch adds #include <linux/delay.h>, so now
-msleep() should be declared and there won't be any build errors.
+I've got a feeling that requirement might've been added in later
+versions of the datasheet...
 
-If you want me to send the old version that fails to build, let me 
-know.
+--ogUXNSQj4OI1q3LQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Alan Stern
+-----BEGIN PGP SIGNATURE-----
 
-#syz test: https://github.com/google/kasan.git 1f22d15c
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3ycHYACgkQJNaLcl1U
+h9CUewf9HCpR8m1farmmx9Se1np+I9L3i4ncQb8j5AD1UGgSmhZMsNze4JTk6oWA
+9DT0aL69PsnCxrYL8gV8CMy0vJPKhLg3+nRQvb1aVsRPBbWbtFQkSZA4YJ/xnmuu
+lC7PGYlGH7XM2z8QU7XwRsZQVwZ183+1QF4srp4w+VSCDtTku8I4nHzVzCOvGMaF
+3T8dZQkGZ642sYUA3ZZCBRfVJOKIE/JsEQYLTksyOLqIAhjzvg31uyT+P1GnvZjV
+iD7C8zj22PjiICoEhOFk+0KpLcb38763CCxC7jF4Z3prrNY+jV0ExukK4VfG3vCh
+67xrgyK5Y7JF8tUgkZ5Zu9c9/ulLZQ==
+=q6x7
+-----END PGP SIGNATURE-----
 
-Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-===================================================================
---- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
-+++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-@@ -49,6 +49,7 @@
- #include <media/tuner.h>
- 
- #include <linux/workqueue.h>
-+#include <linux/delay.h>
- 
- #include "usbvision.h"
- #include "usbvision-cards.h"
-@@ -1585,6 +1586,7 @@ static void usbvision_disconnect(struct
- 		wake_up_interruptible(&usbvision->wait_frame);
- 		wake_up_interruptible(&usbvision->wait_stream);
- 	} else {
-+		msleep(100);
- 		usbvision_release(usbvision);
- 	}
- 
-Index: usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-===================================================================
---- usb-devel.orig/drivers/media/v4l2-core/v4l2-dev.c
-+++ usb-devel/drivers/media/v4l2-core/v4l2-dev.c
-@@ -24,6 +24,7 @@
- #include <linux/kmod.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-+#include <linux/delay.h>
- 
- #include <media/v4l2-common.h>
- #include <media/v4l2-device.h>
-@@ -419,9 +420,10 @@ static int v4l2_open(struct inode *inode
- 	video_get(vdev);
- 	mutex_unlock(&videodev_lock);
- 	if (vdev->fops->open) {
--		if (video_is_registered(vdev))
-+		if (video_is_registered(vdev)) {
-+			msleep(200);
- 			ret = vdev->fops->open(filp);
--		else
-+		} else
- 			ret = -ENODEV;
- 	}
- 
-
-
+--ogUXNSQj4OI1q3LQ--
