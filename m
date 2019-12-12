@@ -2,120 +2,293 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B77C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9CC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE2021655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1IaqH10"
+	by mail.kernel.org (Postfix) with ESMTP id DB84B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfLLAez (ORCPT
+        id S1727406AbfLLAgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:34:55 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45395 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727235AbfLLAey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:34:54 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d20so189904ljc.12;
-        Wed, 11 Dec 2019 16:34:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5L40IYt4QXnAL9ClYzbub20H962D5Pu7HKoLLeNuUdo=;
-        b=m1IaqH10vIaHXN6VNlyeOfJLb9buzmFjVIC4KYp08bUQuVhqAojCur8tj9aX1LOZ29
-         x+EdwwuB2v2YSPyvrtqm48VBgzl8CcUz1eDmDQSXsbxSaD9x8yEBwhrB7C25mPCk1R3l
-         VdMhDxxk0z3qJUGU48DZkVjJgJtjz6bMzI5EgdyMEDmx0AxYXRbG+p7Z8eYMODJJpDC6
-         630/8QzEvI9uSnr+L6FUmnZM8yIhXEwavNoSIXCwrw+U7tpWf1NVkgb++vc2N2HUC4d5
-         kjnw/mCgwlT8nwOvIR8/0RAJrrVjO4Dxu87f3QdUqv1qNdPl9d+gdE7x8NoKRHG7yANK
-         W6EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5L40IYt4QXnAL9ClYzbub20H962D5Pu7HKoLLeNuUdo=;
-        b=Ws/J+pZ57s3oGFMd+fBzk9tSqrGo//EJdSU6m4PjJBJ8e0+bvnCqNaejiDyb/uO8gC
-         0cv4UicMWUy8Hfs/gA3ryeDoTNZw8YrscrmjPwliY7E+19wdSWayV72pfTawWdVgpaOH
-         wKLkrToTgC5ZEKdqYsrKxVlNq1Q7h1Ld3X3JprVzOhDNSgJVQnB9D15uVAxmOPmw4Drw
-         z19GvlD2++S6IBve8syAxW0EwcPB9dOFqwGF+M8P4xczUcWPbPXqVwVQRuuqteH66HEM
-         J2S7VSpwJvsh+rkcss8y25icRmhmGd8XXeBjNV5R7ki/A7kvatxkx6Yw8wYieyHQXoqs
-         ZhzQ==
-X-Gm-Message-State: APjAAAUsf7p03/tcYEbLYQwfKF0zvZtUGfu8KLocZ8Wva8ygCniW4qE1
-        jIRKLdg60FQ+K1JGPEPeTfmJJxDX
-X-Google-Smtp-Source: APXvYqyFtG8+RJ4TkZDqZBHilLvwxAbNyIJyp42lDcIggvRmqFLbgKKr2DuOhN+D8VrBqPDUaCeLvw==
-X-Received: by 2002:a2e:7a1a:: with SMTP id v26mr3999518ljc.76.1576110892255;
-        Wed, 11 Dec 2019 16:34:52 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u20sm1939954lju.34.2019.12.11.16.34.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 16:34:51 -0800 (PST)
-Subject: Re: [PATCH v2 3/9] input: elants: remove unused axes
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <fba33fca7c1e8a21cc1dc9e9aca975e871468e22.1576079249.git.mirq-linux@rere.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <84eb5d89-f26c-fab6-5424-c962d8e184d9@gmail.com>
-Date:   Thu, 12 Dec 2019 03:34:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <fba33fca7c1e8a21cc1dc9e9aca975e871468e22.1576079249.git.mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Dec 2019 19:36:24 -0500
+Received: from gate.crashing.org ([63.228.1.57]:46636 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727224AbfLLAgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:36:24 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xBC0ZORJ002058;
+        Wed, 11 Dec 2019 18:35:25 -0600
+Message-ID: <b359a4a84d3dad08dc45899dc9b56e7323ffb734.camel@kernel.crashing.org>
+Subject: Re: [RFC/PATCH] printk: Fix preferred console selection with
+ multiple matches
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        AlekseyMakarov <aleksey.makarov@linaro.org>
+Date:   Thu, 12 Dec 2019 11:35:23 +1100
+In-Reply-To: <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
+References: <b8131bf32a5572352561ec7f2457eb61cc811390.camel@kernel.crashing.org>
+         <20191210091502.qoq55fdjad6aixab@pathway.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.12.2019 19:03, Michał Mirosław пишет:
-> Driver only ever reports MT events. Clear capabilities of all others.
+On Tue, 2019-12-10 at 10:15 +0100, Petr Mladek wrote:
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/input/touchscreen/elants_i2c.c | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c b/drivers/input/touchscreen/elants_i2c.c
-> index eadd26d5a06f..ab9d63239ff5 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -1251,17 +1251,6 @@ static int elants_i2c_probe(struct i2c_client *client,
->  	ts->input->name = "Elan Touchscreen";
->  	ts->input->id.bustype = BUS_I2C;
->  
-> -	__set_bit(BTN_TOUCH, ts->input->keybit);
-> -	__set_bit(EV_ABS, ts->input->evbit);
-> -	__set_bit(EV_KEY, ts->input->evbit);
-> -
-> -	/* Single touch input params setup */
-> -	input_set_abs_params(ts->input, ABS_X, 0, ts->x_max, 0, 0);
-> -	input_set_abs_params(ts->input, ABS_Y, 0, ts->y_max, 0, 0);
-> -	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
-> -	input_abs_set_res(ts->input, ABS_X, ts->x_res);
-> -	input_abs_set_res(ts->input, ABS_Y, ts->y_res);
-> -
->  	/* Multitouch input params setup */
->  	error = input_mt_init_slots(ts->input, MAX_CONTACT_NUM,
->  				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
-> 
+> Anyway, here is the patch that we use. Could you please check if it
+> works for you as well? Does it make sense, please?
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+It doesn't fix my problem. tty0 remains the default console instead
+of ttyS0 with your patch applied.
+
+I suspect for the same reason, we match uart0 which isn't preferred,
+so we enable that but don't put it "first" in the list, and since
+we break out of the loop we never match ttyS0.
+
+I see 3 simple ways out of this that don't involve breaking up match()
+
+ - Bite the bullet and use my patch assuming that calling setup()
+multiple times is safe. I had a look at the two you had concerns
+with, the zilog ones seems safe. pl1011 will leak a clk_prepare
+reference but I think that's a non-issue for a kernel console
+(I may be wrong)
+
+ - Rework the loop to try matching against the array entry pointed
+by preferred_console first.
+
+ - Rework the loop to try matching the entries from the command line
+before trying to match the entries added by the platform/arch.
+(Easily done by flagging them in the array, I can cook a patch).
+
+Let me know what you prefer or if you have a different idea and
+I'll try to whip up a patch tomorrow.
+
+Cheers,
+Ben.
+
+
+> From: Petr Mladek <pmladek@suse.com>
+> Date: Tue, 20 Jun 2017 14:40:34 +0200
+> Subject: printk/console: Correctly mark console that is used when opening /dev/console
+> Patch-mainline: Never, an extensive clean up is being prepared for upstream
+> References: bsc#1040020
+> 
+> showconsole tool shows the real name of tty device associated with
+> /dev/console. It expects that the related console driver has set
+> CON_CONSDEV flag.
+> 
+> On the other hand, kernel ignores CON_CONSDEV flag when it looks
+> for the right driver. Instead, it takes the first driver that
+> has the tty binding (console->device). See tty_lookup_driver()
+> and console_device().
+> 
+> All this works most of the time because kernel puts the driver
+> with CON_CONSDEV flag first into the list. There is almost always
+> registered a real (non-boot) console with this flag set. The real
+> consoles mostly (always?) have tty binding. Boot consoles that
+> might miss the tty binding are always removed unless keep_bootcon
+> command line parameter is used.
+> 
+> The problem is when some consoles are defined on the command line
+> and the preferred one (last one) is not registered from some reason.
+> Note that the consoles might be added to the command line also
+> using ACPI SPCR or device tree. It might happen that, for example,
+> SPCR code and user add the same console using two aliases.
+> Then the first alias matches and we might miss that it matched
+> also with the preferred console.
+> 
+> There was one attempt to fix this by searching the command line
+> from the end and match the preferred alias first. But it caused
+> regressions. For example, ttyS* are taken as aliases as well
+> and kernel messages can appear only on one serial port.
+> The reversed matching caused that the logs suddenly appeared
+> on another serial port.
+> 
+> The right solution is to set CON_CONSDEV flag for the driver
+> used by tty_lookup_driver() even when the preferred console
+> is not registered.
+> 
+> It is a bit complicated because register_console() code is tricky.
+> It expects that only the preferred driver will have CON_CONSDEV
+> flag set. Also it expects that a boot console will stay first
+> in the list until the preferred console is registered. These
+> information are used to make various decisions:
+> 
+>     + Use a fallback code when none console is configured on
+>       the command line. This code tries to enable any console
+>       until a real one is enabled.
+> 
+>     + Unregister all boot consoles when the real preferred one
+>       is registered. And do not reply the log on the real console
+>       to avoid duplicates.
+> 
+> A rather invasive clean up is being prepared for upstream. This
+> patch tries to be as minimalist and do not change the order
+> of consoles as possible.
+> 
+> It keeps the logic about having a boot console first until
+> the real preferred console is registered. But it makes sure
+> that the first console with tty binding (console->device) will
+> have CON_CONSDEV flag set. Let's look at this in more details.
+> 
+> The fallback code in console_register() already works as
+> expected. It sets CON_CONSDEV flag for any console with
+> tty binding.
+> 
+> The code matching all consoles from the command line newly sets
+> CON_CONSDEV flag also for the fist console with the tty binding.
+> But it sets "consdev_fallback" to avoid putting this console
+> first into the list. Remember that we want to keep the boot
+> console first until the preferred is registered. The information
+> about the fallback is used also to avoid doing other actions
+> that need to wait for the preferred console.
+> 
+> The code adding the console into the list of drivers must
+> put non-preferred drivers with tty binding next to the
+> console with CON_CONSDEV set. This is the only change that
+> might change the order of console drivers in the list
+> and eventually cause regressions. But it has an effect only
+> when there are at least three drivers mentioned on the command
+> line, a boot console is registered and the preferred driver
+> is not registered. This should be a corner case.
+> 
+> Finally, unregister_console() sets CON_CONSDEV to first console
+> with tty binding instead of the first one in the list.
+> 
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  kernel/printk/printk.c | 59 ++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 50 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 94ec1aacea64..b6bb4d362b22 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2662,16 +2662,23 @@ void register_console(struct console *newcon)
+>  	int i;
+>  	unsigned long flags;
+>  	struct console *bcon = NULL;
+> +	struct console *con_consdev = NULL;
+>  	struct console_cmdline *c;
+>  	static bool has_preferred;
+> +	bool consdev_fallback = false;
+>  
+> -	if (console_drivers)
+> -		for_each_console(bcon)
+> +	if (console_drivers) {
+> +		for_each_console(bcon) {
+>  			if (WARN(bcon == newcon,
+>  					"console '%s%d' already registered\n",
+>  					bcon->name, bcon->index))
+>  				return;
+>  
+> +			if (bcon->flags & CON_CONSDEV && !con_consdev)
+> +				con_consdev = bcon;
+> +		}
+> +	}
+> +
+>  	/*
+>  	 * before we register a new CON_BOOT console, make sure we don't
+>  	 * already have a valid console
+> @@ -2739,8 +2746,17 @@ void register_console(struct console *newcon)
+>  
+>  		newcon->flags |= CON_ENABLED;
+>  		if (i == preferred_console) {
+> +			/* This is the last console on the command line. */
+>  			newcon->flags |= CON_CONSDEV;
+>  			has_preferred = true;
+> +		} else if (newcon->device && !con_consdev) {
+> +			/*
+> +			 * This is the first console with tty binding. It will
+> +			 * be used for /dev/console when the preferred one
+> +			 * will not get registered for some reason.
+> +			 */
+> +			newcon->flags |= CON_CONSDEV;
+> +			consdev_fallback = true;
+>  		}
+>  		break;
+>  	}
+> @@ -2754,7 +2770,9 @@ void register_console(struct console *newcon)
+>  	 * the real console are the same physical device, it's annoying to
+>  	 * see the beginning boot messages twice
+>  	 */
+> -	if (bcon && ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV))
+> +	if (bcon &&
+> +	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+> +	    !consdev_fallback)
+>  		newcon->flags &= ~CON_PRINTBUFFER;
+>  
+>  	/*
+> @@ -2762,12 +2780,28 @@ void register_console(struct console *newcon)
+>  	 *	preferred driver at the head of the list.
+>  	 */
+>  	console_lock();
+> -	if ((newcon->flags & CON_CONSDEV) || console_drivers == NULL) {
+> +	if ((newcon->flags & CON_CONSDEV && !consdev_fallback) ||
+> +	     console_drivers == NULL) {
+> +		/* Put the preferred or the first console at the head. */
+>  		newcon->next = console_drivers;
+>  		console_drivers = newcon;
+> -		if (newcon->next)
+> -			newcon->next->flags &= ~CON_CONSDEV;
+> +		/* Only one console can have CON_CONSDEV flag set */
+> +		if (con_consdev)
+> +			con_consdev->flags &= ~CON_CONSDEV;
+> +	} else if (newcon->device && con_consdev) {
+> +		/*
+> +		 * Keep the driver associated with /dev/console.
+> +		 * We are here only when the console was enabled by the cycle
+> +		 * checking console_cmdline and this is neither preferred
+> +		 * console nor the consdev fallback.
+> +		 */
+> +		newcon->next = con_consdev->next;
+> +		con_consdev->next = newcon;
+>  	} else {
+> +		/*
+> +		 * Keep a boot console first until the preferred real one
+> +		 * is registered.
+> +		 */
+>  		newcon->next = console_drivers->next;
+>  		console_drivers->next = newcon;
+>  	}
+> @@ -2808,6 +2842,7 @@ void register_console(struct console *newcon)
+>  		newcon->name, newcon->index);
+>  	if (bcon &&
+>  	    ((newcon->flags & (CON_CONSDEV | CON_BOOT)) == CON_CONSDEV) &&
+> +	    !consdev_fallback &&
+>  	    !keep_bootcon) {
+>  		/* We need to iterate through all boot consoles, to make
+>  		 * sure we print everything out, before we unregister them.
+> @@ -2853,10 +2888,16 @@ int unregister_console(struct console *console)
+>  
+>  	/*
+>  	 * If this isn't the last console and it has CON_CONSDEV set, we
+> -	 * need to set it on the next preferred console.
+> +	 * need to set it on the first console with tty binding.
+>  	 */
+> -	if (console_drivers != NULL && console->flags & CON_CONSDEV)
+> -		console_drivers->flags |= CON_CONSDEV;
+> +	if (console_drivers != NULL && console->flags & CON_CONSDEV) {
+> +		for_each_console(a) {
+> +			if (a->device) {
+> +				a->flags |= CON_CONSDEV;
+> +				break;
+> +			}
+> +		}
+> +	}
+>  
+>  	console->flags &= ~CON_ENABLED;
+>  	console_unlock();
+
