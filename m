@@ -2,340 +2,325 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF91C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23742C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 907AE2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C18214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfLLIQq (ORCPT
+        id S1728192AbfLLIQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:16:46 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48208 "EHLO comms.puri.sm"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfLLIQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:16:46 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id 3D198E01F3;
-        Thu, 12 Dec 2019 00:16:44 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IVaT9x0ILVlj; Thu, 12 Dec 2019 00:16:43 -0800 (PST)
-Subject: Re: [PATCH V5 1/3] thermal/drivers/cpu_cooling: Add idle cooling
- device documentation
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, rui.zhang@intel.com
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        viresh.kumar@linaro.org, amit.kucheria@linaro.org,
-        linux-kernel@vger.kernel.org
-References: <20191211224347.1001-1-daniel.lezcano@linaro.org>
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
- 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
- ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
-Message-ID: <6206b0c7-0f3a-80df-efa8-4f88939615d4@puri.sm>
-Date:   Thu, 12 Dec 2019 09:16:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <20191211224347.1001-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 12 Dec 2019 03:16:55 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42710 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726382AbfLLIQy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 03:16:54 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so863931otd.9;
+        Thu, 12 Dec 2019 00:16:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ewr89PonhWcgQjjMfRXnUYggn4igO3v85xYb+oGoz0c=;
+        b=XNT1JDqjfoaOHfMOlVUsVNvOgfjlLXhYnufQ1cU0/Fa6fDHBopULqfi63PkFPeVFlg
+         znXK5xmMa7S8B7Leg+rhfoUKja/rPLSOlb7uhX2u5iL5GCaTd4mn9oEt048Ec/BjIrfX
+         XgRrx1AIZIkUwSZV/3kW6088Tr7NRHIC1kC0OV3y5vqaL9rIa5RAu3APZ00CHYb+51gt
+         96qSgi1NgLqwJp0bVTgNinjOoOwnLWSYRuVKlRgKyjIE0tR7zlrf5NJLv0K6aQcbZGfp
+         pi7wtWRk9m+X+n4JN9BxE28/dFmTThVC/yA1m6Hu/U83RfMgKgFSFSVeYjpSrFxp5TJ8
+         1kTw==
+X-Gm-Message-State: APjAAAU4Q/2vbuHVRYOTq1lAqtuZk4jhQDC24NPrag/of9lzcHpFfGcw
+        EoP8SvN7Rw1Vn4VwHEfdD7YEvHS/nxMQ7tV0Xsc=
+X-Google-Smtp-Source: APXvYqzG9ZYt3uBwcdCm4dU8hq16ZX7u/oPyLUqMuF3MVZpIJkp+3Lze2iN7nOOizTD0C1A2hDfmvNSvEV/OKJdYmNA=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr6910500otm.297.1576138612708;
+ Thu, 12 Dec 2019 00:16:52 -0800 (PST)
+MIME-Version: 1.0
+References: <20191211204306.1207817-1-arnd@arndb.de> <20191211204306.1207817-25-arnd@arndb.de>
+In-Reply-To: <20191211204306.1207817-25-arnd@arndb.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 09:16:41 +0100
+Message-ID: <CAMuHMdW=eG9WWbeL0Od6dVzE7ydpBvVybvkn+cGFtyBR77sP6A@mail.gmail.com>
+Subject: Re: [PATCH 24/24] Documentation: document ioctl interfaces better
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Arnd,
 
+On Wed, Dec 11, 2019 at 9:53 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> Documentation/process/botching-up-ioctls.rst was orignally
+> written as a blog post for DRM driver writers, so it it misses
+> some points while going into a lot of detail on others.
+>
+> Try to provide a replacement that addresses typical issues
+> across a wider range of subsystems, and follows the style of
+> the core-api documentation better.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On 11.12.19 23:43, Daniel Lezcano wrote:
-> Provide some documentation for the idle injection cooling effect in
-> order to let people to understand the rational of the approach for the
-> idle injection CPU cooling device.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Thanks for your patch!
 
-Reviewed-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-
-thanks
-
-> ---
->   V4:
->     - Fixed typos, replaced 'period' per 'duty cycles', clarified some
->       wording (Amit Kucheria)
-> ---
->  .../driver-api/thermal/cpu-idle-cooling.rst   | 189 ++++++++++++++++++
->  1 file changed, 189 insertions(+)
->  create mode 100644 Documentation/driver-api/thermal/cpu-idle-cooling.rst
-> 
-> diff --git a/Documentation/driver-api/thermal/cpu-idle-cooling.rst b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-> new file mode 100644
-> index 000000000000..13d7fe4e8de8
 > --- /dev/null
-> +++ b/Documentation/driver-api/thermal/cpu-idle-cooling.rst
-> @@ -0,0 +1,189 @@
+> +++ b/Documentation/core-api/ioctl.rst
+> @@ -0,0 +1,250 @@
+> +======================
+> +ioctl based interfaces
+> +======================
 > +
-> +Situation:
-> +----------
+> +:c:func:`ioctl` is the most common way for applications to interface
+> +with device drivers. It is flexible and easily extended by adding new
+> +commands and can be passed through character devices, block devices as
+> +well as sockets and other special file descriptors.
 > +
-> +Under certain circumstances a SoC can reach a critical temperature
-> +limit and is unable to stabilize the temperature around a temperature
-> +control. When the SoC has to stabilize the temperature, the kernel can
-> +act on a cooling device to mitigate the dissipated power. When the
-> +critical temperature is reached, a decision must be taken to reduce
-> +the temperature, that, in turn impacts performance.
+> +However, it is also very easy to get ioctl command definitions wrong,
+> +and hard to fix them later without breaking existing applications,
+> +so this documentation tries to help developers get it right.
 > +
-> +Another situation is when the silicon temperature continues to
-> +increase even after the dynamic leakage is reduced to its minimum by
-> +clock gating the component. This runaway phenomenon can continue due
-> +to the static leakage. The only solution is to power down the
-> +component, thus dropping the dynamic and static leakage that will
-> +allow the component to cool down.
+> +Command number definitions
+> +==========================
 > +
-> +Last but not least, the system can ask for a specific power budget but
-> +because of the OPP density, we can only choose an OPP with a power
-> +budget lower than the requested one and under-utilize the CPU, thus
-> +losing performance. In other words, one OPP under-utilizes the CPU
-> +with a power less than the requested power budget and the next OPP
-> +exceeds the power budget. An intermediate OPP could have been used if
-> +it were present.
+> +The command number, or request number, is the second argument passed to
+> +the ioctl system call. While this can be any 32-bit number that uniquely
+> +identifies an action for a particular driver, there are a number of
+> +conventions around defining them.
+
+Interesting. I never realized the action is 32-bit in the kernel, but
+unsigned long in userspace...
+
 > +
-> +Solutions:
-> +----------
+> +``include/uapi/asm-generic/ioctl.h`` provides four macros for defining
+> +ioctl commands that follow modern conventions: ``_IOC``, ``_IOR``,
+> +``_IOW``, and ``_IORW``. These should be used for all new commands,
+> +with the correct parameters:
 > +
-> +If we can remove the static and the dynamic leakage for a specific
-> +duration in a controlled period, the SoC temperature will
-> +decrease. Acting on the idle state duration or the idle cycle
-> +injection period, we can mitigate the temperature by modulating the
-> +power budget.
+> +_IO/_IOR/_IOW/_IOWR
+
+This says _IO....
+
+> +   The macro name determines whether the argument is used for passing
+> +   data into kernel (_IOW), from the kernel (_IOR), both (_IOWR) or is
+
+into the kernel
+, or is
+
+> +   not a pointer (_IOC). It is possible but not recommended to pass an
+> +   integer value instead of a pointer with _IOC.
+
+...which is not explained here, but _IOC is?
+
 > +
-> +The Operating Performance Point (OPP) density has a great influence on
-> +the control precision of cpufreq, however different vendors have a
-> +plethora of OPP density, and some have large power gap between OPPs,
-> +that will result in loss of performance during thermal control and
-> +loss of power in other scenarios.
+> +type
+> +   An 8-bit number, often a character literal, specific to a subsystem
+> +   or driver, and listed in :doc:`../ioctl/ioctl-number`
 > +
-> +At a specific OPP, we can assume that injecting idle cycle on all CPUs
-> +belong to the same cluster, with a duration greater than the cluster
-> +idle state target residency, we lead to dropping the static and the
-> +dynamic leakage for this period (modulo the energy needed to enter
-> +this state). So the sustainable power with idle cycles has a linear
-> +relation with the OPP’s sustainable power and can be computed with a
-> +coefficient similar to:
+> +nr
+> +  An 8-bit number identifying the specific command, unique for a give
+> +  value of 'type'
 > +
-> +	    Power(IdleCycle) = Coef x Power(OPP)
+> +size
+> +  The name of the data type pointed to by the argument, the command
+> +  number encodes the ``sizeof(size)`` value in a 13-bit or 14-bit integer,
+> +  leading to a limit of 8191 bytes for the maximum size of the argument.
+> +  Note: do not pass sizeof(type) type into _IOR/IOW, as that will lead
+> +  to encoding sizeof(sizeof(type)), i.e. sizeof(size_t).
+
+Looks like "size" could be renamed, to make this more obvious?
+
+> +Timestamps
+> +==========
 > +
-> +Idle Injection:
-> +---------------
+> +Traditionally, timestamps and timeout values are passed as ``struct
+> +timespec`` or ``struct timeval``, but these are problematic because of
+> +incompatible definitions of these structures in user space after the
+> +move to 64-bit time_t.
 > +
-> +The base concept of the idle injection is to force the CPU to go to an
-> +idle state for a specified time each control cycle, it provides
-> +another way to control CPU power and heat in addition to
-> +cpufreq. Ideally, if all CPUs belonging to the same cluster, inject
-> +their idle cycles synchronously, the cluster can reach its power down
-> +state with a minimum power consumption and reduce the static leakage
-> +to almost zero.  However, these idle cycles injection will add extra
-> +latencies as the CPUs will have to wakeup from a deep sleep state.
+> +The __kernel_timespec type can be used instead to be embedded in other
+> +data structures when separate second/nanosecond values are desired,
+> +or passed to user space directly. This is still not ideal though,
+> +as the structure matches neither the kernel's timespec64 nor the user
+> +space timespec exactly. The get_timespec64() and put_timespec64() helper
+> +functions canbe used to ensure that the layout remains compatible with
+
+can be
+
+> +user space and the padding is treated correctly.
 > +
-> +We use a fixed duration of idle injection that gives an acceptable
-> +performance penalty and a fixed latency. Mitigation can be increased
-> +or decreased by modulating the duty cycle of the idle injection.
+> +As it is cheap to convert seconds to nanoseconds, but the opposite
+> +requires an expensive 64-bit division, a simple __u64 nanosecond value
+> +can be simpler and more efficient.
 > +
-> +     ^
-> +     |
-> +     |
-> +     |-------                         -------
-> +     |_______|_______________________|_______|___________
+> +Timeout values and timestamps should ideally use CLOCK_MONOTONIC time,
+> +as returned by ``ktime_get_ns()`` or ``ktime_get_ts64()``.  Unlike
+> +CLOCK_REALTIME, this makes the timestamps immune from jumping backwards
+> +or forwards due to leap second adjustments and clock_settime() calls.
 > +
-> +     <------>
-> +       idle  <---------------------->
-> +                    running
+> +``ktime_get_real_ns()`` can be used for CLOCK_REALTIME timestamps that
+> +may be required for timestamps that need to be persistent across a reboot
+
+Drop "may be required for timestamps that"?
+
+> +or between multiple machines.
+
+> +Structure layout
+> +----------------
 > +
-> +      <----------------------------->
-> +              duty cycle 25%
+> +Compatible data structures have the same layout on all architectures,
+> +avoiding all problematic members:
 > +
-> +	      
-> +The implementation of the cooling device bases the number of states on
-> +the duty cycle percentage. When no mitigation is happening the cooling
-> +device state is zero, meaning the duty cycle is 0%.
+> +* ``long`` and ``unsigned long`` are the size of a register, so
+> +  they can be either 32 bit or 64 bit wide and cannot be used in portable
+
+32-bit or 64-bit (for consistency with the rest of the document)
+
+> +  data structures. Fixed-length replacements are ``__s32``, ``__u32``,
+> +  ``__s64`` and ``__u64``.
 > +
-> +When the mitigation begins, depending on the governor's policy, a
-> +starting state is selected. With a fixed idle duration and the duty
-> +cycle (aka the cooling device state), the running duration can be
-> +computed.
+> +* Pointers have the same problem, in addition to requiring the
+> +  use of ``compat_ptr()``. The best workaround is to use ``__u64``
+> +  in place of pointers, which requires a cast to ``uintptr_t`` in user
+> +  space, and the use of ``u64_to_user_ptr()`` in the kernel to convert
+> +  it back into a user pointer.
 > +
-> +The governor will change the cooling device state thus the duty cycle
-> +and this variation will modulate the cooling effect.
+> +* On the x86-32 (i386) architecture, the alignment of 64-bit variables
+> +  is only 32 bit, but they are naturally aligned on most other
+
+32-bit
+
+> +  architectures including x86-64. This means a structure like
 > +
-> +     ^
-> +     |
-> +     |
-> +     |-------                 -------
-> +     |_______|_______________|_______|___________
+> +  ::
 > +
-> +     <------>
-> +       idle  <-------------->
-> +                running
+> +    struct foo {
+> +        __u32 a;
+> +        __u64 b;
+> +        __u32 c;
+> +    };
 > +
-> +      <----------------------------->
-> +              duty cycle 33%
+> +  has four bytes of padding between a and b on x86-64, plus another four
+> +  bytes of padding at the end, but no padding on i386, and it needs a
+> +  compat_ioctl conversion handler to translate between the two formats.
+> +
+> +  To avoid this problem, all structures should have their members
+> +  naturally aligned, or explicit reserved fields added in place of the
+> +  implicit padding.
+> +
+> +* On ARM OABI user space, 16-bit member variables have 32-bit
+> +  alignment, making them incompatible with modern EABI kernels.
+> +  Conversely, on the m68k architecture, all struct members have at most
+> +  16-bit alignment. These rarely cause problems as neither ARM-OABI nor
+
+"have at most 16-bit alignment" sounds a bit weird to me, as a member
+may have a greater alignment.
+"struct members are not guaranteed to have an alignment greater than 16-bit"?
+
+> +  m68k are supported by any compat mode, but for consistency, it is best
+> +  to completely avoid 16-bit member variables.
 > +
 > +
-> +     ^
-> +     |
-> +     |
-> +     |-------         -------
-> +     |_______|_______|_______|___________
+> +* Bitfields and enums generally work as one would expect them to,
+> +  but some properties of them are implementation-defined, so it is better
+> +  to avoid them completely in ioctl interfaces.
 > +
-> +     <------>
-> +       idle  <------>
-> +              running
+> +* ``char`` members can be either signed or unsigned, depending on
+> +  the architecture, so the __u8 and __s8 types should be used for 8-bit
+> +  integer values, though char arrays are clearer for fixed-length strings.
 > +
-> +      <------------->
-> +       duty cycle 50%
+> +Information leaks
+> +=================
 > +
-> +The idle injection duration value must comply with the constraints:
+> +Uninitialized data must not be copied back to user space, as this can
+> +cause an information leak, which can be used to defeat kernel address
+> +space layout randomization (KASLR), helping in an attack.
 > +
-> +- It is less than or equal to the latency we tolerate when the
-> +  mitigation begins. It is platform dependent and will depend on the
-> +  user experience, reactivity vs performance trade off we want. This
-> +  value should be specified.
+> +As explained for the compat mode, it is best to not avoid any padding in
+
+best to avoid any implicit padding?
+
+> +data structures, but if there is already padding in existing structures,
+> +the kernel driver must be careful to zero out the padding using
+> +``memset()`` or similar before copying it to user space.
 > +
-> +- It is greater than the idle state’s target residency we want to go
-> +  for thermal mitigation, otherwise we end up consuming more energy.
+> +Subsystem abstractions
+> +======================
 > +
-> +Power considerations
-> +--------------------
-> +  
-> +When we reach the thermal trip point, we have to sustain a specified
-> +power for a specific temperature but at this time we consume:
+> +While some device drivers implement their own ioctl function, most
+> +subsystems implement the same command for multiple drivers.  Ideally the
+> +subsystem has an .ioctl() handler that copies the arguments from and
+> +to user space, passing them into subsystem specific callback functions
+> +through normal kernel pointers.
 > +
-> + Power = Capacitance x Voltage^2 x Frequency x Utilisation
+> +This helps in various ways:
 > +
-> +... which is more than the sustainable power (or there is something
-> +wrong in the system setup). The ‘Capacitance’ and ‘Utilisation’ are a
-> +fixed value, ‘Voltage’ and the ‘Frequency’ are fixed artificially
-> +because we don’t want to change the OPP. We can group the
-> +‘Capacitance’ and the ‘Utilisation’ into a single term which is the
-> +‘Dynamic Power Coefficient (Cdyn)’ Simplifying the above, we have:
+> +* Applications written for one driver are more likely to work for
+> +  another one in the same subsystem if there are no subtle differences
+> +  in the user space ABI.
 > +
-> + Pdyn = Cdyn x Voltage^2 x Frequency
+> +* The complexity of user space access and data structure layout at done
+
+is done
+
+> +  in one place, reducing the potential for implementation bugs.
 > +
-> +The power allocator governor will ask us somehow to reduce our power
-> +in order to target the sustainable power defined in the device
-> +tree. So with the idle injection mechanism, we want an average power
-> +(Ptarget) resulting in an amount of time running at full power on a
-> +specific OPP and idle another amount of time. That could be put in a
-> +equation:
+> +* It is more likely to be reviewed by experienced developers
+> +  that can spot problems in the interface when the ioctl is shared
+> +  between multiple drivers than when it is only used in a single driver.
 > +
-> + P(opp)target = ((Trunning x (P(opp)running) + (Tidle x P(opp)idle)) /
-> +			(Trunning + Tidle)
-> +  ...
+> +Alternatives to ioctl
+> +=====================
 > +
-> + Tidle = Trunning x ((P(opp)running / P(opp)target) - 1)
+> +There are many cases in which ioctl is not the best solution for a
+> +problem. Alternatives include
+
+:
+
 > +
-> +At this point if we know the running period for the CPU, that gives us
-> +the idle injection we need. Alternatively if we have the idle
-> +injection duration, we can compute the running duration with:
+> +* System calls are a better choice for a system-wide feature that
+> +  is not tied to a physical device or constrained by the file system
+> +  permissions of a character device node
 > +
-> + Trunning = Tidle / ((P(opp)running / P(opp)target) - 1)
+> +* netlink is the preferred way of configuring any network related
+> +  objects through sockets.
 > +
-> +Practically, if the running power is less than the targeted power, we
-> +end up with a negative time value, so obviously the equation usage is
-> +bound to a power reduction, hence a higher OPP is needed to have the
-> +running power greater than the targeted power.
+> +* debugfs is used for ad-hoc interfaces for debugging functionality
+> +  that does not need to be exposed as a stable interface to applications.
 > +
-> +However, in this demonstration we ignore three aspects:
+> +* sysfs is a good way to expose the state of an in-kernel object
+> +  that is not tied to a file descriptor.
 > +
-> + * The static leakage is not defined here, we can introduce it in the
-> +   equation but assuming it will be zero most of the time as it is
-> +   difficult to get the values from the SoC vendors
+> +* configfs can be used for more complex configuration than sysfs
 > +
-> + * The idle state wake up latency (or entry + exit latency) is not
-> +   taken into account, it must be added in the equation in order to
-> +   rigorously compute the idle injection
-> +
-> + * The injected idle duration must be greater than the idle state
-> +   target residency, otherwise we end up consuming more energy and
-> +   potentially invert the mitigation effect
-> +
-> +So the final equation is:
-> +
-> + Trunning = (Tidle - Twakeup ) x
-> +		(((P(opp)dyn + P(opp)static ) - P(opp)target) / P(opp)target )
-> 
+> +* A custom file system can provide extra flexibility with a simple
+> +  user interface but add a lot of complexity in the implementation.
+
+adds ... to
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
