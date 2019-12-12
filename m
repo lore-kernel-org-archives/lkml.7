@@ -2,114 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64BFC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBF1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9926B214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F882214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FU9Q2wyf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pl/pUQBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfLLV7i (ORCPT
+        id S1731264AbfLLV7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:59:38 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:48162 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730772AbfLLV7i (ORCPT
+        Thu, 12 Dec 2019 16:59:54 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38306 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730772AbfLLV7y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:59:38 -0500
-Received: from [10.137.112.108] (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9B1D120B7187;
-        Thu, 12 Dec 2019 13:59:37 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B1D120B7187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576187977;
-        bh=Y9Ia1uhAwwdt2/y4b2PdNeomp16sm0N1Qu1cAFv7fSk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FU9Q2wyf7nNhxOjtT5IYizTDNqX1dmscLVC6mRe5Qw2DTXgm1Ve6622U8GntPorMc
-         l5MTV79TxG3Wwo4nG/xHx/t5BIjG5FfrW1YipvcJnuXD7HJgv/8bY9dpp7awwhOlXJ
-         2VKkAyRxQ/WF6WnJwS7Z8feLgzSD6Iq5VOwZn8wo=
-Subject: Re: [PATCH v2 1/2] IMA: Define workqueue for early boot "key"
- measurements
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191211185116.2740-1-nramas@linux.microsoft.com>
- <20191211185116.2740-2-nramas@linux.microsoft.com>
- <1576138743.4579.147.camel@linux.ibm.com>
- <0cc15a43-8e1b-9819-33fe-8325068f8df2@linux.microsoft.com>
- <1576185189.4579.165.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <b4ff3607-076e-7b90-24d1-9a129d9ce720@linux.microsoft.com>
-Date:   Thu, 12 Dec 2019 13:59:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 12 Dec 2019 16:59:54 -0500
+Received: by mail-pl1-f194.google.com with SMTP id a17so155802pls.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:59:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:from:cc:to:subject:user-agent:date;
+        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
+        b=Pl/pUQBmMNlT60swExa6Lc0oNeW8xywtmM0c5iE+6MjRqMLAh/sicSUDhIRtJUFEJF
+         LkeK0S+MTgT2BjI+j/Bjr/9clApktvsRn9HX1KIaIChXS/MIG/vKXkv5PgabEjK1dGGE
+         PKdVuMVX4sx3mWJ46X6FmpnNqriJ5y4UJ1Ir8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:from:cc:to:subject
+         :user-agent:date;
+        bh=CmXfpguq27944eP1eRHL/S89lr4HkiikW6X9wQMZTak=;
+        b=jy8rZj3poPOsT+nQZIgBFnHmhNlSUWueRAmD78wmgB4yn7A7zlmAzDXE9FIWxROk0r
+         gplv4k6OKpvTA0dOAu7XdCyQ8EeJe4cPo4UnjJMx/bBvSo0jAL9EzGBmahfMzt31/xp1
+         nkhOkUKPITwyEpZXEOUV3ejQJbWuek5Ivr5agEJsnbKxPCUpkrk4a/iqt+uH+SMJDyaZ
+         nZ3lkRQVm2+Puhuru8eeaH/hWweIMvh9laNZE6ujyXDggVH+i+KM7xtESGkOAdKCVJCQ
+         QCp9vPfadMJ/yuYO7ICZgyFkWUfWcBS9D74KQWhJNfiM5EPgg9r6xxozrjhQVW3aPy5C
+         DSdg==
+X-Gm-Message-State: APjAAAXswkoynjnEHVkj/RM0XttUgyBlefw0+ZuIYrJ76YSnhYBbVwe4
+        UC8ZG+cIincNn2PhH92AErlqJg==
+X-Google-Smtp-Source: APXvYqyYdeFIttKHtScn51FUQtkOnmir8OiEGe0EwjEvNpgQw9TAoxHuXImKHk2nhWN4iUrT/Ec2Fg==
+X-Received: by 2002:a17:902:9a94:: with SMTP id w20mr11523626plp.54.1576187993538;
+        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id b73sm8519686pfb.72.2019.12.12.13.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 13:59:53 -0800 (PST)
+Message-ID: <5df2b859.1c69fb81.3a87e.5ace@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1576185189.4579.165.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
+References: <20191212193544.80640-1-dianders@chromium.org> <20191212113540.6.Iec10b23bb000186b36b8bacfb6789d8233de04a7@changeid>
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Kiran Gunda <kgunda@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, mka@chromium.org,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 6/7] arm64: dts: qcom: sc7180: Avoid "phy" for USB QMP PHY wrapper
+User-Agent: alot/0.8.1
+Date:   Thu, 12 Dec 2019 13:59:52 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 1:13 PM, Mimi Zohar wrote:
+Quoting Douglas Anderson (2019-12-12 11:35:42)
+> The bindings for the QMP PHY are truly strange.  I believe (?) that
+> they may have originated because with PCIe each lane is treated as a
+> different PHY and the same PHY driver is used for a whole bunch of
+> things (incluidng PCIe).
+>=20
+> In any case, now that we have "make dtbs_check", we find that having
+> the outer node named "phy" triggers the
+> "schemas/phy/phy-provider.yaml" schema, yelling about:
+>=20
+>   phy@88e9000: '#phy-cells' is a required property
+>=20
+> Let's call the outer node the "phy-wrapper" and the inner node the
+> "phy" to make dtbs_check happy.
+>=20
+> Fixes: 0b766e7fe5a2 ("arm64: dts: qcom: sc7180: Add USB related nodes")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
 
-> 
-> Looking at this again, something seems off or at least the comment
-> doesn't match the code.
-> 
->         /*
->           * To avoid holding the mutex while processing queued keys,
->           * transfer the queued keys with the mutex held to a temp list,
->           * release the mutex, and then process the queued keys from
->           * the temp list.
->           *
->           * Since ima_process_keys is set to true above, any new key will
->           * be processed immediately and not queued.
->           */
-> 
-> Setting ima_process_key before taking the lock won't prevent the race.
->   I think you want to test ima_process_keys before taking the lock and
-> again immediately afterward taking the lock, before setting it.  Then
-> the comment would match the code.
-> 
-> Shouldn't ima_process_keys be defined as static to limit the scope to
-> this file?
-> 
-> Mimi
-> 
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-In IMA hook, ima_process_key is checked without lock. If it is false, 
-ima_queue_key is called. If the key was queued (by ima_queue_key()) then 
-the hook defers measurement. Else, it processes it immediately.
+Would be good to add phy-wrapper to possible node names in the DT spec
+too.
 
-In ima_queue_key() function the check for ima_process_key is done after 
-taking the lock and the key queued if the flag is false.
-
-In ima_process_keys() ima_process_key is set without lock and then the 
-queued keys are moved to a temp list after taking the lock.
-
-I have reviewed the changes myself and also with a few of my colleagues. 
-I don't think there is a race condition. Please let me know if you do 
-see a problem.
-
-I can move the setting of ima_process_key flag inside the lock. But 
-honestly I don't think that is necessary.
-
-I agree that ima_process_keys should be static since it is used in this 
-file one. I'll make that change.
-
-I can also move the setting of ima_process_key flag inside the lock 
-along with the above change.
-
-thanks,
-  -lakshmi
