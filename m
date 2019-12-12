@@ -2,90 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21A9C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB6AC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C817E21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576169407;
-	bh=eaCUUCpdZ+9jexLrCcFGczPuBpNoGYYZMgq+3l/E9xQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b/hbzt0xoa+obWYh0wqSaE0kMidhF6yB3m2sqIeu0Dzi21Iirte00xBAypILUTEO3
-	 WbNEhpMqXCC7q9EGmgu6RpAMi49IFP5Snn3DWsAQmW5qvbMKOPZZQJKyi1VbsUnR6s
-	 H14q88Hn8h+EvwfDiuNKLqQQsI+YRo2cAaLqXEqQ=
+	by mail.kernel.org (Postfix) with ESMTP id 326FF21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:50:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="FSoOnz2O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfLLQuG (ORCPT
+        id S1729990AbfLLQuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:50:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45242 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbfLLQuG (ORCPT
+        Thu, 12 Dec 2019 11:50:50 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:31066 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729762AbfLLQuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:50:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so2613954otp.12;
-        Thu, 12 Dec 2019 08:50:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eaCUUCpdZ+9jexLrCcFGczPuBpNoGYYZMgq+3l/E9xQ=;
-        b=i4l9Lk0XVMNukyGJcxO7E0U5Q9Jv98x4y7i8eTujCwGCKMtQ/r8aM1lwp8gOG7IUc3
-         T1+u61IvdwZ2SdS+jFeptIyp8LHhd9jvUnrVEfj+2uFUKQhgRb70WGwDZRX51W9lFuPA
-         7jwcOgKs/Of0r3O2+CDY5lahzGwVEcPuQwOoiPGO5lefsZqWWDpeJNCJg5QFDVQ+4k7J
-         fGa6O+SqEAfW64cJMren2nU9bWVHDbVDuRqtWp9F1ZqldqLqKTjin0ouZkl/Nafwyy2x
-         poBOb0FXrJs3XAjOL643wf1w7XqmXrO6kWjqFKQjT06xjI00Uga+0kKGoRSOXVu1aub0
-         Xg2Q==
-X-Gm-Message-State: APjAAAXIokBEml44bvZJqq0NFq7PHwlTqqZ0jNDFuO6fu7NYWbGerJz8
-        83woFNOCUsb8xpQXwaoGnBMnT96xL2veXmAvBuyJaA==
-X-Google-Smtp-Source: APXvYqy8SxGzaYOvMgcZc8OPw5g1ZlMhu7aM6woCRSkpZ1ycT5QV3+ZW9Xg6QZLm8CbRVZuD0AEdYw/DWJoG5fIDvYQ=
-X-Received: by 2002:a05:6830:95:: with SMTP id a21mr8617620oto.167.1576169405609;
- Thu, 12 Dec 2019 08:50:05 -0800 (PST)
+        Thu, 12 Dec 2019 11:50:50 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCGfE7x019441;
+        Thu, 12 Dec 2019 10:48:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=Y5UjW/iCL1Sg9lvY5uXhCGfChrkY/+BGEyhe0F7nTj4=;
+ b=FSoOnz2OD+7PkuvLAppfrLau4qkp5IvCDS61w9a3557LTss4kFKVQwQlC20v8VFUNYt8
+ 0IRsQIGpnwvEy0bDwoxmvbLLt9CaS/EsMwuiWn1hyMLDd1hNbCQ3mnyVLQkps3q8m3A3
+ nbCBYqdhSjAaMmpblirUYeTlp26Ebju4YIpx6hZaHAG8vv1ZwusLWsS297O5v+U2rWEO
+ ZD3APpOZUp/ySSNKJoClqNUf/5RYnHcKx/4jYa13IahTLTDfr404/Ow0O82gcrM4ypJ8
+ MW6OVJLzZ/TPitZrzkG59o5Av33OOlsKoxdF22TuiW4qUORfI5HBBqVWDKeKNIb5PMjs 8w== 
+Authentication-Results: ppops.net;
+        spf=fail smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from ediex01.ad.cirrus.com ([5.172.152.52])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2wr9ctxxcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 12 Dec 2019 10:48:38 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 12 Dec
+ 2019 16:48:35 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Thu, 12 Dec 2019 16:48:35 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 6D0192A1;
+        Thu, 12 Dec 2019 16:48:35 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 16:48:35 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+CC:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <gregkh@linuxfoundation.org>,
+        <kstewart@linuxfoundation.org>, <allison@lohutok.net>,
+        <guennadi.liakhovetski@linux.intel.com>, <tglx@linutronix.de>,
+        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: wm8962: fix lambda value
+Message-ID: <20191212164835.GD10451@ediswmail.ad.cirrus.com>
+References: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <2691942.bH9KnLg61H@kreacher> <AM0PR04MB44814D98FDF152FB6D186B13885A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB44814D98FDF152FB6D186B13885A0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 12 Dec 2019 17:49:54 +0100
-Message-ID: <CAJZ5v0j7khsPq_Gye8vutmK8_=z1ZUCfZ4t1ENtmOdVR4qWQeg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU offline
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-SPF-Result: fail
+X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
+ -all
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
+ malwarescore=0 clxscore=1011 suspectscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912120130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 2:53 PM Peng Fan <peng.fan@nxp.com> wrote:
->
-> > Subject: [PATCH] cpufreq: Avoid leaving stale IRQ work items during CPU
-> > offline
-> >
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > The scheduler code calling cpufreq_update_util() may run during CPU offline
-> > on the target CPU after the IRQ work lists have been flushed for it, so the
-> > target CPU should be prevented from running code that may queue up an IRQ
-> > work item on it at that point.
-> >
-> > Unfortunately, that may not be the case if dvfs_possible_from_any_cpu is set
-> > for at least one cpufreq policy in the system, because that allows the CPU
-> > going offline to run the utilization update callback of the cpufreq governor on
-> > behalf of another (online) CPU in some cases.
-> >
-> > If that happens, the cpufreq governor callback may queue up an IRQ work on
-> > the CPU running it, which is going offline, and the IRQ work will not be flushed
->
-> "will" -> "might"
+On Wed, Dec 11, 2019 at 07:57:22PM +0800, Shengjiu Wang wrote:
+> According to user manual, it is required that FLL_LAMBDA > 0
+> in all cases (Integer and Franctional modes).
+> 
+> Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  sound/soc/codecs/wm8962.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+> index 3e5c69fbc33a..d9d59f45833f 100644
+> --- a/sound/soc/codecs/wm8962.c
+> +++ b/sound/soc/codecs/wm8962.c
+> @@ -2788,7 +2788,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
+>  
+>  	if (target % Fref == 0) {
+>  		fll_div->theta = 0;
+> -		fll_div->lambda = 0;
+> +		fll_div->lambda = 1;
+>  	} else {
+>  		gcd_fll = gcd(target, fratio * Fref);
+>  
+> @@ -2858,7 +2858,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (fll_div.theta || fll_div.lambda)
+> +	if (fll_div.theta)
+>  		fll1 |= WM8962_FLL_FRAC;
 
-Well, I'm not sure, but OK.
+How well tested is this change, and is it addressing an issue you
+have observed? I agree this does better fit the datasheet just a
+little nervous as its an older part that has seen a lot of usage.
+
+Thanks,
+Charles
