@@ -2,346 +2,148 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37B7C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB57C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F8C2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DB52077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FnyQZB7U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRzJQiVQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfLLNj0 (ORCPT
+        id S1729498AbfLLNkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:39:26 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34246 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729405AbfLLNj0 (ORCPT
+        Thu, 12 Dec 2019 08:40:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41829 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729429AbfLLNks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:39:26 -0500
-Received: by mail-pj1-f67.google.com with SMTP id j11so1064536pjs.1;
-        Thu, 12 Dec 2019 05:39:25 -0800 (PST)
+        Thu, 12 Dec 2019 08:40:48 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so2326894ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 05:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version:in-reply-to
-         :content-transfer-encoding;
-        bh=QNw0wSWDYS412iIOnCOz7lWytbJcyDm/vPYrMQVOY+A=;
-        b=FnyQZB7UWH46xGYqGMV5DUcLuL6Ol1mWnsGPDy25hN5Mri4MN/ra4/9CWOVb8JXBpI
-         etGFS/zfKLK68ZdLPGm/tvIjF3d8jwcd37wvdFxvp/lQ26RmjhDPgVEcCa1Wflel9t8l
-         5Opyw3U0AwWA+n1+wmYfwei13rzoPugI+Qvuj3ocQC/NIfC3B815a2F56diUdOVfSVfM
-         NzP54NetrBeBLCtq9PpJhYfZhKsWuxrrsxvoLfSUe94Y2T19JofEuq3ICq+9eXzUDgt3
-         i1SJ6s06COLOR1uZCjq949tGhC2LMq2blK9OpJt5SCux0YvGDc+0KOGSqeg7DNZFmIZw
-         7wjw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
+        b=DRzJQiVQg/nQ/ASUfL3q6cDwUxWJ56eQnZWGgR+JOoveYSxcv7+j9kjbi9XlxA1AEO
+         A02/XOPXYlK843ecHoWeaRH53jfl/cx5u3XSjbfE6QXM6s9uUsm05zfWWRKxADesDQaV
+         PnpOe4EYjBF5MZNs5FNBPAYxERQpmPL1TeloXm3jpv3+AB/lT3PvU4ZBj/VaARR4vYaR
+         uJAZHSCgQIgMRkQV60ebT26TmXAs0cOXjT+DYySEPkfd4IKU4kJpTPp6/Mka/ayB4hXZ
+         fNwhN8IIW0TkBhIE6JdShsrKJP3KtegCAZBZzOcTXVPJ7RuZIJLfrFV04K8VZIFI/qoI
+         sOeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :in-reply-to:content-transfer-encoding;
-        bh=QNw0wSWDYS412iIOnCOz7lWytbJcyDm/vPYrMQVOY+A=;
-        b=t24aQm4zrCet8f9CoY4xX1L3p4PNYJ9mJxerCNq8S+UnEvy4twOzLwditcAImn4fdG
-         FofEtU6SvKDUp7XU3VhDB8ZRIKzBf4l88o88ucJBtylNUtE3VLJtXRiwuYouD45nHNGa
-         N5TyRJrEkW+rbnZmPdySJMrpMTqUEjvFpn6Iif8YBPqi/0/ZOhBwrf2dqw2aCfvMXAQS
-         WnPlzbritDsNA/OnPY9CEeNL6Cc39ypBBoGiYRf5QkKKgPa+Q+PTax8vrihQIDHXX4GW
-         FN3QJFmNDMknuyA3plxgTxA8LEWsJxfLCnkJQKgcSR14WtU6oXaIa+F41OF0qVx0wB1o
-         Q9/g==
-X-Gm-Message-State: APjAAAXyvDkbicYRkf6zek5Q2YfYb11peYHPuq8/gstS1zb4Z1heyNHF
-        PpLhnZQRrHd18cZkINtnZuE=
-X-Google-Smtp-Source: APXvYqy82OmHGVipwaG188UZTJQex0ku+UVSDGWNX0YY52TMxE6wMI4E5e0QBWEx9qFc9D4D4yU8fg==
-X-Received: by 2002:a17:90a:808c:: with SMTP id c12mr9689023pjn.105.1576157964900;
-        Thu, 12 Dec 2019 05:39:24 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id m3sm6883598pgp.32.2019.12.12.05.39.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 05:39:24 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-Cc:     jgross@suse.com, axboe@kernel.dk, sjpark@amazon.com,
-        konrad.wilk@oracle.com, pdurrant@amazon.com,
-        SeongJae Park <sjpark@amazon.de>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, xen-devel@lists.xenproject.org
-Subject: Re: Re: [Xen-devel] [PATCH v7 2/3] xen/blkback: Squeeze page pools if a memory pressure is detected
-Date:   Thu, 12 Dec 2019 14:39:05 +0100
-Message-Id: <20191212133905.462-1-sj38.park@gmail.com>
-X-Mailer: git-send-email 2.17.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7PbHPLSXQGj0yJrSH192TMtAaxNo5rw41NetJ/dcUfw=;
+        b=Pnp4M52SQhCaLcEyPKxyn66sSg8YtGCp2V6Rfh10HzbuaAT9Ajcxjzt6Xjm2KtqTTO
+         yHVVPpShHp6iaLnXbjydYaz9Xt3mTmxJc37pX2lsPRR+xEm+/Od1K4eQqGV6IF+Bg44F
+         8cBAj9LnYyrPk49byfZOac8qnhYTyh8/zon2q1m1vta01NRF2dDAJ6qMJe1x0xKel2Ai
+         r9o+Ml+JG2DRfxXikPc+EObYznbsYGYoooDJgT4sTI7maUQegdEu+8LpuHanrxOGhttm
+         IswlILMomVKqBUBoaMXnzCy9om4kcckip0+inbTd6XD9Wj9UVc170+JiaPR3C5M0mOXi
+         4ycA==
+X-Gm-Message-State: APjAAAV9JemHBrIBEinkiA+VQ5y5QDpHPcB7ncsnOyZd8Jh6KExke1Ia
+        xlRDpw4vyaQWpDv+G8VNGoSY1wTtoXK/IRdBFTrlnQ==
+X-Google-Smtp-Source: APXvYqz4WIPVD6RaEfzhjt2nRL8Q3ReinXWMfS2taUKWfU1ppqbKjrPvuAhDEVOow4IVqRo34vof7KNX/xH9rfQS/Dc=
+X-Received: by 2002:a2e:9ec4:: with SMTP id h4mr6024597ljk.77.1576158044254;
+ Thu, 12 Dec 2019 05:40:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212114247.GB11756@Air-de-Roger>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-4-geert+renesas@glider.be>
+In-Reply-To: <20191127084253.16356-4-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 14:40:29 +0100
+Message-ID: <CACRpkdZs0_VvfpE34bgrMtBVeamCsq6BaqfyJc1tyvWCornSUw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] gpiolib: Add support for GPIO line table lookup
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 12:42:47 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> 
-> Please make sure you Cc me in blkback related patches.
+> Currently GPIOs can only be referred to by GPIO controller and offset in
+> GPIO lookup tables.
+>
+> Add support for looking them up by line name.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Sorry for forgotting you!  I will never forget again.
+OK I see what you want to do...
 
-> 
-> On Wed, Dec 11, 2019 at 06:10:15PM +0000, SeongJae Park wrote:
-> > Each `blkif` has a free pages pool for the grant mapping.  The size of
-> > the pool starts from zero and be increased on demand while processing
->                                 ^ is
-> > the I/O requests.  If current I/O requests handling is finished or 100
-> > milliseconds has passed since last I/O requests handling, it checks and
-> > shrinks the pool to not exceed the size limit, `max_buffer_pages`.
-> > 
-> > Therefore, host administrators can cause memory pressure in blkback by
-> > attaching a large number of block devices and inducing I/O.  Such
-> > problematic situations can be avoided by limiting the maximum number of
-> > devices that can be attached, but finding the optimal limit is not so
-> > easy.  Improper set of the limit can results in the memory pressure or a
->                                                   ^ s/the//
-> > resource underutilization.  This commit avoids such problematic
-> > situations by squeezing the pools (returns every free page in the pool
-> > to the system) for a while (users can set this duration via a module
-> > parameter) if a memory pressure is detected.
->                 ^ s/a//
-> > 
-> > Discussions
-> > ===========
-> > 
-> > The `blkback`'s original shrinking mechanism returns only pages in the
-> > pool, which are not currently be used by `blkback`, to the system.  In
-> 
-> I think you can remove both comas in the above sentence.
-> 
-> > other words, the pages that are not mapped with granted pages.  Because
-> > this commit is changing only the shrink limit but still uses the same
-> > freeing mechanism it does not touch pages which are currently mapping
-> > grants.
-> > 
-> > Once a memory pressure is detected, this commit keeps the squeezing
->        ^ s/a//
+> +               if (p->chip_hwnum == (u16)-1) {
 
-Thank you for corrections, will apply!
+If you want to use this then use:
 
-> > limit for a user-specified time duration.  The duration should be
-> > neither too long nor too short.  If it is too long, the squeezing
-> > incurring overhead can reduce the I/O performance.  If it is too short,
-> > `blkback` will not free enough pages to reduce the memory pressure.
-> > This commit sets the value as `10 milliseconds` by default because it is
-> > a short time in terms of I/O while it is a long time in terms of memory
-> > operations.  Also, as the original shrinking mechanism works for at
-> > least every 100 milliseconds, this could be a somewhat reasonable
-> > choice.  I also tested other durations (refer to the below section for
-> > more details) and confirmed that 10 milliseconds is the one that works
-> > best with the test.  That said, the proper duration depends on actual
-> > configurations and workloads.  That's why this commit allows users to
-> > set the duration as a module parameter.
-> > 
-> > Memory Pressure Test
-> > ====================
-> > 
-> > To show how this commit fixes the memory pressure situation well, I
-> > configured a test environment on a xen-running virtualization system.
-> > On the `blkfront` running guest instances, I attach a large number of
-> > network-backed volume devices and induce I/O to those.  Meanwhile, I
-> > measure the number of pages that swapped in (pswpin) and out (pswpout)
-> > on the `blkback` running guest.  The test ran twice, once for the
-> > `blkback` before this commit and once for that after this commit.  As
-> > shown below, this commit has dramatically reduced the memory pressure:
-> > 
-> >                 pswpin  pswpout
-> >     before      76,672  185,799
-> >     after          212    3,325
-> > 
-> > Optimal Aggressive Shrinking Duration
-> > -------------------------------------
-> > 
-> > To find a best squeezing duration, I repeated the test with three
-> > different durations (1ms, 10ms, and 100ms).  The results are as below:
-> > 
-> >     duration    pswpin  pswpout
-> >     1           852     6,424
-> >     10          212     3,325
-> >     100         203     3,340
-> > 
-> > As expected, the memory pressure has decreased as the duration is
-> > increased, but the reduction stopped from the `10ms`.  Based on this
-> > results, I chose the default duration as 10ms.
-> > 
-> > Performance Overhead Test
-> > =========================
-> > 
-> > This commit could incur I/O performance degradation under severe memory
-> > pressure because the squeezing will require more page allocations per
-> > I/O.  To show the overhead, I artificially made a worst-case squeezing
-> > situation and measured the I/O performance of a `blkfront` running
-> > guest.
-> > 
-> > For the artificial squeezing, I set the `blkback.max_buffer_pages` using
-> > the `/sys/module/xen_blkback/parameters/max_buffer_pages` file.  In this
-> > test, I set the value to `1024` and `0`.  The `1024` is the default
-> > value.  Setting the value as `0` is same to a situation doing the
-> > squeezing always (worst-case).
-> > 
-> > For the I/O performance measurement, I run a simple `dd` command 5 times
-> > as below and collect the 'MB/s' results.
-> > 
-> >     $ for i in {1..5}; do dd if=/dev/zero of=file \
-> >                              bs=4k count=$((256*512)); sync; done
-> 
-> I think it would be better if you could skip the filesystem overhead
-> by writing directly to a block device, ie:
-> 
-> Attach a null_blk based block device to the guest (on dom0):
-> # xl block-attach guest phy:/dev/null_blk0 xvdb w
-> 
-> Run a workload against the device (inside the guest):
-> # fio --filename=/dev/xvdb --direct=1 --rw=randrw --bs=4k --ioengine=libaio \
->       --iodepth=64 --runtime=120 --numjobs=4 --time_based --group_reporting \
->       --name=throughput-test-job --eta-newline=1
-> 
-> You should run this on a multi-vcpu guest so that multiple queues are
-> used, and adjust the numjobs to (at least) match the number of queues.
+if (p->chip_hwnum == U16_MAX)
 
-I forgot to update the `dd` command.  I used the command for the slow block
-device test, but directly induced the I/O towards the block device for the fast
-block device test as below:
+from <linux/limits.h>
 
-    # xl block-attach guest phy:/dev/ram0 xvdb w
- 
-    $ for i in {1..5}; do dd if=/dev/zero of=file \
-                             bs=4k count=$((256*512)); sync; done
+> +                       desc = gpio_name_to_desc(p->chip_label);
+> +                       if (desc) {
+> +                               *flags = p->flags;
+> +                               return desc;
+> +                       }
+> +
+> +                       dev_warn(dev, "cannot find GPIO line %s, deferring\n",
+> +                                p->chip_label);
+> +                       return ERR_PTR(-EPROBE_DEFER);
+> +               }
+> +
+>                 chip = find_chip_by_name(p->chip_label);
+>
+>                 if (!chip) {
+> diff --git a/include/linux/gpio/machine.h b/include/linux/gpio/machine.h
+> index 1ebe5be05d5f81fa..84c1c097e55eefaf 100644
+> --- a/include/linux/gpio/machine.h
+> +++ b/include/linux/gpio/machine.h
+> @@ -31,7 +31,7 @@ enum gpio_lookup_flags {
+>   */
+>  struct gpiod_lookup {
+>         const char *chip_label;
+> -       u16 chip_hwnum;
+> +       u16 chip_hwnum;                 /* if -1, chip_label is named line */
 
-Nevertheless, I agree that you suggested test will provide much more accurate.
-As stated before, my test is only designed for a minimal proof-of-concept.
+/* if U16_MAX then chip_label is the named line we are looking for */
 
-> 
-> 
-> > 
-> > If the underlying block device is slow enough, the squeezing overhead
-> > could be hidden.  For the reason, I do this test for both a slow block
-> > device and a fast block device.  I use a popular cloud block storage
-> > service, ebs[1] as a slow device and the ramdisk block device[2] for the
-> > fast device.
-> > 
-> > The results are as below.  'max_pgs' represents the value of the
-> > `blkback.max_buffer_pages` parameter.
-> > 
-> > On the slow block device
-> > ------------------------
-> > 
-> >     max_pgs   Min       Max       Median     Avg    Stddev
-> >     0         38.7      45.8      38.7       40.12  3.1752165
-> >     1024      38.7      45.8      38.7       40.12  3.1752165
-> >     No difference proven at 95.0% confidence
-> > 
-> > On the fast block device
-> > ------------------------
-> > 
-> >     max_pgs   Min       Max       Median     Avg    Stddev
-> >     0         417       423       420        419.4  2.5099801
-> >     1024      414       425       416        417.8  4.4384682
-> >     No difference proven at 95.0% confidence
-> 
-> This is intriguing, as it seems to prove that the usage of a cache of
-> free pages is irrelevant performance wise.
-> 
-> The pool of free pages was introduced long ago, and it's possible that
-> recent improvements to the balloon driver had made such pool useless,
-> at which point it could be removed instead of worked around.
+But the member name "chip_label" is completely abused with this
+setup, it should then be renamed as part of the patch set to something
+like chip_label_or_line_name so it is clear what it is or
+just name it "const char *key".
 
-I guess the grant page allocation overhead in this test scenario is really
-small.  In an absence of memory pressure, fragmentation, and NUMA imbalance,
-the latency of the page allocation ('get_page()') is very short, as it will
-success in the fast path.
+But I'm not entirely convinced about reusing the existing
+struct gpio_lookup for this.
 
-Few years ago, I once measured the page allocation latency on my machine.
-Roughly speaking, it was about 1us in best case, 100us in worst case, and 5us
-in average.  Please keep in mind that the measurement was not designed and
-performed in serious way.  Thus the results could have profile overhead in it,
-though.  While keeping that in mind, let's simply believe the number and ignore
-the latency of the block layer, blkback itself (including the grant
-mapping), and anything else including context switch, cache miss, but the
-allocation.  In other words, suppose that the grant page allocation is only one
-source of the overhead.  It will be able to achieve 1 million IOPS (4KB *
-1MIOPS = 4 GB/s) in the best case, 200 thousand IOPS (800 MB/s) in average, and
-10 thousand IOPS (40 MB/s) in worst case.  Based on this coarse calculation, I
-think the test results is reasonable.
+What about constructing a new lookup struct specifically for this?
+I understand it is more work, but will that not be more
+maintainable and readable?
 
-This also means that the effect of the blkback's free pages pool might be
-visible under page allocation fast path failure situation.  Nevertheless, it
-would be also hard to measure that in micro level unless the measurement is
-well designed and controlled.
-
-> 
-> Do you think you could perform some more tests (as pointed out above
-> against the block device to skip the fs overhead) and report back the
-> results?
-
-To be honest, I'm not sure whether additional tests are really necessary,
-because I think the `dd` test and the results explanation already makes some
-sense and provide the minimal proof of the concept.  Also, this change is a
-fallback for the memory pressure situation, which is an error path in some
-point of view.  Such errorneous situation might not happen frequently and if
-the situation is not solved in short time, something much worse (e.g., OOM kill
-of the user space xen control processes) than temporal I/O performance
-degradation could happen.  Thus, I'm not sure whether such detailed performance
-measurement is necessary for this rare error handling change.  The comment of
-'xen_blkbk_unmap()' also says, "This could accumulate ops up to the batch size
-to reduce the number of hypercalls, but since this is only used in error paths
-there's no real need.".
-
-That said, if you still want me to do the test, I will gladly do it.  Note that
-since I'm now traveling US without the power cable of my now discharged laptop
-which is the only way to connect to my test environments in my office, I would
-not be able to do the additional test quickly.  I assume I could do the test
-and give you the result within a couple of week.  If you want me to post next
-version with minor changes such as commit message update meanwhile, please just
-let me know.  Again, if you want it, I will gladly do it :)
-
-> 
-> > 
-> > In short, even worst case squeezing on ramdisk based fast block device
-> > makes no visible performance degradation.  Please note that this is just
-> > a very simple and minimal test.  On systems using super-fast block
-> > devices and a special I/O workload, the results might be different.  If
-> > you have any doubt, test on your machine for your workload to find the
-> > optimal squeezing duration for you.
-> > 
-> > [1] https://aws.amazon.com/ebs/
-> > [2] https://www.kernel.org/doc/html/latest/admin-guide/blockdev/ramdisk.html
-> > 
-> > Reviewed-by: Juergen Gross <jgross@suse.com>
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> > ---
-> >  drivers/block/xen-blkback/blkback.c | 22 ++++++++++++++++++++--
-> >  drivers/block/xen-blkback/common.h  |  1 +
-> >  drivers/block/xen-blkback/xenbus.c  |  3 ++-
-> >  3 files changed, 23 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
-> > index fd1e19f1a49f..98823d150905 100644
-> > --- a/drivers/block/xen-blkback/blkback.c
-> > +++ b/drivers/block/xen-blkback/blkback.c
-> > @@ -142,6 +142,21 @@ static inline bool persistent_gnt_timeout(struct persistent_gnt *persistent_gnt)
-> >  		HZ * xen_blkif_pgrant_timeout);
-> >  }
-> >  
-> > +/* Once a memory pressure is detected, squeeze free page pools for a while. */
-> > +static unsigned int buffer_squeeze_duration_ms = 10;
-> > +module_param_named(buffer_squeeze_duration_ms,
-> > +		buffer_squeeze_duration_ms, int, 0644);
-> > +MODULE_PARM_DESC(buffer_squeeze_duration_ms,
-> > +"Duration in ms to squeeze pages buffer when a memory pressure is detected");
-> 
-> You should add a description about this parameter to
-> Documentation/ABI/testing/sysfs-driver-xen-blkback
-
-Good point, I will.
-
-
-Thanks,
-SeongJae Park
-
-> 
-> Thanks, Roger.
-> 
+Yours,
+Linus Walleij
