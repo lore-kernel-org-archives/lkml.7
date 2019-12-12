@@ -2,87 +2,81 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F83C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D90EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534E321556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043A821556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfLLVr1 (ORCPT
+        id S1731146AbfLLVtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:47:27 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:54628 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730831AbfLLVr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:47:26 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifWIu-0001IZ-3M; Thu, 12 Dec 2019 21:47:24 +0000
-Date:   Thu, 12 Dec 2019 21:47:24 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        linux-kernel@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>
-Subject: Re: [PATCH] vfs: Handle file systems without ->parse_params better
-Message-ID: <20191212214724.GL4203@ZenIV.linux.org.uk>
-References: <20191212213604.19525-1-labbott@redhat.com>
+        Thu, 12 Dec 2019 16:49:10 -0500
+Received: from mga06.intel.com ([134.134.136.31]:9274 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730960AbfLLVtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:49:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 13:49:09 -0800
+X-IronPort-AV: E=Sophos;i="5.69,307,1571727600"; 
+   d="scan'208,223";a="208240156"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 13:49:09 -0800
+From:   Tony Luck <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tony Luck <tony.luck@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/cpufeatures: Add feature flag for fast short rep movsb
+Date:   Thu, 12 Dec 2019 13:49:08 -0800
+Message-Id: <20191212214908.20185-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212213604.19525-1-labbott@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 04:36:04PM -0500, Laura Abbott wrote:
-> @@ -141,14 +191,19 @@ int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param)
->  		 */
->  		return ret;
->  
-> -	if (fc->ops->parse_param) {
-> -		ret = fc->ops->parse_param(fc, param);
-> -		if (ret != -ENOPARAM)
-> -			return ret;
-> -	}
-> +	parse_param = fc->ops->parse_param;
-> +	if (!parse_param)
-> +		parse_param = fs_generic_parse_param;
-> +
-> +	ret = parse_param(fc, param);
-> +	if (ret != -ENOPARAM)
-> +		return ret;
->  
-> -	/* If the filesystem doesn't take any arguments, give it the
-> -	 * default handling of source.
-> +	/*
-> +	 * File systems may have a ->parse_param function but rely on
-> +	 * the top level to parse the source function. File systems
-> +	 * may have their own source parsing though so this needs
-> +	 * to come after the call to parse_param above.
->  	 */
->  	if (strcmp(param->key, "source") == 0) {
->  		if (param->type != fs_value_is_string)
-> -- 
-> 2.21.0
+From the Intel Optimization Reference Manual:
 
-No.  Please, get rid of the boilerplate.  About 80% of that thing
-is an absolutely pointless dance around "but we need that to call
-fs_parse()".  We do *NOT* need to call fs_parse() here.  We do
-not need a struct fs_parameter_description instance.  We do not
-need struct fs_parameter_spec instances.  We do not need a magical
-global constant.  And I'm not entirely convinced that we need
-to make fs_generic_parse_param() default - filesystems that
-want this behaviour can easily ask for it.  A sane default is
-to reject any bogus options.
+3.7.6.1 Fast Short REP MOVSB
+Beginning with processors based on Ice Lake Client microarchitecture,
+REP MOVSB performance of short operations is enhanced. The enhancement
+applies to string lengths between 1 and 128 bytes long.  Support for
+fast-short REP MOVSB is enumerated by the CPUID feature flag: CPUID
+[EAX=7H, ECX=0H).EDX.FAST_SHORT_REP_MOVSB[bit 4] = 1. There is no change
+in the REP STOS performance.
 
-I would call it ignore_unknowns_parse_param(), while we are at it.
+Add an X86_FEATURE_FSRM flag for this.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+
+Net effect of this patch is just to make "fsrm" appear in the
+flags section of /proc/cpuinfo. Maybe someone can look into whether
+we should make copy routines that use "rep movsb" check for this
+flag to optimize copies on older CPUs that don't have it?
+
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 0652d3eed9bd..ab441b15d582 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -356,6 +356,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_FSRM		(18*32+ 4) /* Fast Short Rep Mov */
+ #define X86_FEATURE_AVX512_VP2INTERSECT (18*32+ 8) /* AVX-512 Intersect for D/Q */
+ #define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+-- 
+2.20.1
+
