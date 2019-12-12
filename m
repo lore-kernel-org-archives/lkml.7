@@ -2,143 +2,150 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636F9C2D0C6
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFE6C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F75E208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D315021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Zo5ksowD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CnvWkqCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfLLBcG (ORCPT
+        id S1727516AbfLLBdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:32:06 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56734 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727409AbfLLBcF (ORCPT
+        Wed, 11 Dec 2019 20:33:21 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34677 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfLLBdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:32:05 -0500
-X-UUID: 4668d23a93624f75a55c9da384b7b2b0-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=nK2R9M4vgOMADfue/0FK/jrldLeO7zeckYA8kNQqoWM=;
-        b=Zo5ksowDXa/rz9ggFN02MMM6FWU4+Q82Nx7N53yJzQpK6zdsYT4G1QEllbXno70fW9S5FnktnNVk1FBa3AeCWCtfuyqL5uoAS+OMqC7olxA6gbDqPEjfopAdoyq8RAQ1NuHtD3lhqUIhp/dXM3ZuMZrJOOqzDKBMGMbpQt0tdTk=;
-X-UUID: 4668d23a93624f75a55c9da384b7b2b0-20191212
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <dennis-yc.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2075683752; Thu, 12 Dec 2019 09:32:00 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 09:31:40 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 09:31:55 +0800
-Message-ID: <1576114319.17653.10.camel@mtkswgap22>
-Subject: Re: [PATCH v2 08/14] soc: mediatek: cmdq: add write_s function
-From:   Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 12 Dec 2019 09:31:59 +0800
-In-Reply-To: <1575963305.31101.0.camel@mtksdaap41>
-References: <1574819937-6246-1-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1574819937-6246-10-git-send-email-dennis-yc.hsieh@mediatek.com>
-         <1575963305.31101.0.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 11 Dec 2019 20:33:21 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a15so769710otf.1;
+        Wed, 11 Dec 2019 17:33:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lzwdJDAmxJY1eABknzBM4VRQbsIRzOn9IbtmF0lZgCU=;
+        b=CnvWkqCIuOLMkvjfdwAteNxGWDSx/41p6Mxfq1pDteizNN4eSX3TrU6hCvEzwzGHlL
+         I2savvk5kobSLwvhb4l+JPtAKAh8/XZ1NmIkNmpROXN7N5lh5J9orwRJDGIkeTp1tL/E
+         m0XcH3/8Eyh4ItkJ/KDVbAMRGKx2OhWPC0JfDvt0vhbj0O+CTVWUWartgVImJ0XYDshT
+         6VTQLpE9QWbAX6CpKEvQHP4K/cDUDi23fUOqxC0tjOkb0AryP2A0X8yURAUt1dvqC22c
+         VwODXc0/eTYZdanR/YwU6TyOywUphf1zXBRPZIf9n5pQBT+I/xGvMyEv/8uJP8s6ftFw
+         EtdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lzwdJDAmxJY1eABknzBM4VRQbsIRzOn9IbtmF0lZgCU=;
+        b=m0jOsNtog8EEZ/u2IZb6wSgEGtX0d3ISa23+XZV8gFjXMQzjYEdkjZ7y/jakWZX9xQ
+         mASGPEG+N1UN1J7TqAM/mVuU0BRX2xdYaYfuxNKinBkAzopV7gQ4WzmQEPgEaUbKomIh
+         l5pFJofALXhNj5hneZBx5R1aBqcmGYos78B3kf2tb6Ii8OHlS0ImNmufbL4wB4gz0CEz
+         UkDzyKiCbTQ5czzdMPeHPAqkV7DxOrn3QlHq1hBrWjwgyMDKdcLWY2v5/JuvuiLn8A7B
+         c0BAqiibI1YqxAoDH43YVuhKwPFGvRJ/YaD5x+ZWNo7srLMKm6zoSJ+Su/h40gz5Gsm9
+         tNOg==
+X-Gm-Message-State: APjAAAX2KS6xmRAwASB3kPJMVQsa2iyFtwBjkALk99+JLSF7wIRx0ILH
+        qsMdjTW7i9fEgzNc1La6ODh0lNPqqiSUQDOekSc=
+X-Google-Smtp-Source: APXvYqx0Veo01LY+lVcztJhE85CJaZ2sZ5n/EcknAKg/M7aXZfNy5+ZipN+IhtT0o3fqlLmnElL+3FhI+5yErdlFwlY=
+X-Received: by 2002:a05:6830:158d:: with SMTP id i13mr5301485otr.33.1576114400042;
+ Wed, 11 Dec 2019 17:33:20 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20191211111628.2955-1-max.hirsch@gmail.com> <20191211162654.GD6622@ziepe.ca>
+In-Reply-To: <20191211162654.GD6622@ziepe.ca>
+From:   Max Hirsch <max.hirsch@gmail.com>
+Date:   Wed, 11 Dec 2019 20:33:10 -0500
+Message-ID: <CADgTo880aSn++fcf_rt0+8DCE4Y=xgXtZxFx9B0nzM_M1HdWPw@mail.gmail.com>
+Subject: Re: [PATCH] RDMA/cma: Fix checkpatch error
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Steve Wise <swise@opengridcomputing.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Danit Goldberg <danitg@mellanox.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dag Moxnes <dag.moxnes@oracle.com>,
+        Myungho Jung <mhjungk@gmail.com>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmliYnksDQoNCnRoYW5rcyBmb3IgeW91ciBjb21tZW50DQoNCk9uIFR1ZSwgMjAxOS0xMi0x
-MCBhdCAxNTozNSArMDgwMCwgQmliYnkgSHNpZWggd3JvdGU6DQo+IE9uIFdlZCwgMjAxOS0xMS0y
-NyBhdCAwOTo1OCArMDgwMCwgRGVubmlzIFlDIEhzaWVoIHdyb3RlOg0KPiA+IGFkZCB3cml0ZV9z
-IGZ1bmN0aW9uIGluIGNtZHEgaGVscGVyIGZ1bmN0aW9ucyB3aGljaA0KPiA+IHdyaXRlcyB2YWx1
-ZSBjb250YWlucyBpbiBpbnRlcm5hbCByZWdpc3RlciB0byBhZGRyZXNzDQo+ID4gd2l0aCBsYXJn
-ZSBkbWEgYWNjZXNzIHN1cHBvcnQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlD
-IEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgNDAgKysrKysrKysrKysrKysr
-KysrKysrKysrDQo+ID4gIGluY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94Lmgg
-fCAgMiArKw0KPiA+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oICAgIHwg
-MTIgKysrKysrKw0KPiA+ICAzIGZpbGVzIGNoYW5nZWQsIDU0IGluc2VydGlvbnMoKykNCj4gPiAN
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMg
-Yi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiA+IGluZGV4IDljYzIz
-NGYwOGVjNS4uMmVkYmMwOTU0ZDk3IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc29jL21lZGlh
-dGVrL210ay1jbWRxLWhlbHBlci5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
-LWNtZHEtaGVscGVyLmMNCj4gPiBAQCAtMTUsMTEgKzE1LDE4IEBADQo+ID4gICNkZWZpbmUgQ01E
-UV9FT0NfQ01ECQkoKHU2NCkoKENNRFFfQ09ERV9FT0MgPDwgQ01EUV9PUF9DT0RFX1NISUZUKSkg
-XA0KPiA+ICAJCQkJPDwgMzIgfCBDTURRX0VPQ19JUlFfRU4pDQo+ID4gICNkZWZpbmUgQ01EUV9S
-RUdfVFlQRQkJMQ0KPiA+ICsjZGVmaW5lIENNRFFfQUREUl9ISUdIKGFkZHIpCSgodTMyKSgoKGFk
-ZHIpID4+IDE2KSAmIEdFTk1BU0soMzEsIDApKSkNCj4gPiArI2RlZmluZSBDTURRX0FERFJfTE9X
-X0JJVAlCSVQoMSkNCj4gPiArI2RlZmluZSBDTURRX0FERFJfTE9XKGFkZHIpCSgodTE2KShhZGRy
-KSB8IENNRFFfQUREUl9MT1dfQklUKQ0KPiA+ICANCj4gPiAgc3RydWN0IGNtZHFfaW5zdHJ1Y3Rp
-b24gew0KPiA+ICAJdW5pb24gew0KPiA+ICAJCXUzMiB2YWx1ZTsNCj4gPiAgCQl1MzIgbWFzazsN
-Cj4gPiArCQlzdHJ1Y3Qgew0KPiA+ICsJCQl1MTYgYXJnX2M7DQo+ID4gKwkJCXUxNiBhcmdfYjsN
-Cj4gPiArCQl9Ow0KPiA+ICAJfTsNCj4gPiAgCXVuaW9uIHsNCj4gPiAgCQl1MTYgb2Zmc2V0Ow0K
-PiA+IEBAIC0yMjQsNiArMjMxLDM5IEBAIGludCBjbWRxX3BrdF93cml0ZV9tYXNrKHN0cnVjdCBj
-bWRxX3BrdCAqcGt0LCB1OCBzdWJzeXMsDQo+ID4gIH0NCj4gPiAgRVhQT1JUX1NZTUJPTChjbWRx
-X3BrdF93cml0ZV9tYXNrKTsNCj4gPiAgDQo+ID4gK2ludCBjbWRxX3BrdF93cml0ZV9zKHN0cnVj
-dCBjbWRxX3BrdCAqcGt0LCBwaHlzX2FkZHJfdCBhZGRyLCB1MTYgcmVnX2lkeCwNCj4gPiArCQkg
-ICAgIHUzMiBtYXNrKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgY21kcV9pbnN0cnVjdGlvbiBpbnN0
-ID0geyB7MH0gfTsNCj4gPiArCWNvbnN0IHUxNiBkc3RfcmVnX2lkeCA9IENNRFFfU1BSX1RFTVA7
-DQo+ID4gKwlpbnQgZXJyOw0KPiA+ICsNCj4gPiArCWlmIChtYXNrICE9IFUzMl9NQVgpIHsNCj4g
-PiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX01BU0s7DQo+ID4gKwkJaW5zdC5tYXNrID0gfm1hc2s7
-DQo+ID4gKwkJZXJyID0gY21kcV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gPiAr
-CQlpZiAoZXJyIDwgMCkNCj4gPiArCQkJcmV0dXJuIGVycjsNCj4gPiArDQo+ID4gKwkJaW5zdC5t
-YXNrID0gMDsNCj4gPiArCQlpbnN0Lm9wID0gQ01EUV9DT0RFX1dSSVRFX1NfTUFTSzsNCj4gPiAr
-CX0gZWxzZSB7DQo+ID4gKwkJaW5zdC5vcCA9IENNRFFfQ09ERV9XUklURV9TOw0KPiA+ICsJfQ0K
-PiA+ICsNCj4gPiArCWVyciA9IGNtZHFfcGt0X2Fzc2lnbihwa3QsIGRzdF9yZWdfaWR4LCBDTURR
-X0FERFJfSElHSChhZGRyKSk7DQo+ID4gKwlpZiAoZXJyIDwgMCkNCj4gPiArCQlyZXR1cm4gZXJy
-Ow0KPiA+ICsNCj4gPiArCWluc3QuYXJnX2JfdCA9IENNRFFfUkVHX1RZUEU7DQo+ID4gKwlpbnN0
-LnNvcCA9IGRzdF9yZWdfaWR4Ow0KPiA+ICsJaW5zdC5vZmZzZXQgPSBDTURRX0FERFJfTE9XKGFk
-ZHIpOw0KPiA+ICsJaW5zdC5hcmdfYiA9IHJlZ19pZHg7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGNt
-ZHFfcGt0X2FwcGVuZF9jb21tYW5kKHBrdCwgaW5zdCk7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZ
-TUJPTChjbWRxX3BrdF93cml0ZV9zKTsNCj4gPiArDQo+ID4gIGludCBjbWRxX3BrdF93ZmUoc3Ry
-dWN0IGNtZHFfcGt0ICpwa3QsIHUxNiBldmVudCkNCj4gPiAgew0KPiA+ICAJc3RydWN0IGNtZHFf
-aW5zdHJ1Y3Rpb24gaW5zdCA9IHsgezB9IH07DQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGlu
-dXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmggYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRr
-LWNtZHEtbWFpbGJveC5oDQo+ID4gaW5kZXggMTIxYzNiYjZkM2RlLi44ZWY4N2UxYmQwM2IgMTAw
-NjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0K
-PiA+ICsrKyBiL2luY2x1ZGUvbGludXgvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmgNCj4gPiBA
-QCAtNTksNiArNTksOCBAQCBlbnVtIGNtZHFfY29kZSB7DQo+ID4gIAlDTURRX0NPREVfSlVNUCA9
-IDB4MTAsDQo+ID4gIAlDTURRX0NPREVfV0ZFID0gMHgyMCwNCj4gPiAgCUNNRFFfQ09ERV9FT0Mg
-PSAweDQwLA0KPiA+ICsJQ01EUV9DT0RFX1dSSVRFX1MgPSAweDkwLA0KPiA+ICsJQ01EUV9DT0RF
-X1dSSVRFX1NfTUFTSyA9IDB4OTEsDQo+ID4gIAlDTURRX0NPREVfTE9HSUMgPSAweGEwLA0KPiA+
-ICB9Ow0KPiA+ICANCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsv
-bXRrLWNtZHEuaCBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCj4gPiBp
-bmRleCBjNjZiM2EwZGEyYTIuLjU2ZmYxOTcwMTk3YyAxMDA2NDQNCj4gPiAtLS0gYS9pbmNsdWRl
-L2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9z
-b2MvbWVkaWF0ZWsvbXRrLWNtZHEuaA0KPiA+IEBAIC0xMDYsNiArMTA2LDE4IEBAIGludCBjbWRx
-X3BrdF93cml0ZShzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgdTggc3Vic3lzLCB1MTYgb2Zmc2V0LCB1
-MzIgdmFsdWUpOw0KPiA+ICBpbnQgY21kcV9wa3Rfd3JpdGVfbWFzayhzdHJ1Y3QgY21kcV9wa3Qg
-KnBrdCwgdTggc3Vic3lzLA0KPiA+ICAJCQl1MTYgb2Zmc2V0LCB1MzIgdmFsdWUsIHUzMiBtYXNr
-KTsNCj4gPiAgDQo+ID4gKy8qKg0KPiA+ICsgKiBjbWRxX3BrdF93cml0ZV9zX21hc2soKSAtIGFw
-cGVuZCB3cml0ZV9zIGNvbW1hbmQgdG8gdGhlIENNRFEgcGFja2V0DQo+IEkgdGhpbmsgd2UgbmVl
-ZCBhZGQgbW9yZSBkZXNjcmlwdGlvbnMgYWJvdXQgZGlmZmVyZW5jZSBiZXR3ZWVuIHdyaXRlLg0K
-PiANCj4gQmliYnkNCg0Kb2ssIHdpbGwgY2hhbmdlDQoNCg0KUmVnYXJkcywNCkRlbm5pcw0KDQo+
-ID4gKyAqIEBwa3Q6CXRoZSBDTURRIHBhY2tldA0KPiA+ICsgKiBAYWRkcjoJdGhlIHBoeXNpY2Fs
-IGFkZHJlc3Mgb2YgcmVnaXN0ZXIgb3IgZG1hDQo+ID4gKyAqIEByZWdfaWR4Ogl0aGUgQ01EUSBp
-bnRlcm5hbCByZWdpc3RlciBJRCB3aGljaCBjYWNoZSBzb3VyY2UgdmFsdWUNCj4gPiArICogQG1h
-c2s6CXRoZSBzcGVjaWZpZWQgdGFyZ2V0IHJlZ2lzdGVyIG1hc2sNCj4gPiArICoNCj4gPiArICog
-UmV0dXJuOiAwIGZvciBzdWNjZXNzOyBlbHNlIHRoZSBlcnJvciBjb2RlIGlzIHJldHVybmVkDQo+
-ID4gKyAqLw0KPiA+ICtpbnQgY21kcV9wa3Rfd3JpdGVfcyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwg
-cGh5c19hZGRyX3QgYWRkciwgdTE2IHJlZ19pZHgsDQo+ID4gKwkJICAgICB1MzIgbWFzayk7DQo+
-ID4gKw0KPiA+ICAvKioNCj4gPiAgICogY21kcV9wa3Rfd2ZlKCkgLSBhcHBlbmQgd2FpdCBmb3Ig
-ZXZlbnQgY29tbWFuZCB0byB0aGUgQ01EUSBwYWNrZXQNCj4gPiAgICogQHBrdDoJdGhlIENNRFEg
-cGFja2V0DQo+IA0KPiANCg0K
+Thanks for the quick response. This is my first patch, so I want to
+follow the correct protocol. I reran checkpatch after making the
+changes and there were no errors or warnings in the region I changed.
 
+...
+WARNING: line over 80 characters
+#308: FILE: drivers/infiniband/core/cma.c:308:
++ return cma_dev->default_roce_tos[port - rdma_start_port(cma_dev->device)]=
+;
+
+<<<<<<<<<<<<<<<<<< HERE IS WHERE THE ERROR WAS
+
+WARNING: line over 80 characters
+#495: FILE: drivers/infiniband/core/cma.c:495:
++ struct cma_multicast *mc =3D container_of(kref, struct cma_multicast, mcr=
+ef);
+...
+
+I was have read that it is beneficial to make the changes very small.
+I wanted to target a specific checkpatch error. If you believe it
+would be better I can make a patch cleaning up the entire function.
+
+I can also make a second patch changing ret to a bool. I did not want
+to do that as a part of this patch because: I wanted a VERY small
+change (increase acceptance likelihood), and there is a specific
+protocol for submitting multiple commits in a patch, i.e. ordering
+them correctly. I did not want to introduce a potential error source
+when submitting a patch i.e. I submitted 2 commits in the wrong order.
+
+Since you have the comment to remove the brackets around the ret
+assign how would I go about modifying this patch? Should I resubmit a
+patch i.e. start a new email with with your proposed changes?
+
+
+On Wed, Dec 11, 2019 at 11:26 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Wed, Dec 11, 2019 at 11:16:26AM +0000, Max Hirsch wrote:
+> > When running checkpatch on cma.c the following error was found:
+>
+> I think checkpatch will complain about your patch, did you run it?
+>
+> > ERROR: do not use assignment in if condition
+> > #413: FILE: drivers/infiniband/tmp.c:413:
+> > +     if ((ret =3D (id_priv->state =3D=3D comp)))
+> >
+> > This patch moves the assignment of ret to the previous line. The if sta=
+tement then checks the value of ret assigned on the previous line. The assi=
+gned value of ret is not changed. Testing involved recompiling and loading =
+the kernel. After the changes checkpatch does not report this the error in =
+cma.c.
+> >
+> > Signed-off-by: Max Hirsch <max.hirsch@gmail.com>
+> >  drivers/infiniband/core/cma.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cm=
+a.c
+> > index 25f2b70fd8ef..bdb7a8493517 100644
+> > +++ b/drivers/infiniband/core/cma.c
+> > @@ -410,7 +410,8 @@ static int cma_comp_exch(struct rdma_id_private *id=
+_priv,
+> >       int ret;
+> >
+> >       spin_lock_irqsave(&id_priv->lock, flags);
+> > -     if ((ret =3D (id_priv->state =3D=3D comp)))
+> > +     ret =3D (id_priv->state =3D=3D comp);
+>
+> Brackets are not needed
+>
+> Ret and the return result should be changed to a bool
+>
+> Jason
