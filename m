@@ -2,113 +2,95 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35ECC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F47C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891A32073D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgAf6wGb"
+	by mail.kernel.org (Postfix) with ESMTP id 0A3BC206C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576176523;
+	bh=MTd9muN0RFcbU7r9IeK72YN2J5t+SjeoBTN78A1i2RI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rxCDQRB/u4Bb5iskhVpRzjlqBKqeVI9nsrJ5elUnkoyvCy9aihN39phTeCrYE7pp0
+	 eLEdSmjYlthSuArGzm134Ne1J80xd9IVUUyPkajO09Zlov05NNnlpG4nJSZ/cl+E1I
+	 IQVxIw1sH0/sbdrIGBpjkVxVLj1s0lHc1TI/8vTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfLLSro (ORCPT
+        id S1730546AbfLLSsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:47:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56570 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730496AbfLLSrn (ORCPT
+        Thu, 12 Dec 2019 13:48:42 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37914 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730473AbfLLSsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:47:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576176461;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LxLk3eg2Es8W+l1JQOAktx5N9PKbv0TgxxD+ocFBGR4=;
-        b=hgAf6wGbHefzBlh89aQ1Sq7VcV6pDIS0cJhlQlINpWMk0lAHJlmL97jPdWmPeJ7lLaHudo
-        WqUWSyetRDmFC7QooakrfvXdYkjUBL5NTbwrwvCc32tiD1IpZ8jX9JUsFqPbUmt329p/gH
-        vLHg4EK7XvygfWIjBpLPcajF5csba5A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-0m2MbMipPEa_1LIDDeuPmw-1; Thu, 12 Dec 2019 13:47:30 -0500
-X-MC-Unique: 0m2MbMipPEa_1LIDDeuPmw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A668E1800D63;
-        Thu, 12 Dec 2019 18:47:28 +0000 (UTC)
-Received: from treble (ovpn-123-178.rdu2.redhat.com [10.10.123.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8F7645C219;
-        Thu, 12 Dec 2019 18:47:27 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 12:47:25 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     dsterba@suse.cz, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20191212184725.db3ost7rcopotr5u@treble>
-References: <20191206135406.563336e7@canb.auug.org.au>
- <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
- <20191211134929.GL3929@twin.jikos.cz>
- <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
+        Thu, 12 Dec 2019 13:48:41 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k8so3445556ljh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:48:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yLX/s+7Ivhh0xF9dE8Ygc3zv1BE9WaHo0SxDQx/ndOw=;
+        b=Hxo7zIOH626xCx5M7isNX9Kz2i6WfXy8dvU+dHqLV39CO//zL/XyJhwdy9zMUggXsF
+         sKVjhBuXVQzllryD1mGY0+h/6F170yVG671fMzLLAz66yPU2LfkO41ADlv1O+3YGsXdW
+         gJZ1lANbmyuJbIB7rg2DrjzC2Wjd1R0mzUPj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yLX/s+7Ivhh0xF9dE8Ygc3zv1BE9WaHo0SxDQx/ndOw=;
+        b=Nod1kR4wP5CdQoIC5S4b7J7kEx5YA0sid57Q4MloxGCF4gOJ4V6QYe0pegytp5ZzL/
+         Y+APOD2Uo/OZpgvWHx4fLEsyi6CMyrlcPFLHPUogiIkWTqSPKhZpeixgIwnX/ePhgB04
+         ENsYJAROgUaFBLNwbUgXD2OKIN3aPvutPgC1oYpECrStQbKJgcvBei2QcFVqQn7QplHo
+         3fEnin3lcb5BL1HP1HxTZHbAcGeOV+AEafeqzQx+CIldOvnCg+zM/jbQHtJbSDje/PyP
+         0vFRurpXUVxIfqk0VVBqK/CE6slCphUO8+IloHt6ocj1kfuCGfUEVgjtZuNgQj/j2het
+         Xs3Q==
+X-Gm-Message-State: APjAAAVIb7APMKzlPgY3qdY4o8bjVgJ0HX4v0xknITWlV44h2946BoVW
+        KRwsp/3qIlw2CXWsKf6AIpa+wkYMS7E=
+X-Google-Smtp-Source: APXvYqzPk6YH+rKagLV8YHy5FQfHJkd3taeBJHCEroXGR2erpOm9SttWVHAThjx8Us5nqlFBEhcXgg==
+X-Received: by 2002:a2e:808a:: with SMTP id i10mr6590531ljg.151.1576176519194;
+        Thu, 12 Dec 2019 10:48:39 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id x29sm3763110lfg.45.2019.12.12.10.48.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 10:48:38 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id 203so11685lfa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:48:38 -0800 (PST)
+X-Received: by 2002:ac2:50cc:: with SMTP id h12mr6524868lfm.29.1576176517766;
+ Thu, 12 Dec 2019 10:48:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20191212140752.347520-1-linux@dominikbrodowski.net>
+ <20191212140752.347520-3-linux@dominikbrodowski.net> <20191212183848.GJ4203@ZenIV.linux.org.uk>
+In-Reply-To: <20191212183848.GJ4203@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 12 Dec 2019 10:48:22 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiGH8mBqShwmOy-g+QA4_+prs-5s4eX6wZa7yatCu3aNw@mail.gmail.com>
+Message-ID: <CAHk-=wiGH8mBqShwmOy-g+QA4_+prs-5s4eX6wZa7yatCu3aNw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fs: remove ksys_dup()
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Dominik Brodowski <linux@dominikbrodowski.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 08:21:38AM -0800, Randy Dunlap wrote:
-> [oops, forgot to add Josh and PeterZ]
-> 
-> On 12/11/19 5:49 AM, David Sterba wrote:
-> > On Fri, Dec 06, 2019 at 08:17:30AM -0800, Randy Dunlap wrote:
-> >> On 12/5/19 6:54 PM, Stephen Rothwell wrote:
-> >>> Hi all,
-> >>>
-> >>> Please do not add any material for v5.6 to your linux-next included
-> >>> trees until after v5.5-rc1 has been released.
-> >>>
-> >>> Changes since 20191204:
-> >>>
-> >>
-> >> on x86_64:
-> >>
-> >> fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
-> > 
-> > Can somebody enlighten me what is one supposed to do to address the
-> > warnings? Function names reported in the list contain our ASSERT macro
-> > that conditionally calls BUG() that I believe is what could cause the
-> > unreachable instructions but I don't see how.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/btrfs/ctree.h#n3113
-> > 
-> > __cold
-> > static inline void assfail(const char *expr, const char *file, int line)
-> > {
-> > 	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
-> > 		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-> > 		BUG();
-> > 	}
-> > }
-> > 
-> > #define ASSERT(expr)	\
-> > 	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-> > 
+On Thu, Dec 12, 2019 at 10:38 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> Let's not expose the kernel guts to init/*.c more than absolutely unavoidable.
 
-Randy, can you share one of the btrfs .o files?  I'm not able to
-recreate.
+Well, in this case I think it's more than justified: it removes one of
+the nasty "pass user pointers from kernel space" cases.
 
--- 
-Josh
+I'd like to get to the point where "init" doesn't need set_fs() at
+all. We're not there now - do_execve() is going to be painful. So
+maybe we'll never be. But this gets us one step closer, at least.
 
+               Linus
