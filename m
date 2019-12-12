@@ -2,167 +2,226 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EE7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC950C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09CC206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BD7206A5
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="O7jE6t9n"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WpJjMYnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfLLKSI (ORCPT
+        id S1728657AbfLLKSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:18:08 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:58996 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728345AbfLLKSI (ORCPT
+        Thu, 12 Dec 2019 05:18:47 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30331 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728568AbfLLKSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:18:08 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 462D82E155F;
-        Thu, 12 Dec 2019 13:18:04 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 6sBoM5pET9-I3KCvubY;
-        Thu, 12 Dec 2019 13:18:04 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1576145884; bh=zaaqDW6B+Z+tvzrCtCpGdNpgn1+QS2zPkFpQlchb+uc=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=O7jE6t9nGVe3nijci/ma2dBmfXzaRRwbJzL0gnoucvmjPa8GRqXckdtG6Vfm8HlZV
-         6xdqkOp5H7s9kt4ic2EcDZuLGRarEjD+jK7PCnZy2z43r9FXdQ0Q/qee0GkWJ5cOaO
-         hEH897I9JrT7DQ66Cu3vieeQ10hvn8WOs6MnrOzI=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8007::1:d])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id DGpJEa6MbD-I2TS2axC;
-        Thu, 12 Dec 2019 13:18:03 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH 0/2] pipe: Fixes [ver #2]
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Sterba <dsterba@suse.cz>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <157558502272.10278.8718685637610645781.stgit@warthog.procyon.org.uk>
- <20191206135604.GB2734@twin.jikos.cz>
- <CAHk-=wiN_pWbcRaw5L-J2EFUyCn49Due0McwETKwmFFPp88K8Q@mail.gmail.com>
- <CAHk-=wjvO1V912ya=1rdXwrm1OBTi6GqnqryH_E8OR69cZuVOg@mail.gmail.com>
- <CAHk-=wizsHmCwUAyQKdU7hBPXHYQn-fOtJKBqMs-79br2pWxeQ@mail.gmail.com>
- <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <b2ae78da-1c29-8ef7-d0bb-376c52af37c3@yandex-team.ru>
-Date:   Thu, 12 Dec 2019 13:18:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 05:18:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576145925;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/RV3uj+8NHFPspwJjX2GHWhoPU20m5g/wC7g2NGzOqk=;
+        b=WpJjMYnLUmX280p5lLrvAxdWW2AMa4Wed5mZE52AvgBMGynCgZigewtPcYywTeI1xecpV8
+        MO/GzZb1GSQ/brLgS6ME1LLyqm6Ys0d63uRg6sxYysQhONmiPe0So5Q8ThINmiai0R1Ot4
+        nDd3YezO3WegXmmWgei4jtKlZTZNBEU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-86-nF9-gOzXNBGscKAqVK7CSQ-1; Thu, 12 Dec 2019 05:18:41 -0500
+X-MC-Unique: nF9-gOzXNBGscKAqVK7CSQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F2671800D41;
+        Thu, 12 Dec 2019 10:18:39 +0000 (UTC)
+Received: from carbon (ovpn-200-20.brq.redhat.com [10.40.200.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C503B5D9C9;
+        Thu, 12 Dec 2019 10:18:33 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 11:18:31 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        Li Rongqing <lirongqing@baidu.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        <mhocko@kernel.org>, <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        brouer@redhat.com,
+        =?UTF-8?B?QmrDtnJuIFQ=?= =?UTF-8?B?w7ZwZWw=?= 
+        <bjorn.topel@intel.com>
+Subject: Re: [PATCH][v2] page_pool: handle page recycle for NUMA_NO_NODE
+ condition
+Message-ID: <20191212111831.2a9f05d3@carbon>
+In-Reply-To: <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
+References: <1575624767-3343-1-git-send-email-lirongqing@baidu.com>
+        <9fecbff3518d311ec7c3aee9ae0315a73682a4af.camel@mellanox.com>
+        <20191211194933.15b53c11@carbon>
+        <831ed886842c894f7b2ffe83fe34705180a86b3b.camel@mellanox.com>
+        <0a252066-fdc3-a81d-7a36-8f49d2babc01@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wjeG0q1vgzu4iJhW5juPkTsjTYmiqiMUYAebWW+0bam6w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/12/2019 01.47, Linus Torvalds wrote:
-> On Fri, Dec 6, 2019 at 7:50 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
->> The "make goes slow" problem bisects down to b667b8673443 ("pipe:
->> Advance tail pointer inside of wait spinlock in pipe_read()").
-> 
-> I'm not entirely sure that ends up being 100% true. It did bisect to
-> that, but the behavior wasn't entirely stable. There definitely is
-> some nasty timing trigger.
-> 
-> But I did finally figure out what seems to have been going on with at
-> least the biggest part of the build performance regression. It's seems
-> to be a nasty interaction with the scheduler and the GNU make
-> jobserver, and in particular the pipe wakeups really _really_ do seem
-> to want to be synchronous both for the readers and the writers.
-> 
-> When a writer wakes up a reader, we want the reader to react quickly
-> and vice versa. The most obvious case was for the GNU make jobserver,
-> where sub-makes would do a single-byte write to the jobserver pipe,
-> and we want to wake up the reader *immediatly*, because the reader is
-> actually a lot more important than the writer. The reader is what gets
-> the next job going, the writer just got done with the last one.
-> 
-> And when a reader empties a full pipe, it's because the writer is
-> generating data, and you want to just get the writer going again asap.
-> 
-> Anyway, I've spent way too much time looking at this and wondering
-> about odd performance patterns. It seems to be mostly back up to
-> normal.
-> 
-> I say "mostly", because I still see times of "not as many concurrent
-> compiles going as I'd expect". It might be a kbuild problem, it might
-> be an issue with GNU make (I've seen problems with the make jobserver
-> wanting many more tokens than expected before and the kernel makefiles
-> - it migth be about deep subdirectories etc), and it might be some
-> remaining pipe issue. But my allmodconfig builds aren't _enormously_
-> slower than they used to be.
-> 
-> But there's definitely some unhappy interaction with the jobserver. I
-> have 16 threads (8 cores with HT), and I generally use "make -j32" to
-> keep them busy because the jobserver isn't great. The pipe rework made
-> even that 2x slop not work all that well. Something held on to tokens
-> too long, and there was definitely some interaction with the pipe
-> wakeup code. Using "-j64" hid the problem, but it was a problem.
-> 
-> It might be the new scheduler balancing changes that are interacting
-> with the pipe thing. I'm adding PeterZ, Ingo and Vincent to the cc,
-> because I hadn't realized just how important the sync wakeup seems to
-> be for pipe performance even at a big level.
-> 
-> I've pushed out my pipe changes. I really didn't want to do that kind
-> of stuff at the end of the merge window, but I spent a lot more time
-> than I wanted looking at this code, because I was getting to the point
-> where the alternative was to just revert it all.
-> 
-> DavidH, give these a look:
-> 
-b>    85190d15f4ea pipe: don't use 'pipe_wait() for basic pipe IO
->    a28c8b9db8a1 pipe: remove 'waiting_writers' merging logic
->    f467a6a66419 pipe: fix and clarify pipe read wakeup logic
->    1b6b26ae7053 pipe: fix and clarify pipe write wakeup logic
->    ad910e36da4c pipe: fix poll/select race introduced by the pipe rework
+On Thu, 12 Dec 2019 09:34:14 +0800
+Yunsheng Lin <linyunsheng@huawei.com> wrote:
 
-commit f467a6a66419 pipe: fix and clarify pipe read wakeup logic
-killed "wake writer when buffer becomes half empty" part added by
-commit cefa80ced57a ("pipe: Increase the writer-wakeup threshold to reduce context-switch count").
+> +CC Michal, Peter, Greg and Bjorn
+> Because there has been disscusion about where and how the NUMA_NO_NODE
+> should be handled before.
+>=20
+> On 2019/12/12 5:24, Saeed Mahameed wrote:
+> > On Wed, 2019-12-11 at 19:49 +0100, Jesper Dangaard Brouer wrote: =20
+> >> On Sat, 7 Dec 2019 03:52:41 +0000
+> >> Saeed Mahameed <saeedm@mellanox.com> wrote:
+> >> =20
+> >>> I don't think it is correct to check that the page nid is same as
+> >>> numa_mem_id() if pool is NUMA_NO_NODE. In such case we should allow
+> >>> all  pages to recycle, because you can't assume where pages are
+> >>> allocated from and where they are being handled. =20
+> >>
+> >> I agree, using numa_mem_id() is not valid, because it takes the numa
+> >> node id from the executing CPU and the call to __page_pool_put_page()
+> >> can happen on a remote CPU (e.g. cpumap redirect, and in future
+> >> SKBs).
+> >>
+> >> =20
+> >>> I suggest the following:
+> >>>
+> >>> return !page_pfmemalloc() &&=20
+> >>> ( page_to_nid(page) =3D=3D pool->p.nid || pool->p.nid =3D=3D NUMA_NO_=
+NODE ); =20
+> >>
+> >> Above code doesn't generate optimal ASM code, I suggest:
+> >>
+> >>  static bool pool_page_reusable(struct page_pool *pool, struct page *p=
+age)
+> >>  {
+> >> 	return !page_is_pfmemalloc(page) &&
+> >> 		pool->p.nid !=3D NUMA_NO_NODE &&
+> >> 		page_to_nid(page) =3D=3D pool->p.nid;
+> >>  }
+> >> =20
+> >=20
+> > this is not equivalent to the above. Here in case pool->p.nid is
+> > NUMA_NO_NODE, pool_page_reusable() will always be false.
+> >=20
+> > We can avoid the extra check in data path.
+> > How about avoiding NUMA_NO_NODE in page_pool altogether, and force
+> > numa_mem_id() as pool->p.nid when user requests NUMA_NO_NODE at page
+> > pool init, as already done in alloc_pages_node().  =20
+>=20
+> That means we will not support page reuse mitigation for NUMA_NO_NODE,
+> which is not same semantic that alloc_pages_node() handle NUMA_NO_NODE,
+> because alloc_pages_node() will allocate the page based on the node
+> of the current running cpu.
 
-I suppose that was unintentional. Jobserver juggles with few bytes and
-should never reach half/full buffer thresholds.
+True, as I wrote (below) my code defines semantics as: that a page_pool
+configured with NUMA_NO_NODE means skip NUMA checks, and allow recycle
+regardless of NUMA node page belong to.  It seems that you want another
+semantics.
 
-Also reader should wake writer with sync wakeup only if buffer is empty.
-Otherwise sync wakeup adds couple unneeded context switches.
+I'm open to other semantics. My main concern is performance.  The
+page_pool fast-path for driver recycling use-case of XDP_DROP, have
+extreme performance requirements, as it needs to compete with driver
+local recycle tricks (else we cannot use page_pool to simplify drivers).
+The extreme performance target is 100Gbit/s =3D 148Mpps =3D 6.72ns, and
+in practice I'm measuring 25Mpps =3D 40ns with Mlx5 driver (single q),
+and Bj=C3=B8rn is showing 30 Mpps =3D 33.3ns with i40e.  At this level every
+cycle/instruction counts.
 
-> 
-> the top two of which are purely "I'm fed up looking at this code, this
-> needs to go" kind of changes.
-> 
-> In particular, that last change is because I think the GNU jobserver
-> problem is partly a thundering herd issue: when a job token becomes
-> free (ie somebody does a one-byte write to an empty jobserver pipe),
-> it wakes up *everybody* who is waiting for a token. One of them will
-> get it, and the others will go to sleep again. And then it repeats all
-> over. I didn't fix it, but it _could_ be fixed with exclusive waits
-> for readers/writers, but that means more smarts than pipe_wait() can
-> do. And because the jobserver isn't great at keeping everybody happy,
-> I'm using a much bigger "make -jX" value than the number of CPU's I
-> have, which makes the herd bigger. And I suspect none of this helps
-> the scheduler pick the _right_ process to run, which just makes
-> scheduling an even bigger problem.
-> 
->              Linus
-> 
+=20
+> Also, There seems to be a wild guessing of the node id here, which has
+> been disscussed before and has not reached a agreement yet.
+>=20
+> >=20
+> > which will imply recycling without adding any extra condition to the
+> > data path.
+
+I love code that moves thing out of our fast-path.
+
+> >=20
+> > diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> > index a6aefe989043..00c99282a306 100644
+> > --- a/net/core/page_pool.c
+> > +++ b/net/core/page_pool.c
+> > @@ -28,6 +28,9 @@ static int page_pool_init(struct page_pool *pool,
+> > =20
+> >         memcpy(&pool->p, params, sizeof(pool->p));
+> > =20
+> > +	/* overwrite to allow recycling.. */
+> > +       if (pool->p.nid =3D=3D NUMA_NO_NODE)=20
+> > +               pool->p.nid =3D numa_mem_id();=20
+> > +
+
+The problem is that page_pool_init() is can be initiated from a random
+CPU, first at driver setup/bringup, and later at other queue changes
+that can be started via ethtool or XDP attach. (numa_mem_id() picks
+from running CPU).
+
+As Yunsheng mentioned elsewhere, there is also a dev_to_node() function.
+Isn't that what we want in a place like this?
+
+
+One issue with dev_to_node() is that in case of !CONFIG_NUMA it returns
+NUMA_NO_NODE (-1).  (And device_initialize() also set it to -1).  Thus,
+in that case we set pool->p.nid =3D 0, as page_to_nid() will also return
+zero in that case (as far as I follow the code).
+
+
+> > After a quick look, i don't see any reason why to keep NUMA_NO_NODE in
+> > pool->p.nid..=20
+> >=20
+> >  =20
+> >> I have compiled different variants and looked at the ASM code
+> >> generated by GCC.  This seems to give the best result.
+> >>
+> >> =20
+> >>> 1) never recycle emergency pages, regardless of pool nid.
+> >>> 2) always recycle if pool is NUMA_NO_NODE. =20
+> >>
+> >> Yes, this defines the semantics, that a page_pool configured with
+> >> NUMA_NO_NODE means skip NUMA checks.  I think that sounds okay...
+> >>
+> >> =20
+> >>> the above change should not add any overhead, a modest branch
+> >>> predictor will handle this with no effort. =20
+> >>
+> >> It still annoys me that we keep adding instructions to this code
+> >> hot-path (I counted 34 bytes and 11 instructions in my proposed
+> >> function).
+> >>
+> >> I think that it might be possible to move these NUMA checks to
+> >> alloc-side (instead of return/recycles side as today), and perhaps
+> >> only on slow-path when dequeuing from ptr_ring (as recycles that
+> >> call __page_pool_recycle_direct() will be pinned during NAPI).
+> >> But lets focus on a smaller fix for the immediate issue...
+> >> =20
+> >=20
+> > I know. It annoys me too, but we need recycling to work in
+> > production : where rings/napi can migrate and numa nodes can be
+> > NUMA_NO_NODE :-(.
+> >=20
+> >  =20
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
