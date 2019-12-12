@@ -2,150 +2,201 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7C2C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC93C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D570222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549E52464B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:11:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wfeTxdx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbfLLELd (ORCPT
+        id S1727879AbfLLELw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 23:11:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727847AbfLLELc (ORCPT
+        Wed, 11 Dec 2019 23:11:52 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:33434 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbfLLELv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 23:11:32 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC477Co110775
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:11:31 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wr8m0mafe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 23:11:31 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Thu, 12 Dec 2019 04:11:27 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Dec 2019 04:11:23 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBC4BLZP33882284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 04:11:21 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE8A4A405B;
-        Thu, 12 Dec 2019 04:11:21 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6F944A405F;
-        Thu, 12 Dec 2019 04:11:18 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.213.32])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 12 Dec 2019 04:11:18 +0000 (GMT)
-Date:   Wed, 11 Dec 2019 20:11:15 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        andmike@us.ibm.com, sukadev@linux.vnet.ibm.com, mst@redhat.com,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org,
-        leonardo@linux.ibm.com
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1575681159-30356-1-git-send-email-linuxram@us.ibm.com>
- <1575681159-30356-2-git-send-email-linuxram@us.ibm.com>
- <ed0f048c-bb40-c6c6-887c-ef68c9e411a2@ozlabs.ru>
- <20191210051244.GB5702@oc0525413822.ibm.com>
- <c4b48f55-e4e3-222a-0aa0-9b4783e19584@ozlabs.ru>
- <20191210153542.GB5709@oc0525413822.ibm.com>
- <90f6019b-d756-7f33-21b0-bb49c1c842da@ozlabs.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <90f6019b-d756-7f33-21b0-bb49c1c842da@ozlabs.ru>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19121204-0020-0000-0000-0000039751A9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121204-0021-0000-0000-000021EE583B
-Message-Id: <20191212041115.GC5702@oc0525413822.ibm.com>
-Subject: RE: [PATCH v5 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with
- the hypervisor.
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_01:2019-12-12,2019-12-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
- phishscore=0 bulkscore=0 clxscore=1015 adultscore=0 spamscore=0
- suspectscore=48 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912120021
+        Wed, 11 Dec 2019 23:11:51 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d5so1151039qto.0
+        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 20:11:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=NoYBywhpuKimSGwin3C7a9q598Qx6aFDiJR0OAgeQsE=;
+        b=wfeTxdx079Fe51mZcPs1dZwhq8xrTS5gUotCWLzdKwphWY7vT3BBwZv26wQy0zODnl
+         +HWPHkIXGMwax4ysK8eAZ6LPknjfwLQahEjS0xtz4qHwb6Mt3HlwXTSq5whZvCGF5qX4
+         guZQgYKdHcxEoZOxkgTgTSWgDtKq2h6EfqZc/if2XwJu6dQk7CmSvQ1y79Ne8Mbc0Jp1
+         mJsnPIJAhMfL8D0dsSgg7wKf9x61sZHX6Rt0nK07QufXbwBvYEtb9HfADBS6rZYg4AnP
+         6akdPp8WlHcZuTZZtof1evvephpGlGi/vF0czXrpSigMzHJPqDCbmTUdrwayPLzcDqve
+         9Qnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NoYBywhpuKimSGwin3C7a9q598Qx6aFDiJR0OAgeQsE=;
+        b=pis/Z+8xU+sWUmVLs0mV/9xWYfieuK3y8RuXN9KOvh+P7sXt/kHm1D9fXdsEe6WrFP
+         QsJkkZBVedW/A0WAHvrSUPX0AXWMSU3RllpAnp3kph15HWQTgPsZ3mXv9fxFdEl5XCaq
+         UjKWe3bk/EGVpQrNPcO4quoOsMllizWZyFa6+YnFMhLY2F6ajgWrX2B0xZ5nz3GJZx0w
+         7PUzPNFoYVYrygOMOsR+0sv3NFLZRjcClYc5g1I6QmqsozrW1x2ZSBN+MKvVPaO8UGih
+         Gt9JjBZVE6ZevEkQrAIgqLs0K2I2Unt9MmE5eVh4YTym45WG/wzNwmz1swLbmHcDQqCz
+         labQ==
+X-Gm-Message-State: APjAAAVb9vCbWULg1owEWgjlpbqsKnqPYhMD6AtEyfmDLtPeUwHkzbqn
+        k3qQOSbxTwyoCyU/YwW506eWuw==
+X-Google-Smtp-Source: APXvYqwOwkOUiwmU+lCXRKBHb6svrN9ugZb7IIaZhooLdFfD+KKEoFGhritlvRMCeWrMX+yekAvdxw==
+X-Received: by 2002:ac8:7b9b:: with SMTP id p27mr6004108qtu.2.1576123910680;
+        Wed, 11 Dec 2019 20:11:50 -0800 (PST)
+Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.googlemail.com with ESMTPSA id s11sm1364126qkg.99.2019.12.11.20.11.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 11 Dec 2019 20:11:49 -0800 (PST)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+Subject: [Patch v6 0/7] Introduce Thermal Pressure
+Date:   Wed, 11 Dec 2019 23:11:41 -0500
+Message-Id: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 07:15:44PM +1100, Alexey Kardashevskiy wrote:
-> 
-> 
-> On 11/12/2019 02:35, Ram Pai wrote:
-> > On Tue, Dec 10, 2019 at 04:32:10PM +1100, Alexey Kardashevskiy wrote:
-> >>
-..snip..
-> >> As discussed in slack, by default we do not need to clear the entire TCE
-> >> table and we only have to map swiotlb buffer using the small window. It
-> >> is a guest kernel change only. Thanks,
-> > 
-> > Can you tell me what code you are talking about here.  Where is the TCE
-> > table getting cleared? What code needs to be changed to not clear it?
-> 
-> 
-> pci_dma_bus_setup_pSeriesLP()
-> 	iommu_init_table()
-> 		iommu_table_clear()
-> 			for () tbl->it_ops->get()
-> 
-> We do not really need to clear it there, we only need it for VFIO with
-> IOMMU SPAPR TCE v1 which reuses these tables but there are
-> iommu_take_ownership/iommu_release_ownership to clear these tables. I'll
-> send a patch for this.
+Thermal governors can respond to an overheat event of a cpu by
+capping the cpu's maximum possible frequency. This in turn
+means that the maximum available compute capacity of the
+cpu is restricted. But today in the kernel, task scheduler is
+not notified of capping of maximum frequency of a cpu.
+In other words, scheduler is unaware of maximum capacity
+restrictions placed on a cpu due to thermal activity.
+This patch series attempts to address this issue.
+The benefits identified are better task placement among available
+cpus in event of overheating which in turn leads to better
+performance numbers.
 
-Did some experiments. It spent the first 9s in tce_free_pSeriesLP()
-clearing the tce entries.  And the second 13s in 
-tce_setrange_multi_pSeriesLP_walk().  BTW: the code in
-tce_setrange_multi_pSeriesLP_walk() is modified to use DIRECT_TCE.
+The reduction in the maximum possible capacity of a cpu due to a
+thermal event can be considered as thermal pressure. Instantaneous
+thermal pressure is hard to record and can sometime be erroneous
+as there can be mismatch between the actual capping of capacity
+and scheduler recording it. Thus solution is to have a weighted
+average per cpu value for thermal pressure over time.
+The weight reflects the amount of time the cpu has spent at a
+capped maximum frequency. Since thermal pressure is recorded as
+an average, it must be decayed periodically. Exisiting algorithm
+in the kernel scheduler pelt framework is re-used to calculate
+the weighted average. This patch series also defines a sysctl
+inerface to allow for a configurable decay period.
 
-So it looks like the amount of time spent in
-tce_setrange_multi_pSeriesLP_walk() is a function of the size of the
-memory that is mapped in the ddw.
+Regarding testing, basic build, boot and sanity testing have been
+performed on db845c platform with debian file system.
+Further, dhrystone and hackbench tests have been
+run with the thermal pressure algorithm. During testing, due to
+constraints of step wise governor in dealing with big little systems,
+trip point 0 temperature was made assymetric between cpus in little
+cluster and big cluster; the idea being that
+big core will heat up and cpu cooling device will throttle the
+frequency of the big cores faster, there by limiting the maximum available
+capacity and the scheduler will spread out tasks to little cores as well.
+
+Test Results
+
+Hackbench: 1 group , 30000 loops, 10 runs
+                                               Result         SD
+                                               (Secs)     (% of mean)
+ No Thermal Pressure                            14.03       2.69%
+ Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
+ Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
+ Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
+ Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
+ Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
+
+Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+                                                 Result      SD
+                                                 (Secs)    (% of mean)
+ No Thermal Pressure                              9.452      4.49%
+ Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+ Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+ Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+ Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+ Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%
+
+A Brief History
+
+The first version of this patch-series was posted with resuing
+PELT algorithm to decay thermal pressure signal. The discussions
+that followed were around whether intanteneous thermal pressure
+solution is better and whether a stand-alone algortihm to accumulate
+and decay thermal pressure is more appropriate than re-using the
+PELT framework.
+Tests on Hikey960 showed the stand-alone algorithm performing slightly
+better than resuing PELT algorithm and V2 was posted with the stand
+alone algorithm. Test results were shared as part of this series.
+Discussions were around re-using PELT algorithm and running
+further tests with more granular decay period.
+
+For some time after this development was impeded due to hardware
+unavailability, some other unforseen and possibly unfortunate events.
+For this version, h/w was switched from hikey960 to db845c.
+Also Instantaneous thermal pressure was never tested as part of this
+cycle as it is clear that weighted average is a better implementation.
+The non-PELT algorithm never gave any conclusive results to prove that it
+is better than reusing PELT algorithm, in this round of testing.
+Also reusing PELT algorithm means thermal pressure tracks the
+other utilization signals in the scheduler.
+
+v3->v4:
+        - "Patch 3/7:sched: Initialize per cpu thermal pressure structure"
+           is dropped as it is no longer needed following changes in other
+           other patches.
+        - rest of the change log mentioned in specific patches.
+
+v5->v6:
+	- "Added arch_ interface APIs to access and update thermal pressure.
+	   Moved declaration of per cpu thermal_pressure valriable and
+	   infrastructure to update the variable to topology files.
+
+Thara Gopinath (6):
+  sched/pelt.c: Add support to track thermal pressure
+  sched/fair: Add infrastructure to store and update  instantaneous
+    thermal pressure
+  sched/fair: Enable periodic update of thermal pressure
+  sched/fair: update cpu_capcity to reflect thermal pressure
+  thermal/cpu-cooling: Update thermal pressure in case of a maximum
+    frequency capping
+  sched/fair: Enable tuning of decay period
 
 
-> 
-..snip..
-> 
-> > But before I close, you have not told me clearly, what is the problem
-> > with;  'share the page, make the H_PUT_INDIRECT_TCE hcall, unshare the page'.
-> 
-> Between share and unshare you have a (tiny) window of opportunity to
-> attack the guest. No, I do not know how exactly.
-> 
-> For example, the hypervisor does a lot of PHB+PCI hotplug-unplug with
-> 64bit devices - each time this will create a huge window which will
-> share/unshare the same page.  No, I do not know how exactly how this can
-> be exploited either, we cannot rely of what you or myself know today. My
-> point is that we should not be sharing pages at all unless we really
-> really have to, and this does not seem to be the case.
-> 
-> But since this seems to an acceptable compromise anyway,
-> 
-> Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> 
+Thara Gopinath (7):
+  sched/pelt.c: Add support to track thermal pressure
+  sched: Add hook to read per cpu thermal pressure.
+  Add infrastructure to store and update instantaneous thermal pressure
+  sched/fair: Enable periodic update of average thermal pressure
+  sched/fair: update cpu_capacity to reflect thermal pressure
+  thermal/cpu-cooling: Update thermal pressure in case of a maximum
+    frequency capping
+  sched/fair: Enable tuning of decay period
 
-Thanks!
-RP
+ Documentation/admin-guide/kernel-parameters.txt |  5 +++
+ arch/arm/include/asm/topology.h                 |  3 ++
+ arch/arm64/include/asm/topology.h               |  3 ++
+ drivers/base/arch_topology.c                    | 13 +++++++
+ drivers/thermal/cpu_cooling.c                   | 19 +++++++++--
+ include/linux/arch_topology.h                   | 11 ++++++
+ include/linux/sched/topology.h                  |  8 +++++
+ include/trace/events/sched.h                    |  4 +++
+ kernel/sched/fair.c                             | 45 +++++++++++++++++++++++++
+ kernel/sched/pelt.c                             | 22 ++++++++++++
+ kernel/sched/pelt.h                             |  7 ++++
+ kernel/sched/sched.h                            |  1 +
+ 12 files changed, 139 insertions(+), 2 deletions(-)
+
+-- 
+2.1.4
 
