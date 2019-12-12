@@ -6,310 +6,186 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1473EC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E91C2D0CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D275421655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D3C2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:45:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eqmoKdoc";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Dfv/wf4u"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="GzMfjLqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfLLQpv (ORCPT
+        id S1730009AbfLLQpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:45:51 -0500
-Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:57118
-        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729101AbfLLQpu (ORCPT
+        Thu, 12 Dec 2019 11:45:54 -0500
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.3]:49079 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729912AbfLLQpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:45:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576169149;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=dMWFqUj597OGNQyE6eCSrcQ6gjogdNfAxXsK5ao5IKc=;
-        b=eqmoKdocYDAw+g413RVy4yGWfUpgo9J2oyjSG3JRQZGbVGjKhk7xetaogySXKgwg
-        6rt3kRnEt2m8AdkC1aICilRdZ/zxZmWNoybIpZraKiMlVyb4vVbHHM/bLbMz9RYRny6
-        s7+bqCJcxD53SeGkApXj5pvyUQLLo4RovUwbGbhI=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576169149;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=dMWFqUj597OGNQyE6eCSrcQ6gjogdNfAxXsK5ao5IKc=;
-        b=Dfv/wf4uRqlKx3xKOpvY1Y4SSD/7SLo43F9PdPCCeNN1xLCV+K2YyxjhXkbwIFBh
-        GL3c1iPX3a/PppvC6yk46LXc+yQm+BFnB9h8uw7QdFAkjG4QRw637OYdPD9gUde8TV8
-        WoyKQvxgkI4pOkJxsuXgX/vILFZMJTa2VNTO6FQQ=
+        Thu, 12 Dec 2019 11:45:52 -0500
+Received: from [46.226.52.108] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-3.bemta.az-a.eu-west-1.aws.symcld.net id A8/98-12117-CBE62FD5; Thu, 12 Dec 2019 16:45:48 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSfUxbZRTGeXsvlwu086WAHMnA0K3olLYUx3a
+  ZumhmZuMg7B8lTlEv40K7tKVpC7QSTSFhW0GFDdgyvrpNBhlsy4SJjOKMwAhsMiMIW5jLXAcx
+  fJQIg+kiMnt7Yep/v3Oe55z3yZtDE9JRKprmbFbObGT1MiqE1KoCXlb0GBczE0cexjGu/huBT
+  GvNZZK5u3wVMdUrLSKmw7WCmNHueor5vXuMYEq/7Q96jda0tzopzS/jPZSm4u9EzYP22L3kvk
+  CdMSvP9lGgtqnuCmVyPGUrOeoNcqA5cRkKoRE+Q4DXO4iEYoCEqrM/E0LRgeCvzx9RfEHiQQI
+  6pmYDy1AwLcXHRNB3WMULUnwPwZ2uHwleoDADVYO/+ici8AME59r7/YsJPIvgK2enfzwcZ4K7
+  btw3QftcH0Cla7uASeCsj+cdJJbDN+5lkmcJZqGkeBUJDxth+NCCn4Pxq+CeGvJ7EI6BpeI2f
+  wYCR8HEpEvEM2AMTT1CNsCRMH1/NVDwczBUcgsJ/QQYvjm5xjJobOhf4xgYcZWvcRqcqD0StO
+  6/fq5nrc9AU3kpyccHvBlWe+1C2wSXPKdJgePhzNmLlMAb4fJn5f7vAewioauxQlSJVLX/iS1
+  wApx0L1ICvwjNp2aJWv9XhMHQiUnyJCJbEZNl1uVqrQZWp1eoExMVanWSQp2yVaHetl3Jfqxg
+  lVy+opCzWBVqJVtoUVrshv36bKWRs7Yj331lm3pbutDjJa+yFz1Di2SRkkrxYqZ0Q1Zetl3LW
+  rQfmvP1nKUXbaRpGUjGDD4tzMzlcrYcnd53pesy0GJZhKSTlyUWE2uw6HIF6RpS0JXTDacJKW
+  nMM3LRURIRb8K8SZtvfLJi/dZHUEx0uAQFBARIxSbObNBZ/6/PoCgaycIlt/ktYp3R+uSlGV8
+  IkS+E+l1/CCv7rxTtEO0dSn5J99O8l+W2xlbvfE5+oKikSBMe05ya3fb0oQzn7Q67bSaiIOBh
+  nLPucXBbSmzGhS9yRou3uVcLVgZfT6347orqvpuq3iTXJL8Zdy3xLc/48b5Lt+6lb4nfEbWha
+  WnelF71Q8vK/Nh789eD/yDeWCgKafg+rnt4ZYcqHSeXWnfnP0s5DEc2XVwQTU3YvRcqpg4q58
+  pTQxOmicPP56k8ZXfTJo5/6in9urEv0ztR89srRVeNaQZLjRfP3Gj+ZFeY6+3hLytvvs8q5v4
+  8Jk+9s2cgVG7f945nIDQyt3PoUco0pHiT9hfqz9dXOdjlXTvHdnvhYGzI+S0ZmztsGQdy2skC
+  GWnRsuoXCLOF/Qc/rsOHZgQAAA==
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-23.tower-272.messagelabs.com!1576169147!609118!1
+X-Originating-IP: [104.47.0.59]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.22; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 24767 invoked from network); 12 Dec 2019 16:45:48 -0000
+Received: from mail-he1eur01lp2059.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.59)
+  by server-23.tower-272.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 12 Dec 2019 16:45:48 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gK+1m2BE+bwP/+C9pa1nrx1emg4KsKn/h54HtcIBT6fp57O648U4TzUjvlYY9UErx/ohpD1jJFNItDarTMPc+ZWzSeWRpuc9mGVlD5P5PChRDpANsFkVsfE/soyYIOONTY3wG3J4fA84jHp//vyV4A+6W19Rqy4N5lqzDyEFVFaO8Qt5w9LxtmHiDyrUxog5fZbr8zALJ56x7X28rY5JSgVfOGTsSsDpPGA5p2YBttiYQ916wvTL1yRdg/hSzLHwjcXA5Il/BjkoVpJJMv4aLjNXdt9apUj9vHi7lcLWt2hPuHxINBwa5Ylxs2cYM0T3YF/Vtdvna3g8/vRJRkV5xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bTTDDnQF6yGyf4LNfrqV9lYTzjffA+Kdo9rfzAWuVaM=;
+ b=OiAJWPU4cZgZXVAF66xLBil1a8izBZfNwoVRvuCmUsjqRKR7upTk6u1ARIxbZYa2t8XOoccFj9vUlrWaddJrGpkw61RPdaMKpT7R4UBTpnOQBLdctKKL18HJ6OJEEheN+iPiOjQR+w2RrqxVphvQuvg7O6w14oN9jqG+M/jajXkteWyWK3IrTdTGd5x808+zCNbQosEeZTE5u3gXbg5QKobwwweRpNfJqq3o4k657vYU+/E2oQbS+KJuQHhLcpTQEjWyaUaPp4wb6OAwxtfSx9NF7rIDjR6gFFzjwRJWhFYLWt/rJkZazLIN37zXz2DWrqG4ynsWdCZSHOvPVBIPIA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bTTDDnQF6yGyf4LNfrqV9lYTzjffA+Kdo9rfzAWuVaM=;
+ b=GzMfjLqe+fT1EBGLjsUdp5AiswX5/hsGE+MSeikrjj4eOWQpa5eJ+0pCtkOHwhJzM9E+Jgvdlu5flITWhJmr3vXtEFQ/hkNrGUL3y4D/CCNBkWiPRL0N95b/3/mjt46AiJcW3vWQ2Pm6X1Rdx0TqwDp+EfkdHDW63X2eGB4werQ=
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
+ AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM (10.169.155.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.16; Thu, 12 Dec 2019 16:45:46 +0000
+Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2516.019; Thu, 12 Dec 2019
+ 16:45:46 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     Marco Felsch <m.felsch@pengutronix.de>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: RE: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062
+ GPIOs in the core
+Thread-Topic: [RESEND PATCH v3 2/3] mfd: da9062: add support for the DA9062
+ GPIOs in the core
+Thread-Index: AQHVsQXcKFcQyOE/80WxSSkJ3fgLS6e2sC7A
+Date:   Thu, 12 Dec 2019 16:45:46 +0000
+Message-ID: <AM5PR1001MB099464F0AD7334D0AE67011C80550@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20191212160413.15232-1-m.felsch@pengutronix.de>
+ <20191212160413.15232-3-m.felsch@pengutronix.de>
+In-Reply-To: <20191212160413.15232-3-m.felsch@pengutronix.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.228]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 346cf975-cbfd-46a2-d075-08d77f22bcb5
+x-ms-traffictypediagnostic: AM5PR1001MB1043:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR1001MB1043FF2ABFB1D29303F827AFA7550@AM5PR1001MB1043.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(366004)(189003)(199004)(8676002)(4326008)(110136005)(316002)(54906003)(81156014)(81166006)(2906002)(8936002)(86362001)(55016002)(55236004)(66476007)(9686003)(7696005)(71200400001)(5660300002)(66446008)(66946007)(64756008)(186003)(76116006)(33656002)(53546011)(52536014)(26005)(66556008)(6506007)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB1043;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: xzkjdq/c7x1Wij/9wuQ82GVBDxYpUTDWbGhMD55U/orDh/MsAYrBrHhGSysYQa/UtLpyT4/CJhDjmewu4YodbYI64RALHVDLUqOXEPYbZ/unixndxIRHEJyPjApJAU1vB2J0cKhNv4q/ozIbyucnX3rxr2xCWTguZfyDPVlluGZlB89KXeJCu0HTJzXi6aHQxZsUY2igkq1TGDZ9NLcGvt+DxYd6KuvgrUCX6c+ToENyAfALw6zlfIjTosgMhgyvzL4ZxtnHkazyLcxBbZhNpTKzhLofRFZuOh70tnELiy+uyM3Znt0oikW/uyqhIp2ZIF8Sv988YoubvVh3FKErBngyMnCVfZ1kKYeU27dEnEh8zwXiHIo6S9gY2Zm7IVnbVlOUURowdLUyXKZwCru0C9Pbal004hu5+tLUt5jwI3gamMkm+YerTGV9BdLelAF3
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 12 Dec 2019 16:45:49 +0000
-From:   cang@codeaurora.org
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] scsi: ufs: Modulize ufs-bsg
-In-Reply-To: <20191212063703.GC415177@yoga>
-References: <1576054123-16417-1-git-send-email-cang@codeaurora.org>
- <0101016ef425ef65-5c4508cc-5e76-4107-bb27-270f66acaa9a-000000@us-west-2.amazonses.com>
- <20191212045357.GA415177@yoga>
- <0101016ef8b2e2f8-72260b08-e6ad-42fc-bd4b-4a0a72c5c9b3-000000@us-west-2.amazonses.com>
- <20191212063703.GC415177@yoga>
-Message-ID: <0101016efb009269-0de7af38-196d-4a10-8c06-3ca91d2c9177-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.12.12-54.240.27.18
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 346cf975-cbfd-46a2-d075-08d77f22bcb5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 16:45:46.6562
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e9CrwFPlyiMdKgK6Lcfn0eA0eH8vKHb7OMn7M5thpnseEcCV+QNDX2OECWW0mnpteeIPK+LM5xbNomtbNqpVB0C9Ec3FFgcBVo9XZcIBJOU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB1043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-12-12 14:37, Bjorn Andersson wrote:
-> On Wed 11 Dec 22:01 PST 2019, cang@codeaurora.org wrote:
-> 
->> On 2019-12-12 12:53, Bjorn Andersson wrote:
->> > On Wed 11 Dec 00:49 PST 2019, Can Guo wrote:
->> >
->> > > In order to improve the flexibility of ufs-bsg, modulizing it is a
->> > > good
->> > > choice. This change introduces tristate to ufs-bsg to allow users
->> > > compile
->> > > it as an external module.
->> >
->> > Can you please elaborate on what this "flexibility" is and why it's a
->> > good thing?
->> >
->> 
->> ufs-bsg is a helpful gadget for debug/test purpose. But neither
->> disabling it nor enabling it is the best way on a commercialized
->> device. Disabling it means we cannot use it, while enabling it
->> by default will expose all the DEVM/UIC/TM interfaces to user space,
->> which is not "safe" on a commercialized device to let users play with 
->> it.
->> Making it a module can resolve this, because only vendors can install 
->> it
->> as they have the root permissions.
->> 
->> > >
->> > > Signed-off-by: Can Guo <cang@codeaurora.org>
->> > > ---
->> > >  drivers/scsi/ufs/Kconfig   |  3 ++-
->> > >  drivers/scsi/ufs/Makefile  |  2 +-
->> > >  drivers/scsi/ufs/ufs_bsg.c | 49
->> > > +++++++++++++++++++++++++++++++++++++++++++---
->> > >  drivers/scsi/ufs/ufs_bsg.h |  8 --------
->> > >  drivers/scsi/ufs/ufshcd.c  | 36 ++++++++++++++++++++++++++++++----
->> > >  drivers/scsi/ufs/ufshcd.h  |  7 ++++++-
->> > >  6 files changed, 87 insertions(+), 18 deletions(-)
->> > >
->> > > diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
->> > > index d14c224..72620ce 100644
->> > > --- a/drivers/scsi/ufs/Kconfig
->> > > +++ b/drivers/scsi/ufs/Kconfig
->> > > @@ -38,6 +38,7 @@ config SCSI_UFSHCD
->> > >  	select PM_DEVFREQ
->> > >  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->> > >  	select NLS
->> > > +	select BLK_DEV_BSGLIB
->> >
->> > Why is this needed?
->> >
->> 
->> Because ufshcd.c needs to call some funcs defined in bsg lib.
->> 
->> > >  	---help---
->> > >  	This selects the support for UFS devices in Linux, say Y and make
->> > >  	  sure that you know the name of your UFS host adapter (the card
->> > > @@ -143,7 +144,7 @@ config SCSI_UFS_TI_J721E
->> > >  	  If unsure, say N.
->> > >
->> > >  config SCSI_UFS_BSG
->> > > -	bool "Universal Flash Storage BSG device node"
->> > > +	tristate "Universal Flash Storage BSG device node"
->> > >  	depends on SCSI_UFSHCD
->> > >  	select BLK_DEV_BSGLIB
->> > >  	help
->> > > diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
->> > > index 94c6c5d..904eff1 100644
->> > > --- a/drivers/scsi/ufs/Makefile
->> > > +++ b/drivers/scsi/ufs/Makefile
->> > > @@ -6,7 +6,7 @@ obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) += cdns-pltfrm.o
->> > >  obj-$(CONFIG_SCSI_UFS_QCOM) += ufs-qcom.o
->> > >  obj-$(CONFIG_SCSI_UFSHCD) += ufshcd-core.o
->> > >  ufshcd-core-y				+= ufshcd.o ufs-sysfs.o
->> > > -ufshcd-core-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
->> > > +obj-$(CONFIG_SCSI_UFS_BSG)	+= ufs_bsg.o
->> > >  obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
->> > >  obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
->> > >  obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
->> > > diff --git a/drivers/scsi/ufs/ufs_bsg.c b/drivers/scsi/ufs/ufs_bsg.c
->> > > index 3a2e68f..302222f 100644
->> > > --- a/drivers/scsi/ufs/ufs_bsg.c
->> > > +++ b/drivers/scsi/ufs/ufs_bsg.c
->> > > @@ -164,13 +164,15 @@ static int ufs_bsg_request(struct bsg_job *job)
->> > >   */
->> > >  void ufs_bsg_remove(struct ufs_hba *hba)
->> > >  {
->> > > -	struct device *bsg_dev = &hba->bsg_dev;
->> > > +	struct device *bsg_dev = hba->bsg_dev;
->> > >
->> > >  	if (!hba->bsg_queue)
->> > >  		return;
->> > >
->> > >  	bsg_remove_queue(hba->bsg_queue);
->> > >
->> > > +	hba->bsg_dev = NULL;
->> > > +	hba->bsg_queue = NULL;
->> > >  	device_del(bsg_dev);
->> > >  	put_device(bsg_dev);
->> > >  }
->> > > @@ -178,6 +180,7 @@ void ufs_bsg_remove(struct ufs_hba *hba)
->> > >  static inline void ufs_bsg_node_release(struct device *dev)
->> > >  {
->> > >  	put_device(dev->parent);
->> > > +	kfree(dev);
->> > >  }
->> > >
->> > >  /**
->> > > @@ -186,14 +189,19 @@ static inline void ufs_bsg_node_release(struct
->> > > device *dev)
->> > >   *
->> > >   * Called during initial loading of the driver, and before
->> > > scsi_scan_host.
->> > >   */
->> > > -int ufs_bsg_probe(struct ufs_hba *hba)
->> > > +static int ufs_bsg_probe(struct ufs_hba *hba)
->> > >  {
->> > > -	struct device *bsg_dev = &hba->bsg_dev;
->> > > +	struct device *bsg_dev;
->> > >  	struct Scsi_Host *shost = hba->host;
->> > >  	struct device *parent = &shost->shost_gendev;
->> > >  	struct request_queue *q;
->> > >  	int ret;
->> > >
->> > > +	bsg_dev = kzalloc(sizeof(*bsg_dev), GFP_KERNEL);
->> > > +	if (!bsg_dev)
->> > > +		return -ENOMEM;
->> > > +
->> > > +	hba->bsg_dev = bsg_dev;
->> > >  	device_initialize(bsg_dev);
->> > >
->> > >  	bsg_dev->parent = get_device(parent);
->> > > @@ -217,6 +225,41 @@ int ufs_bsg_probe(struct ufs_hba *hba)
->> > >
->> > >  out:
->> > >  	dev_err(bsg_dev, "fail to initialize a bsg dev %d\n",
->> > > shost->host_no);
->> > > +	hba->bsg_dev = NULL;
->> > >  	put_device(bsg_dev);
->> > >  	return ret;
->> > >  }
->> > > +
->> > > +static int __init ufs_bsg_init(void)
->> > > +{
->> > > +	struct list_head *hba_list = NULL;
->> > > +	struct ufs_hba *hba;
->> > > +	int ret = 0;
->> > > +
->> > > +	ufshcd_get_hba_list_lock(&hba_list);
->> > > +	list_for_each_entry(hba, hba_list, list) {
->> > > +		ret = ufs_bsg_probe(hba);
->> > > +		if (ret)
->> > > +			break;
->> > > +	}
->> >
->> > So what happens if I go CONFIG_SCSI_UFS_BSG=y and
->> > CONFIG_SCSI_UFS_QCOM=y?
->> >
->> > Wouldn't that mean that ufs_bsg_init() is called before ufshcd_init()
->> > has added the controller to the list? And even in the even that they are
->> > both =m, what happens if they are invoked in the "wrong" order?
->> >
->> 
->> In the case that CONFIG_SCSI_UFS_BSG=y and CONFIG_SCSI_UFS_QCOM=y,
->> I give late_initcall_sync(ufs_bsg_init) to make sure ufs_bsg_init
->> is invoked only after platform driver is probed. I tested this 
->> combination.
->> 
->> In the case that both of them are "m", installing ufs-bsg before 
->> ufs-qcom
->> is installed would have no effect as ufs_hba_list is empty, which is
->> expected.
-> 
-> Why is it the expected behavior that bsg may or may not probe depending
-> on the driver load order and potentially timing of the initialization.
-> 
->> And in real cases, as the UFS is the boot device, UFS driver will 
->> always
->> be probed during bootup.
->> 
-> 
-> The UFS driver will load and probe because it's mentioned in the
-> devicetree, but if either the ufs drivers or any of its dependencies
-> (phy, resets, clocks, etc) are built as modules it might very well
-> finish probing after lateinitcall.
-> 
-> So in the even that the bsg is =y and any of these drivers are =m, or 
-> if
-> you're having bad luck with your timing, the list will be empty.
-> 
-> As described below, if bsg=m, then there's nothing that will load the
-> module and the bsg will not probe...
-> 
-> [..]
->> > > diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> [..]
->> > >  void ufshcd_remove(struct ufs_hba *hba)
->> > >  {
->> > > -	ufs_bsg_remove(hba);
->> > > +	struct device *bsg_dev = hba->bsg_dev;
->> > > +
->> > > +	mutex_lock(&ufs_hba_list_lock);
->> > > +	list_del(&hba->list);
->> > > +	if (hba->bsg_queue) {
->> > > +		bsg_remove_queue(hba->bsg_queue);
->> > > +		device_del(bsg_dev);
->> >
->> > Am I reading this correct in that you probe the bsg_dev form initcall
->> > and you delete it as the ufshcd instance is removed? That's not okay.
->> >
->> > Regards,
->> > Bjorn
->> >
->> 
->> If ufshcd is removed, its ufs-bsg, if exists, should also be removed.
->> Could you please enlighten me a better way to do this? Thanks.
->> 
-> 
-> It's the asymmetry that I don't like.
-> 
-> Perhaps if you instead make ufshcd platform_device_register_data() the
-> bsg device you would solve the probe ordering, the remove will be
-> symmetric and module autoloading will work as well (although then you
-> need a MODULE_ALIAS of platform:device-name).
-> 
-> Regards,
-> Bjorn
+On 12 December 2019 16:04, Marco Felsch wrote:
 
-Thanks for the suggestion! I didn't even think about this before. I
-will go with the platform_device_register_data() way, it will be much
-easier. After I get my new patchset tested I will upload it for review.
+> Currently the da9062 GPIO's aren't available. The patch adds the support
+> to make these available by adding a gpio device with the corresponding
+> irq resources. Furthermore the patch fixes a minor style issue for the
+> onkey device.
+>=20
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best Regards,
-Can Guo.
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+
+> ---
+>  drivers/mfd/da9062-core.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+> index e69626867c26..5290bdc0ddcd 100644
+> --- a/drivers/mfd/da9062-core.c
+> +++ b/drivers/mfd/da9062-core.c
+> @@ -233,6 +233,14 @@ static struct resource da9062_onkey_resources[] =3D =
+{
+>  	DEFINE_RES_NAMED(DA9062_IRQ_ONKEY, 1, "ONKEY",
+> IORESOURCE_IRQ),
+>  };
+>=20
+> +static struct resource da9062_gpio_resources[] =3D {
+> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI0, 1, "GPI0", IORESOURCE_IRQ),
+> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI1, 1, "GPI1", IORESOURCE_IRQ),
+> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI2, 1, "GPI2", IORESOURCE_IRQ),
+> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI3, 1, "GPI3", IORESOURCE_IRQ),
+> +	DEFINE_RES_NAMED(DA9062_IRQ_GPI4, 1, "GPI4", IORESOURCE_IRQ),
+> +};
+> +
+>  static const struct mfd_cell da9062_devs[] =3D {
+>  	{
+>  		.name		=3D "da9062-core",
+> @@ -266,7 +274,13 @@ static const struct mfd_cell da9062_devs[] =3D {
+>  		.name		=3D "da9062-onkey",
+>  		.num_resources	=3D ARRAY_SIZE(da9062_onkey_resources),
+>  		.resources	=3D da9062_onkey_resources,
+> -		.of_compatible =3D "dlg,da9062-onkey",
+> +		.of_compatible	=3D "dlg,da9062-onkey",
+> +	},
+> +	{
+> +		.name		=3D "da9062-gpio",
+> +		.num_resources	=3D ARRAY_SIZE(da9062_gpio_resources),
+> +		.resources	=3D da9062_gpio_resources,
+> +		.of_compatible	=3D "dlg,da9062-gpio",
+>  	},
+>  };
+>=20
+> --
+> 2.20.1
+
