@@ -2,183 +2,166 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F1FC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08484C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE2D214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F3D214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QdbTZBwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfLLOXR (ORCPT
+        id S1729697AbfLLOX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:23:17 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35833 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729567AbfLLOXR (ORCPT
+        Thu, 12 Dec 2019 09:23:58 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:33470 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbfLLOX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:23:17 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ifPN5-0000lM-Fx; Thu, 12 Dec 2019 15:23:15 +0100
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ifPN4-0007d1-Vc; Thu, 12 Dec 2019 15:23:14 +0100
-Date:   Thu, 12 Dec 2019 15:23:14 +0100
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-ide@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] libata: Fix retrieving of active qcs
-Message-ID: <20191212142314.pcp662fb22pjidaw@pengutronix.de>
-References: <20191212141656.11439-1-s.hauer@pengutronix.de>
+        Thu, 12 Dec 2019 09:23:58 -0500
+Received: by mail-lj1-f193.google.com with SMTP id 21so2520903ljr.0;
+        Thu, 12 Dec 2019 06:23:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MyViXaXViSVG5MBJuSOs6DiQwJnGAWqF15GC1uXA5A0=;
+        b=QdbTZBwtHOy+M6WHKQrwDg7E6qPmaSVXXEaT/TI9cHjZVym9jpjw35m1agJ4bcuiHw
+         PVKcuGPcGrtpDbYfJl7lDpSSjux5XXZ00J64dgkcHhmPn6544nT+Rvnqr2MfaOVXic8h
+         /hlUB8g9HWIfFAuZYAJ4qU2PfTemOHH99VrTT0pCCzryT3KLXlvPIZ8FIfsqXdeWNACA
+         TTRw246TxgzNqy3FyV5DEAuHB3Mx+0LJk9PKTzjghv9sBkklD6xMRtt9kXm49J26wuhk
+         ktz9Rz6K/MRz5MSPS/KkCwGHyQgErHFMnGGMAyNkuwdkjebHtJm90kAKs3fyGwfS5tvb
+         L1BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MyViXaXViSVG5MBJuSOs6DiQwJnGAWqF15GC1uXA5A0=;
+        b=B0sh0fudWe2A7cD+o9mT+4F+rVOHTqPtbyM9wtlUMCO+jwupE1JA3/4dWfeGJkAKVd
+         x72F5+BPgYGUz35wOb0lnBlrhPrpib7vbXKgP0YGvMCvn2YtwPd/vGu2YTU9FanP3IuX
+         tUPRDFU4+b9XNt0vXySkF3/0Yw5tV+xxBcYsoYH3TQN2SbzSRR390utOi9vkEbJ02/sg
+         vpxbza/PUi2ad4gSSnK1NYm6GMWem2u3KrMXT+1/o7A6rCcOZ9BtkzB5F4GxYXaQy37k
+         zqpFyU1gOgZEokGqpSlHHfWZT1wTJxFVpJQnvOPXF2ynxTfNOIL1GOpY/ZfoGUoCkiMF
+         677Q==
+X-Gm-Message-State: APjAAAU/aPDRSv1G7RY+9OE8DFBJwvQe8jqg4SckTNtUHHrc59vY+rUv
+        uQV5z/rYfmX6SiVjLj/lZKuC66tZ
+X-Google-Smtp-Source: APXvYqxPdke9a4fNDxxTT1/ezaD5xKhLk744tLFmfTCPZ+DMObNr2MqCaIJCdDxk+viYke6SHqA2IA==
+X-Received: by 2002:a05:651c:112c:: with SMTP id e12mr6106503ljo.169.1576160634822;
+        Thu, 12 Dec 2019 06:23:54 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id v9sm3399542lfe.18.2019.12.12.06.23.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 06:23:54 -0800 (PST)
+Subject: Re: [PATCH v1] sdhci: tegra: Add workaround for Broadcom WiFi
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191210014011.21987-1-digetx@gmail.com>
+ <CAPDyKFpMe09PNQqinvvidF+wfASx2nuvgf7=Hx5+cGni8pdcRA@mail.gmail.com>
+ <28045442-6a1c-1e0b-0dfe-c36fa9de149a@gmail.com>
+ <CAPDyKFpWO_McZEoefX1T=SE=RYm_GU3S+LgYZrgJY_SJgv7egA@mail.gmail.com>
+ <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com>
+Message-ID: <d4933cb1-d2c1-8055-e0f4-f6fcbe9973bc@gmail.com>
+Date:   Thu, 12 Dec 2019 17:23:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212141656.11439-1-s.hauer@pengutronix.de>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 15:22:43 up 157 days, 20:32, 62 users,  load average: 1.17, 0.81,
- 0.43
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <44f99e56-468e-c3f9-3785-73c2cf8ba118@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:16:56PM +0100, Sascha Hauer wrote:
-> ata_qc_complete_multiple() is called with a mask of the still active
-> tags.
+11.12.2019 19:29, Dmitry Osipenko пишет:
+> 11.12.2019 19:10, Ulf Hansson пишет:
+>> On Wed, 11 Dec 2019 at 16:46, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>
+>>> Hello Ulf,
+>>>
+>>> 11.12.2019 11:11, Ulf Hansson пишет:
+>>>> On Tue, 10 Dec 2019 at 02:40, Dmitry Osipenko <digetx@gmail.com> wrote:
+>>>>>
+>>>>> All Tegra20 boards that have embedded Broadcom WiFi SDIO chip are affected
+>>>>> by a problem where WiFi chip reports CCCR v1.10, while it should v1.20.
+>>>>> In a result high-speed mode isn't enabled for the WiFi card and this
+>>>>> results in a malfunctioning SDIO communication.
+>>>>
+>>>> Does that also mean SDIO_SPEED_SHS bit is set when reading SDIO_CCCR_SPEED?
+>>>
+>>> Yes, the SDIO_SPEED_SHS bit is set.
+>>>
+>>>>>  brcmfmac: brcmf_sdio_readframes: read 304 bytes from channel 1 failed: -84
+>>>>>  brcmfmac: brcmf_sdio_rxfail: abort command, terminate frame, send NAK
+>>>>>
+>>>>> Downstream kernels are overriding card's CCCR info in SDHCI driver to fix
+>>>>> the problem, let's do the same in upstream.
+>>>>>
+>>>>> The change is inspired by omap_hsmmc_init_card() of OMAP's HSMMC driver,
+>>>>> which overrides card's info for the TI wl1251 WiFi.
+>>>>
+>>>> This is a temporary solution and should be replaced by doing the DT
+>>>> parsing during
+>>>>
+>>>> So, yes, let's see if we can use a card quirk instead. That's the first option.
+>>>>
+>>>> A second option is simply to parse the DT subnode for a new DT
+>>>> property during mmc_sdio_init_card(). Along the lines of what we do
+>>>> for the broken-hpi DT binding for eMMC.
+>>>
+>>> Let's try the first option. My understanding is that the problem affects
+>>> only the specific model of the WiFi chip and it's not a board-specific
+>>> problem. I'll add Broadcom driver people to CC for the next version of
+>>> the patch, maybe they'll have something to say.
+>>
+>> Okay, sounds reasonable. By looking at your latest attempt for a fix,
+>> I have two minor nitpicks, otherwise it looks good.
+>>
+>> The nitpicks:
+>> I suggest to rename MMC_QUIRK_HIGH_SPEED_CARD to MMC_QUIRK_HIGH_SPEED
+>> and mmc_card_need_high_speed_toggle() to mmc_card_quirk_hs().
 > 
-> mv_sata doesn't have this information directly and instead calculates
-> the still active tags from the started tags (ap->qc_active) and the
-> finished tags as (ap->qc_active ^ done_mask)
-> 
-> Since 28361c40368 the hw_tag and tag are no longer the same and the
-> equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
-> initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
-> started and this will be in done_mask on completion. ap->qc_active ^
-> done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
-> the internal tag will never be reported as completed.
-> 
-> This is fixed by introducing ata_qc_get_active() which returns the
-> active hardware tags and calling it where appropriate.
-> 
-> This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
-> problem. There is another case in sata_nv that most likely needs fixing
-> as well, but this looks a little different, so I wasn't confident enough
-> to change that.
-> 
-> Fixes: 28361c403683 ("libata: add extra internal command")
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/ata/libata-core.c | 23 +++++++++++++++++++++++
->  drivers/ata/sata_fsl.c    |  2 +-
->  drivers/ata/sata_mv.c     |  2 +-
->  drivers/ata/sata_nv.c     |  2 +-
->  include/linux/libata.h    |  1 +
->  5 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-> index 28c492be0a57..d73bec933892 100644
-> --- a/drivers/ata/libata-core.c
-> +++ b/drivers/ata/libata-core.c
-> @@ -5325,6 +5325,29 @@ void ata_qc_complete(struct ata_queued_cmd *qc)
->  	}
->  }
->  
-> +/**
-> + *	ata_qc_get_active - get bitmask of active qcs
-> + *	@ap: port in question
-> + *
-> + *	LOCKING:
-> + *	spin_lock_irqsave(host lock)
-> + *
-> + *	RETURNS:
-> + *	Bitmask of active qcs
-> + */
-> +u64 ata_qc_get_active(struct ata_port *ap)
-> +{
-> +	u64 qc_active = ap->qc_active;
-> +
-> +	/* ATA_TAG_INTERNAL is sent to hw as tag 0 */
-> +	if (qc_active & (1ULL << ATA_TAG_INTERNAL)) {
-> +		qc_active |= (1 << 0);
-> +		qc_active &= ~(1ULL << ATA_TAG_INTERNAL);
-> +	}
-> +
-> +	return qc_active;
-> +}
-> +
->  /**
->   *	ata_qc_complete_multiple - Complete multiple qcs successfully
->   *	@ap: port in question
-> diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
-> index 8e9cb198fcd1..ca6c706e9c25 100644
-> --- a/drivers/ata/sata_fsl.c
-> +++ b/drivers/ata/sata_fsl.c
-> @@ -1278,7 +1278,7 @@ static void sata_fsl_host_intr(struct ata_port *ap)
->  				     i, ioread32(hcr_base + CC),
->  				     ioread32(hcr_base + CA));
->  		}
-> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
->  		return;
->  
->  	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {
-> diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
-> index ad385a113391..bde695a32097 100644
-> --- a/drivers/ata/sata_mv.c
-> +++ b/drivers/ata/sata_mv.c
-> @@ -2827,7 +2827,7 @@ static void mv_process_crpb_entries(struct ata_port *ap, struct mv_port_priv *pp
->  	}
->  
->  	if (work_done) {
-> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
->  
->  		/* Update the software queue position index in hardware */
->  		writelfl((pp->crpb_dma & EDMA_RSP_Q_BASE_LO_MASK) |
-> diff --git a/drivers/ata/sata_nv.c b/drivers/ata/sata_nv.c
-> index 56946012d113..7510303111fa 100644
-> --- a/drivers/ata/sata_nv.c
-> +++ b/drivers/ata/sata_nv.c
-> @@ -984,7 +984,7 @@ static irqreturn_t nv_adma_interrupt(int irq, void *dev_instance)
->  					check_commands = 0;
->  				check_commands &= ~(1 << pos);
->  			}
-> -			ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
-> +			ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
->  		}
->  	}
->  
-> diff --git a/include/linux/libata.h b/include/linux/libata.h
-> index 207e7ee764ce..f4c045b56e6c 100644
-> --- a/include/linux/libata.h
-> +++ b/include/linux/libata.h
-> @@ -1174,6 +1174,7 @@ extern unsigned int ata_do_dev_read_id(struct ata_device *dev,
->  					struct ata_taskfile *tf, u16 *id);
->  extern void ata_qc_complete(struct ata_queued_cmd *qc);
->  extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
-> +extern u64 ata_qc_get_started(struct ata_port *ap);
+> I'll take it into account, thanks.
 
-s/ata_qc_get_started/ata_qc_get_active/ obviously.
+Looks like I managed to figure out what's really going on:
 
-Sascha
+  1. The BCM4329 doc clearly states that High Speed is supported, see
+page 49 (Section 11: WLAN Interfaces, SDIO v1.2)
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+https://www.cypress.com/file/298626/download
+
+  2. I googled for performance results of the BCM4329 SDIO WiFi and came
+to a conclusion that ~40 Mbit/s is a realistic maximum of the WiFi-data
+throughput for NVIDIA Tegra20 boards due to antenna configuration
+limitations and whatever.
+
+  3. The Tegra's SDHCI clock is pre-configured to 48MHz at the time of
+kernel's boot-up.
+
+  4. IIUC, the maximum clock rate for the legacy SD signaling mode is
+~25MHz and that is more than enough for a 4-lane SDIO data-bus that
+allows up to 100 Mbit/s for the WiFi which is capped to 40 Mbit/s anyways.
+
+  5. Apparently MMC core doesn't limit the clock rate for the Normal
+Speed cards.
+
+
+So, I added "max-frequency = <25000000>;" to the SDHCI node of the
+board's device-tree and ta-da! WiFi works absolutely fine without the
+quirk! Thus the SDIO card quirk isn't really needed and I'm dropping it
+for now.
+
+Ulf, do you know if it's a bug or a feature of the MMC core that it
+doesn't limit clock rate for the Normal Speed cards?
