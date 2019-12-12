@@ -2,89 +2,98 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	SUBJ_ALL_CAPS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6032C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D71C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F48214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF5E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ndQakGne"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RhFXmawa";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RhFXmawa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfLLVJw (ORCPT
+        id S1731023AbfLLVLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:09:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40568 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730806AbfLLVJw (ORCPT
+        Thu, 12 Dec 2019 16:11:51 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:52650 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730806AbfLLVLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:09:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NfTrfkPSa1ladziv/NA8uZx3AQzUk89ICwWABT2MQUM=; b=ndQakGnefV+QEporHtSLrSWtR
-        lUPOben5zYX2quN3mRuu5nH6XQLIGJD4qLJxpk/tTXsSSN5K9TXLqkaKE0SzeAQqrCioBSVl/rG2i
-        sHEQQ+bkq3+k5l2DUzwLOk3MnmgOg1D5ngV+WaSKu42rtnrxdZR5ASX1L6YQZ6WTuh5Be+YeOsNfe
-        aer1pxdOHKR160osM9yf9iyalNAo/stwVksu/HSVgwN40oUFbJb1SpQcoYmux9WM5z6ExO291fjmN
-        tA2CSMBcE6rU5IODAW8TSdU0WZpjWG8dxRdxFpXeXVkzvIuu6lIhczf5b8Kyz7/5/MDycrKgaTGLg
-        z6wvSXDmw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ifViZ-0006So-Kf; Thu, 12 Dec 2019 21:09:51 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 90D97980CCD; Thu, 12 Dec 2019 22:09:49 +0100 (CET)
-Date:   Thu, 12 Dec 2019 22:09:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/
-Message-ID: <20191212210949.GE11457@worktop.programming.kicks-ass.net>
-References: <20191212210052.GA8906@avx2>
+        Thu, 12 Dec 2019 16:11:50 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 464A88EE18E;
+        Thu, 12 Dec 2019 13:11:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576185110;
+        bh=yv+HcFhaQIT9rAZ7nFInNgC/snyyLwKN8IuDMxHyfBk=;
+        h=In-Reply-To:References:Subject:From:Date:To:CC:From;
+        b=RhFXmawa0U2zgCzGKSIRRJRSNVq5buQ59TU3mTXfiGbN9ZJ9dPx7WZ6Utb39OyqTr
+         P9D8Pf4tWKAIn3WF3oHUErLxGbZQ719fCx5VVdUjSKWp2Q6j/hude1hbEAGjyMR3qn
+         CxzA4cH3t2YVcShy6uV3o23/vJfnItviTjwga5Gw=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8tNC8mHn8sfW; Thu, 12 Dec 2019 13:11:50 -0800 (PST)
+Received: from [9.232.166.242] (unknown [129.33.253.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 07B058EE0C7;
+        Thu, 12 Dec 2019 13:11:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1576185110;
+        bh=yv+HcFhaQIT9rAZ7nFInNgC/snyyLwKN8IuDMxHyfBk=;
+        h=In-Reply-To:References:Subject:From:Date:To:CC:From;
+        b=RhFXmawa0U2zgCzGKSIRRJRSNVq5buQ59TU3mTXfiGbN9ZJ9dPx7WZ6Utb39OyqTr
+         P9D8Pf4tWKAIn3WF3oHUErLxGbZQ719fCx5VVdUjSKWp2Q6j/hude1hbEAGjyMR3qn
+         CxzA4cH3t2YVcShy6uV3o23/vJfnItviTjwga5Gw=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <bb256d5a-5c8c-d5ec-5ad2-ddfaf1c83217@intel.com>
+References: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1> <157617293957.8172.1404790695313599409.stgit@tstruk-mobl1> <1576180263.10287.4.camel@HansenPartnership.com> <c3bffb8c-d454-1f53-7f7e-8b65884ffaf6@intel.com> <1576184085.10287.13.camel@HansenPartnership.com> <bb256d5a-5c8c-d5ec-5ad2-ddfaf1c83217@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212210052.GA8906@avx2>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=UTF-8
+Subject: Re: [PATCH =v2 3/3] tpm: selftest: cleanup after unseal with wrong auth/policy test
+From:   James Bottomley <James.Bottomley@Hansenpartnership.com>
+Date:   Thu, 12 Dec 2019 16:11:42 -0500
+To:     Tadeusz Struk <tadeusz.struk@intel.com>,
+        jarkko.sakkinen@linux.intel.com
+CC:     peterz@infradead.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca,
+        mingo@redhat.com, jeffrin@rajagiritech.edu.in,
+        linux-integrity@vger.kernel.org, will@kernel.org, peterhuewe@gmx.de
+Message-ID: <0cfd1aa8-b4d4-4903-a7cc-70191ca842f4@email.android.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 13, 2019 at 12:00:52AM +0300, Alexey Dobriyan wrote:
-> > We could move the kernel to C++ and write:
-> > 
-> > 	std::remove_volatile<typeof(p)>::type __p = (p);
-> > 
-> > /me runs like hell...
-> 
-> Did you just said I can send "struct sched_domain::private" and
-> "struct wait_queue_entry::private" rename?
-> :^)
+On December 12, 2019 4:07:26 PM EST, Tadeusz Struk <tadeusz.struk@intel.com> wrote:
+>On 12/12/19 12:54 PM, James Bottomley wrote:
+>> Not in the modern kernel resource manager world: anyone who is in the
+>> tpm group can access the tpmrm device and we haven't added a
+>dangerous
+>> command filter like we promised we would, so unless they have
+>actually
+>> set lockout or platform authorization, they'll find they can execute
+>it
+>
+>The default for the tpm2_* tools with '-T device' switch is to talk to
+>/dev/tpm0.
+>
+>If one would try to run it, by mistake, it would fail with:
+>
+>$ tpm2_clear -T device
+>ERROR:tcti:src/tss2-tcti/tcti-device.c:439:Tss2_Tcti_Device_Init()
+>Failed to open device file /dev/tpm0: Permission denied
+>
+>To point it to /dev/tpmrm0 it would need to be:
+>$ tpm2_clear -T device:/dev/tpmrm0
 
-I don't believe those are the only usage of C++ keywords. IIRC I'm using
-'class' somewhere as well.
+And most other toolkits talk to the tpmrm device because the tpm 1.2 daemon based architecture didn't work so well.  The point is that if tpm2_clear works on your emulator, it likely works on your real tpm, so making the tests safer to run is not unreasonable.
 
-> Doable but not until C++20. constinit and designated initializers are
-> pretty mandatory.
-> 
-> Debian GNU/Linux 8 debian88 ttyS0
-> 
-> debian88 login: root
-> Password:
-> Last login: Thu Sep 19 01:04:29 +03 2019 on tty1
-> Linux debian88 5.3.0+ #1 SMP PREEMPT Thu Sep 19 01:02:26 +03 2019 x86_64
-> root@debian88:~# cat /proc/$(pgrep sshd)/stack
-> [<0>] _ZL9do_selectiP11fd_set_bitsP10timespec64+0x5ac/0x750
-> [<0>] _Z15core_sys_selectiP15__kernel_fd_setS0_S0_P10timespec64+0x143/0x260
+James
 
-Argh.. I forgot how I hated mangled names.
-
-> [<0>] __x64_sys_select+0xa7/0xf0
-> [<0>] do_syscall_64+0x3b/0xe7
-> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
