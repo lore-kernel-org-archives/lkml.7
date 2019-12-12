@@ -2,175 +2,69 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9243C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558B0C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2A921655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8D321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fWA8oi4B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Iyyibkwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfLLQJY (ORCPT
+        id S1729859AbfLLQJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:09:24 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37072 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729605AbfLLQJY (ORCPT
+        Thu, 12 Dec 2019 11:09:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37874 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729731AbfLLQJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:09:24 -0500
-Received: by mail-io1-f68.google.com with SMTP id k24so3366927ioc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:09:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZSuulaHZP7wrCDMhvr1mBj+rW2++SNmugkVI+athuy0=;
-        b=fWA8oi4BNyT1AqiAexpCYnMadFV+cK60+9u4U1OnYTHAl/RMEBEZ1qUyJVXYWlq3AK
-         1leJZGQkxQSsY3/UJ2F5h18b+SaKi1Ry6fQ3COI85Vg+fxU9oDxBY1qGfUS0JTTufQJq
-         47xWja5YZkpXtzKA6w1TMeZbU4DNqk5ccNV54=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZSuulaHZP7wrCDMhvr1mBj+rW2++SNmugkVI+athuy0=;
-        b=bkfj4pxGObAyDz1MAMdJGM7p4YIXvl1CcHPqxgMYbjlROA1YweqaudyVf1obf3gWB6
-         F8XoZThn4tn5RuAu+BgQ8/uMoOZ94umzzbmKoSsev2BmUd0Kkop4jtNDnyOozxDGqMLZ
-         8oLJtvogiALFZr40KDjRQkXDWTzMp74i6grvgYsLLcCr7zp0VvwsSpQLU0DvOjMjKGZu
-         uf3tVg5zwzHXWJU5KOZM5G0UWv/ZxEgdgzYFoEkANakzBK7EmqDK5ibdQSxeKlTMTBsw
-         x2COGkg6ZJtQcpFyKLqi7VDGzYyQt8cVs8CnaIJt7cgSWyW10xJinqW1dOmB0l79/5MK
-         KkfA==
-X-Gm-Message-State: APjAAAVIPCLm16k2YXExTJeUNx5Z/BFnWI08dGQ0RF3fkhfQISFUefTM
-        BAwAH0V/rB74J6bSPMc6yDtIHo1w/sM=
-X-Google-Smtp-Source: APXvYqwoqPb9/HG+WP4rKEz37Ib9WwlFp/wrMrMvTRf7m+MPkPOnkWhTzw89izdETFGcfHFWFNfyRg==
-X-Received: by 2002:a05:6602:1c6:: with SMTP id w6mr3543011iot.44.1576166962955;
-        Thu, 12 Dec 2019 08:09:22 -0800 (PST)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
-        by smtp.gmail.com with ESMTPSA id n5sm1813389ila.7.2019.12.12.08.09.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 08:09:21 -0800 (PST)
-Received: by mail-io1-f48.google.com with SMTP id k24so3366776ioc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:09:21 -0800 (PST)
-X-Received: by 2002:a02:2385:: with SMTP id u127mr8799499jau.127.1576166960582;
- Thu, 12 Dec 2019 08:09:20 -0800 (PST)
+        Thu, 12 Dec 2019 11:09:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0iZv/b1MpMMgbVLW482W9UgK4Sf8KMy1U7+mvz4azrE=; b=IyyibkwovCItW2dvLXNZVbPgC
+        lCqRmzxJxtzWAIbY0swXdfqLOLKL6W/+BEMG195vPuiS3/TmDffqSEXgveBsmkYNOPlrWVkqm4z3Y
+        fxjPZrZTnpe+9v47Dlg6UAzgOEvoHYtU/1lmlD8fZYZJc0CLg4296F3if3xNZt2tq6lCQtb0nddVs
+        7MmXMfGFMKxFdqfm49hqh0ipH8K2lxzG3jTtIfAmsURra1D94RGRIP5715y7GNhZf/BZ9meg+gPF9
+        uyRuX/0Cqew0YsNHSq/zjZkB6ksyK2oSvGzJwCjz0HXxDeJmA9ULPIxpkF29bDhBlAIG8kZ8wIAVB
+        74l+I3oAg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifR2D-0004o9-NW; Thu, 12 Dec 2019 16:09:49 +0000
+Date:   Thu, 12 Dec 2019 08:09:49 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-serial <linux-serial@vger.kernel.org>,
+        Jiri Slaby <jslaby@suse.com>
+Subject: Re: [PATCH 08/10] tty: serial: samsung_tty: use 'unsigned int' not
+ 'unsigned'
+Message-ID: <20191212160949.GA10815@infradead.org>
+References: <20191210143706.3928480-1-gregkh@linuxfoundation.org>
+ <20191210143706.3928480-8-gregkh@linuxfoundation.org>
+ <eb3cf8f9-3606-c2d6-ad90-4388a52c320b@free.fr>
+ <20191212110834.GB1490894@kroah.com>
 MIME-Version: 1.0
-References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org>
- <1574934847-30372-2-git-send-email-rkambl@codeaurora.org> <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
-In-Reply-To: <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 12 Dec 2019 08:09:08 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
-Message-ID: <CAD=FV=UDGcnLLkBiTBr5GgrzNH20qf9pDQW8wdoqsbO4832M4Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
- for TSENS in SC7180
-To:     Amit Kucheria <amit.kucheria@verdurent.com>
-Cc:     Rajeshwari <rkambl@codeaurora.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        sivaa@codeaurora.org, sanm@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212110834.GB1490894@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Dec 12, 2019 at 12:08:34PM +0100, Greg Kroah-Hartman wrote:
+> Yes.  It's a long-time checkpatch warning, it's good to be explicit for
+> this type of thing.
 
-On Thu, Dec 12, 2019 at 3:00 AM Amit Kucheria
-<amit.kucheria@verdurent.com> wrote:
->
-> Hi Rajeshwari,
->
-> On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
-> >
-> > Add TSENS node and user thermal zone for TSENS sensors in SC7180.
-> >
-> > Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
-> >  1 file changed, 527 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > index 666e9b9..6656ffc 100644
-> > --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> > @@ -911,6 +911,26 @@
-> >                         status = "disabled";
-> >                 };
-> >
-> > +               tsens0: thermal-sensor@c263000 {
-> > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> > +                               <0 0x0c222000 0 0x1ff>; /* SROT */
-> > +                       #qcom,sensors = <15>;
-> > +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       interrupt-names = "uplow";
-> > +                       #thermal-sensor-cells = <1>;
-> > +               };
-> > +
-> > +               tsens1: thermal-sensor@c265000 {
-> > +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> > +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> > +                               <0 0x0c223000 0 0x1ff>; /* SROT */
-> > +                       #qcom,sensors = <10>;
-> > +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       interrupt-names = "uplow";
-> > +                       #thermal-sensor-cells = <1>;
-> > +               };
-> > +
-> >                 spmi_bus: spmi@c440000 {
-> >                         compatible = "qcom,spmi-pmic-arb";
-> >                         reg = <0 0x0c440000 0 0x1100>,
-> > @@ -1121,6 +1141,513 @@
-> >                 };
-> >         };
-> >
-> > +       thermal-zones {
-> > +               cpu0-thermal {
-> > +                       polling-delay-passive = <250>;
-> > +                       polling-delay = <1000>;
-> > +
-> > +                       thermal-sensors = <&tsens0 1>;
-> > +
-> > +                       trips {
-> > +                               cpu0_alert0: trip-point0 {
-> > +                                       temperature = <90000>;
-> > +                                       hysteresis = <2000>;
-> > +                                       type = "passive";
-> > +                               };
-> > +
-> > +                               cpu0_alert1: trip-point1 {
-> > +                                       temperature = <95000>;
-> > +                                       hysteresis = <2000>;
-> > +                                       type = "passive";
-> > +                               };
-> > +
-> > +                               cpu0_crit: cpu_crit {
-> > +                                       temperature = <110000>;
-> > +                                       hysteresis = <1000>;
-> > +                                       type = "critical";
-> > +                               };
->
-> Where are the cooling maps for all the cpu thermal zones? A passive
-> trip point w/o a cooling map is not of much use. If you are waiting
-> for cpufreq support to land before adding them, then remove the
-> passive trip points for now and add them along with the cooling maps
-> when you have cooling devices.
-
-I will note that cpufreq support has landed in the qcom tree::
-
-https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=86899d8235ea0d3d7c293404fb43a6fabff866e6
-
-...so I guess the right thing is to send a patch adding the cooling
-maps for the cpu thermal zones?
-
--Doug
+There is literally no practical benefit going either way.  It is
+just checkpatch forcing one personal opinion on people.
