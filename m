@@ -6,108 +6,73 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8009EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FC2C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F86021556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FD0C2073D
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfLLSem (ORCPT
+        id S1730484AbfLLSes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:34:42 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13397 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730291AbfLLSel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:34:41 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:27:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="239043222"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Dec 2019 10:27:21 -0800
-Date:   Thu, 12 Dec 2019 10:27:21 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Thu, 12 Dec 2019 13:34:48 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52350 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730455AbfLLSer (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:34:47 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifTIR-0001bO-9B; Thu, 12 Dec 2019 18:34:43 +0000
+Date:   Thu, 12 Dec 2019 18:34:43 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+31043da7725b6ec210f1@syzkaller.appspotmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
- VMX_FEATURES_*
-Message-ID: <20191212182721.GI3163@linux.intel.com>
-References: <20191128014016.4389-12-sean.j.christopherson@intel.com>
- <20191212122646.GE4991@zn.tnic>
- <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
- <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
- <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
- <20191212174357.GE3163@linux.intel.com>
- <52dd758d-a590-52a6-4248-22d6852b75cd@redhat.com>
- <DA429131-7A4C-4B74-A020-6CE7622ED2F8@oracle.com>
- <CALMp9eRAYj=dKDtnPymkUA_OOMv+9a4WdPNt4hdpFtBgzwNA9w@mail.gmail.com>
- <EA5BE610-6E9C-4357-AD62-5678C7E81043@oracle.com>
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: BUG: corrupted list in __dentry_kill (2)
+Message-ID: <20191212183443.GH4203@ZenIV.linux.org.uk>
+References: <000000000000b6b03205997b71cf@google.com>
+ <20191212061206.GE4203@ZenIV.linux.org.uk>
+ <CACT4Y+YJuV8EGSx8K_5Qd0f+fUz8MHb1awyJ78Jf8zrNmKokrA@mail.gmail.com>
+ <20191212133844.GG4203@ZenIV.linux.org.uk>
+ <CACT4Y+ZQ6C07TcuAHwc-T+Lb2ZkigkqW32d=TF054RuPwUFimw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <EA5BE610-6E9C-4357-AD62-5678C7E81043@oracle.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACT4Y+ZQ6C07TcuAHwc-T+Lb2ZkigkqW32d=TF054RuPwUFimw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 08:04:19PM +0200, Liran Alon wrote:
-> 
-> 
-> > On 12 Dec 2019, at 19:57, Jim Mattson <jmattson@google.com> wrote:
-> > 
-> > On Thu, Dec 12, 2019 at 9:53 AM Liran Alon <liran.alon@oracle.com> wrote:
-> > 
-> >> Why should CPU VMX features be treated differently than standard CPUID deduced features?
-> > 
-> > Do we have the right Intel people on the recipient list to answer this
-> > question? Presumably, Intel felt that this information should be
-> > available in supervisor mode only.
-> > 
-> > Sean?
-> 
-> Good question. Probably because it just makes sense that Ring3 will never need to use
-> this info as all VMX instructions are privileged. i.e. Can only be executed in Ring0.
+On Thu, Dec 12, 2019 at 04:57:14PM +0100, Dmitry Vyukov wrote:
 
-I highly doubt ring0 vs. ring3 was a motivating factor.  I suspect the MSR
-interface is primarily driven by VMX's allowed-0 vs. allowed-1 behavior,
-which would be awkward to encode in CPUID.  Reporting via MSR also likely
-provided more flexibility for updating/fixing CPU behavior, e.g. patching
-the RDMSR hook is likely far easier than patching CPUID.
+> > Speaking of bisect hazards, I'd recommend to check how your bisect
+> > went - the bug is definitely local to this commit and I really
+> > wonder what had caused the bisect to go wrong in this particular
+> > case.
+> 
+> I did not get the relation of folding to bisection. Or you mean these
+> are just separate things?
 
-Even if the architects intended the information to be supervisor-only,
-that's just their opinion, no?
+Suppose instead of folding the fix in I would've done a followup commit
+just with the fix.  And left the branch in that form, eventually getting
+it pulled into mainline.  From that point on, *ANY* bisect stepping into
+the first commit would've been thrown off.  For ever and ever, since
+once it's in mainline, it really won't go away.
 
-> De-facto in KVM we have discovered this assumption to be problematic BTW,
-> as KVM created an interface to query VMX MSRs values to properly define the requested
-> vCPU model. :P (See kvm_get_msr_feature())
+That's what folding avoids - accumulation of scar tissue, if you will.
+Sure, there's enough cases when bug is found too late - it's already
+in mainline or pulled into net-next or some other branch with similar
+"no rebase, no reorder" policy.  But if you look at the patchsets posted
+on the lists and watch them from iteration to iteration, you'll see
+a _lot_ of fix-folding.  IME (both by my own practice and by watching
+the patchsets posted by others) it outnumbers the cases when fix can't
+be folded by quite a factor.  I wouldn't be surprised if it was an
+order of magnitude...
+
+Strict "never fold fixes" policy would've accelerated the accumulation
+of bisect hazards in the mainline.  And while useful bisect may be a lost
+cause for CI bots, it isn't that for intelligent developers.  Anything
+that makes it more painful is not going to be welcome.
