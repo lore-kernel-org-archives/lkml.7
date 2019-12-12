@@ -1,163 +1,355 @@
-Return-Path: <SRS0=Yvat=2B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706E8C43603
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDC5C2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F63220836
-	for <linux-kernel@archiver.kernel.org>; Wed, 11 Dec 2019 23:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788FB20652
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:03:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ROptf8hF"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GMpo08Hx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfLKXz2 (ORCPT
+        id S1727127AbfLLADm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 18:55:28 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23308 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727101AbfLKXz2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 18:55:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576108527;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=G4wpjlektt4yYwx0w6/RAR7IM+7TmJ4/Z5bpkn88zOE=;
-        b=ROptf8hFmOKBRJEJx7CCLHjFVmBR33iu16v8Xv94hju97rt3MRCo4nsjedPYGlY2h7PJgJ
-        lL3s5yR+p1qnmXtevaqvejns3JrldDkNIldC9QRHoabZPEpy2RaBMkQPDWY1XFV4NrlxgS
-        LwSagZjwRQ9MAPBxPZ2rrQNVRkLTs1o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-389-OEuByi8_M2i7AF-ZGDEvmQ-1; Wed, 11 Dec 2019 18:55:26 -0500
-X-MC-Unique: OEuByi8_M2i7AF-ZGDEvmQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 11 Dec 2019 19:03:42 -0500
+Received: from ozlabs.org ([203.11.71.1]:49015 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbfLLADm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:03:42 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33EEEDB6B;
-        Wed, 11 Dec 2019 23:55:24 +0000 (UTC)
-Received: from cantor.redhat.com (ovpn-116-36.phx2.redhat.com [10.3.116.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 727E210013A1;
-        Wed, 11 Dec 2019 23:55:05 +0000 (UTC)
-From:   Jerry Snitselaar <jsnitsel@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Bundy <christianbundy@fraction.io>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        stable@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: [PATCH v2] tpm_tis: reserve chip for duration of tpm_tis_core_init
-Date:   Wed, 11 Dec 2019 16:54:55 -0700
-Message-Id: <20191211235455.24424-1-jsnitsel@redhat.com>
-In-Reply-To: <20191211231758.22263-1-jsnitsel@redhat.com>
-References: <20191211231758.22263-1-jsnitsel@redhat.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47YDXp22LVz9sPf;
+        Thu, 12 Dec 2019 11:03:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1576109018;
+        bh=qTarbCfIffuwlQVJvuIu6dS6DsZ2kQ6XwR8YnaAKUKA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GMpo08HxUuZ0ZtLfERf0Q8GxXt+XFPmM2uVpg6dCJ88rNAVrvoK1ioR2cvCcVTyPe
+         DXAJKyx5sJUZC3q2mambJcHZcVVjW3iP04/ob77gqt2kQDmCWiofcSFnPst4F8r6iz
+         rKyOl7NNBhCS73inab76L4ZbsvPgJSa6iY+n2mhFSGnr7hxm1AbZHfkIyhF/Hqvp+h
+         wujsWNzRnkuUa/WIJ2AEPztTUe7Qas8lvOXYcOZVSYgVlvC9sprsRCptcGTcb/rGV/
+         eFv5/EwEeWKpwkmNKOZ6yFWW2isYl6CfNJHcJBcsvCWDqoabrRBBIKo9CEHzwsTnqv
+         Jb3eKNxYVvuaA==
+Date:   Thu, 12 Dec 2019 11:03:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Timothy Pearson <tpearson@raptorengineering.com>
+Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
+Message-ID: <20191212110245.6f63732b@canb.auug.org.au>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/RL5.V9g4ttp91kW6rpVU=8=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of repeatedly calling tpm_chip_start/tpm_chip_stop when
-issuing commands to the tpm during initialization, just reserve the
-chip after wait_startup, and release it when we are ready to call
-tpm_chip_register.
+--Sig_/RL5.V9g4ttp91kW6rpVU=8=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Christian Bundy <christianbundy@fraction.io>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Stefan Berger <stefanb@linux.vnet.ibm.com>
-Cc: stable@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Fixes: a3fbfae82b4c ("tpm: take TPM chip power gating out of tpm_transmit=
-()")
-Fixes: 5b359c7c4372 ("tpm_tis_core: Turn on the TPM before probing IRQ's"=
-)
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
----
-v2: Fix integrity list address and add 5b359c7c4372 to fixes
+Hi all,
 
- drivers/char/tpm/tpm_tis_core.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+Today's linux-next merge of the amdgpu tree got conflicts in:
 
-diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
-ore.c
-index 8af2cee1a762..308756d278b3 100644
---- a/drivers/char/tpm/tpm_tis_core.c
-+++ b/drivers/char/tpm/tpm_tis_core.c
-@@ -978,13 +978,13 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
-=20
- 	if (wait_startup(chip, 0) !=3D 0) {
- 		rc =3D -ENODEV;
--		goto out_err;
-+		goto out_start;
- 	}
-=20
- 	/* Take control of the TPM's interrupt hardware and shut it off */
- 	rc =3D tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), &intmask);
- 	if (rc < 0)
--		goto out_err;
-+		goto out_start;
-=20
- 	intmask |=3D TPM_INTF_CMD_READY_INT | TPM_INTF_LOCALITY_CHANGE_INT |
- 		   TPM_INTF_DATA_AVAIL_INT | TPM_INTF_STS_VALID_INT;
-@@ -993,9 +993,8 @@ int tpm_tis_core_init(struct device *dev, struct tpm_=
-tis_data *priv, int irq,
-=20
- 	rc =3D tpm_chip_start(chip);
- 	if (rc)
--		goto out_err;
-+		goto out_start;
- 	rc =3D tpm2_probe(chip);
--	tpm_chip_stop(chip);
- 	if (rc)
- 		goto out_err;
-=20
-@@ -1059,7 +1058,6 @@ int tpm_tis_core_init(struct device *dev, struct tp=
-m_tis_data *priv, int irq,
- 			goto out_err;
- 		}
-=20
--		tpm_chip_start(chip);
- 		chip->flags |=3D TPM_CHIP_FLAG_IRQ;
- 		if (irq) {
- 			tpm_tis_probe_irq_single(chip, intmask, IRQF_SHARED,
-@@ -1070,18 +1068,17 @@ int tpm_tis_core_init(struct device *dev, struct =
-tpm_tis_data *priv, int irq,
- 		} else {
- 			tpm_tis_probe_irq(chip, intmask);
- 		}
--		tpm_chip_stop(chip);
- 	}
-+	tpm_chip_stop(chip);
-=20
- 	rc =3D tpm_chip_register(chip);
- 	if (rc)
--		goto out_err;
--
--	if (chip->ops->clk_enable !=3D NULL)
--		chip->ops->clk_enable(chip, false);
-+		goto out_start;
-=20
- 	return 0;
- out_err:
-+	tpm_chip_stop(chip);
-+out_start:
- 	if ((chip->ops !=3D NULL) && (chip->ops->clk_enable !=3D NULL))
- 		chip->ops->clk_enable(chip, false);
-=20
+  drivers/gpu/drm/amd/display/dc/calcs/Makefile
+  drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+  drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+  drivers/gpu/drm/amd/display/dc/dml/Makefile
+  drivers/gpu/drm/amd/display/dc/dsc/Makefile
+
+between commits:
+
+  c868868f6b6a ("drm/amdgpu: fix stack alignment ABI mismatch for Clang")
+  00db297106e8 ("drm/amdgpu: fix stack alignment ABI mismatch for GCC 7.1+")
+
+from Linus' tree and commit:
+
+  86462415d58d ("amdgpu: Enable initial DCN support on POWER")
+
+from the amdgpu tree.
+
+I fixed it up (I think .. see below) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
 --=20
-2.24.0
+Cheers,
+Stephen Rothwell
 
+diff --cc drivers/gpu/drm/amd/display/dc/calcs/Makefile
+index 26c6d735cdc7,4d3006bd4337..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+@@@ -24,22 -25,23 +25,30 @@@
+  # It calculates Bandwidth and Watermarks values for HW programming
+  #
+ =20
+ -ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+ -	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+ -else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+ -	cc_stack_align :=3D -mstack-alignment=3D16
+++ifdef CONFIG_X86
+ +calcs_ccflags :=3D -mhard-float -msse
++ endif
++=20
+ -ifdef CONFIG_X86
+ -calcs_ccflags :=3D -mhard-float -msse $(cc_stack_align)
+++ifdef CONFIG_PPC64
+++calcs_ccflags :=3D -mhard-float -maltivec
+++endif
+ =20
+ -ifdef CONFIG_CC_IS_CLANG
+ -calcs_ccflags +=3D -msse2
+ +ifdef CONFIG_CC_IS_GCC
+ +ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+ +IS_OLD_GCC =3D 1
+  endif
+  endif
+ =20
+ -ifdef CONFIG_PPC64
+ -calcs_ccflags :=3D -mhard-float -maltivec $(cc_stack_align)
+ +ifdef IS_OLD_GCC
+ +# Stack alignment mismatch, proceed with caution.
+ +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
+ +# (8B stack alignment).
+ +calcs_ccflags +=3D -mpreferred-stack-boundary=3D4
+ +else
+++ifdef CONFIG_X86
+ +calcs_ccflags +=3D -msse2
+ +endif
++ endif
+ =20
+  CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calcs.o :=3D $(calcs_ccflags)
+  CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_auto.o :=3D $(calcs_ccflags)
+diff --cc drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+index 63f3bddba7da,07f652d40f86..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
+@@@ -6,26 -7,25 +7,32 @@@ DCN20 =3D dcn20_resource.o dcn20_init.o d
+  		dcn20_stream_encoder.o dcn20_link_encoder.o dcn20_dccg.o \
+  		dcn20_vmid.o dcn20_dwb.o dcn20_dwb_scl.o
+ =20
+- ifdef CONFIG_DRM_AMD_DC_DSC_SUPPORT
+  DCN20 +=3D dcn20_dsc.o
+- endif
+ =20
+ -ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+ -	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+ -else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+ -	cc_stack_align :=3D -mstack-alignment=3D16
+++ifdef CONFIG_X86
+ +CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -msse
++ endif
++=20
+ -ifdef CONFIG_X86
+ -CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -msse $(=
+cc_stack_align)
+++ifdef CONFIG_PPC64
+++CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -maltivec
+++endif
+ =20
+ -ifdef CONFIG_CC_IS_CLANG
+ -CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o +=3D -msse2
+ +ifdef CONFIG_CC_IS_GCC
+ +ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+ +IS_OLD_GCC =3D 1
+  endif
+  endif
+ =20
+ -ifdef CONFIG_PPC64
+ -CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -maltive=
+c $(cc_stack_align)
+ +ifdef IS_OLD_GCC
+ +# Stack alignment mismatch, proceed with caution.
+ +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
+ +# (8B stack alignment).
+ +CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o +=3D -mpreferred-stack-bou=
+ndary=3D4
+ +else
+++ifdef CONFIG_X86
+ +CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o +=3D -msse2
+ +endif
++ endif
+ =20
+  AMD_DAL_DCN20 =3D $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
+ =20
+diff --cc drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+index 14113ccf498d,041464d001bd..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/Makefile
+@@@ -1,24 -2,26 +2,33 @@@
+  #
+  # Makefile for DCN21.
+ =20
+- DCN21 =3D dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o dcn21_hwseq.o dcn2=
+1_link_encoder.o
++ DCN21 =3D dcn21_init.o dcn21_hubp.o dcn21_hubbub.o dcn21_resource.o \
++ 	 dcn21_hwseq.o dcn21_link_encoder.o
+ =20
+ -ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+ -	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+ -else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+ -	cc_stack_align :=3D -mstack-alignment=3D16
+++ifdef CONFIG_X86
+ +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse
++ endif
++=20
+ -ifdef CONFIG_X86
+ -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -msse $(=
+cc_stack_align)
+++ifdef CONFIG_PPC64
+++CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -maltivec
+++endif
+ =20
+ -ifdef CONFIG_CC_IS_CLANG
+ -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -msse2
+ +ifdef CONFIG_CC_IS_GCC
+ +ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+ +IS_OLD_GCC =3D 1
+  endif
+  endif
+ =20
+ -ifdef CONFIG_PPC64
+ -CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o :=3D -mhard-float -maltive=
+c $(cc_stack_align)
+ +ifdef IS_OLD_GCC
+ +# Stack alignment mismatch, proceed with caution.
+ +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
+ +# (8B stack alignment).
+ +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -mpreferred-stack-bou=
+ndary=3D4
+ +else
+++ifdef CONFIG_X86
+ +CFLAGS_$(AMDDALPATH)/dc/dcn21/dcn21_resource.o +=3D -msse2
+ +endif
++ endif
+ =20
+  AMD_DAL_DCN21 =3D $(addprefix $(AMDDALPATH)/dc/dcn21/,$(DCN21))
+ =20
+diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
+index 8df251626e22,82c8978c81ab..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@@ -24,22 -25,23 +25,30 @@@
+  # It provides the general basic services required by other DAL
+  # subcomponents.
+ =20
+ -ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+ -	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+ -else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+ -	cc_stack_align :=3D -mstack-alignment=3D16
+++ifdef CONFIG_X86
+ +dml_ccflags :=3D -mhard-float -msse
++ endif
++=20
+ -ifdef CONFIG_X86
+ -dml_ccflags :=3D -mhard-float -msse $(cc_stack_align)
+++ifdef CONFIG_PPC64
+++dml_ccflags :=3D -mhard-float -maltivec
+++endif
+ =20
+ -ifdef CONFIG_CC_IS_CLANG
+ -dml_ccflags +=3D -msse2
+ +ifdef CONFIG_CC_IS_GCC
+ +ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+ +IS_OLD_GCC =3D 1
+  endif
+  endif
+ =20
+ -ifdef CONFIG_PPC64
+ -dml_ccflags :=3D -mhard-float -maltivec $(cc_stack_align)
+ +ifdef IS_OLD_GCC
+ +# Stack alignment mismatch, proceed with caution.
+ +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
+ +# (8B stack alignment).
+ +dml_ccflags +=3D -mpreferred-stack-boundary=3D4
+ +else
+++ifdef CONFIG_X86
+ +dml_ccflags +=3D -msse2
+ +endif
++ endif
+ =20
+  CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o :=3D $(dml_ccflags)
+ =20
+diff --cc drivers/gpu/drm/amd/display/dc/dsc/Makefile
+index 970737217e53,08edd919ec82..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+@@@ -1,22 -2,23 +2,30 @@@
+  #
+  # Makefile for the 'dsc' sub-component of DAL.
+ =20
+ -ifneq ($(call cc-option, -mpreferred-stack-boundary=3D4),)
+ -	cc_stack_align :=3D -mpreferred-stack-boundary=3D4
+ -else ifneq ($(call cc-option, -mstack-alignment=3D16),)
+ -	cc_stack_align :=3D -mstack-alignment=3D16
+++ifdef CONFIG_X86
+ +dsc_ccflags :=3D -mhard-float -msse
++ endif
++=20
+ -ifdef CONFIG_X86
+ -dsc_ccflags :=3D -mhard-float -msse $(cc_stack_align)
+++ifdef CONFIG_PPC64
+++dsc_ccflags :=3D -mhard-float -maltivec
+++endif
+ =20
+ -ifdef CONFIG_CC_IS_CLANG
+ -dsc_ccflags +=3D -msse2
+ +ifdef CONFIG_CC_IS_GCC
+ +ifeq ($(call cc-ifversion, -lt, 0701, y), y)
+ +IS_OLD_GCC =3D 1
+  endif
+  endif
+ =20
+ -ifdef CONFIG_PPC64
+ -dsc_ccflags :=3D -mhard-float -maltivec $(cc_stack_align)
+ +ifdef IS_OLD_GCC
+ +# Stack alignment mismatch, proceed with caution.
+ +# GCC < 7.1 cannot compile code using `double` and -mpreferred-stack-boun=
+dary=3D3
+ +# (8B stack alignment).
+ +dsc_ccflags +=3D -mpreferred-stack-boundary=3D4
+ +else
+++ifdef CONFIG_X86
+ +dsc_ccflags +=3D -msse2
+ +endif
++ endif
+ =20
+  CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc.o :=3D $(dsc_ccflags)
+  CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc_dpi.o :=3D $(dsc_ccflags)
+
+--Sig_/RL5.V9g4ttp91kW6rpVU=8=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3xg9kACgkQAVBC80lX
+0GxWnwf+Ll2e8+jgwnaI0W2OuAInjQy0M8XXpVoCvWfifLKRgBSID6+6QQJDE8eq
+E9HQKzlGhbV7ChNkWjVFYzqfXGiEESXrDILJc9YN/5UkclX+uZ0E+EV6Ur16WSub
+qyxJW2qFBsOHf0v5hoxX5nmW0VYHK4jYZMJF4ijXEc/gQ2YtJK6a+Ik8o+0Y+o0p
+R0ho7eIqsRhzZDs1FVjXLEZMr3A+MRs/G7X0ck4UQs6pWW5Th9THHHg2fyDl7qub
+qHoenRbLD6S/mGJZDoQkmisCPTUkdqVURJUaKadPxVe1dDaku6UPKAM2Yyd+XHSC
+UfCqFeZeZh/wetnCZ+LEZYC4d8AihQ==
+=uvTZ
+-----END PGP SIGNATURE-----
+
+--Sig_/RL5.V9g4ttp91kW6rpVU=8=--
