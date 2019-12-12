@@ -2,108 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099B2C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF371C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4400214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B339B214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:51:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="siHC5Sv0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lr4zFJbm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfLLJr5 (ORCPT
+        id S1728430AbfLLJvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:47:57 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7967 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726382AbfLLJr5 (ORCPT
+        Thu, 12 Dec 2019 04:51:00 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:35887 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbfLLJu6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:47:57 -0500
-X-UUID: 6e79bea5163d41eeb21e4f5f05621e07-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=jjUFyhr70q5Qwl+cMOFBMZpPatFW/kw0aENfH71RXPE=;
-        b=siHC5Sv0bod7DC+uDh1agxAwNc0q3H+wb4uE/xWH/GaNfvZ1ubRB4K18lY+N771dFzHAX7D+5JpH9d7HLI2FBrWocJ9n832TbQZCpDb/eTNCTeTCUlWZQphEiGO5i3i/rZXp8ZxNRT7QNzM4qiSIvhnbe1FrMg6LlAC6/GEc3Ww=;
-X-UUID: 6e79bea5163d41eeb21e4f5f05621e07-20191212
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1503291767; Thu, 12 Dec 2019 17:47:50 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 17:47:29 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 17:47:46 +0800
-Message-ID: <1576144069.16442.3.camel@mtksdaap41>
-Subject: Re: [PATCH v17 0/6] support gce on mt8183 platform
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>
-CC:     Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>
-Date:   Thu, 12 Dec 2019 17:47:49 +0800
-In-Reply-To: <cb5cd58e-dc62-ae30-9ddd-7c2b95fde3e3@gmail.com>
-References: <20191121015410.18852-1-bibby.hsieh@mediatek.com>
-         <CANMq1KCTJQL+GFqo8HYM8cEpzXJmebJ=9ju4CzHLwyuQfbZEAA@mail.gmail.com>
-         <cb5cd58e-dc62-ae30-9ddd-7c2b95fde3e3@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 12 Dec 2019 04:50:58 -0500
+Received: by mail-ua1-f65.google.com with SMTP id k33so623027uag.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 01:50:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Th0Gxjy39UzyWkgaaSlqfUVGyatOKXBlhrJ1etVX5js=;
+        b=Lr4zFJbm8S7HgAMSDwABkA/wyND+xwdWGQnbqBjKgGo7aCnTiK8exjImHHk9GVigub
+         OaEkvndf8/JCWjrVQnkebzikIg3uTiUuNMj9PK+Hdz5dbj8KOi1h7JaRhq4Ez9J8mYN8
+         7GY99n0HWRrJq8+wjtLytVQYXZpJHijWwBw8hvMh5YDK0gY9LpzoPD4hzf6bjwToMqTF
+         BXYVG570RYgua0JseTb5oaqV7jIcHoZd6nBTTnYqs1ev1K36YKDKg2oPPhbyY5JbQT6G
+         EQhIA+/kNaa5FMfQh/+KDZ9zr9pZf/sXj42yi6Fu1wwHRpA+yK6HeCzVmaEhNuZBgrh8
+         Atmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Th0Gxjy39UzyWkgaaSlqfUVGyatOKXBlhrJ1etVX5js=;
+        b=st04N3f8wabBOdk5jIz/7RnshxHfFKMhM4MFcce+0Fw0IB+KapId2RoVTIKpYkIvhI
+         zguYeE66V/TxyVJvZSj4p2VxOy4sezMpKKQ9+7Fb0yJsMeixW6dKV2B1rWDAGiHUDhQJ
+         0iYoAPYwYKhhonlBoHVaQ01vOHxVaddK1NvREDMnNupy1nd5uOkKgLShiiUyjyoqXNrx
+         tY8QDMjdg/UCQylRh4dQ7VXO7ws5bGkCAIXrv08bNfhJ3rbtrJD3gpNV45vRGKHB68tY
+         vA/mB+tmjd8rYg8Qg7KLiQy9y7ZRgroX0bK/m7HYfLIu7b/z5JJHSB0z4lSF/+Mo7F8P
+         z2Zg==
+X-Gm-Message-State: APjAAAU/DZEsbIAvZqKob7iBBpBiRcd+cXDRcvND897QBsrC9HulYniv
+        +n6tuGDEZPCSxhtffKH+m8panv1aCcW+BBV1U0ye2g==
+X-Google-Smtp-Source: APXvYqwKZRVjkZ142WpeRsqhhDVJVdjOwhdMN2XDbdsfhAIXiWHisLYDXPMxFD1KaEHk4XY7A7F6pkHxDLP4o1kLsjo=
+X-Received: by 2002:ab0:7352:: with SMTP id k18mr7176180uap.77.1576144257519;
+ Thu, 12 Dec 2019 01:50:57 -0800 (PST)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <cover.1576058136.git.amit.kucheria@linaro.org>
+ <39d6b8e4b2cc5836839cfae7cdf0ee3470653b64.1576058136.git.amit.kucheria@linaro.org>
+ <aa9174c2-c851-4769-0f9c-5541047a7901@linaro.org>
+In-Reply-To: <aa9174c2-c851-4769-0f9c-5541047a7901@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Thu, 12 Dec 2019 15:20:44 +0530
+Message-ID: <CAHLCerPNMBFgFv6zAdKtzs21p9Y18d8fohJEMJe7o4ufNwdS6Q@mail.gmail.com>
+Subject: Re: [PATCH] drivers: thermal: tsens: Work with old DTBs
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Olof Johansson <olof@lixom.net>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTEyIGF0IDA4OjQ5ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
-Og0KPiANCj4gT24gMTEvMTIvMjAxOSAyMzowOSwgTmljb2xhcyBCb2ljaGF0IHdyb3RlOg0KPiA+
-IEhpIE1hdHRoaWFzLA0KPiA+IA0KPiA+IFF1aWNrIHF1ZXN0aW9uLCBhbnkgcmVhc29uIHlvdSBw
-aWNrZWQgb25seSBwYXRjaGVzIDIrMys2IGZyb20gdGhpcw0KPiA+IHNlcmllcywgYW5kIG5vdCB0
-aGUgMyBvdGhlcnM/DQo+ID4gDQo+IA0KPiBUaGUgcXVpY2sgYW5zd2VyLCB0aW1lIDopDQo+IFRo
-ZSBsb25nZXIgb25lOg0KPiAxLzYgd2VudCBhbHJlYWR5IGluIHRocm91Z2ggZml4ZXMgZm9yIHY1
-LjQNCj4gNC82IGl0IHRvdWNoZXMgbWFpbGJveCBjb2RlLCBzbyB3ZSB3aWxsIG5lZWQgYSBhY2tl
-ZC1ieSBmcm9tIEphc3NpDQoNCkhpLCBKYXNzaSwNCg0KU29ycnkgZm9yIHRoZSBtYWlsaW5nIGxv
-c2luZy4NCkNvdWxkIHlvdSBoZWxwIG1lIHRvIHJldmlldyBbUEFUQ0ggNC82IHNvYzogbWVkaWF0
-ZWs6IGNtZHE6IGFkZCBwb2xsaW5nDQpmdW5jdGlvbl0gaWYgeW91IGFyZSBmcmVlPw0KDQpCaWJi
-eQ0KDQo+IDUvNiB0aW1lLCBJIHdhbnQgdG8gaGF2ZSBhIGJldHRlciBsb29rIG9udG8gdGhpcyB0
-byBzZWUgaWYgdGhhdCBtYWtlcyBzZW5zZSAoSQ0KPiBzbGlnaHRseSByZW1lbWJlciBzb21lIG9s
-ZCBjb21tZW50IEkgaGFkIG9uIHRoaXMpDQo+IA0KPiBSZWdhcmRzLA0KPiBNYXR0aGlhcw0KPiAN
-Cj4gPiBUaGFua3MuDQo+ID4gDQo+ID4gT24gV2VkLCBOb3YgMjAsIDIwMTkgYXQgNTo1NCBQTSBC
-aWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPiB3cm90ZToNCj4gPj4NCj4gPj4g
-Q2hhbmdlcyBzaW5jZSB2MTY6DQo+ID4+ICAtIG5hbWluZyB0aGUgcG9sbCBtYXNrIGVuYWJsZSBi
-aXQNCj4gPj4gIC0gYWRkIGEgcGF0Y2ggdG8gZml1cCB0aGUgaW5wdXQgb3JkZXIgb2Ygd3JpdGUg
-YXBpDQo+ID4+DQo+ID4+IENoYW5nZXMgc2luY2UgdjE1Og0KPiA+PiAgLSByZWJhc2Ugb250byA1
-LjQtcmMxDQo+ID4+ICAtIHJvbGxiYWNrIHRoZSB2MTQgY2hhbmdlDQo+ID4+ICAtIGFkZCBhIHBh
-dGNoIHRvIGZpeHVwIHRoZSBjb21iaW5hdGlvbiBvZiByZXR1cm4gdmFsdWUNCj4gPj4NCj4gPj4g
-Q2hhbmdlcyBzaW5jZSB2MTQ6DQo+ID4+ICAtIGNoYW5nZSBpbnB1dCBhcmd1bWVudCBhcyBwb2lu
-dGVyIGluIGFwcGVuZF9jb21tZW5kKCkNCj4gPj4NCj4gPj4gQ2hhbmdlcyBzaW5jZSB2MTM6DQo+
-ID4+ICAtIHNlcGFyYXRlIHBvbGwgZnVuY3Rpb24gYXMgcG9sbCB3LyAmIHcvbyBtYXNrIGZ1bmN0
-aW9uDQo+ID4+ICAtIGRpcmVjdGx5IHBhc3MgaW5zdCBpbnRvIGFwcGVuZF9jb21tYW5kIGZ1bmN0
-aW9uIGluc3RlYWQNCj4gPj4gICAgb2YgcmV0dXJucyBhIHBvaW50ZXINCj4gPj4gIC0gZml4dXAg
-Y29kaW5nIHN0eWxlDQo+ID4+ICAtIHJlYmFzZSBvbnRvIDUuMy1yYzENCj4gPj4NCj4gPj4gWy4u
-LiBzbmlwIC4uLl0NCj4gPj4NCj4gPj4gQmliYnkgSHNpZWggKDYpOg0KPiA+PiAgIHNvYzogbWVk
-aWF0ZWs6IGNtZHE6IGZpeHVwIHdyb25nIGlucHV0IG9yZGVyIG9mIHdyaXRlIGFwaQ0KPiA+PiAg
-IHNvYzogbWVkaWF0ZWs6IGNtZHE6IHJlbW92ZSBPUiBvcGVydGFpb24gZnJvbSBlcnIgcmV0dXJu
-DQo+ID4+ICAgc29jOiBtZWRpYXRlazogY21kcTogZGVmaW5lIHRoZSBpbnN0cnVjdGlvbiBzdHJ1
-Y3QNCj4gPj4gICBzb2M6IG1lZGlhdGVrOiBjbWRxOiBhZGQgcG9sbGluZyBmdW5jdGlvbg0KPiA+
-PiAgIHNvYzogbWVkaWF0ZWs6IGNtZHE6IGFkZCBjbWRxX2Rldl9nZXRfY2xpZW50X3JlZyBmdW5j
-dGlvbg0KPiA+PiAgIGFybTY0OiBkdHM6IGFkZCBnY2Ugbm9kZSBmb3IgbXQ4MTgzDQo+ID4+DQo+
-ID4+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE4My5kdHNpIHwgIDEwICsrDQo+
-ID4+ICBkcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyAgIHwgMTQ3ICsrKysr
-KysrKysrKysrKysrKystLS0tDQo+ID4+ICBpbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEt
-bWFpbGJveC5oIHwgIDExICsrDQo+ID4+ICBpbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGst
-Y21kcS5oICAgIHwgIDUzICsrKysrKysrDQo+ID4+ICA0IGZpbGVzIGNoYW5nZWQsIDE5NSBpbnNl
-cnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkNCj4gPj4NCj4gPj4gLS0NCj4gPj4gMi4xOC4wDQoN
-Cg==
+On Wed, Dec 11, 2019 at 9:42 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 11/12/2019 10:58, Amit Kucheria wrote:
+> > In order for the old DTBs to continue working, the new interrupt code
+> > must not return an error if interrupts are not defined.
+> >
+> > Fixes: 634e11d5b450a ("drivers: thermal: tsens: Add interrupt support")
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >  drivers/thermal/qcom/tsens.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+> > index 015e7d2015985..d8f51067ed411 100644
+> > --- a/drivers/thermal/qcom/tsens.c
+> > +++ b/drivers/thermal/qcom/tsens.c
+> > @@ -109,7 +109,7 @@ static int tsens_register(struct tsens_priv *priv)
+> >
+> >       irq = platform_get_irq_byname(pdev, "uplow");
+> >       if (irq < 0) {
+> > -             ret = irq;
+>
+> 'ret' remains uninitialized here.
+>
+> > +             dev_warn(&pdev->dev, "Missing uplow irq in DT\n");
+> >               goto err_put_device;
+> >       }
+> >
+> > @@ -118,7 +118,8 @@ static int tsens_register(struct tsens_priv *priv)
+> >                                       IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> >                                       dev_name(&pdev->dev), priv);
+> >       if (ret) {
+> > -             dev_err(&pdev->dev, "%s: failed to get irq\n", __func__);
+> > +             dev_warn(&pdev->dev, "%s: failed to get uplow irq\n", __func__);
+> > +             ret = 0;
+> >               goto err_put_device;
+> >       }
+>
+> The code now is unable to make a distinction between an error in the DT
+> and the old DT :/
+>
+> Why not version the DT?
 
+Versioning the DT is probably overkill for this driver. Just checking
+for ENXIO as suggested by Stephan seems to be enough. We don't lose
+the error checking for devm_request_threaded_irq either.
+
+Regards,
+Amit
