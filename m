@@ -2,128 +2,104 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E60DC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EACBC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E628206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90C124671
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:41:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jNYnQoHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbfLLSlC (ORCPT
+        id S1730511AbfLLSlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:41:02 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22235 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbfLLSkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:40:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 10:40:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="211205406"
-Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.172])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Dec 2019 10:40:42 -0800
-From:   Gayatri Kammela <gayatri.kammela@intel.com>
-To:     platform-driver-x86@vger.kernel.org
-Cc:     vishwanath.somayaji@intel.com, dvhart@infradead.org,
-        linux-kernel@vger.kernel.org, mika.westerberg@intel.com,
-        charles.d.prestopine@intel.com,
-        Gayatri Kammela <gayatri.kammela@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        "David E . Box" <david.e.box@intel.com>,
-        Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v4 1/5] platform/x86: intel_pmc_core: Clean up: Remove comma after the termination line
-Date:   Thu, 12 Dec 2019 10:38:43 -0800
-Message-Id: <df7f9854e7205ec77caa33d89aaab14acc70f740.1576105486.git.gayatri.kammela@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1576105486.git.gayatri.kammela@intel.com>
-References: <cover.1576105486.git.gayatri.kammela@intel.com>
-In-Reply-To: <cover.1576105486.git.gayatri.kammela@intel.com>
-References: <cover.1576105486.git.gayatri.kammela@intel.com>
+        Thu, 12 Dec 2019 13:41:50 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34283 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730398AbfLLSlu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:41:50 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so3901689wrr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 10:41:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=72YajA1rnf1+0GYcRZg+w7DqemoBrj7bzh2eLFUJiCE=;
+        b=jNYnQoHT9D/iVwOUAeI1nYXpjIriEoi9Dw5l2o9FH2p/aEb+0YBuSa9axL/yreKfaq
+         di+zCTiZj7gbHshdS5Y93GwwfD+rw3u9hwsdKLLlXyPe6zNVmCpaM6zIgdU+T61xCM3c
+         QYv9CuD4Q6beHt6nMaR8GNpKLwk7obh9YzSAUv8VeCaG7hmhxaanGMcrSYbV7p9nQtHD
+         UVDWO+7uAryoOkuMcvyKqw2rhgfRREpsAwjdP9T4wxgCQygIN5MAaPN0Fb8g/chmATOv
+         06WVcz23ABetfzmtG5CA+MjyvkWTR9T0uJgs9jT7ZMiv96jiGpktQluK+X/M1YQ5U8Uh
+         YVHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=72YajA1rnf1+0GYcRZg+w7DqemoBrj7bzh2eLFUJiCE=;
+        b=fKN1zkGYxJR2vapfwGPF0C87S2Fz7vpHbSG0rYr9WaloziDwQ5fMW1ABz/g5677sTb
+         t6w96WeFvHmeXeqEn9AEPeF/Yjka+6OwYvLKKBnsPuhw7GXGF/rhbWlxFhgA6WZmwczN
+         tzfL5U97NL3rNcZDcVPqRMpEjbpgAc7gFO0t9qAn+K4tFeMzWDEXGNI/De0tlvvrV/VN
+         JBYaCIkNxg3Y4YLMVOqFTrI+ee+FuOYWuiZZq9oQUyAz8JN5B6XhXVDFYJiy6aRwvLZf
+         q3dxd0AN2Xy0RxPu7c2uYfUfXIG3Igh0mOYua7IrYBbtawwlTmiUeisz9gK4CGV7NvQV
+         RKxg==
+X-Gm-Message-State: APjAAAW2QWWXpdrcmWGMiGT2GfJ/8A8/LsGms+BVnED7kYRNkJ3uo14q
+        c5ZheAD1n2KIIfGl3qnZvXA=
+X-Google-Smtp-Source: APXvYqx8ZThmxV87EE0UzwxMrK2+QTlXaMc9wq2IkRJkHgaXl++grGfqBwQvYlBMrQV4hI1I2Y1oUw==
+X-Received: by 2002:adf:f58a:: with SMTP id f10mr8246259wro.105.1576176108476;
+        Thu, 12 Dec 2019 10:41:48 -0800 (PST)
+Received: from localhost ([5.59.90.131])
+        by smtp.gmail.com with ESMTPSA id k8sm7056412wrl.3.2019.12.12.10.41.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 10:41:47 -0800 (PST)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: WARNING: CPU: 3 PID: 1 at =?iso-8859-1?Q?=5F=5Fflush=5Fwork.isra.47+0x22c/0x248?=
+Date:   Thu, 12 Dec 2019 19:41:46 +0100
+MIME-Version: 1.0
+Message-ID: <8dec2d95-f483-44a9-8223-0f8f3de33238@gmail.com>
+In-Reply-To: <5708082a-680f-4107-aaf8-a39d76037d77@gmail.com>
+References: <5708082a-680f-4107-aaf8-a39d76037d77@gmail.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is common practice to place a comma after the last entry in an
-initialized array to avoid the need to add one in future patches that
-extend the array. But when the last element is a termination marker, the
-comma could be harmful. Any new entries must be added before the
-terminator (and the comma would prevent the compiler from issuing a
-warning about an entry after the terminator).
+On Thursday, December 12, 2019 12:09:21 AM CET, Vicente Bergas wrote:
+> Hi,
+> since v5.5-rc1 four equal consecutive traces appeared that seem related to
+> rockchip sound. As i wasn't sure to whom sent the report just added
+> everybody from
+> ./scripts/get_maintainer.pl sound/soc/rockchip/rk3399_gru_sound.c
+> which is the file containg one of the functions in the trace.
+>
+> By the way, sound works fine. After all traces, there is this message that
+> could also be related:
+> [    0.625354] da7219 8-001a: Using default DAI clk names:=20
+> da7219-dai-wclk, da7219-dai-bclk
+>
+> Regards,
+>  Vicente.
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: David E. Box <david.e.box@intel.com>
-Cc: Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
----
- drivers/platform/x86/intel_pmc_core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Please, ignore this email. The issue has already been solved with
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?h=3D=
+for-5.5&id=3D4bf2e385aa59c2fae5f880aa25cfd2b470109093
 
-diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
-index 571b4754477c..f7256168bb8f 100644
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@ -49,7 +49,7 @@ static const struct pmc_bit_map spt_pll_map[] = {
- 	{"GEN2 USB2PCIE2 PLL",		SPT_PMC_BIT_MPHY_CMN_LANE1},
- 	{"DMIPCIE3 PLL",		SPT_PMC_BIT_MPHY_CMN_LANE2},
- 	{"SATA PLL",			SPT_PMC_BIT_MPHY_CMN_LANE3},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map spt_mphy_map[] = {
-@@ -69,7 +69,7 @@ static const struct pmc_bit_map spt_mphy_map[] = {
- 	{"MPHY CORE LANE 13",          SPT_PMC_BIT_MPHY_LANE13},
- 	{"MPHY CORE LANE 14",          SPT_PMC_BIT_MPHY_LANE14},
- 	{"MPHY CORE LANE 15",          SPT_PMC_BIT_MPHY_LANE15},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map spt_pfear_map[] = {
-@@ -113,7 +113,7 @@ static const struct pmc_bit_map spt_pfear_map[] = {
- 	{"CSME_SMS1",			SPT_PMC_BIT_CSME_SMS1},
- 	{"CSME_RTC",			SPT_PMC_BIT_CSME_RTC},
- 	{"CSME_PSF",			SPT_PMC_BIT_CSME_PSF},
--	{},
-+	{}
- };
- 
- static const struct pmc_bit_map spt_ltr_show_map[] = {
-@@ -300,7 +300,7 @@ static const struct pmc_bit_map *cnp_slps0_dbg_maps[] = {
- 	cnp_slps0_dbg0_map,
- 	cnp_slps0_dbg1_map,
- 	cnp_slps0_dbg2_map,
--	NULL,
-+	NULL
- };
- 
- static const struct pmc_bit_map cnp_ltr_show_map[] = {
-@@ -823,7 +823,7 @@ MODULE_DEVICE_TABLE(x86cpu, intel_pmc_core_ids);
- 
- static const struct pci_device_id pmc_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, SPT_PMC_PCI_DEVICE_ID), 0},
--	{ 0, },
-+	{ 0, }
- };
- 
- /*
--- 
-2.17.1
+Regards,
+  Vicen=C3=A7.
 
