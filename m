@@ -2,822 +2,163 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BFCC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E124FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2FE2073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4D02073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oJmcGMLV";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="E4bVcbkH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XwzJ2fiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730705AbfLLSv1 (ORCPT
+        id S1730719AbfLLSva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:51:27 -0500
-Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:41150
-        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730684AbfLLSvY (ORCPT
+        Thu, 12 Dec 2019 13:51:30 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:57256 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730651AbfLLSv0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:51:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1576176683;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=AuXBw5HRp7PbniKtYIiLPGmK102wGzaSApJ0LqgZBe4=;
-        b=oJmcGMLV0WtJYbd0fFDH2dA3ALsJmWpyiJGdY5ePDC8t/i497pgyrgD1OTgn8nLV
-        QlxcqM0VEs5C+yPZl99RQI26bR3Qn4ekTelVxzc/WtB0O7K4dKD0Bq3bNhPQtnoHK6F
-        xVyH49jsBW3PoEnFJbfNmfco60vULc8ztQWvFLC0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1576176683;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=AuXBw5HRp7PbniKtYIiLPGmK102wGzaSApJ0LqgZBe4=;
-        b=E4bVcbkHIwtts8uAf33xauMATJfl4Fss+MMoZPBB3H1fLnT2UQ9vWsPGz3w1WiCu
-        Oh7orvG1HAeyh5VGprGlMgZmLf3qicwuXaKIGCGjZiBCEClfy8S0TV+oeooYdHuKQjI
-        CgBq0OS6Q2AvhGplA/qN5ZCweD4Fud7nS9yju2Aw=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 165F2C447B0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org, swboyd@chromium.org
-Cc:     Elliot Berman <eberman@codeaurora.org>,
-        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 15/17] firmware: qcom_scm: Order functions, definitions by service/command
-Date:   Thu, 12 Dec 2019 18:51:23 +0000
-Message-ID: <0101016efb7388fa-29f511eb-16b6-4903-ad46-225aaa9fa56d-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1576176651-17089-1-git-send-email-eberman@codeaurora.org>
-References: <1576176651-17089-1-git-send-email-eberman@codeaurora.org>
-X-SES-Outgoing: 2019.12.12-54.240.27.187
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Thu, 12 Dec 2019 13:51:26 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCInQ2N071249;
+        Thu, 12 Dec 2019 18:51:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=zaKIVHYYQNYvdMbmkRZGkWLw1vkdwvczrml95DtTJAY=;
+ b=XwzJ2fiZ/H6sRv26zjzMBqb3PduV1kwp19YMd2Q8A5BYL3kZtD1/DHph5L4EFEAzt5nF
+ ur59alOYzAKyd2qzbopbMwdclz1eeGufSx4SUJj+kltObp02f3880J53RuFPEvVdmWsJ
+ W+FJIT4RYh89zg3QZ1Ul+CtUbmMSeaWKxXpJNikqkFRFrfnl2XmOqvKvHqORsZq3LX24
+ 2lg9hceviEG1xwbriNl0b4eJm6HeSPXd/BZA0LiA9qHBC6BbPW+KKtuRESJBPNErXTdM
+ tz/7rJpCg2IiGhuYL7BQR6jrdlMNPIZd/bX1l1CC1HRdKcVgbKPNwE0v8kjjXH0R7bcK 7g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2wr4qrvu6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:51:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xBCInqlB097689;
+        Thu, 12 Dec 2019 18:51:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2wumk6mu80-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 18:51:18 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xBCIpGOF018385;
+        Thu, 12 Dec 2019 18:51:17 GMT
+Received: from [192.168.14.112] (/109.65.223.49)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 12 Dec 2019 10:49:57 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v5 2/2] kvm: Use huge pages for DAX-backed files
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
+Date:   Thu, 12 Dec 2019 20:49:52 +0200
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-nvdimm@lists.01.org, x86@kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jason.zeng@intel.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ED482280-CB47-4AB6-9E7E-EEE7848E0F8B@oracle.com>
+References: <20191212182238.46535-1-brho@google.com>
+ <20191212182238.46535-3-brho@google.com>
+ <06108004-1720-41EB-BCAB-BFA8FEBF4772@oracle.com>
+To:     Barret Rhoden <brho@google.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1912120144
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9469 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1912120144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Definitions throughout qcom_scm are loosely grouped and loosely ordered.
-Sort all the functions/definitions by service ID/command ID to improve
-sanity when needing to add new functionality to this driver.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Elliot Berman <eberman@codeaurora.org>
----
- drivers/firmware/qcom_scm.c | 376 ++++++++++++++++++++++----------------------
- drivers/firmware/qcom_scm.h | 120 +++++++-------
- include/linux/qcom_scm.h    | 111 +++++++------
- 3 files changed, 309 insertions(+), 298 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index 5efe729..5ba4c85 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -85,33 +85,33 @@ static void qcom_scm_clk_disable(void)
- }
- 
- /**
-- * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-+ * qcom_scm_set_warm_boot_addr() - Set the warm boot address for cpus
-  * @entry: Entry point function for the cpus
-  * @cpus: The cpumask of cpus that will use the entry point
-  *
-- * Set the cold boot address of the cpus. Any cpu outside the supported
-- * range would be removed from the cpu present mask.
-+ * Set the Linux entry point for the SCM to transfer control to when coming
-+ * out of a power down. CPU power down may be executed on cpuidle or hotplug.
-  */
--int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
-+int qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
- {
--	return __qcom_scm_set_cold_boot_addr(__scm ? __scm->dev : NULL, entry,
--					     cpus);
-+	return __qcom_scm_set_warm_boot_addr(__scm->dev, entry, cpus);
- }
--EXPORT_SYMBOL(qcom_scm_set_cold_boot_addr);
-+EXPORT_SYMBOL(qcom_scm_set_warm_boot_addr);
- 
- /**
-- * qcom_scm_set_warm_boot_addr() - Set the warm boot address for cpus
-+ * qcom_scm_set_cold_boot_addr() - Set the cold boot address for cpus
-  * @entry: Entry point function for the cpus
-  * @cpus: The cpumask of cpus that will use the entry point
-  *
-- * Set the Linux entry point for the SCM to transfer control to when coming
-- * out of a power down. CPU power down may be executed on cpuidle or hotplug.
-+ * Set the cold boot address of the cpus. Any cpu outside the supported
-+ * range would be removed from the cpu present mask.
-  */
--int qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
-+int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
- {
--	return __qcom_scm_set_warm_boot_addr(__scm->dev, entry, cpus);
-+	return __qcom_scm_set_cold_boot_addr(__scm ? __scm->dev : NULL, entry,
-+					     cpus);
- }
--EXPORT_SYMBOL(qcom_scm_set_warm_boot_addr);
-+EXPORT_SYMBOL(qcom_scm_set_cold_boot_addr);
- 
- /**
-  * qcom_scm_cpu_power_down() - Power down the cpu
-@@ -127,107 +127,33 @@ void qcom_scm_cpu_power_down(u32 flags)
- }
- EXPORT_SYMBOL(qcom_scm_cpu_power_down);
- 
--/**
-- * qcom_scm_hdcp_available() - Check if secure environment supports HDCP.
-- *
-- * Return true if HDCP is supported, false if not.
-- */
--bool qcom_scm_hdcp_available(void)
--{
--	int ret = qcom_scm_clk_enable();
--
--	if (ret)
--		return ret;
--
--	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_HDCP,
--						QCOM_SCM_HDCP_INVOKE);
--
--	qcom_scm_clk_disable();
--
--	return ret > 0 ? true : false;
--}
--EXPORT_SYMBOL(qcom_scm_hdcp_available);
--
--/**
-- * qcom_scm_hdcp_req() - Send HDCP request.
-- * @req: HDCP request array
-- * @req_cnt: HDCP request array count
-- * @resp: response buffer passed to SCM
-- *
-- * Write HDCP register(s) through SCM.
-- */
--int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
--{
--	int ret = qcom_scm_clk_enable();
--
--	if (ret)
--		return ret;
--
--	ret = __qcom_scm_hdcp_req(__scm->dev, req, req_cnt, resp);
--	qcom_scm_clk_disable();
--	return ret;
--}
--EXPORT_SYMBOL(qcom_scm_hdcp_req);
--
--/**
-- * qcom_scm_pas_supported() - Check if the peripheral authentication service is
-- *			      available for the given peripherial
-- * @peripheral:	peripheral id
-- *
-- * Returns true if PAS is supported for this peripheral, otherwise false.
-- */
--bool qcom_scm_pas_supported(u32 peripheral)
-+int qcom_scm_set_remote_state(u32 state, u32 id)
- {
--	int ret;
--
--	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_PIL,
--					   QCOM_SCM_PIL_PAS_IS_SUPPORTED);
--	if (ret <= 0)
--		return false;
--
--	return __qcom_scm_pas_supported(__scm->dev, peripheral);
-+	return __qcom_scm_set_remote_state(__scm->dev, state, id);
- }
--EXPORT_SYMBOL(qcom_scm_pas_supported);
-+EXPORT_SYMBOL(qcom_scm_set_remote_state);
- 
--/**
-- * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
-- */
--bool qcom_scm_ocmem_lock_available(void)
-+static void qcom_scm_set_download_mode(bool enable)
- {
--	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_OCMEM,
--					    QCOM_SCM_OCMEM_LOCK_CMD);
--}
--EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
-+	bool avail;
-+	int ret = 0;
- 
--/**
-- * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
-- * region to the specified initiator
-- *
-- * @id:     tz initiator id
-- * @offset: OCMEM offset
-- * @size:   OCMEM size
-- * @mode:   access mode (WIDE/NARROW)
-- */
--int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
--			u32 mode)
--{
--	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
--}
--EXPORT_SYMBOL(qcom_scm_ocmem_lock);
-+	avail = __qcom_scm_is_call_available(__scm->dev,
-+					     QCOM_SCM_SVC_BOOT,
-+					     QCOM_SCM_BOOT_SET_DLOAD_MODE);
-+	if (avail) {
-+		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
-+	} else if (__scm->dload_mode_addr) {
-+		ret = __qcom_scm_io_writel(__scm->dev, __scm->dload_mode_addr,
-+					   enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
-+	} else {
-+		dev_err(__scm->dev,
-+			"No available mechanism for setting download mode\n");
-+	}
- 
--/**
-- * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
-- * region from the specified initiator
-- *
-- * @id:     tz initiator id
-- * @offset: OCMEM offset
-- * @size:   OCMEM size
-- */
--int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
--{
--	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
-+	if (ret)
-+		dev_err(__scm->dev, "failed to set download mode: %d\n", ret);
- }
--EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
- 
- /**
-  * qcom_scm_pas_init_image() - Initialize peripheral authentication service
-@@ -342,6 +268,26 @@ int qcom_scm_pas_shutdown(u32 peripheral)
- }
- EXPORT_SYMBOL(qcom_scm_pas_shutdown);
- 
-+/**
-+ * qcom_scm_pas_supported() - Check if the peripheral authentication service is
-+ *			      available for the given peripherial
-+ * @peripheral:	peripheral id
-+ *
-+ * Returns true if PAS is supported for this peripheral, otherwise false.
-+ */
-+bool qcom_scm_pas_supported(u32 peripheral)
-+{
-+	int ret;
-+
-+	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_PIL,
-+					   QCOM_SCM_PIL_PAS_IS_SUPPORTED);
-+	if (ret <= 0)
-+		return false;
-+
-+	return __qcom_scm_pas_supported(__scm->dev, peripheral);
-+}
-+EXPORT_SYMBOL(qcom_scm_pas_supported);
-+
- static int qcom_scm_pas_reset_assert(struct reset_controller_dev *rcdev,
- 				     unsigned long idx)
- {
-@@ -365,6 +311,18 @@ static const struct reset_control_ops qcom_scm_pas_reset_ops = {
- 	.deassert = qcom_scm_pas_reset_deassert,
- };
- 
-+int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
-+{
-+	return __qcom_scm_io_readl(__scm->dev, addr, val);
-+}
-+EXPORT_SYMBOL(qcom_scm_io_readl);
-+
-+int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
-+{
-+	return __qcom_scm_io_writel(__scm->dev, addr, val);
-+}
-+EXPORT_SYMBOL(qcom_scm_io_writel);
-+
- /**
-  * qcom_scm_restore_sec_cfg_available() - Check if secure environment
-  * supports restore security config interface.
-@@ -396,87 +354,6 @@ int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
- }
- EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
- 
--int qcom_scm_qsmmu500_wait_safe_toggle(bool en)
--{
--	return __qcom_scm_qsmmu500_wait_safe_toggle(__scm->dev, en);
--}
--EXPORT_SYMBOL(qcom_scm_qsmmu500_wait_safe_toggle);
--
--int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
--{
--	return __qcom_scm_io_readl(__scm->dev, addr, val);
--}
--EXPORT_SYMBOL(qcom_scm_io_readl);
--
--int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
--{
--	return __qcom_scm_io_writel(__scm->dev, addr, val);
--}
--EXPORT_SYMBOL(qcom_scm_io_writel);
--
--static void qcom_scm_set_download_mode(bool enable)
--{
--	bool avail;
--	int ret = 0;
--
--	avail = __qcom_scm_is_call_available(__scm->dev,
--					     QCOM_SCM_SVC_BOOT,
--					     QCOM_SCM_BOOT_SET_DLOAD_MODE);
--	if (avail) {
--		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
--	} else if (__scm->dload_mode_addr) {
--		ret = __qcom_scm_io_writel(__scm->dev, __scm->dload_mode_addr,
--					   enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
--	} else {
--		dev_err(__scm->dev,
--			"No available mechanism for setting download mode\n");
--	}
--
--	if (ret)
--		dev_err(__scm->dev, "failed to set download mode: %d\n", ret);
--}
--
--static int qcom_scm_find_dload_address(struct device *dev, u64 *addr)
--{
--	struct device_node *tcsr;
--	struct device_node *np = dev->of_node;
--	struct resource res;
--	u32 offset;
--	int ret;
--
--	tcsr = of_parse_phandle(np, "qcom,dload-mode", 0);
--	if (!tcsr)
--		return 0;
--
--	ret = of_address_to_resource(tcsr, 0, &res);
--	of_node_put(tcsr);
--	if (ret)
--		return ret;
--
--	ret = of_property_read_u32_index(np, "qcom,dload-mode", 1, &offset);
--	if (ret < 0)
--		return ret;
--
--	*addr = res.start + offset;
--
--	return 0;
--}
--
--/**
-- * qcom_scm_is_available() - Checks if SCM is available
-- */
--bool qcom_scm_is_available(void)
--{
--	return !!__scm;
--}
--EXPORT_SYMBOL(qcom_scm_is_available);
--
--int qcom_scm_set_remote_state(u32 state, u32 id)
--{
--	return __qcom_scm_set_remote_state(__scm->dev, state, id);
--}
--EXPORT_SYMBOL(qcom_scm_set_remote_state);
--
- /**
-  * qcom_scm_assign_mem() - Make a secure call to reassign memory ownership
-  * @mem_addr: mem region whose ownership need to be reassigned
-@@ -559,6 +436,129 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
- }
- EXPORT_SYMBOL(qcom_scm_assign_mem);
- 
-+/**
-+ * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
-+ */
-+bool qcom_scm_ocmem_lock_available(void)
-+{
-+	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_OCMEM,
-+					    QCOM_SCM_OCMEM_LOCK_CMD);
-+}
-+EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
-+
-+/**
-+ * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
-+ * region to the specified initiator
-+ *
-+ * @id:     tz initiator id
-+ * @offset: OCMEM offset
-+ * @size:   OCMEM size
-+ * @mode:   access mode (WIDE/NARROW)
-+ */
-+int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
-+			u32 mode)
-+{
-+	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
-+}
-+EXPORT_SYMBOL(qcom_scm_ocmem_lock);
-+
-+/**
-+ * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
-+ * region from the specified initiator
-+ *
-+ * @id:     tz initiator id
-+ * @offset: OCMEM offset
-+ * @size:   OCMEM size
-+ */
-+int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
-+{
-+	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
-+}
-+EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
-+
-+/**
-+ * qcom_scm_hdcp_available() - Check if secure environment supports HDCP.
-+ *
-+ * Return true if HDCP is supported, false if not.
-+ */
-+bool qcom_scm_hdcp_available(void)
-+{
-+	int ret = qcom_scm_clk_enable();
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_HDCP,
-+						QCOM_SCM_HDCP_INVOKE);
-+
-+	qcom_scm_clk_disable();
-+
-+	return ret > 0 ? true : false;
-+}
-+EXPORT_SYMBOL(qcom_scm_hdcp_available);
-+
-+/**
-+ * qcom_scm_hdcp_req() - Send HDCP request.
-+ * @req: HDCP request array
-+ * @req_cnt: HDCP request array count
-+ * @resp: response buffer passed to SCM
-+ *
-+ * Write HDCP register(s) through SCM.
-+ */
-+int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
-+{
-+	int ret = qcom_scm_clk_enable();
-+
-+	if (ret)
-+		return ret;
-+
-+	ret = __qcom_scm_hdcp_req(__scm->dev, req, req_cnt, resp);
-+	qcom_scm_clk_disable();
-+	return ret;
-+}
-+EXPORT_SYMBOL(qcom_scm_hdcp_req);
-+
-+int qcom_scm_qsmmu500_wait_safe_toggle(bool en)
-+{
-+	return __qcom_scm_qsmmu500_wait_safe_toggle(__scm->dev, en);
-+}
-+EXPORT_SYMBOL(qcom_scm_qsmmu500_wait_safe_toggle);
-+
-+static int qcom_scm_find_dload_address(struct device *dev, u64 *addr)
-+{
-+	struct device_node *tcsr;
-+	struct device_node *np = dev->of_node;
-+	struct resource res;
-+	u32 offset;
-+	int ret;
-+
-+	tcsr = of_parse_phandle(np, "qcom,dload-mode", 0);
-+	if (!tcsr)
-+		return 0;
-+
-+	ret = of_address_to_resource(tcsr, 0, &res);
-+	of_node_put(tcsr);
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32_index(np, "qcom,dload-mode", 1, &offset);
-+	if (ret < 0)
-+		return ret;
-+
-+	*addr = res.start + offset;
-+
-+	return 0;
-+}
-+
-+/**
-+ * qcom_scm_is_available() - Checks if SCM is available
-+ */
-+bool qcom_scm_is_available(void)
-+{
-+	return !!__scm;
-+}
-+EXPORT_SYMBOL(qcom_scm_is_available);
-+
- static int qcom_scm_probe(struct platform_device *pdev)
- {
- 	struct qcom_scm *scm;
-diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-index a022556..56ace3b 100644
---- a/drivers/firmware/qcom_scm.h
-+++ b/drivers/firmware/qcom_scm.h
-@@ -4,64 +4,83 @@
- #ifndef __QCOM_SCM_INT_H
- #define __QCOM_SCM_INT_H
- 
--#define QCOM_SCM_SVC_BOOT		0x1
--#define QCOM_SCM_BOOT_SET_ADDR		0x1
--#define QCOM_SCM_BOOT_SET_DLOAD_MODE		0x10
--#define QCOM_SCM_BOOT_SET_REMOTE_STATE	0xa
--extern int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id);
--extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
--
-+#define QCOM_SCM_SVC_BOOT		0x01
-+#define QCOM_SCM_BOOT_SET_ADDR		0x01
-+#define QCOM_SCM_BOOT_TERMINATE_PC	0x02
-+#define QCOM_SCM_BOOT_SET_DLOAD_MODE	0x10
-+#define QCOM_SCM_BOOT_SET_REMOTE_STATE	0x0a
- extern int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
- 		const cpumask_t *cpus);
- extern int __qcom_scm_set_cold_boot_addr(struct device *dev, void *entry,
- 		const cpumask_t *cpus);
--
--#define QCOM_SCM_BOOT_TERMINATE_PC	0x2
--#define QCOM_SCM_FLUSH_FLAG_MASK	0x3
- extern void __qcom_scm_cpu_power_down(struct device *dev, u32 flags);
-+extern int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id);
-+extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
-+#define QCOM_SCM_FLUSH_FLAG_MASK	0x3
-+
-+#define QCOM_SCM_SVC_PIL		0x02
-+#define QCOM_SCM_PIL_PAS_INIT_IMAGE	0x01
-+#define QCOM_SCM_PIL_PAS_MEM_SETUP	0x02
-+#define QCOM_SCM_PIL_PAS_AUTH_AND_RESET	0x05
-+#define QCOM_SCM_PIL_PAS_SHUTDOWN	0x06
-+#define QCOM_SCM_PIL_PAS_IS_SUPPORTED	0x07
-+#define QCOM_SCM_PIL_PAS_MSS_RESET	0x0a
-+extern bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral);
-+extern int  __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
-+		dma_addr_t metadata_phys);
-+extern int  __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
-+		phys_addr_t addr, phys_addr_t size);
-+extern int  __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral);
-+extern int  __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral);
-+extern int  __qcom_scm_pas_mss_reset(struct device *dev, bool reset);
- 
--#define QCOM_SCM_SVC_IO			0x5
--#define QCOM_SCM_IO_READ		0x1
--#define QCOM_SCM_IO_WRITE		0x2
-+#define QCOM_SCM_SVC_IO			0x05
-+#define QCOM_SCM_IO_READ		0x01
-+#define QCOM_SCM_IO_WRITE		0x02
- extern int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr, unsigned int *val);
- extern int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val);
- 
--#define QCOM_SCM_SVC_INFO		0x6
--#define QCOM_SCM_INFO_IS_CALL_AVAIL	0x1
-+#define QCOM_SCM_SVC_INFO		0x06
-+#define QCOM_SCM_INFO_IS_CALL_AVAIL	0x01
- extern int __qcom_scm_is_call_available(struct device *dev, u32 svc_id,
- 		u32 cmd_id);
- 
--#define QCOM_SCM_SVC_HDCP		0x11
--#define QCOM_SCM_HDCP_INVOKE		0x01
--extern int __qcom_scm_hdcp_req(struct device *dev,
--		struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp);
--
--extern void __qcom_scm_init(void);
--
--#define QCOM_SCM_SVC_OCMEM			0xf
--#define QCOM_SCM_OCMEM_LOCK_CMD		0x1
--#define QCOM_SCM_OCMEM_UNLOCK_CMD		0x2
-+#define QCOM_SCM_SVC_MP				0x0c
-+#define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
-+#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
-+#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
-+#define QCOM_SCM_MP_ASSIGN			0x16
-+extern int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
-+				      u32 spare);
-+extern int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
-+					     size_t *size);
-+extern int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr,
-+					     u32 size, u32 spare);
-+extern int  __qcom_scm_assign_mem(struct device *dev,
-+				  phys_addr_t mem_region, size_t mem_sz,
-+				  phys_addr_t src, size_t src_sz,
-+				  phys_addr_t dest, size_t dest_sz);
- 
-+#define QCOM_SCM_SVC_OCMEM		0x0f
-+#define QCOM_SCM_OCMEM_LOCK_CMD		0x01
-+#define QCOM_SCM_OCMEM_UNLOCK_CMD	0x02
- extern int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset,
- 				 u32 size, u32 mode);
- extern int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset,
- 				   u32 size);
- 
--#define QCOM_SCM_SVC_PIL		0x2
--#define QCOM_SCM_PIL_PAS_INIT_IMAGE	0x1
--#define QCOM_SCM_PIL_PAS_MEM_SETUP	0x2
--#define QCOM_SCM_PIL_PAS_AUTH_AND_RESET	0x5
--#define QCOM_SCM_PIL_PAS_SHUTDOWN	0x6
--#define QCOM_SCM_PIL_PAS_IS_SUPPORTED	0x7
--#define QCOM_SCM_PIL_PAS_MSS_RESET		0xa
--extern bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral);
--extern int  __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
--		dma_addr_t metadata_phys);
--extern int  __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
--		phys_addr_t addr, phys_addr_t size);
--extern int  __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral);
--extern int  __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral);
--extern int  __qcom_scm_pas_mss_reset(struct device *dev, bool reset);
-+#define QCOM_SCM_SVC_HDCP		0x11
-+#define QCOM_SCM_HDCP_INVOKE		0x01
-+extern int __qcom_scm_hdcp_req(struct device *dev,
-+		struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp);
-+
-+#define QCOM_SCM_SVC_SMMU_PROGRAM		0x15
-+#define QCOM_SCM_SMMU_CONFIG_ERRATA1		0x03
-+#define QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL	0x02
-+extern int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev,
-+						bool enable);
-+
-+extern void __qcom_scm_init(void);
- 
- /* common error codes */
- #define QCOM_SCM_V2_EBUSY	-12
-@@ -90,25 +109,4 @@ static inline int qcom_scm_remap_error(int err)
- 	return -EINVAL;
- }
- 
--#define QCOM_SCM_SVC_MP			0xc
--#define QCOM_SCM_MP_RESTORE_SEC_CFG	2
--extern int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
--				      u32 spare);
--#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	3
--#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	4
--#define QCOM_SCM_SVC_SMMU_PROGRAM	0x15
--#define QCOM_SCM_SMMU_CONFIG_ERRATA1		0x3
--#define QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL	0x2
--extern int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
--					     size_t *size);
--extern int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr,
--					     u32 size, u32 spare);
--extern int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev,
--						bool enable);
--#define QCOM_SCM_MP_ASSIGN	0x16
--extern int  __qcom_scm_assign_mem(struct device *dev,
--				  phys_addr_t mem_region, size_t mem_sz,
--				  phys_addr_t src, size_t src_sz,
--				  phys_addr_t dest, size_t dest_sz);
--
- #endif
-diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-index 6fb23c5..e3e382f 100644
---- a/include/linux/qcom_scm.h
-+++ b/include/linux/qcom_scm.h
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
--/* Copyright (c) 2010-2015, 2018, The Linux Foundation. All rights reserved.
-+/* Copyright (c) 2010-2015, 2018-2019 The Linux Foundation. All rights reserved.
-  * Copyright (C) 2015 Linaro Ltd.
-  */
- #ifndef __QCOM_SCM_H
-@@ -55,75 +55,88 @@ enum qcom_scm_sec_dev_id {
- #define QCOM_SCM_PERM_RWX (QCOM_SCM_PERM_RW | QCOM_SCM_PERM_EXEC)
- 
- #if IS_ENABLED(CONFIG_QCOM_SCM)
-+extern bool qcom_scm_is_available(void);
-+
- extern int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus);
- extern int qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus);
--extern bool qcom_scm_is_available(void);
--extern bool qcom_scm_hdcp_available(void);
--extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
--			     u32 *resp);
--extern bool qcom_scm_ocmem_lock_available(void);
--extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
--			       u32 size, u32 mode);
--extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
--				 u32 size);
--extern bool qcom_scm_pas_supported(u32 peripheral);
-+extern void qcom_scm_cpu_power_down(u32 flags);
-+extern int qcom_scm_set_remote_state(u32 state, u32 id);
-+
- extern int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
- 				   size_t size);
- extern int qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr,
- 				  phys_addr_t size);
- extern int qcom_scm_pas_auth_and_reset(u32 peripheral);
- extern int qcom_scm_pas_shutdown(u32 peripheral);
--extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
--			       unsigned int *src,
--			       const struct qcom_scm_vmperm *newvm,
--			       unsigned int dest_cnt);
--extern void qcom_scm_cpu_power_down(u32 flags);
--extern int qcom_scm_set_remote_state(u32 state, u32 id);
-+extern bool qcom_scm_pas_supported(u32 peripheral);
-+
-+extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
-+extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
-+
- extern bool qcom_scm_restore_sec_cfg_available(void);
- extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
- extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
- extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
-+extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
-+			       unsigned int *src,
-+			       const struct qcom_scm_vmperm *newvm,
-+			       unsigned int dest_cnt);
-+
-+extern bool qcom_scm_ocmem_lock_available(void);
-+extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
-+			       u32 size, u32 mode);
-+extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
-+				 u32 size);
-+
-+extern bool qcom_scm_hdcp_available(void);
-+extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
-+			     u32 *resp);
-+
- extern int qcom_scm_qsmmu500_wait_safe_toggle(bool en);
--extern int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
--extern int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
- #else
- 
- #include <linux/errno.h>
- 
--static inline
--int qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
--{
--	return -ENODEV;
--}
--static inline
--int qcom_scm_set_warm_boot_addr(void *entry, const cpumask_t *cpus)
--{
--	return -ENODEV;
--}
- static inline bool qcom_scm_is_available(void) { return false; }
--static inline bool qcom_scm_hdcp_available(void) { return false; }
--static inline int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
--				    u32 *resp) { return -ENODEV; }
--static inline bool qcom_scm_pas_supported(u32 peripheral) { return false; }
-+
-+static inline int qcom_scm_set_cold_boot_addr(void *entry,
-+		const cpumask_t *cpus) { return -ENODEV; }
-+static inline int qcom_scm_set_warm_boot_addr(void *entry,
-+		const cpumask_t *cpus) { return -ENODEV; }
-+static inline void qcom_scm_cpu_power_down(u32 flags) {}
-+static inline u32 qcom_scm_set_remote_state(u32 state,u32 id)
-+		{ return -ENODEV; }
-+
- static inline int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
--					  size_t size) { return -ENODEV; }
-+		size_t size) { return -ENODEV; }
- static inline int qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr,
--					 phys_addr_t size) { return -ENODEV; }
--static inline int
--qcom_scm_pas_auth_and_reset(u32 peripheral) { return -ENODEV; }
-+		phys_addr_t size) { return -ENODEV; }
-+static inline int qcom_scm_pas_auth_and_reset(u32 peripheral)
-+		{ return -ENODEV; }
- static inline int qcom_scm_pas_shutdown(u32 peripheral) { return -ENODEV; }
-+static inline bool qcom_scm_pas_supported(u32 peripheral) { return false; }
-+
-+static inline int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val)
-+		{ return -ENODEV; }
-+static inline int qcom_scm_io_writel(phys_addr_t addr, unsigned int val)
-+		{ return -ENODEV; }
-+
-+static inline bool qcom_scm_restore_sec_cfg_available(void) { return false; }
-+static inline int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare)
-+		{ return -ENODEV; }
-+static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size)
-+		{ return -ENODEV; }
-+static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
-+		{ return -ENODEV; }
- static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
--				      unsigned int *src,
--				      const struct qcom_scm_vmperm *newvm,
--				      unsigned int dest_cnt) { return -ENODEV; }
--static inline void qcom_scm_cpu_power_down(u32 flags) {}
--static inline u32
--qcom_scm_set_remote_state(u32 state,u32 id) { return -ENODEV; }
--static inline int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare) { return -ENODEV; }
--static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size) { return -ENODEV; }
--static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare) { return -ENODEV; }
--static inline int qcom_scm_qsmmu500_wait_safe_toggle(bool en) { return -ENODEV; }
--static inline int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val) { return -ENODEV; }
--static inline int qcom_scm_io_writel(phys_addr_t addr, unsigned int val) { return -ENODEV; }
-+		unsigned int *src, const struct qcom_scm_vmperm *newvm,
-+		unsigned int dest_cnt) { return -ENODEV; }
-+
-+static inline bool qcom_scm_hdcp_available(void) { return false; }
-+static inline int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
-+		u32 *resp) { return -ENODEV; }
-+
-+static inline int qcom_scm_qsmmu500_wait_safe_toggle(bool en)
-+		{ return -ENODEV; }
- #endif
- #endif
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> On 12 Dec 2019, at 20:47, Liran Alon <liran.alon@oracle.com> wrote:
+>=20
+>=20
+>=20
+>> On 12 Dec 2019, at 20:22, Barret Rhoden <brho@google.com> wrote:
+>>=20
+>> This change allows KVM to map DAX-backed files made of huge pages =
+with
+>> huge mappings in the EPT/TDP.
+>=20
+> This change isn=E2=80=99t only relevant for TDP. It also affects when =
+KVM use shadow-paging.
+> See how FNAME(page_fault)() calls transparent_hugepage_adjust().
+>=20
+>>=20
+>> DAX pages are not PageTransCompound.  The existing check is trying to
+>> determine if the mapping for the pfn is a huge mapping or not.
+>=20
+> I would rephrase =E2=80=9CThe existing check is trying to determine if =
+the pfn
+> is mapped as part of a transparent huge-page=E2=80=9D.
+>=20
+>> For
+>> non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
+>=20
+> This is not related to hugetlbfs but rather THP.
+>=20
+>> For DAX, we can check the page table itself.
+>>=20
+>> Note that KVM already faulted in the page (or huge page) in the =
+host's
+>> page table, and we hold the KVM mmu spinlock.  We grabbed that lock =
+in
+>> kvm_mmu_notifier_invalidate_range_end, before checking the mmu seq.
+>>=20
+>> Signed-off-by: Barret Rhoden <brho@google.com>
+>=20
+> I don=E2=80=99t think the right place to change for this functionality =
+is transparent_hugepage_adjust()
+> which is meant to handle PFNs that are mapped as part of a transparent =
+huge-page.
+>=20
+> For example, this would prevent mapping DAX-backed file page as 1GB.
+> As transparent_hugepage_adjust() only handles the case (level =3D=3D =
+PT_PAGE_TABLE_LEVEL).
+>=20
+> As you are parsing the page-tables to discover the page-size the PFN =
+is mapped in,
+> I think you should instead modify kvm_host_page_size() to parse =
+page-tables instead
+> of rely on vma_kernel_pagesize() (Which relies on =
+vma->vm_ops->pagesize()) in case
+> of is_zone_device_page().
+> The main complication though of doing this is that at this point you =
+don=E2=80=99t yet have the PFN
+> that is retrieved by try_async_pf(). So maybe you should consider =
+modifying the order of calls
+> in tdp_page_fault() & FNAME(page_fault)().
+>=20
+> -Liran
+
+Or alternatively when thinking about it more, maybe just rename =
+transparent_hugepage_adjust()
+to not be specific to THP and better handle the case of parsing =
+page-tables changing mapping-level to 1GB.
+That is probably easier and more elegant.
+
+-Liran
+
 
