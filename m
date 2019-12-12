@@ -2,38 +2,37 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5221C04E30
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF4DC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A488C21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA124682
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 03:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfLLDkM (ORCPT
+        id S1727953AbfLLDkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 22:40:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58556 "EHLO mx1.suse.de"
+        Wed, 11 Dec 2019 22:40:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58768 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727641AbfLLDkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 22:40:03 -0500
+        id S1727802AbfLLDkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 22:40:10 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EADCCAE40;
-        Thu, 12 Dec 2019 03:40:01 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id CDFB0ADE1;
+        Thu, 12 Dec 2019 03:40:08 +0000 (UTC)
 From:   =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 To:     linux-realtek-soc@lists.infradead.org, linux-leds@vger.kernel.org
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        sales@fdhisi.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [RFC 11/25] dt-bindings: leds: tm1628: Add Fuda Hisi Microelectronics FD628
-Date:   Thu, 12 Dec 2019 04:39:38 +0100
-Message-Id: <20191212033952.5967-12-afaerber@suse.de>
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [RFC 25/25] WIP: leds: tm1628: Prepare AiP1618 keys
+Date:   Thu, 12 Dec 2019 04:39:52 +0100
+Message-Id: <20191212033952.5967-26-afaerber@suse.de>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20191212033952.5967-1-afaerber@suse.de>
 References: <20191212033952.5967-1-afaerber@suse.de>
@@ -45,26 +44,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a compatible string for FD628.
+Extend definition with key input lines.
 
-Cc: sales@fdhisi.com
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/leds/leds-tm1628.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
-index 024875656e79..3f2cc4cec04d 100644
---- a/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
-+++ b/Documentation/devicetree/bindings/leds/titanmec,tm1628.yaml
-@@ -12,6 +12,7 @@ maintainers:
- properties:
-   compatible:
-     enum:
-+    - fdhisi,fd628
-     - titanmec,tm1628
- 
-   reg:
+diff --git a/drivers/leds/leds-tm1628.c b/drivers/leds/leds-tm1628.c
+index 2caf1e63fc90..e28809d9a700 100644
+--- a/drivers/leds/leds-tm1628.c
++++ b/drivers/leds/leds-tm1628.c
+@@ -699,6 +699,8 @@ static const struct tm1628_info aip1618_info = {
+ 	.seg_mask = GENMASK(14, 12) | GENMASK(5, 1),
+ 	.modes = aip1618_modes,
+ 	.default_mode = 3,
++	.k_mask = BIT(2),
++	.ks_mask = GENMASK(5, 1),
+ 	.pwm_map = tm1628_pwm_map,
+ 	.default_pwm = 0,
+ };
 -- 
 2.16.4
 
