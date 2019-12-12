@@ -2,141 +2,174 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61763C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70290C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A62221556
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3417F22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hK/r0/td"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CXoo+nHL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730928AbfLLUxR (ORCPT
+        id S1730938AbfLLUxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:53:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27055 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730878AbfLLUxR (ORCPT
+        Thu, 12 Dec 2019 15:53:43 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33477 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730894AbfLLUxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:53:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576183996;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jFsMCkTPVgR+W1Kd3Lf7aWur2abNjkkDZbU5lmEOBvY=;
-        b=hK/r0/tdUfUddrypg8CTRgyQQsrs3YRpe8+jY2rzNAv8seUe133HnAINpm6M2BLw4kVEcW
-        ffiuO9SV+Z35WQbTpPNMddJa9XY6PXkxR+ykOrxIbYgLRjbMPP/ScT6E7wmEg0FvGCQFx+
-        NU7O2+r1NJ9elj20oPGY+JET/Py0E3w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-8Vj4gIgUMM2OAurVbZEBGA-1; Thu, 12 Dec 2019 15:53:11 -0500
-X-MC-Unique: 8Vj4gIgUMM2OAurVbZEBGA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0B8F100726D;
-        Thu, 12 Dec 2019 20:53:06 +0000 (UTC)
-Received: from shalem.localdomain.com (unknown [10.36.118.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7223B60BB1;
-        Thu, 12 Dec 2019 20:53:05 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH resend] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
-Date:   Thu, 12 Dec 2019 21:53:04 +0100
-Message-Id: <20191212205304.191610-1-hdegoede@redhat.com>
+        Thu, 12 Dec 2019 15:53:42 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v140so218140oie.0
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:53:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q/kJv8AZtrQ1tJoTlAjQBJyNXaZYs14RTc7efEcCC3c=;
+        b=CXoo+nHLTQb5saMEEZxOIXV69+PypiZhz14dMoSY3hEM8jydZwc0lVnHGgp1KmRWCm
+         x9Zt1OeDWdpIagyI8VNBztutYR3xYV3nRsPDv5IpbgPHULq5tj9C1d4+P49+dlDwL9kj
+         V+YcJ5lnN/rVoK5Wquw6sHWYyTAW4Q6Ny35Tubwvs8ZrVRdovAoR8QYWs0nn1YyJhth2
+         EC2w/nWqEo05KLJ5hCjRm/tUA+ivg7BfizrWMAhaKrtZjU/n8caKyIPASx9370KwhGNj
+         GD3fA1e6nq01vUdftzjztPKNtanlqb0k39IIK9QTbpI2eSPrJ05SrMBQFYcVlHH+s06g
+         hgqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q/kJv8AZtrQ1tJoTlAjQBJyNXaZYs14RTc7efEcCC3c=;
+        b=qesQW39Fa7jn8+XtN08ckUJAswGRt4/LiiuCxreR06B6mTITSCueWo5RZ9OREjmBoE
+         kAH1dbL/MieU1Cg29bYNdyJFymbl4z3d0zsQBl1LuNfs/7SrpJKUMxIEfWczuX17Dcsk
+         dbpBxy2auXDv6RxTMTuazfiEYbvhvoeafy2dH+YUmTocuBlu/nfO1HhYtQqkBmV6qsF8
+         X3wwtI6/WWrnKI9Wdqt4+t3r3leV/eiIeBarK63ygLAdlKc2SBoXQiHXLkAbio2MQTmv
+         A3nXL8OIokhQMYkKNKdpmt/t5AmZ6FBbciwJ46/7bpVCiBNb5iI+8QOL+brsxGoJdNFm
+         cpng==
+X-Gm-Message-State: APjAAAV1O9bKoZBaOnbVvcu9jHWRATkUZqw4DOIny1MI+3j33W9Yf8r/
+        NOVTvOrFmmBXdCp1IzX5FGv+GFYs3HQQyvMqBfXU4tmnQtoqDg==
+X-Google-Smtp-Source: APXvYqwLn9M6X66Q6fNfNx/dd3PWZBQALsorGQE4axpniDjBXj0CPGfYf3eWRHiScccugxE5pnqobBypgHuMzrh/g94=
+X-Received: by 2002:a05:6808:8d5:: with SMTP id k21mr6465600oij.121.1576184020952;
+ Thu, 12 Dec 2019 12:53:40 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+References: <CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com>
+ <CADyx2V6j+do+CmmSYEUr0iP7TUWD7xHLP2ZJPrqB1Y+QEAwzhw@mail.gmail.com>
+In-Reply-To: <CADyx2V6j+do+CmmSYEUr0iP7TUWD7xHLP2ZJPrqB1Y+QEAwzhw@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 12 Dec 2019 21:53:29 +0100
+Message-ID: <CANpmjNOCUF8xW69oG9om91HRKxsj0L5DXSgf5j+D1EK_j29sqQ@mail.gmail.com>
+Subject: Re: Kernel Concurrency Sanitizer (KCSAN)
+To:     Walter <truhuan@gmail.com>
+Cc:     kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Paul Turner <pjt@google.com>, Daniel Axtens <dja@axtens.net>,
+        Anatol Pomazau <anatol@google.com>,
+        Will Deacon <willdeacon@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we link purgatory with -r aka we enable "incremental linking"
-no checks for unresolved symbols are done while linking the purgatory.
+On Thu, 12 Dec 2019 at 10:57, Walter <truhuan@gmail.com> wrote:
+>
+> Hi Marco,
+>
+> Data racing issues always bothers us, we are happy to use this debug tool to
+> detect the root cause. So, we need to understand this tool implementation,
+> we try to trace your code and have some questions, would you take the free time
+> to answer the question.
+> Thanks.
+>
+> Question:
+> We assume they access the same variable when use read() and write()
+> Below two Scenario are false negative?
+>
+> ===
+> Scenario 1:
+>
+> CPU 0:                                                                                     CPU 1:
+> tsan_read()                                                                               tsan_write()
+>   check_access()                                                                         check_access()
+>      watchpoint=find_watchpoint() // watchpoint=NULL                     watchpoint=find_watchpoint() // watchpoint=NULL
+>      kcsan_setup_watchpoint()                                                          kcsan_setup_watchpoint()
+>         watchpoint = insert_watchpoint                                                    watchpoint = insert_watchpoint
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running objcopy to generate purgatory.ro.
+Assumption: have more than 1 free slot for the address, otherwise
+impossible that both set up a watchpoint.
 
-This will help us catch missing symbols in the purgatory sooner.
+>         if (!remove_watchpoint(watchpoint)) // no enter, no report           if (!remove_watchpoint(watchpoint)) // no enter, no report
 
-Note this commit also removes --no-undefined from LDFLAGS_purgatory
-as that has no effect.
+Correct.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Using 2 if_changed lines under a single rule does not work, then
-  1 of the 2 will always execute each build.
-  Instead add a new (unused) purgatory.chk intermediate which gets
-  linked from purgatory.ro without -r to do the missing symbols check
-- This also fixes the check generating an a.out file (oops)
----
- arch/s390/purgatory/.gitignore |  1 +
- arch/s390/purgatory/Makefile   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+> ===
+> Scenario 2:
+>
+> CPU 0:                                                                                    CPU 1:
+> tsan_read()
+>   check_access()
+>     watchpoint=find_watchpoint() // watchpoint=NULL
+>     kcsan_setup_watchpoint()
+>       watchpoint = insert_watchpoint()
+>
+> tsan_read()                                                                              tsan_write()
+>   check_access()                                                                        check_access()
+>     find_watchpoint()
+>       if(expect_write && !is_write)
+>         continue
+>       return NULL
+>     kcsan_setup_watchpoint()
+>       watchpoint = insert_watchpoint()
+>       remove_watchpoint(watchpoint)
+>         watchpoint = INVALID_WATCHPOINT
+>                                                                                                       watchpoint = find_watchpoint()
+>                                                                                                       kcsan_found_watchpoint()
 
-diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitign=
-ore
-index 04a03433c720..c82157f46b18 100644
---- a/arch/s390/purgatory/.gitignore
-+++ b/arch/s390/purgatory/.gitignore
-@@ -1,3 +1,4 @@
- purgatory
-+purgatory.chk
- purgatory.lds
- purgatory.ro
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index bc0d7a0d0394..13e9a5dc0a07 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD :=3D y
-=20
- purgatory-y :=3D head.o purgatory.o string.o sha256.o mem.o
-=20
--targets +=3D $(purgatory-y) purgatory.lds purgatory purgatory.ro
-+targets +=3D $(purgatory-y) purgatory.lds purgatory purgatory.chk purgat=
-ory.ro
- PURGATORY_OBJS =3D $(addprefix $(obj)/,$(purgatory-y))
-=20
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-@@ -26,15 +26,22 @@ KBUILD_CFLAGS +=3D $(CLANG_FLAGS)
- KBUILD_CFLAGS +=3D $(call cc-option,-fno-PIE)
- KBUILD_AFLAGS :=3D $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
-=20
--LDFLAGS_purgatory :=3D -r --no-undefined -nostdlib -z nodefaultlib -T
-+# Since we link purgatory with -r unresolved symbols are not checked, so=
- we
-+# also link a purgatory.chk binary without -r to check for unresolved sy=
-mbols.
-+PURGATORY_LDFLAGS :=3D -nostdlib -z nodefaultlib
-+LDFLAGS_purgatory :=3D -r $(PURGATORY_LDFLAGS) -T
-+LDFLAGS_purgatory.chk :=3D -e purgatory_start $(PURGATORY_LDFLAGS)
- $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
-=20
-+$(obj)/purgatory.chk: $(obj)/purgatory FORCE
-+		$(call if_changed,ld)
-+
- OBJCOPYFLAGS_purgatory.ro :=3D -O elf64-s390
- OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'*debug*'
- OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'.comment'
- OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'.note.*'
--$(obj)/purgatory.ro: $(obj)/purgatory FORCE
-+$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
- 		$(call if_changed,objcopy)
-=20
- $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro F=
-ORCE
---=20
-2.23.0
+This is a bit incorrect, because if atomically setting watchpoint to
+INVALID_WATCHPOINT happened before concurrent find_watchpoint(),
+find_watchpoint will not return anything, thus not entering
+kcsan_found_watchpoint. If find_watchpoint happened before setting
+watchpoint to INVALID_WATCHPOINT, the rest of the trace matches.
+Either way,  no reporting will happen.
 
+>                                                                                                           consumed = try_consume_watchpoint() // consumed=false, no report
+
+Correct again, no reporting would happen.  While running, have a look
+at /sys/kernel/debug/kcsan and look at the 'report_races' counter;
+that counter tells you how often this case actually occurred. In all
+our testing with the default config, this case is extremely rare.
+
+As it says on the tin, KCSAN is a *sampling watchpoint* based data
+race detector so all the above are expected. If you want to tweak
+KCSAN's config to be more aggressive, there are various options
+available. The most important ones:
+
+* KCSAN_UDELAY_{TASK,INTERRUPT} -- Watchpoint delay in microseconds
+for tasks and interrupts respectively. [Increasing this will make
+KCSAN more aggressive.]
+* KCSAN_SKIP_WATCH -- Skip instructions before setting up watchpoint.
+[Decreasing this will make KCSAN more aggressive.]
+
+Note, however, that making KCSAN more aggressive also implies a
+noticeable performance hit.
+
+Also, please find the latest version here:
+https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git/log/?h=kcsan
+-- there have been a number of changes since the initial version from
+September/October.
+
+Thanks,
+-- Marco
