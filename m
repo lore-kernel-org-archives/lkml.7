@@ -2,132 +2,198 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC15C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64933C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 507CA2465E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF9722B48
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 06:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Tpc3ARXx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5SWiyDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfLLGR5 (ORCPT
+        id S1727937AbfLLGXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 01:17:57 -0500
-Received: from mout.gmx.net ([212.227.15.15]:54087 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbfLLGR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 01:17:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1576131461;
-        bh=KL73YRrT7LLHVsznmPTHt/klCRSoc1CVMKSMBDmBo6I=;
-        h=X-UI-Sender-Class:From:To:Subject:Reply-to:Date;
-        b=Tpc3ARXxO+7BOveLypF/SVr8mN0m+AgXaOl5a/zuwIZlfLxkuOvwxPmPNtZTI8OmQ
-         nDRZjvPdrzU/X4npI+hF0EyGJwd5ehZq1GlZxO5AxGFBzuVzlmxWmnPGmnlGHdYwb1
-         HYnuKO8tdTiqRXa1KWzBzRHzBv9dUZucJV/kZpbQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from corona.crabdance.com ([173.228.106.20]) by mail.gmx.com
- (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
- 1MKbgE-1iQujo3OOq-00KwkB; Thu, 12 Dec 2019 07:17:41 +0100
-Received: by corona.crabdance.com (Postfix, from userid 1001)
-        id BFE2D6E85603; Wed, 11 Dec 2019 22:17:02 -0800 (PST)
-From:   Stefan Schaeckeler <schaecsn@gmx.net>
-To:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] thermal: rockchip: enable hwmon
-Content-Type: text/plain
-Reply-to: schaecsn@gmx.net
-Message-Id: <20191212061702.BFE2D6E85603@corona.crabdance.com>
-Date:   Wed, 11 Dec 2019 22:17:02 -0800 (PST)
-X-Provags-ID: V03:K1:kW48YWv2at+CtoZ29KlwFzvfojnYn+Z2kTPJCrfxCVA5Rh90eXV
- aM0gPv8hwKLUJ2iDVrZbWVOWIqDS4KVTl38TNMvJV32rVUullnP6dlrbKMYeIcndtHucyom
- MSUCZDZU+Xu4+kEiA13utXDD/2NBQynNtjXJeU09nBD+OkbsLck4KpO2RGz+HrIqDiZSCgj
- fKIBwKd4KkB87Z94yizRg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8lU53RZXNGc=:sHRJzAdIaFHRXzs8mtVvzs
- f6InwGCn/l5BZMSCxMyTXAhaoZ7dS9F6qxUBsgCvr3SSROiqGwCvMl5Qe9plRrS0XFICiO4lr
- dyCIIF/Qk0ByJPzjOC/m+CA203m/i2Qu0Qve5T9s/k/MCXqsov2QFvZ6na17H1rYprH91OSe8
- g68xOoJIFDDEJDGSI4v8DA3hg0MbacLSrkpP4GUeJEOpXWFUT9NAIyHSa+iIIH+SCUQn/doqy
- BZzt4R6NvLndpk3bNnjgYWOgVqUakjsPdsacPEQOQk10BpQhiqYwi+lMIITxLyty2F/v0Y/Ww
- rnnobEPvXAZsbYJV3e9j5dpWQCCOeAqIGeKbgavxyNXA8DP+gIodRZc05eoovlGpaHXuAza82
- fyhnX9zAg3YvOPcYglyMFHBlGytIgwyKBIPld5+cqtUJ0HH5vQF1JQKwHSQSEX0zBIEQO/rdB
- 4dKC3BWAkssdJrJXpRsAR0Dil7A3WBWpxtsBdRy4t04OuhlBKAnmdh6cjHwR5pWTDPIt7zWYU
- v1CQwY1XY15Cu+upIUnbPmxEx+DCYxYwr5xn++HpuCvY5w/bukbqw/S0k66g1icYQm/seM0Fa
- 3ziE1uH00dSP1q7pQ/3MQ5NvPyMEFGQSQMBt4ZtHb6ByFABsEAK+pRD8a7YtkI7P+IxDkK9d5
- IFpBK4OryV0yYSWKuqxS3y6aoTYOKN8Qi36v3Ji9dGZiwOf5e9fxwvnHbBADNqd6LclyTRrVJ
- svdqUX0ikEm9/aCN/mGbnzEunSwrd2m0EX0z6taP58gWYUqJ5WWSl3RSDW28B5FUB+A4pbR5i
- U7d9h33aiVTOG/ffx3xnq8skbj9jCt2VVwk7i1OXlFXD0Dt0532yR//0rifOqE5bp3h89p5BC
- WeB2dzdi/yFIfVfUaSMhB8h9M48KK9D/IKtiUKaIxBA6tTVKzSwHk7NucxKfoI70T0p5QUfho
- obCWmGjdX/KP25fo3T3fFJXPQqyn6ERXmeToAhWnq1s+GgT77LuWVWRuXuSWbJCTWTB6bdI97
- HI7hCrFDAhnhgJJ9bjjD7/qMnBpk5/GjlNuzPZBOQpIgZCx85l7Fm58MU+aViFSzB4fcP9glY
- uftxD3KXeknjou9mPmBr3Xbg3xsY+mb0fN1zgs5z1VzvJhIVAja8gZernjZ/rNZk9jsg4bD5B
- vG+uAdgqho/YkxhO6smQ4268B3zsB2vUx5EXqIBVHhrpZ+0fs9WmbFoWTI3nF9EbwivaZZq7A
- tRfztC7BrfN3WKncCMrtszSwpEAy4cdLGOJFu0nXcrIKT+YanoRLnHNl8dNk=
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Dec 2019 01:23:25 -0500
+Received: from mail-io1-f41.google.com ([209.85.166.41]:37432 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726833AbfLLGXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 01:23:25 -0500
+Received: by mail-io1-f41.google.com with SMTP id k24so1499930ioc.4;
+        Wed, 11 Dec 2019 22:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v6NmxBZ8vV201dlBtVW07bjKFin+mwj/uirkjZ9u0AY=;
+        b=j5SWiyDVBNqZT1PcE6iXH6kE4RXdm62NrmqGIGv09+lSo4LTU5s7rWwFFmSGdpfUNi
+         sukpKFsgP7aFXfbDSo7gsCtzYOPCJbv4q4vWY41dBTOabdpeSYTXBy/5+BMQEItJ15Sy
+         y09om1CxA57hk3TMln3XC75K+AYNnnV77NfqUChNDt1uXAAZ8M3dDrpgwaDVin3vILWY
+         5RhPY8iXSQ6NpUwvysBTC2YAUy5KsFKZcjVT/rzBCfpILNNiqZf0DlCEupx7Mc3WCoUP
+         QkifWL5/1ME7tcmUiqm0xDlRvNYzSVtT/CW4k6muK0LK6CZCnxvYuOVBQdpJXln2+9kU
+         bFWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v6NmxBZ8vV201dlBtVW07bjKFin+mwj/uirkjZ9u0AY=;
+        b=ZFQS+nT7n0SzJlD/BIj391vJ+EpDB0D/FgsCo5PJKUw9Hx0rc8/kjYdBfDI5jqdPK3
+         C5wEN76Qy7+CpI7gkOXhn4whvQpJyWd750+mIZjW28tHiwwD4eqWRWhacTiwCN/b0JDM
+         QEiPTab749iF1bAwex0JI7e55syp0Q8mj0gOxTFxHnmnSR1VeLP0gZGEbWcvJV64KZpg
+         gP138NNb/HpgYvGYy8sMz7UBiV4O3OUw1Li8oDieIBEEwftxqQBRsjkMUoL3sY9kQoeK
+         4arDmMiAIkPKpBy4+2Qrd9TofdfUZcmnqf21uMeJeQnKJI5A/acPSUmGrjIQ1rfpA51p
+         eLOw==
+X-Gm-Message-State: APjAAAVyRhvHl7RH7yPDVGTy/duLXNxq5kj+V6wx7/efbUvU1y7w12UF
+        fd4d1kosZlIAsvSXrl9sbhaWwk3NcPAXOsiiVfU=
+X-Google-Smtp-Source: APXvYqwX8wJ8S7PF+1+fB9M3X5vS3O9OPKaGmpvdWd2oR7M6q2o4l+sGHZnsLdxEECGes2O5N5+2Naz6XZS/VC/A84o=
+X-Received: by 2002:a6b:4401:: with SMTP id r1mr1649395ioa.243.1576131803998;
+ Wed, 11 Dec 2019 22:23:23 -0800 (PST)
+MIME-Version: 1.0
+References: <20191211084112.971-1-linux.amoon@gmail.com> <a4610efc-844a-2d43-5db1-cf813102e701@baylibre.com>
+ <CANAwSgQOTA0mSvFW5otaCzFPHidhY7VFcrXZHjCD-1XkQpcx3w@mail.gmail.com>
+ <20191211095043.3kngq7wh77xvadge@gondor.apana.org.au> <CANAwSgR-fT21uBSP747MVkXf2GYqm_6kcne059pX-OegftLSZA@mail.gmail.com>
+ <CAKv+Gu8HQ7RY9WSYZrLUR7tNjuybF5sp7xe94VLQpJrDSRg4NA@mail.gmail.com>
+ <1229236701.11947072.1576070229564@mail.yahoo.com> <CAFBinCAxq-uW+gsmb-8wqxHGXt2W+4w9iD++2fL=FQ7S-RsAkw@mail.gmail.com>
+In-Reply-To: <CAFBinCAxq-uW+gsmb-8wqxHGXt2W+4w9iD++2fL=FQ7S-RsAkw@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Thu, 12 Dec 2019 11:53:12 +0530
+Message-ID: <CANAwSgR0nrVJKGxO3_Tv6g=1dKgnSJN3VJ0WxAdxGhzhWx1jkg@mail.gmail.com>
+Subject: Re: [PATCHv1 0/3] Enable crypto module on Amlogic GXBB SoC platform
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Anand Moon <moon.linux@yahoo.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default, of-based thermal drivers do not enable hwmon.
-Explicitly enable hwmon for both, the soc and gpu temperature
-sensor.
+Hi Martin,
 
-Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
+On Thu, 12 Dec 2019 at 05:00, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> On Wed, Dec 11, 2019 at 2:17 PM Anand Moon <moon.linux@yahoo.com> wrote:
+> [...]
+> > Sorry once again I send my logs too early.
+> > I still having some issue with the Hardware glx cryto module.
+> I'm surprised to see that you managed to get the GXL crypto driver to
+> load at all on GXBB
+> as far as I know GXBB uses an older crypto IP block (BLKMV) than GXL
+> (and newer SoCs, called "DMA"): [0]
+>
+> so my understanding is that a new crypto driver is needed for GXBB
+> (BLKMV registers) support.
+> the 32-bit SoCs use the same BLKMV IP block as far as I can tell, so
+> these would also benefit from this other driver.
+> (I don't know if anyone is working on a BLKMV crypto driver - all I
+> can tell is that I'm not working on one)
+>
+>
+> Martin
+>
+>
+> [0] https://github.com/khadas/linux/blob/195ea69f96d9bddc1386737e89769ff350762aea/drivers/amlogic/crypto/Kconfig
 
-=2D--
- drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+*You are absolutely correct. current crypto GLX driver might not work for GXBB*
+Yes new crypto driver is needed for this board. I will try to study on
+this feature.
 
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip=
-_thermal.c
-index 343c2f5c5a25..e47c60010259 100644
-=2D-- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/pinctrl/consumer.h>
+But both S805 and S905 share the same crypto IP block for.sure see below link.
+[0]  https://github.com/khadas/linux/blob/195ea69f96d9bddc1386737e89769ff350762aea/Documentation/devicetree/bindings/crypto/aml-crypto.txt#L1-L61
 
-+#include "thermal_hwmon.h"
-+
- /**
-  * If the temperature over a period of time High,
-  * the resulting TSHUT gave CRU module,let it reset the entire chip,
-@@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_d=
-evice *pdev)
+It's not working see the debug logs.
+[alarm@alarm ~]$ sudo modprobe tcrypt sec=1 mode=500
+[sudo] password for alarm:
+[   39.567302] tcrypt:
+[   39.567302] testing speed of async ecb(aes) (ecb-aes-gxl) encryption
+[   39.570171] tcrypt: test 0 (128 bit key, 16 byte blocks):
+[   39.570229] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 1
+IV(0) key=16 flow=1
+[   41.598687] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   41.598900] tcrypt: encryption() failed flags=0
+[   41.603383] tcrypt: test 0 (192 bit key, 16 byte blocks):
+[   41.603424] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 1
+IV(0) key=24 flow=0
+[   43.646686] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   43.646900] tcrypt: encryption() failed flags=0
+[   43.651378] tcrypt: test 0 (256 bit key, 16 byte blocks):
+[   43.651419] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 1
+IV(0) key=32 flow=1
+[   45.694691] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   45.694902] tcrypt: encryption() failed flags=0
+[   45.699419] tcrypt:
+[   45.699419] testing speed of async ecb(aes) (ecb-aes-gxl) decryption
+[   45.707838] tcrypt: test 0 (128 bit key, 16 byte blocks):
+[   45.707872] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 0
+IV(0) key=16 flow=0
+[   47.742677] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   47.742879] tcrypt: decryption() failed flags=0
+[   47.747366] tcrypt: test 0 (192 bit key, 16 byte blocks):
+[   47.747402] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 0
+IV(0) key=24 flow=1
+[   49.790684] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   49.790898] tcrypt: decryption() failed flags=0
+[   49.795380] tcrypt: test 0 (256 bit key, 16 byte blocks):
+[   49.795420] gxl-crypto c8832000.crypto: meson_cipher ecb(aes) 16 0
+IV(0) key=32 flow=0
+[   51.838680] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   51.838894] tcrypt: decryption() failed flags=0
+[   51.852005] tcrypt:
+[   51.852005] testing speed of async cbc(aes) (cbc-aes-gxl) encryption
+[   51.854903] tcrypt: test 0 (128 bit key, 16 byte blocks):
+[   51.854941] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 1
+IV(16) key=16 flow=1
+[   53.886678] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   53.886882] tcrypt: encryption() failed flags=0
+[   53.891385] tcrypt: test 0 (192 bit key, 16 byte blocks):
+[   53.891428] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 1
+IV(16) key=24 flow=0
+[   55.934686] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   55.934901] tcrypt: encryption() failed flags=0
+[   55.939410] tcrypt: test 0 (256 bit key, 16 byte blocks):
+[   55.939447] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 1
+IV(16) key=32 flow=1
+[   57.982684] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   57.982899] tcrypt: encryption() failed flags=0
+[   57.987429] tcrypt:
+[   57.987429] testing speed of async cbc(aes) (cbc-aes-gxl) decryption
+[   57.995832] tcrypt: test 0 (128 bit key, 16 byte blocks):
+[   57.995864] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 0
+IV(16) key=16 flow=0
+[   60.030680] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   60.030880] tcrypt: decryption() failed flags=0
+[   60.035369] tcrypt: test 0 (192 bit key, 16 byte blocks):
+[   60.035406] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 0
+IV(16) key=24 flow=1
+[   62.078678] gxl-crypto c8832000.crypto: DMA timeout for flow 1
+[   62.078888] tcrypt: decryption() failed flags=0
+[   62.083377] tcrypt: test 0 (256 bit key, 16 byte blocks):
+[   62.083416] gxl-crypto c8832000.crypto: meson_cipher cbc(aes) 16 0
+IV(16) key=32 flow=0
+[   64.126684] gxl-crypto c8832000.crypto: DMA timeout for flow 0
+[   64.126899] tcrypt: decryption() failed flags=0
+[   64.143285] tcrypt: failed to load transform for lrw(aes): -2
+[   64.155243] tcrypt: failed to load transform for lrw(aes): -2
+[   64.167318] tcrypt:
 
- 	thermal->chip->control(thermal->regs, true);
-
--	for (i =3D 0; i < thermal->chip->chn_num; i++)
-+	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
-+		thermal->sensors[i].tzd->tzp->no_hwmon =3D false;
-+		error =3D thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
-+		if (error)
-+			dev_warn(&pdev->dev,
-+				 "failed to register sensor %d with hwmon: %d\n",
-+				 i, error);
-+	}
-
- 	platform_set_drvdata(pdev, thermal);
-
-@@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_d=
-evice *pdev)
- 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		struct rockchip_thermal_sensor *sensor =3D &thermal->sensors[i];
-
-+		thermal_remove_hwmon_sysfs(sensor->tzd);
- 		rockchip_thermal_toggle_sensor(sensor, false);
- 	}
-
-=2D-
-2.24.0
-
+-Anand
