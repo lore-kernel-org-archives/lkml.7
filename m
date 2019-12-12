@@ -2,115 +2,126 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEBDC2D0C5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18BAC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75201208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pgm7k7+8"
+	by mail.kernel.org (Postfix) with ESMTP id BE227208C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfLLCMt (ORCPT
+        id S1727734AbfLLCNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:12:49 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33401 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727610AbfLLCMt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:12:49 -0500
-Received: by mail-lj1-f195.google.com with SMTP id 21so430340ljr.0;
-        Wed, 11 Dec 2019 18:12:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LjKmmGGr7I3bsVNJKL/MxiBjYqhZ6jr8Q64gi26fwIo=;
-        b=Pgm7k7+8rcTU4r4nhE+uDFkUt/ZfwVcD12TahrGqBNOH5eEmSn8PR4UBye4oscgPgo
-         9R2SoKez8rU10trp+OrKrfgmh1buPD85G/fzawNqQFqwxybb6m11WDq+1lsh7QRmt+5s
-         tVqEZdP/SbaLYsZxxjWbUOr1V4i+7ULo9yTpdc7RblvzyDhWIKmnyNuBfBaxmZjuDYRH
-         lPStXJOcFZolOrUN7TOJnapCtf1Go7NR5cOtD9YR7wC7A995pXQwh9xhyG9hJoO5Cw0A
-         GFNYRvYpP6glqv75ITaGjca0jDAWJU2WWtBHUTTuXQAdBlnVldHp3Ye3qKpy2eAGgw8s
-         jSdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LjKmmGGr7I3bsVNJKL/MxiBjYqhZ6jr8Q64gi26fwIo=;
-        b=Lrt9aDQAUEAi3eG8sQMi/99DsgPZd/XVbdiwrJArBdT+IefnfXqqpUi7cAKtNgW0or
-         yIDvEfFJb5YMB85II4e+kCpKcKlUNUbZ76uwGYHP0+PZIw4IEm8iVxeNbyrNx4GB0Exi
-         /5UH0Wib/Hsnqo4BX9/FjkEy9OcAiF8t3OkI3KIUhODSg0VFHOHFk//OVj4dMWopPybT
-         qPPGfQ6llgAQTAEl2f1GnxT/6RZzJbOjvGFdYWneUnmjNWgWVbzja8gysP8RsI347tCc
-         fGbPmtg11gvE+n6iz970MMKaNo3ZKJbQAvyREZa4Jqxauuwb/049pmFcggpdyPoJw0Zy
-         4BVw==
-X-Gm-Message-State: APjAAAXnxVRo0MnbvtX0qoNWh3bgZZbjkkcpbuKS6JGsjLvve6WORizw
-        GV003INkaBDfyRhmkaF0A+e2KZTmEAVX0CT6XDM=
-X-Google-Smtp-Source: APXvYqwnVnMEcO2L0aq3+e/XrVxcjJi+EM9wQHdAG97WqFaRKIj/dPQSuFGOyBqLbmoUl7OlVvHnx/n4pHceTKzRz+0=
-X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr4162594ljm.53.1576116766664;
- Wed, 11 Dec 2019 18:12:46 -0800 (PST)
+        Wed, 11 Dec 2019 21:13:42 -0500
+Received: from mga04.intel.com ([192.55.52.120]:35819 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726793AbfLLCNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:13:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 18:13:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
+   d="scan'208";a="225748499"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga002.jf.intel.com with ESMTP; 11 Dec 2019 18:13:38 -0800
+Cc:     baolu.lu@linux.intel.com
+Subject: Re: [PATCH 1/1] iommu/vt-d: Fix dmar pte read access not set error
+To:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, kevin.tian@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191211014015.7898-1-baolu.lu@linux.intel.com>
+ <20191212014952.vlrmxrk2cebwxjnp@cantor>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <6f3bcad9-b9b3-b349-fdad-ce53a79a665b@linux.intel.com>
+Date:   Thu, 12 Dec 2019 10:12:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191211163310.4788-1-sj38.park@gmail.com> <3dab421e-6aa5-90e4-791e-53482f5c1fe8@kernel.org>
- <CAEjAshqjjVgtf_JxNvi3WOvkrjOp_-YjK=rY7GE0Mt40Y1EMqQ@mail.gmail.com>
- <CAFd5g4649_C0tSy3W-KzN05Y8K5zZtGUGVYFA9iAKvaXsPentw@mail.gmail.com> <CAFd5g46X4P7dfJWVw9hdvhVupanuZU-_KWGzostRy_e1Z=P1Og@mail.gmail.com>
-In-Reply-To: <CAFd5g46X4P7dfJWVw9hdvhVupanuZU-_KWGzostRy_e1Z=P1Og@mail.gmail.com>
-From:   SeongJae Park <sj38.park@gmail.com>
-Date:   Thu, 12 Dec 2019 03:12:19 +0100
-Message-ID: <CAEjAshpxvhL_h9tVDy9fX7ocs=cc1ihtqE5L39RhJh9CDD8bpw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/6] Fix nits in the kunit
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     shuah <shuah@kernel.org>, SeongJae Park <sjpark@amazon.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, SeongJae Park <sjpark@amazon.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191212014952.vlrmxrk2cebwxjnp@cantor>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 3:06 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Wed, Dec 11, 2019 at 9:45 AM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Wed, Dec 11, 2019 at 9:40 AM SeongJae Park <sj38.park@gmail.com> wrote:
-> > >
-> > > On Wed, Dec 11, 2019 at 6:22 PM shuah <shuah@kernel.org> wrote:
-> > > >
-> > > > On 12/11/19 9:33 AM, SeongJae Park wrote:
-> > > > > May I ask some comments?
->
-> SeongJae,
->
-> I reviewed and tested all your patches. Everything looks good to me
-> with one minor caveat: I tried applying your patches on
-> kselftest/fixes[1] and got the following error:
->
-> error: patch failed: Documentation/dev-tools/kunit/start.rst:21
-> error: Documentation/dev-tools/kunit/start.rst: patch does not apply
-> Patch failed at 0005 kunit: Rename 'kunitconfig' to '.kunitconfig'
->
-> I think the merge conflict is fairly straightforward, but it would
-> still probably make Shuah's life easier if you rebased your patches.
+Hi,
 
-Appreciate your nice response, I will rebase it and send the next version!
+On 12/12/19 9:49 AM, Jerry Snitselaar wrote:
+> On Wed Dec 11 19, Lu Baolu wrote:
+>> If the default DMA domain of a group doesn't fit a device, it
+>> will still sit in the group but use a private identity domain.
+>> When map/unmap/iova_to_phys come through iommu API, the driver
+>> should still serve them, otherwise, other devices in the same
+>> group will be impacted. Since identity domain has been mapped
+>> with the whole available memory space and RMRRs, we don't need
+>> to worry about the impact on it.
+>>
+>> Link: https://www.spinics.net/lists/iommu/msg40416.html
+>> Cc: Jerry Snitselaar <jsnitsel@redhat.com>
+>> Reported-by: Jerry Snitselaar <jsnitsel@redhat.com>
+>> Fixes: 942067f1b6b97 ("iommu/vt-d: Identify default domains replaced 
+>> with private")
+>> Cc: stable@vger.kernel.org # v5.3+
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> 
+> Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
+Can you please try this fix and check whether it can fix your problem?
+If it helps, do you mind adding a Tested-by?
 
-Thanks,
-SeongJae Park
+Best regards,
+baolu
 
->
-> Cheers!
->
-> P.S. Thanks for the patch adding the test case for test the build_dir
-> thing. I really appreciate that!
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=fixes
+> 
+>> ---
+>> drivers/iommu/intel-iommu.c | 8 --------
+>> 1 file changed, 8 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index 0c8d81f56a30..b73bebea9148 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -5478,9 +5478,6 @@ static int intel_iommu_map(struct iommu_domain 
+>> *domain,
+>>     int prot = 0;
+>>     int ret;
+>>
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return -EINVAL;
+>> -
+>>     if (iommu_prot & IOMMU_READ)
+>>         prot |= DMA_PTE_READ;
+>>     if (iommu_prot & IOMMU_WRITE)
+>> @@ -5523,8 +5520,6 @@ static size_t intel_iommu_unmap(struct 
+>> iommu_domain *domain,
+>>     /* Cope with horrid API which requires us to unmap more than the
+>>        size argument if it happens to be a large-page mapping. */
+>>     BUG_ON(!pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level));
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return 0;
+>>
+>>     if (size < VTD_PAGE_SIZE << level_to_offset_bits(level))
+>>         size = VTD_PAGE_SIZE << level_to_offset_bits(level);
+>> @@ -5556,9 +5551,6 @@ static phys_addr_t 
+>> intel_iommu_iova_to_phys(struct iommu_domain *domain,
+>>     int level = 0;
+>>     u64 phys = 0;
+>>
+>> -    if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>> -        return 0;
+>> -
+>>     pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+>>     if (pte)
+>>         phys = dma_pte_addr(pte);
+>> -- 
+>> 2.17.1
+>>
+> 
