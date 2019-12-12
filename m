@@ -2,130 +2,80 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C1CC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79654C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2BED21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Og0OIM3E"
+	by mail.kernel.org (Postfix) with ESMTP id 4F1F12173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576159365;
+	bh=sy+crXeHM5W71lQNmFRu6qQnDoDFhxVk2fBkN0YDLvE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PKp9Iy54XPFUJerlf/lSJkZAFd1FGbszxasCQmLtig0q7dr187sFE1Vc+g316dIAO
+	 R/2/zMthSGy4GhKEntMU0tpKBFQl+wjspRJ6NXwnpFFlUYIoI0TjnwefDaHKppWJJF
+	 M03S30u9ba6CQq4O/zKNgi5aTjSxAXE0JMlJEvns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfLLOCh (ORCPT
+        id S1729647AbfLLOCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:02:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39519 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729524AbfLLOCg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:02:36 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d5so2630512wmb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:02:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u2RUDl0mYLvmXxjsLkAo20DZhbBWkB25mVRHhxsu6eI=;
-        b=Og0OIM3ERcWxCnRN++RWWG4z6rzmr5a6nHC6FsZO8HVaAVTtF1LczCuN6879Xt0VbM
-         rtvTvkjllgM1I2VrJQitukSJtlMPazhlm11Eah76iznHoRB3K14Tt5F4kvYqB5FJxaf5
-         cvb+o1m/OKAS7Sg4eHfWZPgI8/P0KTHHdS2q3CM0n6DmXuEy7UM/0tFCR+2D1qLBZjBA
-         4dDgTIEpIdAa5yyroiTlCgmjN97ODLzvGmGwfwOdkI+U0IKJUOokU2BTHsCFXnJ+fsvc
-         LjqAhgryPODrbsbMMp69/CKJtew/4PWTYKeo2iyVqC95uEJSKCPbCY9VSDzMj+uwuQH9
-         hviw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u2RUDl0mYLvmXxjsLkAo20DZhbBWkB25mVRHhxsu6eI=;
-        b=W6ensMgwuXenxMxBL6RqU0ymcx2pr4R6RT1LG1vHBhOiww7FjgX3EwFw26Xo73/LRe
-         thWz0/9kgi9uG84r3VvlVkDXAca/QzXTvCyyL/v6Bl5B1LrT5n7edzwUIlpIzuzY+Q5P
-         H9M4khcuQ8HEiCJcx+lFcwhK7363UR48bbnMqUbRPKOZmabb6FlDyF6enlgjsrwicgJP
-         KZNUXeOV6bAzqpYzvT2IlZCqBZlbX9GKGEZXCh6WGKiy009hWlhlkD8nOlnZ/Ldv09Zz
-         mYX0QcCGiwiNqLYi1N9Lotr6jMyowEpVikdlZ4g0ooG1WOUDZ5TwJJKmloPd5ruNW9eM
-         vOEQ==
-X-Gm-Message-State: APjAAAWuv7VT0lV2d+9jnPNZfDo+ZAYKzBQpa6IKNQnBwH8JHGZeoBzk
-        Dhh0Fy8oponH2lxoCLRx9u94ZccMI6JWA7eCuEF+Qg==
-X-Google-Smtp-Source: APXvYqxbofXUzxSXHnSYtdpsEwkoDNF3YT6M3W65sasL+TC5Y8hxcYGpm8mGi9TIXs/EUWoX6MrXiLHTPwCwSvhT8tk=
-X-Received: by 2002:a7b:c95a:: with SMTP id i26mr6726628wml.67.1576159354472;
- Thu, 12 Dec 2019 06:02:34 -0800 (PST)
+        Thu, 12 Dec 2019 09:02:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729568AbfLLOCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:02:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0637121655;
+        Thu, 12 Dec 2019 14:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576159363;
+        bh=sy+crXeHM5W71lQNmFRu6qQnDoDFhxVk2fBkN0YDLvE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WOv4MI7/GQ1xpFQY6FYZg2qCsAoA+Ko1l/1LUW/pXJbfesTD3iU3inIzu/d0jg/fL
+         uXJCtAilUMGgApsr2r/uMaw65wENLo4ZX0kPLEAEL79mr0ew9rx9kC8BwMw4XN9y8e
+         iZdlFXwA/yX/gYw1G/Cn6571Q9YbOBZdNfqF5W6c=
+Date:   Thu, 12 Dec 2019 15:02:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device
+ node
+Message-ID: <20191212140241.GA1595136@kroah.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <20191211150351.658072828@linuxfoundation.org>
+ <20191212133132.GA13171@amd>
 MIME-Version: 1.0
-References: <20191212103158.4958-1-hdegoede@redhat.com> <20191212103158.4958-3-hdegoede@redhat.com>
- <CAKv+Gu9AjYVvLot9+enuwSWfyfzqgCWSuW3ioccm3FJ7KFA8eA@mail.gmail.com> <82c65f05-1140-e10e-ba2f-0c4c5c85bbc8@redhat.com>
-In-Reply-To: <82c65f05-1140-e10e-ba2f-0c4c5c85bbc8@redhat.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 12 Dec 2019 15:02:15 +0100
-Message-ID: <CAKv+Gu9StgwBs=y6KU2Pb_P499SfH8po978gHoAbXVL8mB722A@mail.gmail.com>
-Subject: Re: [PATCH 5.5 regression fix 2/2] efi/libstub/helper: Initialize
- pointer variables to zero for mixed mode
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191212133132.GA13171@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 13:45, Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 12-12-2019 12:29, Ard Biesheuvel wrote:
-> > On Thu, 12 Dec 2019 at 11:32, Hans de Goede <hdegoede@redhat.com> wrote:
-> >>
-> >> When running in EFI mixed mode (running a 64 bit kernel on 32 bit EFI
-> >> firmware), we _must_ initialize any pointers which are returned by
-> >> reference by an EFI call to NULL before making the EFI call.
-> >>
-> >> In mixed mode pointers are 64 bit, but when running on a 32 bit firmware,
-> >> EFI calls which return a pointer value by reference only fill the lower
-> >> 32 bits of the passed pointer, leaving the upper 32 bits uninitialized
-> >> unless we explicitly set them to 0 before the call.
-> >>
-> >> We have had this bug in the efi-stub-helper.c file reading code for
-> >> a while now, but this has likely not been noticed sofar because
-> >> this code only gets triggered when LILO style file=... arguments are
-> >> present on the kernel cmdline.
-> >>
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> >> ---
-> >>   drivers/firmware/efi/libstub/efi-stub-helper.c | 4 ++--
-> >>   1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/firmware/efi/libstub/efi-stub-helper.c b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> >> index e02579907f2e..6ca7d86743af 100644
-> >> --- a/drivers/firmware/efi/libstub/efi-stub-helper.c
-> >> +++ b/drivers/firmware/efi/libstub/efi-stub-helper.c
-> >> @@ -365,7 +365,7 @@ static efi_status_t efi_file_size(efi_system_table_t *sys_table_arg, void *__fh,
-> >>                                    u64 *file_sz)
-> >>   {
-> >>          efi_file_handle_t *h, *fh = __fh;
-> >
-> > What about h? Doesn't it suffer from the same problem?
-> >
-> >> -       efi_file_info_t *info;
-> >> +       efi_file_info_t *info = NULL;
-> >>          efi_status_t status;
-> >>          efi_guid_t info_guid = EFI_FILE_INFO_ID;
-> >>          unsigned long info_sz;
-> >
-> > And info_sz?
->
-> And "efi_file_io_interface_t *io" and "efi_file_handle_t *fh"
-> in efi_open_volume().
->
-> I think that is all of them.
->
+On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > The RTC module on the A23 was claimed to be the same as on the A31, when
+> > in fact it is not. The A31 does not have an RTC external clock output,
+> > and its internal RC oscillator's average clock rate is not in the same
+> > range. The A33's RTC is the same as the A23.
+> > 
+> > This patch fixes the compatible string and clock properties to conform
+> > to the updated bindings. The register range is also fixed.
+> 
+> No, this is not okay for v4.19. New compatible is not in
+> ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
 
-OK.
+Good catch, I would have thought both of those would happen at the same
+time.
 
-I'll fix it up locally.
+Now dropped, thanks.
+
+greg k-h
