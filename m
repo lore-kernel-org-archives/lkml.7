@@ -2,85 +2,88 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE460C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1244EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B40B0214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 22:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB27D214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZK2aaBtq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uqu+7XlU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731284AbfLLW57 (ORCPT
+        id S1731318AbfLLXAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 17:57:59 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:40726 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731131AbfLLW57 (ORCPT
+        Thu, 12 Dec 2019 18:00:05 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35562 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731036AbfLLXAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 17:57:59 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7F3D020B7187;
-        Thu, 12 Dec 2019 14:57:58 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7F3D020B7187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1576191478;
-        bh=IaY9QfPYlGX8LBGy1XQmQtegmcwNOQejtgEwB7A4BKM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZK2aaBtqm/DdZi7fhP+jIagujLRcrIzUhHkusgPASPWi+e45zhO4QcV4EsrQnGWgG
-         cEVGInMrEE2PBMHOKGGNS/Hm6PfK2zTv6ao/pNu89hUpnw2783+PXhtB2SnSf+jXlV
-         FsTlSGsPyE0ttPj7kLXTEPBqZyXR+usBEscHngN0=
-Subject: Re: [PATCH v2 1/2] IMA: Define workqueue for early boot "key"
- measurements
-To:     Mimi Zohar <zohar@linux.ibm.com>, linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191211185116.2740-1-nramas@linux.microsoft.com>
- <20191211185116.2740-2-nramas@linux.microsoft.com>
- <1576138743.4579.147.camel@linux.ibm.com>
- <0cc15a43-8e1b-9819-33fe-8325068f8df2@linux.microsoft.com>
- <1576185189.4579.165.camel@linux.ibm.com>
- <b4ff3607-076e-7b90-24d1-9a129d9ce720@linux.microsoft.com>
- <1576191258.4579.181.camel@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <cd0d6b0c-1be4-493d-6ba7-72bd60f601cb@linux.microsoft.com>
-Date:   Thu, 12 Dec 2019 14:58:22 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Thu, 12 Dec 2019 18:00:05 -0500
+Received: by mail-pj1-f65.google.com with SMTP id w23so219275pjd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:00:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=JN+Ktkw/NX+vtVwV9GDwICCRE7UoyIaMfXDRDUJV33s=;
+        b=uqu+7XlUdx9YFY30A8AfkRlg2or1VONGseo0GnDz21Ua/gF32aAjoQ0FHqfOSd9633
+         ObPSIlnCDobNZVACXDrvtVdHeUXbMbEJ7VeYmjmOmAY7RFnGxYQOpoYJvXx4FlAtZA+L
+         CNgOJNexA4Yn7wSFG2hALnHv2JO4bbE+7vkuvXHGU1QY+xgaLCB78pHu5cKT/nY4qk59
+         fvoNolPtMQDd0BbuWsdjlvf/2eP3npHod+B2It1a2B1t9A/crCz8NBP1zc13nsB3/2RI
+         HLmXWXOB2UnT4mEQekKaRSOlI2rxMAPWBo6z+zoLhNMvMXmlcfAc0YZeBfwZEgegjmev
+         vJdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=JN+Ktkw/NX+vtVwV9GDwICCRE7UoyIaMfXDRDUJV33s=;
+        b=KtoUe/3h7b3wzWthgv3Y8OYCteUVr3TYaNoS7xvj+o3jkodLnwnX4lZyaUFo6ifBNR
+         pmAE7iuTi73uez5FqHKV9GnPHylTKR+et7Lwkb6bA3dxLZj1B44HAGWHjqXFsEXahtLk
+         3SBzadjWhvNkYmPshfI/7gHiRjWDYfV8cisd4dmJuGcbMKdQ0eN5CKEx3M8vHvg5nIJw
+         S6M07C+QML3HPseyNwDJzV1LJS0eC7hvpQj/sYOf8p9H8iO4xHMLp0+eu/It3wserC1z
+         zv/xKjDZeQPVgIyd5t3qFQZvpLgFBsLIDmTwwKpSW2cDlZ/ep/o63KTQmEsFIcwgts7n
+         2F3A==
+X-Gm-Message-State: APjAAAVExvc71TVf1TiKl9dGv+zom2ywjlAcSTlGllYj+GQMsnsdJOlR
+        RzG8uZ7ZerZZMr7hKs4Tqu2BOA==
+X-Google-Smtp-Source: APXvYqzTTTD6A5DIIlnM5LYToFDQm+vIoDq/hBSRrVuWjmG0bXqcD6uiNLrJ2d6gAz6HsVphMCgibQ==
+X-Received: by 2002:a17:90a:9bc6:: with SMTP id b6mr12933687pjw.77.1576191604684;
+        Thu, 12 Dec 2019 15:00:04 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id k15sm8577813pfg.37.2019.12.12.15.00.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 15:00:04 -0800 (PST)
+Date:   Thu, 12 Dec 2019 15:00:03 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Florian Westphal <fw@strlen.de>
+cc:     linux-mm@kvack.org, cl@linux.com, penberg@kernel.org,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: remove __krealloc
+In-Reply-To: <20191212223442.22141-1-fw@strlen.de>
+Message-ID: <alpine.DEB.2.21.1912121459400.121505@chino.kir.corp.google.com>
+References: <20191212223442.22141-1-fw@strlen.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <1576191258.4579.181.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Dec 2019, Florian Westphal wrote:
 
-On 12/12/2019 2:54 PM, Mimi Zohar wrote:
-
->>
->> I can also move the setting of ima_process_key flag inside the lock
->> along with the above change.
+> Since 5.5-rc1 the last user of this function is gone, so remove the
+> functionality.
 > 
-> My concern is with the last sentence "Since ima_process_keys is set to
-> true above, any new key will be processed immediately and not queued."
->    It's unlikely, but possible, that a second process will wait for the
-> ima_keys_mutex.  Either we remove this sentence or move setting
-> ima_process_keys to after taking the lock.
+> See commit
+> 2ad9d7747c10 ("netfilter: conntrack: free extension area immediately")
+> for details.
 > 
-> Mimi
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 
-Sure - i'll move the setting of ima_process_keys flag inside the lock 
-and define the flag as static. Will keep the comment as is.
-
-thanks,
-  -lakshmi
-
+So this also means that we can fold __do_krealloc() into krealloc()?
