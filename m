@@ -2,203 +2,141 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC408C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22351C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA68A206A5
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ch+J675q"
+	by mail.kernel.org (Postfix) with ESMTP id EC60B206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfLLKUD (ORCPT
+        id S1728598AbfLLKWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:20:03 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37006 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfLLKUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:20:03 -0500
-Received: by mail-wr1-f67.google.com with SMTP id w15so2108680wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 02:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=FWshdGOlPI7yjVJAElFvMo0mlzQ6xIrNID/VuBYtMSo=;
-        b=Ch+J675qtJbBX8NFcLS7CYqYDrNctC1O0yw6s4DcnHprhA91RaEmIlTNuyNTsQwWrC
-         hvbgwH5ipBMwZN/Ar5J6GQJPFZwa49XYAT5QK12dmuqXkFJ0ZMPa8A24SpxxohwxxDIj
-         S5KM2WaPLDMe6iu+lTejbUH7fGBZnQGwsexvq9rgMDEX9KjE9q5UJDGKhGFrNhSVAq+D
-         xJWnK6ThYoeS8N9wQg0AWif5xusWzRBrA5KLqeo8coRGQUVOFs8e6o34T/CfPalY1nPl
-         7K7IlI+Tg35SVoDo2AnDk4E0bjXPrZ+iNJn28zUBHamlbQDZxtlLAeg+ce0MtasPGheL
-         RmPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=FWshdGOlPI7yjVJAElFvMo0mlzQ6xIrNID/VuBYtMSo=;
-        b=b+/gdRJjN1avl9n9CKw9ylUCJvlUUmrcqVPuXaN7aq0QJDB1Ne1PDlN+DRduAGvuzP
-         +uRuusXGi0o2yu0mqxNahbmeqFFRi3sfW3Zyxx7WHrLlmuszNvlVcW3SZzHKmqwLqRjY
-         LnfjrR+cvUzNG+fOIVJaVnGEwpv8sDlLXsO9Y+4+mH8QCZfffHymnKpzy5s0yV/bsr0G
-         nAsDrtfnDW9M1nA1kyMRIBaTmMvtxfYmKWPn2+eMpZdX2fo+OQyD5n5dRcDEyu8ocfg8
-         ek7iWfkHLPgBqkyMHMS7HbypKGyuiwQxram2nyoBVrzIzKelz3RghaYF1qq0HUlnvSv9
-         jYnA==
-X-Gm-Message-State: APjAAAUBOmA+VCapqmw0RpOnzt1CQxIUssQE4mHrvaGngODa0tWIXrfR
-        k8wKykD7iUzuhBRbVvM34mPeMw==
-X-Google-Smtp-Source: APXvYqw+sp+j42VZGq85rGThgx/ogUAVCFmxSUrPZRugAeSCRN9cShhFUB1lK7uDgM7f0ZfqlYo+zg==
-X-Received: by 2002:adf:ffc7:: with SMTP id x7mr5320534wrs.159.1576146000146;
-        Thu, 12 Dec 2019 02:20:00 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e6sm5485646wru.44.2019.12.12.02.19.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 02:19:59 -0800 (PST)
-References: <20191206074052.15557-1-jian.hu@amlogic.com> <20191206074052.15557-4-jian.hu@amlogic.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jian Hu <jian.hu@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        "Rob Herring" <robh@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/6] clk: meson: eeclk: refactor eeclk common driver to support A1
-In-reply-to: <20191206074052.15557-4-jian.hu@amlogic.com>
-Date:   Thu, 12 Dec 2019 11:19:59 +0100
-Message-ID: <1j7e31lub4.fsf@starbuckisacylon.baylibre.com>
+        Thu, 12 Dec 2019 05:22:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:41272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728435AbfLLKWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:22:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64FED328;
+        Thu, 12 Dec 2019 02:22:35 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF0D23F6CF;
+        Thu, 12 Dec 2019 02:22:33 -0800 (PST)
+Subject: Re: [PATCH v2 9/9] arm64: dts: rockchip: RockPro64: hook up bluetooth
+ at uart0
+To:     Soeren Moch <smoch@web.de>, Kalle Valo <kvalo@codeaurora.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc:     brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191211235253.2539-1-smoch@web.de>
+ <20191211235253.2539-10-smoch@web.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a0ad4723-db85-0eda-efb5-f0c9a2a6aec3@arm.com>
+Date:   Thu, 12 Dec 2019 10:22:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191211235253.2539-10-smoch@web.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Soeren,
 
-On Fri 06 Dec 2019 at 08:40, Jian Hu <jian.hu@amlogic.com> wrote:
-
-> Introduce a common probe function for A1 series, the way to get
-> regmap is different between A1 series and the previous series.
-> The register region is only for one clock driver, the function of
-> meson_eeclkc_probe is not fit for A1, So it is necessary to
-> introduce a new function.
-
-Please drop this patch
-
-#1 you are patching the EE driver for something that is no longer an EE
- driver
-#2 Let's get the basics right, you can move (re)factoring afterward
-
-Your probe function is simple enough. Just properly write it in each
-driver for now.
-
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+On 11/12/2019 11:52 pm, Soeren Moch wrote:
+> With enabled wifi support (required for firmware loading) for the
+> Ampak AP6359SA based wifi/bt combo module we now also can enable
+> the bluetooth part.
+> 
+> Suggested-by: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Soeren Moch <smoch@web.de>
 > ---
->  drivers/clk/meson/meson-eeclk.c | 59 +++++++++++++++++++++++++++------
->  drivers/clk/meson/meson-eeclk.h |  1 +
->  2 files changed, 50 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/clk/meson/meson-eeclk.c b/drivers/clk/meson/meson-eeclk.c
-> index a7cb1e7aedc4..12ceb1caabd8 100644
-> --- a/drivers/clk/meson/meson-eeclk.c
-> +++ b/drivers/clk/meson/meson-eeclk.c
-> @@ -13,25 +13,37 @@
->  #include "clk-regmap.h"
->  #include "meson-eeclk.h"
->  
-> -int meson_eeclkc_probe(struct platform_device *pdev)
-> +static struct regmap_config clkc_regmap_config = {
-> +	.reg_bits       = 32,
-> +	.val_bits       = 32,
-> +	.reg_stride     = 4,
-> +};
+> changes in v2:
+> - new patch
+> 
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Cc: brcm80211-dev-list@cypress.com
+> Cc: netdev@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 29 ++++++++++++++++++-
+>   1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> index 9fa92790d6e0..94cc462e234d 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> @@ -561,6 +561,20 @@
+>   };
+> 
+>   &pinctrl {
+> +	bt {
+> +		bt_enable_h: bt-enable-h {
+> +			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
 > +
-> +static struct regmap *meson_regmap_resource(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	struct device *dev = &pdev->dev;
+> +		bt_host_wake_l: bt-host-wake-l {
+> +			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
+> +		};
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		bt_wake_l: bt-wake-l {
+> +			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
 > +
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return ERR_CAST(base);
+>   	buttons {
+>   		pwrbtn: pwrbtn {
+>   			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
+> @@ -729,8 +743,21 @@
+> 
+>   &uart0 {
+>   	pinctrl-names = "default";
+> -	pinctrl-0 = <&uart0_xfer &uart0_cts>;
+> +	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
+>   	status = "okay";
 > +
-> +	return devm_regmap_init_mmio(dev, base, &clkc_regmap_config);
-> +}
-> +
-> +static int meson_common_probe(struct platform_device *pdev, struct regmap *map)
->  {
->  	const struct meson_eeclkc_data *data;
->  	struct device *dev = &pdev->dev;
-> -	struct regmap *map;
->  	int ret, i;
->  
->  	data = of_device_get_match_data(dev);
->  	if (!data)
->  		return -EINVAL;
->  
-> -	/* Get the hhi system controller node */
-> -	map = syscon_node_to_regmap(of_get_parent(dev->of_node));
-> -	if (IS_ERR(map)) {
-> -		dev_err(dev,
-> -			"failed to get HHI regmap\n");
-> -		return PTR_ERR(map);
-> -	}
-> -
->  	if (data->init_count)
->  		regmap_multi_reg_write(map, data->init_regs, data->init_count);
->  
-> @@ -54,3 +66,30 @@ int meson_eeclkc_probe(struct platform_device *pdev)
->  	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
->  					   data->hw_onecell_data);
->  }
-> +
-> +int meson_eeclkc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct regmap *map;
-> +
-> +	/* Get the hhi system controller node */
-> +	map = syscon_node_to_regmap(of_get_parent(dev->of_node));
-> +	if (IS_ERR(map)) {
-> +		dev_err(dev,
-> +			"failed to get HHI regmap\n");
-> +		return PTR_ERR(map);
-> +	}
-> +
-> +	return meson_common_probe(pdev, map);
-> +}
-> +
-> +int meson_clkc_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *map;
-> +
-> +	map = meson_regmap_resource(pdev);
-> +	if (IS_ERR(map))
-> +		return PTR_ERR(map);
-> +
-> +	return meson_common_probe(pdev, map);
-> +}
-> diff --git a/drivers/clk/meson/meson-eeclk.h b/drivers/clk/meson/meson-eeclk.h
-> index 77316207bde1..a2e9ab3a4f6b 100644
-> --- a/drivers/clk/meson/meson-eeclk.h
-> +++ b/drivers/clk/meson/meson-eeclk.h
-> @@ -21,5 +21,6 @@ struct meson_eeclkc_data {
->  };
->  
->  int meson_eeclkc_probe(struct platform_device *pdev);
-> +int meson_clkc_probe(struct platform_device *pdev);
->  
->  #endif /* __MESON_CLKC_H */
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		clocks = <&rk808 1>;
+> +		clock-names = "extclk";
 
+Is this right? Comparing the binding and the naming on the schematics, 
+it seems more likely that this might be the LPO clock rather than the 
+TXCO clock.
+
+Robin.
+
+> +		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
+> +		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
+> +		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
+> +		vbat-supply = <&vcc3v3_sys>;
+> +		vddio-supply = <&vcc_1v8>;
+> +	};
+>   };
+> 
+>   &uart2 {
+> --
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
