@@ -2,105 +2,76 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D5EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE07C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2048205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:27:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQIaEQxp"
+	by mail.kernel.org (Postfix) with ESMTP id D7D8B24653
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 02:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576117689;
+	bh=8R0G/Esfz6f8bJ+iwK7FblzQL1UoNKf4MiHAgRE9+0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TAVd7ePtBdd6dgJ3ZsLL3IspWFRJNT1kXTQvwJHRwuSzxYyGMATzeq5nZAn/q2e1u
+	 iO3fkGOV4be28jMMRSJSI7kBcbqtcVrcE6X/UBIzYv3/48SjX6SwXMRdbCiSOI664C
+	 /79meUR6/I/YFif1T24VaC/J3+1B79JJo8PAwkVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfLLC1Z (ORCPT
+        id S1727868AbfLLC2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 21:27:25 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38588 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbfLLC1X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 21:27:23 -0500
-Received: by mail-pg1-f196.google.com with SMTP id a33so328972pgm.5;
-        Wed, 11 Dec 2019 18:27:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tTHS0sAFW9uPlD+AqCNYpUarFLmjwnHqD++0UeSB8hU=;
-        b=XQIaEQxpgLBwXmiYR6pgGNgeFnutK6DCycup5orLwxibF5fYc8fMjIopR0VkLtgggt
-         KjI5/JWB4bKTxcALCb0rHq8otftnAoxoX3n1GDzGxeu3qVIhu7QuYyv2+Mwp2Bry6GYp
-         tRsT+zld0GfIWiO585WuHZA0454yZ0ZgGJs/DWoR+s5cSUaAki86/LKYI3WY7ujV5P/y
-         9LeYFUV9ZeR9kqCSfnsA79SVQeHOXx76+b6UUG0MNWlaw0UIpoGkWr+D4dtHkDbATWE3
-         HIVIstSxVNQmlB/Xw2ipNa0QI8nimIhCOcMYDhKRxqwf7ry9yk2vEb1cZsQCX7t9K0N3
-         6tng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tTHS0sAFW9uPlD+AqCNYpUarFLmjwnHqD++0UeSB8hU=;
-        b=PmNkLtEK1wXiG9Ar5308zA+N2V4zsvWXX4rOjIJQY4VOKce84v5ekDAZtxudP8JQ/K
-         /3IL0eP+h0CSK/6erqWqcaFMUO02Cf3aoiGK3yUR5xXSh7Z2CSeM5LoM2QbxT8MeVBY7
-         FZ7l+S9qPwNbcpy/UKyd53lxbYL+BneIK12NzKBFznXCKJxSsMrLfNkFySRNKFD/SS5B
-         1rdn0YP1r04A0Lko2xmT7XVSF7c+BiIVKCWGlaxZI9xU8mbALVkyT+/XdH6Cid5wE+lP
-         wVUe1k5kEBPU8KJfO0G2HnPlqZVqu1jOmhvioqUiqojLrTip2ogiEmP5MN3q4zno4dVA
-         eVdA==
-X-Gm-Message-State: APjAAAUdw+RywvLGleY/vTEJJRYf+nsqqzCKhLMazbcxoFQmnJQJHcKK
-        6gI4/CRuT7vbpef30i5Tibs=
-X-Google-Smtp-Source: APXvYqyxoOoOHx1Hg7FJQOpMCtLSu31I0G7JyqkADbCfGNxEQhYGyDSTVOGeuddMmJ2QYMjHO14sMA==
-X-Received: by 2002:a63:4f59:: with SMTP id p25mr7719374pgl.230.1576117642714;
-        Wed, 11 Dec 2019 18:27:22 -0800 (PST)
-Received: from localhost.localdomain ([12.176.148.120])
-        by smtp.gmail.com with ESMTPSA id d22sm4245173pgg.52.2019.12.11.18.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 18:27:21 -0800 (PST)
-From:   SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sjpark@amazon.de>
-To:     brendanhiggins@google.com, shuah@kernel.org
-Cc:     sjpark@amazon.com, corbet@lwn.net, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, sj38.park@gmail.com,
-        sjpark@amazon.de
-Subject: [PATCH v6 1/6] docs/kunit/start: Use in-tree 'kunit_defconfig'
-Date:   Thu, 12 Dec 2019 02:27:06 +0000
-Message-Id: <20191212022711.10062-2-sjpark@amazon.de>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191212022711.10062-1-sjpark@amazon.de>
-References: <20191212022711.10062-1-sjpark@amazon.de>
+        Wed, 11 Dec 2019 21:28:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727678AbfLLC2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 21:28:08 -0500
+Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00DF1214D8;
+        Thu, 12 Dec 2019 02:28:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576117687;
+        bh=8R0G/Esfz6f8bJ+iwK7FblzQL1UoNKf4MiHAgRE9+0A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bt7W00WnaDy9m5HuLcdJ3XqiPEbbvySLRgsmCvk0EWwUKbhAb0JipINEMa3sEEJJp
+         bH6irVb9sYpMvcKBCYu7VS3g5vAEwuz0hArcloZhz2grjnEoXF2O9kJguPw8kIia35
+         4Cca307sb++iTEX0FkavYDJBGBcTmWnDFrYyezUU=
+Date:   Thu, 12 Dec 2019 10:27:54 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Chris Healy <cphealy@gmail.com>,
+        Cory Tusar <cory.tusar@zii.aero>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] ARM: dts: vf610-zii-scu4-aib: Use generic names
+ for DT nodes
+Message-ID: <20191212022753.GG15858@dragon>
+References: <20191211140444.7076-1-andrew.smirnov@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211140444.7076-1-andrew.smirnov@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kunit doc suggests users to get the default `kunitconfig` from an
-external git tree.  However, the file is already located under the
-`arch/um/configs/` of the kernel tree.  Because the local file is easier
-to access and maintain, this commit updates the doc to use it.
+On Wed, Dec 11, 2019 at 06:04:43AM -0800, Andrey Smirnov wrote:
+> The devicetree specification recommends using generic node names.
+> 
+> Some ZII dts files already follow such recommendation, but some don't,
+> so use generic node names for consistency among the ZII dts files.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
----
- Documentation/dev-tools/kunit/start.rst | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-index 9d6db892c41c..d5197f1a45cb 100644
---- a/Documentation/dev-tools/kunit/start.rst
-+++ b/Documentation/dev-tools/kunit/start.rst
-@@ -32,9 +32,8 @@ regular Kernel config, with the specific test targets as well.
- 
- .. code-block:: bash
- 
--	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
- 	cd $PATH_TO_LINUX_REPO
--	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
-+	cp arch/um/configs/kunit_defconfig kunitconfig
- 
- You may want to add kunitconfig to your local gitignore.
- 
--- 
-2.17.1
-
+Applied both, thanks.
