@@ -2,94 +2,110 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75145C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C704AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB82077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576182095;
-	bh=m/+ZeYHmq8+ttJUjVN2Yb9qA1/uVMT7wh75REnSEa7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j+GTOa3Wp3ooRS88rwsq2veV5eI/iPWl/3cKG94m4STbsL/89//gx6j447PlGMTgj
-	 5deaFbribI8rk0X3pCHuDoW5cPOlFxX+WxGSJmpjGG5ILQEw3M+Zt0glRTPMN5JE+u
-	 DMy3cPO2EFu7MskOec7B3WRk/J1QbqMgL9O2fVBI=
+	by mail.kernel.org (Postfix) with ESMTP id 984C62077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dltFnCJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfLLUVe (ORCPT
+        id S1730855AbfLLUWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:21:34 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45483 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730707AbfLLUVd (ORCPT
+        Thu, 12 Dec 2019 15:22:09 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56626 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730707AbfLLUWJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:21:33 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j42so4121525wrj.12;
-        Thu, 12 Dec 2019 12:21:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CPNUf9ZfNsHV45XZGqiBQJlUTUhc2MVRp6BnooBqqSc=;
-        b=I49SI3JMgbdRmcSyXk+TmA97aoRu3zvvMUs0kL/WAdD/Mrv9aw3KtvpsFz/RmoaXZn
-         6AmfJ8t1D8tRGgH+j1qfqxHW4gSIxPW5XAwvR3xdTzJwQ+PsOAPJbTRz7oqzjeLPdL6W
-         ldUBE+4+jEoSTF56cnW//gHXmFWMeUrXtUkJN+2OUxpqkScMo1MG5uKlGst5lqaiak0g
-         tg5xBOLAk92p+bP5sw0S/oBquvj2wKT8DSgupO68wkWgNPHDlcYiAYno5ktNwMox/y8A
-         j15/oMipjfUrZn6XYfv4jmvkbDaJNNdVmFsdmpskEwjxUx3IRDb0xM0HMiyL7UdNMUqM
-         xTWg==
-X-Gm-Message-State: APjAAAXoLiXSoKA8mIBI7hpHu41k+ZS5h7kwPhFxjr/ZwN3sIyGXsM7c
-        xaqv3QYrpLIQO3R7jiE3n0v2lTs+
-X-Google-Smtp-Source: APXvYqzzbodyVYL3FNuaGg6Zp/U+21dUGiWWf3SbMNFJoJ0+vWDhCy4pxUgA9VjNMpaXXox/nvLRBw==
-X-Received: by 2002:a17:906:3953:: with SMTP id g19mr11516560eje.227.1576182089998;
-        Thu, 12 Dec 2019 12:21:29 -0800 (PST)
-Received: from kozik-lap ([194.230.155.234])
-        by smtp.googlemail.com with ESMTPSA id k36sm2772ede.57.2019.12.12.12.21.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 12 Dec 2019 12:21:29 -0800 (PST)
-Date:   Thu, 12 Dec 2019 21:21:26 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: exynos: Correct USB3503 GPIOs polarity
-Message-ID: <20191212202126.GA3534@kozik-lap>
-References: <20191211144638.24676-1-m.szyprowski@samsung.com>
- <CGME20191211144648eucas1p2065aac523ce190a5c0e6e2b5b11bd5ce@eucas1p2.samsung.com>
- <20191211144638.24676-2-m.szyprowski@samsung.com>
+        Thu, 12 Dec 2019 15:22:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oVn4n9KO0Wi7WPkaRPWf1qdzcetPOXcYdPlzDCBnbRo=; b=dltFnCJkTHTijV1oeQZ+c3MLr
+        VTaCGN8lrrIBqNCfDrT/MfjGWJpbw2zWJrvGpiYseNzgjj/jQ8hsHHtt6OcvE2foPV2x1GFKXytPa
+        a/uifxzN/siY79GEwrg+ikl40vaXBzW5eWV8xyXvIsR+6rPi7/0WuTJ0KpOnDGSQTTccPNbK9oGnT
+        GVxomvni0k4qeMlOGLxp6UEK3Twx4VEo3uX1YDT1XgnByW0Mtr1F3vYoRqYg7LIt29bXDi+KydTsN
+        kSPE7oYTY5GrhVFKlE1kLLFOKjQHG/duQsHF3hBtSdx7bmvIyU6Lz8C42dtRsVNdRnfTxjz9cNA7X
+        aQKEA1mUA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifUyG-0006Ss-Ky; Thu, 12 Dec 2019 20:22:00 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C9AF0980CCD; Thu, 12 Dec 2019 21:21:57 +0100 (CET)
+Date:   Thu, 12 Dec 2019 21:21:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, dja@axtens.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL]
+ Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212202157.GD11457@worktop.programming.kicks-ass.net>
+References: <87blslei5o.fsf@mpe.ellerman.id.au>
+ <20191206131650.GM2827@hirez.programming.kicks-ass.net>
+ <875zimp0ay.fsf@mpe.ellerman.id.au>
+ <20191212080105.GV2844@hirez.programming.kicks-ass.net>
+ <20191212100756.GA11317@willie-the-truck>
+ <20191212104610.GW2827@hirez.programming.kicks-ass.net>
+ <CAHk-=wjUBsH0BYDBv=q36482G-U7c=9bC89L_BViSciTfb8fhA@mail.gmail.com>
+ <20191212180634.GA19020@willie-the-truck>
+ <CAHk-=whRxB0adkz+V7SQC8Ac_rr_YfaPY8M2mFDfJP2FFBNz8A@mail.gmail.com>
+ <20191212193401.GB19020@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191211144638.24676-2-m.szyprowski@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191212193401.GB19020@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Dec 11, 2019 at 03:46:35PM +0100, Marek Szyprowski wrote:
-> Current USB3503 driver ignores GPIO polarity and always operates as if the
-> GPIO lines were flagged as ACTIVE_HIGH. Fix the polarity for the existing
-> USB3503 chip applications to match the chip specification and common
-> convention for naming the pins. The only pin, which has to be ACTIVE_LOW
-> is the reset pin. The remaining are ACTIVE_HIGH. This change allows later
-> to fix the USB3503 driver to properly use generic GPIO bindings and read
-> polarity from DT.
+On Thu, Dec 12, 2019 at 07:34:01PM +0000, Will Deacon wrote:
+> void ool_store_release(volatile unsigned long *ptr, unsigned long val)
+> {
+> 	smp_store_release(ptr, val);
+> }
 > 
+> 0000000000000000 <ool_store_release>:
+>    0:   a9be7bfd        stp     x29, x30, [sp, #-32]!
+>    4:   90000002        adrp    x2, 0 <__stack_chk_guard>
+>    8:   91000042        add     x2, x2, #0x0
+>    c:   910003fd        mov     x29, sp
+>   10:   f9400043        ldr     x3, [x2]
+>   14:   f9000fa3        str     x3, [x29, #24]
+>   18:   d2800003        mov     x3, #0x0                        // #0
+>   1c:   c89ffc01        stlr    x1, [x0]
+>   20:   f9400fa1        ldr     x1, [x29, #24]
+>   24:   f9400040        ldr     x0, [x2]
+>   28:   ca000020        eor     x0, x1, x0
+>   2c:   b5000060        cbnz    x0, 38 <ool_store_release+0x38>
+>   30:   a8c27bfd        ldp     x29, x30, [sp], #32
+>   34:   d65f03c0        ret
+>   38:   94000000        bl      0 <__stack_chk_fail>
+> 
+> It's a mess, and fixing READ_ONCE() doesn't help this case, which is why
+> I was looking at getting rid of volatile where it's not strictly needed.
+> I'm certainly open to other suggestions, I just haven't managed to think
+> of anything else.
 
-Thanks, applied (for v5.6).
+We could move the kernel to C++ and write:
 
-Best regards,
-Krzysztof
+	std::remove_volatile<typeof(p)>::type __p = (p);
 
+/me runs like hell...
