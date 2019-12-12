@@ -2,154 +2,117 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A2FC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38109C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03892077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEAC2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="RjG14Yi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbfLLNo4 (ORCPT
+        id S1729527AbfLLNpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:44:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:47352 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbfLLNoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:44:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D4D530E;
-        Thu, 12 Dec 2019 05:44:54 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17E8B3F718;
-        Thu, 12 Dec 2019 05:44:52 -0800 (PST)
-Subject: Re: [PATCH] pcie: Add quirk for the Arm Neoverse N1SDP platform
-To:     Andre Przywara <andre.przywara@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, Len Brown <lenb@kernel.org>
-References: <20191211201725.GA30513@google.com>
- <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <46bfdd37-c8a2-f0e2-b0b4-0a40a129d4cb@arm.com>
-Date:   Thu, 12 Dec 2019 13:44:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 08:45:33 -0500
+Received: from mail-mw2nam12on2107.outbound.protection.outlook.com ([40.107.244.107]:40513
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729392AbfLLNpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:45:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KOViPhT4CjhjNGmB/FR+PJ7oWwU5ER+2E0dWmiy04Ebg24rE44BQqeWgJdNsP7yBI+BVqQh3/V5lgtfRK8ilAarvci10mxAq2WxG0yoVN4hVRUrSVooOSf9jdY4LYP9s1OYmACk9Iw+l6FNpCfCG0EGo+DxMS9ug6Yzupem3Zp1zRFjqeHXQ51+QDTgG6RGdQn/4tr5OMKwAgKqt9BzmDPLZrnUcdvI4jP9r9+BE0xciuS3OaDvbJyhO7cYFyedrbLCIlhPAgVgk+dXjMjPZS30uzz9ZR2A4A7mVAAOEN+Oj7MwR2N+GLjkU6Sri9Xr3elmIDFhO62atJahLvdCZbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cXDFNXOMtyfqRJoqpL6MDqc7Wczvuf8vznYe0n4ZY+I=;
+ b=J0NKy4NBS48x/HaGD0uqfRxF/kaDGwVyDfOYbYuEBL1bRK/QijTAC+8voUEZeLTzTi2OlIXRP/wOQxN4kTRgxJcYNkvJOWuP920beB7nCuu5u+rk4FVER5UU3NT38Z6Y2ygFu+FQDd1NwkVARQnhgRs+X02SZkDVycSfrgOmXijHxLrtQ+4l3kD6E8/iBJI/ae5cg+wLiPS3uOMl4SOp6ZmzIUwDLRBD9D5DdhKSElddER8g4QeOi6HNt1dPfJOO7NTtBFCf97zFmPG7C1H99f3IE/7azscASZp8Z01/JudzTivFtELf02FNt1hRy3isy/rxDod3v74hQfqfkLhqJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cXDFNXOMtyfqRJoqpL6MDqc7Wczvuf8vznYe0n4ZY+I=;
+ b=RjG14Yi+YgeXTtGtBZWms36bB7AWuGX52AA26xjk/CBCIV9ttTyCZmaXWQaCodQfgFRvOdnud6muElqJctdKelmcjKIZJvI4StjhXznZls2dxi4Po1h5XErE0/IpA5FAllf13Ci5vunk7iBTtwoz7Hs3ONVzeMkh6Ees7zj6WLw=
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com (10.174.186.34) by
+ DM5PR1301MB2025.namprd13.prod.outlook.com (10.174.186.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.11; Thu, 12 Dec 2019 13:45:29 +0000
+Received: from DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230]) by DM5PR1301MB2108.namprd13.prod.outlook.com
+ ([fe80::2d23:b456:d67:f230%6]) with mapi id 15.20.2538.012; Thu, 12 Dec 2019
+ 13:45:29 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "paulmck@kernel.org" <paulmck@kernel.org>,
+        "madhuparnabhowmik04@gmail.com" <madhuparnabhowmik04@gmail.com>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-kernel-mentees@lists.linuxfoundation.org" 
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "joel@joelfernandes.org" <joel@joelfernandes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs: nfs: dir.c: Fix sparse error
+Thread-Topic: [PATCH] fs: nfs: dir.c: Fix sparse error
+Thread-Index: AQHVrx1GhpnK5B8ObEWj1ayFx8ZCxae0HusAgABxqwCAAVZfAIAAn6KA
+Date:   Thu, 12 Dec 2019 13:45:29 +0000
+Message-ID: <5614739335088d3e9baff43b752df04b84a8ad14.camel@hammerspace.com>
+References: <201912110621.WJ6oENgf%lkp@intel.com>
+         <20191211074842.21400-1-madhuparnabhowmik04@gmail.com>
+         <20191212041406.GT2889@paulmck-ThinkPad-P72>
+In-Reply-To: <20191212041406.GT2889@paulmck-ThinkPad-P72>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [68.40.189.247]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b6730210-7e93-49c9-9ed5-08d77f098d10
+x-ms-traffictypediagnostic: DM5PR1301MB2025:
+x-microsoft-antispam-prvs: <DM5PR1301MB202520B52BADE4C55838DA93B8550@DM5PR1301MB2025.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0249EFCB0B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39840400004)(376002)(366004)(396003)(136003)(346002)(189003)(199004)(110136005)(26005)(186003)(4744005)(36756003)(6512007)(2616005)(86362001)(5660300002)(71200400001)(508600001)(81166006)(64756008)(66556008)(66446008)(6506007)(6486002)(4001150100001)(966005)(54906003)(316002)(81156014)(76116006)(8676002)(2906002)(4326008)(66946007)(66476007)(91956017)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR1301MB2025;H:DM5PR1301MB2108.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r3VN4tx5S580MpVCryx2gLWDwjCSz/N8JvtVFzcxoh7rq07GGy4oPZPJCL8yc+p8n8iBZeY9A7kaicK1i48gJvTgRyWcTFwMFcbAA21fXlkjueqALU0fvDSAIJGGH4nz+CnKAndPfOYGDQuBEuspVZVxh/3Lpd+1fDjkRtBzgeTzagyI91rDCxbym9bV6LavqosW/c4ZoRLw1LPSs1LCWRzGm213SWhFk8jaqBgMnqHmc0125fSQrCQEcOwiecSnLDbOfGL9PPOPIITk0H+M+qgh1q+U7M5VZdKy5wLm36xHvmMOO66MoDEGVWBcOuhVygK36Ks9WryAFpua/7IwIS5iiwB6YPvruh+8BHnYaAVQY2ptek6SGjgSfsOQIXDacCWH58CN9c3Yr5GDbAP7hFMh8b6r+h6Vx5GO5+jOZgSilmKFsYs4HUPfXCyUdNLK
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E58661FD5D40E2428E504984389359BB@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <9ad40b55-0d31-a7b7-9f99-ea281fd4ad7d@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b6730210-7e93-49c9-9ed5-08d77f098d10
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 13:45:29.1725
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X0vRXfpDnDQAJSpbB9qU38mIG+WGUXYUibI6BOit3hiz0hS4k6FsV0xFpe2YGOypuICz3zIVuVini8D2HLzQfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1301MB2025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 11:05 am, Andre Przywara wrote:
-> On 11/12/2019 20:17, Bjorn Helgaas wrote:
-> 
-> Hi Bjorn,
-> 
->> On Wed, Dec 11, 2019 at 11:00:49AM +0000, Andre Przywara wrote:
->>> On Tue, 10 Dec 2019 08:41:15 -0600
->>> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>> On Mon, Dec 09, 2019 at 04:06:38PM +0000, Andre Przywara wrote:
->>>>> From: Deepak Pandey <Deepak.Pandey@arm.com>
->>>>>
->>>>> The Arm N1SDP SoC suffers from some PCIe integration issues, most
->>>>> prominently config space accesses to not existing BDFs being answered
->>>>> with a bus abort, resulting in an SError.
->>>>
->>>> Can we tease this apart a little more?  Linux doesn't program all the
->>>> bits that control error signaling, so even on hardware that works
->>>> perfectly, much of this behavior is determined by what firmware did.
->>>> I wonder if Linux could be more careful about this.
->>>>
->>>> "Bus abort" is not a term used in PCIe.
->>>
->>> Yes, sorry, that was my sloppy term, also aiming more at the CPU
->>> side of the bus, between the cores and the RC.
->>>
->>>>   IIUC, a config read to a
->>>> device that doesn't exist should terminate with an Unsupported Request
->>>> completion, e.g., see the implementation note in PCIe r5.0 sec 2.3.1.
->>>
->>> Yes, that's what Lorenzo mentioned as well.
->>>
->>>> The UR should be an uncorrectable non-fatal error (Table 6-5), and
->>>> Figures 6-2 and 6-3 show how it should be handled and when it should
->>>> be signaled as a system error.  In case you don't have a copy of the
->>>> spec, I extracted those two figures and put them at [1].
->>>
->>> Thanks for that.
->>> So in the last few months we tossed several ideas around how to
->>> work-around this without kernel intervention, all of them turned out
->>> to be not working. There are indeed registers in the RC that
->>> influence error reporting to the CPU side, but even if we could
->>> suppress (or catch) the SError, we can't recover and fixup the read
->>> transaction to the CPU. Even Lorenzo gave up on this ;-) As far as I
->>> understood this, there are gates missing which are supposed to
->>> translate this specific UR into a valid "all-1s" response.
->>
->> But the commit log says firmware scanned the bus (catching the
->> SErrors).  Shouldn't Linux be able to catch them the same way?
-> 
-> Not really. The scanning is done by the SCP management processor, which is a Cortex-M class core on the same bus. So it's a simple, single core running very early after power-on, when the actual AP cores are still off. The SError handler is set to just increase a value, then to return. This value is then checked before and after a config space access for a given
-> BDF: https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp
-> 
-> On the AP cores that run Linux later on this is quite different: The SError is asynchronous, imprecise (inexact) and has no syndrome information. That means we can't attribute this anymore to the faulting instruction, we don't even know if it happened due to this config space access. The CPU might have executed later instructions already, so the state is broken at this point. SError basically means: the system is screwed up.
-> Because this is quite common for SErrors, we don't even allow to register SError handlers in arm64 Linux.
-
-Furthermore, on the main application processor, SError might be 
-delivered to EL3 firmware well beyond the reach of Linux, so we can make 
-zero assumptions about how it's handled and whether we'll ever see it, 
-or survive the result (EL3 is at liberty to say "oh, something went 
-wrong, I'll reset the system immediately").
-
-Robin.
-> So even if we could somehow handle this is in Linux, it would be a much greater and intrusive hack, so I'd rather stick with this version.
->   
->> The "all-1s" response directly from hardware is typical of most
->> platforms, but I don't think it's strictly required by the PCIe spec
->> and I don't think it's absolutely essential even to Linux.  If you can
->> catch the SErrors, isn't there a way for software to fabricate that
->> all-1s data and continue after the read?
-> 
-> That was an idea we had as well, but due to the points mentioned above this is not possible.
-> 
->>>> Even ECAM compliance is not really minor -- if this controller were
->>>> fully compliant with the spec, you would need ZERO Linux changes to
->>>> support it.  Every quirk like this means additional maintenance
->>>> burden, and it's not just a one-time thing.  It means old kernels that
->>>> *should* "just work" on your system will not work unless somebody
->>>> backports the quirk.
->>>
->>> I am well aware of that, and we had quite some discussions
->>> internally, with quite some opposition.  ...
->>
->> The main point is that *future* silicon should be designed to avoid
->> this issue.  I hope at least that part was not controversial.
-> 
-> Yes, the design goal was to be completely standards (SBSA, ACPI, ECAM) compliant, it was just the usual "things happen" that wasn't spotted in time.
-> 
->> If we want to take advantage of the generic PCI code supplied by
->> Linux, we have to expect that the hardware will play by the rules of
->> PCI.
-> 
-> You don't need to convince me ;-), but I think the lesson has been learned.
-> 
-> Cheers,
-> Andre.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+T24gV2VkLCAyMDE5LTEyLTExIGF0IDIwOjE0IC0wODAwLCBQYXVsIEUuIE1jS2VubmV5IHdyb3Rl
+Og0KPiBPbiBXZWQsIERlYyAxMSwgMjAxOSBhdCAwMToxODo0MlBNICswNTMwLCANCj4gbWFkaHVw
+YXJuYWJob3dtaWswNEBnbWFpbC5jb20gd3JvdGU6DQo+ID4gVGhpcyBidWlsZCBlcnJvciBpcyBi
+ZWNhdXNlIHRoZSBtYWNybyBsaXN0X3RhaWxfcmN1KCkgaXMNCj4gPiBub3QgeWV0IHByZXNlbnQg
+aW4gdGhlIG1haW5saW5lIGtlcm5lbC4NCj4gPiANCj4gPiBUaGlzIHBhdGNoIGlzIGRlcGVuZGVu
+dCBvbiB0aGUgcGF0Y2ggOiANCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1rZXJu
+ZWwtbWVudGVlcy9DQUY2NUhQMlNDODlrOUhKWmZjTGdlT01SUEJLUnlhc0NNaUxvMmdaZ0JLeWNq
+SHVVNkFAbWFpbC5nbWFpbC5jb20vVC8jdA0KPiANCj4gSWYgdGhlIE5GUyBmb2xrcyBhcmUgT0sg
+d2l0aCBpdCwgSSB3b3VsZCBiZSBoYXBweSB0byB0YWtlIGl0IGluIC1yY3UsDQo+IHdoZXJlIHRo
+ZSBsaXN0X3RhaWxfcmN1KCkgcGF0Y2ggaXMgY3VycmVudGx5IGxvY2F0ZWQuDQo+IA0KPiAJCQkJ
+CQkJVGhhbngsIFBhdWwNCg0KVGhhdCB3b3VsZCBiZSBmaW5lIHdpdGggbWUuDQoNCkNoZWVycw0K
+ICBUcm9uZA0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFp
+bmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
