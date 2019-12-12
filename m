@@ -2,166 +2,132 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281EDC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB15C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED32F214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576186180;
-	bh=8Wowg5V6SXmd4dQi9NTO8PQLQmoKCLNZs2KZBgwQU2A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=vfRWDpG0wq2gS1m5gjmA+r5ohlx8ElyUAsBnKanxPRD1IQGfJZihWwsbWwjHwYqHe
-	 pBg2oYKUmV7FJoo60v85wNWOF6usj4evvZxuyIwK8QnN5IYPsN6atJOJKomCJeFrFn
-	 8ZdB+fN2SMrSQ77zGTf7M5zqBlzpnAMum/4UZNvA=
+	by mail.kernel.org (Postfix) with ESMTP id C00BA2465A
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 21:30:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tohT6lXB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbfLLV3j (ORCPT
+        id S1731111AbfLLVam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 16:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbfLLV3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 16:29:39 -0500
-Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD8402054F;
-        Thu, 12 Dec 2019 21:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576186178;
-        bh=8Wowg5V6SXmd4dQi9NTO8PQLQmoKCLNZs2KZBgwQU2A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=V5RKeHQ9a9KdRLvZdxd5Dc72m6H6D2KCCRw5jUO301Obli6gN9ibNNCTHU1FFH3zh
-         y7q0Vm0PH4DR3hp2kJekphvHEyAnkMTyP3f+dDUWCcE9ZLEDrKQYfcKPfJI8l00nIa
-         behpVtbVmbo1KZBwtFHSA4x52JxbjIhqAlf3WEAs=
-Date:   Thu, 12 Dec 2019 15:29:36 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-rockchip@lists.infradead.org,
-        Shawn Lin <shawn.lin@rock-chips.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vicente Bergas <vicencb@gmail.com>
-Subject: Re: [PATCH] PCI: rockchip: Fix register number offset to program IO
- outbound ATU
-Message-ID: <20191212212936.GA13645@google.com>
+        Thu, 12 Dec 2019 16:30:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36877 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731067AbfLLVam (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 16:30:42 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w15so4371285wru.4
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 13:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Ar3WGUfhwEDSSCq+9U1VZWrSE5XYUNVdZnayKnIhqMo=;
+        b=tohT6lXBhBc2QJ3oUJgFUSmQ7INkSx6FdEKCFGb0sJVtpqkXC+tujNgxj/fj2RPgvC
+         /ojbALCKFzuioc5m2Oc5vymHLHGEc1677h4HuhZrW9jfDHZOVEJgtMRcb3dSSvjHnkvu
+         cnn2i2s9LuMyaFISELlYzr70zXQ+oHotcglIWaf7KuMdUj0mikYSoHWHeQMZE0a4gs3E
+         c8MHuf4nOcEzqckIyTI7p0PVThKQ0grDjWKV7smF3qVSELFnMMsW1jxkx9ZEbrlwcHMV
+         GeV3IATLxC5H7dJ0BUR96f3PGXYDZ6dqb0OpaIxx7YWvLonmEEpd2alYGb1eqgcvn1CG
+         As8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Ar3WGUfhwEDSSCq+9U1VZWrSE5XYUNVdZnayKnIhqMo=;
+        b=Pja1IGwhQzUsxUk4/SjFyRPY+7H/ikp1t542kDXAb04MCGPQ2sV/Ex1PvSoCEJl5f8
+         0GkQdenJkZihkv93/+vc+lS2jMnYt5xRGbUOooD/yj1zdREElw9YMgwuKzdUY75zFUvI
+         zvf/W7UpoauihwVg1IRGSQv3C0Ke82puq029vAYgdDw5gvvyvbHtKJly99VkOOZP8zKQ
+         9TVO48VglGop3VDwH/uEWlEoat+AuUBzn0OLO8Q2UR0XVjTSIDc3ttz6or6VAhtKP9j+
+         0aO3zqVOSvVc7Bio9RO/gFD6ovhYS4PLviU/+DgYIKWaz62G7r9Uh7WyPQOPGjQ3Fynt
+         e4Dw==
+X-Gm-Message-State: APjAAAXICW4IsTYcIdBiu7m8qxpk2ojOfhuj0LNoTawLBhuG2ogDGK+G
+        iY9dl7PWWbZgieXVlS4kq1Frvw==
+X-Google-Smtp-Source: APXvYqxdK6wPYL6bpRlBDpDABeuKHmVhx787FfsFi1e5hzInLniJKOGj9A9UNuqksGO6GoeLEepgOA==
+X-Received: by 2002:adf:e3c1:: with SMTP id k1mr8247798wrm.151.1576186240242;
+        Thu, 12 Dec 2019 13:30:40 -0800 (PST)
+Received: from ?IPv6:2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca? ([2a01:cb1d:6e7:d500:82a9:347a:43f3:d2ca])
+        by smtp.gmail.com with ESMTPSA id n8sm7605285wrx.42.2019.12.12.13.30.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 13:30:39 -0800 (PST)
+Subject: Re: [PATCH 3/3] media: platform: meson-ao-cec-g12a: add wakeup
+ support
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>, mchehab@kernel.org,
+        hverkuil-cisco@xs4all.nl, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media <linux-media@vger.kernel.org>
+References: <20191212145925.32123-1-glaroque@baylibre.com>
+ <20191212145925.32123-4-glaroque@baylibre.com>
+ <CAFBinCDjfzQX=ZG=cgTYo=icGNU-t4Kqnu0Bu5qRLsRk_s6S_Q@mail.gmail.com>
+From:   guillaume La Roque <glaroque@baylibre.com>
+Message-ID: <b923c0f0-3627-121a-fa4f-49bd0c40825b@baylibre.com>
+Date:   Thu, 12 Dec 2019 22:30:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191211093450.7481-1-enric.balletbo@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAFBinCDjfzQX=ZG=cgTYo=icGNU-t4Kqnu0Bu5qRLsRk_s6S_Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Vicente]
+Hi Martin,
 
-On Wed, Dec 11, 2019 at 10:34:50AM +0100, Enric Balletbo i Serra wrote:
-> Since commit '62240a88004b ("PCI: rockchip: Drop storing driver private
-> outbound resource data)' the offset calculation is wrong to access the
-> register number to program the IO outbound ATU. The offset should be
-> based on the IORESOURCE_MEM resource size instead of the IORESOURCE_IO
-> size.
+
+thanks for review
+
+On 12/12/19 8:57 PM, Martin Blumenstingl wrote:
+> Hi Guillaume,
 >
-> ...
+> (I don't know the specifics of this hardware but I have two general
+> comments below)
+>
+> On Thu, Dec 12, 2019 at 4:00 PM Guillaume La Roque
+> <glaroque@baylibre.com> wrote:
+>> +#define CECB_FUNC_CFG_REG              0xA0
+>> +#define CECB_FUNC_CFG_MASK             GENMASK(6, 0)
+>> +#define CECB_FUNC_CFG_CEC_ON           0x01
+>> +#define CECB_FUNC_CFG_OTP_ON           0x02
+>> +#define CECB_FUNC_CFG_AUTO_STANDBY     0x04
+>> +#define CECB_FUNC_CFG_AUTO_POWER_ON    0x08
+>> +#define CECB_FUNC_CFG_ALL              0x2f
+>> +#define CECB_FUNC_CFG_NONE             0x0
+>> +
+>> +#define CECB_LOG_ADDR_REG      0xA4
+>> +#define CECB_LOG_ADDR_MASK     GENMASK(22, 16)
+> do these registers have some RTI_* prefix in the datasheet?
+> that would make it easier to spot that these registers belong to AO /
+> RTI (while all other registers belong to the CEC controller)
 
-> Fixes: 62240a88004b ("PCI: rockchip: Drop storing driver private outbound resource data)
-> Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Suggested-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+as i say register info come from amlogic BSP.
 
-Thanks, I applied this with Vicente's reported-by and tested-by and
-Andrew's ack to for-linus for v5.5.
+nothing in datasheet unfortunately. in amlogic code , this register are called AO_DEBUG_REG0 and AO_DEBUG_REG1 in amlogic BSP...
 
-I'm confused about "msg_bus_addr".  It is computed as
-"entry->res->start - entry->offset + <other stuff>".  A struct
-resource contains a CPU physical address, and adding entry->offset
-gets you a PCI bus address.  But later rockchip_pcie_probe() calls
-devm_ioremap(rockchip->msg_bus_addr), which expects a CPU physical
-address.  So it looks like we're passing a PCI bus address when we
-should be passing a CPU physical address.  What am I missing?
-
-For the future, I do think we should consider:
-
-  - Renaming rockchip_pcie_prog_ob_atu() and
-    rockchip_pcie_prog_ib_atu() so they match
-    dw_pcie_prog_outbound_atu() and dw_pcie_prog_inbound_atu().
-
-  - Changing the rockchip_pcie_prog_ob_atu() and
-    rockchip_pcie_prog_ib_atu() interfaces so they take a 64-bit
-    pci_addr/cpu_addr instead of 32-bit lower_addr and upper_addr,
-    also to follow the dw examples.
-
-  - Renaming the rockchip_pcie_cfg_atu() local "offset" to "index" or
-    similar since it's a register number, not a memory or I/O space
-    offset.
-
-  - Reworking the rockchip_pcie_cfg_atu() loops.  Currently there are
-    three different ways to compute the register number.  The
-    msg_bus_addr computation is split between the top and bottom of
-    the function and uses "reg_no" left over from the IO loop and
-    "offset" left from the memory loop.  Maybe something like this:
-
-      rockchip_pcie_prog_inbound_atu(rockchip, 2, 32 - 1, 0);
-
-      atu_idx = 1;
-
-      mem = resource_list_first_type(&bridge->windows, IORESOURCE_MEM);
-      mem_entries = resource_size(mem->res) >> 20;
-      mem_pci_addr = mem->res->start - mem->offset;
-      for (i = 0; i < mem_entries; i++, atu_idx++)
-        rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
-                                        AXI_WRAPPER_MEM_WRITE, 20 - 1,
-                                        mem_pci_addr + (i << 20));
-
-      io = resource_list_first_type(&bridge->windows, IORESOURCE_IO);
-      io_entries = resource_size(entry->res) >> 20;
-      io_pci_addr = io->res->start - io->offset;
-      for (i = 0; i < io_entries; i++, atu_idx++)
-        rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
-                                        AXI_WRAPPER_IO_WRITE, 20 - 1,
-                                        io_pci_addr + (i << 20));
-
-      rockchip_pcie_prog_outbound_atu(rockchip, atu_idx,
-                                      AXI_WRAPPER_NOR_MSG, 20 - 1, 0);
-      rockchip->msg_bus_addr = mem_pci_addr +
-        (mem_entries + io_entries) << 20);
-
-> ---
-> 
->  drivers/pci/controller/pcie-rockchip-host.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-host.c b/drivers/pci/controller/pcie-rockchip-host.c
-> index d9b63bfa5dd7..94af6f5828a3 100644
-> --- a/drivers/pci/controller/pcie-rockchip-host.c
-> +++ b/drivers/pci/controller/pcie-rockchip-host.c
-> @@ -834,10 +834,12 @@ static int rockchip_pcie_cfg_atu(struct rockchip_pcie *rockchip)
->  	if (!entry)
->  		return -ENODEV;
->  
-> +	/* store the register number offset to program RC io outbound ATU */
-> +	offset = size >> 20;
-> +
->  	size = resource_size(entry->res);
->  	pci_addr = entry->res->start - entry->offset;
->  
-> -	offset = size >> 20;
->  	for (reg_no = 0; reg_no < (size >> 20); reg_no++) {
->  		err = rockchip_pcie_prog_ob_atu(rockchip,
->  						reg_no + 1 + offset,
-> -- 
-> 2.20.1
-> 
+>
+> [...]
+>> +       if (ao_cec->regmap_ao_sysctrl)
+>> +               ret |= regmap_update_bits(ao_cec->regmap_ao_sysctrl,
+>> +                                        CECB_LOG_ADDR_REG,
+>> +                                         CECB_FUNC_CFG_MASK,
+> why do we need to mask CECB_FUNC_CFG_MASK (from register 0xa0) in the
+> CECB_LOG_ADDR_REG register (0xa4)?
+good point, it's an error i will fix
+>
+>> +                                         logical_addr << CECB_LOG_ADDR_SHIFT);
+> FIELD_PREP(CECB_FUNC_CFG_MASK, logical_addr) would make it consistent
+> with the rest of the driver
+> then you can also drop the #define CECB_LOG_ADDR_SHIFT
+i will
+>
+> Martin
