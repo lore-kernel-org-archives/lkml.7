@@ -2,165 +2,115 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C061BC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F62C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:42:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAE922527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70A021655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cCFmmoTX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbfLLOlW (ORCPT
+        id S1729754AbfLLOmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:41:22 -0500
-Received: from ns.iliad.fr ([212.27.33.1]:59576 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729273AbfLLOlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:41:22 -0500
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id BBA22200E9;
-        Thu, 12 Dec 2019 15:41:20 +0100 (CET)
-Received: from [192.168.108.51] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id A1FA5200E6;
-        Thu, 12 Dec 2019 15:41:20 +0100 (CET)
-Subject: Re: [PATCH v1] clk: Convert managed get functions to devm_add_action
- API
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <3d8a58bf-0814-1ec1-038a-10a20b9646ad@free.fr>
- <20191128185630.GK82109@yoga> <20191202014237.GR248138@dtor-ws>
- <f177ef95-ef7e-cab0-1322-6de28f18ecdb@free.fr>
- <c0ccca86-b7b1-b587-60c1-4794376fa789@arm.com>
- <ba630966-5479-c831-d0e2-bc2eb12bc317@free.fr>
- <20191211222829.GV50317@dtor-ws>
- <70528f77-ca10-01cd-153b-23486ce87d45@free.fr>
- <20191212141747.GI25745@shell.armlinux.org.uk>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <58c27422-e06c-f42e-16ea-baeca3bb9b01@free.fr>
-Date:   Thu, 12 Dec 2019 15:41:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 12 Dec 2019 09:42:15 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39000 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729355AbfLLOmP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 09:42:15 -0500
+Received: by mail-lf1-f67.google.com with SMTP id y1so1890784lfb.6
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tZEozXho8/b7kOqmVnapq/xyhPGY85u/Fazs9Eblm1E=;
+        b=cCFmmoTXOmDLfgP+nSgeOYumVAZUrCnARZzWT6kYYgCKF1bePY08qH25uoDIaIHIIP
+         xy8kMJ6JQ2UyEvDyewbvtPrrH9UtNKJVImB4NokJIoH/R67zMUh04sKFC2b9DZZNNYUs
+         aUGcMes7TUb5SFaiVdEGG5DyRqBgacd0FAD4lAf+ICRsdMe3e2j3QZ8mi0budLFypHnU
+         Q9CAtFfX69QmpkYitVwIFJ08foJUmu7rOTj1ckh5yeQ90ov1O2obpxX2rMKf54BvokNm
+         ude9UZXPiRBYKsQ2CDcY3DczzV6WI8NM6/9D9PHWpM76xo1IPmfR6iBERCj82PcqPI0L
+         ppSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tZEozXho8/b7kOqmVnapq/xyhPGY85u/Fazs9Eblm1E=;
+        b=hqdIwrkeJ+YCAZ3+y04c7+EN5qYL9OmvOGqwNczK7XraCvYjLViFwPa5ATCtRZ0lIQ
+         d3BdDQMiEgDelP8zkM5MZKW30p5G1lt5QKJbBHdP2kvwagLk9HSWEiu0cYx6RIcUhprv
+         RgGscMip2GPWiy4y0EYtE8B7Ese83uFQuQfRLABtnHbc7i9SSso9KIry/8sXDniyuIp/
+         fTHUCWABRGUsQqLa0Z0XRXVlDiO/W/UPSl7w9EX/lXof8I6isJC3NOOivSS872Eg8MgO
+         EfFK+O+8OVQ5/sFl+YQabxBOAdhvt0D+lpXD44WU+ZdPbM9Y3RMySePx+M9nAHNYkrTv
+         qtqQ==
+X-Gm-Message-State: APjAAAUEOyFGMII41F1KE5491P+7i1aif1vXryE95IY/xYOjQ4Mlu/nZ
+        O3YVUVQQbTLygl7hEaHnI1sdvvqMuHpWYVSOdwjO7Q==
+X-Google-Smtp-Source: APXvYqzNd5E12+tK1syFHjNwCOV5eMNSPBpGptit7BvfAlgSkslbOpdSmdz3b8GlBGkJlIqKTDmvgy11rgnCB3iAN8w=
+X-Received: by 2002:ac2:4945:: with SMTP id o5mr5702467lfi.93.1576161732769;
+ Thu, 12 Dec 2019 06:42:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212141747.GI25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Dec 12 15:41:20 2019 +0100 (CET)
+References: <20191127084253.16356-1-geert+renesas@glider.be> <20191127084253.16356-7-geert+renesas@glider.be>
+In-Reply-To: <20191127084253.16356-7-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 12 Dec 2019 15:42:01 +0100
+Message-ID: <CACRpkdb1XZAeSThxWmJtnm80T4aPufXV2UvJdVdgnw-TJe3trg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] docs: gpio: Add GPIO Aggregator/Repeater documentation
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/2019 15:17, Russell King - ARM Linux admin wrote:
+On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-> On Thu, Dec 12, 2019 at 02:53:40PM +0100, Marc Gonzalez wrote:
->
->> On 11/12/2019 23:28, Dmitry Torokhov wrote:
->>
->>> On Wed, Dec 11, 2019 at 05:17:28PM +0100, Marc Gonzalez wrote:
->>>
->>>> What is the rationale for the devm_add_action API?
->>>
->>> For one-off and maybe complex unwind actions in drivers that wish to use
->>> devm API (as mixing devm and manual release is verboten). Also is often
->>> used when some core subsystem does not provide enough devm APIs.
->>
->> Thanks for the insight, Dmitry. Thanks to Robin too.
->>
->> This is what I understand so far:
->>
->> devm_add_action() is nice because it hides/factorizes the complexity
->> of the devres API, but it incurs a small storage overhead of one
->> pointer per call, which makes it unfit for frequently used actions,
->> such as clk_get.
->>
->> Is that correct?
->>
->> My question is: why not design the API without the small overhead?
->>
->> Proof of concept below:
->>
->>
->> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
->> index 0bbb328bd17f..76392dd6273b 100644
->> --- a/drivers/base/devres.c
->> +++ b/drivers/base/devres.c
->> @@ -685,6 +685,20 @@ int devres_release_group(struct device *dev, void *id)
->>  }
->>  EXPORT_SYMBOL_GPL(devres_release_group);
->>  
->> +void *devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
->> +{
->> +	void *data = devres_alloc(func, size, GFP_KERNEL);
->> +
->> +	if (data) {
->> +		memcpy(data, arg, size);
->> +		devres_add(dev, data);
->> +	} else
->> +		func(dev, arg);
->> +
->> +	return data;
->> +}
->> +EXPORT_SYMBOL_GPL(devm_add);
->> +
->>  /*
->>   * Custom devres actions allow inserting a simple function call
->>   * into the teadown sequence.
->> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
->> index be160764911b..8db671823126 100644
->> --- a/drivers/clk/clk-devres.c
->> +++ b/drivers/clk/clk-devres.c
->> @@ -4,6 +4,11 @@
->>  #include <linux/export.h>
->>  #include <linux/gfp.h>
->>  
->> +static void __clk_put(struct device *dev, void *data)
->> +{
->> +	clk_put(*(struct clk **)data);
->> +}
->> +
->>  static void devm_clk_release(struct device *dev, void *res)
->>  {
->>  	clk_put(*(struct clk **)res);
->> @@ -11,19 +16,11 @@ static void devm_clk_release(struct device *dev, void *res)
->>  
->>  struct clk *devm_clk_get(struct device *dev, const char *id)
->>  {
->> -	struct clk **ptr, *clk;
->> -
->> -	ptr = devres_alloc(devm_clk_release, sizeof(*ptr), GFP_KERNEL);
->> -	if (!ptr)
->> -		return ERR_PTR(-ENOMEM);
->> +	struct clk *clk = clk_get(dev, id);
->>  
->> -	clk = clk_get(dev, id);
->> -	if (!IS_ERR(clk)) {
->> -		*ptr = clk;
->> -		devres_add(dev, ptr);
->> -	} else {
->> -		devres_free(ptr);
->> -	}
->> +	if (!IS_ERR(clk))
->> +		if (!devm_add(dev, __clk_put, &clk, sizeof(clk)))
->> +			clk = ERR_PTR(-ENOMEM);
-> 
-> You leak clk here.
+> +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
+> +them into a new gpio_chip, which can be assigned to a group or user using
+> +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
+> +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
+> +GPIO controller, and no longer needs to care about which GPIOs to grab and
+> +which not, reducing the attack surface.
+> +
+> +Aggregated GPIO controllers are instantiated and destroyed by writing to
+> +write-only attribute files in sysfs.
 
-I don't think so ;-)
+I suppose virtual machines will have a lengthy config file where
+they specify which GPIO lines to pick and use for their GPIO
+aggregator, and that will all be fine, the VM starts and the aggregator
+is there and we can start executing.
 
-If devm_add() returns NULL, then we have called __clk_put(dev, &clk);
+I would perhaps point out a weakness as with all sysfs and with the current
+gpio sysfs: if a process creates an aggregator device, and then that
+process crashes, what happens when you try to restart the process and
+run e.g. your VM again?
 
-Regards.
+Time for a hard reboot? Or should we add some design guidelines for
+these machines so that they can cleanly tear down aggregators
+previously created by the crashed VM?
+
+Yours,
+Linus Walleij
