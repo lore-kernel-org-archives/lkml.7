@@ -2,119 +2,154 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4880BC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E619C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13FD322527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="UkPiQGkS"
+	by mail.kernel.org (Postfix) with ESMTP id 3C7142067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfLLPKL (ORCPT
+        id S1728975AbfLLPLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:10:11 -0500
-Received: from mailgw01.mediatek.com ([216.200.240.184]:45626 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728581AbfLLPKK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:10:10 -0500
-X-UUID: d5b1c1139af847fab4a6947ae83326a9-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=84wpsP18Q2abVq3hW8fuZwnD/ApWQ30/AxRn97/G118=;
-        b=UkPiQGkS1kcFAqhGZxjzEALbMv4gp538c3RtIPLGNFC4DE5xWKS3uuKHLtV7RxD26mPPD5w4rHadQoqMqeoNSzBtEktr9awH5AzEYoEosmXRjTlVGtauooi48+BTvcwr8NL1C7l3QPAkpamTqdF+kLOELr4QVCVCcMnuCoV+iBk=;
-X-UUID: d5b1c1139af847fab4a6947ae83326a9-20191212
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 263070001; Thu, 12 Dec 2019 07:09:59 -0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 07:06:26 -0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 23:05:20 +0800
-Message-ID: <1576163122.18168.2.camel@mtksdccf07>
-Subject: Re: [PATCH net-next 2/6] net: dsa: mt7530: Extend device data ready
- for adding a new hardware
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>
-Date:   Thu, 12 Dec 2019 23:05:22 +0800
-In-Reply-To: <d77e3109-e022-3581-2ca8-02889c5ddbf4@gmail.com>
-References: <cover.1575914275.git.landen.chao@mediatek.com>
-         <2d546d6bb15ff8b4b75af2220e20db4e634f4145.1575914275.git.landen.chao@mediatek.com>
-         <d77e3109-e022-3581-2ca8-02889c5ddbf4@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Thu, 12 Dec 2019 10:11:52 -0500
+Received: from gate.crashing.org ([63.228.1.57]:50455 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbfLLPLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:11:52 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xBCFAuSn025295;
+        Thu, 12 Dec 2019 09:10:56 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id xBCFApXE025289;
+        Thu, 12 Dec 2019 09:10:51 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Thu, 12 Dec 2019 09:10:51 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        christophe.leroy@c-s.fr, linux-arch@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: READ_ONCE() + STACKPROTECTOR_STRONG == :/ (was Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops))
+Message-ID: <20191212151051.GF3152@gate.crashing.org>
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <875zimp0ay.fsf@mpe.ellerman.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <875zimp0ay.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTEyLTEyIGF0IDExOjQ1ICswODAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiANCj4gT24gMTIvMTAvMjAxOSAxMjoxNCBBTSwgTGFuZGVuIENoYW8gd3JvdGU6DQo+ID4g
-QWRkIGEgc3RydWN0dXJlIGhvbGRpbmcgcmVxdWlyZWQgb3BlcmF0aW9ucyBmb3IgZWFjaCBkZXZp
-Y2Ugc3VjaCBhcyBkZXZpY2UNCj4gPiBpbml0aWFsaXphdGlvbiwgUEhZIHBvcnQgcmVhZCBvciB3
-cml0ZSwgYSBjaGVja2VyIHdoZXRoZXIgUEhZIGludGVyZmFjZSBpcw0KPiA+IHN1cHBvcnRlZCBv
-biBhIGNlcnRhaW4gcG9ydCwgTUFDIHBvcnQgc2V0dXAgZm9yIGVpdGhlciBidXMgcGFkIG9yIGEN
-Cj4gPiBzcGVjaWZpYyBQSFkgaW50ZXJmYWNlLg0KPiA+IA0KPiA+IFRoZSBwYXRjaCBpcyBkb25l
-IGZvciByZWFkeSBhZGRpbmcgYSBuZXcgaGFyZHdhcmUgTVQ3NTMxLg0KPiA+IA0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IExhbmRlbiBDaGFvIDxsYW5kZW4uY2hhb0BtZWRpYXRlay5jb20+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0K
-PiBbc25pcF0NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYyBi
-L2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+IGluZGV4IGVkMWVjMTBlYzYyYi4uOWE2NDhk
-MWY1ZDA5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+ICsr
-KyBiL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYw0KPiA+IEBAIC00MjUsNyArNDI1LDcgQEAgbXQ3
-NTMwX2ZkYl93cml0ZShzdHJ1Y3QgbXQ3NTMwX3ByaXYgKnByaXYsIHUxNiB2aWQsDQo+ID4gIH0N
-Cj4gPiAgDQo+ID4gIHN0YXRpYyBpbnQNCj4gPiAtbXQ3NTMwX3BhZF9jbGtfc2V0dXAoc3RydWN0
-IGRzYV9zd2l0Y2ggKmRzLCBpbnQgbW9kZSkNCj4gPiArbXQ3NTMwX3BhZF9jbGtfc2V0dXAoc3Ry
-dWN0IGRzYV9zd2l0Y2ggKmRzLCBwaHlfaW50ZXJmYWNlX3QgbW9kZSkNCj4gDQo+IEhlcmUgeW91
-IHBhc3MgYSBwaHlfaW50ZXJmYWNlX3QgYXJndW1lbnQgYnV0IG5vdCBpbiBtdDc2MzJfcGFkX2Ns
-a19zZXR1cCgpLg0KPiANCj4gPiArc3RhdGljIGludA0KPiA+ICttdDc1MzBfcGFkX3NldHVwKHN0
-cnVjdCBkc2Ffc3dpdGNoICpkcywgY29uc3Qgc3RydWN0IHBoeWxpbmtfbGlua19zdGF0ZSAqc3Rh
-dGUpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBtdDc1MzBfcHJpdiAqcHJpdiA9IGRzLT5wcml2Ow0K
-PiA+ICsNCj4gPiArCS8qIFNldHVwIFRYIGNpcmN1aXQgaW5jbHVpbmcgcmVsZXZhbnQgUEFEIGFu
-ZCBkcml2aW5nICovDQo+ID4gKwltdDc1MzBfcGFkX2Nsa19zZXR1cChkcywgc3RhdGUtPmludGVy
-ZmFjZSk7DQo+ID4gKw0KPiA+ICsJaWYgKHByaXYtPmlkID09IElEX01UNzUzMCkgew0KPiA+ICsJ
-CS8qIFNldHVwIFJYIGNpcmN1aXQsIHJlbGV2YW50IFBBRCBhbmQgZHJpdmluZyBvbiB0aGUNCj4g
-PiArCQkgKiBob3N0IHdoaWNoIG11c3QgYmUgcGxhY2VkIGFmdGVyIHRoZSBzZXR1cCBvbiB0aGUN
-Cj4gPiArCQkgKiBkZXZpY2Ugc2lkZSBpcyBhbGwgZmluaXNoZWQuDQo+ID4gKwkJICovDQo+ID4g
-KwkJbXQ3NjIzX3BhZF9jbGtfc2V0dXAoZHMpOw0KPiANCj4gV291bGQgbm90IGl0IG1ha2Ugc2Vu
-c2UgdG8gcGFzcyBpdCBkb3duIGhlcmUgYXMgd2VsbCBmb3IgY29uc2lzdGVuY3k/DQptdDc2MjNf
-cGFkX2NsaygpIGNvbnRhaW5zIHRoZSBzZXR0aW5nIGZvciBQSFlfSU5URVJGQUNFX01PREVfVFJH
-TUlJLiBJdA0KaXMgcmVhbGx5IGJldHRlciB0byBwYXNzIHBoeV9pbnRlcmZhY2VfdCBmb3IgZXJy
-b3IgaGFuZGxpbmcuDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gQEAgLTE2NjAsOCArMTc2OCwxOSBA
-QCBtdDc1MzBfcHJvYmUoc3RydWN0IG1kaW9fZGV2aWNlICptZGlvZGV2KQ0KPiA+ICAJLyogR2V0
-IHRoZSBoYXJkd2FyZSBpZGVudGlmaWVyIGZyb20gdGhlIGRldmljZXRyZWUgbm9kZS4NCj4gPiAg
-CSAqIFdlIHdpbGwgbmVlZCBpdCBmb3Igc29tZSBvZiB0aGUgY2xvY2sgYW5kIHJlZ3VsYXRvciBz
-ZXR1cC4NCj4gPiAgCSAqLw0KPiA+IC0JcHJpdi0+aWQgPSAodW5zaWduZWQgaW50KSh1bnNpZ25l
-ZCBsb25nKQ0KPiA+IC0JCW9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmbWRpb2Rldi0+ZGV2KTsN
-Cj4gPiArCXByaXYtPmluZm8gPSBvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoJm1kaW9kZXYtPmRl
-dik7DQo+ID4gKwlpZiAoIXByaXYtPmluZm8pDQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4g
-Kw0KPiA+ICsJLyogU2FuaXR5IGNoZWNrIGlmIHRoZXNlIHJlcXVpcmVkIGRldmljZSBvcGVyc3Rh
-aW9ucyBhcmUgZmlsbGVkDQo+ID4gKwkgKiBwcm9wZXJseS4NCj4gDQo+IFR5cG86IG9wZXJhdGlv
-bnMuDQpPb3BzLCBzb3JyeS4gSSdsbCBjb3JyZWN0IGl0Lg0KDQpMYW5kZW4NCj4gDQo+IE90aGVy
-IHRoYW4gdGhhdCwgdGhpcyBsb29rcyBva2F5IHRvIG1lLg0KDQoNCg==
+Hi,
 
+On Thu, Dec 12, 2019 at 04:42:13PM +1100, Michael Ellerman wrote:
+> Some of the generic versions don't generate good code compared to our
+> versions, but that's because READ_ONCE() is triggering stack protector
+> to be enabled.
+
+The *big* difference is the generic code has a special path that does not
+do an atomic access at all.  Either that is a good idea or not, but we
+probably should not change the behaviour here, not without benchmarking
+anyway.
+
+> For example, comparing an out-of-line copy of the generic and ppc
+> versions of test_and_set_bit_lock():
+
+(With what GCC version, and what exact flags?)
+
+(A stand-alone testcase would be nice too, btw).
+
+(Michael gave me one, thanks!)
+
+> If you squint, the generated code for the actual logic is pretty similar, but
+> the stack protector gunk makes a big mess.
+
+And with stack protector it cannot shrink-wrap the exit, one of the bigger
+performance costs of the stack protector.  The extra branch in the generic
+code isn't fun either (but maybe it is good for performance?
+
+> It's particularly bad here
+> because the ppc version doesn't even need a stack frame.
+
+You are hit by this:
+
+  if (... || (RECORD_OR_UNION_TYPE_P (var_type)
+              && record_or_union_type_has_array_p (var_type)) ...)
+
+(in the GCC code, stack_protect_decl_p (), cfgexpand.c)
+
+for the variable __u from
+
+#define __READ_ONCE(x, check)                                           \
+({                                                                      \
+        union { typeof(x) __val; char __c[1]; } __u;                    \
+        __read_once_size(&(x), __u.__c, sizeof(x));                     \
+        smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
+        __u.__val;                                                      \
+})
+
+This is all optimised away later, but at the point this decision is made
+GCC does not know that.
+
+> So READ_ONCE() + STACKPROTECTOR_STRONG is problematic. The root cause is
+> presumably that READ_ONCE() does an access to an on-stack variable,
+> which triggers the heuristics in the compiler that the stack needs
+> protecting.
+
+Not exactly, but the problem is READ_ONCE alright.
+
+> It seems like a compiler "mis-feature" that a constant-sized access to the stack
+> triggers the stack protector logic, especially when the access is eventually
+> optimised away. But I guess that's probably what we get for doing tricks like
+> READ_ONCE() in the first place :/
+
+__c is an array.  That is all that matters.  I don't think it is very
+reasonable to fault GCC for this.
+
+> I tried going back to the version of READ_ONCE() that doesn't use a
+> union, ie. effectively reverting dd36929720f4 ("kernel: make READ_ONCE()
+> valid on const arguments") to get:
+> 
+> #define READ_ONCE(x)							\
+> 	({ typeof(x) __val; __read_once_size(&x, &__val, sizeof(__val)); __val; })
+
+With that, it is that the address of __val is taken:
+
+  ...
+  || TREE_ADDRESSABLE (var)
+  ...
+
+> But it makes no difference, the stack protector stuff still triggers. So
+> I guess it's simply taking the address of a stack variable that triggers
+> it.
+
+Not in the earlier testcase.  Btw, there is no such thing as a "stack
+variable" at that point in the compiler: it just is a local var.
+
+> There seems to be a function attribute to enable stack protector for a
+> function, but not one to disable it:
+>   https://gcc.gnu.org/onlinedocs/gcc-9.2.0/gcc/Common-Function-Attributes.html#index-stack_005fprotect-function-attribute
+
+Yes.
+
+> That may not be a good solution even if it did exist, because it would
+> potentially disable stack protector in places where we do want it
+> enabled.
+
+Right, I don't think we want that, such an attribute invites people to
+write dangerous code.  (You already can just put the functions that you
+want to be unsafe in a separate source file...  It sounds even sillier
+that way, heh).
+
+
+Segher
