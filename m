@@ -2,96 +2,154 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60424C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 211F3C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39713206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDAAA2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:59:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnTDDbfj"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aj/3kNTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbfLLR7Y (ORCPT
+        id S1730302AbfLLR7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:59:24 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:38901 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730033AbfLLR7X (ORCPT
+        Thu, 12 Dec 2019 12:59:38 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46971 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730281AbfLLR7h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:59:23 -0500
-Received: by mail-qk1-f180.google.com with SMTP id k6so2346922qki.5;
-        Thu, 12 Dec 2019 09:59:23 -0800 (PST)
+        Thu, 12 Dec 2019 12:59:37 -0500
+Received: by mail-ot1-f68.google.com with SMTP id g18so2829728otj.13
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:59:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CbaD0cZrdTWE2/HMYdJPs3JGTAc0XDZM1g5dQvZGfY0=;
-        b=RnTDDbfjvRmDe063ONyHn7VNtFjkaqBAuqFLT9DCtKNKx6K27xlAW5cFwhn5brSiyE
-         FJ6mGRMEF6u8/wHOq7ciuXHKfHeM0qKppo3ibAgu1UR9MHwsn63bmFuHp9zuX5GY7RbJ
-         VfleL2g9rneo86pJgFt4fvoF7WbPeXp8gaeqI39lf8ND3f/qp3+h0uLGPoAedxVY2KDX
-         QVKAFh6RlUbSjBuf6oL/4W53pOD6/yCbyruL9T+PEm77y5cZ3CB1n56foJ4XsT8k5OnL
-         QxHCdjZ4dqKwguGxEjNNj0SIlFZkOe/hO4jzFnOLhJa9o9EJiguOMMG94h7sim/S32aD
-         bvyQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hyvqVUw30+SZX29bM7+V3jqwHKdXckZsARui5p8wXkE=;
+        b=aj/3kNTYpNtUKR7EbJSlbIR7OuvgLrMsg2A0F6fYB2/hgfbnnbl9+8LyBrDy8shOr8
+         5jTRk/BMXhnudMowqBHH0S5NYKRgQ9rFxuCKeSDofqeXcfx7uhKtC17UdE8kpSWquJTK
+         2BEC9fGPeKSZClELYV/QJzc4je45MeCqEmu8+jh7SGQ9Wn9umQYfHEoAt/brB+rXFcDd
+         KNSUTD9SOFqgEMRxqF9sBEz3w7SpWD6Io1lcnEy62y2YhXxStP+4qcvBAPnvD6CQZpO5
+         OXEG8ziZSWTPQLVmfvYXsVj6zS+izGC5yMNZ51Z9Ts6g9RBxBSIb8XJVb/S+wzWyoaQQ
+         FXXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CbaD0cZrdTWE2/HMYdJPs3JGTAc0XDZM1g5dQvZGfY0=;
-        b=mrzmxW42mdPYNhIoyIqhHRSbaS9QSNW7o9jmzsxMyad6Qs0nf+54CoN9XkRdd5G12k
-         2LCZxWfBlCNexIFpERCHkFWbpR1ToUWFmNoPlJaxQ4Fu0W5Y/YxHgmyLgf2WYolJDBEr
-         29VM1rkWAgj2nUWmeXMIYf+RxU+VVneYo30I0QnQJhMP8U/ErsbG1h2K8l0m6tzG1zYr
-         61ULU4oXaNTSwUJ2iilT97VJt6CPNcNjt8vlOhKrhrA8cJM9aLObkHIcdlxL86FtueMm
-         SyS9/jTy/r1H79SxuDCPm5t+p4Vfy0xDwLq6kP+dUayxEufezUXPVUPakO8yNxqHA9NT
-         uTPw==
-X-Gm-Message-State: APjAAAWxo/HPDGepoB119r6cbMyBAUbnLbsTSLrwpIfrdu54YEXEToT8
-        P7KCTNeF+IJAQGQydX7E0SRPJQ1L
-X-Google-Smtp-Source: APXvYqzBXqOP/3L3Ge9RbFdGnu2kGGp1cJNpC+Bo6mhbc/PitGc75B2YPMXcR06seI+WKTgIl6gYQw==
-X-Received: by 2002:a37:4f8e:: with SMTP id d136mr9306792qkb.495.1576173562720;
-        Thu, 12 Dec 2019 09:59:22 -0800 (PST)
-Received: from localhost (modemcable249.105-163-184.mc.videotron.ca. [184.163.105.249])
-        by smtp.gmail.com with ESMTPSA id x27sm1943409qkx.81.2019.12.12.09.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Dec 2019 09:59:22 -0800 (PST)
-From:   Vivien Didelot <vivien.didelot@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vivien Didelot <vivien.didelot@gmail.com>
-Subject: [PATCH] mailmap: add entry for myself
-Date:   Thu, 12 Dec 2019 12:59:08 -0500
-Message-Id: <20191212175908.1727259-1-vivien.didelot@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hyvqVUw30+SZX29bM7+V3jqwHKdXckZsARui5p8wXkE=;
+        b=sd50ldC7EkDCvOaklSefa9xdHVaQfEUsVFAGj1lS/xdbKT55FgkNpQJkLYI1O77JLu
+         GguBJZdLFTVVSU+2zomsdsZr5n4asQsfzyEJ+YVB3FOoXtHdvYcEWfu4xL9oSPuB9Htw
+         QaqjaMnui91+W2E6k+2lWd3t95dMKTF3M2QsC7+QwbMB3IKQlQqTJaVX/3GFif9JBIyE
+         +F8Nl76i5Nmk6ZAeqN3SpzxjNerOLpZLewZmxDmHtKEj6sIjFNZrIFC45V8jf4Q3isRO
+         9LLGWYwNTpUmozpIciOMd2+S6rBY5hVXsumoaq79KE2AS5Dej/ow9LIkEDWngQq/Wrtt
+         FVcg==
+X-Gm-Message-State: APjAAAWas6vkS98EptbcwQ5MjRGV0J2e8i0FHVDngiPKsnpqgVmevUT2
+        deoBvXiO8o/KbbGkC6nwRwKaJj6+yS6GKSNkVcB43Q==
+X-Google-Smtp-Source: APXvYqyspLymJk5JMISgtjN43ATBp0Ct1Ma15zdcNgSN1GXL58ve4+5Bo2yaPsSdIlPxIzbTPZlJpTFkdzRW2z7T/rk=
+X-Received: by 2002:a9d:6f11:: with SMTP id n17mr9356386otq.126.1576173576479;
+ Thu, 12 Dec 2019 09:59:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191211213207.215936-1-brho@google.com> <20191211213207.215936-3-brho@google.com>
+ <376DB19A-4EF1-42BF-A73C-741558E397D4@oracle.com> <CAPcyv4gpYF=D323G+69FhFZw4i5W-15_wTRa1xNPdmear0phTw@mail.gmail.com>
+ <F19843AB-1974-4E79-A85B-9AE00D58E192@oracle.com>
+In-Reply-To: <F19843AB-1974-4E79-A85B-9AE00D58E192@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 12 Dec 2019 09:59:25 -0800
+Message-ID: <CAPcyv4i5ZaiA+KeraXzz-0vs25UGEmZ2ka9Z-PUT3T_7URAFMA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] kvm: Use huge pages for DAX-backed files
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Barret Rhoden <brho@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Zeng, Jason" <jason.zeng@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I no longer work at Savoir-faire Linux but even though MAINTAINERS is
-up-to-date, some emails are still sent to my old email address.
+On Thu, Dec 12, 2019 at 9:39 AM Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 12 Dec 2019, at 18:54, Dan Williams <dan.j.williams@intel.com> wrote=
+:
+> >
+> > On Thu, Dec 12, 2019 at 4:34 AM Liran Alon <liran.alon@oracle.com> wrot=
+e:
+> >>
+> >>
+> >>
+> >>> On 11 Dec 2019, at 23:32, Barret Rhoden <brho@google.com> wrote:
+> >>>
+> >>> This change allows KVM to map DAX-backed files made of huge pages wit=
+h
+> >>> huge mappings in the EPT/TDP.
+> >>>
+> >>> DAX pages are not PageTransCompound.  The existing check is trying to
+> >>> determine if the mapping for the pfn is a huge mapping or not.  For
+> >>> non-DAX maps, e.g. hugetlbfs, that means checking PageTransCompound.
+> >>> For DAX, we can check the page table itself.
+> >>
+> >> For hugetlbfs pages, tdp_page_fault() -> mapping_level() -> host_mappi=
+ng_level() -> kvm_host_page_size() -> vma_kernel_pagesize()
+> >> will return the page-size of the hugetlbfs without the need to parse t=
+he page-tables.
+> >> See vma->vm_ops->pagesize() callback implementation at hugetlb_vm_ops-=
+>pagesize()=3D=3Dhugetlb_vm_op_pagesize().
+> >>
+> >> Only for pages that were originally mapped as small-pages and later me=
+rged to larger pages by THP, there is a need to check for PageTransCompound=
+(). Again, instead of parsing page-tables.
+> >>
+> >> Therefore, it seems more logical to me that:
+> >> (a) If DAX-backed files are mapped as large-pages to userspace, it sho=
+uld be reflected in vma->vm_ops->page_size() of that mapping. Causing kvm_h=
+ost_page_size() to return the right size without the need to parse the page=
+-tables.
+> >
+> > A given dax-mapped vma may have mixed page sizes so ->page_size()
+> > can't be used reliably to enumerating the mapping size.
+>
+> Naive question: Why don=E2=80=99t split the VMA in this case to multiple =
+VMAs with different results for ->page_size()?
 
-Signed-off-by: Vivien Didelot <vivien.didelot@gmail.com>
----
- .mailmap | 1 +
- 1 file changed, 1 insertion(+)
+Filesystems traditionally have not populated ->pagesize() in their
+vm_operations, there was no compelling reason to go add it and the
+complexity seems prohibitive.
 
-diff --git a/.mailmap b/.mailmap
-index fd6219293057..e9d6d1636ca3 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -260,6 +260,7 @@ Vinod Koul <vkoul@kernel.org> <vkoul@infradead.org>
- Viresh Kumar <vireshk@kernel.org> <viresh.kumar@st.com>
- Viresh Kumar <vireshk@kernel.org> <viresh.linux@gmail.com>
- Viresh Kumar <vireshk@kernel.org> <viresh.kumar2@arm.com>
-+Vivien Didelot <vivien.didelot@gmail.com> <vivien.didelot@savoirfairelinux.com>
- Vlad Dogaru <ddvlad@gmail.com> <vlad.dogaru@intel.com>
- Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@virtuozzo.com>
- Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@parallels.com>
--- 
-2.24.0
+> What you are describing sounds like DAX is breaking this callback semanti=
+cs in an unpredictable manner.
 
+It's not unpredictable. vma_kernel_pagesize() returns PAGE_SIZE. Huge
+pages in the page cache has a similar issue.
+
+> >> (b) If DAX-backed files small-pages can be later merged to large-pages=
+ by THP, then the =E2=80=9Cstruct page=E2=80=9D of these pages should be mo=
+dified as usual to make PageTransCompound() return true for them. I=E2=80=
+=99m not highly familiar with this mechanism, but I would expect THP to be =
+able to merge DAX-backed files small-pages to large-pages in case DAX provi=
+des =E2=80=9Cstruct page=E2=80=9D for the DAX pages.
+> >
+> > DAX pages do not participate in THP and do not have the
+> > PageTransCompound accounting. The only mechanism that records the
+> > mapping size for dax is the page tables themselves.
+>
+> What is the rational behind this? Given that DAX pages can be described w=
+ith =E2=80=9Cstruct page=E2=80=9D (i.e. ZONE_DEVICE), what prevents THP fro=
+m manipulating page-tables to merge multiple DAX PFNs to a larger page?
+
+THP accounting is a function of the page allocator. ZONE_DEVICE pages
+are excluded from the page allocator. ZONE_DEVICE is just enough
+infrastructure to support pfn_to_page(), page_address(), and
+get_user_pages(). Other page allocator services beyond that are not
+present.
