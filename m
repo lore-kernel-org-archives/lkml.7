@@ -2,116 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9B6C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC94C3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852B82073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="xbcplkXM"
+	by mail.kernel.org (Postfix) with ESMTP id A4B9F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576168896;
+	bh=kAhkMJgoZo1BWz+qs5Xno3OsSKZ86r1MkClH94NFChM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jybLoJrmARTGRCFbNCgxDpc1zAuP4tQ7qGyRhSPwIRTjc9dFgoLTGhUEl9NfrMgei
+	 VV54d8JUI68mTmhn2D/jWh0VIia9bEDHEPZOzJ17985KSedof1mlr62UHsJYGRRto0
+	 Uo2p5zOndLjaqHzQ8zwjlfZXMgvM3QFc9bH/ueC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729945AbfLLQf0 (ORCPT
+        id S1729930AbfLLQlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:35:26 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41352 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729917AbfLLQf0 (ORCPT
+        Thu, 12 Dec 2019 11:41:36 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36300 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729852AbfLLQlf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:35:26 -0500
-Received: by mail-il1-f194.google.com with SMTP id z90so2545282ilc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 08:35:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3FtLIVj+wnM2ARUnkHjLCIs+M1M/IA6PpWp8jtXGxBs=;
-        b=xbcplkXMsLKBVhI2XoEAIhOCDrqD47HX6n1yvO5V22GmwrrQQBKbWggYHs4jvP1r5e
-         d06kkPEOnjJE94l1i8s0OQBGyq2uCnz06HSXakJyefIeamZrYC04IsPHZG0q8AamKYX7
-         hQiBFF2unkfh+vzBU4sfnsk8eFSJqiqGb27+ELN3raRO+1VzqxuUmJvQteWCoq4j74gw
-         zDZjlxcYlLJc7nj02zY/1J5oio91PD6bX3m6ftojddzXMI4lyWGMcOBLF2IgQDl1+DS4
-         M8/9vHNTZSCqOo/1DexoCnH9ZtJ4bViECOh2oT+MHZ1qxnhhm7JEOSFNx7VJQCROP4qJ
-         4jQQ==
+        Thu, 12 Dec 2019 11:41:35 -0500
+Received: by mail-oi1-f196.google.com with SMTP id c16so911263oic.3;
+        Thu, 12 Dec 2019 08:41:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3FtLIVj+wnM2ARUnkHjLCIs+M1M/IA6PpWp8jtXGxBs=;
-        b=Q8o+zKugmwhtVYHbkflC5to3mSgWFAbo7gEt7+GnFwM9sUcbK2mpxgSfJqv5ZLrrVv
-         sAuOTK0a2w31FCFKbHvADliHzAobMJzcusmFEgsHbQ9etBcgjJIuOmY6jVcIhvu3l/OO
-         4KBkGafUZgIEHgSrOUqgki5G6zrpSAViyGDeL8LT+CAp/6UDjAfgMDqoqmTyIyNLNVT9
-         e3PrhNdE4lE4dToLzE9mkU+fAQkDfBXHx6EYsNxX1rZ6XufPf8xlDT+GzErrZ3s2NVBY
-         IdMhFVZSX/UUzqQ9f1cYRwzlfaV+bVQHu/N5pXOLr6yTBDwr7XMr3ERGiTJvN3JdJdTr
-         w/Tw==
-X-Gm-Message-State: APjAAAVubTeoqjwM96AadtzoijaHYgVBlOO1LgQHO1KlBLcJo+h/C6hQ
-        gxXSyzHcVPqfI6wFMYNSvQ21iA==
-X-Google-Smtp-Source: APXvYqxAPt9ybQh/T8WYBX6qxbHJzz4zpYaVA1B8qE0Zhi2chspe24qfeJl3SeUOs00SEoxpnZbeng==
-X-Received: by 2002:a92:5d03:: with SMTP id r3mr8554165ilb.278.1576168525332;
-        Thu, 12 Dec 2019 08:35:25 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id x62sm1843784ill.86.2019.12.12.08.35.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 08:35:24 -0800 (PST)
-Subject: Re: [PATCH 15/24] compat_ioctl: scsi: move ioctl handling into
- drivers
-To:     Christoph Hellwig <hch@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jason Wang <jasowang@redhat.com>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        =?UTF-8?Q?Kai_M=c3=a4kisara?= <Kai.Makisara@kolumbus.fi>,
-        linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        John Garry <john.garry@huawei.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20191211204306.1207817-1-arnd@arndb.de>
- <20191211204306.1207817-16-arnd@arndb.de>
- <20191211180155-mutt-send-email-mst@kernel.org>
- <858768fb-5f79-8259-eb6a-a26f18fb0e04@redhat.com>
- <20191212162729.GB27991@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6e265890-23e5-6368-4e36-d59ff47879b2@kernel.dk>
-Date:   Thu, 12 Dec 2019 09:35:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kAhkMJgoZo1BWz+qs5Xno3OsSKZ86r1MkClH94NFChM=;
+        b=ZGBqSKgXkEU8zPLpGwOZI18a87nXD3r2fvq+D0pW0f6ala7KTcbSKdwgARMwzpLDo4
+         /sq6isXWuLTvxs9DS/Od/BRQV71ITatVSEE8jrjkTiQI/F+F6bAy/8MAtD/lKC7CTOvu
+         8yt+sbayYou0QAebyUFWnsK3+qC4E6/QN1h0DJLlpfocwiR+l7Vnz51BvA4nMGtaADPP
+         dJGrGuvRiL2ONf0lcuvqYuw2Zwj9camNbSiRGy8mXJKS4lj2SLgJPOOYxROStCWYZzq5
+         1zhmyYzlD73Fz09SK7yo71qm4vVCFOCALtGbpUxvPPlVEAbVv0fDDm0sLv5YVamB1UD2
+         44zg==
+X-Gm-Message-State: APjAAAXV64tNbqEUDxHk2raeRvNW+E07L16mGZy1zciz+572uUlwJFdh
+        JLHMnQaOXQdnvrepsOLi/1WCPIFCn9o+xe1++jk=
+X-Google-Smtp-Source: APXvYqz/HR4b555gMUmBfIr+En2JhqxAwZmSDSEDPYWP867i+78mHmWSktUG5yszyRCA4BCxfwarPEWTLzzeFMNk+PY=
+X-Received: by 2002:a05:6808:b38:: with SMTP id t24mr5694666oij.110.1576168894436;
+ Thu, 12 Dec 2019 08:41:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212162729.GB27991@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191108042225.45391-1-dmitry.torokhov@gmail.com>
+ <20191108042225.45391-2-dmitry.torokhov@gmail.com> <CGME20191212111237eucas1p1a278d2d5d2437e3219896367e82604cc@eucas1p1.samsung.com>
+ <b3f6ca8b-dbdf-0cec-aa8f-47ffcc5c5307@samsung.com> <20191212112825.GK32742@smile.fi.intel.com>
+In-Reply-To: <20191212112825.GK32742@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 12 Dec 2019 17:41:21 +0100
+Message-ID: <CAJZ5v0i3dSOSa37yWLM+zDVnMKVTkOxbyKD4vo0KVwj_uFB26Q@mail.gmail.com>
+Subject: Re: [PATCH v8 1/6] software node: rename is_array to is_inline
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 9:27 AM, Christoph Hellwig wrote:
-> On Thu, Dec 12, 2019 at 01:28:08AM +0100, Paolo Bonzini wrote:
->> I think it's because the only ioctl for virtio-blk is SG_IO.  It makes
->> sense to lump it in with scsi, but I wouldn't mind getting rid of
->> CONFIG_VIRTIO_BLK_SCSI altogether.
-> 
-> CONFIG_VIRTIO_BLK_SCSI has been broken for about two years, as it
-> never set the QUEUE_FLAG_SCSI_PASSTHROUGH flag after that was
-> introduced.  I actually have a patch that I plan to send to remove
-> this support as it was a really idea to start with (speaking as
-> the person who had that idea back in the day).
+On Thu, Dec 12, 2019 at 12:28 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Dec 12, 2019 at 12:12:36PM +0100, Marek Szyprowski wrote:
+> > Dear All,
+> >
+> > On 08.11.2019 05:22, Dmitry Torokhov wrote:
+> > > We do not need a special flag to know if we are dealing with an array,
+> > > as we can get that data from ratio between element length and the data
+> > > size, however we do need a flag to know whether the data is stored
+> > > directly inside property_entry or separately.
+> > >
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> >
+> > Today I've noticed that this patch got merged to linux-next as commit
+> > e6bff4665c595b5a4aff173848851ed49ac3bfad. Sadly it breaks DWC3/xHCI
+> > driver operation on Samsung Exynos5 SoCs (and probably on other SoCs
+> > which use DWC3 in host mode too). I get the following errors during boot:
+> >
+> > dwc3 12000000.dwc3: failed to add properties to xHCI
+> > dwc3 12000000.dwc3: failed to initialize host
+> > dwc3: probe of 12000000.dwc3 failed with error -61
+> >
+> > Here is a full kernel log from Exynos5250-based Snow Chromebook on KernelCI:
+> >
+> > https://storage.kernelci.org/next/master/next-20191212/arm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos5250-snow.txt
+> >
+> > (lack of 'ref' clk is not related nor fatal to the driver operation).
+> >
+> > The code which fails after this patch is located in
+> > drivers/usb/dwc3/host.c. Let me know if I can help more in locating the bug.
+>
+> Thank you for report.
+>
+> I think we should not have that patch in the fist place... I used to have
+> a bad feeling about it and then forgot about it existence.
 
-We had this very discussion two years ago, and we never got it removed.
-Let's please get it done.
+Well, I think you mean the [2/6].
 
--- 
-Jens Axboe
+The $subject one really shouldn't change functionality, we must have
+missed something here.
 
+Anyway, I'll drop this branch from the linux-next one for now.
