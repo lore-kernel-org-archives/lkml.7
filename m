@@ -2,81 +2,104 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 261A4C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B94FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63DC227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:18:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576153089;
-	bh=kcRAiUVM6uCVLF5RFVgg3i1SM/L5Afj/d2s24LWGAx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zHWx7JDe5+bGxzMTQLFZg0kSzND2MVX+WLsWIWaO6J4jyhq1kxU7j1rA1XV0KDb15
-	 SC/cSnCHoljDKNFP4KMNcO7spEywSs9IxSof96ZfpJIcHAsPy4Cw22agKP6AZq2O4f
-	 5Tq5vLgY0aIUOkPUzZYit8Sa6dLkF1ciIC2Paylk=
+	by mail.kernel.org (Postfix) with ESMTP id 0DD2121655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 12:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfLLMSI (ORCPT
+        id S1729172AbfLLMTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 07:18:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728996AbfLLMSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:18:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8F4521655;
-        Thu, 12 Dec 2019 12:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576153087;
-        bh=kcRAiUVM6uCVLF5RFVgg3i1SM/L5Afj/d2s24LWGAx0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2rXTJmdy+1+JBIhhBCvogRAbIwFuitwcX5haXJlVoU6lEVg8aknzibwUGW7Wh+9y5
-         bCnQPPFbKHq6S+9gS+XTD94PTdd3U8gdntkOZxiYwMrshSYFTDer3lsJJ11UNhkUv2
-         u7b8A7f0H7Z7E1/sko8kEIqTfSvq9e6EyY+QzpBM=
-Date:   Thu, 12 Dec 2019 13:18:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/105] 5.3.16-stable review
-Message-ID: <20191212121805.GB1540720@kroah.com>
-References: <20191211150221.153659747@linuxfoundation.org>
- <20191212100456.GB1470066@kroah.com>
+        Thu, 12 Dec 2019 07:19:41 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40846 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728996AbfLLMTl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 07:19:41 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 178C51C246E; Thu, 12 Dec 2019 13:19:39 +0100 (CET)
+Date:   Thu, 12 Dec 2019 13:19:38 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 148/350] media: ad5820: Define entity function
+Message-ID: <20191212121938.GB17876@duo.ucw.cz>
+References: <20191210210735.9077-1-sashal@kernel.org>
+ <20191210210735.9077-109-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
 Content-Disposition: inline
-In-Reply-To: <20191212100456.GB1470066@kroah.com>
+In-Reply-To: <20191210210735.9077-109-sashal@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:04:56AM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Dec 11, 2019 at 04:04:49PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.16 release.
-> > There are 105 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> 
-> I have pushed out -rc2 with a number of additional fixes:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.3-rc2.gz
 
-That was the 5.4 patch, here is the correct 5.3 patch:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.16-rc2.gz
+--XOIedfhf+7KOe/yw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2019-12-10 16:04:13, Sasha Levin wrote:
+> From: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>=20
+> [ Upstream commit 801ef7c4919efba6b96b5aed1e72844ca69e26d3 ]
+>=20
+> Without this patch, media_device_register_entity throws a warning:
+>=20
+> dev_warn(mdev->dev,
+> 	 "Entity type for entity %s was not initialized!\n",
+> 	 entity->name);
+
+This fixes warning, not a serious bug. Thus it is against stable
+rules.
+
+Please either update the rules to the real rules in use, or stop
+pushing such pages to stable.
+
+Best regards,
+								Pavel
+
+
+> index 925c171e77976..7a49651f4d1f2 100644
+> --- a/drivers/media/i2c/ad5820.c
+> +++ b/drivers/media/i2c/ad5820.c
+> @@ -309,6 +309,7 @@ static int ad5820_probe(struct i2c_client *client,
+>  	v4l2_i2c_subdev_init(&coil->subdev, client, &ad5820_ops);
+>  	coil->subdev.flags |=3D V4L2_SUBDEV_FL_HAS_DEVNODE;
+>  	coil->subdev.internal_ops =3D &ad5820_internal_ops;
+> +	coil->subdev.entity.function =3D MEDIA_ENT_F_LENS;
+>  	strscpy(coil->subdev.name, "ad5820 focus", sizeof(coil->subdev.name));
+> =20
+>  	ret =3D media_entity_pads_init(&coil->subdev.entity, 0, NULL);
+> --=20
+> 2.20.1
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--XOIedfhf+7KOe/yw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXfIwWgAKCRAw5/Bqldv6
+8mPuAKCTD2vWmTbZq6rDI/hxj2csiiW8GgCgwgqev2YgRPLpjjjb134mrnrnfEs=
+=N+Yw
+-----END PGP SIGNATURE-----
+
+--XOIedfhf+7KOe/yw--
