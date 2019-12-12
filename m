@@ -2,97 +2,86 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52111C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7318BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313842253D
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBD621556
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 18:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576174062;
-	bh=7JxF7qlG8TCPWnDPzZgbQ3ebBCcdJS+oN0FEpXv0GfQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Hr8n6kl3bPGRHpEFIQwMOb/YppYEcDFRo8Sv7/rQSUpfbOg1A+/Qt/rclvZWEuQoW
-	 Vr7Ai2AwNPbJX8i9ni61sRPWtA4il2pdxQAZiqyEFr3vIn4eV/P5bUZ7jfyH+4fxnU
-	 YND+FGdoKhnejKhLf+JoeIGYFE4ausVNrBuBpEHs=
+	s=default; t=1576174247;
+	bh=OBeMstB7/3kVrbQjqXG2vjx2xBj7BRaI8jToPPCTYZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LRgs5Mx/RoquRDFYzKfi9CmoZ/XuHJVCNPma1pkN5BZlCJac1bBtnsHwtL6veVom6
+	 7qZBAbnl4vx09TftvWYFHDioqOxzf9F7pnItkfYp1KJCrXGD2jU4/03kbrW/xtOitK
+	 UClqg/hUNt9UxhxBMOZ+iHGtxRJDpiUKXl3NUn9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfLLSHl (ORCPT
+        id S1730291AbfLLSKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 13:07:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730304AbfLLSHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:07:41 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1540E21556;
-        Thu, 12 Dec 2019 18:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576174060;
-        bh=7JxF7qlG8TCPWnDPzZgbQ3ebBCcdJS+oN0FEpXv0GfQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=JXkLX1OluMqqPy0R9SYwYDWxJrmMzd6K8MYmgGBuWxjlG0/D8gpeEYzaoggRWgBkp
-         o/k6R3AIzCN20dlJPguNrzjzU65m+o+pI2vKWsCPLVYsLYxqeaRHJrCo/eATvaKF0A
-         jzZUg5+Vav2q3Nl9XSzJQSanhy7jS95I5oGtlCMY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id A11A63522757; Thu, 12 Dec 2019 10:07:39 -0800 (PST)
-Date:   Thu, 12 Dec 2019 10:07:39 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] rcu: fix spelling mistake "leval" -> "level"
-Message-ID: <20191212180739.GZ2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191212173643.91135-1-colin.king@canonical.com>
+        Thu, 12 Dec 2019 13:10:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40919 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730080AbfLLSKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 13:10:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so3762073wrn.7;
+        Thu, 12 Dec 2019 10:10:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2FkS+4Qqd9YB/yfl4AmGYyT+drz3UF0FpODz0HkSGMA=;
+        b=kMu3mkIB9WF7D/Qb9hukRycItKGl+K1c+5JayfLVoAE2XYyVLHmoWw6XNsuNXC1pGx
+         1JbhcA5KJH+PjnjTVkgDbHVhPjgeDC0MF3XO86LNY0OjMANlQMgmPGcN+PnXo3B5T3GI
+         5eG6LHPQNAPiHVDagE1mPFDBPyfcOMcnCwiW/elYnCAhOtNjp9Q6ZyDo4V+4hlaeERnr
+         57DGST1uhhJ48lLqwzmf+aA3/048QvNRVc+KRQ/qTqEXua1Y5yaXhflYy2m5Im3BDiXg
+         nGwldeFnOf0mkf4I+VCs3uEHjvNI9JIhDJFziVsS9C1a9i1ifoWZRWjeYVoNcpWkqSLJ
+         0m2g==
+X-Gm-Message-State: APjAAAWWoB9qbLaxvdNWU00wtKqYN4s5iXAACPhl8kwO9fULLyaxkDh0
+        jOEEy/qslg5q3/rf58GsW5E=
+X-Google-Smtp-Source: APXvYqw/uME6tOeL7OUNHpp0730NBNHkdBcAqsk97DSNHM6GFRhnhLP9/9ujUjhyVbAVN3av+4I7DA==
+X-Received: by 2002:a5d:4d0e:: with SMTP id z14mr7540381wrt.208.1576174243640;
+        Thu, 12 Dec 2019 10:10:43 -0800 (PST)
+Received: from debian (122.163.200.146.dyn.plus.net. [146.200.163.122])
+        by smtp.gmail.com with ESMTPSA id n189sm6278387wme.33.2019.12.12.10.10.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 10:10:43 -0800 (PST)
+Date:   Thu, 12 Dec 2019 18:10:41 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Paul Durrant <pdurrant@amazon.com>
+Cc:     netdev@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net] xen-netback: avoid race that can lead to NULL
+ pointer dereference
+Message-ID: <20191212181041.mjuoy4el6h2jedhv@debian>
+References: <20191212123723.21548-1-pdurrant@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191212173643.91135-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191212123723.21548-1-pdurrant@amazon.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 05:36:43PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Thu, Dec 12, 2019 at 12:37:23PM +0000, Paul Durrant wrote:
+> Commit 2ac061ce97f4 ("xen/netback: cleanup init and deinit code")
+> introduced a problem. In function xenvif_disconnect_queue(), the value of
+> queue->rx_irq is zeroed *before* queue->task is stopped. Unfortunately that
+> task may call notify_remote_via_irq(queue->rx_irq) and calling that
+> function with a zero value results in a NULL pointer dereference in
+> evtchn_from_irq().
 > 
-> There is a spelling mistake in a pr_info message. Fix it.
+> This patch simply re-orders things, stopping all tasks before zero-ing the
+> irq values, thereby avoiding the possibility of the race.
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Paul Durrant <pdurrant@amazon.com>
 
-Good catch!  Queued, thank you!
-
-							Thanx, Paul
-
-> ---
->  kernel/rcu/tree_plugin.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 4d4637c361b7..0765784012f8 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -57,7 +57,7 @@ static void __init rcu_bootup_announce_oddness(void)
->  	if (qlowmark != DEFAULT_RCU_QLOMARK)
->  		pr_info("\tBoot-time adjustment of callback low-water mark to %ld.\n", qlowmark);
->  	if (qovld != DEFAULT_RCU_QOVLD)
-> -		pr_info("\tBoot-time adjustment of callback overload leval to %ld.\n", qovld);
-> +		pr_info("\tBoot-time adjustment of callback overload level to %ld.\n", qovld);
->  	if (jiffies_till_first_fqs != ULONG_MAX)
->  		pr_info("\tBoot-time adjustment of first FQS scan delay to %ld jiffies.\n", jiffies_till_first_fqs);
->  	if (jiffies_till_next_fqs != ULONG_MAX)
-> -- 
-> 2.24.0
-> 
+Acked-by: Wei Liu <wei.liu@kernel.org>
