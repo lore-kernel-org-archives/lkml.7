@@ -2,399 +2,115 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A287CC2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EED9C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C4942077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC272077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 11:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="0pngTayz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/MDo+Ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfLLLAf (ORCPT
+        id S1728926AbfLLLBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 06:00:35 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:34681 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728423AbfLLLAe (ORCPT
+        Thu, 12 Dec 2019 06:01:02 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:43446 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728423AbfLLLBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 06:00:34 -0500
-Received: by mail-ua1-f68.google.com with SMTP id w20so696379uap.1
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 03:00:32 -0800 (PST)
+        Thu, 12 Dec 2019 06:01:01 -0500
+Received: by mail-yb1-f196.google.com with SMTP id d34so274709yba.10;
+        Thu, 12 Dec 2019 03:01:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E/BDoN8LZUDxXyY/LOw9blBuAN4iCi1dNk0E5OnY49A=;
-        b=0pngTayzWJ20KkIBh4tlHJX+QdVx/rkEkOMTPMMkhuqR7vgQNhYEqZ1NPP0dRkr4P+
-         bDnwbbiSS91uoE+EW/6uHJpeB3oEPywSxie4sceXAxr79+DkZTxNo79cogGtfTDCoF65
-         p5BhjUqxj68aDMfQvYOga54io5dJ8DtIxyc0AXJdszgIgn6likYDlp9hzDxMYedA/fy+
-         JBF4uNj6AUsW3L1kiUdruc+lmWz9604Fy2MXvU1GId/o3xOwR6ef6ZfdCjo5RB48Oz/o
-         AOgBtNJQuPYxR0xLGQoHZCvQ6I7teRQogxfgoExeNTKipB0JRJumEMP2I0J9Jty2rVo0
-         BoKw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3NLogIIkrt/hmZd7hzl4otAejKTvhVHjvTAan3q/U3Q=;
+        b=U/MDo+ExHjLwBASvVMUbmdOjymwLMERC0Omm57dulGMVXjJprLZdP52/rBvSla++6o
+         ru1Qbajslbn/FBW5TScyEMt5Sa7Ov0nI1b8aqBO3py3EcrvK060GiHRonnPiEbyHMGUl
+         3yx8oLd+pwvpvcYTraRwRqBpiLiZuXdpYruWtQQF7ZBfNbFafd/iWbF0b2xPYdbT8L7x
+         T81hbkYPB7X32Au0J9bUALVri+YtCM/oKYra9NTtdz1ZNglqIagk4ax6vkkF3lppmM67
+         nimZ+NlE8oL00yPrDrR82o3pLR5q6s9KQN8tGvO6QnXT7EvRWaTl6W+48Xaz+kZbXSXu
+         UIIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E/BDoN8LZUDxXyY/LOw9blBuAN4iCi1dNk0E5OnY49A=;
-        b=YOOaRpS6CMVPbmzkATSHU7voCyTGTOW8w31nOt+Ouli0RReiHiQIO1A6zsFNWY+eEs
-         J5J/psUaK6PuCkcqOWfLA7ozVCHWmw1itRfBXz3FwIxZfcWm06tfcSXWs6fqNhAp9T9W
-         1TYDM2rO6EqqMC9zCMWxi5vakaa2jsClKgWZzkuqTT/z1XXFY3QA4Sh70CkGp0YJJjnH
-         X8iXILOtpTjNvuj33Mrl4ln2IvgAhmJy+S0tt97j4qNrJnxmIgMFB9o8CqMIk7JkpkV9
-         19SH24sJC1EzIRP1u2T7IdLnn0gPshquW+moo7BjRQc2xNYWAvWPNQAzIssriPFqSq9+
-         YHRA==
-X-Gm-Message-State: APjAAAUOC2W/6yGaYr51xyxptiSpghzsLILf/h5s4EWwHIEXnC7lJeSU
-        QWxkwqKvhqT4fSdN5UwPlV2vVkw38HpjyF4UW1MHiA==
-X-Google-Smtp-Source: APXvYqwnaZfxUPkSEezGB5U9Be0aoIHy6gUvMu2tLslGzbrnWfKh9WtnN3GznE6iiy3DrBY9cJowKpnsSo9OqxIiHTM=
-X-Received: by 2002:ab0:7352:: with SMTP id k18mr7377553uap.77.1576148432270;
- Thu, 12 Dec 2019 03:00:32 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3NLogIIkrt/hmZd7hzl4otAejKTvhVHjvTAan3q/U3Q=;
+        b=QgIA38D/oIQKO5VgsqpiY5kvUfEzsCsdHnkKZ+EV6aFm6+xPKxjc94XqzQkHshg3jE
+         fHQcvScPSMKiekG+sjghJyudwGf+zoQTMx2ijIzykBPSeyPqp6PG6hrS9Lu6RbLm8ndw
+         0+u93Rh3F4DWyzXUY5zIUYXtXvsuf6145gjFnABZz1BR/VOFXMK1fz5R8TFN5f5VzePU
+         eBmIZo8ncfCV+8ca5NKf+WpwFgIPnts4wo9M84Vmjo8po5G041/6aEnHzz2bcjqv8cON
+         5phxNKnfkjkGsRwgqEIdQjT1U2wZbX5V7t1hspQ+4bx7+OHhnpdhHloiltYSZGa85qLs
+         9ldQ==
+X-Gm-Message-State: APjAAAUF+Gtl0OvgpMyNCitffKxUPZI1ijyQlLfHEu6T1VYscx3htwxb
+        XRrTF9985XEiewteuIjKMgzQGYq3JSILcg==
+X-Google-Smtp-Source: APXvYqyCiWoYgW7gP5cqkOhfMLFAjSAYch+A+DHKKiWA9vs2WRbDV64ENGoizBVTkS6dMJh0fJ4+9w==
+X-Received: by 2002:a25:6385:: with SMTP id x127mr3510081ybb.468.1576148460482;
+        Thu, 12 Dec 2019 03:01:00 -0800 (PST)
+Received: from karen ([2604:2d80:d68a:cf00:1549:e76:ca4c:6ce8])
+        by smtp.gmail.com with ESMTPSA id 199sm2383432ywn.52.2019.12.12.03.00.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 03:00:59 -0800 (PST)
+Date:   Thu, 12 Dec 2019 05:00:57 -0600
+From:   Scott Schafer <schaferjscott@gmail.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     gregkh@linuxfoundation.org, Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 20/23] staging: qlge: Fix CHECK: usleep_range is
+ preferred over udelay
+Message-ID: <20191212110057.GA7934@karen>
+References: <cover.1576086080.git.schaferjscott@gmail.com>
+ <a3f14b13d76102cd4e536152e09517a69ddbe9f9.1576086080.git.schaferjscott@gmail.com>
+ <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
 MIME-Version: 1.0
-References: <1574934847-30372-1-git-send-email-rkambl@codeaurora.org> <1574934847-30372-2-git-send-email-rkambl@codeaurora.org>
-In-Reply-To: <1574934847-30372-2-git-send-email-rkambl@codeaurora.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Thu, 12 Dec 2019 16:30:20 +0530
-Message-ID: <CAHLCerOVH1xLjMmDNFVx=YYYTA3MipaOhHZ-AYtxEnDFgRbSJg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: sc7180: Add device node support
- for TSENS in SC7180
-To:     Rajeshwari <rkambl@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        sivaa@codeaurora.org, sanm@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <337af773-a1da-0c04-6180-aa3597372522@cogentembedded.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rajeshwari,
+On Thu, Dec 12, 2019 at 01:45:57PM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 11.12.2019 21:12, Scott Schafer wrote:
+> 
+> > chage udelay() to usleep_range()
+> 
+>    Change?
+> 
+> > Signed-off-by: Scott Schafer <schaferjscott@gmail.com>
+> > ---
+> >   drivers/staging/qlge/qlge_main.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+> > index e18aa335c899..9427386e4a1e 100644
+> > --- a/drivers/staging/qlge/qlge_main.c
+> > +++ b/drivers/staging/qlge/qlge_main.c
+> > @@ -147,7 +147,7 @@ int ql_sem_spinlock(struct ql_adapter *qdev, u32 sem_mask)
+> >   	do {
+> >   		if (!ql_sem_trylock(qdev, sem_mask))
+> >   			return 0;
+> > -		udelay(100);
+> > +		usleep_range(100, 200);
+> 
+>    I hope you're not in atomic context...
+> 
+> >   	} while (--wait_count);
+> >   	return -ETIMEDOUT;
+> >   }
+> 
+> MBR, Sergei
 
-On Thu, Nov 28, 2019 at 3:25 PM Rajeshwari <rkambl@codeaurora.org> wrote:
->
-> Add TSENS node and user thermal zone for TSENS sensors in SC7180.
->
-> Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 527 +++++++++++++++++++++++++++++++++++
->  1 file changed, 527 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 666e9b9..6656ffc 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -911,6 +911,26 @@
->                         status = "disabled";
->                 };
->
-> +               tsens0: thermal-sensor@c263000 {
-> +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> +                       reg = <0 0x0c263000 0 0x1ff>, /* TM */
-> +                               <0 0x0c222000 0 0x1ff>; /* SROT */
-> +                       #qcom,sensors = <15>;
-> +                       interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "uplow";
-> +                       #thermal-sensor-cells = <1>;
-> +               };
-> +
-> +               tsens1: thermal-sensor@c265000 {
-> +                       compatible = "qcom,sc7180-tsens","qcom,tsens-v2";
-> +                       reg = <0 0x0c265000 0 0x1ff>, /* TM */
-> +                               <0 0x0c223000 0 0x1ff>; /* SROT */
-> +                       #qcom,sensors = <10>;
-> +                       interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "uplow";
-> +                       #thermal-sensor-cells = <1>;
-> +               };
-> +
->                 spmi_bus: spmi@c440000 {
->                         compatible = "qcom,spmi-pmic-arb";
->                         reg = <0 0x0c440000 0 0x1100>,
-> @@ -1121,6 +1141,513 @@
->                 };
->         };
->
-> +       thermal-zones {
-> +               cpu0-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 1>;
-> +
-> +                       trips {
-> +                               cpu0_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu0_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu0_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-
-Where are the cooling maps for all the cpu thermal zones? A passive
-trip point w/o a cooling map is not of much use. If you are waiting
-for cpufreq support to land before adding them, then remove the
-passive trip points for now and add them along with the cooling maps
-when you have cooling devices.
-
-> +                       };
-> +               };
-> +
-> +               cpu1-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 2>;
-> +
-> +                       trips {
-> +                               cpu1_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu1_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu1_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu2-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 3>;
-> +
-> +                       trips {
-> +                               cpu2_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu2_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu2_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu3-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 4>;
-> +
-> +                       trips {
-> +                               cpu3_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu3_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu3_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu4-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 5>;
-> +
-> +                       trips {
-> +                               cpu4_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu4_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu4_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu5-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 6>;
-> +
-> +                       trips {
-> +                               cpu5_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu5_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu5_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu6-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 9>;
-> +
-> +                       trips {
-> +                               cpu6_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu6_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu6_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu7-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 10>;
-> +
-> +                       trips {
-> +                               cpu7_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu7_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu7_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu8-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 11>;
-> +
-> +                       trips {
-> +                               cpu8_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu8_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu8_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu9-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 12>;
-> +
-> +                       trips {
-> +                               cpu9_alert0: trip-point0 {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu9_alert1: trip-point1 {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu9_crit: cpu_crit {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <1000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
+Im not quite what you mean by "I hope you're not in atomic context",
+could you please explain why you said this? 
