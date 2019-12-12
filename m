@@ -2,127 +2,144 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E185C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B43C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280302173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576157743;
-	bh=kX7tmQZUkMsb+wxM2lkuAZ/OE6BVVDyV/hHHPESUsac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S5azAp83wHg+vedSi0T3748IRq6cS7TlOdbwB1A4MlKJXFOcrUQTVqY89yLKTH49N
-	 FhB8C+0r1Yu9kbU2AhdZghQuIQahLpQaaV60uXPJjnf8U3wEsB/pcmMnIoGDaDXpeK
-	 zP8j1iroTnFeGuGKITqik85PzWE7utu2IfmQtVyw=
+	by mail.kernel.org (Postfix) with ESMTP id 6CA5D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfLLNfm (ORCPT
+        id S1729496AbfLLNg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:35:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfLLNfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:35:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2D15214AF;
-        Thu, 12 Dec 2019 13:35:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576157741;
-        bh=kX7tmQZUkMsb+wxM2lkuAZ/OE6BVVDyV/hHHPESUsac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BoyR0ZHnOCM+h1SLcosyobq3AU7Dt2V+OSXVLxawClCqojIZ2bAFsyhqBOiln6VJR
-         2tyjWyjao06jWXe2DM5EvcjPbXUzWQUQaAnuU5gyUvfnNM7G53OR9OAf+xyCR4Jje/
-         KMYKVot6sJ84MeRlL1Xu0KA10X+gtEBv5Agw+foo=
-Date:   Thu, 12 Dec 2019 14:35:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     zhenwei pi <pizhenwei@bytedance.com>
-Cc:     arnd@arndb.de, peng.hao2@zte.com.cn, linux-kernel@vger.kernel.org
-Subject: Re: [External] Re: [PATCH] misc: pvpanic: add crash loaded event
-Message-ID: <20191212133539.GA1571185@kroah.com>
-References: <20191212123226.1879155-1-pizhenwei@bytedance.com>
- <20191212130155.GA1544206@kroah.com>
- <0364f87c-7ad0-0208-fb03-d5f17d45ab73@bytedance.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0364f87c-7ad0-0208-fb03-d5f17d45ab73@bytedance.com>
+        Thu, 12 Dec 2019 08:36:57 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:46065 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729428AbfLLNg5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 08:36:57 -0500
+Received: from orion.localdomain ([77.9.34.244]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N30VJ-1hjUae0AJh-013OL2; Thu, 12 Dec 2019 14:36:45 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, jchapman@katalix.com, netdev@vger.kernel.org
+Subject: [PATCH] net: l2tp: remove unneeded MODULE_VERSION() usage
+Date:   Thu, 12 Dec 2019 14:36:13 +0100
+Message-Id: <20191212133613.25376-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:6qYUVL/1QU7SOmEBdm0nTdLO073oCYRrqAiMznG4x2UbdVcYzn7
+ pgsQGBHsYMDHccGq2ca7NLLAWCas6SESLnDKlJXliSGoeoVTJdRXc52sCpQG4T6wXt6mNuA
+ MYnPlyfyN8xHVfLRy/znxflU2lKSKNOguk5GQTGlti/ruVG+yogyH7Kj2Nbq1DjzI51D88+
+ Tse7xwcZTbopic+s5JeCw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5Jbj/oeTWbs=:izDIY2av33ECANoVM1qixZ
+ LcohtjqEiy2/hhxIYhSv7jVhAzttGtYlykjk7o4Oxzgk+ahiTSSCTo/buh32NH5AvofXw3vaH
+ g0XU68ZCTw2IIzU2gBYpBfXBbuSolat71ykRxBCaSgQ6gn5VEfbBsP7XEoMQ2Q5orfvxwe1+N
+ k02MwiF6PbQnmOvwnBGjcB+XPzHzsgNlLRkhyi81EtRCS5LKzgV6jaEOzyC5iH7DhPJrim6qr
+ 4BW7opeUHv4Fy0YwQLH7cPS9U0cWnjg9qfm9WfhWmMQek8AW6/VHR8gkN0bmVQYI/eBddNQUg
+ 3EfR1o4bsMEoFXyWsLvhtNarrdhkNYQ9yuQHr4ttgvBtbG/3VP4vazHnclqYeHnfIWKjXr44S
+ ttgWfbrZO7ljP2EZJBhsnDdcnSkWWuDzskFw6ehbNXxAQq2ziMIuBmj9OmXN5U4hbhWsBlmms
+ e6MCaRpf+nN7B1rnMk6+A7BNPenG7SF4fkcUSerbUHpXLca9AuJS+Gza7iQvnkY07VZn8qYvH
+ 08rN0rCr1Z/6Mjug2vKj3bkiA9OfCN4/NbdlqCE+nDr7n7QtdMY7Hlyf7CpuUtfmCJotcI316
+ 9xoZRztrPf2lw8WYYHg8e/3EIavUHXA9uFoxEWOu/aQcTL/Ajy1n07yIpLnYbOlv0YEg9pb+I
+ /worppFg//iGyVmKFyHuOev2cAnob3LxMMu1B08PrXHKM34hGmHWHmmRtECWK4RjLYZT+AiEP
+ 3/iLIHDv4T/ADH5KARdTOi1mdtxyc0ycF6rqT0QD0qRPZVZPu6Vbrmnnp6rgX2TA5Cp9f3zpL
+ OCVwPC0s0EfB3WGm47Zyc1xZ2sCuLiwkDS7eDskMYhTqRZty76mBqQ4LCrVF47pLhJeLU2FDl
+ 9vCUTiNR/o5tzBqzHk8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 09:26:22PM +0800, zhenwei pi wrote:
-> On 12/12/19 9:01 PM, Greg KH wrote:
-> 
-> > On Thu, Dec 12, 2019 at 08:32:26PM +0800, zhenwei pi wrote:
-> > > Some users prefer kdump tools to generate guest kernel dumpfile,
-> > > at the same time, need a out-of-band kernel panic event.
-> > > 
-> > > Currently if booting guest kernel with 'crash_kexec_post_notifiers',
-> > > QEMU will recieve PVPANIC_PANICKED event and stop VM. If booting
-> > > guest kernel without 'crash_kexec_post_notifiers', guest will not
-> > > call notifier chain.
-> > > 
-> > > Add PVPANIC_CRASH_LOADED bit for pvpanic event, it means that guest
-> > > actually hit a kernel panic, but kernel wants to handle by itself.
-> > > 
-> > > Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
-> > > ---
-> > >   drivers/misc/pvpanic.c | 10 +++++++++-
-> > >   1 file changed, 9 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/misc/pvpanic.c b/drivers/misc/pvpanic.c
-> > > index 95ff7c5a1dfb..a8cc96c90550 100644
-> > > --- a/drivers/misc/pvpanic.c
-> > > +++ b/drivers/misc/pvpanic.c
-> > > @@ -10,6 +10,7 @@
-> > >   #include <linux/acpi.h>
-> > >   #include <linux/kernel.h>
-> > > +#include <linux/kexec.h>
-> > >   #include <linux/module.h>
-> > >   #include <linux/of.h>
-> > >   #include <linux/of_address.h>
-> > > @@ -19,6 +20,7 @@
-> > >   static void __iomem *base;
-> > >   #define PVPANIC_PANICKED        (1 << 0)
-> > > +#define PVPANIC_CRASH_LOADED    (1 << 1)
-> > BIT(1)?
-> 
-> zhenwei: yes, define PVPANIC_CRASH_LOADED as BIT(1)?
-> 
-> > 
-> > >   MODULE_AUTHOR("Hu Tao <hutao@cn.fujitsu.com>");
-> > >   MODULE_DESCRIPTION("pvpanic device driver");
-> > > @@ -34,7 +36,13 @@ static int
-> > >   pvpanic_panic_notify(struct notifier_block *nb, unsigned long code,
-> > >   		     void *unused)
-> > >   {
-> > > -	pvpanic_send_event(PVPANIC_PANICKED);
-> > > +	unsigned int event = PVPANIC_PANICKED;
-> > > +
-> > > +	if (kexec_crash_loaded())
-> > > +		event = PVPANIC_CRASH_LOADED;
-> > > +
-> > > +	pvpanic_send_event(event);
-> > Who gets this event to know that the above new bit is set or not?
-> 
-> Hypervisor will catch this event. A typical case maybe like this: guest os triggers
-> pvpanic PVPANIC_CRASH_LOADED event, QEMU gets this event by handling vm-exit reason,
-> then QEMU posts event to libvirt. Monotor agent gets domain lifecycle event from
-> libvirt. Bingo, we can know that the guest has crashed but it handle error by
-> kexec crash loaded image.
+Remove MODULE_VERSION(), as it isn't needed at all: the only version
+making sense is the kernel version.
 
-But as you have burried this user api value in a random .c file, how
-does anything outside of the kernel know what the value really is for?
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ net/l2tp/l2tp_core.c    | 1 -
+ net/l2tp/l2tp_debugfs.c | 1 -
+ net/l2tp/l2tp_eth.c     | 1 -
+ net/l2tp/l2tp_ip.c      | 1 -
+ net/l2tp/l2tp_ip6.c     | 1 -
+ net/l2tp/l2tp_netlink.c | 1 -
+ net/l2tp/l2tp_ppp.c     | 1 -
+ 7 files changed, 7 deletions(-)
 
-Shouldn't the #define be in a uapi file?
+diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
+index f82ea12bac37..29da8b28046f 100644
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -1784,4 +1784,3 @@ module_exit(l2tp_exit);
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("L2TP core");
+ MODULE_LICENSE("GPL");
+-MODULE_VERSION(L2TP_DRV_VERSION);
+diff --git a/net/l2tp/l2tp_debugfs.c b/net/l2tp/l2tp_debugfs.c
+index 35bb4f3bdbe0..fa84078d1809 100644
+--- a/net/l2tp/l2tp_debugfs.c
++++ b/net/l2tp/l2tp_debugfs.c
+@@ -345,4 +345,3 @@ module_exit(l2tp_debugfs_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("L2TP debugfs driver");
+-MODULE_VERSION("1.0");
+diff --git a/net/l2tp/l2tp_eth.c b/net/l2tp/l2tp_eth.c
+index d3b520b9b2c9..d0569e993574 100644
+--- a/net/l2tp/l2tp_eth.c
++++ b/net/l2tp/l2tp_eth.c
+@@ -381,5 +381,4 @@ module_exit(l2tp_eth_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("L2TP ethernet pseudowire driver");
+-MODULE_VERSION("1.0");
+ MODULE_ALIAS_L2TP_PWTYPE(5);
+diff --git a/net/l2tp/l2tp_ip.c b/net/l2tp/l2tp_ip.c
+index 0d7c887a2b75..f02909157e25 100644
+--- a/net/l2tp/l2tp_ip.c
++++ b/net/l2tp/l2tp_ip.c
+@@ -677,7 +677,6 @@ module_exit(l2tp_ip_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("L2TP over IP");
+-MODULE_VERSION("1.0");
+ 
+ /* Use the value of SOCK_DGRAM (2) directory, because __stringify doesn't like
+  * enums
+diff --git a/net/l2tp/l2tp_ip6.c b/net/l2tp/l2tp_ip6.c
+index d148766f40d1..8fa37a30347a 100644
+--- a/net/l2tp/l2tp_ip6.c
++++ b/net/l2tp/l2tp_ip6.c
+@@ -810,7 +810,6 @@ module_exit(l2tp_ip6_exit);
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Chris Elston <celston@katalix.com>");
+ MODULE_DESCRIPTION("L2TP IP encapsulation for IPv6");
+-MODULE_VERSION("1.0");
+ 
+ /* Use the value of SOCK_DGRAM (2) directory, because __stringify doesn't like
+  * enums
+diff --git a/net/l2tp/l2tp_netlink.c b/net/l2tp/l2tp_netlink.c
+index f5a9bdc4980c..89b85371d4d3 100644
+--- a/net/l2tp/l2tp_netlink.c
++++ b/net/l2tp/l2tp_netlink.c
+@@ -1032,5 +1032,4 @@ module_exit(l2tp_nl_cleanup);
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("L2TP netlink");
+ MODULE_LICENSE("GPL");
+-MODULE_VERSION("1.0");
+ MODULE_ALIAS_GENL_FAMILY("l2tp");
+diff --git a/net/l2tp/l2tp_ppp.c b/net/l2tp/l2tp_ppp.c
+index c54cb59593ef..4b4be64e3fe2 100644
+--- a/net/l2tp/l2tp_ppp.c
++++ b/net/l2tp/l2tp_ppp.c
+@@ -1755,6 +1755,5 @@ module_exit(pppol2tp_exit);
+ MODULE_AUTHOR("James Chapman <jchapman@katalix.com>");
+ MODULE_DESCRIPTION("PPP over L2TP over UDP");
+ MODULE_LICENSE("GPL");
+-MODULE_VERSION(PPPOL2TP_DRV_VERSION);
+ MODULE_ALIAS_NET_PF_PROTO(PF_PPPOX, PX_PROTO_OL2TP);
+ MODULE_ALIAS_L2TP_PWTYPE(7);
+-- 
+2.11.0
 
-thanks,
-
-greg k-h-
