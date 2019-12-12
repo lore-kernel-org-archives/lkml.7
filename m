@@ -2,114 +2,113 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0284C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBFEC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D69A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF50214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 00:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HshZQGQH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfLLA3D (ORCPT
+        id S1727378AbfLLA3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 19:29:03 -0500
-Received: from mga09.intel.com ([134.134.136.24]:50208 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbfLLA3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 19:29:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Dec 2019 16:29:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,303,1571727600"; 
-   d="scan'208";a="388118644"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 11 Dec 2019 16:29:02 -0800
-Date:   Wed, 11 Dec 2019 16:29:02 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Ben Gardon <bgardon@google.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH v2 1/3] KVM: x86: assign two bits to track SPTE kinds
-Message-ID: <20191212002902.GM5044@linux.intel.com>
-References: <1569582943-13476-1-git-send-email-pbonzini@redhat.com>
- <1569582943-13476-2-git-send-email-pbonzini@redhat.com>
- <CANgfPd8G194y1Bo-6HR-jP8wh4DvdAsaijue_pnhetjduyzn4A@mail.gmail.com>
- <20191211191327.GI5044@linux.intel.com>
- <4e850c10-ff14-d95e-df22-0d0fd7427509@redhat.com>
+        Wed, 11 Dec 2019 19:29:36 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36330 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbfLLA3g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 11 Dec 2019 19:29:36 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n12so281879lfe.3;
+        Wed, 11 Dec 2019 16:29:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pC6XF/C4qA6Z3fF58X0CjVZydy0fb8CelD9qd37i5gc=;
+        b=HshZQGQHDaBtH2auNRZfezkqBM+IIN3iaK35ve5/12tX8zrV3UwAwhNtW2CaOC4GGH
+         VulBEsCEkSHMh7Ln0pKDk9e8aB3S++LApRbmWewG2o0/isabLtPD9i09Pcr+uy6mJ1zh
+         yinfxOFIvvABQXxS3N32b9Hu/AlWcnXm7UipweDlDLPPkxZwaNQYKlS5DRi7NZgtqEvQ
+         5HiVMcTOP1bpSnkaN4n/2pVbUD/+EISG3O6fpniJ9EpXw3bgh0UEfNoVMAZi2BSoC1WR
+         BQ/rX5E358IAzM7hQ94LlfNSTL2fuo10CBtRH5favAiDybjbGb1diIYoP1VvKQCA7r6X
+         oWUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pC6XF/C4qA6Z3fF58X0CjVZydy0fb8CelD9qd37i5gc=;
+        b=CH04j7calde3YBRK69AHXtWFZN4MTur9MU579yU31ZJZbl7fIpG2+0HjyxCyw17/bl
+         C+grvvQJ2PhOnd8pFz/kH067StEzzJG5gV4tHU+Q97zfWLiiHz3cD6BVKyZPDCdzraDw
+         Yf+zey0ba9zVkaYPqKRBgWscPAkBF5YP7wS2TMJVWkGH9iwVHziVieH9I8IpWydLm0VS
+         VvwcIuXndX05xKsRi8Qk9fRmAouJNfqOU0fC8kTwpPeW+2nrhSVjT51CFG880T+yPbno
+         VK14z27puUWGOMZrzAySoAicMNpsnlpK6w5tS1+S2Z5gpmR51VhwfhcF3BMVUeliY+VM
+         RlzQ==
+X-Gm-Message-State: APjAAAU5lF1FD/9/EovHQ3F+oqTt45jUJ5q3freS29CGMfAKB/my6fM6
+        goOnr62iNxAKcIaguRlcujm/diwh
+X-Google-Smtp-Source: APXvYqyD9UYdejrNSyfdLH+9mfQMcI9Ym/rhgknNTIiB4I1iG4nafZurmwrznkO4CEVPBg3bmCBAvw==
+X-Received: by 2002:ac2:599c:: with SMTP id w28mr4173459lfn.78.1576110573638;
+        Wed, 11 Dec 2019 16:29:33 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id d16sm1964036lfa.16.2019.12.11.16.29.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 16:29:32 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] input: elants: Support Asus TF300T touchscreen
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Scott Liu <scott.liu@emc.com.tw>,
+        James Chen <james.chen@emc.com.tw>,
+        Johnny Chuang <johnny.chuang@emc.com.tw>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh-dt@kernel.org>
+References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3da0327c-d7c4-b0f2-9ab4-b7088891ef7c@gmail.com>
+Date:   Thu, 12 Dec 2019 03:29:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e850c10-ff14-d95e-df22-0d0fd7427509@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 12:28:27AM +0100, Paolo Bonzini wrote:
-> On 11/12/19 20:13, Sean Christopherson wrote:
-> > Assuming we haven't missed something, the easiest fix would be to reduce
-> > the MMIO generation by one bit and use bits 62:54 for the MMIO generation.
+11.12.2019 19:03, Michał Mirosław пишет:
+> This series cleans up the driver a bit and implements changes needed to
+> support EKTF3624-based touchscreen used in eg. Asus TF300T tablet. 
 > 
-> Yes, and I mistakenly thought it would be done just by adjusting 
-> PT64_SECOND_AVAIL_BITS_SHIFT.
+> ---
+> v2: extended with Dmitry's patches (replaced v1 patches 3 and 4)
 > 
-> I will test and send formally something like this:
+> Dmitry Osipenko (3):
+>   input: elants: support 0x66 reply opcode for reporting touches
+>   dt-bindings: input: elants-i2c: Document common touchscreen properties
+>   dt-bindings: input: elants-i2c: Document eKTF3624
 > 
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 6f92b40d798c..aa2d86f42b9a 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -405,11 +405,13 @@ static inline bool is_access_track_spte(u64 spte)
->  }
->  
->  /*
-> - * Due to limited space in PTEs, the MMIO generation is a 19 bit subset of
-> + * Due to limited space in PTEs, the MMIO generation is a 18 bit subset of
->   * the memslots generation and is derived as follows:
->   *
->   * Bits 0-8 of the MMIO generation are propagated to spte bits 3-11
-> - * Bits 9-18 of the MMIO generation are propagated to spte bits 52-61
-> + * Bits 9-17 of the MMIO generation are propagated to spte bits 54-62
->   *
-> + * We don't use bit 63 to avoid conflicting with the SVE bit in EPT PTEs.
-> + *
->   * The KVM_MEMSLOT_GEN_UPDATE_IN_PROGRESS flag is intentionally not included in
->   * the MMIO generation number, as doing so would require stealing a bit from
-> @@ -418,15 +418,16 @@ static inline bool is_access_track_spte(u64 spte)
->   * requires a full MMU zap).  The flag is instead explicitly queried when
->   * checking for MMIO spte cache hits.
->   */
-> -#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(18, 0)
-> +#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(17, 0)
->  
->  #define MMIO_SPTE_GEN_LOW_START		3
->  #define MMIO_SPTE_GEN_LOW_END		11
->  #define MMIO_SPTE_GEN_LOW_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
->  						    MMIO_SPTE_GEN_LOW_START)
->  
-> -#define MMIO_SPTE_GEN_HIGH_START	52
-> -#define MMIO_SPTE_GEN_HIGH_END		61
-> +/* Leave room for SPTE_SPECIAL_MASK.  */
-> +#define MMIO_SPTE_GEN_HIGH_START	PT64_SECOND_AVAIL_BITS_SHIFT
+> Michał Mirosław (6):
+>   input: elants: document some registers and values
+>   input: elants: support old touch report format
+>   input: elants: remove unused axes
+>   input: elants: override touchscreen info with DT properties
+>   input: elants: refactor elants_i2c_execute_command()
+>   input: elants: read touchscreen size for EKTF3624
+> 
+>  .../devicetree/bindings/input/elants_i2c.txt  |   6 +-
+>  drivers/input/touchscreen/elants_i2c.c        | 358 ++++++++++++------
+>  2 files changed, 239 insertions(+), 125 deletions(-)
+> 
 
-I'd rather have GEN_HIGH_START be an explicit bit number and then add
-a BUILD_BUG_ON(GEN_HIGH_START < PT64_SECOND_AVAIL_BITS_SHIFT) to ensure
-the MMIO gen doesn't overlap other stuff.  That way we get a build error
-if someone changes PT64_SECOND_AVAIL_BITS_SHIFT, otherwise the MMIO gen
-will end up who knows where and probably overwrite NX or EPT.SUPPRESS_VE.
+Hello Michał,
 
-> +#define MMIO_SPTE_GEN_HIGH_END		62
->  #define MMIO_SPTE_GEN_HIGH_MASK		GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
->  						    MMIO_SPTE_GEN_HIGH_START)
->  static u64 generation_mmio_spte_mask(u64 gen)
-> 
-> 
-> Paolo
-> 
+The series works and looks good to me, eKTF3624 touchscreen is working
+fine on Nexus 7. Thank you very much!
