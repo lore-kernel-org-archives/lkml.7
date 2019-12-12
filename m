@@ -2,103 +2,127 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B35A1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B05CC2D0C6
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E662077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427542077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 01:40:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UHgVF9wK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDaEK2Lv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfLLBjo (ORCPT
+        id S1727599AbfLLBki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 20:39:44 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41425 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727297AbfLLBjn (ORCPT
+        Wed, 11 Dec 2019 20:40:38 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33620 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbfLLBkh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 20:39:43 -0500
-Received: by mail-pg1-f194.google.com with SMTP id x8so266524pgk.8;
-        Wed, 11 Dec 2019 17:39:43 -0800 (PST)
+        Wed, 11 Dec 2019 20:40:37 -0500
+Received: by mail-pf1-f195.google.com with SMTP id y206so247719pfb.0;
+        Wed, 11 Dec 2019 17:40:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        h=sender:from:subject:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jcEFefOBgkTbuCgx02nnmSywE4fFjL33e6Qr6u/eGyo=;
-        b=UHgVF9wKnMAzPdq+8k5+tMF0N9py4cpouWLLfgPZWIqY2oeBxzLoez07bzCF5YV8Oo
-         ted5AFT/usdkmhZQTmxbVaTUlLuX+VA/uHgSLLdkMEBOEv0jdhl9TjCUDHI5SsJT0cDA
-         JPQoU1Ou+TtyhjbkobibT8kwd84QdOklMkZUuFimMz0eHfDPZH5IsHL4lHZgpGZ1ZrgJ
-         9+ac6z/XFdw1ktqyYe7t8xTeSrd6H115SaM4Yn56A3lb85Nx0RtdFuJFdRKDgIqkEg48
-         h5SuwWNWn0A688v+NbjMSHoQgbnDeXf0/uIERUY9plp4jQ+tuZmLhVgAL7VqBfhK2qGH
-         mbpw==
+        bh=dwmsUJYMt5xrrap+rvfe8cg+cZO6d3WRlJ1DUVNQLrA=;
+        b=NDaEK2LvN7DRpEq/EzAJxx1bUoOsY72Sig4eLwIO2jiAOe8xMnz1uwP2DoApqOSc1G
+         S5lmmqXRbprDAe16ci3b3jRVE1q7LsZOIB0AuPlBdfQ8lq72Rd+CXkGkt8s4iNqG1WL4
+         +7KRlNImlczrjqIq3Xw1bEVipkgHKnN8+40d6QzA2u24faAaw1HrVUFhzMWG8fYXmued
+         cSCKN7+ku0zzQ3P10y62Y2tK1BFkzbk02FtlaUGQvtHPHzzatMlboiRlNKofgGKcPTaK
+         TdAAscL5oCymKMSpXGSvePUPeB1EEuVdkj0rm2bGth72Zg+8HSvf9CMJhcThzJKdPJfg
+         udhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+        h=x-gm-message-state:sender:from:subject:to:cc:references:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=jcEFefOBgkTbuCgx02nnmSywE4fFjL33e6Qr6u/eGyo=;
-        b=rGvzr1ODU9TklJ+t494LD16ohAcpd7VjX2Q6hz8aBlhZKt/M/wQpmcT7/2whRAa4a3
-         xebZKWWXAR4IE/PKx6KpJftJez4Cqq9XYs1P7TDNF+5Y6fStTP1GLC8e+uE+ZackdmWh
-         6ABC1jEnaQ0oruszpZcpTUM78DuGIXD3Tio5apaGowzVBMu42I47p2MmKpWY0W6uTgIh
-         yMR6g6cRQbhYU4pEcB7UdDOyS0xxxmu+BMLuxIiMkvZHi9LzRxjovXoBRPuqed8oDA8B
-         8zf2cyn6pCWAbukMe5N0Xj7bEbdAtO7N19DkZ6s7F14do0cofdtwh8/DQ3R7X3O+d7YF
-         SCeQ==
-X-Gm-Message-State: APjAAAWwglJvsV4j1vkKRdDMJdDmbIFy7HSqzUMWtCMqTRBuFCE4JWQm
-        FBIV5OBzR2j2CqSxJx9r2ZU=
-X-Google-Smtp-Source: APXvYqyttOxmSzS2h7erROIt6mz49uxLvt//PkJptC/TdhyxqocBs//U9yo7tar5mVXbrXrZE6ardA==
-X-Received: by 2002:a63:6704:: with SMTP id b4mr7845796pgc.424.1576114783067;
-        Wed, 11 Dec 2019 17:39:43 -0800 (PST)
+        bh=dwmsUJYMt5xrrap+rvfe8cg+cZO6d3WRlJ1DUVNQLrA=;
+        b=ZVjgDfI2bVKT9ruRw3wn/REAwZwsD1kEIK75FhrWff/ZMD8XbNCiKhYndWr79IreVS
+         GKm/HUnqdSzqMpn8dhc2sIFRXVMXF9XD8gyeI04Y9olPcVLThoEkVO/YKliV5Sw3QeKi
+         E36Dy8p9uOLdUI/EDBfYwBSbRPhy/68Tw36ZlD7yh1oSTOzGx8J4vDNGJM+ln8JPBuNb
+         5PE34xUqiOuGxlVGSBHOFhfCfhnug/lMOm5PKjrqn4mOVrZFTG6I8RnXNs9O6vxlfEwF
+         RmcA8WAIHwernzzRs+Xz0VX6izVId1Hv5q8sfDuzR9d1u+VasSNCN5PWm4APkScFQuwe
+         oqxQ==
+X-Gm-Message-State: APjAAAV1wdLEpnTvP0n8zNLSC+ZPFBDrZxLaoSMI3rHq75loOpdpxeBn
+        F9gQEysT0sXvrVEHsh9bzh7mXKxW
+X-Google-Smtp-Source: APXvYqzDjWjamdpFJ43MLw86QvYZg6zyr+221X4XxbjOUtxe47fIrUtZtPONGIm3NJWAfXS+h2UmbA==
+X-Received: by 2002:aa7:9145:: with SMTP id 5mr7172058pfi.74.1576114836495;
+        Wed, 11 Dec 2019 17:40:36 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g8sm4424271pfh.43.2019.12.11.17.39.42
+        by smtp.gmail.com with ESMTPSA id i16sm4449070pfo.12.2019.12.11.17.40.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Dec 2019 17:39:42 -0800 (PST)
-Subject: Re: [PATCH 0/2] watchdog: mtx-1: Relax build dependencies
-To:     Denis Efremov <efremov@linux.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mips@linux-mips.org, Paul Burton <paulburton@kernel.org>
-References: <20191211210204.31579-1-f.fainelli@gmail.com>
- <1a3eb533-b273-f903-ccaf-fdeaea9da51a@linux.com>
+        Wed, 11 Dec 2019 17:40:35 -0800 (PST)
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <87f90857-633f-2437-4a26-a3b3dd7ea7c7@roeck-us.net>
-Date:   Wed, 11 Dec 2019 17:39:41 -0800
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <7b43a504-160f-e793-99b2-bcb79d331b6a@nvidia.com>
+Message-ID: <8de7c018-32c7-f46e-4c43-ea3a70378a14@roeck-us.net>
+Date:   Wed, 11 Dec 2019 17:40:34 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1a3eb533-b273-f903-ccaf-fdeaea9da51a@linux.com>
+In-Reply-To: <7b43a504-160f-e793-99b2-bcb79d331b6a@nvidia.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/11/19 3:46 PM, Denis Efremov wrote:
-> Hi,
+On 12/11/19 1:36 PM, Jon Hunter wrote:
 > 
-> Thanks for the fix.
-> I tested the compilation with these patches.
-> You can add my:
-> Tested-by: Denis Efremov <efremov@linux.com>
+> On 11/12/2019 15:02, Greg Kroah-Hartman wrote:
+>> This is the start of the stable review cycle for the 4.19.89 release.
+>> There are 243 patches in this series, all will be posted as a response
+>> to this one.  If anyone has any issues with these being applied, please
+>> let me know.
+>>
+>> Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+>> Anything received after that time might be too late.
+>>
+>> The whole patch series can be found in one patch at:
+>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
+>> or in the git tree and branch at:
+>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+>> and the diffstat can be found below.
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
+>> -------------
+>> Pseudo-Shortlog of commits:
 > 
-> Look like this error could be fixed the same way:
-> In file included from drivers/watchdog/ar7_wdt.c:29:
-> ./arch/mips/include/asm/mach-ar7/ar7.h: In function ‘ar7_is_titan’:
-> ./arch/mips/include/asm/mach-ar7/ar7.h:111:24: error: implicit declaration of function ‘KSEG1ADDR’; did you mean ‘CKSEG1ADDR’? [-Werror=implicit-function-declaration]
+> ...
+> 
+>> Linus Walleij <linus.walleij@linaro.org>
+>>      gpio: OF: Parse MMC-specific CD and WP properties
+> 
+> The above change is causing intermittent failures on Tegra30 eMMC.
+> Reverting this change on top of the 4.19.89-rc1 fixes the problem.
 > 
 
-This is yet another old-style watchdog driver which should be left alone
-unless it has a bug that needs to be fixed. Really, if anyone out there
-is still using this driver, converting it to use the watchdog core
-would make much more sense.
+Thanks for tracking that down. I see boot failures for arm:vexpress-a9
+when trying to boot from mmc.
 
+I dimly recall that this was a problem before. Ah yes ... commit 89a5e15bcba8
+("gpio/mmc/of: Respect polarity in the device tree") fixes the above commit.
+Can you give it a try ?
+
+[ One may wonder though why this was back-ported in the first place. ]
+
+Thanks,
 Guenter
-
-
