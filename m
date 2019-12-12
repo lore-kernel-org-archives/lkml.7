@@ -2,150 +2,163 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C86C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1F4C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7DD2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E648D214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 14:16:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aIqcQsQX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="syayC1Rv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbfLLONw (ORCPT
+        id S1729650AbfLLOQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 09:13:52 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44393 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729650AbfLLONv (ORCPT
+        Thu, 12 Dec 2019 09:16:39 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43143 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729578AbfLLOQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 09:13:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576160031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+ZExjJXZmAxrisVlHnSSzmAF44okPSODnrWMGgB8ZBE=;
-        b=aIqcQsQXNrc8tYiriXSHQ1CbdhuKI8HlTnqvaMlqbOIjrBauLTjC+ySlulhogYTZ6KsOFU
-        pgThq5RA7DydALkyWOVHc3YETtY/Yxzvzc3Oa6wcl9Y+mozyQ3Thk2wR4txvwLS/GtfA7b
-        seZVWJXXOTiTrKj0UHepLmNxgeB9njU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-wuAdAh3jMCytffIMVkp2zg-1; Thu, 12 Dec 2019 09:13:50 -0500
-X-MC-Unique: wuAdAh3jMCytffIMVkp2zg-1
-Received: by mail-wr1-f72.google.com with SMTP id f17so1075432wrt.19
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 06:13:49 -0800 (PST)
+        Thu, 12 Dec 2019 09:16:38 -0500
+Received: by mail-qk1-f193.google.com with SMTP id t129so1683591qke.10;
+        Thu, 12 Dec 2019 06:16:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6GBGCKakEwAi+SxuWUfOkadj0n7loMWnfnQvA8ShRvQ=;
+        b=syayC1RvNDxvD18+kTX/JNogom/aWz14yGuOHeDLj5KjomPtSd37PoGodtbiCvOpdE
+         vGIaVlQeTXfMsf9yVKonxDTBX2DP2xlnGPfieK+nH8CDudRSroy1R7g3EVhDc/DfhJ24
+         FzrwYjcvm7+7WFEo6oRj4dM8wmPiCC4wedPnKXsxCGCk7S4dIWZF0fodt1DxRPkW9T9l
+         CZc/iztXwUpiJe86KApaizcy2cEnJa8T7CFnVOiAfJBtiTZXw8Iu5hXIB/fNwqN+qQEy
+         k+VIRKMpPtu/KpcQrMOb3nzGuE9cgLSMypnGsqstWYmxBlvVj99j8AVObaopHS+/5ajL
+         vQrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+ZExjJXZmAxrisVlHnSSzmAF44okPSODnrWMGgB8ZBE=;
-        b=NC2x+Uv8HzfG/IB/utCtNMwHdQIh8OKQ6Jgc+GS5n/4p0reZS39VbwxWU30TLWKsvD
-         O9XC55f2y5r1/4G2Bu4xxkIPnGerWNgT09UgBzN+UkXhEIZj0YEDkVVSyV3zRfjKgFd/
-         JXGzrDd8VERaSli+pEWl77HGM7prNbCjCMslH63lImoiiQcNLfL7N9nN38wNpF5GO5Fs
-         YGmnlYjAaDtXy+ljpiHD9nOgs1XWr0b20JcSFTtQGiedMlNi0KvZH16Xu2iNCEHlrwC/
-         qjj0ljNLEU2Qy3khKLiNU9lgs0fMhnRx8yahc5UlUhUyO/fP7Z7PdnBBaN6kxqb5Ruf2
-         zZtQ==
-X-Gm-Message-State: APjAAAWBGtggG7T62uGZ9PDQkD50U+J1zucpkikEyogz8wx/qVllvbok
-        OJ5TVt0t7Mq5lnP3SHQw4msYckiLGT60CU+W9EzZtlNS7dnYLQuNR9qYH4Er5Bsl/Q3jcOrHR5C
-        Usr7UP3tiJjwe7h2XbJJqtXAj
-X-Received: by 2002:a1c:1d16:: with SMTP id d22mr7146061wmd.158.1576160028582;
-        Thu, 12 Dec 2019 06:13:48 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzXF4yU0mb+JGHuD4jVpmfrMhrWl7mkfC0/B+dcZzKjBOfKW3ZFj8XtTi3XukYIj/A/1colAQ==
-X-Received: by 2002:a1c:1d16:: with SMTP id d22mr7146033wmd.158.1576160028358;
-        Thu, 12 Dec 2019 06:13:48 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9? ([2001:b07:6468:f312:e9bb:92e9:fcc3:7ba9])
-        by smtp.gmail.com with ESMTPSA id v3sm6151298wml.47.2019.12.12.06.13.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 06:13:47 -0800 (PST)
-Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
- VMX_FEATURES_*
-To:     Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
- <20191128014016.4389-12-sean.j.christopherson@intel.com>
- <20191212122646.GE4991@zn.tnic>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
-Date:   Thu, 12 Dec 2019 15:13:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6GBGCKakEwAi+SxuWUfOkadj0n7loMWnfnQvA8ShRvQ=;
+        b=FcD0waKJ0qi6DOPilTKmIu+/tqxHjYML2lY91lfg9L85xQxxBNJl2P/NS77UKlQ+4K
+         5aGxI8GhYw6QOiNg0iFLVg7j6j2yz6ZsYVAlY49gRnmQTjlI2l+T9Txz2zPMbWoZbmt2
+         GrX06NV/PED0j9b8kG2tTAup2UhVfpybhrOOrPcc3Mw27xhbOyHLSyci5oslL3HQL39U
+         IRAiBlA/v50sTC5jvXcwd7EuWTtRXQ7o4g0U9699OkGYcUH1PPhupoIs/XSzi3JF711/
+         r+IY9bx/akLy+es4ePxinZI5Tll7P2TcZoYobdl/nsbfpbF4MB1w4DraL43GPYzz8AuA
+         aejQ==
+X-Gm-Message-State: APjAAAW0l6bOAVpqBEi7rzT0dJxkVKxzKYmr0lfkuJpHDS/0BM3vHPy3
+        KFmorYS0qxuNeNETQmIV/xpPRQRkDfbqxrWBgSg=
+X-Google-Smtp-Source: APXvYqy3LZbmIJZqWEtZQRAxI8xuryqKsLm5wgMvxsNC8rWduFKgN8bZg4xqtDDT3Ra7L0z4cOoXyw9CsE4XvMKt3OQ=
+X-Received: by 2002:a37:a642:: with SMTP id p63mr8470433qke.85.1576160197345;
+ Thu, 12 Dec 2019 06:16:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191212122646.GE4991@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <58ce5534-64bd-4b4b-bd60-ed4e0c71b20f@gmail.com>
+ <166f0016-7061-be5c-660d-0499f74e8697@arm.com> <20191212005254.GE24359@e119886-lin.cambridge.arm.com>
+In-Reply-To: <20191212005254.GE24359@e119886-lin.cambridge.arm.com>
+From:   Enric Balletbo Serra <eballetbo@gmail.com>
+Date:   Thu, 12 Dec 2019 15:16:25 +0100
+Message-ID: <CAFqH_50pJVQT3uqtpVgqn4ijfdPMzHoE1ns_KARH+_cKe+3NRg@mail.gmail.com>
+Subject: Re: [REGRESSION] PCI v5.5-rc1 breaks google kevin
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Stefan_M=C3=A4tje?= <stefan.maetje@esd.eu>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 13:26, Borislav Petkov wrote:
-> 
-> vmx flags       : virtual_nmis preemption_timer invvpid ept_x_only ept_ad ept_1gb flexpriority tsc_offsetting virtual_tpr mtf virt_apic_accesses ept vpid unrestricted_guest ple shadow_vmcs pml mode_based_ept_exec
-> 
-> virtual_nmis		-> vnmis
+Hi Vicente,
 
-Even vnmi
+Missatge de Andrew Murray <andrew.murray@arm.com> del dia dj., 12 de
+des. 2019 a les 1:53:
+>
+> On Thu, Dec 12, 2019 at 12:12:56AM +0000, Robin Murphy wrote:
+> > Hi Vicente,
+> >
+> > On 2019-12-11 11:38 pm, Vicente Bergas wrote:
+> > > Hi,
+> > > since v5.5-rc1 the google kevin chromebook does not boot.
+> > > Git bisect reports 5e0c21c75e8c PCI/ASPM: Remove pcie_aspm_enabled()
+> > > unnecessary locking
+> > > as the first bad commit.
+> > >
+> > > In order to revert it from v5.5-rc1 i had to also revert some dependencies:
+> > > 5e0c21c75e8c08375a69710527e4a921b897cb7e
+> > > aff5d0552da4055da3faa27ee4252e48bb1f5821
+> > > 35efea32b26f9aacc99bf07e0d2cdfba2028b099
+> > > 687aaf386aeb551130f31705ce40d1341047a936
+> > > 72ea91afbfb08619696ccde610ee4d0d29cf4a1d
+> > > 87e90283c94c76ee11d379ab5a0973382bbd0baf
+> > > After reverting all of this, still no luck.
+> > > So, either the results of git bisect are not to be trusted, or
+> > > there are more bad commits.
+> > >
+> > > By "does not boot" i mean that the display fails to start and
+> > > the display is the only output device, so debugging is quite difficult.
+> >
 
-> preemption_timer	-> preempt_tmr
+Another issue that is affecting current mainline for kevin is fixed
+with [1]. As usual, I have a tracking branch for 5.5 for different
+Chromebooks with some not yet merged patches that makes things work
+while are not fixed [2]. For kevin only the mentioned ASoC patch [1]
+and the pcie fix [3] should be needed. Other than that display is
+working for me on Kevin.
 
-I would prefer the full one here.
+Cheers,
+ Enric
 
-> flexpriority		-> flexprio
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?h=for-5.5&id=4bf2e385aa59c2fae5f880aa25cfd2b470109093
+[2] https://gitlab.collabora.com/eballetbo/linux/commits/topic/chromeos/somewhat-stable-5.5
+[3]  https://lkml.org/lkml/2019/12/11/199
 
-Full name?
-
-> tsc_offsetting		-> tsc_ofs
-
-tsc_offset?
-
-> virtual_tpr		-> vtpr
-
-Do we need this?  It's usually included together with flexpriority.
-
-> virt_apic_accesses	-> vapic
-
-apicv
-
-> unrestricted_guest	-> unres_guest
-
-Full? Or just unrestricted
-
-In general I would stick to the same names as kvm_intel module
-parameters (sans "enable_" if applicable) and not even bother publishing
-the others.  Some features are either not used by KVM or available on
-all VMX processors.
-
-Paolo
-
-> and so on. Those are just my examples - I betcha the SDM is more
-> creative here with abbreviations. But you guys are going to grep for
-> them. If it were me, I'd save on typing. :-)
-
+> > Assuming it's a manifestation of the same PCI breakage that Enric and
+> > Lorenzo figured out, there's a proposed fix here:
+> > https://lkml.org/lkml/2019/12/11/199
+>
+> It's likely that any PCI driver that uses PCI IO with that controller will
+> suffer the same fate.
+>
+> Vicente - can you try the patch that has been proposed and verify it fixes
+> the issue for you?
+>
+> Thanks,
+>
+> Andrew Murray
+>
+> >
+> > Robin.
+> >
+> > > v5.5-rc1 as is (reverting no commits at all) works fine when disabling PCI:
+> > > # CONFIG_PCI is not set
+> > >
+> > > Regards,
+> > >   Vicente.
+> > >
+> > >
+> > > _______________________________________________
+> > > Linux-rockchip mailing list
+> > > Linux-rockchip@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
