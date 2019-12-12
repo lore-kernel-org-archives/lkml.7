@@ -2,141 +2,210 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7981EC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FF6C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB342173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576180903;
-	bh=IfLvnnJKRvyI93u9CW8kz1PZkYj6AIw5gIzN3vvMkTM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dihFppebUfEkoDFNISRPUpZaoil6yXmuqSM/BNZyBtycALj9h0VI0DF2Zn7yYTPL+
-	 ktNDcuV7jbXFspPIdYB56gTp9S/Qogt/Y5kL1VsqGM7wo0SOn8cvgOliYSXeWINy5V
-	 49eOiwk1efcRiniK93xdsA9ynwVq+FdZkx2Prr2g=
+	by mail.kernel.org (Postfix) with ESMTP id 44D582073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:02:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IaavmPRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfLLUBm (ORCPT
+        id S1730779AbfLLUCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:01:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLLUBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:01:41 -0500
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931B82173E
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 20:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576180900;
-        bh=IfLvnnJKRvyI93u9CW8kz1PZkYj6AIw5gIzN3vvMkTM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xwbKOE1nWQtY3afZU5JvRT9J9N9WaSnPhEuu7v8c/NjN62r/nSo6CjotAFT8dUA4L
-         Uoy9cHFN0/AycUtv4Fz7ESc9pS1MBYwQA9frJgL8sMUrkArJJW+TiYBZPI/0cyUVTT
-         dl7Am9I/04jqtl3e38Jr9VWVEPEZxfwRCpcMaACs=
-Received: by mail-wm1-f41.google.com with SMTP id a5so3745739wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:01:40 -0800 (PST)
-X-Gm-Message-State: APjAAAWLcFGGKWRPk2ClK1Cunh8gmK3qxRmaKRlst38DtHCgh9ruho5G
-        xmkMsiGDzISnUtra4s/JaRYjxHg3NT2d4C+VvR5QFA==
-X-Google-Smtp-Source: APXvYqyMBb6YoHl1pO6RZfHcWPfBbg8P61zxM3fQyQXFPkv+dnM6X8BqMRpNWeXsObtT9mdtUmm0SD8cBue2dH9KxPs=
-X-Received: by 2002:a1c:2083:: with SMTP id g125mr8677354wmg.89.1576180899002;
- Thu, 12 Dec 2019 12:01:39 -0800 (PST)
+        Thu, 12 Dec 2019 15:02:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27770 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730707AbfLLUCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 15:02:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576180920;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hb8TmGk+a9HjoYdlVzo58zXnc/ROW/PTOkZPr16nz2Q=;
+        b=IaavmPRt9zNg8iW4gvdsBXazkxV31bY8w4kWt4F8RAwDzahv/MaMYNybAzUihp+S709/7c
+        CjKnS3e3gjvK8D0shsT7V4wS+DuUcR7JLja4AQD7koqgR6S8wG4fhPU0+unFyCs9L/9idh
+        vLl8HfASEWU6rZ42Hhuml+T1x+JHR2s=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-Hfa1qo57NrWC3nFJUYHJHQ-1; Thu, 12 Dec 2019 15:01:59 -0500
+X-MC-Unique: Hfa1qo57NrWC3nFJUYHJHQ-1
+Received: by mail-qt1-f200.google.com with SMTP id v25so203432qtq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:01:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hb8TmGk+a9HjoYdlVzo58zXnc/ROW/PTOkZPr16nz2Q=;
+        b=AK+MV39VRbfEo+RlNsqwe1dLzi4R1dHcWVFSSMG75JygXLVysILXAZBYK9sHJY4ffA
+         DURZP1+7l6Vno41LJ4i3tvNiPeBBt2oqumeFjl5MV/fEPRtXz0h6HI790VlyRgIPQO4i
+         I0ylin4pVDrJ2ThD4LbgaEK70Ewmndb3HIUcd6+D4kpEoGMWQp8WpqSOg7eVHVyi5ItD
+         HHbXJ11as5XrSAUH1k7iHVczZWbE4qKCnKkENLYC0ckunfIOBIfKB9qzmRQC8VZ1n4/z
+         oB99Nl85nEPiyCJUhFfAn4thhGUabLNRPCKuHHz3LRgG8UFN6NaWOTwdo6ijWftSfmFM
+         ykpw==
+X-Gm-Message-State: APjAAAWG1O5hPobNYo0FMA/auPAcvFbf+gikGoPIETYjBR7xsqQdZ5BB
+        izAQsWkTDQw0ydlp4RbtQZd4Ef8K40qHVlyBqoSiYkOOEfbIPgdsOXVJcWWM7hYvmE2V8Myp5Og
+        sZlokMelzVWKtuA2B37yQZP0O
+X-Received: by 2002:a37:65c8:: with SMTP id z191mr10018893qkb.176.1576180918868;
+        Thu, 12 Dec 2019 12:01:58 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwAvAkoCbeKTQnT+w3TgLyOTd0Fj7dn/2e/2ltCsdsrrquGwZiDl6tub5yxZG3D4TI1/gPcZg==
+X-Received: by 2002:a37:65c8:: with SMTP id z191mr10018819qkb.176.1576180918172;
+        Thu, 12 Dec 2019 12:01:58 -0800 (PST)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id f19sm2075294qkk.69.2019.12.12.12.01.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 12:01:57 -0800 (PST)
+Subject: Re: [PATCH] vfs: Don't reject unknown parameters
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191212145042.12694-1-labbott@redhat.com>
+ <CAOi1vP9E2yLeFptg7o99usEi=x3kf=NnHYdURXPhX4vTXKCTCQ@mail.gmail.com>
+ <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com>
+ <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <cf4c9634-1503-d182-cb12-810fb969bc96@redhat.com>
+Date:   Thu, 12 Dec 2019 15:01:56 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191121060444.GA55272@gmail.com> <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121171214.GD12042@gmail.com> <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
- <20191122105141.GY4114@hirez.programming.kicks-ass.net> <20191122152715.GA1909@hirez.programming.kicks-ass.net>
- <3908561D78D1C84285E8C5FCA982C28F7F4DD20D@ORSMSX115.amr.corp.intel.com>
- <20191122202345.GC2844@hirez.programming.kicks-ass.net> <20191122204204.GA192370@romley-ivt3.sc.intel.com>
- <CALCETrUBomb2_2xyX-tZUD84smtDWH6e16zSN1qupkv-DWu5kw@mail.gmail.com>
- <20191212085755.GR2827@hirez.programming.kicks-ass.net> <3908561D78D1C84285E8C5FCA982C28F7F5011B2@ORSMSX115.amr.corp.intel.com>
- <3908561D78D1C84285E8C5FCA982C28F7F5013AA@ORSMSX115.amr.corp.intel.com>
-In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F5013AA@ORSMSX115.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 12 Dec 2019 12:01:27 -0800
-X-Gmail-Original-Message-ID: <CALCETrX6Riy8vHkWcYOt-Vt0xD2JGgua4o-8F6KatUsXH9iEUQ@mail.gmail.com>
-Message-ID: <CALCETrX6Riy8vHkWcYOt-Vt0xD2JGgua4o-8F6KatUsXH9iEUQ@mail.gmail.com>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 11:46 AM Luck, Tony <tony.luck@intel.com> wrote:
->
-> >> If anything we could switch the entire bitmap interface to unsigned int,
-> >> but I'm not sure that'd actually help much.
-> >
-> > As we've been looking for potential split lock issues in kernel code, most of
-> > the ones we found relate to callers who have <=32 bits and thus stick:
-> >
-> >       u32 flags;
-> >
-> > in their structure.  So it would solve those places, and fix any future code
-> > where someone does the same thing.
->
-> If different architectures can do better with 8-bit/16-bit/32-bit/64-bit instructions
-> to manipulate bitmaps, then perhaps this is justification to make all the
-> functions operate on "bitmap_t" and have each architecture provide the
-> typedef for their favorite width.
->
+On 12/12/19 12:56 PM, Linus Torvalds wrote:
+> On Thu, Dec 12, 2019 at 9:47 AM Laura Abbott <labbott@redhat.com> wrote:
+>>
+>> Good point, I think I missed how that code flow worked for printing
+>> out the error. I debated putting in a dummy parse_param but I
+>> figured that squashfs wouldn't be the only fs that didn't take
+>> arguments (it's in the minority but certainly not the only one).
+> 
+> I think printing out the error part is actually fine - it would act as
+> a warning for invalid parameters like this.
+> 
+> So I think a dummy parse_param that prints out a warning is likely the
+> right thing to do.
+> 
+> Something like the attached, perhaps? Totally untested.
+> 
+>                 Linus
+> 
 
-Hmm.  IMO there are really two different types of uses of the API.
+That doesn't quite work. We can't just unconditionally return success
+because we rely on -ENOPARAM being returned to parse the source option
+back in vfs_parse_fs_param. I think ramfs may also be broken for the
+same reason right now as well from reading the code. We also rely on the
+fallback source parsing for file systems that do have ->parse_param.
 
-1 There's a field somewhere and I want to atomically set a bit.  Something like:
+We could do all this in squashfs but given other file systems that don't
+have args will also hit this we could just make it generic. The following
+works for me (under commenting and poor name choices notwithstanding)
 
-struct whatever {
-  ...
-  whatever_t field;
- ...
-};
+diff --git a/fs/fs_parser.c b/fs/fs_parser.c
+index d1930adce68d..5e45e36d51e7 100644
+--- a/fs/fs_parser.c
++++ b/fs/fs_parser.c
+@@ -302,6 +302,50 @@ int fs_lookup_param(struct fs_context *fc,
+  }
+  EXPORT_SYMBOL(fs_lookup_param);
+  
++enum {
++        NO_OPT_SOURCE,
++};
++
++static const struct fs_parameter_spec no_opt_fs_param_specs[] = {
++        fsparam_string  ("source",              NO_OPT_SOURCE),
++        {}
++};
++
++const struct fs_parameter_description no_opt_fs_parameters = {
++        .name           = "no_opt_fs",
++        .specs          = no_opt_fs_param_specs,
++};
++
++int fs_no_opt_parse_param(struct fs_context *fc, struct fs_parameter *param)
++{
++        struct fs_parse_result result;
++        int opt;
++
++        opt = fs_parse(fc, &no_opt_fs_parameters, param, &result);
++        if (opt < 0) {
++                /* Just log an error for backwards compatibility */
++                errorf(fc, "%s: Unknown parameter '%s'",
++                      fc->fs_type->name, param->key);
++                return 0;
++        }
++
++        switch (opt) {
++        case NO_OPT_SOURCE:
++                if (param->type != fs_value_is_string)
++                        return invalf(fc, "%s: Non-string source",
++					fc->fs_type->name);
++                if (fc->source)
++                        return invalf(fc, "%s: Multiple sources specified",
++					fc->fs_type->name);
++                fc->source = param->string;
++                param->string = NULL;
++                break;
++        }
++
++        return 0;
++}
++EXPORT_SYMBOL(fs_no_opt_parse_param);
++
+  #ifdef CONFIG_VALIDATE_FS_PARSER
+  /**
+   * validate_constant_table - Validate a constant table
+diff --git a/fs/squashfs/super.c b/fs/squashfs/super.c
+index 0cc4ceec0562..07a9b38f7bf5 100644
+--- a/fs/squashfs/super.c
++++ b/fs/squashfs/super.c
+@@ -18,6 +18,7 @@
+  
+  #include <linux/fs.h>
+  #include <linux/fs_context.h>
++#include <linux/fs_parser.h>
+  #include <linux/vfs.h>
+  #include <linux/slab.h>
+  #include <linux/mutex.h>
+@@ -358,6 +359,7 @@ static int squashfs_reconfigure(struct fs_context *fc)
+  static const struct fs_context_operations squashfs_context_ops = {
+  	.get_tree	= squashfs_get_tree,
+  	.reconfigure	= squashfs_reconfigure,
++	.parse_param	= fs_no_opt_parse_param,
+  };
+  
+  static int squashfs_init_fs_context(struct fs_context *fc)
+diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
+index dee140db6240..f67b2afcc491 100644
+--- a/include/linux/fs_parser.h
++++ b/include/linux/fs_parser.h
+@@ -106,6 +106,8 @@ static inline bool fs_validate_description(const struct fs_parameter_description
+  { return true; }
+  #endif
+  
++extern int fs_no_opt_parse_param(struct fs_context *fc, struct fs_parameter *param);
++
+  /*
+   * Parameter type, name, index and flags element constructors.  Use as:
+   *
 
-struct whatever *w;
-set_bit(3, &w->field);
-
-If whatever_t is architecture-dependent, then it's really awkward to
-use more than 32 bits, since some architectures won't have more than
-32-bits.
-
-
-2. DECLARE_BITMAP(), etc.  That is, someone wants a biggish bitmap
-with a certain number of bits.
-
-Here the type doesn't really matter.
-
-On an architecture with genuinely atomic bit operations (i.e. no
-hashed spinlocks involved), the width really shouldn't matter.
-set_bit() should promise to be atomic on that bit, to be a full
-barrier, and to not modify adjacent bits.  I don't see why the width
-would matter for most use cases.  If we're concerned, the
-implementation could actually use the largest atomic operation and
-just suitably align it.  IOW, on x86, LOCK BTSQ *where we manually
-align the pointer to 8 bytes and adjust the bit number accordingly*
-should cover every possible case even of PeterZ's concerns are
-correct.
-
-For the "I have a field in a struct and I just want an atomic RMW that
-changes one bit*, an API that matches the rest of the atomic API seems
-nice: just act on atomic_t and atomic64_t.
-
-The current "unsigned long" thing basically can't be used on a 64-bit
-big-endian architecture with a 32-bit field without gross hackery.
-And sometimes we actually want a 32-bit field.
-
-Or am I missing some annoying subtlely here?
