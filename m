@@ -2,141 +2,135 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22351C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C935FC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC60B206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E85206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 10:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfLLKWh (ORCPT
+        id S1728624AbfLLKXb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 05:22:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:41272 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbfLLKWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 05:22:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64FED328;
-        Thu, 12 Dec 2019 02:22:35 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF0D23F6CF;
-        Thu, 12 Dec 2019 02:22:33 -0800 (PST)
-Subject: Re: [PATCH v2 9/9] arm64: dts: rockchip: RockPro64: hook up bluetooth
- at uart0
-To:     Soeren Moch <smoch@web.de>, Kalle Valo <kvalo@codeaurora.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     brcm80211-dev-list.pdl@broadcom.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, brcm80211-dev-list@cypress.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191211235253.2539-1-smoch@web.de>
- <20191211235253.2539-10-smoch@web.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a0ad4723-db85-0eda-efb5-f0c9a2a6aec3@arm.com>
-Date:   Thu, 12 Dec 2019 10:22:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 12 Dec 2019 05:23:31 -0500
+Received: from mail-oln040092253056.outbound.protection.outlook.com ([40.92.253.56]:6191
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728339AbfLLKXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 05:23:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RQX9L+MQcArEmTu+v+Z4CHMtdaEpT0EHUFyQd+rtFo+NmGQAFeqESJbNz05DnNgWf6pOvii0qw/5E7HMmK91VuvnRTMqReE3MulGI+yAK0ogV5MzOVxtvRzLHUsReR2Ojp7KWG4fhh2ZUES0tSVDA8+LZprsNiSBKFKhhCX6maAYKTQqE/I7e3QIllSUjyslnhxQePtIM/zYZwdmumcA1b0YztO2NYy2u3vv0CvT1Jd2JfYADpB/q/0LD/e2ByC52rKNAZHrJoaHZ/l5kULfZAfsVUVZ6rO63Or9adcXEvbOCqCybl/hJqAhr9TorvG/EE3ZWYxWEAZLtK1qGoxOLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2suxBRlx4DortOsNvdQiwdZ9XeaEm9SX5PpELvBdc+s=;
+ b=lQDrxaE2C0KM6bBaWEgky28z766sT+RQ/IJCqo/yasCi+u6+pOk7EZJ9os0/OkAHmHuMGQ5u2nVFoq5MmUVPHrYT+DBOmoTF8a/74Dsb3sAdngO76YDSJO9I1eYpBKIBCwGMojk5RsG/424mLyVigPW04qU2dzZUfeo+neVjsPmhMxSQdbHtV7+C1H2Uz1Me/4RNyJt+ObFEHAlIifHz1ClKWkL2vxQxnbkeIPquX4j05oxpE1q7hmtAgbCd0sdzIGwdfBNlUrB/zCmXt5+S0f2Vw6rFVcI1novCUyeumgHi3UFLHiSP/QIVJjFaIm3FHjUEl3HLNdfxUFseExLbww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT050.eop-APC01.prod.protection.outlook.com
+ (10.152.250.53) by SG2APC01HT180.eop-APC01.prod.protection.outlook.com
+ (10.152.251.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2495.25; Thu, 12 Dec
+ 2019 10:23:26 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.52) by
+ SG2APC01FT050.mail.protection.outlook.com (10.152.251.238) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2538.15 via Frontend Transport; Thu, 12 Dec 2019 10:23:26 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::20ad:6646:5bcd:63c9%11]) with mapi id 15.20.2538.016; Thu, 12 Dec
+ 2019 10:23:26 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Thread-Topic: [PATCH v12 0/4] PCI: Patch series to improve Thunderbolt
+ enumeration
+Thread-Index: AQHVrpB+5sK/XGeQw0yttw28ATWBvaez5zkAgAJn/IA=
+Date:   Thu, 12 Dec 2019 10:23:26 +0000
+Message-ID: <PSXP216MB0438B40D6EFFF5F9B5952F6580550@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PSXP216MB043892C04178AB333F7AF08C80580@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20191210213836.GA149297@google.com>
+In-Reply-To: <20191210213836.GA149297@google.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SYBPR01CA0100.ausprd01.prod.outlook.com
+ (2603:10c6:10:1::16) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:08F74278F8568228DB0DBBC190698F687120CB3AB3BB5E174018E19F267EE2CD;UpperCasedChecksum:F4E01E1F6AAF9B48191FDBA8D8A0D702537B3C556F6E680C35DFB83F6261F3E5;SizeAsReceived:7693;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [LtKVBW5ZIO1RG3O+fC9OjTqW4dAtljzfF3k5Phq8hQWWdwWq4711EspiPt5lKaIVNev+t/YTcEY=]
+x-microsoft-original-message-id: <20191212102317.GA1503@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 345ef186-b1c1-4286-8b80-08d77eed5276
+x-ms-traffictypediagnostic: SG2APC01HT180:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6JqG5le3xz48xCiNrYSWEcj7I8/icb4hySvLnLXeE7pRZlqbFruzM0Lgjosw2VNPawcNzJJg+mgX99BKm9mhzn/YNnpq0gqBPt/F7OgcyTC5fBEWc8iTrEA6RJGoXyhqJJ760gE355YBRWfpgrpOJdDiFTLVcBwFs9htijlCMTdkbusOqkJOkpJxnM0glW6h
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <ABC6B899D7F08A4E8A8F1D0B29364526@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20191211235253.2539-10-smoch@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 345ef186-b1c1-4286-8b80-08d77eed5276
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 10:23:26.1709
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Soeren,
+On Tue, Dec 10, 2019 at 03:38:36PM -0600, Bjorn Helgaas wrote:
+> On Mon, Dec 09, 2019 at 12:59:29PM +0000, Nicholas Johnson wrote:
+> > Hi all,
+> > 
+> > Since last time:
+> > 	Reverse Christmas tree for a couple of variables
+> > 
+> > 	Changed while to whilst (sounds more formal, and so that 
+> > 	grepping for "while" only brings up code)
+> > 
+> > 	Made sure they still apply to latest Linux v5.5-rc1
+> > 
+> > Kind regards,
+> > Nicholas
+> > 
+> > Nicholas Johnson (4):
+> >   PCI: Consider alignment of hot-added bridges when distributing
+> >     available resources
+> >   PCI: In extend_bridge_window() change available to new_size
+> >   PCI: Change extend_bridge_window() to set resource size directly
+> >   PCI: Allow extend_bridge_window() to shrink resource if necessary
+> > 
+> >  drivers/pci/setup-bus.c | 182 +++++++++++++++++++---------------------
+> >  1 file changed, 88 insertions(+), 94 deletions(-)
+> 
+> Applied to pci/resource for v5.6, thanks!
+Thank you all for your time, support and patience with me. I have 
+learned a lot in the past year.
 
-On 11/12/2019 11:52 pm, Soeren Moch wrote:
-> With enabled wifi support (required for firmware loading) for the
-> Ampak AP6359SA based wifi/bt combo module we now also can enable
-> the bluetooth part.
-> 
-> Suggested-by: Heiko Stuebner <heiko@sntech.de>
-> Signed-off-by: Soeren Moch <smoch@web.de>
-> ---
-> changes in v2:
-> - new patch
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: brcm80211-dev-list.pdl@broadcom.com
-> Cc: brcm80211-dev-list@cypress.com
-> Cc: netdev@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-rockchip@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   .../boot/dts/rockchip/rk3399-rockpro64.dts    | 29 ++++++++++++++++++-
->   1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> index 9fa92790d6e0..94cc462e234d 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> @@ -561,6 +561,20 @@
->   };
-> 
->   &pinctrl {
-> +	bt {
-> +		bt_enable_h: bt-enable-h {
-> +			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		bt_host_wake_l: bt-host-wake-l {
-> +			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
-> +		};
-> +
-> +		bt_wake_l: bt-wake-l {
-> +			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
->   	buttons {
->   		pwrbtn: pwrbtn {
->   			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-> @@ -729,8 +743,21 @@
-> 
->   &uart0 {
->   	pinctrl-names = "default";
-> -	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-> +	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
->   	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		clocks = <&rk808 1>;
-> +		clock-names = "extclk";
+I will obviously stick around to address any potential concerns with the 
+patches, but it also seems like kernel development is what I want to do 
+as a career. Hopefully I can take this beyond a hobby despite my 
+physical location. Perth, Western Australia is not big on this. Perhaps 
+there are companies open to telecommuting employees. In any case, you 
+will continue to see me around.
 
-Is this right? Comparing the binding and the naming on the schematics, 
-it seems more likely that this might be the LPO clock rather than the 
-TXCO clock.
-
-Robin.
-
-> +		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-> +		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-> +		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
-> +		vbat-supply = <&vcc3v3_sys>;
-> +		vddio-supply = <&vcc_1v8>;
-> +	};
->   };
-> 
->   &uart2 {
-> --
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-> 
+Kind regards,
+Nicholas
