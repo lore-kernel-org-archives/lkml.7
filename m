@@ -2,94 +2,82 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1803C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0767BC2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7EFD214D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:45:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576143910;
-	bh=f9Ak9YkcdsVwX35rit8MveYU4mESDVr/WrzqXYx+3tQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XSvg4TmcTxzNtB/ixZfFIH8QX4gRXU/d/3Jyo1bR/iCN2RFlDX0fY7ZC0h5wZbrXE
-	 71re8X4UFOPQ1ahUH0auDPQGJI+ZEh3U9mgUY64pAMrVdxOKzvxZziI6c36Pii6n+p
-	 SNBequbYRkdAQwkFezaSsd25oPzxddLcu5YIutg8=
+	by mail.kernel.org (Postfix) with ESMTP id CCACB214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfLLJpJ (ORCPT
+        id S1728535AbfLLJpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 04:45:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbfLLJpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:45:09 -0500
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72C322173E;
-        Thu, 12 Dec 2019 09:45:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576143908;
-        bh=f9Ak9YkcdsVwX35rit8MveYU4mESDVr/WrzqXYx+3tQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dYazKHmGOA8OjL3TyHejoYsQ3UWGGNpXDFa4p1IrdQe4HAkpH8M36qmu1ixuKvTZB
-         OQqg/MRrPgdVWPfBjEQB9OtMs9fjbwSnM38fzAYWosw3qX9OK/E3DOU28DVVFLqLvI
-         WsB6VK91RflvrUMmAM5bnp2+u95IbMUF70EGDVns=
-Received: by mail-lj1-f176.google.com with SMTP id s22so1518253ljs.7;
-        Thu, 12 Dec 2019 01:45:08 -0800 (PST)
-X-Gm-Message-State: APjAAAWo0fIPjHU0mob9wcKe8fGe5HUzbvvklO+6xLaS4sPCPIF3WZ00
-        wwFPoBXLWhGvsxUVFyu83TeZfe7hy55B6fersek=
-X-Google-Smtp-Source: APXvYqwQIBLDBM/LOFWdWY408vZlspPEQyRtjumJP4U2w2tpFn5JsyeZ2XVAe4ydAUifEraE6irZW5dAQ/EgUzp4CvA=
-X-Received: by 2002:a2e:9196:: with SMTP id f22mr5323830ljg.18.1576143906674;
- Thu, 12 Dec 2019 01:45:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20191212092726.41027-1-chenzhou10@huawei.com> <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
-In-Reply-To: <CAJKOXPexCjtPB03kKLzLK+4LdrM1_qNstMa4cJW19OpHsN59eg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 12 Dec 2019 10:44:54 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPfW4r92LF4RPiPAEjn++nCj-+EG9OUu8GOT-+9iztP1Ew@mail.gmail.com>
-Message-ID: <CAJKOXPfW4r92LF4RPiPAEjn++nCj-+EG9OUu8GOT-+9iztP1Ew@mail.gmail.com>
-Subject: Re: [PATCH -next v2] pinctrl: samsung: fix build error without CONFIG_OF_GPIO
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
-        linux-gpio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
+        Thu, 12 Dec 2019 04:45:42 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36187 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfLLJpl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:45:41 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1ifL2O-0005Pq-4u; Thu, 12 Dec 2019 10:45:36 +0100
+Message-ID: <7e13626ae46b6241549e33c983695bed316e9a6f.camel@pengutronix.de>
+Subject: Re: linux-next: build failure after merge of the imx-mxs tree
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Shawn Guo <shawnguo@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 12 Dec 2019 10:45:34 +0100
+In-Reply-To: <20191212013323.GZ15858@dragon>
+References: <20191212083556.1b98ece7@canb.auug.org.au>
+         <20191212013323.GZ15858@dragon>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Dec 2019 at 10:38, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, 12 Dec 2019 at 10:30, Chen Zhou <chenzhou10@huawei.com> wrote:
-> >
-> > If CONFIG_OF_GPIO is n, build fails:
-> >
-> > drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
-> > drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
-> >    gc->of_node = bank->of_node;
-> >
-> > Use #ifdef to guard this.
-> >
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> > ---
-> >  drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
-> >  1 file changed, 2 insertions(+)
->
-> I was thinking about adding OF_GPIO but I could not trigger such case
-> as you mention. How can I reproduce this?
+Hi Shawn,
 
-OK, I reproduced it with x86_64 + COMPILE_TEST + PINCTRL_S3C64XX. I'll
-fix it up with proper dependencies on OF and GPIOLIB. The driver
-should not have unnecessary ifdefs.
+On Do, 2019-12-12 at 09:33 +0800, Shawn Guo wrote:
+> Hi Stephen,
+> 
+> On Thu, Dec 12, 2019 at 08:35:56AM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the imx-mxs tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> 
+> Sorry for the breakage.
+> 
+[...]
+> > The warning was (probably) introduced by commit
+> > 
+> >   e79295edf1df ("ARM: dts: imx6: RDU2: link eDP bridge to panel")
+> 
+> I have just taken these two commits out.
 
-Thanks for the report!
+The commit message of this change should maybe have been clearer, but
+the warning is expected. The bootloader fixes the DT before passing it
+on to Linux by completing the other direction of link if eDP is
+enabled.
 
-Best regards,
-Krzysztof
+How do we want to handle this? If you totally dislike the warning I can
+get around it by not adding the link and adding some more complexity to
+the bootloader, but given the choice I would like to keep the
+incomplete link in the Linux DT and keep bootloader complexity down.
+
+Regards,
+Lucas
+
