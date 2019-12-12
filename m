@@ -2,111 +2,217 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98246C2D0C8
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63579C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C35522B48
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E89321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:51:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f5bMNPM5"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="NhQMUA4e";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jz+I4tz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfLLEut (ORCPT
+        id S1727959AbfLLEvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 23:50:49 -0500
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:32514 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726689AbfLLEus (ORCPT
+        Wed, 11 Dec 2019 23:51:08 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:57023 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbfLLEvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 23:50:48 -0500
-X-UUID: 0350d3d39d8d4823bb50c2421b97151f-20191212
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=61QzL2uAhif1inmfHk4F3GpOWbSMt53a76nKAzVwLMU=;
-        b=f5bMNPM5X3vpibe0RnOnQWIHHLjNcUhruZoyv2kTE7kQMw2sq6n8oCiqECQvYoXylolEXoxlHHdzYCtPjixo5Mk4wplOpBb8wMOEzckUSh89XQ0ukV3N+v41y+IA9vePsWjQrTSMqTJAM1tHOscJaSAx8PQJYXxGxJA+hQ4XHSw=;
-X-UUID: 0350d3d39d8d4823bb50c2421b97151f-20191212
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1765757622; Thu, 12 Dec 2019 12:49:59 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 12 Dec 2019 12:49:45 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 12 Dec 2019 12:49:53 +0800
-Message-ID: <1576126197.29693.3.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: Fix can't get component for external
- display plane.
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-CC:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR MEDIATEK" 
-        <dri-devel@lists.freedesktop.org>,
-        Yongqiang Niu <yongqiang.niu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sean Paul <seanpaul@chromium.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Thu, 12 Dec 2019 12:49:57 +0800
-In-Reply-To: <1575264270.16063.0.camel@mtksdaap41>
-References: <20191127100419.130300-1-pihsun@chromium.org>
-         <1575264270.16063.0.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: A33FA4A393275F96C1D67CACE7875D97147C4BC54960F0F3AB9A8D502DF8916C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 11 Dec 2019 23:51:07 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3E8E5223A2;
+        Wed, 11 Dec 2019 23:51:06 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 11 Dec 2019 23:51:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=ep04Dn5qmfs2mdZrsK/koUM1j+dGjwq
+        qU1VZH2ff2Bg=; b=NhQMUA4eJdN1LLv6TG4FBgd1f4z8zBRTwyzqXT0So1EDQIE
+        sWXuuyVpo9S9tTSIkd1zb17Qa0HAA/wj9iSg4kAnnuD5X9JHTU8Y5eK/nh3oRzvr
+        bHJlicK0lMBa0e+qQGyrXUul9obC4WMizmBaLMwnZeO7mf4qw3PmmF0MWU9Cbo6M
+        xw2iTzOM07DhZLn4yckRbdDgewhwUJF+CoNPHvg0io4FExcGPCoCNJ9wIoNWHk9j
+        rHkQyHUR0eN9tZR+0/1ljg/gFPm8EsTLgaPjq7JlDblJ21pLpD4L4Wg6W8HrFqTO
+        jmvZ2Pzm7zI1snTtWiJUYCtNkTvrmIb7r2FZDSg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ep04Dn
+        5qmfs2mdZrsK/koUM1j+dGjwqqU1VZH2ff2Bg=; b=jz+I4tz9Wi87/0G/8gRhYc
+        XHQiPj3L7xwNR3yRWqsLoribVEa8oOHVS4+n4VSwVZbRxbiel6F644QBG6pRbD4q
+        bqQBBfDFuhM9Zq9PB/2nKfDah52HY4Sv9okOkeI9QiuuiEX8VSi+NgwsMfvk2OTw
+        7Xr/fl8PuSoh76pQl2SobYBWaWnETpJ81PGdMOdPmvrKb9sGfd36+3F5mEOQmpfS
+        Z7d7n6/A2MIosHW2vwQ4xAQq0EVKsA2/skclelYwOZxK7P3U1Xfa1QABJtregqsD
+        8Cb7GVOLJyZvx0c0k0PKe9RL0z9New0Ns2Iobm6i8ffw0iNpzjVE2DIX3VJk+fbA
+        ==
+X-ME-Sender: <xms:OMfxXTJ_voGqbigVdF8n5SuBLo2hRpb8_CZ_-L3FAu-rjeWrQmY8cA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeliedgjeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:OMfxXWa1d2H2fo0KalFXZtAtuy5LPgOhmMm4w70aXsPA4JNyF_bL5Q>
+    <xmx:OMfxXX51WvkT_LD69OPWyqXr5N2f5NU61DMg8P_VMhrb3K9mNVGELA>
+    <xmx:OMfxXXJzLKE4c7eUavZA4yCcDEOnIbqFsUysXT47HJSE3pBQrifQdg>
+    <xmx:OsfxXU554NfgEQkg-4fSJH1Ybo_bc-NhMdbjfS1xQpJtib0U_kmHJA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 726AAE00A2; Wed, 11 Dec 2019 23:51:04 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-679-g1f7ccac-fmstable-20191210v1
+Mime-Version: 1.0
+Message-Id: <f597202e-0d5a-4b76-ba0a-a6f0a857b289@www.fastmail.com>
+In-Reply-To: <bffadb0a-aba7-d799-b2ef-a4adb3259c4b@linux.ibm.com>
+References: <1575566112-11658-1-git-send-email-eajames@linux.ibm.com>
+ <1575566112-11658-7-git-send-email-eajames@linux.ibm.com>
+ <de395d95-15f4-4df3-873d-ce89ae008ed3@www.fastmail.com>
+ <bffadb0a-aba7-d799-b2ef-a4adb3259c4b@linux.ibm.com>
+Date:   Thu, 12 Dec 2019 15:22:44 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Eddie James" <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, "Jason Cooper" <jason@lakedaemon.net>,
+        linux-aspeed@lists.ozlabs.org, "Marc Zyngier" <maz@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>, tglx@linutronix.de,
+        mark.rutland@arm.com, "Joel Stanley" <joel@jms.id.au>
+Subject: Re: [PATCH v2 06/12] drivers/soc: Add Aspeed XDMA Engine Driver
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFBpLUhzdW46DQoNCk9uIE1vbiwgMjAxOS0xMi0wMiBhdCAxMzoyNCArMDgwMCwgQ0sgSHUg
-d3JvdGU6DQo+IEhpLCBQaS1Ic3VuOg0KPiANCj4gDQo+IE9uIFdlZCwgMjAxOS0xMS0yNyBhdCAx
-ODowNCArMDgwMCwgUGktSHN1biBTaGloIHdyb3RlOg0KPiA+IEZyb206IFlvbmdxaWFuZyBOaXUg
-PHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KPiA+IA0KPiA+IFRoZSBvcmlnaW5hbCBsb2dp
-YyBpcyBvayBmb3IgcHJpbWFyeSBkaXNwbGF5LCBidXQgd2lsbCBub3QgZmluZCBvdXQNCj4gPiBj
-b21wb25lbnQgZm9yIGV4dGVybmFsIGRpc3BsYXkuDQo+ID4gDQo+ID4gRm9yIGV4YW1wbGUsIHBs
-YW5lLT5pbmRleCBpcyA2IGZvciBleHRlcm5hbCBkaXNwbGF5LCBidXQgdGhlcmUgYXJlIG9ubHkN
-Cj4gPiAyIGxheWVyIG5yIGluIGV4dGVybmFsIGRpc3BsYXksIGFuZCB0aGlzIGNvbmRpdGlvbiB3
-aWxsIG5ldmVyIGhhcHBlbjoNCj4gPiBpZiAocGxhbmUtPmluZGV4IDwgKGNvdW50ICsgbXRrX2Rk
-cF9jb21wX2xheWVyX25yKGNvbXApKSkNCj4gPiANCj4gPiBGaXggdGhpcyBieSB1c2luZyB0aGUg
-b2Zmc2V0IG9mIHRoZSBwbGFuZSB0byBtdGtfY3J0Yy0+cGxhbmVzIGFzIGluZGV4LA0KPiA+IGlu
-c3RlYWQgb2YgcGxhbmUtPmluZGV4Lg0KPiANCj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBt
-ZWRpYXRlay5jb20+DQo+IA0KDQpBcHBsaWVkIHRvIG1lZGlhdGVrLWRybS1maXhlcy01LjUgWzFd
-LCB0aGFua3MuDQoNClsxXQ0KaHR0cHM6Ly9naXRodWIuY29tL2NraHUtbWVkaWF0ZWsvbGludXgu
-Z2l0LXRhZ3MvY29tbWl0cy9tZWRpYXRlay1kcm0tZml4ZXMtNS41DQoNCg0KUmVnYXJkcywNCkNL
-DQoNCj4gUmVnYXJkcywNCj4gQ0sNCj4gDQo+ID4gDQo+ID4gRml4ZXM6IGQ2YjUzZjY4MzU2ZiAo
-ImRybS9tZWRpYXRlazogQWRkIGhlbHBlciB0byBnZXQgY29tcG9uZW50IGZvciBhIHBsYW5lIikN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVr
-LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaS1Ic3VuIFNoaWggPHBpaHN1bkBjaHJvbWl1bS5v
-cmc+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMu
-YyB8IDUgKysrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
-dGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
-DQo+ID4gaW5kZXggZjgwYThiYTc1OTc3Li5iMzRlN2Q3MDcwMmEgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gQEAgLTIxNSwxMSArMjE1LDEy
-IEBAIHN0cnVjdCBtdGtfZGRwX2NvbXAgKm10a19kcm1fZGRwX2NvbXBfZm9yX3BsYW5lKHN0cnVj
-dCBkcm1fY3J0YyAqY3J0YywNCj4gPiAgCXN0cnVjdCBtdGtfZHJtX2NydGMgKm10a19jcnRjID0g
-dG9fbXRrX2NydGMoY3J0Yyk7DQo+ID4gIAlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wOw0KPiA+
-ICAJaW50IGksIGNvdW50ID0gMDsNCj4gPiArCXVuc2lnbmVkIGludCBsb2NhbF9pbmRleCA9IHBs
-YW5lIC0gbXRrX2NydGMtPnBsYW5lczsNCj4gPiAgDQo+ID4gIAlmb3IgKGkgPSAwOyBpIDwgbXRr
-X2NydGMtPmRkcF9jb21wX25yOyBpKyspIHsNCj4gPiAgCQljb21wID0gbXRrX2NydGMtPmRkcF9j
-b21wW2ldOw0KPiA+IC0JCWlmIChwbGFuZS0+aW5kZXggPCAoY291bnQgKyBtdGtfZGRwX2NvbXBf
-bGF5ZXJfbnIoY29tcCkpKSB7DQo+ID4gLQkJCSpsb2NhbF9sYXllciA9IHBsYW5lLT5pbmRleCAt
-IGNvdW50Ow0KPiA+ICsJCWlmIChsb2NhbF9pbmRleCA8IChjb3VudCArIG10a19kZHBfY29tcF9s
-YXllcl9ucihjb21wKSkpIHsNCj4gPiArCQkJKmxvY2FsX2xheWVyID0gbG9jYWxfaW5kZXggLSBj
-b3VudDsNCj4gPiAgCQkJcmV0dXJuIGNvbXA7DQo+ID4gIAkJfQ0KPiA+ICAJCWNvdW50ICs9IG10
-a19kZHBfY29tcF9sYXllcl9ucihjb21wKTsNCj4gPiANCj4gPiBiYXNlLWNvbW1pdDogMTg3NWZm
-MzIwZjE0YWZlMjE3MzFhNmU0YzdiNDZkZDMzZTQ1ZGZhYQ0KPiANCg0K
 
+
+On Thu, 12 Dec 2019, at 07:09, Eddie James wrote:
+> 
+> On 12/10/19 9:47 PM, Andrew Jeffery wrote:
+> >
+> > On Fri, 6 Dec 2019, at 03:45, Eddie James wrote:
+> >> +
+> >> +static unsigned int aspeed_xdma_ast2600_set_cmd(struct aspeed_xdma *ctx,
+> >> +						struct aspeed_xdma_op *op,
+> >> +						u32 bmc_addr)
+> >> +{
+> >> +	u64 cmd = XDMA_CMD_AST2600_CMD_IRQ_BMC |
+> >> +		(op->direction ? XDMA_CMD_AST2600_CMD_UPSTREAM : 0);
+> >> +	unsigned int line_size;
+> >> +	unsigned int nidx = (ctx->cmd_idx + 1) % XDMA_NUM_CMDS;
+> >> +	unsigned int line_no = 1;
+> >> +	unsigned int pitch = 1;
+> >> +	struct aspeed_xdma_cmd *ncmd =
+> >> +		&(((struct aspeed_xdma_cmd *)ctx->cmdq)[ctx->cmd_idx]);
+> >> +
+> >> +	if ((op->host_addr + op->len) & 0xffffffff00000000ULL)
+> > Do we know that this won't wrap?
+> 
+> 
+> No, but I assume it would be a bad transfer anyway at that point?
+
+But what happens as a consequence? We would have a 64 bit address
+but wouldn't enable 64bit addressing, so presumably the hardware
+would only use the bottom 32 bits of the address?
+
+Things could get weird yes?
+
+Or is there some failure that would occur before we trigger the transfer?
+Is that what you're depending on?
+
+> >> +
+> >> +static void aspeed_xdma_done(struct aspeed_xdma *ctx, bool error)
+> >> +{
+> >> +	if (ctx->current_client) {
+> >> +		ctx->current_client->error = error;
+> >> +		ctx->current_client->in_progress = false;
+> >> +		ctx->current_client = NULL;
+> > You need to take start_lock before writing these members to ensure the
+> > writes are not reordered across acquisition of start_lock in
+> > aspeed_xdma_start() above, unless there's some other guarantee of that?
+> 
+> 
+> Unless we get spurious interrupts (as in, the xdma interrupt fires with 
+> no transfer started, and somehow the correct status bits are set), it's 
+> not possible to execute this at the same time as aspeed_xdma_start(). So 
+> I did not try and lock here. Do you think it's worth locking for that 
+> situation?
+> 
+
+Why is it worth not locking? How is it correct? To answer that way we invoke
+all kinds of reasoning about multi-processing (interrupt handled on one core
+while aspeed_xdma_start() is executing on another), value visibility and
+instruction reordering (though as it happens the 2400, 2500 and 2600 are all
+in-order). We'll trip ourselves up if there is eventually a switch to out-of-order
+execution where the writes might be reordered and delayed until after
+start_lock has been acquired in aspeed_xdma_start() by a subseqent transfer.
+This line of reasoning is brittle exploitation of properties of the currently used
+cores for no benefit. Finishing the DMA op isn't a hot path where you might
+want to take some of these risks for performance, so we have almost zero
+care for lock contention but we must always be concerned about correctness.
+
+We avoid invoking all of those questions by acquiring the lock.
+
+> >> +
+> >> +	ctx->vga_pool = devm_gen_pool_create(dev, ilog2(PAGE_SIZE), -1, NULL);
+> >> +	if (!ctx->vga_pool) {
+> >> +		dev_err(dev, "Failed to setup genalloc pool.\n");
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +
+> >> +	rc = of_property_read_u32_array(dev->of_node, "vga-mem", vgamem, 2);
+> > As mentioned, this could be any reserved memory range. Also can't we get it as
+> > a resource rather than parsing a u32 array? Not sure if there's an advantage
+> > but it feels like a better representation.
+> 
+> 
+> That doesn't work unfortunately because the VGA memory is not mapped and 
+> the reserved memory subsystem fails to find it.
+
+Fair enough.
+
+> >> +
+> >> +	regmap_update_bits(sdmc, SDMC_REMAP, ctx->chip->sdmc_remap,
+> >> +			   ctx->chip->sdmc_remap);
+> > I disagree with doing this. As mentioned on the bindings it should be up to
+> > the platform integrator to ensure that this is configured appropriately.
+> 
+> 
+> Probably so, but then how does one actually configure that elsewhere? Do 
+> you mean add code to the edac driver (and add support for the ast2600) 
+> to read some dts properties to set it?
+
+Right. That's where I was going. I don't expect you to do that as part of this
+patch series, but if you could separate this code out into separate patches
+(dealing with the sdmc property in the devicetree binding as well) we can at
+least concentrate on getting the core XDMA driver in and work out how to
+move forward with configuring the memory controller later.
+
+> >> +/*
+> >> + * aspeed_xdma_direction
+> >> + *
+> >> + * ASPEED_XDMA_DIRECTION_DOWNSTREAM: transfers data from the host to the BMC
+> >> + *
+> >> + * ASPEED_XDMA_DIRECTION_UPSTREAM: transfers data from the BMC to the host
+> >> + *
+> >> + * ASPEED_XDMA_DIRECTION_RESET: resets the XDMA engine
+> >> + */
+> >> +enum aspeed_xdma_direction {
+> >> +	ASPEED_XDMA_DIRECTION_DOWNSTREAM = 0,
+> >> +	ASPEED_XDMA_DIRECTION_UPSTREAM,
+> >> +	ASPEED_XDMA_DIRECTION_RESET,
+> > I still think having a reset action as part of the direction is a bit funky. Can you maybe
+> > put that in a separate patch so we can debate it later?
+> 
+> 
+> I can, but I'm fairly convinced this is the cleanest way to add the 
+> reset functionality.
+> 
+
+Right, but if you separate it out you'll get my reviewed-by on the core XDMA
+patches much quicker :) You can convince me about it in slow-time.
+
+Cheers,
+
+Andrew
