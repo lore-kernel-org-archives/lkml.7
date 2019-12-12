@@ -2,94 +2,101 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A28BC00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23F1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0158D2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0F42067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbfLLRsG (ORCPT
+        id S1730205AbfLLRsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:48:06 -0500
-Received: from mga03.intel.com ([134.134.136.65]:48925 "EHLO mga03.intel.com"
+        Thu, 12 Dec 2019 12:48:46 -0500
+Received: from mga11.intel.com ([192.55.52.93]:42295 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729771AbfLLRsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:48:05 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1729771AbfLLRsp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:48:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 09:48:03 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 09:48:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="245817844"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2019 09:48:01 -0800
-Date:   Thu, 12 Dec 2019 09:48:01 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191212174801.GF3163@linux.intel.com>
-References: <20191128014016.4389-2-sean.j.christopherson@intel.com>
- <201912010347.7tMb4moN%lkp@intel.com>
- <20191202190633.GG4063@linux.intel.com>
- <20191212092509.GB4991@zn.tnic>
+   d="scan'208";a="414006006"
+Received: from tstruk-mobl1.jf.intel.com (HELO [127.0.1.1]) ([10.7.196.67])
+  by fmsmga005.fm.intel.com with ESMTP; 12 Dec 2019 09:48:44 -0800
+Subject: [PATCH =v2 1/3] tpm: fix invalid locking in NONBLOCKING mode
+From:   Tadeusz Struk <tadeusz.struk@intel.com>
+To:     jarkko.sakkinen@linux.intel.com
+Cc:     tadeusz.struk@intel.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, jgg@ziepe.ca, mingo@redhat.com,
+        jeffrin@rajagiritech.edu.in, linux-integrity@vger.kernel.org,
+        will@kernel.org, peterhuewe@gmx.de
+Date:   Thu, 12 Dec 2019 09:48:47 -0800
+Message-ID: <157617292787.8172.9586296287013438621.stgit@tstruk-mobl1>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191212092509.GB4991@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:25:09AM +0100, Borislav Petkov wrote:
-> On Mon, Dec 02, 2019 at 11:06:33AM -0800, Sean Christopherson wrote:
-> > Argh, flat out missed this when doing search and replace.
-> 
-> There are more. What always works reliably for me is git grep:
-> 
-> $ git grep MSR_IA32_FEATURE_CONTROL
-> drivers/idle/intel_idle.c:1287:         rdmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-> tools/arch/x86/include/asm/msr-index.h:561:#define MSR_IA32_FEATURE_CONTROL        0x0000003a
-> tools/power/x86/turbostat/turbostat.c:4502:     if (!get_msr(base_cpu, MSR_IA32_FEATURE_CONTROL, &msr))
-> tools/power/x86/turbostat/turbostat.c:4503:             fprintf(outf, "cpu%d: MSR_IA32_FEATURE_CONTROL: 0x%08llx (%sLocked %s)\n",
-> tools/testing/selftests/kvm/include/x86_64/processor.h:771:#define MSR_IA32_FEATURE_CONTROL        0x0000003a
-> tools/testing/selftests/kvm/lib/x86_64/vmx.c:162:       feature_control = rdmsr(MSR_IA32_FEATURE_CONTROL);
-> tools/testing/selftests/kvm/lib/x86_64/vmx.c:164:               wrmsr(MSR_IA32_FEATURE_CONTROL, feature_control | required);
-> 
-> those additional ones won't break the build but it is perhaps worth
-> unifying them all since we're at it, anyway.
+When an application sends TPM commands in NONBLOCKING mode
+the driver holds chip->tpm_mutex returning from write(),
+which triggers: "WARNING: lock held when returning to user space".
+To fix this issue the driver needs to release the mutex before
+returning and acquire it again in tpm_dev_async_work() before
+sending the command.
 
-I caught all the tools updates and addressed them in patch 03/19, "tools
-arch x86: Sync msr-index.h from kernel sources".  Do you want those changes
-folded into the rename itself? 
+Cc: stable@vger.kernel.org
+Fixes: 9e1b74a63f776 (tpm: add support for nonblocking operation)
+Reported-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Tested-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Signed-off-by: Tadeusz Struk <tadeusz.struk@intel.com>
+---
+Changes in v2:
+- Updated commit message as requested
+- Add the fix and test updates to the same series
+---
+ drivers/char/tpm/tpm-dev-common.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/char/tpm/tpm-dev-common.c b/drivers/char/tpm/tpm-dev-common.c
+index 2ec47a69a2a6..b23b0b999232 100644
+--- a/drivers/char/tpm/tpm-dev-common.c
++++ b/drivers/char/tpm/tpm-dev-common.c
+@@ -61,6 +61,12 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 
+ 	mutex_lock(&priv->buffer_mutex);
+ 	priv->command_enqueued = false;
++	ret = tpm_try_get_ops(priv->chip);
++	if (ret) {
++		priv->response_length = ret;
++		goto out;
++	}
++
+ 	ret = tpm_dev_transmit(priv->chip, priv->space, priv->data_buffer,
+ 			       sizeof(priv->data_buffer));
+ 	tpm_put_ops(priv->chip);
+@@ -68,6 +74,7 @@ static void tpm_dev_async_work(struct work_struct *work)
+ 		priv->response_length = ret;
+ 		mod_timer(&priv->user_read_timer, jiffies + (120 * HZ));
+ 	}
++out:
+ 	mutex_unlock(&priv->buffer_mutex);
+ 	wake_up_interruptible(&priv->async_wait);
+ }
+@@ -204,6 +211,7 @@ ssize_t tpm_common_write(struct file *file, const char __user *buf,
+ 	if (file->f_flags & O_NONBLOCK) {
+ 		priv->command_enqueued = true;
+ 		queue_work(tpm_dev_wq, &priv->async_work);
++		tpm_put_ops(priv->chip);
+ 		mutex_unlock(&priv->buffer_mutex);
+ 		return size;
+ 	}
+
