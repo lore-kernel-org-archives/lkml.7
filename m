@@ -2,210 +2,106 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FF6C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4558C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D582073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1B72073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 20:05:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IaavmPRt"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="E8Z+ULO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfLLUCD (ORCPT
+        id S1730776AbfLLUFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 15:02:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27770 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730707AbfLLUCC (ORCPT
+        Thu, 12 Dec 2019 15:05:46 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41912 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730703AbfLLUFq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 15:02:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576180920;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hb8TmGk+a9HjoYdlVzo58zXnc/ROW/PTOkZPr16nz2Q=;
-        b=IaavmPRt9zNg8iW4gvdsBXazkxV31bY8w4kWt4F8RAwDzahv/MaMYNybAzUihp+S709/7c
-        CjKnS3e3gjvK8D0shsT7V4wS+DuUcR7JLja4AQD7koqgR6S8wG4fhPU0+unFyCs9L/9idh
-        vLl8HfASEWU6rZ42Hhuml+T1x+JHR2s=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-188-Hfa1qo57NrWC3nFJUYHJHQ-1; Thu, 12 Dec 2019 15:01:59 -0500
-X-MC-Unique: Hfa1qo57NrWC3nFJUYHJHQ-1
-Received: by mail-qt1-f200.google.com with SMTP id v25so203432qtq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 12:01:59 -0800 (PST)
+        Thu, 12 Dec 2019 15:05:46 -0500
+Received: by mail-ot1-f68.google.com with SMTP id r27so3268157otc.8;
+        Thu, 12 Dec 2019 12:05:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=437EO4ykMGZ70j4wdecX6upxaV7ChyHqB8vxhf7BSCU=;
+        b=E8Z+ULO8qgHol6Rsi27z38zqVd4Xbc69LcKOkoFJGjXc3bmNgWG2BjcxceM3WYQcaE
+         0KTVJu9KLALvHSqBEHOFect79UpcXnATI2AEuL4PE3CGlT7M5TOp1+Tj7ARIChSG0soK
+         52pRTSCXoU7TW26gajeHDZG5GZ515idA3tF6dPKasIPPd/PIrSj6++yhlQzy3OToSOZs
+         wkx9d66oFG7yGe3U/Hm4ibJywLk8HSryYKpEXlNm8d2ZWxcvNb3U4FvqZdH8k3L643vY
+         hn+LHgt1lFtDNUfQKxkep4qyRWKZXeg7bpRpK2fnx/I6QxfHB7IdgeCEIfGcYOSjBDJQ
+         Suag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hb8TmGk+a9HjoYdlVzo58zXnc/ROW/PTOkZPr16nz2Q=;
-        b=AK+MV39VRbfEo+RlNsqwe1dLzi4R1dHcWVFSSMG75JygXLVysILXAZBYK9sHJY4ffA
-         DURZP1+7l6Vno41LJ4i3tvNiPeBBt2oqumeFjl5MV/fEPRtXz0h6HI790VlyRgIPQO4i
-         I0ylin4pVDrJ2ThD4LbgaEK70Ewmndb3HIUcd6+D4kpEoGMWQp8WpqSOg7eVHVyi5ItD
-         HHbXJ11as5XrSAUH1k7iHVczZWbE4qKCnKkENLYC0ckunfIOBIfKB9qzmRQC8VZ1n4/z
-         oB99Nl85nEPiyCJUhFfAn4thhGUabLNRPCKuHHz3LRgG8UFN6NaWOTwdo6ijWftSfmFM
-         ykpw==
-X-Gm-Message-State: APjAAAWG1O5hPobNYo0FMA/auPAcvFbf+gikGoPIETYjBR7xsqQdZ5BB
-        izAQsWkTDQw0ydlp4RbtQZd4Ef8K40qHVlyBqoSiYkOOEfbIPgdsOXVJcWWM7hYvmE2V8Myp5Og
-        sZlokMelzVWKtuA2B37yQZP0O
-X-Received: by 2002:a37:65c8:: with SMTP id z191mr10018893qkb.176.1576180918868;
-        Thu, 12 Dec 2019 12:01:58 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwAvAkoCbeKTQnT+w3TgLyOTd0Fj7dn/2e/2ltCsdsrrquGwZiDl6tub5yxZG3D4TI1/gPcZg==
-X-Received: by 2002:a37:65c8:: with SMTP id z191mr10018819qkb.176.1576180918172;
-        Thu, 12 Dec 2019 12:01:58 -0800 (PST)
-Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id f19sm2075294qkk.69.2019.12.12.12.01.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Dec 2019 12:01:57 -0800 (PST)
-Subject: Re: [PATCH] vfs: Don't reject unknown parameters
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Jeremi Piotrowski <jeremi.piotrowski@gmail.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191212145042.12694-1-labbott@redhat.com>
- <CAOi1vP9E2yLeFptg7o99usEi=x3kf=NnHYdURXPhX4vTXKCTCQ@mail.gmail.com>
- <fbe90a0b-cf24-8c0c-48eb-6183852dfbf1@redhat.com>
- <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <cf4c9634-1503-d182-cb12-810fb969bc96@redhat.com>
-Date:   Thu, 12 Dec 2019 15:01:56 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=437EO4ykMGZ70j4wdecX6upxaV7ChyHqB8vxhf7BSCU=;
+        b=Y9J+hHYv0rBDFXI40IWg5QEw9/yFTDg0Hfd+HEP18RxxkZhhuamsQe+20HcwQyWtQ0
+         kT83bqK2JAmS832wI9dIYD5nKdpIUrVpGBEQhJ1eVJhbq4GLXZlDL2F2TlUnrdSkKt8W
+         Wnk9HqP5u//tMwwQ21qe/gPJyg0Nvy2WxUqHNU6Fm3lSwoaxgPBWZFSH7zRWuhOJAOxV
+         I9jTXyhzO4AzS1IUZxCRs4zuzD3Ab328PsWhpFmb8EoMWohMitLgllOpXrt1dyb/TN06
+         3/FlbvVMbh0JFj19GPLmxltVS+jrCdVAuITq4sDzzYadIT4MDj42dj+35PH0LNARm4Uy
+         EYow==
+X-Gm-Message-State: APjAAAWqU+2gVHUO2M8vgpjUND2v0+xMVL606hhT0nHxszIZvtnoWhEr
+        acPQh2FCtIU4VEYVIr5msyTyyZ5y55KvqbMOiCg=
+X-Google-Smtp-Source: APXvYqzNrNV1NDqP8CepWCfv6Hd8n0AT4q6WjL/e97tNxNuu2sXH1BK40ukL5qB/y5FaxInRXC3FHM5D/HKulk5FNlo=
+X-Received: by 2002:a9d:7342:: with SMTP id l2mr10117519otk.98.1576181145181;
+ Thu, 12 Dec 2019 12:05:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh7Wuk9QCP6oH5Qc1a89_X6H1CHRK_OyB4NLmX7nRYJeA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1576153187-28378-1-git-send-email-xingyu.chen@amlogic.com> <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
+In-Reply-To: <1576153187-28378-3-git-send-email-xingyu.chen@amlogic.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 12 Dec 2019 21:05:34 +0100
+Message-ID: <CAFBinCBHLqgPExPsVaSWdSOr0Oj-jeYa4Z82U-pJ=fS+D1wGnA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: watchdog: add new binding for meson
+ secure watchdog
+To:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/12/19 12:56 PM, Linus Torvalds wrote:
-> On Thu, Dec 12, 2019 at 9:47 AM Laura Abbott <labbott@redhat.com> wrote:
->>
->> Good point, I think I missed how that code flow worked for printing
->> out the error. I debated putting in a dummy parse_param but I
->> figured that squashfs wouldn't be the only fs that didn't take
->> arguments (it's in the minority but certainly not the only one).
-> 
-> I think printing out the error part is actually fine - it would act as
-> a warning for invalid parameters like this.
-> 
-> So I think a dummy parse_param that prints out a warning is likely the
-> right thing to do.
-> 
-> Something like the attached, perhaps? Totally untested.
-> 
->                 Linus
-> 
+Hi Xingyu and Rob,
 
-That doesn't quite work. We can't just unconditionally return success
-because we rely on -ENOPARAM being returned to parse the source option
-back in vfs_parse_fs_param. I think ramfs may also be broken for the
-same reason right now as well from reading the code. We also rely on the
-fallback source parsing for file systems that do have ->parse_param.
+On Thu, Dec 12, 2019 at 1:20 PM Xingyu Chen <xingyu.chen@amlogic.com> wrote:
+[...]
+> +examples:
+> +  - |
+> +    watchdog {
+> +          compatible = "amlogic,meson-sec-wdt";
+> +          timeout-sec = <60>;
+> +    };
+in v3 of this patch Rob commented that there shouldn't be an OF node
+if there are no additional properties
+with timeout-sec there's now an additional property so my
+understanding is that it's fine to have an OF node
 
-We could do all this in squashfs but given other file systems that don't
-have args will also hit this we could just make it generic. The following
-works for me (under commenting and poor name choices notwithstanding)
+what I don't understand yet is where this node should be placed.
+is it supposed to be a child node of the secure monitor node (for
+which we already have a binding here:
+Documentation/devicetree/bindings/firmware/meson/meson_sm.txt) or
+where else would we place it inside the .dts?
 
-diff --git a/fs/fs_parser.c b/fs/fs_parser.c
-index d1930adce68d..5e45e36d51e7 100644
---- a/fs/fs_parser.c
-+++ b/fs/fs_parser.c
-@@ -302,6 +302,50 @@ int fs_lookup_param(struct fs_context *fc,
-  }
-  EXPORT_SYMBOL(fs_lookup_param);
-  
-+enum {
-+        NO_OPT_SOURCE,
-+};
-+
-+static const struct fs_parameter_spec no_opt_fs_param_specs[] = {
-+        fsparam_string  ("source",              NO_OPT_SOURCE),
-+        {}
-+};
-+
-+const struct fs_parameter_description no_opt_fs_parameters = {
-+        .name           = "no_opt_fs",
-+        .specs          = no_opt_fs_param_specs,
-+};
-+
-+int fs_no_opt_parse_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+        struct fs_parse_result result;
-+        int opt;
-+
-+        opt = fs_parse(fc, &no_opt_fs_parameters, param, &result);
-+        if (opt < 0) {
-+                /* Just log an error for backwards compatibility */
-+                errorf(fc, "%s: Unknown parameter '%s'",
-+                      fc->fs_type->name, param->key);
-+                return 0;
-+        }
-+
-+        switch (opt) {
-+        case NO_OPT_SOURCE:
-+                if (param->type != fs_value_is_string)
-+                        return invalf(fc, "%s: Non-string source",
-+					fc->fs_type->name);
-+                if (fc->source)
-+                        return invalf(fc, "%s: Multiple sources specified",
-+					fc->fs_type->name);
-+                fc->source = param->string;
-+                param->string = NULL;
-+                break;
-+        }
-+
-+        return 0;
-+}
-+EXPORT_SYMBOL(fs_no_opt_parse_param);
-+
-  #ifdef CONFIG_VALIDATE_FS_PARSER
-  /**
-   * validate_constant_table - Validate a constant table
-diff --git a/fs/squashfs/super.c b/fs/squashfs/super.c
-index 0cc4ceec0562..07a9b38f7bf5 100644
---- a/fs/squashfs/super.c
-+++ b/fs/squashfs/super.c
-@@ -18,6 +18,7 @@
-  
-  #include <linux/fs.h>
-  #include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
-  #include <linux/vfs.h>
-  #include <linux/slab.h>
-  #include <linux/mutex.h>
-@@ -358,6 +359,7 @@ static int squashfs_reconfigure(struct fs_context *fc)
-  static const struct fs_context_operations squashfs_context_ops = {
-  	.get_tree	= squashfs_get_tree,
-  	.reconfigure	= squashfs_reconfigure,
-+	.parse_param	= fs_no_opt_parse_param,
-  };
-  
-  static int squashfs_init_fs_context(struct fs_context *fc)
-diff --git a/include/linux/fs_parser.h b/include/linux/fs_parser.h
-index dee140db6240..f67b2afcc491 100644
---- a/include/linux/fs_parser.h
-+++ b/include/linux/fs_parser.h
-@@ -106,6 +106,8 @@ static inline bool fs_validate_description(const struct fs_parameter_description
-  { return true; }
-  #endif
-  
-+extern int fs_no_opt_parse_param(struct fs_context *fc, struct fs_parameter *param);
-+
-  /*
-   * Parameter type, name, index and flags element constructors.  Use as:
-   *
 
+Martin
+
+
+[0] https://patchwork.kernel.org/patch/11211399/
