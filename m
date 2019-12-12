@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E40C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35E6C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF7852173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FF82173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:59:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbfLLN7T (ORCPT
+        id S1729605AbfLLN7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 12 Dec 2019 08:59:19 -0500
-Received: from isilmar-4.linta.de ([136.243.71.142]:42648 "EHLO
+Received: from isilmar-4.linta.de ([136.243.71.142]:42642 "EHLO
         isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729560AbfLLN7N (ORCPT
+        with ESMTP id S1729559AbfLLN7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 08:59:13 -0500
 X-isilmar-external: YES
@@ -28,10 +28,10 @@ X-isilmar-external: YES
 X-isilmar-external: YES
 X-isilmar-external: YES
 Received: from light.dominikbrodowski.net (brodo.linta [10.1.0.102])
-        by isilmar-4.linta.de (Postfix) with ESMTPSA id 40FE6200A97;
+        by isilmar-4.linta.de (Postfix) with ESMTPSA id 394B2200A94;
         Thu, 12 Dec 2019 13:59:11 +0000 (UTC)
 Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
-        id EE4D920B6C; Thu, 12 Dec 2019 14:57:34 +0100 (CET)
+        id 5CBD620B70; Thu, 12 Dec 2019 14:57:38 +0100 (CET)
 From:   Dominik Brodowski <linux@dominikbrodowski.net>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -39,9 +39,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] devtmpfs: use do_mount() instead of ksys_mount()
-Date:   Thu, 12 Dec 2019 14:57:22 +0100
-Message-Id: <20191212135724.331342-2-linux@dominikbrodowski.net>
+Subject: [PATCH 3/3] init: use do_mount() instead of ksys_mount()
+Date:   Thu, 12 Dec 2019 14:57:24 +0100
+Message-Id: <20191212135724.331342-4-linux@dominikbrodowski.net>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20191212135724.331342-1-linux@dominikbrodowski.net>
 References: <20191212135724.331342-1-linux@dominikbrodowski.net>
@@ -52,83 +52,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In devtmpfs, do_mount() can be called directly instead of complex wrapping
-by ksys_mount():
-- the first and third arguments are const strings in the kernel,
-  and do not need to be copied over from userspace;
-- the fifth argument is NULL, and therefore no page needs to be
-  copied over from userspace;
-- the second and fourth argument are passed through anyway.
+In prepare_namespace(), do_mount() can be used instead of ksys_mount()
+as the first and third argument are const strings in the kernel, the
+second and fourth argument are passed through anyway, and the fifth
+argument is NULL.
+
+In do_mount_root(), ksys_mount() is called with the first and third
+argument being already kernelspace strings, which do not need to be
+copied over from userspace to kernelspace (again). The second and
+fourth arguments are passed through to do_mount() anyway. The fifth
+argument, while already residing in kernelspace, needs to be put into
+a page of its own. Then, do_mount() can be used instead of
+ksys_mount().
+
+Once this is done, there are no in-kernel users to ksys_mount() left,
+which can therefore be removed.
 
 Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
 ---
- drivers/base/devtmpfs.c | 6 +++---
- include/linux/device.h  | 4 ++--
- init/do_mounts.c        | 2 +-
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ fs/namespace.c           | 10 ++--------
+ include/linux/syscalls.h |  2 --
+ init/do_mounts.c         | 28 ++++++++++++++++++++++------
+ 3 files changed, 24 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/base/devtmpfs.c b/drivers/base/devtmpfs.c
-index 30d0523014e0..6cdbf1531238 100644
---- a/drivers/base/devtmpfs.c
-+++ b/drivers/base/devtmpfs.c
-@@ -359,7 +359,7 @@ static int handle_remove(const char *nodename, struct device *dev)
-  * If configured, or requested by the commandline, devtmpfs will be
-  * auto-mounted after the kernel mounted the root filesystem.
-  */
--int devtmpfs_mount(const char *mntdir)
-+int devtmpfs_mount(void)
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 2fd0c8bcb8c1..be601d3a8008 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -3325,8 +3325,8 @@ struct dentry *mount_subtree(struct vfsmount *m, const char *name)
+ }
+ EXPORT_SYMBOL(mount_subtree);
+ 
+-int ksys_mount(const char __user *dev_name, const char __user *dir_name,
+-	       const char __user *type, unsigned long flags, void __user *data)
++SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
++		char __user *, type, unsigned long, flags, void __user *, data)
  {
- 	int err;
+ 	int ret;
+ 	char *kernel_type;
+@@ -3359,12 +3359,6 @@ int ksys_mount(const char __user *dev_name, const char __user *dir_name,
+ 	return ret;
+ }
  
-@@ -369,7 +369,7 @@ int devtmpfs_mount(const char *mntdir)
- 	if (!thread)
- 		return 0;
+-SYSCALL_DEFINE5(mount, char __user *, dev_name, char __user *, dir_name,
+-		char __user *, type, unsigned long, flags, void __user *, data)
+-{
+-	return ksys_mount(dev_name, dir_name, type, flags, data);
+-}
+-
+ /*
+  * Create a kernel mount representation for a new, prepared superblock
+  * (specified by fs_fd) and attach to an open_tree-like file descriptor.
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index d0391cc2dae9..5262b7a76d39 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1231,8 +1231,6 @@ asmlinkage long sys_ni_syscall(void);
+  * the ksys_xyzyyz() functions prototyped below.
+  */
  
--	err = ksys_mount("devtmpfs", mntdir, "devtmpfs", MS_SILENT, NULL);
-+	err = do_mount("devtmpfs", "dev", "devtmpfs", MS_SILENT, NULL);
- 	if (err)
- 		printk(KERN_INFO "devtmpfs: error mounting %i\n", err);
- 	else
-@@ -394,7 +394,7 @@ static int devtmpfsd(void *p)
- 	*err = ksys_unshare(CLONE_NEWNS);
- 	if (*err)
- 		goto out;
--	*err = ksys_mount("devtmpfs", "/", "devtmpfs", MS_SILENT, NULL);
-+	*err = do_mount("devtmpfs", "/", "devtmpfs", MS_SILENT, NULL);
- 	if (*err)
- 		goto out;
- 	ksys_chdir("/.."); /* will traverse into overmounted root */
-diff --git a/include/linux/device.h b/include/linux/device.h
-index e226030c1df3..96ff76731e93 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -1666,11 +1666,11 @@ extern bool kill_device(struct device *dev);
- #ifdef CONFIG_DEVTMPFS
- extern int devtmpfs_create_node(struct device *dev);
- extern int devtmpfs_delete_node(struct device *dev);
--extern int devtmpfs_mount(const char *mntdir);
-+extern int devtmpfs_mount(void);
- #else
- static inline int devtmpfs_create_node(struct device *dev) { return 0; }
- static inline int devtmpfs_delete_node(struct device *dev) { return 0; }
--static inline int devtmpfs_mount(const char *mountpoint) { return 0; }
-+static inline int devtmpfs_mount(void) { return 0; }
- #endif
- 
- /* drivers/base/power/shutdown.c */
+-int ksys_mount(const char __user *dev_name, const char __user *dir_name,
+-	       const char __user *type, unsigned long flags, void __user *data);
+ int ksys_umount(char __user *name, int flags);
+ int ksys_dup(unsigned int fildes);
+ int ksys_chroot(const char __user *filename);
 diff --git a/init/do_mounts.c b/init/do_mounts.c
-index af9cda887a23..43f6d098c880 100644
+index 43f6d098c880..f55cbd9cb818 100644
 --- a/init/do_mounts.c
 +++ b/init/do_mounts.c
-@@ -670,7 +670,7 @@ void __init prepare_namespace(void)
+@@ -387,12 +387,25 @@ static void __init get_fs_names(char *page)
+ 	*s = '\0';
+ }
  
+-static int __init do_mount_root(char *name, char *fs, int flags, void *data)
++static int __init do_mount_root(const char *name, const char *fs,
++				 const int flags, const void *data)
+ {
+ 	struct super_block *s;
+-	int err = ksys_mount(name, "/root", fs, flags, data);
+-	if (err)
+-		return err;
++	char *data_page;
++	struct page *p;
++	int ret;
++
++	/* do_mount() requires a full page as fifth argument */
++	p = alloc_page(GFP_KERNEL);
++	if (!p)
++		return -ENOMEM;
++
++	data_page = page_address(p);
++	strncpy(data_page, data, PAGE_SIZE - 1);
++
++	ret = do_mount(name, "/root", fs, flags, data_page);
++	if (ret)
++		goto out;
+ 
+ 	ksys_chdir("/root");
+ 	s = current->fs->pwd.dentry->d_sb;
+@@ -402,7 +415,10 @@ static int __init do_mount_root(char *name, char *fs, int flags, void *data)
+ 	       s->s_type->name,
+ 	       sb_rdonly(s) ? " readonly" : "",
+ 	       MAJOR(ROOT_DEV), MINOR(ROOT_DEV));
+-	return 0;
++
++out:
++	put_page(p);
++	return ret;
+ }
+ 
+ void __init mount_block_root(char *name, int flags)
+@@ -671,7 +687,7 @@ void __init prepare_namespace(void)
  	mount_root();
  out:
--	devtmpfs_mount("dev");
-+	devtmpfs_mount();
- 	ksys_mount(".", "/", NULL, MS_MOVE, NULL);
+ 	devtmpfs_mount();
+-	ksys_mount(".", "/", NULL, MS_MOVE, NULL);
++	do_mount(".", "/", NULL, MS_MOVE, NULL);
  	ksys_chroot(".");
  }
+ 
 -- 
 2.24.1
 
