@@ -2,119 +2,235 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8E4C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE68C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6CFF2077B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19FE214D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 07:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfLLHuK (ORCPT
+        id S1728176AbfLLHvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 02:50:10 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44400 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfLLHuK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 02:50:10 -0500
-Received: by mail-ot1-f68.google.com with SMTP id x3so763523oto.11;
-        Wed, 11 Dec 2019 23:50:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/i/kQrCR6DRe6WEYPeoiMdcrOD+Sk8SKui3HhgY5J0s=;
-        b=mfksngvisLsxX/EDeyFMVuYwSYwFdD87SHWUX0H5nPuTWvyGv1bStpCx5CDkO/Idey
-         evfxi9XPRJZzqMVwD/5qx5Ujja34U8miEkiLXuW51pwlq3j2AzYvbdps/2SFyor581Td
-         iiUnUaACoZM05KSKE1VInn+gDsFkJZRqODHuZApVvjedLG8vNUppTs5NfsAx0nVEqMUa
-         Vxc7ADtU12FjyL03Ms7qCYEYtIVxCukzF53RR93v/7rFLbb11C3dWxwVnKWmSuiWYfyP
-         COvduXzUfMdGCq6XBGnxCExyD0T3zEmQijZo1ggCIExKC9nsJUcJK/MGPbPENGKMClWA
-         a7mw==
-X-Gm-Message-State: APjAAAVOuyKt/0/OijIehqspNQK63uf+kNA8GzCw34Ki+SYXq1AeaxkG
-        0ZBbXQLa9e0XX/ngITrsiijqY4CV4TB9sFgud2A=
-X-Google-Smtp-Source: APXvYqx5Q1XLzgImqMNSLFEKkWfP29H11T2mMVKgou1wFXgvzMdVoOIlVa0RXO+hmfl2N4vbkLgMry9BjhklGEomGUc=
-X-Received: by 2002:a9d:2073:: with SMTP id n106mr6639922ota.145.1576137009080;
- Wed, 11 Dec 2019 23:50:09 -0800 (PST)
-MIME-Version: 1.0
-References: <87v9qmcloc.wl-kuninori.morimoto.gx@renesas.com>
-In-Reply-To: <87v9qmcloc.wl-kuninori.morimoto.gx@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Dec 2019 08:49:58 +0100
-Message-ID: <CAMuHMdU2LTuOeNAm4bHbei6LOcvEWbwS=WzVSGkZE0kw8RA0kA@mail.gmail.com>
-Subject: Re: [PATCH] sh: add missing DECLARE_EXPORT() for __ashiftrt_r4_2x
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 12 Dec 2019 02:51:39 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:35664 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728095AbfLLHvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 02:51:39 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT9N48fFduPEJAA--.13S2;
+        Thu, 12 Dec 2019 15:51:20 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>
+Cc:     linux-fsdevel@vger.kernel.org, ecryptfs@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6] fs: introduce is_dot_or_dotdot helper for cleanup
+Date:   Thu, 12 Dec 2019 15:51:04 +0800
+Message-Id: <1576137064-31249-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9DxT9N48fFduPEJAA--.13S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF1xJF45AFWDZF4DJr17Awb_yoW7Wr1kpF
+        sxAF97Jrs7Gry5urn5tr1fCr1Yv3s7Wr17GrZ7Ga4vk342qrn5XrWIyry09wn5JFWDX3Z0
+        ga98G34rCFy5tFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvlb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+        04v7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x07boo7NUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Morimoto-san,
+There exists many similar and duplicate codes to check "." and "..",
+so introduce is_dot_or_dotdot helper to make the code more clean.
 
-On Thu, Dec 12, 2019 at 3:39 AM Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
->
-> __ashiftrt_r4_2x is used from kernel module.
-> We need DECLARE_EXPORT(), otherwise we will get compile error.
->
-> ERROR: "__ashiftrt_r4_25" [drivers/iio/pressure/bmp280.ko] undefined!
-> ERROR: "__ashiftrt_r4_26" [drivers/iio/dac/ad5764.ko] undefined!
-> ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/mma7660.ko] undefined!
-> ERROR: "__ashiftrt_r4_25" [drivers/iio/accel/dmard06.ko] undefined!
-> ERROR: "__ashiftrt_r4_26" [drivers/iio/accel/bma220_spi.ko] undefined!
-> ERROR: "__ashiftrt_r4_25" [drivers/crypto/hisilicon/sec/hisi_sec.ko] undefined!
-> ERROR: "__ashiftrt_r4_26" [drivers/rtc/rtc-x1205.ko] undefined!
-> ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf85063.ko] undefined!
-> ERROR: "__ashiftrt_r4_25" [drivers/rtc/rtc-pcf2123.ko] undefined!
-> ERROR: "__ashiftrt_r4_25" [drivers/input/tablet/gtco.ko] undefined!
-> ERROR: "__ashiftrt_r4_26" [drivers/input/mouse/psmouse.ko] undefined!
-> ERROR: "__ashiftrt_r4_28" [drivers/input/mouse/psmouse.ko] undefined!
-> ERROR: "__ashiftrt_r4_28" [drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko] undefined!
-> ERROR: "__ashiftrt_r4_28" [fs/udf/udf.ko] undefined!
->
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Thanks for your patch!
+v6:
+  - do not use the helper function in fs/namei.c
+  - add extra check "len >= 1" in is_dot_or_dotdot()
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+v5:
+  - remove "qname" variable in fscrypt_fname_disk_to_usr()
+  - modify "len < 2" to "len == 1" in is_dot_or_dotdot()
 
-> --- a/arch/sh/kernel/sh_ksyms_32.c
-> +++ b/arch/sh/kernel/sh_ksyms_32.c
-> @@ -53,8 +53,14 @@ DECLARE_EXPORT(__ashiftrt_r4_21);
->  DECLARE_EXPORT(__ashiftrt_r4_22);
->  DECLARE_EXPORT(__ashiftrt_r4_23);
->  DECLARE_EXPORT(__ashiftrt_r4_24);
-> +DECLARE_EXPORT(__ashiftrt_r4_25);
-> +DECLARE_EXPORT(__ashiftrt_r4_26);
->  DECLARE_EXPORT(__ashiftrt_r4_27);
-> +DECLARE_EXPORT(__ashiftrt_r4_28);
-> +DECLARE_EXPORT(__ashiftrt_r4_29);
->  DECLARE_EXPORT(__ashiftrt_r4_30);
-> +DECLARE_EXPORT(__ashiftrt_r4_31);
-> +DECLARE_EXPORT(__ashiftrt_r4_32);
->  DECLARE_EXPORT(__movstr);
->  DECLARE_EXPORT(__movstrSI8);
->  DECLARE_EXPORT(__movstrSI12);
+v4:
+  - rename is_dot_dotdot() to is_dot_or_dotdot()
 
-Wouldn't it make sense to just add all of them (__ashiftrt_r4_[0-32])?
+v3:
+  - use "name" and "len" as arguments instead of qstr
+  - move is_dot_dotdot() to include/linux/namei.h
 
-Gr{oetje,eeting}s,
+v2:
+  - use the better performance implementation of is_dot_dotdot
+  - make it static inline and move it to include/linux/fs.h
 
-                        Geert
+ fs/crypto/fname.c     | 17 +++--------------
+ fs/ecryptfs/crypto.c  | 12 +-----------
+ fs/f2fs/f2fs.h        | 11 -----------
+ fs/f2fs/hash.c        |  3 ++-
+ include/linux/namei.h | 10 ++++++++++
+ 5 files changed, 16 insertions(+), 37 deletions(-)
 
+diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+index 3da3707..bb41f5d 100644
+--- a/fs/crypto/fname.c
++++ b/fs/crypto/fname.c
+@@ -11,21 +11,11 @@
+  * This has not yet undergone a rigorous security audit.
+  */
+ 
++#include <linux/namei.h>
+ #include <linux/scatterlist.h>
+ #include <crypto/skcipher.h>
+ #include "fscrypt_private.h"
+ 
+-static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * fname_encrypt() - encrypt a filename
+  *
+@@ -252,10 +242,9 @@ int fscrypt_fname_disk_to_usr(struct inode *inode,
+ 			const struct fscrypt_str *iname,
+ 			struct fscrypt_str *oname)
+ {
+-	const struct qstr qname = FSTR_TO_QSTR(iname);
+ 	struct fscrypt_digested_name digested_name;
+ 
+-	if (fscrypt_is_dot_dotdot(&qname)) {
++	if (is_dot_or_dotdot(iname->name, iname->len)) {
+ 		oname->name[0] = '.';
+ 		oname->name[iname->len - 1] = '.';
+ 		oname->len = iname->len;
+@@ -323,7 +312,7 @@ int fscrypt_setup_filename(struct inode *dir, const struct qstr *iname,
+ 	memset(fname, 0, sizeof(struct fscrypt_name));
+ 	fname->usr_fname = iname;
+ 
+-	if (!IS_ENCRYPTED(dir) || fscrypt_is_dot_dotdot(iname)) {
++	if (!IS_ENCRYPTED(dir) || is_dot_or_dotdot(iname->name, iname->len)) {
+ 		fname->disk_name.name = (unsigned char *)iname->name;
+ 		fname->disk_name.len = iname->len;
+ 		return 0;
+diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+index f91db24..c3bcbf0 100644
+--- a/fs/ecryptfs/crypto.c
++++ b/fs/ecryptfs/crypto.c
+@@ -1991,16 +1991,6 @@ int ecryptfs_encrypt_and_encode_filename(
+ 	return rc;
+ }
+ 
+-static bool is_dot_dotdot(const char *name, size_t name_size)
+-{
+-	if (name_size == 1 && name[0] == '.')
+-		return true;
+-	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ /**
+  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
+  * @plaintext_name: The plaintext name
+@@ -2027,7 +2017,7 @@ int ecryptfs_decode_and_decrypt_filename(char **plaintext_name,
+ 
+ 	if ((mount_crypt_stat->flags & ECRYPTFS_GLOBAL_ENCRYPT_FILENAMES) &&
+ 	    !(mount_crypt_stat->flags & ECRYPTFS_ENCRYPTED_VIEW_ENABLED)) {
+-		if (is_dot_dotdot(name, name_size)) {
++		if (is_dot_or_dotdot(name, name_size)) {
+ 			rc = ecryptfs_copy_filename(plaintext_name,
+ 						    plaintext_name_size,
+ 						    name, name_size);
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 5a888a0..3d5e684 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2767,17 +2767,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
+ 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+ }
+ 
+-static inline bool is_dot_dotdot(const struct qstr *str)
+-{
+-	if (str->len == 1 && str->name[0] == '.')
+-		return true;
+-
+-	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
+-		return true;
+-
+-	return false;
+-}
+-
+ static inline bool f2fs_may_extent_tree(struct inode *inode)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+index 5bc4dcd..ef155c2 100644
+--- a/fs/f2fs/hash.c
++++ b/fs/f2fs/hash.c
+@@ -15,6 +15,7 @@
+ #include <linux/cryptohash.h>
+ #include <linux/pagemap.h>
+ #include <linux/unicode.h>
++#include <linux/namei.h>
+ 
+ #include "f2fs.h"
+ 
+@@ -82,7 +83,7 @@ static f2fs_hash_t __f2fs_dentry_hash(const struct qstr *name_info,
+ 	if (fname && !fname->disk_name.name)
+ 		return cpu_to_le32(fname->hash);
+ 
+-	if (is_dot_dotdot(name_info))
++	if (is_dot_or_dotdot(name, len))
+ 		return 0;
+ 
+ 	/* Initialize the default seed for the hash checksum functions */
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 7fe7b87..8b69d0f 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -92,4 +92,14 @@ retry_estale(const long error, const unsigned int flags)
+ 	return error == -ESTALE && !(flags & LOOKUP_REVAL);
+ }
+ 
++static inline bool is_dot_or_dotdot(const unsigned char *name, size_t len)
++{
++	if (len >= 1 && unlikely(name[0] == '.')) {
++		if (len == 1 || (len == 2 && name[1] == '.'))
++			return true;
++	}
++
++	return false;
++}
++
+ #endif /* _LINUX_NAMEI_H */
+-- 
+2.1.0
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
