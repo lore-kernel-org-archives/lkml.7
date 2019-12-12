@@ -2,76 +2,108 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A31C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD56EC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1412173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C9E22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 09:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576143029;
+	bh=WLLz/+MINSEFbqQts+ckh3RtQutBOa1c7Yny63WPibw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hdv2YTnq/qHPlX9l+Z+HY+NAesT7cE4D387PSKqhDoOHYFL0N41YtCBYSN3V6Y0Nq
+	 ubjub4XNVcMKMNtu1moIVVtrN8flD7ZNSD1rtxnrt19D8GxodXsC0TNiyjxgBkGMOY
+	 lsCw8uyQKQXqGjkhSDA8/B3vdsa8QZrtzxLlBUt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfLLJaY (ORCPT
+        id S1728367AbfLLJa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 12 Dec 2019 04:30:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728261AbfLLJaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 04:30:24 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7676 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbfLLJaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:30:23 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CBF2CE826BD3C26BC609;
-        Thu, 12 Dec 2019 17:30:20 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 12 Dec 2019 17:30:13 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <tomasz.figa@gmail.com>, <krzk@kernel.org>,
-        <s.nawrocki@samsung.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenzhou10@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH -next v2] pinctrl: samsung: fix build error without CONFIG_OF_GPIO
-Date:   Thu, 12 Dec 2019 17:27:26 +0800
-Message-ID: <20191212092726.41027-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F8421655;
+        Thu, 12 Dec 2019 09:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576143021;
+        bh=WLLz/+MINSEFbqQts+ckh3RtQutBOa1c7Yny63WPibw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=plvp96yI1hZz08EPlquQd8De9ZqBzZDL2yD65ChZimyeNY7TikPshYphSOUQg+PHI
+         1KDJ5Mk+D+OeGJcHwvA1zrD69dsjIFt5AN5AJ+b901UI1xILY+z2KTrag+PlAeWvyb
+         YzTS4DqBLdgzWand1DebgztLOCDiH9YSFoIBQxN4=
+Date:   Thu, 12 Dec 2019 10:30:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/243] 4.19.89-stable review
+Message-ID: <20191212093018.GA1378792@kroah.com>
+References: <20191211150339.185439726@linuxfoundation.org>
+ <7b43a504-160f-e793-99b2-bcb79d331b6a@nvidia.com>
+ <8de7c018-32c7-f46e-4c43-ea3a70378a14@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8de7c018-32c7-f46e-4c43-ea3a70378a14@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_OF_GPIO is n, build fails:
+On Wed, Dec 11, 2019 at 05:40:34PM -0800, Guenter Roeck wrote:
+> On 12/11/19 1:36 PM, Jon Hunter wrote:
+> > 
+> > On 11/12/2019 15:02, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 4.19.89 release.
+> > > There are 243 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > > 
+> > > Responses should be made by Fri, 13 Dec 2019 14:56:06 +0000.
+> > > Anything received after that time might be too late.
+> > > 
+> > > The whole patch series can be found in one patch at:
+> > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.89-rc1.gz
+> > > or in the git tree and branch at:
+> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > > and the diffstat can be found below.
+> > > 
+> > > thanks,
+> > > 
+> > > greg k-h
+> > > 
+> > > -------------
+> > > Pseudo-Shortlog of commits:
+> > 
+> > ...
+> > 
+> > > Linus Walleij <linus.walleij@linaro.org>
+> > >      gpio: OF: Parse MMC-specific CD and WP properties
+> > 
+> > The above change is causing intermittent failures on Tegra30 eMMC.
+> > Reverting this change on top of the 4.19.89-rc1 fixes the problem.
+> > 
+> 
+> Thanks for tracking that down. I see boot failures for arm:vexpress-a9
+> when trying to boot from mmc.
+> 
+> I dimly recall that this was a problem before. Ah yes ... commit 89a5e15bcba8
+> ("gpio/mmc/of: Respect polarity in the device tree") fixes the above commit.
+> Can you give it a try ?
+> 
+> [ One may wonder though why this was back-ported in the first place. ]
 
-drivers/pinctrl/samsung/pinctrl-samsung.c: In function samsung_gpiolib_register:
-drivers/pinctrl/samsung/pinctrl-samsung.c:969:5: error: struct gpio_chip has no member named of_node
-   gc->of_node = bank->of_node;
+I've dropped the original patch here now, thanks.
 
-Use #ifdef to guard this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/pinctrl/samsung/pinctrl-samsung.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index f26574e..5c29ad8 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -966,7 +966,9 @@ static int samsung_gpiolib_register(struct platform_device *pdev,
- 		gc->base = bank->grange.base;
- 		gc->ngpio = bank->nr_pins;
- 		gc->parent = &pdev->dev;
-+#ifdef CONFIG_OF_GPIO
- 		gc->of_node = bank->of_node;
-+#endif
- 		gc->label = bank->name;
- 
- 		ret = devm_gpiochip_add_data(&pdev->dev, gc, bank);
--- 
-2.7.4
-
+greg k-h
