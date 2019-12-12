@@ -2,102 +2,166 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DAEC2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9458C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A065B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8859B214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 13:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfLLNbf (ORCPT
+        id S1729467AbfLLNdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 08:31:35 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47976 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbfLLNbf (ORCPT
+        Thu, 12 Dec 2019 08:33:37 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40342 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729302AbfLLNdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:31:35 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 723A61C2461; Thu, 12 Dec 2019 14:31:33 +0100 (CET)
-Date:   Thu, 12 Dec 2019 14:31:32 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device
- node
-Message-ID: <20191212133132.GA13171@amd>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150351.658072828@linuxfoundation.org>
+        Thu, 12 Dec 2019 08:33:37 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 6so410540oix.7;
+        Thu, 12 Dec 2019 05:33:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B1c5GbpC2qZV4XZL32ReXMmOl4Gf9Xdye7e43MFMR8g=;
+        b=ir+J4KCiAPAkjvp0ky7CL/fRvOfMW0Zm7o6v1rXeaVUwDUxF+C9TNjXpn/BysOxlk7
+         jJoVe5vx7/SBDPPYb7u1VhtIifglsrR+YblRpsrivUjYZYP9lccjXlwbyfruFgZBi8qa
+         FG80TRt7j8ounLnQC3UpkFKEVH/R6a6/IJHuA+ChO6JBMQ5umQTxLXd46SyztwKTsBUj
+         +kXOZseOs9sI5AUoKcO2Vr3PN/+LrB6oxo5jqQKIwFy3+s96Uop2ypSNkqKzDZ5/i3KZ
+         6oaJR4CsJthXtHp5SJYfNYltMOJyuTE6WmZQV9n85PdWWAtrg0fWq9yUp/ixquWJprKb
+         WHPA==
+X-Gm-Message-State: APjAAAVhFittvr2zZoo96SeXv2x9q8StI17TKbAhNdj1Uu3I2nzUKQ7u
+        HaYg40oYzoh4JCwP1mVESs5PZCWVAVuwNI6D3Tk=
+X-Google-Smtp-Source: APXvYqyZrB81syD0Ce6WwALcSofZswA84PMJGyV785ydrh5qmd3i1ZIC8I8AuxCcmSbHRH3rYOaGved6PnxX/cMztls=
+X-Received: by 2002:aca:4e87:: with SMTP id c129mr4645921oib.153.1576157615510;
+ Thu, 12 Dec 2019 05:33:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Content-Disposition: inline
-In-Reply-To: <20191211150351.658072828@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191127084253.16356-1-geert+renesas@glider.be>
+ <20191127084253.16356-3-geert+renesas@glider.be> <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
+In-Reply-To: <CACRpkdYyY0eGipdK6ixZxLtdJ5px=U2mOa79VZb00NEEAEL=6g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Dec 2019 14:33:24 +0100
+Message-ID: <CAMuHMdVL2w=DzOHTh-Tq6NZLTNUKxUneMi3wX71Z83mdsy3LTA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] gpiolib: Add support for gpiochipN-based table lookup
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 12, 2019 at 2:20 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Nov 27, 2019 at 9:43 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > Currently GPIO controllers can only be referred to by label in GPIO
+> > lookup tables.
+> >
+> > Add support for looking them up by "gpiochipN" name, with "N" either the
+> > corresponding GPIO device's ID number, or the GPIO controller's first
+> > GPIO number.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> What the commit message is missing is a rationale, why is this needed?
 
-Hi!
+Right. To be added: so they can be looked up in the GPIO lookup table
+using either the chip's label, or the "gpiochipN" name.
 
-> The RTC module on the A23 was claimed to be the same as on the A31, when
-> in fact it is not. The A31 does not have an RTC external clock output,
-> and its internal RC oscillator's average clock rate is not in the same
-> range. The A33's RTC is the same as the A23.
->=20
-> This patch fixes the compatible string and clock properties to conform
-> to the updated bindings. The register range is also fixed.
+> > If this is rejected, the GPIO Aggregator documentation must be updated.
+> >
+> > The second variant is currently used by the legacy sysfs interface only,
+> > so perhaps the chip->base check should be dropped?
+>
+> Anything improving the sysfs is actively discouraged by me.
+> If it is just about staying compatible it is another thing.
 
-No, this is not okay for v4.19. New compatible is not in
-=2E/drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
+OK, so N must be the corresponding GPIO device's ID number.
 
-Best regards,
-								Pavel
+> > +static int gpiochip_match_id(struct gpio_chip *chip, void *data)
+> > +{
+> > +       int id = (uintptr_t)data;
+> > +
+> > +       return id == chip->base || id == chip->gpiodev->id;
+> > +}
+> >  static struct gpio_chip *find_chip_by_name(const char *name)
+> >  {
+> > -       return gpiochip_find((void *)name, gpiochip_match_name);
+> > +       struct gpio_chip *chip;
+> > +       int id;
+> > +
+> > +       chip = gpiochip_find((void *)name, gpiochip_match_name);
+> > +       if (chip)
+> > +               return chip;
+> > +
+> > +       if (!str_has_prefix(name, GPIOCHIP_NAME))
+> > +               return NULL;
+> > +
+> > +       if (kstrtoint(name + strlen(GPIOCHIP_NAME), 10, &id))
+> > +               return NULL;
+> > +
+> > +       return gpiochip_find((void *)(uintptr_t)id, gpiochip_match_id);
+>
+> Isn't it easier to just  augment the existing match function to
+> check like this:
+>
+> static int gpiochip_match_name(struct gpio_chip *chip, void *data)
+> {
+>         const char *name = data;
+>
+>         if (!strcmp(chip->label, name))
+>                return 0;
 
-> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> @@ -565,11 +565,11 @@
->  		};
-> =20
->  		rtc: rtc@1f00000 {
-> -			compatible =3D "allwinner,sun6i-a31-rtc";
-> -			reg =3D <0x01f00000 0x54>;
-> +			compatible =3D "allwinner,sun8i-a23-rtc";
-> +			reg =3D <0x01f00000 0x400>;
->  			interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> -			clock-output-names =3D "osc32k";
-> +			clock-output-names =3D "osc32k", "osc32k-out";
->  			clocks =3D <&ext_osc32k>;
->  			#clock-cells =3D <1>;
->  		};
+return true;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+>         return !strcmp(dev_name(&chip->gpiodev->dev), name);
+> }
 
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Oh, didn't think of using dev_name() on the gpiodev.
+Yes, with the chip->base check removed, the code can be simplified.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Or just
 
-iEYEARECAAYFAl3yQTQACgkQMOfwapXb+vINnACfSuFVVvBSSyClbD3yZFaOyLyO
-HiIAoK7yohRRq657OxcfA88kbpQdOpHe
-=opG4
------END PGP SIGNATURE-----
+        return !strcmp(chip->label, name) ||
+               !strcmp(dev_name(&chip->gpiodev->dev), name);
 
---C7zPtVaVf+AK4Oqc--
+> We should I guess also add some kerneldoc to say we first
+> match on the label and second on dev_name().
+
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
