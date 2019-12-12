@@ -2,118 +2,103 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 668D8C00454
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC3AC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE3E22527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:45:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="cJ10Yye5"
+	by mail.kernel.org (Postfix) with ESMTP id 2755D2077B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 19:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbfLLTp6 (ORCPT
+        id S1730719AbfLLTq2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 14:45:58 -0500
-Received: from rere.qmqm.pl ([91.227.64.183]:30833 "EHLO rere.qmqm.pl"
+        Thu, 12 Dec 2019 14:46:28 -0500
+Received: from mga18.intel.com ([134.134.136.126]:41514 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730284AbfLLTp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 14:45:58 -0500
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 47Ykmy0dwcz60;
-        Thu, 12 Dec 2019 20:45:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1576179956; bh=jQ54pf6Th0HMTAdiqavUkKS8KHekP4LdV0jt9P6GhmA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cJ10Yye52Jy3s5WTedkN4QYJjfdfYtDvYAKQX++zujaW2I/dQukY/cerW+mtAIJez
-         Ze5SSQTe9EmVadx2m4iIJYNfxgwxUm1AglT8uK2sTyXJ8nIeRMhG0R9+8jBT8WBdda
-         XTIRu3Ri/jdMVjpuC96eEvtdRS1pScGgd93BpAwa7LOroKqjFCrXhRClPHNrYYnoNw
-         JfV1OrI5ihkD6xqtxksZJiMwnqHHtd3RxMAEWk7Ep/Ezi8QLLNMiHwsF8q9ckVipWE
-         N/QcAAhLbaaXjmpK3iyMJG/8W5zjlka3rU5H+zRYeXhHjTZuOAUkm72uli5HNqy3T+
-         QUUEe9em67cvw==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-Date:   Thu, 12 Dec 2019 20:45:52 +0100
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-kernel@vger.kernel.org, Henrik Rydberg <rydberg@bitmath.org>,
-        James Chen <james.chen@emc.com.tw>,
-        Johnny Chuang <johnny.chuang@emc.com.tw>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh-dt@kernel.org>,
-        Scott Liu <scott.liu@emc.com.tw>
-Subject: Re: [PATCH v2 2/9] input: elants: support old touch report format
-Message-ID: <20191212194552.GA22553@qmqm.qmqm.pl>
-References: <cover.1576079249.git.mirq-linux@rere.qmqm.pl>
- <2b5e15ea600c33dfab4aa50e360ec553f1af7db0.1576079249.git.mirq-linux@rere.qmqm.pl>
- <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
+        id S1730284AbfLLTq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 14:46:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 11:46:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
+   d="scan'208";a="211222079"
+Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Dec 2019 11:46:26 -0800
+Received: from orsmsx156.amr.corp.intel.com (10.22.240.22) by
+ ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 12 Dec 2019 11:46:25 -0800
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.94]) by
+ ORSMSX156.amr.corp.intel.com ([169.254.8.240]) with mapi id 14.03.0439.000;
+ Thu, 12 Dec 2019 11:46:25 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     'Peter Zijlstra' <peterz@infradead.org>,
+        'Andy Lutomirski' <luto@kernel.org>
+CC:     "Yu, Fenghua" <fenghua.yu@intel.com>,
+        'Ingo Molnar' <mingo@kernel.org>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@redhat.com>,
+        'Borislav Petkov' <bp@alien8.de>,
+        'H Peter Anvin' <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        'linux-kernel' <linux-kernel@vger.kernel.org>,
+        'x86' <x86@kernel.org>
+Subject: RE: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Thread-Topic: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Thread-Index: AQHVoA1uR0NpEjA1wUmtm7eAgTQzs6eVqSUAgAB0jYCAAEXyAP//gC6AgAGn1ICAAEz+gP//pIgggACuT4CAAAUeAIAADDWAgB6dr4CAAB9eQIAADuCQ
+Date:   Thu, 12 Dec 2019 19:46:25 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F5013AA@ORSMSX115.amr.corp.intel.com>
+References: <20191121060444.GA55272@gmail.com>
+ <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+ <20191121171214.GD12042@gmail.com>
+ <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
+ <20191122105141.GY4114@hirez.programming.kicks-ass.net>
+ <20191122152715.GA1909@hirez.programming.kicks-ass.net>
+ <3908561D78D1C84285E8C5FCA982C28F7F4DD20D@ORSMSX115.amr.corp.intel.com>
+ <20191122202345.GC2844@hirez.programming.kicks-ass.net>
+ <20191122204204.GA192370@romley-ivt3.sc.intel.com>
+ <CALCETrUBomb2_2xyX-tZUD84smtDWH6e16zSN1qupkv-DWu5kw@mail.gmail.com>
+ <20191212085755.GR2827@hirez.programming.kicks-ass.net>
+ <3908561D78D1C84285E8C5FCA982C28F7F5011B2@ORSMSX115.amr.corp.intel.com>
+In-Reply-To: <3908561D78D1C84285E8C5FCA982C28F7F5011B2@ORSMSX115.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYjIxYmY1ODUtOWQzMC00MDBhLWI1OTQtN2YwMWYxY2E1M2YyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoid1dSbGpcL2lsQVd3MmFxSlwvamZyZjJmQm5zeFlSRjhJa3ExTnZyZURyMDh4RkJLZ0RUM3ZnWmtXeVZwZTRcL3dDeiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f53b507c-76dd-8733-9698-952aa7a7301f@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 03:54:13AM +0300, Dmitry Osipenko wrote:
-> 11.12.2019 19:03, Michał Mirosław пишет:
-> > Support ELAN touchpad sensor with older firmware as found on eg. Asus
-> > Transformer Pads.
-[...]
-> > @@ -814,8 +817,16 @@ static void elants_i2c_mt_event(struct elants_data *ts, u8 *buf)
-> >  			pos = &buf[FW_POS_XY + i * 3];
-> >  			x = (((u16)pos[0] & 0xf0) << 4) | pos[1];
-> >  			y = (((u16)pos[0] & 0x0f) << 8) | pos[2];
-> > -			p = buf[FW_POS_PRESSURE + i];
-> > -			w = buf[FW_POS_WIDTH + i];
-> > +			if (report_len == PACKET_SIZE_OLD) {
-> > +				w = buf[FW_POS_WIDTH + i / 2];
-> > +				w >>= 4 * (~i & 1);	// little-endian-nibbles
-> > +				w |= w << 4;
-> > +				w |= !w;
-> > +				p = w;
-> 
-> Did you copy this from the downstream driver as-is? I'm looking at the
-> Nexus 7 driver and it does the following for older format:
-> 
-> u8 size_idx[] = { 35, 35, 36, 36, 37, 37, 38, 38, 39, 39 };
-> unsigned int s;
-> 
-> if (i & 1)
-> 	s = buf[size_idx[i]];
-> else
-> 	s = buf[size_idx[i]] / 16;
-> 
-> w = s & 0xf;
-> p = s * 16;
+>> If anything we could switch the entire bitmap interface to unsigned int,
+>> but I'm not sure that'd actually help much.
+>
+> As we've been looking for potential split lock issues in kernel code, most of
+> the ones we found relate to callers who have <=32 bits and thus stick:
+>
+>	u32 flags;
+>
+> in their structure.  So it would solve those places, and fix any future code
+> where someone does the same thing.
 
-This is the same thing modulo (w), which is scaled here to declared axis
-range (1-255 from 0-15, assuming 0 means "no touch" so it should not occur).
+If different architectures can do better with 8-bit/16-bit/32-bit/64-bit instructions
+to manipulate bitmaps, then perhaps this is justification to make all the
+functions operate on "bitmap_t" and have each architecture provide the
+typedef for their favorite width.
 
-OTOH, I admit, that I don't have any software that can verify those
-settings. It might be that eg. one of MT_PRESSURE or MT_TOUCH_MAJOR axes
-should be dropped in this case, but with no docs I can't be sure what
-the reported values really are.
-
-This is from the original (GPL) code dump labeled 'Asus 10_6_1_27_5':
-
-|  touch_size = ((i & 0x01) ? buf[size_index[i]] : (buf[size_index[i]] >> 4)) & 0x0F;
-|  if(touch_size == 0) touch_size = 1;
-|  if (touch_size <= 7)
-|      touch_size = touch_size << 5;
-|  else
-|      touch_size = 255;
-|    
-|    input_report_abs(idev, ABS_MT_TOUCH_MAJOR, touch_size);
-|    input_report_abs(idev, ABS_MT_PRESSURE, touch_size);
-
-
-Best Regards,
-Michał Mirosław
+-Tony
