@@ -2,257 +2,140 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A579FC43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0A5C2D0C8
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7695322527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FA322527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 08:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfLLITP (ORCPT
+        id S1728263AbfLLITQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 03:19:15 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37002 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728197AbfLLITN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 03:19:13 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC8CCjv126073
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 03:19:12 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtdp5bbk5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 03:19:12 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 12 Dec 2019 08:19:10 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Dec 2019 08:19:06 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBC8INZR36176334
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 08:18:23 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87C24AE051;
-        Thu, 12 Dec 2019 08:19:05 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FDCAAE053;
-        Thu, 12 Dec 2019 08:19:04 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.137.139])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Dec 2019 08:19:04 +0000 (GMT)
-Subject: Re: [PATCH v2 1/2] IMA: Define workqueue for early boot "key"
- measurements
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     eric.snowberg@oracle.com, dhowells@redhat.com,
-        mathew.j.martineau@linux.intel.com, matthewgarrett@google.com,
-        sashal@kernel.org, jamorris@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-Date:   Thu, 12 Dec 2019 03:19:03 -0500
-In-Reply-To: <20191211185116.2740-2-nramas@linux.microsoft.com>
-References: <20191211185116.2740-1-nramas@linux.microsoft.com>
-         <20191211185116.2740-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121208-4275-0000-0000-0000038E2C42
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121208-4276-0000-0000-000038A1E422
-Message-Id: <1576138743.4579.147.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_01:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=2
- priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912120057
+        Thu, 12 Dec 2019 03:19:16 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:7222 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728201AbfLLITO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 03:19:14 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 077BD20775CFDA10E796;
+        Thu, 12 Dec 2019 16:19:12 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 12 Dec 2019
+ 16:19:03 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
+        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+Subject: [PATCH v2 1/4] KVM: VMX: Fix some typos and out-dated function names in comments
+Date:   Thu, 12 Dec 2019 16:18:35 +0800
+Message-ID: <1576138718-32728-2-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1576138718-32728-1-git-send-email-linmiaohe@huawei.com>
+References: <1576138718-32728-1-git-send-email-linmiaohe@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-12-11 at 10:51 -0800, Lakshmi Ramasubramanian wrote:
-> Measuring keys requires a custom IMA policy to be loaded.
-> Keys created or updated before a custom IMA policy is loaded should
-> be queued and the keys should be processed after a custom policy
-> is loaded.
-> 
-> This patch defines workqueue for queuing keys when a custom IMA policy
-> has not yet been loaded.
-> 
-> A flag namely ima_process_keys is used to check if the key should be
-> queued or should be processed immediately.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima.h                 |  15 +++
->  security/integrity/ima/ima_asymmetric_keys.c | 110 +++++++++++++++++++
->  2 files changed, 125 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index f06238e41a7c..97f8a4078483 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -205,6 +205,21 @@ extern const char *const func_tokens[];
->  
->  struct modsig;
->  
-> +#ifdef CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE
-> +/*
-> + * To track keys that need to be measured.
-> + */
-> +struct ima_key_entry {
-> +	struct list_head list;
-> +	void *payload;
-> +	size_t payload_len;
-> +	char *keyring_name;
-> +};
-> +void ima_process_queued_keys(void);
-> +#else
-> +static inline void ima_process_queued_keys(void) {}
-> +#endif /* CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE */
-> +
->  /* LIM API function definitions */
->  int ima_get_action(struct inode *inode, const struct cred *cred, u32 secid,
->  		   int mask, enum ima_hooks func, int *pcr,
-> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-> index fea2e7dd3b09..ba01e04ec025 100644
-> --- a/security/integrity/ima/ima_asymmetric_keys.c
-> +++ b/security/integrity/ima/ima_asymmetric_keys.c
-> @@ -14,6 +14,116 @@
->  #include <keys/asymmetric-type.h>
->  #include "ima.h"
->  
-> +/*
-> + * Flag to indicate whether a key can be processed
-> + * right away or should be queued for processing later.
-> + */
-> +bool ima_process_keys;
-> +
-> +/*
-> + * To synchronize access to the list of keys that need to be measured
-> + */
-> +static DEFINE_MUTEX(ima_keys_mutex);
-> +static LIST_HEAD(ima_keys);
-> +
-> +static void ima_free_key_entry(struct ima_key_entry *entry)
-> +{
-> +	if (entry) {
-> +		kfree(entry->payload);
-> +		kfree(entry->keyring_name);
-> +		kfree(entry);
-> +	}
-> +}
-> +
-> +static struct ima_key_entry *ima_alloc_key_entry(
-> +	struct key *keyring,
-> +	const void *payload, size_t payload_len)
-> +{
-> +	int rc = 0;
-> +	struct ima_key_entry *entry;
-> +
-> +	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-> +	if (entry) {
-> +		entry->payload = kmemdup(payload, payload_len, GFP_KERNEL);
-> +		entry->keyring_name = kstrdup(keyring->description,
-> +					      GFP_KERNEL);
-> +		entry->payload_len = payload_len;
-> +	}
-> +
-> +	if ((entry == NULL) || (entry->payload == NULL) ||
-> +	    (entry->keyring_name == NULL)) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	INIT_LIST_HEAD(&entry->list);
-> +
-> +out:
-> +	if (rc) {
-> +		ima_free_key_entry(entry);
-> +		entry = NULL;
-> +	}
-> +
-> +	return entry;
-> +}
-> +
-> +bool ima_queue_key(struct key *keyring, const void *payload,
-> +		   size_t payload_len)
-> +{
-> +	bool queued = false;
-> +	struct ima_key_entry *entry;
-> +
-> +	entry = ima_alloc_key_entry(keyring, payload, payload_len);
-> +	if (!entry)
-> +		return false;
-> +
-> +	mutex_lock(&ima_keys_mutex);
-> +	if (!ima_process_keys) {
-> +		list_add_tail(&entry->list, &ima_keys);
-> +		queued = true;
-> +	}
-> +	mutex_unlock(&ima_keys_mutex);
-> +
-> +	if (!queued)
-> +		ima_free_key_entry(entry);
-> +
-> +	return queued;
-> +}
-> +
-> +/*
-> + * ima_process_queued_keys() - process keys queued for measurement
-> + *
-> + * This function sets ima_process_keys to true and processes queued keys.
-> + * From here on keys will be processed right away (not queued).
-> + */
-> +void ima_process_queued_keys(void)
-> +{
-> +	struct ima_key_entry *entry, *tmp;
-> +	LIST_HEAD(temp_ima_keys);
-> +
-> +	if (ima_process_keys)
-> +		return;
-> +
-> +	ima_process_keys = true;
-> +
-> +	INIT_LIST_HEAD(&temp_ima_keys);
-> +
-> +	mutex_lock(&ima_keys_mutex);
-> +
-> +	list_for_each_entry_safe(entry, tmp, &ima_keys, list)
-> +		list_move_tail(&entry->list, &temp_ima_keys);
-> +
-> +	mutex_unlock(&ima_keys_mutex);
+From: Miaohe Lin <linmiaohe@huawei.com>
 
+Fix some comment typos and out-dated function names in comments. Since
+commit b1346ab2afbe ("KVM: nVMX: Rename prepare_vmcs02_*_full to
+prepare_vmcs02_*_rare"), prepare_vmcs02_full has been renamed to
+prepare_vmcs02_rare.
+nested_vmx_merge_msr_bitmap is renamed to nested_vmx_prepare_msr_bitmap
+since commit c992384bde84 ("KVM: vmx: speed up MSR bitmap merge").
 
-The v1 comment, which explained the need for using a temporary
-keyring, is an example of an informative comment.  If you don't
-object, instead of re-posting this patch, I can insert it.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ arch/x86/kvm/vmx/nested.c             | 2 +-
+ arch/x86/kvm/vmx/vmcs_shadow_fields.h | 4 ++--
+ arch/x86/kvm/vmx/vmx.c                | 8 ++++----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-Mimi
-
-> +
-> +	list_for_each_entry_safe(entry, tmp, &temp_ima_keys, list) {
-> +		process_buffer_measurement(entry->payload, entry->payload_len,
-> +					   entry->keyring_name, KEY_CHECK, 0,
-> +					   entry->keyring_name);
-> +		list_del(&entry->list);
-> +		ima_free_key_entry(entry);
-> +	}
-> +}
-> +
->  /**
->   * ima_post_key_create_or_update - measure asymmetric keys
->   * @keyring: keyring to which the key is linked to
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 7b01ef1d87e6..63ab49de324d 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3427,7 +3427,7 @@ static int nested_vmx_run(struct kvm_vcpu *vcpu, bool launch)
+ 
+ /*
+  * On a nested exit from L2 to L1, vmcs12.guest_cr0 might not be up-to-date
+- * because L2 may have changed some cr0 bits directly (CRO_GUEST_HOST_MASK).
++ * because L2 may have changed some cr0 bits directly (CR0_GUEST_HOST_MASK).
+  * This function returns the new value we should put in vmcs12.guest_cr0.
+  * It's not enough to just return the vmcs02 GUEST_CR0. Rather,
+  *  1. Bits that neither L0 nor L1 trapped, were set directly by L2 and are now
+diff --git a/arch/x86/kvm/vmx/vmcs_shadow_fields.h b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+index eb1ecd16fd22..cad128d1657b 100644
+--- a/arch/x86/kvm/vmx/vmcs_shadow_fields.h
++++ b/arch/x86/kvm/vmx/vmcs_shadow_fields.h
+@@ -23,12 +23,12 @@ BUILD_BUG_ON(1)
+  *
+  * When adding or removing fields here, note that shadowed
+  * fields must always be synced by prepare_vmcs02, not just
+- * prepare_vmcs02_full.
++ * prepare_vmcs02_rare.
+  */
+ 
+ /*
+  * Keeping the fields ordered by size is an attempt at improving
+- * branch prediction in vmcs_read_any and vmcs_write_any.
++ * branch prediction in vmcs12_read_any and vmcs12_write_any.
+  */
+ 
+ /* 16-bits */
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 51e3b27f90ed..dae712c8785e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1922,7 +1922,7 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ }
+ 
+ /*
+- * Writes msr value into into the appropriate "register".
++ * Writes msr value into the appropriate "register".
+  * Returns 0 on success, non-0 otherwise.
+  * Assumes vcpu_load() was already called.
+  */
+@@ -2016,7 +2016,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		 *
+ 		 * For nested:
+ 		 * The handling of the MSR bitmap for L2 guests is done in
+-		 * nested_vmx_merge_msr_bitmap. We should not touch the
++		 * nested_vmx_prepare_msr_bitmap. We should not touch the
+ 		 * vmcs02.msr_bitmap here since it gets completely overwritten
+ 		 * in the merging. We update the vmcs01 here for L1 as well
+ 		 * since it will end up touching the MSR anyway now.
+@@ -2052,7 +2052,7 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		 *
+ 		 * For nested:
+ 		 * The handling of the MSR bitmap for L2 guests is done in
+-		 * nested_vmx_merge_msr_bitmap. We should not touch the
++		 * nested_vmx_prepare_msr_bitmap. We should not touch the
+ 		 * vmcs02.msr_bitmap here since it gets completely overwritten
+ 		 * in the merging.
+ 		 */
+@@ -6720,7 +6720,7 @@ static struct kvm_vcpu *vmx_create_vcpu(struct kvm *kvm, unsigned int id)
+ 	 * If PML is turned on, failure on enabling PML just results in failure
+ 	 * of creating the vcpu, therefore we can simplify PML logic (by
+ 	 * avoiding dealing with cases, such as enabling PML partially on vcpus
+-	 * for the guest, etc.
++	 * for the guest), etc.
+ 	 */
+ 	if (enable_pml) {
+ 		vmx->pml_pg = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
+-- 
+2.19.1
 
