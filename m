@@ -2,134 +2,121 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F68C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21A3C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE1F24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:29:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvOxXaJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 971B521655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 05:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1576128677;
+	bh=IqT00ys4+en9fWFNviGZ5cJEB2KyitXoZ7Fsi/IzO9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=h3on5MTsd95GgrbygmXAoWmr10IOtrF0jyjsqi3/qrzC8ROqP2c5+Zbu2G/eDuS3a
+	 ywFKiuGb4oXSJZA36ROKMCWrXBDz7qNImm97vnMv/0SWjajUIkiLrRhS5zt/0+4n2l
+	 PgIldPewT6DUUKcpXVpVD1QtrkkIPJzkantzL/CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfLLF3l (ORCPT
+        id S1726931AbfLLFbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 00:29:41 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:42941 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfLLF3l (ORCPT
+        Thu, 12 Dec 2019 00:31:16 -0500
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:63787 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfLLFbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 00:29:41 -0500
-Received: by mail-pj1-f66.google.com with SMTP id o11so523573pjp.9;
-        Wed, 11 Dec 2019 21:29:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ty3dpK0QTIzeB9iEDR4WAHT8NL5h1eWqIJaiU5glr4w=;
-        b=MvOxXaJJ2IDFyzGFq4UInxj47QiscDaLhYt7M0EP5WBcwN2+3/NiArepmzNC4+A0Sv
-         Ll30HqN8p4r33J3HTR2uWW2lT9Z2f9JsIsmyPo8d1Be9fAmy9PpkmO3I+IH/AyDdF5b3
-         h0zei4D2vTlnmmZZSquKtLEnRc5oL9T/DvDxVazJgApCejDPRm6ey8/dfOsq5PdWuVXU
-         fkrCH2gqmiH17vyTDRZfRW9s2y8QXJUjSA8VSe8iNc63vDe6KLTiA68cTe6mfV3411iA
-         /GzJ3je9Nu7ftlLJUBZDuiPbrGtsYbQxEP1x2z+GgghBOoIlO/6v2fBLsshmsIMX9Yd1
-         EgAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ty3dpK0QTIzeB9iEDR4WAHT8NL5h1eWqIJaiU5glr4w=;
-        b=WJiigQUQ4c4ZClztagmHP/yOox9b69KDr81tDh1Lom6GtqjrZ6GqrnI6bxmNZuVQvg
-         jHeGRxda1r/aTFVmRFMzOhdh2Iho20qOgTvcQI+ok6r9LTKUzvXKGTS3nkk9qga7LvP6
-         RxYOcq1k3Vlpa0tbLDtaHxNynJ2PrNwV3EGDPiec+v87QJW+qSxBoyTfkAHNL4fUgCzD
-         2gNIg4tErWBuin2rlKfHwCav2saALY5Qp5lI1JqN6y1PYJmqkFbqaiMrtXWbPvi8ovRQ
-         8C/tLExNZzcV5vMbMtKdtU4GaZUr5hhtcDHSLx3b9b0UadksgS7VvOjnd85LaHgVEIjg
-         +4yA==
-X-Gm-Message-State: APjAAAWsYx+WHieKcqxFhletZMEX3BmH7I7OdBxf1sq9dSdyu/66MyMh
-        WwhqjISgYWhpfPis+Dvm9aPJMLNR
-X-Google-Smtp-Source: APXvYqw67g9FGJ3Vsm4Tg5w1zgdJ1orF+ZDvuJ6G4/7V8u/UUhkJNsMtkHC/XUA8SoL+1XPJKIaX5A==
-X-Received: by 2002:a17:90a:33e8:: with SMTP id n95mr7975895pjb.17.1576128580674;
-        Wed, 11 Dec 2019 21:29:40 -0800 (PST)
-Received: from localhost.localdomain ([163.152.162.99])
-        by smtp.gmail.com with ESMTPSA id h7sm5532289pfq.36.2019.12.11.21.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 21:29:40 -0800 (PST)
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah@kernel.org, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org, marmarek@invisiblethingslab.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Suwan Kim <suwan.kim027@gmail.com>
-Subject: [PATCH 2/2] usbip: Fix error path of vhci_recv_ret_submit()
-Date:   Thu, 12 Dec 2019 14:28:41 +0900
-Message-Id: <20191212052841.6734-3-suwan.kim027@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191212052841.6734-1-suwan.kim027@gmail.com>
-References: <20191212052841.6734-1-suwan.kim027@gmail.com>
+        Thu, 12 Dec 2019 00:31:16 -0500
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id xBC5UtvP010862;
+        Thu, 12 Dec 2019 14:30:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xBC5UtvP010862
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1576128656;
+        bh=yoxmpqDe2x6QTk+OCI2TnHYO1f9S6bQL94maOXXu9Cg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=BFMJ0fqyvkgSQU6XTqtRTdjRVMGf2K4LKdULuCjmxrJWmEHbKkLTL08Jq3uyKFVWQ
+         r4z0QcWjdD2c6KDnie9ikxQRa1XFzD6r+OKJRJi2GlzbLkLCA2OFTq483TGWTRxdev
+         xYWai3NjWpSNEvWhjJjrKsz3PgzeKZ5V1fstOAV2RAjbvGY3qRGLQA3L+7GLUrCoO7
+         oE6znrbosrNWUtV+Jt3KUpR0KxJe8isMHFxHkrF7i4Ozq9Y2dV5rOc1ZJTOxGPzWfg
+         DHhHtSHkeZsCF1CNMGn79CYhEJ4hDt93Rwr+rBYcydoDo9cZ+0ReAF239Y55rpytp2
+         8FAz7fY+UmymA==
+X-Nifty-SrcIP: [209.85.221.182]
+Received: by mail-vk1-f182.google.com with SMTP id s62so55073vkb.10;
+        Wed, 11 Dec 2019 21:30:55 -0800 (PST)
+X-Gm-Message-State: APjAAAU4yAC9S9XsgqNCoyD1w/Dy1qZM/z4hhi6mh/CXHcSSsrCuFMqh
+        Od1BN49kZ1ME+CzCdZsM6Lqbwnt5nG21/LirURU=
+X-Google-Smtp-Source: APXvYqzyAz3nSzfmsWApFSr+H7lqWz4keVsUzY5ov/PBG2Gnw3VZND0u41kQMEzVp4JKD2lPAcUKpZx5ND+FxHbatqM=
+X-Received: by 2002:a1f:2e4a:: with SMTP id u71mr3546169vku.96.1576128654360;
+ Wed, 11 Dec 2019 21:30:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <87wob4tf9b.fsf@alyssa.is>
+In-Reply-To: <87wob4tf9b.fsf@alyssa.is>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 12 Dec 2019 14:30:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ2+=jCO5SUpB-C8NZHODLVXs3SJ2qyYR9J+OiU_+1iAg@mail.gmail.com>
+Message-ID: <CAK7LNAQ2+=jCO5SUpB-C8NZHODLVXs3SJ2qyYR9J+OiU_+1iAg@mail.gmail.com>
+Subject: Re: Bogus dependency for HW_RANDOM_VIRTIO with oldconfig
+To:     Alyssa Ross <hi@alyssa.is>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-crypto@vger.kernel.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a transaction error happens in vhci_recv_ret_submit(), event
-handler closes connection and changes port status to kick hub_event.
-Then hub tries to flush the endpoint URBs, but that causes infinite
-loop between usb_hub_flush_endpoint() and vhci_urb_dequeue() because
-"vhci_priv" in vhci_urb_dequeue() was already released by
-vhci_recv_ret_submit() before a transmission error occurred. Thus,
-vhci_urb_dequeue() terminates early and usb_hub_flush_endpoint()
-continuously calls vhci_urb_dequeue().
+On Tue, Dec 10, 2019 at 11:41 PM Alyssa Ross <hi@alyssa.is> wrote:
+>
+> I'm new here and not sure if I'm contacting the correct people/groups --
+> please point me in the right direction if not.  I don't know if the
+> culprit here is Kconfig, the virtio Kconfig file, the hw_random Kconfig
+> file, or some combination of those.
+>
+> I believe I have discovered an issue with the order in which make
+> oldconfig asks for virtio-related options, and would appreciate some
+> advice on how to solve it:
+>
+> HW_RANDOM_VIRTIO=y depends on VIRTIO=y.  In my kernel, VIRTIO=y is
+> selected by VIRITO_PCI=y, but when make oldconfig prompts for
+> HW_RANDOM_VIRTIO, VIRTIO_PCI has not been prompted for yet, and so
+> VIRTIO is still set to m.
+>
+> This means that it's not possible for me to set HW_RANDOM_VIRTIO=y using
+> oldconfig without setting an VIRTIO-selecting option I don't need, but
+> that is prompted for _before_ HW_RANDOM_VIRTIO.  One such option that I
+> have identified so far is VOP.  It is prompted for before
+> HW_RANDOM_VIRTIO, and so if I set VOP=y it is now possible to set
+> HW_RANDOM_VIRTIO.
+>
+> When using menuconfig on a config file generated with oldconfig, that
+> does not have HW_RANDOM_VIRTIO enabled, I am able to set HW_RANDOM=y and
+> HW_RANDOM_VIRTIO=y, and after saving I can confirm that no other changes
+> have been made to the configuration file.  This tells me that there's no
+> need for a dependency on e.g. VOP, except when using oldconfig.
 
-The root cause of this issue is that vhci_recv_ret_submit()
-terminates early without giving back URB when transaction error
-occurs in vhci_recv_ret_submit(). That causes the error URB to still
-be linked at endpoint list without “vhci_priv".
+OK, you are right.
 
-So, in the case of trasnaction error in vhci_recv_ret_submit(),
-unlink URB from the endpoint, insert proper error code in
-urb->status and give back URB.
+Actually, the oldconfig restarts when it finds a newly-visible option.
+For example, when VIRTIO is changed from n to y,
+oldconfig restarts the menu and shows a prompt for HW_RANDOM_VIRTIO.
 
-Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
----
- drivers/usb/usbip/vhci_rx.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+But, this does not happen when VIRTIO is changed from m to y.
 
-diff --git a/drivers/usb/usbip/vhci_rx.c b/drivers/usb/usbip/vhci_rx.c
-index 33f8972ba842..dc26acad6baf 100644
---- a/drivers/usb/usbip/vhci_rx.c
-+++ b/drivers/usb/usbip/vhci_rx.c
-@@ -77,16 +77,21 @@ static void vhci_recv_ret_submit(struct vhci_device *vdev,
- 	usbip_pack_pdu(pdu, urb, USBIP_RET_SUBMIT, 0);
- 
- 	/* recv transfer buffer */
--	if (usbip_recv_xbuff(ud, urb) < 0)
--		return;
-+	if (usbip_recv_xbuff(ud, urb) < 0) {
-+		urb->status = -EPIPE;
-+		goto error;
-+	}
- 
- 	/* recv iso_packet_descriptor */
--	if (usbip_recv_iso(ud, urb) < 0)
--		return;
-+	if (usbip_recv_iso(ud, urb) < 0) {
-+		urb->status = -EPIPE;
-+		goto error;
-+	}
- 
- 	/* restore the padding in iso packets */
- 	usbip_pad_iso(ud, urb);
- 
-+error:
- 	if (usbip_dbg_flag_vhci_rx)
- 		usbip_dump_urb(urb);
- 
+> So, I think there is an ordering issue here, and that oldconfig
+> should not prompt for HW_RANDOM_VIRTIO until after any option that might
+> select VIRTIO=y.
+>
+> I would be happy to try to submit or test a patch to fix this, but I
+> don't know where to go from here.
+
+Perhaps check_conf() could be fixed, though I have not looked into it yet.
+
+
 -- 
-2.20.1
-
+Best Regards
+Masahiro Yamada
