@@ -2,201 +2,151 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1B6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA51BC43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84A4222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57D3222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 04:13:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e3SCyNmm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r1N7j2c/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfLLEMW (ORCPT
+        id S1727924AbfLLENW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 11 Dec 2019 23:12:22 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36372 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfLLELz (ORCPT
+        Wed, 11 Dec 2019 23:13:22 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39218 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbfLLENW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 11 Dec 2019 23:11:55 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a203so539599qkc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 11 Dec 2019 20:11:54 -0800 (PST)
+        Wed, 11 Dec 2019 23:13:22 -0500
+Received: by mail-pl1-f194.google.com with SMTP id o9so14049plk.6;
+        Wed, 11 Dec 2019 20:13:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7l5JKLqHdHgruudTWmIyB43cagXE9G3mjJRNavUYrx4=;
-        b=e3SCyNmm8WdEkCQ7f3y2JoLiUnEkvMrrU/TuSfpi+kkupGJr28+LC5r5TA0lQcSeIR
-         vvBy19qWpacP2+4UZTKfaFcgRe8r7P1Wfcq3xidv9Hf43Mq3Cvt8TvxmiTXfn3N/Xsvh
-         Apr44+/tMBHFY6K27rPCm9SiRomjBs/sNiM3GDLBtohddXnL6BcV0q4+mMU+HkXsnzAC
-         /EdpT3yUbUdm/3Ib5DgDGRuiIV2g1jbbDKPN6TtSstSp4SVzX0aydgoGdgd+INdWmFB9
-         3dIjeKF+X+Ig3QzTtNaP7/pEhOU80TuR1vsNrqwGQiNR5uaY+iYmySn639nxva/hL8CW
-         RiWg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3wj8Dheg0t7aOx2oOyzDxBUcqj9QGe+RgbTXlwms6a8=;
+        b=r1N7j2c/zMJURipN0QTxbWPytjyUJrIn7WZ5+bPqliFjXb2hVmvhoQA6OTIHd+2y03
+         52nYVDGsbT9k+IRibuEvylq8KhGkiho1UE52ESmRBryK7pWshfAqj4e6knQO87Yh/h2a
+         FNINv5Twrp8glgmL4wayQg/84+qwRanQiHb6vf6xZ5d3D3E4VPF8VIN+JRALkYoj/DlC
+         Lb8H6wVaqn36cpO9wuU6JFHbG/z3xF6PYMwRz3DJAGsiWrPh7Dl4nErHz3GS55Ujt5cX
+         JClYjVQk8+Fqr/ERw3+wfPCTpwIkr6eFPd8RN2kqpgDUY0W0+3ot3Jxy+IV7YXpTdpyg
+         Fe7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=7l5JKLqHdHgruudTWmIyB43cagXE9G3mjJRNavUYrx4=;
-        b=PNaDAP8eoHgZnk9rFbVNJfUsuC0oNe5KWSIBSpOIdroWWxVdCSBhqo3zwoy2lxwGqr
-         a+podJzhTt4uF5QIgdNK5khbXnkOGPh670iRdvWy+R733fjbj9Y+Fis3oT2OSaMYILpk
-         ZCoFUQpeigE41onca2WcDKyEdR2mRvTylfNXdP08Mb6eTScIPlP6wSHPQjYiQO82R/HH
-         nJ0e3UckOV8QwrlfNgcn/UjiBbiMsE3CyUMONuWAcnlUwRHVNiTAFzgo/Tjp9Vx/KqbA
-         51xg4CXWMitV6JbjSxs9syb5SSLj4p7BUVaOqKAFV1HVAOxC86qk8DZBOdxWcHe9bkBA
-         Rt/Q==
-X-Gm-Message-State: APjAAAUYiCgji/1zAN5TcN3SbOEJpdofxchREApRAK+taiZh1FpSK2tL
-        n4MafJEpFIUhYe/hmNlzUzAP/Q==
-X-Google-Smtp-Source: APXvYqx6nLAvmXFo0EYR5d9XGwePPiY2grZzGrICF+/4YsX4sqK6wuoDqbQGdnQRwlh2YeQdOZqKyQ==
-X-Received: by 2002:a37:b601:: with SMTP id g1mr6388350qkf.114.1576123914207;
-        Wed, 11 Dec 2019 20:11:54 -0800 (PST)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id s11sm1364126qkg.99.2019.12.11.20.11.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 11 Dec 2019 20:11:53 -0800 (PST)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v6 3/7] Add infrastructure to store and update instantaneous thermal pressure
-Date:   Wed, 11 Dec 2019 23:11:44 -0500
-Message-Id: <1576123908-12105-4-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
-References: <1576123908-12105-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3wj8Dheg0t7aOx2oOyzDxBUcqj9QGe+RgbTXlwms6a8=;
+        b=f3unug2tADMIJxaqF4SPHIdkhzouu6hYYCQV6sSnfODiwdI9Ieed2BeSSRodEWRIjy
+         78mcuYdARO1r1J31eg0zZup7KYFj9d9ib6M7muiMwvJM7K4T0oQ7Icezv9PPYXI5AYUu
+         7ZqBRJ/WQXqv+FIDbR6CKyX2YhfStKbjz7V/jGqEP2Ej5wDGq0zrPzJBpRAlWgnO4kWs
+         pNvIAmc0eTLwvwiO4cO916VXnWEauUykXHktIfgw7/sFIAAo9yX9KmpA23b+5NT0M+JV
+         WqIV4rgaF+tNDSiL7Xt0NW1s4+8Ef45XvmXb4+95MHklOM7VUj3jnFn9mu3/3DGukXp9
+         v/bA==
+X-Gm-Message-State: APjAAAXoik8+Hy+qNdzEMKMty5rAcFBTLQKuIv4dJe17th8oa5Dhec+h
+        jRgfXRJY6c3THA7Okj7oKD1RyrUd
+X-Google-Smtp-Source: APXvYqx276a1h/f7HPGSuz3alCcMOUjkgid0eq8s6bOTm+l/jw8fdiG9/xSRI/bwj43vEbn0UKa/Mg==
+X-Received: by 2002:a17:902:fe8d:: with SMTP id x13mr7497211plm.232.1576124001147;
+        Wed, 11 Dec 2019 20:13:21 -0800 (PST)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id i3sm4930058pfg.94.2019.12.11.20.13.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 11 Dec 2019 20:13:20 -0800 (PST)
+Subject: Re: [PATCH net-next v3 0/5] ethtool netlink interface, preliminary
+ part
+To:     Michal Kubecek <mkubecek@suse.cz>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jiri Pirko <jiri@resnulli.us>, Andrew Lunn <andrew@lunn.ch>,
+        John Linville <linville@tuxdriver.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-kernel@vger.kernel.org
+References: <cover.1576057593.git.mkubecek@suse.cz>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <7814ad69-8ae8-bc93-a880-ffa351d7b005@gmail.com>
+Date:   Wed, 11 Dec 2019 20:13:19 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <cover.1576057593.git.mkubecek@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add architecture specific APIs to update and track thermal pressure on a
-per cpu basis. A per cpu variable thermal_pressure is introduced to keep
-track of instantaneous per cpu thermal pressure. Thermal pressure is the
-delta between maximum capacity and capped capacity due to a thermal event.
-capacity and capped capacity due to a thermal event.
 
-topology_get_thermal_pressure can be hooked into the scheduler specified
-arch_scale_thermal_capacity to retrieve instantaneius thermal pressure of
-a cpu.
 
-arch_set_thermal_presure can be used to update the thermal pressure by
-providing a capped maximum capacity.
+On 12/11/2019 1:58 AM, Michal Kubecek wrote:
+> As Jakub Kicinski suggested in ethtool netlink v7 discussion, this
+> submission consists only of preliminary patches which raised no objections;
+> first four patches already have Acked-by or Reviewed-by.
 
-Considering topology_get_thermal_pressure reads thermal_pressure and
-arch_set_thermal_pressure writes into thermal_pressure, one can argue for
-some sort of locking mechanism to avoid a stale value.  But considering
-topology_get_thermal_pressure_average can be called from a system critical
-path like scheduler tick function, a locking mechanism is not ideal. This
-means that it is possible the thermal_pressure value used to calculate
-average thermal pressure for a cpu can be stale for upto 1 tick period.
-
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
-
-v3->v4:
-        - Dropped per cpu max_capacity_info struct and instead added a per
-          delta_capacity variable to store the delta between maximum
-          capacity and capped capacity. The delta is now calculated when
-          thermal pressure is updated and not every tick.
-        - Dropped populate_max_capacity_info api as only per cpu delta
-          capacity is stored.
-        - Renamed update_periodic_maxcap to
-          trigger_thermal_pressure_average and update_maxcap_capacity to
-          update_thermal_pressure.
-v4->v5:
-	- As per Peter's review comments folded thermal.c into fair.c.
-	- As per Ionela's review comments revamped update_thermal_pressure
-	  to take maximum available capacity as input instead of maximum
-	  capped frequency ration.
-v5->v6:
-	- As per review comments moved all the infrastructure to track
-	  and retrieve instantaneous thermal pressure out of scheduler
-	  to topology files.
-
- arch/arm/include/asm/topology.h   |  3 +++
- arch/arm64/include/asm/topology.h |  3 +++
- drivers/base/arch_topology.c      | 13 +++++++++++++
- include/linux/arch_topology.h     | 11 +++++++++++
- 4 files changed, 30 insertions(+)
-
-diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-index 8a0fae9..90b18c3 100644
---- a/arch/arm/include/asm/topology.h
-+++ b/arch/arm/include/asm/topology.h
-@@ -16,6 +16,9 @@
- /* Enable topology flag updates */
- #define arch_update_cpu_topology topology_update_cpu_topology
- 
-+/* Replace task scheduler's defalut thermal pressure retrieve API */
-+#define arch_scale_thermal_capacity topology_get_thermal_pressure
-+
- #else
- 
- static inline void init_cpu_topology(void) { }
-diff --git a/arch/arm64/include/asm/topology.h b/arch/arm64/include/asm/topology.h
-index a4d945d..ccb277b 100644
---- a/arch/arm64/include/asm/topology.h
-+++ b/arch/arm64/include/asm/topology.h
-@@ -25,6 +25,9 @@ int pcibus_to_node(struct pci_bus *bus);
- /* Enable topology flag updates */
- #define arch_update_cpu_topology topology_update_cpu_topology
- 
-+/* Replace task scheduler's defalut thermal pressure retrieve API */
-+#define arch_scale_thermal_capacity topology_get_thermal_pressure
-+
- #include <asm-generic/topology.h>
- 
- #endif /* _ASM_ARM_TOPOLOGY_H */
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 1eb81f11..3a91379 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -42,6 +42,19 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity)
- 	per_cpu(cpu_scale, cpu) = capacity;
- }
- 
-+DEFINE_PER_CPU(unsigned long, thermal_pressure);
-+
-+void arch_set_thermal_pressure(struct cpumask *cpus,
-+			       unsigned long capped_capacity)
-+{
-+	int cpu;
-+	unsigned long delta = arch_scale_cpu_capacity(cpumask_first(cpus)) -
-+					capped_capacity;
-+
-+	for_each_cpu(cpu, cpus)
-+		WRITE_ONCE(per_cpu(thermal_pressure, cpu), delta);
-+}
-+
- static ssize_t cpu_capacity_show(struct device *dev,
- 				 struct device_attribute *attr,
- 				 char *buf)
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 3015ecb..7a04364 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -33,6 +33,17 @@ unsigned long topology_get_freq_scale(int cpu)
- 	return per_cpu(freq_scale, cpu);
- }
- 
-+DECLARE_PER_CPU(unsigned long, thermal_pressure);
-+
-+static inline
-+unsigned long topology_get_thermal_pressure(int cpu)
-+{
-+	return per_cpu(thermal_pressure, cpu);
-+}
-+
-+void arch_set_thermal_pressure(struct cpumask *cpus,
-+			       unsigned long capped_capacity);
-+
- struct cpu_topology {
- 	int thread_id;
- 	int core_id;
+Good strategy, let's make sure we can land the entire ethtool over
+netlink for v5.6, that would be a great milestone and would open up the
+door for quite a lot of development. Thanks for your persistence on the
+subject, because this is anything but fun.
 -- 
-2.1.4
-
+Florian
