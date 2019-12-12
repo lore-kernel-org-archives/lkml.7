@@ -2,207 +2,202 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41180C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07A2C2D0C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0176821655
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70A92067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LJi6/y2+"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="yel7ilHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfLLPMH (ORCPT
+        id S1729121AbfLLPMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:12:07 -0500
-Received: from mail-eopbgr50066.outbound.protection.outlook.com ([40.107.5.66]:8160
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728883AbfLLPMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:12:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mr2IpCvR7fWDjyY8DmUE1o0G+Gvhq/OfgeY02lFB6Fbg5L9d3H6fFvC5DHTaPDU9/e6cDfhiL/+QriNJcY3fiq7s4BmLRgo8JwHOIiGTXtyGSoH1kTVqrAdxTMXZ8csWpPnrMAdkgRKBRAhPUKUuIg3bM45dlnSnvDX6Ix5EuqU06guiz/Yk6Py0/MJ9DndWZ1SQ2jD4VKIyfi6gnAeN5jSVILxGLIuhT2LVqQDQSd14+mciOBbpcmyt7ta6QcNtD1431x924lWkO7WzSzbvl/YjQwVYXP2bHNdIflFEaTInyEXBudsl5pZpiF3hT/xlLEcOGMHegaI7XcnjSi7idw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2je7bdPVoppYRk+mIJA54yYVc3BE0wkBmNj0P7bgQOY=;
- b=Mwq/cy7LES/IhFEM49rkuQCJsmsCzW2FCFLUlLQNuu8qVDK9C+SVe7tTjMGm8qbqykIE5ZzlusIF2whsgPEJQRNIqy8zh1X6G1HzXE0/V68TMk0g8j0RP+jj5IM+6ngWIBIrgnWMoiz3QJqg0QpN6VJT+FP5fgLqdTQQFpXWn6VDf0Ri7KP3IHNu9w001tpqr/cfxOusP054egeqheCwFFQrOk60Ps3+SA0p5MoIbReOMdZqnxxe2ZNzFsMhPBOxTQ9u3LyPuH2OJKURGeRvTU2ShB0+TgNAjk6OmNy4LAQNR7PJGY9H2VpkXrXVfSQ39w3MdeHYgKXVdG9STSW+pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2je7bdPVoppYRk+mIJA54yYVc3BE0wkBmNj0P7bgQOY=;
- b=LJi6/y2+FrGbgwmPpd/eM1SflucW7R1cM1jZzZM0SNVZ915pWlINaJ+lsqyMLPlj5MQA5whvF5IdNrvFeLJp0XtqlPCnSV7Ckr4UwUpv3QouJwcZyPosFSi13ZnG9i37tRQlGsSr1zsvmCGQJG20YFZATgtjfJf2GfzE+yM921I=
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) by
- VI1PR0402MB3678.eurprd04.prod.outlook.com (52.134.12.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2516.17; Thu, 12 Dec 2019 15:10:21 +0000
-Received: from VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::69c1:8385:67ab:cb0f]) by VI1PR0402MB3918.eurprd04.prod.outlook.com
- ([fe80::69c1:8385:67ab:cb0f%2]) with mapi id 15.20.2538.016; Thu, 12 Dec 2019
- 15:10:21 +0000
-From:   Mirela Rabulea <mirela.rabulea@nxp.com>
-To:     "mchehab@kernel.org" <mchehab@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "laurent.pinchart+renesas@ideasonboard.com" 
-        <laurent.pinchart+renesas@ideasonboard.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "niklas.soderlund+renesas@ragnatech.se" 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v2 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Topic: [PATCH v2 4/5] media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG
- Encoder/Decoder
-Thread-Index: AQHVm7EZYainAUrU+0KZ+YmU4QHyZKe2xSiA
-Date:   Thu, 12 Dec 2019 15:10:21 +0000
-Message-ID: <1576163421.17593.11.camel@nxp.com>
-References: <1573821286-26506-1-git-send-email-mirela.rabulea@nxp.com>
-In-Reply-To: <1573821286-26506-1-git-send-email-mirela.rabulea@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.18.5.2-0ubuntu3.2 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mirela.rabulea@nxp.com; 
-x-originating-ip: [92.121.36.198]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bce362f3-e209-4269-fb2e-08d77f156853
-x-ms-traffictypediagnostic: VI1PR0402MB3678:|VI1PR0402MB3678:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB3678A83CBFFF1348547D3CE48F550@VI1PR0402MB3678.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(346002)(136003)(39860400002)(376002)(189003)(199004)(44832011)(7416002)(26005)(186003)(71200400001)(103116003)(6512007)(6506007)(2616005)(5660300002)(66476007)(66556008)(66446008)(64756008)(66946007)(81156014)(91956017)(76116006)(6486002)(81166006)(4326008)(8676002)(86362001)(4001150100001)(478600001)(2906002)(316002)(8936002)(110136005)(36756003)(54906003)(99106002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3678;H:VI1PR0402MB3918.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: guM5RmcpqdXYXmkHTGRY2LkSWog9A3rUlRTW8a8CM1w+k3TPMLUrT5TTd8eEpSZuVlgP6Ce5FLnraIIRivljFecIBSez9VITUz/OQgJPcfwfsk4fm3rGZY2CPfXvERHen6v0gB1HYLuPFzQC1egy+O4b6R52j9xJvfOoApkoYGmPKVyn5ASIDafWaTwDB5G5+xufG6gtFchYAAia+1Rh8T72T8szwQIRXKMK32NiH9tzvqZUXTYnXaV0kj1mW5rF7IAqrYyIwo1imE9ZrGX5ZFS1EeVbPEaqfcFG15D/MyWsT6uWMXbdylhzfdgiu82569STBKBGXgOQCY3MTsrhBlkaQ4+NwfB9eQsO8nc2rmN8mSMzy0oriYMEA1WQJzXd1Uh14rfMC2y6dD1s7yiE++yWXz54trsC/EylkwmE6TT4oPIJWd3UyTgrwHV4UDwpZFUq1ea8vTLFmYKvQSoZTNWzqEMX/UPWg1ThwcvpE762TX0NGH782VT29EdXJx2y
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2455AE94C0535C4B8421177CA2E5E737@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 12 Dec 2019 10:12:31 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38593 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728581AbfLLPMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:12:31 -0500
+Received: by mail-io1-f68.google.com with SMTP id v3so3148707ioj.5
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 07:12:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xYajL1U4jC9ZExri89zzMJt4P1KGCBp+VKCTmb/5gEg=;
+        b=yel7ilHm7D9YLCabiqexU/awxOwjIQwGurhRmekMKKUCirwy/juruq6cvGggD1GKAO
+         BgFeDjrvbG/+D99lMen/iUvoq7qqEqvuPt7cVVEJtgAAGAr3ihKjSzv8EJ5EMbR3a8PA
+         fYU/s648B7KEiKfRte1jl73nBCJxGA7ISEMkBQMbkvOA4h0nJk+4sPwFWEASOy5ozfZd
+         uplPqjE8+JJGMjj4J7ggm5mU/tSG2meECVA1OrpwHA2gMttqddtr7BJm6QR9Q9a21bPu
+         PVjTpPSGA697ks/ntLRSadMIrd+lBaQxwltVvf6h336i/BiWOdrJafIncICcS0E+cTnB
+         EJ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xYajL1U4jC9ZExri89zzMJt4P1KGCBp+VKCTmb/5gEg=;
+        b=jX+3YSi9MpQZINeHlB2EzfSyPBglGa9zZT1gSO6vGKLflL/ZYcIbH0qlIVEzJ7UV/Z
+         ybbHkdbkcuZ6VJha7APxY1yRal1lgBcgTFhXd+sat+y+15pmu+aDOlCg1gqWHli1wtFL
+         D0hOKDHkDI5AFkSKVX4Q2iqQtbHIExGyBbY/4QUUMa4z8FxzAdDyNF+WqPJUFaZXv7Rs
+         Lf3PO942bomnTQsZBM6qZvJ62ZV59+eOkNs+OP271e4QaU4EI0YzAZ3IjXyr77HNAs6T
+         qEnXwawHwuI/Vc4XQAB+VwC0jOvjzd3p0sQjWjrbCMYhA6+MyqcYNIcQPKrA8Txj5Fw0
+         VynQ==
+X-Gm-Message-State: APjAAAUy6LieenpQ4xgAuEnwvv8/Jh5d0D68w/11DhzGpIvbWq+MtAdQ
+        l5/SclCerFezfQGJNCKDmzOhrA==
+X-Google-Smtp-Source: APXvYqwQrECTsC0NoxcyQsWFywGf7uiHdeeO98ULP3wU9Ay553x/UnWcSRKbYVDtIdFccs89cjtwfQ==
+X-Received: by 2002:a6b:6202:: with SMTP id f2mr3341454iog.272.1576163549769;
+        Thu, 12 Dec 2019 07:12:29 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id o83sm1801557ild.13.2019.12.12.07.12.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Dec 2019 07:12:28 -0800 (PST)
+Subject: Re: [PATCH] libata: Fix retrieving of active qcs
+To:     Sascha Hauer <s.hauer@pengutronix.de>, linux-ide@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de
+References: <20191212141656.11439-1-s.hauer@pengutronix.de>
+ <20191212142314.pcp662fb22pjidaw@pengutronix.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3edd5096-e824-1e83-8c91-43d1183c73e3@kernel.dk>
+Date:   Thu, 12 Dec 2019 08:12:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bce362f3-e209-4269-fb2e-08d77f156853
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 15:10:21.6590
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bZMr5dt/vinhT/JH4GyJg8SHoYL+AtWpRkinQO74uRKNdBqmEfNzInaOqYn90pKoDQ9/YLNJok3A8LZyFeZV3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3678
+In-Reply-To: <20191212142314.pcp662fb22pjidaw@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCk9uIFZpLCAyMDE5LTExLTE1IGF0IDE0OjM0ICswMjAwLCBNaXJlbGEgUmFidWxlYSB3
-cm90ZToNCj4gVjRMMiBkcml2ZXIgZm9yIHRoZSBKUEVHIGVuY29kZXIvZGVjb2RlciBmcm9tIGku
-TVg4UVhQL2kuTVg4UU0NCj4gYXBwbGljYXRpb24NCj4gcHJvY2Vzc29ycy4NCj4gVGhlIG11bHRp
-LXBsYW5hciBidWZmZXJzIEFQSSBpcyB1c2VkLg0KPiANCj4gQmFzZWxpbmUgYW5kIGV4dGVuZGVk
-IHNlcXVlbnRpYWwganBlZyBkZWNvZGluZyBpcyBzdXBwb3J0ZWQuDQo+IFByb2dyZXNzaXZlIGpw
-ZWcgZGVjb2RpbmcgaXMgbm90IHN1cHBvcnRlZCBieSB0aGUgSVAuDQo+IFN1cHBvcnRzIGVuY29k
-ZSBhbmQgZGVjb2RlIG9mIHZhcmlvdXMgZm9ybWF0czoNCj4gwqDCoMKgwqDCoFlVVjQ0NCwgWVVW
-NDIyLCBZVVY0MjAsIFJHQiwgQVJHQiwgR3JheQ0KPiBZVVY0MjAgaXMgdGhlIG9ubHkgbXVsdGkt
-cGxhbmFyIGZvcm1hdCBzdXBwb3J0ZWQuDQo+IE1pbmltdW0gcmVzb2x1dGlvbiBpcyA2NCB4IDY0
-LCBtYXhpbXVtIDgxOTIgeCA4MTkyLg0KPiBUaGUgYWxpZ25tZW50IHJlcXVpcmVtZW50cyBmb3Ig
-dGhlIHJlc29sdXRpb24gZGVwZW5kIG9uIHRoZSBmb3JtYXQsDQo+IG11bHRpcGxlIG9mIDE2IHJl
-c29sdXRpb25zIHNob3VsZCB3b3JrIGZvciBhbGwgZm9ybWF0cy4NCj4gDQo+IHY0bDItY29tcGxp
-YW5jZSB0ZXN0cyBhcmUgcGFzc2luZywgaW5jbHVkaW5nIHRoZQ0KPiBzdHJlYW1pbmcgdGVzdHMs
-ICJ2NGwyLWNvbXBsaWFuY2UgLXMiDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBNaXJlbGEgUmFidWxl
-YSA8bWlyZWxhLnJhYnVsZWFAbnhwLmNvbT4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6DQo+IEZp
-eCB2NGwyLWNvbXBsaWFuY2Ugc3RyZWFtaW5nIHRlc3RzLCAidjRsMi1jb21wbGlhbmNlIC1zIg0K
-PiArCXJldHVybiAwOw0KPiArfQ0KDQpBbnkgbmV3IGZlZWRiYWNrIGFmdGVyIHRoZSB2MiBmb3Ig
-dGhpcyBwYXRjaD8gT3IgZm9yIHRoZSBlbnRpcmUgcGF0Y2gNCnNldD8NCg0KVGhlIHN0YXR1cyBz
-byBmYXIgaXM6DQpQYXRjaCAjMSBnb3QgUmV2aWV3ZWQtYnk6IFBhdWwgS29jaWFsa293c2tpIDxw
-YXVsLmtvY2lhbGtvd3NraUBib290bGluLg0KY29tPg0KUGF0Y2ggIzIgZ290IG5vIGZlZWRiYWNr
-Lg0KUGF0Y2ggIzMgZ290IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-Pg0KUGF0Y2ggIzQgaXMgYXQgdjIsIGFmdGVyIGZpeGluZyB2NGwyLWNvbXBsaWFuY2Ugc3RyZWFt
-aW5nIHRlc3RzLCB0aGFua3MNCkhhbnMgVmVya3VpbCBmb3IgZmVlZGJhY2suIFRoZXJlIHdhcyBt
-b3JlIGZlZWRiYWNrIGZyb20gRXplcXVpZWwgR2FyY2lhDQpyZWxhdGVkIHRvIGNvbW1vbiBKUEVH
-IGNvZGUsIEkgdHJpZWQgdXNpbmcgUGhpbGlwcCBaYWJlbCdzIHY0bDIgSlBFRw0KaGVscGVycyBw
-YXRjaCwgYnV0IEkgY2Fubm90IHVzZSBpdCAiYXMtaXMiLCBJJ20gZXhwZWN0aW5nIHRoZSBuZXh0
-DQp2ZXJzaW9uLg0KUGF0Y2ggIzUgZ290IG5vIGZlZWRiYWNrDQoNCkZvciB0aGUgcmVmZXJlbmNl
-LCB0aGlzIGlzIHRoZSBsYXRlc3Qgb3V0cHV0IGZyb20gdjRsMi1jb21wbGlhbmNlOg0KDQouL3Y0
-bDItY29tcGxpYW5jZSAtLWRldmljZSAvZGV2L3ZpZGVvMSAtcw0KdjRsMi1jb21wbGlhbmNlIFNI
-QTogNmM0MTVhMTFmY2ViMzIwNjdjZGI1YzJlMzNmOTBkYmYwMTgxODJhNCwgNjQgYml0cw0KDQpD
-b21wbGlhbmNlIHRlc3QgZm9yIG14Yy1qcGVnIGRlY29kZSBkZXZpY2UgL2Rldi92aWRlbzE6DQoN
-CkRyaXZlciBJbmZvOg0KCURyaXZlciBuYW1lwqDCoMKgwqDCoMKgOiBteGMtanBlZyBkZWNvZGUN
-CglDYXJkIHR5cGXCoMKgwqDCoMKgwqDCoMKgOiBteGMtanBlZyBkZWNvZGVyDQoJQnVzIGluZm/C
-oMKgwqDCoMKgwqDCoMKgwqA6IHBsYXRmb3JtOjU4NDUwMDAwLmpwZWdlbmMNCglEcml2ZXIgdmVy
-c2lvbsKgwqDCoDogNS41LjANCglDYXBhYmlsaXRpZXPCoMKgwqDCoMKgOiAweDg0MjA0MDAwDQoJ
-CVZpZGVvIE1lbW9yeS10by1NZW1vcnkgTXVsdGlwbGFuYXINCgkJU3RyZWFtaW5nDQoJCUV4dGVu
-ZGVkIFBpeCBGb3JtYXQNCgkJRGV2aWNlIENhcGFiaWxpdGllcw0KCURldmljZSBDYXBzwqDCoMKg
-wqDCoMKgOiAweDA0MjA0MDAwDQoJCVZpZGVvIE1lbW9yeS10by1NZW1vcnkgTXVsdGlwbGFuYXIN
-CgkJU3RyZWFtaW5nDQoJCUV4dGVuZGVkIFBpeCBGb3JtYXQNCglEZXRlY3RlZCBKUEVHIEVuY29k
-ZXINCg0KUmVxdWlyZWQgaW9jdGxzOg0KCXRlc3QgVklESU9DX1FVRVJZQ0FQOiBPSw0KDQpBbGxv
-dyBmb3IgbXVsdGlwbGUgb3BlbnM6DQoJdGVzdCBzZWNvbmQgL2Rldi92aWRlbzEgb3BlbjogT0sN
-Cgl0ZXN0IFZJRElPQ19RVUVSWUNBUDogT0sNCgl0ZXN0IFZJRElPQ19HL1NfUFJJT1JJVFk6IE9L
-DQoJdGVzdCBmb3IgdW5saW1pdGVkIG9wZW5zOiBPSw0KDQpEZWJ1ZyBpb2N0bHM6DQoJdGVzdCBW
-SURJT0NfREJHX0cvU19SRUdJU1RFUjogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0Nf
-TE9HX1NUQVRVUzogT0sgKE5vdCBTdXBwb3J0ZWQpDQoNCklucHV0IGlvY3RsczoNCgl0ZXN0IFZJ
-RElPQ19HL1NfVFVORVIvRU5VTV9GUkVRX0JBTkRTOiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0
-IFZJRElPQ19HL1NfRlJFUVVFTkNZOiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19T
-X0hXX0ZSRVFfU0VFSzogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0NfRU5VTUFVRElP
-OiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19HL1MvRU5VTUlOUFVUOiBPSyAoTm90
-IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19HL1NfQVVESU86IE9LIChOb3QgU3VwcG9ydGVkKQ0K
-CUlucHV0czogMCBBdWRpbyBJbnB1dHM6IDAgVHVuZXJzOiAwDQoNCk91dHB1dCBpb2N0bHM6DQoJ
-dGVzdCBWSURJT0NfRy9TX01PRFVMQVRPUjogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJ
-T0NfRy9TX0ZSRVFVRU5DWTogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0NfRU5VTUFV
-RE9VVDogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0NfRy9TL0VOVU1PVVRQVVQ6IE9L
-IChOb3QgU3VwcG9ydGVkKQ0KCXRlc3QgVklESU9DX0cvU19BVURPVVQ6IE9LIChOb3QgU3VwcG9y
-dGVkKQ0KCU91dHB1dHM6IDAgQXVkaW8gT3V0cHV0czogMCBNb2R1bGF0b3JzOiAwDQoNCklucHV0
-L091dHB1dCBjb25maWd1cmF0aW9uIGlvY3RsczoNCgl0ZXN0IFZJRElPQ19FTlVNL0cvUy9RVUVS
-WV9TVEQ6IE9LIChOb3QgU3VwcG9ydGVkKQ0KCXRlc3QgVklESU9DX0VOVU0vRy9TL1FVRVJZX0RW
-X1RJTUlOR1M6IE9LIChOb3QgU3VwcG9ydGVkKQ0KCXRlc3QgVklESU9DX0RWX1RJTUlOR1NfQ0FQ
-OiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19HL1NfRURJRDogT0sgKE5vdCBTdXBw
-b3J0ZWQpDQoNCkNvbnRyb2wgaW9jdGxzOg0KCXRlc3QgVklESU9DX1FVRVJZX0VYVF9DVFJML1FV
-RVJZTUVOVTogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0NfUVVFUllDVFJMOiBPSyAo
-Tm90IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19HL1NfQ1RSTDogT0sgKE5vdCBTdXBwb3J0ZWQp
-DQoJdGVzdCBWSURJT0NfRy9TL1RSWV9FWFRfQ1RSTFM6IE9LIChOb3QgU3VwcG9ydGVkKQ0KCXRl
-c3QgVklESU9DXyhVTilTVUJTQ1JJQkVfRVZFTlQvRFFFVkVOVDogT0sgKE5vdCBTdXBwb3J0ZWQp
-DQoJdGVzdCBWSURJT0NfRy9TX0pQRUdDT01QOiBPSyAoTm90IFN1cHBvcnRlZCkNCglTdGFuZGFy
-ZCBDb250cm9sczogMCBQcml2YXRlIENvbnRyb2xzOiAwDQoNCkZvcm1hdCBpb2N0bHM6DQoJdGVz
-dCBWSURJT0NfRU5VTV9GTVQvRlJBTUVTSVpFUy9GUkFNRUlOVEVSVkFMUzogT0sNCgl0ZXN0IFZJ
-RElPQ19HL1NfUEFSTTogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBWSURJT0NfR19GQlVGOiBP
-SyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFZJRElPQ19HX0ZNVDogT0sNCgl0ZXN0IFZJRElPQ19U
-UllfRk1UOiBPSw0KCXRlc3QgVklESU9DX1NfRk1UOiBPSw0KCXRlc3QgVklESU9DX0dfU0xJQ0VE
-X1ZCSV9DQVA6IE9LIChOb3QgU3VwcG9ydGVkKQ0KCXRlc3QgQ3JvcHBpbmc6IE9LIChOb3QgU3Vw
-cG9ydGVkKQ0KCXRlc3QgQ29tcG9zaW5nOiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFNjYWxp
-bmc6IE9LDQoNCkNvZGVjIGlvY3RsczoNCgl0ZXN0IFZJRElPQ18oVFJZXylFTkNPREVSX0NNRDog
-T0sNCgl0ZXN0IFZJRElPQ19HX0VOQ19JTkRFWDogT0sgKE5vdCBTdXBwb3J0ZWQpDQoJdGVzdCBW
-SURJT0NfKFRSWV8pREVDT0RFUl9DTUQ6IE9LDQoNCkJ1ZmZlciBpb2N0bHM6DQoJdGVzdCBWSURJ
-T0NfUkVRQlVGUy9DUkVBVEVfQlVGUy9RVUVSWUJVRjogT0sNCgl0ZXN0IFZJRElPQ19FWFBCVUY6
-IE9LDQoJdGVzdCBSZXF1ZXN0czogT0sgKE5vdCBTdXBwb3J0ZWQpDQoNClRlc3QgaW5wdXQgMDoN
-Cg0KU3RyZWFtaW5nIGlvY3RsczoNCgl0ZXN0IHJlYWQvd3JpdGU6IE9LIChOb3QgU3VwcG9ydGVk
-KQ0KCXRlc3QgYmxvY2tpbmcgd2FpdDogT0sNCglWaWRlbyBDYXB0dXJlIE11bHRpcGxhbmFyOiBD
-YXB0dXJlZCA1OCBidWZmZXJzwqDCoMKgwqANCgl0ZXN0IE1NQVAgKG5vIHBvbGwpOiBPSw0KCVZp
-ZGVvIENhcHR1cmUgTXVsdGlwbGFuYXI6IENhcHR1cmVkIDU4IGJ1ZmZlcnPCoMKgwqDCoA0KCXRl
-c3QgTU1BUCAoc2VsZWN0KTogT0sNCglWaWRlbyBDYXB0dXJlIE11bHRpcGxhbmFyOiBDYXB0dXJl
-ZCA1OCBidWZmZXJzwqDCoMKgwqANCgl0ZXN0IE1NQVAgKGVwb2xsKTogT0sNCgl0ZXN0IFVTRVJQ
-VFIgKG5vIHBvbGwpOiBPSyAoTm90IFN1cHBvcnRlZCkNCgl0ZXN0IFVTRVJQVFIgKHNlbGVjdCk6
-IE9LIChOb3QgU3VwcG9ydGVkKQ0KCXRlc3QgRE1BQlVGOiBDYW5ub3QgdGVzdCwgc3BlY2lmeSAt
-LWV4cGJ1Zi1kZXZpY2UNCg0KVG90YWwgZm9yIG14Yy1qcGVnIGRlY29kZSBkZXZpY2UgL2Rldi92
-aWRlbzE6IDUxLCBTdWNjZWVkZWQ6IDUxLA0KRmFpbGVkOiAwLCBXYXJuaW5nczogMA0KDQpUaGFu
-a3MsDQpNaXJlbGE=
+On 12/12/19 7:23 AM, Sascha Hauer wrote:
+> On Thu, Dec 12, 2019 at 03:16:56PM +0100, Sascha Hauer wrote:
+>> ata_qc_complete_multiple() is called with a mask of the still active
+>> tags.
+>>
+>> mv_sata doesn't have this information directly and instead calculates
+>> the still active tags from the started tags (ap->qc_active) and the
+>> finished tags as (ap->qc_active ^ done_mask)
+>>
+>> Since 28361c40368 the hw_tag and tag are no longer the same and the
+>> equation is no longer valid. In ata_exec_internal_sg() ap->qc_active is
+>> initialized as 1ULL << ATA_TAG_INTERNAL, but in hardware tag 0 is
+>> started and this will be in done_mask on completion. ap->qc_active ^
+>> done_mask becomes 0x100000000 ^ 0x1 = 0x100000001 and thus tag 0 used as
+>> the internal tag will never be reported as completed.
+>>
+>> This is fixed by introducing ata_qc_get_active() which returns the
+>> active hardware tags and calling it where appropriate.
+>>
+>> This is tested on mv_sata, but sata_fsl and sata_nv suffer from the same
+>> problem. There is another case in sata_nv that most likely needs fixing
+>> as well, but this looks a little different, so I wasn't confident enough
+>> to change that.
+>>
+>> Fixes: 28361c403683 ("libata: add extra internal command")
+>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+>> ---
+>>  drivers/ata/libata-core.c | 23 +++++++++++++++++++++++
+>>  drivers/ata/sata_fsl.c    |  2 +-
+>>  drivers/ata/sata_mv.c     |  2 +-
+>>  drivers/ata/sata_nv.c     |  2 +-
+>>  include/linux/libata.h    |  1 +
+>>  5 files changed, 27 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+>> index 28c492be0a57..d73bec933892 100644
+>> --- a/drivers/ata/libata-core.c
+>> +++ b/drivers/ata/libata-core.c
+>> @@ -5325,6 +5325,29 @@ void ata_qc_complete(struct ata_queued_cmd *qc)
+>>  	}
+>>  }
+>>  
+>> +/**
+>> + *	ata_qc_get_active - get bitmask of active qcs
+>> + *	@ap: port in question
+>> + *
+>> + *	LOCKING:
+>> + *	spin_lock_irqsave(host lock)
+>> + *
+>> + *	RETURNS:
+>> + *	Bitmask of active qcs
+>> + */
+>> +u64 ata_qc_get_active(struct ata_port *ap)
+>> +{
+>> +	u64 qc_active = ap->qc_active;
+>> +
+>> +	/* ATA_TAG_INTERNAL is sent to hw as tag 0 */
+>> +	if (qc_active & (1ULL << ATA_TAG_INTERNAL)) {
+>> +		qc_active |= (1 << 0);
+>> +		qc_active &= ~(1ULL << ATA_TAG_INTERNAL);
+>> +	}
+>> +
+>> +	return qc_active;
+>> +}
+>> +
+>>  /**
+>>   *	ata_qc_complete_multiple - Complete multiple qcs successfully
+>>   *	@ap: port in question
+>> diff --git a/drivers/ata/sata_fsl.c b/drivers/ata/sata_fsl.c
+>> index 8e9cb198fcd1..ca6c706e9c25 100644
+>> --- a/drivers/ata/sata_fsl.c
+>> +++ b/drivers/ata/sata_fsl.c
+>> @@ -1278,7 +1278,7 @@ static void sata_fsl_host_intr(struct ata_port *ap)
+>>  				     i, ioread32(hcr_base + CC),
+>>  				     ioread32(hcr_base + CA));
+>>  		}
+>> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
+>> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+>>  		return;
+>>  
+>>  	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {
+>> diff --git a/drivers/ata/sata_mv.c b/drivers/ata/sata_mv.c
+>> index ad385a113391..bde695a32097 100644
+>> --- a/drivers/ata/sata_mv.c
+>> +++ b/drivers/ata/sata_mv.c
+>> @@ -2827,7 +2827,7 @@ static void mv_process_crpb_entries(struct ata_port *ap, struct mv_port_priv *pp
+>>  	}
+>>  
+>>  	if (work_done) {
+>> -		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
+>> +		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+>>  
+>>  		/* Update the software queue position index in hardware */
+>>  		writelfl((pp->crpb_dma & EDMA_RSP_Q_BASE_LO_MASK) |
+>> diff --git a/drivers/ata/sata_nv.c b/drivers/ata/sata_nv.c
+>> index 56946012d113..7510303111fa 100644
+>> --- a/drivers/ata/sata_nv.c
+>> +++ b/drivers/ata/sata_nv.c
+>> @@ -984,7 +984,7 @@ static irqreturn_t nv_adma_interrupt(int irq, void *dev_instance)
+>>  					check_commands = 0;
+>>  				check_commands &= ~(1 << pos);
+>>  			}
+>> -			ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
+>> +			ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+>>  		}
+>>  	}
+>>  
+>> diff --git a/include/linux/libata.h b/include/linux/libata.h
+>> index 207e7ee764ce..f4c045b56e6c 100644
+>> --- a/include/linux/libata.h
+>> +++ b/include/linux/libata.h
+>> @@ -1174,6 +1174,7 @@ extern unsigned int ata_do_dev_read_id(struct ata_device *dev,
+>>  					struct ata_taskfile *tf, u16 *id);
+>>  extern void ata_qc_complete(struct ata_queued_cmd *qc);
+>>  extern int ata_qc_complete_multiple(struct ata_port *ap, u64 qc_active);
+>> +extern u64 ata_qc_get_started(struct ata_port *ap);
+> 
+> s/ata_qc_get_started/ata_qc_get_active/ obviously.
+
+Last minute edit? Please send a v2.
+
+-- 
+Jens Axboe
+
