@@ -2,97 +2,218 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EE0C2D0C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24856C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7255D227BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1576167083;
-	bh=slAzlIzEDDtUyqYVNRNXCpBSABhNHtvTF49rt/tiHk4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fzBBZpXvmJjF917AcALr9xle+0zgCk4/ZQwjy2EFWtXZpgGRYeX/YKf/cNzOp8xFg
-	 9GX+RDTSyEnyof/kKQR9i+oWI/9lJrbc1oCkfOT3q9xFw5wb3oAV5IyceR5nxNc5Pd
-	 MZQZp6LNLYcU/NeaDhFymiz6GzJmLu3Ps+Sp/bpU=
+	by mail.kernel.org (Postfix) with ESMTP id EA10321655
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbfLLQLW (ORCPT
+        id S1729878AbfLLQLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 12 Dec 2019 11:11:24 -0500
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39027 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729675AbfLLQLW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 12 Dec 2019 11:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729416AbfLLQLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:11:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE5382073B;
-        Thu, 12 Dec 2019 16:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576167081;
-        bh=slAzlIzEDDtUyqYVNRNXCpBSABhNHtvTF49rt/tiHk4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TXL7ZmvdaRoOtUG+0//y+M9Nvl+dVjSNQMClD1WuGoP2cMQoONYFN9ckoARPeJjeb
-         hmk4pVP+57s6BBdu+VdXTnKvHTNB2ik1isslv92n1jy68zxItcRDCt6zKCJdxR9kWZ
-         wePOqL23XkD1UCBHry0W8LugqiLff13yTvnqVNk0=
-Date:   Thu, 12 Dec 2019 17:11:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Sasha Levin <sashal@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 4.19 185/243] ARM: dts: sun8i: a23/a33: Fix up RTC device
- node
-Message-ID: <20191212161119.GA1673133@kroah.com>
-References: <20191211150339.185439726@linuxfoundation.org>
- <20191211150351.658072828@linuxfoundation.org>
- <20191212133132.GA13171@amd>
- <20191212140241.GA1595136@kroah.com>
- <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
+Received: from [109.168.11.45] (port=43476 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1ifR3e-007CSs-Hw; Thu, 12 Dec 2019 17:11:18 +0100
+Subject: Re: [PATCH 07/10] i2c: Add driver for AD242x bus controller
+To:     Daniel Mack <daniel@zonque.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        broonie@kernel.org, lee.jones@linaro.org, lars@metafoo.de,
+        pascal.huerst@gmail.com
+References: <20191209183511.3576038-1-daniel@zonque.org>
+ <20191209183511.3576038-9-daniel@zonque.org>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <64adf5d7-754a-f1da-aa9b-11579c5a2780@lucaceresoli.net>
+Date:   Thu, 12 Dec 2019 17:11:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67z5T4XVOc03LL9K0p1yP9UtiDhmLNj8kzxVnsDsr0rew@mail.gmail.com>
+In-Reply-To: <20191209183511.3576038-9-daniel@zonque.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 10:18:34PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Dec 12, 2019 at 10:02 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Dec 12, 2019 at 02:31:32PM +0100, Pavel Machek wrote:
-> > > Hi!
-> > >
-> > > > The RTC module on the A23 was claimed to be the same as on the A31, when
-> > > > in fact it is not. The A31 does not have an RTC external clock output,
-> > > > and its internal RC oscillator's average clock rate is not in the same
-> > > > range. The A33's RTC is the same as the A23.
-> > > >
-> > > > This patch fixes the compatible string and clock properties to conform
-> > > > to the updated bindings. The register range is also fixed.
-> > >
-> > > No, this is not okay for v4.19. New compatible is not in
-> > > ./drivers/rtc/rtc-sun6i.c, so this will completely break rtc support.
-> >
-> > Good catch, I would have thought both of those would happen at the same
-> > time.
+Hi Daniel,
+
+On 09/12/19 19:35, Daniel Mack wrote:
+> This device must be instantiated as a sub-device of the AD242x MFD
+> device.
 > 
-> (Fixed Maxime's email)
+> In order to access remote I2C peripherals, the master node is configured
+> to the slave node number and the remote I2C client address on the remote
+> side, and then the payload is sent to the BUS client of the master node,
+> which transparently proxies the traffic through.
+
+This remote I2C feature in these chips is interesting. It looks somewhat
+similar to remote I2C in the video serdes chip by TI and Maxim, but it's
+different from both of them. So now we have 3 vendors implementing the
+same feature in 3 different ways.
+
+Cool.
+
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> ---
+>  drivers/i2c/busses/Kconfig      |  10 ++
+>  drivers/i2c/busses/Makefile     |   1 +
+>  drivers/i2c/busses/i2c-ad242x.c | 178 ++++++++++++++++++++++++++++++++
+>  3 files changed, 189 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-ad242x.c
 > 
-> Neither were marked for stable. I guess Sasha's auto selection bot is at
-> work here. Is there anything we can do to prevent them from being selected?
-> For sunxi, we pretty much don't expect things to be backported, unless
-> something critical was fixed.
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 6a0aa76859f3..b9cf049bedb0 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -365,6 +365,16 @@ config I2C_POWERMAC
+>  
+>  comment "I2C system bus drivers (mostly embedded / system-on-chip)"
+>  
+> +config I2C_AD242X
+> +	tristate "Analog Devices AD242x"
+> +	depends on MFD_AD242X
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  I2C bus controller function of AD242x slave nodes.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called i2c-ad242x.
+> +
+>  config I2C_ALTERA
+>  	tristate "Altera Soft IP I2C"
+>  	depends on (ARCH_SOCFPGA || NIOS2) && OF
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 3ab8aebc39c9..57c31ea8a477 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -32,6 +32,7 @@ obj-$(CONFIG_I2C_HYDRA)		+= i2c-hydra.o
+>  obj-$(CONFIG_I2C_POWERMAC)	+= i2c-powermac.o
+>  
+>  # Embedded system I2C/SMBus host controller drivers
+> +obj-$(CONFIG_I2C_AD242X)	+= i2c-ad242x.o
+>  obj-$(CONFIG_I2C_ALTERA)	+= i2c-altera.o
+>  obj-$(CONFIG_I2C_AMD_MP2)	+= i2c-amd-mp2-pci.o i2c-amd-mp2-plat.o
+>  obj-$(CONFIG_I2C_ASPEED)	+= i2c-aspeed.o
+> diff --git a/drivers/i2c/busses/i2c-ad242x.c b/drivers/i2c/busses/i2c-ad242x.c
+> new file mode 100644
+> index 000000000000..b94056653898
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-ad242x.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/i2c.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mfd/ad242x.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +struct ad242x_i2c {
+> +	struct device		*dev;
+> +	struct ad242x_node	*node;
+> +	struct i2c_adapter	adap;
+> +	u32			node_index;
+> +};
+> +
+> +static int ad242x_set_addr(struct ad242x_node *mnode,
+> +			   struct ad242x_i2c_bus *bus,
+> +			   uint8_t node_id, uint8_t addr)
+> +{
+> +	int ret;
+> +	uint8_t buf[2] = { AD242X_CHIP, addr };
+> +
+> +	ret = regmap_update_bits(mnode->regmap, AD242X_NODEADR,
+> +				 AD242X_NODEADR_PERI | AD242X_NODEADR_MASK,
+> +				 node_id);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * We can't use the slave's regmap here as it holds the same
+> +	 * lock we also need to guard this context.
+> +	 */
+> +	ret = i2c_transfer_buffer_flags(bus->client,
+> +					buf, sizeof(buf), 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return regmap_update_bits(mnode->regmap, AD242X_NODEADR,
+> +				  AD242X_NODEADR_PERI, AD242X_NODEADR_PERI);
+> +}
+> +
+> +static int ad242x_i2c_xfer(struct i2c_adapter *adap,
+> +			   struct i2c_msg msgs[], int num)
+> +{
+> +	struct ad242x_i2c *i2c = adap->algo_data;
+> +	struct ad242x_i2c_bus *bus = ad242x_master_get_bus(i2c->node->master);
+> +	struct ad242x_node *mnode = ad242x_master_get_node(i2c->node->master);
+> +	int ret, i, current_addr = -1;
+> +
+> +	mutex_lock(&bus->mutex);
+> +
+> +	for (i = 0; i < num; i++) {
+> +		struct i2c_msg *msg = msgs + i;
+> +
+> +		if (msg->addr != current_addr) {
+> +			ret = ad242x_set_addr(mnode, bus,
+> +					      i2c->node->id, msg->addr);
+> +			if (ret < 0) {
+> +				dev_err(i2c->node->dev,
+> +					"Cannot set address: %d\n", ret);
+> +				break;
+> +			}
+> +
+> +			current_addr = msg->addr;
+> +		}
+> +
+> +		ret = i2c_transfer_buffer_flags(bus->client,
+> +						msg->buf, msg->len, msg->flags);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	mutex_unlock(&bus->mutex);
+> +
+> +	return ret < 0 ? ret : num;
+> +}
 
-Sasha can add any files to the bot to ignore, just let him know what
-ones to mark that way.
+Your implementation here looks quite clean and simple, and simple is
+good, but I think there's a problem in this function. A "normal"
+master_xfer function issues a repeated start between one msg and the
+next one, at least in the typical case where all msgs have the same
+slave address. Your implementation breaks repeated start. At first sight
+we might need more complex code here to coalesce all consecutive msgs
+with the same address into a single i2c_transfer() call.
 
-thanks,
-
-greg k-h
+-- 
+Luca
