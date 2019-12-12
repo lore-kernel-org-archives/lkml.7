@@ -2,102 +2,93 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B000C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E209C00454
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566D72073B
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0595C2073B
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 16:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hZkK/m8H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F8XIWu5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfLLQ3I (ORCPT
+        id S1729913AbfLLQ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 11:29:08 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:61781 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfLLQ3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 11:29:08 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47YfPs2NwxzB09Zb;
-        Thu, 12 Dec 2019 17:29:05 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hZkK/m8H; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 7szMB8CuQCrE; Thu, 12 Dec 2019 17:29:05 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47YfPs1CttzB09ZY;
-        Thu, 12 Dec 2019 17:29:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576168145; bh=GqFn+uBl1T1SHKz7HkTW4UtcdVqHhLnzfzrSD9BDta0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hZkK/m8HNu6crHPRFQeyTlxplW8itx03feClS8KjZ4yIjdVlEkwbbG+iGfL8Z26Ez
-         rXXgv8/DU7MVt5qteRHEOUo0dRKAk3HeLBP/vPAlPHLQ/KIuqVZst1u1MrtOgvn4NN
-         zy9JLTLo/cFdvfuHIUIwxlTzZK81Nko5IGSQd2gg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C2EDE8B876;
-        Thu, 12 Dec 2019 17:29:06 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3HzLIrD_1spS; Thu, 12 Dec 2019 17:29:06 +0100 (CET)
-Received: from [172.25.230.112] (po15451.idsi0.si.c-s.fr [172.25.230.112])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9FB778B872;
-        Thu, 12 Dec 2019 17:29:06 +0100 (CET)
-Subject: Re: [PATCH] powerpc/irq: don't use current_stack_pointer() in
- do_IRQ()
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1bb34d3ea006c308221706290613e6cc5dc3cb74.1575802064.git.christophe.leroy@c-s.fr>
- <20191212125116.GA3381@infradead.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <185df2a7-e6c4-0d2d-59cd-760df94fa3c6@c-s.fr>
-Date:   Thu, 12 Dec 2019 17:29:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 12 Dec 2019 11:29:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51826 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729762AbfLLQ3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 11:29:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IidiBxDJM+VIT+v37VGMG28TIHnD27VtPSaxTsIJSpI=; b=F8XIWu5dE5QOlZY+5UkEYA1bl
+        klREN3ImvGQJucbjAIGPeNrcq8me7SFVJlVcnaEwVNT5l2jewD90OPG2jPNyrUe76CsZb1v0Qf5Gc
+        C6wSuddKzvJiG5oNjTpMJOayfosQqjkzPhKT0OsQEQdHhSBURHFLlSyGPZ2RSqRrw9AfZBrViP0dd
+        iC3JlCiXTt0XmaODIFZX6AGQ5BhXDjALGdZF7WNLYnL8FfLRyLDglEacEhmyk9UFRF+gNH3aNSQkQ
+        a7Vs1AVgrostmvjB2/AU+D1QMt5L5wIOFxjsqMVmMZW8RyIDxB9gAaIWC8Oq750u3ABjiOVVafTwC
+        RBtcsphWg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ifRLX-0004nE-4h; Thu, 12 Dec 2019 16:29:47 +0000
+Date:   Thu, 12 Dec 2019 08:29:47 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, y2038@lists.linaro.org,
+        Hannes Reinecke <hare@suse.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-ide@vger.kernel.org
+Subject: Re: [PATCH 20/24] compat_ioctl: move HDIO ioctl handling into
+ drivers/ide
+Message-ID: <20191212162947.GC27991@infradead.org>
+References: <20191211204306.1207817-1-arnd@arndb.de>
+ <20191211204306.1207817-21-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20191212125116.GA3381@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191211204306.1207817-21-arnd@arndb.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> +static int put_user_long(long val, unsigned long arg)
+> +{
+> +#ifdef CONFIG_COMPAT
+> +	if (in_compat_syscall())
+> +		return put_user(val, (compat_long_t __user *)compat_ptr(arg));
+> +#endif
+> +	return put_user(val, (long __user *)arg);
+> +}
 
+We had this
 
-Le 12/12/2019 à 13:51, Christoph Hellwig a écrit :
-> Why can't current_stack_pointer be turned into an inline function using
-> inline assembly?  That would reduce the overhead for all callers.
-> 
+#ifdef CONFIG_COMPAT
+	if (in_compat_syscall())
+		...
+	...
+#endif
 
-In the old days, it was a macro, and it was changed into an assembly 
-function by commit 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bfe9a2cfe91a
+patter quite frequently.  Can we define a in_compat_syscall stub
+and make sure compat_ptr and the compat_* types are available available
+to clean this up a bit?
 
-It was later renamed from __get_SP() to current_stack_pointer() by 
-commit 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=acf620ecf56cfc4edaffaf158250e128539cdd26
+> -	if (NULL == (void *) arg) {
+> +	if (NULL == argp) {
 
-But in fact this function is badly named as it doesn't provide the 
-current stack pointer but a pointer to the parent's stack frame.
+	if (!argp) {
 
-Having it as an extern function forces GCC to set a stack frame in the 
-calling function. If inline assembly is used instead, there's a risk of 
-not getting a stack frame in the calling function, in which case the 
-current_stack_pointer() will return the grandparent's stackframe pointer 
-instead of the parent's one.
-
-Christophe
+?
