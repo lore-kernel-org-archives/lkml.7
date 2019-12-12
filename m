@@ -2,211 +2,224 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7B7C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184B1C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F8422527
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bLOmSdwv";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="DXgSXF4i"
+	by mail.kernel.org (Postfix) with ESMTP id DFE12205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 15:18:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfLLPST (ORCPT
+        id S1729283AbfLLPSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 10:18:19 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:1284 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728929AbfLLPST (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 10:18:19 -0500
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCFFfWh015968;
-        Thu, 12 Dec 2019 07:18:08 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=+swVOdgF5RaJEvniZvFBP6gVf+9OysdUN190zQlwVQA=;
- b=bLOmSdwvhJEG7JvjfZAvXY349WvgBaARXRWIXjaz38/61RyIry5nuNvWBOQAQUUum3wX
- lW8O4ybroRRDYIofy1KWDiJbciiPGGFADHooRZk0hr4T95BXS/LgiAXB20/yI/lcQ0fm
- x7ajLd8aBmQx+HemnULUwJXjdQlmbYM3gT8= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wu87qkp2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 12 Dec 2019 07:18:07 -0800
-Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
- ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 12 Dec 2019 07:18:06 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 12 Dec 2019 07:18:06 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FT6AiYRkpt4/yr4YWNLKRfwO+JcG15TL2Vvnn8QTLDVADHlYAYTeFheCHRJGexMox2hQwPY557mlFNYyhwbRbX6MjJ3yCdeRL7+9WgnsKgPC5nXs7lnfYoznZiwGs08bjIuM3NX+MiDMpxhIx58ojs8rxzRsUa8vh/qjAJHpODyR5MvDplc/7oH8DZrvPwvsRGJusRw0iUg52h3CctZ0AtFsBNnfWpIewWPqh3Ey+lRHF1Kk5TVl92lTSFrkBqy1oenmHKSiBVbDF2r6rskm4Gi5OCSx7emx+zFGp5U1XOaHcv7+YLau6KxkeMSSsjCM4hmPl7WRvpoZd1fSDCCt3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+swVOdgF5RaJEvniZvFBP6gVf+9OysdUN190zQlwVQA=;
- b=ZnZ6sNTzvP7YWaugkyFTrmrRdavgOhuXvS6dQ1myIO+BIVO2a1Z0aO+IIaABt90h8ebZOcuN6W5aHHaUG38jo+cvkQnrH4vTtmvWZy1xAgRbU8DwHiri1QmLmszo/dGctFKTQWQr6MG5BtdKjj2fGu+IT6LFcGJch95MasmBu1CsxG8PY/PFHnyQPJ7ZSCbWRZUoEh7nl6JcVc+QEzad9zIBz8stGe67BwZb+1KOE7K4ePbPaFj2CYV9k+Jmz0n9s/waci8KSitJwSlg3dcVKc74F5ziy+6XGEF8QQhT/fXdD3OjKN+4ypThTFEPzGI7PTw4IO0ks6XTL+9YOB5qtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+swVOdgF5RaJEvniZvFBP6gVf+9OysdUN190zQlwVQA=;
- b=DXgSXF4iZUuVyMfyDmjINbPS0iMWuwP4LrcQhhy4MDPyp3s9zpVjblszgG1aNISLkXQm2GeQM+lheUmP+2xucJXZ6rgbfixhWGUJlZ63IGCy+zx+Z8vHpvlHNGtOaJtVe2phHUXAA4+FeN/er8oIYKE7PFHZJYWk7Gd4LHi9hDo=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1120.namprd15.prod.outlook.com (10.175.8.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2538.18; Thu, 12 Dec 2019 15:18:05 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f831:d112:6187:90d9]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f831:d112:6187:90d9%4]) with mapi id 15.20.2516.018; Thu, 12 Dec 2019
- 15:18:05 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v8] perf: Sharing PMU counters across compatible events
-Thread-Topic: [PATCH v8] perf: Sharing PMU counters across compatible events
-Thread-Index: AQHVrJTJGmqRAKGiXEWGIEJPQu1yRae2itaAgAAasYA=
-Date:   Thu, 12 Dec 2019 15:18:05 +0000
-Message-ID: <02350C29-3A23-4773-BC51-922B866EDA9A@fb.com>
-References: <20191207002447.2976319-1-songliubraving@fb.com>
- <20191212134231.GW2844@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191212134231.GW2844@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3601.0.10)
-x-originating-ip: [2620:10d:c090:180::d1f]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cfb0ab47-3cab-4123-6beb-08d77f167c9c
-x-ms-traffictypediagnostic: MWHPR15MB1120:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB112054350D0DA6DBCC89657FB3550@MWHPR15MB1120.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1728;
-x-forefront-prvs: 0249EFCB0B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(376002)(346002)(366004)(39860400002)(189003)(199004)(6916009)(71200400001)(6506007)(53546011)(4326008)(33656002)(5660300002)(6486002)(54906003)(316002)(86362001)(81166006)(8936002)(81156014)(8676002)(2616005)(64756008)(2906002)(66446008)(66946007)(478600001)(76116006)(36756003)(186003)(66476007)(66556008)(6512007);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1120;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dVsNI46F87CBwq8Dl8AB9YXYg4lUCAfitpQFZp7W7a2MqoKLW2iW9eIQL+lCD/Qx6SavGaNXsS4nyW8rhgaTyAsww5O0ajRKHtgpjGMyhPzXt5Ju89/h4qabRA9VP++x/reZEFw6owBc+0Pux/H4rxR7lD4nkrlmjF8Xaxqr8dV0GtTCrNm7EvNfeGUxypSrT3Llizj5mYfvuXE0YwJtlLfxzfzd8K5TuGJhPRItM/bzIFm8eVvhi2uqGm1vTwaBa1PkpAy9Bp4b1p4UP5lOmevzpVaYPRfvbrUc9ACxsch/QK6b4gIVSSSws199HyHMjmtMS5XhAJ0GpWlgO0NnJ0GMZf6LVxBF5eGKp0+aDIA4mNfLJJ8ER2mQZfdczcBFRAwvZ4Zneg5qTGtsf9u6KhU/3VjmhCmhWWKYqRlZQy2b7WvDxn2AAJgDB6yIyq7c
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E0E39BC4112A5E4DA7585EF77E9D6C8D@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 12 Dec 2019 10:18:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:50346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728944AbfLLPSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 10:18:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 68A6530E;
+        Thu, 12 Dec 2019 07:18:40 -0800 (PST)
+Received: from [10.37.9.115] (unknown [10.37.9.115])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB9B63F6CF;
+        Thu, 12 Dec 2019 07:18:35 -0800 (PST)
+Subject: Re: [PATCH v16 11/25] mm: pagewalk: Add p4d_entry() and pgd_entry()
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Zong Li <zong.li@sifive.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20191206135316.47703-1-steven.price@arm.com>
+ <20191206135316.47703-12-steven.price@arm.com>
+ <13280f9e-6f03-e1fd-659a-31462ba185b0@shipmail.org>
+ <7fd20e9f-822a-897d-218e-bddf135fd33d@shipmail.org>
+ <a5bb53f1-dd40-f32c-917b-a1ae1a49e5b2@arm.com>
+ <16b2ecbc-316a-33f8-ace2-e54cd8001b24@shipmail.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <2cef327b-a16b-f76d-4c3f-bd894332c736@arm.com>
+Date:   Thu, 12 Dec 2019 15:18:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfb0ab47-3cab-4123-6beb-08d77f167c9c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Dec 2019 15:18:05.1489
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bRLmw/qLOS6d7sG8CejFm7hyqDYKMDesXqWO6Ip4oJik6+Z8MRp7qIPnxL6/nKvC6zSXcDGChJmoZc9QkfSnqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1120
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_03:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 malwarescore=0
- spamscore=0 mlxscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- mlxlogscore=950 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912120118
-X-FB-Internal: deliver
+In-Reply-To: <16b2ecbc-316a-33f8-ace2-e54cd8001b24@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12/12/2019 14:04, Thomas Hellström (VMware) wrote:
+> On 12/12/19 2:15 PM, Steven Price wrote:
+>> On 12/12/2019 11:33, Thomas Hellström (VMware) wrote:
+>>> On 12/12/19 12:23 PM, Thomas Hellström (VMware) wrote:
+>>>> On 12/6/19 2:53 PM, Steven Price wrote:
+>>>>> pgd_entry() and pud_entry() were removed by commit 0b1fbfe50006c410
+>>>>> ("mm/pagewalk: remove pgd_entry() and pud_entry()") because there were
+>>>>> no users. We're about to add users so reintroduce them, along with
+>>>>> p4d_entry() as we now have 5 levels of tables.
+>>>>>
+>>>>> Note that commit a00cc7d9dd93d66a ("mm, x86: add support for
+>>>>> PUD-sized transparent hugepages") already re-added pud_entry() but with
+>>>>> different semantics to the other callbacks. Since there have never
+>>>>> been upstream users of this, revert the semantics back to match the
+>>>>> other callbacks. This means pud_entry() is called for all entries, not
+>>>>> just transparent huge pages.
+>>
+>> When I wrote that there were no upstream users, which sadly shows how
+>> long ago that was :(
+>>
+>>>> Actually, there are two users of pud_entry(), in hmm.c and since 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic and requires no attention but the one in hmm.c is probably largely untested, and seems to assume it was called outside of the spinlock.
+>>>>
+>>>> The problem with the current patch is that the hmm pud_entry will traverse also pmds, so that will be done twice now.
+>>>>
+>>>> In another thread we were discussing a means of rerunning the level (in case of a race), or continuing after a level, based on the return value after the callback. The change was fairly invasive,
+>>>>
+>>> Hmm. Forgot to remove the above text that appears twice. :(. The correct one is inline below.
+>>>
+>>>>
+>>>>> Tested-by: Zong Li <zong.li@sifive.com>
+>>>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>>>> ---
+>>>>>   include/linux/pagewalk.h | 19 +++++++++++++------
+>>>>>   mm/pagewalk.c            | 27 ++++++++++++++++-----------
+>>>>>   2 files changed, 29 insertions(+), 17 deletions(-)
+>>>>>
+>>>>> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+>>>>> index 6ec82e92c87f..06790f23957f 100644
+>>>>> --- a/include/linux/pagewalk.h
+>>>>> +++ b/include/linux/pagewalk.h
+>>>>> @@ -8,15 +8,15 @@ struct mm_walk;
+>>>>>     /**
+>>>>>    * mm_walk_ops - callbacks for walk_page_range
+>>>>> - * @pud_entry:        if set, called for each non-empty PUD (2nd-level) entry
+>>>>> - *            this handler should only handle pud_trans_huge() puds.
+>>>>> - *            the pmd_entry or pte_entry callbacks will be used for
+>>>>> - *            regular PUDs.
+>>>>> - * @pmd_entry:        if set, called for each non-empty PMD (3rd-level) entry
+>>>>> + * @pgd_entry:        if set, called for each non-empty PGD (top-level) entry
+>>>>> + * @p4d_entry:        if set, called for each non-empty P4D entry
+>>>>> + * @pud_entry:        if set, called for each non-empty PUD entry
+>>>>> + * @pmd_entry:        if set, called for each non-empty PMD entry
+>>>>>    *            this handler is required to be able to handle
+>>>>>    *            pmd_trans_huge() pmds.  They may simply choose to
+>>>>>    *            split_huge_page() instead of handling it explicitly.
+>>>>> - * @pte_entry:        if set, called for each non-empty PTE (4th-level) entry
+>>>>> + * @pte_entry:        if set, called for each non-empty PTE (lowest-level)
+>>>>> + *            entry
+>>>>>    * @pte_hole:        if set, called for each hole at all levels
+>>>>>    * @hugetlb_entry:    if set, called for each hugetlb entry
+>>>>>    * @test_walk:        caller specific callback function to determine whether
+>>>>> @@ -27,8 +27,15 @@ struct mm_walk;
+>>>>>    * @pre_vma:            if set, called before starting walk on a non-null vma.
+>>>>>    * @post_vma:           if set, called after a walk on a non-null vma, provided
+>>>>>    *                      that @pre_vma and the vma walk succeeded.
+>>>>> + *
+>>>>> + * p?d_entry callbacks are called even if those levels are folded on a
+>>>>> + * particular architecture/configuration.
+>>>>>    */
+>>>>>   struct mm_walk_ops {
+>>>>> +    int (*pgd_entry)(pgd_t *pgd, unsigned long addr,
+>>>>> +             unsigned long next, struct mm_walk *walk);
+>>>>> +    int (*p4d_entry)(p4d_t *p4d, unsigned long addr,
+>>>>> +             unsigned long next, struct mm_walk *walk);
+>>>>>       int (*pud_entry)(pud_t *pud, unsigned long addr,
+>>>>>                unsigned long next, struct mm_walk *walk);
+>>>>>       int (*pmd_entry)(pmd_t *pmd, unsigned long addr,
+>>>>> diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+>>>>> index ea0b9e606ad1..c089786e7a7f 100644
+>>>>> --- a/mm/pagewalk.c
+>>>>> +++ b/mm/pagewalk.c
+>>>>> @@ -94,15 +94,9 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+>>>>>           }
+>>>>>             if (ops->pud_entry) {
+>>>>> -            spinlock_t *ptl = pud_trans_huge_lock(pud, walk->vma);
+>>>>> -
+>>>>> -            if (ptl) {
+>>>>> -                err = ops->pud_entry(pud, addr, next, walk);
+>>>>> -                spin_unlock(ptl);
+>>>>> -                if (err)
+>>>>> -                    break;
+>>>>> -                continue;
+>>>>> -            }
+>>>>> +            err = ops->pud_entry(pud, addr, next, walk);
+>>>>> +            if (err)
+>>>>> +                break;
+>>>>
+>>>> Actually, there are two current users of pud_entry(), in hmm.c and since 5.5rc1 also mapping_dirty_helpers.c. The latter one is unproblematic and requires no attention but the one in hmm.c is probably largely untested, and seems to assume it was called outside of the spinlock.
+>>
+>> Thanks for pointing that out, I guess the simplest fix would be to
+>> squash in something like the below which should restore the old
+>> behaviour for hmm.c without affecting others.
+>>
+>> Steve 
+> 
+> I'm not fully sure that the old behaviour is the correct one, but definitely hmm's pud_entry needs some fixing.
+> I'm more concerned with the pagewalk code. With your patch it actually splits all huge puds present in the page-table
+> on each page walk which is not what we want.
 
+Good catch - yes that's certainly not ideal.
 
-> On Dec 12, 2019, at 5:42 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Fri, Dec 06, 2019 at 04:24:47PM -0800, Song Liu wrote:
->> +/* Remove dup_master for the event */
->> +static void perf_event_remove_dup(struct perf_event *event,
->> +				  struct perf_event_context *ctx)
->> +
->> +{
->> +	struct perf_event *tmp, *new_master;
->> +	int count;
->> +
->> +	/* no sharing */
->> +	if (!event->dup_master)
->> +		return;
->> +
->> +	WARN_ON_ONCE(event->state !=3D PERF_EVENT_STATE_INACTIVE &&
->> +		     event->state !=3D PERF_EVENT_STATE_OFF);
->> +
->> +	/* this event is not the master */
->> +	if (event->dup_master !=3D event) {
->> +		event->dup_master =3D NULL;
->> +		return;
->> +	}
->> +
->> +	/* this event is the master */
->> +	perf_event_exit_dup_master(event);
->> +
->> +	count =3D 0;
->> +	new_master =3D NULL;
->> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
->> +		WARN_ON_ONCE(tmp->state > PERF_EVENT_STATE_INACTIVE);
->> +		if (tmp->dup_master =3D=3D event) {
->> +			count++;
->> +			if (!new_master)
->> +				new_master =3D tmp;
->> +		}
->> +	}
->> +
->> +	if (!count)
->> +		return;
->> +
->> +	if (count =3D=3D 1) {
->> +		/* no more sharing */
->> +		new_master->dup_master =3D NULL;
->> +		return;
->> +	}
->> +
->> +	perf_event_init_dup_master(new_master);
->> +
->> +	/* switch to new_master */
->> +	list_for_each_entry(tmp, &ctx->event_list, event_entry)
->> +		if (tmp->dup_master =3D=3D event)
->> +			tmp->dup_master =3D new_master;
->> +}
->=20
-> I'm thinking you can do that in a single iteration:
->=20
-> 	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
-> 		if (tmp->dup_master !=3D event)
-> 			continue;
->=20
-> 		if (!new_master)
-> 			new_master =3D tmp;
->=20
-> 		tmp->dup_master =3D new_master;
-> 		count++;
-> 	}
->=20
-> 	if (count =3D=3D 1)
-> 		new_master->dup_master =3D NULL;
-> 	else
-> 		perf_event_init_dup_master(new_master);
->=20
-> Hmm?
+> One idea would be to add a new member to struct_mm_walk:
+> 
+> enum page_walk_ret_action {
+>      ACTION_SUBTREE = 0,
+>      ACTION_CONTINUE = 1,
+>      ACTION_AGAIN = 2 /* Only for levels that thave p?d_unstable */
+> };
+> 
+> struct mm_walk {
+>      ...
+>      enum page_walk_ret_action action; /* or perhaps as an enum */
+> };
+> 
+> 
+> if (ops->pud_entry) {
+>      walk->action = ACTION_SUBTREE;
+>      ...
+>      ...
+>      ...
+>      if (walk->action == ACTION_AGAIN)  /* Callback tried to split huge entry, but failed */
+>          goto again;
+>      else if (walk->action == ACTION_CONTINUE) /* Done with this subtree. Probably huge entry handled. */
+>          continue;
+>      /* ACTION_SUBTREE falls through */
+> }
 
-This should work. Let me fix in v9.=20
+I'll have a go at implementing the above - this might also allow removing the test_p?d() callbacks as they can simply return ACTION_CONTINUE.
 
-Thanks,
-Song
+Steve
+
+> we discussed something similar before on linux-mm, but the idea then was to redefine
+> the positive return value of the callback to the action, but that meant changing those existing callbacks that relied on
+> a positive return value. The above would be helpful also for pmd_entry.
+> 
+> /Thomas
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
