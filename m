@@ -6,47 +6,49 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A431C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F39DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15898214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA2E22527
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 23:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbfLLXdK (ORCPT
+        id S1731275AbfLLXdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 18:33:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45844 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730934AbfLLXdK (ORCPT
+        Thu, 12 Dec 2019 18:33:12 -0500
+Received: from mail-io1-f70.google.com ([209.85.166.70]:39420 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731184AbfLLXdL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 18:33:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id m18so421008ioj.12
+        Thu, 12 Dec 2019 18:33:11 -0500
+Received: by mail-io1-f70.google.com with SMTP id a11so432208iot.6
         for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 15:33:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=az5DuF1alBK/2C/X8kBxQrX+6pJZmNF6wl9c7tpV3lo=;
-        b=mE3YPi47mjO0UVgN1//xOD8+BxlDIRiJjiq9ArzYBND51eW/feKr0vtHjIZoWimDyp
-         7QyBS2xz1iBxEie0vLKyZEyxUomCBFyqNZbdqn3Z0tlGh592rDq/64xsy7S4jtmNDOTz
-         QNiky0JBoIdFPr5ziz6kaJpo7v+OhYa7J6TsCzNP2n5nzPY9Q03/R+5N9aRttpO+b/Ig
-         fgbmNBPQ2i0pEuSF1MmfGDwaPamfZQqbfeI2PIWg8BI8C+5DSr5n3MlCFZb0ZHC7FCq+
-         pk/hwvURI73l80CCkdEkAB/NsBD9EGQZ3QpqLTF2dyOxJy4vBLxkESMjePk17Q0LKBqh
-         kgfg==
-X-Gm-Message-State: APjAAAXwafnMaHqfUDQImsMtg3Wm7HupRQZJG/z5CAdbE4O8v3zEnyTi
-        qFyLr7kDRKltSR2oO/gU2WjBBZribzj36HH6jxdci0Ro69hx
-X-Google-Smtp-Source: APXvYqxGIhpUq2Ta2me1n35TUp99Om4bxMFVM6Z6vlAx3gNI2Gir2nRgvbWbgIQZNvn9/aduwA/ZHCQXiLujH6NoAjRsBqhCGjr6
+        bh=uPmT7H1u4tQQr91gsmUmlGu51pKPCSerupF0+mBYR+A=;
+        b=JgfECBJtOzwfMy7YYTizMre3IoGrBKKoprPhS7g7+18NhogZaY2zxcbaNIee/mki+9
+         0LJwdfPJURCdkSGa5kCUzY3iXmI+ubNv+sNlQIopOorRBiOxzvXpPl8b37pJ6FNwZ2iK
+         YcaphSg3w9+IvuR6eOow9HfigP156dxLGhAq+MlR6rb2szNoOXbAXWCW8qSrwvNhRrKn
+         TgCWT8sg7FZtjpgUEdy94r6Bcfz7OoUt9aOmp9hs3Jwi0ROF4FBrDCbyATTHPfYI8Azr
+         p1X2OGRsCLR/uyGHu9zIc2ygFgRR7ow9Onl17SbCDEf1VjwptwAuXU+m8ADCZVVDMlyi
+         /ZGg==
+X-Gm-Message-State: APjAAAXcsAjTcprhChvdwHnKi80PqH2SgNN860ozFjAjs+Hrcl8OlXg2
+        McwmDCndjirYqlt/qhgfOo0S7aCQVBwolaXjUhiC69eGOFxR
+X-Google-Smtp-Source: APXvYqxRonIBYq3QlOSfLTDmRhr3h1LOT5KDkHtrZySgylant5xgPnByJCRl6xs7oY/bbF7kt3LOHlPciackUCos0rlrM+RWe26+
 MIME-Version: 1.0
-X-Received: by 2002:a92:d610:: with SMTP id w16mr10414196ilm.283.1576193590003;
+X-Received: by 2002:a92:7606:: with SMTP id r6mr10592785ilc.120.1576193590352;
  Thu, 12 Dec 2019 15:33:10 -0800 (PST)
-Date:   Thu, 12 Dec 2019 15:33:09 -0800
+Date:   Thu, 12 Dec 2019 15:33:10 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000790ac05998a2ba3@google.com>
-Subject: KCSAN: data-race in timer_clear_idle / trigger_dyntick_cpu.isra.0 (2)
-From:   syzbot <syzbot+62407dedb3b93892c631@syzkaller.appspotmail.com>
-To:     elver@google.com, john.stultz@linaro.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Message-ID: <0000000000000ce4b105998a2b08@google.com>
+Subject: KCSAN: data-race in add_timer / timer_clear_idle (2)
+From:   syzbot <syzbot+c051abeff5e2e8ac40f0@syzkaller.appspotmail.com>
+To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
+        davem@davemloft.net, elver@google.com,
+        linux-kernel@vger.kernel.org, mareklindner@neomailbox.ch,
+        netdev@vger.kernel.org, sven@narfation.org, sw@simonwunderlich.de,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,51 +61,40 @@ syzbot found the following crash on:
 
 HEAD commit:    ef798c30 x86, kcsan: Enable KCSAN for x86
 git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e7ae61e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=156e052ee00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=8077a73bd604a9d4
-dashboard link: https://syzkaller.appspot.com/bug?extid=62407dedb3b93892c631
+dashboard link: https://syzkaller.appspot.com/bug?extid=c051abeff5e2e8ac40f0
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+62407dedb3b93892c631@syzkaller.appspotmail.com
+Reported-by: syzbot+c051abeff5e2e8ac40f0@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KCSAN: data-race in timer_clear_idle / trigger_dyntick_cpu.isra.0
+BUG: KCSAN: data-race in add_timer / timer_clear_idle
 
-read to 0xffff88812be1b6e4 of 1 bytes by interrupt on cpu 1:
-  trigger_dyntick_cpu.isra.0+0x75/0x100 kernel/time/timer.c:577
-  internal_add_timer kernel/time/timer.c:596 [inline]
-  add_timer_on+0x186/0x2d0 kernel/time/timer.c:1174
-  clocksource_watchdog+0x63f/0x760 kernel/time/clocksource.c:297
-  call_timer_fn+0x5f/0x2f0 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0xc0c/0xcd0 kernel/time/timer.c:1786
-  __do_softirq+0x115/0x33f kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0xbb/0xe0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:60
-  arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:571
-  default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
-  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
-  do_idle+0x1af/0x280 kernel/sched/idle.c:263
-  cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
-  start_secondary+0x168/0x1b0 arch/x86/kernel/smpboot.c:264
-  secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:241
+read to 0xffff88812be1b6e4 of 1 bytes by task 23 on cpu 1:
+  forward_timer_base kernel/time/timer.c:892 [inline]
+  __mod_timer kernel/time/timer.c:1009 [inline]
+  mod_timer kernel/time/timer.c:1100 [inline]
+  add_timer+0x3a6/0x550 kernel/time/timer.c:1136
+  __queue_delayed_work+0x13b/0x1d0 kernel/workqueue.c:1649
+  queue_delayed_work_on+0xf3/0x110 kernel/workqueue.c:1674
+  queue_delayed_work include/linux/workqueue.h:509 [inline]
+  batadv_mcast_start_timer net/batman-adv/multicast.c:71 [inline]
+  batadv_mcast_mla_update+0x11ad/0x19e0 net/batman-adv/multicast.c:949
+  process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
+  worker_thread+0xa0/0x800 kernel/workqueue.c:2415
+  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
 write to 0xffff88812be1b6e4 of 1 bytes by task 0 on cpu 0:
   timer_clear_idle+0x42/0x50 kernel/time/timer.c:1675
-  tick_nohz_next_event+0x15d/0x370 kernel/time/tick-sched.c:708
-  __tick_nohz_idle_stop_tick kernel/time/tick-sched.c:943 [inline]
-  tick_nohz_idle_stop_tick+0x3c2/0x670 kernel/time/tick-sched.c:973
-  cpuidle_idle_call kernel/sched/idle.c:151 [inline]
-  do_idle+0x1a5/0x280 kernel/sched/idle.c:263
+  tick_nohz_restart_sched_tick kernel/time/tick-sched.c:839 [inline]
+  __tick_nohz_idle_restart_tick+0x36/0x1b0 kernel/time/tick-sched.c:1140
+  tick_nohz_idle_exit+0x1af/0x1e0 kernel/time/tick-sched.c:1181
+  do_idle+0xb1/0x280 kernel/sched/idle.c:276
   cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:355
   rest_init+0xec/0xf6 init/main.c:452
   arch_call_rest_init+0x17/0x37
