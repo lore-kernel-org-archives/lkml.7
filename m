@@ -2,105 +2,119 @@ Return-Path: <SRS0=kgnc=2C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AE6C43603
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934A7C43603
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1B2214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB9E2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 12 Dec 2019 17:44:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtKdqd1u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfLLRoB (ORCPT
+        id S1730258AbfLLRo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 12 Dec 2019 12:44:01 -0500
-Received: from mga18.intel.com ([134.134.136.126]:32104 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730235AbfLLRn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 12 Dec 2019 12:43:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Dec 2019 09:43:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,306,1571727600"; 
-   d="scan'208";a="216367838"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga003.jf.intel.com with ESMTP; 12 Dec 2019 09:43:57 -0800
-Date:   Thu, 12 Dec 2019 09:43:57 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Liran Alon <liran.alon@oracle.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v4 11/19] x86/cpu: Print VMX flags in /proc/cpuinfo using
- VMX_FEATURES_*
-Message-ID: <20191212174357.GE3163@linux.intel.com>
-References: <20191128014016.4389-1-sean.j.christopherson@intel.com>
- <20191128014016.4389-12-sean.j.christopherson@intel.com>
- <20191212122646.GE4991@zn.tnic>
- <d0b21e7e-69f5-09f9-3e1c-14d49fa42b9f@redhat.com>
- <4A24DE75-4E68-4EC6-B3F3-4ACB0EE82BF0@oracle.com>
- <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
+        Thu, 12 Dec 2019 12:44:29 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45253 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730075AbfLLRo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 12 Dec 2019 12:44:29 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so1120591pfg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 12 Dec 2019 09:44:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vAybGGxacChJwAejcpVjaSkmOSjuyOa7Vm0vQDf0ytg=;
+        b=XtKdqd1uqEqin8HfnsY6la7gkuC/L5k7UGq5WAVvh5yLgp/O7bgr5j2xLaZPJpJSZY
+         BkbEVDXJE8CedObjoydxulNAUnY3TJHHQNcPAZ/CoOJ+AT/xyDRa1yKCyjg1ofQCSrPc
+         dmOUjyw+tazUcoYKBq1whPaLNbhoET6FUDY6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vAybGGxacChJwAejcpVjaSkmOSjuyOa7Vm0vQDf0ytg=;
+        b=DN6Rs7F70lzxMetzDSfQY2/rknrUgsTZwULUS7NvdGBnPmsn9vtXZEqk1dlr35qjbb
+         P6uslOoSUWVKKMM7+iEfY/EcoSw41Whsj4KYASFPRa32YVJq56g12bWerO4K4k3lftFf
+         IbzLzNwdH3Pf+6qA0rJNx4CF9NGkRo0Z0hqPdwY9hZT3mSd9uJQK4RTypWrUlreRsnsx
+         HZ7qFJsU+6e+hArk8CITmIfVFWHGYsk2RRdVEx9QpjD77MA54yIG0FD/YTMXPGFaxlOP
+         Egb0gjz5qDZuHILFojvjIKeYwDqg4wiLsC9/BDRQopTlW1NOA9QWj8AQvffZICgSty7T
+         Vyiw==
+X-Gm-Message-State: APjAAAXL8rEB4qSLnS8XRCELcYsIdKeuSwnI/iMbBtx2BumcgFat0DV8
+        3y3YT/uit+yQJm3hseZgEso8cg==
+X-Google-Smtp-Source: APXvYqx2FdF/gi6uYV/9IkBPv0MXEhVzlJwwj3Cn0zKuTW8p0YuVLJmzJYaX5SE2C2iWT2vFodsZPQ==
+X-Received: by 2002:aa7:9d0d:: with SMTP id k13mr11590528pfp.254.1576172668230;
+        Thu, 12 Dec 2019 09:44:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o17sm6423863pjq.1.2019.12.12.09.44.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 09:44:27 -0800 (PST)
+Date:   Thu, 12 Dec 2019 09:44:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] gcc-plugins: make it possible to disable
+ CONFIG_GCC_PLUGINS again
+Message-ID: <201912120943.486E507@keescook>
+References: <20191211133951.401933-1-arnd@arndb.de>
+ <CAK7LNASeyPxgQczSvEN4S3Ae7fRtYyynhU9kJ=96VX34S4TECA@mail.gmail.com>
+ <CAK8P3a1dH+msCgxU-=w4gp30Bw+x3=6Cj473DuFzxun+3dfOcA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <17c6569e-d0af-539c-6d63-f4c07367d8d1@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAK8P3a1dH+msCgxU-=w4gp30Bw+x3=6Cj473DuFzxun+3dfOcA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Dec 12, 2019 at 04:57:10PM +0100, Paolo Bonzini wrote:
-> On 12/12/19 16:52, Liran Alon wrote:
-> >>> virt_apic_accesses	-> vapic
-> >> apicv
-> > Frankly, I dislike APICv terminology. I prefer to enumerate the
-> > various VMX features which are collectively called APICv by KVM. 
-> > APICv currently represents in KVM terminology the combination of
-> > APIC-register virtualization, virtual-interrupt-delivery and
-> > posted-interrupts (See cpu_has_vmx_apicv()).
-> > 
-> > In fact, the coupling of “enable_apicv” module parameter have made me
-> > multiple times to need to disable entire APICv features when there
-> > for example was only a bug in posted-interrupts.
-> > 
-> > Even you got confused as virtualize-apic-access is not part of KVM’s
-> > APICv terminology but rather it’s enablement depend on
-> > flexpriority_enabled (See cpu_need_virtualize_apic_accesses()). i.e.
-> > It can be used for faster intercept handling of accesses to guest
-> > xAPIC MMIO page.
+On Thu, Dec 12, 2019 at 10:59:40AM +0100, Arnd Bergmann wrote:
+> On Thu, Dec 12, 2019 at 5:52 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > On Wed, Dec 11, 2019 at 10:40 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > >
+> > > I noticed that randconfig builds with gcc no longer produce a lot of
+> > > ccache hits, unlike with clang, and traced this back to plugins
+> > > now being enabled unconditionally if they are supported.
+> > >
+> > > I am now working around this by adding
+> > >
+> > >    export CCACHE_COMPILERCHECK=/usr/bin/size -A %compiler%
+> > >
+> > > to my top-level Makefile. This changes the heuristic that ccache uses
+> > > to determine whether the plugins are the same after a 'make clean'.
+> > >
+> > > However, it also seems that being able to just turn off the plugins is
+> > > generally useful, at least for build testing it adds noticeable overhead
+> > > but does not find a lot of bugs additional bugs, and may be easier for
+> > > ccache users than my workaround.
+> > >
+> > > Fixes: 9f671e58159a ("security: Create "kernel hardening" config area")
+> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
 > 
-> Right, I got confused with APIC-register virtualization.  Virtualize
-> APIC accesses is another one I wouldn't bother putting in /proc/cpuinfo,
-> since it's usually present together with flexpriority.
+> On Wed, Dec 11, 2019 at 2:59 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> >Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Thanks! Who would be the best person to pick up the patch?
+> Should I send it to Andrew?
 
-Key word being "usually".  My intent in printing out partially redundant
-flags was to help users debug/understand why the combined feature isn't
-supported.  E.g. userspace can already easily (relatively speaking) query
-flexpriority support via /sys/module/kvm_intel/parameters/flexpriority.
-But if that comes back "N", the user has no way to determine exactly why
-flexpriority is disabled.
+Acked-by: Kees Cook <keescook@chromium.org>
+
+I can take it in my tree, or I'm happy to have Masahiro take it.
+
+-- 
+Kees Cook
